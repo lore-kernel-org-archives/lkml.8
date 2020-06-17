@@ -2,160 +2,513 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00268C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2449C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D30EE214DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:49:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CIaAUySo"
+	by mail.kernel.org (Postfix) with ESMTP id 75D852083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592409022;
+	bh=0XX0Neg6rqJ60J3T0nNMWFJUKq6z1gWzk0W6g0jZa74=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=pULClNUK8VhNkovrxqua39nwK9qY0pRm7QMqTGU1n8MALj7B3Jjk0uDMoQJO28pzj
+	 YIAi+RQBH8w728xSBR7gFLUH3hsmzjTdIdqTDtWxnILp3eelGk3FVYLaDPWbkuvKAA
+	 RzzxwNSyRg7cspggvvS6AKEiRuVJSfHO4sXK2UQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgFQPtd (ORCPT
+        id S1726893AbgFQPuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:49:33 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60035 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726511AbgFQPtc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:49:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592408970;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tDWhLTLZ7olw8GAAlUQ4uQj+TXV9++NuoVK0ARUFcIQ=;
-        b=CIaAUySoh1hFw+V1Uer7NWbm7bGUtDIlqS0Vk9SwKEGRuUlmItUZGRj2KS1GpozQu7TrNW
-        i4JSTFyj6pdgjIX+qnfyAWj4MyOEfU5eYixYSGv5rdpITnbp51B+omMNnYBjZ5Z5gtZF6n
-        /Ic8kg+cKEkWl85dBfYSkquAPQJY4Vg=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-398-AYecHJ78MrOoE8mSiNOQfQ-1; Wed, 17 Jun 2020 11:49:28 -0400
-X-MC-Unique: AYecHJ78MrOoE8mSiNOQfQ-1
-Received: by mail-qt1-f200.google.com with SMTP id n8so2038806qtk.11
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:49:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tDWhLTLZ7olw8GAAlUQ4uQj+TXV9++NuoVK0ARUFcIQ=;
-        b=Jan0FWUx5MJTIsZYtCxykN3lUBWrSS1tRIuvDlJPDgfEtorYj62EC1IzpeGI7z+Wps
-         n7xlecKe3YIczLGZsnqVNRel8L7gjJ3JV4MU8U/eZaFCVUkiTApeAerKNb/AFS2p/hmh
-         tBfN++tmKHUlgylSHreXD4tqpTPoxenCh5N9hxp+bZYid33T9r87sjJ8L5i2FFU1ln/F
-         l5NuZhjOBe1Vg0nKTE1MheAEg3wafyDMxehFT1kn7v+FZsZpjpjTLZoG/pXe91c9CTo8
-         pTj55+1C3MQVVO0SFuWbVLmJBKZAuLIVGw/zHTKRK/02Hyy0Bhq5GYK7bQFSjvFNkiwF
-         ylVQ==
-X-Gm-Message-State: AOAM530GKrihq5GsWSkqSRT+0gnGQgCyTa72o1GuLn8diu92neL9bGI2
-        OyhL3hzDr3WXrCJ1ejVKw79ACNKrNW3n22V8xgvE0mujDYRZq3Fl+V5BWe8NvgSpidvhw78KtTC
-        agYbapMgvUanhGOIUJfllAwHT
-X-Received: by 2002:aed:2803:: with SMTP id r3mr25137317qtd.212.1592408968135;
-        Wed, 17 Jun 2020 08:49:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwJJovWTmPSQ+HOXo0IAdIlJ+CjdneGFj8wAR4MxASHoGf+c0X4S+fKYy93Bmy5LEQzmh9cyw==
-X-Received: by 2002:aed:2803:: with SMTP id r3mr25137294qtd.212.1592408967833;
-        Wed, 17 Jun 2020 08:49:27 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id t13sm238106qtc.77.2020.06.17.08.49.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 08:49:26 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 11:49:25 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Guo Ren <guoren@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        linux-csky@vger.kernel.org
-Subject: Re: [PATCH 07/25] mm/csky: Use mm_fault_accounting()
-Message-ID: <20200617154925.GC76766@xz-x1>
-References: <20200615221607.7764-1-peterx@redhat.com>
- <20200615221607.7764-8-peterx@redhat.com>
- <CAJF2gTSVSXO=phc1eeb-ZmDMrSDjSSLd3tN6ng_8n-pCSZh5zw@mail.gmail.com>
+        Wed, 17 Jun 2020 11:50:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38788 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726511AbgFQPuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 11:50:19 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 732AD20773;
+        Wed, 17 Jun 2020 15:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592409017;
+        bh=0XX0Neg6rqJ60J3T0nNMWFJUKq6z1gWzk0W6g0jZa74=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=AOU9mRwuF6CZWoURPlSqNu0yWihfib63eZ9mxHuyS1k9Kh9bqxFiZP3+ZJ69pOzWH
+         AsccJRlR24GgHPg1wC/7PpovkGBbPRiyXtujMf4F97VmWZBWcoAh8z0w7cqikBVjin
+         AkUpvlhZDYYHTVA0UWVVantVseIbAKVJAKlhfMVc=
+Date:   Wed, 17 Jun 2020 10:50:15 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, tsbogend@alpha.franken.de,
+        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
+        jiaxun.yang@flygoat.com, paulburton@kernel.org, info@metux.net,
+        allison@lohutok.net, kstewart@linuxfoundation.org,
+        tglx@linutronix.de, jonas.gorski@gmail.com, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH 3/3] pci: add BCM6328 PCIe controller support
+Message-ID: <20200617155015.GA2035534@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAJF2gTSVSXO=phc1eeb-ZmDMrSDjSSLd3tN6ng_8n-pCSZh5zw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200617102556.3792821-4-noltari@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 03:04:49PM +0800, Guo Ren wrote:
-> Hi Peter,
+"git log --oneline drivers/pci/controller/" tells you that the
+conventional style for the subject would be:
 
-Hi, Guo,
+  PCI: bcm6328: Add BCM6328 PCIe host controller support
 
+On Wed, Jun 17, 2020 at 12:25:56PM +0200, Álvaro Fernández Rojas wrote:
+> BCM6328 PCIe host controller is found on BCM6328, BCM6362 and BCM63268 SoCs.
 > 
-> On Tue, Jun 16, 2020 at 6:16 AM Peter Xu <peterx@redhat.com> wrote:
-> >
-> > Use the new mm_fault_accounting() helper for page fault accounting.
-> > Also, move the accounting to be after release of mmap_sem.
-> >
-> > CC: Guo Ren <guoren@kernel.org>
-> > CC: linux-csky@vger.kernel.org
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > ---
-> >  arch/csky/mm/fault.c | 13 +------------
-> >  1 file changed, 1 insertion(+), 12 deletions(-)
-> >
-> > diff --git a/arch/csky/mm/fault.c b/arch/csky/mm/fault.c
-> > index 4e6dc68f3258..8f8d34d27eca 100644
-> > --- a/arch/csky/mm/fault.c
-> > +++ b/arch/csky/mm/fault.c
-> > @@ -111,8 +111,6 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
-> >                 return;
-> >         }
-> >  #endif
-> > -
-> > -       perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
-> >         /*
-> >          * If we're in an interrupt or have no user
-> >          * context, we must not take the fault..
-> > @@ -160,17 +158,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs, unsigned long write,
-> >                         goto bad_area;
-> >                 BUG();
-> >         }
-> > -       if (fault & VM_FAULT_MAJOR) {
-> > -               tsk->maj_flt++;
-> > -               perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1, regs,
-> > -                             address);
-> > -       } else {
-> > -               tsk->min_flt++;
-> > -               perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs,
-> > -                             address);
-> > -       }
-> > -
-> >         up_read(&mm->mmap_sem);
-> > +       mm_fault_accounting(tsk, regs, address, fault & VM_FAULT_MAJOR);
-> >         return;
-> >
-> >         /*
-> > --
-> > 2.26.2
-> >
-> I notice that you move it out of mm->mmap_sem's area, all archs should
-> follow the rule ? Can you give me a clarification and put it into de
-> commit log ?
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> ---
+>  drivers/pci/controller/Kconfig        |   8 +
+>  drivers/pci/controller/Makefile       |   1 +
+>  drivers/pci/controller/pcie-bcm6328.c | 346 ++++++++++++++++++++++++++
+>  3 files changed, 355 insertions(+)
+>  create mode 100644 drivers/pci/controller/pcie-bcm6328.c
+> 
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index adddf21fa381..7e238c04764e 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -3,6 +3,14 @@
+>  menu "PCI controller drivers"
+>  	depends on PCI
+>  
+> +config PCIE_BCM6328
+> +	bool "BCM6328 PCIe controller"
+> +	depends on BMIPS_GENERIC || COMPILE_TEST
+> +	depends on OF
+> +	help
+> +	  Say Y here if you want support for the PCIe host controller found
+> +	  on BCM6328, BCM6362 and BCM63268 SoCs.
+> +
+>  config PCI_MVEBU
+>  	bool "Marvell EBU PCIe controller"
+>  	depends on ARCH_MVEBU || ARCH_DOVE || COMPILE_TEST
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> index efd9733ead26..1c3e82575845 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_PCIE_BCM6328) += pcie-bcm6328.o
+>  obj-$(CONFIG_PCIE_CADENCE) += cadence/
+>  obj-$(CONFIG_PCI_FTPCI100) += pci-ftpci100.o
+>  obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o
+> diff --git a/drivers/pci/controller/pcie-bcm6328.c b/drivers/pci/controller/pcie-bcm6328.c
+> new file mode 100644
+> index 000000000000..5bd86b166336
+> --- /dev/null
+> +++ b/drivers/pci/controller/pcie-bcm6328.c
+> @@ -0,0 +1,346 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * BCM6328 PCIe Controller Driver
+> + *
+> + * Copyright (C) 2020 Álvaro Fernández Rojas <noltari@gmail.com>
+> + * Copyright (C) 2015 Jonas Gorski <jonas.gorski@gmail.com>
+> + * Copyright (C) 2008 Maxime Bizon <mbizon@freebox.fr>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +
+> +#include "../pci.h"
+> +
+> +#define SERDES_PCIE_EN			BIT(0)
+> +#define SERDES_PCIE_EXD_EN		BIT(15)
+> +
+> +#define PCIE_BUS_BRIDGE			0
+> +#define PCIE_BUS_DEVICE			1
+> +
+> +#define PCIE_CONFIG2_REG		0x408
+> +#define CONFIG2_BAR1_SIZE_EN		1
+> +#define CONFIG2_BAR1_SIZE_MASK		0xf
+> +
+> +#define PCIE_IDVAL3_REG			0x43c
+> +#define IDVAL3_CLASS_CODE_MASK		0xffffff
+> +#define IDVAL3_SUBCLASS_SHIFT		8
+> +#define IDVAL3_CLASS_SHIFT		16
+> +
+> +#define PCIE_DLSTATUS_REG		0x1048
+> +#define DLSTATUS_PHYLINKUP		BIT(13)
+> +
+> +#define PCIE_BRIDGE_OPT1_REG		0x2820
+> +#define OPT1_RD_BE_OPT_EN		BIT(7)
+> +#define OPT1_RD_REPLY_BE_FIX_EN		BIT(9)
+> +#define OPT1_PCIE_BRIDGE_HOLE_DET_EN	BIT(11)
+> +#define OPT1_L1_INT_STATUS_MASK_POL	BIT(12)
+> +
+> +#define PCIE_BRIDGE_OPT2_REG		0x2824
+> +#define OPT2_UBUS_UR_DECODE_DIS		BIT(2)
+> +#define OPT2_TX_CREDIT_CHK_EN		BIT(4)
+> +#define OPT2_CFG_TYPE1_BD_SEL		BIT(7)
+> +#define OPT2_CFG_TYPE1_BUS_NO_SHIFT	16
+> +#define OPT2_CFG_TYPE1_BUS_NO_MASK	(0xff << OPT2_CFG_TYPE1_BUS_NO_SHIFT)
+> +
+> +#define PCIE_BRIDGE_BAR0_BASEMASK_REG	0x2828
+> +#define BASEMASK_REMAP_EN		BIT(0)
+> +#define BASEMASK_SWAP_EN		BIT(1)
+> +#define BASEMASK_MASK_SHIFT		4
+> +#define BASEMASK_MASK_MASK		(0xfff << BASEMASK_MASK_SHIFT)
+> +#define BASEMASK_BASE_SHIFT		20
+> +#define BASEMASK_BASE_MASK		(0xfff << BASEMASK_BASE_SHIFT)
+> +
+> +#define PCIE_BRIDGE_BAR0_REBASE_ADDR_REG 0x282c
+> +#define REBASE_ADDR_BASE_SHIFT		20
+> +#define REBASE_ADDR_BASE_MASK		(0xfff << REBASE_ADDR_BASE_SHIFT)
+> +
+> +#define PCIE_BRIDGE_RC_INT_MASK_REG	0x2854
+> +#define PCIE_RC_INT_A			BIT(0)
+> +#define PCIE_RC_INT_B			BIT(1)
+> +#define PCIE_RC_INT_C			BIT(2)
+> +#define PCIE_RC_INT_D			BIT(3)
+> +
+> +#define PCIE_DEVICE_OFFSET		0x8000
+> +
+> +struct bcm6328_pcie {
+> +	void __iomem *base;
+> +	struct regmap *serdes;
+> +	struct clk *clk;
+> +	struct reset_control *reset;
+> +	struct reset_control *reset_ext;
+> +	struct reset_control *reset_core;
+> +	struct reset_control *reset_hard;
+> +};
+> +
+> +static struct bcm6328_pcie bcm6328_pcie;
 
-I don't think it's a must, but mmap_sem should not be required at least by
-observing current code.  E.g., do_user_addr_fault() of x86 does the accounting
-without mmap_sem even before this series.
+It would be better to dynamically allocate this like all the other
+drivers in driver/pci/controller/ do.
 
-The perf events should be thread safe on its own.  Frankly speaking I'm not
-very certain about my understanding on the per task counters, because iiuc we
-can also try to get user pages remotely of a thread in parallel with the page
-fault happening on the same thread, then it seems to me that the per task pf
-counters can be accessed on different cores simultaneously.  However otoh that
-seems to be very rare, and it's still acceptable to me as a trade off to avoid
-overhead of locks or atomic ops on the counters.  I'd be glad to be corrected
-if I missed anything important here...
+> +/*
+> + * swizzle 32bits data to return only the needed part
+> + */
+> +static int postprocess_read(u32 data, int where, unsigned int size)
+> +{
+> +	u32 ret = 0;
+> +
+> +	switch (size) {
+> +	case 1:
+> +		ret = (data >> ((where & 3) << 3)) & 0xff;
+> +		break;
+> +	case 2:
+> +		ret = (data >> ((where & 3) << 3)) & 0xffff;
+> +		break;
+> +	case 4:
+> +		ret = data;
+> +		break;
+> +	}
+> +
+> +	return ret;
 
-Thanks,
+No need for "ret" here; just return the values directly.
 
--- 
-Peter Xu
+> +}
+> +
+> +static int preprocess_write(u32 orig_data, u32 val, int where,
+> +			    unsigned int size)
+> +{
+> +	u32 ret = 0;
+> +
+> +	switch (size) {
+> +	case 1:
+> +		ret = (orig_data & ~(0xff << ((where & 3) << 3))) |
+> +		      (val << ((where & 3) << 3));
+> +		break;
+> +	case 2:
+> +		ret = (orig_data & ~(0xffff << ((where & 3) << 3))) |
+> +		      (val << ((where & 3) << 3));
+> +		break;
+> +	case 4:
+> +		ret = val;
+> +		break;
+> +	}
+> +
+> +	return ret;
 
+No need for "ret" here either.
+
+> +}
+> +
+> +static int bcm6328_pcie_can_access(struct pci_bus *bus, int devfn)
+> +{
+> +	struct bcm6328_pcie *priv = &bcm6328_pcie;
+> +
+> +	switch (bus->number) {
+> +	case PCIE_BUS_BRIDGE:
+> +		return PCI_SLOT(devfn) == 0;
+> +	case PCIE_BUS_DEVICE:
+> +		if (PCI_SLOT(devfn) == 0)
+> +			return __raw_readl(priv->base + PCIE_DLSTATUS_REG)
+> +			       & DLSTATUS_PHYLINKUP;
+
+Checking for link up is problematic.  The link may go down after we
+check but before we do the actual config read.  We have to be able to
+handle that case anyway, so you should not check whether the link is
+up.
+
+> +		/* fall through */
+> +	default:
+> +		return false;
+> +	}
+
+Why do you need this function at all?  Normally a config read to a
+device that doesn't exist returns ~0 data, and the PCI core knows how
+to interpret that.
+
+The implication is that this controller is severely limited and can
+only support:
+
+  bus 0, device 0, functions 0-7 (presumably root ports), and
+  bus 1, device 0, functions 0-7 (presumably endpoints)?
+
+It cannot support any switches or slots?  And apparently the root bus
+number is not programmable?
+
+> +}
+> +
+> +static int bcm6328_pcie_read(struct pci_bus *bus, unsigned int devfn,
+> +			     int where, int size, u32 *val)
+> +{
+> +	struct bcm6328_pcie *priv = &bcm6328_pcie;
+> +	u32 data;
+> +	u32 reg = where & ~3;
+> +
+> +	if (!bcm6328_pcie_can_access(bus, devfn))
+> +		return PCIBIOS_DEVICE_NOT_FOUND;
+> +
+> +	if (bus->number == PCIE_BUS_DEVICE)
+> +		reg += PCIE_DEVICE_OFFSET;
+> +
+> +	data = __raw_readl(priv->base + reg);
+
+Why do you need __raw_readl() and __raw_writel?  This would be the
+first use in drivers/pci/, so you shouldn't need them unless this
+hardware is really unique in some way.
+
+> +	*val = postprocess_read(data, where, size);
+> +
+> +	return PCIBIOS_SUCCESSFUL;
+> +}
+> +
+> +static int bcm6328_pcie_write(struct pci_bus *bus, unsigned int devfn,
+> +			      int where, int size, u32 val)
+> +{
+> +	struct bcm6328_pcie *priv = &bcm6328_pcie;
+> +	u32 data;
+> +	u32 reg = where & ~3;
+> +
+> +	if (!bcm6328_pcie_can_access(bus, devfn))
+> +		return PCIBIOS_DEVICE_NOT_FOUND;
+> +
+> +	if (bus->number == PCIE_BUS_DEVICE)
+> +		reg += PCIE_DEVICE_OFFSET;
+> +
+> +	data = __raw_readl(priv->base + reg);
+> +	data = preprocess_write(data, val, where, size);
+> +	__raw_writel(data, priv->base + reg);
+
+So this hardware is unable to perform 1- or 2-byte config writes on
+PCI?  That's a hardware defect that can cause corruption of config
+registers.
+
+See pci_generic_config_write32() and add a similar warning here if
+this hardware is broken in this way.
+
+> +	return PCIBIOS_SUCCESSFUL;
+> +}
+> +
+> +static struct pci_ops bcm6328_pcie_ops = {
+> +	.read = bcm6328_pcie_read,
+> +	.write = bcm6328_pcie_write,
+> +};
+> +
+> +static struct resource bcm6328_pcie_io_resource;
+> +static struct resource bcm6328_pcie_mem_resource;
+> +static struct resource bcm6328_pcie_busn_resource;
+> +
+> +static struct pci_controller bcm6328_pcie_controller = {
+> +	.pci_ops = &bcm6328_pcie_ops,
+> +	.io_resource = &bcm6328_pcie_io_resource,
+> +	.mem_resource = &bcm6328_pcie_mem_resource,
+> +	.busn_resource = &bcm6328_pcie_busn_resource,
+> +};
+> +
+> +static void bcm6328_pcie_reset(struct bcm6328_pcie *priv)
+> +{
+> +	regmap_write_bits(priv->serdes, 0,
+> +			  SERDES_PCIE_EN | SERDES_PCIE_EXD_EN,
+> +			  SERDES_PCIE_EN | SERDES_PCIE_EXD_EN);
+> +
+> +	reset_control_assert(priv->reset);
+> +	reset_control_assert(priv->reset_core);
+> +	reset_control_assert(priv->reset_ext);
+> +	if (priv->reset_hard) {
+> +		reset_control_assert(priv->reset_hard);
+> +		mdelay(10);
+> +		reset_control_deassert(priv->reset_hard);
+> +	}
+> +	mdelay(10);
+> +
+> +	reset_control_deassert(priv->reset_core);
+> +	reset_control_deassert(priv->reset);
+> +	mdelay(10);
+> +
+> +	reset_control_deassert(priv->reset_ext);
+> +	mdelay(200);
+> +}
+> +
+> +static void bcm6328_pcie_setup(struct bcm6328_pcie *priv)
+> +{
+> +	u32 val;
+> +
+> +	val = __raw_readl(priv->base + PCIE_BRIDGE_OPT1_REG);
+> +	val |= OPT1_RD_BE_OPT_EN;
+> +	val |= OPT1_RD_REPLY_BE_FIX_EN;
+> +	val |= OPT1_PCIE_BRIDGE_HOLE_DET_EN;
+> +	val |= OPT1_L1_INT_STATUS_MASK_POL;
+> +	__raw_writel(val, priv->base + PCIE_BRIDGE_OPT1_REG);
+> +
+> +	val = __raw_readl(priv->base + PCIE_BRIDGE_RC_INT_MASK_REG);
+> +	val |= PCIE_RC_INT_A;
+> +	val |= PCIE_RC_INT_B;
+> +	val |= PCIE_RC_INT_C;
+> +	val |= PCIE_RC_INT_D;
+> +	__raw_writel(val, priv->base + PCIE_BRIDGE_RC_INT_MASK_REG);
+> +
+> +	val = __raw_readl(priv->base + PCIE_BRIDGE_OPT2_REG);
+> +	/* enable credit checking and error checking */
+> +	val |= OPT2_TX_CREDIT_CHK_EN;
+> +	val |= OPT2_UBUS_UR_DECODE_DIS;
+> +	/* set device bus/func for the pcie device */
+> +	val |= (PCIE_BUS_DEVICE << OPT2_CFG_TYPE1_BUS_NO_SHIFT);
+> +	val |= OPT2_CFG_TYPE1_BD_SEL;
+> +	__raw_writel(val, priv->base + PCIE_BRIDGE_OPT2_REG);
+> +
+> +	/* setup class code as bridge */
+> +	val = __raw_readl(priv->base + PCIE_IDVAL3_REG);
+> +	val &= ~IDVAL3_CLASS_CODE_MASK;
+> +	val |= (PCI_CLASS_BRIDGE_PCI << IDVAL3_SUBCLASS_SHIFT);
+> +	__raw_writel(val, priv->base + PCIE_IDVAL3_REG);
+> +
+> +	/* disable bar1 size */
+> +	val = __raw_readl(priv->base + PCIE_CONFIG2_REG);
+> +	val &= ~CONFIG2_BAR1_SIZE_MASK;
+> +	__raw_writel(val, priv->base + PCIE_CONFIG2_REG);
+> +
+> +	/* set bar0 to little endian */
+> +	val = (bcm6328_pcie_mem_resource.start >> 20)
+> +	      << BASEMASK_BASE_SHIFT;
+> +	val |= (bcm6328_pcie_mem_resource.end >> 20) << BASEMASK_MASK_SHIFT;
+> +	val |= BASEMASK_REMAP_EN;
+> +	__raw_writel(val, priv->base + PCIE_BRIDGE_BAR0_BASEMASK_REG);
+> +
+> +	val = (bcm6328_pcie_mem_resource.start >> 20)
+> +	      << REBASE_ADDR_BASE_SHIFT;
+> +	__raw_writel(val, priv->base + PCIE_BRIDGE_BAR0_REBASE_ADDR_REG);
+> +}
+> +
+> +static int bcm6328_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct bcm6328_pcie *priv = &bcm6328_pcie;
+> +	int ret;
+> +
+> +	of_pci_check_probe_only();
+
+Why do you need this?
+
+> +	priv->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	priv->serdes = syscon_regmap_lookup_by_phandle(np, "brcm,serdes");
+> +	if (IS_ERR(priv->serdes))
+> +		return PTR_ERR(priv->serdes);
+> +
+> +	priv->reset = devm_reset_control_get_exclusive(dev, "pcie");
+> +	if (IS_ERR(priv->reset))
+> +		return PTR_ERR(priv->reset);
+> +
+> +	priv->reset_ext = devm_reset_control_get_exclusive(dev, "pcie-ext");
+> +	if (IS_ERR(priv->reset_ext))
+> +		return PTR_ERR(priv->reset_ext);
+> +
+> +	priv->reset_core = devm_reset_control_get_exclusive(dev, "pcie-core");
+> +	if (IS_ERR(priv->reset_core))
+> +		return PTR_ERR(priv->reset_core);
+> +
+> +	priv->reset_hard = devm_reset_control_get_optional_exclusive(dev,
+> +		"pcie-hard");
+> +	if (IS_ERR(priv->reset_hard))
+> +		return PTR_ERR(priv->reset_hard);
+> +
+> +	priv->clk = devm_clk_get(dev, "pcie");
+> +	if (IS_ERR(priv->clk))
+> +		return PTR_ERR(priv->clk);
+> +
+> +	ret = clk_prepare_enable(priv->clk);
+> +	if (ret) {
+> +		dev_err(dev, "could not enable clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	pci_load_of_ranges(&bcm6328_pcie_controller, np);
+
+Please use the generic pci_parse_request_of_pci_ranges() as most PCIe
+host drivers do, instead of the MIPS-specific pci_load_of_ranges().
+
+I know that's probably not a trivial change, but it would help remove
+a lot of unnecessarily MIPS-specific code from this driver and its
+dependencies.
+
+> +	if (!bcm6328_pcie_mem_resource.start)
+> +		return -EINVAL;
+> +
+> +	of_pci_parse_bus_range(np, &bcm6328_pcie_busn_resource);
+> +
+> +	bcm6328_pcie_reset(priv);
+> +	bcm6328_pcie_setup(priv);
+> +
+> +	register_pci_controller(&bcm6328_pcie_controller);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id bcm6328_pcie_of_match[] = {
+> +	{ .compatible = "brcm,bcm6328-pcie", },
+> +	{ .compatible = "brcm,bcm6362-pcie", },
+> +	{ .compatible = "brcm,bcm63268-pcie", },
+> +	{ /* sentinel */ },
+> +};
+> +
+> +static struct platform_driver bcm6328_pcie_driver = {
+> +	.driver	= {
+> +		.name = "bcm6328-pcie",
+> +		.of_match_table = bcm6328_pcie_of_match,
+> +	},
+> +	.probe = bcm6328_pcie_probe,
+> +};
+> +builtin_platform_driver(bcm6328_pcie_driver);
+> -- 
+> 2.27.0
+> 
