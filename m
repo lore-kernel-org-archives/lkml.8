@@ -2,186 +2,192 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D7AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD3B207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4328820734
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:13:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Awadm/m6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgFQOM5 (ORCPT
+        id S1726955AbgFQONK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 10:12:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2628 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726328AbgFQOM4 (ORCPT
+        Wed, 17 Jun 2020 10:13:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbgFQONJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 10:12:56 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05HE6Tjk135905;
-        Wed, 17 Jun 2020 10:12:48 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31q6hdr6du-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 10:12:48 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05HE7P0c146770;
-        Wed, 17 Jun 2020 10:12:48 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31q6hdr6cr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 10:12:48 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05HEBHtQ000389;
-        Wed, 17 Jun 2020 14:12:46 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03fra.de.ibm.com with ESMTP id 31q6c90fef-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 14:12:46 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05HEChCu14614638
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jun 2020 14:12:43 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 46F6D11C058;
-        Wed, 17 Jun 2020 14:12:43 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6A6AC11C050;
-        Wed, 17 Jun 2020 14:12:42 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.186.32])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 17 Jun 2020 14:12:42 +0000 (GMT)
-Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
- IOMMU feature
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
- <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
- <e5204218-6e93-8713-6056-2a62531c310e@amd.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <64544f14-eecf-6dda-d232-0bceeb2840ff@linux.ibm.com>
-Date:   Wed, 17 Jun 2020 16:12:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 17 Jun 2020 10:13:09 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 373A1C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:13:08 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id j202so1342681ybg.6
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:13:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w7Sk4BmGiurLqmgxw2Dzz1OAQhCbcvIbUaVFjs9AqkE=;
+        b=Awadm/m6rOqaV6Y5mlaX9Gfsg4s6zvEHdiKJzd33cFxAGPhfc6fxVxk9vji8B76pwn
+         WI6WLVUJuJer03q0E2LmtIdQ8qom8Bpcu4BUFhOGFqkZALehT38njMGF6IkdOKPIhpV+
+         FXkzC77+bRqUllloHbP2B9aNgjd6kT3yq/C+LJcQKBgJ+3WbFgloQetLZa2Hy4C3hTui
+         1L6MC/UioAkNRtWg0mFoBwH0sfwbY69FC/wS6CfAO6hivd0RhfyRVQyaN8FPYD55ruzx
+         D1uGYEMQKSp0QnHfz4ehko8OIfs71dlk/238m6xXPl/bytH0wg00cHZQcat8+7VINud1
+         Ke+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w7Sk4BmGiurLqmgxw2Dzz1OAQhCbcvIbUaVFjs9AqkE=;
+        b=E8UIe+lwrXvGOchpaOniA9bYwJW1xURBlQ7BjnhBlUkTMggO8PZ6UpNWZXd6G7y3xL
+         i4x1m+jQjdpx91q+eFDli6ACwXY1IYTUcJQKF2hiE/ACspq2bVZ/xWhnu6c6vMg7Nfe4
+         3cFbNYglCOdywBQ68gSoMnMffD5T4saXoEI99YnX1n6t8J3OZlMYSdgJpNWrTgradtX5
+         PUiEQVHLkfzmGcy/oypKuuhK+92gg1Q3rjg8454hjYHj/hETXp7zufg1wr1dcRejT23x
+         eF6u/sxS2GLIL6sZyYJ6NkrU2gJOqGYAal8d/9nROocL2JodcCDt1XUDJtXM7i47PMZT
+         22Mw==
+X-Gm-Message-State: AOAM5309uC08Gbm/i8KHF6O407MNlYUgcHGHI39wa98FL2hH5P7g2uUa
+        yJ/8ZUyQuV5vBlgbsovDBdxW6Oxvofx9hoKyI502Rw==
+X-Google-Smtp-Source: ABdhPJxR5WKL9bWfdzNlZuOGFZs0xv21TnQVWWVSPRx/9BSk+4es74k7/DHIIHxLcqG0kL7DixeloEZGAQDnq/R0wsQ=
+X-Received: by 2002:a25:be81:: with SMTP id i1mr12981047ybk.243.1592403187417;
+ Wed, 17 Jun 2020 07:13:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e5204218-6e93-8713-6056-2a62531c310e@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-17_04:2020-06-17,2020-06-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- mlxscore=0 priorityscore=1501 cotscore=-2147483648 malwarescore=0
- suspectscore=0 clxscore=1015 lowpriorityscore=0 mlxlogscore=999
- spamscore=0 impostorscore=0 bulkscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006170105
+References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
+ <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
+In-Reply-To: <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Wed, 17 Jun 2020 17:12:56 +0300
+Message-ID: <CAD8XO3axk-_BP1Nk_vT=u08OSuLmuEzXoSnmdB8pHKR_G2A1dw@mail.gmail.com>
+Subject: Re: [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        peterhuewe@gmx.de,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 17 Jun 2020 at 16:58, Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> Hi Maxim,
+>
+> On Thu, 4 Jun 2020 at 23:28, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+> >
+> > With the evolving use-cases for TEE bus, now it's required to support
+> > multi-stage enumeration process. But using a simple index doesn't
+> > suffice this requirement and instead leads to duplicate sysfs entries.
+> > So instead switch to use more informative device UUID for sysfs entry
+> > like:
+> > /sys/bus/tee/devices/optee-ta-<uuid>
+> >
+> > Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> > Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
+> >  MAINTAINERS                                       | 1 +
+> >  drivers/tee/optee/device.c                        | 9 ++++++---
+> >  3 files changed, 15 insertions(+), 3 deletions(-)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> > new file mode 100644
+> > index 000000000000..0ae04ae5374a
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> > @@ -0,0 +1,8 @@
+> > +What:          /sys/bus/tee/devices/optee-ta-<uuid>/
+> > +Date:           May 2020
+> > +KernelVersion   5.7
+> > +Contact:        tee-dev@lists.linaro.org
+> > +Description:
+> > +               OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
+> > +               matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
+> > +               are free to create needed API under optee-ta-<uuid> directory.
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index ecc0749810b0..6717afef2de3 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -12516,6 +12516,7 @@ OP-TEE DRIVER
+> >  M:     Jens Wiklander <jens.wiklander@linaro.org>
+> >  L:     tee-dev@lists.linaro.org
+> >  S:     Maintained
+> > +F:     Documentation/ABI/testing/sysfs-bus-optee-devices
+> >  F:     drivers/tee/optee/
+> >
+> >  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
+> > diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
+> > index e3a148521ec1..23d264c8146e 100644
+> > --- a/drivers/tee/optee/device.c
+> > +++ b/drivers/tee/optee/device.c
+> > @@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
+> >         return 0;
+> >  }
+> >
+> > -static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+> > +static int optee_register_device(const uuid_t *device_uuid)
+> >  {
+> >         struct tee_client_device *optee_device = NULL;
+> >         int rc;
+> > @@ -75,7 +75,10 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+> >                 return -ENOMEM;
+> >
+> >         optee_device->dev.bus = &tee_bus_type;
+> > -       dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
+> > +       if (dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid)) {
+>
+> You should be using format specifier as: "%pUb" instead of "%pUl" as
+> UUID representation for TAs is in big endian format. See below:
+>
+> # ls /sys/bus/tee/devices/
+> optee-ta-405b6ad9-e5c3-e321-8794-1002a5d5c61b
+> optee-ta-71d950bc-c9d4-c442-82cb-343fb7f37896
+> optee-ta-e70f4af0-5d1f-9b4b-abf7-619b85b4ce8c
+>
+> While UUID for fTPM TA is in big endian format:
+> bc50d971-d4c9-42c4-82cb-343fb7f37896
+>
+> Sorry that I missed it during review and noticed this while testing.
+>
+> With the above fix included, I tested this series using fTPM early TA
+> on Qemu for aarch64 and used basic random number generation test using
+> tpm2-tools. So feel free to add:
+>
+> Tested-by: Sumit Garg <sumit.garg@linaro.org>
+>
+> -Sumit
+>
+Oh, thanks. I will do v9 with this change and mailing list change.
+Probalby you also need to check which prints are inside optee-os. I
+think I copypasted this print from somewhere.
 
+Maxim.
 
-On 2020-06-17 15:36, Tom Lendacky wrote:
-> On 6/17/20 5:43 AM, Pierre Morel wrote:
->> An architecture protecting the guest memory against unauthorized host
->> access may want to enforce VIRTIO I/O device protection through the
->> use of VIRTIO_F_IOMMU_PLATFORM.
->>
->> Let's give a chance to the architecture to accept or not devices
->> without VIRTIO_F_IOMMU_PLATFORM.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> Acked-by: Jason Wang <jasowang@redhat.com>
->> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
->> ---
->>   arch/s390/mm/init.c     |  6 ++++++
->>   drivers/virtio/virtio.c | 22 ++++++++++++++++++++++
->>   include/linux/virtio.h  |  2 ++
->>   3 files changed, 30 insertions(+)
->>
->> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
->> index 6dc7c3b60ef6..215070c03226 100644
->> --- a/arch/s390/mm/init.c
->> +++ b/arch/s390/mm/init.c
->> @@ -45,6 +45,7 @@
->>   #include <asm/kasan.h>
->>   #include <asm/dma-mapping.h>
->>   #include <asm/uv.h>
->> +#include <linux/virtio.h>
->>   
->>   pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
->>   
->> @@ -161,6 +162,11 @@ bool force_dma_unencrypted(struct device *dev)
->>   	return is_prot_virt_guest();
->>   }
->>   
->> +int arch_needs_virtio_iommu_platform(struct virtio_device *dev)
->> +{
->> +	return is_prot_virt_guest();
->> +}
->> +
->>   /* protected virtualization */
->>   static void pv_init(void)
->>   {
->> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
->> index a977e32a88f2..aa8e01104f86 100644
->> --- a/drivers/virtio/virtio.c
->> +++ b/drivers/virtio/virtio.c
->> @@ -167,6 +167,21 @@ void virtio_add_status(struct virtio_device *dev, unsigned int status)
->>   }
->>   EXPORT_SYMBOL_GPL(virtio_add_status);
->>   
->> +/*
->> + * arch_needs_virtio_iommu_platform - provide arch specific hook when finalizing
->> + *				      features for VIRTIO device dev
->> + * @dev: the VIRTIO device being added
->> + *
->> + * Permits the platform to provide architecture specific functionality when
->> + * devices features are finalized. This is the default implementation.
->> + * Architecture implementations can override this.
->> + */
->> +
->> +int __weak arch_needs_virtio_iommu_platform(struct virtio_device *dev)
->> +{
->> +	return 0;
->> +}
->> +
->>   int virtio_finalize_features(struct virtio_device *dev)
->>   {
->>   	int ret = dev->config->finalize_features(dev);
->> @@ -179,6 +194,13 @@ int virtio_finalize_features(struct virtio_device *dev)
->>   	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
->>   		return 0;
->>   
->> +	if (arch_needs_virtio_iommu_platform(dev) &&
->> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-> 
-> Just a style nit, but the "!virtio..." should be directly under the
-> "arch_...", not tabbed out.
-
-Oh right, thanks!
-
-Pierre
-
-> 
-> Thanks,
-> Tom
-> 
-
-...snip...
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
+> > +               kfree(optee_device);
+> > +               return -ENOMEM;
+> > +       }
+> >         uuid_copy(&optee_device->id.uuid, device_uuid);
+> >
+> >         rc = device_register(&optee_device->dev);
+> > @@ -144,7 +147,7 @@ int optee_enumerate_devices(void)
+> >         num_devices = shm_size / sizeof(uuid_t);
+> >
+> >         for (idx = 0; idx < num_devices; idx++) {
+> > -               rc = optee_register_device(&device_uuid[idx], idx);
+> > +               rc = optee_register_device(&device_uuid[idx]);
+> >                 if (rc)
+> >                         goto out_shm;
+> >         }
+> > --
+> > 2.17.1
+> >
