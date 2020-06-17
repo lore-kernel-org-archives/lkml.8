@@ -2,139 +2,183 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFD0214DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E3720776
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:58:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="oHJZsmwD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pX61bJji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgFQN6F (ORCPT
+        id S1726893AbgFQN6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:58:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54156 "EHLO
+        Wed, 17 Jun 2020 09:58:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgFQN6D (ORCPT
+        with ESMTP id S1726496AbgFQN63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:58:03 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AFB3C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 06:58:01 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id b6so2429746wrs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 06:58:01 -0700 (PDT)
+        Wed, 17 Jun 2020 09:58:29 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4836FC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 06:58:29 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id z9so2938476ljh.13
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 06:58:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=czz/LMTUSEyCUOCBc2bpVTh7IggBB8ARvYVKv0fzm0w=;
-        b=oHJZsmwDgazVpFYFy9f1b0DXnvsC0m5vxNXELt2qWUG2KfVfS0Fn9Az8Mm4tsT5Yun
-         T0BN8K2g46PCiRW5Vtd3CYq9U6e5qZuldGsqUGrQVKibeXmeDBk6U6AB2EVkl4AOMQoQ
-         bb1tNkHgfcvlaxd0Rj1tDcDG32lDe0/EQGnL4=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MLDiEuuNfJhWVK1I22iFWyRL9tqHD8cVwzgyE91Mz3s=;
+        b=pX61bJji52z48r7wt+tWy3rQ+DH7PbhTwh06jxsDGu+mRiyZ3DZtqcDG+frmoxZt4c
+         p/Rdh5X9077wQFDpuru7e8LbuLvGeZwGDlzoc2CWVwYwC+qj0MpehNyaz/kO6wu9FQwR
+         pndgcwWzYmMSn0oMbVqTN1yG9ytkJmw2Lk+HT3hsfx0Sy3RWSE5wGAOLh/Sgj0ChQWPD
+         qXJsd5G0osmuvnEZ+IfchDQZQ5FQfH7kCWSKT7nM5chmmyEoAdMNCUjE9LLKqGuvXue1
+         cwD1xmTFnZElTyBAEqtNUnDvcbULj2cXsAUDmLECz2ke07KqZ23MEmVwqwVjNLUd2wSR
+         wZUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=czz/LMTUSEyCUOCBc2bpVTh7IggBB8ARvYVKv0fzm0w=;
-        b=m7Lb5PgeJIkpoSkmPbWf3K914KkwwvBW0bYjydjy3bX5P21STpBwyH8Y+JePt+eKAA
-         S8K5VovTFUDWpb9ZQHG2sBUsByTnpi4kZJVDTfov3kKo1xUW+WGZ+jOiGQ2sc+/lbe1D
-         JhCnlDdpsDqVtimOarugeHsqlfFRlBt+uzDqEArujk29RgiW1OTSxznBjGG/tzXjytF8
-         MoeMy/t8iUkJAvBLtoX0bozwzGLmnbwo76ppHBGWSFFN+FQ9N5tYxwjR45S1k3iO34Qr
-         aH6fnnpHHCDxcieC71WmNQpYVsr/485E9vOxGJkBJwgWoMHscm0RQrrLR1TkBWQTR2op
-         F8Jw==
-X-Gm-Message-State: AOAM5303yRauFyOISsP3UViVl1IsuFmIDmkUUPmJ40VDvvPBRMc5plCw
-        jIfzMNa+/2mL6te0E9uD/Ys1Pw==
-X-Google-Smtp-Source: ABdhPJxEWNxFxNxnJ3uLML+OdoNnGyXOqpBVbo7UMqTkjK8aBRi7UkKmaFuOunrzbNW+H9nqkV6M+Q==
-X-Received: by 2002:a5d:4286:: with SMTP id k6mr8336535wrq.140.1592402279710;
-        Wed, 17 Jun 2020 06:57:59 -0700 (PDT)
-Received: from localhost ([2a01:4b00:8432:8a00:63de:dd93:20be:f460])
-        by smtp.gmail.com with ESMTPSA id 67sm35206526wrk.49.2020.06.17.06.57.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 06:57:58 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 14:57:58 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-Message-ID: <20200617135758.GA548179@chrisdown.name>
-References: <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
- <20200519075213.GF32497@dhcp22.suse.cz>
- <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
- <20200519084535.GG32497@dhcp22.suse.cz>
- <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
- <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
- <20200520190906.GA558281@chrisdown.name>
- <20200521095515.GK6462@dhcp22.suse.cz>
- <20200521163450.GV6462@dhcp22.suse.cz>
- <CA+G9fYsdsgRmwLtSKJSzB1eWcUQ1z-_aaU+BNcQpker34XT6_w@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MLDiEuuNfJhWVK1I22iFWyRL9tqHD8cVwzgyE91Mz3s=;
+        b=tOlLu/UmulC2G68a4mvbkKif+4T6NURyvo+0LS57b7EUYpPC6gAFRr6xouewtxLE7B
+         KcRIytzO8OUFIPD+MHQhfvbEY78K9S/c8wDlOEJpQBUFpHpOHbiqaXgrw5PeBhY+WH8Q
+         BHYb7vags8Oh8Yy6CyIPojK+aAm2dNL4qS/DREljzIHKA2Nt8AJqTcWlRf4SPlA124pZ
+         jhN3ImqjZpt9GjVFL7CnTBu4woM+VzKnoP3Q7P3fdXEQIZefbn1gNOspKRWxKe0i3v6t
+         QXM406DfAUaxcf0tF/3SV1EtMda/bTziXFo3zHYIC8kulXRGARAc/F7I4h/6lT7LzZln
+         l7+w==
+X-Gm-Message-State: AOAM531QcIwE0xeQsbFH5aZ3rwhL58C6B5nNrYoAeQk0D1cOn3N6M6dX
+        Cn9Z67SZD8QG0yV/sCXtSBqJ8vtODD2DhmLtsbCZVfcqPz5qVQ==
+X-Google-Smtp-Source: ABdhPJxZbnVS7dm8L9M8mgWbiYnE/qRK7G9n0TXltwJD9k3GVyoHe4++Q8DEIUTVAf5MSBMRAhHi+ho6FdlkYcVm+Ak=
+X-Received: by 2002:a2e:7e08:: with SMTP id z8mr3803277ljc.339.1592402307692;
+ Wed, 17 Jun 2020 06:58:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYsdsgRmwLtSKJSzB1eWcUQ1z-_aaU+BNcQpker34XT6_w@mail.gmail.com>
-User-Agent: Mutt/1.14.3 (2020-06-14)
+References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
+In-Reply-To: <20200604175851.758-2-maxim.uvarov@linaro.org>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Wed, 17 Jun 2020 19:28:16 +0530
+Message-ID: <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
+Subject: Re: [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+To:     Maxim Uvarov <maxim.uvarov@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        peterhuewe@gmx.de,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Naresh Kamboju writes:
->mkfs -t ext4 /dev/disk/by-id/ata-TOSHIBA_MG04ACA100N_Y8RQK14KF6XF
->mke2fs 1.43.8 (1-Jan-2018)
->Creating filesystem with 244190646 4k blocks and 61054976 inodes
->Filesystem UUID: 7c380766-0ed8-41ba-a0de-3c08e78f1891
->Superblock backups stored on blocks:
->32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
->4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
->102400000, 214990848
->Allocating group tables:    0/7453 done
->Writing inode tables:    0/7453 done
->Creating journal (262144 blocks): [   51.544525] under min:0 emin:0
->[   51.845304] under min:0 emin:0
->[   51.848738] under min:0 emin:0
->[   51.858147] under min:0 emin:0
->[   51.861333] under min:0 emin:0
->[   51.862034] under min:0 emin:0
->[   51.862442] under min:0 emin:0
->[   51.862763] under min:0 emin:0
+Hi Maxim,
 
-Thanks, this helps a lot. Somehow we're entering mem_cgroup_below_min even when 
-min/emin is 0 (which should indeed be the case if you haven't set them in the 
-hierarchy).
+On Thu, 4 Jun 2020 at 23:28, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+>
+> With the evolving use-cases for TEE bus, now it's required to support
+> multi-stage enumeration process. But using a simple index doesn't
+> suffice this requirement and instead leads to duplicate sysfs entries.
+> So instead switch to use more informative device UUID for sysfs entry
+> like:
+> /sys/bus/tee/devices/optee-ta-<uuid>
+>
+> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
+>  MAINTAINERS                                       | 1 +
+>  drivers/tee/optee/device.c                        | 9 ++++++---
+>  3 files changed, 15 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+>
+> diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> new file mode 100644
+> index 000000000000..0ae04ae5374a
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> @@ -0,0 +1,8 @@
+> +What:          /sys/bus/tee/devices/optee-ta-<uuid>/
+> +Date:           May 2020
+> +KernelVersion   5.7
+> +Contact:        tee-dev@lists.linaro.org
+> +Description:
+> +               OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
+> +               matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
+> +               are free to create needed API under optee-ta-<uuid> directory.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ecc0749810b0..6717afef2de3 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12516,6 +12516,7 @@ OP-TEE DRIVER
+>  M:     Jens Wiklander <jens.wiklander@linaro.org>
+>  L:     tee-dev@lists.linaro.org
+>  S:     Maintained
+> +F:     Documentation/ABI/testing/sysfs-bus-optee-devices
+>  F:     drivers/tee/optee/
+>
+>  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
+> diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
+> index e3a148521ec1..23d264c8146e 100644
+> --- a/drivers/tee/optee/device.c
+> +++ b/drivers/tee/optee/device.c
+> @@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
+>         return 0;
+>  }
+>
+> -static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+> +static int optee_register_device(const uuid_t *device_uuid)
+>  {
+>         struct tee_client_device *optee_device = NULL;
+>         int rc;
+> @@ -75,7 +75,10 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+>                 return -ENOMEM;
+>
+>         optee_device->dev.bus = &tee_bus_type;
+> -       dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
+> +       if (dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid)) {
 
-My guess is that page_counter_read(&memcg->memory) is 0, which means 
-mem_cgroup_below_min will return 1.
+You should be using format specifier as: "%pUb" instead of "%pUl" as
+UUID representation for TAs is in big endian format. See below:
 
-However, I don't know for sure why that should then result in the OOM killer 
-coming along. My guess is that since this memcg has 0 pages to scan anyway, we 
-enter premature OOM under some conditions. I don't know why we wouldn't have 
-hit that with the old version of mem_cgroup_protected that returned 
-MEMCG_PROT_* members, though.
+# ls /sys/bus/tee/devices/
+optee-ta-405b6ad9-e5c3-e321-8794-1002a5d5c61b
+optee-ta-71d950bc-c9d4-c442-82cb-343fb7f37896
+optee-ta-e70f4af0-5d1f-9b4b-abf7-619b85b4ce8c
 
-Can you please try the patch with the `>=` checks in mem_cgroup_below_min and 
-mem_cgroup_below_low changed to `>`? If that fixes it, then that gives a strong 
-hint about what's going on here.
+While UUID for fTPM TA is in big endian format:
+bc50d971-d4c9-42c4-82cb-343fb7f37896
 
-Thanks for your help!
+Sorry that I missed it during review and noticed this while testing.
+
+With the above fix included, I tested this series using fTPM early TA
+on Qemu for aarch64 and used basic random number generation test using
+tpm2-tools. So feel free to add:
+
+Tested-by: Sumit Garg <sumit.garg@linaro.org>
+
+-Sumit
+
+> +               kfree(optee_device);
+> +               return -ENOMEM;
+> +       }
+>         uuid_copy(&optee_device->id.uuid, device_uuid);
+>
+>         rc = device_register(&optee_device->dev);
+> @@ -144,7 +147,7 @@ int optee_enumerate_devices(void)
+>         num_devices = shm_size / sizeof(uuid_t);
+>
+>         for (idx = 0; idx < num_devices; idx++) {
+> -               rc = optee_register_device(&device_uuid[idx], idx);
+> +               rc = optee_register_device(&device_uuid[idx]);
+>                 if (rc)
+>                         goto out_shm;
+>         }
+> --
+> 2.17.1
+>
