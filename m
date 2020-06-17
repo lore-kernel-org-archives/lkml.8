@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66B3C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 008EC21582
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB67C2166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgFQXl2 (ORCPT
+        id S1727900AbgFQXlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 19:41:28 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57886 "EHLO
+        Wed, 17 Jun 2020 19:41:35 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57884 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbgFQXks (ORCPT
+        with ESMTP id S1726848AbgFQXkr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 19:40:48 -0400
+        Wed, 17 Jun 2020 19:40:47 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 37E59803202A;
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 065938040A6A;
         Wed, 17 Jun 2020 23:40:43 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Gg27YjHjmQiO; Thu, 18 Jun 2020 02:40:42 +0300 (MSK)
+        with ESMTP id Xid-sN17JxPT; Thu, 18 Jun 2020 02:40:42 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -39,9 +39,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 7/9] dmaengine: dw: Add dummy device_caps callback
-Date:   Thu, 18 Jun 2020 02:40:26 +0300
-Message-ID: <20200617234028.25808-8-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v6 6/9] dmaengine: dw: Set DMA device max segment size parameter
+Date:   Thu, 18 Jun 2020 02:40:25 +0300
+Message-ID: <20200617234028.25808-7-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200617234028.25808-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200617234028.25808-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,13 +53,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
-have non-uniform DMA capabilities per device channels, let's add
-the DW DMA specific device_caps callback to expose that specifics up to
-the DMA consumer. It's a dummy function for now. We'll fill it in with
-capabilities overrides in the next commits.
+Maximum block size DW DMAC configuration corresponds to the max segment
+size DMA parameter in the DMA core subsystem notation. Lets set it with a
+value specific to the probed DW DMA controller. It shall help the DMA
+clients to create size-optimized SG-list items for the controller. This in
+turn will cause less dw_desc allocations, less LLP reinitializations,
+better DMA device performance.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
@@ -69,37 +71,37 @@ Cc: devicetree@vger.kernel.org
 
 ---
 
+Changelog v2:
+- This is a new patch created in place of the dropped one:
+  "dmaengine: dw: Add LLP and block size config accessors".
+
 Changelog v3:
-- This is a new patch created as a result of the discussion with Vinud and
-  Andy in the framework of DW DMA burst and LLP capabilities.
+- Use the block_size found for the very first channel instead of looking for
+  the maximum of maximum block sizes.
+- Don't define device-specific device_dma_parameters object, since it has
+  already been defined by the platform device core.
 ---
- drivers/dma/dw/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/dma/dw/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index fb95920c429e..ceded21537e2 100644
+index 33e99d95b3d3..fb95920c429e 100644
 --- a/drivers/dma/dw/core.c
 +++ b/drivers/dma/dw/core.c
-@@ -1049,6 +1049,11 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
- 	dev_vdbg(chan2dev(chan), "%s: done\n", __func__);
- }
+@@ -1229,6 +1229,13 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 			     BIT(DMA_MEM_TO_MEM);
+ 	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
  
-+static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
-+{
++	/*
++	 * For now there is no hardware with non uniform maximum block size
++	 * across all of the device channels, so we set the maximum segment
++	 * size as the block size found for the very first channel.
++	 */
++	dma_set_max_seg_size(dw->dma.dev, dw->chan[0].block_size);
 +
-+}
-+
- int do_dma_probe(struct dw_dma_chip *chip)
- {
- 	struct dw_dma *dw = chip->dw;
-@@ -1214,6 +1219,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	dw->dma.device_prep_dma_memcpy = dwc_prep_dma_memcpy;
- 	dw->dma.device_prep_slave_sg = dwc_prep_slave_sg;
- 
-+	dw->dma.device_caps = dwc_caps;
- 	dw->dma.device_config = dwc_config;
- 	dw->dma.device_pause = dwc_pause;
- 	dw->dma.device_resume = dwc_resume;
+ 	err = dma_async_device_register(&dw->dma);
+ 	if (err)
+ 		goto err_dma_register;
 -- 
 2.26.2
 
