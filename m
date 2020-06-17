@@ -2,165 +2,183 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 578FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36172C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB8321532
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:15:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WckloiLg"
+	by mail.kernel.org (Postfix) with ESMTP id 11A9B21548
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592432221;
+	bh=KowlxG65tz9vfiybuZAojROsw0Pm5+V1piEoxV5K5yc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T3rP8eeg53vaspGBgp34joA+1Xaut4Pa2cJfj9XOASbE6i4L+aNgB35DiZP8phpdD
+	 onTcYe6xocHZ8cqIODj3ii2MJO//W277Hi79YSlZnZwt1BdCZ8/UWlx7PvYlJvMW7Q
+	 n2MGB6AsjoCIbj6ieg7Ttwglcdem2SqxxH69H0pQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgFQWPs (ORCPT
+        id S1727048AbgFQWRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:15:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgFQWPs (ORCPT
+        Wed, 17 Jun 2020 18:17:00 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:33870 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726919AbgFQWQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:15:48 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6365AC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:15:48 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id s88so1721459pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:15:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=utLyEazY0Lxy25RnigtP2rxCKLns71B2z42HG9ml/D4=;
-        b=WckloiLg0RFwJrJdmcKNlWXSNfZ/6MQx67MHZDFh8c+yAskzSA6l5RIBqs3zddQnm2
-         WzDiiiw1LhLzjc1n7L91A2p7Kxb2n33xRnOvq5adE7m++wo6DD9qe3TIAE0m9ByUu8be
-         zdLjcFokB4JAHoo/6w6q5FnZnghxo3w3kkkeI=
+        Wed, 17 Jun 2020 18:16:59 -0400
+Received: by mail-il1-f194.google.com with SMTP id x18so3916181ilp.1;
+        Wed, 17 Jun 2020 15:16:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=utLyEazY0Lxy25RnigtP2rxCKLns71B2z42HG9ml/D4=;
-        b=fICNu0wcP0xrDa5kUAL9MYtib3roVixeArMHYdyJWT1NA8ITFnEqHHkQIUdqiapioD
-         iGmL1wHs3T4BV1S/qSGRq0Ag0CHvqp8jK+UQLu8JxPxslqyNKPWd7SevICEOYNRpRrYb
-         ouGdgm9Myrk+VkEcYRkldqR4XQOwlcs/z/iqCyihlJY3jjQEbjFyK98Ipms+5KzIxxYo
-         ezg92bLi9MRhFratkewEc2ZmqhrcZB8IMoq80mXjx375pOPTRLrh7hat+GTH0kkpBJ/X
-         +Rk1LaC3uqkvmZSq6yTgBg8/MexdO1/UW4TTKIestuj2zee9QAnFxWuKQYAbLyeKKa8I
-         tUow==
-X-Gm-Message-State: AOAM531Ea+VDn3q1mATwC3UaNNVnS2XhIzGOMkdmbOro/fw0/+4rJ+IE
-        1/e4lgR+wXdAaWYDoYYF8lcYxQ==
-X-Google-Smtp-Source: ABdhPJxlTozeERdzOMihQqX1dEP3H+HnoPVAcG9HIrnzfmpQZGVKOE9LHSN9pSjhSEaGM204Pa8oQQ==
-X-Received: by 2002:a17:902:b206:: with SMTP id t6mr1058159plr.262.1592432147885;
-        Wed, 17 Jun 2020 15:15:47 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id z1sm776586pfr.88.2020.06.17.15.15.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 15:15:47 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 15:15:46 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org, robdclark@gmail.com,
-        robdclark@chromium.org, stanimir.varbanov@linaro.org,
-        viresh.kumar@linaro.org, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/6] DVFS for IO devices on sdm845 and sc7180
-Message-ID: <20200617221546.GC4525@google.com>
-References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
+        bh=/dcY53hMYQl/W+BZuZm5AIbg/CG1JMRTeXapBxnAQnQ=;
+        b=cCD97buxR44ylCSMBDeJRaiGlYT7TPaUN6hqN5+C/w2NXW4ALb8n6hDmqw8UXg7AEV
+         bvugJmJhcevikmtf/A/h7QlekyEELynR9CI7r3aU8ZHmE6fbZP3uprHmhzRQMOGeLDw5
+         olEh3WH3TffXcVEyRfujtkzvZJi5BL0BFBqVkxH5uLEqfKSZQBfvQjcAHt+sTmv6efLb
+         EGWU81wphAGUTN4Pw8CBeYfQE2IbuJjHhsCn8U6leidgbOt/KUs7IUY07fROUuC741kz
+         DUQ+5kYD4VjKNna69fwX5fweIHiO2ndKF5rT7KZhBuD1Zvp2R31RLXZh3XvOImk93SIG
+         fo6w==
+X-Gm-Message-State: AOAM530gm0LOvzxXcavQstZci8sU0gfr0dw+3J3XH1iK3JIQKaA5w/tz
+        9aUI1FUyjzmeYUDBXlABtg==
+X-Google-Smtp-Source: ABdhPJy/RDAuO2ERCKKVsMEchWk9PFvHKMyA40PezXAcNnCIINfQN0maDzTb8FiPAk/8JZR1aEbqIg==
+X-Received: by 2002:a92:db01:: with SMTP id b1mr1140964iln.233.1592432218330;
+        Wed, 17 Jun 2020 15:16:58 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id c62sm523052ill.62.2020.06.17.15.16.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 15:16:57 -0700 (PDT)
+Received: (nullmailer pid 2931941 invoked by uid 1000);
+        Wed, 17 Jun 2020 22:16:56 -0000
+Date:   Wed, 17 Jun 2020 16:16:56 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     wg@grandegger.com, mkl@pengutronix.de, kernel@martin.sperl.org,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RESEND PATCH 1/6] dt-bindings: can: Document devicetree
+ bindings for MCP25XXFD
+Message-ID: <20200617221656.GA2927781@bogus>
+References: <20200610074711.10969-1-manivannan.sadhasivam@linaro.org>
+ <20200610074711.10969-2-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <20200610074711.10969-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-What is the plan for landing these, it seems not all must/should
-go through the QCOM tree.
-
-My guesses:
-
-tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
-spi: spi-geni-qcom: Use OPP API to set clk/perf state
-  QCOM tree due to shared dependency on change in include/linux/qcom-geni-se.h
-
-drm/msm/dpu: Use OPP API to set clk/perf state
-drm/msm: dsi: Use OPP API to set clk/perf state
-  drm/msm tree
-
-media: venus: core: Add support for opp tables/perf voting
-  venus tree
-
-spi: spi-qcom-qspi: Use OPP API to set clk/perf state
-  SPI tree
-
-
-Does this make sense or are there any dependencies I'm missing?
-
-Thanks
-
-Matthias
-
-On Mon, Jun 15, 2020 at 05:32:38PM +0530, Rajendra Nayak wrote:
-> Changes in v6:
-> 1. rebased on 5.8-rc1, no functional change. 
+On Wed, Jun 10, 2020 at 01:17:06PM +0530, Manivannan Sadhasivam wrote:
+> From: Martin Sperl <kernel@martin.sperl.org>
 > 
-> Changes in v5:
-> 1. Opp cleanup path fixed up across drivers
+> Add devicetree YAML bindings for Microchip MCP25XXFD CAN controller.
 > 
-> Changes in v4:
-> 1. Fixed all review feedback on v3
-> 2. Dropped the dts patches, will post as a seperate series once
-> driver changes are reviewed and merged.
-> The driver changes without DT updates to include OPP tables will
-> have zero functional change.
-> 3. Dropped the mmc/sdhc patch, which is a standalone patch. will
-> repost if needed seperately.
+> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+> [mani: converted to YAML binding]
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../bindings/net/can/microchip,mcp25xxfd.yaml | 82 +++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.yaml
 > 
-> Changes in v3:
-> 1. Added better error handling for dev_pm_opp_of_add_table()
-> 2. Some minor changes and fixes in 'PATCH 12/17' as compared to v2
-> 3. Dropped the mmc patch picked up by Ulf [2]
-> 
-> Changes in v2:
-> 1. Added error handling for dev_pm_opp_set_clkname()
-> and dev_pm_opp_of_add_table()
-> 2. Used dev_pm_opp_put_clkname() in the cleanup path
-> 3. Dropped the OPP patch pulled in by Viresh [1]
-> 4. Dropped the UFS patches since they had some major rework
-> needed because of changes that were merged in the merge window
-> and I don't have a UFS device currently to validate the changes.
-> 
-> We have had support added in the OPP core for a while now to support
-> DVFS for IO devices, and this series uses that infrastructure to
-> add DVFS support for various IO devices in sdm845 and sc7180 SoCs.
-> 
-> [1] https://lkml.org/lkml/2020/4/14/98
-> [2] https://lore.kernel.org/patchwork/patch/1226381/
-> 
-> Rajendra Nayak (6):
->   tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
->   spi: spi-geni-qcom: Use OPP API to set clk/perf state
->   drm/msm/dpu: Use OPP API to set clk/perf state
->   drm/msm: dsi: Use OPP API to set clk/perf state
->   media: venus: core: Add support for opp tables/perf voting
->   spi: spi-qcom-qspi: Use OPP API to set clk/perf state
-> 
->  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  |  3 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        | 26 +++++++++++-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |  4 ++
->  drivers/gpu/drm/msm/dsi/dsi.h                  |  2 +
->  drivers/gpu/drm/msm/dsi/dsi_cfg.c              |  4 +-
->  drivers/gpu/drm/msm/dsi/dsi_host.c             | 58 ++++++++++++++++++++++++++
->  drivers/media/platform/qcom/venus/core.c       | 43 ++++++++++++++++---
->  drivers/media/platform/qcom/venus/core.h       |  5 +++
->  drivers/media/platform/qcom/venus/pm_helpers.c | 54 ++++++++++++++++++++++--
->  drivers/spi/spi-geni-qcom.c                    | 26 ++++++++++--
->  drivers/spi/spi-qcom-qspi.c                    | 28 ++++++++++++-
->  drivers/tty/serial/qcom_geni_serial.c          | 34 ++++++++++++---
->  include/linux/qcom-geni-se.h                   |  4 ++
->  13 files changed, 268 insertions(+), 23 deletions(-)
-> 
+> diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.yaml b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.yaml
+> new file mode 100644
+> index 000000000000..7b87ec328515
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.yaml
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/can/microchip,mcp25xxfd.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip MCP25XXFD stand-alone CAN controller binding
+> +
+> +maintainers:
+> +  -  Martin Sperl <kernel@martin.sperl.org>
+> +  -  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +properties:
+> +  compatible:
+> +    const: microchip,mcp2517fd
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  vdd-supply:
+> +    description: Regulator that powers the CAN controller
+> +
+> +  xceiver-supply:
+> +    description: Regulator that powers the CAN transceiver
+> +
+> +  microchip,clock-out-div:
+> +    description: Clock output pin divider
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+
+You can drop the 'allOf' now.
+
+> +    enum: [0, 1, 2, 4, 10]
+> +    default: 10
+> +
+> +  microchip,clock-div2:
+> +    description: Divide the internal clock by 2
+> +    type: boolean
+> +
+> +  microchip,gpio-open-drain:
+> +    description: Enable open-drain for all pins
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - interrupts
+> +  - gpio-controller
+
+And '#gpio-cells'?
+
+> +  - vdd-supply
+> +  - xceiver-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    spi {
+> +           #address-cells = <1>;
+> +           #size-cells = <0>;
+> +
+> +           can0: can@1 {
+> +                   compatible = "microchip,mcp2517fd";
+> +                   reg = <1>;
+> +                   clocks = <&clk24m>;
+> +                   interrupt-parent = <&gpio4>;
+> +                   interrupts = <13 0x8>;
+> +                   vdd-supply = <&reg5v0>;
+> +                   xceiver-supply = <&reg5v0>;
+> +                   gpio-controller;
+> +                   #gpio-cells = <2>;
+> +           };
+> +    };
+> +
+> +...
 > -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+> 2.17.1
 > 
