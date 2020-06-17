@@ -2,124 +2,139 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAFBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CAE92088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592425330;
-	bh=xNE9XSOvhghCOem7BB7ItlRidhpb63R/mvntoncsZiY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A+H0DNdv6rzK8iBDlN1Gb1B0pnJdhMETpz3XBCCUvi71Ok7xn/auwD8q4JRBZaVzo
-	 IGtw+0W4n32asn5QsuuRqXbP+qa/ArQHtvoU66dneUaaqf/2kH3lp/HQ3sRtZijA5u
-	 nNH1RCkx2CMNFIoFKbUFmyndmhsEIpt8Nyg6strg=
+	by mail.kernel.org (Postfix) with ESMTP id 618F62088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:23:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KUwEnnVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgFQUWI (ORCPT
+        id S1726927AbgFQUXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:22:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgFQUWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:22:08 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3124E217D9;
-        Wed, 17 Jun 2020 20:22:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592425327;
-        bh=xNE9XSOvhghCOem7BB7ItlRidhpb63R/mvntoncsZiY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cM/8adJS/CfoBabKgs5smCjZMrm8f4R2wBu/gfpLBZYw+kKE8o3U72M3S583OKTjP
-         PCrAgGaKQQvjKKN85m9N2/+zEAPa/OWP+SnRpU8VVUEdGURnzSYRgx2brhjdwglSNO
-         GbFlg7PGff1nb9Qr5CibEyTntz1Xma5RKY/dSU2Q=
-Received: by mail-oi1-f171.google.com with SMTP id 25so2927693oiy.13;
-        Wed, 17 Jun 2020 13:22:07 -0700 (PDT)
-X-Gm-Message-State: AOAM532aiIXPZdMvtpJZ2gGovaCO6Dvwr0lJz/dCgRp7hh1IkL2a6Htm
-        nUgm+B2EoEvxi43vRA4/vz3pfL8WZJ6k6ji05Q==
-X-Google-Smtp-Source: ABdhPJzi4G/SG7UPJZAtkdxWsR+QkKnM2jLwSEKoazMNV1MrKFH3VVff+tCgS2ag5HdiA3cWgQIOgK9y06+Tn3frHYE=
-X-Received: by 2002:aca:1e0b:: with SMTP id m11mr388478oic.147.1592425326440;
- Wed, 17 Jun 2020 13:22:06 -0700 (PDT)
+        Wed, 17 Jun 2020 16:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgFQUXO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 16:23:14 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C8F8C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:23:14 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d4so1834857pgk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:23:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=eps4Ei5p4v0C3v2/fz1NIeuMiErn9v1jAL+UTG1cAZ4=;
+        b=KUwEnnVuoDexMEaNIhuG4RLuBUPsEa0c8mx/p66yeGTJknY5jo5chKwZr87y1L3H+5
+         FLevFJUpgH8KfcLzKSALX5DDxCB7+s9Mqo++j4RM5/MFcO9wC+IcBRKXSPpo8C7wyHud
+         dj86nf9Qb1XbOuSKdsBKTtZI7uk0dkGUjuwmM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=eps4Ei5p4v0C3v2/fz1NIeuMiErn9v1jAL+UTG1cAZ4=;
+        b=QnPvWcKErSL6Hx5fF8YNd0ZvDTnu333PYiHVj6QqqMa9B76ax4ahh7c+k7Uyj08DNb
+         yX8a+U4DQQ/QLxEhqliFVPDGQhjHWiwYaeqU157z6Hdg5PBSrvBLZHIsNHCQYzthdbwS
+         1iapNocsrLJHcBT3AaSKLVmJyeer3tjunFsV2dexc1krvDORfnF2nbNknEmYzmhIrMdg
+         2+JARULCHZVFLUiXDMUv/qUJtsMEyjo83FjjS1PDgiAZfnqhPAV65KtWYgp7vVkEcYDm
+         XTByiJlSfHceZHF8jV+zfLwDCJNrokKBHAToeIlk2gk660oGj2RqP4VCTCFzJU+GXlXo
+         Ytig==
+X-Gm-Message-State: AOAM532xlX7yhaR/3as733nTxDtA9cCt+pmRucvLjNUaJsN29aSSJtMF
+        xUGJdYnS0LoiMwMmkejFziRi7A==
+X-Google-Smtp-Source: ABdhPJwWQgEdOfbFG7zAFOTYs510ibb89tg4xrESspvF0suYJlxtlkHG0lqpc/fh7RGBgnoPvxH+kg==
+X-Received: by 2002:a65:6550:: with SMTP id a16mr452402pgw.183.1592425393877;
+        Wed, 17 Jun 2020 13:23:13 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id s21sm615275pgg.8.2020.06.17.13.23.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 13:23:13 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
- <2dc6384c945c7d35ab4f75464d3a77046dc125b3.1590594512.git-series.maxime@cerno.tech>
-In-Reply-To: <2dc6384c945c7d35ab4f75464d3a77046dc125b3.1590594512.git-series.maxime@cerno.tech>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 17 Jun 2020 14:21:52 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+pZebUgG_fyQkhhbp2khVc+L-kJ2D2O8BiO6SyjfAK_Q@mail.gmail.com>
-Message-ID: <CAL_Jsq+pZebUgG_fyQkhhbp2khVc+L-kJ2D2O8BiO6SyjfAK_Q@mail.gmail.com>
-Subject: Re: [PATCH v3 006/105] dt-bindings: display: Convert VC4 bindings to schemas
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200617113851.607706-7-alexandru.elisei@arm.com>
+References: <20200617113851.607706-1-alexandru.elisei@arm.com> <20200617113851.607706-7-alexandru.elisei@arm.com>
+Subject: Re: [PATCH v5 6/7] arm_pmu: Introduce pmu_irq_ops
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     mark.rutland@arm.com, Julien Thierry <julien.thierry@arm.com>,
+        maz@kernel.org, Will Deacon <will.deacon@arm.com>,
+        catalin.marinas@arm.com, will@kernel.org,
+        Julien Thierry <julien.thierry.kdev@gmail.com>
+To:     Alexandru Elisei <alexandru.elisei@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Wed, 17 Jun 2020 13:23:12 -0700
+Message-ID: <159242539231.62212.11549121838391298623@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 9:49 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> The BCM283x SoCs have a display pipeline composed of several controllers
-> with device tree bindings that are supported by Linux.
->
-> Now that we have the DT validation in place, let's split into separate
-> files and convert the device tree bindings for those controllers to
-> schemas.
->
-> This is just a 1:1 conversion though, and some bindings were incomplete so
-> it results in example validation warnings that are going to be addressed in
-> the following patches.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt              | 174 +------------------------------------------------------------------------
->  Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml         |  66 +++++++++++++++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml        |  73 ++++++++++++++++++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml        |  75 +++++++++++++++++++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml         |  37 +++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml |  40 +++++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-txp.yaml         |  37 +++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-v3d.yaml         |  42 +++++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml         |  34 ++++++++++++++-
->  Documentation/devicetree/bindings/display/brcm,bcm2835-vec.yaml         |  44 ++++++++++++++++++-
->  MAINTAINERS                                                             |   2 +-
->  11 files changed, 449 insertions(+), 175 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-txp.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-v3d.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-vec.yaml
+Quoting Alexandru Elisei (2020-06-17 04:38:50)
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index df352b334ea7..17e5952d21e4 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -26,8 +26,46 @@
+> =20
+>  #include <asm/irq_regs.h>
+> =20
+> +static int armpmu_count_irq_users(const int irq);
+> +
+> +struct pmu_irq_ops {
+> +       void (*enable_pmuirq)(unsigned int irq);
+> +       void (*disable_pmuirq)(unsigned int irq);
+> +       void (*free_pmuirq)(unsigned int irq, int cpu, void __percpu *dev=
+id);
 
-Not sure why my checks didn't catch this, but now linux-next has these warnings:
+Does 'cpu' need to be signed?
 
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.example.dt.yaml:
-panel: compatible: Additional items are not allowed ('simple-panel'
-was unexpected)
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.example.dt.yaml:
-panel: compatible: ['ontat,yx700wv03', 'simple-panel'] is too long
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.example.dt.yaml:
-panel: 'power-supply' is a required property
+> +};
+> +
+> +static void armpmu_free_pmuirq(unsigned int irq, int cpu, void __percpu =
+*devid)
+> +{
+> +       free_irq(irq, per_cpu_ptr(devid, cpu));
+> +}
+> +
+> +static const struct pmu_irq_ops pmuirq_ops =3D {
+> +       .enable_pmuirq =3D enable_irq,
+> +       .disable_pmuirq =3D disable_irq_nosync,
+> +       .free_pmuirq =3D armpmu_free_pmuirq
+> +};
+> +
+> +static void armpmu_enable_percpu_pmuirq(unsigned int irq)
+> +{
+> +       enable_percpu_irq(irq, IRQ_TYPE_NONE);
+> +}
+> +
+> +static void armpmu_free_percpu_pmuirq(unsigned int irq, int cpu,
+> +                                  void __percpu *devid)
+> +{
+> +       if (armpmu_count_irq_users(irq) =3D=3D 1)
+> +               free_percpu_irq(irq, devid);
+> +}
+> +
+> +static const struct pmu_irq_ops percpu_pmuirq_ops =3D {
+> +       .enable_pmuirq =3D armpmu_enable_percpu_pmuirq,
+> +       .disable_pmuirq =3D disable_percpu_irq,
+> +       .free_pmuirq =3D armpmu_free_percpu_pmuirq
+> +};
+> +
+>  static DEFINE_PER_CPU(struct arm_pmu *, cpu_armpmu);
+>  static DEFINE_PER_CPU(int, cpu_irq);
+
+Same question as above.
+
+> +static DEFINE_PER_CPU(const struct pmu_irq_ops *, cpu_irq_ops);
+> =20
+>  static inline u64 arm_pmu_event_max_period(struct perf_event *event)
+>  {
