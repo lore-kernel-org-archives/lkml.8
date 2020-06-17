@@ -2,231 +2,191 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 725F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C48F20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:29:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="gY47oZ/8"
+	by mail.kernel.org (Postfix) with ESMTP id 1A906208B3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592407748;
+	bh=SD+fejC18TjS7/DoA5KE5YrnoAqS1yLaxfx11ISwTbM=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=rZKQwXYsrJ3rDGR4PcSz4OSzgVzCHuhFqW06PMfK1sv3SbLZmm0XElf8l2CmSBFLx
+	 wBKiTc5iTfhhhwkysNDaq3ZXrv1q6+03vFlwCVbQcsk/GeHpQMrre2iHW/QazgD2l9
+	 kfE1guw5lyb1UosAVejNuZQoyNPD6aLGFuR0XVMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgFQP3C (ORCPT
+        id S1726997AbgFQP3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:29:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726848AbgFQP3B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:29:01 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD01BC0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:29:00 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id i27so3336266ljb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:29:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=1Jejmo94fRTO1Nf1cVg0JuCnL5f+D9dWyuhEwNHgCto=;
-        b=gY47oZ/8jima8hUgUvS22+dJJei29tpxOsnOiPUZvVHgsyecPh2PTpPiLADhqB3Jy5
-         5/NenTMuy6Nl2vx9Q8QROcfdisNAjpQ9p34cZO62xjsALFzTU4fha+2KofoRMxNOQOqg
-         DiAcYTTRXXb670mowm0u3QboQESmHolMamxDRpdtyH4CZnYoLSrPH8KuXiNb+KbyrLLW
-         ewFNkks7MX7ehYZpE+bGL7f7mbexgh1Lz+7ExQxlZEyj/fsgV7ok3HInwVNQ5evC/pkC
-         DJ3NDSCThgh3hCpJM6Wdwh0sAwKhXHQnNcDnRD0pBDBbU3sVBT6641DWRWA8L8rhJIZ8
-         GIhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=1Jejmo94fRTO1Nf1cVg0JuCnL5f+D9dWyuhEwNHgCto=;
-        b=rI2uIcFIBp1mKp4vlXC1Re6PiyFk1XEiZCIt1wSJBHgh/NnToFy+45294BAdEHfBKU
-         K7Q71spvwWWb60Dy0EPPLOtgtu/8Opic7V4Mu6EK+8VEcJqGYF8iAx7GnChKXFk6nkDW
-         nwFu7TBHEfN8g1zeRo/s399Mr06XlkjaUqckBXGCWR9hVx6jV6y3o3YbiRCIcS5t1pnW
-         jiCjQ5hQoQFcncADn0AjWfeKhQvIfwVz4joMBMIfC1u8/EDmtILoTDzmjpwC4W4v/qQw
-         xPeP8thMBgZwqfSqqUohaStAriW6d8jrAkoDuERRe9mmycmA/7c/HkGaKJC+m5vOi6AY
-         qOtg==
-X-Gm-Message-State: AOAM531tGcaJQVml4FbKri1w7MeYKo3ePSogdez57ZTGOl6ckXSWCUod
-        THm4EhFpEJWVlrtqhNyVXmKzBw==
-X-Google-Smtp-Source: ABdhPJxXi/cFo9WQlsVNHaUWqnJ0fClcBL3sHMCXkne5vzOfMKrvXNH95dUMzNIUva44CRMzuHPocg==
-X-Received: by 2002:a2e:2202:: with SMTP id i2mr4444744lji.199.1592407739045;
-        Wed, 17 Jun 2020 08:28:59 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id b10sm32549lfi.20.2020.06.17.08.28.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 08:28:58 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 17:28:57 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Michael Rodin <mrodin@de.adit-jv.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, michael@rodin.online,
-        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com,
-        Steve Longerbeam <steve_longerbeam@mentor.com>
-Subject: Re: [PATCH] media: rcar-vin: Move media_device_register to async
- completion
-Message-ID: <20200617152857.GA2936315@oden.dyn.berto.se>
-References: <1592328696-84533-1-git-send-email-mrodin@de.adit-jv.com>
- <20200617105646.GB2850317@oden.dyn.berto.se>
- <20200617151537.GB88066@vmlxhi-121.adit-jv.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200617151537.GB88066@vmlxhi-121.adit-jv.com>
+        Wed, 17 Jun 2020 11:29:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726848AbgFQP3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 11:29:03 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E7AE20897;
+        Wed, 17 Jun 2020 15:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592407742;
+        bh=SD+fejC18TjS7/DoA5KE5YrnoAqS1yLaxfx11ISwTbM=;
+        h=From:To:Subject:Date:From;
+        b=nF/JSFGNj+SedrGskz4bgXFzZUfgizp2OmgNo4HUP37JHEcCY9Ov9Wqps/KNaLklv
+         KfoizibFHs7fTzlwFxrmfoL6igIyNTVeH5qaWhJCnQ6UcGaSLcnGGzEkrCkEOZukVy
+         nSHRUgttSJF7pXr7+g8rKFIDbICS7nwgJ0RvAuFA=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] serial: samsung: Minor whitespace cleanups
+Date:   Wed, 17 Jun 2020 17:28:56 +0200
+Message-Id: <20200617152856.18086-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+Make the code slightly more readable by removing unneeded line breaks,
+adding missing line breaks and white spaces.  This also fixes few strict
+checkpatch suggestions:
 
-On 2020-06-17 17:15:37 +0200, Michael Rodin wrote:
-> Hi Niklas and Steve,
-> 
-> On Wed, Jun 17, 2020 at 12:56:46PM +0200, Niklas Söderlund wrote:
-> > Hi Michael and Steve,
-> > 
-> > On 2020-06-16 19:31:36 +0200, Michael Rodin wrote:
-> > > From: Steve Longerbeam <steve_longerbeam@mentor.com>
-> > > 
-> > > The media_device is registered during driver probe, before async
-> > > completion, so it is possible for .link_notify to be called before
-> > > all devices are bound.
-> > > 
-> > > Fix this by moving media_device_register() to rvin_group_notify_complete().
-> > > This ensures that all devices are now bound (the rcar-csi2 subdevices and
-> > > and video capture devices) before .link_notify can be called.
-> > 
-> > I'm curious to what situation created the need for this change. I'm 
-> > currently trying to take the VIN driver in the opposite direction [1] 
-> > with the end goal of registering video devices at probe time and then 
-> > allow the media graph to populate as devices becomes available.
-> 
-> It looks like almost all platform drivers call media_device_register() in
-> the completion callback. From my understaning it is necessary to ensure
-> that all subdevices are bound and all links are created before the user
-> can enable any link (which would trigger link_notify callback execution)
-> and set formats. If I am not mistaken, Steve could observe an "OOPS" or
-> at least it is theoretically possible.
+	CHECK: spaces preferred around that '-' (ctx:VxV)
+	CHECK: Unbalanced braces around else statement
+	CHECK: Lines should not end with a '('
 
-If an OOPS have been observed I would be interested to see it. That way 
-we can fix the OOPS and keep the media graph registration where it is 
-today.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/tty/serial/samsung_tty.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-> 
-> Actually I found that this patch alone is not enough even if it is correct,
-> because we also have to register the media device in rvin_parallel_notify_complete()
-> in case if there is only a parallel video input device attached.
-> 
-> > My reason for this is that we could have a functional pipeline inside 
-> > the graph even if it's not complete. This came out of the GMSL work done
-> > a while pack where I had a faulty camera that would prevent the other 7 
-> > in the system to function.
-> 
-> I agree that if a probe of a faulty subdevice fails, this should not affect
-> functionality of the other attached subdevices. The "complete" callback of
-> the async notifier is probably not executed in this case, so I guess, we
-> would have to register the media device in the "bound" callback after the first
-> subdevice has been probed? Otherwise there is not much sense to have video
-> capture devices, which are not connected to any source.
-
-Calling it in the bound callback is mostly the same as it is today, as 
-link_notify could then be called when not all entities are in the graph.  
-In fact even if we where tp move the media device registration to the t
-complete callback we have this problem if any of the subdevices are 
-unbound. Then we are back to the state with a registerd media device 
-where not all entities are present.
-
-I think the solution here is to address the issue (if any) in the 
-link_notify callback when the graph is not fully populated.
-
-> 
-> (Delayed) population of the media graph after media device registration
-> sounds also like a requirement for device tree overlay support, which would
-> also be a nice feature.
-> 
-> > 1. [PATCH 0/5] media-device: Report if graph is complete
-> > 
-> > > 
-> > > Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> > > Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
-> > > ---
-> > >  drivers/media/platform/rcar-vin/rcar-core.c | 14 ++++++--------
-> > >  1 file changed, 6 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-> > > index 7440c89..e70f83b 100644
-> > > --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> > > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> > > @@ -253,7 +253,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
-> > >  	struct media_device *mdev = &group->mdev;
-> > >  	const struct of_device_id *match;
-> > >  	struct device_node *np;
-> > > -	int ret;
-> > >  
-> > >  	mutex_init(&group->lock);
-> > >  
-> > > @@ -266,7 +265,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
-> > >  	vin_dbg(vin, "found %u enabled VIN's in DT", group->count);
-> > >  
-> > >  	mdev->dev = vin->dev;
-> > > -	mdev->ops = &rvin_media_ops;
-> > >  
-> > >  	match = of_match_node(vin->dev->driver->of_match_table,
-> > >  			      vin->dev->of_node);
-> > > @@ -278,11 +276,7 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
-> > >  
-> > >  	media_device_init(mdev);
-> > >  
-> > > -	ret = media_device_register(&group->mdev);
-> > > -	if (ret)
-> > > -		rvin_group_cleanup(group);
-> > > -
-> > > -	return ret;
-> > > +	return 0;
-> > >  }
-> > >  
-> > >  static void rvin_group_release(struct kref *kref)
-> > > @@ -688,6 +682,8 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
-> > >  		return ret;
-> > >  	}
-> > >  
-> > > +	vin->group->mdev.ops = &rvin_media_ops;
-> > > +
-> > >  	/* Register all video nodes for the group. */
-> > >  	for (i = 0; i < RCAR_VIN_NUM; i++) {
-> > >  		if (vin->group->vin[i] &&
-> > > @@ -736,8 +732,10 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
-> > >  		}
-> > >  	}
-> > >  	mutex_unlock(&vin->group->lock);
-> > > +	if (ret)
-> > > +		return ret;
-> > >  
-> > > -	return ret;
-> > > +	return media_device_register(&vin->group->mdev);
-> > >  }
-> > >  
-> > >  static void rvin_group_notify_unbind(struct v4l2_async_notifier *notifier,
-> > > -- 
-> > > 2.7.4
-> > > 
-> > 
-> > -- 
-> > Regards,
-> > Niklas Söderlund
-> 
-> -- 
-> Best Regards,
-> Michael
-
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index d913d9b2762a..7be9579216b8 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -327,7 +327,6 @@ static void s3c24xx_serial_tx_dma_complete(void *args)
+ 	unsigned long flags;
+ 	int count;
+ 
+-
+ 	dmaengine_tx_status(dma->tx_chan, dma->tx_cookie, &state);
+ 	count = dma->tx_bytes_requested - state.residue;
+ 	async_tx_ack(dma->tx_desc);
+@@ -409,7 +408,6 @@ static int s3c24xx_serial_start_tx_dma(struct s3c24xx_uart_port *ourport,
+ 	struct circ_buf *xmit = &port->state->xmit;
+ 	struct s3c24xx_uart_dma *dma = ourport->dma;
+ 
+-
+ 	if (ourport->tx_mode != S3C24XX_TX_DMA)
+ 		enable_tx_dma(ourport);
+ 
+@@ -816,7 +814,6 @@ static irqreturn_t s3c24xx_serial_rx_chars_pio(void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
+-
+ static irqreturn_t s3c24xx_serial_rx_chars(int irq, void *dev_id)
+ {
+ 	struct s3c24xx_uart_port *ourport = dev_id;
+@@ -842,8 +839,8 @@ static irqreturn_t s3c24xx_serial_tx_chars(int irq, void *id)
+ 	    count >= ourport->min_dma_size) {
+ 		int align = dma_get_cache_alignment() -
+ 			(xmit->tail & (dma_get_cache_alignment() - 1));
+-		if (count-align >= ourport->min_dma_size) {
+-			dma_count = count-align;
++		if (count - align >= ourport->min_dma_size) {
++			dma_count = count - align;
+ 			count = align;
+ 		}
+ 	}
+@@ -1589,7 +1586,6 @@ s3c24xx_serial_verify_port(struct uart_port *port, struct serial_struct *ser)
+ 	return 0;
+ }
+ 
+-
+ #ifdef CONFIG_SERIAL_SAMSUNG_CONSOLE
+ 
+ static struct console s3c24xx_serial_console;
+@@ -1672,7 +1668,6 @@ s3c24xx_serial_ports[CONFIG_SERIAL_SAMSUNG_UARTS] = {
+ 		}
+ 	},
+ #if CONFIG_SERIAL_SAMSUNG_UARTS > 2
+-
+ 	[2] = {
+ 		.port = {
+ 			.lock		= __PORT_LOCK_UNLOCKED(2),
+@@ -1728,7 +1723,6 @@ static void s3c24xx_serial_resetport(struct uart_port *port,
+ 	udelay(1);
+ }
+ 
+-
+ #ifdef CONFIG_ARM_S3C24XX_CPUFREQ
+ 
+ static int s3c24xx_serial_cpufreq_transition(struct notifier_block *nb,
+@@ -1903,9 +1897,9 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
+ 
+ 	port->mapbase = res->start;
+ 	ret = platform_get_irq(platdev, 0);
+-	if (ret < 0)
++	if (ret < 0) {
+ 		port->irq = 0;
+-	else {
++	} else {
+ 		port->irq = ret;
+ 		ourport->rx_irq = ret;
+ 		ourport->tx_irq = ret + 1;
+@@ -1977,8 +1971,8 @@ static const struct of_device_id s3c24xx_uart_dt_match[];
+ 
+ static int probe_index;
+ 
+-static inline struct s3c24xx_serial_drv_data *s3c24xx_get_driver_data(
+-			struct platform_device *pdev)
++static inline struct s3c24xx_serial_drv_data *
++s3c24xx_get_driver_data(struct platform_device *pdev)
+ {
+ #ifdef CONFIG_OF
+ 	if (pdev->dev.of_node) {
+@@ -2329,7 +2323,6 @@ s3c24xx_serial_get_options(struct uart_port *port, int *baud,
+ 		*baud = rate / (16 * (ubrdiv + 1));
+ 		dev_dbg(port->dev, "calculated baud %d\n", *baud);
+ 	}
+-
+ }
+ 
+ static int __init
+@@ -2696,6 +2689,7 @@ static int __init s3c2410_early_console_setup(struct earlycon_device *device,
+ 	device->port.private_data = &s3c2410_early_console_data;
+ 	return samsung_early_console_setup(device, opt);
+ }
++
+ OF_EARLYCON_DECLARE(s3c2410, "samsung,s3c2410-uart",
+ 			s3c2410_early_console_setup);
+ 
+@@ -2710,6 +2704,7 @@ static int __init s3c2440_early_console_setup(struct earlycon_device *device,
+ 	device->port.private_data = &s3c2440_early_console_data;
+ 	return samsung_early_console_setup(device, opt);
+ }
++
+ OF_EARLYCON_DECLARE(s3c2412, "samsung,s3c2412-uart",
+ 			s3c2440_early_console_setup);
+ OF_EARLYCON_DECLARE(s3c2440, "samsung,s3c2440-uart",
+@@ -2728,6 +2723,7 @@ static int __init s5pv210_early_console_setup(struct earlycon_device *device,
+ 	device->port.private_data = &s5pv210_early_console_data;
+ 	return samsung_early_console_setup(device, opt);
+ }
++
+ OF_EARLYCON_DECLARE(s5pv210, "samsung,s5pv210-uart",
+ 			s5pv210_early_console_setup);
+ OF_EARLYCON_DECLARE(exynos4210, "samsung,exynos4210-uart",
 -- 
-Regards,
-Niklas Söderlund
+2.17.1
+
