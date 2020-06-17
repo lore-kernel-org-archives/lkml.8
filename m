@@ -2,114 +2,195 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CD0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E89D62089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592423876;
-	bh=6EOWrWAPKgFLB8ZGNw/bkhy+Y9laihybAO1W8FLLgE0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fQ+PXWKvRgYPno1Zjx3tMGasOPxSq0Rp9t8D9hcbChm0M7aw2rNLYgP/qsggqcrcL
-	 FpPZ5QRYq/8JMFhmILuhbolv0lVYOeqSDLYU54T9slv//zBp42/E1TlHBRGTd+dUVE
-	 m+cIuXn/C+U3cosGW9OM/GOhXTO85mgMLDWay8yU=
+	by mail.kernel.org (Postfix) with ESMTP id 2F0602089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:58:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OGVeyzLc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgFQT5y (ORCPT
+        id S1726940AbgFQT6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 15:57:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgFQT5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 15:57:53 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57B5E2089D
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 19:57:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592423872;
-        bh=6EOWrWAPKgFLB8ZGNw/bkhy+Y9laihybAO1W8FLLgE0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xaFHz/iozgWgycs5vkKMyLQhywn8LIE3m4thJ9lGfq/ft4mvHZp8Zw5f5pCL9xn6y
-         OItViZbot/baWh8iOwsng7TD4RkNT/wrwtmxpkuvcb4ss3L9Bhxhi5Sbnz/RSCxTze
-         1EUmCWL24KfJLS2lOEh6Vtau7NF1OyGZ4zODcKlU=
-Received: by mail-ot1-f47.google.com with SMTP id g5so2662208otg.6
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:57:52 -0700 (PDT)
-X-Gm-Message-State: AOAM5326R5Z6UHhxwC5u1UNjREyMHp7pk/nQq134kwAIemMhtJTc8Zfx
-        ks6bTePkj0JKX4FekXygUGADZI1Vs3lqykfSJQ==
-X-Google-Smtp-Source: ABdhPJxYGD7ydPNempaQlxGwlY6okLDhzODVF+rKdYIQX8opUjKSSSQ82BnNVzZIgHkIo8WpU9K2CdFtcuufRw2uHTk=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr598307ots.192.1592423871739;
- Wed, 17 Jun 2020 12:57:51 -0700 (PDT)
+        Wed, 17 Jun 2020 15:58:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbgFQT6E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 15:58:04 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69AE0C0613EF
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:58:03 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id n9so1441775plk.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:58:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mtm26zMhVvziSNAo5SmfL3grFhcLxm63K6Ll3k7pVLA=;
+        b=OGVeyzLchDvvpgrQEJsCwDmB0g5mSK2iyCbWztP7Kq7e12lAsbrbJJ/O765BM1d9FQ
+         vMMvIE3saYLDImlEZ8eBNU3vlyvAG5MdNrvhwK/eP1+c7i+djFuR5nroesN2ZDFLFVQh
+         AMcDeULYTTf+crJp+k+EIY9BLyYqFncTk8mtc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mtm26zMhVvziSNAo5SmfL3grFhcLxm63K6Ll3k7pVLA=;
+        b=pIlyfbrh2Sv0EWdf8tAs121MhRKlXRllpAMm/BOaXSo4U1MuiwKzurdpwXvBjG6VUO
+         OJbBNuZT90oHtzc137axspJaaNgyaYultQFahJPiMH/+rIs0FXXTDL23Q9CX2T/iohdl
+         wvz/Uf1l1t3+WseIihFLQ6H3ZCCo2lWO63LqIP43RO0zTw0cPJ70gL2HED56czZUVCdA
+         F8yWAt+poGFgnZSI3nafAJPbPzewW3a/UVo9/JGzmD4BEzCewwG+jv0O4jg5XZn9LBQ0
+         +L43zqeUgw948ff4tEG13q8pyydRBOof4b0+8Is8Nbhr3tziIUiAItnmgheAU5hjR3k5
+         n+EQ==
+X-Gm-Message-State: AOAM531HHqc/3M/ILrEgWRk7jtJnbYJH2LTLVs4Np6NLKZYJV832xLbM
+        9zO7vfs5B/8qL2aakmZGAFgXcg==
+X-Google-Smtp-Source: ABdhPJx1Vhks5l1dJnwJicud25Ov+I84VyGCU0nF8o3XyWLhCCiEEzvHbnFtOemqhaMfq16ly8QKug==
+X-Received: by 2002:a17:90a:7a8f:: with SMTP id q15mr598912pjf.116.1592423882783;
+        Wed, 17 Jun 2020 12:58:02 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w22sm628496pfq.193.2020.06.17.12.58.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 12:58:01 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 12:58:00 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christoph Hellwig <hch@lst.de>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v4 03/11] fs: Add fd_install_received() wrapper for
+ __fd_install_received()
+Message-ID: <202006171141.4DA1174979@keescook>
+References: <20200616032524.460144-1-keescook@chromium.org>
+ <20200616032524.460144-4-keescook@chromium.org>
+ <6de12195ec3244b99e6026b4b46e5be2@AcuMS.aculab.com>
 MIME-Version: 1.0
-References: <20200527200544.7849-1-krzk@kernel.org> <20200527204334.GA15485@kevin>
- <20200617141547.GA30516@kozik-lap> <b41bfead-7b73-be78-c63f-79a0a7e23b2a@arm.com>
-In-Reply-To: <b41bfead-7b73-be78-c63f-79a0a7e23b2a@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 17 Jun 2020 13:57:40 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLrFFOVQVR0dWbru6bJvz7sXs8v6Op-hiNgdMwH3N=2Fw@mail.gmail.com>
-Message-ID: <CAL_JsqLrFFOVQVR0dWbru6bJvz7sXs8v6Op-hiNgdMwH3N=2Fw@mail.gmail.com>
-Subject: Re: [PATCH v3] drm/panfrost: Reduce the amount of logs on deferred probe
-To:     Steven Price <steven.price@arm.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6de12195ec3244b99e6026b4b46e5be2@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 8:36 AM Steven Price <steven.price@arm.com> wrote:
->
-> On 17/06/2020 15:15, Krzysztof Kozlowski wrote:
-> > On Wed, May 27, 2020 at 04:43:34PM -0400, Alyssa Rosenzweig wrote:
-> >> Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-> >>
-> >> On Wed, May 27, 2020 at 10:05:44PM +0200, Krzysztof Kozlowski wrote:
-> >>> There is no point to print deferred probe (and its failures to get
-> >>> resources) as an error.  Also there is no need to print regulator errors
-> >>> twice.
-> >>>
-> >>> In case of multiple probe tries this would pollute the dmesg.
-> >>>
-> >>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >>> Reviewed-by: Steven Price <steven.price@arm.com>
-> >>>
-> >>> ---
-> >>>
-> >>> Changes since v2:
-> >>> 1. Rebase
-> >>> 2. Add Steven's review
-> >>>
-> >>> Changes since v1:
-> >>> 1. Remove second error message from calling panfrost_regulator_init()
-> >>> ---
-> >>>   drivers/gpu/drm/panfrost/panfrost_device.c | 8 ++++----
-> >>>   1 file changed, 4 insertions(+), 4 deletions(-)
-> >>>
-> >
-> > Hi Rob, Tomeu and Steven,
-> >
-> > You're listed as maintainers for panfrost. Is anyone going to pick this
-> > up?
->
-> I'm only a reviewer so I've been leaving it for Rob or Tomeu, but I can
-> pick it up if Rob/Tomeu are happy for me to do that.
->
-> > Maybe I sent it to wrong mailing list or forgot about anything?
->
-> No, there's actually a few Panfrost commits waiting, it was on my todo
-> list to ask if Rob/Tomeu needed some help with merging patches.
+On Wed, Jun 17, 2020 at 03:35:20PM +0000, David Laight wrote:
+> From: Kees Cook
+> > Sent: 16 June 2020 04:25
+> > 
+> > For both pidfd and seccomp, the __user pointer is not used. Update
+> > __fd_install_received() to make writing to ufd optional. (ufd
+> > itself cannot checked for NULL because this changes the SCM_RIGHTS
+> > interface behavior.) In these cases, the new fd needs to be returned
+> > on success.  Update the existing callers to handle it. Add new wrapper
+> > fd_install_received() for pidfd and seccomp that does not use the ufd
+> > argument.
+> ...> 
+> >  static inline int fd_install_received_user(struct file *file, int __user *ufd,
+> >  					   unsigned int o_flags)
+> >  {
+> > -	return __fd_install_received(file, ufd, o_flags);
+> > +	return __fd_install_received(file, true, ufd, o_flags);
+> > +}
+> 
+> Can you get rid of the 'return user' parameter by adding
+> 	if (!ufd) return -EFAULT;
+> to the above wrapper, then checking for NULL in the function?
+> 
+> Or does that do the wrong horrid things in the fail path?
 
-Please do, I haven't had the cycles for panfrost lately.
+Oh, hm. No, that shouldn't break the failure path, since everything gets
+unwound in __fd_install_received if the ufd write fails.
 
-Rob
+Effectively this (I'll chop it up into the correct patches):
+
+diff --git a/fs/file.c b/fs/file.c
+index b583e7c60571..3b80324a31cc 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -939,18 +939,16 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
+  *
+  * @fd: fd to install into (if negative, a new fd will be allocated)
+  * @file: struct file that was received from another process
+- * @ufd_required: true to use @ufd for writing fd number to userspace
+  * @ufd: __user pointer to write new fd number to
+  * @o_flags: the O_* flags to apply to the new fd entry
+  *
+  * Installs a received file into the file descriptor table, with appropriate
+  * checks and count updates. Optionally writes the fd number to userspace, if
+- * @ufd_required is true (@ufd cannot just be tested for NULL because NULL may
+- * actually get passed into SCM_RIGHTS).
++ * @ufd is non-NULL.
+  *
+  * Returns newly install fd or -ve on error.
+  */
+-int __fd_install_received(int fd, struct file *file, bool ufd_required,
++int __fd_install_received(int fd, struct file *file,
+ 			  int __user *ufd, unsigned int o_flags)
+ {
+ 	struct socket *sock;
+@@ -967,7 +965,7 @@ int __fd_install_received(int fd, struct file *file, bool ufd_required,
+ 			return new_fd;
+ 	}
+ 
+-	if (ufd_required) {
++	if (ufd) {
+ 		error = put_user(new_fd, ufd);
+ 		if (error) {
+ 			put_unused_fd(new_fd);
+diff --git a/include/linux/file.h b/include/linux/file.h
+index f1d16e24a12e..2ade0d90bc5e 100644
+--- a/include/linux/file.h
++++ b/include/linux/file.h
+@@ -91,20 +91,22 @@ extern void put_unused_fd(unsigned int fd);
+ 
+ extern void fd_install(unsigned int fd, struct file *file);
+ 
+-extern int __fd_install_received(int fd, struct file *file, bool ufd_required,
++extern int __fd_install_received(int fd, struct file *file,
+ 				 int __user *ufd, unsigned int o_flags);
+ static inline int fd_install_received_user(struct file *file, int __user *ufd,
+ 					   unsigned int o_flags)
+ {
+-	return __fd_install_received(-1, file, true, ufd, o_flags);
++	if (ufd == NULL)
++		return -EFAULT;
++	return __fd_install_received(-1, file, ufd, o_flags);
+ }
+ static inline int fd_install_received(struct file *file, unsigned int o_flags)
+ {
+-	return __fd_install_received(-1, file, false, NULL, o_flags);
++	return __fd_install_received(-1, file, NULL, o_flags);
+ }
+ static inline int fd_replace_received(int fd, struct file *file, unsigned int o_flags)
+ {
+-	return __fd_install_received(fd, file, false, NULL, o_flags);
++	return __fd_install_received(fd, file, NULL, o_flags);
+ }
+ 
+ extern void flush_delayed_fput(void);
+
+-- 
+Kees Cook
