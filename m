@@ -2,192 +2,130 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AE8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1792720734
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E6B621527
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:57:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CaV54r4A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="thh63VHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgFQIzS (ORCPT
+        id S1726282AbgFQI54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35500 "EHLO
+        Wed, 17 Jun 2020 04:57:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgFQIzS (ORCPT
+        with ESMTP id S1725901AbgFQI5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:55:18 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8DA8C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 01:55:17 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id i3so1913386ljg.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 01:55:17 -0700 (PDT)
+        Wed, 17 Jun 2020 04:57:55 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F7A4C061573;
+        Wed, 17 Jun 2020 01:57:55 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id j13so937068vsn.3;
+        Wed, 17 Jun 2020 01:57:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DKUBgryVX8raW8V6LX9CcUkjsYO+vcdlONyVIxz7SUc=;
-        b=CaV54r4A+HlePitwPGO+qincgGOuG7ADF7vr8aNNZPfSQ0HMLdkDcagXdk+UkvKG7v
-         SD9DYhETNNOcqAe7x52dJVBAMM3Y2gekLHw5gW5HL0ShX9n98wfCQ7kQe1atFlcRpyT+
-         bsgZjLXR/mJhH6r8b7Iqrkgj7u4vg2RfOX2b2LxqD+LvZGo6MIAjLU1EHr0L4HviYdmr
-         v+PnmPaxITLbIqkPyJx/PHbYYyH8VCatiQpG5I6lZkhp0zcyZxL+rnK4utvEmFV3e/ff
-         fy3lPLqHy2tBcMD1q5aGNMf9SJMSp9zrDGWUYJJGKvhbE0vLO3S+sIQoqfixBYR7eaiq
-         orKQ==
+         :cc;
+        bh=e0GIsBatfapINbf1Qhrb6ieuf0yzr/q+/Cwq8LRbwso=;
+        b=thh63VHsT+2xCdrOTfL871hB51pmQB0rlLEQYQ/D2M6BBadj7jBAS2z65tXfYR4Tr1
+         wR7WeY24w9GxeO8dDxW8QmOUriK9jg6VA0m8OBsgFs2UT6IBWmPeK/H0qpKmzsbFkDhB
+         +tS4KpohwMSQwCTUu8n1kBn0vnepV71BshhNwvVODL5DpczpxvnnqoLD4N3VYYSt0dCz
+         ic78H2v3vDFdJ9rfVcCn+zBFlemn0htT7oBz8BnkILsQEEsL9RA0RFNevonUcoEbn0Ke
+         i2OYagDGxBBInJ95+Za7ZZrUTzF0s7j3gFL+Gn+9RKr6boXRrNPz8fFWqNeh4sFBiz0+
+         yBow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DKUBgryVX8raW8V6LX9CcUkjsYO+vcdlONyVIxz7SUc=;
-        b=HYs768sJ+PoUdG/j94p83EyEKj0JGhekOoAhzWhFJdvch3bKxvMg8T7EAMdcJMfcpV
-         NpJoWY9+bzEALKIqV5yeFOQGPcvooRtEjoM5J+g7hbYy1ZQzRRM+0f3UhjtYY/LYGtBr
-         EStjAdbrweJqvWkMzK0WR11iJ40JafncsrLHM3vJJcYJvfflGXEB1gW9gRqeZ0HLVZ+A
-         xrJ7jxitqP0W5tODUv/cT84cbNnkFP8n92mb/iDi/+1NM3PfRXbCbsEmx671nMg3bLX0
-         R/4JSeDc61Vda4NWlXypPyGlFdj47oWQ5ycOwMfXupismfXZLHMsx28+DPxA1FVUfvhm
-         dbQg==
-X-Gm-Message-State: AOAM5325zemsbou93kIaM/bfV/Duv13qnbGLeBOzRp6DgeUQ0hmpy801
-        Lx5BQjdFaLzWIckslPQmVkZOQgR6OnxZQXngu+WlsrC8PSqO1Q==
-X-Google-Smtp-Source: ABdhPJxY09Oi8zHnXXIrikOGhhUvTJ3aDyHIWr9Fl2s0RZWrwI83gNkh5JRQmgvS8xuTKX91WW9ttN8gjjYCmH0p+dM=
-X-Received: by 2002:a2e:b88c:: with SMTP id r12mr3449089ljp.266.1592384115874;
- Wed, 17 Jun 2020 01:55:15 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=e0GIsBatfapINbf1Qhrb6ieuf0yzr/q+/Cwq8LRbwso=;
+        b=CIKDpvUFsFAqowGk4ZEpoQkT9nUCfuVUb8EELLkCNX+s4uDdZFfPuZKDIkewyFnF9z
+         ApHTmfjbwOiasbWCRrAo5vWdwxPVys64Yc0unlbt9gaUafc5GIxkZGHp785DDtOSexU8
+         YZJshu+d+AAy+StbR3VC5QwfiCFxFuMsI/5oqaSJb2Y2tRz9xNlbTajY6BzGFxQFQItm
+         S7oqN+c5yn0SzZo2bTgDPn+tfCnCy6eDv+loRrxsPBSKaQKPxkvL4ODE1tFDRCnMBiG4
+         cb09Mcll3uCREB6FAKQ3JLwMFvNCJWBkc5DKKdwysukafEAqlIY52DOyB3XTq50c62GY
+         y7Lg==
+X-Gm-Message-State: AOAM53230nHzdLjSXwa5+wpZunHcsMVBHM5bl0znepG36HNQwRwF0K4q
+        mhmyzctaekcRWhtCfU9ggCxJLAfP02HS45Fsj3c=
+X-Google-Smtp-Source: ABdhPJwFD40J/rabMT3XsR4v1Ox0g6ANGlzSspKwGjvnIWrfQ3tNbNLN5wNI3QvElV6zbvR8Nowyhk34KTrB0KLEmqI=
+X-Received: by 2002:a67:a64c:: with SMTP id r12mr4847402vsh.127.1592384274215;
+ Wed, 17 Jun 2020 01:57:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200616172611.492085670@linuxfoundation.org>
-In-Reply-To: <20200616172611.492085670@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 17 Jun 2020 14:25:04 +0530
-Message-ID: <CA+G9fYuHkeN-ubz7w7=A+auuxPPBSS-2oLWLSs-OyDjYfejJDA@mail.gmail.com>
-Subject: Re: [PATCH 5.6 000/158] 5.6.19-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+References: <47dcc56312229fc8f25f39c2beeb3a8ba811f3e9.camel@gmail.com>
+ <336371513.41592205783606.JavaMail.epsvc@epcpadp2> <231786897.01592205482200.JavaMail.epsvc@epcpadp2>
+ <231786897.01592212081335.JavaMail.epsvc@epcpadp2> <CGME20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210@epcms2p6>
+ <1210830415.21592275802431.JavaMail.epsvc@epcpadp1> <SN6PR04MB4640EE125CF504AF9362B23FFC9A0@SN6PR04MB4640.namprd04.prod.outlook.com>
+In-Reply-To: <SN6PR04MB4640EE125CF504AF9362B23FFC9A0@SN6PR04MB4640.namprd04.prod.outlook.com>
+From:   Alim Akhtar <alim.akhtar@gmail.com>
+Date:   Wed, 17 Jun 2020 14:27:19 +0530
+Message-ID: <CAGOxZ50TUnvmmdspxr6dHWrpoxZqHtvR-1Wg6jAVH6k-w5LT2w@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 2/5] scsi: ufs: Add UFS-feature layer
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
+        Bean Huo <huobean@gmail.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020 at 22:57, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Wed, Jun 17, 2020 at 12:27 PM Avri Altman <Avri.Altman@wdc.com> wrote:
 >
-> This is the start of the stable review cycle for the 5.6.19 release.
-> There are 158 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> >
+> > Hi, Bean
+> > >
+> > > On Mon, 2020-06-15 at 16:23 +0900, Daejun Park wrote:
+> > > > +void ufsf_scan_features(struct ufs_hba *hba)
+> > > > +{
+> > > > +       int ret;
+> > > > +
+> > > > +       init_waitqueue_head(&hba->ufsf.sdev_wait);
+> > > > +       atomic_set(&hba->ufsf.slave_conf_cnt, 0);
+> > > > +
+> > > > +       if (hba->dev_info.wspecversion >= HPB_SUPPORTED_VERSION &&
+> > > > +           (hba->dev_info.b_ufs_feature_sup & UFS_DEV_HPB_SUPPORT))
+> > >
+> > > How about removing this check "(hba->dev_info.wspecversion >=
+> > > HPB_SUPPORTED_VERSION" since ufs with lower version than v3.1 can add
+> > > HPB feature by FFU,
+> > > if (hba->dev_info.b_ufs_feature_sup  &UFS_FEATURE_SUPPORT_HPB_BIT) is
+> > > enough.
+> > OK, changing it seems no problem. But I want to know what other people
+> > think
+> > about this version checking code.
+> HPB1.0 isn't part of ufs3.1, but published only later.
+> Allowing earlier versions will required to quirk the descriptor sizes.
+> I see Bean's point here, but I vote for adding it in a single quirk, when the time comes.
 >
-> Responses should be made by Thu, 18 Jun 2020 17:25:39 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.6.19-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+I second Avri here, older devices need a quirk to handle, let do that
+as a separate patch.
+> Thanks,
+> Avri
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
 
-Summary
-------------------------------------------------------------------------
 
-kernel: 5.6.19-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.6.y
-git commit: b60e06c9887321691c8d341e86c085ed3a6a4138
-git describe: v5.6.18-159-gb60e06c98873
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.6-oe/bui=
-ld/v5.6.18-159-gb60e06c98873
-
-No regressions (compared to build v5.6.17-42-g1bece508f6a9)
-
-No fixes (compared to build v5.6.17-42-g1bece508f6a9)
-
-Ran 30750 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* ltp-controllers-tests
-* ltp-open-posix-tests
-* network-basic-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+Regards,
+Alim
