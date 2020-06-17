@@ -2,107 +2,117 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D282C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9378520707
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:40:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592397638;
-	bh=L++2pqqcClpU9mPgWdwwA260YxhqLgIQOBMLvdueqUU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LhQLiExbXnfRkJ+6eM9GL1Nq/5OmqiWqbSa8iqV/0nW3Zqu2ElPYuwGzSfzX1SsRD
-	 yJ4nCM3DMEY0k83ikkwDEXW/0ITmZApIzsYYmTAiwC912jF/Knk2NjpZF8O9kCZSkB
-	 uXpA293TtWu+6b+6c2nxDw9ecm5rUaCYMHOytZzA=
+	by mail.kernel.org (Postfix) with ESMTP id 6D18C20DD4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:40:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hQMjO7Nf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgFQMkg (ORCPT
+        id S1726853AbgFQMkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 08:40:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725964AbgFQMke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 08:40:34 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 703C620DD4;
-        Wed, 17 Jun 2020 12:40:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592397633;
-        bh=L++2pqqcClpU9mPgWdwwA260YxhqLgIQOBMLvdueqUU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wrdJkg1VSnmORU6g1UOqTFJAgbYx94MFEgjLYhzxh30EcpiMJB/0y95yHC8Rcm3uS
-         2mFdY38oT/rlih3MoIYqV2wsITqH3KOYSUhhvY1sUm/67FghxZAl/qrVEqvCAg3AON
-         XQmLu4xQT1zqs4FQNpVz+p8G4LXhvhZqs7XUnBQY=
-Date:   Wed, 17 Jun 2020 13:40:31 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lgirdwood@gmail.com, robh+dt@kernel.org,
-        Nisha Kumari <nishakumari@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v4 4/5] regulator: qcom: Add labibb driver
-Message-ID: <20200617124031.GG4613@sirena.org.uk>
-References: <20200602100924.26256-1-sumit.semwal@linaro.org>
- <20200602100924.26256-5-sumit.semwal@linaro.org>
- <20200602113241.GE5684@sirena.org.uk>
- <CAO_48GGgNUGosN2PiL=U5JkR3Bh5wNK3N4xYYML1UwmdfDPRww@mail.gmail.com>
- <20200602122554.GG5684@sirena.org.uk>
- <CAO_48GFwEHBGmz0QvN+pXFSyHC9+7=0aoJLHF4uupGSx2TcSvA@mail.gmail.com>
- <20200617114721.GD4613@sirena.org.uk>
- <CAO_48GF9pKZCCof170TvB0ubOkecDzcGhtUUuY_Td78L1J338A@mail.gmail.com>
- <20200617120601.GE4613@sirena.org.uk>
- <CAO_48GGhX-AxjvvvPKRMc+LQ_Uws1s_b4Q+aHokVv2RxcpObQw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GUPx2O/K0ibUojHx"
-Content-Disposition: inline
-In-Reply-To: <CAO_48GGhX-AxjvvvPKRMc+LQ_Uws1s_b4Q+aHokVv2RxcpObQw@mail.gmail.com>
-X-Cookie: This fortune is false.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 17 Jun 2020 08:40:42 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36051 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726833AbgFQMkh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 08:40:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592397636;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=2RQrT3EjDVr3su/B3tRPDza7pUR3iLPl4siz1SBOLw8=;
+        b=hQMjO7NfwdTU8N5p2O4d+ZWv+iGEw8Rra9MgUuiifMUNfb3sEzF/IAIu4i8/fGnj5qQ2Rx
+        lj+dgLfEQwHtxS9zEQhy8I+PfJd1B/uuWql9X1yJCMPYmi+XNoojECjSj8Ri5JBfWZQ85V
+        ZgCfydu9St2T7/6f0DipGZYYk3HUjyo=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-31-2qfS0-V6NiaXCn3unQkguw-1; Wed, 17 Jun 2020 08:40:34 -0400
+X-MC-Unique: 2qfS0-V6NiaXCn3unQkguw-1
+Received: by mail-qv1-f72.google.com with SMTP id ba13so1485872qvb.15
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 05:40:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2RQrT3EjDVr3su/B3tRPDza7pUR3iLPl4siz1SBOLw8=;
+        b=OELzNpxBqkD86CQO/dXWdU+Dwc8U372NHPM87MFP4uisnQBF4ZZLnyjkV+1gTHSxPO
+         bnUvbXSgX2ZqQSMsXVDa/CG+CL8dTSmdvUWO6aEUiqt1UtI4eh+xKjVOQtEYumcFeJPK
+         sc3vNrulMueMo+pMmLq6wW9e1w2EKBc3LRiMwnikkQ/UrvzA3Dr6XuqFmfs8lMDl0Lxy
+         mNia9L0rot9ykCuvvZuFSTfwh+aUjtCpLNVnk4lpv+Khql4NlFGOAlQu2jrt/MHEqWsO
+         JrbVpm85uQ7++7TC24d+IFe4GqS+PnluK6hB56mETdiCOuvg5EXU/JSSpm6wDHTtyqPM
+         N8ZA==
+X-Gm-Message-State: AOAM5326wiOIp5lgk1vSwEcHdZP+yA8UpyXKIvVHSkmZyZgW8VmfqTxi
+        XbYABSoHXj30uxOBE5WQEtgtI0kb4EClIN1XFrdZq/0XfSNnnb0h0bW7MK/fl6grOEO1GKlSqBi
+        6U3IVem7FjyNrzxjGSQOMbdh0
+X-Received: by 2002:a37:2c85:: with SMTP id s127mr23808530qkh.35.1592397634145;
+        Wed, 17 Jun 2020 05:40:34 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwRdA5/LRmzm5WOE/vH5imSdM/e0uBC09qFzet2IijFSRmUYeFsucAw0atfWaZlDq4biKMDmQ==
+X-Received: by 2002:a37:2c85:: with SMTP id s127mr23808515qkh.35.1592397633918;
+        Wed, 17 Jun 2020 05:40:33 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id 69sm17054463qkh.15.2020.06.17.05.40.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 05:40:33 -0700 (PDT)
+From:   trix@redhat.com
+To:     paul@paul-moore.com, stephen.smalley.work@gmail.com,
+        eparis@parisplace.org, omosnace@redhat.com, weiyongjun1@huawei.com
+Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] selinux: fix undefined return of cond_evaluate_expr
+Date:   Wed, 17 Jun 2020 05:40:28 -0700
+Message-Id: <20200617124028.14130-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Tom Rix <trix@redhat.com>
 
---GUPx2O/K0ibUojHx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+clang static analysis reports an undefined return
 
-On Wed, Jun 17, 2020 at 05:39:26PM +0530, Sumit Semwal wrote:
-> On Wed, 17 Jun 2020 at 17:36, Mark Brown <broonie@kernel.org> wrote:
+security/selinux/ss/conditional.c:79:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
+        return s[0];
+        ^~~~~~~~~~~
 
-> > That seems...  interesting.  Are you sure the regulator has fully ramped
-> > when STATUS1 starts flagging?
+static int cond_evaluate_expr( ...
+{
+	u32 i;
+	int s[COND_EXPR_MAXDEPTH];
 
-> On a consumer device, I am not sure I have any way of checking that,
-> but if there's some way you'd like me to validate it, I'll be happy
-> to.
+	for (i = 0; i < expr->len; i++)
+	  ...
 
-Without any way of validating what's going on or information on the
-hardware I'd be inclined to go with whatever reports more slowly for
-safety.
+	return s[0];
 
---GUPx2O/K0ibUojHx
-Content-Type: application/pgp-signature; name="signature.asc"
+When expr->len is 0, the loop which sets s[0] never runs.
 
------BEGIN PGP SIGNATURE-----
+So return -1 if the loop never runs.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7qDz4ACgkQJNaLcl1U
-h9BUTQf+KRqV/mXMamOWLACdLW5gZH6Y09B9TTc3Tz2fPQsNFYJnIhlDLeu8fT1+
-9B1QCd6Uu+8YxtlaD9d013/bapXRVVrx+6Lge3xyghKGc4UYljifwI5aSnP/+KbK
-WdtJ803eBe1inc0yg03o5OzrwKtd3Q48bIaOJuApqz6Jww5o7bZ4lglbMfv56f0n
-HsD1z0i0zX83BewbLqxTWWxv8u4DrrS1+o3EqzzK2dgUwKFmCR/ZJ8RHZeVS20vJ
-WGHc8n8fV5EjIuUHlqJ5lOl/+C07FCI1UrLSYA+16MiAmPbmaWlEXzKl0/m3yj8k
-/FZh8gFCDt0cewJTYyDX/huTVOwNdA==
-=AigS
------END PGP SIGNATURE-----
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ security/selinux/ss/conditional.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---GUPx2O/K0ibUojHx--
+diff --git a/security/selinux/ss/conditional.c b/security/selinux/ss/conditional.c
+index 450bc02f4cd2..0cc7cdd58465 100644
+--- a/security/selinux/ss/conditional.c
++++ b/security/selinux/ss/conditional.c
+@@ -27,6 +27,9 @@ static int cond_evaluate_expr(struct policydb *p, struct cond_expr *expr)
+ 	int s[COND_EXPR_MAXDEPTH];
+ 	int sp = -1;
+ 
++	if (expr->len == 0)
++		return -1;
++
+ 	for (i = 0; i < expr->len; i++) {
+ 		struct cond_expr_node *node = &expr->nodes[i];
+ 
+-- 
+2.18.1
+
