@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B00C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BE6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28AD020B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94BD92098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q146FF/n"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gVqy3Kjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgFQWdG (ORCPT
+        id S1727866AbgFQWdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:33:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49482 "EHLO
+        Wed, 17 Jun 2020 18:33:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbgFQWdC (ORCPT
+        with ESMTP id S1727849AbgFQWdC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 18:33:02 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE907C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:33:00 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id x18so4887785lji.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:33:00 -0700 (PDT)
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A43C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:33:01 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id x18so4887823lji.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:33:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DTnN1Qd9XL+Q3/Xzr6hJSAyMU91ZuAFYJQwbqBZtvcY=;
-        b=Q146FF/nq+MAfYccQR1kIs3GUWuAZhEsgx/HXcUtPrQMLg1Mg+RNA1fdwxHS5lAAfy
-         sOgFjmEORhNl/CAOWc2VoMk2jb7+G/ZZ+niOE3QFW59Tkhv28PrKnJdBMmqd+U4Y4Ls5
-         gOwUlgTH0vNGwifLM1MJ3DqN9LE34Hpsc1D1GOuTPnm66OBvduKxB5I1UJ5RtlUiWWal
-         hAZMNnJOBOx5/mgn2CqyT0efglskibG8HEv992ExsXGs+UpTO4EecVH6O2394mgNbXgW
-         p8iay6e/Pz3O2DrTynxTy2JlHHVpFnhHHJAt86iRJ/8zYWjlVUC0vN5CZEbRHKwlhgdb
-         pSnA==
+        bh=elMpiHvJWsjYoN8PlQbYu4ErKElFdKXtWgkUy15ZXZk=;
+        b=gVqy3KjhCAZKxJJIp7EGn1cJPoT+yzjHlMx5EffGgIfTktO7nC0K88SmU0eiypqG5R
+         NPZDvpEEsu8xUnG0hyC4UDrFL5+MDw0YKORoJVmUufM9R79D7WyJTz+TKGo/crxJjgGn
+         GVjWRuM0ahmxsUOLvbDtNNEaIqYkHNgWfl4T1Bi/gsSIuP8bnFhPga/XHV33ghwBIj2T
+         xCGQ5gMe93LCCQHV1xaB91Z8vpPpYokCZ7beroWrzLq5kw0sX3FvnNW6jMaJapQ7WYM7
+         HPAttOY/wPjRPGja29aEFzgtEE1lwDg9oUrn72KfqazoT6XAVZFJrzMjXJ12V1KEpbSA
+         UVwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DTnN1Qd9XL+Q3/Xzr6hJSAyMU91ZuAFYJQwbqBZtvcY=;
-        b=SY5FxaSyS5Bp8X0/HHQ4pCZm0hmQbnft+P/T7lIcZsrgKfI20NEZJP7kriOyj+T4RI
-         4IAz5R9iuvGOoP74+TieKMPAmCKaSunyl51RlTCZU9pVGwBGkfmjU4B77hMNc9tkJix4
-         RADHJj74mOhzUc9ZB5Co9Hs9nonGGCp4pRYLoPw/g+OptsJqVsUKWOLBB0xo/VgRsXew
-         MDaXDEFmmd1GF6crN6cd0PzMtTJskT8UDP6lD6Z1qYo+HC2G8BKNXjlV1Izazua1R4mK
-         AtWE/IjtA+CQNDi7SLorQVSKi+xU9Ic1a+HEbwx4NXzaFTsJ0GaPCQU804vSQ/A6SB6w
-         H6lA==
-X-Gm-Message-State: AOAM5330A1wVjRsEFrT0hY0kLf6Xl/Wynsqpk9GRdUVYe73RlKbt+PIS
-        3Bu2sGiniLCNjCG/RMqryII=
-X-Google-Smtp-Source: ABdhPJwhdCwN/f8LHIFgMw6Cx073H+VGydeUleO2xclVyfEpe7ig5C+oVXkIvyVsSCcrLw3kJmNuyg==
-X-Received: by 2002:a2e:a16a:: with SMTP id u10mr697169ljl.222.1592433179424;
-        Wed, 17 Jun 2020 15:32:59 -0700 (PDT)
+        bh=elMpiHvJWsjYoN8PlQbYu4ErKElFdKXtWgkUy15ZXZk=;
+        b=WmfK+Y/glRVcijHOBlIWrDcCYek5BSUXVfiMvMDh+cdeor5QX5JKftmNhajEhQQPQt
+         pJ0cy2G4dZx46kfMvBVoOs3xTl1EWTAZnpOl2o1vcrCY4MexyZpSkjSGR+Bqix7/ckAt
+         fBCBh4uNF+3L3h9DP42o780tzeHWc3GBzjW/GUvjFOmSsXkoV2ivX+8hQ2gh+Ua5vuId
+         oTsMyvd/fnd65rNFD7P1zbOUPx7/BYXDbMcHZcqBj688z1BFLnTwO05+nwDN72TFmfYt
+         8GCrk3ek2ElL2QQ2eH6YKVQM2th6eevJKlTuG9HKFGd5/7mR60h8Q5vVJA8yqFAq5uGo
+         m5xw==
+X-Gm-Message-State: AOAM531n4S/JSVdFl4FTQl97qQn0VYhKQWQId5fSJnCcm8T/eGA9WJ4Y
+        yZdsMAyVaVv8WDQ33vV67Uk=
+X-Google-Smtp-Source: ABdhPJy7a8w9Su6nTUzLVWfm2I09oqawqmOLV1R+ZS9Qd5m273T0pNUEoEiQJQJaQaPITjhDzqc4Tw==
+X-Received: by 2002:a2e:b8ce:: with SMTP id s14mr681249ljp.89.1592433180426;
+        Wed, 17 Jun 2020 15:33:00 -0700 (PDT)
 Received: from localhost.localdomain (h-82-196-111-136.NA.cust.bahnhof.se. [82.196.111.136])
-        by smtp.gmail.com with ESMTPSA id 203sm226079lfh.19.2020.06.17.15.32.58
+        by smtp.gmail.com with ESMTPSA id 203sm226079lfh.19.2020.06.17.15.32.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 15:32:58 -0700 (PDT)
+        Wed, 17 Jun 2020 15:32:59 -0700 (PDT)
 From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
 Cc:     lgirdwood@gmail.com, broonie@kernel.org,
         linux-kernel@vger.kernel.org,
         Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH 4/5] regulator: max8907: Constify static structs
-Date:   Thu, 18 Jun 2020 00:32:46 +0200
-Message-Id: <20200617223247.25566-5-rikard.falkeborn@gmail.com>
+Subject: [PATCH 5/5] regulator: max8997: Constify struct regulator_ops
+Date:   Thu, 18 Jun 2020 00:32:47 +0200
+Message-Id: <20200617223247.25566-6-rikard.falkeborn@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200617223247.25566-1-rikard.falkeborn@gmail.com>
 References: <20200617223247.25566-1-rikard.falkeborn@gmail.com>
@@ -83,48 +83,84 @@ them in read-only memory.
 
 Before:
    text    data     bss     dec     hex filename
-   2753    7328       0   10081    2761 drivers/regulator/max8907-regulator.o
+  13114    8596       0   21710    54ce drivers/regulator/max8997-regulator.o
 
 After:
    text    data     bss     dec     hex filename
-   9405     684       0   10089    2769 drivers/regulator/max8907-regulator.o
+  14038    7672       0   21710    54ce drivers/regulator/max8997-regulator.o
 
 Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 ---
- drivers/regulator/max8907-regulator.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/regulator/max8997-regulator.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/regulator/max8907-regulator.c b/drivers/regulator/max8907-regulator.c
-index 96dc0eea7659..1a6fd68f3fb1 100644
---- a/drivers/regulator/max8907-regulator.c
-+++ b/drivers/regulator/max8907-regulator.c
-@@ -109,7 +109,7 @@ struct max8907_regulator {
- static const struct regulator_ops max8907_mbatt_ops = {
+diff --git a/drivers/regulator/max8997-regulator.c b/drivers/regulator/max8997-regulator.c
+index 4d2487279a0a..ba47a5e2fbcb 100644
+--- a/drivers/regulator/max8997-regulator.c
++++ b/drivers/regulator/max8997-regulator.c
+@@ -732,7 +732,7 @@ static int max8997_reg_disable_suspend(struct regulator_dev *rdev)
+ 	return max8997_update_reg(i2c, reg, ~pattern, mask);
+ }
+ 
+-static struct regulator_ops max8997_ldo_ops = {
++static const struct regulator_ops max8997_ldo_ops = {
+ 	.list_voltage		= max8997_list_voltage,
+ 	.is_enabled		= max8997_reg_is_enabled,
+ 	.enable			= max8997_reg_enable,
+@@ -742,7 +742,7 @@ static struct regulator_ops max8997_ldo_ops = {
+ 	.set_suspend_disable	= max8997_reg_disable_suspend,
  };
  
--static struct regulator_ops max8907_ldo_ops = {
-+static const struct regulator_ops max8907_ldo_ops = {
- 	.list_voltage = regulator_list_voltage_linear,
- 	.set_voltage_sel = regulator_set_voltage_sel_regmap,
- 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-@@ -128,7 +128,7 @@ static const struct regulator_ops max8907_fixed_ops = {
- 	.list_voltage = regulator_list_voltage_linear,
+-static struct regulator_ops max8997_buck_ops = {
++static const struct regulator_ops max8997_buck_ops = {
+ 	.list_voltage		= max8997_list_voltage,
+ 	.is_enabled		= max8997_reg_is_enabled,
+ 	.enable			= max8997_reg_enable,
+@@ -753,7 +753,7 @@ static struct regulator_ops max8997_buck_ops = {
+ 	.set_suspend_disable	= max8997_reg_disable_suspend,
  };
  
--static struct regulator_ops max8907_out5v_ops = {
-+static const struct regulator_ops max8907_out5v_ops = {
- 	.list_voltage = regulator_list_voltage_linear,
- 	.enable = regulator_enable_regmap,
- 	.disable = regulator_disable_regmap,
-@@ -145,7 +145,7 @@ static const struct regulator_ops max8907_bbat_ops = {
- 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
+-static struct regulator_ops max8997_fixedvolt_ops = {
++static const struct regulator_ops max8997_fixedvolt_ops = {
+ 	.list_voltage		= max8997_list_voltage,
+ 	.is_enabled		= max8997_reg_is_enabled,
+ 	.enable			= max8997_reg_enable,
+@@ -761,7 +761,7 @@ static struct regulator_ops max8997_fixedvolt_ops = {
+ 	.set_suspend_disable	= max8997_reg_disable_suspend,
  };
  
--static struct regulator_desc max8907_regulators[] = {
-+static const struct regulator_desc max8907_regulators[] = {
- 	REG_MBATT(),
- 	REG_LDO(SD1, "in-v1", MAX8907_REG_SDCTL1, 650000, 2225000, 25000),
- 	REG_LDO(SD2, "in-v2", MAX8907_REG_SDCTL2, 637500, 1425000, 12500),
+-static struct regulator_ops max8997_safeout_ops = {
++static const struct regulator_ops max8997_safeout_ops = {
+ 	.list_voltage		= regulator_list_voltage_table,
+ 	.is_enabled		= max8997_reg_is_enabled,
+ 	.enable			= max8997_reg_enable,
+@@ -771,7 +771,7 @@ static struct regulator_ops max8997_safeout_ops = {
+ 	.set_suspend_disable	= max8997_reg_disable_suspend,
+ };
+ 
+-static struct regulator_ops max8997_fixedstate_ops = {
++static const struct regulator_ops max8997_fixedstate_ops = {
+ 	.list_voltage		= max8997_list_voltage_charger_cv,
+ 	.get_voltage_sel	= max8997_get_voltage_sel,
+ 	.set_voltage		= max8997_set_voltage_charger_cv,
+@@ -805,7 +805,7 @@ static int max8997_get_current_limit(struct regulator_dev *rdev)
+ 	return max8997_list_voltage(rdev, sel);
+ }
+ 
+-static struct regulator_ops max8997_charger_ops = {
++static const struct regulator_ops max8997_charger_ops = {
+ 	.is_enabled		= max8997_reg_is_enabled,
+ 	.enable			= max8997_reg_enable,
+ 	.disable		= max8997_reg_disable,
+@@ -813,7 +813,7 @@ static struct regulator_ops max8997_charger_ops = {
+ 	.set_current_limit	= max8997_set_current_limit,
+ };
+ 
+-static struct regulator_ops max8997_charger_fixedstate_ops = {
++static const struct regulator_ops max8997_charger_fixedstate_ops = {
+ 	.get_current_limit	= max8997_get_current_limit,
+ 	.set_current_limit	= max8997_set_current_limit,
+ };
 -- 
 2.27.0
 
