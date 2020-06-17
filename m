@@ -2,153 +2,167 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7814DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89AE9208D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CE520884
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:21:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f9SMlyM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgFQTVg (ORCPT
+        id S1726976AbgFQTVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 15:21:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34460 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726597AbgFQTVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 15:21:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0E869ADC9;
-        Wed, 17 Jun 2020 19:21:38 +0000 (UTC)
-Message-ID: <9450f86c15ecd8435bcdbc395f8674172a975100.camel@suse.de>
-Subject: Re: [PATCH v3 4/9] ARM: dts: bcm2711: Add reset controller to xHCI
- node
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, andy.shevchenko@gmail.com,
-        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com,
-        devicetree@vger.kernel.org, wahrenst@gmx.net,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Date:   Wed, 17 Jun 2020 21:21:31 +0200
-In-Reply-To: <20200612171334.26385-5-nsaenzjulienne@suse.de>
-References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
-         <20200612171334.26385-5-nsaenzjulienne@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-lfIoWXagrdDHMww3Jq4T"
-User-Agent: Evolution 3.36.3 
+        Wed, 17 Jun 2020 15:21:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbgFQTVn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 15:21:43 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4493C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:21:42 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id i27so4250888ljb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:21:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I6zPV8zobDf9HXBdYcU6mVid6vbxVvMja1AcfqC3AhY=;
+        b=f9SMlyM/U0Pqzn1ZfwPovFVY6pZbMaVNMoLSufan6Hon09QmB+eZa9nTGXfGxBQyIe
+         PQULWwLtmklVkIMpg9pFaEPTNvi2LC9IcxyTkpI/nBKVXWG3U0wSSuyj8AbbZMKiq4EL
+         OwS61L9Q6Exu+JDkyDU+jwWBB4UHVz/IkhsdeBAJdL60GDpDSexutvvHvx7VHaAPNwb0
+         FnlqEr9i019s7c+rJ7WxAlpIIYFqrnAFs8U6vfs8J2tYfCZFlRTNQg6JB5oYjGsmP5Iz
+         rqP5WAiuJJNGDIoK/swk2D9TyycjNZRhwlFDD2mZ41qIct+Dy4I6wr1vYDthC2JvIh/L
+         vNVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I6zPV8zobDf9HXBdYcU6mVid6vbxVvMja1AcfqC3AhY=;
+        b=rVqXJLNEFoWsH+RpLPMrIL9YCeaHcQgm+C5kjvQyTqAAg+L2ej2jIt14MzWXF0tEOE
+         jC035ZnxZP5coqE4i5AsySV6u9E13qoMaWJ5B+g38KMe5iX8EU3GiUvELEVRse+qNFBz
+         JGQBYU3Vk0v/qhi0W1lny9rvmpB7RZShpfBbm2e8W4WTsG0vVgMMpgQaD39A1d5rADLi
+         x5X4q2qNnhWOCMtZZZSGCm1v6PBZggIe1cqnPTfKsczseSWABMwSlrhbBZg3cqpRYmFm
+         05IROMXnOPOS5sBcMVuvGfJ5WY7E80ltugiISnRnjxvC9RtCm2U2ao0Dcye5sTCa36YF
+         286A==
+X-Gm-Message-State: AOAM531QRwqiP5LBdQjkE5CSYRwUH23czORXvHuR21yqDWBhwiHrhwb/
+        TILqRrta9MEFt3JZ6cI3avQMjKQpmq8zdIYff+8=
+X-Google-Smtp-Source: ABdhPJy/zgi6evi5V74dtl6A1Gnb2qzWqwv0aC2J/qtn2wVcoQui5pDVfUgL66fQBPwxEv0f/1kKdEbuFTWgUKo0FhA=
+X-Received: by 2002:a2e:7215:: with SMTP id n21mr333356ljc.315.1592421701149;
+ Wed, 17 Jun 2020 12:21:41 -0700 (PDT)
 MIME-Version: 1.0
+References: <1592360843-3440-1-git-send-email-jrdr.linux@gmail.com>
+ <1592360843-3440-2-git-send-email-jrdr.linux@gmail.com> <20200617111321.GP4282@kadam>
+ <CAFqt6zYHXmoCrWLEru2FZsRnXptFERJv1qiDFPip=q_cZaZEBg@mail.gmail.com> <20200617175918.GO4151@kadam>
+In-Reply-To: <20200617175918.GO4151@kadam>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Thu, 18 Jun 2020 00:59:57 +0530
+Message-ID: <CAFqt6za2Npg147p=47_PKjGehKKP=s5dgtu1O=nrrPePxjXPkg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] staging: kpc2000: Unpin partial pinned pages
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Bharath Vedartham <linux.bhar@gmail.com>,
+        harshjain32@gmail.com, John Hubbard <jhubbard@nvidia.com>,
+        Greg KH <gregkh@linuxfoundation.org>, pakki001@umn.edu,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Simon_Sandstr=C3=B6m?= <simon@nikanor.nu>,
+        ldufour@linux.ibm.com, Michel Lespinasse <walken@google.com>,
+        jane.pnx9@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-lfIoWXagrdDHMww3Jq4T
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi All,
-
-On Fri, 2020-06-12 at 19:13 +0200, Nicolas Saenz Julienne wrote:
-> The chip is hardwired to the board's PCIe bus and needs to be properly
-> setup trough a firmware routine after a PCI fundamental reset. Pass the
-> reset controller phandle that takes care of triggering the
-> initialization to the relevant PCI device.
+On Wed, Jun 17, 2020 at 11:29 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 >
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> On Wed, Jun 17, 2020 at 11:13:32PM +0530, Souptick Joarder wrote:
+> > On Wed, Jun 17, 2020 at 4:43 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> > >
+> > > On Wed, Jun 17, 2020 at 07:57:20AM +0530, Souptick Joarder wrote:
+> > > > There is a bug, when get_user_pages() failed but partially pinned
+> > > > pages are not unpinned. Fixed it.
+> > > >
+> > > > Also, int is more appropriate type for rv. Changed it.
+> > > >
+> > > > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> > > > Cc: John Hubbard <jhubbard@nvidia.com>
+> > > > Cc: Bharath Vedartham <linux.bhar@gmail.com>
+> > > > Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> > > > ---
+> > > >  drivers/staging/kpc2000/kpc_dma/fileops.c | 6 +++++-
+> > > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
+> > > > index 8975346..b136353 100644
+> > > > --- a/drivers/staging/kpc2000/kpc_dma/fileops.c
+> > > > +++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
+> > > > @@ -35,7 +35,7 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
+> > > >                           unsigned long iov_base, size_t iov_len)
+> > > >  {
+> > > >       unsigned int i = 0;
+> > > > -     long rv = 0;
+> > > > +     int rv = 0;
+> > > >       struct kpc_dma_device *ldev;
+> > > >       struct aio_cb_data *acd;
+> > > >       DECLARE_COMPLETION_ONSTACK(done);
+> > > > @@ -193,6 +193,10 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
+> > > >               put_page(acd->user_pages[i]);
+> > >                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > > >
+> > > >   err_get_user_pages:
+> > > > +     if (rv > 0) {
+> > > > +             for (i = 0; i < rv; i++)
+> > > > +                     put_pages(acd->user_pages[i])
+> > >                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > >
+> > > > +     }
+> > >
+> > > This isn't a complete fix.  "rv" is the negative error code but here we
+> > > are returning a positive value on this path.
+> >
+> > In case of error of get_user_pages(), it will return -errno, 0 and 3rd one is
+> > (rv > 0 && rv != acd->page_count). When rv is -errno or 0 there is no need
+> > to call put_pages() in error path. But for 3rd case partially mapped pages
+> > need to unpin.
+> >
+> > Correct me if I am missing anything.
+> >
 >
-> ---
+>    182                  kfree(acd);
+>    183          }
+>    184          return rv;
+>    185
+>    186   err_descr_too_many:
+>    187          unlock_engine(ldev);
+>    188          dma_unmap_sg(&ldev->pldev->dev, acd->sgt.sgl, acd->sgt.nents, ldev->dir);
+>    189          sg_free_table(&acd->sgt);
+>    190   err_dma_map_sg:
+>    191   err_alloc_sg_table:
+>    192          for (i = 0 ; i < acd->page_count ; i++)
+>    193                  put_page(acd->user_pages[i]);
+>    194
+>    195   err_get_user_pages:
+>    196          if (rv > 0) {
+>                     ^^^^^^
+> "rv" is positive.
 >
-> Changes since v2:
->  - Use dt-bindings to access IDs
+>    197                  for (i = 0; i < rv; i++)
+>    198                          put_pages(acd->user_pages[i])
+>    199          }
+>    200          kfree(acd->user_pages);
+>    201   err_alloc_userpages:
+>    202          kfree(acd);
+>    203          dev_dbg(&priv->ldev->pldev->dev, "%s returning with error %ld\n", __func__, rv);
+>    204          return rv;
+>                        ^^
+> "rv" is still positive but it should be -EFAULT.
 >
-> Changes since v1:
->  - Update to match new binding
->
->  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> index 0cef95058fb0..e20979013414 100644
-> --- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> +++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-> @@ -4,6 +4,8 @@
->  #include "bcm2835-rpi.dtsi"
->  #include "bcm283x-rpi-usb-peripheral.dtsi"
->
-> +#include <dt-bindings/reset/raspberrypi,firmware-reset.h>
-> +
->  / {
->  	compatible =3D "raspberrypi,4-model-b", "brcm,bcm2711";
->  	model =3D "Raspberry Pi 4 Model B";
-> @@ -207,6 +209,13 @@ phy1: ethernet-phy@1 {
->  	};
->  };
->
-> +&pcie0 {
-> +	usb@1,0 {
-> +		reg =3D <0 0 0 0 0>;
-> +		resets =3D <&reset RASPBERRYPI_FIRMWARE_RESET_ID_USB>;
-> +	};
-> +};
-> +
 
-I'm now double-guessing this is correct. With this lspci -tv output:
-
-[0000:00]---00.0-[01]----00.0  VIA Technologies, Inc. VL805 USB 3.0 Host Co=
-ntroller
-
-The DT patch should be more like this:
-
-+&pcie0 {
-+       pci@0 {
-+               #address-cells =3D <3>;
-+               #size-cells =3D <2>;
-+               ranges;
-+
-+               reg =3D <0 0 0 0 0>;
-+
-+               usb@1,0 {
-+                       reg =3D <0x10000 0 0 0 0>;
-+                       resets =3D <&reset RASPBERRYPI_FIRMWARE_RESET_ID_US=
-B>;
-+               };
-+       };
-+};
-
-Small details aside I'm pretty confident this is the way to go, but would
-appreciate some comments/validation.
-
-Regards,
-Nicolas
-
-
---=-lfIoWXagrdDHMww3Jq4T
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7qbTsACgkQlfZmHno8
-x/4CVggAn3Z1hf15FCwZBqJ5vtu95aPDbATL/d0KQ7jGrs66dTwaOP6aBJFw48YF
-0wKRsvMe9LukIRSOBh9HluSEszmQj7/hUGRYcsXaBgmHeOVs9PCXDbJb0/XtgBwF
-3EvokrD1MRS9bcpXwVOCKsMu+wjaGMlCiiJ6wmvD2ffybDPtYA19Xci86XF3Y2WT
-PTeuhEXh+/+wADvH/z0Gi4ivdIAh6FGLbdaSSVgEpf1JChHkSH0anKhw78keHGWK
-WXifnT/7XqG9VtvNNmFvQ1+q7MoyyJlzCn/NXfNuhjmBV+A6gxhefrVRq+P2yeb7
-LzlXGvG8m8RsQQgt1TlpTQwfAjB8KQ==
-=jUpw
------END PGP SIGNATURE-----
-
---=-lfIoWXagrdDHMww3Jq4T--
-
+Ahh,  my mistake. Will correct it in v2.
+Do other patches in the series looks good ?
