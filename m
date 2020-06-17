@@ -2,135 +2,135 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C27AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E073C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C46B208B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE11520734
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:46:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LYAkHByC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aJWK9biv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgFQNpR (ORCPT
+        id S1726558AbgFQNqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:45:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgFQNpQ (ORCPT
+        Wed, 17 Jun 2020 09:46:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30568 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725901AbgFQNqq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:45:16 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB98C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 06:45:16 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l10so2383948wrr.10
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 06:45:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jZcfSh9+wW5N+Dlp3gMek+FnLdHyfPdEraPwakLbSEY=;
-        b=LYAkHByCGO57OGvCsKakDa/onsj0NNBFKEEvJ1Z7yYhTezhe8ecYidS+fkrK9VFrBz
-         SygBH0qJBjfg3qU3HPXeyU8qALRaERnoia1cSFiOruEduuKOrx8vuRg1Kl1WksZQCLMK
-         x/5nLL7+T2k0SU7zHsW7tdWl4RiwXAqkqs2Fy546cOoMY647WD5v1IQqNKWaqoQQDTo4
-         Fu93NL6f5TPFC+i9cCNmWKSL2uQnJg0vC4e+UvZuzF13cCeVrCAApkOOBlsVWXiytWqG
-         c5GFLY/NNOSig71fvwBpu2UfSn9tOl2xE27q9XngYXC+pEjbm45Ppje22FIen6vyjkGr
-         lRzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jZcfSh9+wW5N+Dlp3gMek+FnLdHyfPdEraPwakLbSEY=;
-        b=GLA895+nhWh01vDFNACp9+PquH9E0hiBZFOPQVAYQZjRLm9SbddY9p6JCD1NWdgErR
-         s4vadJy5AYH2Ps3SHGa3A8Ji6H51G5dsZ0Sr0priom4P/aLIQZFiH0yyEC0yoFoXWa1D
-         sV71KMkSMxql+0ZgTqaUbnmSj3XWm9QXmC3r2FjFQrOm+HzGUXJe0QC1sTZAkOCWfjos
-         4TfyAt5OWFlxpyXjv9LfJ7JwXtKwdB2X7lxdeImOVBknIxqnGpFntYKgtuvwwTkG/b3r
-         dbTZkEdL8y+7+tb9yPzYdT35Hzn4z1oDCMYml4W32jUvoazfzhXZu3dBZ6ehVFTQgb7v
-         dnsQ==
-X-Gm-Message-State: AOAM53059Zu3QhzyWY3oDM5m+k+An6Jq7KOygXtt8wyQ1jJvNE1YMPkR
-        MJ+iBpog2ByQtVKnRaf8O7vAmA==
-X-Google-Smtp-Source: ABdhPJyjEYHOKxsSHo9Q9bM5sAOlNls27BPQ1cWgfi72kiXg1pUC1BOlnpNjFiDtsyLCGFq+QVwFTA==
-X-Received: by 2002:adf:9c12:: with SMTP id f18mr9306013wrc.105.1592401514854;
-        Wed, 17 Jun 2020 06:45:14 -0700 (PDT)
-Received: from localhost.localdomain ([87.120.218.65])
-        by smtp.googlemail.com with ESMTPSA id j14sm1251165wrs.75.2020.06.17.06.45.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jun 2020 06:45:14 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        georgi.djakov@linaro.org
-Subject: [PATCH] arm64: dts: msm8916: Add interconnect provider DT nodes
-Date:   Wed, 17 Jun 2020 16:45:15 +0300
-Message-Id: <20200617134515.25229-1-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        Wed, 17 Jun 2020 09:46:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592401604;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=q6wEz7eoHV1YYQkmzrvw20KoNhWZxNuUKHu5DTnNaxE=;
+        b=aJWK9biv9aHWYSckj4GtRtFGbk1vTNzgXCaUzo3mTUSHezmuL/5fwyuLfmiwYUmRAQ8KH9
+        HDC2qkTg82+uWQPB1f/LqUTcOrTbby8i3pVjSGOzQz2kA45EXZsikJBZdU2WC+lFqiolSf
+        bTaGztSAwB+AOz07r9dZ9mkZ411T35M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-247-k2MPCgopPq67u6U_I-qvWg-1; Wed, 17 Jun 2020 09:46:42 -0400
+X-MC-Unique: k2MPCgopPq67u6U_I-qvWg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B07711100F62;
+        Wed, 17 Jun 2020 13:46:40 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 482CC5D9D3;
+        Wed, 17 Jun 2020 13:46:37 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05HDkaMH022324;
+        Wed, 17 Jun 2020 09:46:36 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05HDkY4V022320;
+        Wed, 17 Jun 2020 09:46:34 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Wed, 17 Jun 2020 09:46:34 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Eric Biggers <ebiggers@kernel.org>,
+        George Cherian <gcherian@marvell.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Zaibo Xu <xuzaibo@huawei.com>
+cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Mike Snitzer <msnitzer@redhat.com>,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
+        linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Milan Broz <mbroz@redhat.com>
+Subject: Re: [dm-devel] [PATCH 4/4] crypto: fix the drivers that don't respect
+ CRYPTO_TFM_REQ_MAY_SLEEP
+In-Reply-To: <20200616182327.GE207319@gmail.com>
+Message-ID: <alpine.LRH.2.02.2006170940510.18714@file01.intranet.prod.int.rdu2.redhat.com>
+References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com> <20200610010450.GA6449@gondor.apana.org.au> <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com> <20200610121106.GA23137@gondor.apana.org.au>
+ <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2006161102250.28052@file01.intranet.prod.int.rdu2.redhat.com> <20200616175022.GD207319@gmail.com> <alpine.LRH.2.02.2006161416510.12390@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200616182327.GE207319@gmail.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add nodes for the network-on-chip interconnect buses present on
-MSM8916-based platforms.
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 28 +++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 32bd140ac9fd..6c57896d9836 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include <dt-bindings/arm/coresight-cti-dt.h>
-+#include <dt-bindings/interconnect/qcom,msm8916.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8916.h>
- #include <dt-bindings/reset/qcom,gcc-msm8916.h>
-@@ -406,11 +407,38 @@ soc: soc {
- 		ranges = <0 0 0 0xffffffff>;
- 		compatible = "simple-bus";
- 
-+		bimc: interconnect@400000 {
-+			compatible = "qcom,msm8916-bimc";
-+			reg = <0x00400000 0x62000>;
-+			#interconnect-cells = <1>;
-+			clock-names = "bus", "bus_a";
-+			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
-+				 <&rpmcc RPM_SMD_BIMC_A_CLK>;
-+		};
-+
- 		restart@4ab000 {
- 			compatible = "qcom,pshold";
- 			reg = <0x4ab000 0x4>;
- 		};
- 
-+		pcnoc: interconnect@500000 {
-+			compatible = "qcom,msm8916-pcnoc";
-+			reg = <0x00500000 0x11000>;
-+			#interconnect-cells = <1>;
-+			clock-names = "bus", "bus_a";
-+			clocks = <&rpmcc RPM_SMD_PCNOC_CLK>,
-+				 <&rpmcc RPM_SMD_PCNOC_A_CLK>;
-+		};
-+
-+		snoc: interconnect@580000 {
-+			compatible = "qcom,msm8916-snoc";
-+			reg = <0x00580000 0x14000>;
-+			#interconnect-cells = <1>;
-+			clock-names = "bus", "bus_a";
-+			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-+				 <&rpmcc RPM_SMD_SNOC_A_CLK>;
-+		};
-+
- 		msmgpio: pinctrl@1000000 {
- 			compatible = "qcom,msm8916-pinctrl";
- 			reg = <0x1000000 0x300000>;
+On Tue, 16 Jun 2020, Eric Biggers wrote:
+
+> On Tue, Jun 16, 2020 at 02:18:17PM -0400, Mikulas Patocka wrote:
+> > 
+> > 
+> > On Tue, 16 Jun 2020, Eric Biggers wrote:
+> > 
+> > > On Tue, Jun 16, 2020 at 11:02:50AM -0400, Mikulas Patocka wrote:
+> > > > Fix the crypto drivers that don't respect CRYPTO_TFM_REQ_MAY_SLEEP. If
+> > > > CRYPTO_TFM_REQ_MAY_SLEEP is not set, the driver must not do allocation
+> > > > that sleeps.
+> > > > 
+> > > > Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+> > > 
+> > > I think you need to split this up per driver with a proper explanation and a
+> > > "Fixes:" tag for each driver.
+> > > 
+> > > Also, these bugs should have been detected by the crypto self-tests already,
+> > > since they test having preemption disabled and CRYPTO_TFM_REQ_MAY_SLEEP cleared.
+> > > Can you double check whether these are all valid fixes?  One thing to watch out
+> > > 
+> > > for is that CRYPTO_TFM_REQ_MAY_SLEEP only applies to the function call like
+> > > crypto_skcipher_encrypt() itself.  If the implementation is asynchronous and the
+> > > request gets processed in the background (i.e. if crypto_skcipher_encrypt()
+> > > returns -EINPROGRESS), the background work doesn't have to honor
+> > > CRYPTO_TFM_REQ_MAY_SLEEP.
+> > > 
+> > > - Eric
+> > 
+> > I can only compile-test this patch. I don't have the hardware.
+> > 
+> 
+> I'm just asking for you to check the code extra carefully.  The fact that the
+> self-tests should have been detecting this type of bug implies that these might
+> not actually be valid fixes.
+
+I've checked it more thoroughly and found out that 3 out of 5 drivers do
+the GFP_KERNEL allocation from crypto-engine callback. So, it is
+supposedly OK.
+
+> However, we do know that not all crypto drivers are being actively tested with
+> the latest self-tests and with kernel debugging options enabled.  So it's
+> expected that some are indeed broken.
+> 
+> - Eric
+
+The broken ones are drivers/crypto/cavium/cpt/ and 
+drivers/crypto/hisilicon/sec/
+
+I'm sending patches for them.
+
+Mikulas
+
