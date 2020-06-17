@@ -2,183 +2,105 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2569C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51E3720776
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF458207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:58:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pX61bJji"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcEerde5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgFQN6b (ORCPT
+        id S1726912AbgFQN6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:58:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54240 "EHLO
+        Wed, 17 Jun 2020 09:58:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgFQN63 (ORCPT
+        with ESMTP id S1726496AbgFQN6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:58:29 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4836FC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 06:58:29 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z9so2938476ljh.13
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 06:58:29 -0700 (PDT)
+        Wed, 17 Jun 2020 09:58:47 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89305C06174E;
+        Wed, 17 Jun 2020 06:58:47 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id i74so1864173oib.0;
+        Wed, 17 Jun 2020 06:58:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MLDiEuuNfJhWVK1I22iFWyRL9tqHD8cVwzgyE91Mz3s=;
-        b=pX61bJji52z48r7wt+tWy3rQ+DH7PbhTwh06jxsDGu+mRiyZ3DZtqcDG+frmoxZt4c
-         p/Rdh5X9077wQFDpuru7e8LbuLvGeZwGDlzoc2CWVwYwC+qj0MpehNyaz/kO6wu9FQwR
-         pndgcwWzYmMSn0oMbVqTN1yG9ytkJmw2Lk+HT3hsfx0Sy3RWSE5wGAOLh/Sgj0ChQWPD
-         qXJsd5G0osmuvnEZ+IfchDQZQ5FQfH7kCWSKT7nM5chmmyEoAdMNCUjE9LLKqGuvXue1
-         cwD1xmTFnZElTyBAEqtNUnDvcbULj2cXsAUDmLECz2ke07KqZ23MEmVwqwVjNLUd2wSR
-         wZUQ==
+        bh=eorYSI4kx7e22DHninlhRFcMQd/uFdD7qtd2CZBW3V8=;
+        b=HcEerde5q4FsPwHzHd40ZoWl8VfokXhhEa3ioIzfzPYVCXdK7stl038k3iAwVxirkW
+         HoL4+REwXuV7Ijb4LiLKpixecTvO1DlW/4JX7bqQykyH2EvcH1ubRRF9gGu8HaiXa26F
+         +hPaBbGl9T3tmwYYe0kIg9jggMazzfJDFjayCGL3o95lyFL5lLq8JLbH43qKQTw3LdvE
+         LoRScNGy4XBOMrSuBoJ5W4fB65TDFU+gon3hGmnhsVLWUibIjWm1xvPkdSClLhqWqgJT
+         JhyM46YZmcueaDu4a6v1FE6qpsjbpm0Zrd/hriPUOws07+snWV7/F+YX7sFkKxPGYmyf
+         B1SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MLDiEuuNfJhWVK1I22iFWyRL9tqHD8cVwzgyE91Mz3s=;
-        b=tOlLu/UmulC2G68a4mvbkKif+4T6NURyvo+0LS57b7EUYpPC6gAFRr6xouewtxLE7B
-         KcRIytzO8OUFIPD+MHQhfvbEY78K9S/c8wDlOEJpQBUFpHpOHbiqaXgrw5PeBhY+WH8Q
-         BHYb7vags8Oh8Yy6CyIPojK+aAm2dNL4qS/DREljzIHKA2Nt8AJqTcWlRf4SPlA124pZ
-         jhN3ImqjZpt9GjVFL7CnTBu4woM+VzKnoP3Q7P3fdXEQIZefbn1gNOspKRWxKe0i3v6t
-         QXM406DfAUaxcf0tF/3SV1EtMda/bTziXFo3zHYIC8kulXRGARAc/F7I4h/6lT7LzZln
-         l7+w==
-X-Gm-Message-State: AOAM531QcIwE0xeQsbFH5aZ3rwhL58C6B5nNrYoAeQk0D1cOn3N6M6dX
-        Cn9Z67SZD8QG0yV/sCXtSBqJ8vtODD2DhmLtsbCZVfcqPz5qVQ==
-X-Google-Smtp-Source: ABdhPJxZbnVS7dm8L9M8mgWbiYnE/qRK7G9n0TXltwJD9k3GVyoHe4++Q8DEIUTVAf5MSBMRAhHi+ho6FdlkYcVm+Ak=
-X-Received: by 2002:a2e:7e08:: with SMTP id z8mr3803277ljc.339.1592402307692;
- Wed, 17 Jun 2020 06:58:27 -0700 (PDT)
+        bh=eorYSI4kx7e22DHninlhRFcMQd/uFdD7qtd2CZBW3V8=;
+        b=oxT1YUD7u37KzFyjhlj/3FjnXnotm6bncMPOXEvLejhq0lM5aii7R41d4VuZx19bcM
+         TN3kecn4yKMnr1hwPu3j5AguXYd0bsg+Cd1xxeE35dqVYoBA8qKptl1h1349u84fw82p
+         WkR2DpscwdVgilZSpeN71prdbXl3GUw+BbV/zjl38HADMuYZDeFgVDfKDMZ0X+rnHFrR
+         ZbZ7tlzd4naNtVz+GyHLeHmreqdkTiI+g25fhMGRruOhokrDtMeRv+mKU+SKJgUo8kvH
+         WZCcBTqNWT43CwpWlm2PSXIPBO9ydivCjsJA7EMiv9BB6BXgz8J3o6sKLksd4lpHF078
+         TV7g==
+X-Gm-Message-State: AOAM531Z6lZMy9HIStq/ZD6dJy3mPfdu//56bmKfxBQ7eK5cCPhqfYMG
+        Q1Wbazdt6BPh5XtZqoT+LDzWRtiL9+/+1FDdsHPXAMlF
+X-Google-Smtp-Source: ABdhPJwS8XlvZTqpLBiYZTp/YxzhuUzRvkvoBSCtAiWjZiXL07CBZlnr2rgNVVVwz5sDViq2xgLT+Z3197U2O/X6hjU=
+X-Received: by 2002:aca:55c1:: with SMTP id j184mr7083073oib.160.1592402326786;
+ Wed, 17 Jun 2020 06:58:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
-In-Reply-To: <20200604175851.758-2-maxim.uvarov@linaro.org>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Wed, 17 Jun 2020 19:28:16 +0530
-Message-ID: <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
-Subject: Re: [PATCHv8 1/3] optee: use uuid for sysfs driver entry
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        peterhuewe@gmx.de,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>
+References: <20200617124028.14130-1-trix@redhat.com>
+In-Reply-To: <20200617124028.14130-1-trix@redhat.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Wed, 17 Jun 2020 09:58:35 -0400
+Message-ID: <CAEjxPJ5uGV-SjKL7v5J=7YYEBOjyHwK625SX8fzCrbatuB=9hg@mail.gmail.com>
+Subject: Re: [PATCH] selinux: fix undefined return of cond_evaluate_expr
+To:     trix@redhat.com
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>, weiyongjun1@huawei.com,
+        SElinux list <selinux@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxim,
-
-On Thu, 4 Jun 2020 at 23:28, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+On Wed, Jun 17, 2020 at 8:40 AM <trix@redhat.com> wrote:
 >
-> With the evolving use-cases for TEE bus, now it's required to support
-> multi-stage enumeration process. But using a simple index doesn't
-> suffice this requirement and instead leads to duplicate sysfs entries.
-> So instead switch to use more informative device UUID for sysfs entry
-> like:
-> /sys/bus/tee/devices/optee-ta-<uuid>
+> From: Tom Rix <trix@redhat.com>
 >
-> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
-> ---
->  Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
->  MAINTAINERS                                       | 1 +
->  drivers/tee/optee/device.c                        | 9 ++++++---
->  3 files changed, 15 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+> clang static analysis reports an undefined return
 >
-> diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
-> new file mode 100644
-> index 000000000000..0ae04ae5374a
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
-> @@ -0,0 +1,8 @@
-> +What:          /sys/bus/tee/devices/optee-ta-<uuid>/
-> +Date:           May 2020
-> +KernelVersion   5.7
-> +Contact:        tee-dev@lists.linaro.org
-> +Description:
-> +               OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
-> +               matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
-> +               are free to create needed API under optee-ta-<uuid> directory.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ecc0749810b0..6717afef2de3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12516,6 +12516,7 @@ OP-TEE DRIVER
->  M:     Jens Wiklander <jens.wiklander@linaro.org>
->  L:     tee-dev@lists.linaro.org
->  S:     Maintained
-> +F:     Documentation/ABI/testing/sysfs-bus-optee-devices
->  F:     drivers/tee/optee/
+> security/selinux/ss/conditional.c:79:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
+>         return s[0];
+>         ^~~~~~~~~~~
 >
->  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
-> diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
-> index e3a148521ec1..23d264c8146e 100644
-> --- a/drivers/tee/optee/device.c
-> +++ b/drivers/tee/optee/device.c
-> @@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
->         return 0;
->  }
+> static int cond_evaluate_expr( ...
+> {
+>         u32 i;
+>         int s[COND_EXPR_MAXDEPTH];
 >
-> -static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
-> +static int optee_register_device(const uuid_t *device_uuid)
->  {
->         struct tee_client_device *optee_device = NULL;
->         int rc;
-> @@ -75,7 +75,10 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
->                 return -ENOMEM;
+>         for (i = 0; i < expr->len; i++)
+>           ...
 >
->         optee_device->dev.bus = &tee_bus_type;
-> -       dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
-> +       if (dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid)) {
-
-You should be using format specifier as: "%pUb" instead of "%pUl" as
-UUID representation for TAs is in big endian format. See below:
-
-# ls /sys/bus/tee/devices/
-optee-ta-405b6ad9-e5c3-e321-8794-1002a5d5c61b
-optee-ta-71d950bc-c9d4-c442-82cb-343fb7f37896
-optee-ta-e70f4af0-5d1f-9b4b-abf7-619b85b4ce8c
-
-While UUID for fTPM TA is in big endian format:
-bc50d971-d4c9-42c4-82cb-343fb7f37896
-
-Sorry that I missed it during review and noticed this while testing.
-
-With the above fix included, I tested this series using fTPM early TA
-on Qemu for aarch64 and used basic random number generation test using
-tpm2-tools. So feel free to add:
-
-Tested-by: Sumit Garg <sumit.garg@linaro.org>
-
--Sumit
-
-> +               kfree(optee_device);
-> +               return -ENOMEM;
-> +       }
->         uuid_copy(&optee_device->id.uuid, device_uuid);
+>         return s[0];
 >
->         rc = device_register(&optee_device->dev);
-> @@ -144,7 +147,7 @@ int optee_enumerate_devices(void)
->         num_devices = shm_size / sizeof(uuid_t);
+> When expr->len is 0, the loop which sets s[0] never runs.
 >
->         for (idx = 0; idx < num_devices; idx++) {
-> -               rc = optee_register_device(&device_uuid[idx], idx);
-> +               rc = optee_register_device(&device_uuid[idx]);
->                 if (rc)
->                         goto out_shm;
->         }
-> --
-> 2.17.1
+> So return -1 if the loop never runs.
 >
+> Signed-off-by: Tom Rix <trix@redhat.com>
+
+Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+
+clang didn't complain about the similar pattern in
+security/selinux/ss/services.c:constraint_expr_eval()?
