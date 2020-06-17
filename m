@@ -2,176 +2,496 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD533C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97264214DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F0720FC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:12:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DppQXHIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgFQNL6 (ORCPT
+        id S1726809AbgFQNMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:11:58 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:39407 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726280AbgFQNL6 (ORCPT
+        Wed, 17 Jun 2020 09:12:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57698 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726763AbgFQNMO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:11:58 -0400
-Received: from [5.157.120.79] (port=34860 helo=melee.fritz.box)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jlXrA-000Frj-7f; Wed, 17 Jun 2020 15:11:56 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Keerthy <j-keerthy@ti.com>,
-        Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH v2 3/4] dt-bindings: mfd: lp87565: add LP87524-Q1 variant
-Date:   Wed, 17 Jun 2020 15:11:44 +0200
-Message-Id: <20200617131145.15696-4-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200617131145.15696-1-luca@lucaceresoli.net>
-References: <20200617131145.15696-1-luca@lucaceresoli.net>
+        Wed, 17 Jun 2020 09:12:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592399530;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2lAvnguFBJfbpAn9ko140xdBjcLz8OLfMbowVz8ANzc=;
+        b=DppQXHIVa18rEiEEtmmvR/HYNaK27xLE4HP1z2xUVPb9NNHsJ2jMupkaaFS+A/nHoGWu4w
+        iuEWdILwFTxxRONbE3yk8H78l7tBEW0GPLpyAxCsyMkRcI33Vtr+k6PU11KnS8uk3fIXA+
+        ffkUaDqneIiQvBMEyoYGKBuFnBvGaOc=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-428-HfCLGH7rNZSMTWnnXQZLwg-1; Wed, 17 Jun 2020 09:12:07 -0400
+X-MC-Unique: HfCLGH7rNZSMTWnnXQZLwg-1
+Received: by mail-ed1-f70.google.com with SMTP id a21so850850edy.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 06:12:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=2lAvnguFBJfbpAn9ko140xdBjcLz8OLfMbowVz8ANzc=;
+        b=Z91BT3RfH85ydajESDqngCRFl/zfXBp69ILhtdreNs/bcmz4vpTsZmUAyfgpHyL8A2
+         czsIJ/nR/AT5rr7lfOQnJj1gG6E3YL5gpUFBJ9yov4p+nVuv0aeqoqpQEN5DJk6Wk0CL
+         WW0OU1A1SQaM1Ooi8pwb3ZoCKvA++nhQBmsiin/MDrWjo1lWaQyhxklv+2Ocggh2/0CX
+         SEPZGYI/rM2mxoZWLUemAac94ye/ZnyEmpTgknyUaSzV+QBMZhQ3Ync+aPN/f7M2iL5R
+         fsGlgwcFDZCO2RyAaMEPiHFUm3zCKTB6IvGmwGMsYMK0e88+ckUDALRSOy4hWuZ9ax3i
+         /SaA==
+X-Gm-Message-State: AOAM532OH/43f3byLmqeTdDB3dpbM8BdMk+huqXwPzR2oGPL7nMlMWj4
+        sgQXHIFRMeUCpuOAmjQnbzi/dtm0W8PEhu+U/hUE3jRqgUuXV9R+kcrX3xDV3NzrGUnnyYf4s1t
+        iyv5BA3QMZlV/07dVjOOnmP0N
+X-Received: by 2002:a17:906:178c:: with SMTP id t12mr7103632eje.464.1592399525774;
+        Wed, 17 Jun 2020 06:12:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyN2Sy5hyq2qFc3E+ICbb5JtuoFD6/Ce8fFPulpau2noIJ8aUBJ0N4sWhRdtr2LnvLEn4Pduw==
+X-Received: by 2002:a17:906:178c:: with SMTP id t12mr7103593eje.464.1592399525333;
+        Wed, 17 Jun 2020 06:12:05 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id z38sm8901748ede.96.2020.06.17.06.12.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 06:12:04 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
+        dgilbert@redhat.com, pbonzini@redhat.com, wanpengli@tencent.com,
+        sean.j.christopherson@intel.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] kvm: Add capability to be able to report async pf error to guest
+In-Reply-To: <20200616214847.24482-3-vgoyal@redhat.com>
+References: <20200616214847.24482-1-vgoyal@redhat.com> <20200616214847.24482-3-vgoyal@redhat.com>
+Date:   Wed, 17 Jun 2020 15:12:03 +0200
+Message-ID: <87lfklhm58.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the LP87524-Q1 to the LP87565 bindings document along with an example.
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> As of now asynchronous page fault mecahanism assumes host will always be
+> successful in resolving page fault. So there are only two states, that
+> is page is not present and page is ready.
+>
+> If a page is backed by a file and that file has been truncated (as
+> can be the case with virtio-fs), then page fault handler on host returns
+> -EFAULT.
+>
+> As of now async page fault logic does not look at error code (-EFAULT)
+> returned by get_user_pages_remote() and returns PAGE_READY to guest.
+> Guest tries to access page and page fault happnes again. And this
+> gets kvm into an infinite loop. (Killing host process gets kvm out of
+> this loop though).
+>
+> This patch adds another state to async page fault logic which allows
+> host to return error to guest. Once guest knows that async page fault
+> can't be resolved, it can send SIGBUS to host process (if user space
+> was accessing the page in question).
+>
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  Documentation/virt/kvm/cpuid.rst     |  4 +++
+>  Documentation/virt/kvm/msr.rst       | 10 +++++---
+>  arch/x86/include/asm/kvm_host.h      |  3 +++
+>  arch/x86/include/asm/kvm_para.h      |  8 +++---
+>  arch/x86/include/uapi/asm/kvm_para.h | 10 ++++++--
+>  arch/x86/kernel/kvm.c                | 34 ++++++++++++++++++++-----
+>  arch/x86/kvm/cpuid.c                 |  3 ++-
+>  arch/x86/kvm/mmu/mmu.c               |  2 +-
+>  arch/x86/kvm/x86.c                   | 38 ++++++++++++++++++++--------
+>  9 files changed, 83 insertions(+), 29 deletions(-)
+>
+> diff --git a/Documentation/virt/kvm/cpuid.rst b/Documentation/virt/kvm/cpuid.rst
+> index a7dff9186bed..a4497f3a6e7f 100644
+> --- a/Documentation/virt/kvm/cpuid.rst
+> +++ b/Documentation/virt/kvm/cpuid.rst
+> @@ -92,6 +92,10 @@ KVM_FEATURE_ASYNC_PF_INT          14          guest checks this feature bit
+>                                                async pf acknowledgment msr
+>                                                0x4b564d07.
+>  
+> +KVM_FEATURE_ASYNC_PF_ERROR        15          paravirtualized async PF error
+> +                                              can be enabled by setting bit 4
+> +                                              when writing to msr 0x4b564d02
+> +
+>  KVM_FEATURE_CLOCSOURCE_STABLE_BIT 24          host will warn if no guest-side
+>                                                per-cpu warps are expeced in
+>                                                kvmclock
+> diff --git a/Documentation/virt/kvm/msr.rst b/Documentation/virt/kvm/msr.rst
+> index e37a14c323d2..513eb8e0b0eb 100644
+> --- a/Documentation/virt/kvm/msr.rst
+> +++ b/Documentation/virt/kvm/msr.rst
+> @@ -202,19 +202,21 @@ data:
+>  
+>  		/* Used for 'page ready' events delivered via interrupt notification */
+>  		__u32 token;
+> -
+> -		__u8 pad[56];
+> +                __u32 ready_flags;
+> +		__u8 pad[52];
+>  		__u32 enabled;
+>  	  };
+>  
+> -	Bits 5-4 of the MSR are reserved and should be zero. Bit 0 is set to 1
+> +	Bits 5 of the MSR is reserved and should be zero. Bit 0 is set to 1
+>  	when asynchronous page faults are enabled on the vcpu, 0 when disabled.
+>  	Bit 1 is 1 if asynchronous page faults can be injected when vcpu is in
+>  	cpl == 0. Bit 2 is 1 if asynchronous page faults are delivered to L1 as
+>  	#PF vmexits.  Bit 2 can be set only if KVM_FEATURE_ASYNC_PF_VMEXIT is
+>  	present in CPUID. Bit 3 enables interrupt based delivery of 'page ready'
+>  	events. Bit 3 can only be set if KVM_FEATURE_ASYNC_PF_INT is present in
+> -	CPUID.
+> +	CPUID. Bit 4 enables reporting of page fault errors if hypervisor
+> +        encounters errors while faulting in page. Bit 4 can only be set if
+> +        KVM_FEATURE_ASYNC_PF_ERROR is present in CPUID.
 
----
+Would it actually make sense to deliver the exact error from
+get_user_pages() and not a binary failure/no-failure? Is the guest
+interested in how exactly we failed?
 
-Changes in v2:
- - RFC,v1 was based on the txt file, rewrite for yaml
- - use uppercase consistently in model names (Lee Jones)
- - replace "regulator" -> "mfd" in subject line (Lee Jones)
- - replace "dt:" suffix with "dt-bindings:" prefix in subject line
----
- .../devicetree/bindings/mfd/ti,lp875xx.yaml   | 79 +++++++++++++++++++
- 1 file changed, 79 insertions(+)
+>  
+>  	'Page not present' events are currently always delivered as synthetic
+>  	#PF exception. During delivery of these events APF CR2 register contains
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 348a73106556..ff8dbc604dbe 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -779,6 +779,7 @@ struct kvm_vcpu_arch {
+>  		bool delivery_as_pf_vmexit;
+>  		bool pageready_pending;
+>  		gfn_t error_gfn;
+> +		bool send_pf_error;
+>  	} apf;
+>  
+>  	/* OSVW MSRs (AMD only) */
+> @@ -1680,6 +1681,8 @@ void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu,
+>  			       struct kvm_async_pf *work);
+>  void kvm_arch_async_page_present_queued(struct kvm_vcpu *vcpu);
+>  bool kvm_arch_can_dequeue_async_page_present(struct kvm_vcpu *vcpu);
+> +void kvm_arch_async_page_fault_error(struct kvm_vcpu *vcpu,
+> +				     struct kvm_async_pf *work);
+>  extern bool kvm_find_async_pf_gfn(struct kvm_vcpu *vcpu, gfn_t gfn);
+>  
+>  int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu);
+> diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
+> index bbc43e5411d9..6c738e91ca2c 100644
+> --- a/arch/x86/include/asm/kvm_para.h
+> +++ b/arch/x86/include/asm/kvm_para.h
+> @@ -89,8 +89,8 @@ static inline long kvm_hypercall4(unsigned int nr, unsigned long p1,
+>  bool kvm_para_available(void);
+>  unsigned int kvm_arch_para_features(void);
+>  unsigned int kvm_arch_para_hints(void);
+> -void kvm_async_pf_task_wait_schedule(u32 token);
+> -void kvm_async_pf_task_wake(u32 token);
+> +void kvm_async_pf_task_wait_schedule(u32 token, bool user_mode);
+> +void kvm_async_pf_task_wake(u32 token, bool is_err);
+>  u32 kvm_read_and_reset_apf_flags(void);
+>  void kvm_disable_steal_time(void);
+>  bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token);
+> @@ -120,8 +120,8 @@ static inline void kvm_spinlock_init(void)
+>  #endif /* CONFIG_PARAVIRT_SPINLOCKS */
+>  
+>  #else /* CONFIG_KVM_GUEST */
+> -#define kvm_async_pf_task_wait_schedule(T) do {} while(0)
+> -#define kvm_async_pf_task_wake(T) do {} while(0)
+> +#define kvm_async_pf_task_wait_schedule(T, U) do {} while(0)
+> +#define kvm_async_pf_task_wake(T, I) do {} while(0)
+>  
+>  static inline bool kvm_para_available(void)
+>  {
+> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
+> index 812e9b4c1114..b43fd2ddc949 100644
+> --- a/arch/x86/include/uapi/asm/kvm_para.h
+> +++ b/arch/x86/include/uapi/asm/kvm_para.h
+> @@ -32,6 +32,7 @@
+>  #define KVM_FEATURE_POLL_CONTROL	12
+>  #define KVM_FEATURE_PV_SCHED_YIELD	13
+>  #define KVM_FEATURE_ASYNC_PF_INT	14
+> +#define KVM_FEATURE_ASYNC_PF_ERROR	15
+>  
+>  #define KVM_HINTS_REALTIME      0
+>  
+> @@ -85,6 +86,7 @@ struct kvm_clock_pairing {
+>  #define KVM_ASYNC_PF_SEND_ALWAYS		(1 << 1)
+>  #define KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT	(1 << 2)
+>  #define KVM_ASYNC_PF_DELIVERY_AS_INT		(1 << 3)
+> +#define KVM_ASYNC_PF_SEND_ERROR			(1 << 4)
+>  
+>  /* MSR_KVM_ASYNC_PF_INT */
+>  #define KVM_ASYNC_PF_VEC_MASK			GENMASK(7, 0)
+> @@ -119,14 +121,18 @@ struct kvm_mmu_op_release_pt {
+>  #define KVM_PV_REASON_PAGE_NOT_PRESENT 1
+>  #define KVM_PV_REASON_PAGE_READY 2
+>  
+> +
+> +/* Bit flags for ready_flags field */
+> +#define KVM_PV_REASON_PAGE_ERROR 1
+> +
+>  struct kvm_vcpu_pv_apf_data {
+>  	/* Used for 'page not present' events delivered via #PF */
+>  	__u32 flags;
+>  
+>  	/* Used for 'page ready' events delivered via interrupt notification */
+>  	__u32 token;
+> -
+> -	__u8 pad[56];
+> +	__u32 ready_flags;
+> +	__u8 pad[52];
+>  	__u32 enabled;
+>  };
+>  
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index ff95429d206b..2ee9c9d971ae 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -75,6 +75,7 @@ struct kvm_task_sleep_node {
+>  	struct swait_queue_head wq;
+>  	u32 token;
+>  	int cpu;
+> +	bool is_err;
+>  };
+>  
+>  static struct kvm_task_sleep_head {
+> @@ -97,7 +98,14 @@ static struct kvm_task_sleep_node *_find_apf_task(struct kvm_task_sleep_head *b,
+>  	return NULL;
+>  }
+>  
+> -static bool kvm_async_pf_queue_task(u32 token, struct kvm_task_sleep_node *n)
+> +static void handle_async_pf_error(bool user_mode)
+> +{
+> +	if (user_mode)
+> +		send_sig_info(SIGBUS, SEND_SIG_PRIV, current);
+> +}
+> +
+> +static bool kvm_async_pf_queue_task(u32 token, struct kvm_task_sleep_node *n,
+> +				    bool user_mode)
+>  {
+>  	u32 key = hash_32(token, KVM_TASK_SLEEP_HASHBITS);
+>  	struct kvm_task_sleep_head *b = &async_pf_sleepers[key];
+> @@ -107,6 +115,8 @@ static bool kvm_async_pf_queue_task(u32 token, struct kvm_task_sleep_node *n)
+>  	e = _find_apf_task(b, token);
+>  	if (e) {
+>  		/* dummy entry exist -> wake up was delivered ahead of PF */
+> +		if (e->is_err)
+> +			handle_async_pf_error(user_mode);
+>  		hlist_del(&e->link);
+>  		raw_spin_unlock(&b->lock);
+>  		kfree(e);
+> @@ -128,14 +138,14 @@ static bool kvm_async_pf_queue_task(u32 token, struct kvm_task_sleep_node *n)
+>   * Invoked from the async pagefault handling code or from the VM exit page
+>   * fault handler. In both cases RCU is watching.
+>   */
+> -void kvm_async_pf_task_wait_schedule(u32 token)
+> +void kvm_async_pf_task_wait_schedule(u32 token, bool user_mode)
+>  {
+>  	struct kvm_task_sleep_node n;
+>  	DECLARE_SWAITQUEUE(wait);
+>  
+>  	lockdep_assert_irqs_disabled();
+>  
+> -	if (!kvm_async_pf_queue_task(token, &n))
+> +	if (!kvm_async_pf_queue_task(token, &n, user_mode))
+>  		return;
+>  
+>  	for (;;) {
+> @@ -148,6 +158,8 @@ void kvm_async_pf_task_wait_schedule(u32 token)
+>  		local_irq_disable();
+>  	}
+>  	finish_swait(&n.wq, &wait);
+> +	if (n.is_err)
+> +		handle_async_pf_error(user_mode);
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_async_pf_task_wait_schedule);
+>  
+> @@ -177,7 +189,7 @@ static void apf_task_wake_all(void)
+>  	}
+>  }
+>  
+> -void kvm_async_pf_task_wake(u32 token)
+> +void kvm_async_pf_task_wake(u32 token, bool is_err)
+>  {
+>  	u32 key = hash_32(token, KVM_TASK_SLEEP_HASHBITS);
+>  	struct kvm_task_sleep_head *b = &async_pf_sleepers[key];
+> @@ -208,9 +220,11 @@ void kvm_async_pf_task_wake(u32 token)
+>  		}
+>  		n->token = token;
+>  		n->cpu = smp_processor_id();
+> +		n->is_err = is_err;
+>  		init_swait_queue_head(&n->wq);
+>  		hlist_add_head(&n->link, &b->list);
+>  	} else {
+> +		n->is_err = is_err;
+>  		apf_task_wake_one(n);
+>  	}
+>  	raw_spin_unlock(&b->lock);
+> @@ -256,14 +270,15 @@ bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
+>  		panic("Host injected async #PF in kernel mode\n");
+>  
+>  	/* Page is swapped out by the host. */
+> -	kvm_async_pf_task_wait_schedule(token);
+> +	kvm_async_pf_task_wait_schedule(token, user_mode(regs));
+>  	return true;
+>  }
+>  NOKPROBE_SYMBOL(__kvm_handle_async_pf);
+>  
+>  __visible void __irq_entry kvm_async_pf_intr(struct pt_regs *regs)
+>  {
+> -	u32 token;
+> +	u32 token, ready_flags;
+> +	bool is_err;
+>  
+>  	entering_ack_irq();
+>  
+> @@ -271,7 +286,9 @@ __visible void __irq_entry kvm_async_pf_intr(struct pt_regs *regs)
+>  
+>  	if (__this_cpu_read(apf_reason.enabled)) {
+>  		token = __this_cpu_read(apf_reason.token);
+> -		kvm_async_pf_task_wake(token);
+> +		ready_flags = __this_cpu_read(apf_reason.ready_flags);
+> +		is_err = ready_flags & KVM_PV_REASON_PAGE_ERROR;
+> +		kvm_async_pf_task_wake(token, is_err);
+>  		__this_cpu_write(apf_reason.token, 0);
+>  		wrmsrl(MSR_KVM_ASYNC_PF_ACK, 1);
+>  	}
+> @@ -335,6 +352,9 @@ static void kvm_guest_cpu_init(void)
+>  
+>  		wrmsrl(MSR_KVM_ASYNC_PF_INT, KVM_ASYNC_PF_VECTOR);
+>  
+> +		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_ERROR))
+> +			pa |= KVM_ASYNC_PF_SEND_ERROR;
+> +
+>  		wrmsrl(MSR_KVM_ASYNC_PF_EN, pa);
+>  		__this_cpu_write(apf_reason.enabled, 1);
+>  		pr_info("KVM setup async PF for cpu %d\n", smp_processor_id());
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 253b8e875ccd..f811f36e0c24 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -712,7 +712,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  			     (1 << KVM_FEATURE_PV_SEND_IPI) |
+>  			     (1 << KVM_FEATURE_POLL_CONTROL) |
+>  			     (1 << KVM_FEATURE_PV_SCHED_YIELD) |
+> -			     (1 << KVM_FEATURE_ASYNC_PF_INT);
+> +			     (1 << KVM_FEATURE_ASYNC_PF_INT) |
+> +			     (1 << KVM_FEATURE_ASYNC_PF_ERROR);
+>  
+>  		if (sched_info_on())
+>  			entry->eax |= (1 << KVM_FEATURE_STEAL_TIME);
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index e207900ab303..634182bb07c7 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4175,7 +4175,7 @@ int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
+>  	} else if (flags & KVM_PV_REASON_PAGE_NOT_PRESENT) {
+>  		vcpu->arch.apf.host_apf_flags = 0;
+>  		local_irq_disable();
+> -		kvm_async_pf_task_wait_schedule(fault_address);
+> +		kvm_async_pf_task_wait_schedule(fault_address, 0);
+>  		local_irq_enable();
+>  	} else {
+>  		WARN_ONCE(1, "Unexpected host async PF flags: %x\n", flags);
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 4c5205434b9c..c3b2097f2eaa 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -2690,8 +2690,8 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
+>  {
+>  	gpa_t gpa = data & ~0x3f;
+>  
+> -	/* Bits 4:5 are reserved, Should be zero */
+> -	if (data & 0x30)
+> +	/* Bits 5 is reserved, Should be zero */
+> +	if (data & 0x20)
+>  		return 1;
+>  
+>  	vcpu->arch.apf.msr_en_val = data;
+> @@ -2703,11 +2703,12 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
+>  	}
+>  
+>  	if (kvm_gfn_to_hva_cache_init(vcpu->kvm, &vcpu->arch.apf.data, gpa,
+> -					sizeof(u64)))
+> +					sizeof(u64) + sizeof(u32)))
+>  		return 1;
+>  
+>  	vcpu->arch.apf.send_user_only = !(data & KVM_ASYNC_PF_SEND_ALWAYS);
+>  	vcpu->arch.apf.delivery_as_pf_vmexit = data & KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT;
+> +	vcpu->arch.apf.send_pf_error = data & KVM_ASYNC_PF_SEND_ERROR;
+>  
+>  	kvm_async_pf_wakeup_all(vcpu);
+>  
+> @@ -10481,12 +10482,25 @@ static inline int apf_put_user_notpresent(struct kvm_vcpu *vcpu)
+>  				      sizeof(reason));
+>  }
+>  
+> -static inline int apf_put_user_ready(struct kvm_vcpu *vcpu, u32 token)
+> +static inline int apf_put_user_ready(struct kvm_vcpu *vcpu, u32 token,
+> +				     bool is_err)
+>  {
+>  	unsigned int offset = offsetof(struct kvm_vcpu_pv_apf_data, token);
+> +	int ret;
+> +	u32 ready_flags = 0;
+> +
+> +	if (is_err && vcpu->arch.apf.send_pf_error)
+> +		ready_flags = KVM_PV_REASON_PAGE_ERROR;
+> +
+> +	ret = kvm_write_guest_offset_cached(vcpu->kvm, &vcpu->arch.apf.data,
+> +					    &token, offset, sizeof(token));
+> +	if (ret < 0)
+> +		return ret;
+>  
+> +	offset = offsetof(struct kvm_vcpu_pv_apf_data, ready_flags);
+>  	return kvm_write_guest_offset_cached(vcpu->kvm, &vcpu->arch.apf.data,
+> -					     &token, offset, sizeof(token));
+> +					    &ready_flags, offset,
+> +					    sizeof(ready_flags));
+>  }
+>  
+>  static inline bool apf_pageready_slot_free(struct kvm_vcpu *vcpu)
+> @@ -10571,6 +10585,8 @@ bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+>  void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
+>  				 struct kvm_async_pf *work)
+>  {
+> +	bool present_injected = false;
+> +
+>  	struct kvm_lapic_irq irq = {
+>  		.delivery_mode = APIC_DM_FIXED,
+>  		.vector = vcpu->arch.apf.vec
+> @@ -10584,16 +10600,18 @@ void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
+>  
+>  	if ((work->wakeup_all || work->notpresent_injected) &&
+>  	    kvm_pv_async_pf_enabled(vcpu) &&
+> -	    !apf_put_user_ready(vcpu, work->arch.token)) {
+> +	    !apf_put_user_ready(vcpu, work->arch.token, work->error_code)) {
+>  		vcpu->arch.apf.pageready_pending = true;
+>  		kvm_apic_set_irq(vcpu, &irq, NULL);
+> +		present_injected = true;
+>  	}
+>  
+> -	if (work->error_code) {
+> +	if (work->error_code &&
+> +	    (!present_injected || !vcpu->arch.apf.send_pf_error)) {
+>  		/*
+> -		 * Page fault failed and we don't have a way to report
+> -		 * errors back to guest yet. So save this pfn and force
+> -		 * sync page fault next time.
+> +		 * Page fault failed. If we did not report error back
+> +		 * to guest, save this pfn and force sync page fault next
+> +		 * time.
+>  		 */
+>  		vcpu->arch.apf.error_gfn = work->cr2_or_gpa >> PAGE_SHIFT;
+>  	}
 
-diff --git a/Documentation/devicetree/bindings/mfd/ti,lp875xx.yaml b/Documentation/devicetree/bindings/mfd/ti,lp875xx.yaml
-index f6d1ef4fb441..8c8285438d41 100644
---- a/Documentation/devicetree/bindings/mfd/ti,lp875xx.yaml
-+++ b/Documentation/devicetree/bindings/mfd/ti,lp875xx.yaml
-@@ -15,6 +15,7 @@ properties:
-       - const: ti,lp87565
-       - const: ti,lp87565-q1
-       - const: ti,lp87561-q1
-+      - const: ti,lp87524-q1
- 
-   reg:
-     description: I2C slave address
-@@ -72,6 +73,36 @@ allOf:
-       required:
-         - buck3210-in-supply
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - ti,lp87524-q1
-+    then:
-+      properties:
-+        buck0-in-supply:
-+          description:
-+            Phandle to parent supply node for the BUCK0 converter.
-+
-+        buck1-in-supply:
-+          description:
-+            Phandle to parent supply node for the BUCK1 converter.
-+
-+        buck2-in-supply:
-+          description:
-+            Phandle to parent supply node for the BUCK2 converter.
-+
-+        buck3-in-supply:
-+          description:
-+            Phandle to parent supply node for the BUCK3 converter.
-+
-+      required:
-+        - buck0-in-supply
-+        - buck1-in-supply
-+        - buck2-in-supply
-+        - buck3-in-supply
-+
- examples:
-   - |
-     /* TI LP87565-Q1 PMIC (dual 2-phase output configuration) */
-@@ -131,4 +162,52 @@ examples:
-         };
-     };
- 
-+  - |
-+    /* TI LP87524-Q1 PMIC (four 1-phase output configuration) */
-+    &i2c0 {
-+        lp87524_pmic: pmic@60 {
-+            compatible = "ti,lp87524-q1";
-+            reg = <0x60>;
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+
-+            buck0-in-supply = <&vdd_5v0>;
-+            buck1-in-supply = <&vdd_5v0>;
-+            buck2-in-supply = <&vdd_5v0>;
-+            buck3-in-supply = <&vdd_5v0>;
-+
-+            regulators {
-+                buck0_reg: buck0 {
-+                    regulator-name = "buck0";
-+                    regulator-min-microvolt = <3300000>;
-+                    regulator-max-microvolt = <3300000>;
-+                    regulator-always-on;
-+                };
-+
-+                buck1_reg: buck1 {
-+                    regulator-name = "buck1";
-+                    regulator-min-microvolt = <1350000>;
-+                    regulator-max-microvolt = <1350000>;
-+                    regulator-always-on;
-+                };
-+
-+                buck2_reg: buck2 {
-+                    regulator-name = "buck2";
-+                    regulator-min-microvolt = <950000>;
-+                    regulator-max-microvolt = <950000>;
-+                    regulator-always-on;
-+                };
-+
-+                buck3_reg: buck3 {
-+                    regulator-name = "buck3";
-+                    regulator-min-microvolt = <1800000>;
-+                    regulator-max-microvolt = <1800000>;
-+                    regulator-always-on;
-+                };
-+            };
-+        };
-+    };
-+
-+
-+
- ...
 -- 
-2.27.0
+Vitaly
 
