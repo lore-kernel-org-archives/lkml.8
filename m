@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E63BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5155D2158C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB03F21789
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:26:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHAAsl6n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njDEDuql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgFQQ0W (ORCPT
+        id S1727048AbgFQQ0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:26:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48988 "EHLO
+        Wed, 17 Jun 2020 12:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbgFQQ0K (ORCPT
+        with ESMTP id S1726998AbgFQQ0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:26:10 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5258C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:10 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id e5so2079541ote.11
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:10 -0700 (PDT)
+        Wed, 17 Jun 2020 12:26:13 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10586C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:12 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id e5so2079605ote.11
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qjkiLR+60k9QfvgBZn9QHWt4cqJyvhTf2cZ66HgG/g8=;
-        b=fHAAsl6naqKyGruMnIBUD9m3HqhCSMMQ+6ON9BSP2ZV7/Xc1Gj/K4w1ydJw4tiP/8w
-         5Z/50mpqmxXD1AZiJ6MtAmRfQCXwb284im+78TQ3P5uMlBwkgXuGMv3VpI9jpD7z95BS
-         9DUKJxp7xvcdjQODtkHTqXop4CntdW1kqrSf4+J1XLgT4hs6/f53X5HLG+LwTG5gjPOT
-         wZibGBVsLQv7YeTUoLDFx9E08A+t0SdYxmv6Gybhwk5G0gZb9GUTqwKfuIxxt1lzq/AZ
-         ETfCxvXNGvxBSgx0riF36acI+EMC8+GCH9B933uzhkpJDFprNkD7NSmdFjn+vSbD8mfm
-         8agw==
+        bh=5dxLGInHWnF0fsK6AxTnYzixhFSHss/CD5LDV/6gHL4=;
+        b=njDEDuqlUMYOPKbkoRh1o092okeNjqUn4nfvdK5jLwINgl2WD+fFzh/bYYQxcrcGaq
+         0mQcT8MatlhIv2138jdN8gyIAxOJkjZV9hEjGMxzQ38FJQLQHvBSqxCULX39/XbjaN6h
+         k41dWCsPSx88KW7cGFN3g3b2DZvOx2vaBJZ6ldSR5ZqXOxv2332vWaq36oWpDcaeOSdW
+         g60jjj/L9M7UOWRmIDncpzAvs4hwsxfGDa46G1alCrQYIr94vUUdVo8UVk2tMtvupYDG
+         +oW28kaGDAW4N0FPEDe1TO3q571OnxEBCw0IO0x71WmTGirp8acIzlhgzIQv/Ce4BR+r
+         ei1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qjkiLR+60k9QfvgBZn9QHWt4cqJyvhTf2cZ66HgG/g8=;
-        b=OMcRaYvWsdO1zP/NbxSzG9v1iJrrhSTl9WNqM++dMjKLk2gs6o7fuOO15akQOkAp6b
-         hFKguKdQ4DOaHLSuZcjSLMVBqBouDGfmBFgw3Rdsja15xz5iTEq3hIUuQtbcgzz5j3ou
-         BBdCA1sDYVNRcob78KnuIL3APXavwoCQkMIeHPaev/bD4wrILAclpSw/Xxm9Ge0IUSiB
-         A4zs5rGYQ7PNJdashK77xXKOd4ReSLWatih+2SrQaRK9fJjYBn5Rl63zuQbsB971xQ5G
-         OHTGjTKuxo0uBxtZ+SNlf8avUW8vDQ2EpSzFynEM+yIQDeFI4vbLeQyr79qlRl/v4PGC
-         4GFg==
-X-Gm-Message-State: AOAM530f6jwL5kHNLKniJLfNzvavxW/5mPPGB5raFCh9/bF3l66PgVl4
-        1XT1FygvOteiIxV9IN8VvuQ=
-X-Google-Smtp-Source: ABdhPJzRO6IfgXg+oRo0/e9T350Bh513WjlQHQt4oQQ3r0qni5CVympmGQ7ssd+/mdEwqF0DcKHtmA==
-X-Received: by 2002:a9d:d13:: with SMTP id 19mr5889753oti.83.1592411170056;
-        Wed, 17 Jun 2020 09:26:10 -0700 (PDT)
+        bh=5dxLGInHWnF0fsK6AxTnYzixhFSHss/CD5LDV/6gHL4=;
+        b=RTUpKBDJiUq99mVTKwyJG0hmqxF9XxFKCKPe0O2c3sawreMKwbAf4PNiZmfUfyeYmE
+         ZfGpDmw7kT3vseF8IKh5wXogW5wkgRz/golEEThD4kpsPorboVI6ORaJzRM8B2itIrs5
+         oFhOXOPx6h2tWXGKRlAYcjp8cUBLY63w4TJvaeZTx+KKlr9ypZjZeF4eQ5KC+ytLHo/7
+         /+bQQmbqlfp2ajyHAGtl+bq7eS6KgyryrbQgdwVKv3BklgPJ0WP25g0ua+cmwGHFMjyY
+         3ROZn+llvuRS9VLNZ/jrOLNcDBZmPWMGfU3EWx0uNaOeHGSvNb8Acn9rjXePjaCLb58Y
+         FiyQ==
+X-Gm-Message-State: AOAM530oup9y7Hug7oQb5Rm2QPkL7EDC9L+G+n2fhRQQkKs9iiC5oirU
+        2vzjQvRZJG8zVDLRFuntIfI=
+X-Google-Smtp-Source: ABdhPJxlb/hO4p6b1Crt56Xs+Zhr80MammfE+z5jg1t96X4LN+aJk3VEt2Rd0MIWdAFabWx3RjIhUA==
+X-Received: by 2002:a05:6830:242e:: with SMTP id k14mr7447805ots.36.1592411171393;
+        Wed, 17 Jun 2020 09:26:11 -0700 (PDT)
 Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::ae4b])
-        by smtp.googlemail.com with ESMTPSA id h7sm95877otk.48.2020.06.17.09.26.08
+        by smtp.googlemail.com with ESMTPSA id h7sm95877otk.48.2020.06.17.09.26.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:26:09 -0700 (PDT)
+        Wed, 17 Jun 2020 09:26:10 -0700 (PDT)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
         akpm@linuxfoundation.org, gregkh@linuxfoundation.org
 Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v3 08/21] dyndbg: fix pr_err with empty string
-Date:   Wed, 17 Jun 2020 10:25:21 -0600
-Message-Id: <20200617162536.611386-9-jim.cromie@gmail.com>
+Subject: [PATCH v3 09/21] dyndbg: prefer declarative init in caller, to memset in callee
+Date:   Wed, 17 Jun 2020 10:25:22 -0600
+Message-Id: <20200617162536.611386-10-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200617162536.611386-1-jim.cromie@gmail.com>
 References: <20200617162536.611386-1-jim.cromie@gmail.com>
@@ -77,27 +77,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this pr_err attempts to print the string after the OP, but the string
-has been parsed and chopped up, so looks empty.
+ddebug_exec_query declares an auto var, and passes it to
+ddebug_parse_query, which memsets it before using it.  Drop that
+memset, instead initialize the variable in the caller; let the
+compiler decide how to do it.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- lib/dynamic_debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/dynamic_debug.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 0cb5679f6c54..1d25a846553b 100644
+index 1d25a846553b..da3ed54a6521 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -420,7 +420,7 @@ static int ddebug_parse_flags(const char *str, unsigned int *flagsp,
- 			}
- 		}
- 		if (i < 0) {
--			pr_err("unknown flag '%c' in \"%s\"\n", *str, str);
-+			pr_err("unknown flag '%c'\n", *str);
- 			return -EINVAL;
- 		}
+@@ -330,7 +330,6 @@ static int ddebug_parse_query(char *words[], int nwords,
+ 		pr_err("expecting pairs of match-spec <value>\n");
+ 		return -EINVAL;
  	}
+-	memset(query, 0, sizeof(*query));
+ 
+ 	if (modname)
+ 		/* support $modname.dyndbg=<multiple queries> */
+@@ -448,7 +447,7 @@ static int ddebug_parse_flags(const char *str, unsigned int *flagsp,
+ static int ddebug_exec_query(char *query_string, const char *modname)
+ {
+ 	unsigned int flags = 0, mask = 0;
+-	struct ddebug_query query;
++	struct ddebug_query query = {};
+ #define MAXWORDS 9
+ 	int nwords, nfound;
+ 	char *words[MAXWORDS];
 -- 
 2.26.2
 
