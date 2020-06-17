@@ -2,222 +2,128 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2662FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B22C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 075EE21707
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D684A21527
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:56:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gg//lxpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgFQR4M (ORCPT
+        id S1726926AbgFQR4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 13:56:12 -0400
-Received: from mga06.intel.com ([134.134.136.31]:41022 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbgFQR4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 13:56:12 -0400
-IronPort-SDR: nTgt3IXqgkDZz8mrYcmHT9I8YsKcq/LlK/i4yOb40tS4HhN9VUjmtjWMbzFlfo/8/yOQHaMmLK
- ZO/5EJXic7Yg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 10:56:11 -0700
-IronPort-SDR: uLjDcLQFXZLsMmZ1k8P/BJrERaOOA0rDTl+4i/2ly7R/mvYGhi/ipnoFdWUxSTj/eXrdLmd8Sc
- gTwkT/RNnBhA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
-   d="scan'208";a="262643233"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga007.jf.intel.com with SMTP; 17 Jun 2020 10:56:08 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 17 Jun 2020 20:56:07 +0300
-Date:   Wed, 17 Jun 2020 20:56:07 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Cyrus Lien <cyrus.lien@canonical.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/edid: add support for min horizontal rate equal to
- max horizontal rate
-Message-ID: <20200617175607.GO6112@intel.com>
-References: <20200608195704.29841-1-cyrus.lien@canonical.com>
- <20200609145745.GO6112@intel.com>
- <CAC513mV1B1O90RCbiUGN9Z_4jCHRmcTVjH+R0GffYtG=YwjD5A@mail.gmail.com>
+        Wed, 17 Jun 2020 13:56:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgFQR4o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 13:56:44 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C00CEC06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:56:44 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d4so1660398pgk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:56:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wah6b+5ElzkXhQSXMpu6WP+aPTNfFYkvhbkHvAkhKGg=;
+        b=Gg//lxpFtcoeRTFSTUzVOxJMnX7aWTWzCrGG4vux8gR8wyyWdLJh9xPyFLuLZSYoyt
+         sLoOoC9Czq0XyiX+HKkry+vk+0A2+y3TFmHLM7dzXsLjtXwfhI8Ryr8jgw0VQQvpOL/s
+         U5UJOeITPqpeWC2NnNcRmwZ6WLh2uOnB2ddD4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wah6b+5ElzkXhQSXMpu6WP+aPTNfFYkvhbkHvAkhKGg=;
+        b=VBEvWhucCpx5MAgchVs3L2xagO02+6Q7z46wCgK2ngewNmKHlVE3i0rTmMahmupJpp
+         DW9n3zQvztytXw0udIgmF/NZA8r0pKEClNCjuLCcms8nwSbzpfoFpnUPqJmuC4o2SgET
+         /CA/Z7Xly63QMV3t0YmR5t1H2s8+PcyEMOlzQsb+Psv3mn03YkGylPEY0Ji5cpYOky5z
+         rjyNfklbKj4KqIHPB7WSWLrfBJkMee1mNXlAEIZIIqZVLycEFLoVnlgkGApxmMv2MleB
+         mNX+g4CC6srJXoC/kKW7N1tsgTX8q4I52Cf48CPKpKCheXSaLSBqi9tjSC1LDHxSgfeZ
+         RSSg==
+X-Gm-Message-State: AOAM533PmrD/cN/3aMMlPrIhL7Lp/BEeg76iDu7S+ZJzfgvDTuApmFbA
+        9x3Yegg10l11JZOsVzreyn+SIA==
+X-Google-Smtp-Source: ABdhPJwoRs2t9ywysSqyyKsH20UwIP5c2oKFuhH+rZ86gi/ru/XeeOa9CjITUhl6f1WA66aIvINaOA==
+X-Received: by 2002:a62:1849:: with SMTP id 70mr7521391pfy.227.1592416604312;
+        Wed, 17 Jun 2020 10:56:44 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w77sm513281pff.126.2020.06.17.10.56.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 10:56:43 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 10:56:42 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        vinmenon@codeaurora.org, Matthew Garrett <mjg59@google.com>,
+        Roman Gushchin <guro@fb.com>, Jann Horn <jannh@google.com>,
+        Vijayanand Jitta <vjitta@codeaurora.org>
+Subject: Re: [PATCH 7/9] mm, slub: introduce kmem_cache_debug_flags()
+Message-ID: <202006171055.64F6EB665@keescook>
+References: <20200610163135.17364-1-vbabka@suse.cz>
+ <20200610163135.17364-8-vbabka@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAC513mV1B1O90RCbiUGN9Z_4jCHRmcTVjH+R0GffYtG=YwjD5A@mail.gmail.com>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200610163135.17364-8-vbabka@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 12:58:33AM +0800, Cyrus Lien wrote:
-> On Tue, Jun 9, 2020 at 10:58 PM Ville Syrjälä <ville.syrjala@linux.intel.com>
-> wrote:
+On Wed, Jun 10, 2020 at 06:31:33PM +0200, Vlastimil Babka wrote:
+> There are few places that call kmem_cache_debug(s) (which tests if any of debug
+> flags are enabled for a cache) immediatelly followed by a test for a specific
+> flag. The compiler can probably eliminate the extra check, but we can make the
+> code nicer by introducing kmem_cache_debug_flags() that works like
+> kmem_cache_debug() (including the static key check) but tests for specifig
+> flag(s). The next patches will add more users.
 > 
-> > On Tue, Jun 09, 2020 at 03:57:04AM +0800, Cyrus Lien wrote:
-> > > According to EDID spec, table 3.26, byte #6 and #8, which said "Minimum
-> > > rate value shall be less than or equal to maximum rate value". The
-> > minimum
-> > > horizontal/vertical rate value is able to be equal to maximum horizontal/
-> > > veritcal rate value.
-> >
-> > How does that justifiy ignoring the min value?
-> >
-> > Indeed, this patch does not make sense.
-> Setting minimum horizontal rate equal to maximum horizontal rate is a
-> request come from AMD Windows graphic driver for support freesync (I'm not
-> sure if linux AMD driver also require it).
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  mm/slub.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 24d3e5f832aa..c8e8b4ae2451 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -122,18 +122,28 @@ DEFINE_STATIC_KEY_FALSE(slub_debug_enabled);
+>  #endif
+>  #endif
+>  
+> -static inline int kmem_cache_debug(struct kmem_cache *s)
+> +/*
+> + * Returns true if any of the specified slub_debug flags is enabled for the
+> + * cache. Use only for flags parsed by setup_slub_debug() as it also enables
+> + * the static key.
+> + */
+> +static inline int kmem_cache_debug_flags(struct kmem_cache *s, slab_flags_t flags)
 
-AFAICS the DP spec itself doesn't say anything about the
-horizontal min/max rates. However DP-EDID-CTS 1.2 / 4.8 seems to
-say that hmin==hmax==hsync should hold. Not sure if that should
-be the hsync rate of the min/max/nominal refresh rate. I would
-have maybe expected the max since that's the actual rate it's
-going operate at. Alhtough I even less of an idea what it should
-be if the monitor supports multiple resolutions.
+This should return slab_flag_t, yes?
 
-In this case it doesn't seem to be any of those exactly. Pretty
-close to the min refresh rate though. hmin=hmax=110 kHz vs.
-actual hsync rate for 50Hz would be 111.1 kHz (if it was actually
-running at 50Hz with the declared vblank length which it won't be
-of course). If we calculate in the opposite direction we get a
-vrefresh of ~49.5 Hz based on the 110 kHz hsync rate. So if we
-round to nearest integer it does match the declared vmin of 50Hz.
+>  {
+>  #ifdef CONFIG_SLUB_DEBUG
+>  	if (static_branch_unlikely(&slub_debug_enabled))
+> -		return s->flags & SLAB_DEBUG_FLAGS;
+> +		return s->flags & flags;
+>  #endif
+>  	return 0;
+>  }
+>  
+> +static inline int kmem_cache_debug(struct kmem_cache *s)
 
-I suspect the right answer is to just ignore hmin/hmax when
-it comes to adaptive sync.
-
-> The problem is mode_in_hsync_range always return false except the mode's
-> hsync exactly equal to hmax and hmin.
-> 
-> Add print in mode_in_hsync_range():
-> [drm] mode_in_hsync_range 1920x1200: hsync: 94, hmax: 110, hmix:110
-> [drm] mode_in_hsync_range 1920x1200: hsync: 107, hmax: 110, hmix:110
-> [drm] mode_in_hsync_range 1920x1200: hsync: 152, hmax: 110, hmix:110
-> [drm] mode_in_hsync_range 1920x1440: hsync: 90, hmax: 110, hmix:110
-> [drm] mode_in_hsync_range 1920x1440: hsync: 113, hmax: 110, hmix:110
-> [drm] mode_in_hsync_range 1920x1440: hsync: 183, hmax: 110, hmix:110
-> 
-> Is it available to get or calculate the hmax, hmix value from other fields
-> in EDID ?
-> Would you please provide some advice or directions to solve this problem ?
-> Thank you and appreciated the help.
-> 
-> edid-decode (hex):
-> 
-> 00 ff ff ff ff ff ff 00 06 af 9b 32 00 00 00 00
-> 00 1e 01 04 b5 26 15 78 03 1f 95 a5 53 35 b5 26
-> 0f 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
-> 01 01 01 01 01 01 70 d0 00 a0 f0 70 3e 80 30 20
-> 35 00 7d d6 10 00 00 1a 00 00 00 fd 00 32 5a 6e
-> 6e 17 01 11 01 e0 60 20 50 3c 00 00 00 fe 00 34
-> 34 54 52 4e 15 42 31 37 33 5a 41 4e 00 00 00 00
-> 00 05 81 01 28 00 12 00 00 0b 01 0a 20 20 01 af
-> 
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 
-> ----------------
-> 
-> EDID version: 1.4
-> Manufacturer: AUO Model 12955 Serial Number 0
-> Made in year 2020
-> Digital display
-> 10 bits per primary color channel
-> DisplayPort interface
-> Maximum image size: 38 cm x 21 cm
-> Gamma: 2.20
-> Supported color formats: RGB 4:4:4
-> First detailed timing includes the native pixel format and preferred
-> refresh rate
-> Display is continuous frequency
-> Color Characteristics
->   Red:   0.6445, 0.3251
->   Green: 0.2099, 0.7099
->   Blue:  0.1503, 0.0595
->   White: 0.3134, 0.3291
-> Established Timings I & II: none
-> Standard Timings: none
-> Detailed mode: Clock 533.600 MHz, 381 mm x 214 mm
->                3840 3888 3920 4000 ( 48  32  80)
->                2160 2163 2168 2222 (  3   5  54)
->                +hsync -vsync
->                VertFreq: 60.036 Hz, HorFreq: 133.400 kHz
-> Display Range Limits
->   Monitor ranges (Bare Limits): 50-90 Hz V, 110-110 kHz H, max dotclock 230
-> MHz
-> Alphanumeric Data String: 44TRN
-> Manufacturer-Specified Display Descriptor (0x00): 00 00 00 05 81 01 28 00
-> 12 00 00 0b 01 0a 20 20  ......(.......
-> Has 1 extension block
-> Checksum: 0xaf
-> 
-> ----------------
-> 
-> >
-> > > This change check if h/v-sync excess maximum horizontal/vertical rate if
-> > > hmin equal to hmax or vmin equal to vmax.
-> > >
-> > > Signed-off-by: Cyrus Lien <cyrus.lien@canonical.com>
-> > > ---
-> > >  drivers/gpu/drm/drm_edid.c | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> > > index fed653f13c26..23878320eabd 100644
-> > > --- a/drivers/gpu/drm/drm_edid.c
-> > > +++ b/drivers/gpu/drm/drm_edid.c
-> > > @@ -2674,6 +2674,9 @@ mode_in_hsync_range(const struct drm_display_mode
-> > *mode,
-> > >           hmax += ((t[4] & 0x08) ? 255 : 0);
-> > >       hsync = drm_mode_hsync(mode);
-> > >
-> > > +     if (hmax == hmin)
-> > > +             return (hsync <= hmax);
-> > > +
-> > >       return (hsync <= hmax && hsync >= hmin);
-> > >  }
-> > >
-> > > @@ -2691,6 +2694,9 @@ mode_in_vsync_range(const struct drm_display_mode
-> > *mode,
-> > >           vmax += ((t[4] & 0x02) ? 255 : 0);
-> > >       vsync = drm_mode_vrefresh(mode);
-> > >
-> > > +     if (vmax == vmin)
-> > > +             return (vsync <= vmax);
-> > > +
-> > >       return (vsync <= vmax && vsync >= vmin);
-> > >  }
-> > >
-> > > --
-> > > 2.25.1
-> > >
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> >
-> > --
-> > Ville Syrjälä
-> > Intel
-> >
+And this too, as long as we're making changes here.
 
 -- 
-Ville Syrjälä
-Intel
+Kees Cook
