@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E81C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E928120B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFBE420B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgFQWcb (ORCPT
+        id S1727795AbgFQWcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:32:31 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57422 "EHLO
+        Wed, 17 Jun 2020 18:32:39 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57420 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbgFQWcS (ORCPT
+        with ESMTP id S1726761AbgFQWcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 18:32:18 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id CE38E8001304;
-        Wed, 17 Jun 2020 22:32:12 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4A0CC80045E4;
+        Wed, 17 Jun 2020 22:32:13 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id etF65iES6nRZ; Thu, 18 Jun 2020 01:32:12 +0300 (MSK)
+        with ESMTP id QblWbZzot7VM; Thu, 18 Jun 2020 01:32:12 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
@@ -35,12 +35,13 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 5/6] bus: cdmm: Add MIPS R5 arch support
-Date:   Thu, 18 Jun 2020 01:31:59 +0300
-Message-ID: <20200617223201.23259-6-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v4 6/6] MAINTAINERS: Add maintainers for MIPS core drivers
+Date:   Thu, 18 Jun 2020 01:32:00 +0300
+Message-ID: <20200617223201.23259-7-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -52,32 +53,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CDMM may be available not only on MIPS R2 architectures, but also on
-newer MIPS R5 chips. For instance our P5600 chip has one. Let's mark
-the CDMM bus being supported for that MIPS arch too.
+Add Thomas and myself as maintainers of the MIPS CPU and GIC IRQchip, MIPS
+GIC timer and MIPS CPS CPUidle drivers.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Acked-by: Marc Zyngier <maz@kernel.org>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
----
- drivers/bus/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 6d4e4497b59b..971c07bc92d4 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -58,7 +58,7 @@ config IMX_WEIM
+---
+
+Changelog v3:
+- Keep the files list alphabetically ordered.
+- Add Thomas as the co-maintainer of the designated drivers.
+---
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2926327e4976..20532e0287d7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11278,6 +11278,17 @@ F:	arch/mips/configs/generic/board-boston.config
+ F:	drivers/clk/imgtec/clk-boston.c
+ F:	include/dt-bindings/clock/boston-clock.h
  
- config MIPS_CDMM
- 	bool "MIPS Common Device Memory Map (CDMM) Driver"
--	depends on CPU_MIPSR2
-+	depends on CPU_MIPSR2 || CPU_MIPSR5
- 	help
- 	  Driver needed for the MIPS Common Device Memory Map bus in MIPS
- 	  cores. This bus is for per-CPU tightly coupled devices such as the
++MIPS CORE DRIVERS
++M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
++M:	Serge Semin <fancer.lancer@gmail.com>
++L:	linux-mips@vger.kernel.org
++S:	Supported
++F:	drivers/bus/mips_cdmm.c
++F:	drivers/clocksource/mips-gic-timer.c
++F:	drivers/cpuidle/cpuidle-cps.c
++F:	drivers/irqchip/irq-mips-cpu.c
++F:	drivers/irqchip/irq-mips-gic.c
++
+ MIPS GENERIC PLATFORM
+ M:	Paul Burton <paulburton@kernel.org>
+ L:	linux-mips@vger.kernel.org
 -- 
 2.26.2
 
