@@ -2,121 +2,85 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D505C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2292C21655
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62CAF212CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:44:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IXuESxTW"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CJqbx0vs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgFQUoa (ORCPT
+        id S1726997AbgFQUom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:44:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbgFQUo3 (ORCPT
+        Wed, 17 Jun 2020 16:44:42 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:55578 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgFQUom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:44:29 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A044C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:44:29 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a6so1845657wrm.4
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:44:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=izNQ/AUBePYNQ9lFfRhkbYFYOvim7jrWfUSC8PuNm50=;
-        b=IXuESxTW1GDtdZdcUhaUxCMmqR0alOzlFYEBB6cNiOWNqNKga8hTG5Hpk8e+jPgfs7
-         gKRbcrFHT/bWqDDjWW1Tu0YTxMUPgU3/zaO7ZYFVAB7sZ5/odoojGtjQaAjqQcISTIRV
-         21JjuFUVAp2SULD0ievL+VDKAIV4k3A7ZvwkkUpYlqJyABsW/fENnkF9JkHDsmSI8BPu
-         lTx1kIP34vOyLqlII9KESAAKJppWEmMCqsPsjTAr9hgHKVBogXM1wNRzyliJEEMpb4Fs
-         wM9VKEIlU+zdEi8dgAC6gR4OOYEJEiqf/0YobEdxc2vAIUU4tWPB0ACvaZ+E1SxG3EjY
-         tp8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=izNQ/AUBePYNQ9lFfRhkbYFYOvim7jrWfUSC8PuNm50=;
-        b=LVXffu3/dx7HvUi2R5avxOuYGcbP93s0ugxvj6nkG8ZjDW7JGCo5stN1KXe5MNkxRv
-         YnfABmegUDqodB8/oHNa+0i4wj6U7FmobQa+Ygge/iNJ5eLfUgCXuCCazC8Dh+kqwWXT
-         eg+r+VXXmAU+s5t5B1Q/z3psfW3z6ncQbaIJ5z/CcAsMqxjj7q0jx1GurSscsXUaHZ75
-         /4cBCV0YdWHMcoyt642AD17AS3Tle2sD08VxD11Q4VZMfIN5+Jx8bcYD/LZP+6D1GxCr
-         WYmiueDAsD/Geb9guikVr6sRvsBfj8hp7+oX5JUZyheCFAcSJ7T7I3dnCXs+6fk+OBM2
-         DROA==
-X-Gm-Message-State: AOAM533SN9+FY/fqR+5gb/9qqZsCoKZMsxCne+5Qe5Vml3giyGhZp/E2
-        R9AwOhd+6PSGS4toGxwmQBtBRG7964qztyhuKEYf2w==
-X-Google-Smtp-Source: ABdhPJx4KYJD9wjC9cWcd4dSFsQSQGMcDhbMVkYCssEzFcqvWczHJXD0Mb1mQo4LGh5tn1IdBmBvR3RzvVWXmaZ51kw=
-X-Received: by 2002:adf:9c12:: with SMTP id f18mr1114248wrc.105.1592426668016;
- Wed, 17 Jun 2020 13:44:28 -0700 (PDT)
+        Wed, 17 Jun 2020 16:44:42 -0400
+Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id B038B20B711C;
+        Wed, 17 Jun 2020 13:44:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B038B20B711C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1592426681;
+        bh=sd/3a2ymDFt3eq7MlVb5ASMA/r4IGCb1y6MMEDUE1Vk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CJqbx0vsRC0+FJXa8A6paq6Cf2UfPWNLuf5ceC5mQx6Bu+X6o2cryjI/0jhPbWr7n
+         BUW6dYx4Ykbi9JY252skHMw1TyxCPsZcX9B3NMFmEBl4NPapTa0zlvfEjVIFWFt9D1
+         uBxCLj2zMq/ti0idqGfzqF8qqnB+ACrYJeZ6P0GI=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, bauerman@linux.ibm.com, nayna@linux.ibm.com,
+        sgrubb@redhat.com, paul@paul-moore.com
+Cc:     rgb@redhat.com, linux-integrity@vger.kernel.org,
+        linux-audit@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] integrity: Add errno field in audit message
+Date:   Wed, 17 Jun 2020 13:44:36 -0700
+Message-Id: <20200617204436.2226-2-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200617204436.2226-1-nramas@linux.microsoft.com>
+References: <20200617204436.2226-1-nramas@linux.microsoft.com>
 MIME-Version: 1.0
-References: <20200617180801.158331-1-helen.koike@collabora.com>
-In-Reply-To: <20200617180801.158331-1-helen.koike@collabora.com>
-From:   Tomasz Figa <tfiga@google.com>
-Date:   Wed, 17 Jun 2020 22:44:16 +0200
-Message-ID: <CAAFQd5ACgNJLzWSYW9_=vDxoUhO8gUjz0_+ntfVsRsRJbceA0A@mail.gmail.com>
-Subject: Re: [PATCH] media: staging: rkisp1: rsz: fix resolution limitation on
- sink pad
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>, kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 8:08 PM Helen Koike <helen.koike@collabora.com> wrote:
->
-> Resizer sink pad is limited by what the ISP can generate.
-> The configurations describes what the resizer can produce.
->
-> This was tested on a Scarlet device with ChromiumOs, where the selfpath
-> receives 2592x1944 and produces 1600x1200 (which isn't possible without
-> this fix).
->
-> Fixes: 56e3b29f9f6b2 ("media: staging: rkisp1: add streaming paths")
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
->
-> ---
->
->  drivers/staging/media/rkisp1/rkisp1-resizer.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/staging/media/rkisp1/rkisp1-resizer.c b/drivers/staging/media/rkisp1/rkisp1-resizer.c
-> index d049374413dcf..0d41f43b5339f 100644
-> --- a/drivers/staging/media/rkisp1/rkisp1-resizer.c
-> +++ b/drivers/staging/media/rkisp1/rkisp1-resizer.c
-> @@ -553,11 +553,11 @@ static void rkisp1_rsz_set_sink_fmt(struct rkisp1_resizer *rsz,
->         src_fmt->code = sink_fmt->code;
->
->         sink_fmt->width = clamp_t(u32, format->width,
-> -                                 rsz->config->min_rsz_width,
-> -                                 rsz->config->max_rsz_width);
-> +                                 RKISP1_ISP_MIN_WIDTH,
-> +                                 RKISP1_ISP_MAX_WIDTH);
->         sink_fmt->height = clamp_t(u32, format->height,
-> -                                  rsz->config->min_rsz_height,
-> -                                  rsz->config->max_rsz_height);
-> +                                 RKISP1_ISP_MIN_HEIGHT,
-> +                                 RKISP1_ISP_MAX_HEIGHT);
->
->         *format = *sink_fmt;
->
-> --
-> 2.26.0
->
+Error code is not included in the audit messages logged by
+the integrity subsystem. Add "errno" field in the audit messages
+logged by the integrity subsystem and set the value to the error code
+passed to integrity_audit_msg() in the "result" parameter.
 
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+Sample audit messages:
 
-Best regards,
-Tomasz
+[    6.284329] audit: type=1804 audit(1591756723.627:2): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=kernel op=add_boot_aggregate cause=alloc_entry comm="swapper/0" name="boot_aggregate" res=0 errno=-12
+
+[    8.085456] audit: type=1802 audit(1592005947.297:9): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=policy_update cause=completed comm="systemd" res=1 errno=0
+
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Suggested-by: Steve Grubb <sgrubb@redhat.com>
+---
+ security/integrity/integrity_audit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/security/integrity/integrity_audit.c b/security/integrity/integrity_audit.c
+index 5109173839cc..a265024f82f3 100644
+--- a/security/integrity/integrity_audit.c
++++ b/security/integrity/integrity_audit.c
+@@ -53,6 +53,6 @@ void integrity_audit_msg(int audit_msgno, struct inode *inode,
+ 		audit_log_untrustedstring(ab, inode->i_sb->s_id);
+ 		audit_log_format(ab, " ino=%lu", inode->i_ino);
+ 	}
+-	audit_log_format(ab, " res=%d", !result);
++	audit_log_format(ab, " res=%d errno=%d", !result, result);
+ 	audit_log_end(ab);
+ }
+-- 
+2.27.0
+
