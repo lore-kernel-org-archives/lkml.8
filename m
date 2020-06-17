@@ -2,103 +2,154 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF72C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C027212CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A9DD208D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592423134;
+	bh=qzsvYZpLBWgdL32sHZOFJvtYArIngqyXEv1j1eEpj50=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oasfbWA6sm7FN3N8bKUpqjVq3XmzRKNyNrncOd3wKNGUOXg4YiQzcaKjrjbus0Kw8
+	 Y45HUCWBxdacfeqnc2wgubq2J75cGPz2331njVNP/u0X4Cc+3Nvx2KcBPfCfRHFJfw
+	 TzHY2fYHmzb9I9/f3umLrUdy30GfZy+nFmWpg4EY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgFQTjq (ORCPT
+        id S1726845AbgFQTpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 15:39:46 -0400
-Received: from mga07.intel.com ([134.134.136.100]:52522 "EHLO mga07.intel.com"
+        Wed, 17 Jun 2020 15:45:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgFQTjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 15:39:45 -0400
-IronPort-SDR: wS7tIFarexy0u+Xai9N0UFpJqNPYfGSUT0f/mB8oJikfhiaWgUXBn9qQn6cGa7+5gqdDfWNFJM
- EW18WHN9QlVA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 12:39:45 -0700
-IronPort-SDR: XlOkZWuUqUJIMX3YBJ641L9Zny0vHQ3jjFJ0lLYzgPZoGdYYh0V+M5UafI1dtz9Eglt47VJwI7
- 0sv5dlw7OpgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
-   d="scan'208";a="476968932"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Jun 2020 12:39:44 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.56]) by
- ORSMSX107.amr.corp.intel.com ([169.254.1.92]) with mapi id 14.03.0439.000;
- Wed, 17 Jun 2020 12:39:43 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Christoph Hellwig <hch@infradeed.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu <iommu@lists.linux-foundation.org>
-Subject: RE: [PATCH v3 01/13] iommu: Change type of pasid to unsigned int
-Thread-Topic: [PATCH v3 01/13] iommu: Change type of pasid to unsigned int
-Thread-Index: AQHWRNSCgq6s3Eb3TUCTrKgNEKKtfajdqISA//+LkWA=
-Date:   Wed, 17 Jun 2020 19:39:43 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F67216A@ORSMSX115.amr.corp.intel.com>
-References: <1592418233-17762-1-git-send-email-fenghua.yu@intel.com>
- <1592418233-17762-2-git-send-email-fenghua.yu@intel.com>
- <CALCETrXFHa_05-sGAy5M9YGJWUfTn9MfM-ZYk+hp12tqHNJA0Q@mail.gmail.com>
-In-Reply-To: <CALCETrXFHa_05-sGAy5M9YGJWUfTn9MfM-ZYk+hp12tqHNJA0Q@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        id S1726496AbgFQTpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 15:45:32 -0400
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9646207DD;
+        Wed, 17 Jun 2020 19:45:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592423131;
+        bh=qzsvYZpLBWgdL32sHZOFJvtYArIngqyXEv1j1eEpj50=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vWuJpvkS3nMzD4rpcnRTURrI7swxeURZIvHnsdHUzWgKuUA57aphpLQdZK4TI6/0S
+         epXUwSbwRtN8nh6fhue9ZMfIcmG/btGq23VZPQnPF62psObqO1YNb2pCBBFAvXYoTp
+         beQwWLXPGKgokrWwiGOBrgqgTjP2Xx0Anhf11C1Y=
+Date:   Wed, 17 Jun 2020 12:45:31 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Vijay Balakrishna <vijayb@linux.microsoft.com>
+Cc:     Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Tyler Hicks <tyhicks@linux.microsoft.com>
+Subject: Re: [PATCH v2][RFC] kdump: append kernel build-id string to
+ VMCOREINFO
+Message-Id: <20200617124531.753b42152682219f267b75a1@linux-foundation.org>
+In-Reply-To: <1591849672-34104-1-git-send-email-vijayb@linux.microsoft.com>
+References: <1591849672-34104-1-git-send-email-vijayb@linux.microsoft.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBJcyBQQVNJRCBpbiB0aGUgdWFwaSBhdCBhbGw/DQoNCg0KJCBncmVwIHBhc2lkIGluY2x1ZGUv
-dWFwaS9saW51eC9pb21tdS5oDQoqIEBwYXNpZDogUHJvY2VzcyBBZGRyZXNzIFNwYWNlIElEDQog
-ICAgICAgIF9fdTMyICAgcGFzaWQ7DQogKiBAcGFzaWQ6IFByb2Nlc3MgQWRkcmVzcyBTcGFjZSBJ
-RA0KICAgICAgICBfX3UzMiAgIHBhc2lkOw0KICogQHBhc2lkOiBQcm9jZXNzIEFkZHJlc3MgU3Bh
-Y2UgSUQNCiAgICAgICAgX191MzIgICBwYXNpZDsNCiAqIC0gSWYgdGhlIFBBU0lEIGJpdCBpcyBz
-ZXQsIHRoZSBAcGFzaWQgZmllbGQgaXMgcG9wdWxhdGVkIGFuZCB0aGUgaW52YWxpZGF0aW9uDQog
-KiBAcGFzaWQ6IHByb2Nlc3MgYWRkcmVzcyBzcGFjZSBJRA0KICAgICAgICBfX3U2NCAgIHBhc2lk
-Ow0KICogc3RydWN0IGlvbW11X2ludl9wYXNpZF9pbmZvIC0gUEFTSUQgU2VsZWN0aXZlIEludmFs
-aWRhdGlvbiBTdHJ1Y3R1cmUNCiAqIC0gSWYgdGhlIFBBU0lEIGJpdCBpcyBzZXQsIHRoZSBAcGFz
-aWQgZmllbGQgaXMgcG9wdWxhdGVkIGFuZCB0aGUgaW52YWxpZGF0aW9uDQogKiBAcGFzaWQ6IHBy
-b2Nlc3MgYWRkcmVzcyBzcGFjZSBJRA0Kc3RydWN0IGlvbW11X2ludl9wYXNpZF9pbmZvIHsNCiAg
-ICAgICAgX191NjQgICBwYXNpZDsNCiAqIEBwYXNpZF9pbmZvOiBpbnZhbGlkYXRpb24gZGF0YSB3
-aGVuIEBncmFudWxhcml0eSBpcyAlSU9NTVVfSU5WX0dSQU5VX1BBU0lEDQogICAgICAgICAgICAg
-ICAgc3RydWN0IGlvbW11X2ludl9wYXNpZF9pbmZvIHBhc2lkX2luZm87DQogKiBzdHJ1Y3QgaW9t
-bXVfZ3Bhc2lkX2JpbmRfZGF0YV92dGQgLSBJbnRlbCBWVC1kIHNwZWNpZmljIGRhdGEgb24gZGV2
-aWNlIGFuZCBndWVzdA0Kc3RydWN0IGlvbW11X2dwYXNpZF9iaW5kX2RhdGFfdnRkIHsNCiAqIHN0
-cnVjdCBpb21tdV9ncGFzaWRfYmluZF9kYXRhIC0gSW5mb3JtYXRpb24gYWJvdXQgZGV2aWNlIGFu
-ZCBndWVzdCBQQVNJRCBiaW5kaW5nDQogKiBAaHBhc2lkOiAgICAgUHJvY2VzcyBhZGRyZXNzIHNw
-YWNlIElEIHVzZWQgZm9yIHRoZSBndWVzdCBtbSBpbiBob3N0IElPTU1VDQogKiBAZ3Bhc2lkOiAg
-ICAgUHJvY2VzcyBhZGRyZXNzIHNwYWNlIElEIHVzZWQgZm9yIHRoZSBndWVzdCBtbSBpbiBndWVz
-dCBJT01NVQ0Kc3RydWN0IGlvbW11X2dwYXNpZF9iaW5kX2RhdGEgew0KICAgICAgICBfX3U2NCBo
-cGFzaWQ7DQogICAgICAgIF9fdTY0IGdwYXNpZDsNCiAgICAgICAgICAgICAgICBzdHJ1Y3QgaW9t
-bXVfZ3Bhc2lkX2JpbmRfZGF0YV92dGQgdnRkOw0K
+On Wed, 10 Jun 2020 21:27:52 -0700 Vijay Balakrishna <vijayb@linux.microsoft.com> wrote:
+
+> Make kernel GNU build-id available in VMCOREINFO.  Having
+> build-id in VMCOREINFO facilitates presenting appropriate kernel
+> namelist image with debug information file to kernel crash dump
+> analysis tools.  Currently VMCOREINFO lacks uniquely identifiable
+> key for crash analysis automation.
+> 
+> Regarding if this patch is necessary or matching of linux_banner
+> and OSRELEASE in VMCOREINFO employed by crash(8) meets the
+> need -- IMO, build-id approach more foolproof, in most instances it
+> is a cryptographic hash generated using internal code/ELF bits unlike
+> kernel version string upon which linux_banner is based that is
+> external to the code.  I feel each is intended for a different purpose.
+> Also OSRELEASE is not suitable when two different kernel builds
+> from same version with different features enabled.
+> 
+> Currently for most linux (and non-linux) systems build-id can be
+> extracted using standard methods for file types such as user mode crash
+> dumps, shared libraries, loadable kernel modules etc.,  This is an
+> exception for linux kernel dump.  Having build-id in VMCOREINFO brings
+> some uniformity for automation tools.
+> 
+> ...
+>
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -11,6 +11,8 @@
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+>  
+> +#include <crypto/sha.h>
+> +
+>  /* vmcoreinfo stuff */
+>  unsigned char *vmcoreinfo_data;
+>  size_t vmcoreinfo_size;
+> @@ -376,6 +378,53 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+>  }
+>  EXPORT_SYMBOL(paddr_vmcoreinfo_note);
+>  
+> +#define NOTES_SIZE (&__stop_notes - &__start_notes)
+> +#define BUILD_ID_MAX SHA1_DIGEST_SIZE
+> +#define NT_GNU_BUILD_ID 3
+> +
+> +struct elf_note_section {
+> +	struct elf_note	n_hdr;
+> +	u8 n_data[];
+> +};
+> +
+> +/*
+> + * Add build ID from .notes section as generated by the GNU ld(1)
+> + * or LLVM lld(1) --build-id option.
+> + */
+> +static void add_build_id_vmcoreinfo(void)
+> +{
+> +	char build_id[BUILD_ID_MAX * 2 + 1];
+> +	int n_remain = NOTES_SIZE;
+> +
+> +	while (n_remain >= sizeof(struct elf_note)) {
+> +		const struct elf_note_section *note_sec =
+> +			&__start_notes + NOTES_SIZE - n_remain;
+> +		const u32 n_namesz = note_sec->n_hdr.n_namesz;
+> +
+> +		if (note_sec->n_hdr.n_type == NT_GNU_BUILD_ID &&
+> +		    n_namesz != 0 &&
+> +		    !strcmp((char *)&note_sec->n_data[0], "GNU")) {
+
+Is it guaranteed that n_data[] is null-terminated?
+
+> +			if (note_sec->n_hdr.n_descsz <= BUILD_ID_MAX) {
+> +				const u32 n_descsz = note_sec->n_hdr.n_descsz;
+> +				const u8 *s = &note_sec->n_data[n_namesz];
+> +
+> +				s = PTR_ALIGN(s, 4);
+> +				bin2hex(build_id, s, n_descsz);
+> +				build_id[2 * n_descsz] = '\0';
+> +				VMCOREINFO_BUILD_ID(build_id);
+> +				return;
+> +			}
+> +			pr_warn("Build ID is too large to include in vmcoreinfo: %u > %u\n",
+> +				note_sec->n_hdr.n_descsz,
+> +				BUILD_ID_MAX);
+> +			return;
+> +		}
+> +		n_remain -= sizeof(struct elf_note) +
+> +			ALIGN(note_sec->n_hdr.n_namesz, 4) +
+> +			ALIGN(note_sec->n_hdr.n_descsz, 4);
+> +	}
+> +}
+> +
+>  static int __init crash_save_vmcoreinfo_init(void)
+>  {
+>  	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
+
