@@ -2,84 +2,163 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EF3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FD9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11941208D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592411338;
-	bh=1H0CTWgSc5IHvLsUQzrRHh4kgeEBc5Pmj5ZbDHaTDAs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FN2d6QqZfjGcTASlNT6KfnNyGUEKP2zrLPmbv58h3I6mvy2fgXq7J8//f5tHYHOgI
-	 Ac7zY/MvdvK1mdK6gtnGouE8Eks/xtHOSbs46mUrhiAueX47obXJGmA8YHoMEEDrY6
-	 ww2lOY6vNkVNmVlKKStB9HWNrKu3MPQuUfO+KV0U=
+	by mail.kernel.org (Postfix) with ESMTP id CF9DB208D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:29:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="A2r4Lazt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgFQQ24 (ORCPT
+        id S1727050AbgFQQ3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:28:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726708AbgFQQ24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:28:56 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ABDF208D5;
-        Wed, 17 Jun 2020 16:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592411335;
-        bh=1H0CTWgSc5IHvLsUQzrRHh4kgeEBc5Pmj5ZbDHaTDAs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bG7XIEDR98xPTo6lRgqTpTUlXgdz0HlW1l4RSR8QVd0hgd9XqFG1AuMrOYBsa7gEP
-         JSRlw6wkXiHht4VFpjafiHea/ZsYrZjPtMdZOrhtPVoqbq8hxy8fnprYf4i/I2Xa12
-         f5TNhsJ9hXK5pvRC5EtGbl3YNZtwwa9MQoDjv+Xc=
-Date:   Wed, 17 Jun 2020 09:28:54 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Aaron Ma <aaron.ma@canonical.com>
-Cc:     jeffrey.t.kirsher@intel.com, davem@davemloft.net,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vitaly.lifshits@intel.com,
-        kai.heng.feng@canonical.com, sasha.neftin@intel.com
-Subject: Re: [v2][PATCH] e1000e: continue to init phy even when failed to
- disable ULP
-Message-ID: <20200617092854.7be16376@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <20200617111249.20855-1-aaron.ma@canonical.com>
-References: <20200616100512.22512-1-aaron.ma@canonical.com>
-        <20200617111249.20855-1-aaron.ma@canonical.com>
+        Wed, 17 Jun 2020 12:29:21 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:46840 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbgFQQ3T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 12:29:19 -0400
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200617162915epoutp03db250410996595437862170577e2cf0a~ZYbDsEhAZ0273102731epoutp03P
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 16:29:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200617162915epoutp03db250410996595437862170577e2cf0a~ZYbDsEhAZ0273102731epoutp03P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592411355;
+        bh=pJDQ9bzgD7mDXxkITK5uC1QbmLKf2zUNC9GZ5y74iRI=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=A2r4Lazt05Kx4TtjYPmep/dn0+8ecjNjQCzC6WC0yedjYdgE3YHs011s+BzwFsrD4
+         Hi2GbyNi/rGevUHQlsPd0DGSieOcu4zJEM4jOSD9rH2ImggvF4QWIZqsq0psUHIZSK
+         PXq+YX8JdneaDcD+mvhZI23y/b+GqhMu2MGqKUuE=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20200617162914epcas5p1a27f88125c976d7dca9feb3c5101cc9e~ZYbC8por22551825518epcas5p1-;
+        Wed, 17 Jun 2020 16:29:14 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        87.FE.09703.AD44AEE5; Thu, 18 Jun 2020 01:29:14 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200617162914epcas5p21255b4039eba27206ede0f35035dfd05~ZYbCo56qC1059410594epcas5p22;
+        Wed, 17 Jun 2020 16:29:14 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200617162914epsmtrp1a2ac5034639496a17426e50445c1f59e~ZYbCoO-_41937519375epsmtrp1_;
+        Wed, 17 Jun 2020 16:29:14 +0000 (GMT)
+X-AuditID: b6c32a4a-4b5ff700000025e7-f5-5eea44da53da
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        22.0D.08303.AD44AEE5; Thu, 18 Jun 2020 01:29:14 +0900 (KST)
+Received: from mshams01 (unknown [107.122.43.244]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200617162911epsmtip258b7d1ac6dec4090cf9ebb61c6dd22fe~ZYbADTQEM1472814728epsmtip2g;
+        Wed, 17 Jun 2020 16:29:11 +0000 (GMT)
+From:   "M Tamseel Shams" <m.shams@samsung.com>
+To:     "'Greg KH'" <gregkh@linuxfoundation.org>
+Cc:     <kgene@kernel.org>, <krzk@kernel.org>, <jslaby@suse.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <alim.akhtar@samsung.com>
+In-Reply-To: <20200615125045.GA946844@kroah.com>
+Subject: RE: [RFC PATCH] serial: samsung: Re-factors UART IRQ resource for
+ various Samsung SoC
+Date:   Wed, 17 Jun 2020 21:58:42 +0530
+Message-ID: <000001d644c4$70180730$50481590$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQKFLyHxHkUNw6bP6pRUtYOiC7jR2QHTNgWiAz7cYJqnVpGkAA==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNKsWRmVeSWpSXmKPExsWy7bCmhu4tl1dxBgsazS0ezNvGZtG8eD2b
+        xZQNH5gs+h+/ZrY4f34Du8Wmx9dYLS7vmsNmMeP8PiaLM4t72R04PTat6mTz2D93DbvH5iX1
+        Hn1bVjF6rN9ylcXj8ya5ALYoLpuU1JzMstQifbsEroxd16cxFqziqVjf8IClgfEPZxcjJ4eE
+        gInE0wV3GEFsIYHdjBIXLrl1MXIB2Z8YJXad3cUI4XxmlJi8byc7TMf724fZIBK7GCUu9y1n
+        gmh/ziix/Bg/iM0moCsx6WAbM4gtIqAj0XHmBAtIA7PAK0aJb2+esoIkOAUMJPaefQJWJCyQ
+        ILF5zwowm0VAVWJNN4jNzsErYCnR7AoS5RUQlDg58wkLiM0sIC+x/e0cZoh7FCR+Pl3GCrHK
+        SeLWyznsEDXiEi+PHmEHWSshsIVDYvmjI1ANLhKztyxmg7CFJV4d3wL1mJTEy/42KDtfYv68
+        VVD1FRIrL7yBsu0lDlyZA3QEB9ACTYn1u/QhdvFJ9P5+wgQSlhDglehoE4KoVpT4v7sfaqK4
+        xLsVU1ghbA+J9ktTWScwKs5C8tksJJ/NQvLBLIRlCxhZVjFKphYU56anFpsWGOWllusVJ+YW
+        l+al6yXn525iBKcnLa8djA8ffNA7xMjEwXiIUYKDWUmE1/n3izgh3pTEyqrUovz4otKc1OJD
+        jNIcLErivEo/zsQJCaQnlqRmp6YWpBbBZJk4OKUamIpb9xyL/LMiVm5L3vxKF8FL4uzVx9fN
+        /tvBX+GkeeSTTmct06EvCwUW/58oHK+ctfDwEb27RTOPcTw7kNBwSbPW1Ti8u0sg6/+md178
+        y9nN77koRPidiWObfI/bQeiALRvjs6UmWZwBCXPvxUxb9iHBy+aH/Wm792sTP2/avcTmFotq
+        H0dNZze/0+rlh7aHCwv7xE6QCuVR7Qix+JCyomNldFDpGnNVm0uByscnaH3I4maekf4gcIN4
+        b/9qpXTT4PbVeQ0v3jVZRDtct3r2zvfu15sCjkFFF9OZal8taNhZ16jIV7A8LtNA4eDr3r2b
+        vfrcSw59d2/tOZUz0YbpRoH8vPpCbblzHl6cp8qVWIozEg21mIuKEwE1kINIvgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnkeLIzCtJLcpLzFFi42LZdlhJXveWy6s4g+XLFSwezNvGZtG8eD2b
+        xZQNH5gs+h+/ZrY4f34Du8Wmx9dYLS7vmsNmMeP8PiaLM4t72R04PTat6mTz2D93DbvH5iX1
+        Hn1bVjF6rN9ylcXj8ya5ALYoLpuU1JzMstQifbsEroxd16cxFqziqVjf8IClgfEPZxcjJ4eE
+        gInE+9uH2boYuTiEBHYwStxb+54RIiEuMe3XfihbWGLlv+fsEEVPGSU6/y9gBUmwCehKTDrY
+        xgxiiwjoSHScOcECUsQs8IlR4tDDWYwQHesYJabcfMQGUsUpYCCx9+wTsA5hgTiJCzv7WEBs
+        FgFViTXdK4Di7By8ApYSza4gUV4BQYmTM58AVXAAzdSTaNsIdg+zgLzE9rdzmCFuU5D4+XQZ
+        K8QJThK3Xs5hh6gRl3h59Aj7BEbhWUgmzUKYNAvJpFlIOhYwsqxilEwtKM5Nzy02LDDKSy3X
+        K07MLS7NS9dLzs/dxAiOMy2tHYx7Vn3QO8TIxMF4iFGCg1lJhNf594s4Id6UxMqq1KL8+KLS
+        nNTiQ4zSHCxK4rxfZy2MExJITyxJzU5NLUgtgskycXBKNTA1e2pslT3a+LXtkunXp8kLrHYt
+        mrIxYwZb2XTGlV6i4d4CPUKNX1I13jYceTAlq+fJh/uf7W+m+RpyRp3es1V4C/P0uxt/CC1/
+        UFX6/n+0mur8CUFHhG7Lddj0OnEt8nSZUH/7DNeiA7d678tnWdlu3lUaWhUy5eSWz/pvdQ/t
+        6DHuqD9RfsrOp4/9sXnM5QKTn1z+jtIHt507m+wTHRLq5HVRoDyA+6ulY0TOot4/KTsSm98L
+        99uydcVb867XKvPedL/jocRC7g9/Oay0dqXVTfZ8fP7p/Ckma3XyXDbFXcz+mh/+eOPqukPO
+        Cxd8d5FNvvMiYo+AlsK5viu3Ys9zMJn9nrNnRpTMd1/JUDslluKMREMt5qLiRAC2bXwUIgMA
+        AA==
+X-CMS-MailID: 20200617162914epcas5p21255b4039eba27206ede0f35035dfd05
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200615124355epcas5p446ae2f1b63331ef87334cd7d696c3c43
+References: <CGME20200615124355epcas5p446ae2f1b63331ef87334cd7d696c3c43@epcas5p4.samsung.com>
+        <20200615122609.71884-1-m.shams@samsung.com>
+        <20200615125045.GA946844@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 19:12:48 +0800 Aaron Ma wrote:
-> After commit: e086ba2fccd ("e1000e: disable s0ix entry and exit flows
->  for ME systems").
-> ThinkPad P14s always failed to disable ULP by ME.
-> commit: 0c80cdbf33 ("e1000e: Warn if disabling ULP failed")
-> break out of init phy:
-> 
-> error log:
-> [   42.364753] e1000e 0000:00:1f.6 enp0s31f6: Failed to disable ULP
-> [   42.524626] e1000e 0000:00:1f.6 enp0s31f6: PHY Wakeup cause - Unicast Packet
-> [   42.822476] e1000e 0000:00:1f.6 enp0s31f6: Hardware Error
-> 
-> When disable s0ix, E1000_FWSM_ULP_CFG_DONE will never be 1.
-> If continue to init phy like before, it can work as before.
-> iperf test result good too.
-> 
-> Fixes: 0c80cdbf33 ("e1000e: Warn if disabling ULP failed")
-> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+Hi Greg,
+I will post the patch without RFC tag.
 
-Fixes tag: Fixes: 0c80cdbf33 ("e1000e: Warn if disabling ULP failed")
-Has these problem(s):
-	- SHA1 should be at least 12 digits long
-	  Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-	  or later) just making sure it is not set (or set to "auto").
+Thanks & Regards
+Tamseel
+
+> -----Original Message-----
+> From: Greg KH <gregkh@linuxfoundation.org>
+> Sent: Monday, June 15, 2020 6:21 PM
+> To: Tamseel Shams <m.shams@samsung.com>
+> Cc: kgene@kernel.org; krzk@kernel.org; jslaby@suse.com; linux-arm-
+> kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org; linux-
+> serial@vger.kernel.org; linux-kernel@vger.kernel.org;
+> alim.akhtar@samsung.com
+> Subject: Re: [RFC PATCH] serial: samsung: Re-factors UART IRQ resource for
+> various Samsung SoC
+> 
+> On Mon, Jun 15, 2020 at 05:56:09PM +0530, Tamseel Shams wrote:
+> > In few older Samsung SoCs like s3c2410, s3c2412 and s3c2440, UART IP
+> > is having 2 interrupt lines.
+> > However, in other SoCs like s3c6400, s5pv210, exynos5433, and
+> > exynos4210 UART is having only 1 interrupt line. Due to this,
+> > "platform_get_irq(platdev, 1)"
+> > call in the driver gives the following warning:
+> > "IRQ index 1 not found" on recent platforms.
+> >
+> > This patch re-factors the IRQ resources handling for each platform and
+> > hence fixing the above warnings seen on some platforms.
+> >
+> > Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+> > ---
+> >  drivers/tty/serial/samsung_tty.c | 20 ++++++++++++++++----
+> >  1 file changed, 16 insertions(+), 4 deletions(-)
+> 
+> RFC means "I do not trust this so I don't want anyone to merge it", so
+I'll just
+> delete it from my queue and wait for you to come up with something that
+you
+> feel confident with :)
+> 
+> thanks,
+> 
+> greg k-h
+
