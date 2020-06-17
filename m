@@ -2,97 +2,123 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0437C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1A6F207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:13:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="WE0MqTxx"
+	by mail.kernel.org (Postfix) with ESMTP id 884D420734
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgFQONh (ORCPT
+        id S1726990AbgFQOOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 10:13:37 -0400
-Received: from ozlabs.org ([203.11.71.1]:41669 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbgFQONh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 10:13:37 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 17 Jun 2020 10:14:04 -0400
+Received: from mailout2n.rrzn.uni-hannover.de ([130.75.2.113]:39520 "EHLO
+        mailout2n.rrzn.uni-hannover.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726495AbgFQOOD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 10:14:03 -0400
+X-Greylist: delayed 334 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Jun 2020 10:14:02 EDT
+Received: from lab-pc01.sra.uni-hannover.de (lab.sra.uni-hannover.de [130.75.33.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49n6Vl166Tz9sSF;
-        Thu, 18 Jun 2020 00:13:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1592403215;
-        bh=yJ7IVrfjUL7bvgBlIpbHcEVKh7AcaV7LQqGjQYFZ0aU=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=WE0MqTxxT7dIxRLJ1twvDRMuwovW0/xLVJHQQjQ77nBMyuaW+4pKigwfQEwOPoqSg
-         SuL1eUB6O244tcxeQSyJG+pZLUwLacx+6JYcX89Oi5cuw5j3odJYTC9tzT3sEJFCSV
-         XUhvqflTg1ebHEyELsLH2TQPWFRos+vDbiRngKUmO4qdwqR5n/rnU+vZciKgvUN4vM
-         01dzSGX/L/TtPqQlMZL1wymLIahPaolbCzP1RatjHTPaaFBHt2NfhS5dr79EPzjAa9
-         +HaFiIkR5yUz9AKVVSGITnpMClbXpZwt6FmnU4angf2OZeBux5BdqzKSGQxy5ugWxj
-         +ZGCwIn3mfFwg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 1/3] mm/gup: Use huge_ptep_get() in gup_hugepte()
-In-Reply-To: <ffc3714334c3bfaca6f13788ad039e8759ae413f.1592225558.git.christophe.leroy@csgroup.eu>
-References: <cover.1592225557.git.christophe.leroy@csgroup.eu> <ffc3714334c3bfaca6f13788ad039e8759ae413f.1592225558.git.christophe.leroy@csgroup.eu>
-Date:   Thu, 18 Jun 2020 00:14:05 +1000
-Message-ID: <87zh91dbki.fsf@mpe.ellerman.id.au>
+        by mailout2n.rrzn.uni-hannover.de (Postfix) with ESMTPSA id D0C281F477;
+        Wed, 17 Jun 2020 16:08:26 +0200 (CEST)
+From:   Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     rostedt@goodmis.org, mingo@redhat.com,
+        linux-trace-devel@vger.kernel.org,
+        Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>,
+        linux-kernel@i4.cs.fau.de,
+        Maximilian Werner <maximilian.werner96@gmail.com>
+Subject: [PATCH] tracing/boottime: Fix kprobe multiple events
+Date:   Wed, 17 Jun 2020 16:08:17 +0200
+Message-Id: <20200617140817.17161-1-sascha.ortmann@stud.uni-hannover.de>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@csgroup.eu> writes:
-> gup_hugepte() reads hugepage table entries, it can't read
-> them directly, huge_ptep_get() must be used.
->
-> Fixes: 2ab3a0a02905 ("READ_ONCE: Enforce atomicity for {READ,WRITE}_ONCE() memory accesses")
+Fix boottime kprobe events to add multiple events even if one fails
+and report probe generation failures.
 
-I see that commit in older versions of linux-next but not in mainline.
+As an example, when we try to set multiprobe kprobe events in
+bootconfig like this:
 
-In mainline it seems to be: 9e343b467c70 ("READ_ONCE: Enforce atomicity for {READ,WRITE}_ONCE() memory accesses")
+ftrace.event.kprobes.vfsevents {
+	probes = "vfs_read $arg1 $arg2,,
+                 !error! not reported;?", // leads to error
+		 "vfs_write $arg1 $arg2"
+}
 
-I guess it got rebased somewhere along the way.
+this will not work like expected. After commit
+da0f1f4167e3af69e1d8b32d6d65195ddd2bfb64 ("tracing/boottime:
+Fix kprobe event API usage"), the function
+trace_boot_add_kprobe_event will not produce any error message,
+aborting the function and stopping subsequent probes from getting
+installed when adding a probe fails at kprobe_event_gen_cmd_start.
+Furthermore, probes continue when kprobe_event_gen_cmd_end fails
+(and kprobe_event_gen_cmd_start did not fail). In this case the
+function even returns successfully when the last call to
+kprobe_event_gen_cmd_end is successful.
 
-I fixed it up when applying, and the other two as well.
+The behaviour of reporting and aborting after failures is not
+consistent.
 
-cheers
+The function trace_boot_add_kprobe_event now continues even when
+one of the multiple events fails. Each failure is now reported
+individually. Since the function can only return one result to the
+caller, the function returns now the last failure (or none, if
+nothing fails).
 
-> Cc: Will Deacon <will@kernel.org>
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
->  mm/gup.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/gup.c b/mm/gup.c
-> index de9e36262ccb..761df4944ef5 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2425,7 +2425,7 @@ static int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
->  	if (pte_end < end)
->  		end = pte_end;
->  
-> -	pte = READ_ONCE(*ptep);
-> +	pte = huge_ptep_get(ptep);
->  
->  	if (!pte_access_permitted(pte, flags & FOLL_WRITE))
->  		return 0;
-> -- 
-> 2.25.0
+Cc: linux-kernel@i4.cs.fau.de
+Signed-off-by: Maximilian Werner <maximilian.werner96@gmail.com>
+Signed-off-by: Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
+---
+ kernel/trace/trace_boot.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index 9de29bb45a27..dbb50184e060 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -95,18 +95,24 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
+ 	struct xbc_node *anode;
+ 	char buf[MAX_BUF_LEN];
+ 	const char *val;
++	int error = 0;
+ 	int ret = 0;
+ 
+ 	xbc_node_for_each_array_value(node, "probes", anode, val) {
+ 		kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
+ 
+-		ret = kprobe_event_gen_cmd_start(&cmd, event, val);
+-		if (ret)
+-			break;
++		error = kprobe_event_gen_cmd_start(&cmd, event, val);
++		if (error) {
++			pr_err("Failed to generate probe: %s\n", buf);
++			ret = error;
++			continue;
++		}
+ 
+-		ret = kprobe_event_gen_cmd_end(&cmd);
+-		if (ret)
++		error = kprobe_event_gen_cmd_end(&cmd);
++		if (error) {
+ 			pr_err("Failed to add probe: %s\n", buf);
++			ret = error;
++		}
+ 	}
+ 
+ 	return ret;
+-- 
+2.17.1
+
