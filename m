@@ -2,184 +2,146 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D978BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB81120810
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1670C206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:06:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g/c8YMsF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I7Uq/MjZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgFQED5 (ORCPT
+        id S1726668AbgFQEGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 00:03:57 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60323 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725808AbgFQED5 (ORCPT
+        Wed, 17 Jun 2020 00:06:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgFQEGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 00:03:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592366635;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dUjZV5HGPyTEJs9+tiHKC3ItBOnfHi3MbbIcDCIeAMo=;
-        b=g/c8YMsFcH4210ogGNwA3u3UDa5xQ/Uym0u7oUrjr3O/rZ7zSMYCnoLMAUbRTi+vpF11DH
-        eL6UKlNYzKx8hRwie9HohvQ0EjOTF/eMfvIk9r5aCifPDDZwF4hwFsKb75v6MgfjAFetAJ
-        c0qpbKbePujtBDu38UJWqkZ76fAHTmE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-481-AybmVhfQO_K0_WKlen-EGw-1; Wed, 17 Jun 2020 00:03:48 -0400
-X-MC-Unique: AybmVhfQO_K0_WKlen-EGw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 563581009618;
-        Wed, 17 Jun 2020 04:03:46 +0000 (UTC)
-Received: from localhost (ovpn-12-37.pek2.redhat.com [10.72.12.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D642379317;
-        Wed, 17 Jun 2020 04:03:44 +0000 (UTC)
-Date:   Wed, 17 Jun 2020 12:03:42 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Jaewon Kim <jaewon31.kim@gmail.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        =?utf-8?B?6rmA7J6s7JuQ?= <jaewon31.kim@samsung.com>,
-        "mgorman@techsingularity.net" <mgorman@techsingularity.net>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?utf-8?B?7J207Jqp7YOd?= <ytk.lee@samsung.com>,
-        =?utf-8?B?6rmA7LKg66+8?= <cmlaika.kim@samsung.com>
-Subject: Re: (2) [PATCH v2] page_alloc: consider highatomic reserve in
- wmartermark fast
-Message-ID: <20200617040342.GC3346@MiWiFi-R3L-srv>
-References: <26a6a2c2-56e6-1a34-84ac-8ff9f74c34ce@suse.cz>
- <20200613025102.12880-1-jaewon31.kim@samsung.com>
- <20200613094228.GB3346@MiWiFi-R3L-srv>
- <CAJrd-Ut=QcK5FQP2TUm6==mowoVK_QVCB7x=LL4iUnZxBLYAmA@mail.gmail.com>
- <20200613231736.GJ20367@MiWiFi-R3L-srv>
- <CGME20200612085027epcas1p46383a7eda792eabbd1e74cd08fe988c9@epcms1p1>
- <20200616073002epcms1p12a14cc85b0aebf8ba88bedee7495b34f@epcms1p1>
- <20200616141717.GN20367@MiWiFi-R3L-srv>
- <CAJrd-UuWas4ctJZVd76fiENaDJY6O1EMBisFfdVws09YLQwmrQ@mail.gmail.com>
+        Wed, 17 Jun 2020 00:06:14 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BC91C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 21:06:12 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l11so789768wru.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 21:06:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5PuPiLXB+Zn09O0tzAIe764d7r3OYmp8OwnNdcrO+bA=;
+        b=I7Uq/MjZ+H2xYtZZ4lA3ybOmOnECnv1eu4jmKgICIFg1a36hkRrBKNn6pAPwS4YOOj
+         pTi8/SQv0GJSutNn6gIjqRYG0ulgepo/AWTgsqY7UggatblWIsgzcI9iKBJPxzJj9LCI
+         KpdUWKIow4A/LejdoB21mNpx7LguFSeW0ht7ShdHmcu64lscjRejQgcGXcCQAJXbzfHV
+         rnCSvWG1f89gwvLN2HoMic9sPr7nqASI77NOfJ9HFCpx8DDcnWAlOdOVBbF99OrEEU27
+         /f1XXJdZ2LIUu+hGG5ktnbDJl7awX5pxuprv+heMCzxv5vqgMo+4zfYDhNK2GiTGS7JR
+         Jy3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5PuPiLXB+Zn09O0tzAIe764d7r3OYmp8OwnNdcrO+bA=;
+        b=inyzOBlNZpfjo28lKYbCyEXfrzdamgw78vjQRni59V3UolT9//GGdmz1gevR9rgR0A
+         0h246YE0S52xI5bsvQWNzJj2lyzr+StitULyGDn0O7YjtNQxhtPPokh+efUEuhK4WLZP
+         eRtjeyZbk2xjrs/KO0YY44NUB+CB2w75p1Lzrgn3RSe+ILm/tych/2AY276AE7JvORJM
+         LcEPGveyWoLKiXI8yx9H66lAdyebQ0gzC47kqiRvPzxXZ0MtP0QMQMHlY1G753Beoo8x
+         oFH6oDy16j9KXBdZ8QmjnJq+kYD0+9ZjiKhuHoYzaZjFOlxfSDRNwiP0ECeW6zOmZcc4
+         jXFw==
+X-Gm-Message-State: AOAM532UnaEZBYd9/MuYePDP+DVCnRN1sK+Iv4fV6QHPYxs+J5F42Up4
+        fIo8AqjXci9PtJch4RM7uH95WQA0NXxQLZsaNkoYjw==
+X-Google-Smtp-Source: ABdhPJxo7S4BNCm1hKAaH+x6SbN8seI34s31YejfTVkfl5aLhC7YykVSJY6L56UwCmIH6aI86ha+buwLc2koBjYu4k0=
+X-Received: by 2002:adf:b60b:: with SMTP id f11mr6193172wre.7.1592366770496;
+ Tue, 16 Jun 2020 21:06:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJrd-UuWas4ctJZVd76fiENaDJY6O1EMBisFfdVws09YLQwmrQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <CY4PR13MB1175B804E31E502221BC8163FD830@CY4PR13MB1175.namprd13.prod.outlook.com>
+ <20200616204817.GA212825@google.com> <CY4PR13MB1175A71AE3937C0786721ABFFD9D0@CY4PR13MB1175.namprd13.prod.outlook.com>
+ <202006161703.B2E51605@keescook> <CY4PR13MB1175DCC4066FC0839A6B2E84FD9A0@CY4PR13MB1175.namprd13.prod.outlook.com>
+ <202006162032.9BF6F8F4E@keescook>
+In-Reply-To: <202006162032.9BF6F8F4E@keescook>
+From:   David Gow <davidgow@google.com>
+Date:   Wed, 17 Jun 2020 12:05:59 +0800
+Message-ID: <CABVgOSn48gw3pMSCccmF8FK=3UPF+Spe47AiDQcMiXkk3k4yqQ@mail.gmail.com>
+Subject: Re: RFC - kernel selftest result documentation (KTAP)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Bird, Tim" <Tim.Bird@sony.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/17/20 at 12:46am, Jaewon Kim wrote:
-...
-> > > >>> i.e)
-> > > >>> In following situation, watermark check fails (9MB - 8MB < 4MB) though there are
-> > > >>> enough free (9MB - 4MB > 4MB). If this is really matter, we need to
-> > > >>> count highatomic
-> > > >>> free accurately.
-> > > >>
-> > > >> Seems to make sense. We only use zone->nr_reserved_highatomic to account
-> > > >> the reserved highatomic, don't track how much have been used for
-> > > >> highatomic allocation. But not sure if this will happen often, or just a
-> > > >> very rare case, whether taking that into account will impact anything.
-> > > >
-> > > >Unfortunately there's a problem when trying to account free pages of a migrate
-> > > >type exactly, as e.g. during reserve_highatomic_pageblock(), some pages might be
-> > > >in pcplist of other cpu with other migratetype, and once they are freed, the
-> > > >buddy merging will merge the different migratetypes and distort the accounting.
-> >
-> > Yeah, the migratetype could have been cached in page->index before we
-> > finish the reserve_highatomic_pageblock(). Seems we take a very coarse
-> > grained way to do the highatomic reservation and accounting. When I went
-> > through the related code, found out we call
-> > reserve_highatomic_pageblock() if below condition is met. So what if
-> > order is 1, and all other pages on the page block have been used? Do we
-> > possibly have this kind of extreme case?
-> 
-> If I correctly understand your question, yes I think so.
-> If a hight-order free page was allocated on ALLOC_HARDER context, and the page
-> was the last order-1, then zone->nr_reserved_highatomic will be increased by
-> pageblock_nr_pages even though there was actually no free page moved to the
-> highatomic free page list.
+On Wed, Jun 17, 2020 at 11:36 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Wed, Jun 17, 2020 at 02:30:45AM +0000, Bird, Tim wrote:
+> > Agreed.  You only need machine-parsable data if you expect the CI
+> > system to do something more with the data than just present it.
+> > What that would be, that would be common for all tests (or at least
+> > many test), is unclear.  Maybe there are patterns in the diagnostic
+> > data that could lead to higher-level analysis, or even automated
+> > fixes, that don't become apparent if the data is unstructured.  But
+> > it's hard to know until you have lots of data.  I think just getting
+> > the other things consistent is a good priority right now.
+>
+> Yeah. I think the main place for this is performance analysis, but I
+> think that's a separate system entirely. TAP is really strictly yes/no,
+> where as performance analysis a whole other thing. The only other thing
+> I can think of is some kind of feature analysis, but that would be built
+> out of the standard yes/no output. i.e. if I create a test that checks
+> for specific security mitigation features (*cough*LKDTM*cough*), having
+> a dashboard that shows features down one axis and architectures and/or
+> kernel versions on other axes, then I get a pretty picture. But it's
+> still being built out of the yes/no info.
+>
+> *shrug*
+>
+> I think diagnostic should be expressly non-machine-oriented.
 
-Exactly.
+So from the KUnit side, we sort-of have three kinds of diagnostic lines:
+- Lines printed directly from tests (typically using kunit_info() or
+similar functions): as I understand it, these are basically the
+equivalent of what kselftest typically uses diagnostics for --
+test-specific, human-readable messages. I don't think we need/want to
+parse these much.
+- Kernel messages during test execution. If we get the results from
+scraping the kernel log (which is still the default for KUnit, though
+there is also a debugfs info), other kernel logs can be interleaved
+with the results. Sometimes these are irrelevant things happening on
+another thread, sometimes they're something directly related to the
+test which we'd like to capture (KASAN errors, for instance). I don't
+think we want these to be machine oriented, but we may want to be able
+to filter them out.
+- Expectation failures: as Brendan mentioned, KUnit will print some
+diagnostic messages for individual assertion/expectation failures,
+including the expected and actual values. We'd ideally like to be able
+to identify and parse these, but keeping them human-readable is
+definitely also a goal.
 
-> 
-> The highatomic logic, I think, was originally designed to reserve in
-> that coarse grained
-> way to mitigate highatomic allocation failure.
-> 
-> >
-> > From Jaewon's captured information, we can see that the available free
-> > highatomic is even less than half the zone->nr_reserved_highatomic.
-> > Should we at least limit the reservation to the case with a bigger
-> > order. E.g 1/2 of pageblock_nr_pages? Please correct me if I am wrong or
-> > miss anyting.
-> >
-> 
-> I do not know well, but I think high-order lower than 1/2 of pageblock_nr_pages
-> also should be considered. i.e) a system using huge order-3 atomic allocation
-> in a short time.
-> 
-> > "reserved_highatomic:32768KB and actually 14232kB free."
-> 
-> I think this unwanted case might happen by freed pages. The pages allocated
-> for non-high-atomic also would be freed back into highatomic free
-> list. But I guess
-> there was sudden huge use of highatomic and partially freed.
+Now, to be honest, I doubt that the distinction here would be of much
+use to kselftest, but it could be nice to not go out of our way to
+make parsing some diagnostic lines possible. That being said,
+personally I'm all for avoiding the yaml for diagnostic messages stuff
+and sticking to something simple and line-based, possibly
+standardising a the format of a few common diagnostic measurements
+(e.g., assertions/expected values/etc) in a way that's both
+human-readable and parsable if possible.
 
-OK, thanks for sharing. So we can leave with it, may do some improvement
-if any issue is reported in the future.
+I agree that there's a lot of analysis that is possible with just the
+yes/no data. There's probably some fancy correlation one could do even
+with unstructured diagnostic logs, so I don't think overstructuring
+things is a necessity by any means. Where we have different tests
+doing similar sorts of things, though, consistency in message
+formatting could help even if things are not explicitly parsed.
+Ensuring that helper functions that log and the like are spitting
+things out in the same format is probably a good starting step down
+that path.
 
-> 
-> >
-> > get_page_from_freelist
-> > {
-> >         ...
-> >                         if (unlikely(order && (alloc_flags & ALLOC_HARDER)))
-> >                                 reserve_highatomic_pageblock(page, zone, order);
-> >         ...
-> > }
-> > > >Fixing this for all migratetypes would have performance overhead, so we only do
-> > > >that for MIGRATE_ISOLATE which is not that frequent (and it took a while to
-> > > >eliminate all corner cases), and CMA which doesn't change pageblocks dynamically.
-> > >
-> > > AFAIK we do not account free cma in pcp either. But yes accurate check could be
-> > > overhead. For example, __mod_zone_freepage_state should account highatomic free
-> > > as cma free. And we may see some incorrect accounting issue.
-> > >
-> > > >
-> > > >So either we live with the possible overreclaim due to inaccurate counting per
-> > > >your example above, or we instead let order-0 atomic allocations use highatomic
-> > > >reserves.
-> > > >
-> > >
-> > > Additionally regarding existing Mel's comment, let me remove some of it if you
-> > > don't mind.
-> > >
-> > >         /*
-> > >          * Fast check for order-0 only. If this fails then the reserves
-> > > -        * need to be calculated. There is a corner case where the check
-> > > -        * passes but only the high-order atomic reserve are free. If
-> > > -        * the caller is !atomic then it'll uselessly search the free
-> > > -        * list. That corner case is then slower but it is harmless.
-> > > +        * need to be calculated.
-> > >          */
-> > >
-> > > I will prepare v3 patch.
-> > > Thank you again.
-> > >
-> >
-> 
-
+Cheers,
+-- David
