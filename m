@@ -2,48 +2,45 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE73C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C78C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9850A2098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DB352098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgFQWcR (ORCPT
+        id S1727047AbgFQWcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:32:17 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57334 "EHLO
+        Wed, 17 Jun 2020 18:32:20 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57382 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgFQWcQ (ORCPT
+        with ESMTP id S1726840AbgFQWcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:32:16 -0400
+        Wed, 17 Jun 2020 18:32:17 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id F3DBA8040A6A;
-        Wed, 17 Jun 2020 22:32:10 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id AFAB8803202C;
+        Wed, 17 Jun 2020 22:32:12 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nHQpljPh2UPG; Thu, 18 Jun 2020 01:32:07 +0300 (MSK)
+        with ESMTP id Mdk4A4-gDvp8; Thu, 18 Jun 2020 01:32:12 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
+        Serge Semin <fancer.lancer@gmail.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh@kernel.org>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-mips@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 1/6] dt-bindings: power: Convert mti,mips-cpc to DT schema
-Date:   Thu, 18 Jun 2020 01:31:55 +0300
-Message-ID: <20200617223201.23259-2-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v4 4/6] mips: cdmm: Add mti,mips-cdmm dtb node support
+Date:   Thu, 18 Jun 2020 01:31:58 +0300
+Message-ID: <20200617223201.23259-5-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -55,81 +52,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's a Cluster Power Controller embedded into the MIPS IP cores.
-Currently the corresponding dts node is supposed to have compatible
-and reg properties.
+Since having and mapping the CDMM block is platform specific, then
+instead of just returning a zero-address, lets make the default CDMM
+base address search method (mips_cdmm_phys_base()) to do something
+useful. For instance to find the address in a dedicated dtb-node in
+order to support of-based platforms by default.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: devicetree@vger.kernel.org
 
 ---
 
 Changelog prev:
-- Reword the changelog summary - use shorter version.
-- Lowercase the example hex'es.
+- Use alphabetical order for the include pre-processor operator.
 ---
- .../bindings/power/mti,mips-cpc.txt           |  8 -----
- .../bindings/power/mti,mips-cpc.yaml          | 35 +++++++++++++++++++
- 2 files changed, 35 insertions(+), 8 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
- create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+ drivers/bus/mips_cdmm.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt b/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-deleted file mode 100644
-index c6b82511ae8a..000000000000
---- a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
-+++ /dev/null
-@@ -1,8 +0,0 @@
--Binding for MIPS Cluster Power Controller (CPC).
--
--This binding allows a system to specify where the CPC registers are
--located.
--
--Required properties:
--compatible : Should be "mti,mips-cpc".
--regs: Should describe the address & size of the CPC register region.
-diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
-new file mode 100644
-index 000000000000..9cd92a57130c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/mti,mips-cpc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/bus/mips_cdmm.c b/drivers/bus/mips_cdmm.c
+index 1b14256376d2..9f7ed1fcd428 100644
+--- a/drivers/bus/mips_cdmm.c
++++ b/drivers/bus/mips_cdmm.c
+@@ -13,6 +13,8 @@
+ #include <linux/cpu.h>
+ #include <linux/cpumask.h>
+ #include <linux/io.h>
++#include <linux/of_address.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/smp.h>
+@@ -337,9 +339,22 @@ static phys_addr_t mips_cdmm_cur_base(void)
+  * Picking a suitable physical address at which to map the CDMM region is
+  * platform specific, so this weak function can be overridden by platform
+  * code to pick a suitable value if none is configured by the bootloader.
++ * By default this method tries to find a CDMM-specific node in the system
++ * dtb. Note that this won't work for early serial console.
+  */
+ phys_addr_t __weak mips_cdmm_phys_base(void)
+ {
++	struct device_node *np;
++	struct resource res;
++	int err;
 +
-+title: MIPS Cluster Power Controller
++	np = of_find_compatible_node(NULL, NULL, "mti,mips-cdmm");
++	if (np) {
++		err = of_address_to_resource(np, 0, &res);
++		if (!err)
++			return res.start;
++	}
 +
-+description: |
-+  Defines a location of the MIPS Cluster Power Controller registers.
-+
-+maintainers:
-+  - Paul Burton <paulburton@kernel.org>
-+
-+properties:
-+  compatible:
-+    const: mti,mips-cpc
-+
-+  reg:
-+    description: |
-+      Base address and size of an unoccupied memory region, which will be
-+      used to map the MIPS CPC registers block.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    cpc@1bde0000 {
-+      compatible = "mti,mips-cpc";
-+      reg = <0 0x1bde0000 0 0x8000>;
-+    };
-+...
+ 	return 0;
+ }
+ 
 -- 
 2.26.2
 
