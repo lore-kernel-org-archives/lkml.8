@@ -2,110 +2,109 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36729C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4765BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1441B2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:16:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592428615;
-	bh=RyiMy0SMVaFoLMTZSzw+BTB7kiyfiquzDb9CtKoNpEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z7VEBQZdJ+OOKBY8zAYV+kvBjuRQM3HEzi2TyOYvm0TZTq7Cevj27aXZXaPJSMRkP
-	 AT/MVruaXAem7RbNs8AV46v80dYeL2n1xil6GzMDK4nY9mHkJm8YZmLX1zyrx1x9xK
-	 pW+J75l5qhqalLsottzIh9IppP2A87+QvtxRa+e8=
+	by mail.kernel.org (Postfix) with ESMTP id 2036D2166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:18:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727037AbgFQVQx (ORCPT
+        id S1726966AbgFQVSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:16:53 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45685 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgFQVQx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:16:53 -0400
-Received: by mail-io1-f67.google.com with SMTP id y5so4581022iob.12;
-        Wed, 17 Jun 2020 14:16:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=j8CHgerKh+kCi8teLN3sFICipYAv2LGJo9hWRjpOE2w=;
-        b=LVhoXB2H0KQRHdIYezkyVYOfYuoqTZ129CmCXa47vCln+2NvKbnjNGfncha2RFZ54s
-         pFRdPeAfV3Ezlh1LF4NJ2KIoTrV2nmsVIVpyCqELOqPMMSyTjSkZsU589sB9LA8awqWR
-         RmCowH/zXJ16mXpaZ9nzbsPUqDNaNuXJ1JXDykjnlxKYGUS6mEKlpoIdH4fXwwztqkhC
-         sBNkorxbT25kYa8TzmFOEte8RQIoAWG4Rvl7AAhmPtW84cGh3wKGSl8LrzrxUFmzqUYO
-         nY30K3gqLYDCm2FIxootwMIm9NKW3geDj3lhzK+XOgThWZzD1b2VU6VcP9pMtpOSbCou
-         yYcg==
-X-Gm-Message-State: AOAM530vKO+CjWJx3FjnhMcvfSUKR/cnJd0pwbNH+5H6nlzqFlORkt9b
-        jx++0/5FA9yg/olXfxw+dw==
-X-Google-Smtp-Source: ABdhPJz4vmd5HW/ld1MMrmvl7UPaTLl7RJ4RvzL8jISwi+1GHLhCRTRT9B1g3Vta6QmIHKFwG4d3QQ==
-X-Received: by 2002:a6b:3805:: with SMTP id f5mr1450731ioa.41.1592428612080;
-        Wed, 17 Jun 2020 14:16:52 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id b73sm570734iof.13.2020.06.17.14.16.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 14:16:51 -0700 (PDT)
-Received: (nullmailer pid 2837249 invoked by uid 1000);
-        Wed, 17 Jun 2020 21:16:49 -0000
-Date:   Wed, 17 Jun 2020 15:16:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Amit Singh Tomar <amittomer25@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, andre.przywara@arm.com,
-        vkoul@kernel.org, linux-actions@lists.infradead.org,
-        cristian.ciocaltea@gmail.com, dan.j.williams@intel.com,
-        robh+dt@kernel.org, afaerber@suse.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        manivannan.sadhasivam@linaro.org
-Subject: Re: [PATCH v4 05/10] dt-bindings: dmaengine: convert Actions Semi
- Owl SoCs bindings to yaml
-Message-ID: <20200617211649.GA2837196@bogus>
-References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
- <1591697830-16311-6-git-send-email-amittomer25@gmail.com>
+        Wed, 17 Jun 2020 17:18:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49128 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbgFQVSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 17:18:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 25F12ABE4;
+        Wed, 17 Jun 2020 21:18:49 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 2106A602E9; Wed, 17 Jun 2020 23:18:44 +0200 (CEST)
+Date:   Wed, 17 Jun 2020 23:18:44 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Alexander Lobakin <alobakin@pm.me>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Aya Levin <ayal@mellanox.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Willem de Bruijn <willemb@google.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH resend net] net: ethtool: add missing
+ NETIF_F_GSO_FRAGLIST feature string
+Message-ID: <20200617211844.kupsyijuurjpb5kd@lion.mk-sys.cz>
+References: <9oPfKdiVuoDf251VBJXgNs-Hv-HWPnIJk52x-SQc1frfg8QSf9z3rCL-CBSafkp9SO0CjNzU8QvUv9Abe4SvoUpejeob9OImDPbflzRC-0Y=@pm.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="44eqlknfr26opjcz"
 Content-Disposition: inline
-In-Reply-To: <1591697830-16311-6-git-send-email-amittomer25@gmail.com>
+In-Reply-To: <9oPfKdiVuoDf251VBJXgNs-Hv-HWPnIJk52x-SQc1frfg8QSf9z3rCL-CBSafkp9SO0CjNzU8QvUv9Abe4SvoUpejeob9OImDPbflzRC-0Y=@pm.me>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 09 Jun 2020 15:47:05 +0530, Amit Singh Tomar wrote:
-> Converts the device tree bindings for the Actions Semi Owl SoCs DMA
-> Controller over to YAML schemas.
-> 
-> It also adds new compatible string "actions,s700-dma".
-> 
-> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
-> ---
-> Changes since v3:
-> 	* No change.
-> Changes since v2:
->         * Addressed Rob's comments:
->            - removed unnecessary description.
->            - added unevaluatedProperties
->            - added relevant information about
->              dma-channels and dma-request
->         * Added power-domain property.
-> Change since v1:
->         * Updated the description field to reflect
->           only the necessary information.
->         * replaced the maxItems field with description for each
->           controller attribute(except interrupts).
->         * Replaced the clock macro with number to keep the example
->           as independent as possible.
-> 
->  New patch, was not there in RFC.
-> ---
->  Documentation/devicetree/bindings/dma/owl-dma.txt  | 47 -------------
->  Documentation/devicetree/bindings/dma/owl-dma.yaml | 79 ++++++++++++++++++++++
->  2 files changed, 79 insertions(+), 47 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
->  create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.yaml
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+--44eqlknfr26opjcz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 17, 2020 at 08:42:47PM +0000, Alexander Lobakin wrote:
+> Commit 3b33583265ed ("net: Add fraglist GRO/GSO feature flags") missed
+> an entry for NETIF_F_GSO_FRAGLIST in netdev_features_strings array. As
+> a result, fraglist GSO feature is not shown in 'ethtool -k' output and
+> can't be toggled on/off.
+> The fix is trivial.
+>=20
+> Fixes: 3b33583265ed ("net: Add fraglist GRO/GSO feature flags")
+> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+> ---
+>  net/ethtool/common.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+> index 423e640e3876..47f63526818e 100644
+> --- a/net/ethtool/common.c
+> +++ b/net/ethtool/common.c
+> @@ -43,6 +43,7 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT=
+][ETH_GSTRING_LEN] =3D {
+>  	[NETIF_F_GSO_SCTP_BIT] =3D	 "tx-sctp-segmentation",
+>  	[NETIF_F_GSO_ESP_BIT] =3D		 "tx-esp-segmentation",
+>  	[NETIF_F_GSO_UDP_L4_BIT] =3D	 "tx-udp-segmentation",
+> +	[NETIF_F_GSO_FRAGLIST_BIT] =3D	 "tx-gso-list",
+> =20
+>  	[NETIF_F_FCOE_CRC_BIT] =3D         "tx-checksum-fcoe-crc",
+>  	[NETIF_F_SCTP_CRC_BIT] =3D        "tx-checksum-sctp",
+
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+
+AFAICS the name for NETIF_F_GSO_TUNNEL_REMCSUM_BIT is also missing but
+IMHO it will be better to fix that by a separate patch with its own
+Fixes tag.
+
+Michal
+
+--44eqlknfr26opjcz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAl7qiK0ACgkQ538sG/LR
+dpXuyQf/Thd13ZgZD56Ow44VpEH3IScuR1vm4S5/6kfXAxvwG3+ZxLsqB+b+ErIq
+wzHMRRVNiQO7k+2VzPT63VXzjRha6HnwH0PoRZOD5x7jLmoIyDAGPYS4luF+13/A
+QrcD8WmzWE1OL+O6BotIEKdGld6ldBhJkoZClnh9IIyUcGbnz7a5ZFo3OzWL5ftu
+7JNybpLJo8+p4hUp6hbHX/yGCVeX2janyBru5ET5+bMkbE+C6elah17W7cDyk+02
+fwPGEDPLfvermda+cRLs5S3HtSRrj6Wj4eM+s3q7Mn5XAIRCaBWQBqObXLVamX/p
+zW23X0P5H54TEiv2jsfiRPL0n3qXYQ==
+=GNYI
+-----END PGP SIGNATURE-----
+
+--44eqlknfr26opjcz--
