@@ -2,115 +2,91 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E237C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 517E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C83F20810
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204B020882
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592433599;
-	bh=Y9bnlD/oDcvQNu/ZlL5t02VU0X1eBDdU+d1G1FqX13w=;
+	s=default; t=1592433631;
+	bh=SFSgAUqwblicoJHjl7aysEfwPuGH6Q7IY58XJJx+M9c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pmonoC6INQTZTLsCbC5E90HX04WvKsp87je7Dk/7VevrgOgM5RdLVzKouivI+EzLq
-	 jCsxuXdEgkJIap6pyxH5b9hukwNIc4Pz3SGrCn4287EOLmELxyMJjHesplFgWRWFbL
-	 WH8u7rUvClLtV/1iaGZz8qsN2QyGpXy1VQaM9Hp8=
+	b=2v2mKJNasenWMoqiX2cokhaWRqsBolKOeBGfGnE3wwUobKeb8LFEBLI8pJLHHYqEL
+	 t046OkGzPgpi9SBmOvPyMPF3hDrDkX8SB1YByOzUMqp64wAUBw56mxgvrQdp0dZddr
+	 8xz+9r1W3aGa50WQLxMZsmcgBQU7ceTLhvMEpN2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgFQWj6 (ORCPT
+        id S1727079AbgFQWka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:39:58 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41710 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgFQWj5 (ORCPT
+        Wed, 17 Jun 2020 18:40:30 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:41263 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbgFQWk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:39:57 -0400
-Received: by mail-io1-f67.google.com with SMTP id o5so4835537iow.8;
-        Wed, 17 Jun 2020 15:39:57 -0700 (PDT)
+        Wed, 17 Jun 2020 18:40:28 -0400
+Received: by mail-il1-f193.google.com with SMTP id c75so3926377ila.8;
+        Wed, 17 Jun 2020 15:40:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=w/0XRrWZ/TEBr4RUvpfLqtHCp+br8TfRsV/u8yEznsc=;
-        b=QK3pAly4D1iUbIiRmuMtKWQAnQZfEIsBaLxITX2kCpGQsc65UD5LubI3KSMnSfFKrW
-         Dh1Wsv35+lzGtZ87HqgBKPv3G1nPCPcm2Ny3HXCHN/om8PcvK+asFMQnpuyC51hJdnXh
-         lfOkhc03X/TpLkX8gzXGY1R07u1aNg78gfbo3Klvh7xTu5NqTRtHgHRxYBbZ1Kl+fwPl
-         vv+PfIk7MMXanu7XTLqRP3FivvaX2LnY3yK1LIq4cKh974PNu/CKdmvZfodnRi8me4P3
-         5JwPAeBHtbjvaYxHLDDs8FgpAd1I6zpKhFKAzcR+76aB9br9d5hMm05mvB73mQ9dvpht
-         DqSw==
-X-Gm-Message-State: AOAM532rqkSybeWPvAVqpwGMuR7Vf0ZlcgwQ6S2UuDrhjnw4BqUX5KhE
-        A2gZu03tZpHFXi0rMptTeg==
-X-Google-Smtp-Source: ABdhPJzDXYDIpACDxBvujy5MufeVT3XLKfM2y8iU9whiQUjkAGUKbIu5oYvycaqq2ZysLIV9y9O44w==
-X-Received: by 2002:a05:6602:15c8:: with SMTP id f8mr1793105iow.183.1592433596862;
-        Wed, 17 Jun 2020 15:39:56 -0700 (PDT)
+        bh=Zfs6fQ9dNu1WR3lr294IASeX3pxyyPciqezJugqbLdg=;
+        b=G0ltQ4jE9bsx7HoaSL+9uqiI/M6feDClifO1DbwqodFsP4zcHESho+38F4RrtIaaaV
+         yU0pDEPrS9aGF8uJwOmV1gPCsOfkTyO5BStywEfwQVFEg+WhvkKDCcm11c7Xiilzg50V
+         gNcQeJm+sxPi40QHlrZ4/mj0zFZfB7kyJUfd4BPkjce793MQkdYKEAZZayKSaSADKzkS
+         gGI2KSCk6zhTC+zWv0QugNd89LMvHYm52NuFYxuMoSpLmSRlqup/sqREzaSPbpmVUVxt
+         Dr/SYEs9oHunV8kUNqJc5umPm8FY2onZ0YnH5YCsT3BMwQy7Z+8BbKoRr77jRBYKQMEB
+         Rpxw==
+X-Gm-Message-State: AOAM5339dqAUPQ12LSkQvcX5IrSOvdm6LNhw0vU40ixBybnhlDQNAWx3
+        f6BrHo/l/qlHU09hLcN23Q==
+X-Google-Smtp-Source: ABdhPJzRwz/0uaYi76fA5Zd1pUASZHPvWS/+PxMD1pnVAfG3nH0ehNSUR64R0ytuzMsQ9XxUG4dQDg==
+X-Received: by 2002:a05:6e02:ef2:: with SMTP id j18mr1221721ilk.69.1592433627244;
+        Wed, 17 Jun 2020 15:40:27 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id q5sm535000ile.37.2020.06.17.15.39.55
+        by smtp.gmail.com with ESMTPSA id c85sm537559ilg.41.2020.06.17.15.40.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 15:39:56 -0700 (PDT)
-Received: (nullmailer pid 2969158 invoked by uid 1000);
-        Wed, 17 Jun 2020 22:39:55 -0000
-Date:   Wed, 17 Jun 2020 16:39:55 -0600
+        Wed, 17 Jun 2020 15:40:26 -0700 (PDT)
+Received: (nullmailer pid 2970050 invoked by uid 1000);
+        Wed, 17 Jun 2020 22:40:25 -0000
+Date:   Wed, 17 Jun 2020 16:40:25 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH 4/5] dt-bindings: fpga: xilinx-slave-serial: add optional
- INIT_B GPIO
-Message-ID: <20200617223955.GA2967317@bogus>
-References: <20200611211144.9421-1-luca@lucaceresoli.net>
- <20200611211144.9421-4-luca@lucaceresoli.net>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        devicetree@vger.kernel.org, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v8 3/7] dt-bindings: arm-smmu: Add compatible string for
+ Adreno GPU SMMU
+Message-ID: <20200617224025.GA2969998@bogus>
+References: <20200611222128.28826-1-jcrouse@codeaurora.org>
+ <20200611222128.28826-4-jcrouse@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200611211144.9421-4-luca@lucaceresoli.net>
+In-Reply-To: <20200611222128.28826-4-jcrouse@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 11:11:43PM +0200, Luca Ceresoli wrote:
-> The INIT_B is used by the 6 and 7 series to report the programming status,
-> providing more control and information about programming errors.
+On Thu, 11 Jun 2020 16:21:24 -0600, Jordan Crouse wrote:
+> Every Qcom Adreno GPU has an embedded SMMU for its own use. These
+> devices depend on unique features such as split pagetables,
+> different stall/halt requirements and other settings. Identify them
+> with a compatible string so that they can be identified in the
+> arm-smmu implementation specific code.
 > 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 > ---
->  .../devicetree/bindings/fpga/xilinx-slave-serial.txt       | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> index 9f103f3872e8..a049082e1513 100644
-> --- a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> +++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> @@ -16,6 +16,10 @@ Required properties:
->  - prog_b-gpios: config pin (referred to as PROGRAM_B in the manual)
->  - done-gpios: config status pin (referred to as DONE in the manual)
->  
-> +Optional properties:
-> +- init_b-gpios: initialization status and configuration error pin
-> +                (referred to as INIT_B in the manual)
-
-Don't use '_' in property names:
-
-init-b-gpios
-
-> +
->  Example for full FPGA configuration:
->  
->  	fpga-region0 {
-> @@ -40,7 +44,8 @@ Example for full FPGA configuration:
->  			spi-max-frequency = <60000000>;
->  			spi-cpha;
->  			reg = <0>;
-> -			done-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
->  			prog_b-gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
-> +			init_b-gpios = <&gpio0 28 GPIO_ACTIVE_LOW>;
-> +			done-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
->  		};
->  	};
-> -- 
-> 2.27.0
+>  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
