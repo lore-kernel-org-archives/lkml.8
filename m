@@ -2,411 +2,120 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E5EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F914C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 775D820C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:09:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="NywT8DBe"
+	by mail.kernel.org (Postfix) with ESMTP id 43BDA21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:11:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592413881;
+	bh=OnyQwQduYy6WKNxkVPuURfiiyYSTTZHIr/2hdBtAQEQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fxKs1lSfgIYUUFwYacravji8VFP0JJyhkxbUxKIoId3Slv2cszTAsqMbkLNU++G+/
+	 qIFLlzfuqyGYvBdYNZKNpjb9huN4oiDxPHm+nkaeHdYcl6qiv0gX6+8fjdMUlbpNm5
+	 X2iylqaNB5HygessPLPTU+vCkankuU8USXAlwbag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgFQRJV (ORCPT
+        id S1726848AbgFQRLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 13:09:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbgFQRJU (ORCPT
+        Wed, 17 Jun 2020 13:11:19 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45475 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgFQRLS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 13:09:20 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12C9C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:09:19 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id mb16so3229883ejb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:09:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=llgLOWawE+Jl+FflrGgL/bECe1/T60fUq6NAZEDO5Bg=;
-        b=NywT8DBeLXU7gPTKju8ZORuwIBRNKoEQ8CzSNeSkghidLKMXthxxsmYHxOBwBPVIym
-         ePaceGIC3QILwRqDVQawL5zeNci31L8cq7/0DXFOXqs1vhDkaievRY1qJPL6kzrYS0xM
-         M5yzVukHVoSdsB/TqcnBZWuVecoXv9o56sNoeinolplH4tmCaryja0LqTkAArsDGkdns
-         auDiS4XnaeivzMT63N84+oQwZ69UdsqMBCRYBU7ebk3dGgl2d9oLyni6iTv4bC6gfgeu
-         D7UlOF3y0mpuMcZu4lIx6yuKgFsJLYOXfTS9GGPR2l9cJqOTMNFvd8y6gMABtQGpkiSo
-         I11g==
+        Wed, 17 Jun 2020 13:11:18 -0400
+Received: by mail-io1-f66.google.com with SMTP id y5so3596821iob.12;
+        Wed, 17 Jun 2020 10:11:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=llgLOWawE+Jl+FflrGgL/bECe1/T60fUq6NAZEDO5Bg=;
-        b=K6eWiwkrILPPQZUc8Km83lUCnt93KRHfk8d9nmLWJRRcxzbVLmLrzGR7mvKz1ZSjXx
-         B1WR0I8FbU0XxebY4W850aL6U7isbDIIEmxisT1VpoYoPTo13X/WsuVUiZ6Fk5A4392w
-         0L1hBFR5VcdJgpemHGzEThcDPFhOC5xUJJddpfNmNdKfblEY0Vyh0ViVw7gWuzE8DVRT
-         /MsMqA09coGqtINvW4rC2xYhcz06wCCH/P7f7ROzpoVfe8YYWWYLiaqTEGl/ya4JpgYO
-         aH3T+V46POSbgkwNLVy8CHm/xeeI97XFaRtXrOm7nYRkuDp6By0xTR043O+bIkKU40Co
-         NgKQ==
-X-Gm-Message-State: AOAM530rQw8n00LPy91PZ4aXotE/l/6Wc2tbbdiLp1i3yXKYwHPmaQvm
-        EJVxZ8TZkn5YV9IIRzi48m/Y3FN3dk+R6zrT
-X-Google-Smtp-Source: ABdhPJzkgIaYd7/sDY2Mg75w7NmhdszT6dg/5U2LRj3uYZ+sq/glgTTmVOwxLfj6DcbvGttpuEXDdw==
-X-Received: by 2002:a17:906:5410:: with SMTP id q16mr141105ejo.103.1592413758506;
-        Wed, 17 Jun 2020 10:09:18 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id ew9sm364844ejb.121.2020.06.17.10.09.17
+        bh=+jtHmvg50fwj4vKSvDtfXUFXgpMlM97RSYpyPG/P1dQ=;
+        b=VmqbB/GuQG2JxocWhFLbjoVXJtPiQvZLXwOygJhCa0QpxeQQkWbrx5+O53i3bNCvaN
+         M1RDTv/FloGG4gMoNYtkWmWY+GB/tit+2+f4DQ+P2T6DMqszKqhckW3ToUuuthLuur3S
+         eeBsOGraO//N66mFDzNaU5uaT+pizIseNm5XpM78HbP57nQDFNHhxAYx/VrZzJx+oTbD
+         /AYjctSvpaLh4NOmwEvRnkTbfmedQt0wQ/2y9LMO5OXrUcfA6SJ1Bx/fajxgiVc+sQwr
+         so4fBB96wPZjCOMfJb9iDcQ4H5ulNGQoN841g/dhmtjZtUF6YKOTmSmruX62fN6ypEqy
+         VBpw==
+X-Gm-Message-State: AOAM533HWJJO8XljYyQB10DYx51r1NhU0U1Y5xjzo4UhjqhsqGxwNVOt
+        A/hE6qSMKXDFNVZQ7Oo35doAzX+oNA==
+X-Google-Smtp-Source: ABdhPJxRByoDYwCLqBc8/jcxwM6M3+z1NGMwD6icIx5TmL0Xm82gTRE8ovFe98SOJxGWsgwyn5J+pQ==
+X-Received: by 2002:a05:6602:5ce:: with SMTP id w14mr396142iox.178.1592413877663;
+        Wed, 17 Jun 2020 10:11:17 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id l20sm110443ilk.70.2020.06.17.10.11.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 10:09:17 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 19:09:15 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH] arm: dts: am335x-pocketbeagle: add gpio-line-names
-Message-ID: <20200617170915.GA4185472@x1>
-References: <20200609142504.GA2955236@x1>
+        Wed, 17 Jun 2020 10:11:17 -0700 (PDT)
+Received: (nullmailer pid 2322270 invoked by uid 1000);
+        Wed, 17 Jun 2020 17:11:16 -0000
+Date:   Wed, 17 Jun 2020 11:11:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Keerthy <j-keerthy@ti.com>, Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Axel Lin <axel.lin@ingics.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: mfd: lp87565: convert to yaml
+Message-ID: <20200617171116.GA2321816@bogus>
+References: <20200617131145.15696-1-luca@lucaceresoli.net>
+ <20200617131145.15696-3-luca@lucaceresoli.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609142504.GA2955236@x1>
+In-Reply-To: <20200617131145.15696-3-luca@lucaceresoli.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 04:25:04PM +0200, Drew Fustini wrote:
-> The BeagleBoard.org PocketBeagle has P1 and P2 headers [0] which expose
-> many of the TI AM3358 SoC balls to stacking expansion boards called 
-> "capes", or to other external connections like jumper wires connected
-> to a breadboard.
+On Wed, 17 Jun 2020 15:11:43 +0200, Luca Ceresoli wrote:
+> The definition of "xxx-in-supply" was generic, thus define in detail the
+> possible cases for each chip variant.
 > 
-> Note: the AM3358 die is actually embedded inside of the OSD335x-SM
-> System-in-Package (SiP) [1] but that is irrelevant to the gpio driver.
+> Also document that the only possible I2C slave address is 0x60 as per the
+> datasheet and fix the second example accordingly.
 > 
-> Many of the P1 and P2 header pins can muxed to a GPIO line.  The
-> gpio-line-names describe which P1 or P2 pin that line goes to and the
-> default mux for that P1 or P2 pin if it is not GPIO.
->     
-> Some GPIO lines are named "[NC]" as the corresponding balls are not
-> routed to anything on the PCB.
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 > 
-> The goal for these names is to make it easier for a user viewing the
-> output of gpioinfo to determine which P1 or P2 pin is connected to a
-> GPIO line.  The output of gpioinfo on a PocketBeagle would be:
-> 
-> gpiochip0 - 32 lines:
-> 	line   0:       "[NC]"       unused   input  active-high 
-> 	line   1:       "[NC]"       unused   input  active-high 
-> 	line   2: "P1.08 [SPI0_CLK]" unused input active-high 
-> 	line   3: "P1.10 [SPI0_MISO]" unused input active-high 
-> 	line   4: "P1.12 [SPI0_MOSI]" unused input active-high 
-> 	line   5: "P1.06 [SPI0_CS]" unused input active-high 
-> 	line   6:  "[MMC0_CD]"         "cd"   input   active-low [used]
-> 	line   7: "P2.29 [SPI1_CLK]" unused input active-high 
-> 	line   8:       "[NC]"       unused   input  active-high 
-> 	line   9:       "[NC]"       unused   input  active-high 
-> 	line  10:       "[NC]"       unused   input  active-high 
-> 	line  11:       "[NC]"       unused   input  active-high 
-> 	line  12: "P1.26 [I2C2_SDA]" unused input active-high 
-> 	line  13: "P1.28 [I2C2_SCL]" unused input active-high 
-> 	line  14: "P2.11 [I2C1_SDA]" unused input active-high 
-> 	line  15: "P2.09 [I2C1_SCL]" unused input active-high 
-> 	line  16:       "[NC]"       unused   input  active-high 
-> 	line  17:       "[NC]"       unused   input  active-high 
-> 	line  18:       "[NC]"       unused   input  active-high 
-> 	line  19: "P2.31 [SPI1_CS]" unused input active-high 
-> 	line  20: "P1.20 [PRU0.16]" unused input active-high 
-> 	line  21:       "[NC]"       unused   input  active-high 
-> 	line  22:       "[NC]"       unused   input  active-high 
-> 	line  23:      "P2.03"       unused   input  active-high 
-> 	line  24:       "[NC]"       unused   input  active-high 
-> 	line  25:       "[NC]"       unused   input  active-high 
-> 	line  26:      "P1.34"       unused   input  active-high 
-> 	line  27:      "P2.19"       unused   input  active-high 
-> 	line  28:       "[NC]"       unused   input  active-high 
-> 	line  29:       "[NC]"       unused   input  active-high 
-> 	line  30: "P2.05 [UART4_RX]" unused input active-high 
-> 	line  31: "P2.07 [UART4_TX]" unused input active-high 
-> gpiochip1 - 32 lines:
-> 	line   0:       "[NC]"       unused   input  active-high 
-> 	line   1:       "[NC]"       unused   input  active-high 
-> 	line   2:       "[NC]"       unused   input  active-high 
-> 	line   3:       "[NC]"       unused   input  active-high 
-> 	line   4:       "[NC]"       unused   input  active-high 
-> 	line   5:       "[NC]"       unused   input  active-high 
-> 	line   6: "P1.06 [SPI0_CS]" unused input active-high 
-> 	line   7: "P1.06 [SPI0_CS]" unused input active-high 
-> 	line   8: "P2.27 [SPI1_MISO]" unused input active-high 
-> 	line   9: "P2.25 [SPI1_MOSI]" unused input active-high 
-> 	line  10: "P1.32 [UART0_RX]" unused input active-high 
-> 	line  11: "P1.30 [UART0_TX]" unused input active-high 
-> 	line  12:      "P2.24"       unused   input  active-high 
-> 	line  13:      "P2.33"       unused   input  active-high 
-> 	line  14:      "P2.22"       unused   input  active-high 
-> 	line  15:      "P2.18"       unused   input  active-high 
-> 	line  16:       "[NC]"       unused   input  active-high 
-> 	line  17:       "[NC]"       unused   input  active-high 
-> 	line  18: "P2.01 [PWM1A]" unused input active-high 
-> 	line  19:       "[NC]"       unused   input  active-high 
-> 	line  20:      "P2.10"       unused   input  active-high 
-> 	line  21: "[user led 0]" "beaglebone:green:usr0" output active-high [used]
-> 	line  22: "[user led 1]" "beaglebone:green:usr1" output active-high [used]
-> 	line  23: "[user led 2]" "beaglebone:green:usr2" output active-high [used]
-> 	line  24: "[user led 3]" "beaglebone:green:usr3" output active-high [used]
-> 	line  25:      "P2.06"       unused   input  active-high 
-> 	line  26:      "P2.04"       unused   input  active-high 
-> 	line  27:      "P2.02"       unused   input  active-high 
-> 	line  28:      "P2.08"       unused   input  active-high 
-> 	line  29:       "[NC]"       unused   input  active-high 
-> 	line  30:       "[NC]"       unused   input  active-high 
-> 	line  31:       "[NC]"       unused   input  active-high 
-> gpiochip2 - 32 lines:
-> 	line   0:       "[NC]"       unused   input  active-high 
-> 	line   1:      "P2.17"       unused   input  active-high 
-> 	line   2:       "[NC]"       unused   input  active-high 
-> 	line   3:       "[NC]"       unused   input  active-high 
-> 	line   4:       "[NC]"       unused   input  active-high 
-> 	line   5: "[EEPROM_WP]" unused input active-high 
-> 	line   6:       "[NC]"       unused   input  active-high 
-> 	line   7:       "[NC]"       unused   input  active-high 
-> 	line   8:       "[NC]"       unused   input  active-high 
-> 	line   9:       "[NC]"       unused   input  active-high 
-> 	line  10:       "[NC]"       unused   input  active-high 
-> 	line  11:       "[NC]"       unused   input  active-high 
-> 	line  12:       "[NC]"       unused   input  active-high 
-> 	line  13:       "[NC]"       unused   input  active-high 
-> 	line  14:       "[NC]"       unused   input  active-high 
-> 	line  15:       "[NC]"       unused   input  active-high 
-> 	line  16:       "[NC]"       unused   input  active-high 
-> 	line  17:       "[NC]"       unused   input  active-high 
-> 	line  18:       "[NC]"       unused   input  active-high 
-> 	line  19:       "[NC]"       unused   input  active-high 
-> 	line  20:       "[NC]"       unused   input  active-high 
-> 	line  21:       "[NC]"       unused   input  active-high 
-> 	line  22: "P2.35 [AIN5]" unused input active-high 
-> 	line  23: "P1.02 [AIN6]" unused input active-high 
-> 	line  24: "P1.35 [PRU1.10]" unused input active-high 
-> 	line  25: "P1.04 [PRU1.11]" unused input active-high 
-> 	line  26: "[MMC0_DAT3]" unused input active-high 
-> 	line  27: "[MMC0_DAT2]" unused input active-high 
-> 	line  28: "[MMC0_DAT1]" unused input active-high 
-> 	line  29: "[MMC0_DAT0]" unused input active-high 
-> 	line  30: "[MMC0_CLK]"       unused   input  active-high 
-> 	line  31: "[MMC0_CMD]"       unused   input  active-high 
-> gpiochip3 - 32 lines:
-> 	line   0:       "[NC]"       unused   input  active-high 
-> 	line   1:       "[NC]"       unused   input  active-high 
-> 	line   2:       "[NC]"       unused   input  active-high 
-> 	line   3:       "[NC]"       unused   input  active-high 
-> 	line   4:       "[NC]"       unused   input  active-high 
-> 	line   5: "[I2C0_SDA]"       unused   input  active-high 
-> 	line   6: "[I2C0_SCL]"       unused   input  active-high 
-> 	line   7:     "[JTAG]"       unused   input  active-high 
-> 	line   8:     "[JTAG]"       unused   input  active-high 
-> 	line   9:       "[NC]"       unused   input  active-high 
-> 	line  10:       "[NC]"       unused   input  active-high 
-> 	line  11:       "[NC]"       unused   input  active-high 
-> 	line  12:       "[NC]"       unused   input  active-high 
-> 	line  13: "P1.03 [USB1]" unused input active-high 
-> 	line  14: "P1.36 [PWM0A]" unused input active-high 
-> 	line  15: "P1.33 [PRU0.1]" unused input active-high 
-> 	line  16: "P2.32 [PRU0.2]" unused input active-high 
-> 	line  17: "P2.30 [PRU0.3]" unused input active-high 
-> 	line  18: "P1.31 [PRU0.4]" unused input active-high 
-> 	line  19: "P2.34 [PRU0.5]" unused input active-high 
-> 	line  20: "P2.28 [PRU0.6]" unused input active-high 
-> 	line  21: "P1.29 [PRU0.7]" unused input active-high 
-> 	line  22:       "[NC]"       unused   input  active-high 
-> 	line  23:       "[NC]"       unused   input  active-high 
-> 	line  24:       "[NC]"       unused   input  active-high 
-> 	line  25:       "[NC]"       unused   input  active-high 
-> 	line  26:       "[NC]"       unused   input  active-high 
-> 	line  27:       "[NC]"       unused   input  active-high 
-> 	line  28:       "[NC]"       unused   input  active-high 
-> 	line  29:       "[NC]"       unused   input  active-high 
-> 	line  30:       "[NC]"       unused   input  active-high 
-> 	line  31:       "[NC]"       unused   input  active-high 
-> 
-> [0] https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#71_Expansion_Header_Connectors
-> [1] https://octavosystems.com/app_notes/osd335x-family-pin-assignments/
-> 
-> Reviewed-by: Jason Kridner <jason@beagleboard.org>
-> Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
 > ---
->  arch/arm/boot/dts/am335x-pocketbeagle.dts | 144 ++++++++++++++++++++++
->  1 file changed, 144 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-> index 4da719098028..60e5fa2b9156 100644
-> --- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
-> +++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-> @@ -59,6 +59,150 @@ vmmcsd_fixed: fixedregulator0 {
->  	};
->  };
->  
-> +&gpio0 {
-> +	gpio-line-names =
-> +		"[NC]",
-> +		"[NC]",
-> +		"P1.08 [SPI0_CLK]",
-> +		"P1.10 [SPI0_MISO]",
-> +		"P1.12 [SPI0_MOSI]",
-> +		"P1.06 [SPI0_CS]",
-> +		"[MMC0_CD]",
-> +		"P2.29 [SPI1_CLK]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"P1.26 [I2C2_SDA]",
-> +		"P1.28 [I2C2_SCL]",
-> +		"P2.11 [I2C1_SDA]",
-> +		"P2.09 [I2C1_SCL]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"P2.31 [SPI1_CS]",
-> +		"P1.20 [PRU0.16]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"P2.03",
-> +		"[NC]",
-> +		"[NC]",
-> +		"P1.34",
-> +		"P2.19",
-> +		"[NC]",
-> +		"[NC]",
-> +		"P2.05 [UART4_RX]",
-> +		"P2.07 [UART4_TX]";
-> +};
-> +
-> +&gpio1 {
-> +	gpio-line-names =
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"P1.06 [SPI0_CS]",
-> +		"P1.06 [SPI0_CS]",
-> +		"P2.27 [SPI1_MISO]",
-> +		"P2.25 [SPI1_MOSI]",
-> +		"P1.32 [UART0_RX]",
-> +		"P1.30 [UART0_TX]",
-> +		"P2.24",
-> +		"P2.33",
-> +		"P2.22",
-> +		"P2.18",
-> +		"[NC]",
-> +		"[NC]",
-> +		"P2.01 [PWM1A]",
-> +		"[NC]",
-> +		"P2.10",
-> +		"[user led 0]",
-> +		"[user led 1]",
-> +		"[user led 2]",
-> +		"[user led 3]",
-> +		"P2.06",
-> +		"P2.04",
-> +		"P2.02",
-> +		"P2.08",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]";
-> +};
-> +
-> +&gpio2 {
-> +	gpio-line-names =
-> +		"[NC]",
-> +		"P2.17",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[EEPROM_WP]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"P2.35 [AIN5]",
-> +		"P1.02 [AIN6]",
-> +		"P1.35 [PRU1.10]",
-> +		"P1.04 [PRU1.11]",
-> +		"[MMC0_DAT3]",
-> +		"[MMC0_DAT2]",
-> +		"[MMC0_DAT1]",
-> +		"[MMC0_DAT0]",
-> +		"[MMC0_CLK]",
-> +		"[MMC0_CMD]";
-> +};
-> +
-> +&gpio3 {
-> +	gpio-line-names =
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[I2C0_SDA]",
-> +		"[I2C0_SCL]",
-> +		"[JTAG]",
-> +		"[JTAG]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"P1.03 [USB1]",
-> +		"P1.36 [PWM0A]",
-> +		"P1.33 [PRU0.1]",
-> +		"P2.32 [PRU0.2]",
-> +		"P2.30 [PRU0.3]",
-> +		"P1.31 [PRU0.4]",
-> +		"P2.34 [PRU0.5]",
-> +		"P2.28 [PRU0.6]",
-> +		"P1.29 [PRU0.7]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]",
-> +		"[NC]";
-> +};
-> +
->  &am33xx_pinmux {
->  	i2c2_pins: pinmux-i2c2-pins {
->  		pinctrl-single,pins = <
-> -- 
-> 2.25.1
+> Changes in v2:
+>  - this patch replaces patch "regulator: lp87565: dt: remove duplicated
+>    section" in RFC,v1 (Rob Herring)
+>  - use capital letters consistently (Lee Jones)
+>  - replace "regulator" -> "mfd" in subject line (Lee Jones)
+>  - replace "dt:" suffix with "dt-bindings:" prefix in subject line
+> ---
+>  .../devicetree/bindings/mfd/lp87565.txt       |  79 -----------
+>  .../devicetree/bindings/mfd/ti,lp875xx.yaml   | 134 ++++++++++++++++++
+>  2 files changed, 134 insertions(+), 79 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ti,lp875xx.yaml
 > 
 
-Tony - does this look ok for 5.9?
 
-If so, I might start making other variants like BeagleBone Blue and
-BeagleBone {Green,Black} Wireless and submit those when ready.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-thanks,
-drew
+Error: Documentation/devicetree/bindings/mfd/ti,lp875xx.example.dts:20.9-14 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/mfd/ti,lp875xx.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/mfd/ti,lp875xx.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+
+See https://patchwork.ozlabs.org/patch/1311194
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
