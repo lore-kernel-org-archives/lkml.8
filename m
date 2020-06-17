@@ -2,147 +2,248 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1398FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9032BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE28D20734
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:12:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592403122;
-	bh=MYb/PMhUVvE0cnaOxKWKvBrW2DPjQFDtItA8+YHQqeQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dLvy7MCSIAcZRFlcPjNtjifAyMTc6U3DEEwFekZ6zNh5kwgwMw+fxlfTKHlfZP+B0
-	 G2IIgfEhbM9GMsQ3WX1PtjuisZv3M+mQNVZO6o8KZ8X07xlELo57PAUO9v4fL7pSu6
-	 2FeV7lzjnpB9iOSv1+dNmRVXohAs3U+nU+VqRwIU=
+	by mail.kernel.org (Postfix) with ESMTP id 73D2920734
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgFQOMB (ORCPT
+        id S1726905AbgFQOMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 10:12:01 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36874 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgFQOMA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 10:12:00 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k8so2068282edq.4;
-        Wed, 17 Jun 2020 07:11:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FnLVx3mpNTRNn979KEIujDpuBEHdqJ/b/LKxqUKjo5U=;
-        b=R1VwMYEBBKcjm0+0e/VVQ6zthOJ9S/V7pWUvq8piWXdull4CjVyFS3wIHZyAx9ktTp
-         3qXgTYQZK3KS/Yp3eAY87y4OaCVI3QLMQBjTwdBwvyhNQuJgdLMV9cXOu/G6waPtd7QM
-         +6xuSQ7EHERKPcphHO8zudCohvDq7QEdI3J66W0sDsgre7xuDAeAUA9JiAzuRSNDP2m9
-         RIGiUMwHSv3lTliPg/jWsHR+ya7zvpVRs9ZHnt8x+gmGxKY5U6ToQiVaxqwYKfjcxIBd
-         PpLOs9ScVvFe+AhBB2Zs5L2HdhznT3D9s0Uu4wFapfGf4vpmNVZUjNR3q3soYBkQJxnh
-         ZAIQ==
-X-Gm-Message-State: AOAM530hzvjJjL5hbl/tc1l2ZDqwbcd280/86/8hIdcRRF9r/3auBwFC
-        ia6i23OeDyhu+wlNx22AMj4=
-X-Google-Smtp-Source: ABdhPJznS9MRNi7kFBPyQ0SPfnXV06mWSgLUfdEwyE6fs7gLQFQsvZDC9Kqw5DW5z+Zxjo6sXkZecQ==
-X-Received: by 2002:a05:6402:6cc:: with SMTP id n12mr7166151edy.266.1592403118087;
-        Wed, 17 Jun 2020 07:11:58 -0700 (PDT)
-Received: from localhost (ip-37-188-158-19.eurotel.cz. [37.188.158.19])
-        by smtp.gmail.com with ESMTPSA id z20sm34596ejb.68.2020.06.17.07.11.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 07:11:57 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 16:11:55 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-Message-ID: <20200617141155.GQ9499@dhcp22.suse.cz>
-References: <20200519075213.GF32497@dhcp22.suse.cz>
- <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
- <20200519084535.GG32497@dhcp22.suse.cz>
- <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
- <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
- <20200520190906.GA558281@chrisdown.name>
- <20200521095515.GK6462@dhcp22.suse.cz>
- <20200521163450.GV6462@dhcp22.suse.cz>
- <CA+G9fYsdsgRmwLtSKJSzB1eWcUQ1z-_aaU+BNcQpker34XT6_w@mail.gmail.com>
- <20200617135758.GA548179@chrisdown.name>
+        Wed, 17 Jun 2020 10:12:20 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2321 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726328AbgFQOMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 10:12:19 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 2FBCE2BDB4AF638D855F;
+        Wed, 17 Jun 2020 15:12:18 +0100 (IST)
+Received: from localhost (10.52.121.100) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Wed, 17 Jun
+ 2020 15:12:17 +0100
+Date:   Wed, 17 Jun 2020 15:11:29 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+CC:     Eric Biggers <ebiggers@kernel.org>,
+        George Cherian <gcherian@marvell.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Zaibo Xu <xuzaibo@huawei.com>,
+        Mike Snitzer <msnitzer@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        <linux-kernel@vger.kernel.org>, <dm-devel@redhat.com>,
+        <linux-crypto@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Milan Broz <mbroz@redhat.com>
+Subject: Re: [dm-devel] [PATCH 2/2] hisilicon-crypto: don't sleep of
+ CRYPTO_TFM_REQ_MAY_SLEEP was not specified
+Message-ID: <20200617151129.0000195f@Huawei.com>
+In-Reply-To: <alpine.LRH.2.02.2006170949010.18714@file01.intranet.prod.int.rdu2.redhat.com>
+References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com>
+        <20200610010450.GA6449@gondor.apana.org.au>
+        <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com>
+        <20200610121106.GA23137@gondor.apana.org.au>
+        <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com>
+        <alpine.LRH.2.02.2006161102250.28052@file01.intranet.prod.int.rdu2.redhat.com>
+        <20200616175022.GD207319@gmail.com>
+        <alpine.LRH.2.02.2006161416510.12390@file01.intranet.prod.int.rdu2.redhat.com>
+        <20200616182327.GE207319@gmail.com>
+        <alpine.LRH.2.02.2006170940510.18714@file01.intranet.prod.int.rdu2.redhat.com>
+        <alpine.LRH.2.02.2006170949010.18714@file01.intranet.prod.int.rdu2.redhat.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617135758.GA548179@chrisdown.name>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.121.100]
+X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Our emails have crossed]
+On Wed, 17 Jun 2020 09:49:52 -0400
+Mikulas Patocka <mpatocka@redhat.com> wrote:
 
-On Wed 17-06-20 14:57:58, Chris Down wrote:
-> Naresh Kamboju writes:
-> > mkfs -t ext4 /dev/disk/by-id/ata-TOSHIBA_MG04ACA100N_Y8RQK14KF6XF
-> > mke2fs 1.43.8 (1-Jan-2018)
-> > Creating filesystem with 244190646 4k blocks and 61054976 inodes
-> > Filesystem UUID: 7c380766-0ed8-41ba-a0de-3c08e78f1891
-> > Superblock backups stored on blocks:
-> > 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
-> > 4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
-> > 102400000, 214990848
-> > Allocating group tables:    0/7453 done
-> > Writing inode tables:    0/7453 done
-> > Creating journal (262144 blocks): [   51.544525] under min:0 emin:0
-> > [   51.845304] under min:0 emin:0
-> > [   51.848738] under min:0 emin:0
-> > [   51.858147] under min:0 emin:0
-> > [   51.861333] under min:0 emin:0
-> > [   51.862034] under min:0 emin:0
-> > [   51.862442] under min:0 emin:0
-> > [   51.862763] under min:0 emin:0
+> There is this call chain:
+> sec_alg_skcipher_encrypt -> sec_alg_skcipher_crypto ->
+> sec_alg_alloc_and_calc_split_sizes -> kcalloc
+> where we call sleeping allocator function even if CRYPTO_TFM_REQ_MAY_SLEEP
+> was not specified.
 > 
-> Thanks, this helps a lot. Somehow we're entering mem_cgroup_below_min even
-> when min/emin is 0 (which should indeed be the case if you haven't set them
-> in the hierarchy).
+> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+> Cc: stable@vger.kernel.org	# v4.19+
+> Fixes: 915e4e8413da ("crypto: hisilicon - SEC security accelerator driver")
+
+I don't have a board to hand today to check this, but doesn't seem like it
+will cause any problems.
+
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 > 
-> My guess is that page_counter_read(&memcg->memory) is 0, which means
-> mem_cgroup_below_min will return 1.
+> ---
+>  drivers/crypto/hisilicon/sec/sec_algs.c |   34 ++++++++++++++++----------------
+>  1 file changed, 18 insertions(+), 16 deletions(-)
+> 
+> Index: linux-2.6/drivers/crypto/hisilicon/sec/sec_algs.c
+> ===================================================================
+> --- linux-2.6.orig/drivers/crypto/hisilicon/sec/sec_algs.c
+> +++ linux-2.6/drivers/crypto/hisilicon/sec/sec_algs.c
+> @@ -175,7 +175,8 @@ static int sec_alloc_and_fill_hw_sgl(str
+>  				     dma_addr_t *psec_sgl,
+>  				     struct scatterlist *sgl,
+>  				     int count,
+> -				     struct sec_dev_info *info)
+> +				     struct sec_dev_info *info,
+> +				     gfp_t gfp)
+>  {
+>  	struct sec_hw_sgl *sgl_current = NULL;
+>  	struct sec_hw_sgl *sgl_next;
+> @@ -190,7 +191,7 @@ static int sec_alloc_and_fill_hw_sgl(str
+>  		sge_index = i % SEC_MAX_SGE_NUM;
+>  		if (sge_index == 0) {
+>  			sgl_next = dma_pool_zalloc(info->hw_sgl_pool,
+> -						   GFP_KERNEL, &sgl_next_dma);
+> +						   gfp, &sgl_next_dma);
+>  			if (!sgl_next) {
+>  				ret = -ENOMEM;
+>  				goto err_free_hw_sgls;
+> @@ -545,14 +546,14 @@ void sec_alg_callback(struct sec_bd_info
+>  }
+>  
+>  static int sec_alg_alloc_and_calc_split_sizes(int length, size_t **split_sizes,
+> -					      int *steps)
+> +					      int *steps, gfp_t gfp)
+>  {
+>  	size_t *sizes;
+>  	int i;
+>  
+>  	/* Split into suitable sized blocks */
+>  	*steps = roundup(length, SEC_REQ_LIMIT) / SEC_REQ_LIMIT;
+> -	sizes = kcalloc(*steps, sizeof(*sizes), GFP_KERNEL);
+> +	sizes = kcalloc(*steps, sizeof(*sizes), gfp);
+>  	if (!sizes)
+>  		return -ENOMEM;
+>  
+> @@ -568,7 +569,7 @@ static int sec_map_and_split_sg(struct s
+>  				int steps, struct scatterlist ***splits,
+>  				int **splits_nents,
+>  				int sgl_len_in,
+> -				struct device *dev)
+> +				struct device *dev, gfp_t gfp)
+>  {
+>  	int ret, count;
+>  
+> @@ -576,12 +577,12 @@ static int sec_map_and_split_sg(struct s
+>  	if (!count)
+>  		return -EINVAL;
+>  
+> -	*splits = kcalloc(steps, sizeof(struct scatterlist *), GFP_KERNEL);
+> +	*splits = kcalloc(steps, sizeof(struct scatterlist *), gfp);
+>  	if (!*splits) {
+>  		ret = -ENOMEM;
+>  		goto err_unmap_sg;
+>  	}
+> -	*splits_nents = kcalloc(steps, sizeof(int), GFP_KERNEL);
+> +	*splits_nents = kcalloc(steps, sizeof(int), gfp);
+>  	if (!*splits_nents) {
+>  		ret = -ENOMEM;
+>  		goto err_free_splits;
+> @@ -589,7 +590,7 @@ static int sec_map_and_split_sg(struct s
+>  
+>  	/* output the scatter list before and after this */
+>  	ret = sg_split(sgl, count, 0, steps, split_sizes,
+> -		       *splits, *splits_nents, GFP_KERNEL);
+> +		       *splits, *splits_nents, gfp);
+>  	if (ret) {
+>  		ret = -ENOMEM;
+>  		goto err_free_splits_nents;
+> @@ -630,13 +631,13 @@ static struct sec_request_el
+>  			   int el_size, bool different_dest,
+>  			   struct scatterlist *sgl_in, int n_ents_in,
+>  			   struct scatterlist *sgl_out, int n_ents_out,
+> -			   struct sec_dev_info *info)
+> +			   struct sec_dev_info *info, gfp_t gfp)
+>  {
+>  	struct sec_request_el *el;
+>  	struct sec_bd_info *req;
+>  	int ret;
+>  
+> -	el = kzalloc(sizeof(*el), GFP_KERNEL);
+> +	el = kzalloc(sizeof(*el), gfp);
+>  	if (!el)
+>  		return ERR_PTR(-ENOMEM);
+>  	el->el_length = el_size;
+> @@ -668,7 +669,7 @@ static struct sec_request_el
+>  	el->sgl_in = sgl_in;
+>  
+>  	ret = sec_alloc_and_fill_hw_sgl(&el->in, &el->dma_in, el->sgl_in,
+> -					n_ents_in, info);
+> +					n_ents_in, info, gfp);
+>  	if (ret)
+>  		goto err_free_el;
+>  
+> @@ -679,7 +680,7 @@ static struct sec_request_el
+>  		el->sgl_out = sgl_out;
+>  		ret = sec_alloc_and_fill_hw_sgl(&el->out, &el->dma_out,
+>  						el->sgl_out,
+> -						n_ents_out, info);
+> +						n_ents_out, info, gfp);
+>  		if (ret)
+>  			goto err_free_hw_sgl_in;
+>  
+> @@ -720,6 +721,7 @@ static int sec_alg_skcipher_crypto(struc
+>  	int *splits_out_nents = NULL;
+>  	struct sec_request_el *el, *temp;
+>  	bool split = skreq->src != skreq->dst;
+> +	gfp_t gfp = skreq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP ? GFP_KERNEL : GFP_ATOMIC;
+>  
+>  	mutex_init(&sec_req->lock);
+>  	sec_req->req_base = &skreq->base;
+> @@ -728,13 +730,13 @@ static int sec_alg_skcipher_crypto(struc
+>  	sec_req->len_in = sg_nents(skreq->src);
+>  
+>  	ret = sec_alg_alloc_and_calc_split_sizes(skreq->cryptlen, &split_sizes,
+> -						 &steps);
+> +						 &steps, gfp);
+>  	if (ret)
+>  		return ret;
+>  	sec_req->num_elements = steps;
+>  	ret = sec_map_and_split_sg(skreq->src, split_sizes, steps, &splits_in,
+>  				   &splits_in_nents, sec_req->len_in,
+> -				   info->dev);
+> +				   info->dev, gfp);
+>  	if (ret)
+>  		goto err_free_split_sizes;
+>  
+> @@ -742,7 +744,7 @@ static int sec_alg_skcipher_crypto(struc
+>  		sec_req->len_out = sg_nents(skreq->dst);
+>  		ret = sec_map_and_split_sg(skreq->dst, split_sizes, steps,
+>  					   &splits_out, &splits_out_nents,
+> -					   sec_req->len_out, info->dev);
+> +					   sec_req->len_out, info->dev, gfp);
+>  		if (ret)
+>  			goto err_unmap_in_sg;
+>  	}
+> @@ -775,7 +777,7 @@ static int sec_alg_skcipher_crypto(struc
+>  					       splits_in[i], splits_in_nents[i],
+>  					       split ? splits_out[i] : NULL,
+>  					       split ? splits_out_nents[i] : 0,
+> -					       info);
+> +					       info, gfp);
+>  		if (IS_ERR(el)) {
+>  			ret = PTR_ERR(el);
+>  			goto err_free_elements;
+> 
+> --
+> dm-devel mailing list
+> dm-devel@redhat.com
+> https://www.redhat.com/mailman/listinfo/dm-devel
+> 
 
-Yes this is the case because this is likely the root memcg which skips
-all charges.
 
-> However, I don't know for sure why that should then result in the OOM killer
-> coming along. My guess is that since this memcg has 0 pages to scan anyway,
-> we enter premature OOM under some conditions. I don't know why we wouldn't
-> have hit that with the old version of mem_cgroup_protected that returned
-> MEMCG_PROT_* members, though.
-
-Not really. There is likely no other memcg to reclaim from and assuming
-min limit protection will result in no reclaimable memory and thus the
-OOM killer.
-
-> Can you please try the patch with the `>=` checks in mem_cgroup_below_min
-> and mem_cgroup_below_low changed to `>`? If that fixes it, then that gives a
-> strong hint about what's going on here.
-
-This would work but I believe an explicit check for the root memcg would
-be easier to spot the reasoning.
-
--- 
-Michal Hocko
-SUSE Labs
