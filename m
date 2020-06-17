@@ -2,97 +2,98 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF148C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAF3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4A420882
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592400675;
-	bh=Yrztuz9ss1JEyzxZFF5ooU4M0q3ngs+arYrIpm6e7Xc=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=znCTIbe5oH3esmfRx3Iqh9F+owg8/cOkR5saw8p1h1UUJxbPg/ZVCmfOETpohgIDh
-	 Kp+ZO85R/G3ru3kosg2hTzdkZBU4AzzIKLhc40EXTt+lPBWKv51PC9Xj5UFYXFtm6P
-	 m2gc68QOHKgB+fpO380agc/8jPJgVMGqt0vvHtx8=
+	by mail.kernel.org (Postfix) with ESMTP id 6C0C22158C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgFQNbO (ORCPT
+        id S1726913AbgFQNdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbgFQNbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:31:13 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 675DF207E8;
-        Wed, 17 Jun 2020 13:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592400672;
-        bh=Yrztuz9ss1JEyzxZFF5ooU4M0q3ngs+arYrIpm6e7Xc=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=bIqxN4xUykm3IEHS25CVNFIBUx6gWacOpy/eCd1RTBwaOXcKUG8Iz390Y6AyhfgUV
-         z0aSSPKhiphwcXVXM244AQwFq51JEKjun6NumaC962lxSrcwDRgFIue2pIK+IoWBD2
-         uThNmfZkWwzugDpuyCHWE3iOIh6DObfcABjIkC4c=
-Date:   Wed, 17 Jun 2020 14:31:10 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Alexandre Torgue <alexandre.torgue@st.com>,
-        "patrice.chotard@st.com" <patrice.chotard@st.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, mcoquelin.stm32@gmail.com,
-        linux-stm32@st-md-mailman.stormreply.com
-In-Reply-To: <20200616113035.4514-1-patrice.chotard@st.com>
-References: <20200616113035.4514-1-patrice.chotard@st.com>
-Subject: Re: spi: stm32-qspi: Fix error path in case of -EPROBE_DEFER
-Message-Id: <159240067072.19521.18133995970522150258.b4-ty@kernel.org>
+        Wed, 17 Jun 2020 09:33:02 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:21874 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726355AbgFQNdC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 09:33:02 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05HDSVMJ029699;
+        Wed, 17 Jun 2020 09:33:00 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 31q66c2jnt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 09:32:59 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 05HDWwtg028844
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 17 Jun 2020 09:32:58 -0400
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 17 Jun
+ 2020 06:32:56 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 17 Jun 2020 06:32:56 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 05HDWtWN018768;
+        Wed, 17 Jun 2020 09:32:55 -0400
+From:   Darius Berghe <darius.berghe@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>
+Subject: [PATCH v1 1/3] iio:adc:ltc2471: add match table for existing devices
+Date:   Wed, 17 Jun 2020 16:35:21 +0300
+Message-ID: <20200617133523.58158-1-darius.berghe@analog.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-17_03:2020-06-17,2020-06-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=991 clxscore=1015
+ suspectscore=0 mlxscore=0 phishscore=0 spamscore=0 priorityscore=1501
+ malwarescore=0 cotscore=-2147483648 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006170104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020 13:30:35 +0200, patrice.chotard@st.com wrote:
-> In case of -EPROBE_DEFER, stm32_qspi_release() was called
-> in any case which unregistered driver from pm_runtime framework
-> even if it has not been registered yet to it. This leads to:
-> 
-> stm32-qspi 58003000.spi: can't setup spi0.0, status -13
-> spi_master spi0: spi_device register error /soc/spi@58003000/mx66l51235l@0
-> spi_master spi0: Failed to create SPI device for /soc/spi@58003000/mx66l51235l@0
-> stm32-qspi 58003000.spi: can't setup spi0.1, status -13
-> spi_master spi0: spi_device register error /soc/spi@58003000/mx66l51235l@1
-> spi_master spi0: Failed to create SPI device for /soc/spi@58003000/mx66l51235l@1
-> 
-> [...]
+OF style match table is the proper way of matching device tree nodes
+with drivers and such table was missing, this commit adds it.
 
-Applied to
+Signed-off-by: Darius Berghe <darius.berghe@analog.com>
+---
+ drivers/iio/adc/ltc2471.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+diff --git a/drivers/iio/adc/ltc2471.c b/drivers/iio/adc/ltc2471.c
+index 55fab612843a..0e5cdb43a943 100644
+--- a/drivers/iio/adc/ltc2471.c
++++ b/drivers/iio/adc/ltc2471.c
+@@ -143,9 +143,17 @@ static const struct i2c_device_id ltc2471_i2c_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, ltc2471_i2c_id);
+ 
++static const struct of_device_id ltc2471_of_match[] = {
++	{ .compatible = "adi,ltc2471" },
++	{ .compatible = "adi,ltc2473" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, ltc2471_of_match);
++
+ static struct i2c_driver ltc2471_i2c_driver = {
+ 	.driver = {
+ 		.name = "ltc2471",
++		.of_match_table = of_match_ptr(ltc2471_of_match)
+ 	},
+ 	.probe    = ltc2471_i2c_probe,
+ 	.id_table = ltc2471_i2c_id,
+-- 
+2.26.2
 
-Thanks!
-
-[1/1] spi: stm32-qspi: Fix error path in case of -EPROBE_DEFER
-      commit: 35700e221b18fa53401e5f315be90af9e0bbcdca
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
