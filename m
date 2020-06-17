@@ -2,92 +2,104 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D43C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9634821841
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 932D72082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:00:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgFQV7p (ORCPT
+        id S1727047AbgFQWAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:59:45 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:48644 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbgFQV7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:59:45 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jlg5t-0006Nk-A6; Wed, 17 Jun 2020 23:59:41 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     davem@davemloft.net
-Cc:     kuba@kernel.org, robh+dt@kernel.org, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com
-Subject: Re: [PATCH v4 2/3] dt-bindings: net: ethernet-phy: add enet-phy-clock-out-frequency
-Date:   Wed, 17 Jun 2020 23:59:40 +0200
-Message-ID: <2463406.V3ZL2uFT5d@diego>
-In-Reply-To: <20200617213326.1532365-3-heiko@sntech.de>
-References: <20200617213326.1532365-1-heiko@sntech.de> <20200617213326.1532365-3-heiko@sntech.de>
+        Wed, 17 Jun 2020 18:00:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37450 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726758AbgFQWAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 18:00:14 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7632131C4F4978AC70FE;
+        Thu, 18 Jun 2020 06:00:12 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.200.210) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 18 Jun 2020 06:00:04 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <nsaenzjulienne@suse.de>, <steve.capper@arm.com>,
+        <rppt@linux.ibm.com>, <akpm@linux-foundation.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        Barry Song <song.bao.hua@hisilicon.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        "Anshuman Khandual" <anshuman.khandual@arm.com>
+Subject: [PATCH v3] arm64: mm: reserve hugetlb CMA after numa_init
+Date:   Thu, 18 Jun 2020 09:58:28 +1200
+Message-ID: <20200617215828.25296-1-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.200.210]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 17. Juni 2020, 23:33:25 CEST schrieb Heiko Stuebner:
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> Some ethernet phys have a configurable clock output, so add a generic
-> property to describe its target rate.
-> 
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+hugetlb_cma_reserve() is called at the wrong place. numa_init has not been
+done yet. so all reserved memory will be located at node0.
 
-just now Rob wrote for v3:
+Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages using cma")
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Will Deacon <will@kernel.org>
+Acked-by: Roman Gushchin <guro@fb.com>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+---
+ -v3:
+ add review-by;
+ add comment according to Will's feedback
 
------ 8< ------
-The correct thing to do here is make the phy a clock provider and then 
-the client side use 'assigned-clock-rate' to set the rate. That has the 
-advantage that it also describes the connection of the clock signal. You 
-might not need that for a simple case, but I could imagine needing that 
-in a more complex case.
+ arch/arm64/mm/init.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-Rob
------ 8< ------
-
-
-
->  Documentation/devicetree/bindings/net/ethernet-phy.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> index 9b1f1147ca36..4dcf93f1c555 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-> @@ -84,6 +84,11 @@ properties:
->        the turn around line low at end of the control phase of the
->        MDIO transaction.
->  
-> +  enet-phy-clock-out-frequency:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description:
-> +      Frequency in Hz to set an available clock output to.
-> +
->    enet-phy-lane-swap:
->      $ref: /schemas/types.yaml#definitions/flag
->      description:
-> 
-
-
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index e631e6425165..1e93cfc7c47a 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -404,11 +404,6 @@ void __init arm64_memblock_init(void)
+ 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+ 
+ 	dma_contiguous_reserve(arm64_dma32_phys_limit);
+-
+-#ifdef CONFIG_ARM64_4K_PAGES
+-	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+-#endif
+-
+ }
+ 
+ void __init bootmem_init(void)
+@@ -424,6 +419,16 @@ void __init bootmem_init(void)
+ 	min_low_pfn = min;
+ 
+ 	arm64_numa_init();
++
++	/*
++	 * must be done after arm64_numa_init() which calls numa_init() to
++	 * initialize node_online_map that gets used in hugetlb_cma_reserve()
++	 * while allocating required CMA size across online nodes.
++	 */
++#ifdef CONFIG_ARM64_4K_PAGES
++	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
++#endif
++
+ 	/*
+ 	 * Sparsemem tries to allocate bootmem in memory_present(), so must be
+ 	 * done after the fixed reservations.
+-- 
+2.23.0
 
 
