@@ -6,68 +6,93 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E8EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD31207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001C8206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgFQO1l (ORCPT
+        id S1726511AbgFQOag convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 10:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgFQO1k (ORCPT
+        Wed, 17 Jun 2020 10:30:36 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:44473 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725901AbgFQOag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 10:27:40 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB2E5C06174E;
-        Wed, 17 Jun 2020 07:27:40 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jlZ2M-0002bW-7s; Wed, 17 Jun 2020 16:27:34 +0200
-Date:   Wed, 17 Jun 2020 16:27:34 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Stephen Berman <stephen.berman@gmx.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
-Message-ID: <20200617142734.mxwfoblufmo6li5e@linutronix.de>
-References: <20200612110122.jossn5zrktcvpbpm@linutronix.de>
- <87tuzdrgm5.fsf@gmx.net>
- <20200614171005.3zy673p6bpwoqnmq@linutronix.de>
- <874krcsquv.fsf@gmx.net>
- <20200615145130.bcdidqkp6w23xb6c@linutronix.de>
- <87tuzbh482.fsf@gmx.net>
- <20200616073827.vysntufld3ves666@linutronix.de>
- <87o8pjh1i0.fsf@gmx.net>
- <20200616155501.psduxnisltitodme@linutronix.de>
- <871rmesqkk.fsf@gmx.net>
+        Wed, 17 Jun 2020 10:30:36 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-144-tRDTNmFJP0-XS1WZyvnh3A-1; Wed, 17 Jun 2020 15:30:32 +0100
+X-MC-Unique: tRDTNmFJP0-XS1WZyvnh3A-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 17 Jun 2020 15:30:31 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 17 Jun 2020 15:30:31 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Wolfram Sang' <wsa@kernel.org>,
+        "wu000273@umn.edu" <wu000273@umn.edu>
+CC:     "kjlu@umn.edu" <kjlu@umn.edu>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Rob Herring <robh@kernel.org>,
+        Shubhrajyoti Datta <shubhraj@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] i2c: xiic: Fix reference count leaks.
+Thread-Topic: [PATCH] i2c: xiic: Fix reference count leaks.
+Thread-Index: AQHWQiuTE76LjToEc02VHcgO+GXIWKjc4oTg
+Date:   Wed, 17 Jun 2020 14:30:31 +0000
+Message-ID: <8aa8ee3d005f4a7e9a4dfa6654cc2732@AcuMS.aculab.com>
+References: <20200613215923.2611-1-wu000273@umn.edu>
+ <20200614090950.GB2878@kunai>
+In-Reply-To: <20200614090950.GB2878@kunai>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <871rmesqkk.fsf@gmx.net>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-16 22:28:43 [+0200], Stephen Berman wrote:
-> Your assessment and predictions are right on the mark!
-perfect.
+From: Wolfram Sang
+> Sent: 14 June 2020 10:10
+> 
+> On Sat, Jun 13, 2020 at 04:59:23PM -0500, wu000273@umn.edu wrote:
+> > From: Qiushi Wu <wu000273@umn.edu>
+> >
+> > pm_runtime_get_sync() increments the runtime PM usage counter even
+> > when it returns an error code. Thus call pm_runtime_put_noidle()
+> > if pm_runtime_get_sync() fails.
+> 
+> Can you point me to a discussion where it was decided that this is a
+> proper fix? I'd think we rather should fix pm_runtime_get_sync() but
+> maybe there are technical reasons against it.
 
-> I'm fine with the thermal.tzp=300 workaround, but it would be good to
-> find out why this problem started with commit 6d25be57, if my git
-> bisection was correct, or if it wasn't, then at least somewhere between
-> 5.1.0 and 5.2.0.  Or can you already deduce why?  If not, I'd be more
-> than happy to continue applying any patches or trying any suggestions
-> you have, if you want to continue debugging this issue.  In any case,
-> thanks for pursuing it to this point.
+Or, if there is one place that actually needs the reference split the
+code so that unusual case keeps the reference.
 
-I have no idea why the commit in question should make any difference.
-Could please apply the tracing patch on v5.1 and send the trace?
+In one of the patches I also spotted:
+	ret = pm_runtime_get_sync();
+	if (ret < 0 && ret != _EAGAIN)
+		...
 
-> Steve Berman
+(I think it was EAGAIN.)
+I can't help feeling that is just wrong somewhere.
 
-Sebastian
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
