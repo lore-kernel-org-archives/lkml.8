@@ -2,145 +2,121 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21BFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C051F212CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592426610;
-	bh=DH+JH7LuAvU3SM3hmsff67bT+aoOZzRe3kh/KZUgd9s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NfmxJWLEsS/c7IFJhyjurSTMzx9/wX5jOJ+pOv9vCgCP86hhXJAtjQXY1KFQBkd8n
-	 SRL/y4hHDxnZQpa2yqu+4TwDr0LUDDRRCPZEORcRRniVb4BGF0DykaPDw6teDfeNPQ
-	 Da0cmFQoe9Vl8G7SVvY74J2jEbS2xjp5ZF/qMs+4=
+	by mail.kernel.org (Postfix) with ESMTP id 2292C21655
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:44:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IXuESxTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgFQUn3 (ORCPT
+        id S1726980AbgFQUoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:43:29 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34760 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgFQUn1 (ORCPT
+        Wed, 17 Jun 2020 16:44:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbgFQUo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:43:27 -0400
-Received: by mail-io1-f65.google.com with SMTP id m81so4574840ioa.1;
-        Wed, 17 Jun 2020 13:43:27 -0700 (PDT)
+        Wed, 17 Jun 2020 16:44:29 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A044C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:44:29 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a6so1845657wrm.4
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:44:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=izNQ/AUBePYNQ9lFfRhkbYFYOvim7jrWfUSC8PuNm50=;
+        b=IXuESxTW1GDtdZdcUhaUxCMmqR0alOzlFYEBB6cNiOWNqNKga8hTG5Hpk8e+jPgfs7
+         gKRbcrFHT/bWqDDjWW1Tu0YTxMUPgU3/zaO7ZYFVAB7sZ5/odoojGtjQaAjqQcISTIRV
+         21JjuFUVAp2SULD0ievL+VDKAIV4k3A7ZvwkkUpYlqJyABsW/fENnkF9JkHDsmSI8BPu
+         lTx1kIP34vOyLqlII9KESAAKJppWEmMCqsPsjTAr9hgHKVBogXM1wNRzyliJEEMpb4Fs
+         wM9VKEIlU+zdEi8dgAC6gR4OOYEJEiqf/0YobEdxc2vAIUU4tWPB0ACvaZ+E1SxG3EjY
+         tp8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=emJpJjtrMEqB2UXVQWJGyVmpIt4i0tBG2sjF9wqyg6s=;
-        b=lc5B7tRhJGDdbMFm2QSG6dnzrjGuD5l5poYtmeh4CTduzLGiS0dUmdEGdgO8hsbtb9
-         fzRq00NP2OJzklCvpfvqvyiMmfWfu7RxnADUMobKwEhkMsrN70RJb668ZieH8FIApKZ1
-         CZicwgJqPUGEUnMSeAtH01IsgPmsaq/IZWmDTtCDJaMRr2DuGeHt/RVbfmGnD0rmIYFq
-         EMAAv7q+xjnstOCZMkVBUsoDwpj8P+7enirg0nMy/Zcl6HpG/KXEvzScRKwN8BadeEdI
-         eh2sS7OmXh+W0IjdeaVb/wM9xwcIS9n7zhWJOmB9qyXWMXf8dt/IhEMCnfU/1Rly98lA
-         sucA==
-X-Gm-Message-State: AOAM530MkJpdLqYVEObwVd0h+0kABxEPhVoPbbubliH+GeA1jMxhkROx
-        4MzP9xkR6CozOL1Ln2tU+Q==
-X-Google-Smtp-Source: ABdhPJx6D38aHYbkc7/7zEd9UCiEIZ/iKJdovV7uWe+2O6ZR5TDlocKXFkMaZH8WNeCz6fnzzMumHw==
-X-Received: by 2002:a5d:9d03:: with SMTP id j3mr1328409ioj.176.1592426606820;
-        Wed, 17 Jun 2020 13:43:26 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id c20sm499812iot.33.2020.06.17.13.43.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 13:43:26 -0700 (PDT)
-Received: (nullmailer pid 2766741 invoked by uid 1000);
-        Wed, 17 Jun 2020 20:43:24 -0000
-Date:   Wed, 17 Jun 2020 14:43:24 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, frowand.list@gmail.com, zohar@linux.ibm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        mark.rutland@arm.com, masahiroy@kernel.org, james.morse@arm.com,
-        bhsharma@redhat.com, mbrugger@suse.com, hsinyi@chromium.org,
-        tao.li@vivo.com, christophe.leroy@c-s.fr,
-        gregkh@linuxfoundation.org, nramas@linux.microsoft.com,
-        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [v1 PATCH 2/2] Add Documentation regarding the ima-kexec-buffer
- node in the chosen node documentation
-Message-ID: <20200617204324.GA2740878@bogus>
-References: <20200607233323.22375-1-prsriva@linux.microsoft.com>
- <20200607233323.22375-3-prsriva@linux.microsoft.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=izNQ/AUBePYNQ9lFfRhkbYFYOvim7jrWfUSC8PuNm50=;
+        b=LVXffu3/dx7HvUi2R5avxOuYGcbP93s0ugxvj6nkG8ZjDW7JGCo5stN1KXe5MNkxRv
+         YnfABmegUDqodB8/oHNa+0i4wj6U7FmobQa+Ygge/iNJ5eLfUgCXuCCazC8Dh+kqwWXT
+         eg+r+VXXmAU+s5t5B1Q/z3psfW3z6ncQbaIJ5z/CcAsMqxjj7q0jx1GurSscsXUaHZ75
+         /4cBCV0YdWHMcoyt642AD17AS3Tle2sD08VxD11Q4VZMfIN5+Jx8bcYD/LZP+6D1GxCr
+         WYmiueDAsD/Geb9guikVr6sRvsBfj8hp7+oX5JUZyheCFAcSJ7T7I3dnCXs+6fk+OBM2
+         DROA==
+X-Gm-Message-State: AOAM533SN9+FY/fqR+5gb/9qqZsCoKZMsxCne+5Qe5Vml3giyGhZp/E2
+        R9AwOhd+6PSGS4toGxwmQBtBRG7964qztyhuKEYf2w==
+X-Google-Smtp-Source: ABdhPJx4KYJD9wjC9cWcd4dSFsQSQGMcDhbMVkYCssEzFcqvWczHJXD0Mb1mQo4LGh5tn1IdBmBvR3RzvVWXmaZ51kw=
+X-Received: by 2002:adf:9c12:: with SMTP id f18mr1114248wrc.105.1592426668016;
+ Wed, 17 Jun 2020 13:44:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607233323.22375-3-prsriva@linux.microsoft.com>
+References: <20200617180801.158331-1-helen.koike@collabora.com>
+In-Reply-To: <20200617180801.158331-1-helen.koike@collabora.com>
+From:   Tomasz Figa <tfiga@google.com>
+Date:   Wed, 17 Jun 2020 22:44:16 +0200
+Message-ID: <CAAFQd5ACgNJLzWSYW9_=vDxoUhO8gUjz0_+ntfVsRsRJbceA0A@mail.gmail.com>
+Subject: Re: [PATCH] media: staging: rkisp1: rsz: fix resolution limitation on
+ sink pad
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>, kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 04:33:23PM -0700, Prakhar Srivastava wrote:
-> Add Documentation regarding the ima-kexec-buffer node in
->  the chosen node documentation
-
-Run 'git log --oneline Documentation/devicetree/bindings/chosen.txt' and 
-write $subject using the dominate format used.
-
-For the commit message, answer why you need the change, not what the 
-change is. I can read the diff for that.
-
->  
-> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+On Wed, Jun 17, 2020 at 8:08 PM Helen Koike <helen.koike@collabora.com> wrote:
+>
+> Resizer sink pad is limited by what the ISP can generate.
+> The configurations describes what the resizer can produce.
+>
+> This was tested on a Scarlet device with ChromiumOs, where the selfpath
+> receives 2592x1944 and produces 1600x1200 (which isn't possible without
+> this fix).
+>
+> Fixes: 56e3b29f9f6b2 ("media: staging: rkisp1: add streaming paths")
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+>
 > ---
->  Documentation/devicetree/bindings/chosen.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+>
+>  drivers/staging/media/rkisp1/rkisp1-resizer.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/staging/media/rkisp1/rkisp1-resizer.c b/drivers/staging/media/rkisp1/rkisp1-resizer.c
+> index d049374413dcf..0d41f43b5339f 100644
+> --- a/drivers/staging/media/rkisp1/rkisp1-resizer.c
+> +++ b/drivers/staging/media/rkisp1/rkisp1-resizer.c
+> @@ -553,11 +553,11 @@ static void rkisp1_rsz_set_sink_fmt(struct rkisp1_resizer *rsz,
+>         src_fmt->code = sink_fmt->code;
+>
+>         sink_fmt->width = clamp_t(u32, format->width,
+> -                                 rsz->config->min_rsz_width,
+> -                                 rsz->config->max_rsz_width);
+> +                                 RKISP1_ISP_MIN_WIDTH,
+> +                                 RKISP1_ISP_MAX_WIDTH);
+>         sink_fmt->height = clamp_t(u32, format->height,
+> -                                  rsz->config->min_rsz_height,
+> -                                  rsz->config->max_rsz_height);
+> +                                 RKISP1_ISP_MIN_HEIGHT,
+> +                                 RKISP1_ISP_MAX_HEIGHT);
+>
+>         *format = *sink_fmt;
+>
+> --
+> 2.26.0
+>
 
-This file has moved to a schema here[1]. You need to update it.
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 
-> 
-> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> index 45e79172a646..a15f70c007ef 100644
-> --- a/Documentation/devicetree/bindings/chosen.txt
-> +++ b/Documentation/devicetree/bindings/chosen.txt
-> @@ -135,3 +135,20 @@ e.g.
->  		linux,initrd-end = <0x82800000>;
->  	};
->  };
-> +
-> +linux,ima-kexec-buffer
-> +----------------------
-> +
-> +This property(currently used by powerpc, arm64) holds the memory range,
-> +the address and the size, of the IMA measurement logs that are being carried
-> +over to the kexec session.
-
-What's IMA? 
-
-> +
-> +/ {
-> +	chosen {
-> +		linux,ima-kexec-buffer = <0x9 0x82000000 0x0 0x00008000>;
-> +	};
-> +};
-> +
-> +This porperty does not represent real hardware, but the memory allocated for
-
-typo
-
-> +carrying the IMA measurement logs. The address and the suze are expressed in
-
-typo
-
-> +#address-cells and #size-cells, respectively of the root node.
-> -- 
-> 2.25.1
-> 
-
-
-[1] https://github.com/devicetree-org/dt-schema/blob/master/schemas/chosen.yaml
-
+Best regards,
+Tomasz
