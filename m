@@ -2,103 +2,117 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B300CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18226C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 849DD2166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81AE2166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:22:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B45A1JqM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MWN8cZ9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgFQVUn (ORCPT
+        id S1726960AbgFQVWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:20:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38296 "EHLO
+        Wed, 17 Jun 2020 17:22:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgFQVUm (ORCPT
+        with ESMTP id S1726853AbgFQVWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:20:42 -0400
+        Wed, 17 Jun 2020 17:22:18 -0400
 Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FFDC06174E;
-        Wed, 17 Jun 2020 14:20:42 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id e9so1887217pgo.9;
-        Wed, 17 Jun 2020 14:20:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8755EC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 14:22:18 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id d4so1903413pgk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 14:22:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=NohMyegEt9RgGZs2UzoxJxqN0gmHTgaywhB0Xzu/WmU=;
-        b=B45A1JqMbdGfNkFOLEr80Gd4T4cJHGZpD46j+2UPvaUhAxUwCPVP6oDMxAHHZdG0PP
-         NBSaOy58ayTiZ4z2IKWdPtBY/cMv1hW47Zb/k1+EDN//5NXSVRkRaz2k07Js4raYp3R7
-         qJXH4XaCod9zMWVAX4yu8DTNZvZIk8PFGvsKulS5pwpjkMcaXtBweTxC0gHUQS0QGwQb
-         9sGYmn2QrwjjB7oUm6hw7CYH4f5Ib1tZpcTeDldhHnuHlZIX0c4MxOx6jBmNp9uvr5BS
-         TwB3vBHW2H6ANhuqu0dPKqDfwcqLb56iaMALoRy8H1jb/N103Vxx6BG4lgQ7yzL1ZGM9
-         GzVw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=10p96XOHb93iqxdsMtM/iXJsZQXP+bBYNuuroRQsAf8=;
+        b=MWN8cZ9R5il23Sphk7/cpwDrjsrTR/+kkUhvqrDrigcLgNYhYnRJGvBWABWzskO8YK
+         +fVFuJalBPUahrMWh8uCBsyPDo8OkrkT409WrBkWm++NCgvhsa5DtrkOWHPCUY905Gwr
+         shxLSwAth2+Jg/yZQd8sSxszCwbxMiolkIV4E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NohMyegEt9RgGZs2UzoxJxqN0gmHTgaywhB0Xzu/WmU=;
-        b=rkxXikHLH6amxloveGcI1WNujaF/EGfgAMMcmh5ZbRzadsyYFAVdc/T+YWfHYAkVhn
-         8YIG0qYIhZ8IIxuW7yw/5AkbI75NmE/r3+YXcs0YD/IY51JLQuKm6csvtWRNQKKwX/TV
-         KG6CVhuj+Bl0EDlKOvriLBzHMwz2Vlt7HxfETbaRyncm70Ut01N0Kj3seg/5Flk9oH//
-         5pBR9nSOF9fJ/l0gBHWXvs1ca7lcapfg9IXGpcsAvp/nUuRDMbrDoD7OAmb3pQjcIW0v
-         gOZ/j+jamo4BA67sn/aQLFin75D2eoYRDDtyIZ3LOzPjAzbqBg17W6JsWo2m5Lnvho3j
-         s2tA==
-X-Gm-Message-State: AOAM530q1eJbFmJXfDCC44FX0T49LnKdfTiRDCoxrEIzlfneTlHnCbg4
-        geyzbUekpmndPCTOA+qDs2s=
-X-Google-Smtp-Source: ABdhPJxQCCLyJYuEEt75M86xwUznb39t3XLVtOTwq0j0vZiNuzlxohhOfMK2hQu9uIG/YI5GnyoJzg==
-X-Received: by 2002:a62:1654:: with SMTP id 81mr628850pfw.137.1592428841583;
-        Wed, 17 Jun 2020 14:20:41 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id f191sm702000pfa.82.2020.06.17.14.20.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 14:20:40 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] dt-bindings: phy: add bcm63xx-usbh bindings
-To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        simon@fire.lp0.eu, jonas.gorski@gmail.com, kishon@ti.com,
-        vkoul@kernel.org, robh+dt@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
-        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200616184542.3504965-1-noltari@gmail.com>
- <20200616184542.3504965-2-noltari@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <7b82a18b-2939-9516-d68d-ddac41014da1@gmail.com>
-Date:   Wed, 17 Jun 2020 14:20:31 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=10p96XOHb93iqxdsMtM/iXJsZQXP+bBYNuuroRQsAf8=;
+        b=YllD8OME1q7pqWjcHfSNk/jGpia5t5Lh7GdlNO2DiMUasPsdkgEQYWNVTnebZUnGMw
+         uEjiJGG6vEbk6nqUZgpiyEBtJmkU/sTqu1KjGCb+835AIa6IYLCSe/tAkMVuTXdSVPqv
+         QxBSkJUPHAu38CQP+FXc/cgq5WLWv0a58DvgAk4BIffprXPxDYvJPhDFpOz2PHus3VL2
+         Ulq9mQG4pXZHbP2Y/hqrapr7/ir3ATos39+EZHLpAiNrtay7mGy88Hxwan8aGC4lVKgl
+         fH5Xt7q3bggt4lO4wobRwJLrT3BFts25KIYmiQ014zgKunar5O/7CehtNULFcy0IyPLa
+         sMkg==
+X-Gm-Message-State: AOAM530g63+ZzKBG+olluV/6tzfrF8n+hQkCIsaoIE2+MHSYHd0SNwED
+        tH26YwZgTjK6iFBVd+Vxvwuzrw==
+X-Google-Smtp-Source: ABdhPJwb0QaHkNQ9STjpEw8h7dMc5MOUm/3dIDlXV+GrpRIAApEV64zC+Lai+OzQFtbZUC4Z/eKcQg==
+X-Received: by 2002:a63:1617:: with SMTP id w23mr685649pgl.248.1592428938121;
+        Wed, 17 Jun 2020 14:22:18 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l134sm648777pga.50.2020.06.17.14.22.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 14:22:17 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 14:22:15 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Sargun Dhillon <sargun@sargun.me>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        christian.brauner@ubuntu.com, cyphar@cyphar.com, jannh@google.com,
+        jeffv@google.com, palmer@google.com, rsesek@google.com,
+        tycho@tycho.ws, Matt Denton <mpdenton@google.com>
+Subject: Re: [PATCH v3] seccomp: Add find_notification helper
+Message-ID: <202006171420.C8007EDCD8@keescook>
+References: <20200601112532.150158-1-sargun@sargun.me>
+ <20200617200844.GA12976@Ryzen-9-3900X.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20200616184542.3504965-2-noltari@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617200844.GA12976@Ryzen-9-3900X.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/16/2020 11:45 AM, Álvaro Fernández Rojas wrote:
-> Document BCM63xx USBH PHY bindings.
+On Wed, Jun 17, 2020 at 01:08:44PM -0700, Nathan Chancellor wrote:
+> On Mon, Jun 01, 2020 at 04:25:32AM -0700, Sargun Dhillon wrote:
+> > [...]
+> >  static long seccomp_notify_recv(struct seccomp_filter *filter,
+> >  				void __user *buf)
+> >  {
+> > -	struct seccomp_knotif *knotif = NULL, *cur;
+> > +	struct seccomp_knotif *knotif, *cur;
+> >  	struct seccomp_notif unotif;
+> >  	ssize_t ret;
+> >  
 > 
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> I don't know that this should have been removed, clang now warns:
+> 
+> kernel/seccomp.c:1063:2: warning: variable 'knotif' is used uninitialized whenever 'for' loop exits because its condition is false [-Wsometimes-uninitialized]
+>         list_for_each_entry(cur, &filter->notif->notifications, list) {
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> include/linux/list.h:602:7: note: expanded from macro 'list_for_each_entry'
+>              &pos->member != (head);                                    \
+>              ^~~~~~~~~~~~~~~~~~~~~~
+> kernel/seccomp.c:1075:7: note: uninitialized use occurs here
+>         if (!knotif) {
+>              ^~~~~~
+> kernel/seccomp.c:1063:2: note: remove the condition if it is always true
+>         list_for_each_entry(cur, &filter->notif->notifications, list) {
+>         ^
+> include/linux/list.h:602:7: note: expanded from macro 'list_for_each_entry'
+>              &pos->member != (head);                                    \
+>              ^
+> kernel/seccomp.c:1045:31: note: initialize the variable 'knotif' to silence this warning
+>         struct seccomp_knotif *knotif, *cur;
+>                                      ^
+>                                       = NULL
+> 1 warning generated.
 
+Eek; yes, thank you! I've folded the fix into Sargun's patch.
 
-
-Since the USB PHY supports both roles (host and device) on a large
-number of SoCs, I would just remove "H" from the subject/binding/name
-accordingly. With that:
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Florian
+Kees Cook
