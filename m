@@ -2,109 +2,191 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AC6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB34C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BBE72070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B71920897
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:50:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="R6qNHWtP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gwvvo9mO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgFQVst (ORCPT
+        id S1726927AbgFQVuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:48:49 -0400
-Received: from mail-40136.protonmail.ch ([185.70.40.136]:33616 "EHLO
-        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgFQVst (ORCPT
+        Wed, 17 Jun 2020 17:50:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgFQVuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:48:49 -0400
-X-Greylist: delayed 596 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Jun 2020 17:48:48 EDT
-Date:   Wed, 17 Jun 2020 21:38:47 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
-        t=1592429930; bh=BHRlybEla9RSsqJCF1ZBfvNg6UHwGh4px8zN0yh041Y=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=R6qNHWtP0rxd8v7/aRGEPRJvP4R8ESGedaF+i3uFy2jPt8eiRBw92z6JyEGMzgGPZ
-         qH2M+gtPZGuDSm+LZs44XjkaF1/muj3+r8yYkDMcHhnD3GFWgzDed/ifFPgRYzDn0s
-         D7GZYev0c/TWWUneeOtrfIGJepec04eaHjlowIvOtxikryLjtMEOGAzx5d9V+LrjjA
-         In1bqJCgrXLBAb6lfnbqyJOY7u0YKOS8PHkMGLvVQ7j9Y5GgxFDPJ2tRjH/cFaZJtl
-         pYh+mofJ9e2rN0GqJsdp4dn+WnhFDEjHruogaPlqN9sGcEjmmILJKqoJhAs95obRaO
-         a39S5301L53Qg==
-To:     Michal Kubecek <mkubecek@suse.cz>
-From:   Alexander Lobakin <alobakin@pm.me>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Aya Levin <ayal@mellanox.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Reply-To: Alexander Lobakin <alobakin@pm.me>
-Subject: Re: [PATCH resend net] net: ethtool: add missing NETIF_F_GSO_FRAGLIST feature string
-Message-ID: <5u_BsHq6Jk0q09sGWsVKfvv0NRa5kBHjxdOr9VpNknRnxHpbRO_80JSHl_AWS-C_wBS7B15KetRleLaluF8tOysTNYyLVRUG4BRFQZxnhXw=@pm.me>
-In-Reply-To: <20200617211844.kupsyijuurjpb5kd@lion.mk-sys.cz>
-References: <9oPfKdiVuoDf251VBJXgNs-Hv-HWPnIJk52x-SQc1frfg8QSf9z3rCL-CBSafkp9SO0CjNzU8QvUv9Abe4SvoUpejeob9OImDPbflzRC-0Y=@pm.me> <20200617211844.kupsyijuurjpb5kd@lion.mk-sys.cz>
+        Wed, 17 Jun 2020 17:50:40 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF1AC06174E;
+        Wed, 17 Jun 2020 14:50:40 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id v24so1547679plo.6;
+        Wed, 17 Jun 2020 14:50:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=2inp6DL1Tpkycn57HGb7bKgExPCkT7AU0S7N4Zm5vFs=;
+        b=Gwvvo9mOU5t201a9zj5JmgtflABhfhYczUd+LVugvwo8+GDqTuA5Mkec/W06P8aNIB
+         dDo0nW2p8dh9+V9NSxCHvhVQiRYywvotNaAX5duHdVGnOIa1YAsQXM6lF6qYzE0d1S8q
+         7CACGCuNASoQIEoi1nT8NkEULYYgzcsVFqOqFhtZdw094seNXsZur69I1czBiEPz7mqI
+         tmi/pMSL+OrVvq5RG4+KJUYwdzOWMBaIp8IbN++5K/ThkY7kam+ezfkqPhcDkpeY45IO
+         SQRAA6d9wG14qiuo6VxD/C6YsV5jw5Y/U4MYKBqG+ompA39r2egYNBJbFFrBS90fYmNM
+         Utfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2inp6DL1Tpkycn57HGb7bKgExPCkT7AU0S7N4Zm5vFs=;
+        b=SJEL8aaVvbF/2fNhK8/xqO0QME5IhhDUFdZCCTRj2zLN+O5jPXu4cRxnh4G/eEkbwL
+         +tO+qLlM6l6mAjIKLcHe7r0f0VZ3Nb/VGhF1HvLYinwk2xvgeEjfgrH5mV6Gr3xMSawB
+         GWwGPtiKn8qilgPx7L/zIJ4RVW9RoA3dzhXVGLsJkUWZjjaiILPmo379F5jiTEapF1ID
+         cddh+MopxdHfUcZSTjryrMjzlAinPWBmsSYEU+MpeDoKAkri9CKPSKC2XZoa89vfvioF
+         yiipbG+XcJApglIIQ8eR6+lXwiqoRP5/RWMovwj9LMHyvc5YdroFsReI45mNR/oFAFjX
+         WrVw==
+X-Gm-Message-State: AOAM533ZuPakEl3LRP1vqMpvtYbUS5AfPkVPy4VDRWVT2/cY/22s+Wob
+        cY+O9S41+li3r8AwppnCaLZhpTe8
+X-Google-Smtp-Source: ABdhPJwIUupeR6Q/8kfiMpacfI9dNWprV9GMSeiLVuJ66LCtcmufPiwuObOjIBZDi8wPQlZL4kq13w==
+X-Received: by 2002:a17:90b:4c4b:: with SMTP id np11mr1077511pjb.58.1592430638848;
+        Wed, 17 Jun 2020 14:50:38 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id j17sm666204pgk.66.2020.06.17.14.50.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2020 14:50:38 -0700 (PDT)
+Subject: Re: [PATCH 2/3] dt-bindings: Document BCM6328 PCIe Host Controller
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        bhelgaas@google.com, robh+dt@kernel.org, tsbogend@alpha.franken.de,
+        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
+        jiaxun.yang@flygoat.com, paulburton@kernel.org, info@metux.net,
+        allison@lohutok.net, kstewart@linuxfoundation.org,
+        tglx@linutronix.de, jonas.gorski@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+References: <20200617102556.3792821-1-noltari@gmail.com>
+ <20200617102556.3792821-3-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <e4831ec7-dfe7-ce4d-585f-bf11a1cb1baa@gmail.com>
+Date:   Wed, 17 Jun 2020 14:50:35 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200617102556.3792821-3-noltari@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michal,
 
-On Thursday, 18 June 2020, 0:18, Michal Kubecek <mkubecek@suse.cz> wrote:
 
-> On Wed, Jun 17, 2020 at 08:42:47PM +0000, Alexander Lobakin wrote:
->
-> > Commit 3b33583265ed ("net: Add fraglist GRO/GSO feature flags") missed
-> > an entry for NETIF_F_GSO_FRAGLIST in netdev_features_strings array. As
-> > a result, fraglist GSO feature is not shown in 'ethtool -k' output and
-> > can't be toggled on/off.
-> > The fix is trivial.
-> >
-> > Fixes: 3b33583265ed ("net: Add fraglist GRO/GSO feature flags")
-> > Signed-off-by: Alexander Lobakin alobakin@pm.me
-> >
-> > -----------------------------------------------------------------------=
------------------------------------------
-> >
-> > net/ethtool/common.c | 1 +
-> > 1 file changed, 1 insertion(+)
-> > diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-> > index 423e640e3876..47f63526818e 100644
-> > --- a/net/ethtool/common.c
-> > +++ b/net/ethtool/common.c
-> > @@ -43,6 +43,7 @@ const char netdev_features_strings[NETDEV_FEATURE_COU=
-NT][ETH_GSTRING_LEN] =3D {
-> > [NETIF_F_GSO_SCTP_BIT] =3D "tx-sctp-segmentation",
-> > [NETIF_F_GSO_ESP_BIT] =3D "tx-esp-segmentation",
-> > [NETIF_F_GSO_UDP_L4_BIT] =3D "tx-udp-segmentation",
-> >
-> > -   [NETIF_F_GSO_FRAGLIST_BIT] =3D "tx-gso-list",
-> >     [NETIF_F_FCOE_CRC_BIT] =3D "tx-checksum-fcoe-crc",
-> >     [NETIF_F_SCTP_CRC_BIT] =3D "tx-checksum-sctp",
-> >
->
-> Reviewed-by: Michal Kubecekmkubecek@suse.cz
+On 6/17/2020 3:25 AM, Álvaro Fernández Rojas wrote:
+> BCM6328 PCIe host controller is found on BCM6328, BCM6362 and BCM63268 SoCs.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> ---
+>  .../bindings/pci/brcm,bcm6328-pcie.yaml       | 109 ++++++++++++++++++
+>  1 file changed, 109 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,bcm6328-pcie.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,bcm6328-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,bcm6328-pcie.yaml
+> new file mode 100644
+> index 000000000000..d2bd4933a5fa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/brcm,bcm6328-pcie.yaml
+> @@ -0,0 +1,109 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/brcm,bcm6328-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: BCM6328 PCIe Host Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Álvaro Fernández Rojas <noltari@gmail.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +     - brcm,bcm6328-pcie
+> +     - brcm,bcm6362-pcie
+> +     - brcm,bcm63268-pcie
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: pcie
+> +
+> +  "#interrupt-cells":
+> +    const: 1
+> +
+> +  interrupt-map-mask:
+> +    maxItems: 1
+> +
+> +  interrupt-map:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  ranges:
+> +    maxItems: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 4
+> +
+> +  reset-names:
+> +    items:
+> +      - const: pcie
+> +      - const: pcie-core
+> +      - const: pcie-ext
+> +      - const: pcie-hard
+> +
+> +required:
+> +  - brcm,serdes
+> +  - clocks
+> +  - clock-names
+> +  - "#interrupt-cells"
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - ranges
+> +  - reg
+> +  - resets
+> +  - reset-names
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    serdes_cntl: syscon@10001800 {
+> +      compatible = "syscon";
+> +      reg = <0x10001800 0x4>;
+> +      native-endian;
+> +    };
 
-Thanks!
-
-> AFAICS the name for NETIF_F_GSO_TUNNEL_REMCSUM_BIT is also missing but
-> IMHO it will be better to fix that by a separate patch with its own
-> Fixes tag.
-
-Oh, nice catch! I'll make a separate for this one.
-I also wanted to add any sort of static_assert() / BUILD_BUG_ON() to
-prevent such misses, but don't see any easy pattern to check for now,
-as netdev_features_strings[] is always NETDEV_FEATURE_COUNT-sized.
-
-> Michal
+I believe you could be modelling the SerDes as generic PHY driver which
+would be a little cleaner than the syscon approach. In newer chips like
+6318 it looks like you should be able to use pcie-brcmstb.c since the
+controller appears to be nearly the same and the PHY abstraction would
+work nicely there.
+-- 
+Florian
