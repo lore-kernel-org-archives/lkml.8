@@ -2,153 +2,170 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF08C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98351C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 580D220CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:13:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A2dLbOXc"
+	by mail.kernel.org (Postfix) with ESMTP id 820D6208B3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgFQLNw (ORCPT
+        id S1726949AbgFQLOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:13:52 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:33854 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgFQLNv (ORCPT
+        Wed, 17 Jun 2020 07:14:18 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:46437 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbgFQLOQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:13:51 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05HBD7dx118817;
-        Wed, 17 Jun 2020 11:13:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=cuNGorMCGRL2h1N6XRNC1GY6mItog4OtrSLpqxId5mo=;
- b=A2dLbOXcLXjWH4ngUp9sSdKtQGnN8HjUtHi+IMOBdN/OfpbMrsLVjiYgts+NbLwfFU+r
- veJcPV3EuoS9iaVbn30dR8uAufSE8s0GTKYgVmPUqpMz3rXFGjtcQpvVWOrMjCuUp/uY
- CpAKRY1wUnhDkXiYtQGMk7YhhxYgRGJom65xHxZxFcFlmt2N/V2Mn8egOo6a5HceycSl
- Lwj2SxwFKhZtrdV+O3J7unD1OM/g8vU7A3bxLPkqHeoBRHpvyZQJ/JlHi0QdbI+wib5p
- r3z3270/Pb3GfMF18+aOJlOOZbMo1dYeC9PK0DXJAn2MUZQUQApWf4aadd3YLw48Xv6B Vw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 31qecks591-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jun 2020 11:13:39 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05HBD8Ds161596;
-        Wed, 17 Jun 2020 11:13:38 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 31q66nr3r8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jun 2020 11:13:38 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05HBDUql031357;
-        Wed, 17 Jun 2020 11:13:30 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 17 Jun 2020 04:13:29 -0700
-Date:   Wed, 17 Jun 2020 14:13:22 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-Cc:     gregkh@linuxfoundation.org, jane.pnx9@gmail.com, pakki001@umn.edu,
-        ldufour@linux.ibm.com, harshjain32@gmail.com, simon@nikanor.nu,
-        walken@google.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Bharath Vedartham <linux.bhar@gmail.com>
-Subject: Re: [PATCH 1/4] staging: kpc2000: Unpin partial pinned pages
-Message-ID: <20200617111321.GP4282@kadam>
-References: <1592360843-3440-1-git-send-email-jrdr.linux@gmail.com>
- <1592360843-3440-2-git-send-email-jrdr.linux@gmail.com>
+        Wed, 17 Jun 2020 07:14:16 -0400
+Received: by mail-io1-f70.google.com with SMTP id w2so1540720iom.13
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 04:14:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=74zgtILYzJ4Q87way40PouYE06q/enXdI9CPRRVKbMw=;
+        b=p+1a1ks5vFRlTTa9w2KnAO5T9j0jkINNsS8VnbGo0Ozhq5a/TmuL2AyrtpMUswYCho
+         NCN7sPqTD1T8GnX/1ktTr8gSBjxIG4QgaPrK2yZ8NwmURZUmiTo72aeE/9v3peFBhU58
+         YRWjwI+oYSJhuRO9gYGFNmKWCnBd86bdoXL57FTqWV7bXtvX9LG/QpDWGreEZ7KbpsCV
+         PAyuzpq5/nAH9hexB1+9pytCopEPjpTjCkS4d7xwXNcGO15hyK34dYGe+FSrvB+CG+xs
+         0oR/5ovMQ3bIyg4HQasldNrIQt7e8CuDDzP9TX9YxrX9F4/Wr2w+7V+DaIE6ZXl3zcP2
+         lSCw==
+X-Gm-Message-State: AOAM533JMNJCyPflwhksnAmnBvGSa1DvQmPyiD/Ksp7bo+ycCj4fh+FT
+        bTpCzZ3VBYmlclrKNHdEofJYExc18P1rHlhM0zaw+pBz/yn7
+X-Google-Smtp-Source: ABdhPJwUn7Urbx/hoTKHd4Gm1w2sqP4k6F6w3WvA7z3RQJFoKSEECvvFxhUKtO2/WV5p22MlP6XbgwIJ7XBZoOMCa4UnI10osKWZ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592360843-3440-2-git-send-email-jrdr.linux@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9654 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- bulkscore=0 adultscore=0 phishscore=0 suspectscore=2 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006170088
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9654 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 cotscore=-2147483648 malwarescore=0
- clxscore=1011 adultscore=0 suspectscore=2 spamscore=0 lowpriorityscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006170088
+X-Received: by 2002:a92:d3d0:: with SMTP id c16mr7623005ilh.181.1592392454048;
+ Wed, 17 Jun 2020 04:14:14 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 04:14:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009111c005a845c2bc@google.com>
+Subject: net-next test error: KASAN: use-after-free Write in afs_wake_up_async_call
+From:   syzbot <syzbot+d3eccef36ddbd02713e9@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dhowells@redhat.com, kuba@kernel.org,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 07:57:20AM +0530, Souptick Joarder wrote:
-> There is a bug, when get_user_pages() failed but partially pinned
-> pages are not unpinned. Fixed it.
-> 
-> Also, int is more appropriate type for rv. Changed it.
-> 
-> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Bharath Vedartham <linux.bhar@gmail.com>
-> Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  drivers/staging/kpc2000/kpc_dma/fileops.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
-> index 8975346..b136353 100644
-> --- a/drivers/staging/kpc2000/kpc_dma/fileops.c
-> +++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-> @@ -35,7 +35,7 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
->  			    unsigned long iov_base, size_t iov_len)
->  {
->  	unsigned int i = 0;
-> -	long rv = 0;
-> +	int rv = 0;
->  	struct kpc_dma_device *ldev;
->  	struct aio_cb_data *acd;
->  	DECLARE_COMPLETION_ONSTACK(done);
-> @@ -193,6 +193,10 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
->  		put_page(acd->user_pages[i]);
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->  
->   err_get_user_pages:
-> +	if (rv > 0) {
-> +		for (i = 0; i < rv; i++)
-> +			put_pages(acd->user_pages[i])
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Hello,
 
-> +	}
+syzbot found the following crash on:
 
-This isn't a complete fix.  "rv" is the negative error code but here we
-are returning a positive value on this path.  Also it's ugly to have
-same put_page() loop repeated twice.
+HEAD commit:    69119673 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=151b62f1100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b8ad29058cb749bc
+dashboard link: https://syzkaller.appspot.com/bug?extid=d3eccef36ddbd02713e9
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-It would be better to write it like this:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d3eccef36ddbd02713e9@syzkaller.appspotmail.com
 
-	rv = get_user_pages(iov_base, acd->page_count, FOLL_TOUCH | FOLL_WRITE | FOLL_GET, acd->user_pages, NULL);
-	mmap_read_unlock(current->mm);        /*  release the semaphore */
-	if (rv < 0)
-		goto free_pages;
-	if (rv != acd->page_count) {
-		acd->page_count = rv;
-		rv = -EFAULT;
-		goto put_pages;
-	}
+tipc: TX() has been purged, node left!
+==================================================================
+BUG: KASAN: use-after-free in afs_wake_up_async_call+0x6aa/0x770 fs/afs/rxrpc.c:707
+Write of size 1 at addr ffff8880946c39e4 by task kworker/u4:1/21
 
-	...
+CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.8.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: netns cleanup_net
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ afs_wake_up_async_call+0x6aa/0x770 fs/afs/rxrpc.c:707
+ rxrpc_notify_socket+0x1db/0x5d0 net/rxrpc/recvmsg.c:40
+ __rxrpc_set_call_completion.part.0+0x172/0x410 net/rxrpc/recvmsg.c:76
+ __rxrpc_call_completed net/rxrpc/recvmsg.c:112 [inline]
+ rxrpc_call_completed+0xca/0xf0 net/rxrpc/recvmsg.c:111
+ rxrpc_discard_prealloc+0x781/0xab0 net/rxrpc/call_accept.c:233
+ rxrpc_listen+0x147/0x360 net/rxrpc/af_rxrpc.c:245
+ afs_close_socket+0x95/0x320 fs/afs/rxrpc.c:110
+ afs_net_exit+0x1bc/0x310 fs/afs/main.c:155
+ ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
+ cleanup_net+0x511/0xa50 net/core/net_namespace.c:603
+ process_one_work+0x965/0x1690 kernel/workqueue.c:2269
+ worker_thread+0x96/0xe10 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
 
-put_pages:
-	for (i = 0 ; i < acd->page_count ; i++)
-		put_pages(acd->user_pages[i]);
-free_pages:
-	kfree(acd->user_pages);
+Allocated by task 6820:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc mm/kasan/common.c:494 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
+ kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ afs_alloc_call+0x55/0x630 fs/afs/rxrpc.c:141
+ afs_charge_preallocation+0xe9/0x2d0 fs/afs/rxrpc.c:757
+ afs_open_socket+0x292/0x360 fs/afs/rxrpc.c:92
+ afs_net_init+0xa6c/0xe30 fs/afs/main.c:125
+ ops_init+0xaf/0x420 net/core/net_namespace.c:151
+ setup_net+0x2de/0x860 net/core/net_namespace.c:341
+ copy_net_ns+0x293/0x590 net/core/net_namespace.c:482
+ create_new_namespaces+0x3fb/0xb30 kernel/nsproxy.c:110
+ unshare_nsproxy_namespaces+0xbd/0x1f0 kernel/nsproxy.c:231
+ ksys_unshare+0x43d/0x8e0 kernel/fork.c:2983
+ __do_sys_unshare kernel/fork.c:3051 [inline]
+ __se_sys_unshare kernel/fork.c:3049 [inline]
+ __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3049
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-regards,
-dan carpenter
+Freed by task 21:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x109/0x2b0 mm/slab.c:3757
+ afs_put_call+0x585/0xa40 fs/afs/rxrpc.c:190
+ rxrpc_discard_prealloc+0x764/0xab0 net/rxrpc/call_accept.c:230
+ rxrpc_listen+0x147/0x360 net/rxrpc/af_rxrpc.c:245
+ afs_close_socket+0x95/0x320 fs/afs/rxrpc.c:110
+ afs_net_exit+0x1bc/0x310 fs/afs/main.c:155
+ ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
+ cleanup_net+0x511/0xa50 net/core/net_namespace.c:603
+ process_one_work+0x965/0x1690 kernel/workqueue.c:2269
+ worker_thread+0x96/0xe10 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
 
+The buggy address belongs to the object at ffff8880946c3800
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 484 bytes inside of
+ 1024-byte region [ffff8880946c3800, ffff8880946c3c00)
+The buggy address belongs to the page:
+page:ffffea000251b0c0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea0002546508 ffffea00024fa248 ffff8880aa000c40
+raw: 0000000000000000 ffff8880946c3000 0000000100000002 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880946c3880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880946c3900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880946c3980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                       ^
+ ffff8880946c3a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880946c3a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
