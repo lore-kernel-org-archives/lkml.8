@@ -2,328 +2,118 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C65C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEA7821532
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD3B20897
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:01:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XerUwSIX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X27pYeMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgFQT7H (ORCPT
+        id S1726864AbgFQUBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 15:59:07 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37563 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726496AbgFQT7H (ORCPT
+        Wed, 17 Jun 2020 16:01:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgFQUBL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 15:59:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592423944;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WRHrkKRbe5k2p3dAble6VV20kKgVJLN2B6hsKhETBAc=;
-        b=XerUwSIX41YbVtRoftdGMZWnsPsVURPu5d+1chuN1+oHfrCa6ZgaUPpYp0olaohOwU3rpf
-        STtkC1/7pxmPDQUp7E/N14nXW2epcHnzoL4cV1DQCq7GdAauMUiYGC/i76Bvf4OxrHN3tr
-        6WxBUTS5G6FpDWkLsdDLEJJzijtSlZ8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-452-KyCYzru3NoyzKqzc3jQWBA-1; Wed, 17 Jun 2020 15:59:03 -0400
-X-MC-Unique: KyCYzru3NoyzKqzc3jQWBA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 455D2835B4F;
-        Wed, 17 Jun 2020 19:59:01 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-115-47.rdu2.redhat.com [10.10.115.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1DD0A10013D6;
-        Wed, 17 Jun 2020 19:58:55 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 7A46922363A; Wed, 17 Jun 2020 15:58:54 -0400 (EDT)
-Date:   Wed, 17 Jun 2020 15:58:54 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, pbonzini@redhat.com, wanpengli@tencent.com,
-        sean.j.christopherson@intel.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] kvm,x86: Force sync fault if previous attempts failed
-Message-ID: <20200617195854.GD26770@redhat.com>
-References: <20200616214847.24482-1-vgoyal@redhat.com>
- <20200616214847.24482-2-vgoyal@redhat.com>
- <87o8phhmlp.fsf@vitty.brq.redhat.com>
+        Wed, 17 Jun 2020 16:01:11 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5D62C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:01:09 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id i4so1592091pjd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:01:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=caNCPxuwnsfme3cJQ3yFnZipKvQl8RiDyCwsEjsLsMc=;
+        b=X27pYeMzeBegpSXYr94WQ9cQIx8qfoKI7mRjZFuswG0wtv2Fk0MvxnXTKKZn2wySjq
+         XdXkAxGseiME2d5R6P6OTH3Hu3IXnbw6OaWe4/UQHwh8egU/Zeb/T/Yoa7mgMmoyDvmO
+         Mf5NUUL0VBTx07Qg5Vblr2/bsdgQoz2/oi92w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=caNCPxuwnsfme3cJQ3yFnZipKvQl8RiDyCwsEjsLsMc=;
+        b=CncqHi6sFSVBvnOVy5ZPNK0Phk/aD/siZTdhTm+sh0Rz3US61JEYPMhuhbHXXrHssG
+         UH42m6FawNy5+xklE7rd0sm68bH7XqzBK/b7zceDPNTRUrHj4yGIn/CJufNUZiT+gWLM
+         RWTSKaPonAJjx6IU2JIo7Ssqc3D1iyLDoXgebbOa3W7ao161Lwl+t+SrloaenKytw7zy
+         pDi8ExvW8v49TchL7DGJyaCNl/soRmXDaus/FzaSTmvVCY+mSl7X9NxI4iXVkXC4RMmt
+         unILpMLG4asoujKqbu+f8oNDJ3tcQHkcrxNOkfjeS1TMbE2PbDYIE2bmav7sme7zicwT
+         5/LQ==
+X-Gm-Message-State: AOAM533RMpBYeA4rdnpoIm9/3MwdMJixsztKv3pJxvjdgvj2EnfXYXvV
+        Ce88zW9YMXd4fVSDw8EwJtj6Y+7K3gQ=
+X-Google-Smtp-Source: ABdhPJyPwoUI6HSyoEhh3ukwzEqMPFmJ63d2Boybwl/wQzQT0a3lfMeOWwHvgWFA8yyGf8DRLkfEnQ==
+X-Received: by 2002:a17:90a:ce11:: with SMTP id f17mr654054pju.123.1592424069090;
+        Wed, 17 Jun 2020 13:01:09 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id h7sm599873pgg.17.2020.06.17.13.01.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 13:01:08 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o8phhmlp.fsf@vitty.brq.redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200617113851.607706-2-alexandru.elisei@arm.com>
+References: <20200617113851.607706-1-alexandru.elisei@arm.com> <20200617113851.607706-2-alexandru.elisei@arm.com>
+Subject: Re: [PATCH v5 1/7] arm64: perf: Add missing ISB in armv8pmu_enable_event()
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     mark.rutland@arm.com, Julien Thierry <julien.thierry@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>, maz@kernel.org,
+        Jiri Olsa <jolsa@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, catalin.marinas@arm.com,
+        Namhyung Kim <namhyung@kernel.org>, will@kernel.org,
+        Julien Thierry <julien.thierry.kdev@gmail.com>
+To:     Alexandru Elisei <alexandru.elisei@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Wed, 17 Jun 2020 13:01:07 -0700
+Message-ID: <159242406774.62212.13909672383879587787@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 03:02:10PM +0200, Vitaly Kuznetsov wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
-> 
-> > Page fault error handling behavior in kvm seems little inconsistent when
-> > page fault reports error. If we are doing fault synchronously
-> > then we capture error (-EFAULT) returned by __gfn_to_pfn_memslot() and
-> > exit to user space and qemu reports error, "error: kvm run failed Bad address".
-> >
-> > But if we are doing async page fault, then async_pf_execute() will simply
-> > ignore the error reported by get_user_pages_remote(). It is assumed that
-> > page fault was successful and either a page ready event is injected in
-> > guest or guest is brought out of artificial halt state and run again.
-> > In both the cases when guest retries the instruction, it takes exit
-> > again as page fault was not successful in previous attempt. And then
-> > this infinite loop continues forever.
-> >
-> 
-> Indeed, we always assume get_user_pages_remote() will fetch the page we
-> need. 
-> 
-> > This patch tries to make this behavior consistent. That is instead of
-> > getting into infinite loop of retrying page fault, exit to user space
-> > and stop VM if page fault error happens. This can be improved by
-> > injecting errors in guest when it is allowed. Later patches can
-> > inject error when a process in guest triggered page fault and
-> > in that case guest process will receive SIGBUS. Currently we don't
-> > have a way to inject errors when guest is in kernel mode. Once we
-> > have race free method to do so, we should be able to inject errors
-> > and guest can do fixup_exception() if caller set it up so (virtio-fs).
-> >
-> > When async pf encounters error then save that pfn and when next time
-> > guest retries, do a sync fault instead of async fault. So that if error
-> > is encountered, we exit to qemu and avoid infinite loop.
-> >
-> > As of now only one error pfn is stored and that means it could be
-> > overwritten before next a retry from guest happens. But this is
-> > just a hint and if we miss it, some other time we will catch it.
-> > If this becomes an issue, we could maintain an array of error
-> > gfn later to help ease the issue.
-> 
-> With a single GFN stored we can probably get in the same infinite loop
-> you describe when several processes try to access different unavailable
-> GFNs.
+Quoting Alexandru Elisei (2020-06-17 04:38:45)
+> Writes to the PMXEVTYPER_EL0 register are not self-synchronising. In
+> armv8pmu_enable_event(), the PE can reorder configuring the event type
+> after we have enabled the counter and the interrupt. This can lead to an
+> interrupt being asserted because the of the previous event type that we
 
-We could probably have an array and store bunch of error GFNs. But I
-am not seeing much value in adding that complexity yet (until and
-unless there are easy ways to reproduce). Following is my thought
-process.
+'because the of the' doesn't read properly.
 
-- error gfn is just a hint to force sync fault. Even if we miss it,
-  guest will retry and at some point of time it will be forced to
-  do sync fault.
+> were counting, not the one that we've just enabled.
+>=20
+> The same rationale applies to writes to the PMINTENSET_EL1 register. The =
+PE
+> can reorder enabling the interrupt at any point in the future after we ha=
+ve
+> enabled the event.
+>=20
+> Prevent both situations from happening by adding an ISB just before we
+> enable the event counter.
+>=20
+> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_even=
+t.c
+> index 4d7879484cec..ee180b2a5b39 100644
+> --- a/arch/arm64/kernel/perf_event.c
+> +++ b/arch/arm64/kernel/perf_event.c
+> @@ -605,6 +605,7 @@ static void armv8pmu_enable_event(struct perf_event *=
+event)
+>          * Enable interrupt for this counter
+>          */
+>         armv8pmu_enable_event_irq(event);
+> +       isb();
 
-- If page fault happened in guest user space, we will send error back
-  and will not save or rely on error gfn.
-
-- If page fault happened in guest kernel, then we have blocked
-  async page fault and that means no scheduling (except if interrupt
-  happened in between and that resulted in some scheduling).
-
-I will test it with multiple processes doing I/O to same file and
-then truncate this file and see if all qemu exits pretty soon or
-not.
-
-> Also, is the condition "GFN is unavailable" temporary or
-> permanent?
-
-I think it depends on usage. For the nvdimm use case, if file
-backing that GFN gets truncated, then it is sort of permanent
-failure. But for the case  of virtio-fs, it is possible to reuse
-that GFN to map something else dynamically and once it maps
-something else, then fault will be successful again.
-
-> I guess it's the former but 'error_gfn' is set permanently
-> (assuming no other GFN will overwrite it).
-
-Other GFN can overwrite it. Nothing blocks that. So it is not
-permanent.
-
-Also if we have set error_gfn, on next retry qemu will fail. So,
-leaving it behind should not be a problem. Even if failure was
-temporary for some reason and upon next retry page fault is successful,
-that's fine too. All we did was that did a sync fault instead of
-async one.
-
-I could look into clearing error_gfn on successful fault. I think
-there are bunch of success path, that's why I was avoiding going
-in that direction.
-
-> 
-> What if we do the following instead: add one more field to APF data
-> indicating an error. The guest will kill the corresponding process
-> instead of resuming it then.
-
-That's what second patch is doing. I added a field pageready_flag
-and used bit 0 to indicate error. But that works only if fault
-was triggered by user space otherwise we are not following
-async pf protocol.
-
-If fault was triggered by kernel, then error needs to injected
-synchronously so that kernel can call fixup_exception(). That's
-more complicated and a future TODO item. I think for now, I
-think stopping VM probably is better option than looping infinitely.
-
-This first patch I wanted to do to make error behavior uniform and
-to agree that it makes sense. That is if page fault error happens,
-then either we shoudl inject error back into guest(if it is allowed)
-otherwise, exit to user space. Retrying infinitely is not a good
-option.
-
-> 
-> Also, with KVM_ASYNC_PF_SEND_ALWAYS being deprecated and assuming we
-> switch to #VE, under which curcumstances we'll be unable to handle page
-> fault asyncronously? Apart from overflowing the async PF queue, are
-> there any other scenarios when it still makes sense to keep the guest
-> alive? 
-
-I think we should be able to handle it in most of the cases and
-inject error back into guest.
-
-> 
-> >
-> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> > ---
-> >  arch/x86/include/asm/kvm_host.h |  1 +
-> >  arch/x86/kvm/mmu.h              |  2 +-
-> >  arch/x86/kvm/mmu/mmu.c          |  2 +-
-> >  arch/x86/kvm/x86.c              | 19 +++++++++++++++++--
-> >  include/linux/kvm_host.h        |  1 +
-> >  virt/kvm/async_pf.c             |  8 ++++++--
-> >  6 files changed, 27 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > index 938497a6ebd7..348a73106556 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -778,6 +778,7 @@ struct kvm_vcpu_arch {
-> >  		unsigned long nested_apf_token;
-> >  		bool delivery_as_pf_vmexit;
-> >  		bool pageready_pending;
-> > +		gfn_t error_gfn;
-> >  	} apf;
-> >  
-> >  	/* OSVW MSRs (AMD only) */
-> > diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-> > index 0ad06bfe2c2c..6fa085ff07a3 100644
-> > --- a/arch/x86/kvm/mmu.h
-> > +++ b/arch/x86/kvm/mmu.h
-> > @@ -60,7 +60,7 @@ void kvm_init_mmu(struct kvm_vcpu *vcpu, bool reset_roots);
-> >  void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer);
-> >  void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly,
-> >  			     bool accessed_dirty, gpa_t new_eptp);
-> > -bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu);
-> > +bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu, gfn_t gfn);
-> >  int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
-> >  				u64 fault_address, char *insn, int insn_len);
-> >  
-> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > index 15984dfde427..e207900ab303 100644
-> > --- a/arch/x86/kvm/mmu/mmu.c
-> > +++ b/arch/x86/kvm/mmu/mmu.c
-> > @@ -4078,7 +4078,7 @@ static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
-> >  	if (!async)
-> >  		return false; /* *pfn has correct page already */
-> >  
-> > -	if (!prefault && kvm_can_do_async_pf(vcpu)) {
-> > +	if (!prefault && kvm_can_do_async_pf(vcpu, cr2_or_gpa >> PAGE_SHIFT)) {
-> >  		trace_kvm_try_async_get_page(cr2_or_gpa, gfn);
-> >  		if (kvm_find_async_pf_gfn(vcpu, gfn)) {
-> >  			trace_kvm_async_pf_doublefault(cr2_or_gpa, gfn);
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 697d1b273a2f..4c5205434b9c 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -10513,7 +10513,7 @@ static bool kvm_can_deliver_async_pf(struct kvm_vcpu *vcpu)
-> >  	return true;
-> >  }
-> >  
-> > -bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
-> > +bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu, gfn_t gfn)
-> >  {
-> >  	if (unlikely(!lapic_in_kernel(vcpu) ||
-> >  		     kvm_event_needs_reinjection(vcpu) ||
-> > @@ -10527,7 +10527,13 @@ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
-> >  	 * If interrupts are off we cannot even use an artificial
-> >  	 * halt state.
-> >  	 */
-> > -	return kvm_arch_interrupt_allowed(vcpu);
-> > +	if (!kvm_arch_interrupt_allowed(vcpu))
-> > +		return false;
-> > +
-> > +	if (vcpu->arch.apf.error_gfn == gfn)
-> > +		return false;
-> > +
-> > +	return true;
-> >  }
-> >  
-> >  bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
-> > @@ -10583,6 +10589,15 @@ void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
-> >  		kvm_apic_set_irq(vcpu, &irq, NULL);
-> >  	}
-> >  
-> > +	if (work->error_code) {
-> > +		/*
-> > +		 * Page fault failed and we don't have a way to report
-> > +		 * errors back to guest yet. So save this pfn and force
-> > +		 * sync page fault next time.
-> > +		 */
-> > +		vcpu->arch.apf.error_gfn = work->cr2_or_gpa >> PAGE_SHIFT;
-> > +	}
-> > +
-> >  	vcpu->arch.apf.halted = false;
-> >  	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
-> >  }
-> > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> > index 216cdb6581e2..b8558334b184 100644
-> > --- a/include/linux/kvm_host.h
-> > +++ b/include/linux/kvm_host.h
-> > @@ -207,6 +207,7 @@ struct kvm_async_pf {
-> >  	struct kvm_arch_async_pf arch;
-> >  	bool   wakeup_all;
-> >  	bool notpresent_injected;
-> > +	int error_code;
-> >  };
-> >  
-> >  void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu);
-> > diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
-> > index a36828fbf40a..6b30374a4de1 100644
-> > --- a/virt/kvm/async_pf.c
-> > +++ b/virt/kvm/async_pf.c
-> > @@ -52,6 +52,7 @@ static void async_pf_execute(struct work_struct *work)
-> >  	gpa_t cr2_or_gpa = apf->cr2_or_gpa;
-> >  	int locked = 1;
-> >  	bool first;
-> > +	long ret;
-> >  
-> >  	might_sleep();
-> >  
-> > @@ -61,11 +62,14 @@ static void async_pf_execute(struct work_struct *work)
-> >  	 * access remotely.
-> >  	 */
-> >  	down_read(&mm->mmap_sem);
-> > -	get_user_pages_remote(NULL, mm, addr, 1, FOLL_WRITE, NULL, NULL,
-> > -			&locked);
-> > +	ret = get_user_pages_remote(NULL, mm, addr, 1, FOLL_WRITE, NULL, NULL,
-> > +				    &locked);
-> >  	if (locked)
-> >  		up_read(&mm->mmap_sem);
-> >  
-> > +	if (ret < 0)
-> > +		apf->error_code = ret;
-> > +
-> >  	if (IS_ENABLED(CONFIG_KVM_ASYNC_PF_SYNC))
-> >  		kvm_arch_async_page_present(vcpu, apf);
-> 
-> -- 
-> Vitaly
-> 
-
+Please add a comment before the isb() explaining the situation. Nobody
+knows what this is for when reading the code and they don't want to do
+git archaeology to figure it out.
