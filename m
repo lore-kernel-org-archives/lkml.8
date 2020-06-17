@@ -2,110 +2,121 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60244C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B93720739
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4892A21527
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgFQKoG (ORCPT
+        id S1726883AbgFQKoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 06:44:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:55334 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbgFQKoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 06:44:13 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11084 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726270AbgFQKoM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 06:44:12 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05HAY1sx006314;
+        Wed, 17 Jun 2020 06:44:05 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6j3hjdr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 06:44:05 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05HAYdrw008682;
         Wed, 17 Jun 2020 06:44:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4960031B;
-        Wed, 17 Jun 2020 03:44:03 -0700 (PDT)
-Received: from e112269-lin.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A73D53F71F;
-        Wed, 17 Jun 2020 03:44:01 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
-Cc:     James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
-        Steven Price <steven.price@arm.com>
-Subject: [PATCH] KVM: arm64: kvm_reset_vcpu() return code incorrect with SVE
-Date:   Wed, 17 Jun 2020 11:43:39 +0100
-Message-Id: <20200617104339.35094-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6j3hjcq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 06:44:04 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05HAZkY4002574;
+        Wed, 17 Jun 2020 10:44:02 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 31q6ch8v48-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 10:44:02 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05HAhxAv47448264
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jun 2020 10:43:59 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 57E9D52051;
+        Wed, 17 Jun 2020 10:43:59 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.186.32])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 78A9E5204E;
+        Wed, 17 Jun 2020 10:43:58 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com
+Subject: [PATCH v3 0/1] s390: virtio: let arch choose to accept devices without IOMMU feature
+Date:   Wed, 17 Jun 2020 12:43:56 +0200
+Message-Id: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-17_03:2020-06-17,2020-06-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 phishscore=0 clxscore=1015 cotscore=-2147483648
+ suspectscore=1 spamscore=0 mlxscore=0 priorityscore=1501 bulkscore=0
+ mlxlogscore=577 adultscore=0 impostorscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006170083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If SVE is enabled then 'ret' can be assigned the return value of
-kvm_vcpu_enable_sve() which may be 0 causing future "goto out" sites to
-erroneously return 0 on failure rather than -EINVAL as expected.
+An architecture protecting the guest memory against unauthorized host
+access may want to enforce VIRTIO I/O device protection through the
+use of VIRTIO_F_IOMMU_PLATFORM.
 
-Remove the initialisation of 'ret' and make setting the return value
-explicit to avoid this situation in the future.
+Let's give a chance to the architecture to accept or not devices
+without VIRTIO_F_IOMMU_PLATFORM.
 
-Fixes: 9a3cdf26e336 ("KVM: arm64/sve: Allow userspace to enable SVE for vcpus")
-Reported-by: James Morse <james.morse@arm.com>
-Signed-off-by: Steven Price <steven.price@arm.com>
----
-The problematic chunk isn't visible in the diff, so reproduced here:
+Pierre Morel (1):
+  s390: virtio: let arch accept devices without IOMMU feature
 
-	if (!kvm_arm_vcpu_sve_finalized(vcpu)) {
-		if (test_bit(KVM_ARM_VCPU_SVE, vcpu->arch.features)) {
-			ret = kvm_vcpu_enable_sve(vcpu);
-			if (ret)
-				goto out;
-		}
-	} else {
-		kvm_vcpu_reset_sve(vcpu);
-	}
+ arch/s390/mm/init.c     |  6 ++++++
+ drivers/virtio/virtio.c | 22 ++++++++++++++++++++++
+ include/linux/virtio.h  |  2 ++
+ 3 files changed, 30 insertions(+)
 
- arch/arm64/kvm/reset.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index d3b209023727..f1057603b756 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -245,7 +245,7 @@ static int kvm_vcpu_enable_ptrauth(struct kvm_vcpu *vcpu)
-  */
- int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
- {
--	int ret = -EINVAL;
-+	int ret;
- 	bool loaded;
- 	u32 pstate;
- 
-@@ -269,15 +269,19 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
- 
- 	if (test_bit(KVM_ARM_VCPU_PTRAUTH_ADDRESS, vcpu->arch.features) ||
- 	    test_bit(KVM_ARM_VCPU_PTRAUTH_GENERIC, vcpu->arch.features)) {
--		if (kvm_vcpu_enable_ptrauth(vcpu))
-+		if (kvm_vcpu_enable_ptrauth(vcpu)) {
-+			ret = -EINVAL;
- 			goto out;
-+		}
- 	}
- 
- 	switch (vcpu->arch.target) {
- 	default:
- 		if (test_bit(KVM_ARM_VCPU_EL1_32BIT, vcpu->arch.features)) {
--			if (!cpus_have_const_cap(ARM64_HAS_32BIT_EL1))
-+			if (cpus_have_const_cap(ARM64_HAS_32BIT_EL1)) {
-+				ret = -EINVAL;
- 				goto out;
-+			}
- 			pstate = VCPU_RESET_PSTATE_SVC;
- 		} else {
- 			pstate = VCPU_RESET_PSTATE_EL1;
 -- 
-2.20.1
+2.25.1
+
+Changelog
+
+to v3:
+
+- add warning
+  (Connie, Christian)
+
+- add comment
+  (Connie)
+
+- change hook name
+  (Halil, Connie)
+
+to v2:
+
+- put the test in virtio_finalize_features()
+  (Connie)
+
+- put the test inside VIRTIO core
+  (Jason)
+
+- pass a virtio device as parameter
+  (Halil)
+
 
