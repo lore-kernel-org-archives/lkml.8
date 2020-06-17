@@ -2,136 +2,282 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076E2C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259C2C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC242208D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFFBE20884
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:26:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P2cQuGD/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PG/Phak1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgFQTWd (ORCPT
+        id S1726893AbgFQT0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 15:22:33 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45232 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbgFQTWc (ORCPT
+        Wed, 17 Jun 2020 15:26:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgFQT0p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 15:22:32 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05HJMJ0T074159;
-        Wed, 17 Jun 2020 14:22:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592421739;
-        bh=Bkn+lQ7tZTYAmQ+YAHSjbAZtH5GQl0iS1nrW8ZoWpTo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=P2cQuGD/oBIZXT7KVhuJSwqLsVKQT7n0b+rIdMBvgLV56NSUHJCUln3AI4NgOkioC
-         u3MsHavBkDxTnvb7TryTbVYZUTUr99SKLM+Wmj2uLOS2mM04d0R8R+2i2km3kHtSZ7
-         7l3YvvihLokfoeh5SRMlO6gQlrjP23xU3XLVt7mQ=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05HJMJUj075690
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jun 2020 14:22:19 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 17
- Jun 2020 14:22:18 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 17 Jun 2020 14:22:18 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05HJMIGC110715;
-        Wed, 17 Jun 2020 14:22:18 -0500
-Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
- support to lp55xx
-To:     kernel test robot <lkp@intel.com>, <jacek.anaszewski@gmail.com>,
-        <pavel@ucw.cz>, <robh@kernel.org>
-CC:     <kbuild-all@lists.01.org>, <devicetree@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200615201522.19677-12-dmurphy@ti.com>
- <202006180032.JW0i39C6%lkp@intel.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
-Date:   Wed, 17 Jun 2020 14:22:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 17 Jun 2020 15:26:45 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0414CC0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:26:43 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id b6so3567578wrs.11
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:26:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZerrBpegoM9qPQb5Etrj72WXhDGVZ1V83oi0WSi6xTM=;
+        b=PG/Phak1BgrocswLNaIBxizaBxJuxEys+VcrmxMkA2Kwv8Puq21eaAXTJorp1xGU9m
+         Hmd1zTWOcigvZyVarc/KIFI3ZVwoCWcwWRLhnJUjYvw0HHxJLr6+UsD7/E8Q+UMfjMmP
+         dbpQK0Ma0/scU/k+KuUA3b11LZUOkNS6tq6OQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZerrBpegoM9qPQb5Etrj72WXhDGVZ1V83oi0WSi6xTM=;
+        b=GBTkcOtzW7qt+CK2Y8EBetFXFDTYLrAu40eMIfwXVBXUENKDAZOHO94fk7N3ZxPngC
+         JoAYhV5yKte0qb9XgEvWcaUuN6x2WihPwiPi0rlwCJV6g9U1aAdCIRlJBFwVFxaY7/Mn
+         25vZa9lf78PR6+tbG9upPkRiwr/L0pDAJpxnhH+VzZFLTDM649/zN5cgO7LnTgc4BMKL
+         EOd3Y8aDCeNhLNMo7tdf9vuRCkWBA+EDn7YpBgxd0WcAZx6pcZ+sHhfd7vrwG3U6EN1Y
+         HkVbHXZ6vBT/s8IYKXGISSYGTBolacjBabgfAV1kDb2HbX0hbX/3jBu4kt4dvkmtv2zo
+         d9gg==
+X-Gm-Message-State: AOAM530llJZCyfi2BQr7a/UduGSVgU04/AkoMppPwQUO3kqbscQEamf9
+        EKQv+nxenwl6AtRYJ77HTLpcly4xUrJZdU3lsr0/NQ==
+X-Google-Smtp-Source: ABdhPJw+mIxRsjYUIf3EhTU2b6GnyuNkF4v+xrjYRaaPs9NlyzRVhkksVVOo1UCBOGfTkiEN9ZV4igzzJ9OdbOfksOs=
+X-Received: by 2002:adf:afc7:: with SMTP id y7mr759772wrd.173.1592422002489;
+ Wed, 17 Jun 2020 12:26:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <202006180032.JW0i39C6%lkp@intel.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200526163336.63653-1-kpsingh@chromium.org> <20200526163336.63653-5-kpsingh@chromium.org>
+ <CAEf4BzY0=Hh3O6qeD=2sMWpQRpHpizxH+nEA0hD0khPf3VAbhA@mail.gmail.com>
+ <20200616155433.GA11971@google.com> <CAEf4BzZm86BQqhfVHfm7aKvwK-UXC7679DsJe8xQqYR8eUUwAQ@mail.gmail.com>
+ <7ecf2765-614c-8576-af2c-b4d354e0ffbf@fb.com>
+In-Reply-To: <7ecf2765-614c-8576-af2c-b4d354e0ffbf@fb.com>
+From:   KP Singh <kpsingh@chromium.org>
+Date:   Wed, 17 Jun 2020 21:26:31 +0200
+Message-ID: <CACYkzJ7iD5QdtG_HN8niZFa3ySmxNH5Srfcg4z_qdcO-t1UVVA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 4/4] bpf: Add selftests for local_storage
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Florent Revest <revest@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel/Jacek
+Thanks for sending a fix. Should I keep the patch as it is with a TODO
+to move to vmlinux.h when LLVM is updated?
 
-On 6/17/20 11:28 AM, kernel test robot wrote:
-> Hi Dan,
+
+On Wed, Jun 17, 2020 at 9:19 PM Yonghong Song <yhs@fb.com> wrote:
 >
-> I love your patch! Yet something to improve:
 >
-> [auto build test ERROR on pavel-linux-leds/for-next]
-> [cannot apply to j.anaszewski-leds/for-next]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> On 6/16/20 12:25 PM, Andrii Nakryiko wrote:
+> > On Tue, Jun 16, 2020 at 8:54 AM KP Singh <kpsingh@chromium.org> wrote:
+> >> On 01-Jun 13:29, Andrii Nakryiko wrote:
+> >>> On Tue, May 26, 2020 at 9:34 AM KP Singh <kpsingh@chromium.org> wrote:
+> >>>> From: KP Singh <kpsingh@google.com>
+> >>>>
+> >>>> inode_local_storage:
+> >>>>
+> >>>> * Hook to the file_open and inode_unlink LSM hooks.
+> >>>> * Create and unlink a temporary file.
+> >>>> * Store some information in the inode's bpf_local_storage during
+> >>>>    file_open.
+> >>>> * Verify that this information exists when the file is unlinked.
+> >>>>
+> >>>> sk_local_storage:
+> >>>>
+> >>>> * Hook to the socket_post_create and socket_bind LSM hooks.
+> >>>> * Open and bind a socket and set the sk_storage in the
+> >>>>    socket_post_create hook using the start_server helper.
+> >>>> * Verify if the information is set in the socket_bind hook.
+> >>>>
+> >>>> Signed-off-by: KP Singh <kpsingh@google.com>
+> >>>> ---
+> >>>>   .../bpf/prog_tests/test_local_storage.c       |  60 ++++++++
+> >>>>   .../selftests/bpf/progs/local_storage.c       | 139 ++++++++++++++++++
+> >>>>   2 files changed, 199 insertions(+)
+> >>>>   create mode 100644 tools/testing/selftests/bpf/prog_tests/test_local_storage.c
+> >>>>   create mode 100644 tools/testing/selftests/bpf/progs/local_storage.c
+> >>>>
+> >>> [...]
+> >>>
+> >>>> +struct dummy_storage {
+> >>>> +       __u32 value;
+> >>>> +};
+> >>>> +
+> >>>> +struct {
+> >>>> +       __uint(type, BPF_MAP_TYPE_INODE_STORAGE);
+> >>>> +       __uint(map_flags, BPF_F_NO_PREALLOC);
+> >>>> +       __type(key, int);
+> >>>> +       __type(value, struct dummy_storage);
+> >>>> +} inode_storage_map SEC(".maps");
+> >>>> +
+> >>>> +struct {
+> >>>> +       __uint(type, BPF_MAP_TYPE_SK_STORAGE);
+> >>>> +       __uint(map_flags, BPF_F_NO_PREALLOC | BPF_F_CLONE);
+> >>>> +       __type(key, int);
+> >>>> +       __type(value, struct dummy_storage);
+> >>>> +} sk_storage_map SEC(".maps");
+> >>>> +
+> >>>> +/* Using vmlinux.h causes the generated BTF to be so big that the object
+> >>>> + * load fails at btf__load.
+> >>>> + */
+> >>> That's first time I hear about such issue. Do you have an error log
+> >>> from verifier?
+> >> Here's what I get when I do the following change.
+> >>
+> >> --- a/tools/testing/selftests/bpf/progs/local_storage.c
+> >> +++ b/tools/testing/selftests/bpf/progs/local_storage.c
+> >> @@ -4,8 +4,8 @@
+> >>    * Copyright 2020 Google LLC.
+> >>    */
+> >>
+> >> +#include "vmlinux.h"
+> >>   #include <errno.h>
+> >> -#include <linux/bpf.h>
+> >>   #include <stdbool.h>
+> >>   #include <bpf/bpf_helpers.h>
+> >>   #include <bpf/bpf_tracing.h>
+> >> @@ -37,24 +37,6 @@ struct {
+> >>          __type(value, struct dummy_storage);
+> >>   } sk_storage_map SEC(".maps");
+> >>
+> >> -/* Using vmlinux.h causes the generated BTF to be so big that the object
+> >> - * load fails at btf__load.
+> >> - */
+> >> -struct sock {} __attribute__((preserve_access_index));
+> >> -struct sockaddr {} __attribute__((preserve_access_index));
+> >> -struct socket {
+> >> -       struct sock *sk;
+> >> -} __attribute__((preserve_access_index));
+> >> -
+> >> -struct inode {} __attribute__((preserve_access_index));
+> >> -struct dentry {
+> >> -       struct inode *d_inode;
+> >> -} __attribute__((preserve_access_index));
+> >> -struct file {
+> >> -       struct inode *f_inode;
+> >> -} __attribute__((preserve_access_index));
+> >>
+> >> ./test_progs -t test_local_storage
+> >> libbpf: Error loading BTF: Invalid argument(22)
+> >> libbpf: magic: 0xeb9f
+> >> version: 1
+> >> flags: 0x0
+> >> hdr_len: 24
+> >> type_off: 0
+> >> type_len: 4488
+> >> str_off: 4488
+> >> str_len: 3012
+> >> btf_total_size: 7524
+> >>
+> >> [1] STRUCT (anon) size=32 vlen=4
+> >>          type type_id=2 bits_offset=0
+> >>          map_flags type_id=6 bits_offset=64
+> >>          key type_id=8 bits_offset=128
+> >>          value type_id=9 bits_offset=192
+> >> [2] PTR (anon) type_id=4
+> >> [3] INT int size=4 bits_offset=0 nr_bits=32 encoding=SIGNED
+> >> [4] ARRAY (anon) type_id=3 index_type_id=5 nr_elems=28
+> >> [5] INT __ARRAY_SIZE_TYPE__ size=4 bits_offset=0 nr_bits=32 encoding=(none)
+> >> [6] PTR (anon) type_id=7
+> >> [7] ARRAY (anon) type_id=3 index_type_id=5 nr_elems=1
+> >> [8] PTR (anon) type_id=3
+> >> [9] PTR (anon) type_id=10
+> >> [10] STRUCT dummy_storage size=4 vlen=1
+> >>          value type_id=11 bits_offset=0
+> >> [11] TYPEDEF __u32 type_id=12
+> >>
+> >>    [... More BTF Dump ...]
+> >>
+> >> [91] TYPEDEF wait_queue_head_t type_id=175
+> >>
+> >>    [... More BTF Dump ...]
+> >>
+> >> [173] FWD super_block struct
+> >> [174] FWD vfsmount struct
+> >> [175] FWD wait_queue_head struct
+> >> [106] STRUCT socket_wq size=128 vlen=4
+> >>          wait type_id=91 bits_offset=0 Invalid member
+> >>
+> >> libbpf: Error loading .BTF into kernel: -22.
+> >> libbpf: map 'inode_storage_map': failed to create: Invalid argument(-22)
+> >> libbpf: failed to load object 'local_storage'
+> >> libbpf: failed to load BPF skeleton 'local_storage': -22
+> >> test_test_local_storage:FAIL:skel_load lsm skeleton failed
+> >> #81 test_local_storage:FAIL
+> >>
+> >> The failiure is in:
+> >>
+> >> [106] STRUCT socket_wq size=128 vlen=4
+> >>          wait type_id=91 bits_offset=0 Invalid member
+> >>
+> >>> Clang is smart enough to trim down used types to only those that are
+> >>> actually necessary, so too big BTF shouldn't be a thing. But let's try
+> >>> to dig into this and fix whatever issue it is, before giving up :)
+> >>>
+> >> I was wrong about the size being an issue. The verifier thinks the BTF
+> >> is invalid and more specificially it thinks that the socket_wq's
+> >> member with type_id=91, i.e. typedef wait_queue_head_t is invalid. Am
+> >> I missing some toolchain patches?
+> >>
+> > It is invalid BTF in the sense that we have a struct, embedding a
+> > struct, which is only defined as a forward declaration. There is not
+> > enough information and such situation would have caused compilation
+> > error, because it's impossible to determine the size of the outer
+> > struct.
+> >
+> > Yonghong, it seems like Clang is pruning types too aggressively here?
+> > We should keep types that are embedded, even if they are not used
+> > directly by user code. Could you please take a look?
 >
-> url:    https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217
-> base:   git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git for-next
-> config: ia64-randconfig-r015-20200617 (attached as .config)
-> compiler: ia64-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # save the attached .config to linux build tree
->          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=ia64
+> Yes, this is a llvm bug. The proposed patch is here.
 >
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
+> https://reviews.llvm.org/D82041
 >
-> All errors (new ones prefixed by >>, old ones prefixed by <<):
+> Will merge into llvm 11 trunk after the review. Not sure
 >
-> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function `lp55xx_set_mc_brightness':
->>> drivers/leds/leds-lp55xx-common.c:146: undefined reference to `led_mc_calc_color_components'
-> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function `devm_led_classdev_multicolor_register':
->>> include/linux/led-class-multicolor.h:74: undefined reference to `devm_led_classdev_multicolor_register_ext'
-> vim +146 drivers/leds/leds-lp55xx-common.c
+> whether we can get it into llvm 10.0.1 or not as its release
 >
->     138	
->     139	static int lp55xx_set_mc_brightness(struct led_classdev *cdev,
->     140					    enum led_brightness brightness)
->     141	{
->     142		struct led_classdev_mc *mc_dev = lcdev_to_mccdev(cdev);
->     143		struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
->     144		struct lp55xx_device_config *cfg = led->chip->cfg;
->     145	
->   > 146		led_mc_calc_color_components(&led->mc_cdev, brightness);
->     147		return cfg->multicolor_brightness_fn(led);
->     148	
-
-Well this was a mess to figure out.
-
-The only fix I can figure out here is to remove the
-
-     depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
-
-from each child device and add
-
-     select LEDS_CLASS_MULTI_COLOR
-
-to the LP55XX_COMMON
-
-This way the Multi color framework will inherit the symbol that was set 
-by the COMMON flag which is inherited by majority from the child flags.
-
-Dan
-
+> date is also very close.
+>
+>
+> >
+> >
+> >
+> >> - KP
+> >>
+> >>
+> >>>> +struct sock {} __attribute__((preserve_access_index));
+> >>>> +struct sockaddr {} __attribute__((preserve_access_index));
+> >>>> +struct socket {
+> >>>> +       struct sock *sk;
+> >>>> +} __attribute__((preserve_access_index));
+> >>>> +
+> >>>> +struct inode {} __attribute__((preserve_access_index));
+> >>>> +struct dentry {
+> >>>> +       struct inode *d_inode;
+> >>>> +} __attribute__((preserve_access_index));
+> >>>> +struct file {
+> >>>> +       struct inode *f_inode;
+> >>>> +} __attribute__((preserve_access_index));
+> >>>> +
+> >>>> +
+> >>> [...]
