@@ -2,155 +2,183 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A501C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D34DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E91020734
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:11:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AM1E9sG1"
+	by mail.kernel.org (Postfix) with ESMTP id 2C0E720734
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgFQPLV (ORCPT
+        id S1726835AbgFQPPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:11:21 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36756 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726496AbgFQPLU (ORCPT
+        Wed, 17 Jun 2020 11:15:46 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:50328 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbgFQPPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:11:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592406679;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kAhDrMvU6clWQTo7oSKR54eeGeEEWBU/2DQIntg4cUE=;
-        b=AM1E9sG1hwdat9cYJwvA4yKYiN4TnbG+6kW9ry8/yBZAEtexT4Yc/rxT2Uas8qWYzqJUVP
-        0NBlfU0BrLXe5l0+T9KWo74i8l+nSB5kwipMe2/y6MJPtw8VV+JlcK79gpljAwdtHv1Asq
-        XAgGwJVlU6KenKQaxbvLIcFVgUaEp/M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-140-jP_8C3t7PhyYQDR-j_UjWA-1; Wed, 17 Jun 2020 11:11:16 -0400
-X-MC-Unique: jP_8C3t7PhyYQDR-j_UjWA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 17 Jun 2020 11:15:46 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E9EC03C057F;
+        Wed, 17 Jun 2020 17:15:43 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 8p7emesp5isC; Wed, 17 Jun 2020 17:15:37 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 530631100F67;
-        Wed, 17 Jun 2020 15:11:15 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A749A60BF4;
-        Wed, 17 Jun 2020 15:11:08 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05HFB8tP029064;
-        Wed, 17 Jun 2020 11:11:08 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05HFB8dA029060;
-        Wed, 17 Jun 2020 11:11:08 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Wed, 17 Jun 2020 11:11:07 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Eric Biggers <ebiggers@kernel.org>
-cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Mike Snitzer <msnitzer@redhat.com>,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
-        linux-crypto@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Milan Broz <mbroz@redhat.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        George Cherian <gcherian@marvell.com>,
-        Wei Xu <xuwei5@hisilicon.com>, Zaibo Xu <xuzaibo@Huawei.com>
-Subject: [PATCH 3/3] dm-crypt: don't use drivers that have
- CRYPTO_ALG_ALLOCATES_MEMORY
-In-Reply-To: <alpine.LRH.2.02.2006171107220.18714@file01.intranet.prod.int.rdu2.redhat.com>
-Message-ID: <alpine.LRH.2.02.2006171110270.18714@file01.intranet.prod.int.rdu2.redhat.com>
-References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com> <20200610010450.GA6449@gondor.apana.org.au> <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com> <20200610121106.GA23137@gondor.apana.org.au>
- <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2006161101080.28052@file01.intranet.prod.int.rdu2.redhat.com> <20200616173620.GA207319@gmail.com>
- <alpine.LRH.2.02.2006171107220.18714@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id CA0AD3C00BA;
+        Wed, 17 Jun 2020 17:15:37 +0200 (CEST)
+Received: from vmlxhi-121.adit-jv.com (10.72.92.132) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 17 Jun
+ 2020 17:15:37 +0200
+Date:   Wed, 17 Jun 2020 17:15:37 +0200
+From:   Michael Rodin <mrodin@de.adit-jv.com>
+To:     Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+CC:     Michael Rodin <mrodin@de.adit-jv.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <michael@rodin.online>,
+        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>,
+        Steve Longerbeam <steve_longerbeam@mentor.com>
+Subject: Re: [PATCH] media: rcar-vin: Move media_device_register to async
+ completion
+Message-ID: <20200617151537.GB88066@vmlxhi-121.adit-jv.com>
+References: <1592328696-84533-1-git-send-email-mrodin@de.adit-jv.com>
+ <20200617105646.GB2850317@oden.dyn.berto.se>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200617105646.GB2850317@oden.dyn.berto.se>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.92.132]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't use crypto drivers that have the flag CRYPTO_ALG_ALLOCATES_MEMORY
-set. These drivers allocate memory and thus they are unsuitable for block
-I/O processing.
+Hi Niklas and Steve,
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+On Wed, Jun 17, 2020 at 12:56:46PM +0200, Niklas Söderlund wrote:
+> Hi Michael and Steve,
+> 
+> On 2020-06-16 19:31:36 +0200, Michael Rodin wrote:
+> > From: Steve Longerbeam <steve_longerbeam@mentor.com>
+> > 
+> > The media_device is registered during driver probe, before async
+> > completion, so it is possible for .link_notify to be called before
+> > all devices are bound.
+> > 
+> > Fix this by moving media_device_register() to rvin_group_notify_complete().
+> > This ensures that all devices are now bound (the rcar-csi2 subdevices and
+> > and video capture devices) before .link_notify can be called.
+> 
+> I'm curious to what situation created the need for this change. I'm 
+> currently trying to take the VIN driver in the opposite direction [1] 
+> with the end goal of registering video devices at probe time and then 
+> allow the media graph to populate as devices becomes available.
 
----
- drivers/md/dm-crypt.c |   17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+It looks like almost all platform drivers call media_device_register() in
+the completion callback. From my understaning it is necessary to ensure
+that all subdevices are bound and all links are created before the user
+can enable any link (which would trigger link_notify callback execution)
+and set formats. If I am not mistaken, Steve could observe an "OOPS" or
+at least it is theoretically possible.
 
-Index: linux-2.6/drivers/md/dm-crypt.c
-===================================================================
---- linux-2.6.orig/drivers/md/dm-crypt.c
-+++ linux-2.6/drivers/md/dm-crypt.c
-@@ -419,7 +419,8 @@ static int crypt_iv_lmk_ctr(struct crypt
- 		return -EINVAL;
- 	}
- 
--	lmk->hash_tfm = crypto_alloc_shash("md5", 0, 0);
-+	lmk->hash_tfm = crypto_alloc_shash("md5", 0,
-+					   CRYPTO_ALG_ALLOCATES_MEMORY);
- 	if (IS_ERR(lmk->hash_tfm)) {
- 		ti->error = "Error initializing LMK hash";
- 		return PTR_ERR(lmk->hash_tfm);
-@@ -581,7 +582,8 @@ static int crypt_iv_tcw_ctr(struct crypt
- 		return -EINVAL;
- 	}
- 
--	tcw->crc32_tfm = crypto_alloc_shash("crc32", 0, 0);
-+	tcw->crc32_tfm = crypto_alloc_shash("crc32", 0,
-+					    CRYPTO_ALG_ALLOCATES_MEMORY);
- 	if (IS_ERR(tcw->crc32_tfm)) {
- 		ti->error = "Error initializing CRC32 in TCW";
- 		return PTR_ERR(tcw->crc32_tfm);
-@@ -768,7 +770,8 @@ static int crypt_iv_elephant_ctr(struct
- 	struct iv_elephant_private *elephant = &cc->iv_gen_private.elephant;
- 	int r;
- 
--	elephant->tfm = crypto_alloc_skcipher("ecb(aes)", 0, 0);
-+	elephant->tfm = crypto_alloc_skcipher("ecb(aes)", 0,
-+					      CRYPTO_ALG_ALLOCATES_MEMORY);
- 	if (IS_ERR(elephant->tfm)) {
- 		r = PTR_ERR(elephant->tfm);
- 		elephant->tfm = NULL;
-@@ -2088,7 +2091,8 @@ static int crypt_alloc_tfms_skcipher(str
- 		return -ENOMEM;
- 
- 	for (i = 0; i < cc->tfms_count; i++) {
--		cc->cipher_tfm.tfms[i] = crypto_alloc_skcipher(ciphermode, 0, 0);
-+		cc->cipher_tfm.tfms[i] = crypto_alloc_skcipher(ciphermode, 0,
-+						CRYPTO_ALG_ALLOCATES_MEMORY);
- 		if (IS_ERR(cc->cipher_tfm.tfms[i])) {
- 			err = PTR_ERR(cc->cipher_tfm.tfms[i]);
- 			crypt_free_tfms(cc);
-@@ -2114,7 +2118,8 @@ static int crypt_alloc_tfms_aead(struct
- 	if (!cc->cipher_tfm.tfms)
- 		return -ENOMEM;
- 
--	cc->cipher_tfm.tfms_aead[0] = crypto_alloc_aead(ciphermode, 0, 0);
-+	cc->cipher_tfm.tfms_aead[0] = crypto_alloc_aead(ciphermode, 0,
-+						CRYPTO_ALG_ALLOCATES_MEMORY);
- 	if (IS_ERR(cc->cipher_tfm.tfms_aead[0])) {
- 		err = PTR_ERR(cc->cipher_tfm.tfms_aead[0]);
- 		crypt_free_tfms(cc);
-@@ -2565,7 +2570,7 @@ static int crypt_ctr_auth_cipher(struct
- 		return -ENOMEM;
- 	strncpy(mac_alg, start, end - start);
- 
--	mac = crypto_alloc_ahash(mac_alg, 0, 0);
-+	mac = crypto_alloc_ahash(mac_alg, 0, CRYPTO_ALG_ALLOCATES_MEMORY);
- 	kfree(mac_alg);
- 
- 	if (IS_ERR(mac))
+Actually I found that this patch alone is not enough even if it is correct,
+because we also have to register the media device in rvin_parallel_notify_complete()
+in case if there is only a parallel video input device attached.
 
+> My reason for this is that we could have a functional pipeline inside 
+> the graph even if it's not complete. This came out of the GMSL work done
+> a while pack where I had a faulty camera that would prevent the other 7 
+> in the system to function.
+
+I agree that if a probe of a faulty subdevice fails, this should not affect
+functionality of the other attached subdevices. The "complete" callback of
+the async notifier is probably not executed in this case, so I guess, we
+would have to register the media device in the "bound" callback after the first
+subdevice has been probed? Otherwise there is not much sense to have video
+capture devices, which are not connected to any source.
+
+(Delayed) population of the media graph after media device registration
+sounds also like a requirement for device tree overlay support, which would
+also be a nice feature.
+
+> 1. [PATCH 0/5] media-device: Report if graph is complete
+> 
+> > 
+> > Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> > Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
+> > ---
+> >  drivers/media/platform/rcar-vin/rcar-core.c | 14 ++++++--------
+> >  1 file changed, 6 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
+> > index 7440c89..e70f83b 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> > @@ -253,7 +253,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
+> >  	struct media_device *mdev = &group->mdev;
+> >  	const struct of_device_id *match;
+> >  	struct device_node *np;
+> > -	int ret;
+> >  
+> >  	mutex_init(&group->lock);
+> >  
+> > @@ -266,7 +265,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
+> >  	vin_dbg(vin, "found %u enabled VIN's in DT", group->count);
+> >  
+> >  	mdev->dev = vin->dev;
+> > -	mdev->ops = &rvin_media_ops;
+> >  
+> >  	match = of_match_node(vin->dev->driver->of_match_table,
+> >  			      vin->dev->of_node);
+> > @@ -278,11 +276,7 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
+> >  
+> >  	media_device_init(mdev);
+> >  
+> > -	ret = media_device_register(&group->mdev);
+> > -	if (ret)
+> > -		rvin_group_cleanup(group);
+> > -
+> > -	return ret;
+> > +	return 0;
+> >  }
+> >  
+> >  static void rvin_group_release(struct kref *kref)
+> > @@ -688,6 +682,8 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
+> >  		return ret;
+> >  	}
+> >  
+> > +	vin->group->mdev.ops = &rvin_media_ops;
+> > +
+> >  	/* Register all video nodes for the group. */
+> >  	for (i = 0; i < RCAR_VIN_NUM; i++) {
+> >  		if (vin->group->vin[i] &&
+> > @@ -736,8 +732,10 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
+> >  		}
+> >  	}
+> >  	mutex_unlock(&vin->group->lock);
+> > +	if (ret)
+> > +		return ret;
+> >  
+> > -	return ret;
+> > +	return media_device_register(&vin->group->mdev);
+> >  }
+> >  
+> >  static void rvin_group_notify_unbind(struct v4l2_async_notifier *notifier,
+> > -- 
+> > 2.7.4
+> > 
+> 
+> -- 
+> Regards,
+> Niklas Söderlund
+
+-- 
+Best Regards,
+Michael
