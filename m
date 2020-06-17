@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A3EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5497F21532
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13C1C21532
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:26:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPkdbl9s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KI4pqwh+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgFQQ0S (ORCPT
+        id S1727024AbgFQQ0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:26:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48980 "EHLO
+        Wed, 17 Jun 2020 12:26:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbgFQQ0I (ORCPT
+        with ESMTP id S1726329AbgFQQ0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 12:26:08 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8FC9C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:07 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id n70so2093384ota.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:07 -0700 (PDT)
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0E60C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:08 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id v1so529835ooh.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YvqTkcYAAN78pjSZwwNFeimQiSa/Q3KK8WoooVV/y3U=;
-        b=hPkdbl9soeVEWE9R/q4Kl0iyd8h9OuLS1u7SD95691y6SJWNFSJjOaTBOzexZkB8Pn
-         s+WNf58kRxHdUyfPKsUufvjEl8QuRbrBQvpQnzVhsBC2lwS1b4WxOGOlMAcTS0TDIolH
-         M3ezaB4yBJuqg2lfsjDWZ9Ym7Fg1XIpvHZHSgq/F0+0L8yP0MT+J2O6B3mjEC0fygK4w
-         m9UL7JoEY4uGRIe1+R2StPFHcAg8q6Ww8KLsmjiXZ9o1jAwdH4xsVzoSRcKyZn+l48ca
-         xBlDdphZVog8bjNEsxFvEa1mdRXRanHE5CvqxYA6nZ1QvE110eU6vD3+2RwTK+1JF66W
-         Fddg==
+        bh=V4vaC8jH1uAkf0e4xv8Z3CqlZMc6lIX3fCOrUzVEUYI=;
+        b=KI4pqwh+XCkyNnXG1j38RmHM9YUoW1IzdAMc9ZsD7Sh3MbbRYftqNC978juv0E5lfG
+         ydZzMa0Pbiy4JOwnzQAEPbFUQaQe0kiWDb7hzZSyWYkNvGKrXZ2NnJpsPL4cHyoa046+
+         WYvxCWzMaNc3h6uQpesOXBseXWURfndQ7IEbwlav/HEp/MTmj8x+G01+SaDeJqBnPtNC
+         CbYnB3woElpXnzT8LeQ4xuu2t7/KcuPmsJbZ1b53oxL0hoRxoSCcjkR6EJfHtFkyVJKO
+         +KPA//vQFPwH4UcBTtvgUKLnOyqOz5P6Xa5eU51059I6H4yiopSc2pyK8IKO9MDGOqrL
+         W2Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YvqTkcYAAN78pjSZwwNFeimQiSa/Q3KK8WoooVV/y3U=;
-        b=cKVhHXpSVaOLGYkWayqMQWRBnfTUOJoESDTb0yaENvArDSz5BEcd4bWCzUwpXo3hJW
-         J/ok9yX6X+FaRNtqRYDBT/FezsXFvoVNM3p7DRUQ/lhWBIqodFIKxK3UxZq1/IlGo9mZ
-         fWh+llNMqr29IK/+2FRCNPYY4qnbqxBSilwPBUgpQVI7pWIuytUFD251UvsomuUtMQgf
-         G8rzfaERNd2RfAtQ3p2VTofZWVk2ri56XjEySls++S5hoXcd8aK6zwNORquPwaSifww9
-         7lR4j7NvTH8JPF6d3okLAHywZSQ+vX0qxjcx4JSwT6BkNKdszmVJc/8svkJ6bhT1iojN
-         HU+Q==
-X-Gm-Message-State: AOAM530UB8tF2lz2PW3dfQjSFq/xwZL31Jr73P9sVJBOKgNm3yCwgd0O
-        mK7d9cKEt1lMQ/FKa46Qr3Q=
-X-Google-Smtp-Source: ABdhPJwlO5fFQpzB8wnKazUnHZVIRyOuac8PL9+jVfP5geBAcdW5sYdwhPAo7UPngnlxao8zJovhYQ==
-X-Received: by 2002:a05:6830:1512:: with SMTP id k18mr7562648otp.37.1592411166434;
-        Wed, 17 Jun 2020 09:26:06 -0700 (PDT)
+        bh=V4vaC8jH1uAkf0e4xv8Z3CqlZMc6lIX3fCOrUzVEUYI=;
+        b=ZFyUbi0j078+IsD1FhzjboGsTu6lRpks1DLe+6T+c4u8/Clwau8wHPGDrEiU1XmYOx
+         I0b/rTYI1fWbRLdW/NRrvBZRwyKWgmJpB0vqoiwwaFFUSoBLBt2wAx5xV+aP/Vn1gm9N
+         ld5J+HCo48kuz8IhztF3skzH7TsXnsETfUXP+Lb3AIio1BP2x6hkacUYuDE17oUGJGof
+         +0EFuzIbpDCR6I7gi/DKhwGiA+XCwIyCEkaTW2p7e8Me5ne4vGHThjubneN0JNXPtcDW
+         +27ivnAyKtcLYGyL66ERWYcoAEH1fuVljQb8HvSGOt6uVWf0KHuAQ+1BpG9n1Bo2dIu0
+         9kuA==
+X-Gm-Message-State: AOAM5312dRU8jTTXTQ73THQ+QXq3vUtoy6dwLne9PWjuPnSqViHWbX/j
+        CNUN0vmX3gPxAsTlhWyMF4MspXqLByM=
+X-Google-Smtp-Source: ABdhPJwulPf8PAjGI11HpznAlFwPhOoBNltmelbjqWtLXNOnVoMi600gz5AHyu3YRVLxGET91eqzsg==
+X-Received: by 2002:a4a:4c8e:: with SMTP id a136mr159067oob.23.1592411168149;
+        Wed, 17 Jun 2020 09:26:08 -0700 (PDT)
 Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::ae4b])
-        by smtp.googlemail.com with ESMTPSA id h7sm95877otk.48.2020.06.17.09.26.05
+        by smtp.googlemail.com with ESMTPSA id h7sm95877otk.48.2020.06.17.09.26.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:26:05 -0700 (PDT)
+        Wed, 17 Jun 2020 09:26:07 -0700 (PDT)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
         akpm@linuxfoundation.org, gregkh@linuxfoundation.org
 Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v3 06/21] dyndbg: fix overcounting of ram used by dyndbg
-Date:   Wed, 17 Jun 2020 10:25:19 -0600
-Message-Id: <20200617162536.611386-7-jim.cromie@gmail.com>
+Subject: [PATCH v3 07/21] dyndbg: fix a BUG_ON in ddebug_describe_flags
+Date:   Wed, 17 Jun 2020 10:25:20 -0600
+Message-Id: <20200617162536.611386-8-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200617162536.611386-1-jim.cromie@gmail.com>
 References: <20200617162536.611386-1-jim.cromie@gmail.com>
@@ -77,62 +77,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-during dyndbg init, verbose logging prints its ram overhead.  It
-counted strlens of struct _ddebug's 4 string members, in all callsite
-entries, which would be approximately correct if each had been
-mallocd.  But they are pointers into shared .rodata; for example, all
-10 kobject callsites have identical filename, module values.
+ddebug_describe_flags() currently fills a caller provided string buffer,
+after testing its size (also passed) in a BUG_ON.  Fix this by
+replacing them with a known-big-enough string buffer wrapped in a
+struct, and passing that instead.
 
-Its best not to count that memory at all, since we cannot know they
-were linked in because of CONFIG_DYNAMIC_DEBUG=y, and we want to
-report a number that reflects what ram is saved by deconfiguring it.
-
-Also fix wording and size under-reporting of the __dyndbg section.
-
-Heres my overhead, on a virtme-run VM on a fedora-31 laptop:
-
-  dynamic_debug:dynamic_debug_init: 260 modules, 2479 entries \
-    and 10400 bytes in ddebug tables, 138824 bytes in __dyndbg section
+Also simplify ddebug_describe_flags() flags parameter from a struct to
+a member in that struct, and hoist the member deref up to the caller.
+This makes the function reusable (soon) where flags are unpacked.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- lib/dynamic_debug.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ lib/dynamic_debug.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 66c0bdf06ce7..9b2445507988 100644
+index 9b2445507988..0cb5679f6c54 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -1017,7 +1017,6 @@ static int __init dynamic_debug_init(void)
- 	char *cmdline;
- 	int ret = 0;
- 	int n = 0, entries = 0, modct = 0;
--	int verbose_bytes = 0;
+@@ -87,22 +87,22 @@ static struct { unsigned flag:8; char opt_char; } opt_array[] = {
+ 	{ _DPRINTK_FLAGS_NONE, '_' },
+ };
  
- 	if (&__start___dyndbg == &__stop___dyndbg) {
- 		if (IS_ENABLED(CONFIG_DYNAMIC_DEBUG)) {
-@@ -1033,9 +1032,6 @@ static int __init dynamic_debug_init(void)
- 	iter_start = iter;
- 	for (; iter < __stop___dyndbg; iter++) {
- 		entries++;
--		verbose_bytes += strlen(iter->modname) + strlen(iter->function)
--			+ strlen(iter->filename) + strlen(iter->format);
--
- 		if (strcmp(modname, iter->modname)) {
- 			modct++;
- 			ret = ddebug_add_module(iter_start, n, modname);
-@@ -1052,9 +1048,9 @@ static int __init dynamic_debug_init(void)
- 		goto out_err;
++struct flagsbuf { char buf[ARRAY_SIZE(opt_array)+1]; };
++
+ /* format a string into buf[] which describes the _ddebug's flags */
+-static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
+-				    size_t maxlen)
++static char *ddebug_describe_flags(unsigned int flags, struct flagsbuf *fb)
+ {
+-	char *p = buf;
++	char *p = fb->buf;
+ 	int i;
  
- 	ddebug_init_success = 1;
--	vpr_info("%d modules, %d entries and %d bytes in ddebug tables, %d bytes in (readonly) verbose section\n",
-+	vpr_info("%d modules, %d entries and %d bytes in ddebug tables, %d bytes in __dyndbg section\n",
- 		 modct, entries, (int)(modct * sizeof(struct ddebug_table)),
--		 verbose_bytes + (int)(__stop___dyndbg - __start___dyndbg));
-+		 (int)(entries * sizeof(struct _ddebug)));
+-	BUG_ON(maxlen < 6);
+ 	for (i = 0; i < ARRAY_SIZE(opt_array); ++i)
+-		if (dp->flags & opt_array[i].flag)
++		if (flags & opt_array[i].flag)
+ 			*p++ = opt_array[i].opt_char;
+-	if (p == buf)
++	if (p == fb->buf)
+ 		*p++ = '_';
+ 	*p = '\0';
  
- 	/* apply ddebug_query boot param, dont unload tables on err */
- 	if (ddebug_setup_string[0] != '\0') {
+-	return buf;
++	return fb->buf;
+ }
+ 
+ #define vnpr_info(lvl, fmt, ...)				\
+@@ -147,7 +147,7 @@ static int ddebug_change(const struct ddebug_query *query,
+ 	struct ddebug_table *dt;
+ 	unsigned int newflags;
+ 	unsigned int nfound = 0;
+-	char flagbuf[10];
++	struct flagsbuf fbuf;
+ 
+ 	/* search for matching ddebugs */
+ 	mutex_lock(&ddebug_lock);
+@@ -204,8 +204,7 @@ static int ddebug_change(const struct ddebug_query *query,
+ 			v2pr_info("changed %s:%d [%s]%s =%s\n",
+ 				 trim_prefix(dp->filename), dp->lineno,
+ 				 dt->mod_name, dp->function,
+-				 ddebug_describe_flags(dp, flagbuf,
+-						       sizeof(flagbuf)));
++				 ddebug_describe_flags(dp->flags, &fbuf));
+ 		}
+ 	}
+ 	mutex_unlock(&ddebug_lock);
+@@ -814,7 +813,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ {
+ 	struct ddebug_iter *iter = m->private;
+ 	struct _ddebug *dp = p;
+-	char flagsbuf[10];
++	struct flagsbuf flags;
+ 
+ 	if (p == SEQ_START_TOKEN) {
+ 		seq_puts(m,
+@@ -825,7 +824,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ 	seq_printf(m, "%s:%u [%s]%s =%s \"",
+ 		   trim_prefix(dp->filename), dp->lineno,
+ 		   iter->table->mod_name, dp->function,
+-		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
++		   ddebug_describe_flags(dp->flags, &flags));
+ 	seq_escape(m, dp->format, "\t\r\n\"");
+ 	seq_puts(m, "\"\n");
+ 
 -- 
 2.26.2
 
