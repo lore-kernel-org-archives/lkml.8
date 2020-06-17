@@ -2,98 +2,95 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0831C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22E4C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DFB9206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A242A206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:22:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="UfxZNrtG"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FlJ8BA/r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgFQPVn (ORCPT
+        id S1726941AbgFQPW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:21:43 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:6730 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726815AbgFQPVn (ORCPT
+        Wed, 17 Jun 2020 11:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726815AbgFQPW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:21:43 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05HFLeFP015744;
-        Wed, 17 Jun 2020 10:21:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type;
- s=PODMain02222019; bh=LczWbyRKAQLiLjNE42NBExLivrTvgCbGmOnMR6ffhSg=;
- b=UfxZNrtGYEiu7NgoTQQuwthBw/NdGgMNSGR/wnMIe1ZCon/DgE5CtfIvtqbhI47Yhi8h
- 1rXpK8Vi8Vxl+6XAfShDugB1n7BeyoEOdYwdSSrp9hrlyWwgwoZUprUgDk517OoZ+8is
- +L5Lt+r4Q/hMDB9M8M0rP1wJ//+menR49/wdvbA+5lN8Spz9J0LqVSRVTkFFFu0tcZwA
- xlSuYtzVzRBt1/WYm5PvZeCLe1sqaNmEaJmLoQnwObvAzt00ZiHoii/BKSDdcxPVWIdY
- mvwwt4b/4pzJS/0H3EsRnb7Bqg13AixWV+dU5UfS9l7WX8S7RZZ1TQpsSSqJDT5b3iTy WA== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 31q664sg9n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 17 Jun 2020 10:21:40 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 17 Jun
- 2020 16:21:30 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Wed, 17 Jun 2020 16:21:30 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 0CDE42C6;
-        Wed, 17 Jun 2020 15:21:30 +0000 (UTC)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <broonie@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: [PATCH] regmap: Fix memory leak from regmap_register_patch
-Date:   Wed, 17 Jun 2020 16:21:29 +0100
-Message-ID: <20200617152129.19655-1-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 17 Jun 2020 11:22:28 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7C38C06174E;
+        Wed, 17 Jun 2020 08:22:28 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0bb000a115b7d9110c62d9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:b000:a115:b7d9:110c:62d9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0C32B1EC03C5;
+        Wed, 17 Jun 2020 17:22:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1592407347;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=jYDxX+7IAxeetjgcjqHuc8C8ajEs1SremN84jrW7G34=;
+        b=FlJ8BA/rFfbHhRscG8JZf3811K+pYpyfbdCPV0v6xnQK4W6lGL1HZV6CKX8ywK1TcNpTwX
+        FQbG4lKH89OkaajVBInGO2SrOZ4JfhlNjEV1J4gDy9EqrxpN0pO7m3XTFyVH8g6p5m7cJQ
+        1qI06z91kpXtHxoEQ6OfLSKHyeP0YPw=
+Date:   Wed, 17 Jun 2020 17:22:19 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jacky Hu <hengqing.hu@gmail.com>,
+        Alexander Monakov <amonakov@ispras.ru>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tony.luck@intel.com, x86@kernel.org, yazen.ghannam@amd.com,
+        clemens@ladisch.de
+Subject: Re: [PATCH] hwmon: (k10temp) Add AMD family 17h model 60h probe
+Message-ID: <20200617152219.GG10118@zn.tnic>
+References: <20200616180940.GN13515@zn.tnic>
+ <20200617013255.391975-1-hengqing.hu@gmail.com>
+ <20200617034028.GA1614@roeck-us.net>
+ <20200617071927.GA398128@i716>
+ <alpine.LNX.2.20.13.2006171739010.31660@monopod.intra.ispras.ru>
+ <20200617150735.GA405893@i716>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- mlxscore=0 priorityscore=1501 mlxlogscore=747 impostorscore=0 phishscore=0
- adultscore=0 suspectscore=3 lowpriorityscore=0 clxscore=1015
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006170121
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200617150735.GA405893@i716>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a register patch is registered the reg_sequence is copied but the
-memory allocated is never freed. Add a kfree in regmap_exit to clean it
-up.
+Ok, both of you:
 
-Fixes: 22f0d90a3482 ("regmap: Support register patch sets")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- drivers/base/regmap/regmap.c | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, Jun 17, 2020 at 11:07:35PM +0800, Jacky Hu wrote:
+> Hi,
+> 
+> Sorry, I apologize for didn't do much lookup that you already did the patch
+> submission before I submitted the patch.
+> I have to say we are all programmed by the programs.
+> Also I didn't submit to either of the lists.
+> A few places I did looked at are below before I did the submission.
+> https://pci-ids.ucw.cz/v2.2/pci.ids
+> https://lore.kernel.org/patchwork/project/lkml/list/
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 94e2e2d1824bb..414422e1a2e6e 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1349,6 +1349,7 @@ void regmap_exit(struct regmap *map)
- 	if (map->hwlock)
- 		hwspin_lock_free(map->hwlock);
- 	kfree_const(map->name);
-+	kfree(map->patch);
- 	kfree(map);
- }
- EXPORT_SYMBOL_GPL(regmap_exit);
+Jacky, please do not top-post. Please adhere to the etiquette on public
+mailing lists.
+
+Alexander, things like that can happen and they pretty much do happen
+everytime new hw comes out. Kernel development has exploded so much in
+recent years so that it is absolutely normal to miss stuff. Hell, *we*
+miss stuff too, from time to time.
+
+So let's concentrate on the work pls.
+
+Thank you both!
+
 -- 
-2.11.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
