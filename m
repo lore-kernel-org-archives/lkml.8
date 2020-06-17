@@ -2,153 +2,67 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B515F207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:38:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bsd4RjCo"
+	by mail.kernel.org (Postfix) with ESMTP id DE225207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgFQJii (ORCPT
+        id S1726313AbgFQJkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 05:38:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726134AbgFQJih (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 05:38:37 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 450DAC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 02:38:37 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j10so1567240wrw.8
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 02:38:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=E8BWmiCOfF8V7XGr0mx0rvBPzq+bwE1Pizm33AaL4qs=;
-        b=bsd4RjCof9NsLBOcJBYXveY3WXNatV+dmKY8CRZ63VzrThRUFJSbb/WktReskDvhdW
-         IswwZ+5mE5IgXOCqDy1WgC7H/fJBBxH1yoOpFA7VKpIzlDb/54UXEtQhJA0/r8E2fE8A
-         gQkN6DJKushqnB2TB/SkBmYYfwQrE8j8a+0i98cJcjrklIKGsX8qcybQQtHZRczqQEte
-         jW6OZowwLmB+g1qeUvh8IXFUeNu7WA2r+5E+ezr65XHGFIxIHNCihoMHwSedPaxFI3eA
-         8OdLIFewBgPqGSzBIRUgIIeJr5B7WfFb4IDf+xnkUhrVIIg48fJ1juM8wYA/waJGhJTq
-         bdTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=E8BWmiCOfF8V7XGr0mx0rvBPzq+bwE1Pizm33AaL4qs=;
-        b=oigqBHye1w0x8nRIrWTVbvIIlNcUoMGDV3C2R2TFCI+LO5lgRrrDFiqv3A+XHYWsBR
-         Bx0Qw9XxX5Hp8XcQWJJUwbPF/7b1CLUZRcg2H7CUbRf55NmZcQa6uuL/81Fce/a6oM97
-         GWmAWjSXC3RzTQTyboGmNy2SLJnfyQTT7IOAG26kki1GDqCs1+n9h1khUn9gsbalqc+L
-         0Tdq9M9p5xeVxIR0RW1nahMc9mHhyr6UmK7ULTN65fnWS9f2V5r/C/lVzclaisr9RRZV
-         gFGiOyxeWn5YtMlpHGr3U7VC/NX/QppjFtdS9jx4AZKdJwrNkz6r5mOxzDwc7T+OR9JV
-         iHrg==
-X-Gm-Message-State: AOAM530coKWjhWEV3PM3FFZHxDDtFGcfIpKZ5Ex13MqmVPbpIPNYanjr
-        BVQD3WJeJhWoNA7Ptgi6Tsg=
-X-Google-Smtp-Source: ABdhPJyLkS+G/NW5b7CY0JUQ7jw4vz0YuAovU389sx/HrFlMExNksQEo2Pp+o38rmzMqckV7F43e5g==
-X-Received: by 2002:adf:958a:: with SMTP id p10mr584351wrp.323.1592386715955;
-        Wed, 17 Jun 2020 02:38:35 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.114.138])
-        by smtp.gmail.com with ESMTPSA id v28sm36517376wra.77.2020.06.17.02.38.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 02:38:35 -0700 (PDT)
-Subject: Re: [PATCH v2] arm64: mm: reserve hugetlb CMA after numa_init
-To:     Barry Song <song.bao.hua@hisilicon.com>, catalin.marinas@arm.com,
-        will@kernel.org, nsaenzjulienne@suse.de, steve.capper@arm.com,
-        rppt@linux.ibm.com, akpm@linux-foundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, Roman Gushchin <guro@fb.com>
-References: <20200616221924.74780-1-song.bao.hua@hisilicon.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <f76034e6-3a8d-55ef-dc3d-ad1b168c7c1a@gmail.com>
-Date:   Wed, 17 Jun 2020 11:38:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Wed, 17 Jun 2020 05:40:00 -0400
+Received: from mga17.intel.com ([192.55.52.151]:1552 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725860AbgFQJkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 05:40:00 -0400
+IronPort-SDR: Lm54+dSbrZvU8BdOle+W6UES7HSD1BkCP5eZ/QJ70ubPufPRKnAUlCwbBrB4ipervfDB/rrRsE
+ PjHhWF6UBh4A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 02:39:59 -0700
+IronPort-SDR: qtYX9FlNTIfI+G036Jcw/EpYV4Ng2tQWlmj4nY+/Ah4sxHyiKHP+KwIcusIbAqiizNCHxnNMV+
+ MBPuJZQ4d8Ww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,522,1583222400"; 
+   d="scan'208";a="277222463"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 17 Jun 2020 02:39:59 -0700
+Received: from [10.249.225.191] (abudanko-mobl.ccr.corp.intel.com [10.249.225.191])
+        by linux.intel.com (Postfix) with ESMTP id 7913B5802A3;
+        Wed, 17 Jun 2020 02:39:57 -0700 (PDT)
+Subject: Re: [PATCH v7 01/13] tools/libperf: introduce notion of static polled
+ file descriptors
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200605113834.GC1404794@krava>
+ <be40edeb-0cb9-5e11-2a22-8392316cdced@linux.intel.com>
+ <49eca46e-4d0e-2ae5-d7d9-e37a4d680270@linux.intel.com>
+ <20200608084344.GA1520715@krava>
+ <2d80a43a-54cf-3d12-92fd-066217c95d76@linux.intel.com>
+ <20200608160758.GD1558310@krava>
+ <bde9bcc3-9ec0-6e37-26f6-139b038ad3de@linux.intel.com>
+ <20200615123048.GB2088119@krava>
+ <8b29e324-eb8d-2266-562b-ca46aec76a3e@linux.intel.com>
+ <20200615165802.GD2088119@krava> <20200617092706.GB2210496@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <2818512e-e383-e2be-73ea-92a8b596e593@linux.intel.com>
+Date:   Wed, 17 Jun 2020 12:39:56 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200616221924.74780-1-song.bao.hua@hisilicon.com>
+In-Reply-To: <20200617092706.GB2210496@krava>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -158,50 +72,67 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 17.06.2020 12:27, Jiri Olsa wrote:
+> On Mon, Jun 15, 2020 at 06:58:04PM +0200, Jiri Olsa wrote:
+>> On Mon, Jun 15, 2020 at 05:37:53PM +0300, Alexey Budankov wrote:
+>>>
+>>> On 15.06.2020 15:30, Jiri Olsa wrote:
+>>>> On Mon, Jun 15, 2020 at 08:20:38AM +0300, Alexey Budankov wrote:
+>>>>>
+>>>>> On 08.06.2020 19:07, Jiri Olsa wrote:
+>>>>>> On Mon, Jun 08, 2020 at 12:54:31PM +0300, Alexey Budankov wrote:
+>>>>>>>
+>>>>>>> On 08.06.2020 11:43, Jiri Olsa wrote:
+>>>>>>>> On Mon, Jun 08, 2020 at 11:08:56AM +0300, Alexey Budankov wrote:
+>>>>>>>>>
+>>>>>>>>> On 05.06.2020 19:15, Alexey Budankov wrote:
+>>>>>>>>>>
+>>>>>>>>>> On 05.06.2020 14:38, Jiri Olsa wrote:
+>>>>> <SNIP>
+>>>>>>>>>> revents = fdarray_fixed_revents(array, pos);
+>>>>>>>>>> fdarray__del(array, pos);
+>>>>>>>>>
+>>>>>>>>> So how is it about just adding _revents() and _del() for fixed fds with
+>>>>>>>>> correction of retval to bool for fdarray__add()?
+>>>>>>>>
+>>>>>>>> I don't like the separation for fixed and non-fixed fds,
+>>>>>>>> why can't we make generic?
+>>>>>>>
+>>>>>>> Usage models are different but they want still to be parts of the same class
+>>>>>>> for atomic poll(). The distinction is filterable vs. not filterable.
+>>>>>>> The distinction should be somehow provided in API. Options are:
+>>>>>>> 1. expose separate API calls like __add_nonfilterable(), __del_nonfilterable();
+>>>>>>>    use nonfilterable quality in __filter() and __poll() and, perhaps, other internals;
+>>>>>>> 2. extend fdarray__add(, nonfilterable) with the nonfilterable quality
+>>>>>>>    use the type in __filter() and __poll() and, perhaps, other internals;
+>>>>>>>    expose less API calls in comparison with option 1
+>>>>>>>
+>>>>>>> Exposure of pos for filterable fds should be converted to bool since currently
+>>>>>>> the returned pos can become stale and there is no way in API to check its state.
+>>>>>>> So it could look like this:
+>>>>>>>
+>>>>>>> fdkey = fdarray__add(array, fd, events, type)
+>>>>>>> type: filterable, nonfilterable, somthing else
+>>>>>>> revents = fdarray__get_revents(fdkey);
+>>>>>>> fdarray__del(array, fdkey);
+>>>>>>
+>>>>>> I think there's solution without having filterable type,
+>>>>>> I'm not sure why you think this is needed
+>>>>>>
+>>>>>> I'm busy with other things this week, but I think I can
+>>>>>> come up with some patch early next week if needed
+>>>>>
+>>>>> Friendly reminder.
+>>>>
+>>>> hm? I believe we discussed this in here:
+>>>>   https://lore.kernel.org/lkml/20200609145611.GI1558310@krava/
+>>>
+>>> Do you want it to be implemented like in the patch posted by the link?
+>>
+>> no idea.. looking for good solution ;-)
+> 
+> Friendly reminder.
 
-On 17/06/2020 00:19, Barry Song wrote:
-> hugetlb_cma_reserve() is called at the wrong place. numa_init has not been
-> done yet. so all reserved memory will be located at node0.
-> 
-> Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages using cma")
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Acked-by: Roman Gushchin <guro@fb.com>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+Please see v8: https://lore.kernel.org/lkml/0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com/
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-> ---
->  -v2: add Fixes tag according to Matthias Brugger's comment
-> 
->  arch/arm64/mm/init.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index e631e6425165..41914b483d54 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -404,11 +404,6 @@ void __init arm64_memblock_init(void)
->  	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
->  
->  	dma_contiguous_reserve(arm64_dma32_phys_limit);
-> -
-> -#ifdef CONFIG_ARM64_4K_PAGES
-> -	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
-> -#endif
-> -
->  }
->  
->  void __init bootmem_init(void)
-> @@ -424,6 +419,11 @@ void __init bootmem_init(void)
->  	min_low_pfn = min;
->  
->  	arm64_numa_init();
-> +
-> +#ifdef CONFIG_ARM64_4K_PAGES
-> +	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
-> +#endif
-> +
->  	/*
->  	 * Sparsemem tries to allocate bootmem in memory_present(), so must be
->  	 * done after the fixed reservations.
-> 
+~Alexey
