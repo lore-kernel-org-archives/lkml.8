@@ -2,150 +2,133 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE38AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80B35207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hi+jKuFX"
+	by mail.kernel.org (Postfix) with ESMTP id C0640214DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgFQLiL (ORCPT
+        id S1726928AbgFQLiQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:38:11 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37303 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726879AbgFQLiI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:38:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592393886;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oS2sHeOWkDi5/NnXrNwUVCA9Ew0qnl4Cg+hQYeorxVM=;
-        b=hi+jKuFXEx7wcmDZxxEWD6G0Vfl0Ama/z523llu6qHix6K94zWGwVdk8TIz+K7KaKmNl+s
-        8Spv6CYdFhKuWoq5Cz2LHl7zYgkED1fRpN1VPrA6urIhQ6jxQDw2x8Y+0TwZv08GdOQRg4
-        EuFCvfMs9++FCC6CB/NMHOGqZ96XsBs=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-103-m2dfZQHAO5KuHX4b0HuHNA-1; Wed, 17 Jun 2020 07:38:04 -0400
-X-MC-Unique: m2dfZQHAO5KuHX4b0HuHNA-1
-Received: by mail-ej1-f71.google.com with SMTP id op14so898132ejb.15
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 04:38:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=oS2sHeOWkDi5/NnXrNwUVCA9Ew0qnl4Cg+hQYeorxVM=;
-        b=slrMPy+iDDEZWYN/dMEin/bbZ9f4ai7htN94ieZ7WEDKYGNJKfm1yefxq7qigolWnJ
-         VQ/5Czt4D9tf0pmaaRwiYcT07O/CweCacBgWw9Yx7U936SbBJvJOSOhw8iR20iEEq901
-         ZJl95gDaH0Q+6bLw+WLoLlHRku1+B5kc98XoxZr2Jh2238bp0ztq+L/mN9hy3W8hKs9P
-         YV2L4Ut11vjXmwMyoMMEuBUL5XPtGBkGCAV4oTWQxk2FzNuTdgRth1VWq1vYxmjOo8WF
-         m5BV+9ad2KqiJTzRGV2MVYWSs8LlBaQX5psivTzQHWPqDbcXdMzvnCUdS9xI7UrGpsdq
-         qubA==
-X-Gm-Message-State: AOAM531Zp9Ay+K84j7S7VtdH5v43pOR2rXXBxZevbuii8Pf70dEfgFXW
-        vrPP3huiRE1g6SMd9VUgdEnAfEhCRaMuxGrumLn9beMIzX2Y0qbGisUfCf0BlLZMlyGsP4FAi9X
-        DuBeanNZlziBJsU6CWxjagD8Y
-X-Received: by 2002:a05:6402:1512:: with SMTP id f18mr7008261edw.101.1592393883362;
-        Wed, 17 Jun 2020 04:38:03 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwJArYTpIQqF0kcPvSiZNCMpM4scmG/Pu1RYbyYqnZ4Pb4T9s1BJXq1/3aoKfzT/Ftt5o3QDg==
-X-Received: by 2002:a05:6402:1512:: with SMTP id f18mr7008246edw.101.1592393883098;
-        Wed, 17 Jun 2020 04:38:03 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id v5sm11829338edl.51.2020.06.17.04.38.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 04:38:02 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Like Xu <like.xu@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KVM: SVM: drop MSR_IA32_PERF_CAPABILITIES from emulated MSRs
-In-Reply-To: <CALMp9eQ1qe4w5FojzgsUHKpD=zXqen_D6bBg4-vfHa03BdomGA@mail.gmail.com>
-References: <20200616161427.375651-1-vkuznets@redhat.com> <CALMp9eSWXGQkOOzSrALfZDMj5JHSH=CsK1wKfdj2x2jtV4XJsw@mail.gmail.com> <87366vhscx.fsf@vitty.brq.redhat.com> <CALMp9eQ1qe4w5FojzgsUHKpD=zXqen_D6bBg4-vfHa03BdomGA@mail.gmail.com>
-Date:   Wed, 17 Jun 2020 13:38:01 +0200
-Message-ID: <87wo45hqhy.fsf@vitty.brq.redhat.com>
+        Wed, 17 Jun 2020 07:38:16 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2546 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726879AbgFQLiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 07:38:14 -0400
+Received: from dggemi401-hub.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 86D2650D5EECF6269855;
+        Wed, 17 Jun 2020 19:38:11 +0800 (CST)
+Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.126]) by
+ dggemi401-hub.china.huawei.com ([10.3.17.134]) with mapi id 14.03.0487.000;
+ Wed, 17 Jun 2020 19:38:04 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     Will Deacon <will@kernel.org>, Roman Gushchin <guro@fb.com>
+CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "nsaenzjulienne@suse.de" <nsaenzjulienne@suse.de>,
+        "steve.capper@arm.com" <steve.capper@arm.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>
+Subject: RE: [PATCH v2] arm64: mm: reserve hugetlb CMA after numa_init
+Thread-Topic: [PATCH v2] arm64: mm: reserve hugetlb CMA after numa_init
+Thread-Index: AQHWRCxu8v+ZJR6HI0W0yfQfoTndDqjcEtCAgACalcA=
+Date:   Wed, 17 Jun 2020 11:38:03 +0000
+Message-ID: <B926444035E5E2439431908E3842AFD2502AA9@DGGEMI525-MBS.china.huawei.com>
+References: <20200616221924.74780-1-song.bao.hua@hisilicon.com>
+ <20200617101824.GB3368@willie-the-truck>
+In-Reply-To: <20200617101824.GB3368@willie-the-truck>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.126.201.175]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jim Mattson <jmattson@google.com> writes:
 
-> On Tue, Jun 16, 2020 at 9:45 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->>
->> Jim Mattson <jmattson@google.com> writes:
->>
->> > On Tue, Jun 16, 2020 at 9:14 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->> >>
->> >> state_test/smm_test selftests are failing on AMD with:
->> >> "Unexpected result from KVM_GET_MSRS, r: 51 (failed MSR was 0x345)"
->> >>
->> >> MSR_IA32_PERF_CAPABILITIES is an emulated MSR indeed but only on Intel,
->> >> make svm_has_emulated_msr() skip it so it is not returned by
->> >> KVM_GET_MSR_INDEX_LIST.
->> >
->> > Do we need to support this MSR under SVM for cross-vendor migration?
->> > Or, have we given up on that?
->>
->> To be honest I'm not sure about the status of cross-vendor migration in
->> general and PMU implications in particular, hope Paolo/Sean can shed
->> some light. In this particular case my shallow understanding is that
->> MSR_IA32_PERF_CAPABILITIES has only one known feature bit which unlocks
->> an MSR range with additional counters. If the feature bit is not set
->> this, I guess, can easily be migrated (basically, let's allow writing
->> '0' there on AMD and return '0' on read). But what if the feature was
->> enabled? We'll have to support the new MSR range and do something with
->> it after migration (run intel_pmu in fully emulated mode?).
->>
->> Anyway, the immediate issue I'm trying to fix here is: whatever is
->> returned by KVM_GET_MSR_INDEX_LIST can be successfully queried with
->> KVM_GET_MSRS as some userspaces count on that.
->
-> That's a nice property. Is it documented somewhere?
->
 
-Hm, good question.
+> -----Original Message-----
+> From: Will Deacon [mailto:will@kernel.org]
+> Sent: Wednesday, June 17, 2020 10:18 PM
+> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
+> Cc: catalin.marinas@arm.com; nsaenzjulienne@suse.de;
+> steve.capper@arm.com; rppt@linux.ibm.com; akpm@linux-foundation.org;
+> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Linuxarm
+> <linuxarm@huawei.com>; Matthias Brugger <matthias.bgg@gmail.com>;
+> Roman Gushchin <guro@fb.com>
+> Subject: Re: [PATCH v2] arm64: mm: reserve hugetlb CMA after numa_init
+> 
+> On Wed, Jun 17, 2020 at 10:19:24AM +1200, Barry Song wrote:
+> > hugetlb_cma_reserve() is called at the wrong place. numa_init has not been
+> > done yet. so all reserved memory will be located at node0.
+> >
+> > Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages
+> using cma")
+> 
+> Damn, wasn't CC'd on that :/
+> 
+> > Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> > Acked-by: Roman Gushchin <guro@fb.com>
+> > Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+> > ---
+> >  -v2: add Fixes tag according to Matthias Brugger's comment
+> >
+> >  arch/arm64/mm/init.c | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> > index e631e6425165..41914b483d54 100644
+> > --- a/arch/arm64/mm/init.c
+> > +++ b/arch/arm64/mm/init.c
+> > @@ -404,11 +404,6 @@ void __init arm64_memblock_init(void)
+> >  	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+> >
+> >  	dma_contiguous_reserve(arm64_dma32_phys_limit);
+> > -
+> > -#ifdef CONFIG_ARM64_4K_PAGES
+> > -	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+> > -#endif
+> 
+> Why is this dependent on CONFIG_ARM64_4K_PAGES? We unconditionally
+> select ARCH_HAS_GIGANTIC_PAGE so this seems unnecessary.
 
-Documentation/virt/kvm/api.rst says:
+Roman, would you like to answer this question? Have you found any problem if system
+doesn't set 4K_PAGES?
 
-"KVM_GET_MSR_INDEX_LIST returns the guest msrs that are supported.  The list
-varies by kvm version and host processor, but does not change otherwise.
+> 
+> > -
+> >  }
+> >
+> >  void __init bootmem_init(void)
+> > @@ -424,6 +419,11 @@ void __init bootmem_init(void)
+> >  	min_low_pfn = min;
+> >
+> >  	arm64_numa_init();
+> > +
+> > +#ifdef CONFIG_ARM64_4K_PAGES
+> > +	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+> > +#endif
+> 
+> A comment here wouldn't hurt, as it does look a lot more natural next
+> to dma_contiguous_reserve().
 
-[...]
+Will add some comment here.
 
-KVM_GET_MSR_FEATURE_INDEX_LIST returns the list of MSRs that can be passed
-to the KVM_GET_MSRS system ioctl.  This lets userspace probe host capabilities
-and processor features that are exposed via MSRs (e.g., VMX capabilities)."
+> 
+> Will
 
-Side note: MSR_IA32_PERF_CAPABILITIES can be returned by both
-KVM_GET_MSR_INDEX_LIST and KVM_GET_MSR_FEATURE_INDEX_LIST as we have it
-both as an emulated MSR filtered by kvm_x86_ops.has_emulated_msr() and
-a feature msr filtered by kvm_x86_ops.get_msr_feature(). But the later
-is a whitelist so MSR_IA32_PERF_CAPABILITIES won't appear on AMD and the
-promise "can be passed to the KVM_GET_MSRS" is kept.
-
-For KVM_GET_MSR_INDEX_LIST, the promise is "guest msrs that are
-supported" and I'm not exactly sure what this means. Personally, I see
-no point in returning MSRs which can't be read with KVM_GET_MSRS (as
-this also means the guest can't read them) and KVM selftests seem to
-rely on that (vcpu_save_state()) but this is not a documented feature.
-
-> Reviewed-by: Jim Mattson <jmattson@google.com>
->
-
-Thanks!
-
--- 
-Vitaly
-
+barry
