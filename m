@@ -2,65 +2,85 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37C7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB24C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86D2020FC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD912186A
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgFQV2E (ORCPT
+        id S1727004AbgFQV2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:28:04 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:39991 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgFQV2E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:28:04 -0400
-X-Originating-IP: 86.202.110.81
-Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 7FCD9FF804;
-        Wed, 17 Jun 2020 21:27:58 +0000 (UTC)
-Date:   Wed, 17 Jun 2020 23:27:58 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
-        claudiu.beznea@microchip.com
-Subject: Re: [PATCH 1/3] ARM: dts: at91: sama5d2_xplained: classd: pull-down
- the R1 and R3 lines
-Message-ID: <20200617212758.GD3675@piout.net>
-References: <20200615095525.43414-1-codrin.ciubotariu@microchip.com>
+        Wed, 17 Jun 2020 17:28:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726496AbgFQV2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 17:28:07 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 201952166E;
+        Wed, 17 Jun 2020 21:28:06 +0000 (UTC)
+Date:   Wed, 17 Jun 2020 17:28:04 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Jaewon Kim <jaewon31.kim@samsung.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 0/3] tool lib traceevent: Fix some parsing errors
+Message-ID: <20200617172804.7eccb845@oasis.local.home>
+In-Reply-To: <20200324200845.763565368@goodmis.org>
+References: <20200324200845.763565368@goodmis.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615095525.43414-1-codrin.ciubotariu@microchip.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/06/2020 12:55:23+0300, Codrin Ciubotariu wrote:
-> The R1 and R3 lines drive NMOS transistors that are OFF with a low level.
-> On the SAMA5D2 Xplained board, if the pins corresponding to R1 and R3
-> have pull-ups enabled, there is an extra 2 x 30uA power consumption.
-> Use pull-downs for these 2 lines to remove the unnecessary power
-> consumption.
-> 
-> Fixes: b133ca7a653c ("ARM: dts: at91: sama5d2_xplained: add pin muxing and enable classd")
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> ---
->  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-Applied, thanks.
+Hi Arnaldo,
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+I guess these patches were missed.
+
+-- Steve
+
+
+On Tue, 24 Mar 2020 16:08:45 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> Arnaldo,
+> 
+> Here's a few patches for lib traceevent.
+> 
+> The first one adds an "append()" helper function for appending to strings,
+> which will also simplify the next patch.
+> 
+> The second patch handles "__attribute__((user))" in the field of a
+> trace event. This is needed after the stack leak code added this
+> to parameters of system call events.
+> 
+> The last patch adds handling of __builtin_expect(), as someone wanted
+> to move IS_ERR_VALUE() from the fast path into the print fmt section,
+> which breaks the parsing. This should also be useful for other macros
+> that may evaluate down to a __builtin_expect().
+> 
+> Steven Rostedt (VMware) (3):
+>       tools lib traceevent: Add append() function helper for appending strings
+>       tools lib traceevent: Handle __attribute__((user)) in field names
+>       tools lib traceevent: Add handler for __builtin_expect()
+> 
+> ----
+>  tools/lib/traceevent/event-parse.c | 168 ++++++++++++++++++++++++-------------
+>  1 file changed, 111 insertions(+), 57 deletions(-)
+
+
+
