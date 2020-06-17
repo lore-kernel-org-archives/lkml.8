@@ -2,183 +2,232 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D34DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 573EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0E720734
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A9120707
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:16:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=forissier-org.20150623.gappssmtp.com header.i=@forissier-org.20150623.gappssmtp.com header.b="f8VMnorB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgFQPPq (ORCPT
+        id S1726868AbgFQPQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:15:46 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:50328 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgFQPPq (ORCPT
+        Wed, 17 Jun 2020 11:16:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgFQPQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:15:46 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E9EC03C057F;
-        Wed, 17 Jun 2020 17:15:43 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8p7emesp5isC; Wed, 17 Jun 2020 17:15:37 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id CA0AD3C00BA;
-        Wed, 17 Jun 2020 17:15:37 +0200 (CEST)
-Received: from vmlxhi-121.adit-jv.com (10.72.92.132) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 17 Jun
- 2020 17:15:37 +0200
-Date:   Wed, 17 Jun 2020 17:15:37 +0200
-From:   Michael Rodin <mrodin@de.adit-jv.com>
-To:     Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-CC:     Michael Rodin <mrodin@de.adit-jv.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <michael@rodin.online>,
-        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>,
-        Steve Longerbeam <steve_longerbeam@mentor.com>
-Subject: Re: [PATCH] media: rcar-vin: Move media_device_register to async
- completion
-Message-ID: <20200617151537.GB88066@vmlxhi-121.adit-jv.com>
-References: <1592328696-84533-1-git-send-email-mrodin@de.adit-jv.com>
- <20200617105646.GB2850317@oden.dyn.berto.se>
+        Wed, 17 Jun 2020 11:16:26 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54126C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:16:25 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l11so2774315wru.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:16:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=forissier-org.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2mz7VhPi60QWMA4Yhp954J2CHppq6HBliwPLxF6q0ko=;
+        b=f8VMnorBNEQmOob70UHQhLW70WnwJGMe84NSTBnYjRhuXJSEE7xkJ0+J/QB95FkgvL
+         wwPCBaIyUTeYCo5DIBHj+pE+yeGIX3yYhaNUHdupPXMr576tvN4kLfPSwhjFDV7OHq17
+         ZroNWuxap8RQLqmwuZYrVXj/EOIuID58iRJMwzCrbUfiL16FO8UBV+mQ6XKZJArS/g0A
+         aV4BBoppo+wjE4ffk0NEkEaiMlDiGWgyg3/Is9DTCpk/QTKjOqhDdb3DOmDwdeXewTIk
+         61HwIGwDmhS2IaC1jvIFO9zWiA4p7LdJaVOA1J63NJc9IKEqztDlFBU0JOngFsIpneu1
+         eTDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2mz7VhPi60QWMA4Yhp954J2CHppq6HBliwPLxF6q0ko=;
+        b=KTfjMgUqq+P3WDl7rYlKMPSXJDekQQis5KhsdxJ3B0SV/n1BiYyoT3Umv9jHCecNV9
+         0Eql2Efi0bGNM2sCza3EKDUP/HyEbbFCLnHjgbS6hgcykQmS1ai6TQclrhORa+kuvvlX
+         M/BYtNMBD07/VzvzBakwjx+N1+4iz/q4h46mCjxg1FgNRfdsBKDC9fzH8ZGc3XrZ7veb
+         xkAfZ0xFR5fMpO7+q8u/uKFOWW51OTCigxAam2mT5qYbY2USGcy8FpsIPflqyHi0LuUm
+         mpBUyiD6aAnVRwUeZ0S0kMA8t628WlEh1PqKs34FIi1I7m64iinmYuiUj4MtO7qqZpfZ
+         eH8A==
+X-Gm-Message-State: AOAM5332OxzM3nIJfcO6DujZW4ClyLNXvxWlF+x4rg/CJ2TY7f329WrA
+        1DP6Sye7E3cfqW9V28Rsz0nRoA==
+X-Google-Smtp-Source: ABdhPJybfyFSYK4bHnTGtR15Kc1uJiSCujgvo1+8jqc04NhkSV7n0xb/55m1eefCm0fS6T6nTNQgjw==
+X-Received: by 2002:a5d:4e03:: with SMTP id p3mr9183781wrt.350.1592406983819;
+        Wed, 17 Jun 2020 08:16:23 -0700 (PDT)
+Received: from ?IPv6:2a01:e0a:3cb:7bb0:85f0:4cd7:3460:1772? ([2a01:e0a:3cb:7bb0:85f0:4cd7:3460:1772])
+        by smtp.gmail.com with ESMTPSA id g3sm38262100wrb.46.2020.06.17.08.16.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2020 08:16:22 -0700 (PDT)
+Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+To:     Sumit Garg <sumit.garg@linaro.org>,
+        Maxim Uvarov <maxim.uvarov@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@linaro.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
+References: <20200604175851.758-1-maxim.uvarov@linaro.org>
+ <20200604175851.758-2-maxim.uvarov@linaro.org>
+ <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
+From:   Jerome Forissier <jerome@forissier.org>
+Message-ID: <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org>
+Date:   Wed, 17 Jun 2020 17:16:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200617105646.GB2850317@oden.dyn.berto.se>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.92.132]
+In-Reply-To: <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Niklas and Steve,
 
-On Wed, Jun 17, 2020 at 12:56:46PM +0200, Niklas Söderlund wrote:
-> Hi Michael and Steve,
+
+On 6/17/20 3:58 PM, Sumit Garg wrote:
+> Hi Maxim,
 > 
-> On 2020-06-16 19:31:36 +0200, Michael Rodin wrote:
-> > From: Steve Longerbeam <steve_longerbeam@mentor.com>
-> > 
-> > The media_device is registered during driver probe, before async
-> > completion, so it is possible for .link_notify to be called before
-> > all devices are bound.
-> > 
-> > Fix this by moving media_device_register() to rvin_group_notify_complete().
-> > This ensures that all devices are now bound (the rcar-csi2 subdevices and
-> > and video capture devices) before .link_notify can be called.
+> On Thu, 4 Jun 2020 at 23:28, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+>>
+>> With the evolving use-cases for TEE bus, now it's required to support
+>> multi-stage enumeration process. But using a simple index doesn't
+>> suffice this requirement and instead leads to duplicate sysfs entries.
+>> So instead switch to use more informative device UUID for sysfs entry
+>> like:
+>> /sys/bus/tee/devices/optee-ta-<uuid>
+>>
+>> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+>> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+>> ---
+>>  Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
+>>  MAINTAINERS                                       | 1 +
+>>  drivers/tee/optee/device.c                        | 9 ++++++---
+>>  3 files changed, 15 insertions(+), 3 deletions(-)
+>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
+>> new file mode 100644
+>> index 000000000000..0ae04ae5374a
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
+>> @@ -0,0 +1,8 @@
+>> +What:          /sys/bus/tee/devices/optee-ta-<uuid>/
+>> +Date:           May 2020
+>> +KernelVersion   5.7
+>> +Contact:        tee-dev@lists.linaro.org
+>> +Description:
+>> +               OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
+>> +               matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
+>> +               are free to create needed API under optee-ta-<uuid> directory.
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index ecc0749810b0..6717afef2de3 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -12516,6 +12516,7 @@ OP-TEE DRIVER
+>>  M:     Jens Wiklander <jens.wiklander@linaro.org>
+>>  L:     tee-dev@lists.linaro.org
+>>  S:     Maintained
+>> +F:     Documentation/ABI/testing/sysfs-bus-optee-devices
+>>  F:     drivers/tee/optee/
+>>
+>>  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
+>> diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
+>> index e3a148521ec1..23d264c8146e 100644
+>> --- a/drivers/tee/optee/device.c
+>> +++ b/drivers/tee/optee/device.c
+>> @@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
+>>         return 0;
+>>  }
+>>
+>> -static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+>> +static int optee_register_device(const uuid_t *device_uuid)
+>>  {
+>>         struct tee_client_device *optee_device = NULL;
+>>         int rc;
+>> @@ -75,7 +75,10 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+>>                 return -ENOMEM;
+>>
+>>         optee_device->dev.bus = &tee_bus_type;
+>> -       dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
+>> +       if (dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid)) {
 > 
-> I'm curious to what situation created the need for this change. I'm 
-> currently trying to take the VIN driver in the opposite direction [1] 
-> with the end goal of registering video devices at probe time and then 
-> allow the media graph to populate as devices becomes available.
+> You should be using format specifier as: "%pUb" instead of "%pUl" as
+> UUID representation for TAs is in big endian format. See below:
 
-It looks like almost all platform drivers call media_device_register() in
-the completion callback. From my understaning it is necessary to ensure
-that all subdevices are bound and all links are created before the user
-can enable any link (which would trigger link_notify callback execution)
-and set formats. If I am not mistaken, Steve could observe an "OOPS" or
-at least it is theoretically possible.
+Where does device_uuid come from? If it comes directly from OP-TEE, then
+it should be a pointer to the following struct:
 
-Actually I found that this patch alone is not enough even if it is correct,
-because we also have to register the media device in rvin_parallel_notify_complete()
-in case if there is only a parallel video input device attached.
+typedef struct
+{
+	uint32_t timeLow;
+	uint16_t timeMid;
+	uint16_t timeHiAndVersion;
+	uint8_t clockSeqAndNode[8];
+} TEE_UUID;
 
-> My reason for this is that we could have a functional pipeline inside 
-> the graph even if it's not complete. This came out of the GMSL work done
-> a while pack where I had a faulty camera that would prevent the other 7 
-> in the system to function.
+(GlobalPlatform TEE Internal Core API spec v1.2.1 section 3.2.4)
 
-I agree that if a probe of a faulty subdevice fails, this should not affect
-functionality of the other attached subdevices. The "complete" callback of
-the async notifier is probably not executed in this case, so I guess, we
-would have to register the media device in the "bound" callback after the first
-subdevice has been probed? Otherwise there is not much sense to have video
-capture devices, which are not connected to any source.
+- The spec does not mandate any particular endianness and simply warns
+about possible issues if secure and non-secure worlds differ in endianness.
+- OP-TEE uses %pUl assuming that host order is little endian (that is
+true for the Arm platforms that run OP-TEE currently). By the same logic
+%pUl should be fine in the kernel.
+- On the other hand, the UUID in a Trusted App header is always encoded
+big endian by the Python script that signs and optionally encrypts the
+TA. This should not have any visible impact on UUIDs exchanged between
+the secure and non-secure world though.
 
-(Delayed) population of the media graph after media device registration
-sounds also like a requirement for device tree overlay support, which would
-also be a nice feature.
-
-> 1. [PATCH 0/5] media-device: Report if graph is complete
-> 
-> > 
-> > Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> > Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
-> > ---
-> >  drivers/media/platform/rcar-vin/rcar-core.c | 14 ++++++--------
-> >  1 file changed, 6 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-> > index 7440c89..e70f83b 100644
-> > --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> > @@ -253,7 +253,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
-> >  	struct media_device *mdev = &group->mdev;
-> >  	const struct of_device_id *match;
-> >  	struct device_node *np;
-> > -	int ret;
-> >  
-> >  	mutex_init(&group->lock);
-> >  
-> > @@ -266,7 +265,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
-> >  	vin_dbg(vin, "found %u enabled VIN's in DT", group->count);
-> >  
-> >  	mdev->dev = vin->dev;
-> > -	mdev->ops = &rvin_media_ops;
-> >  
-> >  	match = of_match_node(vin->dev->driver->of_match_table,
-> >  			      vin->dev->of_node);
-> > @@ -278,11 +276,7 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
-> >  
-> >  	media_device_init(mdev);
-> >  
-> > -	ret = media_device_register(&group->mdev);
-> > -	if (ret)
-> > -		rvin_group_cleanup(group);
-> > -
-> > -	return ret;
-> > +	return 0;
-> >  }
-> >  
-> >  static void rvin_group_release(struct kref *kref)
-> > @@ -688,6 +682,8 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
-> >  		return ret;
-> >  	}
-> >  
-> > +	vin->group->mdev.ops = &rvin_media_ops;
-> > +
-> >  	/* Register all video nodes for the group. */
-> >  	for (i = 0; i < RCAR_VIN_NUM; i++) {
-> >  		if (vin->group->vin[i] &&
-> > @@ -736,8 +732,10 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
-> >  		}
-> >  	}
-> >  	mutex_unlock(&vin->group->lock);
-> > +	if (ret)
-> > +		return ret;
-> >  
-> > -	return ret;
-> > +	return media_device_register(&vin->group->mdev);
-> >  }
-> >  
-> >  static void rvin_group_notify_unbind(struct v4l2_async_notifier *notifier,
-> > -- 
-> > 2.7.4
-> > 
-> 
-> -- 
-> Regards,
-> Niklas Söderlund
+So I am wondering why you had to use %pUb. There must be some
+inconsistency somewhere :-/
 
 -- 
-Best Regards,
-Michael
+Jerome
+
+> 
+> # ls /sys/bus/tee/devices/
+> optee-ta-405b6ad9-e5c3-e321-8794-1002a5d5c61b
+> optee-ta-71d950bc-c9d4-c442-82cb-343fb7f37896
+> optee-ta-e70f4af0-5d1f-9b4b-abf7-619b85b4ce8c
+> 
+> While UUID for fTPM TA is in big endian format:
+> bc50d971-d4c9-42c4-82cb-343fb7f37896
+> 
+> Sorry that I missed it during review and noticed this while testing.
+> 
+> With the above fix included, I tested this series using fTPM early TA
+> on Qemu for aarch64 and used basic random number generation test using
+> tpm2-tools. So feel free to add:
+> 
+> Tested-by: Sumit Garg <sumit.garg@linaro.org>
+> 
+> -Sumit
+> 
+>> +               kfree(optee_device);
+>> +               return -ENOMEM;
+>> +       }
+>>         uuid_copy(&optee_device->id.uuid, device_uuid);
+>>
+>>         rc = device_register(&optee_device->dev);
+>> @@ -144,7 +147,7 @@ int optee_enumerate_devices(void)
+>>         num_devices = shm_size / sizeof(uuid_t);
+>>
+>>         for (idx = 0; idx < num_devices; idx++) {
+>> -               rc = optee_register_device(&device_uuid[idx], idx);
+>> +               rc = optee_register_device(&device_uuid[idx]);
+>>                 if (rc)
+>>                         goto out_shm;
+>>         }
+>> --
+>> 2.17.1
+>>
+> _______________________________________________
+> Tee-dev mailing list
+> Tee-dev@lists.linaro.org
+> https://lists.linaro.org/mailman/listinfo/tee-dev
+> 
