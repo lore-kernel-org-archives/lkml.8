@@ -2,154 +2,200 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4341EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 190942073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:41:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="e5EgTXL0"
+	by mail.kernel.org (Postfix) with ESMTP id BAD88212CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgFQIld (ORCPT
+        id S1726785AbgFQIli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:41:33 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:30398 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgFQIlc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:41:32 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200617084130epoutp03eb143ae742ad5acc4cbe1b2bf534e926~ZSCpgfLrD1211912119epoutp03a
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:41:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200617084130epoutp03eb143ae742ad5acc4cbe1b2bf534e926~ZSCpgfLrD1211912119epoutp03a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592383290;
-        bh=gh6W5yGrV5Q3pLGykvDTaDSZ77Dm0FvSvxUgpDFLAOQ=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=e5EgTXL0OT0qOMcwlROb8cMsF296WOJPgV8jBTuAxsVbUTuDYZl00IlyBdqbYiDu+
-         ck2+APFJqpEL6ESov8+uJo91Ut+El/m4cWUay9mbwGQYSWJXj1QSycQ0Je7IrUk4Nm
-         9qDvl3LByuaWSlzDNVh2h9SByYL9p7u4KsJQpuao=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200617084129epcas1p4bddc803e422c6a63a2ad977ce81f2a41~ZSCpE71MB3009130091epcas1p4F;
-        Wed, 17 Jun 2020 08:41:29 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.163]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 49mz7W2ck3zMqYkp; Wed, 17 Jun
-        2020 08:41:27 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0B.50.28581.737D9EE5; Wed, 17 Jun 2020 17:41:27 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200617084126epcas1p40e74869e9d0aa50ccc3ca7285712ceb2~ZSCmiTcgH2746027460epcas1p4P;
-        Wed, 17 Jun 2020 08:41:26 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200617084126epsmtrp27819972cf5f2d905d187fda3f6080885~ZSCmhXFf41225612256epsmtrp2b;
-        Wed, 17 Jun 2020 08:41:26 +0000 (GMT)
-X-AuditID: b6c32a38-2cdff70000006fa5-c4-5ee9d7377685
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8E.33.08303.637D9EE5; Wed, 17 Jun 2020 17:41:26 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200617084126epsmtip225bb24d6730469f22c009e9cb1d6c5c7~ZSCmXu9_M1775117751epsmtip2m;
-        Wed, 17 Jun 2020 08:41:26 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
-Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
-        <mori.takahiro@ab.mitsubishielectric.co.jp>,
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <414101d64477$ccb661f0$662325d0$@samsung.com>
-Subject: RE: [PATCH v3] exfat: remove EXFAT_SB_DIRTY flag
-Date:   Wed, 17 Jun 2020 17:41:26 +0900
-Message-ID: <001f01d64483$16ce1f20$446a5d60$@samsung.com>
+        Wed, 17 Jun 2020 04:41:38 -0400
+Received: from mga05.intel.com ([192.55.52.43]:60992 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725860AbgFQIlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:41:36 -0400
+IronPort-SDR: 8MSWjNRPKK3DUg4cw1TamAO+lH1ScZgA61q1ql1Gw3KaLE909ybEmNVOvfmO3Xu96SblExx+cN
+ 564oHrvn2K5A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 01:41:34 -0700
+IronPort-SDR: pBkWQjso/wi0LwT4pf/LY4sdQejJtsd+kD6omG3Q8f6IMyLsWoyWGN/1+oiX+/4xQioFoyU31C
+ r6S7JnTz3vuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,522,1583222400"; 
+   d="scan'208";a="273450627"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 17 Jun 2020 01:41:33 -0700
+Received: from [10.249.225.191] (abudanko-mobl.ccr.corp.intel.com [10.249.225.191])
+        by linux.intel.com (Postfix) with ESMTP id E081458026B;
+        Wed, 17 Jun 2020 01:41:31 -0700 (PDT)
+Subject: [PATCH v8 09/13] perf stat: implement control commands handling
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <5ed69a1e-052a-9790-7642-cb9c9a53d786@linux.intel.com>
+Date:   Wed, 17 Jun 2020 11:41:30 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQF0BoMPlscPSpT3Th8lCwQKqdMbhQJGtMGMAcFEUC2pgLlC4A==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmvq759ZdxBteOCVr8mHubxeLNyaks
-        Fnv2nmSxuLxrDpvF5f+fWCyWfZnMYrHl3xFWB3aPL3OOs3u0Tf7H7tF8bCWbx85Zd9k9+ras
-        YvT4vEkugC0qxyYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DX
-        LTMH6BYlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToGhQYFecWJucWleul5yfq6V
-        oYGBkSlQZUJOxsutD1gLpnNW/P/9gqmBcQt7FyMHh4SAicS1t25djJwcQgI7GCVaXkpD2J8Y
-        JT7OyOhi5AKyPzNK3F+/iw0kAVLfvH4JC0RiF6NEw/dNrBDOS0aJWS8bwarYBHQl/v3ZD2aL
-        CERLHNtxnhGkiFngCqPEg0ezmEASnAJWEm2LHrGBnCEsYCmx8LoySJhFQFViwoStLCA2L1D4
-        2/dOdghbUOLkzCdgcWYBeYntb+cwQ1ykIPHz6TJWiF1OEi9mP2GGqBGRmN3ZxgyyV0JgLofE
-        5Qt7oF5wkfh1+g8ThC0s8er4FnYIW0ri87u9bJBgqZb4uB9qfgejxIvvthC2scTN9RtYQUqY
-        BTQl1u/ShwgrSuz8PZcRYi2fxLuvPawQU3glOtqEIEpUJfouHYZaKi3R1f6BfQKj0iwkj81C
-        8tgsJA/MQli2gJFlFaNYakFxbnpqsWGBCXJMb2IEJ1Itix2Mc99+0DvEyMTBeIhRgoNZSYTX
-        +feLOCHelMTKqtSi/Pii0pzU4kOMpsCgnsgsJZqcD0zleSXxhqZGxsbGFiZm5mamxkrivCet
-        LsQJCaQnlqRmp6YWpBbB9DFxcEo1MBk6zPt1Q9l4/1veUH6e2zE+T++e2Lx8QUCA+dNa1msz
-        hBQ3T9i03X5z14H1peUJUX29H1582nA2JTJzVtbE+9rslotLzLMfbT1WUlzUE87O9f7Sok83
-        xDJnSi5m5Gb7ErLv76u/S4TkF0gdVpBKF7/O/ec3k9SVGZkn3yp9OvN2S9x9/h2THx7ojl+5
-        7fbf7QKR0o7BCmGB15LEZhuklpq/r5ugONPw5WT/suYHQvs5EtNZDH3dIvoZf4bbXzd6OUFQ
-        9/zcTU9j/OZanDNT631zeB3PokDn6y+LmKsPbheI+zvxwUE3y/erZUtEnuxTuq8bF+THr/Lh
-        /oa63z1/U3aZTp3caKkefb3Hfo3A989KLMUZiYZazEXFiQB3tWnRLQQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnkeLIzCtJLcpLzFFi42LZdlhJXtfs+ss4gx8txhY/5t5msXhzciqL
-        xZ69J1ksLu+aw2Zx+f8nFotlXyazWGz5d4TVgd3jy5zj7B5tk/+xezQfW8nmsXPWXXaPvi2r
-        GD0+b5ILYIvisklJzcksSy3St0vgyni59QFrwXTOiv+/XzA1MG5h72Lk5JAQMJFoXr+EpYuR
-        i0NIYAejRGf/V6iEtMSxE2eYuxg5gGxhicOHiyFqnjNKHD+5jRmkhk1AV+Lfn/1sILaIQLTE
-        1b9/WUBsZoFrjBLfp2dDNGxnlHgx8yRYA6eAlUTbokdsIEOFBSwlFl5XBgmzCKhKTJiwFayX
-        Fyj87XsnO4QtKHFy5hOomdoSvQ9bGSFseYntb+cwQ9ypIPHz6TJWiBucJF7MfsIMUSMiMbuz
-        jXkCo/AsJKNmIRk1C8moWUhaFjCyrGKUTC0ozk3PLTYsMMpLLdcrTswtLs1L10vOz93ECI4r
-        La0djHtWfdA7xMjEwXiIUYKDWUmE1/n3izgh3pTEyqrUovz4otKc1OJDjNIcLErivF9nLYwT
-        EkhPLEnNTk0tSC2CyTJxcEo1MPUs7/k/r/fH/smR6yaWr3v6J/7JJ6vzxY+/Pqq6s2dPPuOt
-        uiy3KLVG8ftiecezLnhE52UFvVfTPvj1X+fsDPW7U/4UrWqJ+PdP5XCbiOqPdyJ2+RF+GlrG
-        kp+nCs+bOmVN/YZJlrH1kY2zFDbfyTEucJV6O8E0rvFu8/V1mivXyK/v/Hh96oe2Jdp9vT8T
-        DK5WXw0++PXEpwV8JxnN1HTKq4QXmu/8eSzP7NOShc7p6/Uctm+f/t6iK53FT2XVBV5joRWJ
-        jitqvti3PGbwsVZ9fn/p9WWS0zy/pHrvOZAQ32RVcnvRQzNH46WNk74eauJUcDC2OBw0dRXD
-        7LMqW3bPSereLmP388QH1tV981uUWIozEg21mIuKEwFo64rBGgMAAA==
-X-CMS-MailID: 20200617084126epcas1p40e74869e9d0aa50ccc3ca7285712ceb2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200616021816epcas1p2bb235df44c0b6f74cdec2f12072891e3
-References: <CGME20200616021816epcas1p2bb235df44c0b6f74cdec2f12072891e3@epcas1p2.samsung.com>
-        <20200616021808.5222-1-kohada.t2@gmail.com>
-        <414101d64477$ccb661f0$662325d0$@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > remove EXFAT_SB_DIRTY flag and related codes.
-> >
-> > This flag is set/reset in exfat_put_super()/exfat_sync_fs() to avoid
-> > sync_blockdev().
-> > However ...
-> > - exfat_put_super():
-> > Before calling this, the VFS has already called sync_filesystem(), so
-> > sync is never performed here.
-> > - exfat_sync_fs():
-> > After calling this, the VFS calls sync_blockdev(), so, it is
-> > meaningless to check EXFAT_SB_DIRTY or to bypass sync_blockdev() here.
-> > Not only that, but in some cases can't clear VOL_DIRTY.
-> > ex:
-> > VOL_DIRTY is set when rmdir starts, but when non-empty-dir is
-> > detected, return error without setting EXFAT_SB_DIRTY.
-> > If performe 'sync' in this state, VOL_DIRTY will not be cleared.
-> >
-> 
-> Since this patch does not resolve 'VOL_DIRTY in ENOTEMPTY' problem you mentioned, it would be better
-> to remove the description above for that and to make new patch.
-> 
-> > Remove the EXFAT_SB_DIRTY check to ensure synchronization.
-> > And, remove the code related to the flag.
-> >
-> > Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
-> 
-> Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
-Applied. Thanks!
+
+Implement handling of 'enable' and 'disable' control commands
+coming from control file descriptor. process_evlist() function
+checks for events on control fds and makes required operations.
+If poll event splits initiated timeout interval then the reminder
+is calculated and still waited in the following poll() syscall.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/builtin-stat.c | 67 +++++++++++++++++++++++++++++----------
+ 1 file changed, 50 insertions(+), 17 deletions(-)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index f88d5ee55022..cc56d71a3ed5 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -492,6 +492,31 @@ static bool process_timeout(int timeout, unsigned int interval, int *times)
+ 	return print_interval(interval, times);
+ }
+ 
++static bool process_evlist(struct evlist *evlist, unsigned int interval, int *times)
++{
++	bool stop = false;
++	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
++
++	if (evlist__ctlfd_process(evlist, &cmd) > 0) {
++		switch (cmd) {
++		case EVLIST_CTL_CMD_ENABLE:
++			pr_info(EVLIST_ENABLED_MSG);
++			stop = print_interval(interval, times);
++			break;
++		case EVLIST_CTL_CMD_DISABLE:
++			stop = print_interval(interval, times);
++			pr_info(EVLIST_DISABLED_MSG);
++			break;
++		case EVLIST_CTL_CMD_ACK:
++		case EVLIST_CTL_CMD_UNSUPPORTED:
++		default:
++			break;
++		}
++	}
++
++	return stop;
++}
++
+ static void enable_counters(void)
+ {
+ 	if (stat_config.initial_delay < 0) {
+@@ -567,10 +592,21 @@ static bool is_target_alive(struct target *_target,
+ 	return false;
+ }
+ 
+-static int dispatch_events(bool forks, int timeout, int interval, int *times, struct timespec *ts)
++static int dispatch_events(bool forks, int timeout, int interval, int *times)
+ {
+ 	bool stop = false;
+ 	int child = 0, status = 0;
++	int time_to_sleep, sleep_time;
++	struct timespec time_start, time_stop, time_diff;
++
++	if (interval)
++		sleep_time = interval;
++	else if (timeout)
++		sleep_time = timeout;
++	else
++		sleep_time = 1000;
++
++	time_to_sleep = sleep_time;
+ 
+ 	while (1) {
+ 		if (forks)
+@@ -581,8 +617,17 @@ static int dispatch_events(bool forks, int timeout, int interval, int *times, st
+ 		if (done || stop || child)
+ 			break;
+ 
+-		nanosleep(ts, NULL);
+-		stop = process_timeout(timeout, interval, times);
++		clock_gettime(CLOCK_MONOTONIC, &time_start);
++		if (!(evlist__poll(evsel_list, time_to_sleep) > 0)) { /* poll timeout or EINTR */
++			stop = process_timeout(timeout, interval, times);
++			time_to_sleep = sleep_time;
++		} else { /* fd revent */
++			stop = process_evlist(evsel_list, interval, times);
++			clock_gettime(CLOCK_MONOTONIC, &time_stop);
++			diff_timespec(&time_diff, &time_stop, &time_start);
++			time_to_sleep -= time_diff.tv_sec * MSEC_PER_SEC +
++					time_diff.tv_nsec / NSEC_PER_MSEC;
++		}
+ 	}
+ 
+ 	return status;
+@@ -651,7 +696,6 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	char msg[BUFSIZ];
+ 	unsigned long long t0, t1;
+ 	struct evsel *counter;
+-	struct timespec ts;
+ 	size_t l;
+ 	int status = 0;
+ 	const bool forks = (argc > 0);
+@@ -660,17 +704,6 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	int i, cpu;
+ 	bool second_pass = false;
+ 
+-	if (interval) {
+-		ts.tv_sec  = interval / USEC_PER_MSEC;
+-		ts.tv_nsec = (interval % USEC_PER_MSEC) * NSEC_PER_MSEC;
+-	} else if (timeout) {
+-		ts.tv_sec  = timeout / USEC_PER_MSEC;
+-		ts.tv_nsec = (timeout % USEC_PER_MSEC) * NSEC_PER_MSEC;
+-	} else {
+-		ts.tv_sec  = 1;
+-		ts.tv_nsec = 0;
+-	}
+-
+ 	if (forks) {
+ 		if (perf_evlist__prepare_workload(evsel_list, &target, argv, is_pipe,
+ 						  workload_exec_failed_signal) < 0) {
+@@ -828,7 +861,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 		enable_counters();
+ 
+ 		if (interval || timeout)
+-			status = dispatch_events(forks, timeout, interval, &times, &ts);
++			status = dispatch_events(forks, timeout, interval, &times);
+ 		if (child_pid != -1) {
+ 			if (timeout)
+ 				kill(child_pid, SIGTERM);
+@@ -845,7 +878,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 			psignal(WTERMSIG(status), argv[0]);
+ 	} else {
+ 		enable_counters();
+-		dispatch_events(forks, timeout, interval, &times, &ts);
++		dispatch_events(forks, timeout, interval, &times);
+ 	}
+ 
+ 	disable_counters();
+-- 
+2.24.1
+
 
