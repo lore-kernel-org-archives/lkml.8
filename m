@@ -2,130 +2,231 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CBAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 725F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71F8D20897
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C48F20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fPvsZiRm"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="gY47oZ/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgFQP2k (ORCPT
+        id S1726980AbgFQP3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:28:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40130 "EHLO
+        Wed, 17 Jun 2020 11:29:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgFQP2j (ORCPT
+        with ESMTP id S1726848AbgFQP3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:28:39 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B2E5C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:28:37 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id e16so1842889qtg.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:28:37 -0700 (PDT)
+        Wed, 17 Jun 2020 11:29:01 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD01BC0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:29:00 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id i27so3336266ljb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:29:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YWvFZzs3KP9lJjMgLteUxWcl0AN5fcCF6bv79uFgihI=;
-        b=fPvsZiRmvOrvrQ4yxrTzKd5CSIveZ17z50EpolEl+pPAK7HUWF0QJZmXtSGVDOakfw
-         7DHwzIzE2lNcGxpAtO8aw08z/gM8Y21yy9DIXMANO2ubUa3TWdA4GmPrzu72SDfRdvmF
-         BClIRqEbNJmDflVkgdFD+OnXmF0SaCCsk8z9/TyDuufHGuZdnpCUVgkaPeljCUzfOGUP
-         iou8x9GwNeXqpb+7LiV1ym/MPlGBad5o331/0hIUNzTl2FFPtmlIOP+y+IRR8Ia8Spm0
-         VHrOAMJcFDHzlMiG7WUr4U2IvrrqHhxtahUa25x/jrfaWVB1Q09VlgzgQNmhTWG78o/m
-         b3Ng==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=1Jejmo94fRTO1Nf1cVg0JuCnL5f+D9dWyuhEwNHgCto=;
+        b=gY47oZ/8jima8hUgUvS22+dJJei29tpxOsnOiPUZvVHgsyecPh2PTpPiLADhqB3Jy5
+         5/NenTMuy6Nl2vx9Q8QROcfdisNAjpQ9p34cZO62xjsALFzTU4fha+2KofoRMxNOQOqg
+         DiAcYTTRXXb670mowm0u3QboQESmHolMamxDRpdtyH4CZnYoLSrPH8KuXiNb+KbyrLLW
+         ewFNkks7MX7ehYZpE+bGL7f7mbexgh1Lz+7ExQxlZEyj/fsgV7ok3HInwVNQ5evC/pkC
+         DJ3NDSCThgh3hCpJM6Wdwh0sAwKhXHQnNcDnRD0pBDBbU3sVBT6641DWRWA8L8rhJIZ8
+         GIhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YWvFZzs3KP9lJjMgLteUxWcl0AN5fcCF6bv79uFgihI=;
-        b=GiTRBtQ/nmIzlhuNhNCUGCzmKZ+T7DUQgAai4VczdvdqA9vnKGCb9yNjylkLysIbRj
-         A8hL6dL1KW3+R12T1dK0Ff29mn/1Iry8nB2BsjoiEopb8vltsBA+AFBmhlYMwC9o3x4L
-         bHgQ8eOXdBHAeUDnpv0+wDaOrOpuWJxNAwHkSa7eYlePbf2UyWRk5wK9diD4KwVyqtbK
-         84zbq05wXZDKMeF5oOhaezg9XA/NXR1f5i1dOXpddwATR4DyswQ/cZDAnhGKMrNpkqqw
-         EYno9Afk6X9cEn8WeQr7F7r19BJahsGDj8bBs330JAdhLgOyuyPo1Hl8RR8n9aOFzdPE
-         8eXw==
-X-Gm-Message-State: AOAM531RSfzmqezaQA/0oyob36AnTEUeCZpOfYH7Zd4uyIU0s0rmHJ3f
-        0i4eG9QESb/UkS5mORkH4uFXug==
-X-Google-Smtp-Source: ABdhPJzZDttOnjxPbTFDeZHyWDfba0peOY2A/3G4231dt912/147Xnlp7RMkFB2VSf50LuX5ZTAibw==
-X-Received: by 2002:ac8:468a:: with SMTP id g10mr27323795qto.6.1592407717080;
-        Wed, 17 Jun 2020 08:28:37 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id f127sm210137qkb.55.2020.06.17.08.28.35
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=1Jejmo94fRTO1Nf1cVg0JuCnL5f+D9dWyuhEwNHgCto=;
+        b=rI2uIcFIBp1mKp4vlXC1Re6PiyFk1XEiZCIt1wSJBHgh/NnToFy+45294BAdEHfBKU
+         K7Q71spvwWWb60Dy0EPPLOtgtu/8Opic7V4Mu6EK+8VEcJqGYF8iAx7GnChKXFk6nkDW
+         nwFu7TBHEfN8g1zeRo/s399Mr06XlkjaUqckBXGCWR9hVx6jV6y3o3YbiRCIcS5t1pnW
+         jiCjQ5hQoQFcncADn0AjWfeKhQvIfwVz4joMBMIfC1u8/EDmtILoTDzmjpwC4W4v/qQw
+         xPeP8thMBgZwqfSqqUohaStAriW6d8jrAkoDuERRe9mmycmA/7c/HkGaKJC+m5vOi6AY
+         qOtg==
+X-Gm-Message-State: AOAM531tGcaJQVml4FbKri1w7MeYKo3ePSogdez57ZTGOl6ckXSWCUod
+        THm4EhFpEJWVlrtqhNyVXmKzBw==
+X-Google-Smtp-Source: ABdhPJxXi/cFo9WQlsVNHaUWqnJ0fClcBL3sHMCXkne5vzOfMKrvXNH95dUMzNIUva44CRMzuHPocg==
+X-Received: by 2002:a2e:2202:: with SMTP id i2mr4444744lji.199.1592407739045;
+        Wed, 17 Jun 2020 08:28:59 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id b10sm32549lfi.20.2020.06.17.08.28.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 08:28:35 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jlZzP-009d7z-9q; Wed, 17 Jun 2020 12:28:35 -0300
-Date:   Wed, 17 Jun 2020 12:28:35 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
-        <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-Message-ID: <20200617152835.GF6578@ziepe.ca>
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-5-daniel.vetter@ffwll.ch>
- <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
- <20200611083430.GD20149@phenom.ffwll.local>
- <20200611141515.GW6578@ziepe.ca>
- <20200616120719.GL20149@phenom.ffwll.local>
- <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
+        Wed, 17 Jun 2020 08:28:58 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 17:28:57 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Michael Rodin <mrodin@de.adit-jv.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, michael@rodin.online,
+        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com,
+        Steve Longerbeam <steve_longerbeam@mentor.com>
+Subject: Re: [PATCH] media: rcar-vin: Move media_device_register to async
+ completion
+Message-ID: <20200617152857.GA2936315@oden.dyn.berto.se>
+References: <1592328696-84533-1-git-send-email-mrodin@de.adit-jv.com>
+ <20200617105646.GB2850317@oden.dyn.berto.se>
+ <20200617151537.GB88066@vmlxhi-121.adit-jv.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200617151537.GB88066@vmlxhi-121.adit-jv.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 08:48:50AM +0200, Daniel Vetter wrote:
+Hi Michael,
 
-> Now my understanding for rdma is that if you don't have hw page fault
-> support,
+On 2020-06-17 17:15:37 +0200, Michael Rodin wrote:
+> Hi Niklas and Steve,
+> 
+> On Wed, Jun 17, 2020 at 12:56:46PM +0200, Niklas Söderlund wrote:
+> > Hi Michael and Steve,
+> > 
+> > On 2020-06-16 19:31:36 +0200, Michael Rodin wrote:
+> > > From: Steve Longerbeam <steve_longerbeam@mentor.com>
+> > > 
+> > > The media_device is registered during driver probe, before async
+> > > completion, so it is possible for .link_notify to be called before
+> > > all devices are bound.
+> > > 
+> > > Fix this by moving media_device_register() to rvin_group_notify_complete().
+> > > This ensures that all devices are now bound (the rcar-csi2 subdevices and
+> > > and video capture devices) before .link_notify can be called.
+> > 
+> > I'm curious to what situation created the need for this change. I'm 
+> > currently trying to take the VIN driver in the opposite direction [1] 
+> > with the end goal of registering video devices at probe time and then 
+> > allow the media graph to populate as devices becomes available.
+> 
+> It looks like almost all platform drivers call media_device_register() in
+> the completion callback. From my understaning it is necessary to ensure
+> that all subdevices are bound and all links are created before the user
+> can enable any link (which would trigger link_notify callback execution)
+> and set formats. If I am not mistaken, Steve could observe an "OOPS" or
+> at least it is theoretically possible.
 
-The RDMA ODP feature is restartable HW page faulting just like nouveau
-has. The classical MR feature doesn't have this. Only mlx5 HW supports
-ODP today.
+If an OOPS have been observed I would be interested to see it. That way 
+we can fix the OOPS and keep the media graph registration where it is 
+today.
 
-> It's only gpus (I think) which are in this awkward in-between spot
-> where dynamic memory management really is much wanted, but the hw
-> kinda sucks. Aside, about 10+ years ago we had a similar problem with
-> gpu hw, but for security: Many gpu didn't have any kinds of page
-> tables to isolate different clients from each another. drivers/gpu
-> fixed this by parsing&validating what userspace submitted to make sure
-> it's only every accessing its own buffers. Most gpus have become
-> reasonable nowadays and do have proper per-process pagetables (gpu
-> process, not the pasid stuff), but even today there's still some of
-> the old model left in some of the smallest SoC.
+> 
+> Actually I found that this patch alone is not enough even if it is correct,
+> because we also have to register the media device in rvin_parallel_notify_complete()
+> in case if there is only a parallel video input device attached.
+> 
+> > My reason for this is that we could have a functional pipeline inside 
+> > the graph even if it's not complete. This came out of the GMSL work done
+> > a while pack where I had a faulty camera that would prevent the other 7 
+> > in the system to function.
+> 
+> I agree that if a probe of a faulty subdevice fails, this should not affect
+> functionality of the other attached subdevices. The "complete" callback of
+> the async notifier is probably not executed in this case, so I guess, we
+> would have to register the media device in the "bound" callback after the first
+> subdevice has been probed? Otherwise there is not much sense to have video
+> capture devices, which are not connected to any source.
 
-But I still don't understand why a dma fence is needed inside the GPU
-driver itself in the notifier.
+Calling it in the bound callback is mostly the same as it is today, as 
+link_notify could then be called when not all entities are in the graph.  
+In fact even if we where tp move the media device registration to the t
+complete callback we have this problem if any of the subdevices are 
+unbound. Then we are back to the state with a registerd media device 
+where not all entities are present.
 
-Surely the GPU driver can block and release the notifier directly from
-its own command processing channel?
+I think the solution here is to address the issue (if any) in the 
+link_notify callback when the graph is not fully populated.
 
-Why does this fence and all it entails need to leak out across
-drivers?
+> 
+> (Delayed) population of the media graph after media device registration
+> sounds also like a requirement for device tree overlay support, which would
+> also be a nice feature.
+> 
+> > 1. [PATCH 0/5] media-device: Report if graph is complete
+> > 
+> > > 
+> > > Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> > > Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
+> > > ---
+> > >  drivers/media/platform/rcar-vin/rcar-core.c | 14 ++++++--------
+> > >  1 file changed, 6 insertions(+), 8 deletions(-)
+> > > 
+> > > diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
+> > > index 7440c89..e70f83b 100644
+> > > --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> > > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> > > @@ -253,7 +253,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
+> > >  	struct media_device *mdev = &group->mdev;
+> > >  	const struct of_device_id *match;
+> > >  	struct device_node *np;
+> > > -	int ret;
+> > >  
+> > >  	mutex_init(&group->lock);
+> > >  
+> > > @@ -266,7 +265,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
+> > >  	vin_dbg(vin, "found %u enabled VIN's in DT", group->count);
+> > >  
+> > >  	mdev->dev = vin->dev;
+> > > -	mdev->ops = &rvin_media_ops;
+> > >  
+> > >  	match = of_match_node(vin->dev->driver->of_match_table,
+> > >  			      vin->dev->of_node);
+> > > @@ -278,11 +276,7 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
+> > >  
+> > >  	media_device_init(mdev);
+> > >  
+> > > -	ret = media_device_register(&group->mdev);
+> > > -	if (ret)
+> > > -		rvin_group_cleanup(group);
+> > > -
+> > > -	return ret;
+> > > +	return 0;
+> > >  }
+> > >  
+> > >  static void rvin_group_release(struct kref *kref)
+> > > @@ -688,6 +682,8 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
+> > >  		return ret;
+> > >  	}
+> > >  
+> > > +	vin->group->mdev.ops = &rvin_media_ops;
+> > > +
+> > >  	/* Register all video nodes for the group. */
+> > >  	for (i = 0; i < RCAR_VIN_NUM; i++) {
+> > >  		if (vin->group->vin[i] &&
+> > > @@ -736,8 +732,10 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
+> > >  		}
+> > >  	}
+> > >  	mutex_unlock(&vin->group->lock);
+> > > +	if (ret)
+> > > +		return ret;
+> > >  
+> > > -	return ret;
+> > > +	return media_device_register(&vin->group->mdev);
+> > >  }
+> > >  
+> > >  static void rvin_group_notify_unbind(struct v4l2_async_notifier *notifier,
+> > > -- 
+> > > 2.7.4
+> > > 
+> > 
+> > -- 
+> > Regards,
+> > Niklas Söderlund
+> 
+> -- 
+> Best Regards,
+> Michael
 
-Jason
+-- 
+Regards,
+Niklas Söderlund
