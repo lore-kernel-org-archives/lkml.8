@@ -2,377 +2,213 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADE2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9D520707
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E19206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:18:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SZbsth7M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hSfdEG1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgFQPRU (ORCPT
+        id S1726864AbgFQPSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38358 "EHLO
+        Wed, 17 Jun 2020 11:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgFQPRT (ORCPT
+        with ESMTP id S1726496AbgFQPSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:17:19 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00A49C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:17:18 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x11so1068806plo.7
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:17:18 -0700 (PDT)
+        Wed, 17 Jun 2020 11:18:48 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC17C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:18:47 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id e1so2767076wrt.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:18:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=iVGPRSWSKdiOzTWfPB5tU+HraOy7vVGZug4QILLdfHc=;
-        b=SZbsth7MuMA2A4DgDArbfV0FZlwzo97l7l8XXMmwb3S5LinjJ1Tof8gkPVHuN7CjsR
-         dsYbhtkx97Wu8CElL7C1aSY+1vbOZGvwI0tByEJJ/5wsxEdbdyqSAToFOC/WL3vL6ejL
-         HVOWphnbneYvwgxKUzpaoEfy+jF46Jv2phd2k=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ONScAretSBCH7wAr+8ANmv5HsgfH9nA7aZy8T5VKxWg=;
+        b=hSfdEG1eeLaNlXQww1U4Fy8i1vvi4w8ZtfN2wm2DaucDaEsiE90lK9nXIlh4mkXuy6
+         fnh+htuCSaiG/t03q7KMFKmpsI63GidJcfXteDKWOxYIPZ2tkG0OdqoYaDXoTYI5Oq7v
+         C67bYNlAlgxfeXKrbCVjvtTEA3d6GWtGwKjjDgqe2+HAEgcfmQ3jXYCdwq+KrxC3PcBu
+         cPvmAtbtj++WEy3F/8UB7IHQXqmV3rAXRd+PiJc5ofFNoFVYplKoxldSJ4eaq3oBP5ka
+         AZCyqfk0i6VYRNge9RURTbeobE9NqIkrwc9XPvd+3bCusVtIMyxOzdUP/vq4FgBo4qum
+         Ntbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iVGPRSWSKdiOzTWfPB5tU+HraOy7vVGZug4QILLdfHc=;
-        b=N31KnWGNJGn+LR+ZoRdwb7BJMcumigoczi1KigIPfzx68ICpXo2GG0BEzYWgbYIDl0
-         Ja1jH/YKHqXBvk5Ei7w6+PyfB6OopHyMr2Rczc/kqS8WW+hTQkyzWmh/qJAmIQkyRxd5
-         G/Y476xKw0qW7bf8jKH4BoNNQe3nKmJA7RygU9iugrKcYFglGU1OQZQbi7lnPN8bfOk5
-         B51Fk/Xmnkj/48nVY0oG6tndBQv9pFV3jxAFlv4/ghgNKyx9VfomO2wZIRCv+6E8l4MB
-         5U8e2G9P42+PePGTuEwr5fs9sJQAPOIsclPVIuJqSxaBvVgMZyBF/hIPr0qUCjXwDzAl
-         sgSg==
-X-Gm-Message-State: AOAM532R+MOKrVF1kNW3um33HN9mjJPnQi1IxUkGs4rsfXw47lkcRgKn
-        Cqd3jiruv9cBgVRTZni9+i9wrg==
-X-Google-Smtp-Source: ABdhPJwj1Mx9ewLIkZEuh6gyLGgN0l/7UqSauW9f+fF3jbRBVqXSsars2aSuvkniyxXh3eoNPlePbA==
-X-Received: by 2002:a17:90a:e50b:: with SMTP id t11mr8669364pjy.109.1592407038163;
-        Wed, 17 Jun 2020 08:17:18 -0700 (PDT)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id n69sm204044pfd.171.2020.06.17.08.17.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 08:17:17 -0700 (PDT)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Christoph Hellwig <hch@lst.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Jessica Yu <jeyu@kernel.org>
-Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v2 1/1] fs: move kernel_read_file* to its own include file
-Date:   Wed, 17 Jun 2020 08:17:10 -0700
-Message-Id: <20200617151710.16613-1-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ONScAretSBCH7wAr+8ANmv5HsgfH9nA7aZy8T5VKxWg=;
+        b=VaF800oPKeN4i3H10xbvVuNctysQDKMDt2c+wbg4Z3DUqGNXw7uH9bh1Wug1ZuWD+h
+         zJPtTxvIJS/aX6LHRap7PrHi1qAxUzuvNe6B4W8VHUoeD9dR3Mn66xBGqQtUc+EVb5DS
+         +Es+da/056KfekZG7VpL/s7plzhUzlpfOLAYLwJXKRWpmeJldwLwt/qPptp1GPJrGN0u
+         WFY6hqCcTGAZtELIm5Wi2aJ4ot5oUGAHaU9vn9BOFo1y33q50FvJiW6lBKvcyDZxocBJ
+         Y4aYmr7DdZVE8PuiXfFV20vZBbRLrIKwmnrTfchfPGl4s7VBLO+NMsrTFIuxbk602mB/
+         nniA==
+X-Gm-Message-State: AOAM5323wqCmHJh7heb0Lq+UPKA4Rek5T1aDxAnXnTc2EgHWYxk6ozJQ
+        YeSVxLds1oExOuzKMKqo3MOnk0LuRGo=
+X-Google-Smtp-Source: ABdhPJxWd4oOb2dfVwKqckj6ab2Z8u6X+WmHzU1ARFhF7bdzQdJ3r+sF4A7z2Cr3jfCcn6zZgRv1Xw==
+X-Received: by 2002:a5d:4286:: with SMTP id k6mr8695376wrq.140.1592407125441;
+        Wed, 17 Jun 2020 08:18:45 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id j4sm116215wma.7.2020.06.17.08.18.44
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jun 2020 08:18:44 -0700 (PDT)
+Subject: Re: [PATCH v3 1/4] dt-bindings: nvmem: qfprom: Convert to yaml
+To:     Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Cc:     dhavalp@codeaurora.org, mturney@codeaurora.org,
+        rnayak@codeaurora.org, Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, saiprakash.ranjan@codeaurora.org,
+        sparate@codeaurora.org, mkurumel@codeaurora.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200617145116.247432-1-dianders@chromium.org>
+ <20200617074930.v3.1.Iea2704ec2cb40c00eca47781c310a6330ac5dd41@changeid>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <ed6d22a1-0d38-9874-d5cc-efe39f360baa@linaro.org>
+Date:   Wed, 17 Jun 2020 16:18:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200617074930.v3.1.Iea2704ec2cb40c00eca47781c310a6330ac5dd41@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move kernel_read_file* out of linux/fs.h to its own linux/kernel_read_file.h
-include file. That header gets pulled in just about everywhere
-and doesn't really need functions not related to the general fs interface.
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
----
- drivers/base/firmware_loader/main.c |  1 +
- fs/exec.c                           |  1 +
- include/linux/fs.h                  | 39 ----------------------
- include/linux/ima.h                 |  1 +
- include/linux/kernel_read_file.h    | 52 +++++++++++++++++++++++++++++
- include/linux/security.h            |  1 +
- kernel/kexec_file.c                 |  1 +
- kernel/module.c                     |  1 +
- security/integrity/digsig.c         |  1 +
- security/integrity/ima/ima_fs.c     |  1 +
- security/integrity/ima/ima_main.c   |  1 +
- security/integrity/ima/ima_policy.c |  1 +
- security/loadpin/loadpin.c          |  1 +
- security/security.c                 |  1 +
- security/selinux/hooks.c            |  1 +
- 15 files changed, 65 insertions(+), 39 deletions(-)
- create mode 100644 include/linux/kernel_read_file.h
 
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index ca871b13524e..136933f1bd6e 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -12,6 +12,7 @@
- 
- #include <linux/capability.h>
- #include <linux/device.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/timer.h>
-diff --git a/fs/exec.c b/fs/exec.c
-index 7b7cbb180785..4ea87db5e4d5 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -23,6 +23,7 @@
-  * formats.
-  */
- 
-+#include <linux/kernel_read_file.h>
- #include <linux/slab.h>
- #include <linux/file.h>
- #include <linux/fdtable.h>
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 2e675c075694..09427d393954 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3012,45 +3012,6 @@ static inline void i_readcount_inc(struct inode *inode)
- #endif
- extern int do_pipe_flags(int *, int);
- 
--#define __kernel_read_file_id(id) \
--	id(UNKNOWN, unknown)		\
--	id(FIRMWARE, firmware)		\
--	id(FIRMWARE_PREALLOC_BUFFER, firmware)	\
--	id(FIRMWARE_EFI_EMBEDDED, firmware)	\
--	id(MODULE, kernel-module)		\
--	id(KEXEC_IMAGE, kexec-image)		\
--	id(KEXEC_INITRAMFS, kexec-initramfs)	\
--	id(POLICY, security-policy)		\
--	id(X509_CERTIFICATE, x509-certificate)	\
--	id(MAX_ID, )
--
--#define __fid_enumify(ENUM, dummy) READING_ ## ENUM,
--#define __fid_stringify(dummy, str) #str,
--
--enum kernel_read_file_id {
--	__kernel_read_file_id(__fid_enumify)
--};
--
--static const char * const kernel_read_file_str[] = {
--	__kernel_read_file_id(__fid_stringify)
--};
--
--static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
--{
--	if ((unsigned)id >= READING_MAX_ID)
--		return kernel_read_file_str[READING_UNKNOWN];
--
--	return kernel_read_file_str[id];
--}
--
--extern int kernel_read_file(struct file *, void **, loff_t *, loff_t,
--			    enum kernel_read_file_id);
--extern int kernel_read_file_from_path(const char *, void **, loff_t *, loff_t,
--				      enum kernel_read_file_id);
--extern int kernel_read_file_from_path_initns(const char *, void **, loff_t *, loff_t,
--					     enum kernel_read_file_id);
--extern int kernel_read_file_from_fd(int, void **, loff_t *, loff_t,
--				    enum kernel_read_file_id);
- extern ssize_t kernel_read(struct file *, void *, size_t, loff_t *);
- extern ssize_t kernel_write(struct file *, const void *, size_t, loff_t *);
- extern ssize_t __kernel_write(struct file *, const void *, size_t, loff_t *);
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 9164e1534ec9..148636bfcc8f 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -7,6 +7,7 @@
- #ifndef _LINUX_IMA_H
- #define _LINUX_IMA_H
- 
-+#include <linux/kernel_read_file.h>
- #include <linux/fs.h>
- #include <linux/security.h>
- #include <linux/kexec.h>
-diff --git a/include/linux/kernel_read_file.h b/include/linux/kernel_read_file.h
-new file mode 100644
-index 000000000000..53f5ca41519a
---- /dev/null
-+++ b/include/linux/kernel_read_file.h
-@@ -0,0 +1,52 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_KERNEL_READ_FILE_H
-+#define _LINUX_KERNEL_READ_FILE_H
-+
-+#include <linux/file.h>
-+#include <linux/types.h>
-+
-+#define __kernel_read_file_id(id) \
-+	id(UNKNOWN, unknown)		\
-+	id(FIRMWARE, firmware)		\
-+	id(FIRMWARE_PREALLOC_BUFFER, firmware)	\
-+	id(FIRMWARE_EFI_EMBEDDED, firmware)	\
-+	id(MODULE, kernel-module)		\
-+	id(KEXEC_IMAGE, kexec-image)		\
-+	id(KEXEC_INITRAMFS, kexec-initramfs)	\
-+	id(POLICY, security-policy)		\
-+	id(X509_CERTIFICATE, x509-certificate)	\
-+	id(MAX_ID, )
-+
-+#define __fid_enumify(ENUM, dummy) READING_ ## ENUM,
-+#define __fid_stringify(dummy, str) #str,
-+
-+enum kernel_read_file_id {
-+	__kernel_read_file_id(__fid_enumify)
-+};
-+
-+static const char * const kernel_read_file_str[] = {
-+	__kernel_read_file_id(__fid_stringify)
-+};
-+
-+static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
-+{
-+	if ((unsigned int)id >= READING_MAX_ID)
-+		return kernel_read_file_str[READING_UNKNOWN];
-+
-+	return kernel_read_file_str[id];
-+}
-+
-+int kernel_read_file(struct file *file,
-+		     void **buf, loff_t *size, loff_t max_size,
-+		     enum kernel_read_file_id id);
-+int kernel_read_file_from_path(const char *path,
-+			       void **buf, loff_t *size, loff_t max_size,
-+			       enum kernel_read_file_id id);
-+int kernel_read_file_from_path_initns(const char *path,
-+				      void **buf, loff_t *size, loff_t max_size,
-+				      enum kernel_read_file_id id);
-+int kernel_read_file_from_fd(int fd,
-+			     void **buf, loff_t *size, loff_t max_size,
-+			     enum kernel_read_file_id id);
-+
-+#endif /* _LINUX_KERNEL_READ_FILE_H */
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 2797e7f6418e..fc1c6af331bd 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -23,6 +23,7 @@
- #ifndef __LINUX_SECURITY_H
- #define __LINUX_SECURITY_H
- 
-+#include <linux/kernel_read_file.h>
- #include <linux/key.h>
- #include <linux/capability.h>
- #include <linux/fs.h>
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index bb05fd52de85..54efafc31d34 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -24,6 +24,7 @@
- #include <linux/elf.h>
- #include <linux/elfcore.h>
- #include <linux/kernel.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/syscalls.h>
- #include <linux/vmalloc.h>
- #include "kexec_internal.h"
-diff --git a/kernel/module.c b/kernel/module.c
-index e8a198588f26..6ed67699531f 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -18,6 +18,7 @@
- #include <linux/fs.h>
- #include <linux/sysfs.h>
- #include <linux/kernel.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- #include <linux/elf.h>
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index e9cbadade74b..d09602aab7bd 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -10,6 +10,7 @@
- #include <linux/sched.h>
- #include <linux/slab.h>
- #include <linux/cred.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/key-type.h>
- #include <linux/digsig.h>
- #include <linux/vmalloc.h>
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index e3fcad871861..57ecbf285fc7 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -13,6 +13,7 @@
-  */
- 
- #include <linux/fcntl.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/slab.h>
- #include <linux/init.h>
- #include <linux/seq_file.h>
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index c1583d98c5e5..15f29fed6d9f 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -18,6 +18,7 @@
- #include <linux/module.h>
- #include <linux/file.h>
- #include <linux/binfmts.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/mount.h>
- #include <linux/mman.h>
- #include <linux/slab.h>
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index e493063a3c34..f8390f6081f0 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -9,6 +9,7 @@
- 
- #include <linux/init.h>
- #include <linux/list.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/fs.h>
- #include <linux/security.h>
- #include <linux/magic.h>
-diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
-index ee5cb944f4ad..81bc95127f92 100644
---- a/security/loadpin/loadpin.c
-+++ b/security/loadpin/loadpin.c
-@@ -11,6 +11,7 @@
- 
- #include <linux/module.h>
- #include <linux/fs.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/lsm_hooks.h>
- #include <linux/mount.h>
- #include <linux/path.h>
-diff --git a/security/security.c b/security/security.c
-index 2bb912496232..8983cdc07ebb 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -16,6 +16,7 @@
- #include <linux/export.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/lsm_hooks.h>
- #include <linux/integrity.h>
- #include <linux/ima.h>
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index efa6108b1ce9..5de45010fb1a 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -24,6 +24,7 @@
- #include <linux/init.h>
- #include <linux/kd.h>
- #include <linux/kernel.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/tracehook.h>
- #include <linux/errno.h>
- #include <linux/sched/signal.h>
--- 
-2.17.1
+On 17/06/2020 15:51, Douglas Anderson wrote:
+> From: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> 
+> This switches the bindings over from txt to yaml.
+> 
+> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+> Changes in v3:
+> - Split conversion to yaml into separate patch new in v3.
+> - Use 'const' for compatible instead of a 1-entry enum.
+> - Changed filename to match compatible string.
+> - Add #address-cells and #size-cells to list of properties.
+> - Fixed up example.
+> 
+>   .../bindings/nvmem/qcom,qfprom.yaml           | 45 +++++++++++++++++++
+>   .../devicetree/bindings/nvmem/qfprom.txt      | 35 ---------------
+>   2 files changed, 45 insertions(+), 35 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+>   delete mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+> new file mode 100644
+> index 000000000000..5efa5e7c4d81
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/nvmem/qcom,qfprom.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies Inc, QFPROM Efuse bindings
+> +
+> +maintainers:
+> +  - Ravi Kumar Bokka <rbokka@codeaurora.org>
+> +
 
+Am not sure this was intentional, but the old maintainer name is totally 
+lost in this patch!
+
+Please fix this!
+
+
+
+> +allOf:
+> +  - $ref: "nvmem.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,qfprom
+> +
+> +  reg:
+> +    items:
+> +      - description: The corrected region.
+> +
+> +  # Needed if any child nodes are present.
+> +  "#address-cells":
+> +    const: 1
+> +  "#size-cells":
+> +    const: 1
+> +
+> +required:
+> +   - compatible
+> +   - reg
+> +
+> +examples:
+> +  - |
+> +    efuse@784000 {
+> +      compatible = "qcom,qfprom";
+> +      reg = <0 0x00784000 0 0x8ff>;
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +
+> +      hstx-trim-primary@1eb {
+> +        reg = <0x1eb 0x1>;
+> +        bits = <1 4>;
+> +      };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/nvmem/qfprom.txt b/Documentation/devicetree/bindings/nvmem/qfprom.txt
+> deleted file mode 100644
+> index 26fe878d5c86..000000000000
+> --- a/Documentation/devicetree/bindings/nvmem/qfprom.txt
+> +++ /dev/null
+> @@ -1,35 +0,0 @@
+> -= Qualcomm QFPROM device tree bindings =
+> -
+> -This binding is intended to represent QFPROM which is found in most QCOM SOCs.
+> -
+> -Required properties:
+> -- compatible: should be "qcom,qfprom"
+> -- reg: Should contain registers location and length
+> -
+> -= Data cells =
+> -Are child nodes of qfprom, bindings of which as described in
+> -bindings/nvmem/nvmem.txt
+> -
+> -Example:
+> -
+> -	qfprom: qfprom@700000 {
+> -		compatible 	= "qcom,qfprom";
+> -		reg		= <0x00700000 0x8000>;
+> -		...
+> -		/* Data cells */
+> -		tsens_calibration: calib@404 {
+> -			reg = <0x4404 0x10>;
+> -		};
+> -	};
+> -
+> -
+> -= Data consumers =
+> -Are device nodes which consume nvmem data cells.
+> -
+> -For example:
+> -
+> -	tsens {
+> -		...
+> -		nvmem-cells = <&tsens_calibration>;
+> -		nvmem-cell-names = "calibration";
+> -	};
+> 
