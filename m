@@ -2,189 +2,164 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B590C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC09C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5261321532
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B27E208D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GeCZWfXa"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="sNqB/fFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgFQQ1u (ORCPT
+        id S1727916AbgFQQ1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:27:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48960 "EHLO
+        Wed, 17 Jun 2020 12:27:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726931AbgFQQ0E (ORCPT
+        with ESMTP id S1727894AbgFQQ1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:26:04 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C558DC06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:03 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id g5so2098719otg.6
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:03 -0700 (PDT)
+        Wed, 17 Jun 2020 12:27:48 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1349C0613EE
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:27:46 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id d15so2423101edm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:27:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=s3HECr+XRw8l7R9dXLwTey4aQmeyYxab5E3F+GzM5HU=;
-        b=GeCZWfXaToyGmpVYuDKpZ9LZu/pUAthihBIsiBwJbCw7nVL5AP59h8isByyC9KtntI
-         qCmmz9tuA8zu/4q9Dtg2L+CnsANthsixl9LnRLid5PLElao/VYrvzb8xmVP3X0mC72c0
-         QUD7Z4PHTxKmhAs43DyVdqViu3DFrvVJxE2eJWXEneiExoD5tODv15lGDuVZd4ZkkZ3J
-         1YaxOWIyebSFJl2WkXwtKVQDcaZERpuHHDup5TSBSqeX0E2tS79ibXskcOfmLFEvmRcw
-         aMM4J+l9PB91LQkPxdQ/u9JQ6v5KJy1szttaLLStAUyvC//JMNYWVIKAh5oRKdQM+8EF
-         W9Dw==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=0PeE1nNOhO8NzBOTfY/pdL8QsrWSh7rT+swmugwtigI=;
+        b=sNqB/fFnXRRSizIysZQ/7bQPvN3dI1sAubAzmXPjlp5zADcg3mFHnEhj4KpzI4rlRT
+         b0rXBfv2Leyc1LO9lG4qxGitWmak6FKoBKT4g43POIBQG/++rpoKsKoTPII/fiiBPcZ4
+         nhol/ldhYskiBz7ksJBQ9W7X36Ud195pCyKhr2fxjwYok3HHb3JoLM6hol9DVu8c0XaT
+         IrDZVH8Ne9ZwHErbNev4dNa6sCLZnMKaiZAZ17jz65bE2z46/CEosSbP3MB0bkOMXt9X
+         jdY+AP4M7yuHGaMmy6BTlRgPH5WXxySI36LtxDl12eLIp0A97DJs8zhMYnEqbY8ZpY8F
+         M2Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=s3HECr+XRw8l7R9dXLwTey4aQmeyYxab5E3F+GzM5HU=;
-        b=m2uaUE2hB/fyQ9Ri8L4RPlsm8AnmbOFHKiZeCR4ugQrl1uXERcjGx29UPqsC0ADmj8
-         ti4r6q+uC+TPBHOc5CAp9h9vpfbYu3BTfxlNYBmrKT/e3+OoZBv1kSjJXfmJ1W46oNtU
-         wjLF45WmQw0FS1fLejGjSqdp9CmYa9AHKmgcCHTJhqjrToO6mhCunUuNn+4eUyFpxq0N
-         +sCoCqs7npSprGeb9zqGxiaLVr01dCSI6kFUfuoUlTviI6HddPuCZ0Ixn//UcQqYU4Ja
-         h3kO6XtGSc9dUCAX5qLD/30mv5RL16+VXhuekPqItqrCD31aSuGnllnkUgNX/l0KIKB7
-         5N5Q==
-X-Gm-Message-State: AOAM5311Brjacn+9NxIvvVxdgX3z8nmsnfvKMHvuYBslqhZ1zk4+vP6B
-        3OMN27jJLGs3PEtGIVsnCw8=
-X-Google-Smtp-Source: ABdhPJyxIrkjxgNOPmU+BV1TTGlxWMzxvgMBpCpbBlJo7zS00PF/38bNJ0xx6TBF3hTGp/qCgVjQ/Q==
-X-Received: by 2002:a9d:d24:: with SMTP id 33mr7235275oti.26.1592411163180;
-        Wed, 17 Jun 2020 09:26:03 -0700 (PDT)
-Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::ae4b])
-        by smtp.googlemail.com with ESMTPSA id h7sm95877otk.48.2020.06.17.09.26.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=0PeE1nNOhO8NzBOTfY/pdL8QsrWSh7rT+swmugwtigI=;
+        b=gvAqi4kgCxuRj+AXowpadDTrNXBexeZxpSI3gAouFiGgN6rSKXAMKYRqbza8dukUl/
+         EIxnfN9k+GbZVtfYXGx/Z8zcHcHtluuwiynS5EayXHIWRsfzvGZaXHKgQSGetXHiTmVt
+         zNzOpeXMtZZ27taAUtbY1gMvz3cCtcJ9eI+YBrU6Hq0ex5b6vfuk+WOUCB/pDiCq6SMv
+         PAJce2+XI9vj5aED8nJa1g2MIHXQc909BJOYjhZnH4LmUP/Fcz0cujX9Mxin3OoJGz46
+         m7J5YEWl3tyhGW6iqD/Y2mXz598wvOfuhV1V0DgbubtD56otvWkePanA5Ty3FIllsMga
+         NEEg==
+X-Gm-Message-State: AOAM530kROaSZ2BY+84K96Htahf1uYoYaQQyXUiLLKFbYd4FkqvApiAu
+        j1YpyTAZEGAfGs4L12LeU9Wk2g==
+X-Google-Smtp-Source: ABdhPJzcNlf5mAAzJmZXfW/N+4oUOHXbX6TDnTWRpql38l+PqLTIechB/LyMZ9YZXb3Wzr6JLXkDVA==
+X-Received: by 2002:aa7:df05:: with SMTP id c5mr25038edy.48.1592411265374;
+        Wed, 17 Jun 2020 09:27:45 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id h9sm312336ejc.96.2020.06.17.09.27.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:26:02 -0700 (PDT)
-From:   Jim Cromie <jim.cromie@gmail.com>
-To:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
-        akpm@linuxfoundation.org, gregkh@linuxfoundation.org
-Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v3 04/21] dyndbg: refine debug verbosity; 1 is basic, 2 more chatty
-Date:   Wed, 17 Jun 2020 10:25:17 -0600
-Message-Id: <20200617162536.611386-5-jim.cromie@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200617162536.611386-1-jim.cromie@gmail.com>
-References: <20200617162536.611386-1-jim.cromie@gmail.com>
+        Wed, 17 Jun 2020 09:27:44 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 18:27:40 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Suman Anna <s-anna@ti.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, jkridner@beagleboard.org,
+        robertcnelson@gmail.com
+Subject: Re: [PATCH] ARM: dts: AM33xx-l4: add gpio-ranges
+Message-ID: <20200617162740.GA4181112@x1>
+References: <20200602131428.GA496390@x1>
+ <803e2d78-28ba-0816-dbb5-d441d7659a91@ti.com>
+ <20200602135155.GE37466@atomide.com>
+ <20200602163458.GA847883@x1>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200602163458.GA847883@x1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The verbose/debug logging done for `cat $MNT/dynamic_debug/control` is
-voluminous (2 per control file entry + 2 per PAGE).  Moreover, it just
-prints pointer and sequence, which is not useful to a dyndbg user.
-So just drop them.
+On Tue, Jun 02, 2020 at 06:34:58PM +0200, Drew Fustini wrote:
+> On Tue, Jun 02, 2020 at 06:51:55AM -0700, Tony Lindgren wrote:
+> > * Grygorii Strashko <grygorii.strashko@ti.com> [200602 13:44]:
+> > > 
+> > > 
+> > > On 02/06/2020 16:14, Drew Fustini wrote:
+> > > > Add gpio-ranges properties to the gpio controller nodes.
+> > > > 
+> > > > These gpio-ranges were created based on "Table 9-10. CONTROL_MODULE
+> > > > REGISTERS" in the  "AM335x Technical Reference Manual" [0] and "Table
+> > > > 4-2. Pin Attributes" in the "AM335x Sitara Processor datasheet" [1].
+> > > > A csv file with this data is available for reference [2].
+> > > 
+> > > It will be good if you can explain not only "what" is changed, but
+> > > also "why" it's needed in commit message.
+> > 
+> > Also, please check (again) that this is the same for all the am3
+> > variants. For omap3, we had different pad assignments even between
+> > SoC revisions. Different pad routings should be easy to deal with
+> > in the dts if needed though.
+> > 
+> > Regards,
+> > 
+> > Tony
+> 
+> It appears that the only usage of am33xx-l4.dtsi is for am335x for which
+> specific parts mentioned in those dtsi files are 3352, 3358, and 3359.
+> 
+> $ git grep am33xx-l4.dtsi 
+> arch/arm/boot/dts/am33xx.dtsi:#include "am33xx-l4.dtsi"
+> $ git grep -l '#include "am33xx.dtsi"' arch/ |wc -l
+> 27
+> $ git grep -l '#include "am33xx.dtsi"' arch/ |grep -v am335x |wc -l
+> 0
+> 
+> Also, it appears that the only AM33xx parts that actually exist are [0]:
+> 
+> AM3351, AM3352, AM3354, AM3356, AM3357, AM3358, AM3359
+> 
+> I clicked on the datasheet link for each product page and while the URL
+> has the specific part number in it [1], they all end up loading the
+> exact same PDF. The header states:
+> 
+> "AM3359, AM3358, AM3357, AM3356, AM3354, AM3352, AM3351
+> SPRS717L – OCTOBER 2011 – REVISED MARCH 2020"
+> 
+> Thus, I do believe all SoC's using am33xx-l4.dtsi would have the same
+> memory map for the pin control registers and the same relationshop from
+> pin to gpio line.  For example, GPMC_A0 has mode 7 and it is labeled
+> gpio1_16.  conf_gpmc_a0 is at offset 840h which makes it pin 16.
+> 
+> Maybe am33xx-l4.dtsi should have actually been named am335x-l4.dtsi?
+> 
+> Though I suppose there is no point in changing that now.
+> 
+> thanks,
+> drew
+> 
+> [0] http://www.ti.com/processors/sitara-arm/am335x-cortex-a8/overview.html
+> [1] https://www.ti.com/lit/ds/symlink/am3359.pdf
 
-Also require verbose>=2 for several other debug printks that are a bit
-too chatty for typical needs;
+Tony - 
 
-ddebug_change() prints changes, once per modified callsite.  Since
-queries like "+p" will enable ~2300 callsites in a typical laptop, a
-user probably doesnt need to see them often.  ddebug_exec_queries()
-still summarizes with verbose=1.
+These gpio-ranges are correct for all the platforms that included
+am33xx-l4.dtsi.
 
-ddebug_(add|remove)_module() also print 1 line per action on a module,
-not needed by typical modprobe user.
+I think it makes sense to add gpio-ranges properties as they describe
+the relationship between a gpio line and pin control register that
+exists in the hardware.
 
-This leaves verbose=1 better focussed on the >control parsing process.
+Are there changes you would like to see in this patch?
 
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
----
- lib/dynamic_debug.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
-
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 2989a590ce9a..c97872cffc8e 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -105,12 +105,15 @@ static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
- 	return buf;
- }
- 
--#define vpr_info(fmt, ...)					\
-+#define vnpr_info(lvl, fmt, ...)				\
- do {								\
--	if (verbose)						\
-+	if (verbose >= lvl)					\
- 		pr_info(fmt, ##__VA_ARGS__);			\
- } while (0)
- 
-+#define vpr_info(fmt, ...)	vnpr_info(1, fmt, ##__VA_ARGS__)
-+#define v2pr_info(fmt, ...)	vnpr_info(2, fmt, ##__VA_ARGS__)
-+
- static void vpr_info_dq(const struct ddebug_query *query, const char *msg)
- {
- 	/* trim any trailing newlines */
-@@ -198,7 +201,7 @@ static int ddebug_change(const struct ddebug_query *query,
- 				static_branch_enable(&dp->key.dd_key_true);
- #endif
- 			dp->flags = newflags;
--			vpr_info("changed %s:%d [%s]%s =%s\n",
-+			v2pr_info("changed %s:%d [%s]%s =%s\n",
- 				 trim_prefix(dp->filename), dp->lineno,
- 				 dt->mod_name, dp->function,
- 				 ddebug_describe_flags(dp, flagbuf,
-@@ -771,8 +774,6 @@ static void *ddebug_proc_start(struct seq_file *m, loff_t *pos)
- 	struct _ddebug *dp;
- 	int n = *pos;
- 
--	vpr_info("called m=%p *pos=%lld\n", m, (unsigned long long)*pos);
--
- 	mutex_lock(&ddebug_lock);
- 
- 	if (!n)
-@@ -795,9 +796,6 @@ static void *ddebug_proc_next(struct seq_file *m, void *p, loff_t *pos)
- 	struct ddebug_iter *iter = m->private;
- 	struct _ddebug *dp;
- 
--	vpr_info("called m=%p p=%p *pos=%lld\n",
--		 m, p, (unsigned long long)*pos);
--
- 	if (p == SEQ_START_TOKEN)
- 		dp = ddebug_iter_first(iter);
- 	else
-@@ -818,8 +816,6 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
- 	struct _ddebug *dp = p;
- 	char flagsbuf[10];
- 
--	vpr_info("called m=%p p=%p\n", m, p);
--
- 	if (p == SEQ_START_TOKEN) {
- 		seq_puts(m,
- 			 "# filename:lineno [module]function flags format\n");
-@@ -842,7 +838,6 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
-  */
- static void ddebug_proc_stop(struct seq_file *m, void *p)
- {
--	vpr_info("called m=%p p=%p\n", m, p);
- 	mutex_unlock(&ddebug_lock);
- }
- 
-@@ -905,7 +900,7 @@ int ddebug_add_module(struct _ddebug *tab, unsigned int n,
- 	list_add_tail(&dt->link, &ddebug_tables);
- 	mutex_unlock(&ddebug_lock);
- 
--	vpr_info("%u debug prints in module %s\n", n, dt->mod_name);
-+	v2pr_info("%u debug prints in module %s\n", n, dt->mod_name);
- 	return 0;
- }
- 
-@@ -964,7 +959,7 @@ int ddebug_remove_module(const char *mod_name)
- 	struct ddebug_table *dt, *nextdt;
- 	int ret = -ENOENT;
- 
--	vpr_info("removing module \"%s\"\n", mod_name);
-+	v2pr_info("removing module \"%s\"\n", mod_name);
- 
- 	mutex_lock(&ddebug_lock);
- 	list_for_each_entry_safe(dt, nextdt, &ddebug_tables, link) {
--- 
-2.26.2
+Thanks,
+Drew
 
