@@ -2,123 +2,112 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9849C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1E4C208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:48:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="odqwFLWO"
+	by mail.kernel.org (Postfix) with ESMTP id 88731208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592376515;
+	bh=B+BnaOuLJmPNNEFwTWeRaIgtnMKDskW0aTjkyXFMMUA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yaQ0DdQ05wyBQUYl6AYVmUA0himgSzrhb4UQ3zF8zd+MVBcf1lw+0u48PzMAtoG7G
+	 g5ulrRdefik4T7UsvtESQQ4J/qg1QFtHkcgmkE7pnghx/uTaojwoKylMDs3XXiic9Z
+	 xDkcb+08KoTFNP6UFqnXNNyvisdPy9YZE2R7Dfjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbgFQGr5 (ORCPT
+        id S1726491AbgFQGsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 02:47:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgFQGr4 (ORCPT
+        Wed, 17 Jun 2020 02:48:32 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42959 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbgFQGsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 02:47:56 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1846C061573;
-        Tue, 16 Jun 2020 23:47:54 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 205so1085589qkg.3;
-        Tue, 16 Jun 2020 23:47:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DEOcBwuJujk3Z3FbvmUIja3o6yp5Y5I7OHP6v1ayOdc=;
-        b=odqwFLWOfz6VFUZ/AEzD/ygRf/c/++SDJbNN/nwQZkGYj3C6pFFoLlEjFCrjxZnWnZ
-         /AXyjECC4SETvu2arNrXc95u4TnzXHHqyDF/78eOtDBo6dibwL8+9lRcggEsnlwVQylQ
-         Q6I9RWdTF9CTRakRQnCWZ15SP/vM1mxe7/0K8Ox0WcMFOZtvH87w9Kq6KK9S8dN6tZgz
-         scyATY9N9Cqf2C8Yjyt4ZoRiMfOrA3xAq6nE7/EB69NaaPNXIztJjRQI5LyEp/Vgc1tS
-         it112IuMOvThGIVcZT1bvRazXFl1FSC3dkTQaQZZAoFopsPy+ebRoNsXOxsCSPGsWH32
-         17rA==
+        Wed, 17 Jun 2020 02:48:32 -0400
+Received: by mail-ed1-f67.google.com with SMTP id x93so1031234ede.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 23:48:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DEOcBwuJujk3Z3FbvmUIja3o6yp5Y5I7OHP6v1ayOdc=;
-        b=rAk4tN47y81vFs1Hp4BV7OIokEiV9FUjQ2RUWnNtxcvT0YVoelI60wpreEl5MHY35Q
-         3pg05mblJfg0bfRoHbRawXR4t3XN8+mFC5DYipQFJAfHaxrkBKU+Wpz4FtDgK2AJ0MBQ
-         WKiXlZ77qQXtMgXKJFP4z9d2IsRib0oT3cmxWQ4jIimyeo0r/Bu0Ucm25rq2T4pmxYGa
-         g7kh77SsZrDLsMFef4mRyvT7hLKa69xxYvsjTJ9Ggldr7vNQxMeouJW++yTVN0qcAMzD
-         nprVCnddSM8wlT589Z0aIvih6BDP4OubFOulikBWeUWhO3TvSmC+qCT2zy/v9mNkQ4M5
-         EbPQ==
-X-Gm-Message-State: AOAM533sP/PdbmkJUF41agggBm+K4bbHeGtjz3LsZ6UezfferN4Hrfs7
-        9LEP+7iwXK3USa2CtFsd87eKam4KvhhEMh52J7o=
-X-Google-Smtp-Source: ABdhPJyNV3aHDegvpKj24F79ISjdEF6CE/prSki/wKRdyu+fjUIjtIU5SobzxF++F/MAqTGJ6CjQl08XmDfeZGFvGf8=
-X-Received: by 2002:a37:8a43:: with SMTP id m64mr23295848qkd.37.1592376473937;
- Tue, 16 Jun 2020 23:47:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OJ3s/HlOTbYQFOq7uleghPGGvHCAXsQqGed7hYcH7AA=;
+        b=DiCiYEKTny59mdnjUjB6qzz6FjfY6xs6/BXqHTO3/L9kC1OUP4WuXfwJip/K8rnj9C
+         ZQhEBgVspsIIVeyHsQyOqccbaBLcwgDC/ieqxHwEXqgT7lDNr/iM+A0ogNntVgafsFts
+         NNBkdvFoSE/W6f22l2zwDIm87EE1iShEKtPYDHIZETYzpTpjDB9zxpmhMCj7n1rkNic9
+         UhtQg17RBG3IyxwQynf0orrSq6jX5l5i7DNfNCQvOlLUh1Js11nledRp+wcD/uVb+pjF
+         cckpL0g2BErORNOW/KsritFWSmm5iOI1in2jyAfThfSnkOWsRIiEKG473+kcZGPIjN8R
+         kMDw==
+X-Gm-Message-State: AOAM530qfLrnCDtxQltNh4jOpFed0fFY7XNeAqi9Q4n6pQD6wkla/wSo
+        +FEMYyCmEzXPfiUyi/4iINU=
+X-Google-Smtp-Source: ABdhPJz3JWyhEs5CJzo9aqGn8eQwPEdhBSBq1iQhuPOQVrf11C3H2KT08oegvw3aW84ZOPEucDEVRg==
+X-Received: by 2002:a05:6402:b31:: with SMTP id bo17mr6113230edb.152.1592376509342;
+        Tue, 16 Jun 2020 23:48:29 -0700 (PDT)
+Received: from localhost (ip-37-188-158-19.eurotel.cz. [37.188.158.19])
+        by smtp.gmail.com with ESMTPSA id a7sm11381186edx.3.2020.06.16.23.48.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 23:48:27 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 08:48:26 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: don't shuffle complete zone
+ when onlining memory
+Message-ID: <20200617064826.GI9499@dhcp22.suse.cz>
+References: <20200616115213.13109-1-david@redhat.com>
+ <20200616115213.13109-3-david@redhat.com>
+ <20200616125051.GH9499@dhcp22.suse.cz>
+ <CAPcyv4hjxyyxVyZbAYoXX2TM3mHF6e4VneVVcmVU+_Q4n9CxzQ@mail.gmail.com>
+ <CAPcyv4gTTVaGAKt91DcgW=t3PgWFioZA7XQrCAU_gAXhcxBe1w@mail.gmail.com>
 MIME-Version: 1.0
-References: <feda3bb02296455d43aeebb7575918d9b28e1a3f.1592368322.git.shengjiu.wang@nxp.com>
- <53a969a83999de91f3ff2809d78335c3f0cc1ee3.1592368322.git.shengjiu.wang@nxp.com>
- <20200617062457.GA6411@Asurada-Nvidia>
-In-Reply-To: <20200617062457.GA6411@Asurada-Nvidia>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Wed, 17 Jun 2020 14:47:43 +0800
-Message-ID: <CAA+D8AOBA2pM0CXpdEO7NS1fdK8Nv=4gRDQ384v6mV9ip6Ke2Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ASoC: fsl_spdif: Add support for imx6sx platform
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4gTTVaGAKt91DcgW=t3PgWFioZA7XQrCAU_gAXhcxBe1w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 2:27 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Wed, Jun 17, 2020 at 12:30:17PM +0800, Shengjiu Wang wrote:
-> > The one difference on imx6sx platform is that the root clock
-> > is shared with ASRC module, so we add a new flags
-> > "shared_root_clock" which means the root clock is independent,
->
-> "shared" means "not independent", against "independent" ;)
->
-> > then we will not do the clk_set_rate and clk_round_rate to avoid
-> > impact ASRC module usage.
+On Tue 16-06-20 10:03:31, Dan Williams wrote:
+> On Tue, Jun 16, 2020 at 10:00 AM Dan Williams <dan.j.williams@intel.com> wrote:
 > >
-> > As add a new flags, we include the soc specific data struct.
-> >
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
->
-> Can add this once fixing the remaining comments:
->
-> Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
->
-> > +static inline bool fsl_spdif_can_set_clk_rate(struct fsl_spdif_priv *spdif,
-> > +                                           int clk)
->
-> Can actually merge into single line as kernel has 100-character
-> limit now, though 80-char is still preferable for a good coding
-> style. But I think this one wouldn't be too bad at all.
->
-> > @@ -421,7 +456,7 @@ static int spdif_set_sample_rate(struct snd_pcm_substream *substream,
-> >       sysclk_df = spdif_priv->sysclk_df[rate];
-> >
-> >       /* Don't mess up the clocks from other modules */
->
-> We can drop this comments now as it's out-of-date and the name of
-> the new helper function is straightforward enough.
->
+> > On Tue, Jun 16, 2020 at 5:51 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > On Tue 16-06-20 13:52:12, David Hildenbrand wrote:
+> > > > Commit e900a918b098 ("mm: shuffle initial free memory to improve
+> > > > memory-side-cache utilization") introduced shuffling of free pages
+> > > > during system boot and whenever we online memory blocks.
+> > > >
+> > > > However, whenever we online memory blocks, all pages that will be
+> > > > exposed to the buddy end up getting freed via __free_one_page(). In the
+> > > > general case, we free these pages in MAX_ORDER - 1 chunks, which
+> > > > corresponds to the shuffle order.
+> > > >
+> > > > Inside __free_one_page(), we will already shuffle the newly onlined pages
+> > > > using "to_tail = shuffle_pick_tail();". Drop explicit zone shuffling on
+> > > > memory hotplug.
+> 
+> This was already explained in the initial patch submission. The
+> shuffle_pick_tail() shuffling at run time is only sufficient for
+> maintaining the shuffle. It's not sufficient for effectively
+> randomizing the free list.
 
-ok, will send v3.
+Yes, the "randomness" of the added memory will be lower. But is this
+observable for hotplug scenarios? Is memory hotplug for the normal
+memory really a thing in setups which use RAM as a cache?
 
-best regards
-wang shengjiu
+While I do agree that the code wise the shuffling per online operation
+doesn't really have any overhead really but it would be really great to
+know whether it matters at all.
+-- 
+Michal Hocko
+SUSE Labs
