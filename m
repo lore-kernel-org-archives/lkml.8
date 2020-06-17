@@ -2,135 +2,108 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E49BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE88F21548
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B7021789
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:54:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u3Wa8m8A"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iIe2Vswy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgFQTxq (ORCPT
+        id S1726945AbgFQTx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 15:53:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53076 "EHLO
+        Wed, 17 Jun 2020 15:53:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbgFQTxq (ORCPT
+        with ESMTP id S1726918AbgFQTx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 15:53:46 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C695C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:53:44 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id m26so2044839lfo.13
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:53:44 -0700 (PDT)
+        Wed, 17 Jun 2020 15:53:56 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A31C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:53:56 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id s10so1812924pgm.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:53:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=652Df2r0/DgKireW06s96KgNYOn5wGhQAsXaGuNmXIU=;
-        b=u3Wa8m8AA+KUbrW2ZJpwKkh5OV+uw6/tbYieNTCpV+g/fKZMa/424dnXDq9k1pZPsC
-         R3FzepNEt9eHmKEZLsQB6039RHnI2oLz4CeV+LIiyjsGAuVvKHjPqJBF3Os+Yu3DAD8h
-         eayE3aq6KDW1uRolK2PO0BBU19aNm/+f0ZClqWN+6CBGWa1oZWt3Q1ccsHsxPC9fP8Fo
-         fRbkAnztmRQIhCW37CvRuaE6qD0vU9+o9o/RIpz49UZIQk8W128R+KBu/KuSbu6ST/8e
-         pUQ0WdEBLZ+YsiIPD892IivctXxTZsc2P7241Yy2nkAjGpLCkDQM5X2GbJvBqr2rZVAY
-         UQQA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HspOBWQFNVTqHKcQjJ7DMFYjwVDK4nykbOjxs8oECug=;
+        b=iIe2Vswy0TY+sRYv+pLytwjoHEIfNisAagX0KZ0vRZecyk0Pd9/p0rl68+ExjofQ3J
+         VHCh76x8fe+irdOQXTRgFjqJ47+41aIgdVqDJBkghAl1xDUzcd9AO/I9Mwv71GdOvnKC
+         ROQqZdM2cbUEhVUyNQZ8WzcQO1FaU2yp/4hWU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=652Df2r0/DgKireW06s96KgNYOn5wGhQAsXaGuNmXIU=;
-        b=eYQbYx9EixTPWyjnRLHBr5DSd+u/9UQtKeSGHv8atIXOElVYoQwrwDlkIZF2jkt6yG
-         NejLpO463eAdJzhBuR/lE7PYt4ZeUjr7oj+HfyGfBgzHR3sg+pU76DgzaTdWWV/ptEg7
-         sSPMnkt1GmCupBviT0mIk827BU1sDaN+pp5kULetr2Qk+HILTER3bHoGHt4pjefjqPOV
-         P1bvpVnz0K+H+rouNHV5YwjjfRiBie/MtCElqHHjdR2TKFppEH5c6yt55tLa23kG3tCq
-         +OTzhrukDXYP1ewkU0KMjEoSdbhz5bsM00624nmNs0zQNc9KzPvDoiG+x74tmxJ+WmHp
-         pE3g==
-X-Gm-Message-State: AOAM532XEkcbpLVfMPiVYJeIp+0f7H/7KiHFOHiAnLPP7/XumxH+06Zc
-        Io2Fb0otTc02SLix6QcSTbnCigrTpTgNhbzG0RMdjQ==
-X-Google-Smtp-Source: ABdhPJyNvJoaAN28/Zg/o9OICE/84/JjfeagXh8bzJTkYAwiivCGPGUzVM1fri9Qg8kksG9nggUrDgCqrfFwoV4dkhw=
-X-Received: by 2002:ac2:41d4:: with SMTP id d20mr299095lfi.204.1592423622439;
- Wed, 17 Jun 2020 12:53:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HspOBWQFNVTqHKcQjJ7DMFYjwVDK4nykbOjxs8oECug=;
+        b=qj2ET1ZiRSrJL3kdf+yVMmyUyIYWpFHah+mcsFASSUOpFxibm9qXud382DwPr8LNXg
+         wVjDYs9PyBla7i2naJe33SsyYcunt1+geo+jhLPvaoGtK2/6eys4iuy7u7+BJvVXbdu/
+         bzhiTwvNXna46n+whyHnJ/sSiJBNUiPwECTVXTa1OXgbvdJhHqyI7ngvVPe1oOMG9ndJ
+         lTbQX5F3OX/uJe8zVaYkNZplrTOaYCMLkjEUMM3VvLfvMS3IiHn9LFALW2Sb2vKdjk7b
+         Jgew1U9yP2IrmXr8iD2GRd1AiDE/fwM24RzNBlzDbL2Ggv0+5ArfH+zoDpt8wCa5JuCZ
+         1ahw==
+X-Gm-Message-State: AOAM532tjpMkL7WXlEaAEsyL8LKh6UL8CRGsv0Dt/S98yxy9n3k6LVua
+        kKfXgXT8oYlji5iQbOsICLqbvA==
+X-Google-Smtp-Source: ABdhPJzU2MrCywm/yIqXZrWJqCrHeLxWKzoBvu0raHnNG08mgZ92LJXSezd98/LJ4Rz5kge/t19oGQ==
+X-Received: by 2002:a63:4e64:: with SMTP id o36mr393204pgl.101.1592423635779;
+        Wed, 17 Jun 2020 12:53:55 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w18sm625330pfq.121.2020.06.17.12.53.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 12:53:53 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>,
+        Christoph Lameter <cl@linux.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, vinmenon@codeaurora.org,
+        Matthew Garrett <mjg59@google.com>,
+        Jann Horn <jannh@google.com>,
+        Vijayanand Jitta <vjitta@codeaurora.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] mm: Expand CONFIG_SLAB_FREELIST_HARDENED to include SLAB and SLOB
+Date:   Wed, 17 Jun 2020 12:53:47 -0700
+Message-Id: <20200617195349.3471794-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200616011742.138975-1-rajatja@google.com> <20200616011742.138975-4-rajatja@google.com>
- <20200616073249.GB30385@infradead.org> <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
- <20200617073100.GA14424@infradead.org>
-In-Reply-To: <20200617073100.GA14424@infradead.org>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Wed, 17 Jun 2020 12:53:03 -0700
-Message-ID: <CACK8Z6FecYkAYQh4sm4RbAQ1iwb9gexqgY9ExD9BH2p-5Usj=g@mail.gmail.com>
-Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg, Christoph,
+Hi,
 
-On Wed, Jun 17, 2020 at 12:31 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Tue, Jun 16, 2020 at 12:27:35PM -0700, Rajat Jain wrote:
-> > Need clarification. The flag "untrusted" is currently a part of
-> > pci_dev struct, and is populated within the PCI subsystem.
->
-> Yes, and that is the problem.
->
-> >
-> > 1) Is your suggestion to move this flag as well as the attribute to
-> > device core (in "struct device")? This would allow other buses to
-> > populate/use this flag if they want. By default it'll be set to 0 for
-> > all devices (PCI subsystem will populate it based on platform info,
-> > like it does today).
-> >
-> > OR
-> >
-> > 2) Are you suggesting to keep the "untrusted" flag within PCI, but
-> > attach the sysfs attribute to the base device? (&pci_dev->dev)?
->
-> (1).  As for IOMMUs and userspace policy it really should not matter
-> what bus a device is on if it is external and not trustworthy.
+In reviewing Vlastimil Babka's latest slub debug series, I realized[1]
+that several checks under CONFIG_SLAB_FREELIST_HARDENED weren't being
+applied to SLAB (or SLOB). Fix this by expanding the Kconfig coverage and
+moving the cache_from_obj() check back into the common code. Additionally
+adds a simple double-free test for SLAB.
 
-Sure. I can move the flag to the "struct device" (and likely call
-it "external" instead of "untrusted" so as to make it suitable for
-more use cases later).  The buses can fill this up if they know which
-devices are external and which ones are not (otherwise it will be 0 by
-default). The PCI can fill this up like it does today, from platform
-info (ACPI / Device tree). Greg, how does this sound?
+Thanks!
 
-Thanks,
+-Kees
 
-Rajat
+[1] https://lore.kernel.org/lkml/202006171039.FBDF2D7F4A@keescook/
+
+Kees Cook (2):
+  mm: Expand CONFIG_SLAB_FREELIST_HARDENED to include SLAB and SLOB
+  slab: Add naive detection of double free
+
+ init/Kconfig |  8 ++++----
+ mm/slab.c    | 22 ++++++++++++----------
+ mm/slab.h    | 31 +++++++++++++++++++++++++++++++
+ mm/slub.c    | 25 +------------------------
+ 4 files changed, 48 insertions(+), 38 deletions(-)
+
+-- 
+2.25.1
+
