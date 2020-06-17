@@ -2,205 +2,95 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6149C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2ABD206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A366C2080D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgFQHR5 (ORCPT
+        id S1726331AbgFQHSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 03:17:57 -0400
-Received: from 167-179-156-38.a7b39c.bne.nbn.aussiebb.net ([167.179.156.38]:41773
-        "EHLO fornost.hmeau.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725894AbgFQHR5 (ORCPT
+        Wed, 17 Jun 2020 03:18:47 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45569 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgFQHSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 03:17:57 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jlSK1-0003hL-J3; Wed, 17 Jun 2020 17:17:22 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 17 Jun 2020 17:17:21 +1000
-From:   "Herbert Xu" <herbert@gondor.apana.org.au>
-Date:   Wed, 17 Jun 2020 17:17:21 +1000
-Subject: [v3 PATCH 2/2] printk: Make linux/printk.h self-contained
-References: <20200617071524.GA3055@gondor.apana.org.au>
-To:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Message-Id: <E1jlSK1-0003hL-J3@fornost.hmeau.com>
+        Wed, 17 Jun 2020 03:18:46 -0400
+Received: by mail-oi1-f193.google.com with SMTP id p70so881530oic.12;
+        Wed, 17 Jun 2020 00:18:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rbNjBfQChq86KCqMUr/PrecFByo1h6xqIQX3C8q/kck=;
+        b=M5MzLtCL+GbFcqDPsSaW+l0ywkmX+pqSMG1hSoUoYkGFrOe/4ZpZ/6Z9fbQJhDVaR+
+         Oee8mcqylWMrUhBZNPNlAuQbsw/b8i02/TRRUFnyl21XIhPPvZu4D4d7xhTj+yAgGafH
+         q4gGOZdEKkDy5XycOMftdP2QXVf5TmPoRLPn2wdZpi+L73uGGkUayoFq8g9H0V4R1v/4
+         sS7a/8cEkr4UKU0dYv8AEqA98gZSfefkhn4wf1YWBA4czNqBrdYyMIBOO9oa4UpcFeTq
+         Ex4rexyWW4y0inybMYWHV5WJAIW+8oBN/e6foA9pQqtO27IA5EeJdvRkVo8lhkc8MuUe
+         dFMA==
+X-Gm-Message-State: AOAM532KOTjlqo2djycUfoGF2FZoph5UYMZB0HHsXL1r+sbFHsDQOJfG
+        N2mPTz0EeRIw5VTDUQZJVw06owXD0xAnPxkiDGc=
+X-Google-Smtp-Source: ABdhPJy2BJl8lH7KWshHjFs2QyMUqtCXHxi/voSfLuUWyFefGalG6ul8iDspOWJlZF5Q8XoTbLrAz6CFfpwp4GQnVjI=
+X-Received: by 2002:aca:849:: with SMTP id 70mr6140466oii.153.1592378325516;
+ Wed, 17 Jun 2020 00:18:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200615141606.2814208-1-thierry.reding@gmail.com> <20200615141606.2814208-2-thierry.reding@gmail.com>
+In-Reply-To: <20200615141606.2814208-2-thierry.reding@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 17 Jun 2020 09:18:34 +0200
+Message-ID: <CAMuHMdWaKgNOz02eVXkFnGRpsjdNNGVtuCf0setigH31-9aXQg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] video: ssd1307fb: Print PWM period using 64-bit
+ format specifier
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As it stands if you include printk.h by itself it will fail to
-compile because it requires definitions from ratelimit.h.  However,
-simply including ratelimit.h from printk.h does not work due to
-inclusion loops involving sched.h and kernel.h.
+Hi Thierry,
 
-This patch solves this by moving bits from ratelimit.h into a new
-header file which can then be included by printk.h without any
-worries about header loops.
+On Mon, Jun 15, 2020 at 4:17 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+> The PWM core will soon change the duty cycle and period of PWMs to 64
+> bits to allow for a broader range of values. Use a 64-bit format
+> specifier to avoid a warning when that change is made.
+>
+> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 
-The build bot then revealed some intriguing failures arising out
-of this patch.  On s390 there is an inclusion loop with asm/bug.h
-and linux/kernel.h that triggers a compile failure, because kernel.h
-will cause asm-generic/bug.h to be included before s390's own
-asm/bug.h has finished processing.  This has been fixed by not
-including kernel.h in arch/s390/include/asm/bug.h.
+> --- a/drivers/video/fbdev/ssd1307fb.c
+> +++ b/drivers/video/fbdev/ssd1307fb.c
+> @@ -312,7 +312,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
+>                 /* Enable the PWM */
+>                 pwm_enable(par->pwm);
+>
+> -               dev_dbg(&par->client->dev, "Using PWM%d with a %dns period.\n",
+> +               dev_dbg(&par->client->dev, "Using PWM%d with a %lluns period.\n",
+>                         par->pwm->pwm, pwm_get_period(par->pwm));
+>         }
 
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Acked-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
+This change must be done together with changing the return type of
+pwm_get_period(), else you will get a compiler warning, and will print a
+bogus value.
 
- arch/s390/include/asm/bug.h     |    2 -
- include/linux/printk.h          |    1 
- include/linux/ratelimit.h       |   36 ---------------------------------
- include/linux/ratelimit_types.h |   43 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 46 insertions(+), 36 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
-index 7725f8006fdfb..0b25f28351edc 100644
---- a/arch/s390/include/asm/bug.h
-+++ b/arch/s390/include/asm/bug.h
-@@ -2,7 +2,7 @@
- #ifndef _ASM_S390_BUG_H
- #define _ASM_S390_BUG_H
- 
--#include <linux/kernel.h>
-+#include <linux/compiler.h>
- 
- #ifdef CONFIG_BUG
- 
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index fc8f03c545430..34c1a7be3e014 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -7,6 +7,7 @@
- #include <linux/kern_levels.h>
- #include <linux/linkage.h>
- #include <linux/cache.h>
-+#include <linux/ratelimit_types.h>
- 
- extern const char linux_banner[];
- extern const char linux_proc_banner[];
-diff --git a/include/linux/ratelimit.h b/include/linux/ratelimit.h
-index 8ddf79e9207a9..b17e0cd0a30cf 100644
---- a/include/linux/ratelimit.h
-+++ b/include/linux/ratelimit.h
-@@ -2,41 +2,10 @@
- #ifndef _LINUX_RATELIMIT_H
- #define _LINUX_RATELIMIT_H
- 
--#include <linux/param.h>
-+#include <linux/ratelimit_types.h>
- #include <linux/sched.h>
- #include <linux/spinlock.h>
- 
--#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
--#define DEFAULT_RATELIMIT_BURST		10
--
--/* issue num suppressed message on exit */
--#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
--
--struct ratelimit_state {
--	raw_spinlock_t	lock;		/* protect the state */
--
--	int		interval;
--	int		burst;
--	int		printed;
--	int		missed;
--	unsigned long	begin;
--	unsigned long	flags;
--};
--
--#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
--		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
--		.interval	= interval_init,			\
--		.burst		= burst_init,				\
--	}
--
--#define RATELIMIT_STATE_INIT_DISABLED					\
--	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
--
--#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
--									\
--	struct ratelimit_state name =					\
--		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
--
- static inline void ratelimit_state_init(struct ratelimit_state *rs,
- 					int interval, int burst)
- {
-@@ -73,9 +42,6 @@ ratelimit_set_flags(struct ratelimit_state *rs, unsigned long flags)
- 
- extern struct ratelimit_state printk_ratelimit_state;
- 
--extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
--#define __ratelimit(state) ___ratelimit(state, __func__)
--
- #ifdef CONFIG_PRINTK
- 
- #define WARN_ON_RATELIMIT(condition, state)	({		\
-diff --git a/include/linux/ratelimit_types.h b/include/linux/ratelimit_types.h
-new file mode 100644
-index 0000000000000..b676aa419eef8
---- /dev/null
-+++ b/include/linux/ratelimit_types.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_RATELIMIT_TYPES_H
-+#define _LINUX_RATELIMIT_TYPES_H
-+
-+#include <linux/bits.h>
-+#include <linux/param.h>
-+#include <linux/spinlock_types.h>
-+
-+#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
-+#define DEFAULT_RATELIMIT_BURST		10
-+
-+/* issue num suppressed message on exit */
-+#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
-+
-+struct ratelimit_state {
-+	raw_spinlock_t	lock;		/* protect the state */
-+
-+	int		interval;
-+	int		burst;
-+	int		printed;
-+	int		missed;
-+	unsigned long	begin;
-+	unsigned long	flags;
-+};
-+
-+#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
-+		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
-+		.interval	= interval_init,			\
-+		.burst		= burst_init,				\
-+	}
-+
-+#define RATELIMIT_STATE_INIT_DISABLED					\
-+	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
-+
-+#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
-+									\
-+	struct ratelimit_state name =					\
-+		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
-+
-+extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
-+#define __ratelimit(state) ___ratelimit(state, __func__)
-+
-+#endif /* _LINUX_RATELIMIT_TYPES_H */
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
