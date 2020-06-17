@@ -2,100 +2,92 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A150FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A971206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:33:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRUTMws7"
+	by mail.kernel.org (Postfix) with ESMTP id 43D7E20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:36:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgFQOdp (ORCPT
+        id S1726854AbgFQOgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 10:33:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgFQOdo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 10:33:44 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A36C06174E;
-        Wed, 17 Jun 2020 07:33:44 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id s88so1144047pjb.5;
-        Wed, 17 Jun 2020 07:33:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=A7+787E4TJUG9/bCUJgW+ej33fZ4Z2tVDSzeCsYPOrY=;
-        b=kRUTMws7Q0VVgVgY/TAXGsl/Y4szr0tnZ3vP92473/zUuwn96UJlHq5zmc1TrccEuL
-         haONzpFTJ/tSz9i9ZcMtGQ6fPT2VGgMiX5yx1Mx2cRaVI+OUfZgfOMtF/grQjAHno+QF
-         0Wkava6HXcZZzTkrjArQp6VgKNMP9fsifQwpHKW6KHOsSJ897CwtEibKaTv2TTIZhqA2
-         ZGP9gPjtZwrILzZMlvK9QKu4Bt/4pe7ksx5+oGJvRASZNg7oKo0aZIroOo4W/je21FIT
-         TTVKjTs87RQfvlSOSUF4KJgjhBsUoC2P1R87kN6GrAGqF0SdHOQetcVQQ8KrVNEDOW2c
-         ozfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A7+787E4TJUG9/bCUJgW+ej33fZ4Z2tVDSzeCsYPOrY=;
-        b=akpkmIbZVnGLG8FvG0/BNuFZg5MByzpdBDuOii27Ye80/fpvvmNAL+e1OHrRKXONUv
-         ocuJODqA4uUdwcBtgcGRt2Nb4daHiUXJMWch8idBAQoxfE1PGFCfzoi1PDRBA1CkIWvj
-         Mh1F03uHyhi+x4ythoWoIf3JMAcfMigm9amWQ2yelrVXs0GlBOHPr2nLPkeipEUSJEpM
-         4vmJnpGWneFJjnTyEON7DNgrq4bWC2zoR7LSMb+KcKGaCpqWvuXq436wmo4boo8ho4TL
-         sCQirYuvF5SaVJ06HZc00bXjGXSqJCJpsitfwFvJuyrzdK8JSRqtAEw79jc240Nzpd77
-         eewQ==
-X-Gm-Message-State: AOAM530xy6r18WDR5a1PoHYl/ucIGB9XyzE6TasHBYH0wNP6aU7QS3BY
-        85t1ETy5pc+l/mhFWN8wA7Y=
-X-Google-Smtp-Source: ABdhPJy/Zf8bsf33U9+WE6cB+Uw6CQw+yQFwsmKugqosMVhjoOEOaCsPOdUOOpuZRgWDunmN8ix7Tw==
-X-Received: by 2002:a17:902:7004:: with SMTP id y4mr2055981plk.83.1592404424022;
-        Wed, 17 Jun 2020 07:33:44 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w12sm135347pfn.68.2020.06.17.07.33.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Jun 2020 07:33:43 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 07:33:42 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Jacky Hu <hengqing.hu@gmail.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tony.luck@intel.com, x86@kernel.org,
-        yazen.ghannam@amd.com, bp@alien8.de, clemens@ladisch.de
-Subject: Re: [PATCH] hwmon: (k10temp) Add AMD family 17h model 60h probe
-Message-ID: <20200617143342.GD93431@roeck-us.net>
-References: <20200616180940.GN13515@zn.tnic>
- <20200617013255.391975-1-hengqing.hu@gmail.com>
- <20200617034028.GA1614@roeck-us.net>
- <20200617071927.GA398128@i716>
+        Wed, 17 Jun 2020 10:36:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:58942 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgFQOgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 10:36:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 579F231B;
+        Wed, 17 Jun 2020 07:36:04 -0700 (PDT)
+Received: from [192.168.1.84] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3BBAE3F73C;
+        Wed, 17 Jun 2020 07:36:03 -0700 (PDT)
+Subject: Re: [PATCH v3] drm/panfrost: Reduce the amount of logs on deferred
+ probe
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+References: <20200527200544.7849-1-krzk@kernel.org>
+ <20200527204334.GA15485@kevin> <20200617141547.GA30516@kozik-lap>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <b41bfead-7b73-be78-c63f-79a0a7e23b2a@arm.com>
+Date:   Wed, 17 Jun 2020 15:35:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617071927.GA398128@i716>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200617141547.GA30516@kozik-lap>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 03:19:27PM +0800, Jacky Hu wrote:
-> Hi Guenter,
+On 17/06/2020 15:15, Krzysztof Kozlowski wrote:
+> On Wed, May 27, 2020 at 04:43:34PM -0400, Alyssa Rosenzweig wrote:
+>> Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+>>
+>> On Wed, May 27, 2020 at 10:05:44PM +0200, Krzysztof Kozlowski wrote:
+>>> There is no point to print deferred probe (and its failures to get
+>>> resources) as an error.  Also there is no need to print regulator errors
+>>> twice.
+>>>
+>>> In case of multiple probe tries this would pollute the dmesg.
+>>>
+>>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>>> Reviewed-by: Steven Price <steven.price@arm.com>
+>>>
+>>> ---
+>>>
+>>> Changes since v2:
+>>> 1. Rebase
+>>> 2. Add Steven's review
+>>>
+>>> Changes since v1:
+>>> 1. Remove second error message from calling panfrost_regulator_init()
+>>> ---
+>>>   drivers/gpu/drm/panfrost/panfrost_device.c | 8 ++++----
+>>>   1 file changed, 4 insertions(+), 4 deletions(-)
+>>>
 > 
-> By increasing the regs count from 32 to 256 and looking into the output of `cat /sys/kernel/debug/k10temp-0000\:00\:18.3/svi`
-> There is some data from 0x05a300 - 0x05a330
-> Do you have any idea how we can guess the offset for this model?
+> Hi Rob, Tomeu and Steven,
 > 
+> You're listed as maintainers for panfrost. Is anyone going to pick this
+> up?
 
-For other chips, the upper 16 bits of the register reported the voltage
-and the lower 16 bit reported the current. It might possibly be that the
-data is now split into multiple registers, but that is impossible to
-determine without datasheet and/or additional information. So, sorry,
-no, I have no idea. We'll have to wait for someone to reverse engineer
-it.
+I'm only a reviewer so I've been leaving it for Rob or Tomeu, but I can 
+pick it up if Rob/Tomeu are happy for me to do that.
 
-Can you send the contents of the "thm" file ? Maybe we can at least
-find the new location of the ccd temperature registers.
+> Maybe I sent it to wrong mailing list or forgot about anything?
 
-Guenter
+No, there's actually a few Panfrost commits waiting, it was on my todo 
+list to ask if Rob/Tomeu needed some help with merging patches.
+
+Steve
