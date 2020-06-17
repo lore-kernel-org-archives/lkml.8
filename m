@@ -4,106 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3032CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B953212CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C0CB206E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592413368;
-	bh=dc+LQ+AYN66hLpsu5bLQY3HQR3L8SZaP8j+oRyYSVoQ=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=Unk5/DKFYOmk+0z2Oul9rSeECYQdg7xMMQdYIYJCW839/tMNK1X3vWllNHtaWqGLt
-	 Wqs4qK6bNGfiXEGGAxaq2RDw+ATJMlreReZXCREY1Ra7OaDRR0SRQLYeDNIC3vjZpd
-	 40rvUYr+LtxDtB8R4AKgfExJsJ8ervMgI6pF2xyM=
+	s=default; t=1592413520;
+	bh=XIMLY6BhInjMoTyqDt0EF+eUnNRnI0xH3FZNQB5JAR0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zpw6L0naKCIvOvM0RoJE19xijNbTfetyX0CBtK0s2BR/gxvRDPC+uurpLx2/xQrK4
+	 0Lkydxgd3Er3Hu9RTO8NSZBZRL3E6blcCTe3QDYWRqXZDuK6dAoIYr26WjIEF14cFB
+	 wMIn2qTWcxnK2K0oQhpxGS0HnTYQ6PaIXj1K4VHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbgFQRCq (ORCPT
+        id S1726861AbgFQRFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 13:02:46 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35490 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgFQRCo (ORCPT
+        Wed, 17 Jun 2020 13:05:19 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43064 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgFQRFS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 13:02:44 -0400
-Received: by mail-il1-f193.google.com with SMTP id l6so2918788ilo.2;
-        Wed, 17 Jun 2020 10:02:44 -0700 (PDT)
+        Wed, 17 Jun 2020 13:05:18 -0400
+Received: by mail-io1-f66.google.com with SMTP id u13so3592167iol.10;
+        Wed, 17 Jun 2020 10:05:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wysgsxusisoXYB/oBjiONlbpR3I9vXszy7LjMADdR3U=;
-        b=bhWijklCw/3RHXvBU8uru+YMpxKRO+M8kM/YQn24ZZYW4vvDu5NPvkRxuV3OMfAcIk
-         LcwXj9emkzQl7g2AJxUxukh4J1QYvq+bskIbR1dSujmm4Bmo17SqnM4XryOQP7yoW/k6
-         If42BZHQ+lM2UUatXqvndDk5tdAT2ULeZ2YfnrcsAdSeGxKrtWP3KiCtl+/JnP8AfskR
-         05fbwZOYGoYlfFDnqyZp9n/5BATXiZoN/ErFzzNZnW+lkzZ00tfCA09PAtE8p6Rftmfn
-         sCutccCI85bcND6pZ/qm519fiUDPA4T7DWZVcMK1Axmttru7FJp/YVa3nTuGdg4lRaWo
-         w4dg==
-X-Gm-Message-State: AOAM531D4AimZ2Qn2bdWkL05zVbm9p/1WEiQFVxcGgRHkH+j/WCJ3RKr
-        /WOxJoPrK/SLFeIyZ03VIg==
-X-Google-Smtp-Source: ABdhPJxImNwbUj9PpjA2BYws1gMI6MBBgEdSo1Q1xpoTQQD6tQRxzu/PREL+1EnhRRsp/OTR/9u+hw==
-X-Received: by 2002:a92:cc0c:: with SMTP id s12mr9709396ilp.192.1592413363578;
-        Wed, 17 Jun 2020 10:02:43 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=HPxsEuG2Ekjg7Hds/kVbwy4+RHNKxxhI4PPschCmgkM=;
+        b=RDT+JG49FSNzk3ZbetyEs02pzOmhpDMJXxn/VaDpboEh5w+tOIQQOesNMMhFEdUAYL
+         7flU2rk1M7I1BLTh17sbua2EDs3+yj1b5fxbItc2vvnqwaSQt9+HBy+CNhxZBx7dLhid
+         g2mG5px08tNOOKu6TjyU1+m/nr2TRHBQo7jDTdDuwxDf1kdEkl21OUU9slf7ktpFWUeF
+         I/Uzwr+5JpP0BSlQY7ePyW84VwKbJkmdxaLIus4NhODy8gv1JTmRMySir5JgaIjzbKJu
+         IY22lQSiv8zdfpfmDsKwLAmreqPIsLDoVgM1mHTbZS7+xtbEQULamYk/s3Vi69Zbh2Zw
+         +mQA==
+X-Gm-Message-State: AOAM532KBVPeqUBeThmPDERsbnZ5WyUmNNE5dKfIUxSWemO/wFzg4K9c
+        +RWBid97NhZvPkAgxfeg/D0GnaPFZg==
+X-Google-Smtp-Source: ABdhPJxOueUOpkABb/OhgZnN7xdWgVuzrEQS51Ltu7wGIP6FvZw5VBXvVUAcxQRRSAHmmWE6Fgb+Kw==
+X-Received: by 2002:a02:1c4a:: with SMTP id c71mr229254jac.142.1592413517160;
+        Wed, 17 Jun 2020 10:05:17 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id f5sm214085iog.49.2020.06.17.10.02.42
+        by smtp.gmail.com with ESMTPSA id d71sm130223ill.9.2020.06.17.10.05.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 10:02:42 -0700 (PDT)
-Received: (nullmailer pid 2307219 invoked by uid 1000);
-        Wed, 17 Jun 2020 17:02:41 -0000
-Date:   Wed, 17 Jun 2020 11:02:41 -0600
+        Wed, 17 Jun 2020 10:05:16 -0700 (PDT)
+Received: (nullmailer pid 2311373 invoked by uid 1000);
+        Wed, 17 Jun 2020 17:05:15 -0000
+Date:   Wed, 17 Jun 2020 11:05:15 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, SoC Team <soc@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-mmc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: mmc: Add Sparx5 SDHCI controller
- bindings
-Message-ID: <20200617170241.GA2306485@bogus>
-References: <20200616140027.4949-1-lars.povlsen@microchip.com>
- <20200616140027.4949-2-lars.povlsen@microchip.com>
+To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
+Cc:     gregkh@linuxfoundation.org, alcooperx@gmail.com,
+        robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        vkoul@kernel.org, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kishon@ti.com, simon@fire.lp0.eu, f.fainelli@gmail.com,
+        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: add bcm63xx-usbh bindings
+Message-ID: <20200617170515.GA2310896@bogus>
+References: <20200616181802.3498745-1-noltari@gmail.com>
+ <20200616181802.3498745-2-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200616140027.4949-2-lars.povlsen@microchip.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200616181802.3498745-2-noltari@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020 16:00:25 +0200, Lars Povlsen wrote:
-> The Sparx5 SDHCI controller is based on the Designware controller IP.
+On Tue, 16 Jun 2020 20:18:01 +0200, Álvaro Fernández Rojas wrote:
+> Document BCM63xx USBH PHY bindings.
 > 
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 > ---
->  .../mmc/microchip,dw-sparx5-sdhci.yaml        | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
+>  v2: phy-cells changed to 1.
+> 
+>  .../bindings/phy/brcm,bcm63xx-usbh-phy.yaml   | 72 +++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dts:20:18: fatal error: dt-bindings/clock/microchip,sparx5.h: No such file or directory
-         #include <dt-bindings/clock/microchip,sparx5.h>
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dt.yaml] Error 1
+Error: Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.example.dts:22.33-34 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.example.dt.yaml] Error 1
 make[1]: *** Waiting for unfinished jobs....
 Makefile:1347: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
 
-See https://patchwork.ozlabs.org/patch/1310435
+See https://patchwork.ozlabs.org/patch/1310646
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
