@@ -2,253 +2,108 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A61AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCA5921919
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C9192184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:34:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgFQVdy (ORCPT
+        id S1727029AbgFQVer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:33:54 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:48418 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726987AbgFQVdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:33:39 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.sntech)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jlfgX-00063V-10; Wed, 17 Jun 2020 23:33:29 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, heiko@sntech.de,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH v4 1/3] net: phy: mscc: move shared probe code into a helper
-Date:   Wed, 17 Jun 2020 23:33:24 +0200
-Message-Id: <20200617213326.1532365-2-heiko@sntech.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200617213326.1532365-1-heiko@sntech.de>
-References: <20200617213326.1532365-1-heiko@sntech.de>
+        Wed, 17 Jun 2020 17:34:47 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:54827 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgFQVer (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 17:34:47 -0400
+X-Originating-IP: 86.202.110.81
+Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 90FF2C0003;
+        Wed, 17 Jun 2020 21:34:38 +0000 (UTC)
+Date:   Wed, 17 Jun 2020 23:34:38 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        claudiu.beznea@microchip.com
+Subject: Re: [PATCH 3/3] Revert "ARM: at91/dt: sama5d2 Xplained: add pdmic
+ node"
+Message-ID: <20200617213438.GF3675@piout.net>
+References: <20200615095525.43414-1-codrin.ciubotariu@microchip.com>
+ <20200615095525.43414-3-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615095525.43414-3-codrin.ciubotariu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Hi,
 
-The different probe functions share a lot of code, so move the
-common parts into a helper to reduce duplication.
+The correct subject line prefix is "ARM: dts: at91:"
 
-This moves the devm_phy_package_join below the general allocation
-but as all components just allocate things, this should be ok.
+On 15/06/2020 12:55:25+0300, Codrin Ciubotariu wrote:
+> There are no PDM microphones on SAMA5D2 Xplained, to exercize the
+> PDMIC.
+> 
+> This reverts commit ca6349a8c51f2e3d6f2acdb36431e7d7328261f7.
+> 
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> ---
+>  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 16 ----------------
+>  1 file changed, 16 deletions(-)
+> 
 
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
- drivers/net/phy/mscc/mscc_main.c | 124 +++++++++++++++----------------
- 1 file changed, 61 insertions(+), 63 deletions(-)
+This patch doesn't apply and I think you'll have to motivate the removal
+a bit more because this seems like a change of policy to me.
 
-diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-index 5ddc44f87eaf..5d2777522fb4 100644
---- a/drivers/net/phy/mscc/mscc_main.c
-+++ b/drivers/net/phy/mscc/mscc_main.c
-@@ -1935,12 +1935,11 @@ static int vsc85xx_read_status(struct phy_device *phydev)
- 	return genphy_read_status(phydev);
- }
- 
--static int vsc8514_probe(struct phy_device *phydev)
-+static int vsc85xx_probe_helper(struct phy_device *phydev,
-+				u32 *leds, int num_leds, u16 led_modes,
-+				const struct vsc85xx_hw_stat *stats, int nstats)
- {
- 	struct vsc8531_private *vsc8531;
--	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
--	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
--	   VSC8531_DUPLEX_COLLISION};
- 
- 	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
- 	if (!vsc8531)
-@@ -1948,54 +1947,66 @@ static int vsc8514_probe(struct phy_device *phydev)
- 
- 	phydev->priv = vsc8531;
- 
--	vsc8584_get_base_addr(phydev);
--	devm_phy_package_join(&phydev->mdio.dev, phydev,
--			      vsc8531->base_addr, 0);
--
--	vsc8531->nleds = 4;
--	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
--	vsc8531->hw_stats = vsc85xx_hw_stats;
--	vsc8531->nstats = ARRAY_SIZE(vsc85xx_hw_stats);
-+	vsc8531->nleds = num_leds;
-+	vsc8531->supp_led_modes = led_modes;
-+	vsc8531->hw_stats = stats;
-+	vsc8531->nstats = nstats;
- 	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
- 				      sizeof(u64), GFP_KERNEL);
- 	if (!vsc8531->stats)
- 		return -ENOMEM;
- 
--	return vsc85xx_dt_led_modes_get(phydev, default_mode);
-+	return vsc85xx_dt_led_modes_get(phydev, leds);
- }
- 
--static int vsc8574_probe(struct phy_device *phydev)
-+static int vsc8514_probe(struct phy_device *phydev)
- {
- 	struct vsc8531_private *vsc8531;
-+	int rc;
- 	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
- 	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
- 	   VSC8531_DUPLEX_COLLISION};
- 
--	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
--	if (!vsc8531)
--		return -ENOMEM;
--
--	phydev->priv = vsc8531;
-+	rc = vsc85xx_probe_helper(phydev, default_mode,
-+				  ARRAY_SIZE(default_mode),
-+				  VSC85XX_SUPP_LED_MODES,
-+				  vsc85xx_hw_stats,
-+				  ARRAY_SIZE(vsc85xx_hw_stats));
-+	if (rc < 0)
-+		return rc;
- 
-+	vsc8531 = phydev->priv;
- 	vsc8584_get_base_addr(phydev);
--	devm_phy_package_join(&phydev->mdio.dev, phydev,
--			      vsc8531->base_addr, 0);
-+	return devm_phy_package_join(&phydev->mdio.dev, phydev,
-+				     vsc8531->base_addr, 0);
-+}
- 
--	vsc8531->nleds = 4;
--	vsc8531->supp_led_modes = VSC8584_SUPP_LED_MODES;
--	vsc8531->hw_stats = vsc8584_hw_stats;
--	vsc8531->nstats = ARRAY_SIZE(vsc8584_hw_stats);
--	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
--				      sizeof(u64), GFP_KERNEL);
--	if (!vsc8531->stats)
--		return -ENOMEM;
-+static int vsc8574_probe(struct phy_device *phydev)
-+{
-+	struct vsc8531_private *vsc8531;
-+	int rc;
-+	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
-+	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
-+	   VSC8531_DUPLEX_COLLISION};
-+
-+	rc = vsc85xx_probe_helper(phydev, default_mode,
-+				  ARRAY_SIZE(default_mode),
-+				  VSC8584_SUPP_LED_MODES,
-+				  vsc8584_hw_stats,
-+				  ARRAY_SIZE(vsc8584_hw_stats));
-+	if (rc < 0)
-+		return rc;
- 
--	return vsc85xx_dt_led_modes_get(phydev, default_mode);
-+	vsc8531 = phydev->priv;
-+	vsc8584_get_base_addr(phydev);
-+	return devm_phy_package_join(&phydev->mdio.dev, phydev,
-+				     vsc8531->base_addr, 0);
- }
- 
- static int vsc8584_probe(struct phy_device *phydev)
- {
- 	struct vsc8531_private *vsc8531;
-+	int rc;
- 	u32 default_mode[4] = {VSC8531_LINK_1000_ACTIVITY,
- 	   VSC8531_LINK_100_ACTIVITY, VSC8531_LINK_ACTIVITY,
- 	   VSC8531_DUPLEX_COLLISION};
-@@ -2005,32 +2016,24 @@ static int vsc8584_probe(struct phy_device *phydev)
- 		return -ENOTSUPP;
- 	}
- 
--	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
--	if (!vsc8531)
--		return -ENOMEM;
--
--	phydev->priv = vsc8531;
-+	rc = vsc85xx_probe_helper(phydev, default_mode,
-+				  ARRAY_SIZE(default_mode),
-+				  VSC8584_SUPP_LED_MODES,
-+				  vsc8584_hw_stats,
-+				  ARRAY_SIZE(vsc8584_hw_stats));
-+	if (rc < 0)
-+		return rc;
- 
-+	vsc8531 = phydev->priv;
- 	vsc8584_get_base_addr(phydev);
--	devm_phy_package_join(&phydev->mdio.dev, phydev,
--			      vsc8531->base_addr, 0);
--
--	vsc8531->nleds = 4;
--	vsc8531->supp_led_modes = VSC8584_SUPP_LED_MODES;
--	vsc8531->hw_stats = vsc8584_hw_stats;
--	vsc8531->nstats = ARRAY_SIZE(vsc8584_hw_stats);
--	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
--				      sizeof(u64), GFP_KERNEL);
--	if (!vsc8531->stats)
--		return -ENOMEM;
--
--	return vsc85xx_dt_led_modes_get(phydev, default_mode);
-+	return devm_phy_package_join(&phydev->mdio.dev, phydev,
-+				     vsc8531->base_addr, 0);
- }
- 
- static int vsc85xx_probe(struct phy_device *phydev)
- {
- 	struct vsc8531_private *vsc8531;
--	int rate_magic;
-+	int rate_magic, rc;
- 	u32 default_mode[2] = {VSC8531_LINK_1000_ACTIVITY,
- 	   VSC8531_LINK_100_ACTIVITY};
- 
-@@ -2038,23 +2041,18 @@ static int vsc85xx_probe(struct phy_device *phydev)
- 	if (rate_magic < 0)
- 		return rate_magic;
- 
--	vsc8531 = devm_kzalloc(&phydev->mdio.dev, sizeof(*vsc8531), GFP_KERNEL);
--	if (!vsc8531)
--		return -ENOMEM;
--
--	phydev->priv = vsc8531;
-+	rc = vsc85xx_probe_helper(phydev, default_mode,
-+				  ARRAY_SIZE(default_mode),
-+				  VSC85XX_SUPP_LED_MODES,
-+				  vsc85xx_hw_stats,
-+				  ARRAY_SIZE(vsc85xx_hw_stats));
-+	if (rc < 0)
-+		return rc;
- 
-+	vsc8531 = phydev->priv;
- 	vsc8531->rate_magic = rate_magic;
--	vsc8531->nleds = 2;
--	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
--	vsc8531->hw_stats = vsc85xx_hw_stats;
--	vsc8531->nstats = ARRAY_SIZE(vsc85xx_hw_stats);
--	vsc8531->stats = devm_kcalloc(&phydev->mdio.dev, vsc8531->nstats,
--				      sizeof(u64), GFP_KERNEL);
--	if (!vsc8531->stats)
--		return -ENOMEM;
- 
--	return vsc85xx_dt_led_modes_get(phydev, default_mode);
-+	return 0;
- }
- 
- /* Microsemi VSC85xx PHYs */
+> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+> index 54d96649da77..c0a255bda477 100644
+> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+> @@ -109,16 +109,6 @@ timer1: timer@1 {
+>  				};
+>  			};
+>  
+> -			pdmic@f8018000 {
+> -				pinctrl-names = "default";
+> -				pinctrl-0 = <&pinctrl_pdmic_default>;
+> -				atmel,model = "PDMIC @ sama5d2_xplained";
+> -				atmel,mic-min-freq = <1000000>;
+> -				atmel,mic-max-freq = <3246000>;
+> -				atmel,mic-offset = <0x0>;
+> -				status = "okay";
+> -			};
+> -
+>  			uart1: serial@f8020000 {
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_uart1_default>;
+> @@ -533,12 +523,6 @@ pinctrl_macb0_phy_irq: macb0_phy_irq {
+>  					bias-disable;
+>  				};
+>  
+> -				pinctrl_pdmic_default: pdmic_default {
+> -					pinmux = <PIN_PB26__PDMIC_DAT>,
+> -						<PIN_PB27__PDMIC_CLK>;
+> -					bias-disable;
+> -				};
+> -
+>  				pinctrl_sdmmc0_default: sdmmc0_default {
+>  					cmd_data {
+>  						pinmux = <PIN_PA1__SDMMC0_CMD>,
+> -- 
+> 2.25.1
+> 
+
 -- 
-2.26.2
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
