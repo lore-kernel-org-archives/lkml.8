@@ -2,135 +2,135 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE19206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C8DE206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:25:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ojk5dxH9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgFQPZU convert rfc822-to-8bit (ORCPT
+        id S1726950AbgFQPZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:25:20 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44638 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgFQPZS (ORCPT
+        Wed, 17 Jun 2020 11:25:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbgFQPZg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:25:18 -0400
-Received: from mail-pf1-f197.google.com ([209.85.210.197])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jlZwB-0001eJ-Cp
-        for linux-kernel@vger.kernel.org; Wed, 17 Jun 2020 15:25:15 +0000
-Received: by mail-pf1-f197.google.com with SMTP id 137so2029686pfw.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:25:15 -0700 (PDT)
+        Wed, 17 Jun 2020 11:25:36 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E3ABC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:25:36 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c21so1555822lfb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:25:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I6nIuDWwcfkNRxXhFGKJnyws0bUwaKcz08/Ho8g5tJI=;
+        b=Ojk5dxH9+DvMUGom64AEv7XfBLXa9lBuwrzwGTnlOsPxiMkrbDSwj3LZ3zSHPWkGyz
+         9ToRm9j64HKaH0C201cTSBPfUeD4L0jyv5gL+/6/qmIuqmzEXURqwTgpPiQXDB2VaGwF
+         qZGvTCrWNr19Q9uHIQ+fcZ1aHaKDOq/bAgerWk0+0yn6/A9lDR5bDmAYvM4uNp9prxVZ
+         6DKX/iKAs8nUP3ny4EOtz7D3j7wO3sIdHgCvXEeJ9MwLbCjJEVdGxS6Z/XsWBmYs70uj
+         wm5KADMa/2iKCqFHgyU/T9kpJ7tGuHoa9yFAJtaAAvyHQEClmKdmqy0zBbSl7zmeo1PX
+         BUuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=qyyiMmv9qYUSuKaCbblPmkDJA2AJx3BvYMLY89xY8b4=;
-        b=rQRBPuWzCFLJjNA9NtqnsQQsm+bIH7PRFHbaoKFGgKTDwQeJ+UlwZX07ouGpSdLbSP
-         bfxHxCe5u8ZUSobVd3in/e8zBavH85Us/JOTSBn9FDwm62LAVixitgEAKAzVeQk+GZWk
-         LPHM9g6/n30Sac8i4+CUeOSCCdBN/P3nL8xWjClWphodhfQiANHF8xUnwI09wbiJx8IF
-         yhfzJeB3rptQXzd+iUDpCd7py3lIyZQXHoExeuJmoYK/gV97XvIS3jAzfE9EfovvlgD9
-         azuP/G1gdSzoPIZQZcjr85ldIbt3NMSOdVvNrZhBFoSaObNtHHECeP5YooS82eeRJR3T
-         hNww==
-X-Gm-Message-State: AOAM531fYGftfUr3gidivcLGtSVGek092NfUN4XzNxZLzzoLTR+HYZiq
-        wx4t5wx4ltH47qB9NEof0Q4U8tXLJZ/aUoOsDaU54G51WaFbiZGWykkR4ivx5aJYImLe0aAvbkj
-        olmnKEI7/7aC6RBqXKnIPnTXpJsOsMe2BYfZah+QuCA==
-X-Received: by 2002:a65:594b:: with SMTP id g11mr365411pgu.168.1592407514031;
-        Wed, 17 Jun 2020 08:25:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxyAnJqzykyq6Qh4y8k+2SiK49GevfzYs41NQ2z60sL/wWRIIaLoTPE/TH4irNzfB/JqLYESQ==
-X-Received: by 2002:a65:594b:: with SMTP id g11mr365379pgu.168.1592407513540;
-        Wed, 17 Jun 2020 08:25:13 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id l3sm203953pgm.59.2020.06.17.08.25.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jun 2020 08:25:13 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v3 2/2] ALSA: hda/realtek: Add mute LED and micmute LED
- support for HP systems
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <s5hbllhzz2m.wl-tiwai@suse.de>
-Date:   Wed, 17 Jun 2020 23:25:10 +0800
-Cc:     tiwai@suse.com, Jaroslav Kysela <perex@perex.cz>,
-        Kailang Yang <kailang@realtek.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Tomas Espeleta <tomas.espeleta@gmail.com>,
-        Thomas Hebb <tommyhebb@gmail.com>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <486196C0-891B-47BA-8A5A-A9B65D27E7E5@canonical.com>
-References: <20200617102906.16156-1-kai.heng.feng@canonical.com>
- <20200617102906.16156-2-kai.heng.feng@canonical.com>
- <s5hbllhzz2m.wl-tiwai@suse.de>
-To:     Takashi Iwai <tiwai@suse.de>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I6nIuDWwcfkNRxXhFGKJnyws0bUwaKcz08/Ho8g5tJI=;
+        b=Wd6Kupg5B1btY0m9BGAHwVAYgRCAksH+Dt+735HQHJIC2PRH+lkbv7ufBal0+L2noN
+         UXFYaE78VVPsFCh+fb2FjUinTkgpt3XUwQ5guVTuLsn9WGuVWuBgIBsiZKG+vkHX3lia
+         HJuNhg0XMtwxmdAaAUsnY2cB/3af3s99ekSZIbeEF+58tBjaQAziEffuFWwNhtIf96BX
+         fmH5aMnIlZ+vgcLUniywXTssWMbFL4FWUPPx5prJoc++dP+a2rvACpl5Y9CEkpAYvHM/
+         l9inJ5KTrRZr5vXL5EWd3aYlwqTF/FZLVuNTihtGnp6B4MnY2wwyqMrTuMsbCB2QBeQn
+         BxnA==
+X-Gm-Message-State: AOAM531l/EEPt8q9UrgkkEbLTHz0N+6E5b+LR/dozf4xaRS0cLmyjCYl
+        G7ZihzD685nNDL3R3gVLnsujf3/5ybKbjYTuSE3A3Q==
+X-Google-Smtp-Source: ABdhPJxW0KcrhfVMM8iiEPssL/hOtSCDm+eXlggQ0rLGtwI+PEd2JAjBdOK9N11hcJ5LAh8Ytoew3jtobcblKdwkZyE=
+X-Received: by 2002:ac2:544b:: with SMTP id d11mr4879243lfn.157.1592407533670;
+ Wed, 17 Jun 2020 08:25:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200616074934.1600036-1-keescook@chromium.org> <20200616074934.1600036-4-keescook@chromium.org>
+In-Reply-To: <20200616074934.1600036-4-keescook@chromium.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 17 Jun 2020 17:25:07 +0200
+Message-ID: <CAG48ez0-jSSaw85=ku35UM3vMe98Vz97B68LsUoNd8ftwpunkQ@mail.gmail.com>
+Subject: Re: [PATCH 3/8] seccomp: Introduce SECCOMP_PIN_ARCHITECTURE
+To:     Kees Cook <keescook@chromium.org>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        Christian Brauner <christian@brauner.io>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Tycho Andersen <tycho@tycho.ws>,
+        "zhujianwei (C)" <zhujianwei7@huawei.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Matt Denton <mpdenton@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Hehuazhen <hehuazhen@huawei.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 16, 2020 at 9:49 AM Kees Cook <keescook@chromium.org> wrote:
+> For systems that provide multiple syscall maps based on architectures
+> (e.g. AUDIT_ARCH_X86_64 and AUDIT_ARCH_I386 via CONFIG_COMPAT), allow
+> a fast way to pin the process to a specific syscall mapping, instead of
+> needing to generate all filters with an architecture check as the first
+> filter action.
 
+This seems reasonable; but can we maybe also add X86-specific handling
+for that X32 mess? AFAIK there are four ways to do syscalls with
+AUDIT_ARCH_X86_64:
 
-> On Jun 17, 2020, at 19:55, Takashi Iwai <tiwai@suse.de> wrote:
-> 
-> On Wed, 17 Jun 2020 12:29:02 +0200,
-> Kai-Heng Feng wrote:
->> 
->> There are two more HP systems control mute LED from HDA codec and need
->> to expose micmute led class so SoF can control micmute LED.
->> 
->> Add quirks to support them.
->> 
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> 
-> I guess this can be applied independently from the patch#1?
-> If so, I'll queue this for for-linus branch.
+1. normal x86-64 syscall, X32 bit unset (native case)
+2. normal x86-64 syscall, X32 bit set (for X32 code calling syscalls
+with no special X32 version)
+3. x32-specific syscall, X32 bit unset (never happens legitimately)
+4. x32-specific syscall, X32 bit set (for X32 code calling syscalls
+with special X32 version)
 
-Yes please. Thanks!
+(I got this wrong when I wrote the notes on x32 in the seccomp manpage...)
 
-Kai-Heng
+Can we add a flag for AUDIT_ARCH_X86_64 that says either "I want
+native x64-64" (enforcing case 1) or "I want X32" (enforcing case 2 or
+4, and in case 2 checking that the syscall has no X32 equivalent)? (Of
+course, if the kernel is built without X32 support, we can leave out
+these extra checks.)
 
-> 
-> 
-> thanks,
-> 
-> Takashi
-> 
-> 
->> ---
->> v3:
->> - No change.
->> v2:
->> - Wording.
->> 
->> sound/pci/hda/patch_realtek.c | 2 ++
->> 1 file changed, 2 insertions(+)
->> 
->> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
->> index 0587d1e96b19..cd1a3619806a 100644
->> --- a/sound/pci/hda/patch_realtek.c
->> +++ b/sound/pci/hda/patch_realtek.c
->> @@ -7473,6 +7473,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
->> 	SND_PCI_QUIRK(0x103c, 0x83b9, "HP Spectre x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
->> 	SND_PCI_QUIRK(0x103c, 0x8497, "HP Envy x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
->> 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
->> +	SND_PCI_QUIRK(0x103c, 0x869d, "HP", ALC236_FIXUP_HP_MUTE_LED),
->> +	SND_PCI_QUIRK(0x103c, 0x8729, "HP", ALC285_FIXUP_HP_GPIO_LED),
->> 	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_LED),
->> 	SND_PCI_QUIRK(0x103c, 0x877a, "HP", ALC285_FIXUP_HP_MUTE_LED),
->> 	SND_PCI_QUIRK(0x103c, 0x877d, "HP", ALC236_FIXUP_HP_MUTE_LED),
->> -- 
->> 2.17.1
->> 
+> +static long seccomp_pin_architecture(void)
+> +{
+> +#ifdef CONFIG_COMPAT
+> +       u32 arch = syscall_get_arch(current);
+> +
+> +       /* How did you even get here? */
+> +       if (current->seccomp.arch && current->seccomp.arch != arch)
+> +               return -EBUSY;
+> +
+> +       current->seccomp.arch = arch;
+> +#endif
+> +       return 0;
+> +}
 
+Are you intentionally writing this such that SECCOMP_PIN_ARCHITECTURE
+only has an effect once you've installed a filter, and propagation to
+other threads happens when a filter is installed with TSYNC? I guess
+that is a possible way to design the API, but it seems like something
+that should at least be pointed out explicitly.
