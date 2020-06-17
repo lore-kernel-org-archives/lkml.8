@@ -4,32 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BA0C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D697C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 966F621927
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34903217BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgFQSY2 (ORCPT
+        id S1727992AbgFQSYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:24:28 -0400
+        Wed, 17 Jun 2020 14:24:34 -0400
 Received: from mga11.intel.com ([192.55.52.93]:18901 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727940AbgFQSY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 14:24:26 -0400
-IronPort-SDR: 1KzvjelhBnexeUcZ35hhXEjR6JmCe+gZjun4lL6n7BdAbd3UaCTrKd6niIvjO12lm+OpbeCiHw
- nNB+HBvMLYGg==
+        id S1727964AbgFQSY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 14:24:28 -0400
+IronPort-SDR: gjx0L7pE6+oTkJwjZ/QjzetFNXu3V5w5g0tTulhv0Rt6EUPlWZtymqMttIjzLE3DWGDcrHBK+/
+ 47Nbpab0WF3Q==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 11:24:18 -0700
-IronPort-SDR: K91DXRYTbEfLBO+4qn05noXE4Q6V9mo7yx+HA05wjOxOY296YyXoC2HW8QuxnVX7yzc6X25gjn
- XyVf6RLwSxUQ==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 11:24:19 -0700
+IronPort-SDR: F/o2axyca0ISrPq9xn00rStEHbjsKZjlWrlWYGlCYA6SflwF2+s/BMrE1Pk/Q0nrowUyekxcmn
+ INNoGLbUnx9g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
-   d="scan'208";a="308874189"
+   d="scan'208";a="308874196"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
   by orsmga008.jf.intel.com with ESMTP; 17 Jun 2020 11:24:18 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
@@ -51,9 +52,9 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, iommu@lists.linux-foundation.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v3 11/13] x86/mmu: Allocate/free PASID
-Date:   Wed, 17 Jun 2020 11:23:51 -0700
-Message-Id: <1592418233-17762-12-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v3 13/13] x86/traps: Fix up invalid PASID
+Date:   Wed, 17 Jun 2020 11:23:53 -0700
+Message-Id: <1592418233-17762-14-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1592418233-17762-1-git-send-email-fenghua.yu@intel.com>
 References: <1592418233-17762-1-git-send-email-fenghua.yu@intel.com>
@@ -62,261 +63,192 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A PASID is allocated for an "mm" the first time any thread attaches
-to an SVM capable device. Later device attachments (whether to the same
-device or another SVM device) will re-use the same PASID.
+A #GP fault is generated when ENQCMD instruction is executed without
+a valid PASID value programmed in the current thread's PASID MSR. The
+#GP fault handler will initialize the MSR if a PASID has been allocated
+for this process.
 
-The PASID is freed when the process exits (so no need to keep
-reference counts on how many SVM devices are sharing the PASID).
+Decoding the user instruction is ugly and sets a bad architecture
+precedent. It may not function if the faulting instruction is modified
+after #GP.
 
+Thomas suggested to provide a reason for the #GP caused by executing ENQCMD
+without a valid PASID value programmed. #GP error codes are 16 bits and all
+16 bits are taken. Refer to SDM Vol 3, Chapter 16.13 for details. The other
+choice was to reflect the error code in an MSR. ENQCMD can also cause #GP
+when loading from the source operand, so its not fully comprehending all
+the reasons. Rather than special case the ENQCMD, in future Intel may
+choose a different fault mechanism for such cases if recovery is needed on
+#GP.
+
+The following heuristic is used to avoid decoding the user instructions
+to determine the precise reason for the #GP fault:
+1) If the mm for the process has not been allocated a PASID, this #GP
+   cannot be fixed.
+2) If the PASID MSR is already initialized, then the #GP was for some
+   other reason
+3) Try initializing the PASID MSR and returning. If the #GP was from
+   an ENQCMD this will fix it. If not, the #GP fault will be repeated
+   and will hit case "2".
+
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
 v3:
-- Add sanity checks in alloc_pasid() and _free_pasid() (Baolu)
-- Add a comment that the private PASID feature will be removed completely
-  from IOMMU and don't track private PASID in mm (Thomas)
+- Check and set current->has_valid_pasid in fixup() (PeterZ)
+- Add fpu__pasid_write() to update the MSR (PeterZ)
+- Add ioasid_find() sanity check in fixup()
 
 v2:
-- Define a helper free_bind() to simplify error exit code in bind_mm()
-  (Thomas)
-- Fix a ret error code in bind_mm() (Thomas)
-- Change pasid's type from "int" to "unsigned int" to have consistent
-  pasid type in iommu (Thomas)
-- Simplify alloc_pasid() a bit.
+- Update the first paragraph of the commit message (Thomas)
+- Add reasons why don't decode the user instruction and don't use
+  #GP error code (Thomas)
+- Change get_task_mm() to current->mm (Thomas)
+- Add comments on why IRQ is disabled during PASID fixup (Thomas)
+- Add comment in fixup() that the function is called when #GP is from
+  user (so mm is not NULL) (Dave Hansen)
 
- arch/x86/include/asm/iommu.h       |   2 +
- arch/x86/include/asm/mmu_context.h |  14 ++++
- drivers/iommu/intel/svm.c          | 128 ++++++++++++++++++++++++++---
- 3 files changed, 132 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/iommu.h |  1 +
+ arch/x86/kernel/traps.c      | 14 +++++++
+ drivers/iommu/intel/svm.c    | 78 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 93 insertions(+)
 
 diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
-index bf1ed2ddc74b..ed41259fe7ac 100644
+index ed41259fe7ac..e9365a5d6f7d 100644
 --- a/arch/x86/include/asm/iommu.h
 +++ b/arch/x86/include/asm/iommu.h
-@@ -26,4 +26,6 @@ arch_rmrr_sanity_check(struct acpi_dmar_reserved_memory *rmrr)
- 	return -EINVAL;
+@@ -27,5 +27,6 @@ arch_rmrr_sanity_check(struct acpi_dmar_reserved_memory *rmrr)
  }
  
-+void __free_pasid(struct mm_struct *mm);
-+
+ void __free_pasid(struct mm_struct *mm);
++bool __fixup_pasid_exception(void);
+ 
  #endif /* _ASM_X86_IOMMU_H */
-diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-index 47562147e70b..f8c91ce8c451 100644
---- a/arch/x86/include/asm/mmu_context.h
-+++ b/arch/x86/include/asm/mmu_context.h
-@@ -13,6 +13,7 @@
- #include <asm/tlbflush.h>
- #include <asm/paravirt.h>
- #include <asm/debugreg.h>
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index af75109485c2..783b2f42fe46 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -59,6 +59,7 @@
+ #include <asm/umip.h>
+ #include <asm/insn.h>
+ #include <asm/insn-eval.h>
 +#include <asm/iommu.h>
  
- extern atomic64_t last_mm_ctx_id;
- 
-@@ -117,9 +118,22 @@ static inline int init_new_context(struct task_struct *tsk,
- 	init_new_context_ldt(mm);
- 	return 0;
+ #ifdef CONFIG_X86_64
+ #include <asm/x86_init.h>
+@@ -513,6 +514,16 @@ static enum kernel_gp_hint get_kernel_gp_address(struct pt_regs *regs,
+ 	return GP_CANONICAL;
  }
-+
-+static inline void free_pasid(struct mm_struct *mm)
+ 
++static bool fixup_pasid_exception(void)
 +{
 +	if (!IS_ENABLED(CONFIG_INTEL_IOMMU_SVM))
-+		return;
++		return false;
++	if (!static_cpu_has(X86_FEATURE_ENQCMD))
++		return false;
 +
-+	if (!cpu_feature_enabled(X86_FEATURE_ENQCMD))
-+		return;
-+
-+	__free_pasid(mm);
++	return __fixup_pasid_exception();
 +}
 +
- static inline void destroy_context(struct mm_struct *mm)
- {
- 	destroy_context_ldt(mm);
-+	free_pasid(mm);
- }
+ #define GPFSTR "general protection fault"
  
- extern void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
+@@ -525,6 +536,9 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
+ 
+ 	cond_local_irq_enable(regs);
+ 
++	if (user_mode(regs) && fixup_pasid_exception())
++		goto exit;
++
+ 	if (static_cpu_has(X86_FEATURE_UMIP)) {
+ 		if (user_mode(regs) && fixup_umip_exception(regs))
+ 			goto exit;
 diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 4e775e12ae52..e3e7699863ac 100644
+index e3e7699863ac..ab27971dff01 100644
 --- a/drivers/iommu/intel/svm.c
 +++ b/drivers/iommu/intel/svm.c
-@@ -425,6 +425,69 @@ int intel_svm_unbind_gpasid(struct device *dev, unsigned int pasid)
- 	return ret;
+@@ -1105,3 +1105,81 @@ void __free_pasid(struct mm_struct *mm)
+ 	 */
+ 	ioasid_free(pasid);
  }
- 
-+static void free_bind(struct intel_svm *svm, struct intel_svm_dev *sdev,
-+		      bool new_pasid)
++
++/*
++ * Write the current task's PASID MSR/state. This is called only when PASID
++ * is enabled.
++ */
++static void fpu__pasid_write(unsigned int pasid)
 +{
-+	if (new_pasid)
-+		ioasid_free(svm->pasid);
-+	kfree(svm);
-+	kfree(sdev);
++	u64 msr_val = pasid | MSR_IA32_PASID_VALID;
++
++	fpregs_lock();
++
++	/*
++	 * If the MSR is active and owned by the current task's FPU, it can
++	 * be directly written.
++	 *
++	 * Otherwise, write the fpstate.
++	 */
++	if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
++		wrmsrl(MSR_IA32_PASID, msr_val);
++	} else {
++		struct ia32_pasid_state *ppasid_state;
++
++		ppasid_state = get_xsave_addr(&current->thread.fpu.state.xsave,
++					      XFEATURE_PASID);
++		/*
++		 * ppasid_state shouldn't be NULL because XFEATURE_PASID
++		 * is enabled.
++		 */
++		WARN_ON_ONCE(!ppasid_state);
++		ppasid_state->pasid = msr_val;
++	}
++	fpregs_unlock();
 +}
 +
 +/*
-+ * If this mm already has a PASID, use it. Otherwise allocate a new one.
-+ * Let the caller know if a new PASID is allocated via 'new_pasid'.
++ * Apply some heuristics to see if the #GP fault was caused by a thread
++ * that hasn't had the IA32_PASID MSR initialized.  If it looks like that
++ * is the problem, try initializing the IA32_PASID MSR. If the heuristic
++ * guesses incorrectly, take one more #GP fault.
 + */
-+static int alloc_pasid(struct intel_svm *svm, struct mm_struct *mm,
-+		       unsigned int pasid_max, bool *new_pasid,
-+		       unsigned int flags)
++bool __fixup_pasid_exception(void)
 +{
++	struct intel_svm *svm;
++	struct mm_struct *mm;
 +	unsigned int pasid;
 +
-+	*new_pasid = false;
++	/*
++	 * If the current task already has a valid PASID in the MSR,
++	 * the #GP must be for some other reason.
++	 */
++	if (current->has_valid_pasid)
++		return false;
 +
 +	/*
-+	 * Reuse the PASID if the mm already has a PASID and not a private
-+	 * PASID is requested.
++	 * This function is called only when this #GP was triggered from user
++	 * space. So the mm cannot be NULL.
 +	 */
-+	if (mm && mm->pasid && !(flags & SVM_FLAG_PRIVATE_PASID)) {
-+		void *p;
-+
-+		/*
-+		 * Since the mm has a PASID already, the PASID should be
-+		 * bound and unbound to the mm before calling this allocation.
-+		 * So the PASID must be allocated by bind_mm() previously and
-+		 * should still exist in ioasid; but its data must be cleared
-+		 * already by unbind_mm().
-+		 *
-+		 * Do a sanity check here to ensure the PASID has the right
-+		 * status before reusing it.
-+		 */
-+		p = ioasid_find(NULL, mm->pasid, NULL);
-+		if (IS_ERR(p) || p)
-+			return INVALID_IOASID;
-+
-+		/*
-+		 * Once the PASID is allocated for this mm, it
-+		 * stays with the mm until the mm is dropped. Reuse
-+		 * the PASID which has been already allocated for the
-+		 * mm instead of allocating a new one.
-+		 */
-+		ioasid_set_data(mm->pasid, svm);
-+
-+		return mm->pasid;
-+	}
-+
-+	/* Allocate a new pasid. Do not use PASID 0, reserved for init PASID. */
-+	pasid = ioasid_alloc(NULL, PASID_MIN, pasid_max - 1, svm);
-+	if (pasid != INVALID_IOASID) {
-+		/* A new pasid is allocated. */
-+		*new_pasid = true;
-+	}
-+
-+	return pasid;
-+}
-+
- /* Caller must hold pasid_mutex, mm reference */
- static int
- intel_svm_bind_mm(struct device *dev, unsigned int flags,
-@@ -518,6 +581,8 @@ intel_svm_bind_mm(struct device *dev, unsigned int flags,
- 	init_rcu_head(&sdev->rcu);
- 
- 	if (!svm) {
-+		bool new_pasid;
-+
- 		svm = kzalloc(sizeof(*svm), GFP_KERNEL);
- 		if (!svm) {
- 			ret = -ENOMEM;
-@@ -529,12 +594,9 @@ intel_svm_bind_mm(struct device *dev, unsigned int flags,
- 		if (pasid_max > intel_pasid_max_id)
- 			pasid_max = intel_pasid_max_id;
- 
--		/* Do not use PASID 0, reserved for RID to PASID */
--		svm->pasid = ioasid_alloc(NULL, PASID_MIN,
--					  pasid_max - 1, svm);
-+		svm->pasid = alloc_pasid(svm, mm, pasid_max, &new_pasid, flags);
- 		if (svm->pasid == INVALID_IOASID) {
--			kfree(svm);
--			kfree(sdev);
-+			free_bind(svm, sdev, new_pasid);
- 			ret = -ENOSPC;
- 			goto out;
- 		}
-@@ -547,9 +609,7 @@ intel_svm_bind_mm(struct device *dev, unsigned int flags,
- 		if (mm) {
- 			ret = mmu_notifier_register(&svm->notifier, mm);
- 			if (ret) {
--				ioasid_free(svm->pasid);
--				kfree(svm);
--				kfree(sdev);
-+				free_bind(svm, sdev, new_pasid);
- 				goto out;
- 			}
- 		}
-@@ -565,12 +625,20 @@ intel_svm_bind_mm(struct device *dev, unsigned int flags,
- 		if (ret) {
- 			if (mm)
- 				mmu_notifier_unregister(&svm->notifier, mm);
--			ioasid_free(svm->pasid);
--			kfree(svm);
--			kfree(sdev);
-+			free_bind(svm, sdev, new_pasid);
- 			goto out;
- 		}
- 
-+		if (mm && new_pasid && !(flags & SVM_FLAG_PRIVATE_PASID)) {
-+			/*
-+			 * Track the new pasid in the mm. The pasid will be
-+			 * freed at process exit.
-+			 *
-+			 * The private PASID feature will be removed soon from
-+			 * IOMMU. Don't track requested private PASID in the mm.
-+			 */
-+			mm->pasid = svm->pasid;
-+		}
- 		list_add_tail(&svm->list, &global_svm_list);
- 	} else {
- 		/*
-@@ -640,7 +708,8 @@ static int intel_svm_unbind_mm(struct device *dev, unsigned int pasid)
- 			kfree_rcu(sdev, rcu);
- 
- 			if (list_empty(&svm->devs)) {
--				ioasid_free(svm->pasid);
-+				/* Clear data in the pasid. */
-+				ioasid_set_data(pasid, NULL);
- 				if (svm->mm)
- 					mmu_notifier_unregister(&svm->notifier, svm->mm);
- 				list_del(&svm->list);
-@@ -1001,3 +1070,38 @@ unsigned int intel_svm_get_pasid(struct iommu_sva *sva)
- 
- 	return pasid;
- }
-+
-+/*
-+ * An invalid pasid is either 0 (init PASID value) or bigger than max PASID
-+ * (PASID_MAX - 1).
-+ */
-+static bool invalid_pasid(unsigned int pasid)
-+{
-+	return (pasid == INIT_PASID) || (pasid >= PASID_MAX);
-+}
-+
-+/* On process exit free the PASID (if one was allocated). */
-+void __free_pasid(struct mm_struct *mm)
-+{
-+	unsigned int pasid = mm->pasid;
-+	void *p;
-+
-+	/* No need to free invalid pasid. */
-+	if (invalid_pasid(pasid))
-+		return;
-+
-+	/* The pasid shouldn't be bound to any mm by now. */
-+	p = ioasid_find(NULL, pasid, NULL);
-+	if (!IS_ERR_OR_NULL(p)) {
-+		pr_err("PASID %d is still in use\n", pasid);
-+
-+		return;
-+	}
++	mm = current->mm;
++	pasid = mm->pasid;
 +
 +	/*
-+	 * Since the pasid is not bound to any svm, there is no race
-+	 * here with binding/unbinding and no need to protect the free
-+	 * operation by pasid_mutex.
++	 * If the PASID isn't found, cannot help.
++	 *
++	 * Don't care if the PASID is bound to the mm here. #PF will handle the
++	 * case that the MSR is fixed up by an unbound PASID.
 +	 */
-+	ioasid_free(pasid);
++	svm = ioasid_find(NULL, pasid, NULL);
++	if (IS_ERR_OR_NULL(svm))
++		return false;
++
++	/* Fix up the MSR by the PASID in the mm. */
++	fpu__pasid_write(pasid);
++
++	/* Now the current task has a valid PASID in the MSR. */
++	current->has_valid_pasid = 1;
++
++	return true;
 +}
 -- 
 2.19.1
