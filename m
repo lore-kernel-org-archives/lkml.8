@@ -2,135 +2,74 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E073C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC54C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE11520734
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:46:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aJWK9biv"
+	by mail.kernel.org (Postfix) with ESMTP id 69A4A21548
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:48:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592401710;
+	bh=/WSk7qORPqa6zZW4wBawrFT3hKVpsXgyi8TneEQdbQA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QsrYa6GF4BdwZ1VD4EQv7Wy4kJN4S0jdTvnFPDkHgGpMyeOhbT0IKYYmhue6ppKQu
+	 kNzeez3CmcEj86VM8kquD0GrQvwtr/9sMuronS0g/82Cy5kOx7x7eg4RGKBp81Y4nA
+	 gyJFiWWd1YPEmi8+7JEdXUuxgsw09eNuJRgtN6Xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgFQNqq (ORCPT
+        id S1726833AbgFQNs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:46:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30568 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725901AbgFQNqq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:46:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592401604;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=q6wEz7eoHV1YYQkmzrvw20KoNhWZxNuUKHu5DTnNaxE=;
-        b=aJWK9biv9aHWYSckj4GtRtFGbk1vTNzgXCaUzo3mTUSHezmuL/5fwyuLfmiwYUmRAQ8KH9
-        HDC2qkTg82+uWQPB1f/LqUTcOrTbby8i3pVjSGOzQz2kA45EXZsikJBZdU2WC+lFqiolSf
-        bTaGztSAwB+AOz07r9dZ9mkZ411T35M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-247-k2MPCgopPq67u6U_I-qvWg-1; Wed, 17 Jun 2020 09:46:42 -0400
-X-MC-Unique: k2MPCgopPq67u6U_I-qvWg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 17 Jun 2020 09:48:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726328AbgFQNs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 09:48:28 -0400
+Received: from dragon (unknown [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B07711100F62;
-        Wed, 17 Jun 2020 13:46:40 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 482CC5D9D3;
-        Wed, 17 Jun 2020 13:46:37 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05HDkaMH022324;
-        Wed, 17 Jun 2020 09:46:36 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05HDkY4V022320;
-        Wed, 17 Jun 2020 09:46:34 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Wed, 17 Jun 2020 09:46:34 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Eric Biggers <ebiggers@kernel.org>,
-        George Cherian <gcherian@marvell.com>,
-        Wei Xu <xuwei5@hisilicon.com>, Zaibo Xu <xuzaibo@huawei.com>
-cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Mike Snitzer <msnitzer@redhat.com>,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
-        linux-crypto@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Milan Broz <mbroz@redhat.com>
-Subject: Re: [dm-devel] [PATCH 4/4] crypto: fix the drivers that don't respect
- CRYPTO_TFM_REQ_MAY_SLEEP
-In-Reply-To: <20200616182327.GE207319@gmail.com>
-Message-ID: <alpine.LRH.2.02.2006170940510.18714@file01.intranet.prod.int.rdu2.redhat.com>
-References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com> <20200610010450.GA6449@gondor.apana.org.au> <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com> <20200610121106.GA23137@gondor.apana.org.au>
- <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2006161102250.28052@file01.intranet.prod.int.rdu2.redhat.com> <20200616175022.GD207319@gmail.com> <alpine.LRH.2.02.2006161416510.12390@file01.intranet.prod.int.rdu2.redhat.com>
- <20200616182327.GE207319@gmail.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5291F208B8;
+        Wed, 17 Jun 2020 13:48:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592401707;
+        bh=/WSk7qORPqa6zZW4wBawrFT3hKVpsXgyi8TneEQdbQA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0SPjckGIAsGEMO6pdj5MsgCDdy8IvavB2ARGaQCmr0b1/8YvUQdO1cEz4JmuOyuSd
+         hUHHjkbDAu64x100rhNsWimz4uNWwEwzeQor+V6IFXlrtY1Nklp6na7SwhWmTRI5fL
+         uW7B7HuxKj8ldkEKYJJzBNfAyfQ13ZeRBaKEf744=
+Date:   Wed, 17 Jun 2020 21:48:14 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        ben.dooks@codethink.co.uk, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 1/2] firmware: imx: make sure MU irq can wake up system
+ from suspend mode
+Message-ID: <20200617134813.GA30139@dragon>
+References: <1587683231-18468-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587683231-18468-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Tue, 16 Jun 2020, Eric Biggers wrote:
-
-> On Tue, Jun 16, 2020 at 02:18:17PM -0400, Mikulas Patocka wrote:
-> > 
-> > 
-> > On Tue, 16 Jun 2020, Eric Biggers wrote:
-> > 
-> > > On Tue, Jun 16, 2020 at 11:02:50AM -0400, Mikulas Patocka wrote:
-> > > > Fix the crypto drivers that don't respect CRYPTO_TFM_REQ_MAY_SLEEP. If
-> > > > CRYPTO_TFM_REQ_MAY_SLEEP is not set, the driver must not do allocation
-> > > > that sleeps.
-> > > > 
-> > > > Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-> > > 
-> > > I think you need to split this up per driver with a proper explanation and a
-> > > "Fixes:" tag for each driver.
-> > > 
-> > > Also, these bugs should have been detected by the crypto self-tests already,
-> > > since they test having preemption disabled and CRYPTO_TFM_REQ_MAY_SLEEP cleared.
-> > > Can you double check whether these are all valid fixes?  One thing to watch out
-> > > 
-> > > for is that CRYPTO_TFM_REQ_MAY_SLEEP only applies to the function call like
-> > > crypto_skcipher_encrypt() itself.  If the implementation is asynchronous and the
-> > > request gets processed in the background (i.e. if crypto_skcipher_encrypt()
-> > > returns -EINPROGRESS), the background work doesn't have to honor
-> > > CRYPTO_TFM_REQ_MAY_SLEEP.
-> > > 
-> > > - Eric
-> > 
-> > I can only compile-test this patch. I don't have the hardware.
-> > 
+On Fri, Apr 24, 2020 at 07:07:10AM +0800, Anson Huang wrote:
+> IRQF_NO_SUSPEND flag is set for MU IRQ of IPC work, but with this
+> flag set, IRQD_WAKEUP_ARMED flag will NOT be set during
+> suspend_device_irq() phase, then when MU IRQ arrives, it will NOT
+> wake up system from suspend.
 > 
-> I'm just asking for you to check the code extra carefully.  The fact that the
-> self-tests should have been detecting this type of bug implies that these might
-> not actually be valid fixes.
-
-I've checked it more thoroughly and found out that 3 out of 5 drivers do
-the GFP_KERNEL allocation from crypto-engine callback. So, it is
-supposedly OK.
-
-> However, we do know that not all crypto drivers are being actively tested with
-> the latest self-tests and with kernel debugging options enabled.  So it's
-> expected that some are indeed broken.
+> To fix this issue, pm_system_wakeup() is called in general MU IRQ
+> handler to make sure system can be waked up when MU IRQ arrives.
 > 
-> - Eric
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-The broken ones are drivers/crypto/cavium/cpt/ and 
-drivers/crypto/hisilicon/sec/
+I see you guys haven't got agreement on patch #2, so applied #1 only.
 
-I'm sending patches for them.
-
-Mikulas
-
+Shawn
