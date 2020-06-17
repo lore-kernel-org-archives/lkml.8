@@ -2,140 +2,172 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F858C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7007C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C02C2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB510207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:53:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VvUC35sO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kOc4tU6n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgFQOwG (ORCPT
+        id S1726966AbgFQOxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 10:52:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34448 "EHLO
+        Wed, 17 Jun 2020 10:53:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbgFQOv4 (ORCPT
+        with ESMTP id S1726355AbgFQOxL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 10:51:56 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EFFAC0613EF
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:51:56 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k2so1115572pjs.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:51:56 -0700 (PDT)
+        Wed, 17 Jun 2020 10:53:11 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0E3C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:53:11 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id i3so3245668ljg.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:53:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oHDXTrxrPr/ji5r+gzel+9fUGlLw6TAHPNwGJ7xfdkA=;
-        b=VvUC35sOnZr1p54G45m3VOKy8uZ8e5bmbhcZN9jZnFVgnTDiwJJjn9q1w9joR+fq6+
-         LvIBHOBoTFfEjjTgB2XyZgDwbQMwmAF2q/yvQvrXOVOTPcqSP5y46rr1TpxGi0W40RPU
-         9jf31u38Q01rzuP+kO6uGvxmaReLYGtsWSpAE=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GJE9jML/rs5aHW6KANE9bp+nTXaw2X7TS0VvCJYBPOA=;
+        b=kOc4tU6nGLrNB7XuIs8kQ61SoV/HvgPps5eut81gdNsvfp9GRT3OUBTvgQWKKiypxY
+         rOvjL20PjDocXOoQsQ3TMX/vHZusaj8j0WmlAg/+EBzb9pXgoXh961f49AZbX//jfidW
+         dXbndr0UWgbOEZb4dWkFgzLutVJbVHB6w33/8NULF7Sbofe1WFPKB+uths7yNOWqUt9l
+         u04vg+luPdpPu0777HXXQctfvarpOVMhMvuKmagWS9/bo+cXWvm7bclMb2WxTfidEhyX
+         lsTN9YvGDZmfNQ9huWnx4s3whwj7b2IgJjL8Ljk4yD9Fvl/P2zGScs+TtzfV6XX3tc7+
+         A5QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oHDXTrxrPr/ji5r+gzel+9fUGlLw6TAHPNwGJ7xfdkA=;
-        b=iQGBND5RWmoqyVNAyErWDwQSfXv9qBcL6zQegghNus1hGEo4qdG6XvljUldsAnI4sy
-         2t07WIzShyo59qtJRI1jYiTEnFr5yaVRteSZn3ezpwkQSFeJW7sIs1JiksAVJeg7rzUE
-         SqitSs4noaTHcnMPErIE6SBTF8D+FwZi4SQs2ej66V5+4/rrOQk8rqD8DiHriEIAUk1I
-         tFH434EB15tEJK7BiyiB7SsxVpjzKOW6+5I81hkeQYBDFc7nHvhQ/9i1QNb/rbPnVbqU
-         xM7Nxx8XR+AcDpOMWwJvsZOsQCzJdGa2xd4Py8PJe65syeUbufdYHWsMPpwKJirTSCnZ
-         /HXg==
-X-Gm-Message-State: AOAM530Dl5BinvAsE6sNt9U88nVV4CB5oqZm649KxQSODmf9ykcipsCi
-        oorzKmW07onS/QbvZq9XXPw77Q==
-X-Google-Smtp-Source: ABdhPJyABziZjJ2pLl5VgSZD68qgYBT6lnAEYD6+D8xTs6fWFVqzHs1ul+Kl1aQoJPBpUFqDygFnzg==
-X-Received: by 2002:a17:90b:4911:: with SMTP id kr17mr8174779pjb.40.1592405515652;
-        Wed, 17 Jun 2020 07:51:55 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id k18sm147040pfp.208.2020.06.17.07.51.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 07:51:55 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     dhavalp@codeaurora.org, mturney@codeaurora.org,
-        rnayak@codeaurora.org, Ravi Kumar Bokka <rbokka@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, saiprakash.ranjan@codeaurora.org,
-        sparate@codeaurora.org, mkurumel@codeaurora.org,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] arm64: dts: qcom: sc7180: Add properties to qfprom for fuse blowing
-Date:   Wed, 17 Jun 2020 07:51:16 -0700
-Message-Id: <20200617074930.v3.4.I70c17309f8b433e900656d7c53a2e6b61888bb68@changeid>
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-In-Reply-To: <20200617145116.247432-1-dianders@chromium.org>
-References: <20200617145116.247432-1-dianders@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GJE9jML/rs5aHW6KANE9bp+nTXaw2X7TS0VvCJYBPOA=;
+        b=qSoKMFdLSxuK6QKgDTtnIiWejblWDFS/trxIUsipg5MXiyUe92FsqZ7ejd9uR6ybb4
+         +FTaKmxUrBP3J1PqIGbWC2w6RKoPgtFvX0jnodEjqWLjr2h+BM3SI5WfcnXJ1YOA+WIQ
+         GRZ8ZaGdxFzN92mzX7aWF7ku6m6GCpNJHhU5Frrd2n1/7iiHc/xZdnKpHkLAaiX/vCDL
+         edesMHAiDxqKEI3zY7bbYuKn9xCM8Kpbmu2WzcXn6ZRkvc+nXxqZHbqZaUqc4Isztfcp
+         PddxXbvoXiQGsuyj6e8t0gErpWD74ix6+msjjkn3fpIUtLvH3DPf4t64FTvAzp+OYCS8
+         1AnQ==
+X-Gm-Message-State: AOAM530bdcil0TcrXneYhmRcE8nZ2I37BfMMLXrZ0KiJyZBI2/usuXiU
+        +/eKM1LHTZGYFYmGNeYPytbkUQylhZkjycnyZd9UPQ==
+X-Google-Smtp-Source: ABdhPJw9GFcL8LP/z+VWE8hrdCQMz8psId0H4FibokHVKz1cYtH1bP9MvxnYZeKl7M7JRkgQCUZclSXpOK7sTlcTz58=
+X-Received: by 2002:a2e:9395:: with SMTP id g21mr3833138ljh.58.1592405589547;
+ Wed, 17 Jun 2020 07:53:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200616164801.18644-1-peter.puhov@linaro.org> <jhjo8pidl01.mognet@arm.com>
+In-Reply-To: <jhjo8pidl01.mognet@arm.com>
+From:   Peter Puhov <peter.puhov@linaro.org>
+Date:   Wed, 17 Jun 2020 10:52:58 -0400
+Message-ID: <CAMDPZ0iNtaZ7p3bre31-m6E4Rb92EFshxrcsTjj3cm6=yr_ctw@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: update_pick_idlest() Select group with lowest
+ group_util when idle_cpus are equal
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Robert Foley <robert.foley@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Peter Puhov <peter.puhov@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravi Kumar Bokka <rbokka@codeaurora.org>
+On Wed, 17 Jun 2020 at 06:50, Valentin Schneider
+<valentin.schneider@arm.com> wrote:
+>
+>
+> On 16/06/20 17:48, peter.puhov@linaro.org wrote:
+> > From: Peter Puhov <peter.puhov@linaro.org>
+> > We tested this patch with following benchmarks:
+> >   perf bench -f simple sched pipe -l 4000000
+> >   perf bench -f simple sched messaging -l 30000
+> >   perf bench -f simple  mem memset -s 3GB -l 15 -f default
+> >   perf bench -f simple futex wake -s -t 640 -w 1
+> >   sysbench cpu --threads=8 --cpu-max-prime=10000 run
+> >   sysbench memory --memory-access-mode=rnd --threads=8 run
+> >   sysbench threads --threads=8 run
+> >   sysbench mutex --mutex-num=1 --threads=8 run
+> >   hackbench --loops 20000
+> >   hackbench --pipe --threads --loops 20000
+> >   hackbench --pipe --threads --loops 20000 --datasize 4096
+> >
+> > and found some performance improvements in:
+> >   sysbench threads
+> >   sysbench mutex
+> >   perf bench futex wake
+> > and no regressions in others.
+> >
+>
+> One nitpick for the results of those: condensing them in a table form would
+> make them more reader-friendly. Perhaps something like:
+>
+> | Benchmark        | Metric   | Lower is better? | BASELINE | SERIES | DELTA |
+> |------------------+----------+------------------+----------+--------+-------|
+> | Sysbench threads | # events | No               |    45526 |  56567 |  +24% |
+> | Sysbench mutex   | ...      |                  |          |        |       |
+>
+> If you want to include more stats for each benchmark, you could have one table
+> per (e.g. see [1]) - it'd still be a more readable form (or so I believe).
+>
+> [1]: https://lore.kernel.org/lkml/20200206191957.12325-1-valentin.schneider@arm.com/
+>
+Good point.
+I will reformat test results.
 
-This patch adds properties to the qfprom node to enable fuse blowing.
-
-Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v3:
-- Name is now 'efuse' to match what schema checker wants.
-- Reorganized ranges to match driver/bindings changes.
-- Added 4th range as per driver/binding changes.
-- No more reg-names as per driver/binding changes.
-- Clock name is now just "sec" as per driver/binding changes.
-
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  4 ++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 10 ++++++++--
- 2 files changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 4e9149d82d09..2a9224e2083f 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -287,6 +287,10 @@ vreg_bob: bob {
- 	};
- };
- 
-+&qfprom {
-+	vcc-supply = <&vreg_l11a_1p8>;
-+};
-+
- &qspi {
- 	status = "okay";
- 	pinctrl-names = "default";
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 31b9217bb5bf..d7f5e3d64b17 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -498,9 +498,15 @@ gcc: clock-controller@100000 {
- 			#power-domain-cells = <1>;
- 		};
- 
--		qfprom@784000 {
-+		qfprom: efuse@784000 {
- 			compatible = "qcom,qfprom";
--			reg = <0 0x00784000 0 0x8ff>;
-+			reg = <0 0x00784000 0 0x8ff>,
-+			      <0 0x00780000 0 0x7a0>,
-+			      <0 0x00782000 0 0x100>,
-+			      <0 0x00786000 0 0x1fff>;
-+
-+			clocks = <&gcc GCC_SEC_CTRL_CLK_SRC>;
-+			clock-names = "sec";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
--- 
-2.27.0.290.gba653c62da-goog
-
+> > ---
+> >  kernel/sched/fair.c | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 02f323b85b6d..abcbdf80ee75 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -8662,8 +8662,14 @@ static bool update_pick_idlest(struct sched_group *idlest,
+> >
+> >       case group_has_spare:
+> >               /* Select group with most idle CPUs */
+> > -             if (idlest_sgs->idle_cpus >= sgs->idle_cpus)
+> > +             if (idlest_sgs->idle_cpus > sgs->idle_cpus)
+> >                       return false;
+> > +
+> > +             /* Select group with lowest group_util */
+> > +             if (idlest_sgs->idle_cpus == sgs->idle_cpus &&
+> > +                     idlest_sgs->group_util <= sgs->group_util)
+> > +                     return false;
+> > +
+> >               break;
+> >       }
+>
+> update_sd_pick_busiest() uses the group's nr_running instead. You mention
+> in the changelog that using nr_running is a possible alternative, did you
+> try benchmarking that and seeing how it compares to using group_util?
+>
+> I think it would be nice to keep pick_busiest() and pick_idlest() aligned
+> wherever possible/sensible.
+>
+I agree with you.
+> Also, there can be cases where one group has a few "big" tasks and another
+> has a handful more "small" tasks. Say something like
+>
+>   sgs_a->group_util = U
+>   sgs_a->sum_nr_running = N
+>
+>   sgs_b->group_util = U*4/3
+>   sgs_b->sum_nr_running = N*2/3
+>
+>   (sgs_b has more util per task, i.e. bigger tasks on average)
+>
+> Given that we're in the 'group_has_spare' case, I would think picking the
+> group with the lesser amount of running tasks would make sense. Though I
+> guess you can find pathological cases where the util per task difference is
+> huge and we should look at util first...
+I will re-run the tests with logic based on sum_nr_running and post results.
+Thank you for suggestions.
