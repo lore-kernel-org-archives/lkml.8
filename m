@@ -2,139 +2,193 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0C7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06145C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB95F21548
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37F021548
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:56:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOribdCq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqPy4fhj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgFQW4O (ORCPT
+        id S1726950AbgFQW4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:56:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53016 "EHLO
+        Wed, 17 Jun 2020 18:56:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgFQW4M (ORCPT
+        with ESMTP id S1726840AbgFQW4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:56:12 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E5B4C06174E;
-        Wed, 17 Jun 2020 15:56:11 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id e16so2998500qtg.0;
-        Wed, 17 Jun 2020 15:56:11 -0700 (PDT)
+        Wed, 17 Jun 2020 18:56:33 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E1EC06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:56:31 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id z2so3995143ilq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:56:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=rtJKBmYWA9oE3E+MeSR+9sAbuhCm/rkoIXEy403L6Hs=;
-        b=VOribdCqu5UFifqtt0QPt1u7KxzW+CjZE0KSkrKvqAVFJYS24VhGa0kpCYZv/rjsLM
-         YpCk1bsDZv5lGiIsxDLRS63BkF6FmR+EBNDOjaD6910nqBAGPRBfRAg96R19ZbPEaJDy
-         zdaYsKPhcWn18RZ/yfg1y93eRLR+paQLnyFhfEbrdrrD0EgZeefi9nDXCv8FStXQ5iyA
-         I31ZGLHVWhsWWO3cX1CqG/1/0e2E1hVZGIyY/p1dJqOb8iR17HkzgcXjnrJ26FcBqnzA
-         c00F0IMRoVZv5vH/xlvuxKDHulMuKtUNfD7nWcIIG+mGEG3/QYkOQlTP4opSr/nmWKkY
-         SDNg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yv49H7uS1jQIlHtyWd5igfCbIiLW1NAeICkJXu9JDUc=;
+        b=AqPy4fhjZbTaSYGqujOcDPRyiVqGk9qiiBNmIVkOJXQe2xRN+nvQEwLDLR6z1vw1Z4
+         ugzTAjfOSDvt6wotmz0VNnWdOFOVxRnaKXApHWrWWjz3M+g9QAflMfRIcuoGQGqoQVwv
+         JjwLAcaufFkiT6OPE/Z1iI2k245GY4iG6c7f5e/+bB8n3/+lHzed0iPWBqj/4YAtDwIu
+         jaKt+OZduUaWwUaW+ioBkezC6vLxKK37gIbEYNSmly08wNunXVMvHof+raVL0lSRkQ2h
+         +OFQyghLsIzrTTBZ+cTd805ZX3SRE/Ju9jqIyTzPpjg73bpFYLI2JVb3POCVRjntRb6j
+         HKgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=rtJKBmYWA9oE3E+MeSR+9sAbuhCm/rkoIXEy403L6Hs=;
-        b=fIHKDJ4fW+17V1//legQHjvyQyuhceZOIHFZIWee0omnajXrH8fT1FZPZ4nwQ7hgMT
-         FPyQ4Rd847d+EMLYkj0z9c+R6f3h0xQdgUy8JksZHPCrbRm37cT/4t4+OnRyFKw1N9ZW
-         /h96c4Hzw0U9X4qSltvs6oqc+PUeq8nm65bNedHfcyx5UUvpWY7gTn4ljF3c0UHtYgRH
-         c9D1quzR0W+r+VAFNThi1c0SfIHBbqdqttXUQjvDCLq7naltPEgo51gPITPh3ha4MyT3
-         utBEcWsaUZdwJP7kAyazijJUqcdaVB/vYxUt+74D6om1KtG7L6JYBTl6qEAKBKcmTiaQ
-         mb5A==
-X-Gm-Message-State: AOAM530tBOJPz+gRhtVwMYt1AckvfOZsThUyArb3Nan9/hdXNhmbxJ9G
-        U2BdFLWBKrPOpBdYnmn9hbTHIq5QerE=
-X-Google-Smtp-Source: ABdhPJxN6XClQx5yZUbM1VPxhRnyDhyXxwIpI4m9IPk3lpD2KZl4vYKSHddBySFQS4m68PWwLjVy/Q==
-X-Received: by 2002:ac8:5301:: with SMTP id t1mr1527331qtn.310.1592434570321;
-        Wed, 17 Jun 2020 15:56:10 -0700 (PDT)
-Received: from [192.168.86.185] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id a5sm1240485qtw.22.2020.06.17.15.56.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jun 2020 15:56:09 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 19:55:29 -0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200617172804.7eccb845@oasis.local.home>
-References: <20200324200845.763565368@goodmis.org> <20200617172804.7eccb845@oasis.local.home>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yv49H7uS1jQIlHtyWd5igfCbIiLW1NAeICkJXu9JDUc=;
+        b=O4lDeaWXi1T1SIUEp/Lj7WK2niUNCCWT5fmk22qzh6VaJ6BouR7K6JpTGx5lv1sDih
+         0h1Q5HL1F4gCbN3ffvW5/AH5gy3On5ng24xNJ/O+0BXrsu98YCmz7D3ZZMpwYA7myONj
+         xVi4gbrt0nRmXIpFf7CXU+oZjty+U6FNJYz3ltRcm0FPPG5ApbfimEnHstfyRqCU894G
+         BVl0qU/SsIXy+jNz9Uc7rfkcUutsCcgDqb9HiEFyEBddZ6Lj+vhVSIjoaoG+J8x1ru2j
+         yI0SGaIinCVabVL14X3qhIITgtltjKmbWeSVgm8RweVsTFvxrzJLl3mWMSrVLDp+wulp
+         y7+g==
+X-Gm-Message-State: AOAM533uUJqjEz3nxFr7vSqWUEYHfMmCcxM0bmT+1p6Gyr6l+lyL3IAH
+        +WM37PBDTmX+O5rzCi/S6e8vEIVBMw==
+X-Google-Smtp-Source: ABdhPJyDsY6SC7aAEyEkelkI5tBlBanFy1+zAcaEf/TR3a2+TDopRpL8D2ttMFQo8I+GVddyQAPBMg==
+X-Received: by 2002:a05:6e02:128a:: with SMTP id y10mr1360552ilq.134.1592434591013;
+        Wed, 17 Jun 2020 15:56:31 -0700 (PDT)
+Received: from localhost.localdomain (174-084-153-250.res.spectrum.com. [174.84.153.250])
+        by smtp.gmail.com with ESMTPSA id t28sm596749ilb.49.2020.06.17.15.56.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 15:56:30 -0700 (PDT)
+From:   Brian Gerst <brgerst@gmail.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Brian Gerst <brgerst@gmail.com>
+Subject: [PATCH V2] x86/stackprotector: Pre-initialize canary for secondary CPUs
+Date:   Wed, 17 Jun 2020 18:56:24 -0400
+Message-Id: <20200617225624.799335-1-brgerst@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 0/3] tool lib traceevent: Fix some parsing errors
-To:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org
-CC:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Jaewon Kim <jaewon31.kim@samsung.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kees Cook <keescook@chromium.org>
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Message-ID: <656DB3D9-6D76-4103-B05B-8E4FE142C3B9@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The idle tasks created for each secondary CPU already have a random stack
+canary generated by fork().  Copy the canary to the percpu variable before
+starting the secondary CPU which removes the need to call
+boot_init_stack_canary().
 
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
+---
 
-On June 17, 2020 6:28:04 PM GMT-03:00, Steven Rostedt <rostedt@goodmis=2Eo=
-rg> wrote:
->Hi Arnaldo,
->
->I guess these patches were missed=2E
+V2: Fixed stack protector disabled case
 
-I'll pick those tomorrow,
+ arch/x86/include/asm/stackprotector.h | 12 ++++++++++++
+ arch/x86/kernel/smpboot.c             | 14 ++------------
+ arch/x86/xen/smp_pv.c                 |  2 --
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
-Thanks for the reminder,
+diff --git a/arch/x86/include/asm/stackprotector.h b/arch/x86/include/asm/stackprotector.h
+index 9804a7957f4e..7fb482f0f25b 100644
+--- a/arch/x86/include/asm/stackprotector.h
++++ b/arch/x86/include/asm/stackprotector.h
+@@ -90,6 +90,15 @@ static __always_inline void boot_init_stack_canary(void)
+ #endif
+ }
+ 
++static inline void cpu_init_stack_canary(int cpu, struct task_struct *idle)
++{
++#ifdef CONFIG_X86_64
++	per_cpu(fixed_percpu_data.stack_canary, cpu) = idle->stack_canary;
++#else
++	per_cpu(stack_canary.canary, cpu) = idle->stack_canary;
++#endif
++}
++
+ static inline void setup_stack_canary_segment(int cpu)
+ {
+ #ifdef CONFIG_X86_32
+@@ -119,6 +128,9 @@ static inline void load_stack_canary_segment(void)
+ static inline void setup_stack_canary_segment(int cpu)
+ { }
+ 
++static inline void cpu_init_stack_canary(int cpu, struct task_struct *idle)
++{ }
++
+ static inline void load_stack_canary_segment(void)
+ {
+ #ifdef CONFIG_X86_32
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index ffbd9a3d78d8..a11bd53c6911 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -51,7 +51,6 @@
+ #include <linux/err.h>
+ #include <linux/nmi.h>
+ #include <linux/tboot.h>
+-#include <linux/stackprotector.h>
+ #include <linux/gfp.h>
+ #include <linux/cpuidle.h>
+ #include <linux/numa.h>
+@@ -80,6 +79,7 @@
+ #include <asm/cpu_device_id.h>
+ #include <asm/spec-ctrl.h>
+ #include <asm/hw_irq.h>
++#include <asm/stackprotector.h>
+ 
+ /* representing HT siblings of each logical CPU */
+ DEFINE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_sibling_map);
+@@ -259,21 +259,10 @@ static void notrace start_secondary(void *unused)
+ 	/* enable local interrupts */
+ 	local_irq_enable();
+ 
+-	/* to prevent fake stack check failure in clock setup */
+-	boot_init_stack_canary();
+-
+ 	x86_cpuinit.setup_percpu_clockev();
+ 
+ 	wmb();
+ 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+-
+-	/*
+-	 * Prevent tail call to cpu_startup_entry() because the stack protector
+-	 * guard has been changed a couple of function calls up, in
+-	 * boot_init_stack_canary() and must not be checked before tail calling
+-	 * another function.
+-	 */
+-	prevent_tail_call_optimization();
+ }
+ 
+ /**
+@@ -1011,6 +1000,7 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
+ 	alternatives_enable_smp();
+ 
+ 	per_cpu(current_task, cpu) = idle;
++	cpu_init_stack_canary(cpu, idle);
+ 
+ 	/* Initialize the interrupt stack(s) */
+ 	ret = irq_init_percpu_irqstack(cpu);
+diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+index 171aff1b11f2..9ea598dcc132 100644
+--- a/arch/x86/xen/smp_pv.c
++++ b/arch/x86/xen/smp_pv.c
+@@ -92,9 +92,7 @@ static void cpu_bringup(void)
+ asmlinkage __visible void cpu_bringup_and_idle(void)
+ {
+ 	cpu_bringup();
+-	boot_init_stack_canary();
+ 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+-	prevent_tail_call_optimization();
+ }
+ 
+ void xen_smp_intr_free_pv(unsigned int cpu)
 
+base-commit: 83cdaef93988a6bc6875623781de571b2694fe02
+-- 
+2.26.2
 
-- Arnaldo
-
->
->-- Steve
->
->
->On Tue, 24 Mar 2020 16:08:45 -0400
->Steven Rostedt <rostedt@goodmis=2Eorg> wrote:
->
->> Arnaldo,
->>=20
->> Here's a few patches for lib traceevent=2E
->>=20
->> The first one adds an "append()" helper function for appending to
->strings,
->> which will also simplify the next patch=2E
->>=20
->> The second patch handles "__attribute__((user))" in the field of a
->> trace event=2E This is needed after the stack leak code added this
->> to parameters of system call events=2E
->>=20
->> The last patch adds handling of __builtin_expect(), as someone wanted
->> to move IS_ERR_VALUE() from the fast path into the print fmt section,
->> which breaks the parsing=2E This should also be useful for other macros
->> that may evaluate down to a __builtin_expect()=2E
->>=20
->> Steven Rostedt (VMware) (3):
->>       tools lib traceevent: Add append() function helper for
->appending strings
->>       tools lib traceevent: Handle __attribute__((user)) in field
->names
->>       tools lib traceevent: Add handler for __builtin_expect()
->>=20
->> ----
->>  tools/lib/traceevent/event-parse=2Ec | 168
->++++++++++++++++++++++++-------------
->>  1 file changed, 111 insertions(+), 57 deletions(-)
-
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
