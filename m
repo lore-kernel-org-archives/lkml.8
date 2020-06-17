@@ -2,138 +2,99 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ABBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13593C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8704920786
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC1920786
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:52:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lW2Iyg1S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qqIvT076"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgFQEwW (ORCPT
+        id S1726829AbgFQEwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 00:52:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54674 "EHLO
+        Wed, 17 Jun 2020 00:52:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725769AbgFQEwV (ORCPT
+        with ESMTP id S1726788AbgFQEwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 00:52:21 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B78C061573;
-        Tue, 16 Jun 2020 21:52:21 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id a9so1201668ljn.6;
-        Tue, 16 Jun 2020 21:52:21 -0700 (PDT)
+        Wed, 17 Jun 2020 00:52:50 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4728C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 21:52:50 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k2so421927pjs.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 21:52:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+Osoj5ygLvNMxDa6TIcT1b6EKKm4cXZgXB/12o2ZCl0=;
-        b=lW2Iyg1ShW2LI+AsuHbi/kCBkrS+XBtLwwWUuqAI6nlrAv8PoSRdNmOXyQqwBhmZWM
-         4rKS0Uo7qEE9mnQVoB8iAom+H4xiqC25FdOQoYrphowG0/38/x7gBNDCDIOYf20KxT0E
-         AaBEqDBk4Ik7L2aTyF0CIEcNGfonBSNkMV4etQ/bK4IZil0qhEAWZ8TPMXw/sg6PD6vq
-         ac62iA6Ula3LnuWCunyZZv7sajXgGWDDp6uN6FnmePIWCNiYqMIzzuuALJ0AryDRkMVD
-         B8jo9zdr13nLnaVN0I3y8PIah9hyuUe/T+8JpdnW1jVA/mzCb07ch3zfz/zZ/fA6LgYb
-         3Ljw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=h0vhA/U1QaPFJFPPSjv2ooCi1yzJ6bifslhy6/ILfNA=;
+        b=qqIvT076Ge1qMBfJZRudD6kJOw7/2aACm4VFEGmTFxFn+fCQL61SzYuS80vLfgU0EO
+         1arc/y+G8q/3e4CymS8UeG6vnphqJUxbkEX9ScUZ9sskxZa5SyNwTR6p51GO3N4XLJ8Y
+         CpOdAaHvmQgc3foOQzxQDusX6yi6ARQogN6GxF6/ZZvu2dTxQNvTkoxtZPcEI45AjFku
+         znd+4BS7UNWJ3KPwSGmrwyp0c39/7x5UkacWCK/fcA+yUIUQJYTWbWxX2mDZtkHRPzH6
+         CiHPsaN+s9EVhHoAeYUMPxQqhZHqk8ptbYyNQqHdCH0TfckHERqD1a75k2FQOhfuhHgs
+         MLJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+Osoj5ygLvNMxDa6TIcT1b6EKKm4cXZgXB/12o2ZCl0=;
-        b=FjaVit+kQ7UDB1x65WH7jGdYI1kluYA7eKd5MTIL/RXudLRN8CIrfz5axYxPKp09JW
-         2wnwfp7pIltM+dywXXMJRoDPxNoMPJh0gIyVS1BxCPXZgaaQi1TMKDCDJNWv7dluHf6o
-         5fL84nVRl/LRGKHnFtwePu5PSm7kEpFzlsGHIdich667gNwZR+IWBvSqUoPsJwL3oS5O
-         JNMb8n2N/YoDAYEt5Ny2CXB9XdmDIVF4qyZfQWG1Cx9wymFUoofGkVpnoTS6jRfQMuke
-         iBbTYqugoRnDGRc5uHz5BYrTFOn4iDF08hjqWjBbCs9QKh+cD/LVwMUX2mNkilYefydB
-         E1NA==
-X-Gm-Message-State: AOAM530Rs+yXb/RQ1XRYP0144QtEGPbq+/OT3Q2b2GbZYkqCOYP9nzOP
-        H0FbAbCQ6SPZzWuR3jMGypf9RMwJ
-X-Google-Smtp-Source: ABdhPJwf+Zpknbb8mRkR5GoEZZJ/z3KJOBdQT7rCwopnn394cbc1Qr8XMmuJmoQXw7uHYjLcBxrHpQ==
-X-Received: by 2002:a05:651c:338:: with SMTP id b24mr2838896ljp.87.1592369539402;
-        Tue, 16 Jun 2020 21:52:19 -0700 (PDT)
-Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.googlemail.com with ESMTPSA id f2sm2021812lfc.11.2020.06.16.21.52.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 21:52:18 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 04/18] i2c: tegra: Fix the error path in
- tegra_i2c_runtime_resume
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <1592358094-23459-5-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f7997a48-eaec-839e-e0cd-cde718bd2e72@gmail.com>
-Date:   Wed, 17 Jun 2020 07:52:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h0vhA/U1QaPFJFPPSjv2ooCi1yzJ6bifslhy6/ILfNA=;
+        b=uD/SqSMx/xTuettYGWjE/P2MCCy6eU44Yvo+SnQisOcy0MBBgCrTWiHotz3V088VIr
+         KFSVwTDKhf+7poiwYITRFNe2/C72iOjeoNzFWAHvGxIRXyu9uM4gA5f64yvNVWvqsqnw
+         bwpDyfWvXU77K5A9jo+Mk1FRVrK8buVtBW/4wx2kTDTlAiYQS7LO68kgGxreuhZ6fOV0
+         Rjbs4prkbzhK4E78BUJ2YFct4wHq2hMkp+xnBbcSumCpkxePPOpQD42GCdiXliFdfT/4
+         m26hkzYJO8H0xPdIkMLesmL1Hq1bqe1seUHwV/tlxQAIb1geArLMFNSIniu/Kt8z+6XY
+         S9mA==
+X-Gm-Message-State: AOAM5314WMO3uIhMghUW8GcfnQ6Nh4QvZwNgcUQdzSOSslp4GJvonj59
+        lMsQY2gusNQ2KKzWH+4PP9jM3A==
+X-Google-Smtp-Source: ABdhPJzUPNYD737LZ9mvXjpLQCfZmh5Gx+UdS29xXQW9wm49nYfnbVwYV0zTgJAUSgpio21zZQQuuQ==
+X-Received: by 2002:a17:90a:930c:: with SMTP id p12mr6662433pjo.2.1592369570118;
+        Tue, 16 Jun 2020 21:52:50 -0700 (PDT)
+Received: from localhost ([122.172.119.132])
+        by smtp.gmail.com with ESMTPSA id h17sm18753333pfo.168.2020.06.16.21.52.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Jun 2020 21:52:49 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 10:22:47 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Sibi Sankar <sibis@codeaurora.org>, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org, rjw@rjwysocki.net,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        lukasz.luba@arm.com, sudeep.holla@arm.com, smasetty@codeaurora.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v6 4/5] cpufreq: qcom: Update the bandwidth levels on
+ frequency change
+Message-ID: <20200617045247.zet624tyloxzj5fx@vireshk-i7>
+References: <20200605213332.609-1-sibis@codeaurora.org>
+ <20200605213332.609-5-sibis@codeaurora.org>
+ <20200615172553.GU4525@google.com>
+ <e21f85d64d72ec637c10dae93e8323bb@codeaurora.org>
+ <20200616221157.GA4525@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1592358094-23459-5-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616221157.GA4525@google.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.06.2020 04:41, Sowjanya Komatineni пишет:
-> tegra_i2c_runtime_resume does not disable prior enabled clocks
-> properly.
+On 16-06-20, 15:11, Matthias Kaehlcke wrote:
+> Hi Sibi,
 > 
-> This patch fixes it.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index 3be1018..1b459ca 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -668,7 +668,7 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
->  		ret = clk_enable(i2c_dev->slow_clk);
->  		if (ret < 0) {
->  			dev_err(dev, "failed to enable slow clock: %d\n", ret);
-> -			return ret;
-> +			goto disable_fast_clk;
->  		}
->  	}
->  
-> @@ -676,11 +676,16 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
->  	if (ret < 0) {
->  		dev_err(i2c_dev->dev,
->  			"Enabling div clk failed, err %d\n", ret);
-> -		clk_disable(i2c_dev->fast_clk);
-> -		return ret;
-> +		goto disable_slow_clk;
->  	}
->  
->  	return 0;
-> +
-> +disable_slow_clk:
-> +	clk_disable(i2c_dev->slow_clk);
-> +disable_fast_clk:
-> +	clk_disable(i2c_dev->fast_clk);
-> +	return ret;
->  }
->  
->  static int __maybe_unused tegra_i2c_runtime_suspend(struct device *dev)
-> 
+> after doing the review I noticed that Viresh replied on the cover letter
+> that he picked the series up for v5.9, so I'm not sure if it makes sense
+> to send a v7.
 
-This looks good to me. Could you please add an additional patch to
-remove all the other conditions of the clk enable/disable? The current
-code was already inconsistent because in most cases there are
-conditions, but not in all cases.
+Its okay, you can send a new version and I will apply that instead.
+
+-- 
+viresh
