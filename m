@@ -2,112 +2,85 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52052C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B589C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6992088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287782088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgFQSc0 (ORCPT
+        id S1727787AbgFQSeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:32:26 -0400
-Received: from mga09.intel.com ([134.134.136.24]:15632 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbgFQSc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 14:32:26 -0400
-IronPort-SDR: Heq0lZ+rxMLq9CxHv+wzrNZP4U2cdoVMZWPHOWXU5rDq5OHfJfwGpg8VttknL3Y9zhSL8od0O0
- eAPZNC9D3khg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 11:32:25 -0700
-IronPort-SDR: adYkGQfP2UnElRGEJLNSZmQJe7CJIILLyFWQpU15MypxbLdC39GAC5XqxiTXYHKphCK9d65QcH
- xoqbO0CZBa7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
-   d="scan'208";a="309568526"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Jun 2020 11:32:24 -0700
-Date:   Wed, 17 Jun 2020 11:32:24 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>, virtio-fs@redhat.com,
-        miklos@szeredi.hu, stefanha@redhat.com, dgilbert@redhat.com,
-        pbonzini@redhat.com, wanpengli@tencent.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] kvm: Add capability to be able to report async pf
- error to guest
-Message-ID: <20200617183224.GK26818@linux.intel.com>
-References: <20200616214847.24482-1-vgoyal@redhat.com>
- <20200616214847.24482-3-vgoyal@redhat.com>
- <87lfklhm58.fsf@vitty.brq.redhat.com>
+        Wed, 17 Jun 2020 14:34:06 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:47700 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbgFQSeF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 14:34:05 -0400
+Received: by mail-il1-f199.google.com with SMTP id w65so2151720ilk.14
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:34:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=F3B7POYganjcYcTK3xulmlzDnkNmuFC83gI/QGxJRTY=;
+        b=pZpiwj0eztRe4dqLcqkr3DfwCqOIEV7HJh2COBBDzXmQMX8X3C2s6LHb+L6EF1D2pI
+         jIktQzo+d1cwqP9DaVstUW9gIZ8EleudLsWCGZqWkeEYmZZkPIsltufe7y3eWqJZKPTN
+         w934EOx0KatQvTHDb0LIjasEs739AkXwEzQJPSkZr9Gda/MQvv8YeXBBsGDxgdP3EygC
+         mtt1IVbz+94r/A59EmvS8wkCZUextQ/pVwsKj/tnIzUxJZ/RQfOYqM15DwNLMbCksJ5K
+         InyTldjeB8eaora6KAPWlb3NKse/R/HOWYFJZQNXEBZd6rH+418mkrD/HVMP3bjnnNrE
+         /Dlw==
+X-Gm-Message-State: AOAM531HbC8wM7fmhTKv5oCVVssRdFsRhPdpE53Caqo5YcsIfP60nGCz
+        GHbC00HQE0R5Ge+I9uCjc9v04UV/S8wAZ6OfxhET9+3TbQDV
+X-Google-Smtp-Source: ABdhPJygKKcZu/ebf2TevbrWJlM+0CuGBrPVjGvdAgLKjnmnW+3Wbg2+h5A3SrR7rk6IBnaFssLxIhPC1NUTeKocc3UNX41F5Ya9
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87lfklhm58.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Received: by 2002:a02:770b:: with SMTP id g11mr621320jac.69.1592418844130;
+ Wed, 17 Jun 2020 11:34:04 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 11:34:04 -0700
+In-Reply-To: <0000000000000655c0057cd141f1@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000089c74405a84be7aa@google.com>
+Subject: Re: WARNING: locking bug in __queue_work
+From:   syzbot <syzbot+6174a6c5eba4b3cdd606@syzkaller.appspotmail.com>
+To:     agruenba@redhat.com, bp@alien8.de, cluster-devel@redhat.com,
+        davem@davemloft.net, hpa@zytor.com, jon.maloy@ericsson.com,
+        keescook@chromium.org, konrad.wilk@oracle.com,
+        kuznet@ms2.inr.ac.ru, len.brown@intel.com,
+        linux-kernel@vger.kernel.org, luto@amacapital.net,
+        mingo@redhat.com, netdev@vger.kernel.org, nstange@suse.de,
+        puwen@hygon.cn, rpeterso@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        tipc-discussion@lists.sourceforge.net, wad@chromium.org,
+        wang.yi59@zte.com.cn, x86@kernel.org, ying.xue@windriver.com,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 03:12:03PM +0200, Vitaly Kuznetsov wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
-> 
-> > As of now asynchronous page fault mecahanism assumes host will always be
-> > successful in resolving page fault. So there are only two states, that
-> > is page is not present and page is ready.
-> >
-> > If a page is backed by a file and that file has been truncated (as
-> > can be the case with virtio-fs), then page fault handler on host returns
-> > -EFAULT.
-> >
-> > As of now async page fault logic does not look at error code (-EFAULT)
-> > returned by get_user_pages_remote() and returns PAGE_READY to guest.
-> > Guest tries to access page and page fault happnes again. And this
-> > gets kvm into an infinite loop. (Killing host process gets kvm out of
-> > this loop though).
+syzbot suspects this bug was fixed by commit:
 
-Isn't this already fixed by patch 1/3 "kvm,x86: Force sync fault if previous
-attempts failed"?  If it isn't, it should be, i.e. we should fix KVM before
-adding what are effectively optimizations on top.   And, it's not clear that
-the optimizations are necessary, e.g. I assume the virtio-fs truncation
-scenario is relatively uncommon, i.e. not performance sensitive?
+commit ea22eee4e6027d8927099de344f7fff43c507ef9
+Author: Bob Peterson <rpeterso@redhat.com>
+Date:   Wed Apr 29 13:45:54 2020 +0000
 
-> >
-> > This patch adds another state to async page fault logic which allows
-> > host to return error to guest. Once guest knows that async page fault
-> > can't be resolved, it can send SIGBUS to host process (if user space
+    gfs2: Allow lock_nolock mount to specify jid=X
 
-I assume this is supposed to be "it can send SIGBUS to guest process"?
-Otherwise none of this makes sense (to me).
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16fcf249100000
+start commit:   fe5cdef2 Merge tag 'for-linus-5.1-2' of git://github.com/c..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=856fc6d0fbbeede9
+dashboard link: https://syzkaller.appspot.com/bug?extid=6174a6c5eba4b3cdd606
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17f6c7e3200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=101507fd200000
 
-> > was accessing the page in question).
+If the result looks correct, please mark the bug fixed by replying with:
 
-Allowing the guest to opt-in to intercepting host page allocation failures
-feels wrong, and fragile.  KVM can't possibly know whether an allocation
-failure is something that should be forwarded to the guest, as KVM doesn't
-know the physical backing for any given hva/gfn, e.g. the error could be
-due to a physical device failure or a configuration issue.  Relying on the
-async #PF mechanism to prevent allocation failures from crashing the guest
-is fragile because there is no guarantee that a #PF can be async.
+#syz fix: gfs2: Allow lock_nolock mount to specify jid=X
 
-IMO, the virtio-fs truncation use case should first be addressed in a way
-that requires explicit userspace intervention, e.g. by enhancing
-kvm_handle_bad_page() to provide the necessary information to userspace so
-that userspace can reflect select errors into the guest.  The reflection
-could piggyback whatever vector is used by async page faults (#PF or #VE),
-but would not be an async page fault per se.  If an async #PF happens to
-encounter an allocation failure, it would naturally fall back to the
-synchronous path (provided by patch 1/3) and the synchronous path would
-automagically handle the error as above.
-
-In other words, I think the guest should be able to enable "error handling"
-support without first enabling async #PF.  From a functional perspective it
-probably won't change a whole lot, but it would hopefully force us to
-concoct an overall "paravirt page fault" design as opposed to simply async
-#PF v2.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
