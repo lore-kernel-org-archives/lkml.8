@@ -2,219 +2,201 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C7FC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3BD421532
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68E3921556
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CGrdoipD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pNglAxY2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgFQQ1G (ORCPT
+        id S1727839AbgFQQ1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:27:06 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:42841 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727809AbgFQQ1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:27:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592411221; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=3kphDNNgXxmWAV6mi4fI4VHOf8JSRgD1IIPPeGHUYd0=; b=CGrdoipD4l5+jDym+0KJP0wdvXAM+GolgvwPXejH1aNVfFAUAqnfi/CjBYEC/9JTZWkL6Xle
- slE048rL6WoVGJgNjXseKqjsILvB/2LSgLs7lYOYjAac2+TTs19jvY1WxdBBCZqTx0H2EfB1
- yXF3nfZoMTRi7rpgPOEonFu1eQ0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
- 5eea4448c4bb4f886d9c2702 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 17 Jun 2020 16:26:48
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0A68CC4339C; Wed, 17 Jun 2020 16:26:46 +0000 (UTC)
-Received: from [10.50.9.163] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rbokka)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 315E0C433AD;
-        Wed, 17 Jun 2020 16:26:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 315E0C433AD
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rbokka@codeaurora.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: nvmem: qfprom: Convert to yaml
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     dhavalp@codeaurora.org, mturney@codeaurora.org,
-        rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        saiprakash.ranjan@codeaurora.org, sparate@codeaurora.org,
-        mkurumel@codeaurora.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200617145116.247432-1-dianders@chromium.org>
- <20200617074930.v3.1.Iea2704ec2cb40c00eca47781c310a6330ac5dd41@changeid>
- <ed6d22a1-0d38-9874-d5cc-efe39f360baa@linaro.org>
-From:   "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>
-Message-ID: <0181cfe3-6627-e599-8f2f-1f433d9e0596@codeaurora.org>
-Date:   Wed, 17 Jun 2020 21:56:38 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 17 Jun 2020 12:27:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbgFQQ0f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 12:26:35 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BDE8C06174E;
+        Wed, 17 Jun 2020 09:26:35 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id s13so2092377otd.7;
+        Wed, 17 Jun 2020 09:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DtbCt4lXWAsz7/FyFOawXtgiyr7YGkyvVZTRxQCf5d4=;
+        b=pNglAxY2ycX605y2jzji57ed8Op7lxOb3lc1yCuCT7cwDvqYUDmz1x84j76wEkz/+U
+         0LeQyM0X9mM5lvWeFfJ7WjPrItNKfJiBlHFgTThb10kw+vs6EQFAzI0UZxQcVhcba1lE
+         0zJ4Stp5KThf+bflvsmxK4NWDDAV/BVNiFRp4QIwbSgPsUaMrSS9B9OqBmFzOzvkp2SI
+         aK5eOOksrf6YBFZOOhN4z/hzQE4H2182N/0AOf0UNffepyi9uWgy2XszKC4R+vqyrtqF
+         cBldMZgbzvdQN/qJcf9DLpoR44jMuI54PHPiO1z249i/IXengOo1jponEi3ESwXsle/N
+         zUnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DtbCt4lXWAsz7/FyFOawXtgiyr7YGkyvVZTRxQCf5d4=;
+        b=fBCOS++ekdTKc0kOGznfVlLfKnPvNclWz9Z9uMQmo2d9fODqUuBo5Yv5uE+0i1ecAC
+         /zKQXAgN5o6V3S8OltQjsBr4jSfWJOO8weRJrg346Z3WTdZekwFAmIjefa9uAOPg7bDY
+         hyHGir45hE/0oP7Q7pWjX8zq5YrCFokVvBRoCuVrFQZfnu7vvD67bktDptsG156Fn3VV
+         +JlcoUOMloSOf54RXTG36gq9geKzAlPC2/dc/jdfpj83uSvrhAZW8PDK8scdVfAkCOQ6
+         02y4Ibhy7L6AT2tJwyrFaqZeEYHGpn2EQvDSNntGICkxJYcXtQ67QWmnEI3IvCrZtb6t
+         ihCA==
+X-Gm-Message-State: AOAM530sefpQ71uPYCPBtwCkMCmvn+2GFrkXqLw2/HaXgRNxpIfMnTMY
+        aqDjJ3AEBZ0jv5CfgZOYV0c=
+X-Google-Smtp-Source: ABdhPJwHlRqkjC8/GZ7Wa363TGIpU8xB0IfHK5jXMv5FOhQjohFvR7XgirJIbCmqx/x4X2H8BPcrUA==
+X-Received: by 2002:a05:6830:1218:: with SMTP id r24mr5323482otp.247.1592411194459;
+        Wed, 17 Jun 2020 09:26:34 -0700 (PDT)
+Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::ae4b])
+        by smtp.googlemail.com with ESMTPSA id h7sm95877otk.48.2020.06.17.09.26.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 09:26:33 -0700 (PDT)
+From:   Jim Cromie <jim.cromie@gmail.com>
+To:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
+        akpm@linuxfoundation.org, gregkh@linuxfoundation.org
+Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>, Will Deacon <will@kernel.org>,
+        Orson Zhai <orson.zhai@unisoc.com>, linux-doc@vger.kernel.org
+Subject: [PATCH v3 19/21] dyndbg: extend ddebug_parse_flags to accept optional leading filter-flags
+Date:   Wed, 17 Jun 2020 10:25:34 -0600
+Message-Id: <20200617162536.611386-22-jim.cromie@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200617162536.611386-1-jim.cromie@gmail.com>
+References: <20200617162536.611386-1-jim.cromie@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ed6d22a1-0d38-9874-d5cc-efe39f360baa@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Change ddebug_parse_flags to accept optional filterflags before the
+required operator [-+=].  Read the flags into the filter_flags
+parameter added in the previous patch.  So this now supplies the
+filterflags to ddebug_exec_query.
 
+filterflags work like query terms, they constrain what callsites get
+matched before theyre modified.  So like a query, they can be empty.
 
-On 6/17/2020 8:48 PM, Srinivas Kandagatla wrote:
-> 
-> 
-> On 17/06/2020 15:51, Douglas Anderson wrote:
->> From: Ravi Kumar Bokka <rbokka@codeaurora.org>
->>
->> This switches the bindings over from txt to yaml.
->>
->> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
->> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> ---
->>
->> Changes in v3:
->> - Split conversion to yaml into separate patch new in v3.
->> - Use 'const' for compatible instead of a 1-entry enum.
->> - Changed filename to match compatible string.
->> - Add #address-cells and #size-cells to list of properties.
->> - Fixed up example.
->>
->>   .../bindings/nvmem/qcom,qfprom.yaml           | 45 +++++++++++++++++++
->>   .../devicetree/bindings/nvmem/qfprom.txt      | 35 ---------------
->>   2 files changed, 45 insertions(+), 35 deletions(-)
->>   create mode 100644 
->> Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
->>   delete mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
->>
->> diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml 
->> b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
->> new file mode 100644
->> index 000000000000..5efa5e7c4d81
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
->> @@ -0,0 +1,45 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/nvmem/qcom,qfprom.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Technologies Inc, QFPROM Efuse bindings
->> +
->> +maintainers:
->> +  - Ravi Kumar Bokka <rbokka@codeaurora.org>
->> +
-> 
-> Am not sure this was intentional, but the old maintainer name is totally 
-> lost in this patch!
-> 
-> Please fix this!
-> 
+Filterflags let you read callsite's flagstate, including results of
+previous modifications, and require that certain flags are set, before
+modifying the callsite further.
 
-Hi Srinivas,
-The existed qfprom dt-bindings in .txt format.
-I will make it as it is to merge whole content in .yaml format once 
-confirm all the parameters with this new driver changes.
+So you can build up sets of callsites by marking them with a
+particular flagstate, for example 'fmlt', then enable that set in a
+batch.
 
-> 
-> 
->> +allOf:
->> +  - $ref: "nvmem.yaml#"
->> +
->> +properties:
->> +  compatible:
->> +    const: qcom,qfprom
->> +
->> +  reg:
->> +    items:
->> +      - description: The corrected region.
->> +
->> +  # Needed if any child nodes are present.
->> +  "#address-cells":
->> +    const: 1
->> +  "#size-cells":
->> +    const: 1
->> +
->> +required:
->> +   - compatible
->> +   - reg
->> +
->> +examples:
->> +  - |
->> +    efuse@784000 {
->> +      compatible = "qcom,qfprom";
->> +      reg = <0 0x00784000 0 0x8ff>;
->> +      #address-cells = <1>;
->> +      #size-cells = <1>;
->> +
->> +      hstx-trim-primary@1eb {
->> +        reg = <0x1eb 0x1>;
->> +        bits = <1 4>;
->> +      };
->> +    };
->> diff --git a/Documentation/devicetree/bindings/nvmem/qfprom.txt 
->> b/Documentation/devicetree/bindings/nvmem/qfprom.txt
->> deleted file mode 100644
->> index 26fe878d5c86..000000000000
->> --- a/Documentation/devicetree/bindings/nvmem/qfprom.txt
->> +++ /dev/null
->> @@ -1,35 +0,0 @@
->> -= Qualcomm QFPROM device tree bindings =
->> -
->> -This binding is intended to represent QFPROM which is found in most 
->> QCOM SOCs.
->> -
->> -Required properties:
->> -- compatible: should be "qcom,qfprom"
->> -- reg: Should contain registers location and length
->> -
->> -= Data cells =
->> -Are child nodes of qfprom, bindings of which as described in
->> -bindings/nvmem/nvmem.txt
->> -
->> -Example:
->> -
->> -    qfprom: qfprom@700000 {
->> -        compatible     = "qcom,qfprom";
->> -        reg        = <0x00700000 0x8000>;
->> -        ...
->> -        /* Data cells */
->> -        tsens_calibration: calib@404 {
->> -            reg = <0x4404 0x10>;
->> -        };
->> -    };
->> -
->> -
->> -= Data consumers =
->> -Are device nodes which consume nvmem data cells.
->> -
->> -For example:
->> -
->> -    tsens {
->> -        ...
->> -        nvmem-cells = <&tsens_calibration>;
->> -        nvmem-cell-names = "calibration";
->> -    };
->>
+  echo fmlt+p >control
 
+Naturally you can use almost any combo of flags you want for marking,
+and can mark several different sets with different patterns.  And then
+you can activate them in a bunch:
+
+  echo 'ft+p; mt+p; lt+p;' >control
+
+You just can't prohibit true flags.
+
+Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+---
+ .../admin-guide/dynamic-debug-howto.rst       | 18 ++++++++----
+ lib/dynamic_debug.c                           | 29 ++++++++++---------
+ 2 files changed, 28 insertions(+), 19 deletions(-)
+
+diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+index e5a8def45f3f..e1ea0c307fcf 100644
+--- a/Documentation/admin-guide/dynamic-debug-howto.rst
++++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+@@ -218,13 +218,19 @@ line
+ 	line -1605          // the 1605 lines from line 1 to line 1605
+ 	line 1600-          // all lines from line 1600 to the end of the file
+ 
+-The flags specification comprises a change operation followed
+-by one or more flag characters.  The change operation is one
+-of the characters::
++Flags Specification::
+ 
+-  -    remove the given flags
+-  +    add the given flags
+-  =    set the flags to the given flags
++  flagspec	::= filterflags? OP modflags
++  filterflags	::= flagset
++  modflags	::= flagset
++  flagset	::= ([pfmltu_] | [PFMLTU_])+	# also cant have pP etc
++  OP		::= [-+=]
++
++OP: modify callsites per following flagset::
++
++  -    remove the following flags
++  +    add the following flags
++  =    set the flags to the following flags
+ 
+ The flags are::
+ 
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index 0fcc688789f4..cf3379b40483 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -452,33 +452,36 @@ static int ddebug_read_flags(const char *str, struct flag_settings *modifiers)
+ }
+ 
+ /*
+- * Parse `str' as a flags specification, format [-+=][p]+.
+- * Sets up *maskp and *flagsp to be used when changing the
+- * flags fields of matched _ddebug's.  Returns 0 on success
+- * or <0 on error.
++ * Parse `str' as a flags-spec, ie: [pfmlt_]*[-+=][pfmlt_]+
++ * Fills flagsettings provided.  Returns 0 on success or <0 on error.
+  */
+ static int ddebug_parse_flags(const char *str,
+ 			      struct flag_settings *modifiers,
+ 			      struct flag_settings *filter)
+ {
+ 	int op;
++	char *opp = strpbrk(str, "-+=");
+ 
+-	switch (*str) {
+-	case '+':
+-	case '-':
+-	case '=':
+-		op = *str++;
+-		break;
+-	default:
+-		pr_err("bad flag-op %c, at start of %s\n", *str, str);
++	if (!opp) {
++		pr_err("no OP given in %s\n", str);
+ 		return -EINVAL;
+ 	}
++	op = *opp;
+ 	vpr_info("op='%c'\n", op);
+ 
++	if (opp != str) {
++		/* filterflags precedes OP, grab it */
++		*opp++ = '\0';
++		if (ddebug_read_flags(str, filter))
++			return -EINVAL;
++		str = opp;
++	} else
++		str++;
++
+ 	if (ddebug_read_flags(str, modifiers))
+ 		return -EINVAL;
+ 
+-	/* calculate final flags, mask based upon op */
++	/* calculate final mods: flags, mask based upon op */
+ 	switch (op) {
+ 	case '=':
+ 		/* modifiers->flags already set */
 -- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member of the Code Aurora Forum, hosted by the Linux Foundation.
+2.26.2
+
