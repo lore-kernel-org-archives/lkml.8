@@ -2,102 +2,82 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D68C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF902C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02B6520786
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBFA208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:27:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fIldEh8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgFQH1B (ORCPT
+        id S1726369AbgFQH1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 03:27:01 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34907 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgFQH1A (ORCPT
+        Wed, 17 Jun 2020 03:27:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgFQH1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 03:27:00 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k4so949246oik.2;
-        Wed, 17 Jun 2020 00:26:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kxyFmibDG5zSWuXtIhnkYe3H38OpnFHk954/p0T/5F0=;
-        b=L1RiL0nnX2c/NYlKiW5iz3AiMph1l9VRBoKIePm5qqptDOLYXDqPn5MMdix1GOKLW8
-         B1QVGhVm3Zie27Mty60B5BVESniQJfLX7NZ5GOzgRmM5t7BlZjOjUYJYXBHkj9LzsdoB
-         sVvF2OQBuDv8Kj/+tBor8qS/CafZUk1rLlKaGAocXbAiP/JVYP9JOX51MDbcB3Bo0NE1
-         0DjTgRWL4A2XOwYUWWL0blm3RYLUKlHV7tP4SX4tP/Zw1hI5WVMKm7GCS7syr3Hqfe9+
-         qlMIBvAXyd0GPQTreWucvnKHaeHvE+N0Kq5xKmqpm+yJ7Ruvom/zKACau4+DiJcBZQt9
-         F+bA==
-X-Gm-Message-State: AOAM533gPJoqyFc8YWCkqLjDdPcm6RawCZOmXEpZzQvhMkmfjdOF/ax2
-        +Npa5u1Hx3RY3XwEsF7ktQK6rT4gNw/2Z/uAbzM=
-X-Google-Smtp-Source: ABdhPJzo05G9Ws9f3MCK6JC8SiQnblUqmieP1YcvRAPGi0k/Moz8N8pFDuR5v0ZYCWq67OhTW6jbDP1dW5+bo2BUdhI=
-X-Received: by 2002:a54:4006:: with SMTP id x6mr6155596oie.148.1592378818667;
- Wed, 17 Jun 2020 00:26:58 -0700 (PDT)
+        Wed, 17 Jun 2020 03:27:23 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23FA2C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 00:27:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=NRn8O7QYdNpRrlpQXqZW82Rfx5PaLTNAyku21vFzCVU=; b=fIldEh8F0gwl0Xcrw20BWI7wS5
+        mS05t+cN5LkOX+nposGs10vbzg0P6uJFl8vFD3VCSwGeEn4to17QJtaqmvbkmcgsooV1odPuO8QLv
+        EmtvCecJoB6DVODf+B8IEMbXXR5HEMdrmNcTybSgXRZtAncvjjPmJsjHVti3Y+FdU2LIniiWQ4804
+        XCWT7EtndQfzact0uZ4cgKPYO43d+xrUNR47ou3Ei4RMM3FFZ8gpgCMYxDiPQcI/7Bhd6PvovI33q
+        Xyi8UstkcnnSulnbbJxy7b0osokUiNLYdeJd//ZL4crd+3tHi2JWGK9Rr0wSAGlG57wcVLzBWmkP0
+        iFQzVATw==;
+Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlSTf-0003eU-IM; Wed, 17 Jun 2020 07:27:19 +0000
+Date:   Wed, 17 Jun 2020 09:27:16 +0200
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [GIT PULL] dma-mapping fixes for 5.8
+Message-ID: <20200617072716.GA7356@infradead.org>
 MIME-Version: 1.0
-References: <20200605024919.56177-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20200605024919.56177-1-navid.emamdoost@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 17 Jun 2020 09:26:47 +0200
-Message-ID: <CAMuHMdXHT9y09L19j2K=oQ1W+7x=SE7MEyjj6r1i=DPcokvWzg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: rcar: handle pm_runtime_get_sync failure case
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Navid,
+The following changes since commit abfbb29297c27e3f101f348dc9e467b0fe70f919:
 
-On Fri, Jun 5, 2020 at 4:50 AM Navid Emamdoost
-<navid.emamdoost@gmail.com> wrote:
-> Calling pm_runtime_get_sync increments the counter even in case of
-> failure, causing incorrect ref count. Call pm_runtime_put if
-> pm_runtime_get_sync fails.
->
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+  Merge tag 'rproc-v5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc (2020-06-08 13:01:08 -0700)
 
-Thanks for your patch!
+are available in the Git repository at:
 
-> --- a/drivers/gpio/gpio-rcar.c
-> +++ b/drivers/gpio/gpio-rcar.c
-> @@ -250,8 +250,10 @@ static int gpio_rcar_request(struct gpio_chip *chip, unsigned offset)
->         int error;
->
->         error = pm_runtime_get_sync(p->dev);
-> -       if (error < 0)
-> +       if (error < 0) {
-> +               pm_runtime_put(p->dev);
+  git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.8-3
 
-As per [1], I would like to see a call to pm_runtime_put_noidle() instead.
+for you to fetch changes up to dbed452a078d56bc7f1abecc3edd6a75e8e4484e:
 
-[1] http://lore.kernel.org/r/CAJZ5v0i87NGcy9+kxubScdPDyByr8ypQWcGgBFn+V-wDd69BHQ@mail.gmail.com
+  dma-pool: decouple DMA_REMAP from DMA_COHERENT_POOL (2020-06-15 08:35:30 +0200)
 
->                 return error;
-> +       }
->
->         error = pinctrl_gpio_request(chip->base + offset);
->         if (error)
+----------------------------------------------------------------
+dma-mapping fixes for 5.8
 
-Gr{oetje,eeting}s,
+ - fixes for the SEV atomic pool (Geert Uytterhoeven and David Rientjes)
 
-                        Geert
+----------------------------------------------------------------
+David Rientjes (1):
+      dma-pool: decouple DMA_REMAP from DMA_COHERENT_POOL
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Geert Uytterhoeven (1):
+      dma-pool: fix too large DMA pools on medium memory size systems
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+ kernel/dma/Kconfig | 10 +++++-----
+ kernel/dma/pool.c  |  7 +++----
+ 2 files changed, 8 insertions(+), 9 deletions(-)
