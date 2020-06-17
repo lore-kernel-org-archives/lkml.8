@@ -2,121 +2,80 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65003C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4877D208B3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D76208B3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbgFQLMT (ORCPT
+        id S1726769AbgFQLNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:12:19 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:49418 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgFQLMT (ORCPT
+        Wed, 17 Jun 2020 07:13:08 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36634 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725964AbgFQLNH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:12:19 -0400
-Received: by mail-il1-f200.google.com with SMTP id i7so1246115ilq.16
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 04:12:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=cK7FTAwbUSTiZjl6IkrYdUSKLpi8bAFJPJNJyEpu2aE=;
-        b=rTuALTrCiXph+Ja5QcSj4Y1ktshpXkaNek6yAz12AYJDatZe6OrXnyeCG3j2glYUtS
-         CqheqzMV4M0wlgRCD4B+1kzFP3py9Q5o0dfjmixHBjtPGY3KfFvtJgw0DiTpcVJwM+P2
-         IrClZ1NjGKeiK8TUQXnGu6PiQyqskJhszsB0KpEF13gHfvaMvxRa7ZalN1EKjcOOkY7Z
-         pn6AkOn1O0TiCp5MVgNd7EW+5bo+AV+M2xdd9XBG+7WSweIyh4NsF3FIh1mNKcz7W2pb
-         2XZSyMIgNTI71Lk/1wfSNxPlp2nyFWxNaa/zycBQWEbMqOCPMyGNXrCEcNwMakuoLz6e
-         YXLQ==
-X-Gm-Message-State: AOAM533LgjyoxF47f1S5lsUQG6ZOVEZ6HAyO7ARpVjHTYoY8rP7wsQPK
-        Z6NMmAhceEYMl2QJF6Vakzzck3dlt0slGBf9euwoRQPYv1jn
-X-Google-Smtp-Source: ABdhPJwem8R228KKsE/YZaUkfEzFGhsGTcUNrUIavzcGCWj1WAo0Jip64m76KutfyvhSJDZU3cyFjADTRrbg3RNznlhdehS3T6FA
+        Wed, 17 Jun 2020 07:13:07 -0400
+Received: from [114.249.250.117] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <aaron.ma@canonical.com>)
+        id 1jlW01-0006g5-Cg; Wed, 17 Jun 2020 11:12:58 +0000
+From:   Aaron Ma <aaron.ma@canonical.com>
+To:     jeffrey.t.kirsher@intel.com, davem@davemloft.net, kuba@kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vitaly.lifshits@intel.com,
+        kai.heng.feng@canonical.com, sasha.neftin@intel.com
+Subject: [v2][PATCH] e1000e: continue to init phy even when failed to disable ULP
+Date:   Wed, 17 Jun 2020 19:12:48 +0800
+Message-Id: <20200617111249.20855-1-aaron.ma@canonical.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200616100512.22512-1-aaron.ma@canonical.com>
+References: <20200616100512.22512-1-aaron.ma@canonical.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:b001:: with SMTP id x1mr7180749ilh.18.1592392338268;
- Wed, 17 Jun 2020 04:12:18 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 04:12:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000aa674005a845bbc5@google.com>
-Subject: KASAN: null-ptr-deref Write in media_request_close
-From:   syzbot <syzbot+6bed2d543cf7e48b822b@syzkaller.appspotmail.com>
-To:     laurent.pinchart@ideasonboard.com, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+After commit: e086ba2fccd ("e1000e: disable s0ix entry and exit flows
+ for ME systems").
+ThinkPad P14s always failed to disable ULP by ME.
+commit: 0c80cdbf33 ("e1000e: Warn if disabling ULP failed")
+break out of init phy:
 
-syzbot found the following crash on:
+error log:
+[   42.364753] e1000e 0000:00:1f.6 enp0s31f6: Failed to disable ULP
+[   42.524626] e1000e 0000:00:1f.6 enp0s31f6: PHY Wakeup cause - Unicast Packet
+[   42.822476] e1000e 0000:00:1f.6 enp0s31f6: Hardware Error
 
-HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13880e71100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=be4578b3f1083656
-dashboard link: https://syzkaller.appspot.com/bug?extid=6bed2d543cf7e48b822b
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+When disable s0ix, E1000_FWSM_ULP_CFG_DONE will never be 1.
+If continue to init phy like before, it can work as before.
+iperf test result good too.
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6bed2d543cf7e48b822b@syzkaller.appspotmail.com
-
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
-R13: 0000000000000404 R14: 00000000004c6c29 R15: 00007f0c04c4a6d4
-==================================================================
-BUG: KASAN: null-ptr-deref in atomic_fetch_sub include/asm-generic/atomic-instrumented.h:199 [inline]
-BUG: KASAN: null-ptr-deref in refcount_sub_and_test include/linux/refcount.h:266 [inline]
-BUG: KASAN: null-ptr-deref in refcount_dec_and_test include/linux/refcount.h:294 [inline]
-BUG: KASAN: null-ptr-deref in kref_put include/linux/kref.h:64 [inline]
-BUG: KASAN: null-ptr-deref in media_request_put drivers/media/mc/mc-request.c:81 [inline]
-BUG: KASAN: null-ptr-deref in media_request_close+0x4d/0x170 drivers/media/mc/mc-request.c:89
-Write of size 4 at addr 0000000000000008 by task syz-executor.5/16136
-
-CPU: 0 PID: 16136 Comm: syz-executor.5 Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- __kasan_report mm/kasan/report.c:517 [inline]
- kasan_report+0x151/0x1d0 mm/kasan/report.c:530
- check_memory_region_inline mm/kasan/generic.c:183 [inline]
- check_memory_region+0x2b5/0x2f0 mm/kasan/generic.c:192
- atomic_fetch_sub include/asm-generic/atomic-instrumented.h:199 [inline]
- refcount_sub_and_test include/linux/refcount.h:266 [inline]
- refcount_dec_and_test include/linux/refcount.h:294 [inline]
- kref_put include/linux/kref.h:64 [inline]
- media_request_put drivers/media/mc/mc-request.c:81 [inline]
- media_request_close+0x4d/0x170 drivers/media/mc/mc-request.c:89
- __fput+0x2ed/0x750 fs/file_table.c:281
- task_work_run+0x147/0x1d0 kernel/task_work.c:123
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop arch/x86/entry/common.c:165 [inline]
- prepare_exit_to_usermode+0x48e/0x600 arch/x86/entry/common.c:196
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45ca69
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f0c04c49c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: fffffffffffffff4 RBX: 00000000004e9300 RCX: 000000000045ca69
-RDX: 00000000200000c0 RSI: 0000000080047c05 RDI: 0000000000000003
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000004
-R13: 0000000000000404 R14: 00000000004c6c29 R15: 00007f0c04c4a6d4
-==================================================================
-
-
+Fixes: 0c80cdbf33 ("e1000e: Warn if disabling ULP failed")
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/net/ethernet/intel/e1000e/ich8lan.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+index f999cca37a8a..be7475c5529d 100644
+--- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
++++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+@@ -303,7 +303,6 @@ static s32 e1000_init_phy_workarounds_pchlan(struct e1000_hw *hw)
+ 	ret_val = e1000_disable_ulp_lpt_lp(hw, true);
+ 	if (ret_val) {
+ 		e_warn("Failed to disable ULP\n");
+-		goto out;
+ 	}
+ 
+ 	ret_val = hw->phy.ops.acquire(hw);
+-- 
+2.26.2
+
