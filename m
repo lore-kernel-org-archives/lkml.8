@@ -2,109 +2,94 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE378C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC57DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B98F22098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:34:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XZbDoRPx"
+	by mail.kernel.org (Postfix) with ESMTP id B44D221548
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgFQWeT (ORCPT
+        id S1726920AbgFQWgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:34:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgFQWeT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:34:19 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1356C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:34:17 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id f130so4273642yba.9
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:34:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=dl8CpF2u3zjH2sdeNdfuapWfq9PffavQBlO7OcAgrZI=;
-        b=XZbDoRPx9MaqRuyRsuE/Zz84rdx1Xg4cSOXtmTvC/TW75TfM/II++KXvkmOZ41Yqf6
-         k0aimUW4ZwWVH3K11wIO5XxCn5FW6ghYzMqX6KekiZf7JAT+9xphRLQFmGCeSf2oWv2B
-         joYHJsCZPN4lBHirZGH3DZRwU5eUSMEaMqB7Kf68HK4NaGlSZXTbS0af4dhERrXKNZ0O
-         C6ROehJ0qKo+jcU7S0430TM9qa1DqWbamBFaRIdN1LWNkSr55f52P4EJEO6/tu4jdhdh
-         sY4C0ESIhkZi3FAp6qi/HhG/QDIzDfFSu+UyLm7nC8Yv/FRs/bez0w6Kd2cDoHu7F+zT
-         21zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=dl8CpF2u3zjH2sdeNdfuapWfq9PffavQBlO7OcAgrZI=;
-        b=uBIl7MSrxIbn4JubjZZIb9BfrF4d4zeLNVpDdrkAq/C43aNJFyHXijMhvpPE1VuhwR
-         ZEWhVafSLSxE/6dvsJl7iRzFlgU+gMGewLa3TSGejxtU273eaNZT4TgVSTWV45XILnCE
-         ++exCZ7Z4etxXjtSVFjcIS0C1kNqeC8gpsOnpKfOjhAPdWWXfSzDRPd08CDTs66/EKe4
-         B5bN0m/5YRf2Gh2LeB12eJNnn0xb0Cki9T65AVNXyXwtZ0tzwNbZv1OjsBda4GVWbnWy
-         +limHAOlSDt7/dwlhwkV2x/Kx+G53niHo3/IIjjJpKbwXwTFzoGrP/7222xkjMJ/fclX
-         z9xw==
-X-Gm-Message-State: AOAM531XO2IxwyEVonGy8vGsz8vPb6vBA3cp7zlu6oakcmfBE/f0znCW
-        kPqnDNW4gazYUdV3j+pXxJdq4ZOYwBuspxo=
-X-Google-Smtp-Source: ABdhPJwSX0MoqylBaNHo5+aHvkEKKYVU9E5bWuZtt82sujJuI/YxK/IxNKn5uJvJu1RQHd461b7kt2QU2QPNQUY=
-X-Received: by 2002:a25:3784:: with SMTP id e126mr2000871yba.267.1592433256945;
- Wed, 17 Jun 2020 15:34:16 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 15:34:14 -0700
-Message-Id: <20200617223414.165923-1-zhangalex@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-Subject: [PATCH] mm/memory.c: make remap_pfn_range() reject unaligned addr
-From:   Kaiyu Zhang <zhangalex@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Alex Zhang <zhangalex@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 17 Jun 2020 18:36:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbgFQWgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 18:36:31 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A21020810;
+        Wed, 17 Jun 2020 22:36:30 +0000 (UTC)
+Date:   Wed, 17 Jun 2020 18:36:28 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Oscar Carter <oscar.carter@gmx.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] tracing: Use linker magic instead of recasting
+ ftrace_ops_list_func()
+Message-ID: <20200617183628.3594271d@oasis.local.home>
+In-Reply-To: <CAG48ez2pOns4vF9M_4ubMJ+p9YFY29udMaH0wm8UuCwGQ4ZZAQ@mail.gmail.com>
+References: <20200617165616.52241bde@oasis.local.home>
+        <CAG48ez2pOns4vF9M_4ubMJ+p9YFY29udMaH0wm8UuCwGQ4ZZAQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Zhang <zhangalex@google.com>
+On Wed, 17 Jun 2020 23:30:07 +0200
+Jann Horn <jannh@google.com> wrote:
+> [...]
+> > +/* Defined by vmlinux.lds.h see the commment above arch_ftrace_ops_list_func for details */
+> > +void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
+> > +                         struct ftrace_ops *op, struct pt_regs *regs);  
+> [...]
+> > +void arch_ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip)
+> >  {  
+> 
+> Well, it's not like the function cast itself is the part that's
+> problematic for CFI; the problematic part is when you actually make a
+> C function call (in particular an indirect one) where the destination
+> is compiled with a prototype that is different from the prototype used
+> at the call site. Doing this linker hackery isn't really any better
+> than shutting up the compiler warning by piling on enough casts or
+> whatever. (There should be some combination of casts that'll shut up
+> this warning, right?)
 
-This function implicitly assumes that the addr passed in is page aligned.
-A non page aligned addr could ultimately cause a kernel bug in
-remap_pte_range as the exit condition in the logic loop may never be
-satisfied.  This patch documents the need for the requirement, as
-well as explicitly adding a check for it.
+It's not called by C, it's called by assembly.
 
-Signed-off-by: Alex Zhang <zhangalex@google.com>
+> 
+> IIUC the real issue here is that ftrace_func_t is defined as a fixed
+> type, but actually has different types depending on the architecture?
+> If so, it might be cleaner to define ftrace_func_t differently
+> depending on architecture, or something like that?
 
----
- mm/memory.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+There's functions that use this type.
 
-diff --git a/mm/memory.c b/mm/memory.c
-index dc7f3543b1fd..9cb0a75f1555 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2081,7 +2081,7 @@ static inline int remap_p4d_range(struct mm_struct *mm, pgd_t *pgd,
- /**
-  * remap_pfn_range - remap kernel memory to userspace
-  * @vma: user vma to map to
-- * @addr: target user address to start at
-+ * @addr: target page aligned user address to start at
-  * @pfn: page frame number of kernel physical memory address
-  * @size: size of mapping area
-  * @prot: page protection flags for this mapping
-@@ -2100,6 +2100,9 @@ int remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,
- 	unsigned long remap_pfn = pfn;
- 	int err;
- 
-+	if (!PAGE_ALIGN(addr))
-+		return -EINVAL;
-+
- 	/*
- 	 * Physically remapped pages are special. Tell the
- 	 * rest of the world about it:
--- 
-2.27.0.290.gba653c62da-goog
+When you register a function to be used by the function tracer (that
+will have 4 parameters). If the arch supports it, it will call it
+directly from the trampoline in assembly, but if it does not, then the
+C code will only let assembly call the two parameter version, that will
+call the 4 parameter function (adding NULLs to the extra two arguments). 
 
+> 
+> And if that's not feasible, I think it would be better to at least
+> replace this linker trickery with straightforward
+> shut-up-the-compiler-casts - it'd be much easier to understand what's
+> actually going on that way.
+
+OK, what's the way to shut up the compiler for it, and we can have that
+instead.
+
+-- Steve
