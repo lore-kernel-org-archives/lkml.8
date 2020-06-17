@@ -2,167 +2,150 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA28EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 105CD214DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9EF5206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:42:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="RsWUyvE5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HRikB7fK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgFQLjB (ORCPT
+        id S1726326AbgFQLmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:39:01 -0400
-Received: from mail-bn7nam10on2072.outbound.protection.outlook.com ([40.107.92.72]:6164
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726763AbgFQLhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:37:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y7RnUe683Yo2Tnw4pJhpLKbFI+sXQDxTJOuRo37po9EGa8fD3Nf3h3F5srZPhdelhGHwKOSN5G6DPvoyep6+cB5ySulR7/YeUzeratmwWnzb1rRT+SxyB2r+lU+XCwukkgoL7MK9PQWRD3t8Sstr8eOWjUfNJ6/m+VDFIcDEtB3cm4j4cvB93jpCLWPOSlibccLpqPmLRdVk4s2c5WvHyn65IaUuZlkfZ79+qKE4dxAGTBPJDiiIFIgLmTyU6cL9RpUjKdgwFjk5yM8SxUZHEznv7o+K0pf5DyYZnwEyY0ICON6BHlfImF1OnRs1Zuty3H17WX+xog6rFaYjj+Ohag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IB9uxm7lwYo7dVHyVjIwXxLpQBJ2/CAVJvzzFPwPt4E=;
- b=eyDAFq3Kl63i8J4CEO5ICmZLybAfs9r5abaR6oRXLIPEieAXnsf0PoLsrNZd6m6Bt9xCX4a8xIM2rw150rbvl+eaBcQ58eRlUESmrBnoscjsAYTcCDeOoG01lB+3arZcS/mLWj6HwzneLHRpdGCSdWbiniKD6Drgxf+03zDwqDSIyjPTVeUhqkNg4U8CZmtBTT4VZtECw9wielxFkzdGejnm86H5wI+HZLiUJnpGw4IArYRhaORb19yrRXM4/KDMxFRsPl539C7ZbdXfq2XCfcK2SFcsnvZR2Dhr4XeKxV6KMbFFhAE7v1PZTBTJfq1AwszekQGuZF9jADb0PPkoag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Wed, 17 Jun 2020 07:42:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgFQLmt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 07:42:49 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16C5DC06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 04:42:47 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id k15so1336986otp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 04:42:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IB9uxm7lwYo7dVHyVjIwXxLpQBJ2/CAVJvzzFPwPt4E=;
- b=RsWUyvE5MGdfkcEQtwSz0zhXmrZMo5DIPud8AkYh5pZLrNswVCVoQ8zgykYfrHkq4KqoDs570qHLdTvLf4kf3+3H89UCoUe8dIiZjvDutzW40L3MesF/XKqJtpy1sZGJP4QmqcOZHmPAWKUG09vU0pEBBxrLEF5SQ2aOkMJrS5g=
-Received: from MN2PR19CA0056.namprd19.prod.outlook.com (2603:10b6:208:19b::33)
- by SN6PR02MB4912.namprd02.prod.outlook.com (2603:10b6:805:99::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.25; Wed, 17 Jun
- 2020 11:37:50 +0000
-Received: from BL2NAM02FT008.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:19b:cafe::f3) by MN2PR19CA0056.outlook.office365.com
- (2603:10b6:208:19b::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22 via Frontend
- Transport; Wed, 17 Jun 2020 11:37:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT008.mail.protection.outlook.com (10.152.76.162) with Microsoft SMTP
- Server id 15.20.3088.18 via Frontend Transport; Wed, 17 Jun 2020 11:37:50
- +0000
-Received: from [149.199.38.66] (port=36161 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jlWN3-0001I0-EA; Wed, 17 Jun 2020 04:36:45 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jlWO5-0007aG-O2; Wed, 17 Jun 2020 04:37:49 -0700
-Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 05HBbiV2015099;
-        Wed, 17 Jun 2020 04:37:44 -0700
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jlWO0-0007TR-8l; Wed, 17 Jun 2020 04:37:44 -0700
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com,
-        sgoud@xilinx.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: [PATCH V4 5/7] gpio: zynq: Disable the irq if it is not a wakeup source
-Date:   Wed, 17 Jun 2020 17:07:25 +0530
-Message-Id: <1592393847-1415-6-git-send-email-srinivas.neeli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
-References: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(136003)(396003)(376002)(39860400002)(346002)(46966005)(2616005)(9786002)(426003)(107886003)(36756003)(6666004)(8676002)(7696005)(44832011)(4326008)(6636002)(82740400003)(8936002)(82310400002)(5660300002)(26005)(186003)(2906002)(83380400001)(356005)(47076004)(316002)(336012)(70206006)(70586007)(81166007)(478600001);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sKWtFIYfKFOwpbzZCQAzRyePUOEgW5s9rDZzhxjhDfs=;
+        b=HRikB7fKxjKifECDakHvZhGhna07GnY3Vo+B+n4UD42jyVrmgGAEnpY33CQV88Z62X
+         0udVcVTTcJXD3fta2FIoFmWcBlryJUq8A18kNMdYsAS3qdCPCVuXQO1FbijWHQJik08d
+         24RVBLLRVqJb+fwxyGxVmgQ5LRItdP4RDe5Qm0dW/6slkJAONs7YsU9wt5By3TyykOCW
+         jEw5GpBE73V4yFwVtHYdQiZLl39g4lYRBcNYc9p6qovoZe4KINyHYBMt1UwESvsCNtKL
+         +H7LYzsmp7NiURlkLx8i59a/vNsC2shRxVOCuoNlRhKHPzoYaMld8PK+FiIwYvqyGUF7
+         NM5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sKWtFIYfKFOwpbzZCQAzRyePUOEgW5s9rDZzhxjhDfs=;
+        b=b3k1i9d33/vBgB5hJI/L1Vk6ymMcQLcSz9qlML/6St2CbioFtcSfNzo2NzPPdpLM2I
+         WGzV7GF5B629csCrFNoiM4ZGAFaYwdz5KOyhcRBgMUJmhwCugJhBDXq0ySixANHctJuC
+         A4S3nB0sPVrzQACkBcyk3Sj7lOizG6yZaHfG3hlU5S01bOcUxMkAuhB8tg78wc63QB47
+         EqPmCWMA823DbZazpqPE/MDplSYmYWw79zll1b04DbTOHJ4BavtzXMc9MHlk6p2sadhM
+         Es7PGL95Vzjfpm2NVn+9Oy8pkw111gewWcVoVw2bOjAYyRmfYpiJp60pK298h2I0RMXd
+         RfQA==
+X-Gm-Message-State: AOAM531qUKiECZlc9OdIKtaxNqSxr4rJwRXQh5UGBt6nlKA/MsnlETsq
+        AgC2HgVXh+bPX2iDTv4YADJZeVwec2fhM30VQBee9w==
+X-Google-Smtp-Source: ABdhPJyEbofVby0G8kGXR+vvfNhB4AvAOrnZfTfD8U151zYCvlIkScVjZcclzby9MNu9D+uRKBmz+cSkXmck4VW5ams=
+X-Received: by 2002:a9d:6a85:: with SMTP id l5mr5361623otq.371.1592394167036;
+ Wed, 17 Jun 2020 04:42:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: beb4aa85-6d6e-442c-2548-08d812b2dd69
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4912:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB4912E6C50B4DA18DE7ABD301AF9A0@SN6PR02MB4912.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-Forefront-PRVS: 04371797A5
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QLu2Wi3LPr1rXNOCBo7AHZ7oexMQNtna89EboIDjD1bAoGsnWLJBnm994qME2aWFsDFoc7udzc7GVyajTJM7qwQGFADnIUj6KxIwm0Ps8HaQX2PdoHAsrc5RvTcCiCKAsUoMvafN4ai0zWhbnK96+0yAQOCmw+G6SK4l3MLi4DUXp9kitfa4ZMf5gQ0bImRKr8WATk+O9MSMOKSbjbaMGy1gM93UXiNaSwXRQs4KTRIn34ySJDeSA5tN8208FGgc3At5XiVj7hyvFulnolMbyW3e9zussaLUxZmFd/qwVU1lKjGO0CYNkhd6l2V7d+Fhss/DfCbCPIx7t8EpqxNsEzyOPBbqv2g9SsTb5gCVqKpk9Ud9H3S3bngNTXaIxwmmoh6tgZkHNWY0hmn6PvS34g==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 11:37:50.0979
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: beb4aa85-6d6e-442c-2548-08d812b2dd69
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4912
+References: <20200602100924.26256-1-sumit.semwal@linaro.org>
+ <20200602100924.26256-5-sumit.semwal@linaro.org> <20200602113241.GE5684@sirena.org.uk>
+ <CAO_48GGgNUGosN2PiL=U5JkR3Bh5wNK3N4xYYML1UwmdfDPRww@mail.gmail.com> <20200602122554.GG5684@sirena.org.uk>
+In-Reply-To: <20200602122554.GG5684@sirena.org.uk>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Wed, 17 Jun 2020 17:12:35 +0530
+Message-ID: <CAO_48GFwEHBGmz0QvN+pXFSyHC9+7=0aoJLHF4uupGSx2TcSvA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] regulator: qcom: Add labibb driver
+To:     Mark Brown <broonie@kernel.org>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lgirdwood@gmail.com, robh+dt@kernel.org,
+        Nisha Kumari <nishakumari@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Hello Mark,
 
-If gpio is not set to wake disable the interrupt. ATF set all slaves with
-enabled interrupts as wakeup sources and if gpio is used in r5 then it
-wakes up linux.
+On Tue, 2 Jun 2020 at 17:55, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Jun 02, 2020 at 05:40:45PM +0530, Sumit Semwal wrote:
+> > On Tue, 2 Jun 2020 at 17:02, Mark Brown <broonie@kernel.org> wrote:
+> > > On Tue, Jun 02, 2020 at 03:39:23PM +0530, Sumit Semwal wrote:
+>
+> > > This should be a get_status() callback...
+>
+> > From my (limited) understanding of downstream code, it seemed like for
+> > this set of regulators, the 'enabled' check is done via the
+> > 'REG_LABIBB_STATUS1 reg; for some reason, not via the same enable_reg
+> > / enable_mask ones.  That's why I used it as is_enabled() callback.
+> > I will try and check with the QC folks to clarify this point about
+> > their hardware.
+>
+> The way this is functioning at the minute the downstream code is just
+> buggy.
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
- drivers/gpio/gpio-zynq.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Apologies for the delay in responding - I pinged the QC folks, and was
+waiting for their reply but haven't got any response so far.
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index 9ac69144a0eb..b6261a3aec55 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -735,6 +735,9 @@ static int __maybe_unused zynq_gpio_suspend(struct device *dev)
- 	struct zynq_gpio *gpio = dev_get_drvdata(dev);
- 	struct irq_data *data = irq_get_irq_data(gpio->irq);
- 
-+	if (!device_may_wakeup(dev))
-+		disable_irq(gpio->irq);
-+
- 	if (!irqd_is_wakeup_set(data)) {
- 		zynq_gpio_save_context(gpio);
- 		return pm_runtime_force_suspend(dev);
-@@ -749,6 +752,9 @@ static int __maybe_unused zynq_gpio_resume(struct device *dev)
- 	struct irq_data *data = irq_get_irq_data(gpio->irq);
- 	int ret;
- 
-+	if (!device_may_wakeup(dev))
-+		enable_irq(gpio->irq);
-+
- 	if (!irqd_is_wakeup_set(data)) {
- 		ret = pm_runtime_force_resume(dev);
- 		zynq_gpio_restore_context(gpio);
-@@ -956,6 +962,8 @@ static int zynq_gpio_probe(struct platform_device *pdev)
- 		goto err_pm_put;
- 	}
- 
-+	irq_set_status_flags(gpio->irq, IRQ_DISABLE_UNLAZY);
-+	device_init_wakeup(&pdev->dev, 1);
- 	pm_runtime_put(&pdev->dev);
- 
- 	return 0;
--- 
-2.7.4
+I tried your suggestion to use the ENABLE_CTL register for checking if
+the regulator is actually enabled. In my limited testing on the Poco,
+it seems like the STATUS1 register updates faster than the ENABLE_CTL
+register, so on the device, I see noticeable lag when I use ENABLE_CTL
+for is_enabled() check. [This is especially true for the IBB, which
+takes longer to become usable than the LAB regulator.]
 
+I understand from a pure regulators' correctness point of view,
+ENABLE_CTL should be the one checked there, so I can change the patch
+as you suggested, but there seems to be some performance penalty
+there.
+
+>
+> > > ...is_enabled() should just be regulator_is_enabled_regmap() and these
+> > > functions should just be removed entirely, you can use the regmap
+> > > operations directly as the ops without the wrapper.
+>
+> > The 2 wrappers are a precursor to the next patch, where we keep track
+> > of regulator's enable status to check during SC handling.
+>
+> Add the functions when they're useful, not before.  TBH if the register
+> is write only you're probably better off adding a register cache.
+
+Agreed, I will remove the wrappers from here, using the regmap
+functions, and add the wrappers with the SC handling patch.
+>
+> > > > +     match = of_match_device(qcom_labibb_match, &pdev->dev);
+> > > > +     if (!match)
+> > > > +             return -ENODEV;
+> > > > +
+> > > > +     for (reg_data = match->data; reg_data->name; reg_data++) {
+> > > > +             child = of_get_child_by_name(pdev->dev.of_node, reg_data->name);
+> > > > +
+> > > > +             if (WARN_ON(child == NULL))
+> > > > +                     return -EINVAL;
+> > >
+> > > This feels like the DT bindings are confused - why do we need to search
+> > > like this?
+>
+> > The WARN_ON? This was suggested by Bjorn to catch the case where the
+> > DT binding for a PMIC instantiates only one of the regulators.
+>
+> No, this whole loop - why this whole match and get child stuff?
+This loop mechanism is what I saw in the other qcom regulators
+upstream, so thought it was an acceptable way.
+For the two children nodes, do you recommend another mechanism to get
+and validate both nodes?
+
+Best,
+Sumit.
