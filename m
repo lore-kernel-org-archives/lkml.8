@@ -2,133 +2,156 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A36EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 530C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32EDD207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D762082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:15:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KVjdG0xG"
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="K6LWcEU7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgFQALd (ORCPT
+        id S1726482AbgFQAPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 20:11:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgFQALd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 20:11:33 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03281C06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 17:11:32 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id d8so83683plo.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 17:11:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7kmhNDfQNJXO7hJjKTrMFRtUAQoboP57XjXJsRdtwLc=;
-        b=KVjdG0xGsNAP+iBrZQFtPpU2KZSHZCCjm3KBV/jssT/5iobGKg3jpwP8jT6qN/sBoO
-         gZIoEPF4VR/E6AqWPrkzP5L8RRdbEtNB2B4BgOj9qcksqrirQzCXaa5jcWoHZImWv+S9
-         gkyg7/BC0+6Wpg0zIphK4G2PD3XKJAbpJycMY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7kmhNDfQNJXO7hJjKTrMFRtUAQoboP57XjXJsRdtwLc=;
-        b=EaqbiQJJCS3O1wCnqK/lBL8urBq8O5XM2BzOHDh1i8AQKv/J94FFaSMSTgamjrvtol
-         KY/XyU5tTF6+ob2GECxI7kNmRqAvLatc6kSvjheH2xpcj76xqVoUwvvi5UbvKSBeI0dx
-         ZjBF+QNEbAlOSGpg+JxPk1JtePq1t6vtCz7xCS+MhYZ7dD60I7u5xE5rK68nQGbGf0Ri
-         Yc2aeotKrRHz2qC0QS8tEUZnSgx9Z/ZrGJ49EjGMYfMrPIjHJSa+zMSSuS+ciEEHL6Of
-         AGAl9Lww8cwHv6eUKB8u5Z3U6X3nZ4MTvx/rQF/HovZi48fOH1jGD4iGNlM8gSBuF2RS
-         lsLg==
-X-Gm-Message-State: AOAM5323FX0TEFxtgpWrPpmj76UJf6kr9/Wayg4s9+0ERSouM9njt45G
-        MRJqT0520nzN0HV8r9TY6FzA6g==
-X-Google-Smtp-Source: ABdhPJxNcrIoyau+3OONR7kGcda1pQTKvdJb7jjXMH3fna2AEp/BvXQRIc+lCG/st65ey5B4ks8M3Q==
-X-Received: by 2002:a17:902:9a88:: with SMTP id w8mr4077107plp.50.1592352691138;
-        Tue, 16 Jun 2020 17:11:31 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id oc6sm3816845pjb.43.2020.06.16.17.11.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 17:11:29 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 17:11:28 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [tip: objtool/core] objtool: Use sh_info to find the base for
- .rela sections
-Message-ID: <202006161708.8CC6F4974@keescook>
-References: <158759428485.28353.15005772572257518607.tip-bot2@tip-bot2>
- <202006161057.E6D5D84@keescook>
- <20200616192749.GB2531@hirez.programming.kicks-ass.net>
+        Tue, 16 Jun 2020 20:15:35 -0400
+Received: from mail-eopbgr1410099.outbound.protection.outlook.com ([40.107.141.99]:6320
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725894AbgFQAPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 20:15:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z3ZWcGKnVZOoJm0LkPwx92hGz7NzUtzCOul98BJdRekrBM8cicQEpaEcvDtXfNmRyaqK65uXmBTC/Vsa3Nyj+vRosO9O5GQwLAOxEnphjfQRrA84IUf+b2N9C5+BFAP6k/lOCxfiEnHUYiSJroXqztp8m5hraPffNRF5QNA9CAgJtihbLLas5nTP3AJ7M64KTm7LTf8kigxmUCdTYEZpSbNrY86a/kh3EexhbyDYddR/o4H4CJquQ/Erw8Vrbu+jDLLr2RSMRRmE3ssGlDNPNTZ9G6ZG03wdwQCRSNeXSr7Pv2tN0d6RQRAn7KlXHl7kU86Udal4z+KN8kT71VCAVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s7VqjXBouL0QsBle2LCVDmMjRtXjanxNMZi2XzINDps=;
+ b=MoLtzC0USdC/Z+bAjfyk/8Ou2lSIctfo9vhD+CUwRPqJt8GZJRnNGtEtcaXk8u4FGle1jq4NMB/aOPd5C5krX4QtOXtkvsDBSKbjJ6TPZUkhTpbtIi9uSzMUvaxOLqitdgdTw+6jWopqoU3OU5LPaibDMSoyzKd1yi5Y4WuXAAbf2Unz52i5G6l3B+04ZdDmeEVcggKEZNfV8egdWcn9DXzgGUcL/HDZwyO/LXXptcAQMVvltm4hbXq4dmVmtxGMSJy+1R1ZtNdUmYRxXCVnJtcMgPvo9SrhlJfOsZ4V8sA2LD2G/LdjVk0E+xn+xlMrGYa4yfYSu2QhwQD837tcLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
+ dkim=pass header.d=sony.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector2-Sony-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s7VqjXBouL0QsBle2LCVDmMjRtXjanxNMZi2XzINDps=;
+ b=K6LWcEU7bEl9Hf4538jr4hRsMNUYyVGkgMQNsXpxMLrb9z9JSacpLNtZ6LUVencQ+gGZwpfs6p5f0qzHAyvrpFJW934vRhW/js2GYjEK9viRFTTcy6fQ+r/Ett+BqK9tg2/FYxuLTXezfuuvC3U1WjhaeIw4U2zlPuXO/ZRmBe4=
+Received: from TYXPR01MB1503.jpnprd01.prod.outlook.com (2603:1096:403:e::12)
+ by TYXPR01MB1630.jpnprd01.prod.outlook.com (2603:1096:403:c::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.25; Wed, 17 Jun
+ 2020 00:15:15 +0000
+Received: from TYXPR01MB1503.jpnprd01.prod.outlook.com
+ ([fe80::6508:8e66:164c:3dbe]) by TYXPR01MB1503.jpnprd01.prod.outlook.com
+ ([fe80::6508:8e66:164c:3dbe%7]) with mapi id 15.20.3088.029; Wed, 17 Jun 2020
+ 00:15:15 +0000
+From:   "Tada, Kenta (Sony)" <Kenta.Tada@sony.com>
+To:     Waiman Long <longman@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "pawan.kumar.gupta@linux.intel.com" 
+        <pawan.kumar.gupta@linux.intel.com>,
+        "asteinhauser@google.com" <asteinhauser@google.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tip-commits@vger.kernel.org" 
+        <linux-tip-commits@vger.kernel.org>,
+        "Tada, Kenta (Sony)" <Kenta.Tada@sony.com>
+Subject: RE: [PATCH] x86/speculation: Check whether speculation is force
+ disabled
+Thread-Topic: [PATCH] x86/speculation: Check whether speculation is force
+ disabled
+Thread-Index: AdY5cwNjHOfD1WXzRFK+VbW3aFu0ZgASi0kAACClRRAAErYHAAApscfAAkJ7FbA=
+Date:   Wed, 17 Jun 2020 00:15:15 +0000
+Message-ID: <TYXPR01MB1503B0B707C7FB39E25D746AF59A0@TYXPR01MB1503.jpnprd01.prod.outlook.com>
+References: <TYXPR01MB150318D484EE220452A5085AF5880@TYXPR01MB1503.jpnprd01.prod.outlook.com>
+ <d0356d0a-83dd-f3ae-c0ba-82089976c014@redhat.com>
+ <TYXPR01MB1503D6F73C6356DED5D2C849F5890@TYXPR01MB1503.jpnprd01.prod.outlook.com>
+ <b7242c5d-f667-1cdb-19ff-8f7ee06b9e7d@redhat.com>
+ <TYXPR01MB150388D14E054374FDB760EDF5860@TYXPR01MB1503.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYXPR01MB150388D14E054374FDB760EDF5860@TYXPR01MB1503.jpnprd01.prod.outlook.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=sony.com;
+x-originating-ip: [211.125.130.172]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6c3dc858-15cb-4630-3fc8-08d8125382c5
+x-ms-traffictypediagnostic: TYXPR01MB1630:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYXPR01MB1630840B9C13F6898CAD35EEF59A0@TYXPR01MB1630.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 04371797A5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nYLxlKGmjBD6ZvsydHb4kWVF9Y22IP1lJcTpnbQW2xzrC78GBxc8sLjnSTLHzfud5B1wIxA9rbNDGYVCPqeQKHue3yj5AB3DrFy6I9+MWB136BssYb7L5LcSTPjoVpl0l3VW8RGAYh+q41Ip6THeMHD+Y/GVOs1gBEqZEXkM5Rm5Yh7CiLS0/vQD9cfOtyLsQhhVqxsnyogJhK5l4G9TjH6DYuCA0tMLg2g/OufYq0xuuGsl4fQTRXwl5bvAcv+YFZSBIBsnwqCMuUcph6upedDHNILG8AEUXdG+2qIM+5vU99BKxm+LqyVe/f0q4G3cL3ir9YBjtH6Z10fPhC74IDe2XK3vIqPw+jh2+YVMdeiJR49ZRz8w8SYN0CGKPzS0nqUyxm6Gl36IZTGaSUKkzdUrsA9qEJyurhtdLzrwzVeertMga9rp0kT5mO+BCeoH
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYXPR01MB1503.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(66446008)(5660300002)(86362001)(53546011)(2906002)(33656002)(52536014)(26005)(7416002)(6506007)(186003)(64756008)(7696005)(71200400001)(8936002)(83380400001)(55016002)(107886003)(54906003)(8676002)(110136005)(966005)(4326008)(66946007)(66556008)(498600001)(76116006)(66476007)(9686003)(921003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 0emMSvh3HjDFrzIIwYukqOy0IDO0+jzmW6cwYL9++vKTdcrbHsiYoMp52yoauE//XmyTgzgNHO2CsK3YqpFgyGmkdEdxp2NhlNaMOdeyw6uWMT+fick3YmthsWKe8n5L1RMGuLt4988/UGtOJzyv4n1td8BKpZCvDAi8l424sWWIaJt9T2H/zhjP46h3H1Znm31vmpLfoZuMZiuekMSXPAg/xzRs/e8N4kQRhpYNunDKOyHQDF555gx2ZztfGy7luPSf34xyJgo3A1nyRXFtEmjGObIssbGx9F2bSpGJBY09Krolc48f7+8CftKEOvqP++7ikT0MDeetn89r59Hv6PxFawQg5WY7/ePJ7v9GRjYvOn3Tn8cS2PbRKd8/8Sj2sQdPgBslx+1keXorglMOc5baa6tm7PFgdbzSlB4InieXdd5BvqxUs318u/muqLi5HDYyRzf50wj1dGd8+h0ImWkCfmxA+RAOwuq4HKmmuku9gK71IDvN2FXcZ/PRoQfG
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616192749.GB2531@hirez.programming.kicks-ass.net>
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c3dc858-15cb-4630-3fc8-08d8125382c5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2020 00:15:15.6436
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mAfxluGKiyqowulGei6Zmxno2p0AJxCn46kWAkalZ2eN6llYlh/fD39ve+dZ3hE5my61AsZ5WGlGIGh3s4uKkQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1630
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 09:27:49PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 16, 2020 at 11:00:59AM -0700, Kees Cook wrote:
-> > On Wed, Apr 22, 2020 at 10:24:44PM -0000, tip-bot2 for Sami Tolvanen wrote:
-> > > The following commit has been merged into the objtool/core branch of tip:
-> > > 
-> > > Commit-ID:     e2ccbff8f02d6b140b8ee71108264686c19b1c78
-> > > Gitweb:        https://git.kernel.org/tip/e2ccbff8f02d6b140b8ee71108264686c19b1c78
-> > > Author:        Sami Tolvanen <samitolvanen@google.com>
-> > > AuthorDate:    Tue, 21 Apr 2020 11:25:01 -07:00
-> > > Committer:     Josh Poimboeuf <jpoimboe@redhat.com>
-> > > CommitterDate: Tue, 21 Apr 2020 18:49:15 -05:00
-> > > 
-> > > objtool: Use sh_info to find the base for .rela sections
-> > > 
-> > > ELF doesn't require .rela section names to match the base section. Use
-> > > the section index in sh_info to find the section instead of looking it
-> > > up by name.
-> > > 
-> > > LLD, for example, generates a .rela section that doesn't match the base
-> > > section name when we merge sections in a linker script for a binary
-> > > compiled with -ffunction-sections.
-> > > 
-> > > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > 
-> > Hi!
-> > 
-> > Where did this commit end up? It seems to have vanished (404 on the
-> > Gitweb link) and isn't in -next nor Linus's tree.
-> > 
-> > This is needed for LTO, FGKASLR, and link speed improvements[1]. Is it
-> > possible to get this landed in -rc2 so all the things depending on it
-> > can rebase happily?
-> 
-> I can't remember why this happened, however I think this patch is in
-> josh's objtool tree that I was going to stick in objtool/core
-> tomorrow-ish.
-
-Okay, thanks!
-
-> Are those things you mentioned still slated for this release?
-
-No, the three things I mentioned aren't for v5.8 (they're still under
-development), but sending their respective series without the -tip
-patches in -rc2 will result in redundant patches. (So, it's hardly the
-end of the world, but it's just a confusing state to be in since they
-appeared in -tip and then never ended up in the merge window. It'd be
-helpful to have them in place for things that will base their latest
-tree on v5.8-rc2.)
-
--- 
-Kees Cook
+SSBjb25maXJtZWQgdGhhdCB0aGlzIGlzc3VlIHdhcyBmaXhlZCBpbiB0aGUgYmVsb3cgbmV3IHBh
+dGNoDQpodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gvMTI1Mzc5OS8NCg0K
+VGhhbmtzLg0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogVGFkYSwgS2VudGEg
+KFNvbnkpIA0KU2VudDogRnJpZGF5LCBKdW5lIDUsIDIwMjAgOTowNyBQTQ0KVG86IFdhaW1hbiBM
+b25nIDxsb25nbWFuQHJlZGhhdC5jb20+OyB4ODZAa2VybmVsLm9yZzsgdGdseEBsaW51dHJvbml4
+LmRlOyBtaW5nb0ByZWRoYXQuY29tOyBicEBhbGllbjguZGU7IGhwYUB6eXRvci5jb207IGpwb2lt
+Ym9lQHJlZGhhdC5jb207IHBldGVyekBpbmZyYWRlYWQub3JnOyB0b255Lmx1Y2tAaW50ZWwuY29t
+OyBwYXdhbi5rdW1hci5ndXB0YUBsaW51eC5pbnRlbC5jb20NCkNjOiBsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnDQpTdWJqZWN0OiBSRTogW1BBVENIXSB4ODYvc3BlY3VsYXRpb246IENoZWNr
+IHdoZXRoZXIgc3BlY3VsYXRpb24gaXMgZm9yY2UgZGlzYWJsZWQNCg0KSSdtIHNvcnJ5IGJ1dCBJ
+IGNvdWxkIG5vdCBmaW5kIHRoZSByZWFzb24gb2YgYWJvdmUgY29tbWVudHMuDQpJIGludmVzdGln
+YXRlZCB0aGUgYmVsb3cgbG9nIGFuZCBJIHRob3VnaHQgaXQgd2FzIHVuaW50ZW50aW9uYWwgYW5k
+IHRoZSBqdXN0IGJ1ZyBhdCB0aGUgbW9tZW50Lg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGtt
+bC8yMDE4MTEyNTE4NTAwNS44NjY3ODA5OTZAbGludXRyb25peC5kZS8NCgkNCiNkZWZpbmUgUEZB
+X1NQRUNfSUJfRk9SQ0VfRElTQUJMRQk2CS8qIEluZGlyZWN0IGJyYW5jaCBzcGVjdWxhdGlvbiBw
+ZXJtYW5lbnRseSByZXN0cmljdGVkICovDQoNCkJ1dCB0aGUgY29tbWVudCBvZiBQRkFfU1BFQ19J
+Ql9GT1JDRV9ESVNBQkxFIGFwcGFyZW50bHkgZXhwbGFpbnMgdGhlIGV4cGVjdGVkIGJlaGF2aW9y
+Lg0KQW5kIGl0IGlzIG9ubHkgbmF0dXJhbCB0aGF0IHVzZXJzIGNhbiBmb3JjZSBkaXNhYmxlIHRo
+ZSBzcGVjdWxhdGlvbiBiZWNhdXNlIG9mIHNlY3VyaXR5Lg0KDQpJJ2xsIGludmVzdGlnYXRlIG1v
+cmUgdG8gZXhwbGFpbiB0aGlzIHBhdGNoIGlzIG5lZWRlZC4NClRoYW5rIHlvdSBmb3IgdGhlIHJl
+dmlldy4NCg0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogV2FpbWFuIExvbmcg
+PGxvbmdtYW5AcmVkaGF0LmNvbT4NClNlbnQ6IEZyaWRheSwgSnVuZSA1LCAyMDIwIDE6MTAgQU0N
+ClRvOiBUYWRhLCBLZW50YSAoU29ueSkgPEtlbnRhLlRhZGFAc29ueS5jb20+OyB4ODZAa2VybmVs
+Lm9yZzsgdGdseEBsaW51dHJvbml4LmRlOyBtaW5nb0ByZWRoYXQuY29tOyBicEBhbGllbjguZGU7
+IGhwYUB6eXRvci5jb207IGpwb2ltYm9lQHJlZGhhdC5jb207IHBldGVyekBpbmZyYWRlYWQub3Jn
+OyB0b255Lmx1Y2tAaW50ZWwuY29tOyBwYXdhbi5rdW1hci5ndXB0YUBsaW51eC5pbnRlbC5jb20N
+CkNjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBSZTogW1BBVENIXSB4
+ODYvc3BlY3VsYXRpb246IENoZWNrIHdoZXRoZXIgc3BlY3VsYXRpb24gaXMgZm9yY2UgZGlzYWJs
+ZWQNCg0KT24gNi80LzIwIDM6MjkgQU0sIFRhZGEsIEtlbnRhIChTb255KSB3cm90ZToNCj4+IEl0
+IGNvbmZsaWN0cyB3aXRoIHlvdXIgbmV3IGNvZGUuIFdlIGNhbiBoYXZlIGFuIGFyZ3VtZW50IG9u
+IHdoZXRoZXIgDQo+PiBJQiBzaG91bGQgZm9sbG93IGhvdyBTU0IgaXMgYmVpbmcgaGFuZGxlZC4g
+QmVmb3JlIHRoYXQgaXMgc2V0dGxlZCwNCj4gVGhhbmsgeW91IGZvciB0aGUgaW5mb3JtYXRpb24u
+DQo+IEl0IGNvbmZsaWN0cyBidXQgSSB0aGluayB1c2VycyB3aG8gcmVhZCB0aGUgYmVsb3cgZG9j
+dW1lbnQgZ2V0IGNvbmZ1c2VkLg0KPiBEb2N1bWVudGF0aW9uL3VzZXJzcGFjZS1hcGkvc3BlY19j
+dHJsLnJzdC4NCj4NCj4gRXNwZWNpYWxseSwgc2VjY29tcCB1c2VycyBtdXN0IGtub3cgdGhlIGRp
+ZmZlcmVuY2Ugb2YgdGhpcyBpbXBsaWNpdCANCj4gc3BlY2lmaWNhdGlvbiBiZWNhdXNlIGJvdGgg
+SUIgYW5kIFNTQiBhcmUgZm9yY2UgZGlzYWJsZWQgDQo+IHNpbXVsdGFuZW91c2x5IHdoZW4gc2Vj
+Y29tcCBpcyBlbmFibGVkIHdpdGhvdXQgU0VDQ09NUF9GSUxURVJfRkxBR19TUEVDX0FMTE9XIG9u
+IHg4Ni4NCg0KV2hhdCBJIGFtIHNheWluZyBpcyB0aGF0IHlvdSBoYXZlIHRvIG1ha2UgdGhlIGFy
+Z3VtZW50IHdoeSB5b3VyIHBhdGNoIGlzIHRoZSByaWdodCB3YXkgdG8gZG8gdGhpbmcgYW5kIGFs
+c28gbWFrZSBzdXJlIHRoYXQgdGhlIGNvbW1lbnQgaXMgY29uc2lzdGVudC4gWW91ciBjdXJyZW50
+IHBhdGNoIGRvZXNuJ3QgZG8gdGhhdC4NCg0KQ2hlZXJzLA0KTG9uZ21hbg0KDQo=
