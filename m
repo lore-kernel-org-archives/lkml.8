@@ -2,92 +2,81 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,HEADER_FROM_DIFFERENT_DOMAINS,
+	INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09734C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E28CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE6E121527
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:37:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eVSYAf8N"
+	by mail.kernel.org (Postfix) with ESMTP id 30F5E2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgFQKhJ (ORCPT
+        id S1726538AbgFQKl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 06:37:09 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45811 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725554AbgFQKhI (ORCPT
+        Wed, 17 Jun 2020 06:41:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725967AbgFQKlY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 06:37:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592390228;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=n+76RBm2rdDCRUK0E1Dtw0hXTnElRxA512NWs4Bw2rA=;
-        b=eVSYAf8NmQjm8yUj4GeQ5PuXm3p2EkOpZmwJcoTU/I51dp0DclKN3uN07j5Spdt6i15Hhm
-        b8YvZReGTMi4l5955AQvtkIhG4LRQ0wvRxWvEdYPR5NwUyp70NzW8gkTAmbhFzS3ZMYrn4
-        67Re0bLadPxk5D+nc8gZ5zR1QE86aOM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-257-P8SjbLLqNwOkZETISR0NRw-1; Wed, 17 Jun 2020 06:37:04 -0400
-X-MC-Unique: P8SjbLLqNwOkZETISR0NRw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC2B88B1595;
-        Wed, 17 Jun 2020 10:36:41 +0000 (UTC)
-Received: from krava (unknown [10.40.193.76])
-        by smtp.corp.redhat.com (Postfix) with SMTP id E91D35D9E4;
-        Wed, 17 Jun 2020 10:36:38 +0000 (UTC)
-Date:   Wed, 17 Jun 2020 12:36:37 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com,
-        irogers@google.com, ak@linux.intel.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] perf: Improve list for arm64
-Message-ID: <20200617103637.GD2210496@krava>
-References: <1592384514-119954-1-git-send-email-john.garry@huawei.com>
+        Wed, 17 Jun 2020 06:41:24 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6198EC06174E;
+        Wed, 17 Jun 2020 03:41:23 -0700 (PDT)
+Received: from [5.158.153.53] (helo=g2noscherz.lab.linutronix.de.)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1jlVVJ-00073K-M2; Wed, 17 Jun 2020 12:41:13 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/1] fs: remove retry loop
+Date:   Wed, 17 Jun 2020 12:46:57 +0206
+Message-Id: <20200617104058.14902-1-john.ogness@linutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592384514-119954-1-git-send-email-john.garry@huawei.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 05:01:52PM +0800, John Garry wrote:
-> This couple of patches provides:
-> - aliases for arm64 CPU core events in perf list, like x86
-> - ensures that CPU core events are not sparsely listed
-> 
-> Differences to v1:
-> - Add ack from Namhyung Kim (thanks)
-> - use more concise logic in patch 2/2 and also add comment
-> 
-> John Garry (2):
->   perf pmu: List kernel supplied event aliases for arm64
->   perf pmu: Improve CPU core PMU HW event list ordering
+Hello,
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+This patch removes the last retry loop in VFS. It is partially
+reverting
 
-thanks,
-jirka
+   commit d3ef3d7351cc ("fs: mnt_want_write speedup")
 
-> 
->  tools/perf/util/pmu.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> -- 
-> 2.26.2
-> 
+by re-introducing per-cpu spinlocks for each mount. The patch
+includes benchmark results in the diffstat section to show that the
+previous optimization work is not undone.
+
+I would have liked to use a percpu_rw_semaphore per mount instead
+of the many spinlocks. However, percpu_rw_semaphore can sleep, which
+is a problem for sb_prepare_remount_readonly() since it needs to
+take the spinlock in @mount_lock in order to iterate @sb->s_mounts.
+Perhaps using a mutex to sychronize @sb->s_mounts is an option. I am
+not sure. That is why this is an RFC.
+
+I am suggesting this partial revert because it removes the retry
+loop and does not show any obvious negative benchmark effects.
+
+John Ogness (1):
+  fs/namespace.c: use spinlock instead of busy loop
+
+ fs/mount.h     |   7 +++
+ fs/namespace.c | 118 +++++++++++++++++++++++++++++++++----------------
+ 2 files changed, 86 insertions(+), 39 deletions(-)
+
+-- 
+2.20.1
 
