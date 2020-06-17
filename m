@@ -6,233 +6,160 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 059BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B61C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB72921527
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ECB321532
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgFQNJK (ORCPT
+        id S1726634AbgFQNMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:09:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6356 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725929AbgFQNJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:09:10 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A73B09B147F80A4789FE;
-        Wed, 17 Jun 2020 21:09:06 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 17 Jun 2020 21:08:58 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <zhangshaokun@hisilicon.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <qiangqing.zhang@nxp.com>,
-        <jolsa@redhat.com>, <linuxarm@huawei.com>,
-        "John Garry" <john.garry@huawei.com>
-Subject: [PATCH] drivers/perf: hisi: Add identifier sysfs file
-Date:   Wed, 17 Jun 2020 21:05:11 +0800
-Message-ID: <1592399111-134786-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Wed, 17 Jun 2020 09:12:00 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:54283 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725929AbgFQNL6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 09:11:58 -0400
+Received: from [5.157.120.79] (port=34860 helo=melee.fritz.box)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1jlXr9-000Frj-FR; Wed, 17 Jun 2020 15:11:55 +0200
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Keerthy <j-keerthy@ti.com>,
+        Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH v2 1/4] regulator: lp87565: enable voltage regardless of ENx pin
+Date:   Wed, 17 Jun 2020 15:11:42 +0200
+Message-Id: <20200617131145.15696-2-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200617131145.15696-1-luca@lucaceresoli.net>
+References: <20200617131145.15696-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To allow userspace to identify the specific implementation of the device,
-add an "identifier" sysfs file.
+This driver enables outputs by setting bit EN_BUCKn in the BUCKn_CTRL1
+register. However, if bit EN_PIN_CTRLn in the same register is set, the
+output is actually enabled only if EN_BUCKn is set AND an enable pin is
+active. Since the driver does not touch EN_PIN_CTRLn, the choice is left to
+the hardware, which in turn gets this bit from OTP memory, and in absence
+of OTP data it uses a default value that is documented in the datasheet for
+LP8752x, but not for LP8756x.
 
-Encoding is as follows:
-hi1620: 0x0	(aka hip08)
-hi1630: 0x30
+Thus the driver doesn't really "know" whether it is actually enabling the
+output or not.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
+In order to make sure activation is always driver-controlled, just clear
+the EN_PIN_CTRLn bit. Now all activation solely depend on the EN_BUCKn bit.
 
-diff --git a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-index 15713faaa07e..a83d99f2662e 100644
---- a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-@@ -33,6 +33,7 @@
- #define DDRC_INT_MASK		0x6c8
- #define DDRC_INT_STATUS		0x6cc
- #define DDRC_INT_CLEAR		0x6d0
-+#define DDRC_VERSION		0x710
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+
+---
+
+As discussed in RFC,v1 [0] there is a potential regression on existing
+hardware, see the discussion for more details. So far Mark Brown kind of
+approved the idea behind this patch, but more discussion about the correct
+way to handle this situation would be greatly appreciated.
+
+[0] https://lkml.org/lkml/2020/6/3/907
+---
+ drivers/regulator/lp87565-regulator.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/regulator/lp87565-regulator.c b/drivers/regulator/lp87565-regulator.c
+index 5d525dacf959..fbed6bc80c1a 100644
+--- a/drivers/regulator/lp87565-regulator.c
++++ b/drivers/regulator/lp87565-regulator.c
+@@ -11,8 +11,8 @@
  
- /* DDRC has 8-counters */
- #define DDRC_NR_COUNTERS	0x8
-@@ -267,6 +268,8 @@ static int hisi_ddrc_pmu_init_data(struct platform_device *pdev,
- 		return PTR_ERR(ddrc_pmu->base);
- 	}
+ #include <linux/mfd/lp87565.h>
  
-+	ddrc_pmu->identifier = readl(ddrc_pmu->base + DDRC_VERSION);
-+
- 	return 0;
- }
- 
-@@ -308,10 +311,23 @@ static const struct attribute_group hisi_ddrc_pmu_cpumask_attr_group = {
- 	.attrs = hisi_ddrc_pmu_cpumask_attrs,
+-#define LP87565_REGULATOR(_name, _id, _of, _ops, _n, _vr, _vm, _er, _em, \
+-			 _delay, _lr, _cr)				\
++#define LP87565_REGULATOR(_name, _id, _of, _ops, _n, _vr, _vm,		\
++			  _er, _em, _ev, _delay, _lr, _cr)		\
+ 	[_id] = {							\
+ 		.desc = {						\
+ 			.name			= _name,		\
+@@ -28,6 +28,7 @@
+ 			.vsel_mask		= _vm,			\
+ 			.enable_reg		= _er,			\
+ 			.enable_mask		= _em,			\
++			.enable_val		= _ev,			\
+ 			.ramp_delay		= _delay,		\
+ 			.linear_ranges		= _lr,			\
+ 			.n_linear_ranges	= ARRAY_SIZE(_lr),	\
+@@ -121,38 +122,54 @@ static const struct lp87565_regulator regulators[] = {
+ 	LP87565_REGULATOR("BUCK0", LP87565_BUCK_0, "buck0", lp87565_buck_ops,
+ 			  256, LP87565_REG_BUCK0_VOUT, LP87565_BUCK_VSET,
+ 			  LP87565_REG_BUCK0_CTRL_1,
++			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL,
+ 			  LP87565_BUCK_CTRL_1_EN, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK0_CTRL_2),
+ 	LP87565_REGULATOR("BUCK1", LP87565_BUCK_1, "buck1", lp87565_buck_ops,
+ 			  256, LP87565_REG_BUCK1_VOUT, LP87565_BUCK_VSET,
+ 			  LP87565_REG_BUCK1_CTRL_1,
++			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL,
+ 			  LP87565_BUCK_CTRL_1_EN, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK1_CTRL_2),
+ 	LP87565_REGULATOR("BUCK2", LP87565_BUCK_2, "buck2", lp87565_buck_ops,
+ 			  256, LP87565_REG_BUCK2_VOUT, LP87565_BUCK_VSET,
+ 			  LP87565_REG_BUCK2_CTRL_1,
++			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL,
+ 			  LP87565_BUCK_CTRL_1_EN, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK2_CTRL_2),
+ 	LP87565_REGULATOR("BUCK3", LP87565_BUCK_3, "buck3", lp87565_buck_ops,
+ 			  256, LP87565_REG_BUCK3_VOUT, LP87565_BUCK_VSET,
+ 			  LP87565_REG_BUCK3_CTRL_1,
++			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL,
+ 			  LP87565_BUCK_CTRL_1_EN, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK3_CTRL_2),
+ 	LP87565_REGULATOR("BUCK10", LP87565_BUCK_10, "buck10", lp87565_buck_ops,
+ 			  256, LP87565_REG_BUCK0_VOUT, LP87565_BUCK_VSET,
+ 			  LP87565_REG_BUCK0_CTRL_1,
+ 			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL |
++			  LP87565_BUCK_CTRL_1_FPWM_MP_0_2,
++			  LP87565_BUCK_CTRL_1_EN |
+ 			  LP87565_BUCK_CTRL_1_FPWM_MP_0_2, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK0_CTRL_2),
+ 	LP87565_REGULATOR("BUCK23", LP87565_BUCK_23, "buck23", lp87565_buck_ops,
+ 			  256, LP87565_REG_BUCK2_VOUT, LP87565_BUCK_VSET,
+ 			  LP87565_REG_BUCK2_CTRL_1,
++			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL,
+ 			  LP87565_BUCK_CTRL_1_EN, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK2_CTRL_2),
+ 	LP87565_REGULATOR("BUCK3210", LP87565_BUCK_3210, "buck3210",
+ 			  lp87565_buck_ops, 256, LP87565_REG_BUCK0_VOUT,
+ 			  LP87565_BUCK_VSET, LP87565_REG_BUCK0_CTRL_1,
+ 			  LP87565_BUCK_CTRL_1_EN |
++			  LP87565_BUCK_CTRL_1_EN_PIN_CTRL |
++			  LP87565_BUCK_CTRL_1_FPWM_MP_0_2,
++			  LP87565_BUCK_CTRL_1_EN |
+ 			  LP87565_BUCK_CTRL_1_FPWM_MP_0_2, 3230,
+ 			  buck0_1_2_3_ranges, LP87565_REG_BUCK0_CTRL_2),
  };
- 
-+static struct device_attribute hisi_ddrc_pmu_identifier_attr =
-+	__ATTR(identifier, 0444, hisi_uncore_pmu_identifier_attr_show, NULL);
-+
-+static struct attribute *hisi_ddrc_pmu_identifier_attrs[] = {
-+	&hisi_ddrc_pmu_identifier_attr.attr,
-+	NULL
-+};
-+
-+static struct attribute_group hisi_ddrc_pmu_identifier_group = {
-+	.attrs = hisi_ddrc_pmu_identifier_attrs,
-+};
-+
- static const struct attribute_group *hisi_ddrc_pmu_attr_groups[] = {
- 	&hisi_ddrc_pmu_format_group,
- 	&hisi_ddrc_pmu_events_group,
- 	&hisi_ddrc_pmu_cpumask_attr_group,
-+	&hisi_ddrc_pmu_identifier_group,
- 	NULL,
- };
- 
-diff --git a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-index dcc5600788a9..4fdaf1d995be 100644
---- a/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
-@@ -23,6 +23,7 @@
- #define HHA_INT_MASK		0x0804
- #define HHA_INT_STATUS		0x0808
- #define HHA_INT_CLEAR		0x080C
-+#define HHA_VERSION		0x1cf0
- #define HHA_PERF_CTRL		0x1E00
- #define HHA_EVENT_CTRL		0x1E04
- #define HHA_EVENT_TYPE0		0x1E80
-@@ -261,6 +262,8 @@ static int hisi_hha_pmu_init_data(struct platform_device *pdev,
- 		return PTR_ERR(hha_pmu->base);
- 	}
- 
-+	hha_pmu->identifier = readl(hha_pmu->base + HHA_VERSION);
-+
- 	return 0;
- }
- 
-@@ -320,10 +323,23 @@ static const struct attribute_group hisi_hha_pmu_cpumask_attr_group = {
- 	.attrs = hisi_hha_pmu_cpumask_attrs,
- };
- 
-+static struct device_attribute hisi_hha_pmu_identifier_attr =
-+	__ATTR(identifier, 0444, hisi_uncore_pmu_identifier_attr_show, NULL);
-+
-+static struct attribute *hisi_hha_pmu_identifier_attrs[] = {
-+	&hisi_hha_pmu_identifier_attr.attr,
-+	NULL
-+};
-+
-+static struct attribute_group hisi_hha_pmu_identifier_group = {
-+	.attrs = hisi_hha_pmu_identifier_attrs,
-+};
-+
- static const struct attribute_group *hisi_hha_pmu_attr_groups[] = {
- 	&hisi_hha_pmu_format_group,
- 	&hisi_hha_pmu_events_group,
- 	&hisi_hha_pmu_cpumask_attr_group,
-+	&hisi_hha_pmu_identifier_group,
- 	NULL,
- };
- 
-diff --git a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-index 7719ae4e2c56..0e7477220be1 100644
---- a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-@@ -25,6 +25,7 @@
- #define L3C_INT_STATUS		0x0808
- #define L3C_INT_CLEAR		0x080c
- #define L3C_EVENT_CTRL	        0x1c00
-+#define L3C_VERSION		0x1cf0
- #define L3C_EVENT_TYPE0		0x1d00
- /*
-  * Each counter is 48-bits and [48:63] are reserved
-@@ -264,6 +265,8 @@ static int hisi_l3c_pmu_init_data(struct platform_device *pdev,
- 		return PTR_ERR(l3c_pmu->base);
- 	}
- 
-+	l3c_pmu->identifier = readl(l3c_pmu->base + L3C_VERSION);
-+
- 	return 0;
- }
- 
-@@ -310,10 +313,23 @@ static const struct attribute_group hisi_l3c_pmu_cpumask_attr_group = {
- 	.attrs = hisi_l3c_pmu_cpumask_attrs,
- };
- 
-+static struct device_attribute hisi_l3c_pmu_identifier_attr =
-+	__ATTR(identifier, 0444, hisi_uncore_pmu_identifier_attr_show, NULL);
-+
-+static struct attribute *hisi_l3c_pmu_identifier_attrs[] = {
-+	&hisi_l3c_pmu_identifier_attr.attr,
-+	NULL
-+};
-+
-+static struct attribute_group hisi_l3c_pmu_identifier_group = {
-+	.attrs = hisi_l3c_pmu_identifier_attrs,
-+};
-+
- static const struct attribute_group *hisi_l3c_pmu_attr_groups[] = {
- 	&hisi_l3c_pmu_format_group,
- 	&hisi_l3c_pmu_events_group,
- 	&hisi_l3c_pmu_cpumask_attr_group,
-+	&hisi_l3c_pmu_identifier_group,
- 	NULL,
- };
- 
-diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.c b/drivers/perf/hisilicon/hisi_uncore_pmu.c
-index 97aff877a4e7..023e247634db 100644
---- a/drivers/perf/hisilicon/hisi_uncore_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_pmu.c
-@@ -119,6 +119,16 @@ int hisi_uncore_pmu_get_event_idx(struct perf_event *event)
- }
- EXPORT_SYMBOL_GPL(hisi_uncore_pmu_get_event_idx);
- 
-+ssize_t hisi_uncore_pmu_identifier_attr_show(struct device *dev,
-+					     struct device_attribute *attr,
-+					     char *page)
-+{
-+	struct hisi_pmu *hisi_pmu = to_hisi_pmu(dev_get_drvdata(dev));
-+
-+	return sprintf(page, "0x%x\n", hisi_pmu->identifier);
-+}
-+EXPORT_SYMBOL_GPL(hisi_uncore_pmu_identifier_attr_show);
-+
- static void hisi_uncore_pmu_clear_event_idx(struct hisi_pmu *hisi_pmu, int idx)
- {
- 	if (!hisi_uncore_pmu_counter_valid(hisi_pmu, idx)) {
-diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.h b/drivers/perf/hisilicon/hisi_uncore_pmu.h
-index 25b0c97b3eb0..14ecaf763153 100644
---- a/drivers/perf/hisilicon/hisi_uncore_pmu.h
-+++ b/drivers/perf/hisilicon/hisi_uncore_pmu.h
-@@ -74,6 +74,7 @@ struct hisi_pmu {
- 	int counter_bits;
- 	/* check event code range */
- 	int check_event;
-+	u32 identifier;
- };
- 
- int hisi_uncore_pmu_counter_valid(struct hisi_pmu *hisi_pmu, int idx);
-@@ -96,4 +97,10 @@ ssize_t hisi_cpumask_sysfs_show(struct device *dev,
- 				struct device_attribute *attr, char *buf);
- int hisi_uncore_pmu_online_cpu(unsigned int cpu, struct hlist_node *node);
- int hisi_uncore_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node);
-+
-+ssize_t hisi_uncore_pmu_identifier_attr_show(struct device *dev,
-+					     struct device_attribute *attr,
-+					     char *page);
-+
-+
- #endif /* __HISI_UNCORE_PMU_H__ */
 -- 
-2.26.2
+2.27.0
 
