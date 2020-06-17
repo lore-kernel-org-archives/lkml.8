@@ -8,69 +8,65 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E3921556
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABEDA21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pNglAxY2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nG+nuav8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgFQQ1L (ORCPT
+        id S1727849AbgFQQ1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:27:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49074 "EHLO
+        Wed, 17 Jun 2020 12:27:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727088AbgFQQ0f (ORCPT
+        with ESMTP id S1727054AbgFQQ01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:26:35 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BDE8C06174E;
-        Wed, 17 Jun 2020 09:26:35 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id s13so2092377otd.7;
-        Wed, 17 Jun 2020 09:26:35 -0700 (PDT)
+        Wed, 17 Jun 2020 12:26:27 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14831C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:27 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id v13so2103016otp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:26:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DtbCt4lXWAsz7/FyFOawXtgiyr7YGkyvVZTRxQCf5d4=;
-        b=pNglAxY2ycX605y2jzji57ed8Op7lxOb3lc1yCuCT7cwDvqYUDmz1x84j76wEkz/+U
-         0LeQyM0X9mM5lvWeFfJ7WjPrItNKfJiBlHFgTThb10kw+vs6EQFAzI0UZxQcVhcba1lE
-         0zJ4Stp5KThf+bflvsmxK4NWDDAV/BVNiFRp4QIwbSgPsUaMrSS9B9OqBmFzOzvkp2SI
-         aK5eOOksrf6YBFZOOhN4z/hzQE4H2182N/0AOf0UNffepyi9uWgy2XszKC4R+vqyrtqF
-         cBldMZgbzvdQN/qJcf9DLpoR44jMuI54PHPiO1z249i/IXengOo1jponEi3ESwXsle/N
-         zUnQ==
+        bh=dk3pc8AeI0c3+wdEYp+hTZYx+ewWTm/IvoUeIkfxAsE=;
+        b=nG+nuav8Qw6xBb23T2t9tWvMzUDdAcso2xuwHW3zG0/KAAmHHffC3dgtlW/jK5H5uF
+         0H0WW5/lFA1J7jQj3qZdLWZ2KdkqtAwzezF0+L2hzmt09jTWp7KUh+ErbuHgZuoClKPD
+         w2DtAj8nf4hugN5yM9ABahO9fYEBM9Rm91W8jv2xKbf7bmDrGQobDUqNUb4rOqMRK7kr
+         vVE9yYZvDHZ5/v3+nNJZl7Z1OGocZOsNsuiQZYIZtlLYlaZ1QoOTS8ueNFVPsjNVkvwa
+         Q0Mopc4NZp4Tl4GMOFhoo1FKCm7Dg61wb5h4DqGsFR8s6LiDlGchJICrYcDdR/RQYqlC
+         vnJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DtbCt4lXWAsz7/FyFOawXtgiyr7YGkyvVZTRxQCf5d4=;
-        b=fBCOS++ekdTKc0kOGznfVlLfKnPvNclWz9Z9uMQmo2d9fODqUuBo5Yv5uE+0i1ecAC
-         /zKQXAgN5o6V3S8OltQjsBr4jSfWJOO8weRJrg346Z3WTdZekwFAmIjefa9uAOPg7bDY
-         hyHGir45hE/0oP7Q7pWjX8zq5YrCFokVvBRoCuVrFQZfnu7vvD67bktDptsG156Fn3VV
-         +JlcoUOMloSOf54RXTG36gq9geKzAlPC2/dc/jdfpj83uSvrhAZW8PDK8scdVfAkCOQ6
-         02y4Ibhy7L6AT2tJwyrFaqZeEYHGpn2EQvDSNntGICkxJYcXtQ67QWmnEI3IvCrZtb6t
-         ihCA==
-X-Gm-Message-State: AOAM530sefpQ71uPYCPBtwCkMCmvn+2GFrkXqLw2/HaXgRNxpIfMnTMY
-        aqDjJ3AEBZ0jv5CfgZOYV0c=
-X-Google-Smtp-Source: ABdhPJwHlRqkjC8/GZ7Wa363TGIpU8xB0IfHK5jXMv5FOhQjohFvR7XgirJIbCmqx/x4X2H8BPcrUA==
-X-Received: by 2002:a05:6830:1218:: with SMTP id r24mr5323482otp.247.1592411194459;
-        Wed, 17 Jun 2020 09:26:34 -0700 (PDT)
+        bh=dk3pc8AeI0c3+wdEYp+hTZYx+ewWTm/IvoUeIkfxAsE=;
+        b=PQYYCqSl+zT2rXHEk6JceaWw0BHyIDLr/10wGiewYn8x4BXY9KqGoS/Dgv5v1gLst1
+         EPvAXjN9qY76s6rAY5zHDhKYin1XkCu89LfJIvzMp+r7FVxf/LBky7uGiqtIRpFWhLRZ
+         Zz2RF8s7SDLcn4pTQ1UW/avtIINXTKyc14tib8r7cOy7Mvboffai1dXbqcXCXLapD5py
+         iFcK1NRmlVBnhvMhPixWvmDwIhq5WkoQusMpkfiMGKGeU16br79QoJ3uNU4IZxAzhN9I
+         LfyLZXudM32ovNmGIXKjhwkHQymZVHN462WtKgv9l4u+A5QwinhQmhQg2h7qSdDDqChP
+         w9Sg==
+X-Gm-Message-State: AOAM5329ZApPTXMZVCjiaZ+iuXSjGm9SxHLzkrwhbFRGCrDtTALn0bHU
+        S5NDMYJtY6hh2KFuchNrsJY=
+X-Google-Smtp-Source: ABdhPJxxoHW1tEDOZuRDffrva288t4Ajc/90lYQP2ebkwDRKVRuwohnE022y+hBEZrZgf0oEb0/kYw==
+X-Received: by 2002:a9d:2de6:: with SMTP id g93mr7924661otb.28.1592411186443;
+        Wed, 17 Jun 2020 09:26:26 -0700 (PDT)
 Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::ae4b])
-        by smtp.googlemail.com with ESMTPSA id h7sm95877otk.48.2020.06.17.09.26.32
+        by smtp.googlemail.com with ESMTPSA id h7sm95877otk.48.2020.06.17.09.26.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:26:33 -0700 (PDT)
+        Wed, 17 Jun 2020 09:26:25 -0700 (PDT)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
         akpm@linuxfoundation.org, gregkh@linuxfoundation.org
-Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>, Will Deacon <will@kernel.org>,
-        Orson Zhai <orson.zhai@unisoc.com>, linux-doc@vger.kernel.org
-Subject: [PATCH v3 19/21] dyndbg: extend ddebug_parse_flags to accept optional leading filter-flags
-Date:   Wed, 17 Jun 2020 10:25:34 -0600
-Message-Id: <20200617162536.611386-22-jim.cromie@gmail.com>
+Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>
+Subject: [PATCH v3 15/21] dyndbg: export ddebug_exec_queries
+Date:   Wed, 17 Jun 2020 10:25:30 -0600
+Message-Id: <20200617162536.611386-18-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200617162536.611386-1-jim.cromie@gmail.com>
 References: <20200617162536.611386-1-jim.cromie@gmail.com>
@@ -81,122 +77,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change ddebug_parse_flags to accept optional filterflags before the
-required operator [-+=].  Read the flags into the filter_flags
-parameter added in the previous patch.  So this now supplies the
-filterflags to ddebug_exec_query.
+Exporting ddebug_exec_queries will allow module authors using dynamic
+debug to actually control/enable/disable their own pr-debug callsites
+dynamically.
 
-filterflags work like query terms, they constrain what callsites get
-matched before theyre modified.  So like a query, they can be empty.
+With it, module authors can tie any update of their internal debug
+variables to a corresponding ddebug_exec_queries invocation, which
+will modify all their selected callsites accordingly.
 
-Filterflags let you read callsite's flagstate, including results of
-previous modifications, and require that certain flags are set, before
-modifying the callsite further.
+Generally, authors would exec +p or -p on some subsets of their set of
+callsites, and leave fmlt flags for user to choose the appropriate
+amount of structural context desired in the logs.
 
-So you can build up sets of callsites by marking them with a
-particular flagstate, for example 'fmlt', then enable that set in a
-batch.
+Depending upon the user needs, the module might be known, and
+therefore a waste of screen width, function would be valuable, file
+would be long and familiar to the author, etc..  That said, author
+could harness the message-prefix facility if they saw fit to do so.
+Any author preferences can be overridden with echo >control
 
-  echo fmlt+p >control
+Is it safe ?
 
-Naturally you can use almost any combo of flags you want for marking,
-and can mark several different sets with different patterns.  And then
-you can activate them in a bunch:
+ddebug_exec_queries() is currently 'exposed' to user space in
+several limited ways;
 
-  echo 'ft+p; mt+p; lt+p;' >control
+1 it is called from module-load callback, where it implements the
+  $modname.dyndbg=+p "fake" parameter provided to all modules.
 
-You just can't prohibit true flags.
+2 it handles query input from >control directly
+
+IOW, it is "fully" exposed to local root user; exposing the same
+functionality to other kernel modules is no additional risk.
+
+The other big issue to check is locking:
+
+dyndbg has a single mutex, taken by ddebug_change to handle >control,
+and by ddebug_proc_(start|stop) to span `cat control`.  ISTM this
+proposed export presents no locking problems.
+
+drm use case:
+
+drm.debug=0x03 appears to be a kernel boot-arg example, setting 2
+internal debug flags.  Each bit is probably controlling a separate
+subset of all debug-prints, they may be overlapping subsets.
+
+Those subsets are *definitely* expressible as a few dyndbg queries
+each.  Any arbitrary subset is.
+
+   drm.dyndbg='file drm_gem_* +p'	# gem debug
+   drm.dyndbg='file *_gem_* +p'		# *gem debug
+
+With this proposed export, drm authors could exec these examples, most
+likely in the callback that handles updates to the drm.debug variable.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- .../admin-guide/dynamic-debug-howto.rst       | 18 ++++++++----
- lib/dynamic_debug.c                           | 29 ++++++++++---------
- 2 files changed, 28 insertions(+), 19 deletions(-)
+ lib/dynamic_debug.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
-index e5a8def45f3f..e1ea0c307fcf 100644
---- a/Documentation/admin-guide/dynamic-debug-howto.rst
-+++ b/Documentation/admin-guide/dynamic-debug-howto.rst
-@@ -218,13 +218,19 @@ line
- 	line -1605          // the 1605 lines from line 1 to line 1605
- 	line 1600-          // all lines from line 1600 to the end of the file
- 
--The flags specification comprises a change operation followed
--by one or more flag characters.  The change operation is one
--of the characters::
-+Flags Specification::
- 
--  -    remove the given flags
--  +    add the given flags
--  =    set the flags to the given flags
-+  flagspec	::= filterflags? OP modflags
-+  filterflags	::= flagset
-+  modflags	::= flagset
-+  flagset	::= ([pfmltu_] | [PFMLTU_])+	# also cant have pP etc
-+  OP		::= [-+=]
-+
-+OP: modify callsites per following flagset::
-+
-+  -    remove the following flags
-+  +    add the following flags
-+  =    set the flags to the following flags
- 
- The flags are::
- 
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 0fcc688789f4..cf3379b40483 100644
+index e1dd96178f18..ff97938b5849 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -452,33 +452,36 @@ static int ddebug_read_flags(const char *str, struct flag_settings *modifiers)
+@@ -547,6 +547,7 @@ static int ddebug_exec_queries(char *query, const char *modname)
+ 		return exitcode;
+ 	return nfound;
  }
++EXPORT_SYMBOL(ddebug_exec_queries);
  
- /*
-- * Parse `str' as a flags specification, format [-+=][p]+.
-- * Sets up *maskp and *flagsp to be used when changing the
-- * flags fields of matched _ddebug's.  Returns 0 on success
-- * or <0 on error.
-+ * Parse `str' as a flags-spec, ie: [pfmlt_]*[-+=][pfmlt_]+
-+ * Fills flagsettings provided.  Returns 0 on success or <0 on error.
-  */
- static int ddebug_parse_flags(const char *str,
- 			      struct flag_settings *modifiers,
- 			      struct flag_settings *filter)
- {
- 	int op;
-+	char *opp = strpbrk(str, "-+=");
+ #define PREFIX_SIZE 64
  
--	switch (*str) {
--	case '+':
--	case '-':
--	case '=':
--		op = *str++;
--		break;
--	default:
--		pr_err("bad flag-op %c, at start of %s\n", *str, str);
-+	if (!opp) {
-+		pr_err("no OP given in %s\n", str);
- 		return -EINVAL;
- 	}
-+	op = *opp;
- 	vpr_info("op='%c'\n", op);
- 
-+	if (opp != str) {
-+		/* filterflags precedes OP, grab it */
-+		*opp++ = '\0';
-+		if (ddebug_read_flags(str, filter))
-+			return -EINVAL;
-+		str = opp;
-+	} else
-+		str++;
-+
- 	if (ddebug_read_flags(str, modifiers))
- 		return -EINVAL;
- 
--	/* calculate final flags, mask based upon op */
-+	/* calculate final mods: flags, mask based upon op */
- 	switch (op) {
- 	case '=':
- 		/* modifiers->flags already set */
 -- 
 2.26.2
 
