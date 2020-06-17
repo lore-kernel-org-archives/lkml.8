@@ -2,1249 +2,1247 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B79C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB03620853
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:38:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jp2SlR0s"
+	by mail.kernel.org (Postfix) with ESMTP id DE9A820853
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgFQHih (ORCPT
+        id S1726934AbgFQHip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 03:38:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726600AbgFQHiB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 03:38:01 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51C08C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 00:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=i7R7lmIxQ/0yWFPxnlebU1sssOEWVh+UaAp+Yjt92+c=; b=jp2SlR0sJyVSsoH83Udci5a4pc
-        QtHbepQTkHZtW+dv7IFYrBNPMoUHyIATQNEffuWpGW5kfJzG6NbmCDq0EgttrImQBpCtOpeo/BEFo
-        IIQLbw5TKd7sC5fH+Q/C2IqyMzKzyM/Bh8mLgYw/W5Pd/ZNzqSE69KeX/U7TCtNZciGtdJJNo8EvR
-        RfWwOA59KmS+Ld5Mwy85q7qj2Hz2XOcydQhAuPIzRdM5o0ERiKd0JIhEmBinqDl+1Pb/y3+lPuzGv
-        e4wHvY599gMv4W887om3f+pb7dgC2SZySLWjALepJJ5BT2dX7jneeJH9qQUV3y0jGVdvUlrfjovI/
-        gB2eLU0Q==;
-Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlSe0-0001XZ-G1; Wed, 17 Jun 2020 07:38:01 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] maccess: rename probe_kernel_{read,write} to copy_{from,to}_kernel_nofault
-Date:   Wed, 17 Jun 2020 09:37:53 +0200
-Message-Id: <20200617073755.8068-2-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200617073755.8068-1-hch@lst.de>
-References: <20200617073755.8068-1-hch@lst.de>
-MIME-Version: 1.0
+        Wed, 17 Jun 2020 03:38:45 -0400
+Received: from comms.puri.sm ([159.203.221.185]:50876 "EHLO comms.puri.sm"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726600AbgFQHin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 03:38:43 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id 05655E04B7;
+        Wed, 17 Jun 2020 00:38:42 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id XGcdugNGcOyL; Wed, 17 Jun 2020 00:38:39 -0700 (PDT)
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+To:     robh@kernel.org, kernel@puri.sm, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, mchehab@kernel.org, Anson.Huang@nxp.com,
+        agx@sigxcpu.org, angus@akkea.ca, broonie@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v3 1/2] arm64: dts: Add a device tree for the Librem 5 phone
+Date:   Wed, 17 Jun 2020 09:38:20 +0200
+Message-Id: <20200617073821.16737-1-martin.kepplinger@puri.sm>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Better describe what these functions do.
+From: "Angus Ainslie (Purism)" <angus@akkea.ca>
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Add a devicetree description for the Librem 5 phone. The early batches
+that have been sold are supported as well as the mass-produced device
+available later this year, see https://puri.sm/products/librem-5/
+
+This boots to a working console with working WWAN modem, wifi usdhc,
+IMU sensor device, proximity sensor, haptic motor, gpio keys, GNSS and LEDs.
+
+Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+For audio related part:
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
 ---
- arch/arm/kernel/ftrace.c           |  3 +-
- arch/arm/kernel/kgdb.c             |  2 +-
- arch/arm64/kernel/insn.c           |  4 +--
- arch/csky/kernel/ftrace.c          |  5 +--
- arch/ia64/kernel/ftrace.c          |  6 ++--
- arch/mips/kernel/kprobes.c         |  6 ++--
- arch/nds32/kernel/ftrace.c         |  5 +--
- arch/parisc/kernel/ftrace.c        |  2 +-
- arch/parisc/kernel/kgdb.c          |  4 +--
- arch/parisc/lib/memcpy.c           |  2 +-
- arch/powerpc/kernel/module_64.c    |  6 ++--
- arch/powerpc/kernel/trace/ftrace.c |  4 +--
- arch/powerpc/lib/inst.c            |  6 ++--
- arch/powerpc/perf/core-book3s.c    |  3 +-
- arch/riscv/kernel/ftrace.c         |  3 +-
- arch/riscv/kernel/kgdb.c           |  4 +--
- arch/riscv/kernel/patch.c          |  4 +--
- arch/s390/kernel/ftrace.c          |  4 +--
- arch/sh/kernel/ftrace.c            |  6 ++--
- arch/um/kernel/maccess.c           |  2 +-
- arch/x86/include/asm/ptrace.h      |  4 +--
- arch/x86/kernel/dumpstack.c        |  2 +-
- arch/x86/kernel/ftrace.c           | 10 +++---
- arch/x86/kernel/kgdb.c             |  6 ++--
- arch/x86/kernel/kprobes/core.c     |  5 +--
- arch/x86/kernel/kprobes/opt.c      |  2 +-
- arch/x86/kernel/traps.c            |  3 +-
- arch/x86/mm/fault.c                |  2 +-
- arch/x86/mm/init_32.c              |  2 +-
- arch/x86/mm/maccess.c              |  4 +--
- arch/x86/xen/enlighten_pv.c        |  2 +-
- drivers/char/mem.c                 |  2 +-
- drivers/dio/dio.c                  |  6 ++--
- drivers/input/serio/hp_sdc.c       |  2 +-
- drivers/misc/kgdbts.c              |  6 ++--
- drivers/video/fbdev/hpfb.c         |  2 +-
- fs/proc/kcore.c                    |  3 +-
- include/linux/uaccess.h            | 13 ++++----
- kernel/debug/debug_core.c          |  6 ++--
- kernel/debug/gdbstub.c             |  6 ++--
- kernel/debug/kdb/kdb_main.c        |  3 +-
- kernel/debug/kdb/kdb_support.c     |  7 +++--
- kernel/kthread.c                   |  2 +-
- kernel/trace/bpf_trace.c           |  4 +--
- kernel/trace/trace_kprobe.c        |  4 +--
- kernel/workqueue.c                 | 10 +++---
- mm/debug.c                         |  8 ++---
- mm/maccess.c                       | 49 +++++++++++++++---------------
- mm/rodata_test.c                   |  2 +-
- mm/slub.c                          |  2 +-
- 50 files changed, 138 insertions(+), 122 deletions(-)
 
-diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
-index 10499d44964a27..9a79ef6b1876ce 100644
---- a/arch/arm/kernel/ftrace.c
-+++ b/arch/arm/kernel/ftrace.c
-@@ -84,7 +84,8 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
- 		old = __opcode_to_mem_arm(old);
- 
- 	if (validate) {
--		if (probe_kernel_read(&replaced, (void *)pc, MCOUNT_INSN_SIZE))
-+		if (copy_from_kernel_nofault(&replaced, (void *)pc,
-+				MCOUNT_INSN_SIZE))
- 			return -EFAULT;
- 
- 		if (replaced != old)
-diff --git a/arch/arm/kernel/kgdb.c b/arch/arm/kernel/kgdb.c
-index 6a95b92966406c..7bd30c0a4280d9 100644
---- a/arch/arm/kernel/kgdb.c
-+++ b/arch/arm/kernel/kgdb.c
-@@ -236,7 +236,7 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
- 	/* patch_text() only supports int-sized breakpoints */
- 	BUILD_BUG_ON(sizeof(int) != BREAK_INSTR_SIZE);
- 
--	err = probe_kernel_read(bpt->saved_instr, (char *)bpt->bpt_addr,
-+	err = copy_from_kernel_nofault(bpt->saved_instr, (char *)bpt->bpt_addr,
- 				BREAK_INSTR_SIZE);
- 	if (err)
- 		return err;
-diff --git a/arch/arm64/kernel/insn.c b/arch/arm64/kernel/insn.c
-index 684d871ae38dc4..a107375005bc9c 100644
---- a/arch/arm64/kernel/insn.c
-+++ b/arch/arm64/kernel/insn.c
-@@ -135,7 +135,7 @@ int __kprobes aarch64_insn_read(void *addr, u32 *insnp)
- 	int ret;
- 	__le32 val;
- 
--	ret = probe_kernel_read(&val, addr, AARCH64_INSN_SIZE);
-+	ret = copy_from_kernel_nofault(&val, addr, AARCH64_INSN_SIZE);
- 	if (!ret)
- 		*insnp = le32_to_cpu(val);
- 
-@@ -151,7 +151,7 @@ static int __kprobes __aarch64_insn_write(void *addr, __le32 insn)
- 	raw_spin_lock_irqsave(&patch_lock, flags);
- 	waddr = patch_map(addr, FIX_TEXT_POKE0);
- 
--	ret = probe_kernel_write(waddr, &insn, AARCH64_INSN_SIZE);
-+	ret = copy_to_kernel_nofault(waddr, &insn, AARCH64_INSN_SIZE);
- 
- 	patch_unmap(FIX_TEXT_POKE0);
- 	raw_spin_unlock_irqrestore(&patch_lock, flags);
-diff --git a/arch/csky/kernel/ftrace.c b/arch/csky/kernel/ftrace.c
-index 3c425b84e3be6f..b4a7ec1517ff73 100644
---- a/arch/csky/kernel/ftrace.c
-+++ b/arch/csky/kernel/ftrace.c
-@@ -72,7 +72,8 @@ static int ftrace_check_current_nop(unsigned long hook)
- 	uint16_t olds[7];
- 	unsigned long hook_pos = hook - 2;
- 
--	if (probe_kernel_read((void *)olds, (void *)hook_pos, sizeof(nops)))
-+	if (copy_from_kernel_nofault((void *)olds, (void *)hook_pos,
-+			sizeof(nops)))
- 		return -EFAULT;
- 
- 	if (memcmp((void *)nops, (void *)olds, sizeof(nops))) {
-@@ -97,7 +98,7 @@ static int ftrace_modify_code(unsigned long hook, unsigned long target,
- 
- 	make_jbsr(target, hook, call, nolr);
- 
--	ret = probe_kernel_write((void *)hook_pos, enable ? call : nops,
-+	ret = copy_to_kernel_nofault((void *)hook_pos, enable ? call : nops,
- 				 sizeof(nops));
- 	if (ret)
- 		return -EPERM;
-diff --git a/arch/ia64/kernel/ftrace.c b/arch/ia64/kernel/ftrace.c
-index cee411e647ca05..b2ab2d58fb30cd 100644
---- a/arch/ia64/kernel/ftrace.c
-+++ b/arch/ia64/kernel/ftrace.c
-@@ -108,7 +108,7 @@ ftrace_modify_code(unsigned long ip, unsigned char *old_code,
- 		goto skip_check;
- 
- 	/* read the text we want to modify */
--	if (probe_kernel_read(replaced, (void *)ip, MCOUNT_INSN_SIZE))
-+	if (copy_from_kernel_nofault(replaced, (void *)ip, MCOUNT_INSN_SIZE))
- 		return -EFAULT;
- 
- 	/* Make sure it is what we expect it to be */
-@@ -117,7 +117,7 @@ ftrace_modify_code(unsigned long ip, unsigned char *old_code,
- 
- skip_check:
- 	/* replace the text with the new text */
--	if (probe_kernel_write(((void *)ip), new_code, MCOUNT_INSN_SIZE))
-+	if (copy_to_kernel_nofault(((void *)ip), new_code, MCOUNT_INSN_SIZE))
- 		return -EPERM;
- 	flush_icache_range(ip, ip + MCOUNT_INSN_SIZE);
- 
-@@ -129,7 +129,7 @@ static int ftrace_make_nop_check(struct dyn_ftrace *rec, unsigned long addr)
- 	unsigned char __attribute__((aligned(8))) replaced[MCOUNT_INSN_SIZE];
- 	unsigned long ip = rec->ip;
- 
--	if (probe_kernel_read(replaced, (void *)ip, MCOUNT_INSN_SIZE))
-+	if (copy_from_kernel_nofault(replaced, (void *)ip, MCOUNT_INSN_SIZE))
- 		return -EFAULT;
- 	if (rec->flags & FTRACE_FL_CONVERTED) {
- 		struct ftrace_call_insn *call_insn, *tmp_call;
-diff --git a/arch/mips/kernel/kprobes.c b/arch/mips/kernel/kprobes.c
-index 6cfae2411c044d..d043c2f897fc2a 100644
---- a/arch/mips/kernel/kprobes.c
-+++ b/arch/mips/kernel/kprobes.c
-@@ -86,9 +86,9 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
- 		goto out;
- 	}
- 
--	if ((probe_kernel_read(&prev_insn, p->addr - 1,
--				sizeof(mips_instruction)) == 0) &&
--				insn_has_delayslot(prev_insn)) {
-+	if (copy_from_kernel_nofault(&prev_insn, p->addr - 1,
-+			sizeof(mips_instruction)) == 0 &&
-+	    insn_has_delayslot(prev_insn)) {
- 		pr_notice("Kprobes for branch delayslot are not supported\n");
- 		ret = -EINVAL;
- 		goto out;
-diff --git a/arch/nds32/kernel/ftrace.c b/arch/nds32/kernel/ftrace.c
-index 22ab77ea27ad37..3763b3f8c3db5f 100644
---- a/arch/nds32/kernel/ftrace.c
-+++ b/arch/nds32/kernel/ftrace.c
-@@ -131,13 +131,14 @@ static int __ftrace_modify_code(unsigned long pc, unsigned long *old_insn,
- 	unsigned long orig_insn[3];
- 
- 	if (validate) {
--		if (probe_kernel_read(orig_insn, (void *)pc, MCOUNT_INSN_SIZE))
-+		if (copy_from_kernel_nofault(orig_insn, (void *)pc,
-+				MCOUNT_INSN_SIZE))
- 			return -EFAULT;
- 		if (memcmp(orig_insn, old_insn, MCOUNT_INSN_SIZE))
- 			return -EINVAL;
- 	}
- 
--	if (probe_kernel_write((void *)pc, new_insn, MCOUNT_INSN_SIZE))
-+	if (copy_to_kernel_nofault((void *)pc, new_insn, MCOUNT_INSN_SIZE))
- 		return -EPERM;
- 
- 	return 0;
-diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
-index b836fc61a24f4b..1df0f67ed6671c 100644
---- a/arch/parisc/kernel/ftrace.c
-+++ b/arch/parisc/kernel/ftrace.c
-@@ -172,7 +172,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
- 
- 	ip = (void *)(rec->ip + 4 - size);
- 
--	ret = probe_kernel_read(insn, ip, size);
-+	ret = copy_from_kernel_nofault(insn, ip, size);
- 	if (ret)
- 		return ret;
- 
-diff --git a/arch/parisc/kernel/kgdb.c b/arch/parisc/kernel/kgdb.c
-index 664278db9b9776..c4554ac13eac79 100644
---- a/arch/parisc/kernel/kgdb.c
-+++ b/arch/parisc/kernel/kgdb.c
-@@ -154,8 +154,8 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long ip)
- 
- int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
- {
--	int ret = probe_kernel_read(bpt->saved_instr, (char *)bpt->bpt_addr,
--				BREAK_INSTR_SIZE);
-+	int ret = copy_from_kernel_nofault(bpt->saved_instr,
-+			(char *)bpt->bpt_addr, BREAK_INSTR_SIZE);
- 	if (ret)
- 		return ret;
- 
-diff --git a/arch/parisc/lib/memcpy.c b/arch/parisc/lib/memcpy.c
-index 94a9fe2702c2f4..4b75388190b4eb 100644
---- a/arch/parisc/lib/memcpy.c
-+++ b/arch/parisc/lib/memcpy.c
-@@ -57,7 +57,7 @@ void * memcpy(void * dst,const void *src, size_t count)
- EXPORT_SYMBOL(raw_copy_in_user);
- EXPORT_SYMBOL(memcpy);
- 
--bool probe_kernel_read_allowed(const void *unsafe_src, size_t size)
-+bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
- {
- 	if ((unsigned long)unsafe_src < PAGE_SIZE)
- 		return false;
-diff --git a/arch/powerpc/kernel/module_64.c b/arch/powerpc/kernel/module_64.c
-index f4c2fa190192a1..ae2b188365b1e1 100644
---- a/arch/powerpc/kernel/module_64.c
-+++ b/arch/powerpc/kernel/module_64.c
-@@ -756,7 +756,8 @@ int module_trampoline_target(struct module *mod, unsigned long addr,
- 
- 	stub = (struct ppc64_stub_entry *)addr;
- 
--	if (probe_kernel_read(&magic, &stub->magic, sizeof(magic))) {
-+	if (copy_from_kernel_nofault(&magic, &stub->magic,
-+			sizeof(magic))) {
- 		pr_err("%s: fault reading magic for stub %lx for %s\n", __func__, addr, mod->name);
- 		return -EFAULT;
- 	}
-@@ -766,7 +767,8 @@ int module_trampoline_target(struct module *mod, unsigned long addr,
- 		return -EFAULT;
- 	}
- 
--	if (probe_kernel_read(&funcdata, &stub->funcdata, sizeof(funcdata))) {
-+	if (copy_from_kernel_nofault(&funcdata, &stub->funcdata,
-+			sizeof(funcdata))) {
- 		pr_err("%s: fault reading funcdata for stub %lx for %s\n", __func__, addr, mod->name);
-                 return -EFAULT;
- 	}
-diff --git a/arch/powerpc/kernel/trace/ftrace.c b/arch/powerpc/kernel/trace/ftrace.c
-index 5e399628f51a60..c1fede6ec93492 100644
---- a/arch/powerpc/kernel/trace/ftrace.c
-+++ b/arch/powerpc/kernel/trace/ftrace.c
-@@ -226,7 +226,7 @@ __ftrace_make_nop(struct module *mod,
- 	unsigned long ip = rec->ip;
- 	unsigned long tramp;
- 
--	if (probe_kernel_read(&op, (void *)ip, MCOUNT_INSN_SIZE))
-+	if (copy_from_kernel_nofault(&op, (void *)ip, MCOUNT_INSN_SIZE))
- 		return -EFAULT;
- 
- 	/* Make sure that that this is still a 24bit jump */
-@@ -249,7 +249,7 @@ __ftrace_make_nop(struct module *mod,
- 	pr_devel("ip:%lx jumps to %lx", ip, tramp);
- 
- 	/* Find where the trampoline jumps to */
--	if (probe_kernel_read(jmp, (void *)tramp, sizeof(jmp))) {
-+	if (copy_from_kernel_nofault(jmp, (void *)tramp, sizeof(jmp))) {
- 		pr_err("Failed to read %lx\n", tramp);
- 		return -EFAULT;
- 	}
-diff --git a/arch/powerpc/lib/inst.c b/arch/powerpc/lib/inst.c
-index aedfd6e31e532b..6c7a20af9fd673 100644
---- a/arch/powerpc/lib/inst.c
-+++ b/arch/powerpc/lib/inst.c
-@@ -33,11 +33,11 @@ int probe_kernel_read_inst(struct ppc_inst *inst,
- 	unsigned int val, suffix;
- 	int err;
- 
--	err = probe_kernel_read(&val, src, sizeof(val));
-+	err = copy_from_kernel_nofault(&val, src, sizeof(val));
- 	if (err)
- 		return err;
- 	if (get_op(val) == OP_PREFIX) {
--		err = probe_kernel_read(&suffix, (void *)src + 4, 4);
-+		err = copy_from_kernel_nofault(&suffix, (void *)src + 4, 4);
- 		*inst = ppc_inst_prefix(val, suffix);
- 	} else {
- 		*inst = ppc_inst(val);
-@@ -64,7 +64,7 @@ int probe_kernel_read_inst(struct ppc_inst *inst,
- 	unsigned int val;
- 	int err;
- 
--	err = probe_kernel_read(&val, src, sizeof(val));
-+	err = copy_from_kernel_nofault(&val, src, sizeof(val));
- 	if (!err)
- 		*inst = ppc_inst(val);
- 
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index 13b9dd5e4a76d9..efe97ff82557d0 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -418,7 +418,8 @@ static __u64 power_pmu_bhrb_to(u64 addr)
- 	__u64 target;
- 
- 	if (is_kernel_addr(addr)) {
--		if (probe_kernel_read(&instr, (void *)addr, sizeof(instr)))
-+		if (copy_from_kernel_nofault(&instr, (void *)addr,
-+				sizeof(instr)))
- 			return 0;
- 
- 		return branch_target((struct ppc_inst *)&instr);
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index 08396614d6f4ec..2ff63d0cbb5008 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -38,7 +38,8 @@ static int ftrace_check_current_call(unsigned long hook_pos,
- 	 * Read the text we want to modify;
- 	 * return must be -EFAULT on read error
- 	 */
--	if (probe_kernel_read(replaced, (void *)hook_pos, MCOUNT_INSN_SIZE))
-+	if (copy_from_kernel_nofault(replaced, (void *)hook_pos,
-+			MCOUNT_INSN_SIZE))
- 		return -EFAULT;
- 
- 	/*
-diff --git a/arch/riscv/kernel/kgdb.c b/arch/riscv/kernel/kgdb.c
-index f16ade84a11f12..a21fb21883e782 100644
---- a/arch/riscv/kernel/kgdb.c
-+++ b/arch/riscv/kernel/kgdb.c
-@@ -153,7 +153,7 @@ int do_single_step(struct pt_regs *regs)
- 	stepped_address = addr;
- 
- 	/* Replace the op code with the break instruction */
--	error = probe_kernel_write((void *)stepped_address,
-+	error = copy_to_kernel_nofault((void *)stepped_address,
- 				   arch_kgdb_ops.gdb_bpt_instr,
- 				   BREAK_INSTR_SIZE);
- 	/* Flush and return */
-@@ -173,7 +173,7 @@ int do_single_step(struct pt_regs *regs)
- static void undo_single_step(struct pt_regs *regs)
- {
- 	if (stepped_opcode != 0) {
--		probe_kernel_write((void *)stepped_address,
-+		copy_to_kernel_nofault((void *)stepped_address,
- 				   (void *)&stepped_opcode, BREAK_INSTR_SIZE);
- 		flush_icache_range(stepped_address,
- 				   stepped_address + BREAK_INSTR_SIZE);
-diff --git a/arch/riscv/kernel/patch.c b/arch/riscv/kernel/patch.c
-index d4a64dfed34238..3fe7a5296aa589 100644
---- a/arch/riscv/kernel/patch.c
-+++ b/arch/riscv/kernel/patch.c
-@@ -63,7 +63,7 @@ static int patch_insn_write(void *addr, const void *insn, size_t len)
- 
- 	waddr = patch_map(addr, FIX_TEXT_POKE0);
- 
--	ret = probe_kernel_write(waddr, insn, len);
-+	ret = copy_to_kernel_nofault(waddr, insn, len);
- 
- 	patch_unmap(FIX_TEXT_POKE0);
- 
-@@ -76,7 +76,7 @@ NOKPROBE_SYMBOL(patch_insn_write);
- #else
- static int patch_insn_write(void *addr, const void *insn, size_t len)
- {
--	return probe_kernel_write(addr, insn, len);
-+	return copy_to_kernel_nofault(addr, insn, len);
- }
- NOKPROBE_SYMBOL(patch_insn_write);
- #endif /* CONFIG_MMU */
-diff --git a/arch/s390/kernel/ftrace.c b/arch/s390/kernel/ftrace.c
-index 44e01dd1e624cf..b388e87a08bf90 100644
---- a/arch/s390/kernel/ftrace.c
-+++ b/arch/s390/kernel/ftrace.c
-@@ -83,7 +83,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
- {
- 	struct ftrace_insn orig, new, old;
- 
--	if (probe_kernel_read(&old, (void *) rec->ip, sizeof(old)))
-+	if (copy_from_kernel_nofault(&old, (void *) rec->ip, sizeof(old)))
- 		return -EFAULT;
- 	if (addr == MCOUNT_ADDR) {
- 		/* Initial code replacement */
-@@ -105,7 +105,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
- {
- 	struct ftrace_insn orig, new, old;
- 
--	if (probe_kernel_read(&old, (void *) rec->ip, sizeof(old)))
-+	if (copy_from_kernel_nofault(&old, (void *) rec->ip, sizeof(old)))
- 		return -EFAULT;
- 	/* Replace nop with an ftrace call. */
- 	ftrace_generate_nop_insn(&orig);
-diff --git a/arch/sh/kernel/ftrace.c b/arch/sh/kernel/ftrace.c
-index 1b04270e5460e8..0646c596184660 100644
---- a/arch/sh/kernel/ftrace.c
-+++ b/arch/sh/kernel/ftrace.c
-@@ -119,7 +119,7 @@ static void ftrace_mod_code(void)
- 	 * But if one were to fail, then they all should, and if one were
- 	 * to succeed, then they all should.
- 	 */
--	mod_code_status = probe_kernel_write(mod_code_ip, mod_code_newcode,
-+	mod_code_status = copy_to_kernel_nofault(mod_code_ip, mod_code_newcode,
- 					     MCOUNT_INSN_SIZE);
- 
- 	/* if we fail, then kill any new writers */
-@@ -203,7 +203,7 @@ static int ftrace_modify_code(unsigned long ip, unsigned char *old_code,
- 	 */
- 
- 	/* read the text we want to modify */
--	if (probe_kernel_read(replaced, (void *)ip, MCOUNT_INSN_SIZE))
-+	if (copy_from_kernel_nofault(replaced, (void *)ip, MCOUNT_INSN_SIZE))
- 		return -EFAULT;
- 
- 	/* Make sure it is what we expect it to be */
-@@ -268,7 +268,7 @@ static int ftrace_mod(unsigned long ip, unsigned long old_addr,
- {
- 	unsigned char code[MCOUNT_INSN_SIZE];
- 
--	if (probe_kernel_read(code, (void *)ip, MCOUNT_INSN_SIZE))
-+	if (copy_from_kernel_nofault(code, (void *)ip, MCOUNT_INSN_SIZE))
- 		return -EFAULT;
- 
- 	if (old_addr != __raw_readl((unsigned long *)code))
-diff --git a/arch/um/kernel/maccess.c b/arch/um/kernel/maccess.c
-index e929c0966696c4..8ccd56813f684f 100644
---- a/arch/um/kernel/maccess.c
-+++ b/arch/um/kernel/maccess.c
-@@ -7,7 +7,7 @@
- #include <linux/kernel.h>
- #include <os.h>
- 
--bool probe_kernel_read_allowed(const void *src, size_t size)
-+bool copy_from_kernel_nofault_allowed(const void *src, size_t size)
- {
- 	void *psrc = (void *)rounddown((unsigned long)src, PAGE_SIZE);
- 
-diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
-index ebedeab4870435..255b2dde2c1b77 100644
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -278,7 +278,7 @@ static inline unsigned long *regs_get_kernel_stack_nth_addr(struct pt_regs *regs
- }
- 
- /* To avoid include hell, we can't include uaccess.h */
--extern long probe_kernel_read(void *dst, const void *src, size_t size);
-+extern long copy_from_kernel_nofault(void *dst, const void *src, size_t size);
- 
- /**
-  * regs_get_kernel_stack_nth() - get Nth entry of the stack
-@@ -298,7 +298,7 @@ static inline unsigned long regs_get_kernel_stack_nth(struct pt_regs *regs,
- 
- 	addr = regs_get_kernel_stack_nth_addr(regs, n);
- 	if (addr) {
--		ret = probe_kernel_read(&val, addr, sizeof(val));
-+		ret = copy_from_kernel_nofault(&val, addr, sizeof(val));
- 		if (!ret)
- 			return val;
- 	}
-diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
-index 456511b2284eab..b037cfa7c0c52f 100644
---- a/arch/x86/kernel/dumpstack.c
-+++ b/arch/x86/kernel/dumpstack.c
-@@ -106,7 +106,7 @@ void show_opcodes(struct pt_regs *regs, const char *loglvl)
- 	bad_ip = user_mode(regs) &&
- 		__chk_range_not_ok(prologue, OPCODE_BUFSIZE, TASK_SIZE_MAX);
- 
--	if (bad_ip || probe_kernel_read(opcodes, (u8 *)prologue,
-+	if (bad_ip || copy_from_kernel_nofault(opcodes, (u8 *)prologue,
- 					OPCODE_BUFSIZE)) {
- 		printk("%sCode: Bad RIP value.\n", loglvl);
- 	} else {
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index c84d28e90a584b..51504566b3a6cd 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -86,7 +86,7 @@ static int ftrace_verify_code(unsigned long ip, const char *old_code)
- 	 * sure what we read is what we expected it to be before modifying it.
- 	 */
- 	/* read the text we want to modify */
--	if (probe_kernel_read(cur_code, (void *)ip, MCOUNT_INSN_SIZE)) {
-+	if (copy_from_kernel_nofault(cur_code, (void *)ip, MCOUNT_INSN_SIZE)) {
- 		WARN_ON(1);
- 		return -EFAULT;
- 	}
-@@ -355,7 +355,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	npages = DIV_ROUND_UP(*tramp_size, PAGE_SIZE);
- 
- 	/* Copy ftrace_caller onto the trampoline memory */
--	ret = probe_kernel_read(trampoline, (void *)start_offset, size);
-+	ret = copy_from_kernel_nofault(trampoline, (void *)start_offset, size);
- 	if (WARN_ON(ret < 0))
- 		goto fail;
- 
-@@ -363,13 +363,13 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 
- 	/* The trampoline ends with ret(q) */
- 	retq = (unsigned long)ftrace_stub;
--	ret = probe_kernel_read(ip, (void *)retq, RET_SIZE);
-+	ret = copy_from_kernel_nofault(ip, (void *)retq, RET_SIZE);
- 	if (WARN_ON(ret < 0))
- 		goto fail;
- 
- 	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
- 		ip = trampoline + (ftrace_regs_caller_ret - ftrace_regs_caller);
--		ret = probe_kernel_read(ip, (void *)retq, RET_SIZE);
-+		ret = copy_from_kernel_nofault(ip, (void *)retq, RET_SIZE);
- 		if (WARN_ON(ret < 0))
- 			goto fail;
- 	}
-@@ -506,7 +506,7 @@ static void *addr_from_call(void *ptr)
- 	union text_poke_insn call;
- 	int ret;
- 
--	ret = probe_kernel_read(&call, ptr, CALL_INSN_SIZE);
-+	ret = copy_from_kernel_nofault(&call, ptr, CALL_INSN_SIZE);
- 	if (WARN_ON_ONCE(ret < 0))
- 		return NULL;
- 
-diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
-index c44fe7d8d9a4e1..68acd30c6b878b 100644
---- a/arch/x86/kernel/kgdb.c
-+++ b/arch/x86/kernel/kgdb.c
-@@ -732,11 +732,11 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
- 	int err;
- 
- 	bpt->type = BP_BREAKPOINT;
--	err = probe_kernel_read(bpt->saved_instr, (char *)bpt->bpt_addr,
-+	err = copy_from_kernel_nofault(bpt->saved_instr, (char *)bpt->bpt_addr,
- 				BREAK_INSTR_SIZE);
- 	if (err)
- 		return err;
--	err = probe_kernel_write((char *)bpt->bpt_addr,
-+	err = copy_to_kernel_nofault((char *)bpt->bpt_addr,
- 				 arch_kgdb_ops.gdb_bpt_instr, BREAK_INSTR_SIZE);
- 	if (!err)
- 		return err;
-@@ -768,7 +768,7 @@ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
- 	return 0;
- 
- knl_write:
--	return probe_kernel_write((char *)bpt->bpt_addr,
-+	return copy_to_kernel_nofault((char *)bpt->bpt_addr,
- 				  (char *)bpt->saved_instr, BREAK_INSTR_SIZE);
- }
- 
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 3bafe1bd4dc702..f09985c87d7331 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -243,7 +243,7 @@ __recover_probed_insn(kprobe_opcode_t *buf, unsigned long addr)
- 	 * Fortunately, we know that the original code is the ideal 5-byte
- 	 * long NOP.
- 	 */
--	if (probe_kernel_read(buf, (void *)addr,
-+	if (copy_from_kernel_nofault(buf, (void *)addr,
- 		MAX_INSN_SIZE * sizeof(kprobe_opcode_t)))
- 		return 0UL;
- 
-@@ -346,7 +346,8 @@ int __copy_instruction(u8 *dest, u8 *src, u8 *real, struct insn *insn)
- 		return 0;
- 
- 	/* This can access kernel text if given address is not recovered */
--	if (probe_kernel_read(dest, (void *)recovered_insn, MAX_INSN_SIZE))
-+	if (copy_from_kernel_nofault(dest, (void *)recovered_insn,
-+			MAX_INSN_SIZE))
- 		return 0;
- 
- 	kernel_insn_init(insn, dest, MAX_INSN_SIZE);
-diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
-index 321c1995028504..7af4c61dde521d 100644
---- a/arch/x86/kernel/kprobes/opt.c
-+++ b/arch/x86/kernel/kprobes/opt.c
-@@ -56,7 +56,7 @@ unsigned long __recover_optprobed_insn(kprobe_opcode_t *buf, unsigned long addr)
- 	 * overwritten by jump destination address. In this case, original
- 	 * bytes must be recovered from op->optinsn.copied_insn buffer.
- 	 */
--	if (probe_kernel_read(buf, (void *)addr,
-+	if (copy_from_kernel_nofault(buf, (void *)addr,
- 		MAX_INSN_SIZE * sizeof(kprobe_opcode_t)))
- 		return 0UL;
- 
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index af75109485c263..7003f2e7b1634a 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -488,7 +488,8 @@ static enum kernel_gp_hint get_kernel_gp_address(struct pt_regs *regs,
- 	u8 insn_buf[MAX_INSN_SIZE];
- 	struct insn insn;
- 
--	if (probe_kernel_read(insn_buf, (void *)regs->ip, MAX_INSN_SIZE))
-+	if (copy_from_kernel_nofault(insn_buf, (void *)regs->ip,
-+			MAX_INSN_SIZE))
- 		return GP_NO_HINT;
- 
- 	kernel_insn_init(&insn, insn_buf, MAX_INSN_SIZE);
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 66be9bd60307d2..e996aa3833b85b 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -442,7 +442,7 @@ static void show_ldttss(const struct desc_ptr *gdt, const char *name, u16 index)
- 		return;
- 	}
- 
--	if (probe_kernel_read(&desc, (void *)(gdt->address + offset),
-+	if (copy_from_kernel_nofault(&desc, (void *)(gdt->address + offset),
- 			      sizeof(struct ldttss_desc))) {
- 		pr_alert("%s: 0x%hx -- GDT entry is not readable\n",
- 			 name, index);
-diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-index bda909e3e37ea3..8b4afad84f4a45 100644
---- a/arch/x86/mm/init_32.c
-+++ b/arch/x86/mm/init_32.c
-@@ -737,7 +737,7 @@ static void __init test_wp_bit(void)
- 
- 	__set_fixmap(FIX_WP_TEST, __pa_symbol(empty_zero_page), PAGE_KERNEL_RO);
- 
--	if (probe_kernel_write((char *)fix_to_virt(FIX_WP_TEST), &z, 1)) {
-+	if (copy_to_kernel_nofault((char *)fix_to_virt(FIX_WP_TEST), &z, 1)) {
- 		clear_fixmap(FIX_WP_TEST);
- 		printk(KERN_CONT "Ok.\n");
- 		return;
-diff --git a/arch/x86/mm/maccess.c b/arch/x86/mm/maccess.c
-index e1d7d7477c22dc..92ec176a729375 100644
---- a/arch/x86/mm/maccess.c
-+++ b/arch/x86/mm/maccess.c
-@@ -9,7 +9,7 @@ static __always_inline u64 canonical_address(u64 vaddr, u8 vaddr_bits)
- 	return ((s64)vaddr << (64 - vaddr_bits)) >> (64 - vaddr_bits);
- }
- 
--bool probe_kernel_read_allowed(const void *unsafe_src, size_t size)
-+bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
- {
- 	unsigned long vaddr = (unsigned long)unsafe_src;
- 
-@@ -22,7 +22,7 @@ bool probe_kernel_read_allowed(const void *unsafe_src, size_t size)
- 	       canonical_address(vaddr, boot_cpu_data.x86_virt_bits) == vaddr;
- }
- #else
--bool probe_kernel_read_allowed(const void *unsafe_src, size_t size)
-+bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
- {
- 	return (unsigned long)unsafe_src >= TASK_SIZE_MAX;
- }
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 33b309d659559e..acc49fa6a0971d 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -386,7 +386,7 @@ static void set_aliased_prot(void *v, pgprot_t prot)
- 
- 	preempt_disable();
- 
--	probe_kernel_read(&dummy, v, 1);
-+	copy_from_kernel_nofault(&dummy, v, 1);
- 
- 	if (HYPERVISOR_update_va_mapping((unsigned long)v, pte, 0))
- 		BUG();
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index 31cae88a730baf..934c92dcb9ab78 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -171,7 +171,7 @@ static ssize_t read_mem(struct file *file, char __user *buf,
- 			if (!ptr)
- 				goto failed;
- 
--			probe = probe_kernel_read(bounce, ptr, sz);
-+			probe = copy_from_kernel_nofault(bounce, ptr, sz);
- 			unxlate_dev_mem_ptr(p, ptr);
- 			if (probe)
- 				goto failed;
-diff --git a/drivers/dio/dio.c b/drivers/dio/dio.c
-index c9aa15fb86a9ae..193b40e7aec033 100644
---- a/drivers/dio/dio.c
-+++ b/drivers/dio/dio.c
-@@ -135,7 +135,8 @@ int __init dio_find(int deviceid)
- 		else
- 			va = ioremap(pa, PAGE_SIZE);
- 
--                if (probe_kernel_read(&i, (unsigned char *)va + DIO_IDOFF, 1)) {
-+		if (copy_from_kernel_nofault(&i,
-+				(unsigned char *)va + DIO_IDOFF, 1)) {
- 			if (scode >= DIOII_SCBASE)
- 				iounmap(va);
-                         continue;             /* no board present at that select code */
-@@ -208,7 +209,8 @@ static int __init dio_init(void)
- 		else
- 			va = ioremap(pa, PAGE_SIZE);
- 
--                if (probe_kernel_read(&i, (unsigned char *)va + DIO_IDOFF, 1)) {
-+		if (copy_from_kernel_nofault(&i,
-+				(unsigned char *)va + DIO_IDOFF, 1)) {
- 			if (scode >= DIOII_SCBASE)
- 				iounmap(va);
-                         continue;              /* no board present at that select code */
-diff --git a/drivers/input/serio/hp_sdc.c b/drivers/input/serio/hp_sdc.c
-index 654252361653df..13eacf6ab43100 100644
---- a/drivers/input/serio/hp_sdc.c
-+++ b/drivers/input/serio/hp_sdc.c
-@@ -1021,7 +1021,7 @@ static int __init hp_sdc_register(void)
- 	hp_sdc.base_io	 = (unsigned long) 0xf0428000;
- 	hp_sdc.data_io	 = (unsigned long) hp_sdc.base_io + 1;
- 	hp_sdc.status_io = (unsigned long) hp_sdc.base_io + 3;
--	if (!probe_kernel_read(&i, (unsigned char *)hp_sdc.data_io, 1))
-+	if (!copy_from_kernel_nofault(&i, (unsigned char *)hp_sdc.data_io, 1))
- 		hp_sdc.dev = (void *)1;
- 	hp_sdc.dev_err   = hp_sdc_init();
- #endif
-diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
-index bccd341e9ae16c..d5d2af4d10e668 100644
---- a/drivers/misc/kgdbts.c
-+++ b/drivers/misc/kgdbts.c
-@@ -828,7 +828,7 @@ static void run_plant_and_detach_test(int is_early)
- 	char before[BREAK_INSTR_SIZE];
- 	char after[BREAK_INSTR_SIZE];
- 
--	probe_kernel_read(before, (char *)kgdbts_break_test,
-+	copy_from_kernel_nofault(before, (char *)kgdbts_break_test,
- 	  BREAK_INSTR_SIZE);
- 	init_simple_test();
- 	ts.tst = plant_and_detach_test;
-@@ -836,8 +836,8 @@ static void run_plant_and_detach_test(int is_early)
- 	/* Activate test with initial breakpoint */
- 	if (!is_early)
- 		kgdb_breakpoint();
--	probe_kernel_read(after, (char *)kgdbts_break_test,
--	  BREAK_INSTR_SIZE);
-+	copy_from_kernel_nofault(after, (char *)kgdbts_break_test,
-+			BREAK_INSTR_SIZE);
- 	if (memcmp(before, after, BREAK_INSTR_SIZE)) {
- 		printk(KERN_CRIT "kgdbts: ERROR kgdb corrupted memory\n");
- 		panic("kgdb memory corruption");
-diff --git a/drivers/video/fbdev/hpfb.c b/drivers/video/fbdev/hpfb.c
-index f02be0db335e91..8d418abdd7678a 100644
---- a/drivers/video/fbdev/hpfb.c
-+++ b/drivers/video/fbdev/hpfb.c
-@@ -402,7 +402,7 @@ int __init hpfb_init(void)
- 	if (err)
- 		return err;
- 
--	err = probe_kernel_read(&i, (unsigned char *)INTFBVADDR + DIO_IDOFF, 1);
-+	err = copy_from_kernel_nofault(&i, (unsigned char *)INTFBVADDR + DIO_IDOFF, 1);
- 
- 	if (!err && (i == DIO_ID_FBUFFER) && topcat_sid_ok(sid = DIO_SECID(INTFBVADDR))) {
- 		if (!request_mem_region(INTFBPADDR, DIO_DEVSIZE, "Internal Topcat"))
-diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-index 8ba492d44e6893..e502414b355640 100644
---- a/fs/proc/kcore.c
-+++ b/fs/proc/kcore.c
-@@ -512,7 +512,8 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
- 				 * Using bounce buffer to bypass the
- 				 * hardened user copy kernel text checks.
- 				 */
--				if (probe_kernel_read(buf, (void *) start, tsz)) {
-+				if (copy_from_kernel_nofault(buf, (void *)start,
-+						tsz)) {
- 					if (clear_user(buffer, tsz)) {
- 						ret = -EFAULT;
- 						goto out;
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 7bcadca221007e..70a3d9cd9113f8 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -301,13 +301,14 @@ copy_struct_from_user(void *dst, size_t ksize, const void __user *src,
- 	return 0;
- }
- 
--bool probe_kernel_read_allowed(const void *unsafe_src, size_t size);
-+bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size);
- 
--extern long probe_kernel_read(void *dst, const void *src, size_t size);
--extern long probe_user_read(void *dst, const void __user *src, size_t size);
-+long copy_from_kernel_nofault(void *dst, const void *src, size_t size);
-+long notrace copy_to_kernel_nofault(void *dst, const void *src, size_t size);
- 
--extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
--extern long notrace probe_user_write(void __user *dst, const void *src, size_t size);
-+extern long probe_user_read(void *dst, const void __user *src, size_t size);
-+extern long notrace probe_user_write(void __user *dst, const void *src,
-+		size_t size);
- 
- long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr,
- 		long count);
-@@ -324,7 +325,7 @@ long strnlen_user_nofault(const void __user *unsafe_addr, long count);
-  * Returns 0 on success, or -EFAULT.
-  */
- #define probe_kernel_address(addr, retval)		\
--	probe_kernel_read(&retval, addr, sizeof(retval))
-+	copy_from_kernel_nofault(&retval, addr, sizeof(retval))
- 
- #ifndef user_access_begin
- #define user_access_begin(ptr,len) access_ok(ptr, len)
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index ccc0f98abdd421..bc8d25f2ac8ad7 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -169,18 +169,18 @@ int __weak kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
- {
- 	int err;
- 
--	err = probe_kernel_read(bpt->saved_instr, (char *)bpt->bpt_addr,
-+	err = copy_from_kernel_nofault(bpt->saved_instr, (char *)bpt->bpt_addr,
- 				BREAK_INSTR_SIZE);
- 	if (err)
- 		return err;
--	err = probe_kernel_write((char *)bpt->bpt_addr,
-+	err = copy_to_kernel_nofault((char *)bpt->bpt_addr,
- 				 arch_kgdb_ops.gdb_bpt_instr, BREAK_INSTR_SIZE);
- 	return err;
- }
- 
- int __weak kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
- {
--	return probe_kernel_write((char *)bpt->bpt_addr,
-+	return copy_to_kernel_nofault((char *)bpt->bpt_addr,
- 				  (char *)bpt->saved_instr, BREAK_INSTR_SIZE);
- }
- 
-diff --git a/kernel/debug/gdbstub.c b/kernel/debug/gdbstub.c
-index 4b280fc7dd6758..61774aec46b4c8 100644
---- a/kernel/debug/gdbstub.c
-+++ b/kernel/debug/gdbstub.c
-@@ -247,7 +247,7 @@ char *kgdb_mem2hex(char *mem, char *buf, int count)
- 	 */
- 	tmp = buf + count;
- 
--	err = probe_kernel_read(tmp, mem, count);
-+	err = copy_from_kernel_nofault(tmp, mem, count);
- 	if (err)
- 		return NULL;
- 	while (count > 0) {
-@@ -283,7 +283,7 @@ int kgdb_hex2mem(char *buf, char *mem, int count)
- 		*tmp_raw |= hex_to_bin(*tmp_hex--) << 4;
- 	}
- 
--	return probe_kernel_write(mem, tmp_raw, count);
-+	return copy_to_kernel_nofault(mem, tmp_raw, count);
- }
- 
- /*
-@@ -335,7 +335,7 @@ static int kgdb_ebin2mem(char *buf, char *mem, int count)
- 		size++;
- 	}
- 
--	return probe_kernel_write(mem, c, size);
-+	return copy_to_kernel_nofault(mem, c, size);
- }
- 
- #if DBG_MAX_REG_NUM > 0
-diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-index ec190569f690a0..5c794906167152 100644
---- a/kernel/debug/kdb/kdb_main.c
-+++ b/kernel/debug/kdb/kdb_main.c
-@@ -2326,7 +2326,8 @@ void kdb_ps1(const struct task_struct *p)
- 	int cpu;
- 	unsigned long tmp;
- 
--	if (!p || probe_kernel_read(&tmp, (char *)p, sizeof(unsigned long)))
-+	if (!p ||
-+	    copy_from_kernel_nofault(&tmp, (char *)p, sizeof(unsigned long)))
- 		return;
- 
- 	cpu = kdb_process_cpu(p);
-diff --git a/kernel/debug/kdb/kdb_support.c b/kernel/debug/kdb/kdb_support.c
-index b8e6306e7e133d..004c5b6c87f89a 100644
---- a/kernel/debug/kdb/kdb_support.c
-+++ b/kernel/debug/kdb/kdb_support.c
-@@ -325,7 +325,7 @@ char *kdb_strdup(const char *str, gfp_t type)
-  */
- int kdb_getarea_size(void *res, unsigned long addr, size_t size)
- {
--	int ret = probe_kernel_read((char *)res, (char *)addr, size);
-+	int ret = copy_from_kernel_nofault((char *)res, (char *)addr, size);
- 	if (ret) {
- 		if (!KDB_STATE(SUPPRESS)) {
- 			kdb_printf("kdb_getarea: Bad address 0x%lx\n", addr);
-@@ -350,7 +350,7 @@ int kdb_getarea_size(void *res, unsigned long addr, size_t size)
-  */
- int kdb_putarea_size(unsigned long addr, void *res, size_t size)
- {
--	int ret = probe_kernel_read((char *)addr, (char *)res, size);
-+	int ret = copy_from_kernel_nofault((char *)addr, (char *)res, size);
- 	if (ret) {
- 		if (!KDB_STATE(SUPPRESS)) {
- 			kdb_printf("kdb_putarea: Bad address 0x%lx\n", addr);
-@@ -624,7 +624,8 @@ char kdb_task_state_char (const struct task_struct *p)
- 	char state;
- 	unsigned long tmp;
- 
--	if (!p || probe_kernel_read(&tmp, (char *)p, sizeof(unsigned long)))
-+	if (!p ||
-+	    copy_from_kernel_nofault(&tmp, (char *)p, sizeof(unsigned long)))
- 		return 'E';
- 
- 	cpu = kdb_process_cpu(p);
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 8e3d2d7fdf5e29..132f84a5fde3f0 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -201,7 +201,7 @@ void *kthread_probe_data(struct task_struct *task)
- 	struct kthread *kthread = to_kthread(task);
- 	void *data = NULL;
- 
--	probe_kernel_read(&data, &kthread->data, sizeof(data));
-+	copy_from_kernel_nofault(&data, &kthread->data, sizeof(data));
- 	return data;
- }
- 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index e729c9e587a076..204afc12425fd7 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -196,7 +196,7 @@ bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr)
- 
- 	if (unlikely(ret < 0))
- 		goto fail;
--	ret = probe_kernel_read(dst, unsafe_ptr, size);
-+	ret = copy_from_kernel_nofault(dst, unsafe_ptr, size);
- 	if (unlikely(ret < 0))
- 		goto fail;
- 	return ret;
-@@ -661,7 +661,7 @@ BPF_CALL_5(bpf_seq_printf, struct seq_file *, m, char *, fmt, u32, fmt_size,
- 
- 			copy_size = (fmt[i + 2] == '4') ? 4 : 16;
- 
--			err = probe_kernel_read(bufs->buf[memcpy_cnt],
-+			err = copy_from_kernel_nofault(bufs->buf[memcpy_cnt],
- 						(void *) (long) args[fmt_cnt],
- 						copy_size);
- 			if (err < 0)
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 6048f1be26d243..841c74863ff896 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1222,7 +1222,7 @@ fetch_store_strlen(unsigned long addr)
- #endif
- 
- 	do {
--		ret = probe_kernel_read(&c, (u8 *)addr + len, 1);
-+		ret = copy_from_kernel_nofault(&c, (u8 *)addr + len, 1);
- 		len++;
- 	} while (c && ret == 0 && len < MAX_STRING_SIZE);
- 
-@@ -1300,7 +1300,7 @@ probe_mem_read(void *dest, void *src, size_t size)
- 	if ((unsigned long)src < TASK_SIZE)
- 		return probe_mem_read_user(dest, src, size);
- #endif
--	return probe_kernel_read(dest, src, size);
-+	return copy_from_kernel_nofault(dest, src, size);
- }
- 
- /* Note that we don't verify it, since the code does not come from user space */
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 9fbe1e2375638a..c41c3c17b86a3e 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -4638,11 +4638,11 @@ void print_worker_info(const char *log_lvl, struct task_struct *task)
- 	 * Carefully copy the associated workqueue's workfn, name and desc.
- 	 * Keep the original last '\0' in case the original is garbage.
- 	 */
--	probe_kernel_read(&fn, &worker->current_func, sizeof(fn));
--	probe_kernel_read(&pwq, &worker->current_pwq, sizeof(pwq));
--	probe_kernel_read(&wq, &pwq->wq, sizeof(wq));
--	probe_kernel_read(name, wq->name, sizeof(name) - 1);
--	probe_kernel_read(desc, worker->desc, sizeof(desc) - 1);
-+	copy_from_kernel_nofault(&fn, &worker->current_func, sizeof(fn));
-+	copy_from_kernel_nofault(&pwq, &worker->current_pwq, sizeof(pwq));
-+	copy_from_kernel_nofault(&wq, &pwq->wq, sizeof(wq));
-+	copy_from_kernel_nofault(name, wq->name, sizeof(name) - 1);
-+	copy_from_kernel_nofault(desc, worker->desc, sizeof(desc) - 1);
- 
- 	if (fn || name[0] || desc[0]) {
- 		printk("%sWorkqueue: %s %ps", log_lvl, name, fn);
-diff --git a/mm/debug.c b/mm/debug.c
-index b5b1de8c71ac51..4f376514744db1 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -120,9 +120,9 @@ void __dump_page(struct page *page, const char *reason)
- 		 * mapping can be invalid pointer and we don't want to crash
- 		 * accessing it, so probe everything depending on it carefully
- 		 */
--		if (probe_kernel_read(&host, &mapping->host,
-+		if (copy_from_kernel_nofault(&host, &mapping->host,
- 					sizeof(struct inode *)) ||
--		    probe_kernel_read(&a_ops, &mapping->a_ops,
-+		    copy_from_kernel_nofault(&a_ops, &mapping->a_ops,
- 				sizeof(struct address_space_operations *))) {
- 			pr_warn("failed to read mapping->host or a_ops, mapping not a valid kernel address?\n");
- 			goto out_mapping;
-@@ -133,7 +133,7 @@ void __dump_page(struct page *page, const char *reason)
- 			goto out_mapping;
- 		}
- 
--		if (probe_kernel_read(&dentry_first,
-+		if (copy_from_kernel_nofault(&dentry_first,
- 			&host->i_dentry.first, sizeof(struct hlist_node *))) {
- 			pr_warn("mapping->a_ops:%ps with invalid mapping->host inode address %px\n",
- 				a_ops, host);
-@@ -146,7 +146,7 @@ void __dump_page(struct page *page, const char *reason)
- 		}
- 
- 		dentry_ptr = container_of(dentry_first, struct dentry, d_u.d_alias);
--		if (probe_kernel_read(&dentry, dentry_ptr,
-+		if (copy_from_kernel_nofault(&dentry, dentry_ptr,
- 							sizeof(struct dentry))) {
- 			pr_warn("mapping->aops:%ps with invalid mapping->host->i_dentry.first %px\n",
- 				a_ops, dentry_ptr);
-diff --git a/mm/maccess.c b/mm/maccess.c
-index 88845eda50474b..cc5d8c6233c05a 100644
---- a/mm/maccess.c
-+++ b/mm/maccess.c
-@@ -6,14 +6,15 @@
- #include <linux/mm.h>
- #include <linux/uaccess.h>
- 
--bool __weak probe_kernel_read_allowed(const void *unsafe_src, size_t size)
-+bool __weak copy_from_kernel_nofault_allowed(const void *unsafe_src,
-+		size_t size)
- {
- 	return true;
- }
- 
- #ifdef HAVE_GET_KERNEL_NOFAULT
- 
--#define probe_kernel_read_loop(dst, src, len, type, err_label)		\
-+#define copy_from_kernel_nofault_loop(dst, src, len, type, err_label)	\
- 	while (len >= sizeof(type)) {					\
- 		__get_kernel_nofault(dst, src, type, err_label);		\
- 		dst += sizeof(type);					\
-@@ -21,25 +22,25 @@ bool __weak probe_kernel_read_allowed(const void *unsafe_src, size_t size)
- 		len -= sizeof(type);					\
- 	}
- 
--long probe_kernel_read(void *dst, const void *src, size_t size)
-+long copy_from_kernel_nofault(void *dst, const void *src, size_t size)
- {
--	if (!probe_kernel_read_allowed(src, size))
-+	if (!copy_from_kernel_nofault_allowed(src, size))
- 		return -ERANGE;
- 
- 	pagefault_disable();
--	probe_kernel_read_loop(dst, src, size, u64, Efault);
--	probe_kernel_read_loop(dst, src, size, u32, Efault);
--	probe_kernel_read_loop(dst, src, size, u16, Efault);
--	probe_kernel_read_loop(dst, src, size, u8, Efault);
-+	copy_from_kernel_nofault_loop(dst, src, size, u64, Efault);
-+	copy_from_kernel_nofault_loop(dst, src, size, u32, Efault);
-+	copy_from_kernel_nofault_loop(dst, src, size, u16, Efault);
-+	copy_from_kernel_nofault_loop(dst, src, size, u8, Efault);
- 	pagefault_enable();
- 	return 0;
- Efault:
- 	pagefault_enable();
- 	return -EFAULT;
- }
--EXPORT_SYMBOL_GPL(probe_kernel_read);
-+EXPORT_SYMBOL_GPL(copy_from_kernel_nofault);
- 
--#define probe_kernel_write_loop(dst, src, len, type, err_label)		\
-+#define copy_to_kernel_nofault_loop(dst, src, len, type, err_label)	\
- 	while (len >= sizeof(type)) {					\
- 		__put_kernel_nofault(dst, src, type, err_label);		\
- 		dst += sizeof(type);					\
-@@ -47,13 +48,13 @@ EXPORT_SYMBOL_GPL(probe_kernel_read);
- 		len -= sizeof(type);					\
- 	}
- 
--long probe_kernel_write(void *dst, const void *src, size_t size)
-+long copy_to_kernel_nofault(void *dst, const void *src, size_t size)
- {
- 	pagefault_disable();
--	probe_kernel_write_loop(dst, src, size, u64, Efault);
--	probe_kernel_write_loop(dst, src, size, u32, Efault);
--	probe_kernel_write_loop(dst, src, size, u16, Efault);
--	probe_kernel_write_loop(dst, src, size, u8, Efault);
-+	copy_to_kernel_nofault_loop(dst, src, size, u64, Efault);
-+	copy_to_kernel_nofault_loop(dst, src, size, u32, Efault);
-+	copy_to_kernel_nofault_loop(dst, src, size, u16, Efault);
-+	copy_to_kernel_nofault_loop(dst, src, size, u8, Efault);
- 	pagefault_enable();
- 	return 0;
- Efault:
-@@ -67,7 +68,7 @@ long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, long count)
- 
- 	if (unlikely(count <= 0))
- 		return 0;
--	if (!probe_kernel_read_allowed(unsafe_addr, count))
-+	if (!copy_from_kernel_nofault_allowed(unsafe_addr, count))
- 		return -ERANGE;
- 
- 	pagefault_disable();
-@@ -87,7 +88,7 @@ long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, long count)
- }
- #else /* HAVE_GET_KERNEL_NOFAULT */
- /**
-- * probe_kernel_read(): safely attempt to read from kernel-space
-+ * copy_from_kernel_nofault(): safely attempt to read from kernel-space
-  * @dst: pointer to the buffer that shall take the data
-  * @src: address to read from
-  * @size: size of the data chunk
-@@ -98,15 +99,15 @@ long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, long count)
-  *
-  * We ensure that the copy_from_user is executed in atomic context so that
-  * do_page_fault() doesn't attempt to take mmap_lock.  This makes
-- * probe_kernel_read() suitable for use within regions where the caller
-+ * copy_from_kernel_nofault() suitable for use within regions where the caller
-  * already holds mmap_lock, or other locks which nest inside mmap_lock.
-  */
--long probe_kernel_read(void *dst, const void *src, size_t size)
-+long copy_from_kernel_nofault(void *dst, const void *src, size_t size)
- {
- 	long ret;
- 	mm_segment_t old_fs = get_fs();
- 
--	if (!probe_kernel_read_allowed(src, size))
-+	if (!copy_from_kernel_nofault_allowed(src, size))
- 		return -ERANGE;
- 
- 	set_fs(KERNEL_DS);
-@@ -120,10 +121,10 @@ long probe_kernel_read(void *dst, const void *src, size_t size)
- 		return -EFAULT;
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(probe_kernel_read);
-+EXPORT_SYMBOL_GPL(copy_from_kernel_nofault);
- 
- /**
-- * probe_kernel_write(): safely attempt to write to a location
-+ * copy_to_kernel_nofault(): safely attempt to write to a location
-  * @dst: address to write to
-  * @src: pointer to the data that shall be written
-  * @size: size of the data chunk
-@@ -131,7 +132,7 @@ EXPORT_SYMBOL_GPL(probe_kernel_read);
-  * Safely write to address @dst from the buffer at @src.  If a kernel fault
-  * happens, handle that and return -EFAULT.
-  */
--long probe_kernel_write(void *dst, const void *src, size_t size)
-+long copy_to_kernel_nofault(void *dst, const void *src, size_t size)
- {
- 	long ret;
- 	mm_segment_t old_fs = get_fs();
-@@ -174,7 +175,7 @@ long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, long count)
- 
- 	if (unlikely(count <= 0))
- 		return 0;
--	if (!probe_kernel_read_allowed(unsafe_addr, count))
-+	if (!copy_from_kernel_nofault_allowed(unsafe_addr, count))
- 		return -ERANGE;
- 
- 	set_fs(KERNEL_DS);
-diff --git a/mm/rodata_test.c b/mm/rodata_test.c
-index 5e313fa93276dd..2a99df7beeb350 100644
---- a/mm/rodata_test.c
-+++ b/mm/rodata_test.c
-@@ -25,7 +25,7 @@ void rodata_test(void)
- 	}
- 
- 	/* test 2: write to the variable; this should fault */
--	if (!probe_kernel_write((void *)&rodata_test_data,
-+	if (!copy_to_kernel_nofault((void *)&rodata_test_data,
- 				(void *)&zero, sizeof(zero))) {
- 		pr_err("test data was not read only\n");
- 		return;
-diff --git a/mm/slub.c b/mm/slub.c
-index b8f798b50d44d1..fe81773fd97e65 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -292,7 +292,7 @@ static inline void *get_freepointer_safe(struct kmem_cache *s, void *object)
- 		return get_freepointer(s, object);
- 
- 	freepointer_addr = (unsigned long)object + s->offset;
--	probe_kernel_read(&p, (void **)freepointer_addr, sizeof(p));
-+	copy_from_kernel_nofault(&p, (void **)freepointer_addr, sizeof(p));
- 	return freelist_ptr(s, p, freepointer_addr);
- }
- 
+revision history
+----------------
+v3:
+thanks a lot Mark for reviewing! changes since v2:
+ * nicer audio cards names
+ * squash unneeded audio_pwr regulator
+ * remove the unneeded susphy_quirk from dwc3_1 after more testing
+ * add usdhc2 card detect via gpio
+ * add headphone detect for audio card
+
+v2:
+thanks a lot Marco, Daniel and Pavel for reviewing. changes since v1:
+ * alphabetical sortings / more consistent node names
+ * remove unused regulator and pinctrl descriptions
+ * generic labels for leds, backlight, flash and torch
+ * audio clk settings moved to sai2 node
+https://lore.kernel.org/linux-arm-kernel/20200604084756.586-1-martin.kepplinger@puri.sm/T/
+
+v1:
+https://lore.kernel.org/linux-arm-kernel/20200514155737.12160-1-martin.kepplinger@puri.sm/
+
+
+
+ arch/arm64/boot/dts/freescale/Makefile        |    1 +
+ .../boot/dts/freescale/imx8mq-librem5.dts     | 1137 +++++++++++++++++
+ 2 files changed, 1138 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5.dts
+
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index cd38d04da5a7..342579121f98 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -34,6 +34,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-hummingboard-pulse.dtb
++dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-nitrogen.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-phanbell.dtb
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5.dts
+new file mode 100644
+index 000000000000..06ffa12e60f7
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5.dts
+@@ -0,0 +1,1137 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Copyright 2018-2020 Purism SPC
++ */
++
++/dts-v1/;
++
++#include "dt-bindings/input/input.h"
++#include "dt-bindings/pwm/pwm.h"
++#include "dt-bindings/usb/pd.h"
++#include "imx8mq.dtsi"
++
++/ {
++	model = "Purism Librem 5";
++	compatible = "purism,librem5", "fsl,imx8mq";
++
++	backlight_dsi: backlight-dsi {
++		compatible = "led-backlight";
++		leds = <&led_backlight>;
++		brightness-levels = <255>;
++		default-brightness-level = <100>;
++	};
++
++	pmic_osc: clock-pmic {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		clock-output-names = "pmic_osc";
++	};
++
++	chosen {
++		stdout-path = &uart1;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_keys>;
++
++		vol-down {
++			label = "VOL_DOWN";
++			gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEDOWN>;
++		};
++
++		vol-up {
++			label = "VOL_UP";
++			gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEUP>;
++		};
++	};
++
++	pwmleds {
++		compatible = "pwm-leds";
++
++		blue {
++			label = "blue:status";
++			max-brightness = <248>;
++			pwms = <&pwm2 0 50000>;
++		};
++
++		green {
++			label = "green:status";
++			max-brightness = <248>;
++			pwms = <&pwm4 0 50000>;
++		};
++
++		red {
++			label = "red:status";
++			max-brightness = <248>;
++			pwms = <&pwm3 0 50000>;
++		};
++	};
++
++	reg_aud_1v8: regulator-audio-1v8 {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_audiopwr>;
++		regulator-name = "AUDIO_PWR_EN";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		gpio = <&gpio1 4 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	reg_gnss: regulator-gnss {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gnsspwr>;
++		regulator-name = "GNSS";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio3 12 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	reg_hub: regulator-hub {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_hub_pwr>;
++		regulator-name = "HUB";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio1 14 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	reg_lcd_3v4: regulator-lcd-3v4 {
++		compatible = "regulator-fixed";
++		regulator-name = "LCD_3V4";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_dsibiasen>;
++		vin-supply = <&reg_vsys_3v4>;
++		enable-active-high;
++		gpio = <&gpio1 20 GPIO_ACTIVE_HIGH>;
++	};
++
++	reg_vdd_sen: regulator-vdd-sen {
++		compatible = "regulator-fixed";
++		regulator-name = "VDD_SEN";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	reg_vdd_3v3: regulator-vdd-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDD_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	reg_vdd_1v8: regulator-vdd-1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	reg_vsys_3v4: regulator-vsys-3v4 {
++		compatible = "regulator-fixed";
++		regulator-name = "VSYS_3V4";
++		regulator-min-microvolt = <3400000>;
++		regulator-max-microvolt = <3400000>;
++		regulator-always-on;
++	};
++
++	reg_wifi_3v3: regulator-wifi-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "3V3_WIFI";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	sound {
++		compatible = "simple-audio-card";
++		pinctrl-0 = <&pinctrl_hp>;
++		simple-audio-card,name = "Librem 5";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,widgets =
++			"Headphone", "Headphones",
++			"Microphone", "Headset Mic",
++			"Microphone", "Digital Mic",
++			"Speaker", "Speaker";
++		simple-audio-card,routing =
++			"Headphones", "HPOUTL",
++			"Headphones", "HPOUTR",
++			"Speaker", "SPKOUTL",
++			"Speaker", "SPKOUTR",
++			"Headset Mic", "MICBIAS",
++			"IN3R", "Headset Mic",
++			"DMICDAT", "Digital Mic";
++		simple-audio-card,hp-det-gpio = <&gpio3 9 GPIO_ACTIVE_HIGH>;
++
++		simple-audio-card,cpu {
++			sound-dai = <&sai2>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&codec>;
++			clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
++			frame-master;
++			bitclock-master;
++		};
++	};
++
++	sound-wwan {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "Modem";
++		simple-audio-card,format = "i2s";
++
++		simple-audio-card,cpu {
++			sound-dai = <&sai6>;
++			frame-inversion;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&bm818_codec>;
++			frame-master;
++			bitclock-master;
++		};
++	};
++
++	bm818_codec: sound-wwan-codec {
++		compatible = "broadmobi,bm818", "option,gtm601";
++		#sound-dai-cells = <0>;
++	};
++
++	vibrator {
++		compatible = "pwm-vibrator";
++		pwms = <&pwm1 0 1000000000 0>;
++		pwm-names = "enable";
++		vcc-supply = <&reg_vdd_3v3>;
++	};
++};
++
++&A53_0 {
++	cpu-supply = <&buck2_reg>;
++};
++
++&A53_1 {
++	cpu-supply = <&buck2_reg>;
++};
++
++&A53_2 {
++	cpu-supply = <&buck2_reg>;
++};
++
++&A53_3 {
++	cpu-supply = <&buck2_reg>;
++};
++
++&ddrc {
++	operating-points-v2 = <&ddrc_opp_table>;
++
++	ddrc_opp_table: ddrc-opp-table {
++		compatible = "operating-points-v2";
++
++		opp-25M {
++			opp-hz = /bits/ 64 <25000000>;
++		};
++		opp-100M {
++			opp-hz = /bits/ 64 <100000000>;
++		};
++		opp-800M {
++			opp-hz = /bits/ 64 <800000000>;
++		};
++	};
++};
++
++&dphy {
++	status = "okay";
++};
++
++&ecspi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi1>;
++	cs-gpios = <&gpio5 9 GPIO_ACTIVE_HIGH>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	nor_flash: flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++	};
++};
++
++&gpio1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pmic_5v>;
++
++	pmic-5v {
++		gpio-hog;
++		gpio = <&gpio1 1 GPIO_ACTIVE_HIGH>;
++		input;
++	};
++};
++
++&iomuxc {
++	pinctrl_audiopwr: audiopwrgrp {
++		fsl,pins = <
++			/* AUDIO_POWER_EN_3V3 */
++			MX8MQ_IOMUXC_GPIO1_IO04_GPIO1_IO4	0x83
++		>;
++	};
++
++	pinctrl_bl: blgrp {
++		fsl,pins = <
++			/* BACKLINGE_EN */
++			MX8MQ_IOMUXC_NAND_DQS_GPIO3_IO14	0x83
++		>;
++	};
++
++	pinctrl_charger_in: chargeringrp {
++		fsl,pins = <
++			/* CHRG_INT */
++			MX8MQ_IOMUXC_NAND_CE2_B_GPIO3_IO3	0x80
++			/* CHG_STATUS_B */
++			MX8MQ_IOMUXC_NAND_ALE_GPIO3_IO0		0x80
++		>;
++	};
++
++	pinctrl_dsibiasen: dsibiasengrp {
++		fsl,pins = <
++			/* DSI_BIAS_EN */
++			MX8MQ_IOMUXC_ENET_TD1_GPIO1_IO20	0x83
++		>;
++	};
++
++	pinctrl_dsien: dsiengrp {
++		fsl,pins = <
++			/* DSI_EN_3V3 */
++			MX8MQ_IOMUXC_GPIO1_IO05_GPIO1_IO5	0x83
++		>;
++	};
++
++	pinctrl_ecspi1: spi1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_ECSPI1_MOSI_ECSPI1_MOSI	0x83
++			MX8MQ_IOMUXC_ECSPI1_MISO_ECSPI1_MISO	0x83
++			MX8MQ_IOMUXC_ECSPI1_SS0_GPIO5_IO9	0x19
++			MX8MQ_IOMUXC_ECSPI1_SCLK_ECSPI1_SCLK	0x83
++		>;
++	};
++
++	pinctrl_gauge: gaugegrp {
++		fsl,pins = <
++			/* BAT_LOW */
++			MX8MQ_IOMUXC_SAI5_RXC_GPIO3_IO20	0x80
++		>;
++	};
++
++	pinctrl_gnsspwr: gnsspwrgrp {
++		fsl,pins = <
++			/* GPS3V3_EN */
++			MX8MQ_IOMUXC_NAND_DATA06_GPIO3_IO12	0x83
++		>;
++	};
++
++	pinctrl_haptic: hapticgrp {
++		fsl,pins = <
++			/* MOTO */
++			MX8MQ_IOMUXC_SPDIF_EXT_CLK_PWM1_OUT	0x83
++		>;
++	};
++
++	pinctrl_hp: hpgrp {
++		fsl,pins = <
++			/* HEADPHONE_DET_1V8 */
++			MX8MQ_IOMUXC_NAND_DATA03_GPIO3_IO9	0x180
++		>;
++	};
++
++	pinctrl_hub_pwr: hubpwrgrp {
++		fsl,pins = <
++			/* HUB_PWR_3V3_EN */
++			MX8MQ_IOMUXC_GPIO1_IO14_GPIO1_IO14	0x83
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL		0x40000026
++			MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA		0x40000026
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_I2C2_SCL_I2C2_SCL		0x40000026
++			MX8MQ_IOMUXC_I2C2_SDA_I2C2_SDA		0x40000026
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_I2C3_SCL_I2C3_SCL		0x40000026
++			MX8MQ_IOMUXC_I2C3_SDA_I2C3_SDA		0x40000026
++		>;
++	};
++
++	pinctrl_i2c4: i2c4grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_I2C4_SCL_I2C4_SCL		0x40000026
++			MX8MQ_IOMUXC_I2C4_SDA_I2C4_SDA		0x40000026
++		>;
++	};
++
++	pinctrl_keys: keysgrp {
++		fsl,pins = <
++			/* VOL- */
++			MX8MQ_IOMUXC_ENET_MDIO_GPIO1_IO17	0x01C0
++			/* VOL+ */
++			MX8MQ_IOMUXC_ENET_MDC_GPIO1_IO16	0x01C0
++		>;
++	};
++
++	pinctrl_led_b: ledbgrp {
++		fsl,pins = <
++			/* LED_B */
++			MX8MQ_IOMUXC_GPIO1_IO13_PWM2_OUT	0x06
++		>;
++	};
++
++	pinctrl_led_g: ledggrp {
++		fsl,pins = <
++			/* LED_G */
++			MX8MQ_IOMUXC_SAI3_MCLK_PWM4_OUT		0x06
++		>;
++	};
++
++	pinctrl_led_r: ledrgrp {
++		fsl,pins = <
++			/* LED_R */
++			MX8MQ_IOMUXC_SPDIF_TX_PWM3_OUT		0x06
++		>;
++	};
++
++	pinctrl_mag: maggrp {
++		fsl,pins = <
++			/* INT_MAG */
++			MX8MQ_IOMUXC_SAI5_RXD1_GPIO3_IO22	0x80
++		>;
++	};
++
++	pinctrl_pmic: pmicgrp {
++		fsl,pins = <
++			/* PMIC_NINT */
++			MX8MQ_IOMUXC_GPIO1_IO07_GPIO1_IO7	0x80
++		>;
++	};
++
++	pinctrl_pmic_5v: pmic5vgrp {
++		fsl,pins = <
++			/* PMIC_5V */
++			MX8MQ_IOMUXC_GPIO1_IO01_GPIO1_IO1	0x80
++		>;
++	};
++
++	pinctrl_prox: proxgrp {
++		fsl,pins = <
++			/* INT_LIGHT */
++			MX8MQ_IOMUXC_NAND_DATA01_GPIO3_IO7	0x80
++		>;
++	};
++
++	pinctrl_rtc: rtcgrp {
++		fsl,pins = <
++			/* RTC_INT */
++			MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9	0x80
++		>;
++	};
++
++	pinctrl_sai2: sai2grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SAI2_TXD0_SAI2_TX_DATA0	0xd6
++			MX8MQ_IOMUXC_SAI2_TXFS_SAI2_TX_SYNC	0xd6
++			MX8MQ_IOMUXC_SAI2_MCLK_SAI2_MCLK	0xd6
++			MX8MQ_IOMUXC_SAI2_RXD0_SAI2_RX_DATA0	0xd6
++			MX8MQ_IOMUXC_SAI2_TXC_SAI2_TX_BCLK	0xd6
++		>;
++	};
++
++	pinctrl_sai6: sai6grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SAI1_RXD5_SAI6_RX_DATA0	0xd6
++			MX8MQ_IOMUXC_SAI1_RXD6_SAI6_RX_SYNC	0xd6
++			MX8MQ_IOMUXC_SAI1_TXD4_SAI6_RX_BCLK	0xd6
++			MX8MQ_IOMUXC_SAI1_TXD5_SAI6_TX_DATA0	0xd6
++		>;
++	};
++
++	pinctrl_tcpc: tcpcgrp {
++		fsl,pins = <
++			/* TCPC_INT */
++			MX8MQ_IOMUXC_GPIO1_IO10_GPIO1_IO10	0x01C0
++		>;
++	};
++
++	pinctrl_typec: typecgrp {
++		fsl,pins = <
++			/* TYPEC_MUX_EN */
++			MX8MQ_IOMUXC_GPIO1_IO11_GPIO1_IO11	0x83
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX	0x49
++			MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX	0x49
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_UART2_TXD_UART2_DCE_TX	0x49
++			MX8MQ_IOMUXC_UART2_RXD_UART2_DCE_RX	0x49
++		>;
++	};
++
++	pinctrl_uart3: uart3grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_UART3_RXD_UART3_DCE_RX	0x49
++			MX8MQ_IOMUXC_UART3_TXD_UART3_DCE_TX	0x49
++		>;
++	};
++
++	pinctrl_uart4: uart4grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_ECSPI2_SCLK_UART4_DCE_RX		0x49
++			MX8MQ_IOMUXC_ECSPI2_MOSI_UART4_DCE_TX		0x49
++			MX8MQ_IOMUXC_ECSPI2_MISO_UART4_DCE_CTS_B	0x49
++			MX8MQ_IOMUXC_ECSPI2_SS0_UART4_DCE_RTS_B		0x49
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
++			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x83
++			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
++		>;
++	};
++
++	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x8d
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xcd
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xcd
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xcd
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xcd
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xcd
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xcd
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xcd
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xcd
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xcd
++			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x8d
++			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
++		>;
++	};
++
++	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x9f
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xdf
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xdf
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xdf
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xdf
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xdf
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xdf
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xdf
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xdf
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xdf
++			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x9f
++			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x80
++			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK		0x83
++			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD		0xc3
++			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0	0xc3
++			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1	0xc3
++			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2	0xc3
++			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3	0xc3
++			MX8MQ_IOMUXC_SD2_RESET_B_USDHC2_RESET_B 0xc1
++		>;
++	};
++
++	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x80
++			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK		0x8d
++			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD		0xcd
++			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0	0xcd
++			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1	0xcd
++			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2	0xcd
++			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3	0xcd
++			MX8MQ_IOMUXC_SD2_RESET_B_USDHC2_RESET_B 0xc1
++		>;
++	};
++
++	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
++		fsl,pins = <
++			MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x80
++			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK		0x9f
++			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD		0xcf
++			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0	0xcf
++			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1	0xcf
++			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2	0xcf
++			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3	0xcf
++			MX8MQ_IOMUXC_SD2_RESET_B_USDHC2_RESET_B 0xc1
++		>;
++	};
++
++	pinctrl_wdog: wdoggrp {
++		fsl,pins = <
++			/* nWDOG */
++			MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B	0x1f
++		>;
++	};
++};
++
++&i2c1 {
++	clock-frequency = <387000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	typec_pd: usb-pd@3f {
++		compatible = "ti,tps6598x";
++		reg = <0x3f>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_typec>, <&pinctrl_tcpc>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
++
++		connector {
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++
++					usb_con_hs: endpoint {
++						remote-endpoint = <&typec_hs>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++
++					usb_con_ss: endpoint {
++						remote-endpoint = <&typec_ss>;
++					};
++				};
++			};
++		};
++	};
++
++	pmic: pmic@4b {
++		compatible = "rohm,bd71837";
++		reg = <0x4b>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pmic>;
++		clocks = <&pmic_osc>;
++		clock-names = "osc";
++		clock-output-names = "pmic_clk";
++		interrupt-parent = <&gpio1>;
++		interrupts = <7 GPIO_ACTIVE_LOW>;
++		interrupt-names = "irq";
++		rohm,reset-snvs-powered;
++
++		regulators {
++			buck1_reg: BUCK1 {
++				regulator-name = "BUCK1";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1300000>;
++				regulator-ramp-delay = <1250>;
++				rohm,dvs-run-voltage = <900000>;
++				rohm,dvs-idle-voltage = <850000>;
++				rohm,dvs-suspend-voltage = <800000>;
++				regulator-always-on;
++			};
++
++			buck2_reg: BUCK2 {
++				regulator-name = "BUCK2";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1300000>;
++				regulator-ramp-delay = <1250>;
++				rohm,dvs-run-voltage = <1000000>;
++				rohm,dvs-idle-voltage = <900000>;
++				regulator-always-on;
++			};
++
++			buck3_reg: BUCK3 {
++				regulator-name = "BUCK3";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1300000>;
++				rohm,dvs-run-voltage = <900000>;
++				regulator-always-on;
++			};
++
++			buck4_reg: BUCK4 {
++				regulator-name = "BUCK4";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1300000>;
++				rohm,dvs-run-voltage = <1000000>;
++			};
++
++			buck5_reg: BUCK5 {
++				regulator-name = "BUCK5";
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++			};
++
++			buck6_reg: BUCK6 {
++				regulator-name = "BUCK6";
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			buck7_reg: BUCK7 {
++				regulator-name = "BUCK7";
++				regulator-min-microvolt = <1605000>;
++				regulator-max-microvolt = <1995000>;
++				regulator-always-on;
++			};
++
++			buck8_reg: BUCK8 {
++				regulator-name = "BUCK8";
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1400000>;
++				regulator-always-on;
++			};
++
++			ldo1_reg: LDO1 {
++				regulator-name = "LDO1";
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3300000>;
++				/* leave on for snvs power button */
++				regulator-always-on;
++			};
++
++			ldo2_reg: LDO2 {
++				regulator-name = "LDO2";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <900000>;
++				/* leave on for snvs power button */
++				regulator-always-on;
++			};
++
++			ldo3_reg: LDO3 {
++				regulator-name = "LDO3";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			ldo4_reg: LDO4 {
++				regulator-name = "LDO4";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++
++			ldo5_reg: LDO5 {
++				/* VDD_PHY_0V9 - MIPI and HDMI domains */
++				regulator-name = "LDO5";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			ldo6_reg: LDO6 {
++				/* VDD_PHY_0V9 - MIPI, HDMI and USB domains */
++				regulator-name = "LDO6";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++
++			ldo7_reg: LDO7 {
++				/* VDD_PHY_3V3 - USB domain */
++				regulator-name = "LDO7";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++		};
++	};
++
++	rtc@68 {
++		compatible = "microcrystal,rv4162";
++		reg = <0x68>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_rtc>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <9 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++&i2c2 {
++	clock-frequency = <387000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++
++	magnetometer@1e	{
++		compatible = "st,lsm9ds1-magn";
++		reg = <0x1e>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_mag>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
++		vdd-supply = <&reg_vdd_sen>;
++		vddio-supply = <&reg_vdd_1v8>;
++	};
++
++	regulator@3e {
++		compatible = "tps65132";
++		reg = <0x3e>;
++		outp {
++			regulator-name = "LCD_AVDD";
++			vin-supply = <&reg_lcd_3v4>;
++		};
++
++		outn {
++			regulator-name = "LCD_AVEE";
++			vin-supply = <&reg_lcd_3v4>;
++		};
++	};
++
++	flash@53 {
++		compatible = "lm3560";
++		reg = <0x53>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		flash@0 {
++			reg = <0x0>;
++			flash-timeout-us = <150000>;
++			flash-max-microamp = <320000>;
++			led-max-microamp = <60000>;
++			label = "flash";
++		};
++
++		torch@1 {
++			reg = <0x1>;
++			led-max-microamp = <10000>;
++			label = "torch";
++		};
++
++	};
++
++	prox@60 {
++		compatible = "vishay,vcnl4040";
++		reg = <0x60>;
++		pinctrl-0 = <&pinctrl_prox>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
++	};
++
++	accel-gyro@6a	{
++		compatible = "st,lsm9ds1-imu";
++		reg = <0x6a>;
++		vdd-supply = <&reg_vdd_sen>;
++		vddio-supply = <&reg_vdd_1v8>;
++		mount-matrix =  "1",  "0",  "0",
++				"0",  "1",  "0",
++				"0",  "0", "-1";
++	};
++};
++
++&i2c3 {
++	clock-frequency = <387000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++
++	codec: audio-codec@1a {
++		compatible = "wlf,wm8962";
++		reg = <0x1a>; // 0x4a is the test address
++		clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
++		assigned-clocks = <&clk IMX8MQ_CLK_SAI2>;
++		assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1_OUT>;
++		assigned-clock-rates = <24576000>;
++		#sound-dai-cells = <0>;
++		mic-cfg = <0x200>;
++		DCVDD-supply = <&reg_aud_1v8>;
++		DBVDD-supply = <&reg_aud_1v8>;
++		AVDD-supply = <&reg_aud_1v8>;
++		CPVDD-supply = <&reg_aud_1v8>;
++		MICVDD-supply = <&reg_aud_1v8>;
++		PLLVDD-supply = <&reg_aud_1v8>;
++		SPKVDD1-supply = <&reg_vsys_3v4>;
++		SPKVDD2-supply = <&reg_vsys_3v4>;
++		gpio-cfg = <
++			0x0000 /* n/c */
++			0x0001 /* gpio2, 1: default */
++			0x0013 /* gpio3, 2: dmicclk */
++			0x0000 /* n/c, 3: default */
++			0x8014 /* gpio5, 4: dmic_dat */
++			0x0000 /* gpio6, 5: default */
++		>;
++	};
++
++	backlight@36 {
++		compatible = "ti,lm36922";
++		reg = <0x36>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_bl>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		enable-gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
++		vled-supply = <&reg_vsys_3v4>;
++		ti,ovp-microvolt = <25000000>;
++
++		led_backlight: led@0 {
++			reg = <0>;
++			label = ":backlight";
++			linux,default-trigger = "backlight";
++			led-max-microamp = <20000>;
++		};
++	};
++
++	touchscreen@38 {
++		compatible = "edt,edt-ft5506";
++		reg = <0x38>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <27 IRQ_TYPE_EDGE_FALLING>;
++		touchscreen-size-x = <720>;
++		touchscreen-size-y = <1440>;
++	};
++};
++
++&i2c4 {
++	clock-frequency = <387000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c4>;
++	status = "okay";
++
++	bat: fuel-gauge@36 {
++		compatible = "maxim,max17055";
++		reg = <0x36>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gauge>;
++		maxim,over-heat-temp = <700>;
++		maxim,over-volt = <4500>;
++		maxim,rsns-microohm = <5000>;
++	};
++
++	charger@6a {
++		compatible = "ti,bq25890";
++		reg = <0x6a>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_charger_in>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
++		phys = <&usb3_phy0>;
++		ti,battery-regulation-voltage = <4192000>; /* uV */
++		ti,charge-current = <1600000>; /* uA */
++		ti,termination-current = <66000>;  /* uA */
++		ti,precharge-current = <130000>; /* uA */
++		ti,minimum-sys-voltage = <3700000>; /* uV */
++		ti,boost-voltage = <5000000>; /* uV */
++		ti,boost-max-current = <50000>; /* uA */
++		ti,use-vinmin-threshold = <1>; /* enable VINDPM */
++		ti,vinmin-threshold = <3900000>; /* uV */
++		monitored-battery = <&bat>;
++	};
++};
++
++&pgc_gpu {
++	power-supply = <&buck3_reg>;
++};
++
++&pgc_mipi {
++	power-supply = <&ldo5_reg>;
++};
++
++&pgc_vpu {
++	power-supply = <&buck4_reg>;
++};
++
++&pwm1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_haptic>;
++	status = "okay";
++};
++
++&pwm2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_led_b>;
++	status = "okay";
++};
++
++&pwm3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_led_g>;
++	status = "okay";
++};
++
++&pwm4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_led_r>;
++	status = "okay";
++};
++
++&sai2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_sai2>;
++	assigned-clocks = <&clk IMX8MQ_CLK_SAI2>;
++	assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1_OUT>;
++	assigned-clock-rates = <24576000>;
++	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL2>;
++	assigned-clock-rates = <786432000>, <722534400>;
++	status = "okay";
++};
++
++&sai6 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_sai6>;
++	assigned-clocks = <&clk IMX8MQ_CLK_SAI6>;
++	assigned-clock-parents = <&clk IMX8MQ_AUDIO_PLL1_OUT>;
++	assigned-clock-rates = <24576000>;
++	fsl,sai-synchronous-rx;
++	status = "okay";
++};
++
++&snvs_pwrkey {
++	status = "okay";
++};
++
++&snvs_rtc {
++	status = "disabled";
++};
++
++&uart1 { /* console */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&uart2 { /* TPS - GPS - DEBUG */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++
++	gnss {
++		compatible = "globaltop,pa6h";
++		vcc-supply = <&reg_gnss>;
++		current-speed = <9600>;
++	};
++};
++
++&uart3 { /* SMC */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++	status = "okay";
++};
++
++&uart4 { /* BT */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart4>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&usb3_phy0 {
++	status = "okay";
++};
++
++&usb3_phy1 {
++	vbus-supply = <&reg_hub>;
++	status = "okay";
++};
++
++&usb_dwc3_0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	dr_mode = "otg";
++	snps,dis_u3_susphy_quirk;
++	status = "okay";
++
++	port@0 {
++		reg = <0>;
++
++		typec_hs: endpoint {
++			remote-endpoint = <&usb_con_hs>;
++		};
++	};
++
++	port@1 {
++		reg = <1>;
++
++		typec_ss: endpoint {
++			remote-endpoint = <&usb_con_ss>;
++		};
++	};
++};
++
++&usb_dwc3_1 {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
++	bus-width = <8>;
++	vmmc-supply = <&reg_vdd_3v3>;
++	power-supply = <&reg_vdd_1v8>;
++	non-removable;
++	status = "okay";
++};
++
++&usdhc2 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
++	bus-width = <4>;
++	vmmc-supply = <&reg_wifi_3v3>;
++	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
++	disable-wp;
++	cap-sdio-irq;
++	keep-power-in-suspend;
++	wakeup-source;
++	status = "okay";
++};
++
++&wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++	status = "okay";
++};
 -- 
-2.26.2
+2.20.1
 
