@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C06E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF6321532
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EE821532
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592419945;
-	bh=F0HSnIgr+/nj4f4OoJWMedidccIF5oN1P0Lnc/e+mOQ=;
+	s=default; t=1592419947;
+	bh=7AmvXJlxqBgNywJoaFgNk0iEDG8dIR6iFDwZ8EwfoO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PKxN/dI/RfztVyIaG/PkIgMsGEgPB+TYa5AEdCtNHffQBGnxcTeQIRb0Sc8MkgX3X
-	 u3wXnRoe6+w+8EF5CpNi4dBY7nt0C04UD6IkFcdbMqwAVHdPYTab7EUMqXh7JaR6kw
-	 32mmGcMb25+6heoN7xLNSZioE760u0E4LIxXsa8A=
+	b=PgxxlredwdIcF0OaedIpQSBvhv3CUoSfiGwl++JXOdDLWqqF83Z0fFHNNPMhQRCi3
+	 F8GWqK7jnY9oeuYKN1UFJHDGY+6fYP71l4S7nI0ugML/M7hBQpQcRgvnsGfcqr0rK9
+	 kblf+IrVFTnmco0NUWMNYmqPYf9P2ZPjapTLsxtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgFQSwY (ORCPT
+        id S1728040AbgFQSw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:52:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40482 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 14:52:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727861AbgFQSwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727882AbgFQSwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 14:52:19 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FC1C217A0;
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E49A21789;
         Wed, 17 Jun 2020 18:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592419938;
-        bh=F0HSnIgr+/nj4f4OoJWMedidccIF5oN1P0Lnc/e+mOQ=;
+        bh=7AmvXJlxqBgNywJoaFgNk0iEDG8dIR6iFDwZ8EwfoO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A2JIxZmPKKawwJ1QvwvrgLzzMDkWXhd7Igm5OQJbkrwXTfdEBUw1igzY7hsSAm9lA
-         14WTnr0bIwt3sGMqYeeTa8mf4hI616BK6P4zpNjGZuzzVPDVo9FqglGW6BZFVzLO3z
-         1aKcmInQbYOa8ofGa0M6IuyQuFEeKSQ7gwo3aR08=
+        b=Tharhsq//t4bnpSd8pYTOc6IRfasjOcFycfvA+UEf2Z+SnYIFNXVSzSOb8Bvfl/We
+         Sh28mLI9r5XKtzFb237KJJh3KVzNbxhu4LzpNWYR3KJ6ZfQgJB+fUsSi/wc1gVw5ru
+         AvPKzhAaeBXAknTpseWyj0uzvZk32CO7DAFmfiOQ=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jldAV-00C8Ah-Um; Wed, 17 Jun 2020 20:52:15 +0200
+        id 1jldAW-00C8Ap-0U; Wed, 17 Jun 2020 20:52:16 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Media Mailing List <linux-media@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Brad Love <brad@nextdimension.cc>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: [RFC 1/4] media: atomisp: fix identation at I2C Kconfig menu
-Date:   Wed, 17 Jun 2020 20:52:11 +0200
-Message-Id: <a6fa7016f510f13ed6e31052b8bcf83e4680d899.1592419750.git.mchehab+huawei@kernel.org>
+        Brad Love <brad@nextdimension.cc>, Sean Young <sean@mess.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [RFC 3/4] media: dvb_frontend: move algo-specific settings to a function
+Date:   Wed, 17 Jun 2020 20:52:13 +0200
+Message-Id: <daa69edd80e7fcf979062273f3067cb7b5573d52.1592419750.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1592419750.git.mchehab+huawei@kernel.org>
 References: <cover.1592419750.git.mchehab+huawei@kernel.org>
@@ -64,153 +61,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are several bad whitespacing usage there. Remove them.
-
-While here, place all Kconfig options for sensors at the
-same place.
+As we're planning to call this code on a separate place, let's
+fist move it to a different function.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/staging/media/atomisp/i2c/Kconfig     | 74 +++++++++++--------
- .../staging/media/atomisp/i2c/ov5693/Kconfig  | 12 ---
- 2 files changed, 42 insertions(+), 44 deletions(-)
- delete mode 100644 drivers/staging/media/atomisp/i2c/ov5693/Kconfig
+ drivers/media/dvb-core/dvb_frontend.c | 90 +++++++++++++++------------
+ 1 file changed, 49 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/i2c/Kconfig b/drivers/staging/media/atomisp/i2c/Kconfig
-index 7c7f0fc090b3..a772b833a85f 100644
---- a/drivers/staging/media/atomisp/i2c/Kconfig
-+++ b/drivers/staging/media/atomisp/i2c/Kconfig
-@@ -3,53 +3,51 @@
- # Kconfig for sensor drivers
- #
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index 06ea30a689d7..ed85dc2a9183 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -1790,6 +1790,54 @@ static int dvbv3_set_delivery_system(struct dvb_frontend *fe)
+ 	return emulate_delivery_system(fe, delsys);
+ }
  
--source "drivers/staging/media/atomisp/i2c/ov5693/Kconfig"
--
- config VIDEO_ATOMISP_OV2722
--       tristate "OVT ov2722 sensor support"
-+	tristate "OVT ov2722 sensor support"
- 	depends on ACPI
--       depends on I2C && VIDEO_V4L2
-+	depends on I2C && VIDEO_V4L2
- 	help
--	 This is a Video4Linux2 sensor-level driver for the OVT
--	 OV2722 raw camera.
-+	  This is a Video4Linux2 sensor-level driver for the OVT
-+	  OV2722 raw camera.
- 
--	 OVT is a 2M raw sensor.
-+	  OVT is a 2M raw sensor.
- 
--	 It currently only works with the atomisp driver.
-+	  It currently only works with the atomisp driver.
- 
- config VIDEO_ATOMISP_GC2235
--       tristate "Galaxy gc2235 sensor support"
-+	tristate "Galaxy gc2235 sensor support"
- 	depends on ACPI
--       depends on I2C && VIDEO_V4L2
-+	depends on I2C && VIDEO_V4L2
- 	help
--	 This is a Video4Linux2 sensor-level driver for the OVT
--	 GC2235 raw camera.
-+	  This is a Video4Linux2 sensor-level driver for the OVT
-+	  GC2235 raw camera.
- 
--	 GC2235 is a 2M raw sensor.
-+	  GC2235 is a 2M raw sensor.
- 
--	 It currently only works with the atomisp driver.
-+	  It currently only works with the atomisp driver.
- 
- config VIDEO_ATOMISP_MSRLIST_HELPER
--       tristate "Helper library to load, parse and apply large register lists."
--       depends on I2C
-+	tristate "Helper library to load, parse and apply large register lists."
-+	depends on I2C
- 	help
--	 This is a helper library to be used from a sensor driver to load, parse
--	 and apply large register lists.
-+	  This is a helper library to be used from a sensor driver to load, parse
-+	  and apply large register lists.
- 
--	 To compile this driver as a module, choose M here: the
--	 module will be called libmsrlisthelper.
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called libmsrlisthelper.
- 
- config VIDEO_ATOMISP_MT9M114
--       tristate "Aptina mt9m114 sensor support"
-+	tristate "Aptina mt9m114 sensor support"
- 	depends on ACPI
--       depends on I2C && VIDEO_V4L2
-+	depends on I2C && VIDEO_V4L2
- 	help
--	 This is a Video4Linux2 sensor-level driver for the Micron
--	 mt9m114 1.3 Mpixel camera.
-+	  This is a Video4Linux2 sensor-level driver for the Micron
-+	  mt9m114 1.3 Mpixel camera.
- 
--	 mt9m114 is video camera sensor.
-+	  mt9m114 is video camera sensor.
- 
--	 It currently only works with the atomisp driver.
-+	  It currently only works with the atomisp driver.
- 
- config VIDEO_ATOMISP_GC0310
- 	tristate "GC0310 sensor support"
-@@ -60,16 +58,28 @@ config VIDEO_ATOMISP_GC0310
- 	  GC0310 0.3MP sensor.
- 
- config VIDEO_ATOMISP_OV2680
--       tristate "Omnivision OV2680 sensor support"
-+	tristate "Omnivision OV2680 sensor support"
- 	depends on ACPI
--       depends on I2C && VIDEO_V4L2
-+	depends on I2C && VIDEO_V4L2
- 	help
--	 This is a Video4Linux2 sensor-level driver for the Omnivision
--	 OV2680 raw camera.
-+	  This is a Video4Linux2 sensor-level driver for the Omnivision
-+	  OV2680 raw camera.
- 
--	 ov2680 is a 2M raw sensor.
-+	  ov2680 is a 2M raw sensor.
- 
--	 It currently only works with the atomisp driver.
-+	  It currently only works with the atomisp driver.
++static void prepare_tuning_algo_parameters(struct dvb_frontend *fe)
++{
++	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
++	struct dvb_frontend_private *fepriv = fe->frontend_priv;
++	struct dvb_frontend_tune_settings fetunesettings;
 +
-+config VIDEO_ATOMISP_OV5693
-+	tristate "Omnivision ov5693 sensor support"
-+	depends on ACPI
-+	depends on I2C && VIDEO_V4L2
-+	help
-+	  This is a Video4Linux2 sensor-level driver for the Micron
-+	  ov5693 5 Mpixel camera.
++	/* get frontend-specific tuning settings */
++	memset(&fetunesettings, 0, sizeof(struct dvb_frontend_tune_settings));
++	if (fe->ops.get_tune_settings && (fe->ops.get_tune_settings(fe, &fetunesettings) == 0)) {
++		fepriv->min_delay = (fetunesettings.min_delay_ms * HZ) / 1000;
++		fepriv->max_drift = fetunesettings.max_drift;
++		fepriv->step_size = fetunesettings.step_size;
++	} else {
++		/* default values */
++		switch (c->delivery_system) {
++		case SYS_DVBS:
++		case SYS_DVBS2:
++		case SYS_ISDBS:
++		case SYS_TURBO:
++		case SYS_DVBC_ANNEX_A:
++		case SYS_DVBC_ANNEX_C:
++			fepriv->min_delay = HZ / 20;
++			fepriv->step_size = c->symbol_rate / 16000;
++			fepriv->max_drift = c->symbol_rate / 2000;
++			break;
++		case SYS_DVBT:
++		case SYS_DVBT2:
++		case SYS_ISDBT:
++		case SYS_DTMB:
++			fepriv->min_delay = HZ / 20;
++			fepriv->step_size = dvb_frontend_get_stepsize(fe) * 2;
++			fepriv->max_drift = (dvb_frontend_get_stepsize(fe) * 2) + 1;
++			break;
++		default:
++			/*
++			 * FIXME: This sounds wrong! if freqency_stepsize is
++			 * defined by the frontend, why not use it???
++			 */
++			fepriv->min_delay = HZ / 20;
++			fepriv->step_size = 0; /* no zigzag */
++			fepriv->max_drift = 0;
++			break;
++		}
++	}
++	if (dvb_override_tune_delay > 0)
++		fepriv->min_delay = (dvb_override_tune_delay * HZ) / 1000;
++}
 +
-+	  ov5693 is video camera sensor.
-+
-+	  It currently only works with the atomisp driver.
+ /**
+  * dtv_property_process_set -  Sets a single DTV property
+  * @fe:		Pointer to &struct dvb_frontend
+@@ -2182,7 +2230,6 @@ static int dtv_set_frontend(struct dvb_frontend *fe)
+ {
+ 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+ 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+-	struct dvb_frontend_tune_settings fetunesettings;
+ 	u32 rolloff = 0;
  
- #
- # Kconfig for flash drivers
-diff --git a/drivers/staging/media/atomisp/i2c/ov5693/Kconfig b/drivers/staging/media/atomisp/i2c/ov5693/Kconfig
-deleted file mode 100644
-index c8d09f416c35..000000000000
---- a/drivers/staging/media/atomisp/i2c/ov5693/Kconfig
-+++ /dev/null
-@@ -1,12 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--config VIDEO_ATOMISP_OV5693
--       tristate "Omnivision ov5693 sensor support"
--	depends on ACPI
--       depends on I2C && VIDEO_V4L2
--	help
--	 This is a Video4Linux2 sensor-level driver for the Micron
--	 ov5693 5 Mpixel camera.
--
--	 ov5693 is video camera sensor.
--
--	 It currently only works with the atomisp driver.
+ 	if (dvb_frontend_check_parameters(fe) < 0)
+@@ -2260,46 +2307,7 @@ static int dtv_set_frontend(struct dvb_frontend *fe)
+ 	if (c->hierarchy == HIERARCHY_NONE && c->code_rate_LP == FEC_NONE)
+ 		c->code_rate_LP = FEC_AUTO;
+ 
+-	/* get frontend-specific tuning settings */
+-	memset(&fetunesettings, 0, sizeof(struct dvb_frontend_tune_settings));
+-	if (fe->ops.get_tune_settings && (fe->ops.get_tune_settings(fe, &fetunesettings) == 0)) {
+-		fepriv->min_delay = (fetunesettings.min_delay_ms * HZ) / 1000;
+-		fepriv->max_drift = fetunesettings.max_drift;
+-		fepriv->step_size = fetunesettings.step_size;
+-	} else {
+-		/* default values */
+-		switch (c->delivery_system) {
+-		case SYS_DVBS:
+-		case SYS_DVBS2:
+-		case SYS_ISDBS:
+-		case SYS_TURBO:
+-		case SYS_DVBC_ANNEX_A:
+-		case SYS_DVBC_ANNEX_C:
+-			fepriv->min_delay = HZ / 20;
+-			fepriv->step_size = c->symbol_rate / 16000;
+-			fepriv->max_drift = c->symbol_rate / 2000;
+-			break;
+-		case SYS_DVBT:
+-		case SYS_DVBT2:
+-		case SYS_ISDBT:
+-		case SYS_DTMB:
+-			fepriv->min_delay = HZ / 20;
+-			fepriv->step_size = dvb_frontend_get_stepsize(fe) * 2;
+-			fepriv->max_drift = (dvb_frontend_get_stepsize(fe) * 2) + 1;
+-			break;
+-		default:
+-			/*
+-			 * FIXME: This sounds wrong! if freqency_stepsize is
+-			 * defined by the frontend, why not use it???
+-			 */
+-			fepriv->min_delay = HZ / 20;
+-			fepriv->step_size = 0; /* no zigzag */
+-			fepriv->max_drift = 0;
+-			break;
+-		}
+-	}
+-	if (dvb_override_tune_delay > 0)
+-		fepriv->min_delay = (dvb_override_tune_delay * HZ) / 1000;
++	prepare_tuning_algo_parameters(fe);
+ 
+ 	fepriv->state = FESTATE_RETUNE;
+ 
 -- 
 2.26.2
 
