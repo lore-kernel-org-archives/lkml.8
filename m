@@ -2,176 +2,132 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E73C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E8EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6B3520734
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48BA320734
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BL1hO3Op"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MIEmoOwM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgFQLQj (ORCPT
+        id S1726873AbgFQLRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:16:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgFQLQi (ORCPT
+        Wed, 17 Jun 2020 07:17:12 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:42995 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbgFQLRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:16:38 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1EE2C061573;
-        Wed, 17 Jun 2020 04:16:37 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r7so1928379wro.1;
-        Wed, 17 Jun 2020 04:16:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=NwwANDgxX4dH8O6rPRqOhoTERCt3DfmFlNR5UMYf758=;
-        b=BL1hO3Op+QBp8lH71zepc4iX03Z4R7n2mMn8zb5G7QIhV26mJblM+IUm67N01CqEmP
-         CvejAxdKOh3qk6kWgZERySMMqPk0njDkzwa1RRW8ReS39a6tFlYUAfcebKjGBvMkxkWF
-         5GyqEAKxV0UAahM8Fnfpu6mg8hn5yseiH0i1+v1+A1ca7R1UcbWlsqF59bnqnCl49PmV
-         fTr/WPn7Dbf/od2RgCEjFcYQpqLHq1YXKR6IhcSJ+A7PFvR/tDUyt2r69AlqVb19hIfl
-         bOqsrAAJ2FRKeorjbqy5nYsxHC4meOj1/9b5TPL6YJBRi9pYM1tOAqfAWgcTaWeiL/dA
-         VaIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=NwwANDgxX4dH8O6rPRqOhoTERCt3DfmFlNR5UMYf758=;
-        b=k2elOc85ftJYGSkkGwGdKMG53xILLT4qtOiLcM2DfKEb24BAXBVrdN76qgnPTtAOFM
-         45g/OuO/JzlQQZoZeS1zapBWDnpLLKINqV2Lt1uum3aUURQeURO2p9V5e1/ldn7ilsGL
-         NczaHLG5WY8GP0/x5Aa3uLXBY5Vy5O/aUgvQf43/1Bku2Cjyrrhjdx62PgikvBl6NoqT
-         xn8hmAoUIGICeyVKUu81B35hEVZzJFvS6h810n0hkFh6OBvHt/Y4Zus7a5plo1tmYGnM
-         N3qiRClHuBKeHI3J8y7Azm1Kh9hDf55bZaB4aT3VogBiedvegaQ+P/oNY3AzEAYFu3ko
-         t3ow==
-X-Gm-Message-State: AOAM533msg4uA3tOzQF5HZOBy58AjnsenXm3aIZTGc2HiuvGUJ0SqOBi
-        UUELXrFuvYGI3NDREQpLMDk=
-X-Google-Smtp-Source: ABdhPJwqUA3U4GFIJDkU3eE+1XiMKRoFQ26XkN59MR/FARFOznjy9KoXpCB75Rh2GfTcaObpKKD39Q==
-X-Received: by 2002:adf:aa94:: with SMTP id h20mr7462127wrc.327.1592392596473;
-        Wed, 17 Jun 2020 04:16:36 -0700 (PDT)
-Received: from macbook-pro-alvaro-eth.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
-        by smtp.gmail.com with ESMTPSA id d28sm4242126wrc.50.2020.06.17.04.16.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jun 2020 04:16:35 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 1/2] dt-bindings: phy: add bcm63xx-usbh bindings
-From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
-In-Reply-To: <2cc00ff1-f411-1c2d-d2ce-4cc0bfc2ccb5@gmail.com>
-Date:   Wed, 17 Jun 2020 13:16:34 +0200
-Cc:     simon@fire.lp0.eu, Jonas Gorski <jonas.gorski@gmail.com>,
-        kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, p.zabel@pengutronix.de,
-        krzk@kernel.org, gregkh@linuxfoundation.org, alcooperx@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F5FC8442-319A-48A7-BEEA-92C0EADE6BDA@gmail.com>
-References: <20200616083408.3426435-1-noltari@gmail.com>
- <20200616083408.3426435-2-noltari@gmail.com>
- <2cc00ff1-f411-1c2d-d2ce-4cc0bfc2ccb5@gmail.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 17 Jun 2020 07:17:11 -0400
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200617111708epoutp03c779dbb19297823937e7fff78fce28ca~ZUKi9Gign1267112671epoutp03K
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:17:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200617111708epoutp03c779dbb19297823937e7fff78fce28ca~ZUKi9Gign1267112671epoutp03K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592392628;
+        bh=De11PZoZWlcQRwwo0Y8/mr/Pxhnq+Txfs9hPs4x5UzQ=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=MIEmoOwMZwBbGlks8DVr4ZZ0gmwE19zwK6jWDXf8QbmZA2jxeJ48oPRPOEVKlIxYL
+         qruR5Ef8YTcNrq1kmbGvVum3ME5mVxxXE4gdNFLEqMnNddTSsL7/Hyqp7um7ojJt/C
+         ewYmDNfTiF1caAmFXhGyJPcWa2QIYyBfIgwVjNCk=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20200617111708epcas5p1c4e0e139b4bc55695b8bd93eea5fc4e9~ZUKiJfXDm1538915389epcas5p1N;
+        Wed, 17 Jun 2020 11:17:08 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DF.BD.09703.3BBF9EE5; Wed, 17 Jun 2020 20:17:07 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200617111707epcas5p3fcb86caeac4a852d44f37ae40759c8a1~ZUKhd7jLw3226032260epcas5p3F;
+        Wed, 17 Jun 2020 11:17:07 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200617111707epsmtrp2629be9449835228b4369f02e6d3e5021~ZUKhdPlaY3247232472epsmtrp2B;
+        Wed, 17 Jun 2020 11:17:07 +0000 (GMT)
+X-AuditID: b6c32a4a-4cbff700000025e7-45-5ee9fbb3f906
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        28.4E.08382.3BBF9EE5; Wed, 17 Jun 2020 20:17:07 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200617111705epsmtip28dc31d81babdd092756d80f3eeda4d79~ZUKf9xn730587705877epsmtip2h;
+        Wed, 17 Jun 2020 11:17:05 +0000 (GMT)
+From:   Tamseel Shams <m.shams@samsung.com>
+To:     kgene@kernel.org, krzk@kernel.org, gregkh@linuxfoundation.org,
+        jslaby@suse.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alim.akhtar@samsung.com,
+        Tamseel Shams <m.shams@samsung.com>
+Subject: [PATCH] serial: samsung: fix spelling mistake
+Date:   Wed, 17 Jun 2020 16:29:07 +0530
+Message-Id: <20200617105907.7143-1-m.shams@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNIsWRmVeSWpSXmKPExsWy7bCmhu7m3y/jDM4/sbF4MG8bm0Xz4vVs
+        FlM2fGCy6H/8mtni/PkN7BabHl9jtbi8aw6bxYzz+5gszizuZbe427qY3YHLY9OqTjaP/XPX
+        sHtsXlLv0bdlFaPH+i1XWTw+b5ILYIvisklJzcksSy3St0vgyuh69YO1YAdrxfSTy1gbGHex
+        dDFyckgImEhMvHyMuYuRi0NIYDejxPm/P9ggnE+MEqe7ZrFDON8YJZo2bgHKcIC1LL0YDhHf
+        yygx4+06RginhUni3/MdjCBFbAKaEsfPc4OsEBEIkXh3dgtYDbPASUaJvZsbwHYLC5hJrD3Q
+        wA5SzyKgKjFtqixImFfAXOLWqrnsEOfJS6zecIAZwj7HLtH3IQPiBheJi5fLIcLCEq+Ob4Eq
+        l5L4/G4vG4SdLzF/3iqo1gqJlRfeQNn2EgeuzGEBGcMMdOX6XfogYWYBPone30+YIKbzSnS0
+        CUFUK0r8390PNV1c4t2KKawQtofEv9vLwCYKCcRKvHx0n3kCo8wshKELGBlXMUqmFhTnpqcW
+        mxYY5aWW6xUn5haX5qXrJefnbmIEx7+W1w7Ghw8+6B1iZOJgPMQowcGsJMLr/PtFnBBvSmJl
+        VWpRfnxRaU5q8SFGaQ4WJXFepR9n4oQE0hNLUrNTUwtSi2CyTBycUg1MUx1U9k79cXn3jDiZ
+        v/NevD748dqKgAK1jdw8rafsG959vH173jN7Ru3l25LevjVi0iz46nrZylFlU9TvSS4Pjxbm
+        T9nBeT4/4Y7l/29er7fNsLxYv3bGdqaXNw0k6rx2KR39/3qG6MbcbaHbF/yIfdLhdGVxJI93
+        q77iUz6LHZ9zXHZuOq3wjT3U2jx9m9ULr2vvz+y6eiYwaumLa6f0UifceTKL5b/fFMZLj+aY
+        /FvU1yJ+8n7ue+mviyMrZV1O1CxblvmbT8pxssuK6W99Jj04ePjqPrad/+15971Z4vfzRHrO
+        zufi97TLdgger+juE7wxY7a7sd6slRahAn7/vti9Lnhpk5jQ66G5V6GPafMmJZbijERDLeai
+        4kQAIHwlMm4DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnluLIzCtJLcpLzFFi42LZdlhJXnfz75dxBgu3c1k8mLeNzaJ58Xo2
+        iykbPjBZ9D9+zWxx/vwGdotNj6+xWlzeNYfNYsb5fUwWZxb3slvcbV3M7sDlsWlVJ5vH/rlr
+        2D02L6n36NuyitFj/ZarLB6fN8kFsEVx2aSk5mSWpRbp2yVwZXS9+sFasIO1YvrJZawNjLtY
+        uhg5OCQETCSWXgzvYuTiEBLYzSgxc8khxi5GTqC4uMS0X/uhbGGJlf+es0MUNTFJfLt/nBGk
+        mU1AU+L4eW4QU0QgQmLmxxqQEmaB84wSO4+vZgLpFRYwk1h7oIEdpIZFQFVi2lRZkDCvgLnE
+        rVVz2SHGy0us3nCAeQIjzwJGhlWMkqkFxbnpucWGBYZ5qeV6xYm5xaV56XrJ+bmbGMFhpqW5
+        g3H7qg96hxiZOBgPMUpwMCuJ8Dr/fhEnxJuSWFmVWpQfX1Sak1p8iFGag0VJnPdG4cI4IYH0
+        xJLU7NTUgtQimCwTB6dUA1OV3YnmfHbj1AV/b/De4vZeOJe9ie2xZ0hZYd7Dja+Uetjv79KV
+        k5m3sMs/6tGNvaG9J00FfnaFzJ/0P3lB6Q2tiKmTauLeBNkIn/Nclsq35kB38Jc7d93vnd/z
+        XuRs2o3uvPxN247uaTFp135z2fnH9qk30tgVHBtNnpfdPR986pvtE91pGc2HVGR3X+EVtLuv
+        aOT7cvOj6P3bpEyOXPbKK9z2UGHOpRlr7z9od5nd+HGpzMOArUeWvWHzmqr5b9L+/SrMj7bK
+        SbCefvC868/TTzfSszm95TS7fKqCuXr9gralvzo7gUPwyJvKure5KxbLul/LsL4mYr7MSEtv
+        p/v/Oxxzrs7ivHjad+ZZax0WJZbijERDLeai4kQAXXhHFaICAAA=
+X-CMS-MailID: 20200617111707epcas5p3fcb86caeac4a852d44f37ae40759c8a1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200617111707epcas5p3fcb86caeac4a852d44f37ae40759c8a1
+References: <CGME20200617111707epcas5p3fcb86caeac4a852d44f37ae40759c8a1@epcas5p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
+There is a spelling mistake in a comment. Fix it.
 
-> El 16 jun 2020, a las 19:17, Florian Fainelli <f.fainelli@gmail.com> =
-escribi=C3=B3:
->=20
->=20
->=20
-> On 6/16/2020 1:34 AM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
->> Document BCM63xx USBH PHY bindings.
->>=20
->> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> ---
->> .../bindings/phy/brcm,bcm63xx-usbh-phy.yaml   | 72 =
-+++++++++++++++++++
->> 1 file changed, 72 insertions(+)
->> create mode 100644 =
-Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
->>=20
->> diff --git =
-a/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml =
-b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
->> new file mode 100644
->> index 000000000000..3e7c97799b91
->> --- /dev/null
->> +++ =
-b/Documentation/devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml
->> @@ -0,0 +1,72 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/phy/brcm,bcm63xx-usbh-phy.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: BCM63xx USBH PHY
->> +
->> +maintainers:
->> +  - =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - brcm,bcm6318-usbh-phy
->> +      - brcm,bcm6328-usbh-phy
->> +      - brcm,bcm6358-usbh-phy
->> +      - brcm,bcm6362-usbh-phy
->> +      - brcm,bcm6368-usbh-phy
->> +      - brcm,bcm63268-usbh-phy
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 2
->> +
->> +  clock-names:
->> +    items:
->> +      - const: usbh
->> +      - const: usb_ref
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  "#phy-cells":
->> +    const: 0
->=20
-> On 6328, the same register space allows the controlling of the USB PHY
-> in either host or device mode, so I believe you would need to add a
-> #phy-cells =3D 1 in order to distinguish the consumer (host versus =
-device)
-> if we get to the point where drivers/usb/gadget/udc/bcm63xx_udc.c
-> becomes DT aware.
+Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+---
+ drivers/tty/serial/samsung_tty.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I=E2=80=99ve just realized that I have implemented this wrong in v3, =
-because I implemented the SwapControl USB_DEVICE_SEL value, and you =
-meant the UTMIControl1 USB_DEVICE_MODE_SEL value.
-So I have a couple of questions about this, because I haven=E2=80=99t =
-got any bcm63xx with usb device configuration to test:
-- Is USB_DEVICE_SEL also needed in SwapControl or do we only need =
-USB_DEVICE_MODE_SEL in UTMIControl1?
-- Are the rest of the host values needed when configured in device mode? =
-Should I only set the device values when in device mode?
-
->=20
-> Other than that, this looks good to me!
-> --=20
-> Florian
-
-Best regards,
-=C3=81lvaro.
+diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
+index 6ef614d8648c..050a47fecdef 100644
+--- a/drivers/tty/serial/samsung_tty.c
++++ b/drivers/tty/serial/samsung_tty.c
+@@ -6,7 +6,7 @@
+  *	http://armlinux.simtec.co.uk/
+  */
+ 
+-/* Hote on 2410 error handling
++/* Note on 2410 error handling
+  *
+  * The s3c2410 manual has a love/hate affair with the contents of the
+  * UERSTAT register in the UART blocks, and keeps marking some of the
+-- 
+2.17.1
 
