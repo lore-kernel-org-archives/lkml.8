@@ -2,113 +2,132 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF74DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A141121532
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5AB21789
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:41:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hHeKJA5b"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="R4fqqVAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgFQSk3 (ORCPT
+        id S1727788AbgFQSls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:40:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgFQSkZ (ORCPT
+        Wed, 17 Jun 2020 14:41:48 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:13254 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726971AbgFQSlr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 14:40:25 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1CCCC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:40:23 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y17so1334872plb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:40:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KcSum0XnLgDWG/9J1zd7huPRZUcbTdd3T0stJfNhXtU=;
-        b=hHeKJA5bpWojfm1pX2unVw+EfqUuRl8oPBdUNPLoCxjZ64sU0oStIKYfknHILmDFaZ
-         H9ZHJAe3xkt0qMgGgjNa6EjvRt/0qyjX/4NrDrZCZMQNniC1zsg9rGq+JkViIVv/0vWR
-         +7lVX4VJq+6OYKuN/6lWKksWFEEFKKkIWjELs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KcSum0XnLgDWG/9J1zd7huPRZUcbTdd3T0stJfNhXtU=;
-        b=KYpW1FFLVqNrrrxc0Escj9csR5d0cDJTR775wyEDPaBknOAUJbX4aAjixIkrfI9vhO
-         Gz3reGQ1CyjgQPSbRPuXjrjB0I8TM9SYcXvYtd5kBWf1Ip1pWCIpLJxscD7L2IdcLCrD
-         2tC8mtONR98J9AvuDewzJCCnC7kkFvcdMixzq8eVMYasniG6E0AD+5m5HcDhuoqdvGpN
-         C1VvwKvu7WUhlT6iL82ZD2LyR7HKwuIhZhkWUkd9bdZ9rbW9dBcTi1NKWE/QpUjSJz1J
-         VJEgfiQEUH6qD5XcWFwP2JgdfHqsuE7W592GIRjP05Zga5cpvXDr5HxMWDpevbNuebXV
-         rkiQ==
-X-Gm-Message-State: AOAM531qhh4Vir718RYAovmuIjNw4JXgr4NxYpEgykGwtCqXLnRBT7a9
-        AtT0Dxerf3BfO35T1Jko9pfLXw==
-X-Google-Smtp-Source: ABdhPJzMCEeKbMD2vkbh+chVGcN7dvBNIk/GO49GvRnea+7Iwh7JIl8l4xjbafw6OC9ChWgKjmpkjA==
-X-Received: by 2002:a17:90a:218c:: with SMTP id q12mr383955pjc.116.1592419223126;
-        Wed, 17 Jun 2020 11:40:23 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u128sm506788pfu.148.2020.06.17.11.40.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 11:40:21 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 11:40:20 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian@brauner.io>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "containers@lists.linux-foundation.org" 
-        <containers@lists.linux-foundation.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v4 02/11] fs: Move __scm_install_fd() to
- __fd_install_received()
-Message-ID: <202006171139.98B1735@keescook>
-References: <20200616032524.460144-1-keescook@chromium.org>
- <20200616032524.460144-3-keescook@chromium.org>
- <b58ef9a368214b69a86c7a78b67f84d5@AcuMS.aculab.com>
+        Wed, 17 Jun 2020 14:41:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592419307; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=P8b5JOxhRUXeY99+Bs74zgYrVahy5f7jYS7XTHseLgo=; b=R4fqqVAuCkmqdco3YQsRhWEF+qGDp4UAHfRfEDIr6E7iWinYgVgEfh8hRGIHOBwePvTOVWyk
+ cskoWrAEWJheAGDCu+AUfA5Jsn51sp/s6pUVPGP3nbgIZvVz8z77P3/m+4Cs/QXyxktigUe6
+ sksXTU1ZrJdW9Tux0K+ZUMnT9CU=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5eea63dcc76a4e7a2aadc598 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 17 Jun 2020 18:41:32
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0555CC433A0; Wed, 17 Jun 2020 18:41:30 +0000 (UTC)
+Received: from jackp-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jackp)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9342EC433C8;
+        Wed, 17 Jun 2020 18:41:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9342EC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
+Date:   Wed, 17 Jun 2020 11:41:23 -0700
+From:   Jack Pham <jackp@codeaurora.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     heikki.krogerus@linux.intel.com, mark.rutland@arm.com,
+        broonie@kernel.org, bjorn.andersson@linaro.org,
+        gregkh@linuxfoundation.org, lgirdwood@gmail.com, agross@kernel.org,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rdunlap@infradead.org,
+        bryan.odonoghue@linaro.org, lijun.kernel@gmail.com
+Subject: Re: [PATCH v3 6/6] arm64: boot: dts: qcom: pm8150b: Add DTS node for
+ PMIC VBUS booster
+Message-ID: <20200617184123.GA24052@jackp-linux.qualcomm.com>
+References: <20200617180209.5636-1-wcheng@codeaurora.org>
+ <20200617180209.5636-7-wcheng@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b58ef9a368214b69a86c7a78b67f84d5@AcuMS.aculab.com>
+In-Reply-To: <20200617180209.5636-7-wcheng@codeaurora.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 03:25:41PM +0000, David Laight wrote:
-> From: Kees Cook
-> > Sent: 16 June 2020 04:25
->  
-> > In preparation for users of the "install a received file" logic outside
-> > of net/ (pidfd and seccomp), relocate and rename __scm_install_fd() from
-> > net/core/scm.c to __fd_install_received() in fs/file.c, and provide a
-> > wrapper named fd_install_received_user(), as future patches will change
-> > the interface to __fd_install_received().
+Hey Wesley,
+
+On Wed, Jun 17, 2020 at 11:02:09AM -0700, Wesley Cheng wrote:
+> Add the required DTS node for the USB VBUS output regulator, which is
+> available on PM8150B.  This will provide the VBUS source to connected
+> peripherals.
 > 
-> Any reason for the leading __ ??
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/pm8150b.dtsi   | 6 ++++++
+>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 7 +++++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+> index ec44a8bc2f84..b7274d9d7341 100644
+> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+> @@ -22,6 +22,12 @@ power-on@800 {
+>  			status = "disabled";
+>  		};
+>  
+> +		qcom,dcdc@1100 {
+> +			compatible = "qcom,pm8150b-vbus-reg";
+> +			status = "disabled";
+> +			reg = <0x1100>;
+> +		};
+> +
+>  		qcom,typec@1500 {
+>  			compatible = "qcom,pm8150b-usb-typec";
+>  			status = "disabled";
 
-Mainly because of the code pattern of only using the inline helpers to
-call it.
+Don't you also need a "usb_vbus-supply" property here under the Type-C
+node pointing to the phandle of the vbus reg?
 
--- 
-Kees Cook
+Jack
+
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> index 6c6325c3af59..3845d19893eb 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> @@ -426,6 +426,13 @@ &usb_1 {
+>  	status = "okay";
+>  };
+>  
+> +&spmi_bus {
+> +	pmic@2 {
+> +		qcom,dcdc@1100 {
+> +			status = "okay";
+> +		};
+> +};
+> +
+>  &usb_1_dwc3 {
+>  	dr_mode = "peripheral";
+>  };
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
