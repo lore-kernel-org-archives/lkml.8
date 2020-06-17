@@ -2,136 +2,220 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A22DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C39BD21532
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C227214DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:29:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DoVHZEx4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgFQU2E (ORCPT
+        id S1726980AbgFQU3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:28:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbgFQU2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:28:03 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E900214DB;
-        Wed, 17 Jun 2020 20:28:02 +0000 (UTC)
-Date:   Wed, 17 Jun 2020 16:28:00 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@redhat.com>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel/trace: Remove function callback casts
-Message-ID: <20200617162800.05a12502@oasis.local.home>
-In-Reply-To: <20200615162245.13d3feff@oasis.local.home>
-References: <20200614070154.6039-1-oscar.carter@gmx.com>
-        <20200615161738.18d07ce6@oasis.local.home>
-        <20200615162245.13d3feff@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 17 Jun 2020 16:29:20 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:50592 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgFQU3U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 16:29:20 -0400
+Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id BA4AB20B7192;
+        Wed, 17 Jun 2020 13:29:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BA4AB20B7192
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1592425758;
+        bh=nTnDxgYdbln+2Ap546pVuSBhXez+BJpTi4VKFr4mt1I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DoVHZEx4akiPuZCUm2tmg/wzrlat9Nvc9OeYX6ln5zVVNtdUt+K/tAEWpTO8sqmzH
+         XSSdWMO0WlAh3D+ACduv5Pbgyea/D+QfILYQH3Q/zUF68MtUnSBeg2rvYQVugjbxeS
+         Ocqfnlh74xfLbBqthBibumlfUA9zJtyiJ+4Yr47E=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, sgrubb@redhat.com, paul@paul-moore.com
+Cc:     rgb@redhat.com, linux-integrity@vger.kernel.org,
+        linux-audit@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] IMA: Add audit log for failure conditions
+Date:   Wed, 17 Jun 2020 13:29:14 -0700
+Message-Id: <20200617202914.20576-1-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Jun 2020 16:22:45 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+process_buffer_measurement() and ima_alloc_key_entry() functions need to
+log an audit message for auditing integrity measurement failures.
 
-> As I was saying. This typecast is being paranoid, as archs will call
-> the ftrace_ops_list_func directly, and only pass in two parameters.
-> 
-> Now one way around this is to instead of having the typecast, I could
-> use linker magic to create another function that I can define without
-> the typecast to get the same effect. Similar to what I did in commit:
-> 
-> 46f9469247c6f ("ftrace: Rename ftrace_graph_stub to ftrace_stub_graph")
+Add audit message in these two functions. Remove "pr_devel" log message
+in process_buffer_measurement().
 
-Would something like this work for you?
+Sample audit messages:
 
--- Steve
+[    6.415374] audit: type=1804 audit(1592005945.627:2): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=kernel op=measuring_kexec_cmdline cause=alloc_entry comm="swapper/0" name="kexec-cmdline" res=0
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index db600ef218d7..120babd9ba44 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -145,13 +145,18 @@
-  * Need to also make ftrace_stub_graph point to ftrace_stub
-  * so that the same stub location may have different protocols
-  * and not mess up with C verifiers.
-+ *
-+ * ftrace_ops_list_func will be defined as arch_ftrace_ops_list_func
-+ * as some archs will have a different prototype for that function
-+ * but ftrace_ops_list_func() will have a single prototype.
-  */
- #define MCOUNT_REC()	. = ALIGN(8);				\
- 			__start_mcount_loc = .;			\
- 			KEEP(*(__mcount_loc))			\
- 			KEEP(*(__patchable_function_entries))	\
- 			__stop_mcount_loc = .;			\
--			ftrace_stub_graph = ftrace_stub;
-+			ftrace_stub_graph = ftrace_stub;	\
-+			ftrace_ops_list_func = arch_ftrace_ops_list_func;
- #else
- # ifdef CONFIG_FUNCTION_TRACER
- #  define MCOUNT_REC()	ftrace_stub_graph = ftrace_stub;
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f060838e9cbb..b775d399026e 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -119,14 +119,9 @@ struct ftrace_ops __rcu *ftrace_ops_list __read_mostly = &ftrace_list_end;
- ftrace_func_t ftrace_trace_function __read_mostly = ftrace_stub;
- struct ftrace_ops global_ops;
- 
--#if ARCH_SUPPORTS_FTRACE_OPS
--static void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
--				 struct ftrace_ops *op, struct pt_regs *regs);
--#else
--/* See comment below, where ftrace_ops_list_func is defined */
--static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip);
--#define ftrace_ops_list_func ((ftrace_func_t)ftrace_ops_no_ops)
--#endif
-+/* Defined by vmlinux.lds.h see the commment above arch_ftrace_ops_list_func for details */
-+void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
-+			  struct ftrace_ops *op, struct pt_regs *regs);
- 
- static inline void ftrace_ops_init(struct ftrace_ops *ops)
- {
-@@ -6859,21 +6854,23 @@ __ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
-  * Note, CONFIG_DYNAMIC_FTRACE_WITH_REGS expects a full regs to be saved.
-  * An architecture can pass partial regs with ftrace_ops and still
-  * set the ARCH_SUPPORTS_FTRACE_OPS.
-+ *
-+ * In vmlinux.lds.h, ftrace_ops_list_func() is defined to be
-+ * arch_ftrace_ops_list_func.
-  */
- #if ARCH_SUPPORTS_FTRACE_OPS
--static void ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
--				 struct ftrace_ops *op, struct pt_regs *regs)
-+void arch_ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
-+			       struct ftrace_ops *op, struct pt_regs *regs)
- {
- 	__ftrace_ops_list_func(ip, parent_ip, NULL, regs);
+[    8.128004] audit: type=1804 audit(1592005947.341:11): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=measuring_key cause=hashing_error comm="systemd" name=".builtin_trusted_keys" res=0
+
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+ security/integrity/ima/ima.h            | 48 ++++++++++++++++---------
+ security/integrity/ima/ima_main.c       | 18 +++++++---
+ security/integrity/ima/ima_policy.c     |  2 +-
+ security/integrity/ima/ima_queue_keys.c |  5 +++
+ 4 files changed, 51 insertions(+), 22 deletions(-)
+
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index df93ac258e01..c3a32e181b48 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -186,27 +186,43 @@ static inline unsigned int ima_hash_key(u8 *digest)
+ 	return (digest[0] | digest[1] << 8) % IMA_MEASURE_HTABLE_SIZE;
  }
--NOKPROBE_SYMBOL(ftrace_ops_list_func);
- #else
--static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip)
-+void arch_ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip)
- {
- 	__ftrace_ops_list_func(ip, parent_ip, NULL, NULL);
- }
--NOKPROBE_SYMBOL(ftrace_ops_no_ops);
- #endif
-+NOKPROBE_SYMBOL(arch_ftrace_ops_list_func);
  
- /*
-  * If there's only one function registered but it does not support
+-#define __ima_hooks(hook)		\
+-	hook(NONE)			\
+-	hook(FILE_CHECK)		\
+-	hook(MMAP_CHECK)		\
+-	hook(BPRM_CHECK)		\
+-	hook(CREDS_CHECK)		\
+-	hook(POST_SETATTR)		\
+-	hook(MODULE_CHECK)		\
+-	hook(FIRMWARE_CHECK)		\
+-	hook(KEXEC_KERNEL_CHECK)	\
+-	hook(KEXEC_INITRAMFS_CHECK)	\
+-	hook(POLICY_CHECK)		\
+-	hook(KEXEC_CMDLINE)		\
+-	hook(KEY_CHECK)			\
+-	hook(MAX_CHECK)
+-#define __ima_hook_enumify(ENUM)	ENUM,
++#define __ima_hooks(hook)				\
++	hook(NONE, none)				\
++	hook(FILE_CHECK, file)				\
++	hook(MMAP_CHECK, mmap)				\
++	hook(BPRM_CHECK, bprm)				\
++	hook(CREDS_CHECK, creds)			\
++	hook(POST_SETATTR, post_setattr)		\
++	hook(MODULE_CHECK, module)			\
++	hook(FIRMWARE_CHECK, firmware)			\
++	hook(KEXEC_KERNEL_CHECK, kexec_kernel)		\
++	hook(KEXEC_INITRAMFS_CHECK, kexec_initramfs)	\
++	hook(POLICY_CHECK, policy)			\
++	hook(KEXEC_CMDLINE, kexec_cmdline)		\
++	hook(KEY_CHECK, key)				\
++	hook(MAX_CHECK, none)
++
++#define __ima_hook_enumify(ENUM, str)	ENUM,
++#define __ima_stringify(arg) (#arg)
++#define __ima_hook_measuring_stringify(ENUM, str) \
++		(__ima_stringify(measuring_ ##str)),
+ 
+ enum ima_hooks {
+ 	__ima_hooks(__ima_hook_enumify)
+ };
+ 
++static const char * const ima_hooks_measure_str[] = {
++	__ima_hooks(__ima_hook_measuring_stringify)
++};
++
++static inline const char *func_measure_str(enum ima_hooks func)
++{
++	if (func >= MAX_CHECK)
++		return ima_hooks_measure_str[NONE];
++
++	return ima_hooks_measure_str[func];
++}
++
+ extern const char *const func_tokens[];
+ 
+ struct modsig;
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index c1583d98c5e5..8a001aa8e592 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -740,6 +740,7 @@ void process_buffer_measurement(const void *buf, int size,
+ 				int pcr, const char *keyring)
+ {
+ 	int ret = 0;
++	const char *audit_cause = "ENOMEM";
+ 	struct ima_template_entry *entry = NULL;
+ 	struct integrity_iint_cache iint = {};
+ 	struct ima_event_data event_data = {.iint = &iint,
+@@ -794,21 +795,28 @@ void process_buffer_measurement(const void *buf, int size,
+ 	iint.ima_hash->length = hash_digest_size[ima_hash_algo];
+ 
+ 	ret = ima_calc_buffer_hash(buf, size, iint.ima_hash);
+-	if (ret < 0)
++	if (ret < 0) {
++		audit_cause = "hashing_error";
+ 		goto out;
++	}
+ 
+ 	ret = ima_alloc_init_template(&event_data, &entry, template);
+-	if (ret < 0)
++	if (ret < 0) {
++		audit_cause = "alloc_entry";
+ 		goto out;
++	}
+ 
+ 	ret = ima_store_template(entry, violation, NULL, buf, pcr);
+-
+-	if (ret < 0)
++	if (ret < 0) {
++		audit_cause = "store_entry";
+ 		ima_free_template_entry(entry);
++	}
+ 
+ out:
+ 	if (ret < 0)
+-		pr_devel("%s: failed, result: %d\n", __func__, ret);
++		integrity_audit_msg(AUDIT_INTEGRITY_PCR, NULL, eventname,
++				    func_measure_str(func),
++				    audit_cause, ret, 0);
+ 
+ 	return;
+ }
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index e493063a3c34..66aa3e17a888 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -1414,7 +1414,7 @@ void ima_delete_rules(void)
+ 	}
+ }
+ 
+-#define __ima_hook_stringify(str)	(#str),
++#define __ima_hook_stringify(func, str)	(#func),
+ 
+ const char *const func_tokens[] = {
+ 	__ima_hooks(__ima_hook_stringify)
+diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
+index cb3e3f501593..631fd7ab2dcd 100644
+--- a/security/integrity/ima/ima_queue_keys.c
++++ b/security/integrity/ima/ima_queue_keys.c
+@@ -68,6 +68,7 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
+ 						 size_t payload_len)
+ {
+ 	int rc = 0;
++	const char *audit_cause = "ENOMEM";
+ 	struct ima_key_entry *entry;
+ 
+ 	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
+@@ -88,6 +89,10 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
+ 
+ out:
+ 	if (rc) {
++		integrity_audit_msg(AUDIT_INTEGRITY_PCR, NULL,
++				    keyring->description,
++				    func_measure_str(KEY_CHECK),
++				    audit_cause, rc, 0);
+ 		ima_free_key_entry(entry);
+ 		entry = NULL;
+ 	}
+-- 
+2.27.0
+
