@@ -2,136 +2,105 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4985C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9ACA208B3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1082168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgFQLWk (ORCPT
+        id S1726341AbgFQLYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:22:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34280 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725894AbgFQLWj (ORCPT
+        Wed, 17 Jun 2020 07:24:18 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:40273 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgFQLYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:22:39 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05HB3SBG124022;
-        Wed, 17 Jun 2020 07:22:30 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6j3jnpq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 07:22:30 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05HBHbu5176128;
-        Wed, 17 Jun 2020 07:22:30 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6j3jnnx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 07:22:29 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05HBLLMO027045;
-        Wed, 17 Jun 2020 11:22:27 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma05fra.de.ibm.com with ESMTP id 31q6c8rcah-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 11:22:27 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05HBMO8Y59179156
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jun 2020 11:22:24 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AF95CA405C;
-        Wed, 17 Jun 2020 11:22:24 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1A86DA405B;
-        Wed, 17 Jun 2020 11:22:24 +0000 (GMT)
-Received: from osiris (unknown [9.171.12.194])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 17 Jun 2020 11:22:24 +0000 (GMT)
-Date:   Wed, 17 Jun 2020 13:22:22 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, cohuck@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
- IOMMU feature
-Message-ID: <20200617112222.GF4479@osiris>
-References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
- <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
+        Wed, 17 Jun 2020 07:24:15 -0400
+Received: by mail-il1-f198.google.com with SMTP id s4so1274053ilc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 04:24:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=9VMHnIpjIIoaGQ215cnFAeiATHBF0bn8x+y3MmR8AgQ=;
+        b=cgFA9roySX209jz6BcwIK6kIVevqovNMDxkYmcfqN7K8ZLkneutIwLdEfpiZtBxa9u
+         1D6F+byQ5oTAMJCwxDeDKc38rze2Y0jM+Vep1K+Wg9HFth7yO26x12ChDmUMLCkZHlIO
+         0ZbkpR8IExHKhjwPAVcgIev0hpdOjgta3f6Lxa0T/6qGVosj/0+/Fb9FRZix59VpcVET
+         obcMoCyRoBlENPWXDbm5Vh4AdzsrsloyY9vcSK7C4TmPEMZJq66hPMsJuc/KdGLQWEmR
+         cGndIOvGFd5fxkjVexjQHp+mNQ7MFVHZZIuQu6J5EF1St/0pVdJV4DyIfhVEa8ZdxN//
+         /XuQ==
+X-Gm-Message-State: AOAM531V+ijpYQpQZGhs6fnHUivwFYuWAYs5sHnGaRrLQm2x16btJkUF
+        YwEfqr7ZLKAPcwCDtJj83Ay73+UCZtF7wNJsGplclHmtAhsZ
+X-Google-Smtp-Source: ABdhPJz+MKzCz57Sskv3R4M7HkZVgsQXcDzJSbuIE2ID1x4nS22bOI4xWyIeeKHQACnWTf4GEd01RV7L8EZRL/Fg5EPei9GeEXff
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-17_03:2020-06-17,2020-06-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 phishscore=0 clxscore=1011 cotscore=-2147483648
- suspectscore=1 spamscore=0 mlxscore=0 priorityscore=1501 bulkscore=0
- mlxlogscore=648 adultscore=0 impostorscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006170087
+X-Received: by 2002:a02:6305:: with SMTP id j5mr29038718jac.140.1592393053856;
+ Wed, 17 Jun 2020 04:24:13 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 04:24:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005166b905a845e639@google.com>
+Subject: WARNING in corrupted/usb_submit_urb
+From:   syzbot <syzbot+120d387f677320f6a57c@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, ingrassia@epigenesys.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 12:43:57PM +0200, Pierre Morel wrote:
-> An architecture protecting the guest memory against unauthorized host
-> access may want to enforce VIRTIO I/O device protection through the
-> use of VIRTIO_F_IOMMU_PLATFORM.
-> 
-> Let's give a chance to the architecture to accept or not devices
-> without VIRTIO_F_IOMMU_PLATFORM.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Acked-by: Jason Wang <jasowang@redhat.com>
-> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> ---
->  arch/s390/mm/init.c     |  6 ++++++
->  drivers/virtio/virtio.c | 22 ++++++++++++++++++++++
->  include/linux/virtio.h  |  2 ++
->  3 files changed, 30 insertions(+)
-> 
-> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index 6dc7c3b60ef6..215070c03226 100644
-> --- a/arch/s390/mm/init.c
-> +++ b/arch/s390/mm/init.c
-> @@ -45,6 +45,7 @@
->  #include <asm/kasan.h>
->  #include <asm/dma-mapping.h>
->  #include <asm/uv.h>
-> +#include <linux/virtio.h>
-> 
->  pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
-> 
-> @@ -161,6 +162,11 @@ bool force_dma_unencrypted(struct device *dev)
->  	return is_prot_virt_guest();
->  }
-> 
-> +int arch_needs_virtio_iommu_platform(struct virtio_device *dev)
-> +{
-> +	return is_prot_virt_guest();
-> +}
-> +
->  /* protected virtualization */
->  static void pv_init(void)
+Hello,
 
-Can we please stop dumping random code to arch/s390/mm/init.c?
+syzbot found the following crash on:
 
-All the protected virtualization functions should go into a separate
-file (e.g. mem_encrypt.c like on x86), some of which could also be in
-header files.
+HEAD commit:    d6ff8147 usb: gadget: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=140052c3e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=90a3d9bed5648419
+dashboard link: https://syzkaller.appspot.com/bug?extid=120d387f677320f6a57c
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16195fd9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1610f2c3e00000
 
-Please consider this a comment for the future.. just go ahead with
-this patch as-is.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+120d387f677320f6a57c@syzkaller.appspotmail.com
+
+ati_remote 1-1:0.0: Unknown Medion X10 receiver, using default ati_remote Medion keymap
+------------[ cut here ]------------
+usb 1-1: BOGUS urb xfer, pipe 1 != type 3
+WARNING: CPU: 1 PID: 81 at drivers/usb/core/urb.c:478 usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 81 Comm: kworker/1:1 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ panic+0x2aa/0x6e1 kernel/panic.c:221
+ __warn.cold+0x2f/0x30 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+Code: 4d 85 ed 74 46 e8 18 ce dd fd 4c 89 f7 e8 d0 5c 17 ff 41 89 d8 44 89 e1 4c 89 ea 48 89 c6 48 c7 c7 e0 e7 3b 86 e8 a0 5f b2 fd <0f> 0b e9 20 f4 ff ff e8 ec cd dd fd 0f 1f 44 00 00 e8 e2 cd dd fd
+RSP: 0018:ffff8881d8a0f0b8 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
