@@ -6,86 +6,84 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 204B020882
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDFA22080D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592433631;
-	bh=SFSgAUqwblicoJHjl7aysEfwPuGH6Q7IY58XJJx+M9c=;
+	s=default; t=1592433691;
+	bh=Xh3ybxLkHSjak6y5+KgRzzWKN96sjSa9Rqtcc553tOo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2v2mKJNasenWMoqiX2cokhaWRqsBolKOeBGfGnE3wwUobKeb8LFEBLI8pJLHHYqEL
-	 t046OkGzPgpi9SBmOvPyMPF3hDrDkX8SB1YByOzUMqp64wAUBw56mxgvrQdp0dZddr
-	 8xz+9r1W3aGa50WQLxMZsmcgBQU7ceTLhvMEpN2o=
+	b=k25Dz8w+fnX8E76ofxIVshANI3wCiLHnS20beTntLoerxxY9erVTRMe/QqhmCLNE4
+	 maw7JA0rBFWXGg6HAlkCArOzVqAZe4z37/NIpC9ewmzFkILydovcMMoljYGT/e0KCM
+	 kCKCJwqcOP1HTjfKwzQnhzoZV6UFSqKvlE5v0ocQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgFQWka (ORCPT
+        id S1727038AbgFQWla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:40:30 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41263 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgFQWk2 (ORCPT
+        Wed, 17 Jun 2020 18:41:30 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:32991 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgFQWla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:40:28 -0400
-Received: by mail-il1-f193.google.com with SMTP id c75so3926377ila.8;
-        Wed, 17 Jun 2020 15:40:27 -0700 (PDT)
+        Wed, 17 Jun 2020 18:41:30 -0400
+Received: by mail-il1-f194.google.com with SMTP id z2so3962971ilq.0;
+        Wed, 17 Jun 2020 15:41:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Zfs6fQ9dNu1WR3lr294IASeX3pxyyPciqezJugqbLdg=;
-        b=G0ltQ4jE9bsx7HoaSL+9uqiI/M6feDClifO1DbwqodFsP4zcHESho+38F4RrtIaaaV
-         yU0pDEPrS9aGF8uJwOmV1gPCsOfkTyO5BStywEfwQVFEg+WhvkKDCcm11c7Xiilzg50V
-         gNcQeJm+sxPi40QHlrZ4/mj0zFZfB7kyJUfd4BPkjce793MQkdYKEAZZayKSaSADKzkS
-         gGI2KSCk6zhTC+zWv0QugNd89LMvHYm52NuFYxuMoSpLmSRlqup/sqREzaSPbpmVUVxt
-         Dr/SYEs9oHunV8kUNqJc5umPm8FY2onZ0YnH5YCsT3BMwQy7Z+8BbKoRr77jRBYKQMEB
-         Rpxw==
-X-Gm-Message-State: AOAM5339dqAUPQ12LSkQvcX5IrSOvdm6LNhw0vU40ixBybnhlDQNAWx3
-        f6BrHo/l/qlHU09hLcN23Q==
-X-Google-Smtp-Source: ABdhPJzRwz/0uaYi76fA5Zd1pUASZHPvWS/+PxMD1pnVAfG3nH0ehNSUR64R0ytuzMsQ9XxUG4dQDg==
-X-Received: by 2002:a05:6e02:ef2:: with SMTP id j18mr1221721ilk.69.1592433627244;
-        Wed, 17 Jun 2020 15:40:27 -0700 (PDT)
+        bh=ell7jiNP2ad4ewc9/m5zo9VzyaHvMd9lvaN9Obmnl0g=;
+        b=mN3Een/K33d+grsl7oh+Cn32kUb9M5BMOovPLoVU1DyZqaFD7x6tuMnOQihQVqgORU
+         ZxMj6vNkq3cWBDEuY/ooBllTlBVVwSPPFqW3D+8Y48FL73gr2yuPRu+eCpZkuOWC9d4j
+         RN1XRf0p3GWIxyu2xlObcunCqXXBDaAeXhs3BbBbMoIjfn7JEzfYiG/WDDr8Atulx0di
+         m1jp+QwfKXVqQNCyCxsTGBQd3tSMhGcryIr8QvZrOJMosEmhD04Mpl2YrCwD3MIJn9sa
+         yjsBjmqQLcFEtJ3mbPs1rp9DPD4wCPBZ9LqI9iqE6uRr6HEQ8Gzu7/uBlv8pCvOyBcG2
+         yAPQ==
+X-Gm-Message-State: AOAM532TEc7uu1a0Y7mLe8L//81h0ehhI2+kmbOdfroTdG5w2dq58yqj
+        pEReDmXu5q8RUdUYJhfVag==
+X-Google-Smtp-Source: ABdhPJw0hCI5p++1/CP8eVsgrsWGIaVi/lbypn4bUR7hGreLuUwIR7E32EZlueXTudx7WsXVWKCeSQ==
+X-Received: by 2002:a92:1b86:: with SMTP id f6mr1287269ill.9.1592433688369;
+        Wed, 17 Jun 2020 15:41:28 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id c85sm537559ilg.41.2020.06.17.15.40.26
+        by smtp.gmail.com with ESMTPSA id k18sm634053ioj.54.2020.06.17.15.41.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 15:40:26 -0700 (PDT)
-Received: (nullmailer pid 2970050 invoked by uid 1000);
-        Wed, 17 Jun 2020 22:40:25 -0000
-Date:   Wed, 17 Jun 2020 16:40:25 -0600
+        Wed, 17 Jun 2020 15:41:27 -0700 (PDT)
+Received: (nullmailer pid 2971783 invoked by uid 1000);
+        Wed, 17 Jun 2020 22:41:26 -0000
+Date:   Wed, 17 Jun 2020 16:41:26 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        devicetree@vger.kernel.org, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v8 3/7] dt-bindings: arm-smmu: Add compatible string for
- Adreno GPU SMMU
-Message-ID: <20200617224025.GA2969998@bogus>
-References: <20200611222128.28826-1-jcrouse@codeaurora.org>
- <20200611222128.28826-4-jcrouse@codeaurora.org>
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v2 1/4] dt-bindings: display: simple: add CDTech
+ S070PWS19HP-FC21 and S070SWV29HG-DC44
+Message-ID: <20200617224126.GA2971729@bogus>
+References: <20200612072219.13669-1-matthias.schiffer@ew.tq-group.com>
+ <20200612072219.13669-2-matthias.schiffer@ew.tq-group.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200611222128.28826-4-jcrouse@codeaurora.org>
+In-Reply-To: <20200612072219.13669-2-matthias.schiffer@ew.tq-group.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jun 2020 16:21:24 -0600, Jordan Crouse wrote:
-> Every Qcom Adreno GPU has an embedded SMMU for its own use. These
-> devices depend on unique features such as split pagetables,
-> different stall/halt requirements and other settings. Identify them
-> with a compatible string so that they can be identified in the
-> arm-smmu implementation specific code.
+On Fri, 12 Jun 2020 09:22:16 +0200, Matthias Schiffer wrote:
+> Add the CDTech Electronics displays S070PWS19HP-FC21 (7.0" WSVGA) and
+> S070SWV29HG-DC44 (7.0" WVGA) to the panel-simple compatible list.
 > 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 > ---
 > 
->  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
+> v2: no changes
+> 
+>  .../devicetree/bindings/display/panel/panel-simple.yaml       | 4 ++++
 >  1 file changed, 4 insertions(+)
 > 
 
