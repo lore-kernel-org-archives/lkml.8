@@ -2,174 +2,243 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE7BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A7AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40E4A2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8C22166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:44:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lwLEhOqZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgFQVoB convert rfc822-to-8bit (ORCPT
+        id S1726998AbgFQVov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:44:01 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2523 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726840AbgFQVoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:44:00 -0400
-Received: from dggemi405-hub.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 4B4867EF58780DFA22C1;
-        Thu, 18 Jun 2020 05:43:58 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.126]) by
- dggemi405-hub.china.huawei.com ([10.3.17.143]) with mapi id 14.03.0487.000;
- Thu, 18 Jun 2020 05:43:52 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Roman Gushchin <guro@fb.com>, Will Deacon <will@kernel.org>
-CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "nsaenzjulienne@suse.de" <nsaenzjulienne@suse.de>,
-        "steve.capper@arm.com" <steve.capper@arm.com>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>
-Subject: RE: [PATCH v2] arm64: mm: reserve hugetlb CMA after numa_init
-Thread-Topic: [PATCH v2] arm64: mm: reserve hugetlb CMA after numa_init
-Thread-Index: AQHWRCxu8v+ZJR6HI0W0yfQfoTndDqjcEtCAgACalcD//+wXAIAAuwbA
-Date:   Wed, 17 Jun 2020 21:43:51 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD2503532@DGGEMI525-MBS.china.huawei.com>
-References: <20200616221924.74780-1-song.bao.hua@hisilicon.com>
- <20200617101824.GB3368@willie-the-truck>
- <B926444035E5E2439431908E3842AFD2502AA9@DGGEMI525-MBS.china.huawei.com>
- <20200617182026.GA19784@carbon.dhcp.thefacebook.com>
-In-Reply-To: <20200617182026.GA19784@carbon.dhcp.thefacebook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.203.89]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 17 Jun 2020 17:44:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgFQVou (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 17:44:50 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ACE1C06174E;
+        Wed, 17 Jun 2020 14:44:50 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y13so2229694lfe.9;
+        Wed, 17 Jun 2020 14:44:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3OcGAL2Kxv5orG1lDTHD0HoSJEXX60m7KQNoTqlPNKk=;
+        b=lwLEhOqZOSHhxFOByIhV3rIRcCYAe5MOnpIqr97dgc7IBAt8HUlXWmwTdUdVBN3Yil
+         AIXG+lz1A9GjtfbeHLTAy5ByAoKe/J69M23vj5LouDto33ur41WZ39+M8J+mBCOFKcd+
+         1SmI70N0Mrmbjy5L5BlR50PMzvgSqPW/hcw752TXc1QhhzcA2hAyAlG8uItDzTtLfvWP
+         zAF+ofnEx9TuOqfh/o/+sxuPVr9Id+gXCTfPU7hzrmt4+1n6H/9kaerxQtBvPNILRMvw
+         no479c9H+2B3pZ1fviV0iMhQBasoldZyLd8DJILVl3ETP/+am/FuGDcx8Xsf3ew2Refr
+         8ezw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3OcGAL2Kxv5orG1lDTHD0HoSJEXX60m7KQNoTqlPNKk=;
+        b=B+CI5WdMk6mq5AF6pRX+14DOzdI6F5R43KhLVzWij4ZSUt+ecc5BSPGl2vdQKp0PoY
+         A01qV0kbg9yU4BDebC6l1yFWLe/+9MOrUO8S1MBsYAJJzMGE+8NZm77II0UPrBIAA72E
+         PLeqfbBrj7mOpXvi9enbkcWzjAU/2dZE0DFJ3Bp4MWypL2jMBbkUvUXWGWrtiqlU5Qde
+         zhb/FFeAU0lIE1JRQUjrGlGHIqUxuPJi7enpLS1oq2tX5z96mp8kdfNQ+3TGZDAYFozF
+         J3jgQ/BWVhSV660G80/gPXJh9jGVU8DxTTM07zF6DS73RPSrRaOvBeGTxAo0Dxgwbsus
+         tmuA==
+X-Gm-Message-State: AOAM531/OiBetVu4Z4fiBhSvY4ahbctNn7vcgTIJhouSpQa94+MI8rhG
+        2JmMPli0AY1TPqISgfkFpXLe8c/a
+X-Google-Smtp-Source: ABdhPJzfx2jrwUo9clrvUJN/nulC28AYYrDluu8sqWs/XPSON6lTZzIVrcMhZ9p6NJk0K/p4inYxsQ==
+X-Received: by 2002:a19:83c7:: with SMTP id f190mr528250lfd.14.1592430288655;
+        Wed, 17 Jun 2020 14:44:48 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id 11sm219650lfz.78.2020.06.17.14.44.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2020 14:44:48 -0700 (PDT)
+Subject: Re: [PATCH v4 22/37] dt-bindings: host1x: Document new interconnect
+ properties
+To:     Rob Herring <robh@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>,
+        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+References: <20200609131404.17523-1-digetx@gmail.com>
+ <20200609131404.17523-23-digetx@gmail.com> <20200617213726.GA2837398@bogus>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5303317a-2cb6-d7a8-361a-30867fc6eab7@gmail.com>
+Date:   Thu, 18 Jun 2020 00:44:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200617213726.GA2837398@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Roman Gushchin [mailto:guro@fb.com]
-> Sent: Thursday, June 18, 2020 6:20 AM
-> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
-> Cc: Will Deacon <will@kernel.org>; catalin.marinas@arm.com;
-> nsaenzjulienne@suse.de; steve.capper@arm.com; rppt@linux.ibm.com;
-> akpm@linux-foundation.org; linux-arm-kernel@lists.infradead.org;
-> linux-kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>; Matthias
-> Brugger <matthias.bgg@gmail.com>
-> Subject: Re: [PATCH v2] arm64: mm: reserve hugetlb CMA after numa_init
+18.06.2020 00:37, Rob Herring пишет:
+> On Tue, Jun 09, 2020 at 04:13:49PM +0300, Dmitry Osipenko wrote:
+>> Most of Host1x devices have at least one memory client. These clients
+>> are directly connected to the memory controller. The new interconnect
+>> properties represent the memory client's connection to the memory
+>> controller.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  .../display/tegra/nvidia,tegra20-host1x.txt   | 68 +++++++++++++++++++
+>>  1 file changed, 68 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> index 47319214b5f6..ab4fbee7bccf 100644
+>> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>> @@ -20,6 +20,10 @@ Required properties:
+>>  - reset-names: Must include the following entries:
+>>    - host1x
+>>  
+>> +Each host1x client module having to perform DMA through the Memory Controller
+>> +should have the interconnect endpoints set to the Memory Client and External
+>> +Memory respectively.
+>> +
+>>  The host1x top-level node defines a number of children, each representing one
+>>  of the following host1x client modules:
+>>  
+>> @@ -36,6 +40,12 @@ of the following host1x client modules:
+>>    - reset-names: Must include the following entries:
+>>      - mpe
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the MPE memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  - vi: video input
+>>  
+>>    Required properties:
+>> @@ -65,6 +75,12 @@ of the following host1x client modules:
+>>        - power-domains: Must include sor powergate node as csicil is in
+>>          SOR partition.
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the VI memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  - epp: encoder pre-processor
+>>  
+>>    Required properties:
+>> @@ -78,6 +94,12 @@ of the following host1x client modules:
+>>    - reset-names: Must include the following entries:
+>>      - epp
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the EPP memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  - isp: image signal processor
+>>  
+>>    Required properties:
+>> @@ -91,6 +113,12 @@ of the following host1x client modules:
+>>    - reset-names: Must include the following entries:
+>>      - isp
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the ISP memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  - gr2d: 2D graphics engine
+>>  
+>>    Required properties:
+>> @@ -104,6 +132,12 @@ of the following host1x client modules:
+>>    - reset-names: Must include the following entries:
+>>      - 2d
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the GR2D memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  - gr3d: 3D graphics engine
+>>  
+>>    Required properties:
+>> @@ -122,6 +156,12 @@ of the following host1x client modules:
+>>      - 3d
+>>      - 3d2 (Only required on SoCs with two 3D clocks)
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the GR3D memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  - dc: display controller
+>>  
+>>    Required properties:
+>> @@ -149,6 +189,10 @@ of the following host1x client modules:
+>>    - nvidia,hpd-gpio: specifies a GPIO used for hotplug detection
+>>    - nvidia,edid: supplies a binary EDID blob
+>>    - nvidia,panel: phandle of a display panel
+>> +  - interconnects: Must contain entry for the DC memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>>  
+>>  - hdmi: High Definition Multimedia Interface
+>>  
+>> @@ -297,6 +341,12 @@ of the following host1x client modules:
+>>    - reset-names: Must include the following entries:
+>>      - vic
+>>  
+>> +  Optional properties:
+>> +  - interconnects: Must contain entry for the VIC memory clients.
+>> +  - interconnect-names: Must include name of the interconnect path for each
+>> +    interconnect entry. Consult TRM documentation for information about
+>> +    available memory clients, see MEMORY CONTROLLER section.
+>> +
+>>  Example:
+>>  
+>>  / {
+>> @@ -410,6 +460,15 @@ Example:
+>>  			resets = <&tegra_car 27>;
+>>  			reset-names = "dc";
+>>  
+>> +			interconnects = <&mc TEGRA20_MC_DISPLAY0A &emc>,
+>> +					<&mc TEGRA20_MC_DISPLAY0B &emc>,
+>> +					<&mc TEGRA20_MC_DISPLAY0C &emc>,
+>> +					<&mc TEGRA20_MC_DISPLAY1B &emc>;
 > 
-> On Wed, Jun 17, 2020 at 11:38:03AM +0000, Song Bao Hua (Barry Song)
-> wrote:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Will Deacon [mailto:will@kernel.org]
-> > > Sent: Wednesday, June 17, 2020 10:18 PM
-> > > To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
-> > > Cc: catalin.marinas@arm.com; nsaenzjulienne@suse.de;
-> > > steve.capper@arm.com; rppt@linux.ibm.com;
-> akpm@linux-foundation.org;
-> > > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> Linuxarm
-> > > <linuxarm@huawei.com>; Matthias Brugger <matthias.bgg@gmail.com>;
-> > > Roman Gushchin <guro@fb.com>
-> > > Subject: Re: [PATCH v2] arm64: mm: reserve hugetlb CMA after numa_init
-> > >
-> > > On Wed, Jun 17, 2020 at 10:19:24AM +1200, Barry Song wrote:
-> > > > hugetlb_cma_reserve() is called at the wrong place. numa_init has not
-> been
-> > > > done yet. so all reserved memory will be located at node0.
-> > > >
-> > > > Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic
-> hugepages
-> > > using cma")
-> > >
-> > > Damn, wasn't CC'd on that :/
-> > >
-> > > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> > > > Acked-by: Roman Gushchin <guro@fb.com>
-> > > > Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> > > > ---
-> > > >  -v2: add Fixes tag according to Matthias Brugger's comment
-> > > >
-> > > >  arch/arm64/mm/init.c | 10 +++++-----
-> > > >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > > >
-> > > > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > > > index e631e6425165..41914b483d54 100644
-> > > > --- a/arch/arm64/mm/init.c
-> > > > +++ b/arch/arm64/mm/init.c
-> > > > @@ -404,11 +404,6 @@ void __init arm64_memblock_init(void)
-> > > >  	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
-> > > >
-> > > >  	dma_contiguous_reserve(arm64_dma32_phys_limit);
-> > > > -
-> > > > -#ifdef CONFIG_ARM64_4K_PAGES
-> > > > -	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
-> > > > -#endif
-> > >
-> > > Why is this dependent on CONFIG_ARM64_4K_PAGES? We unconditionally
-> > > select ARCH_HAS_GIGANTIC_PAGE so this seems unnecessary.
-> >
-> > Roman, would you like to answer this question? Have you found any
-> problem if system
-> > doesn't set 4K_PAGES?
-> 
-> No, I was just following the code in arch/arm64/mm/hugetlbpage.c where all
-> related to PUD-sized pages is guarded by CONFIG_ARM64_4K_PAGES.
-> Actually I did all my testing on x86-64, I don't even have any arm hardware.
-> 
-> I'm totally fine with removing this #ifdef if it's not needed.
+> This looks odd or wrong. Each entry has 2 phandles? 
 
-At this moment, I would suggest we should keep this "ifdef". Otherwise, hugetlb_cma_reserve() won't be really useful.
+Each entry defines interconnect path, where MC is the start of the path
+and EMC is the end. So yes, 2 phandles for each path.
 
-For example, while setting PAGE size to 64KB. I got this error in hugetlb_cma_reserve():
-hugetlb_cma: cma area should be at least 4194304 MiB
-This is absolutely unreasonable.
+Please see arm/boot/dts/qcom-msm8974.dtsi for another example [1].
 
-Supporting hugetlb_cma_reserve() for page sizes other than 4k is a different issue. 
-It might be addressed in a separate patch later.
-
-> 
-> Thanks!
-> 
-> >
-> > >
-> > > > -
-> > > >  }
-> > > >
-> > > >  void __init bootmem_init(void)
-> > > > @@ -424,6 +419,11 @@ void __init bootmem_init(void)
-> > > >  	min_low_pfn = min;
-> > > >
-> > > >  	arm64_numa_init();
-> > > > +
-> > > > +#ifdef CONFIG_ARM64_4K_PAGES
-> > > > +	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
-> > > > +#endif
-> > >
-> > > A comment here wouldn't hurt, as it does look a lot more natural next
-> > > to dma_contiguous_reserve().
-> >
-> > Will add some comment here.
-> >
-> > >
-> > > Will
-> >
-> > barry
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/qcom-msm8974.dtsi?h=v5.8-rc1#n1448
