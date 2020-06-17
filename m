@@ -2,105 +2,107 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC23C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1082168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7BAD208B3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:24:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgFQLYS (ORCPT
+        id S1726582AbgFQLYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:24:18 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:40273 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgFQLYP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:24:15 -0400
-Received: by mail-il1-f198.google.com with SMTP id s4so1274053ilc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 04:24:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=9VMHnIpjIIoaGQ215cnFAeiATHBF0bn8x+y3MmR8AgQ=;
-        b=cgFA9roySX209jz6BcwIK6kIVevqovNMDxkYmcfqN7K8ZLkneutIwLdEfpiZtBxa9u
-         1D6F+byQ5oTAMJCwxDeDKc38rze2Y0jM+Vep1K+Wg9HFth7yO26x12ChDmUMLCkZHlIO
-         0ZbkpR8IExHKhjwPAVcgIev0hpdOjgta3f6Lxa0T/6qGVosj/0+/Fb9FRZix59VpcVET
-         obcMoCyRoBlENPWXDbm5Vh4AdzsrsloyY9vcSK7C4TmPEMZJq66hPMsJuc/KdGLQWEmR
-         cGndIOvGFd5fxkjVexjQHp+mNQ7MFVHZZIuQu6J5EF1St/0pVdJV4DyIfhVEa8ZdxN//
-         /XuQ==
-X-Gm-Message-State: AOAM531V+ijpYQpQZGhs6fnHUivwFYuWAYs5sHnGaRrLQm2x16btJkUF
-        YwEfqr7ZLKAPcwCDtJj83Ay73+UCZtF7wNJsGplclHmtAhsZ
-X-Google-Smtp-Source: ABdhPJz+MKzCz57Sskv3R4M7HkZVgsQXcDzJSbuIE2ID1x4nS22bOI4xWyIeeKHQACnWTf4GEd01RV7L8EZRL/Fg5EPei9GeEXff
+        Wed, 17 Jun 2020 07:24:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43984 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgFQLYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 07:24:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9F06BACDB;
+        Wed, 17 Jun 2020 11:24:26 +0000 (UTC)
+Subject: Re: [PATCH v6 00/19] The new cgroup slab memory controller
+To:     Roman Gushchin <guro@fb.com>, Shakeel Butt <shakeelb@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+References: <20200608230654.828134-1-guro@fb.com>
+ <CALvZod7ThL=yMwxzCLvrTtq=+Dr5ooUSX-iFP8AhiAGURByFBA@mail.gmail.com>
+ <20200617024147.GA10812@carbon.lan>
+ <CALvZod4vLQb4kns=ao8btL_g--9axZfcaxhMnj+CoTrCkyWoWQ@mail.gmail.com>
+ <20200617033217.GE10812@carbon.lan>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <e510e964-2703-d123-120c-816bbdd35743@suse.cz>
+Date:   Wed, 17 Jun 2020 13:24:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:6305:: with SMTP id j5mr29038718jac.140.1592393053856;
- Wed, 17 Jun 2020 04:24:13 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 04:24:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005166b905a845e639@google.com>
-Subject: WARNING in corrupted/usb_submit_urb
-From:   syzbot <syzbot+120d387f677320f6a57c@syzkaller.appspotmail.com>
-To:     gregkh@linuxfoundation.org, ingrassia@epigenesys.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200617033217.GE10812@carbon.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 6/17/20 5:32 AM, Roman Gushchin wrote:
+> On Tue, Jun 16, 2020 at 08:05:39PM -0700, Shakeel Butt wrote:
+>> On Tue, Jun 16, 2020 at 7:41 PM Roman Gushchin <guro@fb.com> wrote:
+>> >
+>> > On Tue, Jun 16, 2020 at 06:46:56PM -0700, Shakeel Butt wrote:
+>> > > On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
+>> > > >
+>> [...]
+>> > >
+>> > > Have you performed any [perf] testing on SLAB with this patchset?
+>> >
+>> > The accounting part is the same for SLAB and SLUB, so there should be no
+>> > significant difference. I've checked that it compiles, boots and passes
+>> > kselftests. And that memory savings are there.
+>> >
+>> 
+>> What about performance? Also you mentioned that sharing kmem-cache
+>> between accounted and non-accounted can have additional overhead. Any
+>> difference between SLAB and SLUB for such a case?
+> 
+> Not really.
+> 
+> Sharing a single set of caches adds some overhead to root- and non-accounted
+> allocations, which is something I've tried hard to avoid in my original version.
+> But I have to admit, it allows to simplify and remove a lot of code, and here
+> it's hard to argue with Johanness, who pushed on this design.
+> 
+> With performance testing it's not that easy, because it's not obvious what
+> we wanna test. Obviously, per-object accounting is more expensive, and
+> measuring something like 1000000 allocations and deallocations in a line from
+> a single kmem_cache will show a regression. But in the real world the relative
+> cost of allocations is usually low, and we can get some benefits from a smaller
+> working set and from having shared kmem_cache objects cache hot.
+> Not speaking about some extra memory and the fragmentation reduction.
+> 
+> We've done an extensive testing of the original version in Facebook production,
+> and we haven't noticed any regressions so far. But I have to admit, we were
+> using an original version with two sets of kmem_caches.
+> 
+> If you have any specific tests in mind, I can definitely run them. Or if you
+> can help with the performance evaluation, I'll appreciate it a lot.
 
-syzbot found the following crash on:
+Jesper provided some pointers here [1], it would be really great if you could
+run at least those microbenchmarks. With mmtests it's the major question of
+which subset/profiles to run, maybe the referenced commits provide some hints,
+or maybe Mel could suggest what he used to evaluate SLAB vs SLUB not so long ago.
 
-HEAD commit:    d6ff8147 usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=140052c3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=90a3d9bed5648419
-dashboard link: https://syzkaller.appspot.com/bug?extid=120d387f677320f6a57c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16195fd9e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1610f2c3e00000
+[1] https://lore.kernel.org/linux-mm/20200527103545.4348ac10@carbon/
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+120d387f677320f6a57c@syzkaller.appspotmail.com
+> Thanks!
+> 
 
-ati_remote 1-1:0.0: Unknown Medion X10 receiver, using default ati_remote Medion keymap
-------------[ cut here ]------------
-usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-WARNING: CPU: 1 PID: 81 at drivers/usb/core/urb.c:478 usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 81 Comm: kworker/1:1 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xef/0x16e lib/dump_stack.c:118
- panic+0x2aa/0x6e1 kernel/panic.c:221
- __warn.cold+0x2f/0x30 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
-Code: 4d 85 ed 74 46 e8 18 ce dd fd 4c 89 f7 e8 d0 5c 17 ff 41 89 d8 44 89 e1 4c 89 ea 48 89 c6 48 c7 c7 e0 e7 3b 86 e8 a0 5f b2 fd <0f> 0b e9 20 f4 ff ff e8 ec cd dd fd 0f 1f 44 00 00 e8 e2 cd dd fd
-RSP: 0018:ffff8881d8a0f0b8 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
