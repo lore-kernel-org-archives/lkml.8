@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E423FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D619C2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCA320882
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y9tZxdA1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sogBx8KF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgFQW2O (ORCPT
+        id S1727773AbgFQW2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:28:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48708 "EHLO
+        Wed, 17 Jun 2020 18:28:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgFQW2D (ORCPT
+        with ESMTP id S1727068AbgFQW2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 18:28:03 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40D6EC061755;
-        Wed, 17 Jun 2020 15:28:02 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id c21so2291457lfb.3;
-        Wed, 17 Jun 2020 15:28:02 -0700 (PDT)
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38CADC06174E;
+        Wed, 17 Jun 2020 15:28:03 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id y11so4847894ljm.9;
+        Wed, 17 Jun 2020 15:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=37Z3HYJxY12m2q1zLLMVAo9a4Krobq6zohBrdzALyVQ=;
-        b=Y9tZxdA1rsUIIaZhvYLwCqWPTBb6phJr1GlFlLkZmkTyASjV5UDgh3qmcpfXJOG66b
-         6xnGvDC9A7qwm9zLOWBHW/anG5LKyRHK0Jps7F1yuVWYq2ep3TMgFixmGPknDWOkLhzI
-         Itf3nzn2N8VqHIPa31vjW7HAJ+EpPpuNTidIrMkpryM3ivmGHVwt9DuXNiN6JFFlP7pa
-         6jZcNHu53Q10EMzElyIvK+XUPbsKfSDy+zSZkIg9LXjgKvpj9hIk+awSnvyDM6my/uz6
-         IKfz4sVl5VtGGQzULlzuC6cvmGc2JrDLAF/HuIHwGKvXVkJf93H8hyKMON3L1l9LmNyL
-         3+/Q==
+        bh=IKFzNibCd7jzC+wKme/62sVxJsUZsrptVvulkctN6fc=;
+        b=sogBx8KF5qXKU6uIzglmpLtOwdnq8arZ4/R7HdxFWl9vEyg25TbvzNbcUG5pA7PTxu
+         +Y21qITF5l2IeoGbX8+uDtgy295BPargj9NdUoojpbkgn1HjN2SCkttS5sEeV73w6saM
+         lQut9MIEPs+qRJyP3MahcOMs7ZdAGaGGGpixTEHQfzJoUjI8IPCu6T/6Apst2DmMOBy/
+         KUO8dzCcRhMPS2jxwmOYrUeLehzEENLkwHe15tzosdjPEL44iaqVVBabhJPAmHrJMz4M
+         83Q694VYVrE3UFGfqvgWshqUx5wEp6r2E6qeGiZ5eA67Iax9eZVlDzkJJ/iD0iL2vq96
+         QKyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=37Z3HYJxY12m2q1zLLMVAo9a4Krobq6zohBrdzALyVQ=;
-        b=pCo9FlKjC674S4FT6METhkAvML5N30GsBiU3XFWMKs5go28PnYnWxGV6i/QABE8KWC
-         f516Nl+Xow0nME9d0Q6qDOUQkPtXrP1Mnbrak2kiN/UKMEvzdGXUmeA+HMBN3YZKRvTY
-         gGskKTx4WVg/CUbPT8cKASudJZo52gUBP4cQs3edNCxAtQyaBDZ86GxKvyu7ANcEc4Ff
-         +u1wyQU3OOnAQAPgByZpzGurAhyZLsXYDVZRcO17FcVjezq832o08fTy77jiCIGVc5QF
-         6BfsTg/bdkClmGqAVr3cb5JoJ/EtACmH6quyo+N2FiLLUi0G1NKTpra+I82jsHlrEcps
-         lxng==
-X-Gm-Message-State: AOAM531ALBV2qqUngSPXtj9D2ksIXOyzD/LidNfePvel6NyPEUCsy7xV
-        2IU0A2x/CxLf6Owr+BSj6iE=
-X-Google-Smtp-Source: ABdhPJx6IKZqruOfHC3cc6bguSK0xEBwL3JLuOkypb06GquTIdueKILcT/UJXg0dkgQ+3eEIFuf6dQ==
-X-Received: by 2002:a19:d44:: with SMTP id 65mr610935lfn.36.1592432880756;
-        Wed, 17 Jun 2020 15:28:00 -0700 (PDT)
+        bh=IKFzNibCd7jzC+wKme/62sVxJsUZsrptVvulkctN6fc=;
+        b=Rn7kc1PjAgXC846sVcmyjgVYZF3JR0tJY1gkxFfky6IoYPFa43QSs43JZvq9UzNcG7
+         fp55WhiFP3DsYFo+BZElnL6Z0dH/kaWik2fN/uk5/gKVcOQR7DWyjeB6Jjjwru2hBDyj
+         aKYEQxu5Q5JtnkvdVaVVefclGOVTtf8gzTMQfESeRJDnHRX10Dbkl1/nUsn8YpaflATz
+         lXjTfvpxAZ20hIQEDX6/u+GkkX1uk0TYzfLkLA6DbcpdW8Uvvr/UaRv74yshhpxBJC7a
+         YFhTEyQbifOsfPmhe4EXVUcNeVRLxYBZZLnaGS8pC2ciCPjW6DaYjLAQYexdWIZbhTtr
+         qJJQ==
+X-Gm-Message-State: AOAM533ZIQK2mSLH6Y0z9nDu+LjGIw36+/cOUvzUaozZ34tqnmFsSpK2
+        NjoSJs8F2mPtk8ObX4qBTzY=
+X-Google-Smtp-Source: ABdhPJwcUfeogdH2fdQoZn2uStj+lMY3N6d4lTg2ozcjT5sN41K76ccpr8S5r0ZJF0Z0vAo7B1CP+A==
+X-Received: by 2002:a2e:9810:: with SMTP id a16mr648149ljj.157.1592432881697;
+        Wed, 17 Jun 2020 15:28:01 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id a1sm210378ljk.133.2020.06.17.15.27.59
+        by smtp.gmail.com with ESMTPSA id a1sm210378ljk.133.2020.06.17.15.28.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 15:28:00 -0700 (PDT)
+        Wed, 17 Jun 2020 15:28:01 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -68,9 +68,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Frank Rowand <frowand.list@gmail.com>
 Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 6/7] drm/tegra: output: rgb: Wrap directly-connected panel into DRM bridge
-Date:   Thu, 18 Jun 2020 01:27:02 +0300
-Message-Id: <20200617222703.17080-7-digetx@gmail.com>
+Subject: [PATCH v8 7/7] drm/panel-simple: Add missing connector type for some panels
+Date:   Thu, 18 Jun 2020 01:27:03 +0300
+Message-Id: <20200617222703.17080-8-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200617222703.17080-1-digetx@gmail.com>
 References: <20200617222703.17080-1-digetx@gmail.com>
@@ -81,148 +81,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently Tegra DRM driver manually manages display panel, but this
-management could be moved out into DRM core if we'll wrap panel into
-DRM bridge. This patch wraps RGB panel into a DRM bridge and removes
-manual handling of the panel from the RGB output code.
+The DRM panel bridge core requires connector type to be set up properly,
+otherwise it rejects the panel. The missing connector type problem popped
+up while I was trying to wrap CLAA070WP03XG panel into a DRM bridge in
+order to test whether panel's rotation property work properly using
+panel-simple driver on NVIDIA Tegra30 Nexus 7 tablet device, which uses
+CLAA070WP03XG display panel.
 
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+The NVIDIA Tegra DRM driver recently gained DRM bridges support for the
+RGB output and now driver wraps directly-connected panels into DRM bridge.
+Hence all panels should have connector type set properly now, otherwise
+the panel's wrapping fails.
+
+This patch adds missing connector types for the LVDS panels that are found
+on NVIDIA Tegra devices:
+
+  1. AUO B101AW03
+  2. Chunghwa CLAA070WP03XG
+  3. Chunghwa CLAA101WA01A
+  4. Chunghwa CLAA101WB01
+  5. EDT ET057090DHU
+  6. Innolux N156BGE L21
+  7. Samsung LTN101NT05
+
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/tegra/rgb.c | 70 ++++++++++---------------------------
- 1 file changed, 18 insertions(+), 52 deletions(-)
+ drivers/gpu/drm/panel/panel-simple.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpu/drm/tegra/rgb.c b/drivers/gpu/drm/tegra/rgb.c
-index 9a7024ec96bc..4142a56ca764 100644
---- a/drivers/gpu/drm/tegra/rgb.c
-+++ b/drivers/gpu/drm/tegra/rgb.c
-@@ -8,7 +8,6 @@
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 6764ac630e22..9eb2dbb7bfa6 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -687,6 +687,7 @@ static const struct panel_desc auo_b101aw03 = {
+ 		.width = 223,
+ 		.height = 125,
+ 	},
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
  
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_bridge_connector.h>
--#include <drm/drm_panel.h>
- #include <drm/drm_simple_kms_helper.h>
+ static const struct display_timing auo_b101ean01_timing = {
+@@ -1340,6 +1341,7 @@ static const struct panel_desc chunghwa_claa070wp03xg = {
+ 		.width = 94,
+ 		.height = 150,
+ 	},
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
  
- #include "drm.h"
-@@ -86,45 +85,13 @@ static void tegra_dc_write_regs(struct tegra_dc *dc,
- 		tegra_dc_writel(dc, table[i].value, table[i].offset);
- }
+ static const struct drm_display_mode chunghwa_claa101wa01a_mode = {
+@@ -1362,6 +1364,7 @@ static const struct panel_desc chunghwa_claa101wa01a = {
+ 		.width = 220,
+ 		.height = 120,
+ 	},
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
  
--static const struct drm_connector_funcs tegra_rgb_connector_funcs = {
--	.reset = drm_atomic_helper_connector_reset,
--	.detect = tegra_output_connector_detect,
--	.fill_modes = drm_helper_probe_single_connector_modes,
--	.destroy = tegra_output_connector_destroy,
--	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
--	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
--};
--
--static enum drm_mode_status
--tegra_rgb_connector_mode_valid(struct drm_connector *connector,
--			       struct drm_display_mode *mode)
--{
--	/*
--	 * FIXME: For now, always assume that the mode is okay. There are
--	 * unresolved issues with clk_round_rate(), which doesn't always
--	 * reliably report whether a frequency can be set or not.
--	 */
--	return MODE_OK;
--}
--
--static const struct drm_connector_helper_funcs tegra_rgb_connector_helper_funcs = {
--	.get_modes = tegra_output_connector_get_modes,
--	.mode_valid = tegra_rgb_connector_mode_valid,
--};
--
- static void tegra_rgb_encoder_disable(struct drm_encoder *encoder)
- {
- 	struct tegra_output *output = encoder_to_output(encoder);
- 	struct tegra_rgb *rgb = to_rgb(output);
+ static const struct drm_display_mode chunghwa_claa101wb01_mode = {
+@@ -1384,6 +1387,7 @@ static const struct panel_desc chunghwa_claa101wb01 = {
+ 		.width = 223,
+ 		.height = 125,
+ 	},
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
  
--	if (output->panel)
--		drm_panel_disable(output->panel);
--
- 	tegra_dc_write_regs(rgb->dc, rgb_disable, ARRAY_SIZE(rgb_disable));
- 	tegra_dc_commit(rgb->dc);
--
--	if (output->panel)
--		drm_panel_unprepare(output->panel);
- }
+ static const struct drm_display_mode dataimage_scf0700c48ggu18_mode = {
+@@ -1573,6 +1577,7 @@ static const struct panel_desc edt_et057090dhu = {
+ 	},
+ 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+ 	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_NEGEDGE,
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
  
- static void tegra_rgb_encoder_enable(struct drm_encoder *encoder)
-@@ -133,9 +100,6 @@ static void tegra_rgb_encoder_enable(struct drm_encoder *encoder)
- 	struct tegra_rgb *rgb = to_rgb(output);
- 	u32 value;
+ static const struct drm_display_mode edt_etm0700g0dh6_mode = {
+@@ -2055,6 +2060,7 @@ static const struct panel_desc innolux_n156bge_l21 = {
+ 		.width = 344,
+ 		.height = 193,
+ 	},
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
  
--	if (output->panel)
--		drm_panel_prepare(output->panel);
--
- 	tegra_dc_write_regs(rgb->dc, rgb_enable, ARRAY_SIZE(rgb_enable));
+ static const struct drm_display_mode innolux_p120zdg_bf1_mode = {
+@@ -3001,6 +3007,7 @@ static const struct panel_desc samsung_ltn101nt05 = {
+ 		.width = 223,
+ 		.height = 125,
+ 	},
++	.connector_type = DRM_MODE_CONNECTOR_LVDS,
+ };
  
- 	value = DE_SELECT_ACTIVE | DE_CONTROL_NORMAL;
-@@ -157,9 +121,6 @@ static void tegra_rgb_encoder_enable(struct drm_encoder *encoder)
- 	tegra_dc_writel(rgb->dc, value, DC_DISP_SHIFT_CLOCK_OPTIONS);
- 
- 	tegra_dc_commit(rgb->dc);
--
--	if (output->panel)
--		drm_panel_enable(output->panel);
- }
- 
- static int
-@@ -278,6 +239,23 @@ int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
- 	drm_encoder_helper_add(&output->encoder,
- 			       &tegra_rgb_encoder_helper_funcs);
- 
-+	/*
-+	 * Wrap directly-connected panel into DRM bridge in order to let
-+	 * DRM core to handle panel for us.
-+	 */
-+	if (output->panel) {
-+		output->bridge = devm_drm_panel_bridge_add(output->dev,
-+							   output->panel);
-+		if (IS_ERR(output->bridge)) {
-+			dev_err(output->dev,
-+				"failed to wrap panel into bridge: %pe\n",
-+				output->bridge);
-+			return PTR_ERR(output->bridge);
-+		}
-+
-+		output->panel = NULL;
-+	}
-+
- 	/*
- 	 * Tegra devices that have LVDS panel utilize LVDS encoder bridge
- 	 * for converting up to 28 LCD LVTTL lanes into 5/4 LVDS lanes that
-@@ -292,8 +270,7 @@ int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
- 	 * Newer device-trees utilize LVDS encoder bridge, which provides
- 	 * us with a connector and handles the display panel.
- 	 *
--	 * For older device-trees we fall back to our own connector and use
--	 * nvidia,panel phandle.
-+	 * For older device-trees we wrapped panel into the panel-bridge.
- 	 */
- 	if (output->bridge) {
- 		err = drm_bridge_attach(&output->encoder, output->bridge,
-@@ -313,17 +290,6 @@ int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
- 		}
- 
- 		drm_connector_attach_encoder(connector, &output->encoder);
--	} else {
--		drm_connector_init(drm, &output->connector,
--				   &tegra_rgb_connector_funcs,
--				   DRM_MODE_CONNECTOR_LVDS);
--		drm_connector_helper_add(&output->connector,
--					 &tegra_rgb_connector_helper_funcs);
--		output->connector.dpms = DRM_MODE_DPMS_OFF;
--
--		drm_connector_attach_encoder(&output->connector,
--					     &output->encoder);
--		drm_connector_register(&output->connector);
- 	}
- 
- 	err = tegra_output_init(drm, output);
+ static const struct drm_display_mode samsung_ltn140at29_301_mode = {
 -- 
 2.26.0
 
