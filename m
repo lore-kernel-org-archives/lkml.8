@@ -2,190 +2,109 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE378C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F08520B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98F22098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:34:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JPDbaA6X"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XZbDoRPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgFQWd1 (ORCPT
+        id S1727029AbgFQWeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:33:27 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40748 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgFQWdY (ORCPT
+        Wed, 17 Jun 2020 18:34:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgFQWeT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:33:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05HMXFhh126109;
-        Wed, 17 Jun 2020 17:33:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592433195;
-        bh=M9uG6vtJ96jC9QIOIsunVBE+D1533JFPVBWV9iLcPh8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JPDbaA6XQK5HT9UK7o9ys+KaDNPzO7ROGUFR+hLcEPt41+lb4jYDbvTO0iMU4masi
-         pz8cYfK75NQRHk8Mr0a4YwWiy8ncd6zybxuWlkfZ2vlv68nBjql8ybV1B1ha8uDsm2
-         iUEReiNEf/8GEEMzDmZ/AeL46+PSdntZPjuzqsm0=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05HMXFQc095001
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jun 2020 17:33:15 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 17
- Jun 2020 17:33:14 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 17 Jun 2020 17:33:14 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05HMXE75127101;
-        Wed, 17 Jun 2020 17:33:14 -0500
-Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
- support to lp55xx
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        kernel test robot <lkp@intel.com>, <pavel@ucw.cz>,
-        <robh@kernel.org>
-CC:     <kbuild-all@lists.01.org>, <devicetree@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200615201522.19677-12-dmurphy@ti.com>
- <202006180032.JW0i39C6%lkp@intel.com>
- <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
- <58ad7723-131f-6930-00d7-1144c993110c@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <fc1ae702-0734-973d-9e3c-22b8f8d5c873@ti.com>
-Date:   Wed, 17 Jun 2020 17:33:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <58ad7723-131f-6930-00d7-1144c993110c@gmail.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 17 Jun 2020 18:34:19 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1356C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:34:17 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id f130so4273642yba.9
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:34:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=dl8CpF2u3zjH2sdeNdfuapWfq9PffavQBlO7OcAgrZI=;
+        b=XZbDoRPx9MaqRuyRsuE/Zz84rdx1Xg4cSOXtmTvC/TW75TfM/II++KXvkmOZ41Yqf6
+         k0aimUW4ZwWVH3K11wIO5XxCn5FW6ghYzMqX6KekiZf7JAT+9xphRLQFmGCeSf2oWv2B
+         joYHJsCZPN4lBHirZGH3DZRwU5eUSMEaMqB7Kf68HK4NaGlSZXTbS0af4dhERrXKNZ0O
+         C6ROehJ0qKo+jcU7S0430TM9qa1DqWbamBFaRIdN1LWNkSr55f52P4EJEO6/tu4jdhdh
+         sY4C0ESIhkZi3FAp6qi/HhG/QDIzDfFSu+UyLm7nC8Yv/FRs/bez0w6Kd2cDoHu7F+zT
+         21zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=dl8CpF2u3zjH2sdeNdfuapWfq9PffavQBlO7OcAgrZI=;
+        b=uBIl7MSrxIbn4JubjZZIb9BfrF4d4zeLNVpDdrkAq/C43aNJFyHXijMhvpPE1VuhwR
+         ZEWhVafSLSxE/6dvsJl7iRzFlgU+gMGewLa3TSGejxtU273eaNZT4TgVSTWV45XILnCE
+         ++exCZ7Z4etxXjtSVFjcIS0C1kNqeC8gpsOnpKfOjhAPdWWXfSzDRPd08CDTs66/EKe4
+         B5bN0m/5YRf2Gh2LeB12eJNnn0xb0Cki9T65AVNXyXwtZ0tzwNbZv1OjsBda4GVWbnWy
+         +limHAOlSDt7/dwlhwkV2x/Kx+G53niHo3/IIjjJpKbwXwTFzoGrP/7222xkjMJ/fclX
+         z9xw==
+X-Gm-Message-State: AOAM531XO2IxwyEVonGy8vGsz8vPb6vBA3cp7zlu6oakcmfBE/f0znCW
+        kPqnDNW4gazYUdV3j+pXxJdq4ZOYwBuspxo=
+X-Google-Smtp-Source: ABdhPJwSX0MoqylBaNHo5+aHvkEKKYVU9E5bWuZtt82sujJuI/YxK/IxNKn5uJvJu1RQHd461b7kt2QU2QPNQUY=
+X-Received: by 2002:a25:3784:: with SMTP id e126mr2000871yba.267.1592433256945;
+ Wed, 17 Jun 2020 15:34:16 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 15:34:14 -0700
+Message-Id: <20200617223414.165923-1-zhangalex@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
+Subject: [PATCH] mm/memory.c: make remap_pfn_range() reject unaligned addr
+From:   Kaiyu Zhang <zhangalex@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Alex Zhang <zhangalex@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+From: Alex Zhang <zhangalex@google.com>
 
-On 6/17/20 4:41 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 6/17/20 9:22 PM, Dan Murphy wrote:
->> Pavel/Jacek
->>
->> On 6/17/20 11:28 AM, kernel test robot wrote:
->>> Hi Dan,
->>>
->>> I love your patch! Yet something to improve:
->>>
->>> [auto build test ERROR on pavel-linux-leds/for-next]
->>> [cannot apply to j.anaszewski-leds/for-next]
->>> [if your patch is applied to the wrong git tree, please drop us a 
->>> note to help
->>> improve the system. BTW, we also suggest to use '--base' option to 
->>> specify the
->>> base tree in git format-patch, please see 
->>> https://stackoverflow.com/a/37406982]
->>>
->>> url: 
->>> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217 
->>>
->>> base: 
->>> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git 
->>> for-next
->>> config: ia64-randconfig-r015-20200617 (attached as .config)
->>> compiler: ia64-linux-gcc (GCC) 9.3.0
->>> reproduce (this is a W=1 build):
->>>          wget 
->>> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross 
->>> -O ~/bin/make.cross
->>>          chmod +x ~/bin/make.cross
->>>          # save the attached .config to linux build tree
->>>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 
->>> make.cross ARCH=ia64
->>>
->>> If you fix the issue, kindly add following tag as appropriate
->>> Reported-by: kernel test robot <lkp@intel.com>
->>>
->>> All errors (new ones prefixed by >>, old ones prefixed by <<):
->>>
->>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
->>> `lp55xx_set_mc_brightness':
->>>>> drivers/leds/leds-lp55xx-common.c:146: undefined reference to 
->>>>> `led_mc_calc_color_components'
->>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
->>> `devm_led_classdev_multicolor_register':
->>>>> include/linux/led-class-multicolor.h:74: undefined reference to 
->>>>> `devm_led_classdev_multicolor_register_ext'
->>> vim +146 drivers/leds/leds-lp55xx-common.c
->>>
->>>     138
->>>     139    static int lp55xx_set_mc_brightness(struct led_classdev 
->>> *cdev,
->>>     140                        enum led_brightness brightness)
->>>     141    {
->>>     142        struct led_classdev_mc *mc_dev = lcdev_to_mccdev(cdev);
->>>     143        struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
->>>     144        struct lp55xx_device_config *cfg = led->chip->cfg;
->>>     145
->>>   > 146 led_mc_calc_color_components(&led->mc_cdev, brightness);
->>>     147        return cfg->multicolor_brightness_fn(led);
->>>     148
->>
->> Well this was a mess to figure out.
->>
->> The only fix I can figure out here is to remove the
->>
->>      depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
->>
->> from each child device and add
->>
->>      select LEDS_CLASS_MULTI_COLOR
->>
->> to the LP55XX_COMMON
->>
->> This way the Multi color framework will inherit the symbol that was 
->> set by the COMMON flag which is inherited by majority from the child 
->> flags.
->
-> Did you try this?
->
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -398,6 +398,7 @@ config LEDS_LP50XX
->  config LEDS_LP55XX_COMMON
->         tristate "Common Driver for TI/National 
-> LP5521/5523/55231/5562/8501"
->         depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || 
-> LEDS_LP8501
-> +       depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
->         depends on OF
->         select FW_LOADER
->         select FW_LOADER_USER_HELPER
->
->
-Yes I did
+This function implicitly assumes that the addr passed in is page aligned.
+A non page aligned addr could ultimately cause a kernel bug in
+remap_pte_range as the exit condition in the logic loop may never be
+satisfied.  This patch documents the need for the requirement, as
+well as explicitly adding a check for it.
 
-That gave unmet dependencies.
+Signed-off-by: Alex Zhang <zhangalex@google.com>
 
-WARNING: unmet direct dependencies detected for LEDS_LP55XX_COMMON
-   Depends on [m]: NEW_LEDS [=y] && (LEDS_LP5521 [=n] || LEDS_LP5523 
-[=m] || LEDS_LP5562 [=y] || LEDS_LP8501 [=y]) && (LEDS_CLASS_MULTI_COLOR 
-[=m] || !LEDS_CLASS_MULTI_COLOR [=m]) && OF [=y]
-   Selected by [y]:
-   - LEDS_LP5562 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
-   - LEDS_LP8501 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
-   Selected by [m]:
-   - LEDS_LP5523 [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y] && 
-(LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m])
+---
+ mm/memory.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/mm/memory.c b/mm/memory.c
+index dc7f3543b1fd..9cb0a75f1555 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2081,7 +2081,7 @@ static inline int remap_p4d_range(struct mm_struct *mm, pgd_t *pgd,
+ /**
+  * remap_pfn_range - remap kernel memory to userspace
+  * @vma: user vma to map to
+- * @addr: target user address to start at
++ * @addr: target page aligned user address to start at
+  * @pfn: page frame number of kernel physical memory address
+  * @size: size of mapping area
+  * @prot: page protection flags for this mapping
+@@ -2100,6 +2100,9 @@ int remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,
+ 	unsigned long remap_pfn = pfn;
+ 	int err;
+ 
++	if (!PAGE_ALIGN(addr))
++		return -EINVAL;
++
+ 	/*
+ 	 * Physically remapped pages are special. Tell the
+ 	 * rest of the world about it:
+-- 
+2.27.0.290.gba653c62da-goog
 
