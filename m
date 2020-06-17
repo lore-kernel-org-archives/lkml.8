@@ -2,150 +2,384 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1293C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DA2C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD6FF2080D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D857921532
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:12:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FIlQShFU"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MI61wtgo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgFQQK5 (ORCPT
+        id S1726864AbgFQQMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:10:57 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39867 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726496AbgFQQK4 (ORCPT
+        Wed, 17 Jun 2020 12:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbgFQQMf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:10:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592410254;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pwPndLdm35gmxUTd/yGdLqQ8FsjkAPP7/6FDJCdV2mM=;
-        b=FIlQShFUpHaVXIsePnoHC1W1OkcqaZqCtukZ4mqpuf7wwU4hEHqFZaneFC4Hr8zS0aOvXq
-        28aAw31xUOtmFiOT1i39WZznxjCXAs5hqoZw2OHmljcrSEGvOuX6DAQ+QDXUtrv4lOP8J2
-        Ss5p50Cfhoc1G9Ci4HohIrTKsh8ynoo=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-207-n-62ueSoPRyZZHKPoBePtQ-1; Wed, 17 Jun 2020 12:10:52 -0400
-X-MC-Unique: n-62ueSoPRyZZHKPoBePtQ-1
-Received: by mail-qk1-f197.google.com with SMTP id p138so2205719qke.7
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:10:52 -0700 (PDT)
+        Wed, 17 Jun 2020 12:12:35 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1FFCC0613EE
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:12:34 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r7so2982601wro.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:12:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=XwOkCRUOqCnXwXoZtVyPm3DMXCuFuirhZG2y4KX3unw=;
+        b=MI61wtgoRtNbLp5+DGdNlaBf4bx8VVfOh1C+SrYIjxGQJdD8FCcQT8+LFXnuZXrloF
+         z0pJI4nRThoy+bjz282CMJvSizG/8hmR6BXTxtgaipNN7DvHDCIo3wTu8Hkc9NNtcX33
+         zdzGy7QZ8T97b4pqVts26Y1jMwfu2kIZ7SyxU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pwPndLdm35gmxUTd/yGdLqQ8FsjkAPP7/6FDJCdV2mM=;
-        b=pTFXFiTbDCjO01K1QfErtmjcUKesgT46jNvFes+3AUjjF0IBQTRVyL4B47l+rouDzG
-         rqyQMBw8sCo4MJZJVC9/wroxbznft0Ge5ICoZ0us1P6HRuu8rz9n0J8lyvalNoP077bW
-         YUyRioJt7enWZcxiwVyIFZ4APNWN2WUlVkZNEAxs3GFjTepO4Q28ayAfO/ZwqA7CDu82
-         8qAd6iNd2eT9309+XT4eTQCW6C6jMWcbsr//wq2a2l51h6wbvWypsmIw3tslPjn0tHkx
-         OVkxXod0KkAV8IDtWk+SrhpLQRUNRGGrCBeXOFYAZAxdZmTsGZhhHb3S8rF2EC6OPyDu
-         uarg==
-X-Gm-Message-State: AOAM530SqkbKltDD1N8QzpS45h1/lhZBtC6gtCKESj7KVtyq3HeMqOgz
-        YlPeR1cxES2EFM/92/jZllZZuetSuLqrARyAOGAYYpVfsULtoufQ0R37J2YXBTP069gm2NvB/Sn
-        j9la16I6R8tA9A9PdCYK6tGyY
-X-Received: by 2002:ac8:fb4:: with SMTP id b49mr27502905qtk.323.1592410252034;
-        Wed, 17 Jun 2020 09:10:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxHPvRTdazh3ByXAbV1+DQb3IK/Hxo+xAXMp5hAEJHzAOp6L2Jx/mkBgpOD51Mg4XUcXd/11g==
-X-Received: by 2002:ac8:fb4:: with SMTP id b49mr27502878qtk.323.1592410251778;
-        Wed, 17 Jun 2020 09:10:51 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id b4sm265252qka.133.2020.06.17.09.10.50
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XwOkCRUOqCnXwXoZtVyPm3DMXCuFuirhZG2y4KX3unw=;
+        b=fjKLcjaMYewhF0bBUpR6rCfV4FoVHI9ln7cXiUkISdh+knpLZ5z00N99+W1sXyx8X+
+         zMmUDLg0/9e1aPYFatm4+8G5KfhGv87TDtuj4EoC4KbWVKMThYlpi3JMSxv0Lq+qsCFt
+         hXidK9RwPb9Iaz3KVz6m0GBfHd44OJNEVH3kFDwbsFvcu2Wb5JHcBvKBu1POaDEqdd/r
+         zaZzik90sR5BrfFyoVUmeHLr5Wfz8d3fWNNj+cY4a+HDklH8Hi3CLO3UYVT8s6L9HNea
+         e5I3dNzYQ7tBw7kSmWDbo3lvvcbGsVD4ncvzLxq+PmJcJUfwZKuBjzaBSk8Wc5QYQM/d
+         mXwQ==
+X-Gm-Message-State: AOAM532wJHxXek2UlLp953RCGApJLE877igdAJL4rNA9pXqjBlQYKSoI
+        81DfEjhiCVUFsLE1OWf6d1oVWg==
+X-Google-Smtp-Source: ABdhPJyrdfdrQ7vODuBR87SSAzcutEYu2luysyml8zT0Xe5hcozF+SrVxRp8ZHixjKWLwp34JROZVg==
+X-Received: by 2002:a05:6000:47:: with SMTP id k7mr8823967wrx.233.1592410353047;
+        Wed, 17 Jun 2020 09:12:33 -0700 (PDT)
+Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id y132sm287568wmb.11.2020.06.17.09.12.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:10:51 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 12:10:49 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        openrisc@lists.librecores.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 00/25] mm: Page fault accounting cleanups
-Message-ID: <20200617161049.GE76766@xz-x1>
-References: <20200615221607.7764-1-peterx@redhat.com>
- <CAHk-=wiTjaXHu+uxMi0xCZQOm4KVr0MucECAK=Zm4p4YZZ1XEg@mail.gmail.com>
- <87imfqecjx.fsf@mpe.ellerman.id.au>
- <20200617080405.GA3208@willie-the-truck>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200617080405.GA3208@willie-the-truck>
+        Wed, 17 Jun 2020 09:12:32 -0700 (PDT)
+From:   Scott Branden <scott.branden@broadcom.com>
+To:     Christoph Hellwig <hch@lst.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Jessica Yu <jeyu@kernel.org>
+Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH v3 1/1] fs: move kernel_read_file* to its own include file
+Date:   Wed, 17 Jun 2020 09:12:18 -0700
+Message-Id: <20200617161218.18487-1-scott.branden@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 09:04:06AM +0100, Will Deacon wrote:
-> On Wed, Jun 17, 2020 at 10:55:14AM +1000, Michael Ellerman wrote:
-> > Linus Torvalds <torvalds@linux-foundation.org> writes:
-> > > On Mon, Jun 15, 2020 at 3:16 PM Peter Xu <peterx@redhat.com> wrote:
-> > >> This series tries to address all of them by introducing mm_fault_accounting()
-> > >> first, so that we move all the page fault accounting into the common code base,
-> > >> then call it properly from arch pf handlers just like handle_mm_fault().
-> > >
-> > > Hmm.
-> > >
-> > > So having looked at this a bit more, I'd actually like to go even
-> > > further, and just get rid of the per-architecture code _entirely_.
-> > 
-> > <snip>
-> > 
-> > > One detail worth noting: I do wonder if we should put the
-> > >
-> > >     perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
-> > >
-> > > just in the arch code at the top of the fault handling, and consider
-> > > it entirely unrelated to the major/minor fault handling. The
-> > > major/minor faults fundamnetally are about successes. But the plain
-> > > PERF_COUNT_SW_PAGE_FAULTS could be about things that fail, including
-> > > things that never even get to this point at all.
-> > 
-> > Yeah I think we should keep it in the arch code at roughly the top.
-> 
-> I agree. It's a nice idea to consolidate the code, but I don't see that
-> it's really possible for PERF_COUNT_SW_PAGE_FAULTS without significantly
-> changing the semantics (and a potentially less useful way. Of course,
-> moving more of do_page_fault() out of the arch code would be great, but
-> that's a much bigger effort.
-> 
-> > If it's moved to the end you could have a process spinning taking bad
-> > page faults (and fixing them up), and see no sign of it from the perf
-> > page fault counters.
-> 
-> The current arm64 behaviour is that we record PERF_COUNT_SW_PAGE_FAULTS
-> if _all_ of the following are true:
-> 
->   1. The fault isn't handled by kprobes
->   2. The pagefault handler is enabled
->   3. We have an mm (current->mm)
->   4. The fault isn't an unexpected kernel fault on a user address (we oops
->      and kill the task in this case)
-> 
-> Which loosely corresponds to "we took a fault on a user address that it
-> looks like we can handle".
-> 
-> That said, I'm happy to tweak this if it brings us into line with other
-> architectures.
+Move kernel_read_file* out of linux/fs.h to its own linux/kernel_read_file.h
+include file. That header gets pulled in just about everywhere
+and doesn't really need functions not related to the general fs interface.
 
-I see.  I'll keep the semantics for PERF_COUNT_SW_PAGE_FAULTS in the next
-version.  Thanks for all the comments!
+Suggested-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 
+---
+Changes since v2:
+Added changes information here.
+Changes since v1:
+Updated commit message to give Christoph's reasoning as to
+why the functions should be moved to another header file.
+---
+ drivers/base/firmware_loader/main.c |  1 +
+ fs/exec.c                           |  1 +
+ include/linux/fs.h                  | 39 ----------------------
+ include/linux/ima.h                 |  1 +
+ include/linux/kernel_read_file.h    | 52 +++++++++++++++++++++++++++++
+ include/linux/security.h            |  1 +
+ kernel/kexec_file.c                 |  1 +
+ kernel/module.c                     |  1 +
+ security/integrity/digsig.c         |  1 +
+ security/integrity/ima/ima_fs.c     |  1 +
+ security/integrity/ima/ima_main.c   |  1 +
+ security/integrity/ima/ima_policy.c |  1 +
+ security/loadpin/loadpin.c          |  1 +
+ security/security.c                 |  1 +
+ security/selinux/hooks.c            |  1 +
+ 15 files changed, 65 insertions(+), 39 deletions(-)
+ create mode 100644 include/linux/kernel_read_file.h
+
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index ca871b13524e..136933f1bd6e 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -12,6 +12,7 @@
+ 
+ #include <linux/capability.h>
+ #include <linux/device.h>
++#include <linux/kernel_read_file.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/timer.h>
+diff --git a/fs/exec.c b/fs/exec.c
+index 7b7cbb180785..4ea87db5e4d5 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -23,6 +23,7 @@
+  * formats.
+  */
+ 
++#include <linux/kernel_read_file.h>
+ #include <linux/slab.h>
+ #include <linux/file.h>
+ #include <linux/fdtable.h>
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 2e675c075694..09427d393954 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3012,45 +3012,6 @@ static inline void i_readcount_inc(struct inode *inode)
+ #endif
+ extern int do_pipe_flags(int *, int);
+ 
+-#define __kernel_read_file_id(id) \
+-	id(UNKNOWN, unknown)		\
+-	id(FIRMWARE, firmware)		\
+-	id(FIRMWARE_PREALLOC_BUFFER, firmware)	\
+-	id(FIRMWARE_EFI_EMBEDDED, firmware)	\
+-	id(MODULE, kernel-module)		\
+-	id(KEXEC_IMAGE, kexec-image)		\
+-	id(KEXEC_INITRAMFS, kexec-initramfs)	\
+-	id(POLICY, security-policy)		\
+-	id(X509_CERTIFICATE, x509-certificate)	\
+-	id(MAX_ID, )
+-
+-#define __fid_enumify(ENUM, dummy) READING_ ## ENUM,
+-#define __fid_stringify(dummy, str) #str,
+-
+-enum kernel_read_file_id {
+-	__kernel_read_file_id(__fid_enumify)
+-};
+-
+-static const char * const kernel_read_file_str[] = {
+-	__kernel_read_file_id(__fid_stringify)
+-};
+-
+-static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
+-{
+-	if ((unsigned)id >= READING_MAX_ID)
+-		return kernel_read_file_str[READING_UNKNOWN];
+-
+-	return kernel_read_file_str[id];
+-}
+-
+-extern int kernel_read_file(struct file *, void **, loff_t *, loff_t,
+-			    enum kernel_read_file_id);
+-extern int kernel_read_file_from_path(const char *, void **, loff_t *, loff_t,
+-				      enum kernel_read_file_id);
+-extern int kernel_read_file_from_path_initns(const char *, void **, loff_t *, loff_t,
+-					     enum kernel_read_file_id);
+-extern int kernel_read_file_from_fd(int, void **, loff_t *, loff_t,
+-				    enum kernel_read_file_id);
+ extern ssize_t kernel_read(struct file *, void *, size_t, loff_t *);
+ extern ssize_t kernel_write(struct file *, const void *, size_t, loff_t *);
+ extern ssize_t __kernel_write(struct file *, const void *, size_t, loff_t *);
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 9164e1534ec9..148636bfcc8f 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -7,6 +7,7 @@
+ #ifndef _LINUX_IMA_H
+ #define _LINUX_IMA_H
+ 
++#include <linux/kernel_read_file.h>
+ #include <linux/fs.h>
+ #include <linux/security.h>
+ #include <linux/kexec.h>
+diff --git a/include/linux/kernel_read_file.h b/include/linux/kernel_read_file.h
+new file mode 100644
+index 000000000000..53f5ca41519a
+--- /dev/null
++++ b/include/linux/kernel_read_file.h
+@@ -0,0 +1,52 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_KERNEL_READ_FILE_H
++#define _LINUX_KERNEL_READ_FILE_H
++
++#include <linux/file.h>
++#include <linux/types.h>
++
++#define __kernel_read_file_id(id) \
++	id(UNKNOWN, unknown)		\
++	id(FIRMWARE, firmware)		\
++	id(FIRMWARE_PREALLOC_BUFFER, firmware)	\
++	id(FIRMWARE_EFI_EMBEDDED, firmware)	\
++	id(MODULE, kernel-module)		\
++	id(KEXEC_IMAGE, kexec-image)		\
++	id(KEXEC_INITRAMFS, kexec-initramfs)	\
++	id(POLICY, security-policy)		\
++	id(X509_CERTIFICATE, x509-certificate)	\
++	id(MAX_ID, )
++
++#define __fid_enumify(ENUM, dummy) READING_ ## ENUM,
++#define __fid_stringify(dummy, str) #str,
++
++enum kernel_read_file_id {
++	__kernel_read_file_id(__fid_enumify)
++};
++
++static const char * const kernel_read_file_str[] = {
++	__kernel_read_file_id(__fid_stringify)
++};
++
++static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
++{
++	if ((unsigned int)id >= READING_MAX_ID)
++		return kernel_read_file_str[READING_UNKNOWN];
++
++	return kernel_read_file_str[id];
++}
++
++int kernel_read_file(struct file *file,
++		     void **buf, loff_t *size, loff_t max_size,
++		     enum kernel_read_file_id id);
++int kernel_read_file_from_path(const char *path,
++			       void **buf, loff_t *size, loff_t max_size,
++			       enum kernel_read_file_id id);
++int kernel_read_file_from_path_initns(const char *path,
++				      void **buf, loff_t *size, loff_t max_size,
++				      enum kernel_read_file_id id);
++int kernel_read_file_from_fd(int fd,
++			     void **buf, loff_t *size, loff_t max_size,
++			     enum kernel_read_file_id id);
++
++#endif /* _LINUX_KERNEL_READ_FILE_H */
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 2797e7f6418e..fc1c6af331bd 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -23,6 +23,7 @@
+ #ifndef __LINUX_SECURITY_H
+ #define __LINUX_SECURITY_H
+ 
++#include <linux/kernel_read_file.h>
+ #include <linux/key.h>
+ #include <linux/capability.h>
+ #include <linux/fs.h>
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index bb05fd52de85..54efafc31d34 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -24,6 +24,7 @@
+ #include <linux/elf.h>
+ #include <linux/elfcore.h>
+ #include <linux/kernel.h>
++#include <linux/kernel_read_file.h>
+ #include <linux/syscalls.h>
+ #include <linux/vmalloc.h>
+ #include "kexec_internal.h"
+diff --git a/kernel/module.c b/kernel/module.c
+index e8a198588f26..6ed67699531f 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -18,6 +18,7 @@
+ #include <linux/fs.h>
+ #include <linux/sysfs.h>
+ #include <linux/kernel.h>
++#include <linux/kernel_read_file.h>
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
+ #include <linux/elf.h>
+diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
+index e9cbadade74b..d09602aab7bd 100644
+--- a/security/integrity/digsig.c
++++ b/security/integrity/digsig.c
+@@ -10,6 +10,7 @@
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+ #include <linux/cred.h>
++#include <linux/kernel_read_file.h>
+ #include <linux/key-type.h>
+ #include <linux/digsig.h>
+ #include <linux/vmalloc.h>
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+index e3fcad871861..57ecbf285fc7 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -13,6 +13,7 @@
+  */
+ 
+ #include <linux/fcntl.h>
++#include <linux/kernel_read_file.h>
+ #include <linux/slab.h>
+ #include <linux/init.h>
+ #include <linux/seq_file.h>
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index c1583d98c5e5..15f29fed6d9f 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -18,6 +18,7 @@
+ #include <linux/module.h>
+ #include <linux/file.h>
+ #include <linux/binfmts.h>
++#include <linux/kernel_read_file.h>
+ #include <linux/mount.h>
+ #include <linux/mman.h>
+ #include <linux/slab.h>
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index e493063a3c34..f8390f6081f0 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/init.h>
+ #include <linux/list.h>
++#include <linux/kernel_read_file.h>
+ #include <linux/fs.h>
+ #include <linux/security.h>
+ #include <linux/magic.h>
+diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
+index ee5cb944f4ad..81bc95127f92 100644
+--- a/security/loadpin/loadpin.c
++++ b/security/loadpin/loadpin.c
+@@ -11,6 +11,7 @@
+ 
+ #include <linux/module.h>
+ #include <linux/fs.h>
++#include <linux/kernel_read_file.h>
+ #include <linux/lsm_hooks.h>
+ #include <linux/mount.h>
+ #include <linux/path.h>
+diff --git a/security/security.c b/security/security.c
+index 2bb912496232..8983cdc07ebb 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -16,6 +16,7 @@
+ #include <linux/export.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
++#include <linux/kernel_read_file.h>
+ #include <linux/lsm_hooks.h>
+ #include <linux/integrity.h>
+ #include <linux/ima.h>
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index efa6108b1ce9..5de45010fb1a 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -24,6 +24,7 @@
+ #include <linux/init.h>
+ #include <linux/kd.h>
+ #include <linux/kernel.h>
++#include <linux/kernel_read_file.h>
+ #include <linux/tracehook.h>
+ #include <linux/errno.h>
+ #include <linux/sched/signal.h>
 -- 
-Peter Xu
+2.17.1
 
