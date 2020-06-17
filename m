@@ -2,213 +2,157 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D39C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF256C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBBE3212CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C410D20897
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:19:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="cT52h2Zn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgFQSSR (ORCPT
+        id S1726912AbgFQSTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:18:17 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:38194 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgFQSSQ (ORCPT
+        Wed, 17 Jun 2020 14:19:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbgFQSTb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 14:18:16 -0400
-IronPort-SDR: efYVrKFao1abJfgAjuK3Z7ZhcR4PPWKob2D0Sc0JUt0fxhdrIifeNFsfw4j787EcYLyq0puyF2
- 8SuFunk0L7IEehqBId+wX9i+j/VH5Yv2fLbyYDwXquJteTC8znMTAMj+UOSMnJ/R3Vd9uDEGmI
- VuNJOv7wXFdQ6KzOc4d80QFvy17O9dySPk22vdYYoQfaZ5OyGCIrpDYhQ5ZYiCeneAYwUFqecg
- /tE6vIdEEjJdrpNVhvr+PhJAI6/88xeUDSb0U/MoY2bJJ4/UCr//4NX9EA429+iiUpInuti+/4
- vj0=
-X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
-   d="scan'208";a="49938173"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 17 Jun 2020 10:18:15 -0800
-IronPort-SDR: wGbn1KzcJ5/BWQql3TKTC64LOt6hWVJy0IhGWCQ5oxSBO0w2LzdQodM1mTQSpcGF+INKHZcuId
- KbyDtj0Fjq+skL/iCZOkpSXdtR/vvNTtgkXY7JTt4XvnTA8VvPnT5pxJfgeysIA8a/nf8Q8HQ+
- nCx+d7eNxggs0e3Tmyp9HjQ9okWZJDcmruAYLUiZtC56+mMtR3Kdzm1ZH63sZ+d5pE1fdZiuqL
- EzvPW4lbnxHIjaDIeKJOSxg5BaglbmWhF611PqhKVu5Oa8MBy+EMfyRQgtMCGS/mpBfpzj+urO
- HPM=
-Subject: Re: [PATCH] media: rcar-vin: Move media_device_register to async
- completion
-To:     =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Michael Rodin <mrodin@de.adit-jv.com>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <michael@rodin.online>,
-        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>
-References: <1592328696-84533-1-git-send-email-mrodin@de.adit-jv.com>
- <20200617105646.GB2850317@oden.dyn.berto.se>
- <20200617151537.GB88066@vmlxhi-121.adit-jv.com>
- <20200617152857.GA2936315@oden.dyn.berto.se>
-From:   Steve Longerbeam <steve_longerbeam@mentor.com>
-Message-ID: <888de4f6-3d89-5b74-750c-376173404832@mentor.com>
-Date:   Wed, 17 Jun 2020 11:18:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 17 Jun 2020 14:19:31 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABD75C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:19:30 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id e16so2333424qtg.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:19:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7ygmg5pJ3Q6RAkZDdpWTzoQBPWiWmPTO6zFsDmZl2Zo=;
+        b=cT52h2ZnmsufofRf+wMCIPQ8EvOaRDlYtQ86xpEeukmIV/6RocEm/QAZzGG9f6e3iv
+         UHMbYzxQEKqa5FRxWNpDE3DaTNWeHbQHY2tX19ysOUTcJZWvNDJchHwcsB4HiWZg2apY
+         w3d1tu0Ucnqvt1p+i9KuIQajfh+69QROTYS+5ymu5uYMoChDVtspjy+35W+mhSYxdu4w
+         CCaKA2W8hkdmnE3dhYQJD+PAVJVjSdVG3L0k7qm8HA4v/axEbyMYUgWwWiJMUz7HcU7E
+         6SDJZ1HpbD9ZyujyiQJqLh0m7c0MXNJeEB/wk8HfFGHmAAohxdclLYRKtuofX/zyudpD
+         meqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7ygmg5pJ3Q6RAkZDdpWTzoQBPWiWmPTO6zFsDmZl2Zo=;
+        b=c+ockvhAom2dcMPDCqnd1+0ZcyUUgAnT1o3nvIVgtFPaARXB+xZnLjSC7NaI/Tmnjs
+         D3+RvsMtx8PXsdxqJ/PqjNYlBwUPVUBeCjWWtdmCZRJ2MGTfe/aiglyfPlwWYC+842ye
+         BXXKn9f62qiDErgB+9xPmRWRaktw001gtgP0YFRO2Ls1lyBSnZyHz+1z0uPJFS7mUjyq
+         9XldWLREL4Nr2Hr2zbaEhAGBpMiBd9yamOhUZ6yu5ZvrtlRqcx+ioUG4sWF1RCpzEccj
+         OI2CH4c0x6xyCrKmcRgji+RM6nkz2lNRl2pTZ2FmBUKtesB25/acwp5cvEVYENVrwHu4
+         YBsQ==
+X-Gm-Message-State: AOAM532hbvqDAJseRYMdOxsPJJsD8YNd7dPkb0UCiDeGjzlr4SOCRxCt
+        gVmN9EatJYqnNSkHGxPSqNMAorOMVnvvNQ==
+X-Google-Smtp-Source: ABdhPJyuInpJpDChXaQb7d+bR+LEx4TD8K3MTPdfbyh1qpch1hfnlKkDXVNs6VwJEYxzaYm/9qYPpQ==
+X-Received: by 2002:ac8:7252:: with SMTP id l18mr361264qtp.71.1592417969382;
+        Wed, 17 Jun 2020 11:19:29 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11e8::1193? ([2620:10d:c091:480::1:6146])
+        by smtp.gmail.com with ESMTPSA id u10sm671035qth.32.2020.06.17.11.19.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2020 11:19:28 -0700 (PDT)
+Subject: Re: [PATCH btrfs/for-next] btrfs: fix fatal extent_buffer readahead
+ vs releasepage race
+To:     fdmanana@gmail.com, Chris Mason <clm@fb.com>
+Cc:     Boris Burkov <boris@bur.io>, David Sterba <dsterba@suse.com>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-team@fb.com
+References: <20200617162746.3780660-1-boris@bur.io>
+ <CAL3q7H47P6E9zn3Zk9C2LX8-1g2QNiCGgbcRMDQDk+JBCoOhzg@mail.gmail.com>
+ <ADB20899-1E88-4546-BEB5-4F2165386184@fb.com>
+ <CAL3q7H5q1ocLa6HjSfiXgVJ67kyfqNBDhcwMqeRVDfbiyr5-tg@mail.gmail.com>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <1fdc19e9-8517-efb3-78c7-6f4d0152d87f@toxicpanda.com>
+Date:   Wed, 17 Jun 2020 14:19:27 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200617152857.GA2936315@oden.dyn.berto.se>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL3q7H5q1ocLa6HjSfiXgVJ67kyfqNBDhcwMqeRVDfbiyr5-tg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
- svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Niklas, Michael,
-
-On 6/17/20 8:28 AM, Niklas Söderlund wrote:
-> Hi Michael,
->
-> On 2020-06-17 17:15:37 +0200, Michael Rodin wrote:
->> Hi Niklas and Steve,
+On 6/17/20 2:11 PM, Filipe Manana wrote:
+> On Wed, Jun 17, 2020 at 6:43 PM Chris Mason <clm@fb.com> wrote:
 >>
->> On Wed, Jun 17, 2020 at 12:56:46PM +0200, Niklas Söderlund wrote:
->>> Hi Michael and Steve,
+>> On 17 Jun 2020, at 13:20, Filipe Manana wrote:
+>>
+>>> On Wed, Jun 17, 2020 at 5:32 PM Boris Burkov <boris@bur.io> wrote:
 >>>
->>> On 2020-06-16 19:31:36 +0200, Michael Rodin wrote:
->>>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
->>>>
->>>> The media_device is registered during driver probe, before async
->>>> completion, so it is possible for .link_notify to be called before
->>>> all devices are bound.
->>>>
->>>> Fix this by moving media_device_register() to rvin_group_notify_complete().
->>>> This ensures that all devices are now bound (the rcar-csi2 subdevices and
->>>> and video capture devices) before .link_notify can be called.
->>> I'm curious to what situation created the need for this change. I'm
->>> currently trying to take the VIN driver in the opposite direction [1]
->>> with the end goal of registering video devices at probe time and then
->>> allow the media graph to populate as devices becomes available.
->> It looks like almost all platform drivers call media_device_register() in
->> the completion callback. From my understaning it is necessary to ensure
->> that all subdevices are bound and all links are created before the user
->> can enable any link (which would trigger link_notify callback execution)
->> and set formats. If I am not mistaken, Steve could observe an "OOPS" or
->> at least it is theoretically possible.
-> If an OOPS have been observed I would be interested to see it. That way
-> we can fix the OOPS and keep the media graph registration where it is
-> today.
-
-It's been a long time since I looked at this on a Salvator-X. But I do 
-remember there was an OOPS if an attempt was made to enable a link 
-before all devices had bound. Unfortunately I no longer have access to 
-RCAR h/w to prove this point.
-
->> Actually I found that this patch alone is not enough even if it is correct,
->> because we also have to register the media device in rvin_parallel_notify_complete()
->> in case if there is only a parallel video input device attached.
->>
->>> My reason for this is that we could have a functional pipeline inside
->>> the graph even if it's not complete. This came out of the GMSL work done
->>> a while pack where I had a faulty camera that would prevent the other 7
->>> in the system to function.
->> I agree that if a probe of a faulty subdevice fails, this should not affect
->> functionality of the other attached subdevices. The "complete" callback of
->> the async notifier is probably not executed in this case, so I guess, we
->> would have to register the media device in the "bound" callback after the first
->> subdevice has been probed? Otherwise there is not much sense to have video
->> capture devices, which are not connected to any source.
-> Calling it in the bound callback is mostly the same as it is today, as
-> link_notify could then be called when not all entities are in the graph.
-> In fact even if we where tp move the media device registration to the t
-> complete callback we have this problem if any of the subdevices are
-> unbound. Then we are back to the state with a registerd media device
-> where not all entities are present.
->
-> I think the solution here is to address the issue (if any) in the
-> link_notify callback when the graph is not fully populated.
-
-I like the idea of allowing a functional pipeline without all devices 
-bound. So I understand the desire to keep media device registration in 
-probe.
-
-So in that case I agree link_notify should be fixed if it still needs 
-fixing to handle non-bound subdevices.
-
-Steve
-
->> (Delayed) population of the media graph after media device registration
->> sounds also like a requirement for device tree overlay support, which would
->> also be a nice feature.
->>
->>> 1. [PATCH 0/5] media-device: Report if graph is complete
->>>
->>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->>>> Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
 >>>> ---
->>>>   drivers/media/platform/rcar-vin/rcar-core.c | 14 ++++++--------
->>>>   1 file changed, 6 insertions(+), 8 deletions(-)
+>>>>   fs/btrfs/extent_io.c | 45
+>>>> ++++++++++++++++++++++++++++----------------
+>>>>   1 file changed, 29 insertions(+), 16 deletions(-)
 >>>>
->>>> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
->>>> index 7440c89..e70f83b 100644
->>>> --- a/drivers/media/platform/rcar-vin/rcar-core.c
->>>> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
->>>> @@ -253,7 +253,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
->>>>   	struct media_device *mdev = &group->mdev;
->>>>   	const struct of_device_id *match;
->>>>   	struct device_node *np;
->>>> -	int ret;
->>>>   
->>>>   	mutex_init(&group->lock);
->>>>   
->>>> @@ -266,7 +265,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
->>>>   	vin_dbg(vin, "found %u enabled VIN's in DT", group->count);
->>>>   
->>>>   	mdev->dev = vin->dev;
->>>> -	mdev->ops = &rvin_media_ops;
->>>>   
->>>>   	match = of_match_node(vin->dev->driver->of_match_table,
->>>>   			      vin->dev->of_node);
->>>> @@ -278,11 +276,7 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
->>>>   
->>>>   	media_device_init(mdev);
->>>>   
->>>> -	ret = media_device_register(&group->mdev);
->>>> -	if (ret)
->>>> -		rvin_group_cleanup(group);
->>>> -
->>>> -	return ret;
->>>> +	return 0;
->>>>   }
->>>>   
->>>>   static void rvin_group_release(struct kref *kref)
->>>> @@ -688,6 +682,8 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
->>>>   		return ret;
->>>>   	}
->>>>   
->>>> +	vin->group->mdev.ops = &rvin_media_ops;
->>>> +
->>>>   	/* Register all video nodes for the group. */
->>>>   	for (i = 0; i < RCAR_VIN_NUM; i++) {
->>>>   		if (vin->group->vin[i] &&
->>>> @@ -736,8 +732,10 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
->>>>   		}
->>>>   	}
->>>>   	mutex_unlock(&vin->group->lock);
->>>> +	if (ret)
->>>> +		return ret;
->>>>   
->>>> -	return ret;
->>>> +	return media_device_register(&vin->group->mdev);
->>>>   }
->>>>   
->>>>   static void rvin_group_notify_unbind(struct v4l2_async_notifier *notifier,
->>>> -- 
->>>> 2.7.4
->>>>
->>> -- 
->>> Regards,
->>> Niklas Söderlund
->> -- 
->> Best Regards,
->> Michael
+>>>> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+>>>> index c59e07360083..f6758ebbb6a2 100644
+>>>> --- a/fs/btrfs/extent_io.c
+>>>> +++ b/fs/btrfs/extent_io.c
+>>>> @@ -3927,6 +3927,11 @@ static noinline_for_stack int
+>>>> write_one_eb(struct extent_buffer *eb,
+>>>>          clear_bit(EXTENT_BUFFER_WRITE_ERR, &eb->bflags);
+>>>>          num_pages = num_extent_pages(eb);
+>>>>          atomic_set(&eb->io_pages, num_pages);
+>>>> +       /*
+>>>> +        * It is possible for releasepage to clear the TREE_REF bit
+>>>> before we
+>>>> +        * set io_pages. See check_buffer_tree_ref for a more
+>>>> detailed comment.
+>>>> +        */
+>>>> +       check_buffer_tree_ref(eb);
+>>>
+>>> This is a whole different case from the one described in the
+>>> changelog, as this is in the write path.
+>>> Why do we need this one?
+>>
+>> This was Josef’s idea, but I really like the symmetry.  You set
+>> io_pages, you do the tree_ref dance.  Everyone fiddling with the write
+>> back bit right now correctly clears writeback after doing the atomic_dec
+>> on io_pages, but the race is tiny and prone to getting exposed again by
+>> shifting code around.  Tree ref checks around io_pages are the most
+>> reliable way to prevent this bug from coming back again later.
+> 
+> Ok, but that still doesn't answer my question.
+> Is there an actual race/problem this hunk solves?
+> 
+> Before calling write_one_eb() we increment the ref on the eb and we
+> also call lock_extent_buffer_for_io(),
+> which clears the dirty bit and sets the writeback bit on the eb while
+> holding its ref_locks spin_lock.
+> 
+> Even if we get to try_release_extent_buffer, it calls
+> extent_buffer_under_io(eb) while holding the ref_locks spin_lock,
+> so at any time it should return true, as either the dirty or the
+> writeback bit is set.
+> 
+> Is this purely a safety guard that is being introduced?
+> 
+> Can we at least describe in the changelog why we are adding this hunk
+> in the write path?
+> All it mentions is a race between reading and releasing pages, there's
+> nothing mentioned about races with writeback.
+> 
 
+I think maybe we make that bit a separate patch, and leave the panic fix on it's 
+own.  I suggested this because I have lofty ideas of killing the refs_lock, and 
+this would at least keep us consistent in our usage TREE_REF to save us from 
+freeing stuff that may be currently under IO.
+
+I'm super not happy with our reference handling coupled with releasepage, but 
+these are the kind of hoops we're going to have to jump through until we have 
+some better infrastructure in place to handle metadata.  Thanks,
+
+Josef
