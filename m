@@ -2,124 +2,108 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CAEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA795C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51B0D207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE8821475
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:56:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgFQHwk (ORCPT
+        id S1726280AbgFQH4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 03:52:40 -0400
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:56983 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725536AbgFQHwj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 03:52:39 -0400
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1jlSs8-000QO4-Fy; Wed, 17 Jun 2020 09:52:36 +0200
-Received: from p5b13afbc.dip0.t-ipconnect.de ([91.19.175.188] helo=[192.168.178.139])
-          by inpost2.zedat.fu-berlin.de (Exim 4.93)
-          with esmtpsa (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jlSs8-000P3x-6f; Wed, 17 Jun 2020 09:52:36 +0200
-Subject: Re: [PATCH v3] sh: Implement __get_user_u64() required for 64-bit
- get_user()
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To:     linux-sh@vger.kernel.org
-Cc:     Rich Felker <dalias@libc.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
-        NIIBE Yutaka <gniibe@fsij.org>, linux-kernel@vger.kernel.org
-References: <20200611075811.2949870-1-glaubitz@physik.fu-berlin.de>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
- 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
- scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <54a92ee8-e35a-270f-6274-454ffb220a5a@physik.fu-berlin.de>
-Date:   Wed, 17 Jun 2020 09:52:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 17 Jun 2020 03:56:40 -0400
+Received: from verein.lst.de ([213.95.11.211]:42288 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbgFQH4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 03:56:39 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 1200968B05; Wed, 17 Jun 2020 09:56:37 +0200 (CEST)
+Date:   Wed, 17 Jun 2020 09:56:36 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Vegard Nossum <vegard.nossum@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, hch@lst.de,
+        mm-commits@vger.kernel.org, viro@zeniv.linux.org.uk
+Subject: Re: [merged] exec-open-code-copy_string_kernel.patch removed from
+ -mm tree
+Message-ID: <20200617075636.GA13618@lst.de>
+References: <20200605201952.V2waw9dhw%akpm@linux-foundation.org> <079d08bb-f8de-e119-a427-4ff0274f4616@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200611075811.2949870-1-glaubitz@physik.fu-berlin.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 91.19.175.188
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <079d08bb-f8de-e119-a427-4ff0274f4616@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/20 9:58 AM, John Paul Adrian Glaubitz wrote:
-> This is version 3 of my patch to implement __get_user_u64() for SH.
-> 
-> I have asked both Yutaka Niibe and Yoshinori Sato to look over my changes and they
-> both agreed that an entry in __ex_tables for the second access was missing, so I
-> add the missing ".long 1b+2, 3b\n\t".
-> 
-> The changes should be correct now and will hopefully get a positive review by
-> the SH maintainers.
+On Tue, Jun 16, 2020 at 03:14:44PM +0200, Vegard Nossum wrote:
+>
+> On 2020-06-05 22:19, akpm@linux-foundation.org wrote:
+>> The patch titled
+>>       Subject: exec: open code copy_string_kernel
+>> has been removed from the -mm tree.  Its filename was
+>>       exec-open-code-copy_string_kernel.patch
+>>
+>> This patch was dropped because it was merged into mainline or a subsystem tree
+>>
+>> ------------------------------------------------------
+>> From: Christoph Hellwig <hch@lst.de>
+>> Subject: exec: open code copy_string_kernel
+>>
+>> Currently copy_string_kernel is just a wrapper around copy_strings that
+>> simplifies the calling conventions and uses set_fs to allow passing a
+>> kernel pointer.  But due to the fact the we only need to handle a single
+>> kernel argument pointer, the logic can be sigificantly simplified while
+>> getting rid of the set_fs.
+>>
+>> Link: http://lkml.kernel.org/r/20200501104105.2621149-3-hch@lst.de
+>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+>> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>> ---
+>>
+>>   fs/exec.c |   45 +++++++++++++++++++++++++++++++++++----------
+>>   1 file changed, 35 insertions(+), 10 deletions(-)
+>>
+>> --- a/fs/exec.c~exec-open-code-copy_string_kernel
+>> +++ a/fs/exec.c
+>> @@ -592,17 +592,42 @@ out:
+>>    */
+>>   int copy_string_kernel(const char *arg, struct linux_binprm *bprm)
+>>   {
+>> -	int r;
+>> -	mm_segment_t oldfs = get_fs();
+>> -	struct user_arg_ptr argv = {
+>> -		.ptr.native = (const char __user *const  __user *)&arg,
+>> -	};
+>> -
+>> -	set_fs(KERNEL_DS);
+>> -	r = copy_strings(1, argv, bprm);
+>> -	set_fs(oldfs);
+>> +	int len = strnlen(arg, MAX_ARG_STRLEN) + 1 /* terminating NUL */;
+>> +	unsigned long pos = bprm->p;
+>>   -	return r;
+>> +	if (len == 0)
+>> +		return -EFAULT;
+>
+> Just a quick question, how can len ever be 0 here when len was set to
+> strnlen() + 1? Should the test be different?
+>
+> The old version (i.e. copy_strings()) seems to return -EFAULT when
+> strnlen() returns 0.
 
-Ping.
+So, the nasty part here is that strnlen_user has different semantics
+from strnlen:
 
-@Rich, @Yoshinori, @Yutaka, @Michael could I get a review if you have some time?
+ - strlen excludes the terminating null byte and never returns error
+   codes
+ - strnlen_user includes the terminating null byte, and a 0 return
+   means it could not access the user address (a condition that can't
+   happen for strlen).
 
-Adrian
-
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer - glaubitz@debian.org
-`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+Now with that back to your original question:  I think then len == 0
+check can just be removed without replacement.
