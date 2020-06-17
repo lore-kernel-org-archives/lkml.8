@@ -2,111 +2,97 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABF9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2061FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F240207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A0C2098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592394446;
-	bh=c3/QWnFt5iLGaQTofmcr61auxhK/9/ececAXtvcpTyw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N08yeblTdZ3FTQb36XaK+IFYkU2GioybTvLbbEoKtibxRNhNmnn2JovltPLxGTGAD
-	 Eh2zR5g5Aj8hclHnX245DnKo5ytM5XRFUiXkFJE+Ob4Tp3zn4ujpBpoU9Q4YGUR7h7
-	 mmKfwMTZnOFaNKLSEn/eof4beGuQc7CEVsOP05us=
+	s=default; t=1592394597;
+	bh=SGktHL8v4bUaxnE11zkIKRC5NP2G8l0cI+uxomn/MU8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=orMpyGRGz3q73/DnWUHP4nOXvQfyNLyq7tLtI1jPW52S0QPlTSHzNUpQtfkrW1Z5R
+	 vffln5D+5EC7oWe6P325L1MlvueG5MbxMRpUj6HouM1dtVsUvq5xt1b5OtqAUZHuRH
+	 zlHQa6vd+39nJNPYoBgNKwWjkVu49F790sJnnLqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgFQLrZ (ORCPT
+        id S1726597AbgFQLtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:47:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57952 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 07:49:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725967AbgFQLrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:47:25 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1725894AbgFQLtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 07:49:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBFE5207DD;
-        Wed, 17 Jun 2020 11:47:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 682F42098B;
+        Wed, 17 Jun 2020 11:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592394444;
-        bh=c3/QWnFt5iLGaQTofmcr61auxhK/9/ececAXtvcpTyw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=14UpedtYLNDUXYNj3lMDMpr6FtOfPmEKPZlQOxSOtExirPznMhHAzsBBji3hG3E8q
-         pDpM3mgMknuYGDeMfKD0oV0r99P+fuXb+FGAAMfrxjzkNlGu1SKIqTRM8CISEwRq/m
-         MKFMrWwVXuKcPBHZlBz5WQrUrWhGbz15wQHYbpks=
-Date:   Wed, 17 Jun 2020 12:47:22 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lgirdwood@gmail.com, robh+dt@kernel.org,
-        Nisha Kumari <nishakumari@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v4 4/5] regulator: qcom: Add labibb driver
-Message-ID: <20200617114721.GD4613@sirena.org.uk>
-References: <20200602100924.26256-1-sumit.semwal@linaro.org>
- <20200602100924.26256-5-sumit.semwal@linaro.org>
- <20200602113241.GE5684@sirena.org.uk>
- <CAO_48GGgNUGosN2PiL=U5JkR3Bh5wNK3N4xYYML1UwmdfDPRww@mail.gmail.com>
- <20200602122554.GG5684@sirena.org.uk>
- <CAO_48GFwEHBGmz0QvN+pXFSyHC9+7=0aoJLHF4uupGSx2TcSvA@mail.gmail.com>
+        s=default; t=1592394594;
+        bh=SGktHL8v4bUaxnE11zkIKRC5NP2G8l0cI+uxomn/MU8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=1+haDgzUZBvOMdpdBhZ9W5amJUuetI3EiyNrNw7K/AsopZqolAfCjt6ECuMn06iIB
+         omCnTHLmqDswENeS05R08MwhSN9WHJpVIkNIaM0ny2d9lBQ2SpvboScc0aowX4FxB7
+         Te9pJc8qPCMK7u0PNkTo7Fji+FhSYYis1lr+lRag=
+Date:   Wed, 17 Jun 2020 13:49:46 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>
+Cc:     Steffen Maier <maier@linux.ibm.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Wade Mealing <wmealing@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH v2] Revert "zram: convert remaining CLASS_ATTR() to
+ CLASS_ATTR_RO()"
+Message-ID: <20200617114946.GA2131650@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UoPmpPX/dBe4BELn"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAO_48GFwEHBGmz0QvN+pXFSyHC9+7=0aoJLHF4uupGSx2TcSvA@mail.gmail.com>
-X-Cookie: This fortune is false.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200617103412.GA2027053@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Wade Mealing <wmealing@redhat.com>
 
---UoPmpPX/dBe4BELn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Turns out that the permissions for 0400 really are what we want here,
+otherwise any user can read from this file.
 
-On Wed, Jun 17, 2020 at 05:12:35PM +0530, Sumit Semwal wrote:
+[fixed formatting, added changelog, and made attribute static - gregkh]
 
-> I understand from a pure regulators' correctness point of view,
-> ENABLE_CTL should be the one checked there, so I can change the patch
-> as you suggested, but there seems to be some performance penalty
-> there.
+Reported-by: Wade Mealing <wmealing@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Fixes: f40609d1591f ("zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()")
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1847832
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+v2: fix read/write confusion in the changelog, thanks to Steffen for the
+    review.
+    was more specific as to the changes I made to the original patch.
 
-I thought the goal was to have the performance penalty to ensure that
-the regulator had actually started?
+ drivers/block/zram/zram_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> > > The WARN_ON? This was suggested by Bjorn to catch the case where the
-> > > DT binding for a PMIC instantiates only one of the regulators.
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 6e2ad90b17a3..270dd810be54 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -2021,7 +2021,8 @@ static ssize_t hot_add_show(struct class *class,
+ 		return ret;
+ 	return scnprintf(buf, PAGE_SIZE, "%d\n", ret);
+ }
+-static CLASS_ATTR_RO(hot_add);
++static struct class_attribute class_attr_hot_add =
++	__ATTR(hot_add, 0400, hot_add_show, NULL);
+ 
+ static ssize_t hot_remove_store(struct class *class,
+ 			struct class_attribute *attr,
+-- 
+2.27.0
 
-> > No, this whole loop - why this whole match and get child stuff?
 
-> This loop mechanism is what I saw in the other qcom regulators
-> upstream, so thought it was an acceptable way.
-> For the two children nodes, do you recommend another mechanism to get
-> and validate both nodes?
-
-I don't understand what you mean by "two children nodes" here?
-
---UoPmpPX/dBe4BELn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7qAskACgkQJNaLcl1U
-h9CwHwf8D6plSnWpJBT6fOA9ZBPP/820nVYr3A+7su56CgW5U+Q0a0fYck3zmpG/
-WbNQm/poaHawCTQsmd6YQGs7SnBaVIJs5xyLmEtsX65EjP4jo+sYuN1/RWio+KIs
-3qupZj3mYWLAVYUrsVq0nKDlrjcorsbT3Kpe/Yzg1TIg2ZYU9kwIrDvDowKkwSvD
-L3oj9fzDokGBGyl8PQd/xCGuM92IrGASoUZeWbYdXfMf0BZxZ0tXN53TmwLE1Ybg
-P8k94OIRbwx4z4HyNxpsy0+mKBwd3kLRIhyAwCZT+HJH13V4OrF5NfoEt3+e58TN
-17C2i1cB4rfV/cHQLvJ6zkqLykqrZw==
-=DTZm
------END PGP SIGNATURE-----
-
---UoPmpPX/dBe4BELn--
