@@ -2,129 +2,106 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8760C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6822080D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8EB32082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:07:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ldFy59vn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uPykhRwT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgFQGFR (ORCPT
+        id S1726878AbgFQGHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 02:05:17 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57064 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgFQGFQ (ORCPT
+        Wed, 17 Jun 2020 02:07:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbgFQGHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 02:05:16 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05H651rG119792;
-        Wed, 17 Jun 2020 01:05:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592373901;
-        bh=pjgQJY6FtV2aSO68aw+isVN5H6rQrBZ0BarV7CeclmA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ldFy59vnuaLA/u87+fSXcqQRsUB1FMfZ07OUnq32bevnq5CuqguFk6/XIN+tU3b5b
-         QzajJXonGLbCTYhJ7liLkJqF8XcR6NM3wvFilkEO57mLXav1z5rVRgnlWTAQRsftd+
-         mmEMIUL1z+KZBoKQCcf3OXJ7dxO5ulRadfJySHJE=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05H651lZ051995
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jun 2020 01:05:01 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 17
- Jun 2020 01:05:00 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 17 Jun 2020 01:05:00 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05H64vko028969;
-        Wed, 17 Jun 2020 01:04:57 -0500
-Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
- platform data removal
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, "Andrew F . Davis" <afd@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <dri-devel@lists.freedesktop.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <20200531193941.13179-1-tony@atomide.com>
- <20200531193941.13179-2-tony@atomide.com>
- <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
- <20200603140639.GG37466@atomide.com>
- <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
- <20200609151943.GL37466@atomide.com>
- <9ed70121-2a53-d2b3-051a-88eb83e6c53f@ti.com>
- <d03dd04f-6f2c-25ba-fe1f-d5fc0dfb5c68@ti.com>
- <592501c9-2d94-b266-ae76-e383d3bffa29@ti.com>
- <20200616153042.GZ37466@atomide.com>
- <3f2855cc-48b8-ecb8-5d92-beeabe344b26@ti.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <d0488631-e2d8-115f-9900-5838147ec674@ti.com>
-Date:   Wed, 17 Jun 2020 09:04:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 17 Jun 2020 02:07:32 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9292AC06174E
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 23:07:31 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id a9so1368676ljn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 23:07:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k2ZEmHhrPs/ulmpdqloJHox+N+2D34dGnYoIhwM09Oc=;
+        b=uPykhRwTSAish44ZDPcrnTHTYCxTAoPDQs0s4pqD9Gz+ToeIJigh/T49FDZ4AhuDkX
+         ZFti8QWz6Uspvl1RbUitrc4JdzWcICXShXq9TFZKvcMSclCNwY/iHqtBXrDk4tBAazFI
+         uzfQqSxSYL7XNi/zx0qIUgOGebOCQ7N2AuzBr3yWfXTTxy3Q/Cegh2vVDSZV4dM3+onD
+         KnZocUo2gfKgj2zcrY/20wezao3Gn/JjFkIG9XieO3vzKrjsy3BR2h0UoWhafeGP6dbV
+         CzJ5DImXZwKUKFLzbM7oo8fP0qvdLZQHpNFDTZbcD0cNDOwiAUtY3AQAhkx8zFdlZ7Kn
+         eu+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k2ZEmHhrPs/ulmpdqloJHox+N+2D34dGnYoIhwM09Oc=;
+        b=QdIhwF/MD3+nVeTGi5ApOHsUY632gVICZTWh8Uua8JkxxVsdJ64UFTPFFbg0/QvA2r
+         1E5bz0wUOZ2EPRyW2eLJQlc+YGJzJicbjTk5wVED3GLYiDiM75Fz8T77dzKkWhFQuu3d
+         1teoBBsaVYPonh9QDprc6Yi13Epzl7SQCO4JYvV9mqoCNb3Z8b9BzxSg0V2V5ybOtSSB
+         mWximDlqRiD872R6TjGWQqodL8ZzybfDM1OHZsEr2gyzGijHN/4F1F/gQCEvhlYdRG7L
+         re4gjU7uKvuto8BP+yc/yjzZ+vytETfyKK0tbQ6zWTi6LU+4hC7IdQoAdKJfSUmk5rlC
+         TQ6A==
+X-Gm-Message-State: AOAM533FGP85rYZtVxWMLbYZAzuNdHuRAiYb31MXSJGPXhtlUZiCuvmp
+        VUOO/EwXCbj30EVnx+t8kx8Zzam6UduYuxQDP+80wQ==
+X-Google-Smtp-Source: ABdhPJwVGClABjAHoGqIadqLzIigFwQpGKlcnffd1cvXC97YTGleZl7YASG+am+g3y0+dLrdmn9YK7ztFIvmDc5Os+w=
+X-Received: by 2002:a2e:5c47:: with SMTP id q68mr3402768ljb.30.1592374049915;
+ Tue, 16 Jun 2020 23:07:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3f2855cc-48b8-ecb8-5d92-beeabe344b26@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
+ <20200616205017.GC20943@linux.intel.com>
+In-Reply-To: <20200616205017.GC20943@linux.intel.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Wed, 17 Jun 2020 11:37:17 +0530
+Message-ID: <CAFA6WYO1X3zdOMgVnHvKm7MAWWyE=dhbLpCcU5zJG7R2fCuycg@mail.gmail.com>
+Subject: Re: [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Maxim Uvarov <maxim.uvarov@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        peterhuewe@gmx.de, Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/06/2020 19:56, Grygorii Strashko wrote:
-> 
-> 
-> On 16/06/2020 18:30, Tony Lindgren wrote:
->> * Tomi Valkeinen <tomi.valkeinen@ti.com> [200616 13:02]:
->>> On 11/06/2020 17:00, Grygorii Strashko wrote:
->>>> I think, suspend might be fixed if all devices, which are now child of ti-sysc, will do
->>>> pm_runtime_force_xxx() calls at noirq suspend stage by adding:
->>>>
->>>>       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->>>>                         pm_runtime_force_resume)
->>>>
->>>> Am I missing smth?
->>>
->>> Isn't this almost exactly the same my patch does? I just used suspend_late
->>> and resume_early. Is noirq phase better than late & early?
->>
->> Well up to you as far as I'm concerned. The noirq phase comes with serious
->> limitations, for let's say i2c bus usage if needed. Probably also harder
->> to debug for suspend and resume.
-> 
-> Unfortunately, you can't use PM runtime force API at .suspend() stage as pm_runtime_get will still 
-> work and
-> there is no sync between suspend and pm_runtime.
-> The PM runtime force API can be used only during late/noirq as at this time pm_runtime is disabled.
+On Wed, 17 Jun 2020 at 02:20, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Thu, Jun 04, 2020 at 08:58:49PM +0300, Maxim Uvarov wrote:
+> > With the evolving use-cases for TEE bus, now it's required to support
+> > multi-stage enumeration process. But using a simple index doesn't
+> > suffice this requirement and instead leads to duplicate sysfs entries.
+> > So instead switch to use more informative device UUID for sysfs entry
+> > like:
+> > /sys/bus/tee/devices/optee-ta-<uuid>
+> >
+> > Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> > Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+>
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>
+> Sumit, are you able to test these easily?
 
-Yes, but which one... Do you know what the diff is with late/noirq from driver's perspective? I 
-guess noirq is atomic context, late is nto?
+Yes, I could give them a try.
 
-Dispc's suspend uses synchronize_irq(), so that rules out noirq. Although the call is not needed if 
-using noirq version, so that could also be managed with small change. But I wonder if there's any 
-benefit in using noirq versus late.
+Maxim,
 
-  Tomi
+Could you share fTPM TA tree which I should use for testing?
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-Sumit
+
+>
+> /Jarkko
