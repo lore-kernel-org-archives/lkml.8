@@ -2,131 +2,83 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5507C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B27C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B51E207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:08:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7+46Mbq"
+	by mail.kernel.org (Postfix) with ESMTP id C47A920853
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:14:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592370872;
+	bh=4RC/DvxLHx87nlYMECwxb5uBAMKIO7v3A/WfAL5PBCs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N4BafosYA4eljzLJCYJw743Hx5C0eSaOanpm/SSChxlDBdpYRmIeFHjay66/nhPLi
+	 mQCuQE0g2gZIAj24k4uRUarsWy4qL6ss7RuL8W6HbuqAl/wjaRHotC2DtKGqZEE0ne
+	 eNAxRWK/TnRU2Rt1SIIEbUM+OLq4/AZyxIm8dC4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgFQFI6 (ORCPT
+        id S1726790AbgFQFOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 01:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57200 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbgFQFI5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 01:08:57 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AB79C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 22:08:57 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id p15so442434qvr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 22:08:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=eSxlgyWtSoXSmG1hmoYzEM444NpFB+T4fXxIpsIpthk=;
-        b=M7+46Mbq0O0SaclOTpKcRrjHwmidJX6jYuBGOcEZ74jIc/ta25h4mCJTNKo4bq+83q
-         7Uf886njOoRqxWR8QDZ7/RsRA5Sugeo26726COXuet5ealArLVgpNAm7WzKWvnkh7F1+
-         Jw3mYYda8xVnPjMlyXz7F265CnwLEXNnmmS2yFdk8jlUxSipLaxR2UNlpiT1HHST/Czj
-         QSitAsKXFmaKnXzUHNsFAZbaKlGpWROPZnVrleXd4ToGLrxLx3T/hNICu+ms2dOXC6Ou
-         8DrfE25X06wx/PoqcbLlyhSZSJRF5gJSApRzvsVNAvoz2+qX/vNn52K5xsuuaSGiOkJ0
-         6LDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eSxlgyWtSoXSmG1hmoYzEM444NpFB+T4fXxIpsIpthk=;
-        b=hiOFFmCJiblpk9lh4lKfMrtIIZYByRf81jxk975WrAUkzayQeHlFqOaoHMKGfBaPuF
-         50LqH/Xsj3/C4OVvguJJhAX2ah/Exm52e1MCR0XJ3iJV6GQkSIGI8KC9UagNFXKy1VLq
-         Ne7Qma0GDLaoIvjAysYgVW1pDHO6MApPbUFcwMoNAZz8NQ33OyTbcgPkbdUTbukPpGQw
-         EZnRCHYt+2iAL8d3cw7iUjHXEAUBcRG4KrxnS/Zv4q42bPGpzr/NWVMBhMt6T5O8W4pT
-         4Fv9Y0o2emI2qIAeHCwzsTHf42GBLhI3l/qf8RmG20kh2ImSgx93ZzNX0zw1ecaHboTJ
-         dAsg==
-X-Gm-Message-State: AOAM533G7l0ausc8qHzh0TGhGPA+Bj9ycWlcAbnYkD4c7JSW/wxBxUxu
-        2SlCG+iFC6VGVIitP00FAAUAlpl3D+cnAOyIlYGrRrDR
-X-Google-Smtp-Source: ABdhPJz7N8RtOL+jmqif9kGxaS4c46DrOpN8lqkzazFSK/+moVt8Qzr4sDusq4/Vi8wkxzE0zK4f3ge4DurCHG3LqFA=
-X-Received: by 2002:ad4:4d04:: with SMTP id l4mr5937206qvl.88.1592370536428;
- Tue, 16 Jun 2020 22:08:56 -0700 (PDT)
+        Wed, 17 Jun 2020 01:14:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725929AbgFQFOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 01:14:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 106092082F;
+        Wed, 17 Jun 2020 05:14:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592370870;
+        bh=4RC/DvxLHx87nlYMECwxb5uBAMKIO7v3A/WfAL5PBCs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YErZksz0VYampTxWJdKuowSC+ReHO1RudkP9FrchHYS6Yh9N3LGVdZvflUqj8fNVz
+         Koo7nEAU92bNrPGW3HRg+wuttpu8rfAwIkXXN2tgFNO1ZoNezk+eUfGYXqKeaSpett
+         ezmBuDCFceFPfl5n9MgqcOj6K4hXh5r3k9hkXwXw=
+Date:   Wed, 17 Jun 2020 07:14:22 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Sergey Organov <sorganov@gmail.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>
+Subject: Re: [PATCH v2] usb: gadget: u_serial: improve performance for large
+ data
+Message-ID: <20200617051422.GA1331778@kroah.com>
+References: <1592310884-4307-1-git-send-email-macpaul.lin@mediatek.com>
+ <1592362007-7120-1-git-send-email-macpaul.lin@mediatek.com>
 MIME-Version: 1.0
-References: <1592288204-27734-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1592288204-27734-3-git-send-email-iamjoonsoo.kim@lge.com> <20200616113601.a8ab80635b6434efe43d2ffc@linux-foundation.org>
-In-Reply-To: <20200616113601.a8ab80635b6434efe43d2ffc@linux-foundation.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Wed, 17 Jun 2020 14:08:45 +0900
-Message-ID: <CAAmzW4NLzfDe_RCXJKXDy+zcYmNA_Uo6_MY8Ob4t0wV8yg3j2A@mail.gmail.com>
-Subject: Re: [PATCH for v5.8 2/3] mm/swap: fix for "mm: workingset: age
- nonresident information alongside anonymous pages"
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan.kim@gmail.com>,
-        Michal Hocko <mhocko@suse.com>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592362007-7120-1-git-send-email-macpaul.lin@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 6=EC=9B=94 17=EC=9D=BC (=EC=88=98) =EC=98=A4=EC=A0=84 3:36, A=
-ndrew Morton <akpm@linux-foundation.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
->
-> On Tue, 16 Jun 2020 15:16:43 +0900 js1304@gmail.com wrote:
->
-> > Subject: [PATCH for v5.8 2/3] mm/swap: fix for "mm: workingset: age non=
-resident information alongside anonymous pages"
->
-> I'm having trouble locating such a patch.
->
-> > Non-file-lru page could also be activated in mark_page_accessed()
-> > and we need to count this activation for nonresident_age.
-> >
-> > Note that it's better for this patch to be squashed into the patch
-> > "mm: workingset: age nonresident information alongside anonymous pages"=
-.
-> >
-> > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > ---
-> >  mm/swap.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/mm/swap.c b/mm/swap.c
-> > index 667133d..c5d5114 100644
-> > --- a/mm/swap.c
-> > +++ b/mm/swap.c
-> > @@ -443,8 +443,7 @@ void mark_page_accessed(struct page *page)
-> >               else
-> >                       __lru_cache_activate_page(page);
-> >               ClearPageReferenced(page);
-> > -             if (page_is_file_lru(page))
-> > -                     workingset_activation(page);
-> > +             workingset_activation(page);
-> >       }
-> >       if (page_is_idle(page))
-> >               clear_page_idle(page);
->
-> AFAICT this patch Fixes: a528910e12ec7ee ("mm: thrash detection-based fil=
-e
-> cache sizing")?
+On Wed, Jun 17, 2020 at 10:46:47AM +0800, Macpaul Lin wrote:
+> Nowadays some embedded systems use VCOM to transfer large log and data.
+> Take LTE MODEM as an example, during the long debugging stage, large
+> log and data were transfer through VCOM when doing field try or in
+> operator's lab. Here we suggest slightly increase the transfer buffer
+> in u_serial.c for performance improving.
+> 
+> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+> ---
+>  drivers/usb/gadget/function/u_serial.c |    5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-No,
+What changed from v1?  Always put that below the --- line as the
+documentation asks for.
 
-This patch could be squashed into the previous patch,
-"mm: workingset: age nonresident information alongside anonymous
-pages", in this patchset.
-I intentionally do not unify them by my hand since review is required.
-
-Thanks.
+v3?
