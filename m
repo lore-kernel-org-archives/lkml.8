@@ -2,124 +2,103 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFE4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C57C82082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7CC2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:08:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRtzcfZI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DeQCrD3h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgFQDGv (ORCPT
+        id S1726720AbgFQDIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 23:06:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38492 "EHLO
+        Tue, 16 Jun 2020 23:08:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbgFQDGv (ORCPT
+        with ESMTP id S1726275AbgFQDIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 23:06:51 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D88BC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 20:06:51 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b16so407973pfi.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 20:06:51 -0700 (PDT)
+        Tue, 16 Jun 2020 23:08:48 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17869C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 20:08:48 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id n23so1008426ljh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 20:08:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=dq2SjmoQupE4U9LhXdo/f9IZ6YV5RooIfJwqe+qSBlg=;
-        b=cRtzcfZIAK/fnCW3uavu1pTWu4tlI6Gez8w4jjX7ksTVmViB2GmyPtbfv4pHB2N0B7
-         52+2ATk8e+AdXsI+gEvmXN+4fq+8vjqv5o1Q0+Vd0gW34QPnbxztqI7LwNR9biWgAZ+K
-         iouMSgsyC99J7dM0nr1U+0TzVOj6EhcTo2mWN62PK3JzQGIoX4VIrHq49FgsD5+CV6F5
-         qU4zo67ue4q3ETFJqak0LoXVYaD8bpLC4qjg64CJULa32Hlk6S/kdBQ2e+0k+xTrp5Ap
-         r2l0ZLwk0wBa1V5SVadZXT7AZlW/xY4KUHIACaXXJvCEgsyULxXV6Kpj0/Uv1SEvLz6T
-         rMxw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+W5Siy2OxVYEhYRlfd+DiDo/+fekl/jChMoSNX4V14g=;
+        b=DeQCrD3hTD9Z/DYXD3P61a6T4HMorNim4f/GPxjeuDZvkujXdlI+CbGIyAbOMrHKyZ
+         MmOU0Co61YTL8W26JmYrxts7J7u7pz3YKnyPSakJIlpAPpYWdhHalEe9vi2CgQNPzovt
+         1c33xl5HNn+KAGHB5HpxzAMNODPcBO70dca9ejE1MWWIw2mmL9PYZiWRS+DBint1y2aT
+         fIuNfABnKRJQFEU0xVfWUSbyQKqLp+jmhGhDQcd6iSuHOAI5snUIS35KF+DUhciuMFhe
+         7MqCgpfo+hpbn8sFkegWAotTrhUq6avHJp0f3H+JRFtzwSWrmV8rA0IorEMLmZQfl5nW
+         Vsrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dq2SjmoQupE4U9LhXdo/f9IZ6YV5RooIfJwqe+qSBlg=;
-        b=eeeTqr0M/0Qsvv8643Hi4vJrGsdOi/I6A7KPkG8gWh8iCCOVk58Loy19EtsgXlY30M
-         O2Zj+Msi7KoncsO/yf6BqycVu2SSHQhml9FDYiM3HDhA7u7TZBdizHlUtMSSsbY8yh7C
-         Xnh4Ll+dyuCd0eMUUsae3rM00Xc55yeb6ZH+43TqRA//PUqzXuzWhsk/G6dlbgL4Flih
-         ASf3TJRTtX/dRh0e0GDXxexI9BtxP03GxQLGPgQwDp9iXNrZGoz3wJEWVDvYKPzEDWG3
-         MiM6UddEB2NmazUJ7mPpgQPvcShlZpUJjqMZ0TG6SZeO8s2osp1aMMHfP9cXQ74tp8Op
-         lZWw==
-X-Gm-Message-State: AOAM532d91S+GKqR2lyw14eQq2PSXtsvefRPQAlxFcNWCCdsnGcWgpa5
-        faypRh9ZBcjrZKek4Ir5RvY=
-X-Google-Smtp-Source: ABdhPJw//k0NXcYX0XzZ+Ih/gjrZwd7t+FwVka95iS2KhwMy/vQRUu8NT/fZjBz2+jqHCu7RJ8h7ag==
-X-Received: by 2002:a63:4822:: with SMTP id v34mr3878745pga.81.1592363210656;
-        Tue, 16 Jun 2020 20:06:50 -0700 (PDT)
-Received: from jordon-HP-15-Notebook-PC.domain.name ([122.171.213.184])
-        by smtp.gmail.com with ESMTPSA id g19sm18210446pfo.209.2020.06.16.20.06.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jun 2020 20:06:49 -0700 (PDT)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     boris.ostrovsky@oracle.com, jgross@suse.com, sstabellini@kernel.org
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [RFC PATCH] xen/privcmd: Convert get_user_pages*() to pin_user_pages*()
-Date:   Wed, 17 Jun 2020 08:44:58 +0530
-Message-Id: <1592363698-4266-1-git-send-email-jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+W5Siy2OxVYEhYRlfd+DiDo/+fekl/jChMoSNX4V14g=;
+        b=T98qC9t9noWPqcX+uNeFYqx6ollIvw5l/CEqIXkRz/NKLUBCmUklLb6zgJEEcwr1XS
+         XkPHcHI3K/IC30WyP4m1d5qd/a5Tz79a8U+HVjRmMOjrsYp4/i2NSkhPI1ZpOoLJPXOo
+         2N0yjBYNNGL2aXy0S4Anq7OQP7AtqFxlr1mthMCJ+/0V9jtJnxdsAfL/fu9rV1trBbYk
+         4yqbsHNHa2DK0BGWyiJAyYfx/Lr6H0rPSL46ZA55Gr78TlqErn99lSl9uSOwOUQ8f1Gh
+         JQMyk0kaWbSQ3kwgugbRZs7e9vinKRWqX17iLmbroLQZMKO79rQa09L1ebUau2TN6mYg
+         p2IA==
+X-Gm-Message-State: AOAM530Dv+Pne3VO4Nx1UF9ons2U+x23wqCcN7lzcn1a5KNNNLyog/eq
+        Es08yLe1rH8MXQqMrynFVvk9SmhzsaRjz9PFVAFmVA==
+X-Google-Smtp-Source: ABdhPJw0MwYJjp160hEnPcW7WhsxusFiYyA9C+OseGgpU5rh5bXc8ZOnUplScqZyCx/mxcAsPg40clzB4r0Jrlwro7c=
+X-Received: by 2002:a2e:8754:: with SMTP id q20mr2966383ljj.270.1592363326327;
+ Tue, 16 Jun 2020 20:08:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-5-guro@fb.com>
+In-Reply-To: <20200608230654.828134-5-guro@fb.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Tue, 16 Jun 2020 20:08:35 -0700
+Message-ID: <CALvZod722TC8JqcMHjYqGE+PgW40d7nGRbAAtOtSvQk0t+ntfQ@mail.gmail.com>
+Subject: Re: [PATCH v6 04/19] mm: slub: implement SLUB version of obj_to_index()
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In 2019, we introduced pin_user_pages*() and now we are converting
-get_user_pages*() to the new API as appropriate. [1] & [2] could
-be referred for more information.
+On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> This commit implements SLUB version of the obj_to_index() function,
+> which will be required to calculate the offset of obj_cgroup in the
+> obj_cgroups vector to store/obtain the objcg ownership data.
+>
+> To make it faster, let's repeat the SLAB's trick introduced by
+> commit 6a2d7a955d8d ("[PATCH] SLAB: use a multiply instead of a
+> divide in obj_to_index()") and avoid an expensive division.
+>
+> Vlastimil Babka noticed, that SLUB does have already a similar
+> function called slab_index(), which is defined only if SLUB_DEBUG
+> is enabled. The function does a similar math, but with a division,
+> and it also takes a page address instead of a page pointer.
+>
+> Let's remove slab_index() and replace it with the new helper
+> __obj_to_index(), which takes a page address. obj_to_index()
+> will be a simple wrapper taking a page pointer and passing
+> page_address(page) into __obj_to_index().
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-[1] Documentation/core-api/pin_user_pages.rst
-
-[2] "Explicit pinning of user-space pages":
-        https://lwn.net/Articles/807108/
-
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
----
-Hi,
-
-I have compile tested this patch but unable to run-time test,
-so any testing help is much appriciated.
-
-Also have a question, why the existing code is not marking the
-pages dirty (since it did FOLL_WRITE) ?
-
- drivers/xen/privcmd.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-index a250d11..543739e 100644
---- a/drivers/xen/privcmd.c
-+++ b/drivers/xen/privcmd.c
-@@ -594,7 +594,7 @@ static int lock_pages(
- 		if (requested > nr_pages)
- 			return -ENOSPC;
- 
--		pinned = get_user_pages_fast(
-+		pinned = pin_user_pages_fast(
- 			(unsigned long) kbufs[i].uptr,
- 			requested, FOLL_WRITE, pages);
- 		if (pinned < 0)
-@@ -614,10 +614,7 @@ static void unlock_pages(struct page *pages[], unsigned int nr_pages)
- 	if (!pages)
- 		return;
- 
--	for (i = 0; i < nr_pages; i++) {
--		if (pages[i])
--			put_page(pages[i]);
--	}
-+	unpin_user_pages(pages, nr_pages);
- }
- 
- static long privcmd_ioctl_dm_op(struct file *file, void __user *udata)
--- 
-1.9.1
-
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
