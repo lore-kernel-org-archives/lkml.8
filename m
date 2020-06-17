@@ -2,105 +2,161 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2569C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF458207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A4F20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:59:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcEerde5"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Go/+9ZBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgFQN6s (ORCPT
+        id S1726915AbgFQN7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:58:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54292 "EHLO
+        Wed, 17 Jun 2020 09:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgFQN6r (ORCPT
+        with ESMTP id S1726480AbgFQN7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:58:47 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89305C06174E;
-        Wed, 17 Jun 2020 06:58:47 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id i74so1864173oib.0;
-        Wed, 17 Jun 2020 06:58:47 -0700 (PDT)
+        Wed, 17 Jun 2020 09:59:39 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99DC0C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 06:59:38 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x6so2425240wrm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 06:59:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eorYSI4kx7e22DHninlhRFcMQd/uFdD7qtd2CZBW3V8=;
-        b=HcEerde5q4FsPwHzHd40ZoWl8VfokXhhEa3ioIzfzPYVCXdK7stl038k3iAwVxirkW
-         HoL4+REwXuV7Ijb4LiLKpixecTvO1DlW/4JX7bqQykyH2EvcH1ubRRF9gGu8HaiXa26F
-         +hPaBbGl9T3tmwYYe0kIg9jggMazzfJDFjayCGL3o95lyFL5lLq8JLbH43qKQTw3LdvE
-         LoRScNGy4XBOMrSuBoJ5W4fB65TDFU+gon3hGmnhsVLWUibIjWm1xvPkdSClLhqWqgJT
-         JhyM46YZmcueaDu4a6v1FE6qpsjbpm0Zrd/hriPUOws07+snWV7/F+YX7sFkKxPGYmyf
-         B1SQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=8bUOsv4bybXC/mQ3Hxos70tmB9QZ6NyHuFcpp79A5zQ=;
+        b=Go/+9ZBYINQ9VUzlG0iy74ta2eMH67TuPQd2a+TF/sBt1oDLA9sLMJqB62Ar8RWkxk
+         0sMcyp1Z7ffxSVOFPq5o3HwWy/I9Gh59I7ek3lR7TQUAdmVRbMN5vhgLZdSjm7TZVpRc
+         TdGlYfUFt0+J7VmicXsaaErvjTwwzLmZuLC32D1hsM6QcsOcTG+TMIZR7FggXwksyxZy
+         MHt6K4cZJCrH1l4XidjoTTls8O3VpQMIvnVQniuNSzyuG0wShjvJ5BWHOK6ct3vPBpHs
+         s+8qg0dX1W7EV24+vVAci6qja8ItjS68bPV8pFuU4Ro/QYk2MddfUPU6veYTM1dyC3tC
+         WiPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eorYSI4kx7e22DHninlhRFcMQd/uFdD7qtd2CZBW3V8=;
-        b=oxT1YUD7u37KzFyjhlj/3FjnXnotm6bncMPOXEvLejhq0lM5aii7R41d4VuZx19bcM
-         TN3kecn4yKMnr1hwPu3j5AguXYd0bsg+Cd1xxeE35dqVYoBA8qKptl1h1349u84fw82p
-         WkR2DpscwdVgilZSpeN71prdbXl3GUw+BbV/zjl38HADMuYZDeFgVDfKDMZ0X+rnHFrR
-         ZbZ7tlzd4naNtVz+GyHLeHmreqdkTiI+g25fhMGRruOhokrDtMeRv+mKU+SKJgUo8kvH
-         WZCcBTqNWT43CwpWlm2PSXIPBO9ydivCjsJA7EMiv9BB6BXgz8J3o6sKLksd4lpHF078
-         TV7g==
-X-Gm-Message-State: AOAM531Z6lZMy9HIStq/ZD6dJy3mPfdu//56bmKfxBQ7eK5cCPhqfYMG
-        Q1Wbazdt6BPh5XtZqoT+LDzWRtiL9+/+1FDdsHPXAMlF
-X-Google-Smtp-Source: ABdhPJwS8XlvZTqpLBiYZTp/YxzhuUzRvkvoBSCtAiWjZiXL07CBZlnr2rgNVVVwz5sDViq2xgLT+Z3197U2O/X6hjU=
-X-Received: by 2002:aca:55c1:: with SMTP id j184mr7083073oib.160.1592402326786;
- Wed, 17 Jun 2020 06:58:46 -0700 (PDT)
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=8bUOsv4bybXC/mQ3Hxos70tmB9QZ6NyHuFcpp79A5zQ=;
+        b=pQsRq6wA6dm6zN+pSYn7WQEzohYPF8oUts5ihX6CkLtl5HaXKTpQlFA6SSV+YRja8r
+         csVBVlh3wwV6MhjEYm31nuC3J1ZRr/vOa38sXiRufjuXWpet3IeGC/sVMCEkGT5M8YHR
+         isYF/fSlht8sqoV+wWV9puAvDPYsAiDNifnKgyZF96OTPQSntjXVxXPUJkWqxp0qd/ir
+         j7+VoBh6S/EAvydaAkKX1rmhBfRxor7NvG4CWl038RSbjeLXsU3YPaT9RZtgSC2AeIqu
+         QFMM7bddEDB/9IJfq+s9Ue+Dt66VoMV4qA7qd6CxGTJlyP/qBkIgVZxLEk1DtnqfZiuO
+         ItTA==
+X-Gm-Message-State: AOAM531wS2E4RNm/hYDm5ORTc0s8zBMTEyvXy2T6FKRaYq2bjnKzG2M+
+        xYtQzFlTGOdOaAdHxJZBEO2XZA==
+X-Google-Smtp-Source: ABdhPJyZoDgBWJusMEybO4nVCF1jKe4N/ywOBHUQE8w7mWB2J38E0OeLsvstMXvxyC+4R8rFG2dxyA==
+X-Received: by 2002:a5d:5112:: with SMTP id s18mr8474999wrt.160.1592402377338;
+        Wed, 17 Jun 2020 06:59:37 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id y132sm610312wmb.11.2020.06.17.06.59.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 06:59:36 -0700 (PDT)
+References: <20200610041329.12948-1-hhk7734@gmail.com> <1jo8prnk2x.fsf@starbuckisacylon.baylibre.com> <20200611053958.GA3687@home-desktop>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Hyeonki Hong <hhk7734@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>, khilman@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH] pinctrl: meson: fix drive strength register and bit calculation
+In-reply-to: <20200611053958.GA3687@home-desktop>
+Date:   Wed, 17 Jun 2020 15:59:35 +0200
+Message-ID: <1jeeqd3i9k.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-References: <20200617124028.14130-1-trix@redhat.com>
-In-Reply-To: <20200617124028.14130-1-trix@redhat.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Wed, 17 Jun 2020 09:58:35 -0400
-Message-ID: <CAEjxPJ5uGV-SjKL7v5J=7YYEBOjyHwK625SX8fzCrbatuB=9hg@mail.gmail.com>
-Subject: Re: [PATCH] selinux: fix undefined return of cond_evaluate_expr
-To:     trix@redhat.com
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>, weiyongjun1@huawei.com,
-        SElinux list <selinux@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 8:40 AM <trix@redhat.com> wrote:
+
+On Thu 11 Jun 2020 at 07:40, Hyeonki Hong <hhk7734@gmail.com> wrote:
+
+> On Wed, Jun 10, 2020 at 03:09:42PM +0200, Jerome Brunet wrote:
+>> 
+>> On Wed 10 Jun 2020 at 06:13, hhk7734@gmail.com wrote:
+>> 
+>> > From: Hyeonki Hong <hhk7734@gmail.com>
+>> >
+>> > If a GPIO bank has greater than 16 pins, PAD_DS_REG is split into two
+>> > registers. However, when register and bit were calculated, the first
+>> > register defined in the bank was used, and the bit was calculated based
+>> > on the first pin. This causes problems in setting the driving strength.
+>> >
+>> > Solved the problem by changing the bit using a mask and selecting the
+>> > next register when the bit exceeds 15.
+>> 
+>> This fixes the case of GPIOX on g12 which goes up to 18 yes but the same
+>> problem will happen again a if bank ever goes past 31 pins. In such case
+>> the problem would apply to all reg types.
+>> 
+>> I would prefer if it was solved in a more generic fashion, like defining
+>> a "stride" table with the values of each reg type. This table can common
+>> to all aml SoCs for now but eventually it probably need to be SoC
+>> specific.
+>> 
+>> This would allow to :
+>> A) handle the case you are reporting in a generic (future proof) way
+>> B) remove the weird "bit = bit << 1;" calc in place in the get/set of
+>> the drive strengh pinconf
 >
-> From: Tom Rix <trix@redhat.com>
+> If all amlogic SoC has same register style, I think the code below is fine.
 >
-> clang static analysis reports an undefined return
+> static const unsigned int meson_bit_strides[] = {
+> 	0, 0, 0, 0, 0, 1, 0
+> };
+
+ the table above is the shift, not the stride.
+ Maybe 'width' is a better description
+ I would prefer if it was { 1, 1, 1, 1, 1, 2, 1 } and adjust the caculation
+
+A part from this, your proposition is exactly what I meant :) Thx
+
 >
-> security/selinux/ss/conditional.c:79:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
->         return s[0];
->         ^~~~~~~~~~~
->
-> static int cond_evaluate_expr( ...
+> static void meson_calc_reg_and_bit(struct meson_bank *bank, unsigned int pin,
+> 				   enum meson_reg_type reg_type,
+> 				   unsigned int *reg, unsigned int *bit)
 > {
->         u32 i;
->         int s[COND_EXPR_MAXDEPTH];
+> 	struct meson_reg_desc *desc = &bank->regs[reg_type];
 >
->         for (i = 0; i < expr->len; i++)
->           ...
+> 	*bit = (desc->bit + pin - bank->first) << meson_bit_strides[reg_type];
+> 	*reg = (desc->reg + (*bit / 32)) * 4;
+> 	*bit &= 0x1f;
+> }
 >
->         return s[0];
+> How about this?
 >
-> When expr->len is 0, the loop which sets s[0] never runs.
->
-> So return -1 if the loop never runs.
->
-> Signed-off-by: Tom Rix <trix@redhat.com>
+>> >
+>> > Signed-off-by: Hyeonki Hong <hhk7734@gmail.com>
+>> > ---
+>> >  drivers/pinctrl/meson/pinctrl-meson.c | 7 +++++++
+>> >  1 file changed, 7 insertions(+)
+>> >
+>> > diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+>> > index bbc919bef2bf..ef66239b7df5 100644
+>> > --- a/drivers/pinctrl/meson/pinctrl-meson.c
+>> > +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+>> > @@ -98,6 +98,13 @@ static void meson_calc_reg_and_bit(struct meson_bank *bank, unsigned int pin,
+>> >
+>> >  	*reg = desc->reg * 4;
+>> >  	*bit = desc->bit + pin - bank->first;
+>> > +
+>> > +	if (reg_type == REG_DS) {
+>> > +		if (*bit > 15) {
+>> > +			*bit &= 0xf;
+>> > +			*reg += 4;
+>> > +		}
+>> > +	}
+>> >  }
+>> >
+>> >  static int meson_get_groups_count(struct pinctrl_dev *pcdev)
+>> 
 
-Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-
-clang didn't complain about the similar pattern in
-security/selinux/ss/services.c:constraint_expr_eval()?
