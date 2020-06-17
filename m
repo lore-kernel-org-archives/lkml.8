@@ -4,73 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DB2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A9FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90EA021532
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D39E9207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592400652;
-	bh=h59fElqc1jeHbztqEARrRAX1SSJF4qJsEPNo7Yvqo98=;
+	s=default; t=1592400669;
+	bh=1jG46vla/snnJOkxI9YckQQGUgzeCfolE1PdeXBgakI=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=MyyJzZS91LmXPaCXxVAOrzKOi1N5CkJpB+7cSzLg36tc+DfiREvQuSJyA5WRbgdin
-	 F7miobBsNeTZhH0FimxGu6Xi8Z4+VaYHEl/FmXLbUnRa0OYb4pTtv1UmqKtoYJTRic
-	 +iCojmdUywijSmh6GEHLn5IpZvvtZpR4Y6XPlifQ=
+	b=2NLJzmBOJdRJhIHA5nrKsWkech4zNpe7I+J9s2bQ5yl+iCL+Ie7ixlaYPeOciUxYR
+	 mcMTdoqrZs56fYuGhbVTMhc4dIKR96VgZorD8LtKUwXTCEQw7L1LK1yc+5LcHknEvv
+	 8z0c3vZclsCKAFtaCkz7D+t5YmgYW1zkzPk2UgGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgFQNav (ORCPT
+        id S1726909AbgFQNbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:30:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37488 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 09:31:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbgFQNau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:30:50 -0400
+        id S1726329AbgFQNbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 09:31:07 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC9EC20853;
-        Wed, 17 Jun 2020 13:30:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5048207E8;
+        Wed, 17 Jun 2020 13:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592400650;
-        bh=h59fElqc1jeHbztqEARrRAX1SSJF4qJsEPNo7Yvqo98=;
+        s=default; t=1592400667;
+        bh=1jG46vla/snnJOkxI9YckQQGUgzeCfolE1PdeXBgakI=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=uKf6Z44ycUVkHYFYbemkXBrdIXw4kYDV891C4aMKMaQ2t5lkj7DlMSa0f2vTf2Fgw
-         3mFUoCan86WrGy/RdL2X3EAEGH0d4VEWY6kgNW1X/89XRRHzUelHuw1mWAiRlYzp0Z
-         1T2SCvXo4ky6/MK4Cfmom25jgL/sVjzWatyCuNi4=
-Date:   Wed, 17 Jun 2020 14:30:48 +0100
+        b=h8Gm54MgNgn6CQ2kuUl6YCSgP6SDgCP5g8zRph5B87AtqQWVda8pEdvI6TYSgUKoG
+         684pe8bRs3KGBNlK4nd0PSiZ8wJxS0rzPg41LDSOvlAu8GT5GzkDk9SGkTyAl3pjly
+         FNDn5yr+X+hGnT86Dw+xTMKkh0NQvO8+H/Ck8fgg=
+Date:   Wed, 17 Jun 2020 14:31:05 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Xiubo.Lee@gmail.com, nicoleotsuka@gmail.com,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, tiwai@suse.com,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        devicetree@vger.kernel.org, festevam@gmail.com, timur@kernel.org,
-        perex@perex.cz
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <2185a3ec866bc59f82d93b73d1a732a896fd8f48.1592369271.git.shengjiu.wang@nxp.com>
-References: <2185a3ec866bc59f82d93b73d1a732a896fd8f48.1592369271.git.shengjiu.wang@nxp.com>
-Subject: Re: [PATCH v2 1/2] ASoC: bindings: fsl-asoc-card: Add compatible string for MQS
-Message-Id: <159240063808.19287.9726215695470911719.b4-ty@kernel.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <20200616135030.1163660-1-axel.lin@ingics.com>
+References: <20200616135030.1163660-1-axel.lin@ingics.com>
+Subject: Re: [PATCH] regulator: mt6358: Remove BROKEN dependency
+Message-Id: <159240066498.19473.1513756528360342589.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 12:48:24 +0800, Shengjiu Wang wrote:
-> Add compatible string "fsl,imx-audio-mqs" for MQS, and move
-> "audio-routing" property to be optional for MQS doesn't need
-> such property.
+On Tue, 16 Jun 2020 21:50:30 +0800, Axel Lin wrote:
+> The MFD part is merged into v5.8-rc1, thus remove BROKEN dependency.
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/2] ASoC: bindings: fsl-asoc-card: Add compatible string for MQS
-      commit: 56d6663d41f982542097775a3a8a6a1b867fe608
-[2/2] ASoC: fsl-asoc-card: Add MQS support
-      commit: 039652a5b965404aee1fa8f61017f822668f41d4
+[1/1] regulator: mt6358: Remove BROKEN dependency
+      commit: 1b3bcca2085865c1facfbea9baf2f5cde5dc15e4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
