@@ -2,131 +2,92 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7860EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69504C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 587CA21475
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B17221501
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:42:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQdUrcNH"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Dw/RBQQY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgFQHly (ORCPT
+        id S1726538AbgFQHmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 03:41:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgFQHlx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 03:41:53 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19BB7C061573;
-        Wed, 17 Jun 2020 00:41:53 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id r77so1688610ior.3;
-        Wed, 17 Jun 2020 00:41:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3uy57yL2IrwciWHLP013hfH1P9FBradhgD4nYowMof4=;
-        b=TQdUrcNHS4HHlvOI0eBrN/euXFcK0YBQJWY2mPBB1l+DSKRuFdIz4LNhQTBU9wvoDw
-         98IRLBi5M3oPSwN/E9Y0KW+qLJJEoKZzI3A1QCzzNQZD+NW2BYFj/Asum+jOHzArZzAR
-         l1fmdLYK2HAzyCXhICKj85baDDhk3AZaUi6jzIewZG2caEVe6GCIveuW2tX+Kuht1cmi
-         7NE/a8fRD3SZYw+ZF2Mtrf4YqEtfN0JSwtRq50EO29JrtnhKPsuts5GT0QfVPYQ8ND1j
-         QkOIeeskgO1BAXKSgUgczo3w68mFvfptr5dCNRFkrL60ETlgMoTqNRHWz1cGZDZt2hKO
-         1O2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3uy57yL2IrwciWHLP013hfH1P9FBradhgD4nYowMof4=;
-        b=aVsvX0p4uf4gfCKLhy6xiO1DML/OavaxU2IdhtQeK28ofuTmNQI6SnozosopnCnFIi
-         8Uedfo9b8DDZ/uxtomZhqqKZZEODn3DOwRcI4hcmLozY0Bn3lJpdHvyAVvUySVNFrFUW
-         AHAvKAwZ1gy1c8I/0DdLb9d8LSAkd6VzNgmI17ZZgbL8UA4U5VwDv3FSCPGBELr5kQ98
-         UrUrqeFDYbJuVzA6cpgqi99jQSY3G6vwt+FtAF1yntRmwdUUdGul7creFpebI3ncvFG6
-         nB7OJbLDGS3KWi6WkMgoDBkvuT/KxfvexfyBFx2aZQ2PhCmCWC58cc3DIls4qjXtFPuP
-         ti8g==
-X-Gm-Message-State: AOAM531/IjaM+dLNd/ckjzm1sDDmDeqJNqjS0j1GiqLPJtqAvE5tKZ2a
-        RAuZXygss5XgnUAIrU70z7uXV7waEo6iYJ9AaVo=
-X-Google-Smtp-Source: ABdhPJwhKDhyx77Do3VQCA27DLr3vTfygmt3xKaYaqQ+jqw8WFYH/jMie3NMjJkA5rbVSpAcnNDjLgmt1tPraQHWZ74=
-X-Received: by 2002:a05:6602:2d95:: with SMTP id k21mr6872828iow.59.1592379712500;
- Wed, 17 Jun 2020 00:41:52 -0700 (PDT)
+        Wed, 17 Jun 2020 03:42:04 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:38616 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgFQHmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 03:42:03 -0400
+Received: from zn.tnic (p200300ec2f0bb00001a9c67a3ce5c424.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:b000:1a9:c67a:3ce5:c424])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6A2D11EC0284;
+        Wed, 17 Jun 2020 09:42:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1592379721;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=lt4ISuhnyW/yTfCzgW3xtWJbReNdoUR46XiPyLceBNs=;
+        b=Dw/RBQQYVOZW88yPd7pbjw23ap5UzbI8KXwLVy6rzZrf3W1/cmRoUncwbkl4DLX5RsAM6B
+        cRpkHVu2tISjy9F6Ci3z3zkqXnPGpk28gKRQ6v/onzlAX4DpOI38JQtxlDJQgfrJQhGjxZ
+        kW38HbwoutTlbjvHd3C7VY1BHQF4ilQ=
+Date:   Wed, 17 Jun 2020 09:41:58 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     "Song, Youquan" <youquan.song@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/mce: Add Skylake quirk for patrol scrub reported
+ errors
+Message-ID: <20200617074158.GB10118@zn.tnic>
+References: <20200615184056.26531-1-tony.luck@intel.com>
+ <20200616192952.GO13515@zn.tnic>
+ <3908561D78D1C84285E8C5FCA982C28F7F670974@ORSMSX115.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <20200605024919.56177-1-navid.emamdoost@gmail.com> <CAMuHMdXHT9y09L19j2K=oQ1W+7x=SE7MEyjj6r1i=DPcokvWzg@mail.gmail.com>
-In-Reply-To: <CAMuHMdXHT9y09L19j2K=oQ1W+7x=SE7MEyjj6r1i=DPcokvWzg@mail.gmail.com>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Wed, 17 Jun 2020 02:41:41 -0500
-Message-ID: <CAEkB2ERLsPcT4amjoH_4-FzLi75epRAm+Wfb9g9EB_xWWrnXHg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: rcar: handle pm_runtime_get_sync failure case
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F670974@ORSMSX115.amr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On Tue, Jun 16, 2020 at 10:33:08PM +0000, Luck, Tony wrote:
+> If the BIOS option is left in the default setting, uncorrectable errors found
+> by the patrol scrubber are reported with a machine check. Those MSCOD
+> and MCACOD signatures are the same ... but that's not important because
+> MCi_STATUS.UC==1. So Linux doesn't need to jump through hoops to
+> "upgrade" the severity.
 
-On Wed, Jun 17, 2020 at 2:26 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Navid,
->
-> On Fri, Jun 5, 2020 at 4:50 AM Navid Emamdoost
-> <navid.emamdoost@gmail.com> wrote:
-> > Calling pm_runtime_get_sync increments the counter even in case of
-> > failure, causing incorrect ref count. Call pm_runtime_put if
-> > pm_runtime_get_sync fails.
-> >
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
->
-> Thanks for your patch!
->
-> > --- a/drivers/gpio/gpio-rcar.c
-> > +++ b/drivers/gpio/gpio-rcar.c
-> > @@ -250,8 +250,10 @@ static int gpio_rcar_request(struct gpio_chip *chip, unsigned offset)
-> >         int error;
-> >
-> >         error = pm_runtime_get_sync(p->dev);
-> > -       if (error < 0)
-> > +       if (error < 0) {
-> > +               pm_runtime_put(p->dev);
->
-> As per [1], I would like to see a call to pm_runtime_put_noidle() instead.
+No, this is not what I meant: I meant when you have the setting enabled
+to downgrade those errors, can they be detected as part of another MCE
+being raised...
 
-V2 was sent per your suggestion, thanks.
+> > If so, then the adjusting needs to happen inside mce_log().
+> So no, this adjust only needs to happen when polling the banks from
+> CMCI or periodic timer.
 
->
-> [1] http://lore.kernel.org/r/CAJZ5v0i87NGcy9+kxubScdPDyByr8ypQWcGgBFn+V-wDd69BHQ@mail.gmail.com
->
-> >                 return error;
-> > +       }
-> >
-> >         error = pinctrl_gpio_request(chip->base + offset);
-> >         if (error)
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+... but since those downgraded errors raise CMCI then the answer to my
+question is no.
 
+> The point was to avoid the runtime test for CPU model on every error. But
+> this isn't a performance critical path, so we can refactor if you think that
+> looks cleaner.
 
+Yes please.
+
+> There is some new set of validation tests running now to check the effectiveness
+> of this BIOS + OS change. So it may be a while before updated version is
+> posted.
+
+Ok, thx.
 
 -- 
-Navid.
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
