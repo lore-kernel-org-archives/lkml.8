@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDA0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E70C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36AC62088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DCB92088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:37:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgFQOhN (ORCPT
+        id S1727039AbgFQOhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 10:37:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60338 "EHLO
+        Wed, 17 Jun 2020 10:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgFQOgv (ORCPT
+        with ESMTP id S1726928AbgFQOgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 10:36:51 -0400
 Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A673C0617B9
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B51C0617BC
         for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:36:50 -0700 (PDT)
 Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:b57b:2191:a081:571d])
         by xavier.telenet-ops.be with bizsmtp
-        id sEcm2200S1Jlgh201EcmLG; Wed, 17 Jun 2020 16:36:47 +0200
+        id sEcm2200P1Jlgh201EcmLF; Wed, 17 Jun 2020 16:36:47 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jlZBG-0007py-RS; Wed, 17 Jun 2020 16:36:46 +0200
+        id 1jlZBG-0007pv-QP; Wed, 17 Jun 2020 16:36:46 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jlZBG-0004ma-Q7; Wed, 17 Jun 2020 16:36:46 +0200
+        id 1jlZBG-0004mX-P1; Wed, 17 Jun 2020 16:36:46 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
         Rich Felker <dalias@libc.org>
@@ -42,9 +42,9 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Guenter Roeck <linux@roeck-us.net>, linux-sh@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 6/9] sh: process: Fix broken lines in register dumps
-Date:   Wed, 17 Jun 2020 16:36:36 +0200
-Message-Id: <20200617143639.18315-7-geert+renesas@glider.be>
+Subject: [PATCH v2 5/9] sh: dump_stack: Fix broken lines and ptrval in calltrace dumps
+Date:   Wed, 17 Jun 2020 16:36:35 +0200
+Message-Id: <20200617143639.18315-6-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200617143639.18315-1-geert+renesas@glider.be>
 References: <20200617143639.18315-1-geert+renesas@glider.be>
@@ -53,90 +53,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rejoin the broken lines by using pr_cont().
-Convert the remaining printk() calls to pr_*() while at it.
+Rejoin the broken lines by dropping the log level parameters and using
+pr_cont().
+Use "%px" to print sensible addresses in call traces.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Tested-by: Guenter Roeck <linux@roeck-us.net>
 ---
 v2:
-  - Add Tested-by.
+  - Add Tested-by,
+  - Rebase on top of "[PATCHv3 00/50] Add log level to show_stack()":
+      - Drop conversion of remaining printk() calls to pr_*(), as they
+	have all received a loglvl parameter,
+      - Remove loglvl parameters from continuations.
 
 Sample impact:
 
- PC is at dma_alloc_attrs+0x32/0xb0
- PR is at platform_resource_setup_memory+0xbc/0x150
--PC  : 8c043d06 SP  : 8f41fe9c SR  : 40000001
--TEA : 00000000
--R0  : 8c043cd4 R1  : 00000000 R2  : 00000000 R3  : 8c213e7c
-+PC  : 8c043cfa SP  : 8f41fe9c SR  : 40000001 TEA : 8c00369e
-+R0  : 8c043cc8 R1  : 00000000 R2  : 00000000 R3  : 8c213e7c
- R4  : 8c29cc38 R5  : 00100000 R6  : 8f41fecc R7  : 00000cc0
- R8  : 8c29cc38 R9  : 8c29720c R10 : 00000cc0 R11 : 00100000
--R12 : 00000000 R13 : 8f41fecc R14 : 8c274773
--MACH: 00000001 MACL: b16b1ded GBR : 09102e96 PR  : 8c2c0524
-+R12 : 00000000 R13 : 8f41fecc R14 : 8c27479f
-+MACH: 00000001 MACL: b16b1ded GBR : 004c5450 PR  : 8c2c0524
----
- arch/sh/kernel/process_32.c | 38 +++++++++++++++++--------------------
- 1 file changed, 17 insertions(+), 21 deletions(-)
+-Stack: (0x8e8b1d58 to 0x8e8b2000)
+-1d40:
+-
+-
+-
+-
+-
+-
+-8c09a2b4
+-8fb51b40
+-
+-1d60:
+-8fbf400c
+-00000000
+-8c09a7da
+-00000122
+-8fbf4010
+-00000001
+-00000002
+-8fbf4000
+-
+-1d80:
+-00000002
+-8fbf400c
+-0030f231
+-00000100
+-8e8b1db0
+-00000000
+-8e8b1dac
+-8c2b64b4
++Stack: (0x8eeabc80 to 0x8eeac000)
++bc80: 8c09a2a8 8fb5cce0 8fbf400c 00000000 8c09a7ce 00000122 8fbf4010 00000002
++bca0: 00000001 8fbf4000 00000001 8fbf400c 0030f231 00000100 8eeabcd8 00000000
++bcc0: 00001000 8c2b64b4 00460000 00000004 232d0f3f 8c21b788 8fb075a4 8fb50e44
 
-diff --git a/arch/sh/kernel/process_32.c b/arch/sh/kernel/process_32.c
-index 456cc8d171f7258a..049f11a5f9abae7a 100644
---- a/arch/sh/kernel/process_32.c
-+++ b/arch/sh/kernel/process_32.c
-@@ -30,34 +30,30 @@
+ [...]
+
+ Call trace:
+- [<(ptrval)>] free_pcppages_bulk+0x106/0x348
+- [<(ptrval)>] __get_free_pages+0xe/0x54
+- [<(ptrval)>] free_unref_page_list+0xca/0x12c
+- [<(ptrval)>] arch_local_irq_restore+0x0/0x24
+- [<(ptrval)>] free_unref_page_commit.isra.141+0x0/0x74
++ [<8c09a7ce>] free_pcppages_bulk+0x106/0x348
++ [<8c21b788>] _cond_resched+0x38/0x54
++ [<8c09bb5a>] free_unref_page_list+0xca/0x12c
++ [<8c002808>] arch_local_irq_restore+0x0/0x24
++ [<8c09aaf8>] free_unref_page_commit.isra.141+0x0/0x74
+---
+ arch/sh/kernel/dumpstack.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/arch/sh/kernel/dumpstack.c b/arch/sh/kernel/dumpstack.c
+index cc8063a01284bf64..0a69588e343f7b98 100644
+--- a/arch/sh/kernel/dumpstack.c
++++ b/arch/sh/kernel/dumpstack.c
+@@ -16,8 +16,8 @@
+ #include <asm/unwinder.h>
+ #include <asm/stacktrace.h>
  
- void show_regs(struct pt_regs * regs)
+-void dump_mem(const char *str, const char *loglvl,
+-	      unsigned long bottom, unsigned long top)
++void dump_mem(const char *str, const char *loglvl, unsigned long bottom,
++	      unsigned long top)
  {
--	printk("\n");
-+	pr_info("\n");
- 	show_regs_print_info(KERN_DEFAULT);
+ 	unsigned long p;
+ 	int i;
+@@ -31,23 +31,23 @@ void dump_mem(const char *str, const char *loglvl,
+ 			unsigned int val;
  
--	printk("PC is at %pS\n", (void *)instruction_pointer(regs));
--	printk("PR is at %pS\n", (void *)regs->pr);
-+	pr_info("PC is at %pS\n", (void *)instruction_pointer(regs));
-+	pr_info("PR is at %pS\n", (void *)regs->pr);
+ 			if (p < bottom || p >= top)
+-				printk("%s         ", loglvl);
++				pr_cont("         ");
+ 			else {
+ 				if (__get_user(val, (unsigned int __user *)p)) {
+-					printk("%s\n", loglvl);
++					pr_cont("\n");
+ 					return;
+ 				}
+-				printk("%s%08x ", loglvl, val);
++				pr_cont("%08x ", val);
+ 			}
+ 		}
+-		printk("%s\n", loglvl);
++		pr_cont("\n");
+ 	}
+ }
  
--	printk("PC  : %08lx SP  : %08lx SR  : %08lx ",
--	       regs->pc, regs->regs[15], regs->sr);
-+	pr_info("PC  : %08lx SP  : %08lx SR  : %08lx ", regs->pc,
-+		regs->regs[15], regs->sr);
- #ifdef CONFIG_MMU
--	printk("TEA : %08x\n", __raw_readl(MMU_TEA));
-+	pr_cont("TEA : %08x\n", __raw_readl(MMU_TEA));
- #else
--	printk("\n");
+ void printk_address(unsigned long address, int reliable)
+ {
+-	printk(" [<%p>] %s%pS\n", (void *) address,
+-			reliable ? "" : "? ", (void *) address);
++	pr_cont(" [<%px>] %s%pS\n", (void *) address,
++		reliable ? "" : "? ", (void *) address);
+ }
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+@@ -137,7 +137,7 @@ void show_trace(struct task_struct *tsk, unsigned long *sp,
+ 
+ 	unwind_stack(tsk, regs, sp, &print_trace_ops, (void *)loglvl);
+ 
+-	printk("%s\n", loglvl);
 +	pr_cont("\n");
- #endif
  
--	printk("R0  : %08lx R1  : %08lx R2  : %08lx R3  : %08lx\n",
--	       regs->regs[0],regs->regs[1],
--	       regs->regs[2],regs->regs[3]);
--	printk("R4  : %08lx R5  : %08lx R6  : %08lx R7  : %08lx\n",
--	       regs->regs[4],regs->regs[5],
--	       regs->regs[6],regs->regs[7]);
--	printk("R8  : %08lx R9  : %08lx R10 : %08lx R11 : %08lx\n",
--	       regs->regs[8],regs->regs[9],
--	       regs->regs[10],regs->regs[11]);
--	printk("R12 : %08lx R13 : %08lx R14 : %08lx\n",
--	       regs->regs[12],regs->regs[13],
--	       regs->regs[14]);
--	printk("MACH: %08lx MACL: %08lx GBR : %08lx PR  : %08lx\n",
--	       regs->mach, regs->macl, regs->gbr, regs->pr);
-+	pr_info("R0  : %08lx R1  : %08lx R2  : %08lx R3  : %08lx\n",
-+		regs->regs[0], regs->regs[1], regs->regs[2], regs->regs[3]);
-+	pr_info("R4  : %08lx R5  : %08lx R6  : %08lx R7  : %08lx\n",
-+		regs->regs[4], regs->regs[5], regs->regs[6], regs->regs[7]);
-+	pr_info("R8  : %08lx R9  : %08lx R10 : %08lx R11 : %08lx\n",
-+		regs->regs[8], regs->regs[9], regs->regs[10], regs->regs[11]);
-+	pr_info("R12 : %08lx R13 : %08lx R14 : %08lx\n",
-+		regs->regs[12], regs->regs[13], regs->regs[14]);
-+	pr_info("MACH: %08lx MACL: %08lx GBR : %08lx PR  : %08lx\n",
-+		regs->mach, regs->macl, regs->gbr, regs->pr);
- 
- 	show_trace(NULL, (unsigned long *)regs->regs[15], regs, KERN_DEFAULT);
- 	show_code(regs);
+ 	if (!tsk)
+ 		tsk = current;
 -- 
 2.17.1
 
