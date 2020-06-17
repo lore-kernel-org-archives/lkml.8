@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEE8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F21DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDC7020DD4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE3D20DD4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:39:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CMv0tEG8"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EphXYlUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgFQBjv (ORCPT
+        id S1726456AbgFQBjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 21:39:51 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18394 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbgFQBjj (ORCPT
+        Tue, 16 Jun 2020 21:39:55 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19583 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbgFQBjp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 21:39:39 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee974290000>; Tue, 16 Jun 2020 18:38:49 -0700
+        Tue, 16 Jun 2020 21:39:45 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ee973fe0000>; Tue, 16 Jun 2020 18:38:06 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 16 Jun 2020 18:39:38 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 16 Jun 2020 18:39:45 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 16 Jun 2020 18:39:38 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jun
- 2020 01:39:38 +0000
+        by hqpgpgate101.nvidia.com on Tue, 16 Jun 2020 18:39:45 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jun
+ 2020 01:39:44 +0000
 Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 17 Jun 2020 01:39:38 +0000
+ Transport; Wed, 17 Jun 2020 01:39:44 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.171.186]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ee974580005>; Tue, 16 Jun 2020 18:39:37 -0700
+        id <B5ee9745f0000>; Tue, 16 Jun 2020 18:39:43 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -47,9 +47,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v2 09/18] media: tegra-video: Update format lookup to offset based
-Date:   Tue, 16 Jun 2020 18:41:25 -0700
-Message-ID: <1592358094-23459-10-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v2 14/18] gpu: host1x: mipi: Split tegra_mipi_calibrate and tegra_mipi_wait
+Date:   Tue, 16 Jun 2020 18:41:30 -0700
+Message-ID: <1592358094-23459-15-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
 References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
@@ -57,71 +57,138 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592357929; bh=5U56MbpoGgbizDY87xBQZF5BWeIIcAyUuev+l62V8Co=;
+        t=1592357886; bh=O5AZ1YsJyVgIvzzx4UikQW0HGSpF8jhWcrl9iX7G1sw=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=CMv0tEG894p1ARhUfQNrAyjPDF4bR6v1FJnuGBkhg2zHhvyVJQE8Npr86O6lM2Om4
-         VeHaug2Ajk0MTNVS9G23fEHDLCTKSibfphGT7oPJz9iEXiIEKuxJiy6At5E+7vAGNa
-         T3wldKr5Fv1fZbfKz9Tvtnbng3KxdV1oIoDVkY5RrGZl4blcwRU9US7XpMkMK+DICD
-         uQJ+BYCTgYLoBQjRVSG8eYNLcia5NAktqij7ldcJPfg7hINNnVVqK2cKcavs4XZdVY
-         6RAgtw71QNwdQ1md84vrL85Hl/96szuFihh5KEaSj0jYJy79hStXG3s1/Yh2vywh4b
-         azO9FN0elayZQ==
+        b=EphXYlUesGN2f54pb5yFegg+T9OllayVCcfPcs+x0iosgUxgLUw5ssotw4EvOD7mJ
+         4O0ylnb7tDe5aKBxSBwrL7WeET3wNQLQp2m3Y5EnFhUsEl8TapJVNd7Gh/MZKbnF7T
+         Vo21X0IFvcrqbn2kESBkTwfg9sK+4AjkAhZV1JLHI+yuz6K5FI5caZSxP/+aen1LMx
+         jar6UX32EME8otgaGMiiOKn8onleNT4cp6EapRD3MIYvK22/Nh/buUfy44AuAlhsNM
+         7Z1ZOOzuuI0dBUZT5qYWlFgDrONMn4Eet5lh0Zw7rsexgfKfDz8toHXXfYvI+jodnr
+         jDan0Cpr4pawg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra VI supported video formats are more for non TPG and there
-can be multiple pixel formats for the same media bus format.
+SW can trigger MIPI pads calibration any time after power on
+but calibration results will be latched and applied to the pads
+by MIPI CAL unit only when the link is in LP-11 state and then
+status register will be updated.
 
-This patch updates the helper function for format lookup based on
-mbus code from pre-defined Tegra supported format list to look from
-the specified list index offset.
+For CSI, trigger of pads calibration happen during CSI stream
+enable where CSI receiver is kept ready prior to sensor or CSI
+transmitter stream start.
 
-Offset based look up is used with sensor device graph (non TPG)
-where format enumeration can list all supported formats for the
-specific sensor mbus codes.
+So, pads may not be in LP-11 at this time and waiting for the
+calibration to be done immediate after calibration start will
+result in timeout.
+
+This patch splits tegra_mipi_calibrate() and tegra_mipi_wait()
+so triggering for calibration and waiting for it to complete can
+happen at different stages.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/staging/media/tegra-video/vi.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/tegra/dsi.c |  7 ++++++-
+ drivers/gpu/host1x/mipi.c   | 23 +++++++++++++++++------
+ include/linux/host1x.h      |  1 +
+ 3 files changed, 24 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
-index 0197f4e..52d751f 100644
---- a/drivers/staging/media/tegra-video/vi.c
-+++ b/drivers/staging/media/tegra-video/vi.c
-@@ -53,11 +53,12 @@ to_tegra_channel_buffer(struct vb2_v4l2_buffer *vb)
- }
- 
- static int tegra_get_format_idx_by_code(struct tegra_vi *vi,
--					unsigned int code)
-+					unsigned int code,
-+					unsigned int offset)
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index 0443589..93e9d85 100644
+--- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -670,6 +670,7 @@ static int tegra_dsi_pad_enable(struct tegra_dsi *dsi)
+ static int tegra_dsi_pad_calibrate(struct tegra_dsi *dsi)
  {
- 	unsigned int i;
+ 	u32 value;
++	int ret;
  
--	for (i = 0; i < vi->soc->nformats; ++i) {
-+	for (i = offset; i < vi->soc->nformats; ++i) {
- 		if (vi->soc->video_formats[i].code == code)
- 			return i;
- 	}
-@@ -598,11 +599,12 @@ static void vi_tpg_fmts_bitmap_init(struct tegra_vi_channel *chan)
- 	bitmap_zero(chan->tpg_fmts_bitmap, MAX_FORMAT_NUM);
+ 	/*
+ 	 * XXX Is this still needed? The module reset is deasserted right
+@@ -693,7 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_dsi *dsi)
+ 		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
+ 	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
  
- 	index = tegra_get_format_idx_by_code(chan->vi,
--					     MEDIA_BUS_FMT_SRGGB10_1X10);
-+					     MEDIA_BUS_FMT_SRGGB10_1X10, 0);
- 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
- 
- 	index = tegra_get_format_idx_by_code(chan->vi,
--					     MEDIA_BUS_FMT_RGB888_1X32_PADHI);
-+					     MEDIA_BUS_FMT_RGB888_1X32_PADHI,
-+					     0);
- 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
+-	return tegra_mipi_calibrate(dsi->mipi);
++	ret = tegra_mipi_calibrate(dsi->mipi);
++	if (ret < 0)
++		return ret;
++
++	return tegra_mipi_wait(dsi->mipi);
  }
  
+ static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned long bclk,
+diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+index 93b354b..99ea36f 100644
+--- a/drivers/gpu/host1x/mipi.c
++++ b/drivers/gpu/host1x/mipi.c
+@@ -296,22 +296,35 @@ int tegra_mipi_disable(struct tegra_mipi_device *dev)
+ }
+ EXPORT_SYMBOL(tegra_mipi_disable);
+ 
+-static int tegra_mipi_wait(struct tegra_mipi *mipi)
++int tegra_mipi_wait(struct tegra_mipi_device *device)
+ {
++	struct tegra_mipi *mipi = device->mipi;
+ 	unsigned long timeout = jiffies + msecs_to_jiffies(250);
+ 	u32 value;
++	int err;
++
++	err = clk_enable(device->mipi->clk);
++	if (err < 0)
++		return err;
++
++	mutex_lock(&device->mipi->lock);
+ 
+ 	while (time_before(jiffies, timeout)) {
+ 		value = tegra_mipi_readl(mipi, MIPI_CAL_STATUS);
+ 		if ((value & MIPI_CAL_STATUS_ACTIVE) == 0 &&
+ 		    (value & MIPI_CAL_STATUS_DONE) != 0)
+-			return 0;
++			goto done;
+ 
+ 		usleep_range(10, 50);
+ 	}
+ 
+-	return -ETIMEDOUT;
++	err = -ETIMEDOUT;
++done:
++	mutex_unlock(&device->mipi->lock);
++	clk_disable(device->mipi->clk);
++	return err;
+ }
++EXPORT_SYMBOL(tegra_mipi_wait);
+ 
+ int tegra_mipi_calibrate(struct tegra_mipi_device *device)
+ {
+@@ -377,12 +390,10 @@ int tegra_mipi_calibrate(struct tegra_mipi_device *device)
+ 	value |= MIPI_CAL_CTRL_START;
+ 	tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
+ 
+-	err = tegra_mipi_wait(device->mipi);
+-
+ 	mutex_unlock(&device->mipi->lock);
+ 	clk_disable(device->mipi->clk);
+ 
+-	return err;
++	return 0;
+ }
+ EXPORT_SYMBOL(tegra_mipi_calibrate);
+ 
+diff --git a/include/linux/host1x.h b/include/linux/host1x.h
+index 61dc577..cf45ec2 100644
+--- a/include/linux/host1x.h
++++ b/include/linux/host1x.h
+@@ -331,5 +331,6 @@ void tegra_mipi_free(struct tegra_mipi_device *device);
+ int tegra_mipi_enable(struct tegra_mipi_device *device);
+ int tegra_mipi_disable(struct tegra_mipi_device *device);
+ int tegra_mipi_calibrate(struct tegra_mipi_device *device);
++int tegra_mipi_wait(struct tegra_mipi_device *device);
+ 
+ #endif
 -- 
 2.7.4
 
