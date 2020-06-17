@@ -2,307 +2,140 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85690C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93229C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 621C3208B3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C47E208B3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:10:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgFQMJs (ORCPT
+        id S1726773AbgFQMKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 08:09:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgFQMJr (ORCPT
+        Wed, 17 Jun 2020 08:10:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18280 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725967AbgFQMKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 08:09:47 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A28E2C061573;
-        Wed, 17 Jun 2020 05:09:46 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jlWso-0000I0-Hh; Wed, 17 Jun 2020 14:09:36 +0200
-Date:   Wed, 17 Jun 2020 14:09:34 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/1] fs/namespace.c: use spinlock instead of busy loop
-Message-ID: <20200617120934.di3hiswezojpy3ft@linutronix.de>
-References: <20200617104058.14902-1-john.ogness@linutronix.de>
- <20200617104058.14902-2-john.ogness@linutronix.de>
- <20200617112719.GI2531@hirez.programming.kicks-ass.net>
+        Wed, 17 Jun 2020 08:10:32 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05HC4fqi186186;
+        Wed, 17 Jun 2020 08:10:29 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6j0mku2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 08:10:29 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05HC54ao188491;
+        Wed, 17 Jun 2020 08:10:29 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6j0mkth-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 08:10:29 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05HC9ln5021568;
+        Wed, 17 Jun 2020 12:10:27 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma03wdc.us.ibm.com with ESMTP id 31q8kkjpk9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 12:10:27 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05HCANuh32702894
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jun 2020 12:10:23 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2AABA78072;
+        Wed, 17 Jun 2020 12:10:25 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 18FBB7805C;
+        Wed, 17 Jun 2020 12:10:24 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.146.208])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 17 Jun 2020 12:10:23 +0000 (GMT)
+Subject: Re: [PATCH v8 03/16] s390/vfio-ap: manage link between queue struct
+ and matrix mdev
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
+        pasic@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com, fiuczy@linux.ibm.com
+References: <20200605214004.14270-1-akrowiak@linux.ibm.com>
+ <20200605214004.14270-4-akrowiak@linux.ibm.com>
+ <6ae77590-8401-a06b-eec5-713319c21017@de.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <f87a4326-ffd7-18b8-e128-2a583421cb1d@linux.ibm.com>
+Date:   Wed, 17 Jun 2020 08:10:23 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200617112719.GI2531@hirez.programming.kicks-ass.net>
+In-Reply-To: <6ae77590-8401-a06b-eec5-713319c21017@de.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-17_03:2020-06-17,2020-06-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 cotscore=-2147483648
+ mlxlogscore=999 lowpriorityscore=0 mlxscore=0 suspectscore=3 clxscore=1015
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006170091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-17 13:27:19 [+0200], Peter Zijlstra wrote:
-> Why can't you use a regular percpu-rwsem for this?
 
-This is the percpu-rwsem version. The lock is per struct super_block not
-per mount point. This is due to the restriction in
-sb_prepare_remount_readonly().
 
-diff --git a/fs/mount.h b/fs/mount.h
-index 711a4093e475..344fae9931b5 100644
---- a/fs/mount.h
-+++ b/fs/mount.h
-@@ -4,6 +4,7 @@
- #include <linux/poll.h>
- #include <linux/ns_common.h>
- #include <linux/fs_pin.h>
-+#include <linux/percpu-rwsem.h>
- 
- struct mnt_namespace {
- 	atomic_t		count;
-@@ -40,6 +41,7 @@ struct mount {
- 		struct rcu_head mnt_rcu;
- 		struct llist_node mnt_llist;
- 	};
-+	struct percpu_rw_semaphore mnt_writers_rws;
- #ifdef CONFIG_SMP
- 	struct mnt_pcp __percpu *mnt_pcp;
- #else
-diff --git a/fs/namespace.c b/fs/namespace.c
-index a28e4db075ed..cc05c922d7d6 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -311,30 +311,17 @@ static int mnt_is_readonly(struct vfsmount *mnt)
- int __mnt_want_write(struct vfsmount *m)
- {
- 	struct mount *mnt = real_mount(m);
-+	struct super_block *sb = m->mnt_sb;
- 	int ret = 0;
- 
--	preempt_disable();
--	mnt_inc_writers(mnt);
--	/*
--	 * The store to mnt_inc_writers must be visible before we pass
--	 * MNT_WRITE_HOLD loop below, so that the slowpath can see our
--	 * incremented count after it has set MNT_WRITE_HOLD.
--	 */
--	smp_mb();
--	while (READ_ONCE(mnt->mnt.mnt_flags) & MNT_WRITE_HOLD)
--		cpu_relax();
--	/*
--	 * After the slowpath clears MNT_WRITE_HOLD, mnt_is_readonly will
--	 * be set to match its requirements. So we must not load that until
--	 * MNT_WRITE_HOLD is cleared.
--	 */
--	smp_rmb();
--	if (mnt_is_readonly(m)) {
--		mnt_dec_writers(mnt);
-+	percpu_down_read(&sb->mnt_writers_rws);
-+
-+	if (mnt_is_readonly(m))
- 		ret = -EROFS;
--	}
--	preempt_enable();
-+	else
-+		mnt_inc_writers(mnt);
- 
-+	percpu_up_read(&sb->mnt_writers_rws);
- 	return ret;
- }
- 
-@@ -459,53 +446,30 @@ void mnt_drop_write_file(struct file *file)
- }
- EXPORT_SYMBOL(mnt_drop_write_file);
- 
--static int mnt_make_readonly(struct mount *mnt)
-+static int mnt_make_readonly(struct super_block *sb, struct mount *mnt)
- {
- 	int ret = 0;
- 
-+	percpu_down_write(&sb->mnt_writers_rws);
- 	lock_mount_hash();
--	mnt->mnt.mnt_flags |= MNT_WRITE_HOLD;
--	/*
--	 * After storing MNT_WRITE_HOLD, we'll read the counters. This store
--	 * should be visible before we do.
--	 */
--	smp_mb();
- 
--	/*
--	 * With writers on hold, if this value is zero, then there are
--	 * definitely no active writers (although held writers may subsequently
--	 * increment the count, they'll have to wait, and decrement it after
--	 * seeing MNT_READONLY).
--	 *
--	 * It is OK to have counter incremented on one CPU and decremented on
--	 * another: the sum will add up correctly. The danger would be when we
--	 * sum up each counter, if we read a counter before it is incremented,
--	 * but then read another CPU's count which it has been subsequently
--	 * decremented from -- we would see more decrements than we should.
--	 * MNT_WRITE_HOLD protects against this scenario, because
--	 * mnt_want_write first increments count, then smp_mb, then spins on
--	 * MNT_WRITE_HOLD, so it can't be decremented by another CPU while
--	 * we're counting up here.
--	 */
- 	if (mnt_get_writers(mnt) > 0)
- 		ret = -EBUSY;
- 	else
- 		mnt->mnt.mnt_flags |= MNT_READONLY;
--	/*
--	 * MNT_READONLY must become visible before ~MNT_WRITE_HOLD, so writers
--	 * that become unheld will see MNT_READONLY.
--	 */
--	smp_wmb();
--	mnt->mnt.mnt_flags &= ~MNT_WRITE_HOLD;
-+
- 	unlock_mount_hash();
-+	percpu_up_write(&sb->mnt_writers_rws);
- 	return ret;
- }
- 
--static int __mnt_unmake_readonly(struct mount *mnt)
-+static int __mnt_unmake_readonly(struct super_block *sb, struct mount *mnt)
- {
-+	percpu_down_write(&sb->mnt_writers_rws);
- 	lock_mount_hash();
- 	mnt->mnt.mnt_flags &= ~MNT_READONLY;
- 	unlock_mount_hash();
-+	percpu_up_write(&sb->mnt_writers_rws);
- 	return 0;
- }
- 
-@@ -514,21 +478,22 @@ int sb_prepare_remount_readonly(struct super_block *sb)
- 	struct mount *mnt;
- 	int err = 0;
- 
--	/* Racy optimization.  Recheck the counter under MNT_WRITE_HOLD */
-+	/* Racy optimization.  Recheck the counter under mnt_writers_rws. */
- 	if (atomic_long_read(&sb->s_remove_count))
- 		return -EBUSY;
- 
-+	percpu_down_write(&sb->mnt_writers_rws);
- 	lock_mount_hash();
-+
- 	list_for_each_entry(mnt, &sb->s_mounts, mnt_instance) {
- 		if (!(mnt->mnt.mnt_flags & MNT_READONLY)) {
--			mnt->mnt.mnt_flags |= MNT_WRITE_HOLD;
--			smp_mb();
- 			if (mnt_get_writers(mnt) > 0) {
- 				err = -EBUSY;
- 				break;
- 			}
- 		}
- 	}
-+
- 	if (!err && atomic_long_read(&sb->s_remove_count))
- 		err = -EBUSY;
- 
-@@ -536,11 +501,9 @@ int sb_prepare_remount_readonly(struct super_block *sb)
- 		sb->s_readonly_remount = 1;
- 		smp_wmb();
- 	}
--	list_for_each_entry(mnt, &sb->s_mounts, mnt_instance) {
--		if (mnt->mnt.mnt_flags & MNT_WRITE_HOLD)
--			mnt->mnt.mnt_flags &= ~MNT_WRITE_HOLD;
--	}
-+
- 	unlock_mount_hash();
-+	percpu_up_write(&sb->mnt_writers_rws);
- 
- 	return err;
- }
-@@ -1036,7 +999,7 @@ static struct mount *clone_mnt(struct mount *old, struct dentry *root,
- 	}
- 
- 	mnt->mnt.mnt_flags = old->mnt.mnt_flags;
--	mnt->mnt.mnt_flags &= ~(MNT_WRITE_HOLD|MNT_MARKED|MNT_INTERNAL);
-+	mnt->mnt.mnt_flags &= ~(MNT_MARKED|MNT_INTERNAL);
- 
- 	atomic_inc(&sb->s_active);
- 	mnt->mnt.mnt_sb = sb;
-@@ -2440,7 +2403,8 @@ static bool can_change_locked_flags(struct mount *mnt, unsigned int mnt_flags)
- 	return true;
- }
- 
--static int change_mount_ro_state(struct mount *mnt, unsigned int mnt_flags)
-+static int change_mount_ro_state(struct super_block *sb,
-+				 struct mount *mnt, unsigned int mnt_flags)
- {
- 	bool readonly_request = (mnt_flags & MNT_READONLY);
- 
-@@ -2448,9 +2412,9 @@ static int change_mount_ro_state(struct mount *mnt, unsigned int mnt_flags)
- 		return 0;
- 
- 	if (readonly_request)
--		return mnt_make_readonly(mnt);
-+		return mnt_make_readonly(sb, mnt);
- 
--	return __mnt_unmake_readonly(mnt);
-+	return __mnt_unmake_readonly(sb, mnt);
- }
- 
- /*
-@@ -2509,7 +2473,7 @@ static int do_reconfigure_mnt(struct path *path, unsigned int mnt_flags)
- 		return -EPERM;
- 
- 	down_write(&sb->s_umount);
--	ret = change_mount_ro_state(mnt, mnt_flags);
-+	ret = change_mount_ro_state(sb, mnt, mnt_flags);
- 	if (ret == 0)
- 		set_mount_attributes(mnt, mnt_flags);
- 	up_write(&sb->s_umount);
-diff --git a/fs/super.c b/fs/super.c
-index a288cd60d2ae..b6036e5fbe8d 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -210,6 +210,8 @@ static struct super_block *alloc_super(struct file_system_type *type, int flags,
- 	INIT_LIST_HEAD(&s->s_mounts);
- 	s->s_user_ns = get_user_ns(user_ns);
- 	init_rwsem(&s->s_umount);
-+	percpu_init_rwsem(&s->mnt_writers_rws);
-+
- 	lockdep_set_class(&s->s_umount, &type->s_umount_key);
- 	/*
- 	 * sget() can have s_umount recursion.
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 45cc10cdf6dd..cc259b7c4ee8 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1458,6 +1458,7 @@ struct super_block {
- #endif
- 	struct hlist_bl_head	s_roots;	/* alternate root dentries for NFS */
- 	struct list_head	s_mounts;	/* list of mounts; _not_ for fs use */
-+	struct percpu_rw_semaphore mnt_writers_rws;
- 	struct block_device	*s_bdev;
- 	struct backing_dev_info *s_bdi;
- 	struct mtd_info		*s_mtd;
-diff --git a/include/linux/mount.h b/include/linux/mount.h
-index bf8cc4108b8f..8daf217108e8 100644
---- a/include/linux/mount.h
-+++ b/include/linux/mount.h
-@@ -32,7 +32,6 @@ struct fs_context;
- #define MNT_READONLY	0x40	/* does the user want this to be r/o? */
- 
- #define MNT_SHRINKABLE	0x100
--#define MNT_WRITE_HOLD	0x200
- 
- #define MNT_SHARED	0x1000	/* if the vfsmount is a shared mount */
- #define MNT_UNBINDABLE	0x2000	/* if the vfsmount is a unbindable mount */
-@@ -49,7 +48,7 @@ struct fs_context;
- 				 | MNT_READONLY)
- #define MNT_ATIME_MASK (MNT_NOATIME | MNT_NODIRATIME | MNT_RELATIME )
- 
--#define MNT_INTERNAL_FLAGS (MNT_SHARED | MNT_WRITE_HOLD | MNT_INTERNAL | \
-+#define MNT_INTERNAL_FLAGS (MNT_SHARED | MNT_INTERNAL | \
- 			    MNT_DOOMED | MNT_SYNC_UMOUNT | MNT_MARKED)
- 
- #define MNT_INTERNAL	0x4000
--- 
-2.27.0
+On 6/16/20 1:50 PM, Christian Borntraeger wrote:
+>
+> On 05.06.20 23:39, Tony Krowiak wrote:
+> [...]
+>> +static void vfio_ap_mdev_link_queues(struct ap_matrix_mdev *matrix_mdev,
+>> +				     enum qlink_type type,
+>> +				     unsigned long qlink_id)
+>> +{
+>> +	unsigned long id;
+>> +	struct vfio_ap_queue *q;
+>> +
+>> +	switch (type) {
+>> +	case LINK_APID:
+>> +	case UNLINK_APID:
+>> +		for_each_set_bit_inv(id, matrix_mdev->matrix.aqm,
+>> +				     matrix_mdev->matrix.aqm_max + 1) {
+>> +			q = vfio_ap_get_queue(AP_MKQID(qlink_id, id));
+>> +			if (q) {
+>> +				if (type == LINK_APID)
+>> +					q->matrix_mdev = matrix_mdev;
+>> +				else
+>> +					q->matrix_mdev = NULL;> +			}
+>> +		}
+>> +		break;
+>> +	default:
+> Can you rather use
+> 	case LINK_APQI:
+> 	case UNLINK_APQI:
+>
+> and add a default case with a WARN_ON_ONCE?
+
+Yes I can.
+
+>
+>> +		for_each_set_bit_inv(id, matrix_mdev->matrix.apm,
+>> +				     matrix_mdev->matrix.apm_max + 1) {
+>> +			q = vfio_ap_get_queue(AP_MKQID(id, qlink_id));
+>> +			if (q) {
+>> +				if (type == LINK_APQI)
+>> +					q->matrix_mdev = matrix_mdev;
+>> +				else
+>> +					q->matrix_mdev = NULL;
+>> +			}
+>> +		}
+>> +		break;
+>> +	}
+>> +}
+>> +
 
