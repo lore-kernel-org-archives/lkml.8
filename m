@@ -2,173 +2,138 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF81C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ABBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1189620853
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8704920786
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:52:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lW2Iyg1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgFQEle (ORCPT
+        id S1726762AbgFQEwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 00:41:34 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:60750 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbgFQElc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 00:41:32 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F21A31A09DA;
-        Wed, 17 Jun 2020 06:41:29 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 817F41A09EC;
-        Wed, 17 Jun 2020 06:41:24 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B2172402B3;
-        Wed, 17 Jun 2020 12:41:17 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] ASoC: fsl_spdif: Add support for imx6sx platform
-Date:   Wed, 17 Jun 2020 12:30:17 +0800
-Message-Id: <53a969a83999de91f3ff2809d78335c3f0cc1ee3.1592368322.git.shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <feda3bb02296455d43aeebb7575918d9b28e1a3f.1592368322.git.shengjiu.wang@nxp.com>
-References: <feda3bb02296455d43aeebb7575918d9b28e1a3f.1592368322.git.shengjiu.wang@nxp.com>
-In-Reply-To: <feda3bb02296455d43aeebb7575918d9b28e1a3f.1592368322.git.shengjiu.wang@nxp.com>
-References: <feda3bb02296455d43aeebb7575918d9b28e1a3f.1592368322.git.shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 17 Jun 2020 00:52:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgFQEwV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 00:52:21 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B78C061573;
+        Tue, 16 Jun 2020 21:52:21 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id a9so1201668ljn.6;
+        Tue, 16 Jun 2020 21:52:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+Osoj5ygLvNMxDa6TIcT1b6EKKm4cXZgXB/12o2ZCl0=;
+        b=lW2Iyg1ShW2LI+AsuHbi/kCBkrS+XBtLwwWUuqAI6nlrAv8PoSRdNmOXyQqwBhmZWM
+         4rKS0Uo7qEE9mnQVoB8iAom+H4xiqC25FdOQoYrphowG0/38/x7gBNDCDIOYf20KxT0E
+         AaBEqDBk4Ik7L2aTyF0CIEcNGfonBSNkMV4etQ/bK4IZil0qhEAWZ8TPMXw/sg6PD6vq
+         ac62iA6Ula3LnuWCunyZZv7sajXgGWDDp6uN6FnmePIWCNiYqMIzzuuALJ0AryDRkMVD
+         B8jo9zdr13nLnaVN0I3y8PIah9hyuUe/T+8JpdnW1jVA/mzCb07ch3zfz/zZ/fA6LgYb
+         3Ljw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+Osoj5ygLvNMxDa6TIcT1b6EKKm4cXZgXB/12o2ZCl0=;
+        b=FjaVit+kQ7UDB1x65WH7jGdYI1kluYA7eKd5MTIL/RXudLRN8CIrfz5axYxPKp09JW
+         2wnwfp7pIltM+dywXXMJRoDPxNoMPJh0gIyVS1BxCPXZgaaQi1TMKDCDJNWv7dluHf6o
+         5fL84nVRl/LRGKHnFtwePu5PSm7kEpFzlsGHIdich667gNwZR+IWBvSqUoPsJwL3oS5O
+         JNMb8n2N/YoDAYEt5Ny2CXB9XdmDIVF4qyZfQWG1Cx9wymFUoofGkVpnoTS6jRfQMuke
+         iBbTYqugoRnDGRc5uHz5BYrTFOn4iDF08hjqWjBbCs9QKh+cD/LVwMUX2mNkilYefydB
+         E1NA==
+X-Gm-Message-State: AOAM530Rs+yXb/RQ1XRYP0144QtEGPbq+/OT3Q2b2GbZYkqCOYP9nzOP
+        H0FbAbCQ6SPZzWuR3jMGypf9RMwJ
+X-Google-Smtp-Source: ABdhPJwf+Zpknbb8mRkR5GoEZZJ/z3KJOBdQT7rCwopnn394cbc1Qr8XMmuJmoQXw7uHYjLcBxrHpQ==
+X-Received: by 2002:a05:651c:338:: with SMTP id b24mr2838896ljp.87.1592369539402;
+        Tue, 16 Jun 2020 21:52:19 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id f2sm2021812lfc.11.2020.06.16.21.52.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Jun 2020 21:52:18 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 04/18] i2c: tegra: Fix the error path in
+ tegra_i2c_runtime_resume
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
+ <1592358094-23459-5-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f7997a48-eaec-839e-e0cd-cde718bd2e72@gmail.com>
+Date:   Wed, 17 Jun 2020 07:52:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <1592358094-23459-5-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The one difference on imx6sx platform is that the root clock
-is shared with ASRC module, so we add a new flags
-"shared_root_clock" which means the root clock is independent,
-then we will not do the clk_set_rate and clk_round_rate to avoid
-impact ASRC module usage.
+17.06.2020 04:41, Sowjanya Komatineni пишет:
+> tegra_i2c_runtime_resume does not disable prior enabled clocks
+> properly.
+> 
+> This patch fixes it.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index 3be1018..1b459ca 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -668,7 +668,7 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
+>  		ret = clk_enable(i2c_dev->slow_clk);
+>  		if (ret < 0) {
+>  			dev_err(dev, "failed to enable slow clock: %d\n", ret);
+> -			return ret;
+> +			goto disable_fast_clk;
+>  		}
+>  	}
+>  
+> @@ -676,11 +676,16 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
+>  	if (ret < 0) {
+>  		dev_err(i2c_dev->dev,
+>  			"Enabling div clk failed, err %d\n", ret);
+> -		clk_disable(i2c_dev->fast_clk);
+> -		return ret;
+> +		goto disable_slow_clk;
+>  	}
+>  
+>  	return 0;
+> +
+> +disable_slow_clk:
+> +	clk_disable(i2c_dev->slow_clk);
+> +disable_fast_clk:
+> +	clk_disable(i2c_dev->fast_clk);
+> +	return ret;
+>  }
+>  
+>  static int __maybe_unused tegra_i2c_runtime_suspend(struct device *dev)
+> 
 
-As add a new flags, we include the soc specific data struct.
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
-changes in v2
-- use shared_root_clk instead ind_root_clk.
-- add fsl_spdif_can_set_clk_rate function.
-
- sound/soc/fsl/fsl_spdif.c | 50 +++++++++++++++++++++++++++++++++++----
- 1 file changed, 46 insertions(+), 4 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl_spdif.c b/sound/soc/fsl/fsl_spdif.c
-index 1b2e516f9162..8dc1959d0463 100644
---- a/sound/soc/fsl/fsl_spdif.c
-+++ b/sound/soc/fsl/fsl_spdif.c
-@@ -42,6 +42,18 @@ static u8 srpc_dpll_locked[] = { 0x0, 0x1, 0x2, 0x3, 0x4, 0xa, 0xb };
- 
- #define DEFAULT_RXCLK_SRC	1
- 
-+/**
-+ * struct fsl_spdif_soc_data: soc specific data
-+ *
-+ * @imx: for imx platform
-+ * @shared_root_clock: flag of sharing a clock source with others;
-+ *                     so the driver shouldn't set root clock rate
-+ */
-+struct fsl_spdif_soc_data {
-+	bool imx;
-+	bool shared_root_clock;
-+};
-+
- /*
-  * SPDIF control structure
-  * Defines channel status, subcode and Q sub
-@@ -89,6 +101,7 @@ struct spdif_mixer_control {
-  * @dma_params_rx: DMA parameters for receive channel
-  */
- struct fsl_spdif_priv {
-+	const struct fsl_spdif_soc_data *soc;
- 	struct spdif_mixer_control fsl_spdif_control;
- 	struct snd_soc_dai_driver cpu_dai_drv;
- 	struct platform_device *pdev;
-@@ -110,6 +123,28 @@ struct fsl_spdif_priv {
- 	u32 regcache_srpc;
- };
- 
-+static struct fsl_spdif_soc_data fsl_spdif_vf610 = {
-+	.imx = false,
-+	.shared_root_clock = false,
-+};
-+
-+static struct fsl_spdif_soc_data fsl_spdif_imx35 = {
-+	.imx = true,
-+	.shared_root_clock = false,
-+};
-+
-+static struct fsl_spdif_soc_data fsl_spdif_imx6sx = {
-+	.imx = true,
-+	.shared_root_clock = true,
-+};
-+
-+/* Check if clk is a root clock that does not share clock source with others */
-+static inline bool fsl_spdif_can_set_clk_rate(struct fsl_spdif_priv *spdif,
-+					      int clk)
-+{
-+	return (clk == STC_TXCLK_SPDIF_ROOT) && !spdif->soc->shared_root_clock;
-+}
-+
- /* DPLL locked and lock loss interrupt handler */
- static void spdif_irq_dpll_lock(struct fsl_spdif_priv *spdif_priv)
- {
-@@ -421,7 +456,7 @@ static int spdif_set_sample_rate(struct snd_pcm_substream *substream,
- 	sysclk_df = spdif_priv->sysclk_df[rate];
- 
- 	/* Don't mess up the clocks from other modules */
--	if (clk != STC_TXCLK_SPDIF_ROOT)
-+	if (!fsl_spdif_can_set_clk_rate(spdif_priv, clk))
- 		goto clk_set_bypass;
- 
- 	/* The S/PDIF block needs a clock of 64 * fs * txclk_df */
-@@ -1186,7 +1221,7 @@ static int fsl_spdif_probe_txclk(struct fsl_spdif_priv *spdif_priv,
- 			continue;
- 
- 		ret = fsl_spdif_txclk_caldiv(spdif_priv, clk, savesub, index,
--					     i == STC_TXCLK_SPDIF_ROOT);
-+					     fsl_spdif_can_set_clk_rate(spdif_priv, i));
- 		if (savesub == ret)
- 			continue;
- 
-@@ -1230,6 +1265,12 @@ static int fsl_spdif_probe(struct platform_device *pdev)
- 
- 	spdif_priv->pdev = pdev;
- 
-+	spdif_priv->soc = of_device_get_match_data(&pdev->dev);
-+	if (!spdif_priv->soc) {
-+		dev_err(&pdev->dev, "failed to get soc data\n");
-+		return -ENODEV;
-+	}
-+
- 	/* Initialize this copy of the CPU DAI driver structure */
- 	memcpy(&spdif_priv->cpu_dai_drv, &fsl_spdif_dai, sizeof(fsl_spdif_dai));
- 	spdif_priv->cpu_dai_drv.name = dev_name(&pdev->dev);
-@@ -1359,8 +1400,9 @@ static const struct dev_pm_ops fsl_spdif_pm = {
- };
- 
- static const struct of_device_id fsl_spdif_dt_ids[] = {
--	{ .compatible = "fsl,imx35-spdif", },
--	{ .compatible = "fsl,vf610-spdif", },
-+	{ .compatible = "fsl,imx35-spdif", .data = &fsl_spdif_imx35, },
-+	{ .compatible = "fsl,vf610-spdif", .data = &fsl_spdif_vf610, },
-+	{ .compatible = "fsl,imx6sx-spdif", .data = &fsl_spdif_imx6sx, },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, fsl_spdif_dt_ids);
--- 
-2.21.0
-
+This looks good to me. Could you please add an additional patch to
+remove all the other conditions of the clk enable/disable? The current
+code was already inconsistent because in most cases there are
+conditions, but not in all cases.
