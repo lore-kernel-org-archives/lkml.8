@@ -2,127 +2,146 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0513C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584C7C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7F82073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3A42073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:51:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592427092;
+	bh=/qLQ3yM3XyTNFyNc2XcraHnlEAHClADyfYVFSkCRAz4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T1eF+ehZ6MxER/TsCYA0CbUEkOOHPaJYEvNHBD+CvDUwQmpNrXAL94PBufi4UgZvO
+	 n7dyKNhfycWrl/xTnhqj9ivQuwG6hQEUvGPCAgGL8TfSscp8w8BUp6g3/1hOyf4l5R
+	 EhGmf6qS1BtrTAg81DUUF3YUcIj5z08yRUx2ZNiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgFQUug (ORCPT
+        id S1726926AbgFQUvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:50:36 -0400
-Received: from mail-lj1-f178.google.com ([209.85.208.178]:37930 "EHLO
-        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgFQUuf (ORCPT
+        Wed, 17 Jun 2020 16:51:31 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33971 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgFQUva (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:50:35 -0400
-Received: by mail-lj1-f178.google.com with SMTP id 9so4596960ljv.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:50:34 -0700 (PDT)
+        Wed, 17 Jun 2020 16:51:30 -0400
+Received: by mail-io1-f66.google.com with SMTP id m81so4602225ioa.1;
+        Wed, 17 Jun 2020 13:51:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=R+dO6lRqS1PqrSqM52LBt9VsranfNdzbtSbVVQr3dFw=;
-        b=pceJSjIWhRUw+Fg4TUXtLrYOxu/4fH1L/rZ9sm6b5i9VEcqLG0Z0enyvhNyxF4RNd9
-         ZCeO1cijAzMHqumN1BAV6g1pTDtEj4ksPX4KlUyEUipplZ+30iXpw9uesH//koKkn+hL
-         oFhaLTYsS+ultyxn5omuWR+Jq77PocgcF8GSQh6WR3zmFWXH0QklXB6JRvd/HGkk+yUh
-         g71cB7u1TdjGQU8JuX7I9zUuCFQ9Xcyd/Awu0v3JggRZIJ2IqUNnljcZB84Ip3RpRvZX
-         KawLJj/g01Qu18ofIrr7CkJ0T+ucML/ZTzTY85lhpgkdRWSSA4IPjusim9bxfE97nANY
-         Cmew==
-X-Gm-Message-State: AOAM531JzvDtlDnDHdVZvuUqMFuUQTGfgMaAvF+gEvYgx3pfZWfjIsEi
-        H9TENTjbcdDZC2z2ddbF2V9NRGxYLcg=
-X-Google-Smtp-Source: ABdhPJyurSnhnHPgWwjUxpQbpvOn+CusOwS2LqU0y9u6rgcj1vQ2jpcqOs8FoIMKS0YQKCGVizBZaw==
-X-Received: by 2002:a2e:7e08:: with SMTP id z8mr482595ljc.339.1592427033193;
-        Wed, 17 Jun 2020 13:50:33 -0700 (PDT)
-Received: from [192.168.1.8] ([213.87.137.195])
-        by smtp.gmail.com with ESMTPSA id m11sm189850lfl.70.2020.06.17.13.50.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 13:50:32 -0700 (PDT)
-Subject: Re: [Cocci] [PATCH] coccinelle: misc: add array_size_dup script to
- detect missed overlow checks
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Kees Cook <keescook@chromium.org>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-References: <20200615102045.4558-1-efremov@linux.com>
- <alpine.DEB.2.22.394.2006172229550.3083@hadrien>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Message-ID: <7c7b22f8-722c-60f5-db5d-290bea2b499c@linux.com>
-Date:   Wed, 17 Jun 2020 23:50:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PUqIc1amV3ysKKM5W4S+0rwIlkHs1OWVj0o1X7NJhus=;
+        b=f0uo371ilNSIT/d5nA0fkO0xNCU0ytlWuvQrrO4ckyymMnnWXvDpTj2BpSpw/R4Aor
+         gG7WOkRyX400w2Qv53NNrGBENssWQlEqu+TWflNhIihzUsqTsMQftQ3FGzczGJuFo9/+
+         uziPrPVx039fxr0grGg6VyrUZL8B9lji78A2tGKj8BRXrimWHAExCsvdb4N1QgVhzYED
+         Gchooae0p+zFZdmm39R8vm7GAWD7QTqW8p/9+b5UeV7ELRCsXN1gcK1DChykF+LYdwyh
+         I2eCLmqLpmF2jP3eh1NOWpZGmq3MPZxBVazsWEvQSW1zz5iHeC/ffHJgd5BbvzGxtIRX
+         qZWQ==
+X-Gm-Message-State: AOAM531GEOgfJoQdGQ9IlwhuJ7XR65RavH/M7qURfUhM60KjLq/fyUrr
+        +HVAB12BzQP5G1GBJOoPfg==
+X-Google-Smtp-Source: ABdhPJwZIV2ss3INJ+tsnBpvrYC2Z4/eH7cHvST4htrIX2MjMYRjwva7DROSce3iqzSeOIIBCpc7gQ==
+X-Received: by 2002:a05:6602:228c:: with SMTP id d12mr1349903iod.43.1592427089990;
+        Wed, 17 Jun 2020 13:51:29 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id p25sm516493iog.47.2020.06.17.13.51.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 13:51:29 -0700 (PDT)
+Received: (nullmailer pid 2784859 invoked by uid 1000);
+        Wed, 17 Jun 2020 20:51:28 -0000
+Date:   Wed, 17 Jun 2020 14:51:28 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Iskren Chernev <iskren.chernev@gmail.com>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 1/2] dt-bindints: power: supply: Document max17040
+ extensions
+Message-ID: <20200617205128.GA2775414@bogus>
+References: <20200608182642.592848-1-iskren.chernev@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.22.394.2006172229550.3083@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608182642.592848-1-iskren.chernev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+typo in the subject
 
+On Mon, Jun 08, 2020 at 09:26:41PM +0300, Iskren Chernev wrote:
+> Maxim max17040 is a fuel gauge from a larger family utilising the Model
+> Gauge thechnology. Document all different compatible strings that the
 
-On 6/17/20 11:30 PM, Julia Lawall wrote:
-> 
-> 
-> On Mon, 15 Jun 2020, Denis Efremov wrote:
-> 
->> Detect an opencoded expression that is used before or after
->> array_size()/array3_size()/struct_size() to compute the same size.
-> 
-> This would benefit from the assignemnt operator metavariables as well.
-> 
-> Also, it could be better to put the python rules up next the SmPL pattern
-> matching rules that they are associated with.
-> 
+typo
 
-Thanks, I will send v2.
-Here is the KSPP ticket with patches https://github.com/KSPP/linux/issues/83 
+> max17040 driver recognizes.
+> 
+> Some devices in the wild report double the capacity. The
+> maxim,double-soc (from State-Of-Charge) property fixes that.
+> 
+> To compensate for the battery chemistry and operating conditions the
+> chips support a compensation value. Specify one or two byte compensation
+> via the maxim,rcomp byte array.
+> 
+> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+> ---
+>  .../power/supply/max17040_battery.txt         | 22 ++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> index 4e0186b8380fa..be11cab4530b9 100644
+> --- a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> @@ -2,7 +2,9 @@ max17040_battery
+>  ~~~~~~~~~~~~~~~~
+>  
+>  Required properties :
+> - - compatible : "maxim,max17040" or "maxim,max77836-battery"
+> + - compatible : "maxim,max17040", "maxim,max17041", "maxim,max17043",
+> + 		"maxim,max17044", "maxim,max17048", "maxim,max17049",
+> +		"maxim,max17058", "maxim,max17059" or "maxim,max77836-battery"
+>   - reg: i2c slave address
+>  
+>  Optional properties :
+> @@ -11,6 +13,15 @@ Optional properties :
+>  				generated. Can be configured from 1 up to 32
+>  				(%). If skipped the power up default value of
+>  				4 (%) will be used.
+> +- maxim,double-soc : 		Certain devices return double the capacity.
+> +				Specify this boolean property to divide the
+> +				reported value in 2 and thus normalize it.
+> +				SOC == State of Charge == Capacity.
+> +- maxim,rcomp :			A value to compensate readings for various
+> +				battery chemistries and operating temperatures.
+> +				max17040,41 have 2 byte rcomp, default to
+> +				0x97 0x00. All other devices have one byte
+> +				rcomp, default to 0x97.
+>  - interrupts : 			Interrupt line see Documentation/devicetree/
+>  				bindings/interrupt-controller/interrupts.txt
+>  - wakeup-source :		This device has wakeup capabilities. Use this
+> @@ -27,7 +38,16 @@ Example:
+>  		compatible = "maxim,max77836-battery";
+>  		reg = <0x36>;
+>  		maxim,alert-low-soc-level = <10>;
+> +		maxim,rcomp = /bits/ 8 <0x97 0x00>;
+>  		interrupt-parent = <&gpio7>;
+>  		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+>  		wakeup-source;
+>  	};
+> +
+> +	battery-fuel-gauge@36 {
+> +		compatible = "maxim,max17048";
+> +		reg = <0x36>;
+> +		maxim,rcomp = /bits/ 8 <0x97>;
+> +		maxim,alert-low-soc-level = <10>;
+> +		maxim,double-soc;
+> +	};
+> 
+> base-commit: 1713116fa907cc7290020f0d8632ec646d2936f8
+> -- 
+> 2.27.0
+> 
