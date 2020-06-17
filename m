@@ -4,65 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF148C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D39E9207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B4A420882
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592400669;
-	bh=1jG46vla/snnJOkxI9YckQQGUgzeCfolE1PdeXBgakI=;
+	s=default; t=1592400675;
+	bh=Yrztuz9ss1JEyzxZFF5ooU4M0q3ngs+arYrIpm6e7Xc=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=2NLJzmBOJdRJhIHA5nrKsWkech4zNpe7I+J9s2bQ5yl+iCL+Ie7ixlaYPeOciUxYR
-	 mcMTdoqrZs56fYuGhbVTMhc4dIKR96VgZorD8LtKUwXTCEQw7L1LK1yc+5LcHknEvv
-	 8z0c3vZclsCKAFtaCkz7D+t5YmgYW1zkzPk2UgGI=
+	b=znCTIbe5oH3esmfRx3Iqh9F+owg8/cOkR5saw8p1h1UUJxbPg/ZVCmfOETpohgIDh
+	 Kp+ZO85R/G3ru3kosg2hTzdkZBU4AzzIKLhc40EXTt+lPBWKv51PC9Xj5UFYXFtm6P
+	 m2gc68QOHKgB+fpO380agc/8jPJgVMGqt0vvHtx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgFQNbI (ORCPT
+        id S1726930AbgFQNbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:31:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37698 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 09:31:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbgFQNbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:31:07 -0400
+        id S1726913AbgFQNbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 09:31:13 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5048207E8;
-        Wed, 17 Jun 2020 13:31:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 675DF207E8;
+        Wed, 17 Jun 2020 13:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592400667;
-        bh=1jG46vla/snnJOkxI9YckQQGUgzeCfolE1PdeXBgakI=;
+        s=default; t=1592400672;
+        bh=Yrztuz9ss1JEyzxZFF5ooU4M0q3ngs+arYrIpm6e7Xc=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=h8Gm54MgNgn6CQ2kuUl6YCSgP6SDgCP5g8zRph5B87AtqQWVda8pEdvI6TYSgUKoG
-         684pe8bRs3KGBNlK4nd0PSiZ8wJxS0rzPg41LDSOvlAu8GT5GzkDk9SGkTyAl3pjly
-         FNDn5yr+X+hGnT86Dw+xTMKkh0NQvO8+H/Ck8fgg=
-Date:   Wed, 17 Jun 2020 14:31:05 +0100
+        b=bIqxN4xUykm3IEHS25CVNFIBUx6gWacOpy/eCd1RTBwaOXcKUG8Iz390Y6AyhfgUV
+         z0aSSPKhiphwcXVXM244AQwFq51JEKjun6NumaC962lxSrcwDRgFIue2pIK+IoWBD2
+         uThNmfZkWwzugDpuyCHWE3iOIh6DObfcABjIkC4c=
+Date:   Wed, 17 Jun 2020 14:31:10 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-In-Reply-To: <20200616135030.1163660-1-axel.lin@ingics.com>
-References: <20200616135030.1163660-1-axel.lin@ingics.com>
-Subject: Re: [PATCH] regulator: mt6358: Remove BROKEN dependency
-Message-Id: <159240066498.19473.1513756528360342589.b4-ty@kernel.org>
+To:     Alexandre Torgue <alexandre.torgue@st.com>,
+        "patrice.chotard@st.com" <patrice.chotard@st.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, mcoquelin.stm32@gmail.com,
+        linux-stm32@st-md-mailman.stormreply.com
+In-Reply-To: <20200616113035.4514-1-patrice.chotard@st.com>
+References: <20200616113035.4514-1-patrice.chotard@st.com>
+Subject: Re: spi: stm32-qspi: Fix error path in case of -EPROBE_DEFER
+Message-Id: <159240067072.19521.18133995970522150258.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020 21:50:30 +0800, Axel Lin wrote:
-> The MFD part is merged into v5.8-rc1, thus remove BROKEN dependency.
+On Tue, 16 Jun 2020 13:30:35 +0200, patrice.chotard@st.com wrote:
+> In case of -EPROBE_DEFER, stm32_qspi_release() was called
+> in any case which unregistered driver from pm_runtime framework
+> even if it has not been registered yet to it. This leads to:
+> 
+> stm32-qspi 58003000.spi: can't setup spi0.0, status -13
+> spi_master spi0: spi_device register error /soc/spi@58003000/mx66l51235l@0
+> spi_master spi0: Failed to create SPI device for /soc/spi@58003000/mx66l51235l@0
+> stm32-qspi 58003000.spi: can't setup spi0.1, status -13
+> spi_master spi0: spi_device register error /soc/spi@58003000/mx66l51235l@1
+> spi_master spi0: Failed to create SPI device for /soc/spi@58003000/mx66l51235l@1
+> 
+> [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] regulator: mt6358: Remove BROKEN dependency
-      commit: 1b3bcca2085865c1facfbea9baf2f5cde5dc15e4
+[1/1] spi: stm32-qspi: Fix error path in case of -EPROBE_DEFER
+      commit: 35700e221b18fa53401e5f315be90af9e0bbcdca
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
