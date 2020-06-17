@@ -2,95 +2,123 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5002EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2557F2089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7AA2089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:47:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gzyi9/fc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ro/jAlAG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgFQQrO (ORCPT
+        id S1726930AbgFQQrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:47:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52502 "EHLO
+        Wed, 17 Jun 2020 12:47:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgFQQrO (ORCPT
+        with ESMTP id S1726341AbgFQQrm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:47:14 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13030C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:47:14 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id c8so3540493iob.6
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:47:14 -0700 (PDT)
+        Wed, 17 Jun 2020 12:47:42 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E316EC06174E;
+        Wed, 17 Jun 2020 09:47:41 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c71so2514744wmd.5;
+        Wed, 17 Jun 2020 09:47:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kQoOO+VF4SBHpGOMcAz5jGxlKXeUrUgImS0zglw1/Uo=;
-        b=Gzyi9/fcMu3VCfePJqRa51D4oz9qb4xhzSSdu0IECQ6t5vsEXW8/sePtO98+w5zDin
-         HO3TsJLee5XV60S/wyy+zT0u/NogW8r1HinR6+wGJ30xpcf3ZAFTOfI3JjRa4BkL1IbJ
-         o1PmNqUdp0zHqA1+j7nid9rcmzFBPa4l/D44BFQ71M1zmUpsLssvJ7+6ADIOT2XVevOK
-         /qVEiBU1MFbXKlOoswkFkN6uJo8+vDMZc3g1a3gV3NgVRT/2WLaRBKFx5zgrkYvBI8ud
-         O61JtuaEeNlQR8ijLGtkOHnYDfPwLhLqZIGagzsC383xHJz/dTeuMditEiHJ7ztMgyop
-         K9Lw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EzP90zRfteOPiS50AHA0iyJn5jZaMdoAKPdTATIDAk0=;
+        b=Ro/jAlAGw4M2CS3G8RW2pmQS0ola4zCJwUlkGuTXUbDBGqMbBtSiYZteSps6NttKMp
+         HkMJAlwjxnEBSRTJV2G6IBclkeXtjnXJSOoqrpgPpVXg6tTucJZeM9bUzE28ibqFnCWh
+         ezG1UHM8ATn0fUhAMrrgThRsQwTlQQY+BeqbGrGZ12LttEPvvla9u+k/SgwwhKrU8/LP
+         5sIzGTxXn6aO6LM8RDLtZnyQL+9ciyarmbpEFMvNh0URuRLjNRZM8eHwEXJy+FF7uL5e
+         mbhzsZryWAE8hFF9rf8kb3kx4RWpM9d8sBvWiuNiOSbIfR+IEBLIqv43CCixMDkAjwMB
+         ugVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kQoOO+VF4SBHpGOMcAz5jGxlKXeUrUgImS0zglw1/Uo=;
-        b=k8AaO6E73GKivkyg1EIiIOaFCBtB4Iep6PN/s9Fg4ms7ylk0AO+mkyg2/mqd8bpCnu
-         oTf1RwIFYZJjqHSZRa4INodXNTg1M6/XXXIHCxeIkussPFRDEzHgHqjZtTvAafkcJnF2
-         J0gjChlGk4YVVHxd98Qk3aZkenfjVKBnN0Lxh53Q+AEJoiie6sWCyslAgRCZi6P20m16
-         IaGQZ6hfrMKTf/NAydmz1TdH/pXNhzbi1PyIGBdfkjrMq4wpeKnrW2y7b5035xdgMwWu
-         vNt/9LFf7URec+o3ggT9vV2odRvjDVSjaBgchIPkZt2A0qUbH1pTUcIYlGmbCC5Byg2v
-         fSyQ==
-X-Gm-Message-State: AOAM5312pSFC2JS/qSUvnPwDxa36dYk8PhLjRQa3uAzLfRKgBoNRqCWh
-        aycuNQ4oeM08naNoDCdH8rl+QoMVDYRP8Di8TUxQ1Q==
-X-Google-Smtp-Source: ABdhPJyspdBz5XZmNNacGUiyqAhl2DY9cyi9vJ5/SPZuoEnOMWtFiNLuNhrkq1K5MVzA228YLegc1IL58aQE/ReQvAI=
-X-Received: by 2002:a05:6638:209:: with SMTP id e9mr180304jaq.48.1592412432984;
- Wed, 17 Jun 2020 09:47:12 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EzP90zRfteOPiS50AHA0iyJn5jZaMdoAKPdTATIDAk0=;
+        b=R3hi57Kgkb0mjqiDhRpSTg08S5zcwkly11XksiFHmB5qSeBo8Bi3EyJuODDbC9hhQN
+         H0+/WPmyBQwsXucIdXVIrz7OFnHinTaSpdWztDfmZOAwAMpf6A4Gp1/3X30NcjWfDX28
+         VVi6JfH2HRAVigKAYnTKei8KTv+7kNn7yHDLrytNk+VhbdD81bR6gbbjEhTpYV+UIR1e
+         vw80rQNTXK+fDzuobbGaFUxL/ubkqd23Ghfq/+0CwXr5VFuzsGCMgQ6m1yeib5NcaW8B
+         /vRQlaVgEutbT0Bh327Zftat94rbTQzS0ZLMBm0qMPgUCnSY8uaclc2XRcWOlgrozdTw
+         xJ3A==
+X-Gm-Message-State: AOAM533j5D4StQDjqTyi01VaK14oEW4ugvnhjinxyBInujCTi/eQ7v2l
+        d6v8nf61quRQjZGbKsSAr8Y=
+X-Google-Smtp-Source: ABdhPJwz6NM2m53Nl29prWuICuKsCu4NxVmzz62srThpnPMfT5RbQ7t9ixisr3khn6OfyBYn1JD9Ng==
+X-Received: by 2002:a05:600c:21c2:: with SMTP id x2mr9532127wmj.33.1592412460358;
+        Wed, 17 Jun 2020 09:47:40 -0700 (PDT)
+Received: from localhost.localdomain (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
+        by smtp.gmail.com with ESMTPSA id g3sm199165wrb.46.2020.06.17.09.47.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 09:47:39 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH 0/8] Drivers: hv: vmbus: Miscellaneous cleanups
+Date:   Wed, 17 Jun 2020 18:46:34 +0200
+Message-Id: <20200617164642.37393-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200616161427.375651-1-vkuznets@redhat.com> <CALMp9eSWXGQkOOzSrALfZDMj5JHSH=CsK1wKfdj2x2jtV4XJsw@mail.gmail.com>
- <87366vhscx.fsf@vitty.brq.redhat.com> <CALMp9eQ1qe4w5FojzgsUHKpD=zXqen_D6bBg4-vfHa03BdomGA@mail.gmail.com>
- <87wo45hqhy.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87wo45hqhy.fsf@vitty.brq.redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 17 Jun 2020 09:47:01 -0700
-Message-ID: <CALMp9eQCbKz5aeacvMvBX4kq5Oxy5Tap3dUT4SZ_dnO-zmrPVQ@mail.gmail.com>
-Subject: Re: [PATCH] KVM: SVM: drop MSR_IA32_PERF_CAPABILITIES from emulated MSRs
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Like Xu <like.xu@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 4:38 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+Hi all,
 
-> Side note: MSR_IA32_PERF_CAPABILITIES can be returned by both
-> KVM_GET_MSR_INDEX_LIST and KVM_GET_MSR_FEATURE_INDEX_LIST as we have it
-> both as an emulated MSR filtered by kvm_x86_ops.has_emulated_msr() and
-> a feature msr filtered by kvm_x86_ops.get_msr_feature(). But the later
-> is a whitelist so MSR_IA32_PERF_CAPABILITIES won't appear on AMD and the
-> promise "can be passed to the KVM_GET_MSRS" is kept.
+I went back to my "cleanup list" recently and I wrote these patches:
+here you can find, among other things,
 
-So, how is MSR_IA32_PERF_CAPABILITIES different from, say,
-MSR_K7_HWCR, which by its very name doesn't sound like it would be
-supported on Intel CPUs? Why not just emulate
-MSR_IA32_PERF_CAPABILITIES on AMD, just as we emulate MSR_K7_HWCR on
-Intel?
+  1) the removal of the fields 'target_vp' and 'numa_node' from the
+     channel data structure, as suggested by Michael back in May;
 
-My concern is that we don't seem to have a standard here. Each
-individual MSR is handled ad hoc, which adds unnecessary complexity.
+  2) various cleanups for channel->lock, which is actually *removed
+     by the end of this series!  ;-)
+
+I'm sure there is room for further "cleanups",  ;-) but let me check
+if these (relatively small) changes make sense first...
+
+Thanks,
+  Andrea
+
+Andrea Parri (Microsoft) (8):
+  Drivers: hv: vmbus: Remove the target_vp field from the vmbus_channel
+    struct
+  Drivers: hv: vmbus: Remove the numa_node field from the vmbus_channel
+    struct
+  Drivers: hv: vmbus: Replace cpumask_test_cpu(, cpu_online_mask) with
+    cpu_online()
+  Drivers: hv: vmbus: Remove unnecessary channel->lock critical sections
+    (sc_list readers)
+  Drivers: hv: vmbus: Use channel_mutex in channel_vp_mapping_show()
+  Drivers: hv: vmbus: Remove unnecessary channel->lock critical sections
+    (sc_list updaters)
+  scsi: storvsc: Introduce the per-storvsc_device spinlock
+  Drivers: hv: vmbus: Remove the lock field from the vmbus_channel
+    struct
+
+ drivers/hv/channel.c       |  9 +++------
+ drivers/hv/channel_mgmt.c  | 31 ++++++-------------------------
+ drivers/hv/hv.c            |  3 ---
+ drivers/hv/vmbus_drv.c     | 17 +++++------------
+ drivers/scsi/storvsc_drv.c | 16 +++++++++++-----
+ include/linux/hyperv.h     | 22 +++++++---------------
+ 6 files changed, 32 insertions(+), 66 deletions(-)
+
+-- 
+2.25.1
+
