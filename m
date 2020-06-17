@@ -2,155 +2,112 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA577C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A465120888
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8224220888
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:55:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zhIwFYvq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SHDEFFc7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgFQPxV (ORCPT
+        id S1726906AbgFQPzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:53:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43908 "EHLO
+        Wed, 17 Jun 2020 11:55:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgFQPxU (ORCPT
+        with ESMTP id S1726494AbgFQPzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:53:20 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 284A2C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:53:20 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 9so3482468ljv.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:53:20 -0700 (PDT)
+        Wed, 17 Jun 2020 11:55:37 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A86AC06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:55:35 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id x18so3518536lji.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:55:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Iil/oRjunCxRdn4O9EnhL5vFoe9sKPuHAAfETKSmZUw=;
-        b=zhIwFYvqS5d/Wg1MMLhDRV3GH6WnWZlkpKF5Gvf2n+o3mBbraSv6/+gF1/wVQ7Kcyp
-         adAODQsWOEjXxtmaTAY8OOgeomh977J+Ip2X4RUs+QJLXP8fCHiBMryYWwGWY4gfVz+j
-         OiEw3dpJmeQ9Ih8zjHeprM4Gt9tFC88PRlY3V32JvNQHp+cM065+LxGIkdQfR1HdKSbO
-         xKOJtEAbSIP0jDNqHyXlIFM3pvnyIAdrXeT9Vjt+d3kXsBP5VgSVyDytRxe/UXnnLsyA
-         sJ7nJiD9AsZ7Gc1Ka2IK/tLWXp9TnAK5clcp93WHPbbonXUq5u2axMTwgQjbamGfwQSH
-         D6KA==
+        bh=P+rzqdnz8r3FAqXWwD1gDVePdUHQDJi/4YgwPQMfMFA=;
+        b=SHDEFFc789vRYeW1su2Gaa8bZ+QIDqGELGMbXne2rOAla35jtL8FX73T2NXQHskY3h
+         6hc2UDPyaQ2YqQircog+cI4jNEOVGlVfGh6jrYWBEFkffTeAuWDll25swry/t778LTwU
+         GvpxSODR6Lbwfu4Ylt8yAW11JYZ0dGlw/M6PfBvOXk44Wl/zcBwDWA9K1O+JiCHMapnc
+         OexX/f6ORWFBGGXc1eZ36asCHwoMLiP0cHPsAmjirFOol94jug7hM4dixnP8T3gkNE1s
+         jCGXOeV8ZNheEOSjWn6y3RPlrEVDkVuxgbHIuz8zuRhVQNWpjMeMCLYn8Tp6qj4OMnal
+         8feg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Iil/oRjunCxRdn4O9EnhL5vFoe9sKPuHAAfETKSmZUw=;
-        b=C5dLL+VS63oWU05Jj+cf7CMTGOONO2Zrn3jwph0+1Eu0FUdMB7775Q7hxRrcaRrC2L
-         aGFHY74p/lsOfC+MPoOfZ/hT23zJvqgwLu0XxyfMJrRa4ngdIyz2WDxyFVDsUO61SYGb
-         HD2SW0/fnBtIJ4dujsE9EPZzPjNjDitJhPmaB2VZNuClPR9gQxm91sJcH5dGm+F4WEXB
-         HXbCtma7rSDTq9f2ub9rUSQ6ID/2XiSnjvIA31LG2eHZg8H41Evi8W0GCfhPtuBSODAz
-         0NNR87cuyegjhJHJMEOWHzhUU/4BpaNX6YwY0YY8gcqTeIfnmT6C2dncck9vN6NLPLtb
-         Q8Fg==
-X-Gm-Message-State: AOAM531U7/23MTJyeWO9yt3qDOr/7WraLTlEHRGOqLceMyuLMNh0/FQ3
-        HMmUCM1mzWGZ6RGsjmFrebF2cWMZMkZBrau+eEDVhg==
-X-Google-Smtp-Source: ABdhPJwm+SOMxQr6ZmVaQG7EF/eaCNB4joE8BGqCN9p7milYkBjvhRKAPIHCQedzXSIf3foSUUfPOKBfz2Igul1hd1Q=
-X-Received: by 2002:a2e:911:: with SMTP id 17mr4655723ljj.411.1592409197458;
- Wed, 17 Jun 2020 08:53:17 -0700 (PDT)
+        bh=P+rzqdnz8r3FAqXWwD1gDVePdUHQDJi/4YgwPQMfMFA=;
+        b=VIKWcUb5/A61vid1SsLb9N1pB6D+mUqVnr1y/qfX54AKF0j3KyMV3wht/sX+7dbB8M
+         N+ClKuGfJusIoSqYDdOWcIM74fHnKSSYoIlNjbcqt3OykS1BK9byG3kyO2Oyhh3gGlAc
+         9YENF3BZW3+gGf7xiY/kFapDDEt4LDY5f5Llrc/3VPWVsJmmbocRg7t43b6/3wfyCzuv
+         iFclHEsrJjFY/wq8PATQsFK3DHPXS0HJ9Hlv8T9RI09NlwIes7z6p8xuket/WgsVNyse
+         /vTME7egcsZSs1NFdDSTTXWqMgy98zrdb/rAYtjgzCx1nF8NZ0ssgh7pVwD4eHP1XVMG
+         nfgw==
+X-Gm-Message-State: AOAM5338GD3t9LME0fjBRbHlkmZA3gIXgJ1xbYYyaQGUCZUCfuVtP3Hk
+        TriAViUzJ+OJE1/UOwB4oVq2nHj9uXopdKcl3+h8/Q==
+X-Google-Smtp-Source: ABdhPJyFhfn2qdOtcu73QdZkHzTrokzYqN5wBiGecH2VRaWa2n9acLfwuRxjivsjawol+3dNCv3nZCVpDFATIMu2jDA=
+X-Received: by 2002:a2e:a58a:: with SMTP id m10mr4496325ljp.347.1592409333511;
+ Wed, 17 Jun 2020 08:55:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200519075213.GF32497@dhcp22.suse.cz> <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
- <20200519084535.GG32497@dhcp22.suse.cz> <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
- <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
- <20200520190906.GA558281@chrisdown.name> <20200521095515.GK6462@dhcp22.suse.cz>
- <20200521163450.GV6462@dhcp22.suse.cz> <CA+G9fYsdsgRmwLtSKJSzB1eWcUQ1z-_aaU+BNcQpker34XT6_w@mail.gmail.com>
- <20200617135758.GA548179@chrisdown.name> <20200617141155.GQ9499@dhcp22.suse.cz>
-In-Reply-To: <20200617141155.GQ9499@dhcp22.suse.cz>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 17 Jun 2020 21:23:05 +0530
-Message-ID: <CA+G9fYu+FB1PE0AMmE-9MrHpayE9kChwTyc3zfM6V83uQ0zcQA@mail.gmail.com>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-To:     Chris Down <chris@chrisdown.name>, Michal Hocko <mhocko@kernel.org>
-Cc:     Yafang Shao <laoar.shao@gmail.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-3-guro@fb.com>
+In-Reply-To: <20200608230654.828134-3-guro@fb.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 17 Jun 2020 08:55:22 -0700
+Message-ID: <CALvZod61ejfKiHRGNBQHKCyWbLr_DrRRzUQh7WVXJYSUu-098w@mail.gmail.com>
+Subject: Re: [PATCH v6 02/19] mm: memcg: prepare for byte-sized vmstat items
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
         Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 at 19:41, Michal Hocko <mhocko@kernel.org> wrote:
+On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
 >
-> [Our emails have crossed]
+> To implement per-object slab memory accounting, we need to
+> convert slab vmstat counters to bytes. Actually, out of
+> 4 levels of counters: global, per-node, per-memcg and per-lruvec
+> only two last levels will require byte-sized counters.
+> It's because global and per-node counters will be counting the
+> number of slab pages, and per-memcg and per-lruvec will be
+> counting the amount of memory taken by charged slab objects.
 >
-> On Wed 17-06-20 14:57:58, Chris Down wrote:
-> > Naresh Kamboju writes:
-> > > mkfs -t ext4 /dev/disk/by-id/ata-TOSHIBA_MG04ACA100N_Y8RQK14KF6XF
-> > > mke2fs 1.43.8 (1-Jan-2018)
-> > > Creating filesystem with 244190646 4k blocks and 61054976 inodes
-> > > Filesystem UUID: 7c380766-0ed8-41ba-a0de-3c08e78f1891
-> > > Superblock backups stored on blocks:
-> > > 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
-> > > 4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
-> > > 102400000, 214990848
-> > > Allocating group tables:    0/7453 done
-> > > Writing inode tables:    0/7453 done
-> > > Creating journal (262144 blocks): [   51.544525] under min:0 emin:0
-> > > [   51.845304] under min:0 emin:0
-> > > [   51.848738] under min:0 emin:0
-> > > [   51.858147] under min:0 emin:0
-> > > [   51.861333] under min:0 emin:0
-> > > [   51.862034] under min:0 emin:0
-> > > [   51.862442] under min:0 emin:0
-> > > [   51.862763] under min:0 emin:0
-> >
-> > Thanks, this helps a lot. Somehow we're entering mem_cgroup_below_min even
-> > when min/emin is 0 (which should indeed be the case if you haven't set them
-> > in the hierarchy).
-> >
-> > My guess is that page_counter_read(&memcg->memory) is 0, which means
-> > mem_cgroup_below_min will return 1.
+> Converting all vmstat counters to bytes or even all slab
+> counters to bytes would introduce an additional overhead.
+> So instead let's store global and per-node counters
+> in pages, and memcg and lruvec counters in bytes.
 >
-> Yes this is the case because this is likely the root memcg which skips
-> all charges.
+> To make the API clean all access helpers (both on the read
+> and write sides) are dealing with bytes.
 >
-> > However, I don't know for sure why that should then result in the OOM killer
-> > coming along. My guess is that since this memcg has 0 pages to scan anyway,
-> > we enter premature OOM under some conditions. I don't know why we wouldn't
-> > have hit that with the old version of mem_cgroup_protected that returned
-> > MEMCG_PROT_* members, though.
+> To avoid back-and-forth conversions a new flavor of read-side
+> helpers is introduced, which always returns values in pages:
+> node_page_state_pages() and global_node_page_state_pages().
 >
-> Not really. There is likely no other memcg to reclaim from and assuming
-> min limit protection will result in no reclaimable memory and thus the
-> OOM killer.
+> Actually new helpers are just reading raw values. Old helpers are
+> simple wrappers, which will complain on an attempt to read
+> byte value, because at the moment no one actually needs bytes.
 >
-> > Can you please try the patch with the `>=` checks in mem_cgroup_below_min
-> > and mem_cgroup_below_low changed to `>`? If that fixes it, then that gives a
-> > strong hint about what's going on here.
+> Thanks to Johannes Weiner for the idea of having the byte-sized API
+> on top of the page-sized internal storage.
 >
-> This would work but I believe an explicit check for the root memcg would
-> be easier to spot the reasoning.
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-May I request you to send debugging or proposed fix patches here.
-I am happy to do more testing.
-
-FYI,
-Here is my repository for testing.
-git: https://github.com/nareshkamboju/linux/tree/printk
-branch: printk
-
-- Naresh
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
