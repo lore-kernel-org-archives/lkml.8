@@ -2,169 +2,192 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5539BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF6AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACBC21548
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E1A21527
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:39:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="FpKpr858"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgFQLi2 (ORCPT
+        id S1727043AbgFQLi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:38:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:56228 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbgFQLiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:38:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 438A91042;
-        Wed, 17 Jun 2020 04:38:18 -0700 (PDT)
-Received: from monolith.arm.com (unknown [10.37.8.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CD143F71F;
-        Wed, 17 Jun 2020 04:38:16 -0700 (PDT)
-From:   Alexandru Elisei <alexandru.elisei@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     maz@kernel.org, will@kernel.org, catalin.marinas@arm.com,
-        mark.rutland@arm.com
-Subject: [PATCH v5 0/7] arm_pmu: Use NMI for perf interrupt
-Date:   Wed, 17 Jun 2020 12:38:44 +0100
-Message-Id: <20200617113851.607706-1-alexandru.elisei@arm.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 17 Jun 2020 07:38:59 -0400
+Received: from mail-bn8nam12on2056.outbound.protection.outlook.com ([40.107.237.56]:2273
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726773AbgFQLhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 07:37:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gO2u/GDBi4fW54r7Bm8TXlijeNpEjRHF6NtVD4yrrScd1Caz90GQHRz253qJPQiYspUz5KVIWcElNjy0KPscP/chuLOHKaER4QwgLcfTrQqq1xJ1sY8SsEYUwQKoRZzOIFxjWgvId2ifu+yM81JvbvwxSZbHgU6l6ubDgNXncLNCzIbg+0c9oEK7Nd8FRD8WCVL+EoCeyWhV4B+jcNmaMYkBYEWojSZATAJnUHoMTL930PvdiLuXuTQnKKsyWiaLsLqN2bWILufJ3yhVXFy9J8JiLvEeqAapOuDkE5KRqAs1pLhjkkRGDRgEE7rqIJdhoVmX42UE5dChJBJgWkULWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=96lmm/m9X4pYH/c3YVANjdHqmCAjoHOI1sptdry4dEs=;
+ b=cOKbPW/CtZRQWXRbdxLBSEkSVdIJle5htWySeef/vdUeqc1/pyEU77omS16jAfD5HL0h7Qx4/tCy/ltuYeb17JK6yTzXaeravAYadBlYGsj0M5a+5ySswfzWLr4NcN9xhp+sAKXRwoFWUH06lRB729xr088NlaYHDO5VJRtsSHPJkQb8QuJJLbwxz8p/vwxLqoxKO61pihYLYRFBAFzbxiOH2BZb1YvE1hs5hQ9UO2TkpoQW/gJqfcV0WeXNM5axPPdb4KD1pdri371YWhDqWCI7x2i+yPloEqgQvex9LyfSxsVe6mTt/zl1qIltk5bfewEvfizPy8XUhOA7Ocqsyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=96lmm/m9X4pYH/c3YVANjdHqmCAjoHOI1sptdry4dEs=;
+ b=FpKpr858taUULVLYeTkXOSkWMEa5WZXox2ZdWw5nabQ5kVtaEUxfTgotkWOteXI5uhLpr/x16uPHm+CmNIUhSkoDJwKhK5y72rRVRuwB/zWE4bGAJMiksmPtlCKBDsNRYkw8Z8kfwU3S/QsAjtxHrT8fnjoGmLpEfJpul14ILvs=
+Received: from DM6PR02CA0110.namprd02.prod.outlook.com (2603:10b6:5:1b4::12)
+ by MWHPR02MB3327.namprd02.prod.outlook.com (2603:10b6:301:62::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Wed, 17 Jun
+ 2020 11:37:50 +0000
+Received: from CY1NAM02FT018.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:5:1b4:cafe::e6) by DM6PR02CA0110.outlook.office365.com
+ (2603:10b6:5:1b4::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend
+ Transport; Wed, 17 Jun 2020 11:37:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT018.mail.protection.outlook.com (10.152.75.183) with Microsoft SMTP
+ Server id 15.20.3088.18 via Frontend Transport; Wed, 17 Jun 2020 11:37:50
+ +0000
+Received: from [149.199.38.66] (port=36164 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1jlWN3-0001I3-Fd; Wed, 17 Jun 2020 04:36:45 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1jlWO5-0007aG-Pd; Wed, 17 Jun 2020 04:37:49 -0700
+Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 05HBblI8015107;
+        Wed, 17 Jun 2020 04:37:47 -0700
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1jlWO3-0007TR-0M; Wed, 17 Jun 2020 04:37:47 -0700
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com,
+        sgoud@xilinx.com
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com
+Subject: [PATCH V4 6/7] gpio: zynq: Add pmc gpio support
+Date:   Wed, 17 Jun 2020 17:07:26 +0530
+Message-Id: <1592393847-1415-7-git-send-email-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
+References: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(376002)(136003)(39860400002)(396003)(46966005)(26005)(107886003)(966005)(83380400001)(47076004)(4326008)(478600001)(8936002)(82740400003)(356005)(82310400002)(81166007)(316002)(336012)(7696005)(426003)(70586007)(6666004)(44832011)(70206006)(5660300002)(9786002)(186003)(6636002)(36756003)(2906002)(8676002)(2616005);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: faba5c50-7338-402b-0a91-08d812b2dd64
+X-MS-TrafficTypeDiagnostic: MWHPR02MB3327:
+X-Microsoft-Antispam-PRVS: <MWHPR02MB33277E628E362E1FD901A328AF9A0@MWHPR02MB3327.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
+X-Forefront-PRVS: 04371797A5
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: P5U9Ho6/WdnvuUOU+LEkLjeXgvTm5ww/HvMWPKbsxB3GJjqZEsYwBipzmXu1ir1c8RUZo0NGRnrM/VxLHpURaxvFefyZF7Z6nEYtJlP1fJFt120yPTjkF9uwZKnIdBXPcA3nW7gen+gbHMmmdP4db6eKRQbXun9AUklRPm8IRBibPmwl00PJcX94kmHJdFNvsCZz/O2Z1X2V7gLwOrbxJUc0zWX1D+/hJO2E75TroZRD/hupXJZ2FDbzES0ZB/Ga1DxHpE7ytEpXyJ48BKG32ZwJAZpZQfZvsUSe2ieBDNIKVgzvrmBfN/MBxXZVnqNpX1xa9+oOv8H+FG73Ph4vFasqJLF/zLYb6H7siTrsLHH2y3/9AbwJ2X5CQe/9xSjZFN7juyxWnT7CBHC9yUIf3eAscSWPnAQTvywLtpLQUr0a1op9TmvRejkIOJ83Epjc47tPfeCpOmgQsroQNrZPRtfvHgPW7Ksi1wPZArSFvnQ=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 11:37:50.0644
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: faba5c50-7338-402b-0a91-08d812b2dd64
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB3327
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The series makes the arm_pmu driver use NMIs for the perf interrupt when
-NMIs are available on the platform (currently, only arm64 + GICv3). To make
-it easier to play with the patches, I've pushed a branch at [1]:
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-$ git clone -b pmu-nmi-v5 git://linux-arm.org/linux-ae
+Add PMC gpio support.
+Only bank 0,1, 3 and 4 are connected to the multiplexed Input output
+pins. Bank 0 and 1 to mio and bank 3 and 4 to extended multiplexed input
+output pins.
 
-I've tested the series on an espressobin v7*. These are the results of
-running perf record -a -- sleep 60:
+Versal devices are the industry's first adaptive compute
+acceleration platforms.
+https://www.xilinx.com/support/documentation/data_sheets/ds950-versal-overview.pdf
 
-1. Without the patches:
+On the Versal platform, we are using two customized GPIO controllers(IP)
+which were used in Zynq/ZynqMp platform.
+One of them present in the Platform Management Controller(PMC) block and
+other in Processing System(PS) block.
 
-    12.68%  [k] _raw_spin_unlock_irq
-    11.08%  [k] arch_cpu_idle
-     7.86%  [k] _raw_spin_unlock_irqrestore
-     6.05%  [k] arch_counter_get_cntpct
-     2.86%  [k] __softirqentry_text_start
-     2.33%  [k] tick_nohz_idle_exit
-     [..]
+In PMC_GPIO only Bank0,1,3 & 4 are enabled and in PS_GPIO only
+Bank 0 & 3 are enabled.
 
-2. Using NMIs:
+You can find more details of GPIO IP in ZynqMP TRM General Purpose
+I/O(Chapter-27).
+https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf
 
-    19.45%  [k] arch_counter_get_cntpct
-     5.14%  [k] __delay
-     3.32%  [k] wait_for_xmitr
-     1.99%  [k] ktime_get
-     1.00%  [k] _raw_write_lock_irqsave
-     1.00%  [.] avahi_escape_label
-     [..]
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
+ drivers/gpio/gpio-zynq.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-When running perf record -a -- iperf3 -c 127.0.0.1 -t 60:
-
-1. Without the patches:
-
-    24.70%  [k] __arch_copy_from_user
-    21.77%  [k] __arch_copy_to_user
-     5.21%  [k] _raw_spin_unlock_irq
-     2.86%  [k] _raw_spin_unlock_irqrestore
-     1.99%  [k] __free_pages_ok
-     1.61%  [k] arch_cpu_idle
-     [..]
-
-2. Using NMIs:
-
-    23.84%  [k] __arch_copy_from_user
-    23.44%  [k] __arch_copy_to_user
-     1.23%  [k] get_page_from_freelist
-     1.16%  [k] tcp_ack
-     0.80%  [k] __free_pages_ok
-     0.78%  [k] tcp_sendmsg_locked
-     [..]
-
-I've ran the same tests in a VM when both host+guest use NMIs, and when
-neither use them. All of these tests were also ran on the model.  Similar
-results in all cases.
-
-* All the firmware versions for espressobin v7 that I've tried clear
-SCR_EL3.FIQ, which means that NMIs don't work. To make them work on the
-board, I modified the GICv3 driver. That's why I would really appreciate
-someone testing this series on a board where NMIs work without any GIC
-changes.
-
-Summary of the patches:
-* Patch 1 is a fix for a bug that Julien found during the review for v4.
-* Patches 2 and 3 remove locking from arm64 perf event code.
-* Patches 4 and 5 makes the arm64 PMU interrupt handler NMI safe.
-* Patches 6 and 7 enable the use of NMIs on arm64 with a GICv3 irqchip.
-
-Changes since v4 [2]:
-- Rebased on top of v5.8-rc1 and dropped the Tested-by tags because it's
-  been almost a year since the series has been tested.
-- Dropped patch 3 because I couldn't find any instance where
-  armv7pmu_read_counter() was called with interrupts enabled. I've also
-  tested this by running several instances of perf for a few hours, and the
-  function was called every time with interrupts disabled.
-- Dropped patches 4 and 5 because the tradeoff wasn't worth it in my
-  opinion: the irq handler was slower all the time (because it
-  saved/restored the counter select register), in exchange for being
-  slightly faster on the rare ocassions when it triggered at the beginning
-  of the critical sections.
-- Minor changes here and there to address review comments.
-
-Changes since v3 [3]:
-- Added tags
-- Fix build issue for perf_event_v6
-- Don't disable preemption in pmu->enable()
-- Always rely on IPI_IRQ_WORK to run the queued work
-- Fixed typos + cleanups
-
-Changes since v2 [4]:
-- Rebased on recent linux-next (next-20190708)
-- Fixed a number of bugs with indices (reported by Wei)
-- Minor style fixes
-
-Changes since v1 [5]:
-- Rebased on v5.1-rc1
-- Pseudo-NMI has changed a lot since then, use the (now merged) NMI API
-- Remove locking from armv7 perf_event
-- Use locking only in armv6 perf_event
-- Use direct counter/type registers insted of selector register for armv8
-
-[1] http://www.linux-arm.org/git?p=linux-ae.git;a=shortlog;h=refs/heads/pmu-nmi-v5
-[2] https://lists.infradead.org/pipermail/linux-arm-kernel/2019-July/666824.html
-[3] https://lists.infradead.org/pipermail/linux-arm-kernel/2019-July/665339.html
-[4] https://lists.infradead.org/pipermail/linux-arm-kernel/2019-March/640536.html
-[5] https://lists.infradead.org/pipermail/linux-arm-kernel/2018-January/554611.html
-
-Alexandru Elisei (1):
-  arm64: perf: Add missing ISB in armv8pmu_enable_event()
-
-Julien Thierry (5):
-  arm64: perf: Remove PMU locking
-  arm64: perf: Defer irq_work to IPI_IRQ_WORK
-  arm64: kvm: pmu: Make overflow handler NMI safe
-  arm_pmu: Introduce pmu_irq_ops
-  arm_pmu: arm64: Use NMIs for PMU
-
-Mark Rutland (1):
-  arm64: perf: Avoid PMXEV* indirection
-
- arch/arm64/kernel/perf_event.c | 138 ++++++++++++++++++++------------
- arch/arm64/kvm/pmu-emul.c      |  25 +++++-
- drivers/perf/arm_pmu.c         | 142 ++++++++++++++++++++++++++++-----
- include/kvm/arm_pmu.h          |   1 +
- 4 files changed, 235 insertions(+), 71 deletions(-)
-
+diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+index b6261a3aec55..2ddb59b242e7 100644
+--- a/drivers/gpio/gpio-zynq.c
++++ b/drivers/gpio/gpio-zynq.c
+@@ -23,6 +23,7 @@
+ #define ZYNQ_GPIO_MAX_BANK	4
+ #define ZYNQMP_GPIO_MAX_BANK	6
+ #define VERSAL_GPIO_MAX_BANK	4
++#define PMC_GPIO_MAX_BANK	5
+ #define VERSAL_UNUSED_BANKS	2
+ 
+ #define ZYNQ_GPIO_BANK0_NGPIO	32
+@@ -815,6 +816,20 @@ static const struct zynq_platform_data versal_gpio_def = {
+ 	.bank_max[3] = 57, /* Bank 3 is connected to FMIOs (32 pins) */
+ };
+ 
++static const struct zynq_platform_data pmc_gpio_def = {
++	.label = "pmc_gpio",
++	.ngpio = 116,
++	.max_bank = PMC_GPIO_MAX_BANK,
++	.bank_min[0] = 0,
++	.bank_max[0] = 25, /* 0 to 25 are connected to MIOs (26 pins) */
++	.bank_min[1] = 26,
++	.bank_max[1] = 51, /* Bank 1 are connected to MIOs (26 pins) */
++	.bank_min[3] = 52,
++	.bank_max[3] = 83, /* Bank 3 is connected to EMIOs (32 pins) */
++	.bank_min[4] = 84,
++	.bank_max[4] = 115, /* Bank 4 is connected to EMIOs (32 pins) */
++};
++
+ static const struct zynq_platform_data zynqmp_gpio_def = {
+ 	.label = "zynqmp_gpio",
+ 	.quirks = GPIO_QUIRK_DATA_RO_BUG,
+@@ -853,6 +868,7 @@ static const struct of_device_id zynq_gpio_of_match[] = {
+ 	{ .compatible = "xlnx,zynq-gpio-1.0", .data = &zynq_gpio_def },
+ 	{ .compatible = "xlnx,zynqmp-gpio-1.0", .data = &zynqmp_gpio_def },
+ 	{ .compatible = "xlnx,versal-gpio-1.0", .data = &versal_gpio_def },
++	{ .compatible = "xlnx,pmc-gpio-1.0", .data = &pmc_gpio_def },
+ 	{ /* end of table */ }
+ };
+ MODULE_DEVICE_TABLE(of, zynq_gpio_of_match);
 -- 
-2.27.0
+2.7.4
 
