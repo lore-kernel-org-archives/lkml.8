@@ -2,221 +2,171 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1F6C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48244C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 733F7208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D26208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:49:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="OIOD71wg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WbBb8vSs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgFQGtE (ORCPT
+        id S1726597AbgFQGt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 02:49:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44290 "EHLO
+        Wed, 17 Jun 2020 02:49:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgFQGtC (ORCPT
+        with ESMTP id S1725773AbgFQGt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 02:49:02 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52C33C06174E
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 23:49:02 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id k4so874609oik.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 23:49:02 -0700 (PDT)
+        Wed, 17 Jun 2020 02:49:29 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CA7CC061573;
+        Tue, 16 Jun 2020 23:49:29 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id c75so1093663ila.8;
+        Tue, 16 Jun 2020 23:49:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A5ZhuFAutHEAeCHrC5mjvXu1Iq0NUc7YMfX/IRu3ZyA=;
-        b=OIOD71wghmL3BJ+4LTxzheuNdBbWNpLdKTVng8Cfhv9Fc+rfz1Bmpja7NkfffcXZ5t
-         F6agC8t3Bl3XSNz2wvhQVeG89txiQ4Fg0oTmf4NqMRP+P7i0aE2AqATgmZ8aSvLna89q
-         jo8UfjgpSF4gK32/sAugm1Q4Ddzgv8tjJWzGc=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=4A3MtNFTe4w9BDypUAIy1seTZtwzWwLTKRoee1JE3PQ=;
+        b=WbBb8vSsDhjdJXd4XuVwDnm+Z9MGNEi8xoJ6cfO6i5qLDcoskwZpfo3yxD10g1ik6i
+         kfCLNlbxGZmSJLaHQwyViXewkmmdT/bsLV+otoxUNA0DrFCHhA7jpvkPjHbfAxwupgbk
+         ocH7vswJZc3H1PVD57dRzr80idtrM/3mjJ0lXbZF7KL1MtOvnSjVo70dwNBcpEElhAdA
+         aqNx28sb06PH7cX0VDYnexE2nm/WxCUL2yXmsoOx1qyyeM0vQJ3c8gcEhHCM25YfJBBJ
+         409xEbYd5Y+E5FV78vHlhz8CSd4sRDtWahmXdovYJ3CEPBfUehxKaA11ICSCxJPjISoi
+         hINg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A5ZhuFAutHEAeCHrC5mjvXu1Iq0NUc7YMfX/IRu3ZyA=;
-        b=tBTaymKdh276+Gzi52X1KFW0tEOXFVbRMLUeAmctTWAwLEOeAfaaca6JLqPBXV5s4Z
-         1ISzFSU58GwWkUxVKHhSH4iXC5RQCvGa0RY/K2WMQj0NukI9kFWiOW/OMEt0ApqCfS3t
-         cogbFT0bmWE2NkY4WlgK7RUezuBWDvsUqQajxixurqmMciMlMenUq/xnFa7JrmSJd+Rg
-         0f3TSTif2rxqkbsDVtl3X4x8Gqx3yeccZPXqNN6n1ZKCal+ukLdG7ShA/bJ+v+g7feDE
-         s77x8tS6cu3IgM+HAoSGtTH/A6dBvdSR0v/Tz9VIxU9EbkXKCXX6aq3DCeHJLY5DeCLY
-         a4Og==
-X-Gm-Message-State: AOAM531s48ZCyW1j5bLARjoDyDBgPABhnrHHcwTvKHbyF9+5AZa++mKl
-        NnNqKWtlS2zOpjfyDpD/tRijGX/ZISjM/6HQQep1vg==
-X-Google-Smtp-Source: ABdhPJwGAcimp20dQiWfb4LYQbPcyitWuj+om1jev4TmvwlxEdnrUo68m+2HSkZsaPumvrGpeUMSVFkd4tAKg9ZB6PA=
-X-Received: by 2002:aca:ad97:: with SMTP id w145mr6315470oie.128.1592376541438;
- Tue, 16 Jun 2020 23:49:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-5-daniel.vetter@ffwll.ch> <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
- <20200611083430.GD20149@phenom.ffwll.local> <20200611141515.GW6578@ziepe.ca> <20200616120719.GL20149@phenom.ffwll.local>
-In-Reply-To: <20200616120719.GL20149@phenom.ffwll.local>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 17 Jun 2020 08:48:50 +0200
-Message-ID: <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep annotations
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=4A3MtNFTe4w9BDypUAIy1seTZtwzWwLTKRoee1JE3PQ=;
+        b=M0BSZg25Tf/p4b4uWmjBkElHs/IAtSxaLbMmQ4zNT8Cc9Uoj5j3uwRE6psAPb09Z9K
+         jaFSrDM8MAhQjuuwo79P5+2e7CaF1tAZ7YntD70LKixVjK060IWargmGRW41xBrBgqTi
+         8Qeyho8s7bOqr0d+7jdlRsF2tPTh85hfvEI7aEuZEfM6jvYWTUjjD+UpzYxkyTXhfUIB
+         PMUo93MtwKXq/U6tz+cZan7djs+wCTrV8UB6uNBXZ3qJprkxWuJOOcp0q3hVvr30hZ3Y
+         EwtP7aGsblVuFcQ16r89B+QQI+CKH/hNMdbnx1Q79klV/jehQFSOfnJ9Oufvjnoep60s
+         wmlQ==
+X-Gm-Message-State: AOAM533JD8BGSvF5MMSx+n4RVsQlBv5EKRIgFQlCnjpPo0N72e4BRyYG
+        GByw6yAaHqGMzfjKB/MgHdk=
+X-Google-Smtp-Source: ABdhPJzoViRRgRiDo3oeUBmL8dkI1s+7DM8xGfda1WPyLBnSUCeb+71tbXgaNb2/tCUFXk5A5IMS4A==
+X-Received: by 2002:a92:8bc7:: with SMTP id i190mr7017207ild.53.1592376568525;
+        Tue, 16 Jun 2020 23:49:28 -0700 (PDT)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id w18sm11197128ili.19.2020.06.16.23.49.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 23:49:27 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 23:49:19 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Lorenz Bauer <lmb@cloudflare.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        kernel-team <kernel-team@cloudflare.com>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>
+Message-ID: <5ee9bcefda5a3_1d4a2af9b18625c4c0@john-XPS-13-9370.notmuch>
+In-Reply-To: <CAADnVQLXEq5+ko_ojmuh1Oc84HiPrfLF-7Cdh1xwwm-PhoFwBQ@mail.gmail.com>
+References: <20200612160141.188370-1-lmb@cloudflare.com>
+ <CAADnVQ+owOvkZ03qyodmh+4NkZD=1LpgTN+YJqiKgr0_OKqRtA@mail.gmail.com>
+ <CACAyw9-Jy+r2t5Yy83EEZ8GDnxEsGOPdrqr2JSfVqcC2E6dYmQ@mail.gmail.com>
+ <CAADnVQJP_i+KsP771L=GwxousnE=w9o2KckZ7ZCbc064EqSq6w@mail.gmail.com>
+ <CACAyw99Szs3nUTx=DSmh0x8iTBLNF9TTLGC0GQLZ=FifVnbzBA@mail.gmail.com>
+ <CAADnVQLXEq5+ko_ojmuh1Oc84HiPrfLF-7Cdh1xwwm-PhoFwBQ@mail.gmail.com>
+Subject: Re: [PATCH bpf 1/2] flow_dissector: reject invalid attach_flags
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 2:07 PM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> Hi Jason,
->
-> Somehow this got stuck somewhere in the mail queues, only popped up just
-> now ...
->
-> On Thu, Jun 11, 2020 at 11:15:15AM -0300, Jason Gunthorpe wrote:
-> > On Thu, Jun 11, 2020 at 10:34:30AM +0200, Daniel Vetter wrote:
-> > > > I still have my doubts about allowing fence waiting from within shrinkers.
-> > > > IMO ideally they should use a trywait approach, in order to allow memory
-> > > > allocation during command submission for drivers that
-> > > > publish fences before command submission. (Since early reservation object
-> > > > release requires that).
+Alexei Starovoitov wrote:
+> On Tue, Jun 16, 2020 at 1:30 AM Lorenz Bauer <lmb@cloudflare.com> wrote:
+> >
+> > On Tue, 16 Jun 2020 at 04:55, Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
 > > >
-> > > Yeah it is a bit annoying, e.g. for drm/scheduler I think we'll end up
-> > > with a mempool to make sure it can handle it's allocations.
+> > > On Mon, Jun 15, 2020 at 7:43 AM Lorenz Bauer <lmb@cloudflare.com> wrote:
+> > > >
+> > > > On Fri, 12 Jun 2020 at 23:36, Alexei Starovoitov
+> > > > <alexei.starovoitov@gmail.com> wrote:
+> > > > >
+> > > > > On Fri, Jun 12, 2020 at 9:02 AM Lorenz Bauer <lmb@cloudflare.com> wrote:
+> > > > > >
+> > > > > > Using BPF_PROG_ATTACH on a flow dissector program supports neither flags
+> > > > > > nor target_fd but accepts any value. Return EINVAL if either are non-zero.
+> > > > > >
+> > > > > > Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> > > > > > Fixes: b27f7bb590ba ("flow_dissector: Move out netns_bpf prog callbacks")
+> > > > > > ---
+> > > > > >  kernel/bpf/net_namespace.c | 3 +++
+> > > > > >  1 file changed, 3 insertions(+)
+> > > > > >
+> > > > > > diff --git a/kernel/bpf/net_namespace.c b/kernel/bpf/net_namespace.c
+> > > > > > index 78cf061f8179..56133e78ae4f 100644
+> > > > > > --- a/kernel/bpf/net_namespace.c
+> > > > > > +++ b/kernel/bpf/net_namespace.c
+> > > > > > @@ -192,6 +192,9 @@ int netns_bpf_prog_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+> > > > > >         struct net *net;
+> > > > > >         int ret;
+> > > > > >
+> > > > > > +       if (attr->attach_flags || attr->target_fd)
+> > > > > > +               return -EINVAL;
+> > > > > > +
+> > > > >
+> > > > > In theory it makes sense, but how did you test it?
+> > > >
+> > > > Not properly it seems, sorry!
+> > > >
+> > > > > test_progs -t flow
+> > > > > fails 5 tests.
+> > > >
+> > > > I spent today digging through this, and the issue is actually more annoying than
+> > > > I thought. BPF_PROG_DETACH for sockmap and flow_dissector ignores
+> > > > attach_bpf_fd. The cgroup and lirc2 attach point use this to make sure that the
+> > > > program being detached is actually what user space expects. We actually have
+> > > > tests that set attach_bpf_fd for these to attach points, which tells
+> > > > me that this is
+> > > > an easy mistake to make.
+
+In sockmap case I didn't manage to think what multiple programs of the same type
+on the same map would look like so we can just remove whatever program is there.
+Is there a problem with this or is it that we just want the sanity check.
+
+> > > >
+> > > > Unfortunately I can't come up with a good fix that seems backportable:
+> > > > - Making sockmap and flow_dissector have the same semantics as cgroup
+> > > >   and lirc2 requires a bunch of changes (probably a new function for sockmap)
 > > >
-> > > > But since drivers are already waiting from within shrinkers and I take your
-> > > > word for HMM requiring this,
-> > >
-> > > Yeah the big trouble is HMM and mmu notifiers. That's the really awkward
-> > > one, the shrinker one is a lot less established.
+> > > making flow dissector pass prog_fd as cg and lirc is certainly my preference.
+> > > Especially since tests are passing fd user code is likely doing the same,
+> > > so breakage is unlikely. Also it wasn't done that long ago, so
+> > > we can backport far enough.
+> > > It will remove cap_net_admin ugly check in bpf_prog_detach()
+> > > which is the only exception now in cap model.
 > >
-> > I really question if HW that needs something like DMA fence should
-> > even be using mmu notifiers - the best use is HW that can fence the
-> > DMA directly without having to get involved with some command stream
-> > processing.
-> >
-> > Or at the very least it should not be a generic DMA fence but a
-> > narrowed completion tied only into the same GPU driver's command
-> > completion processing which should be able to progress without
-> > blocking.
->
-> The problem with gpus is that these completions leak across the board like
-> mad. Both internally within memory managers (made a lot worse with p2p
-> direct access to vram), and through uapi.
->
-> Many gpus still have a very hard time preempting, so doing an overall
-> switch in drivers/gpu to a memory management model where that is required
-> is not a very realistic option.  And minimally you need either preempt
-> (still takes a while, but a lot faster generally than waiting for work to
-> complete) or hw faults (just a bunch of tlb flushes plus virtual indexed
-> caches, so just the caveat of that for a gpu, which has lots and big tlbs
-> and caches). So preventing the completion leaks within the kernel is I
-> think unrealistic, except if we just say "well sorry, run on windows,
-> mkay" for many gpu workloads. Or more realistic "well sorry, run on the
-> nvidia blob with nvidia hw".
->
-> The userspace side we can somewhat isolate, at least for pure compute
-> workloads. But the thing is drivers/gpu is a continum from tiny socs
-> (where dma_fence is a very nice model) to huge compute stuff (where it's
-> maybe not the nicest, but hey hw sucks so still neeeded). Doing full on
-> break in uapi somewhere in there is at least a bit awkward, e.g. some of
-> the media codec code on intel runs all the way from the smallest intel soc
-> to the big transcode servers.
->
-> So the current status quo is "total mess, every driver defines their own
-> rules". All I'm trying to do is some common rules here, do make this mess
-> slightly more manageable and overall reviewable and testable.
->
-> I have no illusions that this is fundamentally pretty horrible, and the
-> leftover wiggle room for writing memory manager is barely more than a
-> hairline. Just not seeing how other options are better.
+> > SGTM. What about sockmap though? The code for that has been around for ages.
+> 
+> you mean the second patch that enforces sock_map_get_from_fd doesn't
+> use attach_flags?
+> I think it didn't break anything, so enforcing is fine.
 
-So bad news is that gpu's are horrible, but I think if you don't have
-to review gpu drivers it's substantially better. If you do have hw
-with full device page fault support, then there's no need to ever
-install a dma_fence. Punching out device ptes and flushing caches is
-all that's needed. That is also the plan we have, for the workloads
-and devices where that's possible.
+I'm ok with enforcing it.
 
-Now my understanding for rdma is that if you don't have hw page fault
-support, then the only other object is to more or less permanently pin
-the memory. So again, dma_fence are completely useless, since it's
-entirely up to userspace when a given piece of registered memory isn't
-needed anymore, and the entire problem boils down to how much do we
-allow random userspace to just pin (system or device) memory. Or at
-least I don't really see any other solution.
+> 
+> or the detach part that doesn't use prog_fd ?
+> I'm not sure what's the best here.
+> At least from cap perspective it's fine because map_fd is there.
+> 
+> John, wdyt?
 
-On the other end we have simpler devices like video input/output.
-Those always need pinned memory, but through hw design it's limited in
-how much you can pin (generally max resolution times a limited set of
-buffers to cycle through). Just including that memory pinning
-allowance as part of device access makes sense.
-
-It's only gpus (I think) which are in this awkward in-between spot
-where dynamic memory management really is much wanted, but the hw
-kinda sucks. Aside, about 10+ years ago we had a similar problem with
-gpu hw, but for security: Many gpu didn't have any kinds of page
-tables to isolate different clients from each another. drivers/gpu
-fixed this by parsing&validating what userspace submitted to make sure
-it's only every accessing its own buffers. Most gpus have become
-reasonable nowadays and do have proper per-process pagetables (gpu
-process, not the pasid stuff), but even today there's still some of
-the old model left in some of the smallest SoC.
-
-tldr; of all this: gpus kinda suck sometimes, but  that's also not news :-/
-
-Cheers, Daniel
-
-> > The intent of notifiers was never to endlessly block while vast
-> > amounts of SW does work.
-> >
-> > Going around and switching everything in a GPU to GFP_ATOMIC seems
-> > like bad idea.
->
-> It's not everyone, or at least not everywhere, it's some fairly limited
-> cases. Also, even if we drop the mmu_notifier on the floor, then we're
-> stuck with shrinkers and GFP_NOFS. Still need a mempool of some sorts to
-> guarantee you get out of a bind, so not much better.
->
-> At least that's my current understanding of where we are across all
-> drivers.
->
-> > > I've pinged a bunch of armsoc gpu driver people and ask them how much this
-> > > hurts, so that we have a clear answer. On x86 I don't think we have much
-> > > of a choice on this, with userptr in amd and i915 and hmm work in nouveau
-> > > (but nouveau I think doesn't use dma_fence in there).
-> >
-> > Right, nor will RDMA ODP.
->
-> Hm, what's the context here? I thought RDMA side you really don't want
-> dma_fence in mmu_notifiers, so not clear to me what you're agreeing on
-> here.
-> -Daniel
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
-
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+I think we can keep the current detach without the prog_fd as-is. And
+then add logic so that if the prog_fd is included we check it?
