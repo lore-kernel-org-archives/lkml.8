@@ -2,259 +2,220 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5438C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A80C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC6120C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:41:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TKxqhw0J"
+	by mail.kernel.org (Postfix) with ESMTP id B5F022073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgFQIlr (ORCPT
+        id S1726867AbgFQImV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:41:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgFQIlo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:41:44 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70AC1C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 01:41:44 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id b6so1367869wrs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 01:41:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DZMa6DET1qb3XpdgoNbeTgpSZ2dO/+nB5dNSP35ZNe0=;
-        b=TKxqhw0Jcu71I/x6Ep+yjYVaT07kQc900R6ef8apklQGlr/MjfDbo04wbE9kuS9Cs8
-         57EVYUFjBEMJs+BftJD3oD4bxmDMsrh5gyA1oVaDpGOuqQYutoBDtVd98ZmIZrl8KLVS
-         z2/nJ5Kxyz7UD3mz0+jGd3YNysk/lab3vq0tzi8GUmPCd6ZGcKjb/jyD3mHkprZZQd8l
-         /xuKRurE3oGyxNB4dVClC0QgyePKySvFsF1NJwl0U5E/XNJyNnyiowKWt8Knn0umPoFp
-         2Ib+0mEMgD8zSIQ/JWysGmWy9RncnoFwhJdvF79XKpEme2JIDlAn5mgjS0hpx5E+AIfg
-         Opgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DZMa6DET1qb3XpdgoNbeTgpSZ2dO/+nB5dNSP35ZNe0=;
-        b=CXd/EGDkbilF9t4dwAM2Ko+x8CcSNFh6IXXB1pus+6LNRFnhAfwxQjoNZGVt7Nukm0
-         iD3H76VTbyv8sPIptoB6C9IjFBbskXm5L2d6LmQjeFbCH+otbB8xmNCxYBVOC0s+WFjS
-         GQSsJ05EADkHYYyoHmN6xIfpyTMCTY+s8cZhmm8ALI5K/IUDKAple4GkgqZt73fnFjCe
-         jSeXdXWKg4E8V4/cQgOezruy1ILmOgII8Fanege/0Pgk7C68zY71HmjqWDOm722NX+w5
-         W/B/1OP4LmOmuJ0BRzjY7kdjKAdazbOAb9o/hUhMFU3UjutZtzX7oxH1wwAFxalKN1Ge
-         8Hew==
-X-Gm-Message-State: AOAM532CyVHqV2aAKwzx62BKeRkSL8TCwuNV/a/czvxY36a/VmuS/Cnl
-        DRj3T6dJYF39VeeXadYwctDS7g==
-X-Google-Smtp-Source: ABdhPJyDYeOK6KU2e/POLcV+YDEeExmRMQdYE6NEwAD8K3mAvZyIodfGhIDKQqOIPcb+xqzcx+am9w==
-X-Received: by 2002:adf:9ccf:: with SMTP id h15mr7360121wre.275.1592383303080;
-        Wed, 17 Jun 2020 01:41:43 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.167.65])
-        by smtp.gmail.com with ESMTPSA id k14sm31635998wrq.97.2020.06.17.01.41.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 01:41:42 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     michael@walle.cc, robh+dt@kernel.org, broonie@kernel.org,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, arnd@arndb.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 1/1] mfd: Add I2C based System Configuaration (SYSCON) access
-Date:   Wed, 17 Jun 2020 09:41:32 +0100
-Message-Id: <20200617084132.704549-1-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        Wed, 17 Jun 2020 04:42:21 -0400
+Received: from mga12.intel.com ([192.55.52.136]:41178 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726282AbgFQImT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:42:19 -0400
+IronPort-SDR: caG6HPTLXi2+qer1q2221r1UP9uLFdzKvyMUTvqcu9Q8kB9eRJNfxF+a/2SQyu9GHa0gEpd8rK
+ B0NC2C35ywbw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 01:42:18 -0700
+IronPort-SDR: HqtkOXXxfARW5VNTB+CfbUCqgLEsAWxV0I8YeKzLoPIG0FzWYi8KpGFIk7HjWWwDo8dcw31rn7
+ XHPUIsnlUhLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,522,1583222400"; 
+   d="scan'208";a="277208314"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 17 Jun 2020 01:42:18 -0700
+Received: from [10.249.225.191] (abudanko-mobl.ccr.corp.intel.com [10.249.225.191])
+        by linux.intel.com (Postfix) with ESMTP id E8B81580223;
+        Wed, 17 Jun 2020 01:42:15 -0700 (PDT)
+Subject: [PATCH v8 10/13] perf stat: introduce --control fd:ctl-fd[,ack-fd]
+ options
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <38b206d9-0038-be6f-66bb-eecbf82016e6@linux.intel.com>
+Date:   Wed, 17 Jun 2020 11:42:14 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The existing SYSCON implementation only supports MMIO (memory mapped)
-accesses, facilitated by Regmap.  This extends support for registers
-held behind I2C busses.
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Introduce --control fd:ctl-fd[,ack-fd] options to pass open file
+descriptors numbers from command line. Extend perf-stat.txt file
+with --control fd:ctl-fd[,ack-fd] options description. Document
+possible usage model introduced by --control fd:ctl-fd[,ack-fd]
+options by providing example bash shell script.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
-Change log:
+ tools/perf/Documentation/perf-stat.txt | 39 ++++++++++++++++++++++++++
+ tools/perf/builtin-stat.c              | 38 +++++++++++++++++++++++++
+ tools/perf/util/stat.h                 |  2 ++
+ 3 files changed, 79 insertions(+)
 
-v1 => v2
-  - Remove legacy references to OF
-  - Allow building as a module (fixes h8300 0-day issue)
-
- drivers/mfd/Kconfig            |  7 +++
- drivers/mfd/Makefile           |  1 +
- drivers/mfd/syscon-i2c.c       | 90 ++++++++++++++++++++++++++++++++++
- include/linux/mfd/syscon-i2c.h | 26 ++++++++++
- 4 files changed, 124 insertions(+)
- create mode 100644 drivers/mfd/syscon-i2c.c
- create mode 100644 include/linux/mfd/syscon-i2c.h
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 0a59249198d34..f25f80f68edca 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1300,6 +1300,13 @@ config MFD_SYSCON
- 	  Select this option to enable accessing system control registers
- 	  via regmap.
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 9f32f6cd558d..c9bfefc051fb 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -176,6 +176,45 @@ with it.  --append may be used here.  Examples:
+      3>results  perf stat --log-fd 3          -- $cmd
+      3>>results perf stat --log-fd 3 --append -- $cmd
  
-+config MFD_SYSCON_I2C
-+	tristate "System Controller Register R/W Based on I2C Regmap"
-+	select REGMAP_I2C
-+	help
-+	  Select this option to enable accessing system control registers
-+	  via I2C using regmap.
++--control fd:ctl-fd[,ack-fd]
++Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
++'disable': disable events). Measurements can be started with events disabled using
++--delay=-1 option. Optionally send control command completion ('ack\n') to ack-fd descriptor
++to synchronize with the controlling process. Example of bash shell script to enable and
++disable events during measurements:
 +
- config MFD_DAVINCI_VOICECODEC
- 	tristate
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index f935d10cbf0fc..0aec1f42ac979 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -219,6 +219,7 @@ obj-$(CONFIG_MFD_RK808)		+= rk808.o
- obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
- obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
- obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
-+obj-$(CONFIG_MFD_SYSCON_I2C)	+= syscon-i2c.o
- obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
- obj-$(CONFIG_MFD_VEXPRESS_SYSREG)	+= vexpress-sysreg.o
- obj-$(CONFIG_MFD_RETU)		+= retu-mfd.o
-diff --git a/drivers/mfd/syscon-i2c.c b/drivers/mfd/syscon-i2c.c
-new file mode 100644
-index 0000000000000..be20ff45ece07
---- /dev/null
-+++ b/drivers/mfd/syscon-i2c.c
-@@ -0,0 +1,90 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * System Control Driver accessed over I2C
-+ *
-+ * Copyright (C) 2020 Linaro Ltd.
-+ *
-+ * Author: Lee Jones <lee.jones@linaro.org>
-+ */
++#!/bin/bash
 +
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/list.h>
-+#include <linux/mfd/syscon-i2c.h>
-+#include <linux/regmap.h>
++ctl_dir=/tmp/
 +
-+static DEFINE_SPINLOCK(syscon_i2c_list_slock);
-+static LIST_HEAD(syscon_i2c_list);
++ctl_fifo=${ctl_dir}perf_ctl.fifo
++test -p ${ctl_fifo} && unlink ${ctl_fifo}
++mkfifo ${ctl_fifo}
++exec {ctl_fd}<>${ctl_fifo}
 +
-+struct syscon {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct list_head list;
-+};
++ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
++test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
++mkfifo ${ctl_ack_fifo}
++exec {ctl_fd_ack}<>${ctl_ack_fifo}
 +
-+static const struct regmap_config syscon_i2c_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
++perf stat -D -1 -e cpu-cycles -a -I 1000       \
++          --control fd:${ctl_fd},${ctl_fd_ack} \
++          -- sleep 30 &
++perf_pid=$!
 +
-+static struct syscon *syscon_i2c_register(struct i2c_client *client)
++sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
++sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
++
++exec {ctl_fd_ack}>&-
++unlink ${ctl_ack_fifo}
++
++exec {ctl_fd}>&-
++unlink ${ctl_fifo}
++
++wait -n ${perf_pid}
++exit $?
++
++
+ --pre::
+ --post::
+ 	Pre and post measurement hooks, e.g.:
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index cc56d71a3ed5..4cb29b40b860 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -188,6 +188,8 @@ static struct perf_stat_config stat_config = {
+ 	.metric_only_len	= METRIC_ONLY_LEN,
+ 	.walltime_nsecs_stats	= &walltime_nsecs_stats,
+ 	.big_num		= true,
++	.ctl_fd			= -1,
++	.ctl_fd_ack		= -1
+ };
+ 
+ static bool cpus_map_matched(struct evsel *a, struct evsel *b)
+@@ -1032,6 +1034,33 @@ static int parse_metric_groups(const struct option *opt,
+ 					 &stat_config.metric_events);
+ }
+ 
++static int parse_control_option(const struct option *opt,
++				const char *str,
++				int unset __maybe_unused)
 +{
-+	struct regmap_config syscon_config = syscon_i2c_regmap_config;
-+	struct device *dev = &client->dev;
-+	struct syscon *syscon;
-+	struct regmap *regmap;
-+	int ret;
++	char *comma = NULL, *endptr = NULL;
++	struct perf_stat_config *config = (struct perf_stat_config *)opt->value;
 +
-+	syscon = devm_kzalloc(dev, sizeof(*syscon), GFP_KERNEL);
-+	if (!syscon)
-+		return ERR_PTR(-ENOMEM);
++	if (strncmp(str, "fd:", 3))
++		return -EINVAL;
 +
-+	syscon_config.name = dev_name(dev);
++	config->ctl_fd = strtoul(&str[3], &endptr, 0);
++	if (endptr == &str[3])
++		return -EINVAL;
 +
-+	regmap = devm_regmap_init_i2c(client, &syscon_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "Failed to initialise Regmap I2C\n");
-+		ret = PTR_ERR(regmap);
-+		return ERR_PTR(ret);
++	comma = strchr(str, ',');
++	if (comma) {
++		if (endptr != comma)
++			return -EINVAL;
++
++		config->ctl_fd_ack = strtoul(comma + 1, &endptr, 0);
++		if (endptr == comma + 1 || *endptr != '\0')
++			return -EINVAL;
 +	}
 +
-+	syscon->regmap = regmap;
-+	syscon->dev = dev;
-+
-+	spin_lock(&syscon_i2c_list_slock);
-+	list_add_tail(&syscon->list, &syscon_i2c_list);
-+	spin_unlock(&syscon_i2c_list_slock);
-+
-+	return syscon;
++	return 0;
 +}
 +
-+static struct regmap *syscon_i2c_get_regmap(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct syscon *entry, *syscon = NULL;
+ static struct option stat_options[] = {
+ 	OPT_BOOLEAN('T', "transaction", &transaction_run,
+ 		    "hardware transaction statistics"),
+@@ -1133,6 +1162,10 @@ static struct option stat_options[] = {
+ 		"libpfm4 event selector. use 'perf list' to list available events",
+ 		parse_libpfm_events_option),
+ #endif
++	OPT_CALLBACK(0, "control", &stat_config, "fd:ctl-fd[,ack-fd]",
++		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
++		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.",
++		      parse_control_option),
+ 	OPT_END()
+ };
+ 
+@@ -2304,6 +2337,9 @@ int cmd_stat(int argc, const char **argv)
+ 	signal(SIGALRM, skip_signal);
+ 	signal(SIGABRT, skip_signal);
+ 
++	if (evlist__initialize_ctlfd(evsel_list, stat_config.ctl_fd, stat_config.ctl_fd_ack))
++		goto out;
 +
-+	spin_lock(&syscon_i2c_list_slock);
+ 	status = 0;
+ 	for (run_idx = 0; forever || run_idx < stat_config.run_count; run_idx++) {
+ 		if (stat_config.run_count != 1 && verbose > 0)
+@@ -2323,6 +2359,8 @@ int cmd_stat(int argc, const char **argv)
+ 	if (!forever && status != -1 && (!interval || stat_config.summary))
+ 		print_counters(NULL, argc, argv);
+ 
++	evlist__finalize_ctlfd(evsel_list);
 +
-+	list_for_each_entry(entry, &syscon_i2c_list, list)
-+		if (entry->dev == dev) {
-+			syscon = entry;
-+			break;
-+		}
-+
-+	spin_unlock(&syscon_i2c_list_slock);
-+
-+	if (!syscon)
-+		syscon = syscon_i2c_register(client);
-+
-+	if (IS_ERR(syscon))
-+		return ERR_CAST(syscon);
-+
-+	return syscon->regmap;
-+}
-+
-+struct regmap *syscon_i2c_to_regmap(struct i2c_client *client)
-+{
-+	return syscon_i2c_get_regmap(client);
-+}
-+EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap);
-diff --git a/include/linux/mfd/syscon-i2c.h b/include/linux/mfd/syscon-i2c.h
-new file mode 100644
-index 0000000000000..e9ded6a363234
---- /dev/null
-+++ b/include/linux/mfd/syscon-i2c.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * System Control Driver accessed via I2C
-+ *
-+ * Copyright (C) 2020 Linaro Ltd.
-+ *
-+ * Author: Lee Jones <lee.jones@linaro.org>
-+ */
-+
-+#ifndef __LINUX_MFD_SYSCON_I2C_H__
-+#define __LINUX_MFD_SYSCON_I2C_H__
-+
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/i2c.h>
-+
-+#ifdef CONFIG_MFD_SYSCON_I2C
-+extern struct regmap *syscon_i2c_to_regmap(struct i2c_client *client);
-+#else
-+static inline struct regmap *syscon_i2c_to_regmap(struct i2c_client *client)
-+{
-+	return ERR_PTR(-ENOTSUPP);
-+}
-+#endif
-+
-+#endif /* __LINUX_MFD_SYSCON_I2C_H__ */
+ 	if (STAT_RECORD) {
+ 		/*
+ 		 * We synthesize the kernel mmap record just so that older tools
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index 626421ef35c2..06f0baabe775 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -133,6 +133,8 @@ struct perf_stat_config {
+ 	struct perf_cpu_map		*cpus_aggr_map;
+ 	u64			*walltime_run;
+ 	struct rblist		 metric_events;
++	int			 ctl_fd;
++	int			 ctl_fd_ack;
+ };
+ 
+ void perf_stat__set_big_num(int set);
 -- 
-2.25.1
+2.24.1
+
 
