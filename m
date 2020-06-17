@@ -2,180 +2,114 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B659EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A36F2080D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9097C208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:28:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VSGXubUj"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="OmVIWap5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgFQA04 (ORCPT
+        id S1726569AbgFQA2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 20:26:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42278 "EHLO
+        Tue, 16 Jun 2020 20:28:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgFQA0z (ORCPT
+        with ESMTP id S1725894AbgFQA2J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 20:26:55 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FD6C061573;
-        Tue, 16 Jun 2020 17:26:53 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id y11so681265ljm.9;
-        Tue, 16 Jun 2020 17:26:53 -0700 (PDT)
+        Tue, 16 Jun 2020 20:28:09 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B16F2C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 17:28:06 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id k11so333867ejr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 17:28:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lEQf5F3W4qCJ4deQv/VzXA6SqhV/PIAqUDgAQqykNFY=;
-        b=VSGXubUjoC6aZ/GL8vLA/sgMXbyYw4sEdfiq1ah7ZlhmgzlXVJxXOy+r/uJTl7g5f9
-         /XTkUXXmPa0tuQ4HtcxIiYJbqHiZP1wm8qbefZaUr9+BNZvYHeqwBlnmrAlYEmYE6Sng
-         m6tspP73JYarWyLVeqmgW9q17WSsL3ef/90c1pieee4kREP+HUw0ZbEb2JPpr9peXSII
-         NU+2tXUS3bAvxXOl9bt9hB411bUtUIM1U/MNjj3WNVCcpknWg4xkTOI+JGKNKYk3bcNo
-         jETlezpNJ8dvzk8gusFXZMNiDGt5ZhhdGZWZb2JK4UUsG2dUQ5O21YkXpg17c7lD6ZJQ
-         SVbw==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ziVCI/eO3kCJ8TB1gX2Qg46EOg54vbaPgpwUxa978JU=;
+        b=OmVIWap5i+4SGm+FtwM/QVGRj7ZG2ei8ffEyfYQ9GenyOQpwe7B2tEHHIR9Qyz0V0f
+         vBV6q2PDEFCkozuQkszlA4poE6V3RbBuGe5/8/ly+oZeck/mFttDXtnRyH2WWBsJCbCe
+         6E0xRubdSEs5Ab+N97Rcw2OEuAqPd51OGE1s3EDCcxIFDIVwHFnmqsG430/VBcoEExJH
+         KEHZ6/xVMDtOBWnnYZj0D2Fl2mMULPkeWOLueUrzYofurw0QI3DdfDNSx9CHVnn3HJ1H
+         pFmZzJAM05selS91Z/75CmTztuJpeNcpZBCNmtjZW7pX7bCwqDtP/GHS9E/eUSOVmW+w
+         13Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lEQf5F3W4qCJ4deQv/VzXA6SqhV/PIAqUDgAQqykNFY=;
-        b=BlZZL9NvxywCFgRz8fugijRIO15Vnb+v15+IjknT4/kZmG/jc9v8l7t/fEDvvM6cD+
-         K5SBXV8dCayBjXpPxpLycOlO+XcMFvsW82DM8OjY6IlQ7Jp1Lj8aYrNPK2FXNU73SF6x
-         gX7fwEdCE9K68ZqpXLq+a2FHMMITXH0Qkcw9Lof3XAWKi6dcMBlyv5T0CNDL62OMwR0c
-         ePTfgjNlaHH/HMCZ3+fhUqNPt3oImfsf1XnaFKImjERZrXgsVZXdDo/3Qbycx7QkinLI
-         mmEIXXY6WZ8YgsEi0VA/ShNuWjuvmK+9BiephiSixC4Qn07HDk/dRJBn4s/ZM48EzaPi
-         w+/g==
-X-Gm-Message-State: AOAM530s97ikKA6OUEnKP2Lud4lDnEoswwuAlbRDx+qG/y87KxYfdxrV
-        cx8sWzQYYjvFPg/JKEa1Ljg=
-X-Google-Smtp-Source: ABdhPJx/61Qe73HXhles5hdVAZmzzp3ui4DiMBM3iBrfiV/5FEpgE9dF+dD+BR8yXqCBrXAXQRL+RQ==
-X-Received: by 2002:a2e:98d7:: with SMTP id s23mr2712729ljj.2.1592353612228;
-        Tue, 16 Jun 2020 17:26:52 -0700 (PDT)
-Received: from localhost (pool-109-191-188-200.is74.ru. [109.191.188.200])
-        by smtp.gmail.com with ESMTPSA id v24sm427080lfo.4.2020.06.16.17.26.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 17:26:51 -0700 (PDT)
-From:   Ivan Mironov <mironov.ivan@gmail.com>
-To:     amd-gfx@lists.freedesktop.org
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Ivan Mironov <mironov.ivan@gmail.com>, stable@vger.kernel.org
-Subject: [PATCH] drm/amd/powerplay: Fix NULL dereference in lock_bus() on Vega20 w/o RAS
-Date:   Wed, 17 Jun 2020 05:26:13 +0500
-Message-Id: <20200617002613.67917-1-mironov.ivan@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ziVCI/eO3kCJ8TB1gX2Qg46EOg54vbaPgpwUxa978JU=;
+        b=e1dG108FZkkoA7UfPH2NTczR5EzmYCATD8Qt4IqGHPMB9kJtvCLJeYtKWiUYljO8GV
+         O+v8PIT0DIBJ18N5Zw7Mqna+HwYCAD8kbMGxre7Wh2V/zTj/JpB1TQ4kgG8cpbWzqNzX
+         AIjkUuPqU1A0SJ7+hiUauPqwF1QyOPIBKuaEy3DmMBd5pUIpQ5e8NZ5rTxQT9UyBZs3h
+         G4NFgsEEVhNPmzklLoV78tLNOZROIfU4G+InrpXWQp4j2ioifSy3hdUD4zJTandBwcCQ
+         mXruZj7AEZ3KLa49RmE9FfjhQTnEEqOpfjUOjOZOhSpid61fJ38h0exziA0ZYFzXprQW
+         sHPA==
+X-Gm-Message-State: AOAM531F2BgfGZ++DTRI/++VESk08ibCrRCGLORFFwd6Q9KNHtRslDwt
+        ltu5CjSW8gNRlNaTYygKmc/yeI7ZdRZK+bVSraHD
+X-Google-Smtp-Source: ABdhPJwcqOzEEo3njX2aqW7aHntYyqFAw0P80lO03RqOPVnL9R0w1Jw9roM8xSWUxmuaM4fg2wlnJVBtkGHMY5vyxmQ=
+X-Received: by 2002:a17:906:ecef:: with SMTP id qt15mr4971301ejb.91.1592353685375;
+ Tue, 16 Jun 2020 17:28:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200615204548.9230-1-trix@redhat.com>
+In-Reply-To: <20200615204548.9230-1-trix@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 16 Jun 2020 20:27:54 -0400
+Message-ID: <CAHC9VhQeo6_mie65AH5bzV9484UWsPQA6kz67ZR7_WSfBQ-3cQ@mail.gmail.com>
+Subject: Re: [PATCH v3] selinux: fix another double free
+To:     trix@redhat.com
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>, weiyongjun1@huawei.com,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I updated my system with Radeon VII from kernel 5.6 to kernel 5.7, and
-following started to happen on each boot:
+On Mon, Jun 15, 2020 at 4:45 PM <trix@redhat.com> wrote:
+> From: Tom Rix <trix@redhat.com>
+>
+> Clang static analysis reports this double free error
+>
+> security/selinux/ss/conditional.c:139:2: warning: Attempt to free released memory [unix.Malloc]
+>         kfree(node->expr.nodes);
+>         ^~~~~~~~~~~~~~~~~~~~~~~
+>
+> When cond_read_node fails, it calls cond_node_destroy which frees the
+> node but does not poison the entry in the node list.  So when it
+> returns to its caller cond_read_list, cond_read_list deletes the
+> partial list.  The latest entry in the list will be deleted twice.
+>
+> So instead of freeing the node in cond_read_node, let list freeing in
+> code_read_list handle the freeing the problem node along with all of the
+> earlier nodes.
+>
+> Because cond_read_node no longer does any error handling, the goto's
+> the error case are redundant.  Instead just return the error code.
+>
+> Fixes: 60abd3181db2 ("selinux: convert cond_list to array")
+>
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+> v3: simplify returns
+>
+>  security/selinux/ss/conditional.c | 18 +++++-------------
+>  1 file changed, 5 insertions(+), 13 deletions(-)
 
-	...
-	BUG: kernel NULL pointer dereference, address: 0000000000000128
-	...
-	CPU: 9 PID: 1940 Comm: modprobe Tainted: G            E     5.7.2-200.im0.fc32.x86_64 #1
-	Hardware name: System manufacturer System Product Name/PRIME X570-P, BIOS 1407 04/02/2020
-	RIP: 0010:lock_bus+0x42/0x60 [amdgpu]
-	...
-	Call Trace:
-	 i2c_smbus_xfer+0x3d/0xf0
-	 i2c_default_probe+0xf3/0x130
-	 i2c_detect.isra.0+0xfe/0x2b0
-	 ? kfree+0xa3/0x200
-	 ? kobject_uevent_env+0x11f/0x6a0
-	 ? i2c_detect.isra.0+0x2b0/0x2b0
-	 __process_new_driver+0x1b/0x20
-	 bus_for_each_dev+0x64/0x90
-	 ? 0xffffffffc0f34000
-	 i2c_register_driver+0x73/0xc0
-	 do_one_initcall+0x46/0x200
-	 ? _cond_resched+0x16/0x40
-	 ? kmem_cache_alloc_trace+0x167/0x220
-	 ? do_init_module+0x23/0x260
-	 do_init_module+0x5c/0x260
-	 __do_sys_init_module+0x14f/0x170
-	 do_syscall_64+0x5b/0xf0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-	...
+Merged into selinux/stable-5.8 with a better subject line.  Thanks for
+catching this and submitting the fix.  Assuming everything goes well
+I'll send this up to Linus later this week.
 
-Error appears when some i2c device driver tries to probe for devices
-using adapter registered by `smu_v11_0_i2c_eeprom_control_init()`.
-Code supporting this adapter requires `adev->psp.ras.ras` to be not
-NULL, which is true only when `amdgpu_ras_init()` detects HW support by
-calling `amdgpu_ras_check_supported()`.
+It might be nice to do a follow-up patch for selinux/next which folds
+cond_node_destroy() into cond_list_destroy() as there is no longer a
+need for that code to be in a separate function.
 
-Before 9015d60c9ee1, adapter was registered by
-
-	-> amdgpu_device_ip_init()
-	  -> amdgpu_ras_recovery_init()
-	    -> amdgpu_ras_eeprom_init()
-	      -> smu_v11_0_i2c_eeprom_control_init()
-
-after verifying that `adev->psp.ras.ras` is not NULL in
-`amdgpu_ras_recovery_init()`. Currently it is registered
-unconditionally by
-
-	-> amdgpu_device_ip_init()
-	  -> pp_sw_init()
-	    -> hwmgr_sw_init()
-	      -> vega20_smu_init()
-	        -> smu_v11_0_i2c_eeprom_control_init()
-
-Fix simply adds HW support check (ras == NULL => no support) before
-calling `smu_v11_0_i2c_eeprom_control_{init,fini}()`.
-
-Please note that there is a chance that similar fix is also required for
-CHIP_ARCTURUS. I do not know whether any actual Arcturus hardware without
-RAS exist, and whether calling `smu_i2c_eeprom_init()` makes any sense
-when there is no HW support.
-
-Cc: stable@vger.kernel.org
-Fixes: 9015d60c9ee1 ("drm/amdgpu: Move EEPROM I2C adapter to amdgpu_device")
-Signed-off-by: Ivan Mironov <mironov.ivan@gmail.com>
----
- drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c
-index 2fb97554134f..c2e0fbbccf56 100644
---- a/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/vega20_smumgr.c
-@@ -522,9 +522,11 @@ static int vega20_smu_init(struct pp_hwmgr *hwmgr)
- 	priv->smu_tables.entry[TABLE_ACTIVITY_MONITOR_COEFF].version = 0x01;
- 	priv->smu_tables.entry[TABLE_ACTIVITY_MONITOR_COEFF].size = sizeof(DpmActivityMonitorCoeffInt_t);
- 
--	ret = smu_v11_0_i2c_eeprom_control_init(&adev->pm.smu_i2c);
--	if (ret)
--		goto err4;
-+	if (adev->psp.ras.ras) {
-+		ret = smu_v11_0_i2c_eeprom_control_init(&adev->pm.smu_i2c);
-+		if (ret)
-+			goto err4;
-+	}
- 
- 	return 0;
- 
-@@ -560,7 +562,8 @@ static int vega20_smu_fini(struct pp_hwmgr *hwmgr)
- 			(struct vega20_smumgr *)(hwmgr->smu_backend);
- 	struct amdgpu_device *adev = hwmgr->adev;
- 
--	smu_v11_0_i2c_eeprom_control_fini(&adev->pm.smu_i2c);
-+	if (adev->psp.ras.ras)
-+		smu_v11_0_i2c_eeprom_control_fini(&adev->pm.smu_i2c);
- 
- 	if (priv) {
- 		amdgpu_bo_free_kernel(&priv->smu_tables.entry[TABLE_PPTABLE].handle,
 -- 
-2.26.2
-
+paul moore
+www.paul-moore.com
