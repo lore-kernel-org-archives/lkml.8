@@ -2,116 +2,97 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B080FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2B32078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:19:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CTzfX1pT"
+	by mail.kernel.org (Postfix) with ESMTP id 658842082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:19:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgFQJTm (ORCPT
+        id S1726833AbgFQJTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 05:19:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20518 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725860AbgFQJTl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 05:19:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592385580;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kkEXKyGt2pSGVeN/088gzrGbTggjvieYaVp7yoqIgIc=;
-        b=CTzfX1pT8nuQVF26AgAbJ8E7twcExn32ny4Xjr4XPH73f6YoUlUYJnN/OVgfwYllOlzH0D
-        D9TFxL8lh9wGQVg5r2d88HauDLV56fXWK23Q+xz5qaKW7+pKDUjHXMkU7B0ehDoduVehUb
-        GK1Cct8cibKEZeK91gnL97vDNn3+Vs0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-dVtHbVnkMZucx-GrMSwLgg-1; Wed, 17 Jun 2020 05:19:37 -0400
-X-MC-Unique: dVtHbVnkMZucx-GrMSwLgg-1
-Received: by mail-ej1-f71.google.com with SMTP id p27so752448ejn.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 02:19:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=kkEXKyGt2pSGVeN/088gzrGbTggjvieYaVp7yoqIgIc=;
-        b=VAWv1FgaISClolyhaKwAqvD1JaFI2ygRxH6CNh6EzwyoRyRALsQy+hxw/Bluu5Xg4p
-         ycxotADnuMh9Y6Ypf5I5yk7+307JFmn2st1cCC279+GBDEHcNXw/aVbKS2XfV5ID9Dqt
-         6Rtd+oN78Nb878+4O2NaUQKsnW67NfjzaRkE1I1ZNTHTELU03/qcEitTwxEGHpZDJChf
-         etPtgGzyDmgBTfORdcTQiEr5oT1uYmrit+V+a9B0wX+BOmzSJOXV9mn7gc+0lE9u4Euy
-         sU2pdGudpaMR9W9gyueGeHKFKW3RpOHubJnQLx6HMPIFckGFx4oimdMBW2F+2knATGOs
-         6USQ==
-X-Gm-Message-State: AOAM530sHKtl0U94Xucwqk7eEmqiK6HR/1VI0fkB8fGxiLQ2mwrd5GMb
-        +2/nKrpI0ZTbkEqOBih8uDMnEBl6caSmC+MYMVRkKKCFGxc/Gl9LqNqH6ZXhb3QztvRddV2rtmV
-        hS40E830D5kW1UNR4YM+QgvPB
-X-Received: by 2002:a17:907:217a:: with SMTP id rl26mr6508699ejb.209.1592385576317;
-        Wed, 17 Jun 2020 02:19:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzrJXQCxLImLWsBTGLvp8iRfU4f8nD2ldLoRX71FQCLOBA0I2c2dEM5Z3bO5UcktbATy/FZlQ==
-X-Received: by 2002:a17:907:217a:: with SMTP id rl26mr6508687ejb.209.1592385576150;
-        Wed, 17 Jun 2020 02:19:36 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id z15sm13057695ejw.8.2020.06.17.02.19.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 02:19:35 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH] KVM: VMX: Remove vcpu_vmx's defunct copy of host_pkru
-In-Reply-To: <20200617034123.25647-1-sean.j.christopherson@intel.com>
-References: <20200617034123.25647-1-sean.j.christopherson@intel.com>
-Date:   Wed, 17 Jun 2020 11:19:34 +0200
-Message-ID: <87zh92gic9.fsf@vitty.brq.redhat.com>
+        Wed, 17 Jun 2020 05:19:47 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6351 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726816AbgFQJTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 05:19:46 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3B258A92749A78F0C949;
+        Wed, 17 Jun 2020 17:19:44 +0800 (CST)
+Received: from [10.166.213.22] (10.166.213.22) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 17 Jun
+ 2020 17:19:35 +0800
+Subject: Re: [PATCH linux-next] kernel/fork.c: annotate data races for
+ copy_process
+To:     Chenweilong <chenweilong@huawei.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dvyukov@google.com" <dvyukov@google.com>
+References: <AB5DF7CCD2A48B4A97860D5EDCA2B71D94AA8AEC@DGGEMM528-MBS.china.huawei.com>
+From:   Zefan Li <lizefan@huawei.com>
+Message-ID: <9b8346c8-c3b8-b0bd-b925-9545aa3482f9@huawei.com>
+Date:   Wed, 17 Jun 2020 17:19:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <AB5DF7CCD2A48B4A97860D5EDCA2B71D94AA8AEC@DGGEMM528-MBS.china.huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.213.22]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On 2020/6/17 17:08, Chenweilong wrote:
+>> On Tue, Jun 09, 2020 at 11:08:01AM +0800, Weilong Chen wrote:
+>>> The check is only there to stop root fork bombs.
+>>>
+>>> BUG: KCSAN: data-race in copy_process / copy_process
+>>>
+>>> write to 0xffffffff86f87d20 of 4 bytes by task 7121 on cpu 5:
+>>>  copy_process+0x2e1a/0x3af0 kernel/fork.c:2285
+>>>  _do_fork+0xf7/0x790 kernel/fork.c:2430
+>>>  __do_sys_clone+0xf9/0x130 kernel/fork.c:2585  __se_sys_clone
+>>> kernel/fork.c:2566 [inline]
+>>>  __x64_sys_clone+0x6c/0x80 kernel/fork.c:2566
+>>>  do_syscall_64+0xc7/0x3b0 arch/x86/entry/common.c:295
+>>>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>>
+>>> read to 0xffffffff86f87d20 of 4 bytes by task 7125 on cpu 3:
+>>>  copy_process+0x9eb/0x3af0 kernel/fork.c:1967
+>>>  _do_fork+0xf7/0x790 kernel/fork.c:2430
+>>>  __do_sys_clone+0xf9/0x130 kernel/fork.c:2585  __se_sys_clone
+>>> kernel/fork.c:2566 [inline]
+>>>  __x64_sys_clone+0x6c/0x80 kernel/fork.c:2566
+>>>  do_syscall_64+0xc7/0x3b0 arch/x86/entry/common.c:295
+>>>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>>
+>>> Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+>>
+>> Plumbing data_race() in there just to taper over this seems ugly.
+>> Before we do that we should probably simply make nr_threads atomic_t.
+> Will using atomic_t cause performance degradation ? I don’t know why atomic was not used in the beginning.
+> 
+>> Also, where's the link to the syzbot/kcsan report? Or did you get this report from somewhere else?
+> I got this from local test.
 
-> Remove vcpu_vmx.host_pkru, which got left behind when PKRU support was
-> moved to common x86 code.
->
-> No functional change intended.
->
-> Fixes: 37486135d3a7b ("KVM: x86: Fix pkru save/restore when guest CR4.PKE=0, move it to x86.c")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx/vmx.h | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index 8a83b5edc820..639798e4a6ca 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -288,8 +288,6 @@ struct vcpu_vmx {
->  
->  	u64 current_tsc_ratio;
->  
-> -	u32 host_pkru;
-> -
->  	unsigned long host_debugctlmsr;
->  
->  	/*
+There is a comment just above the if statement to explain this race:
 
-(Is there a better [automated] way to figure out whether the particular
-field is being used or not than just dropping it and trying to compile
-the whole thing? Leaving #define-s, configs,... aside ...)
+        /*
+         * If multiple threads are within copy_process(), then this check
+         * triggers too late. This doesn't hurt, the check is only there
+         * to stop root fork bombs.
+         */
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+This race won't go away by making nr_threads atomic, because I think it is
+tasklist_lock that protects nr_thread.
 
--- 
-Vitaly
-
+Adding data_race() here I think makes the code more readable, as a supplementary
+to the code comment.
