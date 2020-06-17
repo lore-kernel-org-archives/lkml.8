@@ -2,87 +2,61 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 02:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B84DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 02:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB3A12098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 02:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC302098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 02:08:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgFQCHr (ORCPT
+        id S1726664AbgFQCI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 22:07:47 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:38788 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgFQCHp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 22:07:45 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 08FB82787E;
-        Tue, 16 Jun 2020 22:07:38 -0400 (EDT)
-Date:   Wed, 17 Jun 2020 12:07:40 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Bart Van Assche <bvanassche@acm.org>
-cc:     Chris Boot <bootc@boo.tc>, linuxppc-dev@lists.ozlabs.org,
-        target-devel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Nicholas Bellinger <nab@linux-iscsi.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>
-Subject: Re: [PATCH] scsi: target/sbp: remove firewire SBP target driver
-In-Reply-To: <8cbab988-fba7-8e27-7faf-9f7aa36ca235@acm.org>
-Message-ID: <alpine.LNX.2.22.394.2006171104540.11@nippy.intranet>
-References: <01020172acd3d10f-3964f076-a820-43fc-9494-3f3946e9b7b5-000000@eu-west-1.amazonses.com> <alpine.LNX.2.22.394.2006140934520.15@nippy.intranet> <7ad14946-5c25-fc49-1e48-72d37a607832@boo.tc> <alpine.LNX.2.22.394.2006150919110.8@nippy.intranet>
- <8da0c285-d707-a3d2-063e-472af5cc560f@boo.tc> <alpine.LNX.2.22.394.2006161929380.8@nippy.intranet> <8cbab988-fba7-8e27-7faf-9f7aa36ca235@acm.org>
+        Tue, 16 Jun 2020 22:08:26 -0400
+Received: from mga11.intel.com ([192.55.52.93]:58926 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgFQCI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 22:08:26 -0400
+IronPort-SDR: VTz8LHhMwF+aoLaRAW0kVxluKndXL/gXDImjuJJtEMnyl5i+/mXBMDOxJ8oKNOFp3sTve2TyiG
+ ZepPPC9K3Egw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 19:08:25 -0700
+IronPort-SDR: VcFY5J6iZundJ9mS0cEP2C3HJq6cSvr1bLr79QEKN/SWBoJxBkD83eBjof+rTLFZ2pAzi7D70t
+ Rbxc+Nth5f5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,520,1583222400"; 
+   d="scan'208";a="261597074"
+Received: from vchernon-mobl1.ccr.corp.intel.com (HELO localhost) ([10.252.50.149])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Jun 2020 19:08:21 -0700
+Date:   Wed, 17 Jun 2020 05:08:20 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Frank Werner-Krippendorf <mail@hb9fxq.ch>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dh key: Missing a blank line after declarations
+Message-ID: <20200617020820.GB7215@linux.intel.com>
+References: <20200612203458.13517-1-mail@hb9fxq.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612203458.13517-1-mail@hb9fxq.ch>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020, Bart Van Assche wrote:
-
+On Fri, Jun 12, 2020 at 10:34:58PM +0200, Frank Werner-Krippendorf wrote:
+> This patch fixes a "WARNING: Missing a blank line after declarations" issue found by checkpatch.pl
 > 
-> As far as I know the sbp driver only has had one user ever and that user 
-> is no longer user the sbp driver.
+> Signed-off-by: Frank Werner-Krippendorf <mail@hb9fxq.ch>
 
-So, you estimate the userbase at zero. Can you give a confidence level? 
-Actual measurement is hard because when end users encounter breakage, they 
-look for quick workarounds before they undertake post mortem, log 
-collection, bug reporting, mailing list discussions, analysis etc.
+Umh for which patch?
 
-> So why to keep it in the kernel tree?
-
-Answer: for the same reason it was added to the tree.
-
-Here's a different question: "Why remove it from the kernel tree?"
-
-If maintaining this code is a burden, is it not the kind of tax that all 
-developers/users pay to all developers/users? Does this driver impose an 
-unreasonably high burden for some reason?
-
-The growth of a maintenance burden in general has lead to the invention of 
-design patterns and tooling to minize it. So a good argument for removal 
-would describe the nature of the problem, because some driver deficiencies 
-can be fixed automatically, and some tooling deficiencies can compound an 
-otherwise insignificant or common driver deficiency.
-
-There are spin-off benefits from legacy code besides process improvements. 
-Building and testing this sort of code has regularly revealed erroneous 
-corner cases in commits elsewhere like API changes and refactoring.
-
-Also, legacy code is used by new developers get experience in code 
-modernization. And it provides more training material for neural networks 
-that need to be taught to recognize patches that raise quality.
-
-Ten or twenty years ago, I doubt that anyone predicted these (and other) 
-spin-off benefits. If we can't predict the benefit, how will we project 
-the cost, and use that to justify deletion?
-
-Please see also,
-http://www.mac.linux-m68k.org/docs/obsolete.php
+/Jarkko
