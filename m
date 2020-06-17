@@ -2,267 +2,284 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05887C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F21C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C777920853
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDDB208B3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:28:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="sGetO+Nt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AqAHdhbs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgFQG1a (ORCPT
+        id S1726905AbgFQG2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 02:27:30 -0400
-Received: from mga01.intel.com ([192.55.52.88]:65167 "EHLO mga01.intel.com"
+        Wed, 17 Jun 2020 02:28:49 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:51527 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbgFQG13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 02:27:29 -0400
-IronPort-SDR: yjhJcLeVAbbITBIv9SMbJH8MMMfUpdyi9F5y9z3OWD043pjlG5taCQ0HGapbIdv9amjgirDy3K
- FsSpjr/CaYkw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 23:27:29 -0700
-IronPort-SDR: XE9NAGzZ8JQAlku/+wioO38caPeKCDHPw27B0UmFkyWp8gYZPa2C4PDFg6dy0d4gjRbC7YVhKi
- QJKLq7nCqlVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,521,1583222400"; 
-   d="scan'208";a="299181901"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Jun 2020 23:27:28 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 16 Jun 2020 23:27:28 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
- edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Tue, 16 Jun 2020 23:27:28 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T3LXhi7xlUfFV9xzB/m5hNJKSy7Gkjgd5oNXSVeqHWrR9MXFsICZmkin4ZdyKu+9df3a69ybOSSCZBSOvWqGTJbQRMLVnIK/AQkIk1dpDPO9aku5HvsU5TkYEKABx1097wJv94Al4OMDL+SRt5VgLfm3IKXtVg4IQdY5eu6AYyrSNrENMY3HDidgerI20Wlo+tj6MZXs3FxW56bdV1yPlyhdTVaQ+SwCzKH7Hfx4kNnpKaUXZNgGNJAmMAGFaXrP1obtUoUtT2i6dIuBYfNjsSqcau2Hmv719QofplSf+PkP7pXOJQJ4LPRfjLp4K3G+5HK4HD8wRhPc44xsEvjqSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c0JiwUCQVTepmUn2KexbyYEuiuD8MO2aiBdztGTzhEg=;
- b=UKZa9LJ9edB7JE8WvUhSCRVsxp2qgntIIpI8FxQjjLkpJKtLUxr6F61eOnaQLSWKIHoEUkFhJmKgFVxv97nnrvNM+j0wqhFHUmUWO6CrwpPCeXrYCwgI1NjAg0f4ZMxUlGK29BCDVlQMELF/XahcjDXdvozedNmX/w0E7NFzxNBYgR1sOybVBgB+d7sQl4uGpydlDJ9KParAUL1v51538LurHCj6M24qSPQ4nDsNC3oEzp6FnUi/8QHTVMMMFOJCPkrcsQrr7wXpixAomcNVs+Kjlw4dzLcVZWD3DTB/9M3C2v0bJMSgwxICsYIpoY87lc+zaWNpVjnNMBIBCYkOCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c0JiwUCQVTepmUn2KexbyYEuiuD8MO2aiBdztGTzhEg=;
- b=sGetO+NtU2Sjana8Y0n+2khPl/gH7BGK2RXGdDXsbr8LRqj/p78+m3OquD/tAPVRSrrg6Z191dfop636o1vA0c9oViTsKOEFb/2lQG4HgV54+zOj72EB3GlzE66+d9mSEQSgdgwv8lbmLkWXMRhtwcRkaX3Heoz5XKh0S7yjbUc=
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
- DM6PR11MB3420.namprd11.prod.outlook.com (2603:10b6:5:69::31) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3088.23; Wed, 17 Jun 2020 06:27:27 +0000
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::2c3d:98d9:4e81:c86c]) by DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::2c3d:98d9:4e81:c86c%6]) with mapi id 15.20.3088.029; Wed, 17 Jun 2020
- 06:27:27 +0000
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Stefan Hajnoczi <stefanha@gmail.com>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 14/15] vfio: Document dual stage control
-Thread-Topic: [PATCH v2 14/15] vfio: Document dual stage control
-Thread-Index: AQHWP+klJ2WDrhzcJUGl5z7dUgTydqjZcnYAgALkw9A=
-Date:   Wed, 17 Jun 2020 06:27:27 +0000
-Message-ID: <DM5PR11MB1435C484283BDCD75F19EDB5C39A0@DM5PR11MB1435.namprd11.prod.outlook.com>
-References: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
- <1591877734-66527-15-git-send-email-yi.l.liu@intel.com>
- <20200615094128.GB1491454@stefanha-x1.localdomain>
-In-Reply-To: <20200615094128.GB1491454@stefanha-x1.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.217]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f14b7d07-9df1-4e1d-343a-08d812878191
-x-ms-traffictypediagnostic: DM6PR11MB3420:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB3420AABEFCD6ADF2E0561318C39A0@DM6PR11MB3420.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2089;
-x-forefront-prvs: 04371797A5
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1cMbFOsHoIRCLhhuq86iq2ZXyC/2jdhbGSA4EZpYg9YqZglN7gcierquuN5MZ0pTxXiP/WcP3I85gFe2K7JKZXqTODLl9JFl1mb67Y8eEOeri1t75MX7qJD02RVbZYGu45INWH0A3Ot1qLFDMgf4X76RSpO0I7MI+mv2FZPlr/URZvwubfR2rR4zgkQG9BfyUIcTHB/We2Kvhh6R3cCd2HHgEowzMkgrvLJWhd6y3bRBclXSOhtrsMoETAmmgTULjUbE6QQS8FOWT+cMv1g9l8KgX9UVqv9+Tix/PeDB4UbuxI1T8A7R447EJzUIHQjrherBTlxX9nByVsgvf6pCdvBLq7MSfzLPMoaB6hgJDXDEmH5N2gYDFCw6+YIeIoSg7HQF2t4I3hSSerZIZwbuqQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(376002)(396003)(366004)(86362001)(4326008)(966005)(55016002)(52536014)(33656002)(83380400001)(5660300002)(26005)(2906002)(6916009)(9686003)(316002)(66556008)(66446008)(64756008)(66476007)(76116006)(6506007)(8676002)(71200400001)(186003)(8936002)(7416002)(7696005)(54906003)(66946007)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: sESDsWao/X94nMQu9tHhm3dNnCqb2K+fCMOSo5V4ngUyhTaMpbIJTfnWHbWaFcfGlc9RNnFY6ktqIajxCnv6IYUiAfdwIZQ/AD9r2sO5aX7L18cpKhVCWD828EG+JBdYL7mPwk8qGTfqtWXx9K3H3/k67nIAN30p5dO8mC9IulMfnHejrvXdI5aiIWPKhMI0Pwkbgz7VvgcJPr54hKAVirQPRkBWD4LJv/kXiCjeC4Zbclfv6qKbxGCpoN968vEu8A894pYuPl5nttS9AR2bKzD2aAH95XCpxXJi9eqCHWjZEvY+QKCmAkdi3cZLppVvIm7B8MgvUh9J0JAOwgWyQySG7fwiGV+4giLysvl4bJvQ5MF6NL8lFfFf8+hLvsVHiyAs45booTYFWu1o4QTf9BAtgobT43Us3DC4cCRmlnVaHhwhWcyx5HcXED999QhsHV58I1KYTVjAfeskzuMLsyreHJ5eS8+1evytWujmRWArrwC99dBOvDjDKLdCJfP1
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726874AbgFQG2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 02:28:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592375328; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=s/Vm4bvk2cxG6VkzRYO3gzXCbP6ddUmYHI9BmSE6AD4=; b=AqAHdhbsacOODeSKAfbxZGGTu4qT26y1qvam9l0nE3a8NYre+nrA8HBBO33ApYJdyH0L3d5i
+ +njsLsrqbt1x+baZHk/N+J5XSy7R1LIGOJyxR4u9hXGJCsdDb+VMmm4HuRpFfM3dTmsQWlSW
+ dJkRdBYqrU2RfQP5r2ZcGfJJkHA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
+ 5ee9b81dfe1db4db89e07cdd (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 17 Jun 2020 06:28:45
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4F01DC433CB; Wed, 17 Jun 2020 06:28:45 +0000 (UTC)
+Received: from [192.168.1.102] (unknown [183.83.143.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: charante)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EDC99C433C8;
+        Wed, 17 Jun 2020 06:28:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EDC99C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
+Subject: Re: [PATCH] dmabuf: use spinlock to access dmabuf->name
+To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>
+Cc:     Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
+        "vinmenon@codeaurora.org" <vinmenon@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <316a5cf9-ca71-6506-bf8b-e79ded9055b2@codeaurora.org>
+ <14063C7AD467DE4B82DEDB5C278E8663010F365EF5@fmsmsx107.amr.corp.intel.com>
+ <14063C7AD467DE4B82DEDB5C278E8663010F365F7D@fmsmsx107.amr.corp.intel.com>
+From:   Charan Teja Kalla <charante@codeaurora.org>
+Message-ID: <5b960c9a-ef9d-b43d-716d-113efc793fe5@codeaurora.org>
+Date:   Wed, 17 Jun 2020 11:58:39 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f14b7d07-9df1-4e1d-343a-08d812878191
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2020 06:27:27.5347
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MS7jmkSQ+jI3FANen0CxfieoM+81rL9gnV02vzZ8SCkmqIAKgtujI24/MS2kCB9PYqwb9oAdPE35lLfObR7LKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3420
-X-OriginatorOrg: intel.com
+In-Reply-To: <14063C7AD467DE4B82DEDB5C278E8663010F365F7D@fmsmsx107.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Stefan Hajnoczi <stefanha@gmail.com>
-> Sent: Monday, June 15, 2020 5:41 PM
-> On Thu, Jun 11, 2020 at 05:15:33AM -0700, Liu Yi L wrote:
->
-> > From: Eric Auger <eric.auger@redhat.com>
-> >
-> > The VFIO API was enhanced to support nested stage control: a bunch of
-> > new iotcls and usage guideline.
-> >
-> > Let's document the process to follow to set up nested mode.
-> >
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Cc: Eric Auger <eric.auger@redhat.com>
-> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > Cc: Joerg Roedel <joro@8bytes.org>
-> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > ---
-> > v1 -> v2:
-> > *) new in v2, compared with Eric's original version, pasid table bind
-> >    and fault reporting is removed as this series doesn't cover them.
-> >    Original version from Eric.
-> >    https://lkml.org/lkml/2020/3/20/700
-> >
-> >  Documentation/driver-api/vfio.rst | 64
-> > +++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 64 insertions(+)
-> >
-> > diff --git a/Documentation/driver-api/vfio.rst
-> > b/Documentation/driver-api/vfio.rst
-> > index f1a4d3c..06224bd 100644
-> > --- a/Documentation/driver-api/vfio.rst
-> > +++ b/Documentation/driver-api/vfio.rst
-> > @@ -239,6 +239,70 @@ group and can access them as follows::
-> >  	/* Gratuitous device reset and go... */
-> >  	ioctl(device, VFIO_DEVICE_RESET);
-> >
-> > +IOMMU Dual Stage Control
-> > +------------------------
-> > +
-> > +Some IOMMUs support 2 stages/levels of translation. Stage corresponds
-> > +to the ARM terminology while level corresponds to Intel's VTD terminol=
-ogy.
-> > +In the following text we use either without distinction.
-> > +
-> > +This is useful when the guest is exposed with a virtual IOMMU and
-> > +some devices are assigned to the guest through VFIO. Then the guest
-> > +OS can use stage 1 (GIOVA -> GPA or GVA->GPA), while the hypervisor
-> > +uses stage 2 for VM isolation (GPA -> HPA).
-> > +
-> > +Under dual stage translation, the guest gets ownership of the stage 1
-> > +page tables and also owns stage 1 configuration structures. The
-> > +hypervisor owns the root configuration structure (for security
-> > +reason), including stage 2 configuration. This works as long
-> > +configuration structures and page table
->=20
-> s/as long configuration/as long as configuration/
+Thanks Michael for the comments..
 
-got it.
+On 6/16/2020 7:29 PM, Ruhl, Michael J wrote:
+>> -----Original Message-----
+>> From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
+>> Ruhl, Michael J
+>> Sent: Tuesday, June 16, 2020 9:51 AM
+>> To: Charan Teja Kalla <charante@codeaurora.org>; Sumit Semwal
+>> <sumit.semwal@linaro.org>; open list:DMA BUFFER SHARING FRAMEWORK
+>> <linux-media@vger.kernel.org>; DRI mailing list <dri-
+>> devel@lists.freedesktop.org>
+>> Cc: Linaro MM SIG <linaro-mm-sig@lists.linaro.org>;
+>> vinmenon@codeaurora.org; LKML <linux-kernel@vger.kernel.org>;
+>> stable@vger.kernel.org
+>> Subject: RE: [PATCH] dmabuf: use spinlock to access dmabuf->name
+>>
+>>> -----Original Message-----
+>>> From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
+>>> Charan Teja Kalla
+>>> Sent: Thursday, June 11, 2020 9:40 AM
+>>> To: Sumit Semwal <sumit.semwal@linaro.org>; open list:DMA BUFFER
+>>> SHARING FRAMEWORK <linux-media@vger.kernel.org>; DRI mailing list <dri-
+>>> devel@lists.freedesktop.org>
+>>> Cc: Linaro MM SIG <linaro-mm-sig@lists.linaro.org>;
+>>> vinmenon@codeaurora.org; LKML <linux-kernel@vger.kernel.org>;
+>>> stable@vger.kernel.org
+>>> Subject: [PATCH] dmabuf: use spinlock to access dmabuf->name
+>>>
+>>> There exists a sleep-while-atomic bug while accessing the dmabuf->name
+>>> under mutex in the dmabuffs_dname(). This is caused from the SELinux
+>>> permissions checks on a process where it tries to validate the inherited
+>>> files from fork() by traversing them through iterate_fd() (which
+>>> traverse files under spin_lock) and call
+>>> match_file(security/selinux/hooks.c) where the permission checks happen.
+>>> This audit information is logged using dump_common_audit_data() where it
+>>> calls d_path() to get the file path name. If the file check happen on
+>>> the dmabuf's fd, then it ends up in ->dmabuffs_dname() and use mutex to
+>>> access dmabuf->name. The flow will be like below:
+>>> flush_unauthorized_files()
+>>>  iterate_fd()
+>>>    spin_lock() --> Start of the atomic section.
+>>>      match_file()
+>>>        file_has_perm()
+>>>          avc_has_perm()
+>>>            avc_audit()
+>>>              slow_avc_audit()
+>>> 	        common_lsm_audit()
+>>> 		  dump_common_audit_data()
+>>> 		    audit_log_d_path()
+>>> 		      d_path()
+>>>                        dmabuffs_dname()
+>>>                          mutex_lock()--> Sleep while atomic.
+>>>
+>>> Call trace captured (on 4.19 kernels) is below:
+>>> ___might_sleep+0x204/0x208
+>>> __might_sleep+0x50/0x88
+>>> __mutex_lock_common+0x5c/0x1068
+>>> __mutex_lock_common+0x5c/0x1068
+>>> mutex_lock_nested+0x40/0x50
+>>> dmabuffs_dname+0xa0/0x170
+>>> d_path+0x84/0x290
+>>> audit_log_d_path+0x74/0x130
+>>> common_lsm_audit+0x334/0x6e8
+>>> slow_avc_audit+0xb8/0xf8
+>>> avc_has_perm+0x154/0x218
+>>> file_has_perm+0x70/0x180
+>>> match_file+0x60/0x78
+>>> iterate_fd+0x128/0x168
+>>> selinux_bprm_committing_creds+0x178/0x248
+>>> security_bprm_committing_creds+0x30/0x48
+>>> install_exec_creds+0x1c/0x68
+>>> load_elf_binary+0x3a4/0x14e0
+>>> search_binary_handler+0xb0/0x1e0
+>>>
+>>> So, use spinlock to access dmabuf->name to avoid sleep-while-atomic.
+>>>
+>>> Cc: <stable@vger.kernel.org> [5.3+]
+>>> Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+>>> ---
+>>> drivers/dma-buf/dma-buf.c | 13 +++++++------
+>>> include/linux/dma-buf.h   |  1 +
+>>> 2 files changed, 8 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+>>> index 01ce125..2e0456c 100644
+>>> --- a/drivers/dma-buf/dma-buf.c
+>>> +++ b/drivers/dma-buf/dma-buf.c
+>>> @@ -45,10 +45,10 @@ static char *dmabuffs_dname(struct dentry *dentry,
+>>> char *buffer, int buflen)
+>>> 	size_t ret = 0;
+>>>
+>>> 	dmabuf = dentry->d_fsdata;
+>>> -	dma_resv_lock(dmabuf->resv, NULL);
+>>> +	spin_lock(&dmabuf->name_lock);
+>>> 	if (dmabuf->name)
+>>> 		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
+>>> -	dma_resv_unlock(dmabuf->resv);
+>>> +	spin_unlock(&dmabuf->name_lock);
+>>
+>> I am not really clear on why you need this lock.
+>>
+>> If name == NULL you have no issues.
+>> If name is real, you have no issues.
 
->=20
-> > +format are compatible between the virtual IOMMU and the physical IOMMU=
-.
->=20
-> s/format/formats/
+Yeah, ideal cases...
 
-I see.
+>>
+>> If name is freed you will copy garbage, but the only way
+>> for that to happen is that _set_name or _release have to be called
+>> at just the right time.
+>>
+>> And the above would probably only be an issue if the set_name
+>> was called, so you will get NULL or a real name.
 
-> > +
-> > +Assuming the HW supports it, this nested mode is selected by choosing
-> > +the VFIO_TYPE1_NESTING_IOMMU type through:
-> > +
-> > +    ioctl(container, VFIO_SET_IOMMU, VFIO_TYPE1_NESTING_IOMMU);
-> > +
-> > +This forces the hypervisor to use the stage 2, leaving stage 1
-> > +available for guest usage. The guest stage 1 format depends on IOMMU
-> > +vendor, and it is the same with the nesting configuration method.
-> > +User space should check the format and configuration method after
-> > +setting nesting type by
-> > +using:
-> > +
-> > +    ioctl(container->fd, VFIO_IOMMU_GET_INFO, &nesting_info);
-> > +
-> > +Details can be found in Documentation/userspace-api/iommu.rst. For
-> > +Intel VT-d, each stage 1 page table is bound to host by:
-> > +
-> > +    nesting_op->flags =3D VFIO_IOMMU_NESTING_OP_BIND_PGTBL;
-> > +    memcpy(&nesting_op->data, &bind_data, sizeof(bind_data));
-> > +    ioctl(container->fd, VFIO_IOMMU_NESTING_OP, nesting_op);
-> > +
-> > +As mentioned above, guest OS may use stage 1 for GIOVA->GPA or GVA->GP=
-A.
-> > +GVA->GPA page tables are available when PASID (Process Address Space
-> > +GVA->ID)
-> > +is exposed to guest. e.g. guest with PASID-capable devices assigned.
-> > +For such page table binding, the bind_data should include PASID info,
-> > +which is allocated by guest itself or by host. This depends on
-> > +hardware vendor e.g. Intel VT-d requires to allocate PASID from host.
-> > +This requirement is available by VFIO_IOMMU_GET_INFO. User space
-> > +could allocate PASID from host by:
-> > +
-> > +    req.flags =3D VFIO_IOMMU_ALLOC_PASID;
-> > +    ioctl(container, VFIO_IOMMU_PASID_REQUEST, &req);
->=20
-> It is not clear how the userspace application determines whether PASIDs m=
-ust be
-> allocated from the host via VFIO_IOMMU_PASID_REQUEST or if the guest itse=
-lf can
-> allocate PASIDs. The text mentions VFIO_IOMMU_GET_INFO but what exactly
-> should the userspace application check?
+And there exists a use-after-free to avoid which requires the lock. Say
+that memcpy() in dmabuffs_dname is in progress and in parallel _set_name
+will free the same buffer that memcpy is operating on.
 
-For VT-d, spec 3.0 introduced Virtual Cmd interface for PASID allocation,
-guest request PASID from host if it detects the interface. Application
-should check the IOMMU_NESTING_FEAT_SYSWIDE_PASID setting in the below
-info reported by VFIO_IOMMU_GET_INFO. And virtual VT-d should not report
-SVA related capabilities to guest if  SYSWIDE_PASID is not supported by
-kernel.
+>>
+>> Is there a reason for the lock here?
+>>
+>> Mike
+> 
+> Maybe dmabuf->name = NULL after the kfree(dmabuf->name) in:
+> 
+> dma_buf_release()
+> 
+> Would be sufficient?
 
-+struct iommu_nesting_info {
-+	__u32	size;
-+	__u32	format;
-+	__u32	features;
-+#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
-+#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
-+#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
-+	__u32	flags;
-+	__u8	data[];
-+};
-https://lore.kernel.org/linux-iommu/1591877734-66527-3-git-send-email-yi.l.=
-liu@intel.com/
+I don't think that we will access the 'dmabuf'(thus dmabuf->name) once
+it is in the dma_buf_release(). So, setting the NULL in the _release()
+is not required at all.
 
-Regards,
-Yi Liu
+> 
+> M
+>>> 	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
+>>> 			     dentry->d_name.name, ret > 0 ? name : "");
+>>> @@ -335,7 +335,7 @@ static long dma_buf_set_name(struct dma_buf
+>>> *dmabuf, const char __user *buf)
+>>> 	if (IS_ERR(name))
+>>> 		return PTR_ERR(name);
+>>>
+>>> -	dma_resv_lock(dmabuf->resv, NULL);
+>>> +	spin_lock(&dmabuf->name_lock);
+>>> 	if (!list_empty(&dmabuf->attachments)) {
+>>> 		ret = -EBUSY;
+>>> 		kfree(name);
+>>> @@ -345,7 +345,7 @@ static long dma_buf_set_name(struct dma_buf
+>>> *dmabuf, const char __user *buf)
+>>> 	dmabuf->name = name;
+>>>
+>>> out_unlock:
+>>> -	dma_resv_unlock(dmabuf->resv);
+>>> +	spin_unlock(&dmabuf->name_lock);
+>>> 	return ret;
+>>> }
+>>>
+>>> @@ -405,10 +405,10 @@ static void dma_buf_show_fdinfo(struct seq_file
+>>> *m, struct file *file)
+>>> 	/* Don't count the temporary reference taken inside procfs seq_show
+>>> */
+>>> 	seq_printf(m, "count:\t%ld\n", file_count(dmabuf->file) - 1);
+>>> 	seq_printf(m, "exp_name:\t%s\n", dmabuf->exp_name);
+>>> -	dma_resv_lock(dmabuf->resv, NULL);
+>>> +	spin_lock(&dmabuf->name_lock);
+>>> 	if (dmabuf->name)
+>>> 		seq_printf(m, "name:\t%s\n", dmabuf->name);
+>>> -	dma_resv_unlock(dmabuf->resv);
+>>> +	spin_unlock(&dmabuf->name_lock);
+>>> }
+>>>
+>>> static const struct file_operations dma_buf_fops = {
+>>> @@ -546,6 +546,7 @@ struct dma_buf *dma_buf_export(const struct
+>>> dma_buf_export_info *exp_info)
+>>> 	dmabuf->size = exp_info->size;
+>>> 	dmabuf->exp_name = exp_info->exp_name;
+>>> 	dmabuf->owner = exp_info->owner;
+>>> +	spin_lock_init(&dmabuf->name_lock);
+>>> 	init_waitqueue_head(&dmabuf->poll);
+>>> 	dmabuf->cb_excl.poll = dmabuf->cb_shared.poll = &dmabuf->poll;
+>>> 	dmabuf->cb_excl.active = dmabuf->cb_shared.active = 0;
+>>> diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+>>> index ab0c156..93108fd 100644
+>>> --- a/include/linux/dma-buf.h
+>>> +++ b/include/linux/dma-buf.h
+>>> @@ -311,6 +311,7 @@ struct dma_buf {
+>>> 	void *vmap_ptr;
+>>> 	const char *exp_name;
+>>> 	const char *name;
+>>> +	spinlock_t name_lock;
+>>> 	struct module *owner;
+>>> 	struct list_head list_node;
+>>> 	void *priv;
+>>> --
+>>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+>>> Forum, a Linux Foundation Collaborative Project
+>>> _______________________________________________
+>>> dri-devel mailing list
+>>> dri-devel@lists.freedesktop.org
+>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation Collaborative Project
