@@ -2,145 +2,95 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2642C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 231062073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D86DA2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgFQIjE (ORCPT
+        id S1726952AbgFQIj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:39:04 -0400
-Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:44270 "EHLO
-        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725964AbgFQIjD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:39:03 -0400
-Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: rXJCpYrqKVrAxeK/HGufl69LKC4pcQTcUUGZYB534dwGmUxVSqjN+x/504zNn9i+YPShSGKfW0
- U0QMIZHnITxsotA99KOFT6OeNi8ZZ1m2L7oXIXDGt902t7cD4K5WSO+YP/COJ+vMNSTSziyGu7
- HNftc9oo9lXvpx57ycrXBxaltImFbOK3Us6eexDysElhroEjtq8q7fatJV8B7YHjav9ncYU2JC
- 6yWJiQKYqhQurhE6bspELNnpxxK4ZszRp06jGIM0AlVuGxTyJg6YOrknOiMVmGXdVj9Ks/74SW
- yzE=
-X-SBRS: 2.7
-X-MesageID: 20246153
-X-Ironport-Server: esa3.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.73,522,1583211600"; 
-   d="scan'208";a="20246153"
-Date:   Wed, 17 Jun 2020 10:38:50 +0200
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Anchal Agarwal <anchalag@amazon.com>
-CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Subject: Re: [PATCH 06/12] xen-blkfront: add callbacks for PM suspend and
- hibernation]
-Message-ID: <20200617083850.GX735@Air-de-Roger>
-References: <7FD7505E-79AA-43F6-8D5F-7A2567F333AB@amazon.com>
- <20200604070548.GH1195@Air-de-Roger>
- <20200616214925.GA21684@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200616223003.GA28769@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+        Wed, 17 Jun 2020 04:39:27 -0400
+Received: from mga17.intel.com ([192.55.52.151]:60816 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725964AbgFQIj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:39:27 -0400
+IronPort-SDR: XXxhttbXYENsmX7teS5f6WbM4ojsh/i/MYAs1BdVPBsDWp3ZSTfhPlWn6SyrHblrLNXhZaoLgS
+ CIMhU9baibVg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 01:39:26 -0700
+IronPort-SDR: iawUpKhrQgMcJZru19FSYOcTy0xL/UxwDg7WI08V0DQchYnO95g1dtPvXP45GaW825eJXkb6xh
+ fTBbTu1oLYWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,522,1583222400"; 
+   d="scan'208";a="383129754"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Jun 2020 01:39:26 -0700
+Received: from [10.249.225.191] (abudanko-mobl.ccr.corp.intel.com [10.249.225.191])
+        by linux.intel.com (Postfix) with ESMTP id 680E3580223;
+        Wed, 17 Jun 2020 01:39:24 -0700 (PDT)
+Subject: [PATCH v8 06/13] perf stat: factor out body of event handling loop
+ for fork case
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <1cd9e599-67b7-ad0c-44c1-929cba08bd47@linux.intel.com>
+Date:   Wed, 17 Jun 2020 11:39:23 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200616223003.GA28769@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+In-Reply-To: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 10:30:03PM +0000, Anchal Agarwal wrote:
-> On Tue, Jun 16, 2020 at 09:49:25PM +0000, Anchal Agarwal wrote:
-> > On Thu, Jun 04, 2020 at 09:05:48AM +0200, Roger Pau Monné wrote:
-> > > On Wed, Jun 03, 2020 at 11:33:52PM +0000, Agarwal, Anchal wrote:
-> > > >     On Tue, May 19, 2020 at 11:27:50PM +0000, Anchal Agarwal wrote:
-> > > >     > From: Munehisa Kamata <kamatam@amazon.com>
-> > > >     > +             xenbus_dev_error(dev, err, "Freezing timed out;"
-> > > >     > +                              "the device may become inconsistent state");
-> > > >
-> > > >     Leaving the device in this state is quite bad, as it's in a closed
-> > > >     state and with the queues frozen. You should make an attempt to
-> > > >     restore things to a working state.
-> > > >
-> > > > You mean if backend closed after timeout? Is there a way to know that? I understand it's not good to
-> > > > leave it in this state however, I am still trying to find if there is a good way to know if backend is still connected after timeout.
-> > > > Hence the message " the device may become inconsistent state".  I didn't see a timeout not even once on my end so that's why
-> > > > I may be looking for an alternate perspective here. may be need to thaw everything back intentionally is one thing I could think of.
-> > > 
-> > > You can manually force this state, and then check that it will behave
-> > > correctly. I would expect that on a failure to disconnect from the
-> > > backend you should switch the frontend to the 'Init' state in order to
-> > > try to reconnect to the backend when possible.
-> > > 
-> > From what I understand forcing manually is, failing the freeze without
-> > disconnect and try to revive the connection by unfreezing the
-> > queues->reconnecting to backend [which never got diconnected]. May be even
-> > tearing down things manually because I am not sure what state will frontend
-> > see if backend fails to to disconnect at any point in time. I assumed connected.
-> > Then again if its "CONNECTED" I may not need to tear down everything and start
-> > from Initialising state because that may not work.
-> > 
-> > So I am not so sure about backend's state so much, lets say if  xen_blkif_disconnect fail,
-> > I don't see it getting handled in the backend then what will be backend's state?
-> > Will it still switch xenbus state to 'Closed'? If not what will frontend see, 
-> > if it tries to read backend's state through xenbus_read_driver_state ?
-> > 
-> > So the flow be like:
-> > Front end marks XenbusStateClosing
-> > Backend marks its state as XenbusStateClosing
-> >     Frontend marks XenbusStateClosed
-> >     Backend disconnects calls xen_blkif_disconnect
-> >        Backend fails to disconnect, the above function returns EBUSY
-> >        What will be state of backend here? 
-> >        Frontend did not tear down the rings if backend does not switches the
-> >        state to 'Closed' in case of failure.
-> > 
-> > If backend stays in CONNECTED state, then even if we mark it Initialised in frontend, backend
-> > won't be calling connect(). {From reading code in frontend_changed}
-> > IMU, Initialising will fail since backend dev->state != XenbusStateClosed plus
-> > we did not tear down anything so calling talk_to_blkback may not be needed
-> > 
-> > Does that sound correct?
-> Send that too quickly, I also meant to add XenBusIntialised state should be ok
-> only if we expect backend will stay in "Connected" state. Also, I experimented
-> with that notion. I am little worried about the correctness here. 
-> Can the backend  come to an Unknown state somehow?
 
-Not really, there's no such thing as an Unknown state.
+Factor out body of event handling loop for fork case reusing
+process_timeout() and process_interval() functions.
 
-There are no guarantees about what a backend can do really, so it
-could indeed switch to a not recognized state, but that would be a
-bug in the backend.
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/builtin-stat.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-Roger.
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 62bad2df13ba..3bc538576607 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -798,13 +798,9 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 		enable_counters();
+ 
+ 		if (interval || timeout) {
+-			while (!waitpid(child_pid, &status, WNOHANG)) {
++			while (!stop && !waitpid(child_pid, &status, WNOHANG)) {
+ 				nanosleep(&ts, NULL);
+-				if (timeout)
+-					break;
+-				process_interval();
+-				if (interval_count && !(--times))
+-					break;
++				stop = process_timeout(timeout, interval, &times);
+ 			}
+ 		}
+ 		if (child_pid != -1) {
+-- 
+2.24.1
+
+
