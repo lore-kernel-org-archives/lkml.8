@@ -4,65 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EB0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF62C2080D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B356207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592400641;
-	bh=JpusVXzwVNGmBFr4ew9Yb9okQQqrnxdrslbe27VRNV0=;
+	s=default; t=1592400647;
+	bh=yqPhqEFGOGGnf8tKs0A9o2GYo4CEG0qvZht6TK9uQRk=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=GFOwtMpkQfUafWPxkwRD2sXNkn7mGXYIecI83pkK7BS5PtbubUjhYvU1h7ieM5qtE
-	 yS8E7bR2TNDhFIldLhXdkPBmbRpDKHNXJyIdKIdTqHbvrTS54tWbEAaAE1MaPCf2l+
-	 StSUUEY13lKDOcYHt7Lm5+YeQoWBv/79c8NdWpDs=
+	b=fjKoGdtYCvIWMmbHzn6tMIghL4wUpt7ZOGRBH8FBFcmg1Y1TUl5gpM3MvNfcA2dWi
+	 hHJLEro+uUA+tQaqNvqUldB320VUarO4AFYA7TGc6dYopWVnvgcB2PU5y9bBKjPp1q
+	 Lnx8B3EBVCQBwz35vpB7VW0p8ro3MBkx4djJ3Kxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgFQNak (ORCPT
+        id S1726857AbgFQNaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:30:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37244 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 09:30:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbgFQNak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:30:40 -0400
+        id S1725901AbgFQNap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 09:30:45 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE54F207E8;
-        Wed, 17 Jun 2020 13:30:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F26DD2080D;
+        Wed, 17 Jun 2020 13:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592400640;
-        bh=JpusVXzwVNGmBFr4ew9Yb9okQQqrnxdrslbe27VRNV0=;
+        s=default; t=1592400645;
+        bh=yqPhqEFGOGGnf8tKs0A9o2GYo4CEG0qvZht6TK9uQRk=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Zj9N3fUTYBYkYRl19BQ+1gEd15ArOiw8gMfH/K/XW1VQF+c32VYm79ivumvKvpLdy
-         ekuNPJ6Uj9cvS3bsHtfr0yJ+oOuYXMVC5QmqXekcoZIVzxVdx9oLt72A6J/i1fR1ZW
-         2Mgn9nAJDmLBuortDDVxfQTNkUUSP3YwBwSTyDZM=
-Date:   Wed, 17 Jun 2020 14:30:38 +0100
+        b=xScVLiM4utiA2ijBBxaLGjDzdmBjZPDtyufiTw9HFMGHgIjPQluNDgj2DFGvw+pYo
+         N8nxi/imPtpCa7rZp+UhzFPRJ5WLLYGglf8qZBwDPSj1IApRb4QfEm+xJoHTuAnbRT
+         MQBOSJFe6KPMaImD7l+tKBDnU2IWxM+KrQ1FgZQE=
+Date:   Wed, 17 Jun 2020 14:30:43 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     "wu000273@umn.edu" <wu000273@umn.edu>, kjlu@umn.edu
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Edward Cragg <edward.cragg@codethink.co.uk>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        YueHaibing <yuehaibing@huawei.com>, linux-tegra@vger.kernel.org,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>
-In-Reply-To: <20200613204422.24484-1-wu000273@umn.edu>
-References: <20200613204422.24484-1-wu000273@umn.edu>
-Subject: Re: [PATCH] ASoC: tegra: Fix reference count leaks.
-Message-Id: <159240063808.19287.13977649617002497843.b4-ty@kernel.org>
+To:     Xiubo.Lee@gmail.com, nicoleotsuka@gmail.com,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, tiwai@suse.com,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        devicetree@vger.kernel.org, festevam@gmail.com, timur@kernel.org,
+        perex@perex.cz
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <feda3bb02296455d43aeebb7575918d9b28e1a3f.1592376770.git.shengjiu.wang@nxp.com>
+References: <feda3bb02296455d43aeebb7575918d9b28e1a3f.1592376770.git.shengjiu.wang@nxp.com>
+Subject: Re: [PATCH v3 1/2] ASoC: bindings: fsl_spdif: Add new compatible string for imx6sx
+Message-Id: <159240063808.19287.10407096002593271687.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 13 Jun 2020 15:44:19 -0500, wu000273@umn.edu wrote:
-> Calling pm_runtime_get_sync increments the counter even in case of
-> failure, causing incorrect ref count if pm_runtime_put is not called in
-> error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+On Wed, 17 Jun 2020 14:58:00 +0800, Shengjiu Wang wrote:
+> Add new compatible string "fsl,imx6sx-spdif" in the binding document.
+> And add compatible string "fsl,vf610-spdif" which was missed before.
 
 Applied to
 
@@ -70,8 +66,10 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: tegra: Fix reference count leaks.
-      commit: deca195383a6085be62cb453079e03e04d618d6e
+[1/2] ASoC: bindings: fsl_spdif: Add new compatible string for imx6sx
+      commit: 632108afda6aa1d380e05f1eaa25463047fd00b3
+[2/2] ASoC: fsl_spdif: Add support for imx6sx platform
+      commit: f61b9273c347980f570d1f9cecb867a7835c613d
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
