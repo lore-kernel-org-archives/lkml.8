@@ -2,227 +2,130 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B071AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CBAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87A662089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:28:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592407693;
-	bh=8qW6KNlzlzC7EBTXdd61a2qk7lukXUvfzQKXOwpai5k=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=I7LvBrx/0f44vylwhg04UYQQKhpLrJFiaD9pEUmd1Ie9vFkS1xtjQjaG5AU0Ciytt
-	 W7gL17/b7uo/D7XFJ4+NvP7ZmfMJ7Y2HsJvuMa9I7AV0r+J9UwMg8jFcGLXPfYmbE7
-	 /dz6s3f0Znr06o0aN09jbZnDYf7KinE8hdOuJVpA=
+	by mail.kernel.org (Postfix) with ESMTP id 71F8D20897
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:28:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fPvsZiRm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgFQP2M (ORCPT
+        id S1726964AbgFQP2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:28:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbgFQP2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:28:12 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48AEE20897;
-        Wed, 17 Jun 2020 15:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592407691;
-        bh=8qW6KNlzlzC7EBTXdd61a2qk7lukXUvfzQKXOwpai5k=;
-        h=From:To:Subject:Date:From;
-        b=cpPPRT0I4JwwMQSQrkIWPxGIypkDjBCPgh7cU5OkQvEiAobZbQ9zH6Xs6zu1cwFNO
-         mhjr5WQV2jfgiBoPD2smPD6r1uKCEbD+iwGe/PvWYiJ34+j5FCnvsx+/750Xdf3h4b
-         QCKRsrBGy4xdPjHvjaAIbwsUODipILHWTs8ltnCE=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH RESEND v2] phy: exynos: Rename Exynos to lowercase
-Date:   Wed, 17 Jun 2020 17:28:03 +0200
-Message-Id: <20200617152803.17941-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 17 Jun 2020 11:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbgFQP2j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 11:28:39 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B2E5C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:28:37 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id e16so1842889qtg.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YWvFZzs3KP9lJjMgLteUxWcl0AN5fcCF6bv79uFgihI=;
+        b=fPvsZiRmvOrvrQ4yxrTzKd5CSIveZ17z50EpolEl+pPAK7HUWF0QJZmXtSGVDOakfw
+         7DHwzIzE2lNcGxpAtO8aw08z/gM8Y21yy9DIXMANO2ubUa3TWdA4GmPrzu72SDfRdvmF
+         BClIRqEbNJmDflVkgdFD+OnXmF0SaCCsk8z9/TyDuufHGuZdnpCUVgkaPeljCUzfOGUP
+         iou8x9GwNeXqpb+7LiV1ym/MPlGBad5o331/0hIUNzTl2FFPtmlIOP+y+IRR8Ia8Spm0
+         VHrOAMJcFDHzlMiG7WUr4U2IvrrqHhxtahUa25x/jrfaWVB1Q09VlgzgQNmhTWG78o/m
+         b3Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YWvFZzs3KP9lJjMgLteUxWcl0AN5fcCF6bv79uFgihI=;
+        b=GiTRBtQ/nmIzlhuNhNCUGCzmKZ+T7DUQgAai4VczdvdqA9vnKGCb9yNjylkLysIbRj
+         A8hL6dL1KW3+R12T1dK0Ff29mn/1Iry8nB2BsjoiEopb8vltsBA+AFBmhlYMwC9o3x4L
+         bHgQ8eOXdBHAeUDnpv0+wDaOrOpuWJxNAwHkSa7eYlePbf2UyWRk5wK9diD4KwVyqtbK
+         84zbq05wXZDKMeF5oOhaezg9XA/NXR1f5i1dOXpddwATR4DyswQ/cZDAnhGKMrNpkqqw
+         EYno9Afk6X9cEn8WeQr7F7r19BJahsGDj8bBs330JAdhLgOyuyPo1Hl8RR8n9aOFzdPE
+         8eXw==
+X-Gm-Message-State: AOAM531RSfzmqezaQA/0oyob36AnTEUeCZpOfYH7Zd4uyIU0s0rmHJ3f
+        0i4eG9QESb/UkS5mORkH4uFXug==
+X-Google-Smtp-Source: ABdhPJzZDttOnjxPbTFDeZHyWDfba0peOY2A/3G4231dt912/147Xnlp7RMkFB2VSf50LuX5ZTAibw==
+X-Received: by 2002:ac8:468a:: with SMTP id g10mr27323795qto.6.1592407717080;
+        Wed, 17 Jun 2020 08:28:37 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id f127sm210137qkb.55.2020.06.17.08.28.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 08:28:35 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jlZzP-009d7z-9q; Wed, 17 Jun 2020 12:28:35 -0300
+Date:   Wed, 17 Jun 2020 12:28:35 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200617152835.GF6578@ziepe.ca>
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+ <20200604081224.863494-5-daniel.vetter@ffwll.ch>
+ <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
+ <20200611083430.GD20149@phenom.ffwll.local>
+ <20200611141515.GW6578@ziepe.ca>
+ <20200616120719.GL20149@phenom.ffwll.local>
+ <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix up inconsistent usage of upper and lowercase letters in "Exynos"
-name.
+On Wed, Jun 17, 2020 at 08:48:50AM +0200, Daniel Vetter wrote:
 
-"EXYNOS" is not an abbreviation but a regular trademarked name.
-Therefore it should be written with lowercase letters starting with
-capital letter.
+> Now my understanding for rdma is that if you don't have hw page fault
+> support,
 
-The lowercase "Exynos" name is promoted by its manufacturer Samsung
-Electronics Co., Ltd., in advertisement materials and on website.
+The RDMA ODP feature is restartable HW page faulting just like nouveau
+has. The classical MR feature doesn't have this. Only mlx5 HW supports
+ODP today.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> It's only gpus (I think) which are in this awkward in-between spot
+> where dynamic memory management really is much wanted, but the hw
+> kinda sucks. Aside, about 10+ years ago we had a similar problem with
+> gpu hw, but for security: Many gpu didn't have any kinds of page
+> tables to isolate different clients from each another. drivers/gpu
+> fixed this by parsing&validating what userspace submitted to make sure
+> it's only every accessing its own buffers. Most gpus have become
+> reasonable nowadays and do have proper per-process pagetables (gpu
+> process, not the pasid stuff), but even today there's still some of
+> the old model left in some of the smallest SoC.
 
----
+But I still don't understand why a dma fence is needed inside the GPU
+driver itself in the notifier.
 
-Changes since v1:
-1. Move bindings change to separate patch.
----
- drivers/phy/allwinner/phy-sun4i-usb.c       | 2 +-
- drivers/phy/samsung/Kconfig                 | 8 ++++----
- drivers/phy/samsung/phy-exynos-dp-video.c   | 4 ++--
- drivers/phy/samsung/phy-exynos-mipi-video.c | 4 ++--
- drivers/phy/samsung/phy-exynos-pcie.c       | 2 +-
- drivers/phy/samsung/phy-exynos5-usbdrd.c    | 6 +++---
- drivers/phy/samsung/phy-samsung-usb2.c      | 2 +-
- 7 files changed, 14 insertions(+), 14 deletions(-)
+Surely the GPU driver can block and release the notifier directly from
+its own command processing channel?
 
-diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-index 856927382248..7e09ad6a0b42 100644
---- a/drivers/phy/allwinner/phy-sun4i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-@@ -7,7 +7,7 @@
-  * Based on code from
-  * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
-  *
-- * Modelled after: Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY driver
-+ * Modelled after: Samsung S5P/Exynos SoC series MIPI CSIS/DSIM DPHY driver
-  * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-  * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
-  */
-diff --git a/drivers/phy/samsung/Kconfig b/drivers/phy/samsung/Kconfig
-index 9e483d1fdaf2..19f2e3119343 100644
---- a/drivers/phy/samsung/Kconfig
-+++ b/drivers/phy/samsung/Kconfig
-@@ -3,23 +3,23 @@
- # Phy drivers for Samsung platforms
- #
- config PHY_EXYNOS_DP_VIDEO
--	tristate "EXYNOS SoC series Display Port PHY driver"
-+	tristate "Exynos SoC series Display Port PHY driver"
- 	depends on OF
- 	depends on ARCH_EXYNOS || COMPILE_TEST
- 	default ARCH_EXYNOS
- 	select GENERIC_PHY
- 	help
--	  Support for Display Port PHY found on Samsung EXYNOS SoCs.
-+	  Support for Display Port PHY found on Samsung Exynos SoCs.
- 
- config PHY_EXYNOS_MIPI_VIDEO
--	tristate "S5P/EXYNOS SoC series MIPI CSI-2/DSI PHY driver"
-+	tristate "S5P/Exynos SoC series MIPI CSI-2/DSI PHY driver"
- 	depends on HAS_IOMEM
- 	depends on ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
- 	select GENERIC_PHY
- 	default y if ARCH_S5PV210 || ARCH_EXYNOS
- 	help
- 	  Support for MIPI CSI-2 and MIPI DSI DPHY found on Samsung S5P
--	  and EXYNOS SoCs.
-+	  and Exynos SoCs.
- 
- config PHY_EXYNOS_PCIE
- 	bool "Exynos PCIe PHY driver"
-diff --git a/drivers/phy/samsung/phy-exynos-dp-video.c b/drivers/phy/samsung/phy-exynos-dp-video.c
-index 6c607df1dc9a..2b670ef91deb 100644
---- a/drivers/phy/samsung/phy-exynos-dp-video.c
-+++ b/drivers/phy/samsung/phy-exynos-dp-video.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Samsung EXYNOS SoC series Display Port PHY driver
-+ * Samsung Exynos SoC series Display Port PHY driver
-  *
-  * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-  * Author: Jingoo Han <jg1.han@samsung.com>
-@@ -115,5 +115,5 @@ static struct platform_driver exynos_dp_video_phy_driver = {
- module_platform_driver(exynos_dp_video_phy_driver);
- 
- MODULE_AUTHOR("Jingoo Han <jg1.han@samsung.com>");
--MODULE_DESCRIPTION("Samsung EXYNOS SoC DP PHY driver");
-+MODULE_DESCRIPTION("Samsung Exynos SoC DP PHY driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/phy/samsung/phy-exynos-mipi-video.c b/drivers/phy/samsung/phy-exynos-mipi-video.c
-index bb51195f189f..c1df1ef3ee3c 100644
---- a/drivers/phy/samsung/phy-exynos-mipi-video.c
-+++ b/drivers/phy/samsung/phy-exynos-mipi-video.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY driver
-+ * Samsung S5P/Exynos SoC series MIPI CSIS/DSIM DPHY driver
-  *
-  * Copyright (C) 2013,2016 Samsung Electronics Co., Ltd.
-  * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
-@@ -364,6 +364,6 @@ static struct platform_driver exynos_mipi_video_phy_driver = {
- };
- module_platform_driver(exynos_mipi_video_phy_driver);
- 
--MODULE_DESCRIPTION("Samsung S5P/EXYNOS SoC MIPI CSI-2/DSI PHY driver");
-+MODULE_DESCRIPTION("Samsung S5P/Exynos SoC MIPI CSI-2/DSI PHY driver");
- MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/phy/samsung/phy-exynos-pcie.c b/drivers/phy/samsung/phy-exynos-pcie.c
-index 659e7ae0a6cf..7e28b1aea0d1 100644
---- a/drivers/phy/samsung/phy-exynos-pcie.c
-+++ b/drivers/phy/samsung/phy-exynos-pcie.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Samsung EXYNOS SoC series PCIe PHY driver
-+ * Samsung Exynos SoC series PCIe PHY driver
-  *
-  * Phy provider for PCIe controller on Exynos SoC series
-  *
-diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index e510732afb8b..eb06ce9f748f 100644
---- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-+++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Samsung EXYNOS5 SoC series USB DRD PHY driver
-+ * Samsung Exynos5 SoC series USB DRD PHY driver
-  *
-  * Phy provider for USB 3.0 DRD controller on Exynos5 SoC series
-  *
-@@ -33,7 +33,7 @@
- #define EXYNOS5_FSEL_24MHZ		0x5
- #define EXYNOS5_FSEL_50MHZ		0x7
- 
--/* EXYNOS5: USB 3.0 DRD PHY registers */
-+/* Exynos5: USB 3.0 DRD PHY registers */
- #define EXYNOS5_DRD_LINKSYSTEM			0x04
- 
- #define LINKSYSTEM_FLADJ_MASK			(0x3f << 1)
-@@ -958,7 +958,7 @@ static struct platform_driver exynos5_usb3drd_phy = {
- };
- 
- module_platform_driver(exynos5_usb3drd_phy);
--MODULE_DESCRIPTION("Samsung EXYNOS5 SoCs USB 3.0 DRD controller PHY driver");
-+MODULE_DESCRIPTION("Samsung Exynos5 SoCs USB 3.0 DRD controller PHY driver");
- MODULE_AUTHOR("Vivek Gautam <gautam.vivek@samsung.com>");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:exynos5_usb3drd_phy");
-diff --git a/drivers/phy/samsung/phy-samsung-usb2.c b/drivers/phy/samsung/phy-samsung-usb2.c
-index 090aa02e02de..a3ed3ff04690 100644
---- a/drivers/phy/samsung/phy-samsung-usb2.c
-+++ b/drivers/phy/samsung/phy-samsung-usb2.c
-@@ -255,7 +255,7 @@ static struct platform_driver samsung_usb2_phy_driver = {
- };
- 
- module_platform_driver(samsung_usb2_phy_driver);
--MODULE_DESCRIPTION("Samsung S5P/EXYNOS SoC USB PHY driver");
-+MODULE_DESCRIPTION("Samsung S5P/Exynos SoC USB PHY driver");
- MODULE_AUTHOR("Kamil Debski <k.debski@samsung.com>");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:samsung-usb2-phy");
--- 
-2.17.1
+Why does this fence and all it entails need to leak out across
+drivers?
 
+Jason
