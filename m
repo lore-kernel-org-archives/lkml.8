@@ -2,196 +2,472 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649CCC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B90C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39171206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD18B206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:20:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VtyYKKn+"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JDa1Hx4a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgFQHTc (ORCPT
+        id S1726454AbgFQHUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 03:19:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgFQHTb (ORCPT
+        Wed, 17 Jun 2020 03:20:49 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:39694 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbgFQHUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 03:19:31 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56C38C061573;
-        Wed, 17 Jun 2020 00:19:31 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ga6so565189pjb.1;
-        Wed, 17 Jun 2020 00:19:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ZZQRc8cSih9KfpaA3PdbcUNW5+QnVP16MnOdITJs0uY=;
-        b=VtyYKKn+sOaDU5VHlilWhWIIv2BrJkFOKuEqsvLnfoNTBZ5mHTRltx4dfm1p1stZ7E
-         WoZkW6kUztSKZc8w+bFhkVEHxALpSn7ZNj8wZckvhsBDuZeCD/1ukiFIU/jRIEarAt3G
-         pDuEOdYRA5A6hy49OjN8g7ddOOtE+htt6OhqHSJFtMldh+taw2Bs4JYrD+dxLPUCVu60
-         zyYw1+f6MHtx9KU4OUYr/uJaIeYCpWxd7QSLwTxuMNSbKWkDjTV2YdBpX7oI4/Pz+90T
-         8Wh4IMAzHY690hi6WmzLhbhNlh0wTGmJGJK+vzR9rvbHBpH+TA6hgwCIQpEvebi7U1Bp
-         3yCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ZZQRc8cSih9KfpaA3PdbcUNW5+QnVP16MnOdITJs0uY=;
-        b=sRFcMBSf81QhmDRANeCUL8euTc8FXhmpzS21fpLfqtuNM+H9xnFiNHwgWqprTF68LD
-         Z4Uc7rTsDqKhAuG55sg58Vcwrkm7KzyWYY0p5CuTGXHPIxRxPEqiw5/uERMKR6jgZp8J
-         VPut8UVS3I7OyvaLNuIHXCePdQ9crH9u3RERJU8i7W2OyOLr9p//Xjkjzod1mxMDnKBr
-         5jhpKEAEJtBqSXaIufQGXhF6xxU9WSOp6FWmt+CG9j8FjtLAr12q+0f0qL0zvStQExTZ
-         2olng5L8AoGNj57MmjBJxPJgB755w9u5q3r1HfC71fZguj+3QB+c6LgypoSi4bx/yOeb
-         OFxg==
-X-Gm-Message-State: AOAM533ploVOZlU2mJd0X8U65vzVDEom7AWH2TMQXhOTgjU4NLWXQmyI
-        8vFerzgAbmMtrS3yLwnM2w==
-X-Google-Smtp-Source: ABdhPJyIeenl7cQD2kDC60mWB6VjXLS+6tkAg3ZmwdCKFO3OWqhGMdrjdWeB9LO/ibHX9g/YYbfEsA==
-X-Received: by 2002:a17:90a:6047:: with SMTP id h7mr6370455pjm.145.1592378370875;
-        Wed, 17 Jun 2020 00:19:30 -0700 (PDT)
-Received: from localhost (98.86.92.34.bc.googleusercontent.com. [34.92.86.98])
-        by smtp.gmail.com with ESMTPSA id c7sm16548917pgh.84.2020.06.17.00.19.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 00:19:30 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 15:19:27 +0800
-From:   Jacky Hu <hengqing.hu@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-hwmon@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tony.luck@intel.com, x86@kernel.org,
-        yazen.ghannam@amd.com, bp@alien8.de, clemens@ladisch.de
-Subject: Re: [PATCH] hwmon: (k10temp) Add AMD family 17h model 60h probe
-Message-ID: <20200617071927.GA398128@i716>
-References: <20200616180940.GN13515@zn.tnic>
- <20200617013255.391975-1-hengqing.hu@gmail.com>
- <20200617034028.GA1614@roeck-us.net>
+        Wed, 17 Jun 2020 03:20:48 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200617072042epoutp01737861bc0bd51c0f9a52775de9d6ce7b~ZQ8Gyh1NS1484114841epoutp01k
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:20:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200617072042epoutp01737861bc0bd51c0f9a52775de9d6ce7b~ZQ8Gyh1NS1484114841epoutp01k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592378442;
+        bh=x/kh1K4fCvJoyH4QRZXx+v26thUifv6xFZtA85cF5l0=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=JDa1Hx4agkMKYhpLThiTFyu1GesIoLKHbWOFAbECADuPjD1X2EYm8UDQY/GwvEnKJ
+         um1CNZTYZrnWtWzIkz+JfeRQ2sKgIAgzFYeSkuaYip5r2M25W5y/rre7FLysP1Ha2k
+         52qx6no1oCm6dRndGmFJzviQr6r+gQlcpcbhvrVw=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200617072041epcas1p49cae5b7aa1c554f4c3055a3b1d2e088a~ZQ8GL2LEH0961309613epcas1p4a;
+        Wed, 17 Jun 2020 07:20:41 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49mxLJ6C76zMqYkx; Wed, 17 Jun
+        2020 07:20:40 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CB.39.19033.844C9EE5; Wed, 17 Jun 2020 16:20:40 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200617072038epcas1p4c9c86c54b9fd6d46640c0380c3ea6016~ZQ8C8KvR20961809618epcas1p4d;
+        Wed, 17 Jun 2020 07:20:38 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200617072038epsmtrp22b945c0e524873e259092b064540316d~ZQ8C7RvtM0087800878epsmtrp2h;
+        Wed, 17 Jun 2020 07:20:38 +0000 (GMT)
+X-AuditID: b6c32a36-159ff70000004a59-8d-5ee9c448a4d4
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        67.4B.08303.644C9EE5; Wed, 17 Jun 2020 16:20:38 +0900 (KST)
+Received: from W10PB11329 (unknown [10.253.152.129]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200617072038epsmtip2e39e928efd195bd62987a0c84c859835~ZQ8CuULp_0381503815epsmtip2R;
+        Wed, 17 Jun 2020 07:20:38 +0000 (GMT)
+From:   "Sungjong Seo" <sj1557.seo@samsung.com>
+To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
+Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
+        <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        "'Namjae Jeon'" <namjae.jeon@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200616021808.5222-1-kohada.t2@gmail.com>
+Subject: RE: [PATCH v3] exfat: remove EXFAT_SB_DIRTY flag
+Date:   Wed, 17 Jun 2020 16:20:37 +0900
+Message-ID: <414101d64477$ccb661f0$662325d0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200617034028.GA1614@roeck-us.net>
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQF0BoMPlscPSpT3Th8lCwQKqdMbhQJGtMGMqY6njNA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDJsWRmVeSWpSXmKPExsWy7bCmga7HkZdxBnen8Vj8mHubxeLNyaks
+        Fnv2nmSxuLxrDpvF5f+fWCyWfZnMYvFjer0Du8eXOcfZPdom/2P3aD62ks1j56y77B59W1Yx
+        enzeJBfAFpVjk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuW
+        mQN0ipJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwNCgQK84Mbe4NC9dLzk/18rQ
+        wMDIFKgyISdj9fQ5bAW9MRWTZ8xgbGC87tXFyMkhIWAisfPbBqYuRi4OIYEdjBJPd51jBkkI
+        CXxilDgzuQgi8ZlR4kLjf3aYjsY981kgErsYJfqOH2CDcF4ySsx7vR6sik1AV+LJjZ9go0QE
+        9CROnrzOBmIzCzQySZx4mQ1icwpYSPS+fgJUw8EhLGApsfC6MkiYRUBVYmLfW7ByXqDwvckX
+        WCBsQYmTM5+wQIyRl9j+dg4zxEEKErs/HWWFWGUl0fP9HCtEjYjE7M42ZpDbJAQWckgcOfEa
+        qsFFomn7MlYIW1ji1fEtUJ9JSXx+t5cNwq6X2L3qFAtEcwOjxJFHC1kgEsYS81sWgh3NLKAp
+        sX6XPkRYUWLn77mMEIv5JN597WEFKZEQ4JXoaBOCKFGR+P5hJwvMqis/rjJNYFSaheS1WUhe
+        m4XkhVkIyxYwsqxiFEstKM5NTy02LDBCjuxNjOBkqmW2g3HS2w96hxiZOBgPMUpwMCuJ8Dr/
+        fhEnxJuSWFmVWpQfX1Sak1p8iNEUGNgTmaVEk/OB6TyvJN7Q1MjY2NjCxMzczNRYSZxXTeZC
+        nJBAemJJanZqakFqEUwfEwenVANT9uzn+qaJDJeNX8Q3M5oF+VwKtpvy5q2CaOL8aU3i/WWN
+        Gt2nny+VPfvl7LNovfhIp7t9GbcOuJ9n+Xe8Piuls1vm2Tb1mMg9DhuY8i5d0uNp+fNv//Tk
+        gHM71Pz/1c23PuA1If+BiVqgbmJ/Q7Er/7+wjTeW3wpXdk3YmmF/8KGgL5vjtS8huXm9JW1/
+        PpTPc3n6rlh8T8Au5aD7kxcdXi2wqNZjtw7P2pdPKtc6Vpiz3Bao7T+3oc7jEGt1bL7g8bBz
+        Oq4bH/e805yafX3GpPw/Env+1IczNc9kuFEt+jdK7OBXi5dv2VRW/bXJqjJZt/N0yO22ujyF
+        t4vf3dkeZRdyc/VbiRir3seHmrOVWIozEg21mIuKEwHZ0FMhLwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmkeLIzCtJLcpLzFFi42LZdlhJXtftyMs4g9eL+Sx+zL3NYvHm5FQW
+        iz17T7JYXN41h83i8v9PLBbLvkxmsfgxvd6B3ePLnOPsHm2T/7F7NB9byeaxc9Zddo++LasY
+        PT5vkgtgi+KySUnNySxLLdK3S+DKWD19DltBb0zF5BkzGBsYr3t1MXJySAiYSDTumc/SxcjF
+        ISSwg1FiRctjpi5GDqCElMTBfZoQprDE4cPFECXPGSW+X9jMBNLLJqAr8eTGT2YQW0RAT+Lk
+        yetsIEXMAs1MEq1fmsGKhAQ6GSUmTNADsTkFLCR6Xz9hBhkqLGApsfC6MkiYRUBVYmLfWzYQ
+        mxcofG/yBRYIW1Di5MwnLCDlzEDz2zYygoSZBeQltr+dwwxxvoLE7k9HWSFOsJLo+X6OFaJG
+        RGJ2ZxvzBEbhWUgmzUKYNAvJpFlIOhYwsqxilEwtKM5Nzy02LDDKSy3XK07MLS7NS9dLzs/d
+        xAiOJy2tHYx7Vn3QO8TIxMF4iFGCg1lJhNf594s4Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxf
+        Zy2MExJITyxJzU5NLUgtgskycXBKNTClK/Ls0JobOm8265OCc8GlHJ8DWa4e23nDKuO765UT
+        U20bjmy3uHNIpF08zOWWufX6hPoWhR/8Gxatv6z72DLQ8uDb20fSdswOunn0r/6T/3cijq/d
+        OallTURDjvW7y4UR/Bd1Fi7+O3+x7JKZ5zpjZH/PdDaJvPEpMIzvf9X2Wxt2n8vwTHxnNiVq
+        MmPbS9Pfitr1ypPTd1/kvy+3+tH7k78l11lmrE29otRSGJX/h4HdO/5TptD3VpUDXeZPttn8
+        49pYwMS6QlJZZFXg5JMstdtOVW3v3DPd5FlXWu7aCzJy/yd7nilPiNq18kuL+Yt3vAeea2qX
+        +wbpfHrSUVS4Kf9tAYvZxre3X+XwxKeeVGIpzkg01GIuKk4EAH632V0WAwAA
+X-CMS-MailID: 20200617072038epcas1p4c9c86c54b9fd6d46640c0380c3ea6016
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200616021816epcas1p2bb235df44c0b6f74cdec2f12072891e3
+References: <CGME20200616021816epcas1p2bb235df44c0b6f74cdec2f12072891e3@epcas1p2.samsung.com>
+        <20200616021808.5222-1-kohada.t2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
-
-By increasing the regs count from 32 to 256 and looking into the output of `cat /sys/kernel/debug/k10temp-0000\:00\:18.3/svi`
-There is some data from 0x05a300 - 0x05a330
-Do you have any idea how we can guess the offset for this model?
-
-0x05a000: 00000000 00000000 00000000 00000000
-0x05a010: 00000000 00000000 00000000 00000000
-0x05a020: 00000000 00000000 00000000 00000000
-0x05a030: 00000000 00000000 00000000 00000000
-0x05a040: 00000000 00000000 00000000 00000000
-0x05a050: 00000000 00000000 00000000 00000000
-0x05a060: 00000000 00000000 00000000 00000000
-0x05a070: 00000000 00000000 00000000 00000000
-0x05a080: 00000000 00000000 00000000 00000000
-0x05a090: 00000000 00000000 00000000 00000000
-0x05a0a0: 00000000 00000000 00000000 00000000
-0x05a0b0: 00000000 00000000 00000000 00000000
-0x05a0c0: 00000000 00000000 00000000 00000000
-0x05a0d0: 00000000 00000000 00000000 00000000
-0x05a0e0: 00000000 00000000 00000000 00000000
-0x05a0f0: 00000000 00000000 00000000 00000000
-0x05a100: 00000000 00000000 00000000 00000000
-0x05a110: 00000000 00000000 00000000 00000000
-0x05a120: 00000000 00000000 00000000 00000000
-0x05a130: 00000000 00000000 00000000 00000000
-0x05a140: 00000000 00000000 00000000 00000000
-0x05a150: 00000000 00000000 00000000 00000000
-0x05a160: 00000000 00000000 00000000 00000000
-0x05a170: 00000000 00000000 00000000 00000000
-0x05a180: 00000000 00000000 00000000 00000000
-0x05a190: 00000000 00000000 00000000 00000000
-0x05a1a0: 00000000 00000000 00000000 00000000
-0x05a1b0: 00000000 00000000 00000000 00000000
-0x05a1c0: 00000000 00000000 00000000 00000000
-0x05a1d0: 00000000 00000000 00000000 00000000
-0x05a1e0: 00000000 00000000 00000000 00000000
-0x05a1f0: 00000000 00000000 00000000 00000000
-0x05a200: 00000000 00000000 00000000 00000000
-0x05a210: 00000000 00000000 00000000 00000000
-0x05a220: 00000000 00000000 00000000 00000000
-0x05a230: 00000000 00000000 00000000 00000000
-0x05a240: 00000000 00000000 00000000 00000000
-0x05a250: 00000000 00000000 00000000 00000000
-0x05a260: 00000000 00000000 00000000 00000000
-0x05a270: 00000000 00000000 00000000 00000000
-0x05a280: 00000000 00000000 00000000 00000000
-0x05a290: 00000000 00000000 00000000 00000000
-0x05a2a0: 00000000 00000000 00000000 00000000
-0x05a2b0: 00000000 00000000 00000000 00000000
-0x05a2c0: 00000000 00000000 00000000 00000000
-0x05a2d0: 00000000 00000000 00000000 00000000
-0x05a2e0: 00000000 00000000 00000000 00000000
-0x05a2f0: 00000000 00000000 00000000 00000000
-0x05a300: 00000000 00000001 00000000 00002710
-0x05a310: 00000000 00000008 0000000e 00000000
-0x05a320: 00000001 0000c000 00000000 0000000b
-0x05a330: 00000001 00000000 00000000 00000000
-0x05a340: 00000000 00000000 00000000 00000000
-0x05a350: 00000000 00000000 00000000 00000000
-0x05a360: 00000000 00000000 00000000 00000000
-0x05a370: 00000000 00000000 00000000 00000000
-0x05a380: 00000000 00000000 00000000 00000000
-0x05a390: 00000000 00000000 00000000 00000000
-0x05a3a0: 00000000 00000000 00000000 00000000
-0x05a3b0: 00000000 00000000 00000000 00000000
-0x05a3c0: 00000000 00000000 00000000 00000000
-0x05a3d0: 00000000 00000000 00000000 00000000
-0x05a3e0: 00000000 00000000 00000000 00000000
-0x05a3f0: 00000000 00000000 00000000 00000000 
-
-Thanks.
-Jacky
-On Tue, Jun 16, 2020 at 08:40:28PM -0700, Guenter Roeck wrote:
-> On Wed, Jun 17, 2020 at 09:32:55AM +0800, Jacky Hu wrote:
-> > With this patch applied, output from 4800H (idle) looks as follows:
-> > 
-> > k10temp-pci-00c3
-> > Adapter: PCI adapter
-> > Vcore:         1.55 V
-> > Vsoc:          1.55 V
-> > Tctl:         +49.6°C
-> > Tdie:         +49.6°C
-> > Icore:         0.00 A
-> > Isoc:          0.00 A
-> > 
-> > Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
-> > ---
-> >  drivers/hwmon/k10temp.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-> > index 8f12995ec133..287e9cf2aab9 100644
-> > --- a/drivers/hwmon/k10temp.c
-> > +++ b/drivers/hwmon/k10temp.c
-> > @@ -583,6 +583,7 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >  			k10temp_get_ccd_support(pdev, data, 4);
-> >  			break;
-> >  		case 0x31:	/* Zen2 Threadripper */
-> > +		case 0x60:	/* Zen2 APU */
+> remove EXFAT_SB_DIRTY flag and related codes.
 > 
-> Unfortunately it is not that simple. Output above and the little data I have
-> available suggests that current and voltage measurements are different on the
-> APU. That means that show_current must remain false.
-> This will require a separate case statement which doesn't set any flags.
+> This flag is set/reset in exfat_put_super()/exfat_sync_fs() to avoid
+> sync_blockdev().
+> However ...
+> - exfat_put_super():
+> Before calling this, the VFS has already called sync_filesystem(), so sync
+> is never performed here.
+> - exfat_sync_fs():
+> After calling this, the VFS calls sync_blockdev(), so, it is meaningless
+> to check EXFAT_SB_DIRTY or to bypass sync_blockdev() here.
+> Not only that, but in some cases can't clear VOL_DIRTY.
+> ex:
+> VOL_DIRTY is set when rmdir starts, but when non-empty-dir is detected,
+> return error without setting EXFAT_SB_DIRTY.
+> If performe 'sync' in this state, VOL_DIRTY will not be cleared.
 > 
-> Guenter
+
+Since this patch does not resolve 'VOL_DIRTY in ENOTEMPTY' problem you
+mentioned,
+it would be better to remove the description above for that and to make new
+patch.
+
+> Remove the EXFAT_SB_DIRTY check to ensure synchronization.
+> And, remove the code related to the flag.
 > 
-> >  		case 0x71:	/* Zen2 */
-> >  			data->show_current = !is_threadripper() && !is_epyc();
-> >  			data->cfactor[0] = CFACTOR_ICORE;
-> > -- 
-> > 2.27.0
-> > 
+> Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+
+Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
+
+> ---
+> Changes in v2:
+>  - exfat_sync_fs() avoids synchronous processing when wait=0 Changes in
+v3:
+>  - fix return value in exfat_sync_fs()
+> 
+>  fs/exfat/balloc.c   |  4 ++--
+>  fs/exfat/dir.c      | 16 ++++++++--------
+>  fs/exfat/exfat_fs.h |  5 +----
+>  fs/exfat/fatent.c   |  7 ++-----
+>  fs/exfat/misc.c     |  3 +--
+>  fs/exfat/namei.c    | 12 ++++++------
+>  fs/exfat/super.c    | 14 ++++++--------
+>  7 files changed, 26 insertions(+), 35 deletions(-)
+> 
+> diff --git a/fs/exfat/balloc.c b/fs/exfat/balloc.c index
+> 4055eb00ea9b..a987919686c0 100644
+> --- a/fs/exfat/balloc.c
+> +++ b/fs/exfat/balloc.c
+> @@ -158,7 +158,7 @@ int exfat_set_bitmap(struct inode *inode, unsigned int
+> clu)
+>  	b = BITMAP_OFFSET_BIT_IN_SECTOR(sb, ent_idx);
+> 
+>  	set_bit_le(b, sbi->vol_amap[i]->b_data);
+> -	exfat_update_bh(sb, sbi->vol_amap[i], IS_DIRSYNC(inode));
+> +	exfat_update_bh(sbi->vol_amap[i], IS_DIRSYNC(inode));
+>  	return 0;
+>  }
+> 
+> @@ -180,7 +180,7 @@ void exfat_clear_bitmap(struct inode *inode, unsigned
+> int clu)
+>  	b = BITMAP_OFFSET_BIT_IN_SECTOR(sb, ent_idx);
+> 
+>  	clear_bit_le(b, sbi->vol_amap[i]->b_data);
+> -	exfat_update_bh(sb, sbi->vol_amap[i], IS_DIRSYNC(inode));
+> +	exfat_update_bh(sbi->vol_amap[i], IS_DIRSYNC(inode));
+> 
+>  	if (opts->discard) {
+>  		int ret_discard;
+> diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c index
+> 8e775bd5d523..02acbb6ddf02 100644
+> --- a/fs/exfat/dir.c
+> +++ b/fs/exfat/dir.c
+> @@ -470,7 +470,7 @@ int exfat_init_dir_entry(struct inode *inode, struct
+> exfat_chain *p_dir,
+>  			&ep->dentry.file.access_date,
+>  			NULL);
+> 
+> -	exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
+> +	exfat_update_bh(bh, IS_DIRSYNC(inode));
+>  	brelse(bh);
+> 
+>  	ep = exfat_get_dentry(sb, p_dir, entry + 1, &bh, &sector); @@ -
+> 480,7 +480,7 @@ int exfat_init_dir_entry(struct inode *inode, struct
+> exfat_chain *p_dir,
+>  	exfat_init_stream_entry(ep,
+>  		(type == TYPE_FILE) ? ALLOC_FAT_CHAIN : ALLOC_NO_FAT_CHAIN,
+>  		start_clu, size);
+> -	exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
+> +	exfat_update_bh(bh, IS_DIRSYNC(inode));
+>  	brelse(bh);
+> 
+>  	return 0;
+> @@ -516,7 +516,7 @@ int exfat_update_dir_chksum(struct inode *inode,
+> struct exfat_chain *p_dir,
+>  	}
+> 
+>  	fep->dentry.file.checksum = cpu_to_le16(chksum);
+> -	exfat_update_bh(sb, fbh, IS_DIRSYNC(inode));
+> +	exfat_update_bh(fbh, IS_DIRSYNC(inode));
+>  release_fbh:
+>  	brelse(fbh);
+>  	return ret;
+> @@ -538,7 +538,7 @@ int exfat_init_ext_entry(struct inode *inode, struct
+> exfat_chain *p_dir,
+>  		return -EIO;
+> 
+>  	ep->dentry.file.num_ext = (unsigned char)(num_entries - 1);
+> -	exfat_update_bh(sb, bh, sync);
+> +	exfat_update_bh(bh, sync);
+>  	brelse(bh);
+> 
+>  	ep = exfat_get_dentry(sb, p_dir, entry + 1, &bh, &sector); @@ -
+> 547,7 +547,7 @@ int exfat_init_ext_entry(struct inode *inode, struct
+> exfat_chain *p_dir,
+> 
+>  	ep->dentry.stream.name_len = p_uniname->name_len;
+>  	ep->dentry.stream.name_hash = cpu_to_le16(p_uniname->name_hash);
+> -	exfat_update_bh(sb, bh, sync);
+> +	exfat_update_bh(bh, sync);
+>  	brelse(bh);
+> 
+>  	for (i = EXFAT_FIRST_CLUSTER; i < num_entries; i++) { @@ -556,7
+> +556,7 @@ int exfat_init_ext_entry(struct inode *inode, struct exfat_chain
+> *p_dir,
+>  			return -EIO;
+> 
+>  		exfat_init_name_entry(ep, uniname);
+> -		exfat_update_bh(sb, bh, sync);
+> +		exfat_update_bh(bh, sync);
+>  		brelse(bh);
+>  		uniname += EXFAT_FILE_NAME_LEN;
+>  	}
+> @@ -580,7 +580,7 @@ int exfat_remove_entries(struct inode *inode, struct
+> exfat_chain *p_dir,
+>  			return -EIO;
+> 
+>  		exfat_set_entry_type(ep, TYPE_DELETED);
+> -		exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
+> +		exfat_update_bh(bh, IS_DIRSYNC(inode));
+>  		brelse(bh);
+>  	}
+> 
+> @@ -610,7 +610,7 @@ void exfat_free_dentry_set(struct
+> exfat_entry_set_cache *es, int sync)
+> 
+>  	for (i = 0; i < es->num_bh; i++) {
+>  		if (es->modified)
+> -			exfat_update_bh(es->sb, es->bh[i], sync);
+> +			exfat_update_bh(es->bh[i], sync);
+>  		brelse(es->bh[i]);
+>  	}
+>  	kfree(es);
+> diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h index
+> 595f3117f492..84664024e51e 100644
+> --- a/fs/exfat/exfat_fs.h
+> +++ b/fs/exfat/exfat_fs.h
+> @@ -13,8 +13,6 @@
+>  #define EXFAT_SUPER_MAGIC       0x2011BAB0UL
+>  #define EXFAT_ROOT_INO		1
+> 
+> -#define EXFAT_SB_DIRTY		0
+> -
+>  #define EXFAT_CLUSTERS_UNTRACKED (~0u)
+> 
+>  /*
+> @@ -238,7 +236,6 @@ struct exfat_sb_info {
+>  	unsigned int clu_srch_ptr; /* cluster search pointer */
+>  	unsigned int used_clusters; /* number of used clusters */
+> 
+> -	unsigned long s_state;
+>  	struct mutex s_lock; /* superblock lock */
+>  	struct exfat_mount_options options;
+>  	struct nls_table *nls_io; /* Charset used for input and display */
+> @@ -514,7 +511,7 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi,
+> struct timespec64 *ts,
+>  		u8 *tz, __le16 *time, __le16 *date, u8 *time_cs);
+>  u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type);
+>  u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type); -void
+> exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
+> +void exfat_update_bh(struct buffer_head *bh, int sync);
+>  void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
+>  		unsigned int size, unsigned char flags);  void
+> exfat_chain_dup(struct exfat_chain *dup, struct exfat_chain *ec); diff --
+> git a/fs/exfat/fatent.c b/fs/exfat/fatent.c index
+> 4e5c5c9c0f2d..82ee8246c080 100644
+> --- a/fs/exfat/fatent.c
+> +++ b/fs/exfat/fatent.c
+> @@ -75,7 +75,7 @@ int exfat_ent_set(struct super_block *sb, unsigned int
+> loc,
+> 
+>  	fat_entry = (__le32 *)&(bh->b_data[off]);
+>  	*fat_entry = cpu_to_le32(content);
+> -	exfat_update_bh(sb, bh, sb->s_flags & SB_SYNCHRONOUS);
+> +	exfat_update_bh(bh, sb->s_flags & SB_SYNCHRONOUS);
+>  	exfat_mirror_bh(sb, sec, bh);
+>  	brelse(bh);
+>  	return 0;
+> @@ -174,7 +174,6 @@ int exfat_free_cluster(struct inode *inode, struct
+> exfat_chain *p_chain)
+>  		return -EIO;
+>  	}
+> 
+> -	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
+>  	clu = p_chain->dir;
+> 
+>  	if (p_chain->flags == ALLOC_NO_FAT_CHAIN) { @@ -274,7 +273,7 @@ int
+> exfat_zeroed_cluster(struct inode *dir, unsigned int clu)
+>  			goto release_bhs;
+>  		}
+>  		memset(bhs[n]->b_data, 0, sb->s_blocksize);
+> -		exfat_update_bh(sb, bhs[n], 0);
+> +		exfat_update_bh(bhs[n], 0);
+> 
+>  		n++;
+>  		blknr++;
+> @@ -358,8 +357,6 @@ int exfat_alloc_cluster(struct inode *inode, unsigned
+> int num_alloc,
+>  		}
+>  	}
+> 
+> -	set_bit(EXFAT_SB_DIRTY, &sbi->s_state);
+> -
+>  	p_chain->dir = EXFAT_EOF_CLUSTER;
+> 
+>  	while ((new_clu = exfat_find_free_bitmap(sb, hint_clu)) != diff --
+> git a/fs/exfat/misc.c b/fs/exfat/misc.c index 17d41f3d3709..8a3dde59052b
+> 100644
+> --- a/fs/exfat/misc.c
+> +++ b/fs/exfat/misc.c
+> @@ -163,9 +163,8 @@ u32 exfat_calc_chksum32(void *data, int len, u32
+> chksum, int type)
+>  	return chksum;
+>  }
+> 
+> -void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int
+> sync)
+> +void exfat_update_bh(struct buffer_head *bh, int sync)
+>  {
+> -	set_bit(EXFAT_SB_DIRTY, &EXFAT_SB(sb)->s_state);
+>  	set_buffer_uptodate(bh);
+>  	mark_buffer_dirty(bh);
+> 
+> diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c index
+> edd8023865a0..5eef2217fcf2 100644
+> --- a/fs/exfat/namei.c
+> +++ b/fs/exfat/namei.c
+> @@ -387,7 +387,7 @@ static int exfat_find_empty_entry(struct inode *inode,
+>  			ep->dentry.stream.valid_size = cpu_to_le64(size);
+>  			ep->dentry.stream.size =
+ep->dentry.stream.valid_size;
+>  			ep->dentry.stream.flags = p_dir->flags;
+> -			exfat_update_bh(sb, bh, IS_DIRSYNC(inode));
+> +			exfat_update_bh(bh, IS_DIRSYNC(inode));
+>  			brelse(bh);
+>  			if (exfat_update_dir_chksum(inode, &(ei->dir),
+>  			    ei->entry))
+> @@ -1071,7 +1071,7 @@ static int exfat_rename_file(struct inode *inode,
+> struct exfat_chain *p_dir,
+>  			epnew->dentry.file.attr |=
+cpu_to_le16(ATTR_ARCHIVE);
+>  			ei->attr |= ATTR_ARCHIVE;
+>  		}
+> -		exfat_update_bh(sb, new_bh, sync);
+> +		exfat_update_bh(new_bh, sync);
+>  		brelse(old_bh);
+>  		brelse(new_bh);
+> 
+> @@ -1087,7 +1087,7 @@ static int exfat_rename_file(struct inode *inode,
+> struct exfat_chain *p_dir,
+>  		}
+> 
+>  		memcpy(epnew, epold, DENTRY_SIZE);
+> -		exfat_update_bh(sb, new_bh, sync);
+> +		exfat_update_bh(new_bh, sync);
+>  		brelse(old_bh);
+>  		brelse(new_bh);
+> 
+> @@ -1104,7 +1104,7 @@ static int exfat_rename_file(struct inode *inode,
+> struct exfat_chain *p_dir,
+>  			epold->dentry.file.attr |=
+cpu_to_le16(ATTR_ARCHIVE);
+>  			ei->attr |= ATTR_ARCHIVE;
+>  		}
+> -		exfat_update_bh(sb, old_bh, sync);
+> +		exfat_update_bh(old_bh, sync);
+>  		brelse(old_bh);
+>  		ret = exfat_init_ext_entry(inode, p_dir, oldentry,
+>  			num_new_entries, p_uniname);
+> @@ -1159,7 +1159,7 @@ static int exfat_move_file(struct inode *inode,
+> struct exfat_chain *p_olddir,
+>  		epnew->dentry.file.attr |= cpu_to_le16(ATTR_ARCHIVE);
+>  		ei->attr |= ATTR_ARCHIVE;
+>  	}
+> -	exfat_update_bh(sb, new_bh, IS_DIRSYNC(inode));
+> +	exfat_update_bh(new_bh, IS_DIRSYNC(inode));
+>  	brelse(mov_bh);
+>  	brelse(new_bh);
+> 
+> @@ -1175,7 +1175,7 @@ static int exfat_move_file(struct inode *inode,
+> struct exfat_chain *p_olddir,
+>  	}
+> 
+>  	memcpy(epnew, epmov, DENTRY_SIZE);
+> -	exfat_update_bh(sb, new_bh, IS_DIRSYNC(inode));
+> +	exfat_update_bh(new_bh, IS_DIRSYNC(inode));
+>  	brelse(mov_bh);
+>  	brelse(new_bh);
+> 
+> diff --git a/fs/exfat/super.c b/fs/exfat/super.c index
+> e650e65536f8..8cb146376d6b 100644
+> --- a/fs/exfat/super.c
+> +++ b/fs/exfat/super.c
+> @@ -45,9 +45,6 @@ static void exfat_put_super(struct super_block *sb)
+>  	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+> 
+>  	mutex_lock(&sbi->s_lock);
+> -	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state))
+> -		sync_blockdev(sb->s_bdev);
+> -	exfat_set_vol_flags(sb, VOL_CLEAN);
+>  	exfat_free_bitmap(sbi);
+>  	brelse(sbi->boot_bh);
+>  	mutex_unlock(&sbi->s_lock);
+> @@ -60,13 +57,14 @@ static int exfat_sync_fs(struct super_block *sb, int
+> wait)
+>  	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+>  	int err = 0;
+> 
+> +	if (!wait)
+> +		return 0;
+> +
+>  	/* If there are some dirty buffers in the bdev inode */
+>  	mutex_lock(&sbi->s_lock);
+> -	if (test_and_clear_bit(EXFAT_SB_DIRTY, &sbi->s_state)) {
+> -		sync_blockdev(sb->s_bdev);
+> -		if (exfat_set_vol_flags(sb, VOL_CLEAN))
+> -			err = -EIO;
+> -	}
+> +	sync_blockdev(sb->s_bdev);
+> +	if (exfat_set_vol_flags(sb, VOL_CLEAN))
+> +		err = -EIO;
+>  	mutex_unlock(&sbi->s_lock);
+>  	return err;
+>  }
+> --
+> 2.25.1
+
+
