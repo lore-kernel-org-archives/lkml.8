@@ -2,73 +2,69 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B17BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20359C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9161321556
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 082E4217D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgFQNgf (ORCPT
+        id S1727792AbgFQNhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:36:35 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:40511 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbgFQNg2 (ORCPT
+        Wed, 17 Jun 2020 09:37:19 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:49451 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbgFQNhR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:36:28 -0400
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id B890724000A;
-        Wed, 17 Jun 2020 13:36:23 +0000 (UTC)
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, richardcochran@gmail.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
-        foss@0leil.net, antoine.tenart@bootlin.com
-Subject: [PATCH net-next v2 4/8] net: phy: mscc: take into account the 1588 block in MACsec init
-Date:   Wed, 17 Jun 2020 15:31:23 +0200
-Message-Id: <20200617133127.628454-5-antoine.tenart@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200617133127.628454-1-antoine.tenart@bootlin.com>
-References: <20200617133127.628454-1-antoine.tenart@bootlin.com>
+        Wed, 17 Jun 2020 09:37:17 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id A6E283C057C;
+        Wed, 17 Jun 2020 15:37:15 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JJV9MfC_7Tsw; Wed, 17 Jun 2020 15:37:10 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id AB1AA3C00BA;
+        Wed, 17 Jun 2020 15:37:10 +0200 (CEST)
+Received: from vmlxhi-121.adit-jv.com (10.72.92.132) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 17 Jun
+ 2020 15:37:10 +0200
+Date:   Wed, 17 Jun 2020 15:37:05 +0200
+From:   Michael Rodin <mrodin@de.adit-jv.com>
+To:     Suresh Udipi <sudipi@jp.adit-jv.com>
+CC:     <niklas.soderlund@ragnatech.se>, <akiyama@nds-osk.co.jp>,
+        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <mchehab@kernel.org>,
+        <michael@rodin.online>, <mrodin@de.adit-jv.com>,
+        <securitycheck@denso.co.jp>
+Subject: Re: [PATCH v7 1/2] media: rcar-csi2: Correct the selection of
+ hsfreqrange
+Message-ID: <20200617133705.GA88066@vmlxhi-121.adit-jv.com>
+References: <20200615141126.GE915368@oden.dyn.berto.se>
+ <1592369843-32217-1-git-send-email-sudipi@jp.adit-jv.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1592369843-32217-1-git-send-email-sudipi@jp.adit-jv.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.92.132]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch takes in account the use of the 1588 block in the MACsec
-initialization, as a conditional configuration has to be done (when the
-1588 block is used).
+Hi Suresh,
 
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
----
- drivers/net/phy/mscc/mscc_macsec.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+thanks for your work! It looks like your PHTW patch is missing:
 
-diff --git a/drivers/net/phy/mscc/mscc_macsec.c b/drivers/net/phy/mscc/mscc_macsec.c
-index c0eeb62cb940..713c62b1d1f0 100644
---- a/drivers/net/phy/mscc/mscc_macsec.c
-+++ b/drivers/net/phy/mscc/mscc_macsec.c
-@@ -285,7 +285,9 @@ static void vsc8584_macsec_mac_init(struct phy_device *phydev,
- 				 MSCC_MAC_CFG_PKTINF_CFG_STRIP_PREAMBLE_ENA |
- 				 MSCC_MAC_CFG_PKTINF_CFG_INSERT_PREAMBLE_ENA |
- 				 (bank == HOST_MAC ?
--				  MSCC_MAC_CFG_PKTINF_CFG_ENABLE_TX_PADDING : 0));
-+				  MSCC_MAC_CFG_PKTINF_CFG_ENABLE_TX_PADDING : 0) |
-+				 (IS_ENABLED(CONFIG_NETWORK_PHY_TIMESTAMPING) ?
-+				  MSCC_MAC_CFG_PKTINF_CFG_MACSEC_BYPASS_NUM_PTP_STALL_CLKS(0x8) : 0));
- 
- 	val = vsc8584_macsec_phy_read(phydev, bank, MSCC_MAC_CFG_MODE_CFG);
- 	val &= ~MSCC_MAC_CFG_MODE_CFG_DISABLE_DIC;
+"[PATCH] rcar-vin: rcar-csi2: Select the correct PHTW register"
+
 -- 
-2.26.2
-
+Best Regards,
+Michael
