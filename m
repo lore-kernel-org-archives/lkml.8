@@ -2,196 +2,196 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0182C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB802080D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:33:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="LNtcijz2"
+	by mail.kernel.org (Postfix) with ESMTP id 290D6208D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgFQGdE (ORCPT
+        id S1726915AbgFQGde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 02:33:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbgFQGdD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 02:33:03 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3787C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 23:33:03 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id n5so773188otj.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 23:33:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NJtcH+Zl3aW0pdnpXXzWAHOYw4o/s0gIIF2Ozd7IcyU=;
-        b=LNtcijz2EjSWn4+QP/vIc9et+pU4V3K/KtVzpo0/xDAIEg34OAnRohHYB+gnWcYpl+
-         p50tWaJMauOYRO45kI9FovvB3At2hAT21AUeoDmdYRoFjh2mwZr7pLEEEBxsh7lrKrHi
-         8zrceX0dAsvN/u7x3YXiteEfzM09pRIUYX3YDt9uz78/GkgbM9kagnh5sQfG2j+zCspT
-         9z5QEVcIDzmoLXnH/1ecg8VaCS1upS/yeoGbaBd9EDaqRQXkDkUWfplC5/8T4QaaSJcc
-         Teu/fNE3r9YroPeBzdwJQc0bS7rtCnRnTvodhMtoSQ36KJ3ezJ6KHjEI9HVNoPAybC25
-         jM9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NJtcH+Zl3aW0pdnpXXzWAHOYw4o/s0gIIF2Ozd7IcyU=;
-        b=nDmn4J/Q3DzMjynZaBkmBT8QxrRwAP2/T/4NJlQ51Fdo2ymNB2F5XT8+Ms92BqujQP
-         V3rt/Tj3CgR7aAGOoOAiuI1Venfm9h1kZPpAe//jGZVNd9EqoJXu3Tx631ZFB+Gx1KJ7
-         ssFfIDBqlkRnyMjyvltrZsmv5Eh2g4hTllz+eKpn2M496Mty3hrEYFwdldeOLibxoZ2a
-         pJRomkOvnt6HHOVidqV3xVS5rqIUGksSo6P2kwQXB4BxEeP9hTyaOhT2rvgoD9/Dbdvt
-         cJHKXBfl6nS0f8oJUk8M0O6xMZJr9+z2MUYlZzWDY0i1k1Buea0+1OmuZwqOgpkXrS+B
-         eWrQ==
-X-Gm-Message-State: AOAM532BsMC8DgP727IVnruToUhs16DYXsbea9wjDvz5aqMa1mrFJZzb
-        MP1fuxdy10ejDXQyss+f59TQ995VumqYMfVNgFk0Wr4q
-X-Google-Smtp-Source: ABdhPJy+di3/n+tbg1hHGYwH6syU/4A2Rg/MjyjcVy0VZ1QQzMYXZaQ0UOJRuIT1I5ZceKhhcvAGPPt2bOee079ZZvs=
-X-Received: by 2002:a05:6830:1e59:: with SMTP id e25mr5933962otj.127.1592375583098;
- Tue, 16 Jun 2020 23:33:03 -0700 (PDT)
+        Wed, 17 Jun 2020 02:33:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36212 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbgFQGdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 02:33:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B7C0DAD04;
+        Wed, 17 Jun 2020 06:33:33 +0000 (UTC)
+Subject: Re: linux-next: build failure after merge of the drm-misc tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>
+References: <20200617105929.534edd34@canb.auug.org.au>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <c82b9c52-d4e6-9eef-e37d-0a26ee9f1183@suse.de>
+Date:   Wed, 17 Jun 2020 08:33:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <cover.1592292685.git.zong.li@sifive.com> <7faa60aa4a606b5c5c1ae374d82a7eee6c764b38.1592292685.git.zong.li@sifive.com>
- <29425dbf7d54bab2733d28480d3adb61@mailhost.ics.forth.gr> <CANXhq0pMutK0+hHchQPOaZLqm9B-=MTKv8Xig4hM71_B=5+2bg@mail.gmail.com>
- <6e6cf39ae6ed91bbe086adbade5786cb@mailhost.ics.forth.gr>
-In-Reply-To: <6e6cf39ae6ed91bbe086adbade5786cb@mailhost.ics.forth.gr>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Wed, 17 Jun 2020 14:32:51 +0800
-Message-ID: <CANXhq0pU=RjO=T39-UDOE-34c=RAg7d8v9xdOPjTtcw8uMnx9A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] riscv: Support CONFIG_STRICT_DEVMEM
-To:     Nick Kossifidis <mick@ics.forth.gr>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200617105929.534edd34@canb.auug.org.au>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="9f3F1hth8h3MULKD8eNFEKS2PH808P58m"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 1:28 PM Nick Kossifidis <mick@ics.forth.gr> wrote:
->
-> =CE=A3=CF=84=CE=B9=CF=82 2020-06-17 04:56, Zong Li =CE=AD=CE=B3=CF=81=CE=
-=B1=CF=88=CE=B5:
-> > On Tue, Jun 16, 2020 at 8:27 PM Nick Kossifidis <mick@ics.forth.gr>
-> > wrote:
-> >>
-> >> =CE=A3=CF=84=CE=B9=CF=82 2020-06-16 10:45, Zong Li =CE=AD=CE=B3=CF=81=
-=CE=B1=CF=88=CE=B5:
-> >> > Implement the 'devmem_is_allowed()' interface for RISC-V, like some =
-of
-> >> > other architectures have done. It will be called from
-> >> > range_is_allowed()
-> >> > when userpsace attempts to access /dev/mem.
-> >> >
-> >> > Access to exclusive IOMEM and kernel RAM is denied unless
-> >> > CONFIG_STRICT_DEVMEM is set to 'n'.
-> >> >
-> >> > Test it by devmem, the result as follows:
-> >> >
-> >> >  - CONFIG_STRICT_DEVMEM=3Dy
-> >> >       $ devmem 0x10010000
-> >> >       0x00000000
-> >> >       $ devmem 0x80200000
-> >> >       0x0000106F
-> >> >
-> >> >  - CONFIG_STRICT_DEVMEM is not set
-> >> >       $ devmem 0x10010000
-> >> >       devmem: mmap: Operation not permitted
-> >> >       $ devmem 0x80200000
-> >> >       devmem: mmap: Operation not permitted
-> >> >
-> >> > Signed-off-by: Zong Li <zong.li@sifive.com>
-> >> > ---
-> >> >  arch/riscv/Kconfig          |  1 +
-> >> >  arch/riscv/include/asm/io.h |  2 ++
-> >> >  arch/riscv/mm/init.c        | 19 +++++++++++++++++++
-> >> >  3 files changed, 22 insertions(+)
-> >> >
-> >> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> >> > index 128192e14ff2..ffd7841ede4c 100644
-> >> > --- a/arch/riscv/Kconfig
-> >> > +++ b/arch/riscv/Kconfig
-> >> > @@ -16,6 +16,7 @@ config RISCV
-> >> >       select ARCH_HAS_BINFMT_FLAT
-> >> >       select ARCH_HAS_DEBUG_VIRTUAL if MMU
-> >> >       select ARCH_HAS_DEBUG_WX
-> >> > +     select ARCH_HAS_DEVMEM_IS_ALLOWED
-> >> >       select ARCH_HAS_GCOV_PROFILE_ALL
-> >> >       select ARCH_HAS_GIGANTIC_PAGE
-> >> >       select ARCH_HAS_MMIOWB
-> >> > diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io=
-.h
-> >> > index 3835c3295dc5..04ac65ab93ce 100644
-> >> > --- a/arch/riscv/include/asm/io.h
-> >> > +++ b/arch/riscv/include/asm/io.h
-> >> > @@ -147,4 +147,6 @@ __io_writes_outs(outs, u64, q, __io_pbr(),
-> >> > __io_paw())
-> >> >
-> >> >  #include <asm-generic/io.h>
-> >> >
-> >> > +extern int devmem_is_allowed(unsigned long pfn);
-> >> > +
-> >> >  #endif /* _ASM_RISCV_IO_H */
-> >> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> >> > index bbe816e03b2f..5e7e61519acc 100644
-> >> > --- a/arch/riscv/mm/init.c
-> >> > +++ b/arch/riscv/mm/init.c
-> >> > @@ -517,6 +517,25 @@ void mark_rodata_ro(void)
-> >> >  }
-> >> >  #endif
-> >> >
-> >> > +#ifdef CONFIG_STRICT_DEVMEM
-> >> > +#include <linux/ioport.h>
-> >> > +/*
-> >> > + * devmem_is_allowed() checks to see if /dev/mem access to a certai=
-n
-> >> > address
-> >> > + * is valid. The argument is a physical page number.
-> >> > + *
-> >> > + * Disallow access to system RAM as well as device-exclusive MMIO
-> >> > regions.
-> >> > + * This effectively disable read()/write() on /dev/mem.
-> >> > + */
-> >> > +int devmem_is_allowed(unsigned long pfn)
-> >> > +{
-> >> > +     if (iomem_is_exclusive(pfn << PAGE_SHIFT))
-> >> > +             return 0;
-> >> > +     if (!page_is_ram(pfn))
-> >> > +             return 1;
-> >> > +     return 0;
-> >> > +}
-> >> > +#endif
-> >> > +
-> >> >  void __init resource_init(void)
-> >> >  {
-> >> >       struct memblock_region *region;
-> >>
-> >> This shouldn't be part of /mm/init.c, it has nothing to do with memory
-> >> initialization, I suggest we move it to another file like mmap.c on
-> >
-> > Let me move it, thanks.
-> >
-> >> arm/arm64. Also before using iomem_is_exclusive we should probably
-> >> also
-> >> mark any reserved regions with the no-map attribute as busy|exclusive,
-> >> reserved-memory regions are not necessarily part of the main memory so
-> >> the page_is_ram check may pass and iomem_is_exclusive won't do any
-> >> good.
-> >
-> > What do you think if we mark the reserved region in
-> > kdump_resource_init, and change the kdump_resource_init to a more
-> > generic name for initializing resources?
->
-> Sounds good to me, I'll work on this within the week. Do you agree with
-> marking the no-map reserved-memory regions as exclusive ?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--9f3F1hth8h3MULKD8eNFEKS2PH808P58m
+Content-Type: multipart/mixed; boundary="KpPvdyfxUEtwj1YULHclQa5IHqeHhOHNp";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Daniel Vetter <daniel.vetter@ffwll.ch>,
+ Intel Graphics <intel-gfx@lists.freedesktop.org>,
+ DRI <dri-devel@lists.freedesktop.org>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ Felix Kuehling <Felix.Kuehling@amd.com>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Emil Velikov <emil.velikov@collabora.com>
+Message-ID: <c82b9c52-d4e6-9eef-e37d-0a26ee9f1183@suse.de>
+Subject: Re: linux-next: build failure after merge of the drm-misc tree
+References: <20200617105929.534edd34@canb.auug.org.au>
+In-Reply-To: <20200617105929.534edd34@canb.auug.org.au>
 
-It's OK to me, It seems to me that exclusive is more suitable than
-busy when initialization.
+--KpPvdyfxUEtwj1YULHclQa5IHqeHhOHNp
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+Hi
+
+Am 17.06.20 um 02:59 schrieb Stephen Rothwell:
+> Hi all,
+>=20
+> After merging the drm-misc tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>=20
+> drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c: In function 'amdgpu_a=
+mdkfd_gpuvm_free_memory_of_gpu':
+> drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c:1357:2: error: implici=
+t declaration of function 'drm_gem_object_put_unlocked'; did you mean 'dr=
+m_gem_object_put_locked'? [-Werror=3Dimplicit-function-declaration]
+>  1357 |  drm_gem_object_put_unlocked(&mem->bo->tbo.base);
+>       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       |  drm_gem_object_put_locked
+>=20
+> Caused by commit
+>=20
+>   ab15d56e27be ("drm: remove transient drm_gem_object_put_unlocked()")
+>=20
+> interacting with commit
+>=20
+>   fd9a9f8801de ("drm/amdgpu: Use GEM obj reference for KFD BOs")
+>=20
+> from Linus' tree.
+>=20
+> I have applied the following merge fix up patch for today.
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Wed, 17 Jun 2020 10:55:32 +1000
+> Subject: [PATCH] drm/amdgpu: remove stray drm_gem_object_put_unlocked
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers=
+/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> index b91b5171270f..9015c7b76d60 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+> @@ -1354,7 +1354,7 @@ int amdgpu_amdkfd_gpuvm_free_memory_of_gpu(
+>  	}
+> =20
+>  	/* Free the BO*/
+> -	drm_gem_object_put_unlocked(&mem->bo->tbo.base);
+> +	drm_gem_object_put(&mem->bo->tbo.base);
+
+We recently dropped the _unlock() suffix from drm_gem_object_put(). This
+patch should be ok.
+
+Best regards
+Thomas
+
+>  	mutex_destroy(&mem->lock);
+>  	kfree(mem);
+> =20
+>=20
+>=20
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+(HRB 36809, AG N=FCrnberg)
+Gesch=E4ftsf=FChrer: Felix Imend=F6rffer
+
+
+--KpPvdyfxUEtwj1YULHclQa5IHqeHhOHNp--
+
+--9f3F1hth8h3MULKD8eNFEKS2PH808P58m
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl7puTQACgkQaA3BHVML
+eiN0nQgAvsZCT69rEUsA3tUpzZFwC705X8mKMKckywWtoJ+/kuQZqbCkGlq+p1Tk
+LGn7sXGHxrYO1vyPLiqnV/3bvFi2d7jmqkMKkNS2n2nR0yxIEkUsphfFcnUemM7b
+5IS7Z7nmKO5NmuUsiVZHvRGffvLw1+zuhV7NXygjE/fWX6o1SyIhQBD6W1sCq2QM
+cH19eSryZ8/+tTotQzHGcBGzcI7nsppq99gsASWgV0snoGKHpC+DmIwv5GpNge13
+SFaKJjbld60mY1Q0J158zkssxhbhk/AgS0YsrkCKaifDSdDIhE+LEsV/d2huiUVH
+rby49zaP8OSsO2wSrRP+KSWEG+rDxg==
+=Enbr
+-----END PGP SIGNATURE-----
+
+--9f3F1hth8h3MULKD8eNFEKS2PH808P58m--
