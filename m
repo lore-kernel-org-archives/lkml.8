@@ -2,95 +2,132 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A21C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC43C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C44D220888
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B27C2070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hFDq8l+m"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Mjuj0dqF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgFQPKg (ORCPT
+        id S1726950AbgFQPKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:10:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbgFQPK3 (ORCPT
+        Wed, 17 Jun 2020 11:10:39 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:32896 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbgFQPKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:10:29 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50922C06174E;
-        Wed, 17 Jun 2020 08:10:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=7Em4MC4EQzp9zY211Niwju/uTQx/PBZTsUAMP7BVAwg=; b=hFDq8l+moKpj4m4/2ZppXGE50e
-        64sBKKvo6scapFrQwCZx7bOa3x09Wb3RNc+msxtiAafsymcob9Yilu70Y1qq9z9h9zCelgxb4UGp9
-        PJ0c73dKBuo2csJ0yJzmkerptFRicrqvGgUIDueqNy4upZDIP5jY2qv5tEw6f3d+tdmHax51cHM6o
-        wopQtSlbK3sPNaW8ciPRK3/aUaU+IG/nxRDKozBeQEKP1kaEvxrfvvGtRE7DW6ihm5QcCpZj9oMBE
-        QGwrTeG3hLnVmlGG5+yLcSo8MqVHeXNTYScx641ztg9lGGnut+wM+EWJfTz8fxuG45/g0ZGTs+RqV
-        oKgRyXHg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlZht-0005HH-1B; Wed, 17 Jun 2020 15:10:29 +0000
-Subject: Re: [PATCH v3] debugfs: Add access restriction option
-To:     Peter Enderborg <peter.enderborg@sony.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-References: <20200617133738.6631-1-peter.enderborg@sony.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d6f02bd5-e92d-017b-9ac2-ffdcb4381c97@infradead.org>
-Date:   Wed, 17 Jun 2020 08:10:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 17 Jun 2020 11:10:32 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05HFATQ5117079;
+        Wed, 17 Jun 2020 10:10:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592406629;
+        bh=+LYKN1Pq2F/LuV9iJvrrRWifuR4y4GQ5OVW8WFHqYck=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Mjuj0dqFIBqtUp92BS3SjGGdaO2dJfiE0413B+rz3zXaST7hJaaN0jPDV6hB28ipd
+         2f/YmXUUAd+plQvUh9UMHTPNyvPYa6IOo45RatBpQ/cc2iMUMI/jkRM6lTdLoldU/5
+         H75CL6C8nP2codtVew8FsX/ABwQdjDo/94uMSXwU=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05HFATOj112797;
+        Wed, 17 Jun 2020 10:10:29 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 17
+ Jun 2020 10:10:28 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 17 Jun 2020 10:10:28 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05HFASCi042118;
+        Wed, 17 Jun 2020 10:10:28 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v28 12/15] leds: lp5523: Update the lp5523 code to add multicolor brightness function
+Date:   Wed, 17 Jun 2020 10:09:21 -0500
+Message-ID: <20200617150924.12665-13-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200617150924.12665-1-dmurphy@ti.com>
+References: <20200617150924.12665-1-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200617133738.6631-1-peter.enderborg@sony.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/20 6:37 AM, Peter Enderborg wrote:
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index fb95fad81c79..249c86e53bb7 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -827,6 +827,17 @@
->  			useful to also enable the page_owner functionality.
->  			on: enable the feature
->  
-> +	debugfs=    	[KNL] When CONFIG_DEBUG_FS_RESTRICTED is set, this parameter
-> +			enables what is exposed to userspace.
-> +			Format: { on, no_fs, off }
-> +			on: 	All functions are enabled.
-> +			no_fs: 	Filesystem is not registered but kernel clients can
-> +			        access APIs and a crashkernel can be used to read
-> +				it's content. There its nothing to mount.
+Add the multicolor brightness call back to support the multicolor
+framework.  This call back allows setting  brightness on grouped channels
+in a single function.
 
-				its content. There is nothing to mount.
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/leds/Kconfig       |  1 +
+ drivers/leds/leds-lp5523.c | 20 ++++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-
-> +			off: 	(default) Filesystem is not registered and clients
-> +			        get a -EPERM as result when trying to register files
-> +				or directories within debugfs.
-> +
->  	debugpat	[X86] Enable PAT debugging
->  
->  	decnet.addr=	[HW,NET]
-
-
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index 04e0cb39f92e..44d8b2293436 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -418,6 +418,7 @@ config LEDS_LP5521
+ config LEDS_LP5523
+ 	tristate "LED Support for TI/National LP5523/55231 LED driver chip"
+ 	depends on LEDS_CLASS && I2C
++	depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+ 	select LEDS_LP55XX_COMMON
+ 	help
+ 	  If you say yes here you get support for TI/National Semiconductor
+diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
+index b076c16df9ab..9776dc72a764 100644
+--- a/drivers/leds/leds-lp5523.c
++++ b/drivers/leds/leds-lp5523.c
+@@ -791,6 +791,25 @@ static ssize_t store_master_fader_leds(struct device *dev,
+ 	return ret;
+ }
+ 
++static int lp5523_multicolor_brightness(struct lp55xx_led *led)
++{
++	struct lp55xx_chip *chip = led->chip;
++	int ret;
++	int i;
++
++	mutex_lock(&chip->lock);
++	for (i = 0; i < led->mc_cdev.num_colors; i++) {
++		ret = lp55xx_write(chip,
++				   LP5523_REG_LED_PWM_BASE +
++				   led->mc_cdev.subled_info[i].channel,
++				   led->mc_cdev.subled_info[i].brightness);
++		if (ret)
++			break;
++	}
++	mutex_unlock(&chip->lock);
++	return ret;
++}
++
+ static int lp5523_led_brightness(struct lp55xx_led *led)
+ {
+ 	struct lp55xx_chip *chip = led->chip;
+@@ -857,6 +876,7 @@ static struct lp55xx_device_config lp5523_cfg = {
+ 	.max_channel  = LP5523_MAX_LEDS,
+ 	.post_init_device   = lp5523_post_init_device,
+ 	.brightness_fn      = lp5523_led_brightness,
++	.multicolor_brightness_fn = lp5523_multicolor_brightness,
+ 	.set_led_current    = lp5523_set_led_current,
+ 	.firmware_cb        = lp5523_firmware_loaded,
+ 	.run_engine         = lp5523_run_engine,
 -- 
-~Randy
+2.26.2
 
