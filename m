@@ -2,126 +2,98 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6ECC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD242100A
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:21:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dev-mellanox-co-il.20150623.gappssmtp.com header.i=@dev-mellanox-co-il.20150623.gappssmtp.com header.b="q9VbAJPQ"
+	by mail.kernel.org (Postfix) with ESMTP id 64FB420FC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgFQJVA (ORCPT
+        id S1726785AbgFQJVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 05:21:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725967AbgFQJU6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 05:20:58 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8298EC061573
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 02:20:57 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id m21so1327062eds.13
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 02:20:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dev-mellanox-co-il.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KOGDrIGSTQHdhbcmrj6V2Dmcy4x1v8SuADz9bu5WO38=;
-        b=q9VbAJPQvgoXZBcVIywwZi7fjmdAfLMXjoKwS6dOlQ/FL4lOC1KcO2MsbC+fZhbtcb
-         Y0yBM+z2b1iI8eIbivfkG5eZLvHFuvluWBuRrtnXnP6/mOo1lW3pcHqtgt9Dq+VNNWwf
-         M41aitIVi5IEUcJ84iI1g1w3To2nQZk/W+n/3ZdJJjFyk/GGnBWr46Yj3Xnc0qijhRut
-         1GzvNeF9u8DMqvZEdDfCky21gDKeIwDVKuZNfEbMUWzSOzCLaV7lDfxDDR1Y3NyeZLIA
-         lmUAv1R3GX3Bwe8ArbzDRzIpKr++tjV4q9cmEFl37qrsbzsFyZfW0v6yc+SZKL9UajiR
-         h9vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KOGDrIGSTQHdhbcmrj6V2Dmcy4x1v8SuADz9bu5WO38=;
-        b=HwCNSavwnWpM8naOVe5NjZjA1mzonTwywAXdg0WGdTRjDnZ0HqvZCpgL/iC/6Kz5Sz
-         DR01uvdLORIUPz3qrCwOFeh0Hou/rAVU/X/qqKw2K42pn31xodrGBbLYjyCW9XXAP5mS
-         oOznF4nPVI8j+2CwB4VENaZRV+fK6k4Vpu21WrEcEvTNuvV4cFOl3gdzXIx9TUCANByg
-         tjNHixE+vtfSm6kTgRdjQ0cCkPEFaeJk108CakgcsUe3DTVdJVQuyC+mq1i0MMuiCO6d
-         FW5O3JQfinSG4p7MGujn7yo8niwy4DzG4z9PajoG/W+EKhV+N1shi7+W1sXVgJ9sG3vD
-         CXBw==
-X-Gm-Message-State: AOAM530HX9SUeqT0VK8PA6mA98EYIcijXiwCV56wyIzqiDiSNAvF8LaX
-        8Tqz5ir69hXOTiaivpY0GEN2PTKukw8=
-X-Google-Smtp-Source: ABdhPJwVvVPLNr78je6q4NC5LIWu8iJGohIpNbDKeWcyosOA8MeAN/+/A/Y8hiEqAenFJlQAZ6d/fA==
-X-Received: by 2002:a05:6402:7d4:: with SMTP id u20mr6290190edy.30.1592385656214;
-        Wed, 17 Jun 2020 02:20:56 -0700 (PDT)
-Received: from [10.0.0.57] ([5.22.133.189])
-        by smtp.googlemail.com with ESMTPSA id k23sm12947657ejo.120.2020.06.17.02.20.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 02:20:55 -0700 (PDT)
-Subject: Re: [PATCH rdma-next 0/7] Introduce KABIs to query UCONTEXT, PD and
- MR properties
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Steve Wise <larrystevenwise@gmail.com>,
-        Yishai Hadas <yishaih@mellanox.com>
-References: <20200616105531.2428010-1-leon@kernel.org>
- <20200617082916.GA13188@infradead.org> <20200617083138.GI2383158@unreal>
- <20200617083450.GA25700@infradead.org>
-From:   Yishai Hadas <yishaih@dev.mellanox.co.il>
-Message-ID: <73708880-55d0-0f39-9195-9627d0da2d60@dev.mellanox.co.il>
-Date:   Wed, 17 Jun 2020 12:20:53 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200617083450.GA25700@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 17 Jun 2020 05:21:18 -0400
+Received: from mx.wingtech.com ([180.166.216.14]:49711 "EHLO mail.wingtech.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725846AbgFQJVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 05:21:17 -0400
+X-Greylist: delayed 1012 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Jun 2020 05:21:16 EDT
+Received: from mx.wingtech.com ([192.168.2.43])
+        by mail.wingtech.com  with SMTP id 05H94MlL022388-05H94MlM022388
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:04:22 +0800
+Received: from 192.168.51.143 (HELO ZHAOWUYUN.WINGTECH.COM); Wed, 17 Jun 2020 17:04:19 +0800
+From:   zhaowuyun@wingtech.com
+To:     jaegeuk@kernel.org, yuchao0@huawei.com
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, zhaowuyun@wingtech.com
+Subject: [PATCH] f2fs: fix a race condition between f2fs_write_end_io and f2fs_del_fsync_node_entry
+Date:   Wed, 17 Jun 2020 17:04:19 +0800
+Message-Id: <1592384659-20203-1-git-send-email-zhaowuyun@wingtech.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/2020 11:34 AM, Christoph Hellwig wrote:
-> On Wed, Jun 17, 2020 at 11:31:38AM +0300, Leon Romanovsky wrote:
->> On Wed, Jun 17, 2020 at 01:29:16AM -0700, Christoph Hellwig wrote:
->>> I think you are talking about UABIs (which in linux we actually call
->>> uapis).
->>
->> Yes, I used Yishai's cover letter as is.
-> 
+From: Wuyun Zhao <zhaowuyun@wingtech.com>
 
-We used in the past the "kABI" notation in the rdma sub system when we 
-referred to the ioctl interface that kernel exposes to user space.
+Under some condition, the __write_node_page will submit a page which is not
+f2fs_in_warm_node_list and will not call f2fs_add_fsync_node_entry.
+f2fs_gc continue to run to invoke f2fs_iget -> do_read_inode to read the same node page
+and set code node, which make f2fs_in_warm_node_list become true,
+that will cause f2fs_bug_on in f2fs_del_fsync_node_entry when f2fs_write_end_io called.
 
-See the below [1] from Jason and the below [2] mentioned by Linus as of 
-Doug's pull request.
+[   34.966133] Call trace:
+[   34.969902]  f2fs_del_fsync_node_entry+0x100/0x108
+[   34.976071]  f2fs_write_end_io+0x1e0/0x288
+[   34.981539]  bio_endio+0x248/0x270
+[   34.986289]  blk_update_request+0x2b0/0x4d8
+[   34.991841]  scsi_end_request+0x40/0x440
+[   34.997126]  scsi_io_completion+0xa4/0x748
+[   35.002593]  scsi_finish_command+0xdc/0x110
+[   35.008143]  scsi_softirq_done+0x118/0x150
+[   35.013610]  blk_done_softirq+0x8c/0xe8
+[   35.018811]  __do_softirq+0x2e8/0x578
+[   35.023828]  irq_exit+0xfc/0x120
+[   35.028398]  handle_IPI+0x1d8/0x330
+[   35.033233]  gic_handle_irq+0x110/0x1d4
+[   35.038433]  el1_irq+0xb4/0x130
+[   35.042917]  kmem_cache_alloc+0x3f0/0x418
+[   35.048288]  radix_tree_node_alloc+0x50/0xf8
+[   35.053933]  __radix_tree_create+0xf8/0x188
+[   35.059484]  __radix_tree_insert+0x3c/0x128
+[   35.065035]  add_gc_inode+0x90/0x118
+[   35.069967]  f2fs_gc+0x1b80/0x2d70
+[   35.074718]  f2fs_disable_checkpoint+0x94/0x1d0
+[   35.080621]  f2fs_fill_super+0x10c4/0x1b88
+[   35.086088]  mount_bdev+0x194/0x1e0
+[   35.090923]  f2fs_mount+0x40/0x50
+[   35.095589]  mount_fs+0xb4/0x190
+[   35.100159]  vfs_kern_mount+0x80/0x1d8
+[   35.105260]  do_mount+0x478/0xf18
+[   35.109926]  ksys_mount+0x90/0xd0
+[   35.114592]  __arm64_sys_mount+0x24/0x38
 
-However,
-We may better refers to UAPI to make things clearer.
+Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
+---
+ fs/f2fs/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-[1] https://patchwork.kernel.org/patch/10226945/
-[2] commit 004e390d8133b96485e1ab9af5351c2db4300c63
-Merge: 24180a6008ac f45765872e7a
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu Feb 22 11:57:39 2018 -0800
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index be6ac33..0df5c8c 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -402,6 +402,7 @@ static int do_read_inode(struct inode *inode)
+ 
+ 	/* try to recover cold bit for non-dir inode */
+ 	if (!S_ISDIR(inode->i_mode) && !is_cold_node(node_page)) {
++		f2fs_wait_on_page_writeback(node_page, NODE, true, true);
+ 		set_cold_node(node_page, false);
+ 		set_page_dirty(node_page);
+ 	}
+-- 
+2.7.4
 
-     Merge tag 'for-linus' of 
-git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
-
-     Pull rdma fixes from Doug Ledford:
-      "Nothing in this is overly interesting, it's mostly your garden 
-variety
-       fixes.
-
-       There was some work in this merge cycle around the new ioctl kABI, so
-       there are fixes in here related to that (probably with more to come).
-
-
-Yishai
