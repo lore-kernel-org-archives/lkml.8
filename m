@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98351C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AF3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 820D6208B3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D57F7208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgFQLOS (ORCPT
+        id S1726977AbgFQLO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:14:18 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:46437 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbgFQLOQ (ORCPT
+        Wed, 17 Jun 2020 07:14:28 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:44382 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbgFQLOR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:14:16 -0400
-Received: by mail-io1-f70.google.com with SMTP id w2so1540720iom.13
+        Wed, 17 Jun 2020 07:14:17 -0400
+Received: by mail-io1-f71.google.com with SMTP id v14so1532883iob.11
         for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 04:14:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=74zgtILYzJ4Q87way40PouYE06q/enXdI9CPRRVKbMw=;
-        b=p+1a1ks5vFRlTTa9w2KnAO5T9j0jkINNsS8VnbGo0Ozhq5a/TmuL2AyrtpMUswYCho
-         NCN7sPqTD1T8GnX/1ktTr8gSBjxIG4QgaPrK2yZ8NwmURZUmiTo72aeE/9v3peFBhU58
-         YRWjwI+oYSJhuRO9gYGFNmKWCnBd86bdoXL57FTqWV7bXtvX9LG/QpDWGreEZ7KbpsCV
-         PAyuzpq5/nAH9hexB1+9pytCopEPjpTjCkS4d7xwXNcGO15hyK34dYGe+FSrvB+CG+xs
-         0oR/5ovMQ3bIyg4HQasldNrIQt7e8CuDDzP9TX9YxrX9F4/Wr2w+7V+DaIE6ZXl3zcP2
-         lSCw==
-X-Gm-Message-State: AOAM533JMNJCyPflwhksnAmnBvGSa1DvQmPyiD/Ksp7bo+ycCj4fh+FT
-        bTpCzZ3VBYmlclrKNHdEofJYExc18P1rHlhM0zaw+pBz/yn7
-X-Google-Smtp-Source: ABdhPJwUn7Urbx/hoTKHd4Gm1w2sqP4k6F6w3WvA7z3RQJFoKSEECvvFxhUKtO2/WV5p22MlP6XbgwIJ7XBZoOMCa4UnI10osKWZ
+        bh=Gyew2n14ljcQ2DKykw2+8f7BA8G7wj1M+bEWLsz621g=;
+        b=ANZ/Eji/hv2PjO0+Foj63tp6+tOQJXgVfp9fV9anyGMBVtaJQI51eooxUHJ/4CnhfL
+         YpUlH003gLhB0x0x67CZG9R2315I5xH4jO869uuXSLqw0THq0ECdhVOZm+LBn/qM3xHz
+         B4VeyzsecmDQ1yL+MxBI4mNWqGDgcF+/OE4qnwDLsz1q9fHRdMEzHia04CGNgZ8fL+zE
+         9jAZv13aRgFRL5O/WVVQa/ZYdYm+FVIZGX8LaH/KNoCA7zLnIbAsefn3e3RFDGhVliPU
+         JRqt8KWy7/7B3aoHFbs+YfVveHfnvTlFCTmN3wV6hubTOgaOdFu+hs63ZbVmyvd0J13j
+         yX6A==
+X-Gm-Message-State: AOAM533ZXfLagyQTfg5IG+cxHTpqKxQ+vWkZZg+8XUEd0Q8BCUFC7zWY
+        NMht60/TuFX1Ud1ZPbWeqa2lO7l/lDo3WYZEnlbEWNpkXZaw
+X-Google-Smtp-Source: ABdhPJxIFdw/XHxqd0shSJ72f41ob9wNyGZYR2f2zUcWARsXiv0SYTCgJ7rm0n3OBDoshrC/4J6/bQNXMWBMfyrGBr4EnYWE9qNr
 MIME-Version: 1.0
-X-Received: by 2002:a92:d3d0:: with SMTP id c16mr7623005ilh.181.1592392454048;
+X-Received: by 2002:a92:ce48:: with SMTP id a8mr8033311ilr.23.1592392454376;
  Wed, 17 Jun 2020 04:14:14 -0700 (PDT)
 Date:   Wed, 17 Jun 2020 04:14:14 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009111c005a845c2bc@google.com>
-Subject: net-next test error: KASAN: use-after-free Write in afs_wake_up_async_call
-From:   syzbot <syzbot+d3eccef36ddbd02713e9@syzkaller.appspotmail.com>
+Message-ID: <00000000000096141f05a845c246@google.com>
+Subject: net test error: KASAN: use-after-free Write in afs_wake_up_async_call
+From:   syzbot <syzbot+5e590d73a9d01be6b1a1@syzkaller.appspotmail.com>
 To:     davem@davemloft.net, dhowells@redhat.com, kuba@kernel.org,
         linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
@@ -59,21 +59,21 @@ Hello,
 syzbot found the following crash on:
 
 HEAD commit:    69119673 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=151b62f1100000
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=1054fc4e100000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=b8ad29058cb749bc
-dashboard link: https://syzkaller.appspot.com/bug?extid=d3eccef36ddbd02713e9
+dashboard link: https://syzkaller.appspot.com/bug?extid=5e590d73a9d01be6b1a1
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d3eccef36ddbd02713e9@syzkaller.appspotmail.com
+Reported-by: syzbot+5e590d73a9d01be6b1a1@syzkaller.appspotmail.com
 
 tipc: TX() has been purged, node left!
 ==================================================================
 BUG: KASAN: use-after-free in afs_wake_up_async_call+0x6aa/0x770 fs/afs/rxrpc.c:707
-Write of size 1 at addr ffff8880946c39e4 by task kworker/u4:1/21
+Write of size 1 at addr ffff888096b199e4 by task kworker/u4:6/262
 
-CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.8.0-rc1-syzkaller #0
+CPU: 1 PID: 262 Comm: kworker/u4:6 Not tainted 5.8.0-rc1-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Workqueue: netns cleanup_net
 Call Trace:
@@ -98,7 +98,7 @@ Call Trace:
  kthread+0x3b5/0x4a0 kernel/kthread.c:291
  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
 
-Allocated by task 6820:
+Allocated by task 6821:
  save_stack+0x1b/0x40 mm/kasan/common.c:48
  set_track mm/kasan/common.c:56 [inline]
  __kasan_kmalloc mm/kasan/common.c:494 [inline]
@@ -122,7 +122,7 @@ Allocated by task 6820:
  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Freed by task 21:
+Freed by task 262:
  save_stack+0x1b/0x40 mm/kasan/common.c:48
  set_track mm/kasan/common.c:56 [inline]
  kasan_set_free_info mm/kasan/common.c:316 [inline]
@@ -141,24 +141,24 @@ Freed by task 21:
  kthread+0x3b5/0x4a0 kernel/kthread.c:291
  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
 
-The buggy address belongs to the object at ffff8880946c3800
+The buggy address belongs to the object at ffff888096b19800
  which belongs to the cache kmalloc-1k of size 1024
 The buggy address is located 484 bytes inside of
- 1024-byte region [ffff8880946c3800, ffff8880946c3c00)
+ 1024-byte region [ffff888096b19800, ffff888096b19c00)
 The buggy address belongs to the page:
-page:ffffea000251b0c0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
+page:ffffea00025ac640 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
 flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0002546508 ffffea00024fa248 ffff8880aa000c40
-raw: 0000000000000000 ffff8880946c3000 0000000100000002 0000000000000000
+raw: 00fffe0000000200 ffffea00025df7c8 ffffea000261efc8 ffff8880aa000c40
+raw: 0000000000000000 ffff888096b19000 0000000100000002 0000000000000000
 page dumped because: kasan: bad access detected
 
 Memory state around the buggy address:
- ffff8880946c3880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880946c3900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8880946c3980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888096b19880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888096b19900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888096b19980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
                                                        ^
- ffff8880946c3a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880946c3a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888096b19a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888096b19a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
 ==================================================================
 
 
