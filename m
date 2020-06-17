@@ -2,125 +2,269 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F35A21527
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B96521527
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:18:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HlflOshl"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WkhgoKnE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgFQRRy (ORCPT
+        id S1726981AbgFQRSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 13:17:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39204 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726511AbgFQRRx (ORCPT
+        Wed, 17 Jun 2020 13:18:14 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:34902 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbgFQRSN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 13:17:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592414271;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=syoG//epP3bFi8zAl2b0mjdOvXOrZ7ZffbKVm7T0ZmA=;
-        b=HlflOshlo52J6ZhvX5Ck+yggWTJzKaAGY/BNndxwnCmnrTo4Y8d2H2F0Y/zy1bSwEE0gfT
-        TqP5pPbC2o4VhljDjhBiI3YTjRL2RE3P4kSenYlNR3TWUaKpjKGJCaaA9Lol5jRw1sJi3m
-        dV8gc/OGvYJY3TrnAEQwyOrr2BwKEgM=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-272-LQZ-XmOuMq6KQxphfDbC4Q-1; Wed, 17 Jun 2020 13:17:48 -0400
-X-MC-Unique: LQZ-XmOuMq6KQxphfDbC4Q-1
-Received: by mail-wm1-f71.google.com with SMTP id r1so1502891wmh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:17:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=syoG//epP3bFi8zAl2b0mjdOvXOrZ7ZffbKVm7T0ZmA=;
-        b=famyAfVVZnuUqtva0EZ/9C0jUAIMX/n7FGz/hsgKQ0V0vr/t/D6ZdfVaH5/bXov0vK
-         DO8anvuml5jJsNKSqz112zdjmyHAZ73S0z4Smj7Fqj+Cxm/L2R6+etbL3ahT0AfnjxXe
-         GLHksfTdzsD8fePobNgSR6ZSP1JZa6dNFvIb+WkWwkiTxYyJNiJ9Ifemb0dpVZmZJHaM
-         +iUDlUrVBWXnQyv5Q+G1g+QwEZI0PL0jmopYFrQttLanJOMpqjujGBNQyUWXBSQRDwmr
-         anYZM9F8j5dn7WUbAX/aBqjnvZrjYF0VrOCFQFSvLdQE0wQoL5pK+O1DN8t1ppPs6qaL
-         MZMA==
-X-Gm-Message-State: AOAM532dn2R8bXDaOitu4Pwo7PjoEZ+2/ZAvy5Gx3Up0THhG4lizAHGC
-        KUmUU14s+MI2xWYXk/51ZkvfJ9NBmI0LcPNx5BZKl24bmAsi2sTs7DSLZeAmwKIQV2lcPT74wpC
-        y3z/ETXQRcOgGt12/Fa3ZxVTr
-X-Received: by 2002:a1c:e40a:: with SMTP id b10mr9258262wmh.41.1592414266555;
-        Wed, 17 Jun 2020 10:17:46 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwLVxP68bp+s83lap0HNMsWZSZhomS98RZJPhW0GgtvOxsW+p3Qva87d7QFsCgkfzvuBpUIIw==
-X-Received: by 2002:a1c:e40a:: with SMTP id b10mr9258238wmh.41.1592414266343;
-        Wed, 17 Jun 2020 10:17:46 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:48a4:82f8:2ffd:ec67? ([2001:b07:6468:f312:48a4:82f8:2ffd:ec67])
-        by smtp.gmail.com with ESMTPSA id 23sm464714wmg.10.2020.06.17.10.17.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 10:17:45 -0700 (PDT)
-Subject: Re: [PATCH] KVM: SVM: drop MSR_IA32_PERF_CAPABILITIES from emulated
- MSRs
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Like Xu <like.xu@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200616161427.375651-1-vkuznets@redhat.com>
- <CALMp9eSWXGQkOOzSrALfZDMj5JHSH=CsK1wKfdj2x2jtV4XJsw@mail.gmail.com>
- <87366vhscx.fsf@vitty.brq.redhat.com>
- <CALMp9eQ1qe4w5FojzgsUHKpD=zXqen_D6bBg4-vfHa03BdomGA@mail.gmail.com>
- <87wo45hqhy.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <36ebc576-52c0-4164-1c83-e31146806b6b@redhat.com>
-Date:   Wed, 17 Jun 2020 19:17:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 17 Jun 2020 13:18:13 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05HHHmcZ103922;
+        Wed, 17 Jun 2020 17:17:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2020-01-29; bh=9VQqTPZpR0kzjjfzvsdc4Cd29YvF0dcmDmbQ6puPfZE=;
+ b=WkhgoKnEal4c9PClFZzLziJhMWKcbyIeQUkNxg7Qso6eH8O9emFNz5Yxyn80BZRLSz6q
+ +YgycPyZ+vfek55tD//ARjQCfv9w2jKX0ln7oZX06tsBb7B1pfRCTtLxs4Ova+2nhHxd
+ ukCTajQ4fUmm4HjcdFXx0OK1NUiK8w7UBM97bjqI8coEjQM+bMlEBIaJge8yY5pLDNwB
+ gpBp8atNBQgx818Es5Bagq/yfskFLGaS/F9sHbA+G3aSiCbG7a+XkfOKaOUKBO9Mx1PO
+ 1cNgg2RPzBTk2TXBhe7JW4fAiqXYeptpaqcVA5skwU61al7p/63LNcan8tHYeuDtnGyy XQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 31q65yvmda-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 17 Jun 2020 17:17:59 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05HHDADm140357;
+        Wed, 17 Jun 2020 17:15:58 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 31q66netxq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jun 2020 17:15:58 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05HHFuNR021623;
+        Wed, 17 Jun 2020 17:15:57 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 17 Jun 2020 10:15:56 -0700
+Date:   Wed, 17 Jun 2020 20:15:50 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH v2] coresight: cti: Fix error handling in probe
+Message-ID: <20200617171549.GA9686@kadam>
 MIME-Version: 1.0
-In-Reply-To: <87wo45hqhy.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJ9a7Vjn-1gvOY0h5eiffXgqiNu4rz=Z18hgV33WExGnLEV-nA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9655 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
+ mlxscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006170136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9655 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
+ spamscore=0 clxscore=1015 mlxlogscore=999 suspectscore=0 impostorscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006170137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/06/20 13:38, Vitaly Kuznetsov wrote:
-> 
-> For KVM_GET_MSR_INDEX_LIST, the promise is "guest msrs that are
-> supported" and I'm not exactly sure what this means. Personally, I see
-> no point in returning MSRs which can't be read with KVM_GET_MSRS (as
-> this also means the guest can't read them) and KVM selftests seem to
-> rely on that (vcpu_save_state()) but this is not a documented feature.
+There were a couple problems with error handling in the probe function:
+1)  If the "drvdata" allocation failed then it lead to a NULL
+    dereference.
+2)  On several error paths we decremented "nr_cti_cpu" before it was
+    incremented which lead to a reference counting bug.
 
-Yes, this is intended.  KVM_GET_MSR_INDEX_LIST is not the full list of
-supported MSRs or KVM_GET_MSRS (especially PMU MSRs are missing) but it
-certainly should be a sufficient condition for KVM_GET_MSRS support.
+There were also some parts of the error handling which were not bugs but
+were messy.  The error handling was confusing to read.  It printed some
+unnecessary error messages.
 
-In this case your patch is sort-of correct because AMD machines won't
-have X86_FEATURE_PDCM.  However, even in that case there are two things
-we can do that are better:
+The simplest way to fix these problems was to create a cti_pm_setup()
+function that did all the power management setup in one go.  That way
+when we call cti_pm_release() we don't have to deal with the
+complications of a partially configured power management config.
 
-1) force-set X86_FEATURE_PDCM in vmx_set_cpu_caps instead of having it
-in kvm_set_cpu_caps.  The latter is incorrect because if AMD for
-whatever reason added it we'd lack the support.  This would be basically
-a refined version of your patch.
+I reversed the "if (drvdata->ctidev.cpu >= 0)" condition in cti_pm_release()
+so that it mirros the new cti_pm_setup() function.
 
-2) emulate the MSR on AMD too (returning zero) if somebody for whatever
-reason enables PDCM in there too: this would include returning it in
-KVM_GET_FEATURE_MSR_INDEX_LIST, and using kvm_get_msr_feature to set a
-default value in kvm_pmu_refresh.  The feature bit then would be
-force-set in kvm_set_cpu_caps.  This would be nicer since we have the
-value in vcpu->arch already instead of struct vcpu_vmx.
+Fixes: 6a0953ce7de9 ("coresight: cti: Add CPU idle pm notifer to CTI devices")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+v2: I accidentally introduced a bug in cti_pm_release() in v1.
 
-Thanks,
+ drivers/hwtracing/coresight/coresight-cti.c | 96 ++++++++++++---------
+ 1 file changed, 54 insertions(+), 42 deletions(-)
 
-Paolo
-
+diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
+index 40387d58c8e7..d2da5bf9f552 100644
+--- a/drivers/hwtracing/coresight/coresight-cti.c
++++ b/drivers/hwtracing/coresight/coresight-cti.c
+@@ -747,17 +747,50 @@ static int cti_dying_cpu(unsigned int cpu)
+ 	return 0;
+ }
+ 
++static int cti_pm_setup(struct cti_drvdata *drvdata)
++{
++	int ret;
++
++	if (drvdata->ctidev.cpu == -1)
++		return 0;
++
++	if (nr_cti_cpu)
++		goto done;
++
++	cpus_read_lock();
++	ret = cpuhp_setup_state_nocalls_cpuslocked(
++			CPUHP_AP_ARM_CORESIGHT_CTI_STARTING,
++			"arm/coresight_cti:starting",
++			cti_starting_cpu, cti_dying_cpu);
++	if (ret) {
++		cpus_read_unlock();
++		return ret;
++	}
++
++	ret = cpu_pm_register_notifier(&cti_cpu_pm_nb);
++	cpus_read_unlock();
++	if (ret) {
++		cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_CTI_STARTING);
++		return ret;
++	}
++
++done:
++	nr_cti_cpu++;
++	cti_cpu_drvdata[drvdata->ctidev.cpu] = drvdata;
++
++	return 0;
++}
++
+ /* release PM registrations */
+ static void cti_pm_release(struct cti_drvdata *drvdata)
+ {
+-	if (drvdata->ctidev.cpu >= 0) {
+-		if (--nr_cti_cpu == 0) {
+-			cpu_pm_unregister_notifier(&cti_cpu_pm_nb);
++	if (drvdata->ctidev.cpu == -1)
++		return;
+ 
+-			cpuhp_remove_state_nocalls(
+-				CPUHP_AP_ARM_CORESIGHT_CTI_STARTING);
+-		}
+-		cti_cpu_drvdata[drvdata->ctidev.cpu] = NULL;
++	cti_cpu_drvdata[drvdata->ctidev.cpu] = NULL;
++	if (--nr_cti_cpu == 0) {
++		cpu_pm_unregister_notifier(&cti_cpu_pm_nb);
++		cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_CTI_STARTING);
+ 	}
+ }
+ 
+@@ -823,19 +856,14 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
+ 
+ 	/* driver data*/
+ 	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+-	if (!drvdata) {
+-		ret = -ENOMEM;
+-		dev_info(dev, "%s, mem err\n", __func__);
+-		goto err_out;
+-	}
++	if (!drvdata)
++		return -ENOMEM;
+ 
+ 	/* Validity for the resource is already checked by the AMBA core */
+ 	base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(base)) {
+-		ret = PTR_ERR(base);
+-		dev_err(dev, "%s, remap err\n", __func__);
+-		goto err_out;
+-	}
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
+ 	drvdata->base = base;
+ 
+ 	dev_set_drvdata(dev, drvdata);
+@@ -854,8 +882,7 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
+ 	pdata = coresight_cti_get_platform_data(dev);
+ 	if (IS_ERR(pdata)) {
+ 		dev_err(dev, "coresight_cti_get_platform_data err\n");
+-		ret =  PTR_ERR(pdata);
+-		goto err_out;
++		return  PTR_ERR(pdata);
+ 	}
+ 
+ 	/* default to powered - could change on PM notifications */
+@@ -867,35 +894,20 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
+ 					       drvdata->ctidev.cpu);
+ 	else
+ 		cti_desc.name = coresight_alloc_device_name(&cti_sys_devs, dev);
+-	if (!cti_desc.name) {
+-		ret = -ENOMEM;
+-		goto err_out;
+-	}
++	if (!cti_desc.name)
++		return -ENOMEM;
+ 
+ 	/* setup CPU power management handling for CPU bound CTI devices. */
+-	if (drvdata->ctidev.cpu >= 0) {
+-		cti_cpu_drvdata[drvdata->ctidev.cpu] = drvdata;
+-		if (!nr_cti_cpu++) {
+-			cpus_read_lock();
+-			ret = cpuhp_setup_state_nocalls_cpuslocked(
+-				CPUHP_AP_ARM_CORESIGHT_CTI_STARTING,
+-				"arm/coresight_cti:starting",
+-				cti_starting_cpu, cti_dying_cpu);
+-
+-			if (!ret)
+-				ret = cpu_pm_register_notifier(&cti_cpu_pm_nb);
+-			cpus_read_unlock();
+-			if (ret)
+-				goto err_out;
+-		}
+-	}
++	ret = cti_pm_setup(drvdata);
++	if (ret)
++		return ret;
+ 
+ 	/* create dynamic attributes for connections */
+ 	ret = cti_create_cons_sysfs(dev, drvdata);
+ 	if (ret) {
+ 		dev_err(dev, "%s: create dynamic sysfs entries failed\n",
+ 			cti_desc.name);
+-		goto err_out;
++		goto pm_release;
+ 	}
+ 
+ 	/* set up coresight component description */
+@@ -908,7 +920,7 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
+ 	drvdata->csdev = coresight_register(&cti_desc);
+ 	if (IS_ERR(drvdata->csdev)) {
+ 		ret = PTR_ERR(drvdata->csdev);
+-		goto err_out;
++		goto pm_release;
+ 	}
+ 
+ 	/* add to list of CTI devices */
+@@ -927,7 +939,7 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
+ 	dev_info(&drvdata->csdev->dev, "CTI initialized\n");
+ 	return 0;
+ 
+-err_out:
++pm_release:
+ 	cti_pm_release(drvdata);
+ 	return ret;
+ }
+-- 
+2.27.0
