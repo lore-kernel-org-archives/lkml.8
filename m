@@ -2,117 +2,85 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FADC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A42C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B70392098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F6D20773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:10:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592435438;
+	bh=iTeb2kX7xW5oxSvw8/1TZw92wiNZyuS3Q+0H+TGM910=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=06R92LNGBTBmffZx1U4ZWoxVbQHUI18dfyoyw81TbOFddFW0A/KkdteJ4nIzA3h0e
+	 ycxy2jhoHVwx34USzAcNlU4Qy4/XDO3xuvTTD2GT3lT2bai1qgZXYP0KTGbFLVEM4R
+	 Er2mPLJI0T9y4PyK5efiZcEd8Byp4fLr87LhIbe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgFQXKH (ORCPT
+        id S1726931AbgFQXKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 19:10:07 -0400
-Received: from mga02.intel.com ([134.134.136.20]:18187 "EHLO mga02.intel.com"
+        Wed, 17 Jun 2020 19:10:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbgFQXKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 19:10:06 -0400
-IronPort-SDR: BOApvUG5IKHXyrRMBb+iw+O9cAOTcYnrDPkbBdXW+9lpNXNCTdKR7s6L50ZqA6SfLkVG3ER3fN
- QXNjm2WZaHzQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 16:10:05 -0700
-IronPort-SDR: Xh1ebDmI2ePs5KOp7NfFQgx3PcIZQSKlrBspT7+i6hmvSQnE4h2j8LGD17Foz1au+O+snVSTRH
- /DhIkrek56Xw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
-   d="scan'208";a="309638656"
-Received: from kleeve-mobl.ger.corp.intel.com (HELO localhost) ([10.252.50.166])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Jun 2020 16:09:59 -0700
-Date:   Thu, 18 Jun 2020 02:09:58 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Petr Vandrovec <petr@vmware.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Require that all digests are present in
- TCG_PCR_EVENT2 structures
-Message-ID: <20200617230958.GC62794@linux.intel.com>
-References: <20200615232504.1848159-1-tyhicks@linux.microsoft.com>
- <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
+        id S1726761AbgFQXKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 19:10:36 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D81F920734;
+        Wed, 17 Jun 2020 23:10:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592435436;
+        bh=iTeb2kX7xW5oxSvw8/1TZw92wiNZyuS3Q+0H+TGM910=;
+        h=Date:From:To:Cc:Subject:From;
+        b=l6RrJcxukVy+IEcXGhwAhUOUvaBegt20gGWOi5dMiBQiFybwYJDjSjY2b9Ia31kBG
+         trEeegmcSRzMNG4hUL7ZtPmevX7JB/D1t9I+23sRtYZTnZvPo9OGQXGb886Py5S9s2
+         PcHb2JDprgx3zpoAILbgq8tvv0uRsuN22gYG4/P0=
+Date:   Wed, 17 Jun 2020 18:15:57 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Karsten Keil <isdn@linux-pingi.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] mISDN: hfcsusb: Use struct_size() helper
+Message-ID: <20200617231557.GA1539@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 11:08:38AM +0200, Ard Biesheuvel wrote:
-> (cc Matthew and Peter)
-> 
-> On Tue, 16 Jun 2020 at 01:28, Tyler Hicks <tyhicks@linux.microsoft.com> wrote:
-> >
-> > Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
-> > value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
-> > TCG_PCClientPCREvent event log header. Also require that
-> > TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
-> >
-> > The TCG PC Client Platform Firmware Profile Specification section 9.1
-> > (Family "2.0", Level 00 Revision 1.04) states:
-> >
-> >  For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
-> >  there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
-> >  Note: This includes EV_NO_ACTION events which do not extend the PCR.
-> >
-> > Section 9.4.5.1 provides this description of
-> > TCG_EfiSpecIdEvent.numberOfAlgorithms:
-> >
-> >  The number of Hash algorithms in the digestSizes field. This field MUST
-> >  be set to a value of 0x01 or greater.
-> >
-> > Enforce these restrictions, as required by the above specification, in
-> > order to better identify and ignore invalid sequences of bytes at the
-> > end of an otherwise valid TPM2 event log. Firmware doesn't always have
-> > the means necessary to inform the kernel of the actual event log size so
-> > the kernel's event log parsing code should be stringent when parsing the
-> > event log for resiliency against firmware bugs. This is true, for
-> > example, when firmware passes the event log to the kernel via a reserved
-> > memory region described in device tree.
-> >
-> 
-> When does this happen? Do we have code in mainline that does this?
-> 
-> > Prior to this patch, a single bit set in the offset corresponding to
-> > either the TCG_PCR_EVENT2.eventType or TCG_PCR_EVENT2.eventSize fields,
-> > after the last valid event log entry, could confuse the parser into
-> > thinking that an additional entry is present in the event log. This
-> > patch raises the bar on how difficult it is for stale memory to confuse
-> > the kernel's event log parser but there's still a reliance on firmware
-> > to properly initialize the remainder of the memory region reserved for
-> > the event log as the parser cannot be expected to detect a stale but
-> > otherwise properly formatted firmware event log entry.
-> >
-> > Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
-> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> > ---
-> 
-> I am all for stringent checks, but this could potentially break
-> measured boot on systems that are working fine today, right?
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
-There would not be any sane reason to implement a TPM chip like that.
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
 
-/Jarkko
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/isdn/hardware/mISDN/hfcsusb.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
+index 621364bb6b12..4274906f8654 100644
+--- a/drivers/isdn/hardware/mISDN/hfcsusb.c
++++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
+@@ -261,8 +261,7 @@ hfcsusb_ph_info(struct hfcsusb *hw)
+ 		phi->bch[i].Flags = hw->bch[i].Flags;
+ 	}
+ 	_queue_data(&dch->dev.D, MPH_INFORMATION_IND, MISDN_ID_ANY,
+-		    sizeof(struct ph_info_dch) + dch->dev.nrbchan *
+-		    sizeof(struct ph_info_ch), phi, GFP_ATOMIC);
++		    struct_size(phi, bch, dch->dev.nrbchan), phi, GFP_ATOMIC);
+ 	kfree(phi);
+ }
+ 
+-- 
+2.27.0
+
