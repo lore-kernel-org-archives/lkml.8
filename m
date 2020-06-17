@@ -2,111 +2,88 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03048C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBC920679
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:25:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592382314;
-	bh=WE28cH+mnd/5QSfDhggdio7ufTc6leSAfR4Hjh8Tn1s=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=QQw6ZbsXQxtWTPkrdEE3mK62+v1ezV9jJj1lg9pQEA2Sl7UA/oM5UfmG1HusuSCB4
-	 SPL7l30WpI91OrwBJvZ0Xg7pTQ3mjEqiCtJXnq1v7nNSwDxaSQaNZog3N9ijOzQeRR
-	 EBFNOlhK/+zq8P4+BI/Xecp/xIRbXFyI2XjhKUtw=
+	by mail.kernel.org (Postfix) with ESMTP id C929B20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:25:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pcm2agFe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbgFQIZN (ORCPT
+        id S1726510AbgFQIZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:25:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbgFQIZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:25:12 -0400
-Received: from localhost.localdomain (lfbn-nic-1-188-42.w2-15.abo.wanadoo.fr [2.15.37.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EF642100A;
-        Wed, 17 Jun 2020 08:25:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592382312;
-        bh=WE28cH+mnd/5QSfDhggdio7ufTc6leSAfR4Hjh8Tn1s=;
-        h=From:To:Cc:Subject:Date:From;
-        b=0bc/kx5HTLQkQkU30PmG/f7Is5rojzFBguZQoSq+KzGrH/Y2vGr/sVgCE2PNY2t8X
-         lSLzZ/4wuZEKLmmv3t/PxChdkfo76chUxCN8hlq7aIYaqkNKisbKkZS0VbpAjkLh+M
-         piit97Z6H5W7/dtjeRswAOj64rOiai+npqqjtNbg=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-acpi@vger.kernel.org, lenb@kernel.org, rjw@rjwysocki.net,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH] ACPI: avoid relocations for table signature array
-Date:   Wed, 17 Jun 2020 10:25:05 +0200
-Message-Id: <20200617082505.1159131-1-ardb@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        Wed, 17 Jun 2020 04:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgFQIZd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:25:33 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE3B4C061573;
+        Wed, 17 Jun 2020 01:25:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=NAXZqH3MursAn0+wgZd0xhoxT3Om8ZNhr3AOj88BNwA=; b=Pcm2agFeAxquPL5LAngzPzjqIq
+        E1O1mPL7BGCp5Eq/PFuKmucc/Uf5gXHhFL64YoiDF5UUJEnoleTZY7DW++UfrzE3aAMdAPrpugq5i
+        8Xrj0NtyY+QCer/HMMKYK48+GSVWNVNIRAZgvR2jG0efnVUh9mMfryhyZpI9WPJPVLLPhDl7VGpF5
+        ZayVIN0VtRSOJQc6xYWrTD06Czu3DoL8zXxSIFXpo3dALqCcYApPxnc0L0L4dHzT1gYTYX5z9ACpY
+        VlD6xfD3HocQKBCqUU/zXLWpMVsdHiq2EV2/I3Lz0eBeK35Ruozq7lysC5Nk72FIsIBe4VewUgA5N
+        uTstIriQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlTNW-0006ko-9Y; Wed, 17 Jun 2020 08:25:02 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 43972301DFC;
+        Wed, 17 Jun 2020 10:24:59 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0F22829E5A2E3; Wed, 17 Jun 2020 10:24:59 +0200 (CEST)
+Date:   Wed, 17 Jun 2020 10:24:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [v3 PATCH 1/2] lockdep: Split header file into lockdep and
+ lockdep_types
+Message-ID: <20200617082459.GC2531@hirez.programming.kicks-ass.net>
+References: <20200617071524.GA3055@gondor.apana.org.au>
+ <E1jlSJz-0003hE-8g@fornost.hmeau.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E1jlSJz-0003hE-8g@fornost.hmeau.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On architectures that implement KASLR using the ELF native RELA relocation
-format (such as arm64), every absolute reference in the code incurs an
-overhead of 24 bytes in the .rela section. So storing a 41 element array
-of 4 character signature strings using an array of pointer-to-char incurs
-an 8x overhead (32 bytes per entry => ~1500 bytes), and given the fixed
-length of the entries, and the fact that the array is only used locally,
-it is much better to use an array of arrays here, which gets rid of the
-overhead entirely.
+On Wed, Jun 17, 2020 at 05:17:19PM +1000, Herbert Xu wrote:
+> There is a header file inclusion loop between asm-generic/bug.h
+> and linux/kernel.h.  This causes potential compile failurs depending
+> on the which file is included first.  One way of breaking this loop
+> is to stop spinlock_types.h from including lockdep.h.  This patch
+> splits lockdep.h into two files for this purpose.
+> 
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> Acked-by: Petr Mladek <pmladek@suse.com>
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-While at it, make it __initconst, as it is never referenced except from
-__init code.
+Looks good.
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- drivers/acpi/tables.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-index 0e905c3d1645..ada36bc40c2b 100644
---- a/drivers/acpi/tables.c
-+++ b/drivers/acpi/tables.c
-@@ -490,7 +490,7 @@ static u8 __init acpi_table_checksum(u8 *buffer, u32 length)
- }
- 
- /* All but ACPI_SIG_RSDP and ACPI_SIG_FACS: */
--static const char * const table_sigs[] = {
-+static const char table_sigs[][ACPI_NAMESEG_SIZE] __initconst = {
- 	ACPI_SIG_BERT, ACPI_SIG_BGRT, ACPI_SIG_CPEP, ACPI_SIG_ECDT,
- 	ACPI_SIG_EINJ, ACPI_SIG_ERST, ACPI_SIG_HEST, ACPI_SIG_MADT,
- 	ACPI_SIG_MSCT, ACPI_SIG_SBST, ACPI_SIG_SLIT, ACPI_SIG_SRAT,
-@@ -501,7 +501,7 @@ static const char * const table_sigs[] = {
- 	ACPI_SIG_WDDT, ACPI_SIG_WDRT, ACPI_SIG_DSDT, ACPI_SIG_FADT,
- 	ACPI_SIG_PSDT, ACPI_SIG_RSDT, ACPI_SIG_XSDT, ACPI_SIG_SSDT,
- 	ACPI_SIG_IORT, ACPI_SIG_NFIT, ACPI_SIG_HMAT, ACPI_SIG_PPTT,
--	ACPI_SIG_NHLT, NULL };
-+	ACPI_SIG_NHLT };
- 
- #define ACPI_HEADER_SIZE sizeof(struct acpi_table_header)
- 
-@@ -548,11 +548,11 @@ void __init acpi_table_upgrade(void)
- 
- 		table = file.data;
- 
--		for (sig = 0; table_sigs[sig]; sig++)
-+		for (sig = 0; sig < ARRAY_SIZE(table_sigs); sig++)
- 			if (!memcmp(table->signature, table_sigs[sig], 4))
- 				break;
- 
--		if (!table_sigs[sig]) {
-+		if (sig >= ARRAY_SIZE(table_sigs)) {
- 			pr_err("ACPI OVERRIDE: Unknown signature [%s%s]\n",
- 				cpio_path, file.name);
- 			continue;
--- 
-2.27.0
-
+Petr, how about I stick this in tip/locking/header for us both to share?
