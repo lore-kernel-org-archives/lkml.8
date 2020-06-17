@@ -2,131 +2,139 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34477C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5133C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8FF20720
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 964FB20DD4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:50:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j8LC+vJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgFQKub (ORCPT
+        id S1726303AbgFQKuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 06:50:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:55476 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbgFQKua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 06:50:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B38A331B;
-        Wed, 17 Jun 2020 03:50:29 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 492583F71F;
-        Wed, 17 Jun 2020 03:50:28 -0700 (PDT)
-References: <20200616164801.18644-1-peter.puhov@linaro.org>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     peter.puhov@linaro.org
-Cc:     linux-kernel@vger.kernel.org, robert.foley@linaro.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH] sched/fair: update_pick_idlest() Select group with lowest group_util when idle_cpus are equal
-In-reply-to: <20200616164801.18644-1-peter.puhov@linaro.org>
-Date:   Wed, 17 Jun 2020 11:50:22 +0100
-Message-ID: <jhjo8pidl01.mognet@arm.com>
+        Wed, 17 Jun 2020 06:50:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgFQKuq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 06:50:46 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E27C061573;
+        Wed, 17 Jun 2020 03:50:45 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id e1so1828684wrt.5;
+        Wed, 17 Jun 2020 03:50:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gVHDBOPRXArHHDkY2uOMur9n6Fvr2bId3wooHg7xFFg=;
+        b=j8LC+vJKYkQyMlGKdE8C0hDXNsQX19o7n2SAcSMWkBjEe4GmSL4iQrGBA9zhxlAdy3
+         Ouw7G/EC7X+OKhDdj70jCCbQ+I6+NH9US6JiK1/L5TNK3fXyxw0XQmD/hHGr4PIr485i
+         st/9gVZc/SOZJ7BqHUlRS2aLVjkkvX954+5fDB2C9OYYh0fOjWOH+FgqB0rqwwJDNFvu
+         Aq2tEQUrTQFISMsst7DvqcwX4nc8cbOhi4A3lx6YWLrelE/GcC5LhSe5rvRzifdpap7l
+         mGZkTtqD4PvMMcVptUvxVCf2vZWnWaNYIQzBC71yF6L3yyrUVvlw0AgUQYyPkbG8uUq0
+         cnIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gVHDBOPRXArHHDkY2uOMur9n6Fvr2bId3wooHg7xFFg=;
+        b=mqxcYeH3u9D3nf7oydyhrFTjZKg6Li46udS1ddr5oly1mqEkgQgqp8KLNki41Kcrr0
+         doDqq69XHtaxCt+K7zaYMwlL5GeGYK7oVzl1cZC9hcNdvlZ0Oof0QZqWwg2sNZ3937ai
+         TwrwseFpi4R/l2pFUjHFiRXV/fPzOgD1Knwa9JtrR0sgO0y/2/f7MkWTrnEVCLgE4jkM
+         KL95Gsr5KPF1xwIg9aLAVAG8qiP5CtYhXpt8GuKk0y0uFENJmlLYsZy1TLcDuiJ/+OYr
+         +HwIXAvGdTAIWGDdXwAny4AwdxmhF4m5yRg1tO5HKzH07E5oD/j5CXNTiH39djPGGrQh
+         G6ug==
+X-Gm-Message-State: AOAM531DZgXFzJwMhWlIQEnvChH9p8IUJNz4VN2wyKaAiNpaNJWSU1pK
+        52siRVy66T00qmHZKv14WtQ=
+X-Google-Smtp-Source: ABdhPJzIprqE0+h+Q8QPqdaa6yfC9eShqkNqOXIfMXgG3VfIM567xSARgAQEpBzvkSH8adL3v1V5Yg==
+X-Received: by 2002:adf:f00f:: with SMTP id j15mr8636571wro.347.1592391044252;
+        Wed, 17 Jun 2020 03:50:44 -0700 (PDT)
+Received: from skynet.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
+        by smtp.gmail.com with ESMTPSA id u12sm33331927wrq.90.2020.06.17.03.50.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 03:50:43 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
+        tsbogend@alpha.franken.de, f.fainelli@gmail.com,
+        jonas.gorski@gmail.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v7 0/9] bmips: add bcm6345 reset controller support
+Date:   Wed, 17 Jun 2020 12:50:32 +0200
+Message-Id: <20200617105042.3824116-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+BCM63xx SoCs have a reset controller for certain components.
 
-On 16/06/20 17:48, peter.puhov@linaro.org wrote:
-> From: Peter Puhov <peter.puhov@linaro.org>
-> We tested this patch with following benchmarks:
->   perf bench -f simple sched pipe -l 4000000
->   perf bench -f simple sched messaging -l 30000
->   perf bench -f simple  mem memset -s 3GB -l 15 -f default
->   perf bench -f simple futex wake -s -t 640 -w 1
->   sysbench cpu --threads=8 --cpu-max-prime=10000 run
->   sysbench memory --memory-access-mode=rnd --threads=8 run
->   sysbench threads --threads=8 run
->   sysbench mutex --mutex-num=1 --threads=8 run
->   hackbench --loops 20000
->   hackbench --pipe --threads --loops 20000
->   hackbench --pipe --threads --loops 20000 --datasize 4096
->
-> and found some performance improvements in:
->   sysbench threads
->   sysbench mutex
->   perf bench futex wake
-> and no regressions in others.
->
+v7: introduce changes suggested by Philipp:
+      - sort Kconfig alphabetically.
+      - return 0 on bcm6345_reset_update.
+      - add second sleep comment.
+v6: fix BCM6318_RST_HOSTMIPS value (12 vs 11).
+    driver improvements:
+      - use devm_platform_ioremap_resource.
+      - simplify bcm6345_reset_probe return.
+      - introduce and use to_bcm6345_reset function.
+v5: fix kbuild robot error (drop __init).
+v4: fix device tree bindings documentation.
+v3: using reset-simple isn't possible since sleeping after performing the
+    reset is also needed.
+    Add BCM63268 and BCM6318 support.
+v2: add compatibility to reset-simple instead of adding a new driver.
 
-One nitpick for the results of those: condensing them in a table form would
-make them more reader-friendly. Perhaps something like:
+Álvaro Fernández Rojas (9):
+  mips: bmips: select ARCH_HAS_RESET_CONTROLLER
+  dt-bindings: reset: add BCM6345 reset controller bindings
+  reset: add BCM6345 reset controller driver
+  mips: bmips: dts: add BCM6328 reset controller support
+  mips: bmips: dts: add BCM6358 reset controller support
+  mips: bmips: dts: add BCM6362 reset controller support
+  mips: bmips: dts: add BCM6368 reset controller support
+  mips: bmips: dts: add BCM63268 reset controller support
+  mips: bmips: add BCM6318 reset controller definitions
 
-| Benchmark        | Metric   | Lower is better? | BASELINE | SERIES | DELTA |
-|------------------+----------+------------------+----------+--------+-------|
-| Sysbench threads | # events | No               |    45526 |  56567 |  +24% |
-| Sysbench mutex   | ...      |                  |          |        |       |
+ .../bindings/reset/brcm,bcm6345-reset.yaml    |  37 +++++
+ arch/mips/Kconfig                             |   1 +
+ arch/mips/boot/dts/brcm/bcm63268.dtsi         |   6 +
+ arch/mips/boot/dts/brcm/bcm6328.dtsi          |   6 +
+ arch/mips/boot/dts/brcm/bcm6358.dtsi          |   6 +
+ arch/mips/boot/dts/brcm/bcm6362.dtsi          |   6 +
+ arch/mips/boot/dts/brcm/bcm6368.dtsi          |   6 +
+ drivers/reset/Kconfig                         |   7 +
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-bcm6345.c                 | 135 ++++++++++++++++++
+ include/dt-bindings/reset/bcm6318-reset.h     |  20 +++
+ include/dt-bindings/reset/bcm63268-reset.h    |  26 ++++
+ include/dt-bindings/reset/bcm6328-reset.h     |  18 +++
+ include/dt-bindings/reset/bcm6358-reset.h     |  15 ++
+ include/dt-bindings/reset/bcm6362-reset.h     |  22 +++
+ include/dt-bindings/reset/bcm6368-reset.h     |  16 +++
+ 16 files changed, 328 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm6345-reset.yaml
+ create mode 100644 drivers/reset/reset-bcm6345.c
+ create mode 100644 include/dt-bindings/reset/bcm6318-reset.h
+ create mode 100644 include/dt-bindings/reset/bcm63268-reset.h
+ create mode 100644 include/dt-bindings/reset/bcm6328-reset.h
+ create mode 100644 include/dt-bindings/reset/bcm6358-reset.h
+ create mode 100644 include/dt-bindings/reset/bcm6362-reset.h
+ create mode 100644 include/dt-bindings/reset/bcm6368-reset.h
 
-If you want to include more stats for each benchmark, you could have one table
-per (e.g. see [1]) - it'd still be a more readable form (or so I believe).
+-- 
+2.27.0
 
-[1]: https://lore.kernel.org/lkml/20200206191957.12325-1-valentin.schneider@arm.com/
-
-> ---
->  kernel/sched/fair.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 02f323b85b6d..abcbdf80ee75 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8662,8 +8662,14 @@ static bool update_pick_idlest(struct sched_group *idlest,
->
->       case group_has_spare:
->               /* Select group with most idle CPUs */
-> -		if (idlest_sgs->idle_cpus >= sgs->idle_cpus)
-> +		if (idlest_sgs->idle_cpus > sgs->idle_cpus)
->                       return false;
-> +
-> +		/* Select group with lowest group_util */
-> +		if (idlest_sgs->idle_cpus == sgs->idle_cpus &&
-> +			idlest_sgs->group_util <= sgs->group_util)
-> +			return false;
-> +
->               break;
->       }
-
-update_sd_pick_busiest() uses the group's nr_running instead. You mention
-in the changelog that using nr_running is a possible alternative, did you
-try benchmarking that and seeing how it compares to using group_util?
-
-I think it would be nice to keep pick_busiest() and pick_idlest() aligned
-wherever possible/sensible.
-
-Also, there can be cases where one group has a few "big" tasks and another
-has a handful more "small" tasks. Say something like
-
-  sgs_a->group_util = U
-  sgs_a->sum_nr_running = N
-
-  sgs_b->group_util = U*4/3
-  sgs_b->sum_nr_running = N*2/3
-
-  (sgs_b has more util per task, i.e. bigger tasks on average)
-
-Given that we're in the 'group_has_spare' case, I would think picking the
-group with the lesser amount of running tasks would make sense. Though I
-guess you can find pathological cases where the util per task difference is
-huge and we should look at util first...
