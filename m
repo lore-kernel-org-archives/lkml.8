@@ -2,137 +2,260 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0118C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E94CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96129217A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA24521789
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:53:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hDONFDdA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ed78ea9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgFQTtR (ORCPT
+        id S1726854AbgFQTxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 15:49:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52372 "EHLO
+        Wed, 17 Jun 2020 15:53:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgFQTtQ (ORCPT
+        with ESMTP id S1726496AbgFQTxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 15:49:16 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA62C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:49:16 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x207so1653064pfc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:49:16 -0700 (PDT)
+        Wed, 17 Jun 2020 15:53:01 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A19C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:53:01 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id j202so1877671ybg.6
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 12:53:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=2BRxeAR+U6q8t+VU1Iu1irJtfc0+1W6flWjeS/gZ7T8=;
-        b=hDONFDdA35jwcrsrcwtljPYfAXJ+ZmME34vuqf3PAughzKJZ1/OAdT5pImyJiR1tAa
-         H6ZZjZniZRTl0cff2Pbfi/effw6aD5YvJ0bViib0/ViMh+lVhNKJ3QrtrkUSmGwSOpwG
-         kpJlOSnb+SyKLA5yi+j/aNOkhYgCdrt7CAC20=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mPskS7YpIsPAtpdB17fH8j2IFkcePv+bE+bCBlKpQgA=;
+        b=ed78ea9RokhBOXQQ/ED3VOjQZToVMPxDUom8KiKg5uE4VRuDoKvec1i6HhYrvYiZAm
+         wZd3dYvSePB4ScyYhFUTNLjsyj7tiRh7Lun2SEyHVltevLCD+9NLBfKhgA69UWrR6kLo
+         rcpbvcFdMYJOTv4/UwFdeNkY3iYNOAWGVZnpaxa/FGfwMIlNKBfwDLTkazu4+XjZcuHu
+         mm5GkAb/0wxwQl7jwtZpeCLytbVzmVRdPwcfFIxlUOoXCbpc9HtscXrcE3qqnskzNjk7
+         lnwT2EFpbPot/QidmLPNNnZduY4XMlQ6yrXBovQg4BKKQF9PFZ7kHt0XvHuAizAeeOQc
+         4UWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=2BRxeAR+U6q8t+VU1Iu1irJtfc0+1W6flWjeS/gZ7T8=;
-        b=mMkD/BxvfgDlK3Lgb+CjNNqabnomAmwUIWbywd1rCGEFSqD7rFVx1TmUxlWq4PFHVm
-         MKeyKOQtejV5nDCgKhg4S3tHNfSjeRdet3NlMi9KBZAG+D+euFlCSl/lvbqPCN5zwiAM
-         Ym0O8e0Mtkplc4sEVrLpFiAOwvG1Vu6BWPuXOT693Pqmgs1txvqMfacnQiK9ZJrZ1F6V
-         T2LKIlQnLo23sqgCOwviX54uyJt4naR76SQC5PAevoAmp8INlm4IUXLlyMBBNqiiPZtl
-         mS1TmuruRinyzxOAXs4KV7rF6x0tpN/PR+yFMSgXNVAIhH7vAcUiaGzTwzk1Y1g92nVA
-         4i0A==
-X-Gm-Message-State: AOAM530Z0u+ZgKVavYdlE/VHQ5jXCGAUwowZCckw0ll3ZVPs2uw/E17y
-        W++O4sHYCoT5Ee1fInBUfaZrhw==
-X-Google-Smtp-Source: ABdhPJxunyHTm899ykNDEVyFYCetYC6rQz0rgIj2zO9ixuXYkV5AOgtWHO3XXmVghGaFh6muOUaZmw==
-X-Received: by 2002:a65:4bc8:: with SMTP id p8mr372814pgr.418.1592423354823;
-        Wed, 17 Jun 2020 12:49:14 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id m24sm530608pgb.78.2020.06.17.12.49.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 12:49:14 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mPskS7YpIsPAtpdB17fH8j2IFkcePv+bE+bCBlKpQgA=;
+        b=Lrq9pbV0DS7dUoF2FXwal8socWvwn2SNeWsSf1pHi6bNazFNHBqvS6NgibzU2JTQ0N
+         FSoZWYgjjNKLTSz0jC+T6OsErmw3HvRYpufCLp2eL3NFMwf/gpaeLwJEsY5OFSV0jhqB
+         g+cdwYuyIrexqV+5yGwruEK3w/aVS+ynYP+zHA4RWDusVlu1IcxAPM2Ge/twCK3RRa9D
+         viuD77AF+INCh4u0tFpDb6yYRyktV5aoG/AYoSGdf8dV9Mw6ebpIHf49TBvnOFz1NA4N
+         TeXzuKImZFhuKoH3saXvndorN76vSWKfZWSF/lKonAPaCyeaqYZitIhnmMVVIGs+AcKs
+         uBmQ==
+X-Gm-Message-State: AOAM531EkAoWdzpyz/uwDKmK3AY8nIg8RaCPrUXG3fEn6PbslwZwaOtF
+        G4sSgU+pcsEnvKNCWbhhJ1UVvDUJxoRmYt9jY7zAAQ==
+X-Google-Smtp-Source: ABdhPJyKk4gruxlTdqkE8fe2I1IShHeFFl7/1k/kyn3YfVRFS+u6GplnznRO3HsGs2I6XGIw/XWU6lSpzHqfriEshgw=
+X-Received: by 2002:a25:4f08:: with SMTP id d8mr941798ybb.125.1592423580614;
+ Wed, 17 Jun 2020 12:53:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200616133734.1.I1902d0d48e4f3d4c5b5f1a2008108a4cd3c5ddb5@changeid>
-References: <20200616133734.1.I1902d0d48e4f3d4c5b5f1a2008108a4cd3c5ddb5@changeid>
-Subject: Re: [PATCH] usb: dwc3: qcom: Make sure core device is fully initialized before it is used
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>, Felipe Balbi <balbi@kernel.org>,
+References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
+ <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com> <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org>
+In-Reply-To: <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org>
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Wed, 17 Jun 2020 22:52:49 +0300
+Message-ID: <CAD8XO3bSsgeWjB7SxwR9+=h1PiGeNwCo1UM66-poruRu846L2g@mail.gmail.com>
+Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+To:     Jerome Forissier <jerome@forissier.org>
+Cc:     Sumit Garg <sumit.garg@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Date:   Wed, 17 Jun 2020 12:49:13 -0700
-Message-ID: <159242335325.62212.8113067612959846891@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@linaro.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Matthias Kaehlcke (2020-06-16 13:37:37)
-> dwc3_qcom_of_register_core() uses of_platform_populate() to add
-> the dwc3 core device. The driver core will try to probe the device,
-> however this might fail (e.g. due to deferred probing) and
-> of_platform_populate() would still return 0 if the device was
-> successully added to the platform bus. Verify that the core device
-> is actually bound to its driver before using it, defer probing of the
-> dwc3_qcom device if the core device isn't ready (yet).
->=20
-> Fixes: a4333c3a6ba9 ("usb: dwc3: Add Qualcomm DWC3 glue driver").
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> depends on:
->   https://lore.kernel.org/patchwork/patch/1251661/ ("driver core:Export
->     the symbol device_is_bound")
->=20
->  drivers/usb/dwc3/dwc3-qcom.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index 1dfd024cd06b..5a9036b050c6 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> @@ -537,6 +537,16 @@ static int dwc3_qcom_of_register_core(struct platfor=
-m_device *pdev)
->                 return -ENODEV;
->         }
-> =20
-> +       /*
-> +        * A successful return from of_platform_populate() only guarantee=
-s that
-> +        * the core device was added to the platform bus, however it migh=
-t not
-> +        * be bound to its driver (e.g. due to deferred probing). This dr=
-iver
-> +        * requires the core device to be fully initialized, so defer pro=
-bing
-> +        * if it isn't ready (yet).
-> +        */
-> +       if (!device_is_bound(&qcom->dwc3->dev))
-> +               return -EPROBE_DEFER;
+On Wed, 17 Jun 2020 at 18:16, Jerome Forissier <jerome@forissier.org> wrote:
+>
+>
+>
+> On 6/17/20 3:58 PM, Sumit Garg wrote:
+> > Hi Maxim,
+> >
+> > On Thu, 4 Jun 2020 at 23:28, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+> >>
+> >> With the evolving use-cases for TEE bus, now it's required to support
+> >> multi-stage enumeration process. But using a simple index doesn't
+> >> suffice this requirement and instead leads to duplicate sysfs entries.
+> >> So instead switch to use more informative device UUID for sysfs entry
+> >> like:
+> >> /sys/bus/tee/devices/optee-ta-<uuid>
+> >>
+> >> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> >> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+> >> ---
+> >>  Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
+> >>  MAINTAINERS                                       | 1 +
+> >>  drivers/tee/optee/device.c                        | 9 ++++++---
+> >>  3 files changed, 15 insertions(+), 3 deletions(-)
+> >>  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+> >>
+> >> diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> >> new file mode 100644
+> >> index 000000000000..0ae04ae5374a
+> >> --- /dev/null
+> >> +++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> >> @@ -0,0 +1,8 @@
+> >> +What:          /sys/bus/tee/devices/optee-ta-<uuid>/
+> >> +Date:           May 2020
+> >> +KernelVersion   5.7
+> >> +Contact:        tee-dev@lists.linaro.org
+> >> +Description:
+> >> +               OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
+> >> +               matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
+> >> +               are free to create needed API under optee-ta-<uuid> directory.
+> >> diff --git a/MAINTAINERS b/MAINTAINERS
+> >> index ecc0749810b0..6717afef2de3 100644
+> >> --- a/MAINTAINERS
+> >> +++ b/MAINTAINERS
+> >> @@ -12516,6 +12516,7 @@ OP-TEE DRIVER
+> >>  M:     Jens Wiklander <jens.wiklander@linaro.org>
+> >>  L:     tee-dev@lists.linaro.org
+> >>  S:     Maintained
+> >> +F:     Documentation/ABI/testing/sysfs-bus-optee-devices
+> >>  F:     drivers/tee/optee/
+> >>
+> >>  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
+> >> diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
+> >> index e3a148521ec1..23d264c8146e 100644
+> >> --- a/drivers/tee/optee/device.c
+> >> +++ b/drivers/tee/optee/device.c
+> >> @@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
+> >>         return 0;
+> >>  }
+> >>
+> >> -static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+> >> +static int optee_register_device(const uuid_t *device_uuid)
+> >>  {
+> >>         struct tee_client_device *optee_device = NULL;
+> >>         int rc;
+> >> @@ -75,7 +75,10 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+> >>                 return -ENOMEM;
+> >>
+> >>         optee_device->dev.bus = &tee_bus_type;
+> >> -       dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
+> >> +       if (dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid)) {
+> >
+> > You should be using format specifier as: "%pUb" instead of "%pUl" as
+> > UUID representation for TAs is in big endian format. See below:
+>
+> Where does device_uuid come from? If it comes directly from OP-TEE, then
+> it should be a pointer to the following struct:
+>
+> typedef struct
+> {
+>         uint32_t timeLow;
+>         uint16_t timeMid;
+>         uint16_t timeHiAndVersion;
+>         uint8_t clockSeqAndNode[8];
+> } TEE_UUID;
+>
+> (GlobalPlatform TEE Internal Core API spec v1.2.1 section 3.2.4)
+>
+> - The spec does not mandate any particular endianness and simply warns
+> about possible issues if secure and non-secure worlds differ in endianness.
+> - OP-TEE uses %pUl assuming that host order is little endian (that is
+> true for the Arm platforms that run OP-TEE currently). By the same logic
+> %pUl should be fine in the kernel.
+> - On the other hand, the UUID in a Trusted App header is always encoded
+> big endian by the Python script that signs and optionally encrypts the
+> TA. This should not have any visible impact on UUIDs exchanged between
+> the secure and non-secure world though.
+>
+> So I am wondering why you had to use %pUb. There must be some
+> inconsistency somewhere :-/
+>
+> --
+> Jerome
 
-Isn't this still broken? i.e. the dwc3 core driver may bind much later
-and then device_is_bound() will return an error here and then we'll
-return to the caller, dwc3_qcom_probe(), and that will depopulate the
-device with of_platform_depopulate(). It seems like we need to run some
-sort of wait for driver to be bound function instead of a one-shot check
-for the driver being bound.
+From  linux side it is for example:
 
-> +
->         return 0;
+static const struct tee_client_device_id optee_ftpm_id_table[] = {
+        {UUID_INIT(0xbc50d971, 0xd4c9, 0x42c4,
+                   0x82, 0xcb, 0x34, 0x3f, 0xb7, 0xf3, 0x78, 0x96)},
+        {}
+};
 
-Also, what about acpi? That has the same problem but it isn't covered by
-the dwc3_qcom_of_register_core() function.
+static struct tee_client_driver ftpm_tee_driver = {
+        .id_table       = optee_ftpm_id_table,
+        .driver         = {
+
+So sysfs name has to be the same as the driver has. And  UUD is simple
+16 bytes:#define UUID_SIZE 16
+typedef struct {
+        __u8 b[UUID_SIZE];
+} uuid_t;
+
+From TA it also:
+#define TA_UUID  { 0xBC50D971, 0xD4C9, 0x42C4, \
+        {0x82, 0xCB, 0x34, 0x3F, 0xB7, 0xF3, 0x78, 0x96}}
+
+Compare uuid from optee and kernel driver version is simple:
+static inline bool uuid_equal(const uuid_t *u1, const uuid_t *u2)
+{
+        return memcmp(u1, u2, sizeof(uuid_t)) == 0;
+}
+
+So to support better code navigation. For example grep sources for
+0xBC50D971, or find in sysfs  "*bc50d971-*" I would say we need to use
+BE format.
+optee might also need to switch to BE prints for the same reason.
+
+Maxim.
+
+>
+> >
+> > # ls /sys/bus/tee/devices/
+> > optee-ta-405b6ad9-e5c3-e321-8794-1002a5d5c61b
+> > optee-ta-71d950bc-c9d4-c442-82cb-343fb7f37896
+> > optee-ta-e70f4af0-5d1f-9b4b-abf7-619b85b4ce8c
+> >
+> > While UUID for fTPM TA is in big endian format:
+> > bc50d971-d4c9-42c4-82cb-343fb7f37896
+> >
+> > Sorry that I missed it during review and noticed this while testing.
+> >
+> > With the above fix included, I tested this series using fTPM early TA
+> > on Qemu for aarch64 and used basic random number generation test using
+> > tpm2-tools. So feel free to add:
+> >
+> > Tested-by: Sumit Garg <sumit.garg@linaro.org>
+> >
+> > -Sumit
+> >
+> >> +               kfree(optee_device);
+> >> +               return -ENOMEM;
+> >> +       }
+> >>         uuid_copy(&optee_device->id.uuid, device_uuid);
+> >>
+> >>         rc = device_register(&optee_device->dev);
+> >> @@ -144,7 +147,7 @@ int optee_enumerate_devices(void)
+> >>         num_devices = shm_size / sizeof(uuid_t);
+> >>
+> >>         for (idx = 0; idx < num_devices; idx++) {
+> >> -               rc = optee_register_device(&device_uuid[idx], idx);
+> >> +               rc = optee_register_device(&device_uuid[idx]);
+> >>                 if (rc)
+> >>                         goto out_shm;
+> >>         }
+> >> --
+> >> 2.17.1
+> >>
+> > _______________________________________________
+> > Tee-dev mailing list
+> > Tee-dev@lists.linaro.org
+> > https://lists.linaro.org/mailman/listinfo/tee-dev
+> >
