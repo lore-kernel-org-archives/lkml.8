@@ -2,89 +2,163 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D730EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2CAC21897
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:58:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592431093;
-	bh=1vD+OrQ4Alve7L6hWTCBhaaxl02dnjxL2N2pS8QwJ8o=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ZVa/HxUpX2fFkHMcu+rETBl14+acyTT9UWEzLJgsjYNdw3au5bG3LIN9P1Y7rrTgU
-	 3K/ga9o++VvuSj3fRtjfW7VfSbKhPwN6IJp4KCA9KWzCaHDJQgFzdM5TNGoodnxOtj
-	 PSJ94euxI0i+T9uQpggFPNefp7Z/etZmFTcQRXvg=
+	by mail.kernel.org (Postfix) with ESMTP id ACEAA21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:59:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fPMTh8hF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgFQV6M (ORCPT
+        id S1726960AbgFQV72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:58:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44912 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbgFQV6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:58:11 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90F5021852;
-        Wed, 17 Jun 2020 21:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592431091;
-        bh=1vD+OrQ4Alve7L6hWTCBhaaxl02dnjxL2N2pS8QwJ8o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Rya8g3eaFsy3zINxuvjwWV9rqrgchkU9YFOvHE9ExKi6MI882XFhasmZp8VrqffLb
-         t8zaVYf2Ma0+bbRmjPUIOI4r10FqBsADe2mrcbcP9QTrS6j+G2NMOZja+fDf5UynP0
-         JLBihE/Ij4cRleCfGKtXHB/O+Ejo8yAGXJOVnWHM=
-Date:   Wed, 17 Jun 2020 17:03:31 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] drm/i915/query: Use struct_size() helper
-Message-ID: <20200617220331.GA19550@embeddedor>
+        Wed, 17 Jun 2020 17:59:28 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:51504 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgFQV71 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 17:59:27 -0400
+Received: from [192.168.0.109] (unknown [209.134.121.133])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4675820B7192;
+        Wed, 17 Jun 2020 14:59:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4675820B7192
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1592431166;
+        bh=vXF/AK+HilS0mky+64QCLgW+nVTkEVVzDGGQtIvSA+k=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fPMTh8hFAAiXhQEKxLk0gac9P0G2gGX9W7+19fPNzepTEKB5ul0CZtVePLCz2qivx
+         9Uge20dlFk81QI3MAeJmcOmbf1CFsLG3rGAHonTQEpms840tNubH4Apx1nW2zHB1Z3
+         F7vJJT2kApaZzaqhvaHwWwGBQLwJamdv4txpv7y8=
+Subject: Re: [PATCH v2][RFC] kdump: append kernel build-id string to
+ VMCOREINFO
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Tyler Hicks <tyhicks@linux.microsoft.com>
+References: <1591849672-34104-1-git-send-email-vijayb@linux.microsoft.com>
+ <20200617124531.753b42152682219f267b75a1@linux-foundation.org>
+From:   Vijay Balakrishna <vijayb@linux.microsoft.com>
+Message-ID: <4bf02b0f-fc24-eb28-cf5c-419e7161f707@linux.microsoft.com>
+Date:   Wed, 17 Jun 2020 14:59:18 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200617124531.753b42152682219f267b75a1@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
+Thanks Andrew.  See inline.
 
-This code was detected with the help of Coccinelle and, audited and
-fixed manually.
+On 6/17/2020 12:45 PM, Andrew Morton wrote:
+> On Wed, 10 Jun 2020 21:27:52 -0700 Vijay Balakrishna <vijayb@linux.microsoft.com> wrote:
+> 
+>> Make kernel GNU build-id available in VMCOREINFO.  Having
+>> build-id in VMCOREINFO facilitates presenting appropriate kernel
+>> namelist image with debug information file to kernel crash dump
+>> analysis tools.  Currently VMCOREINFO lacks uniquely identifiable
+>> key for crash analysis automation.
+>>
+>> Regarding if this patch is necessary or matching of linux_banner
+>> and OSRELEASE in VMCOREINFO employed by crash(8) meets the
+>> need -- IMO, build-id approach more foolproof, in most instances it
+>> is a cryptographic hash generated using internal code/ELF bits unlike
+>> kernel version string upon which linux_banner is based that is
+>> external to the code.  I feel each is intended for a different purpose.
+>> Also OSRELEASE is not suitable when two different kernel builds
+>> from same version with different features enabled.
+>>
+>> Currently for most linux (and non-linux) systems build-id can be
+>> extracted using standard methods for file types such as user mode crash
+>> dumps, shared libraries, loadable kernel modules etc.,  This is an
+>> exception for linux kernel dump.  Having build-id in VMCOREINFO brings
+>> some uniformity for automation tools.
+>>
+>> ...
+>>
+>> --- a/kernel/crash_core.c
+>> +++ b/kernel/crash_core.c
+>> @@ -11,6 +11,8 @@
+>>   #include <asm/page.h>
+>>   #include <asm/sections.h>
+>>   
+>> +#include <crypto/sha.h>
+>> +
+>>   /* vmcoreinfo stuff */
+>>   unsigned char *vmcoreinfo_data;
+>>   size_t vmcoreinfo_size;
+>> @@ -376,6 +378,53 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+>>   }
+>>   EXPORT_SYMBOL(paddr_vmcoreinfo_note);
+>>   
+>> +#define NOTES_SIZE (&__stop_notes - &__start_notes)
+>> +#define BUILD_ID_MAX SHA1_DIGEST_SIZE
+>> +#define NT_GNU_BUILD_ID 3
+>> +
+>> +struct elf_note_section {
+>> +	struct elf_note	n_hdr;
+>> +	u8 n_data[];
+>> +};
+>> +
+>> +/*
+>> + * Add build ID from .notes section as generated by the GNU ld(1)
+>> + * or LLVM lld(1) --build-id option.
+>> + */
+>> +static void add_build_id_vmcoreinfo(void)
+>> +{
+>> +	char build_id[BUILD_ID_MAX * 2 + 1];
+>> +	int n_remain = NOTES_SIZE;
+>> +
+>> +	while (n_remain >= sizeof(struct elf_note)) {
+>> +		const struct elf_note_section *note_sec =
+>> +			&__start_notes + NOTES_SIZE - n_remain;
+>> +		const u32 n_namesz = note_sec->n_hdr.n_namesz;
+>> +
+>> +		if (note_sec->n_hdr.n_type == NT_GNU_BUILD_ID &&
+>> +		    n_namesz != 0 &&
+>> +		    !strcmp((char *)&note_sec->n_data[0], "GNU")) {
+> 
+> Is it guaranteed that n_data[] is null-terminated?
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/gpu/drm/i915/i915_query.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ From ELF(5) "Notes (Nhdr)" section:
 
-diff --git a/drivers/gpu/drm/i915/i915_query.c b/drivers/gpu/drm/i915/i915_query.c
-index e75c528ebbe0..c1ebda9b5627 100644
---- a/drivers/gpu/drm/i915/i915_query.c
-+++ b/drivers/gpu/drm/i915/i915_query.c
-@@ -109,8 +109,7 @@ query_engine_info(struct drm_i915_private *i915,
- 	for_each_uabi_engine(engine, i915)
- 		num_uabi_engines++;
- 
--	len = sizeof(struct drm_i915_query_engine_info) +
--	      num_uabi_engines * sizeof(struct drm_i915_engine_info);
-+	len = struct_size(query_ptr, engines, num_uabi_engines);
- 
- 	ret = copy_query_item(&query, sizeof(query), len, query_item);
- 	if (ret != 0)
--- 
-2.27.0
+>        n_namesz  The length of the name field in bytes.  The contents will immediately follow this note in memory.  The name is null  terminated.   For
+>                  example, if the name is "GNU", then n_namesz will be set to 4.
 
+Vijay
+
+> 
+>> +			if (note_sec->n_hdr.n_descsz <= BUILD_ID_MAX) {
+>> +				const u32 n_descsz = note_sec->n_hdr.n_descsz;
+>> +				const u8 *s = &note_sec->n_data[n_namesz];
+>> +
+>> +				s = PTR_ALIGN(s, 4);
+>> +				bin2hex(build_id, s, n_descsz);
+>> +				build_id[2 * n_descsz] = '\0';
+>> +				VMCOREINFO_BUILD_ID(build_id);
+>> +				return;
+>> +			}
+>> +			pr_warn("Build ID is too large to include in vmcoreinfo: %u > %u\n",
+>> +				note_sec->n_hdr.n_descsz,
+>> +				BUILD_ID_MAX);
+>> +			return;
+>> +		}
+>> +		n_remain -= sizeof(struct elf_note) +
+>> +			ALIGN(note_sec->n_hdr.n_namesz, 4) +
+>> +			ALIGN(note_sec->n_hdr.n_descsz, 4);
+>> +	}
+>> +}
+>> +
+>>   static int __init crash_save_vmcoreinfo_init(void)
+>>   {
+>>   	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
