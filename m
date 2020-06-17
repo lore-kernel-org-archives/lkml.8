@@ -2,217 +2,112 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E087C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE24CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 073A921556
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0CC2158C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:43:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ot3VBFHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgFQNiK (ORCPT
+        id S1726597AbgFQNnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:38:10 -0400
-Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:13750 "EHLO
-        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726558AbgFQNiJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:38:09 -0400
-From:   Peter Enderborg <peter.enderborg@sony.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-CC:     Peter Enderborg <peter.enderborg@sony.com>
-Subject: [PATCH v3] debugfs: Add access restriction option
-Date:   Wed, 17 Jun 2020 15:37:38 +0200
-Message-ID: <20200617133738.6631-1-peter.enderborg@sony.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 17 Jun 2020 09:43:19 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:52375 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbgFQNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 09:43:19 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592401399; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=0rJg/220vt9zUyvHiVMMZNyLy4HIJD5Z/P1Mdz9z7JQ=; b=ot3VBFHm0iKIrNSknpdCk6y+sgyhkqeci8I75isB+1RSYCtoRy1A9qMSMJXFjlhOLBAN9Zm4
+ iMRGxvAzI+Rh/o/1rFDLPNKla8namPp05pPgdj59H4UhgA3QLStdNUIrkeOA2qhKxfLdsxmC
+ MtAV+YK0NJIAEnHhHYawwCL68gQ=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
+ 5eea1df6e144dd511574ddf9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 17 Jun 2020 13:43:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9BA25C4339C; Wed, 17 Jun 2020 13:43:18 +0000 (UTC)
+Received: from [192.168.1.102] (unknown [183.83.143.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: charante)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 625E8C433C8;
+        Wed, 17 Jun 2020 13:43:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 625E8C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
+Subject: Re: [PATCH] dmabuf: use spinlock to access dmabuf->name
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>
+Cc:     Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
+        "vinmenon@codeaurora.org" <vinmenon@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <316a5cf9-ca71-6506-bf8b-e79ded9055b2@codeaurora.org>
+ <14063C7AD467DE4B82DEDB5C278E8663010F365EF5@fmsmsx107.amr.corp.intel.com>
+ <14063C7AD467DE4B82DEDB5C278E8663010F365F7D@fmsmsx107.amr.corp.intel.com>
+ <5b960c9a-ef9d-b43d-716d-113efc793fe5@codeaurora.org>
+ <b686a288cff640acaea1111fed650b02@AcuMS.aculab.com>
+From:   Charan Teja Kalla <charante@codeaurora.org>
+Message-ID: <dcf2bdd6-d6fd-96f0-c6e7-6788ea282e35@codeaurora.org>
+Date:   Wed, 17 Jun 2020 19:13:12 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=VdGJw2h9 c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=nTHF0DUjJn0A:10 a=z6gsHLkEAAAA:8 a=tXAC--fUqkprKkcgtVIA:9 a=d-OLMTCWyvARjPbQ-enb:22
-X-SEG-SpamProfiler-Score: 0
+In-Reply-To: <b686a288cff640acaea1111fed650b02@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since debugfs include sensitive information it need to be treated
-carefully. But it also has many very useful debug functions for userspace.
-With this option we can have same configuration for system with
-need of debugfs and a way to turn it off. This gives a extra protection
-for exposure on systems where user-space services with system
-access are attacked.
 
-When enabled it is needed a kernel command line parameter to be activated.
 
-It can be on or off, but also internally on but not seen from user-space.
-This no-fs mode do not register a debugfs as filesystem, but client can
-register their parts in the internal structures. This data can be readed
-with a debugger or saved with a crashkernel. When it is off clients
-get EPERM error when accessing the functions for registering their
-components.
+On 6/17/2020 1:51 PM, David Laight wrote:
+> From: Charan Teja Kalla
+>> Sent: 17 June 2020 07:29
+> ...
+>>>> If name is freed you will copy garbage, but the only way
+>>>> for that to happen is that _set_name or _release have to be called
+>>>> at just the right time.
+>>>>
+>>>> And the above would probably only be an issue if the set_name
+>>>> was called, so you will get NULL or a real name.
+>>
+>> And there exists a use-after-free to avoid which requires the lock. Say
+>> that memcpy() in dmabuffs_dname is in progress and in parallel _set_name
+>> will free the same buffer that memcpy is operating on.
+> 
+> If the name is being looked at while the item is being freed
+> you almost certainly have much bigger problems that just
+> the name being a 'junk' pointer.
 
-Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
----
-v2. Removed MOUNT as part of restrictions. Added API's restrictions as
-    separate restriction.
-v3  Updated Documentation after Randy Dunlap reviews and suggestions.
+True, thus needs the lock.
 
- .../admin-guide/kernel-parameters.txt         | 11 +++++
- fs/debugfs/inode.c                            | 47 +++++++++++++++++++
- lib/Kconfig.debug                             | 10 ++++
- 3 files changed, 68 insertions(+)
+> 
+> 	David.
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+> 
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb95fad81c79..249c86e53bb7 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -827,6 +827,17 @@
- 			useful to also enable the page_owner functionality.
- 			on: enable the feature
- 
-+	debugfs=    	[KNL] When CONFIG_DEBUG_FS_RESTRICTED is set, this parameter
-+			enables what is exposed to userspace.
-+			Format: { on, no_fs, off }
-+			on: 	All functions are enabled.
-+			no_fs: 	Filesystem is not registered but kernel clients can
-+			        access APIs and a crashkernel can be used to read
-+				it's content. There its nothing to mount.
-+			off: 	(default) Filesystem is not registered and clients
-+			        get a -EPERM as result when trying to register files
-+				or directories within debugfs.
-+
- 	debugpat	[X86] Enable PAT debugging
- 
- 	decnet.addr=	[HW,NET]
-diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-index b7f2e971ecbc..2bd80a932ae1 100644
---- a/fs/debugfs/inode.c
-+++ b/fs/debugfs/inode.c
-@@ -31,10 +31,17 @@
- #include "internal.h"
- 
- #define DEBUGFS_DEFAULT_MODE	0700
-+#ifdef CONFIG_DEBUG_FS_RESTRICTED
-+#define DEBUGFS_ALLOW_API 0x2
-+#define DEBUGFS_ALLOW_FS 0x1
-+#endif
- 
- static struct vfsmount *debugfs_mount;
- static int debugfs_mount_count;
- static bool debugfs_registered;
-+#ifdef CONFIG_DEBUG_FS_RESTRICTED
-+static unsigned int debugfs_allow;
-+#endif
- 
- /*
-  * Don't allow access attributes to be changed whilst the kernel is locked down
-@@ -266,6 +273,10 @@ static struct dentry *debug_mount(struct file_system_type *fs_type,
- 			int flags, const char *dev_name,
- 			void *data)
- {
-+#ifdef CONFIG_DEBUG_FS_RESTRICTED
-+	if (!(debugfs_allow & DEBUGFS_ALLOW_API))
-+		return ERR_PTR(-EPERM);
-+#endif
- 	return mount_single(fs_type, flags, data, debug_fill_super);
- }
- 
-@@ -385,6 +396,12 @@ static struct dentry *__debugfs_create_file(const char *name, umode_t mode,
- 	if (IS_ERR(dentry))
- 		return dentry;
- 
-+#ifdef CONFIG_DEBUG_FS_RESTRICTED
-+	if (!(debugfs_allow & DEBUGFS_ALLOW_API)) {
-+		failed_creating(dentry);
-+		return ERR_PTR(-EPERM);
-+	}
-+#endif
- 	inode = debugfs_get_inode(dentry->d_sb);
- 	if (unlikely(!inode)) {
- 		pr_err("out of free dentries, can not create file '%s'\n",
-@@ -541,6 +558,12 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent)
- 	if (IS_ERR(dentry))
- 		return dentry;
- 
-+#ifdef CONFIG_DEBUG_FS_RESTRICTED
-+	if (!(debugfs_allow & DEBUGFS_ALLOW_API)) {
-+		failed_creating(dentry);
-+		return ERR_PTR(-EPERM);
-+	}
-+#endif
- 	inode = debugfs_get_inode(dentry->d_sb);
- 	if (unlikely(!inode)) {
- 		pr_err("out of free dentries, can not create directory '%s'\n",
-@@ -583,6 +606,12 @@ struct dentry *debugfs_create_automount(const char *name,
- 	if (IS_ERR(dentry))
- 		return dentry;
- 
-+#ifdef CONFIG_DEBUG_FS_RESTRICTED
-+	if (!(debugfs_allow & DEBUGFS_ALLOW_API)) {
-+		failed_creating(dentry);
-+		return ERR_PTR(-EPERM);
-+	}
-+#endif
- 	inode = debugfs_get_inode(dentry->d_sb);
- 	if (unlikely(!inode)) {
- 		pr_err("out of free dentries, can not create automount '%s'\n",
-@@ -786,10 +815,28 @@ bool debugfs_initialized(void)
- }
- EXPORT_SYMBOL_GPL(debugfs_initialized);
- 
-+static int __init debugfs_kernel(char *str)
-+{
-+#ifdef CONFIG_DEBUG_FS_RESTRICTED
-+	if (str && !strcmp(str, "on"))
-+		debugfs_allow = DEBUGFS_ALLOW_API | DEBUGFS_ALLOW_FS;
-+	if (str && !strcmp(str, "no-fs"))
-+		debugfs_allow |= DEBUGFS_ALLOW_API;
-+	if (str && !strcmp(str, "off"))
-+		debugfs_allow = 0;
-+#endif
-+	return 0;
-+
-+}
-+early_param("debugfs", debugfs_kernel);
- static int __init debugfs_init(void)
- {
- 	int retval;
- 
-+#ifdef CONFIG_DEBUG_FS_RESTRICTED
-+	if (!(debugfs_allow & DEBUGFS_ALLOW_FS))
-+		return -EPERM;
-+#endif
- 	retval = sysfs_create_mount_point(kernel_kobj, "debug");
- 	if (retval)
- 		return retval;
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index d74ac0fd6b2d..19fdaae14e36 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -477,6 +477,16 @@ config DEBUG_FS
- 
- 	  If unsure, say N.
- 
-+config DEBUG_FS_RESTRICTED
-+	bool "Debug Filesystem restricted"
-+	depends on DEBUG_FS
-+	help
-+	  This is an additional restriction for mounting debugfs. It allows
-+	  the kernel to have debugfs compiled, but requires that kernel command
-+	  line has a debugfs parameter to register as a filesystem.
-+
-+	  If unsure, say N.
-+
- source "lib/Kconfig.kgdb"
- 
- source "lib/Kconfig.ubsan"
 -- 
-2.17.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation Collaborative Project
