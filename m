@@ -2,146 +2,150 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF94C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2247207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B35207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ZxioYcMK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hi+jKuFX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgFQLiG (ORCPT
+        id S1726909AbgFQLiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:38:06 -0400
-Received: from mail-co1nam11on2045.outbound.protection.outlook.com ([40.107.220.45]:6229
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726857AbgFQLiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:38:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JPnBMs4a9C2Uz8mY9GC+tAyhROL72+tAfRJGVCPqK3/d1nNsyePdy2HxIDJz5qJPRhfpu5VWKmBTHOEtSVomEahugZ5LRP9bo5eoDwHne5TT9Ndk3/HJjSlIIPkQd7ogiWFYD5qLMIZo8T/InDsOQ3D1JfRstGAn8yKJTm5eM+cM+WzEvDJULKSd7MlMamUnms6vvl3dvhOd1SHyKDTKhNT5i9dKSO4CC/Iszp5pya5YIdtyNNL9Qa2dFn3yT4ZoKUNnjXE+swysTtAD05RyBvPZOt/Eks1PUE4Z0gBL/AGHWCo8N0kuQX7UY1qDXDI4EW+vlJFJTtFhaxYPyAJDgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LQz9KqmcLaeruV4C2BriXBrjty1fuGu0xbZU8uSeooM=;
- b=aDgkBWovprJ/in0kbZTX3ScNqd6pBRK2zzj+7c+vC2ynUWdDrt8Gx5N2bt1SvaP9cqvv8g7xhGd9OqnJ1alLUoNDQS0wY27+vbC39Zn+YhD4AqJm8Z7WERr9TxllTzrAI13Yag32LHVYVmck8WCoatIavQhiCrZ/QLhMLVydv/ro5RIfYaBaPjAFVYs0lOcJ5yZokEtNKpSsFa9xrUOkd66Z27WQTJtmQutzh4v+48TWwqDNnS2Zq71NyXHJL8K7YfOO5MzldRQhE5Jau0S0NVSH6frRYN6Z2TEy9rfQlVGVAv4Pmh/OhXpiCtUzPXMRBRrGNJl6fB0shlZfQ3RDSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LQz9KqmcLaeruV4C2BriXBrjty1fuGu0xbZU8uSeooM=;
- b=ZxioYcMKwFRiH89cKVcX1uf10bpPMSJ1BFb4owRzbFr24xMOXWMYh7SYb3qRJOVlbvwucWwXm9Krxa6t9KaKB9jfd+VGWjIA+WLntUqdbFVUxw6GBwUcxUHoin1bzidzbcW2Sx7wL45CZjUpLqYwY7/4EdlP49Q6gL6KNRjSDGs=
-Received: from BL0PR02CA0055.namprd02.prod.outlook.com (2603:10b6:207:3d::32)
- by BYAPR02MB5830.namprd02.prod.outlook.com (2603:10b6:a03:122::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Wed, 17 Jun
- 2020 11:38:00 +0000
-Received: from BL2NAM02FT060.eop-nam02.prod.protection.outlook.com
- (2603:10b6:207:3d:cafe::de) by BL0PR02CA0055.outlook.office365.com
- (2603:10b6:207:3d::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend
- Transport; Wed, 17 Jun 2020 11:38:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT060.mail.protection.outlook.com (10.152.76.124) with Microsoft SMTP
- Server id 15.20.3088.18 via Frontend Transport; Wed, 17 Jun 2020 11:38:00
- +0000
-Received: from [149.199.38.66] (port=36286 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jlWND-0001IO-Ob; Wed, 17 Jun 2020 04:36:55 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jlWOG-0007dH-2T; Wed, 17 Jun 2020 04:38:00 -0700
-Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 05HBboaL032674;
-        Wed, 17 Jun 2020 04:37:50 -0700
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jlWO5-0007TR-OO; Wed, 17 Jun 2020 04:37:50 -0700
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com,
-        sgoud@xilinx.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: [PATCH V4 7/7] gpio: zynq: Remove error prints in EPROBE_DEFER
-Date:   Wed, 17 Jun 2020 17:07:27 +0530
-Message-Id: <1592393847-1415-8-git-send-email-srinivas.neeli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
-References: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(396003)(376002)(39860400002)(136003)(46966005)(82740400003)(8676002)(4326008)(6636002)(26005)(81166007)(4744005)(336012)(356005)(83380400001)(107886003)(82310400002)(9786002)(5660300002)(70586007)(426003)(316002)(478600001)(70206006)(2616005)(44832011)(8936002)(7696005)(186003)(2906002)(47076004)(36756003)(6666004);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
+        Wed, 17 Jun 2020 07:38:11 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37303 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726879AbgFQLiI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 07:38:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592393886;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oS2sHeOWkDi5/NnXrNwUVCA9Ew0qnl4Cg+hQYeorxVM=;
+        b=hi+jKuFXEx7wcmDZxxEWD6G0Vfl0Ama/z523llu6qHix6K94zWGwVdk8TIz+K7KaKmNl+s
+        8Spv6CYdFhKuWoq5Cz2LHl7zYgkED1fRpN1VPrA6urIhQ6jxQDw2x8Y+0TwZv08GdOQRg4
+        EuFCvfMs9++FCC6CB/NMHOGqZ96XsBs=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-103-m2dfZQHAO5KuHX4b0HuHNA-1; Wed, 17 Jun 2020 07:38:04 -0400
+X-MC-Unique: m2dfZQHAO5KuHX4b0HuHNA-1
+Received: by mail-ej1-f71.google.com with SMTP id op14so898132ejb.15
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 04:38:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=oS2sHeOWkDi5/NnXrNwUVCA9Ew0qnl4Cg+hQYeorxVM=;
+        b=slrMPy+iDDEZWYN/dMEin/bbZ9f4ai7htN94ieZ7WEDKYGNJKfm1yefxq7qigolWnJ
+         VQ/5Czt4D9tf0pmaaRwiYcT07O/CweCacBgWw9Yx7U936SbBJvJOSOhw8iR20iEEq901
+         ZJl95gDaH0Q+6bLw+WLoLlHRku1+B5kc98XoxZr2Jh2238bp0ztq+L/mN9hy3W8hKs9P
+         YV2L4Ut11vjXmwMyoMMEuBUL5XPtGBkGCAV4oTWQxk2FzNuTdgRth1VWq1vYxmjOo8WF
+         m5BV+9ad2KqiJTzRGV2MVYWSs8LlBaQX5psivTzQHWPqDbcXdMzvnCUdS9xI7UrGpsdq
+         qubA==
+X-Gm-Message-State: AOAM531Zp9Ay+K84j7S7VtdH5v43pOR2rXXBxZevbuii8Pf70dEfgFXW
+        vrPP3huiRE1g6SMd9VUgdEnAfEhCRaMuxGrumLn9beMIzX2Y0qbGisUfCf0BlLZMlyGsP4FAi9X
+        DuBeanNZlziBJsU6CWxjagD8Y
+X-Received: by 2002:a05:6402:1512:: with SMTP id f18mr7008261edw.101.1592393883362;
+        Wed, 17 Jun 2020 04:38:03 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwJArYTpIQqF0kcPvSiZNCMpM4scmG/Pu1RYbyYqnZ4Pb4T9s1BJXq1/3aoKfzT/Ftt5o3QDg==
+X-Received: by 2002:a05:6402:1512:: with SMTP id f18mr7008246edw.101.1592393883098;
+        Wed, 17 Jun 2020 04:38:03 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id v5sm11829338edl.51.2020.06.17.04.38.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 04:38:02 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Like Xu <like.xu@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KVM: SVM: drop MSR_IA32_PERF_CAPABILITIES from emulated MSRs
+In-Reply-To: <CALMp9eQ1qe4w5FojzgsUHKpD=zXqen_D6bBg4-vfHa03BdomGA@mail.gmail.com>
+References: <20200616161427.375651-1-vkuznets@redhat.com> <CALMp9eSWXGQkOOzSrALfZDMj5JHSH=CsK1wKfdj2x2jtV4XJsw@mail.gmail.com> <87366vhscx.fsf@vitty.brq.redhat.com> <CALMp9eQ1qe4w5FojzgsUHKpD=zXqen_D6bBg4-vfHa03BdomGA@mail.gmail.com>
+Date:   Wed, 17 Jun 2020 13:38:01 +0200
+Message-ID: <87wo45hqhy.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: bc23b71e-78ab-4bfa-3099-08d812b2e393
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5830:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB5830E373928941C832563E2EAF9A0@BYAPR02MB5830.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:274;
-X-Forefront-PRVS: 04371797A5
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: CHrTSJQjQY2YEno4fzHDMQjkIR6xKxKueYLBWm9i29H0Pz+uN1D2VN85+ypkeU6kN2WZ6+62XkOXpkbJcTfY721SNKx7SMMYIIkATa5fVIjUKhYRYunvTjeTaou6hycqFJxnnfHCmxYzPbYh6SaoRubk412G1bknFm7Kf+BXiMBBG78Nqd5o25580BX2ZPIT8v8qoJisLmIRUQCkF764vSaeXa7YKWscM9epBnC0Q1Xwh3PjGzKEqu3dJv+zX2KFFyifPLD/dX8ORfZ27vb5HvBpA5qY1gb2T0AxGtSpsFtxh7Wm8GgkTR52g044E80fnh01igMC0fxUquphPOn+LhAKphg4lZTy7JbkVNs32EUyjFFY+6XoKz176A1tR+65WeDHr9Yy8jGUGwtWm8jlPA==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 11:38:00.4338
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc23b71e-78ab-4bfa-3099-08d812b2e393
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5830
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Jim Mattson <jmattson@google.com> writes:
 
-In case of probe is deferred do not print the errors.
+> On Tue, Jun 16, 2020 at 9:45 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>>
+>> Jim Mattson <jmattson@google.com> writes:
+>>
+>> > On Tue, Jun 16, 2020 at 9:14 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>> >>
+>> >> state_test/smm_test selftests are failing on AMD with:
+>> >> "Unexpected result from KVM_GET_MSRS, r: 51 (failed MSR was 0x345)"
+>> >>
+>> >> MSR_IA32_PERF_CAPABILITIES is an emulated MSR indeed but only on Intel,
+>> >> make svm_has_emulated_msr() skip it so it is not returned by
+>> >> KVM_GET_MSR_INDEX_LIST.
+>> >
+>> > Do we need to support this MSR under SVM for cross-vendor migration?
+>> > Or, have we given up on that?
+>>
+>> To be honest I'm not sure about the status of cross-vendor migration in
+>> general and PMU implications in particular, hope Paolo/Sean can shed
+>> some light. In this particular case my shallow understanding is that
+>> MSR_IA32_PERF_CAPABILITIES has only one known feature bit which unlocks
+>> an MSR range with additional counters. If the feature bit is not set
+>> this, I guess, can easily be migrated (basically, let's allow writing
+>> '0' there on AMD and return '0' on read). But what if the feature was
+>> enabled? We'll have to support the new MSR range and do something with
+>> it after migration (run intel_pmu in fully emulated mode?).
+>>
+>> Anyway, the immediate issue I'm trying to fix here is: whatever is
+>> returned by KVM_GET_MSR_INDEX_LIST can be successfully queried with
+>> KVM_GET_MSRS as some userspaces count on that.
+>
+> That's a nice property. Is it documented somewhere?
+>
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
- drivers/gpio/gpio-zynq.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Hm, good question.
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index 2ddb59b242e7..53d1387592fd 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -930,7 +930,8 @@ static int zynq_gpio_probe(struct platform_device *pdev)
- 	/* Retrieve GPIO clock */
- 	gpio->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(gpio->clk)) {
--		dev_err(&pdev->dev, "input clock not found.\n");
-+		if (PTR_ERR(gpio->clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "input clock not found.\n");
- 		return PTR_ERR(gpio->clk);
- 	}
- 	ret = clk_prepare_enable(gpio->clk);
+Documentation/virt/kvm/api.rst says:
+
+"KVM_GET_MSR_INDEX_LIST returns the guest msrs that are supported.  The list
+varies by kvm version and host processor, but does not change otherwise.
+
+[...]
+
+KVM_GET_MSR_FEATURE_INDEX_LIST returns the list of MSRs that can be passed
+to the KVM_GET_MSRS system ioctl.  This lets userspace probe host capabilities
+and processor features that are exposed via MSRs (e.g., VMX capabilities)."
+
+Side note: MSR_IA32_PERF_CAPABILITIES can be returned by both
+KVM_GET_MSR_INDEX_LIST and KVM_GET_MSR_FEATURE_INDEX_LIST as we have it
+both as an emulated MSR filtered by kvm_x86_ops.has_emulated_msr() and
+a feature msr filtered by kvm_x86_ops.get_msr_feature(). But the later
+is a whitelist so MSR_IA32_PERF_CAPABILITIES won't appear on AMD and the
+promise "can be passed to the KVM_GET_MSRS" is kept.
+
+For KVM_GET_MSR_INDEX_LIST, the promise is "guest msrs that are
+supported" and I'm not exactly sure what this means. Personally, I see
+no point in returning MSRs which can't be read with KVM_GET_MSRS (as
+this also means the guest can't read them) and KVM selftests seem to
+rely on that (vcpu_save_state()) but this is not a documented feature.
+
+> Reviewed-by: Jim Mattson <jmattson@google.com>
+>
+
+Thanks!
+
 -- 
-2.7.4
+Vitaly
 
