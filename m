@@ -2,105 +2,207 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E119CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A12C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B118220776
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD984214DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592402388;
-	bh=0Lz6TFQhfGp4bkoSVLTJgIT/broxuaK6TXcJSsj1HDM=;
+	s=default; t=1592402400;
+	bh=RFhaM3Ta+4vMG5mjVJm90A77A9Vq046z26K58yMDuqg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=veDr5MJZJblK/WH9PH3N1Hu3Z1zJQJ77ixrWois8zpUh8IosNet6+Y9z1vVLx8xxG
-	 jtDDXKaP0kKIG+7f7UmMCZZpegksqHD8+6Hd3Ys3eLYrIS1viZocOdhqi9ORatLtJA
-	 Yy8eZU3EHStFvJYgTfAtodw1Iv8qVAtczpJrBd6I=
+	b=T68bvhKgY/IiTWAMPlAEdAjIWjpkYD0UAdEaaJuvOjCQfTccetHGvJJksTtSZTkGC
+	 kU3mSf58WKK2KdFHkzwv0F8DvqufH7sMrULhta6xPqtsd0G9l3q850uDGktAWoA2Um
+	 itITmj1HQrZ3jz5Op3VOb7Qa50zsxhwdXRnD5Lbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgFQN7r (ORCPT
+        id S1726964AbgFQN77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:59:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726920AbgFQN7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:59:45 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1A4E20776;
-        Wed, 17 Jun 2020 13:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592402384;
-        bh=0Lz6TFQhfGp4bkoSVLTJgIT/broxuaK6TXcJSsj1HDM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LMOFazE11y2j35ElYwUhFG1c7RveWXp6JEzTsPUId8PCinClymu6lifqi+kjEA+7N
-         ROrH8zIGYsAXahTZqkbHkC2tTE3RRK/NU6u4KzYYp8wNMheVO4SJyvikQNeLSb7Czv
-         ZpkSIhit1bCec9vwK1O92LKaEcWlRVt/o5J2bQl0=
-Date:   Wed, 17 Jun 2020 19:29:40 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: stm32-mdma: call pm_runtime_put if
- pm_runtime_get_sync fails
-Message-ID: <20200617135940.GU2324254@vkoul-mobl>
-References: <873bfb31-52d8-7c9b-5480-4a94dc945307@web.de>
- <CAEkB2ET_gfNUAuoZHxiGWZX7d3CQaJYJJqS2Fspif5mFq4-xfA@mail.gmail.com>
+        Wed, 17 Jun 2020 09:59:59 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45258 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbgFQN75 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 09:59:57 -0400
+Received: by mail-ed1-f67.google.com with SMTP id t21so1979448edr.12;
+        Wed, 17 Jun 2020 06:59:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RpItOWqOCv2p+qOj41TNq3/UacSSYUf9Nq97mewWfpw=;
+        b=moLnpMHHBK1OCJarjUt/ls8NLkgzp3b5h26wiYLrt2NgznrglJfeEbDOHtogWM5pEn
+         d3hamDOtQkU4hZSGowU9dTuVRtiOm4oEYORZopsIDvJ8vuIXjOCIsF6GKofbsnpLtyHR
+         RJRpd7Nv4TP2WpBChNiKaOmGSL+0txQebds1uDN+PMZeUL00I6GWCJy0ueUjSV2tDn5w
+         sRSjbDgoymw6pPYYDaepLwA9OgAVJEecgXywv8ixkDOttb5CMMkK4Q7aA/n5hbMD1uZg
+         NHqN3FNtu1RhVItBnfYjd1OtywrBFCgl57GZYv/xJRvFr4LQeQvWPGXoYIfpGRDtFyIu
+         KeKA==
+X-Gm-Message-State: AOAM533eAmfvJLE0U8LiTLHb4skabX0XguP0i4u02ty+oyXGK/Plu1nX
+        9VBhF/X44mRpBAVa1PXNdHvUnvzBDL8=
+X-Google-Smtp-Source: ABdhPJwoxdVikISMAUb7wioR733/T+n1aieGFGWSsheowKtsKPI7XosyomEKuGtzw9AQuGmNgWVhWQ==
+X-Received: by 2002:aa7:d054:: with SMTP id n20mr7264496edo.344.1592402393986;
+        Wed, 17 Jun 2020 06:59:53 -0700 (PDT)
+Received: from localhost (ip-37-188-158-19.eurotel.cz. [37.188.158.19])
+        by smtp.gmail.com with ESMTPSA id m30sm12372931eda.16.2020.06.17.06.59.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 06:59:52 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 15:59:51 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+Message-ID: <20200617135951.GP9499@dhcp22.suse.cz>
+References: <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
+ <20200519075213.GF32497@dhcp22.suse.cz>
+ <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
+ <20200519084535.GG32497@dhcp22.suse.cz>
+ <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
+ <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
+ <20200520190906.GA558281@chrisdown.name>
+ <20200521095515.GK6462@dhcp22.suse.cz>
+ <20200521163450.GV6462@dhcp22.suse.cz>
+ <CA+G9fYsdsgRmwLtSKJSzB1eWcUQ1z-_aaU+BNcQpker34XT6_w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEkB2ET_gfNUAuoZHxiGWZX7d3CQaJYJJqS2Fspif5mFq4-xfA@mail.gmail.com>
+In-Reply-To: <CA+G9fYsdsgRmwLtSKJSzB1eWcUQ1z-_aaU+BNcQpker34XT6_w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-06-20, 14:17, Navid Emamdoost wrote:
-> On Wed, Jun 3, 2020 at 1:52 PM Markus Elfring <Markus.Elfring@web.de> wrote:
+On Wed 17-06-20 19:07:20, Naresh Kamboju wrote:
+> On Thu, 21 May 2020 at 22:04, Michal Hocko <mhocko@kernel.org> wrote:
 > >
-> > > Calling pm_runtime_get_sync increments the counter even in case of
-> > > failure, causing incorrect ref count. Call pm_runtime_put if
-> > > pm_runtime_get_sync fails.
+> > On Thu 21-05-20 11:55:16, Michal Hocko wrote:
+> > > On Wed 20-05-20 20:09:06, Chris Down wrote:
+> > > > Hi Naresh,
+> > > >
+> > > > Naresh Kamboju writes:
+> > > > > As a part of investigation on this issue LKFT teammate Anders Roxell
+> > > > > git bisected the problem and found bad commit(s) which caused this problem.
+> > > > >
+> > > > > The following two patches have been reverted on next-20200519 and retested the
+> > > > > reproducible steps and confirmed the test case mkfs -t ext4 got PASS.
+> > > > > ( invoked oom-killer is gone now)
+> > > > >
+> > > > > Revert "mm, memcg: avoid stale protection values when cgroup is above
+> > > > > protection"
+> > > > >    This reverts commit 23a53e1c02006120f89383270d46cbd040a70bc6.
+> > > > >
+> > > > > Revert "mm, memcg: decouple e{low,min} state mutations from protection
+> > > > > checks"
+> > > > >    This reverts commit 7b88906ab7399b58bb088c28befe50bcce076d82.
+> > > >
+> > > > Thanks Anders and Naresh for tracking this down and reverting.
+> > > >
+> > > > I'll take a look tomorrow. I don't see anything immediately obviously wrong
+> > > > in either of those commits from a (very) cursory glance, but they should
+> > > > only be taking effect if protections are set.
+> > >
+> > > Agreed. If memory.{low,min} is not used then the patch should be
+> > > effectively a nop.
 > >
-> > Is it appropriate to copy a sentence from the change description
-> > into the patch subject?
+> > I was staring into the code and do not see anything.  Could you give the
+> > following debugging patch a try and see whether it triggers?
 > >
-> > How do you think about a wording variant like the following?
-> Please stop proposing rewording on my patches!
+> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > index cc555903a332..df2e8df0eb71 100644
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -2404,6 +2404,8 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+> >                          * sc->priority further than desirable.
+> >                          */
+> >                         scan = max(scan, SWAP_CLUSTER_MAX);
+> > +
+> > +                       trace_printk("scan:%lu protection:%lu\n", scan, protection);
+> >                 } else {
+> >                         scan = lruvec_size;
+> >                 }
+> > @@ -2648,6 +2650,7 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+> >                 mem_cgroup_calculate_protection(target_memcg, memcg);
+> >
+> >                 if (mem_cgroup_below_min(memcg)) {
+> > +                       trace_printk("under min:%lu emin:%lu\n", memcg->memory.min, memcg->memory.emin);
+> >                         /*
+> >                          * Hard protection.
+> >                          * If there is no reclaimable memory, OOM.
+> > @@ -2660,6 +2663,7 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+> >                          * there is an unprotected supply
+> >                          * of reclaimable memory from other cgroups.
+> >                          */
+> > +                       trace_printk("under low:%lu elow:%lu\n", memcg->memory.low, memcg->memory.elow);
+> >                         if (!sc->memcg_low_reclaim) {
+> >                                 sc->memcg_low_skipped = 1;
+> >                                 continue;
 > 
-> I will consider updating my patches only if a maintainer asks for it.
+> As per your suggestions on debugging this problem,
+> trace_printk is replaced with printk and applied to your patch on top of the
+> problematic kernel and here is the test output and link.
+> 
+> mkfs -t ext4 /dev/disk/by-id/ata-TOSHIBA_MG04ACA100N_Y8RQK14KF6XF
+> mke2fs 1.43.8 (1-Jan-2018)
+> Creating filesystem with 244190646 4k blocks and 61054976 inodes
+> Filesystem UUID: 7c380766-0ed8-41ba-a0de-3c08e78f1891
+> Superblock backups stored on blocks:
+> 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+> 4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
+> 102400000, 214990848
+> Allocating group tables:    0/7453 done
+> Writing inode tables:    0/7453 done
+> Creating journal (262144 blocks): [   51.544525] under min:0 emin:0
+> [   51.845304] under min:0 emin:0
+> [   51.848738] under min:0 emin:0
+> [   51.858147] under min:0 emin:0
+> [   51.861333] under min:0 emin:0
+> [   51.862034] under min:0 emin:0
+> [   51.862442] under min:0 emin:0
+> [   51.862763] under min:0 emin:0
+> 
+> Full test log link,
+> https://lkft.validation.linaro.org/scheduler/job/1497412#L1451
 
-Yeah ignore these :) no one takes this 'bot' seriously, it is annoying
-yes :(
+Thanks a lot. So it is clear that mem_cgroup_below_min got confused and
+reported protected cgroup. Both effective and real limits are 0 so there
+is no garbage in them. The problem is in mem_cgroup_below_* and it is
+quite obvious.
 
-> >
-> >    The PM runtime reference counter is generally incremented by a call of
-> >    the function “pm_runtime_get_sync”.
-> >    Thus call the function “pm_runtime_put” also in two error cases
-> >    to keep the reference counting consistent.
-> >
-> >
-> > Would you like to add the tag “Fixes” to the commit message?
-> >
-> > Regards,
-> > Markus
-> 
-> 
-> 
-> -- 
-> Navid.
+We are doing the following
++static inline bool mem_cgroup_below_min(struct mem_cgroup *memcg)
++{
++       if (mem_cgroup_disabled())
++               return false;
++
++       return READ_ONCE(memcg->memory.emin) >=
++               page_counter_read(&memcg->memory);
++}
 
+and it makes some sense. Except for the root memcg where we do not
+account any memory. Adding if (mem_cgroup_is_root(memcg)) return false;
+should do the trick. The same is the case for mem_cgroup_below_low.
+Could you give it a try please just to confirm?
 -- 
-~Vinod
+Michal Hocko
+SUSE Labs
