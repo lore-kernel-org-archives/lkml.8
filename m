@@ -2,89 +2,84 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93170C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B08C21532
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9EB21527
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592411584;
-	bh=qJL7rVXvI3peFbGg/V3qdpawcNNdsGR1k6j1oztYM1w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kvesGPCdM9N0ExEOmOkXsd3JWKh4MEZoMNovkEaagNciNgOSn62+4vQbTCGCZEBd0
-	 MVpjVZ97L6vOxnIKYIHHouCkCz3PcuWxTMtKI9YBU5LDniRtdK2LeZ3is+RIEjP8BC
-	 jwbkkIq34epdenlrs6f6m/FFMEnZ4yRomw2Ue3VY=
+	s=default; t=1592411750;
+	bh=KsOzPr2BKHtev42Ot9U8rSfD+Tz9IgpBEpcHiLowtOY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=wO+L0HTvk76tZLSREwWD84zqBGcVr4dMcf9/XhtJV4UGhkNInG5ghfsONnw1wF3Ye
+	 AjHId0fhqVzKW+pPDFuiEJOkoLAO6bVRhIe7Bc/yQQmUwOHsfIhdutGLkaXIlGpxYC
+	 FOjKikqXAQg/uUVNlWP27C74+MvFLnShOg1E8/wA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbgFQQdC (ORCPT
+        id S1726854AbgFQQft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:33:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59572 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 12:35:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbgFQQdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:33:01 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
+        id S1726540AbgFQQfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 12:35:45 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7885206E2;
-        Wed, 17 Jun 2020 16:33:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCBCE21527;
+        Wed, 17 Jun 2020 16:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592411581;
-        bh=qJL7rVXvI3peFbGg/V3qdpawcNNdsGR1k6j1oztYM1w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EpLAJTcN16TDjipZbpmGB3rUirGOy9dVdGa/nlKxBM0lv0sn+H1Ip6IeJrQ2kTAcA
-         exig8INKhx9CNutzsY65DOXX+vmLkCr0aJRLL+AJVBPjqRY81e/vPzmbXfNSGN75V7
-         houPxNH2qaR5Aou4vJJLmMvVOgQ05ZmOm5mvDrJs=
-Date:   Wed, 17 Jun 2020 09:32:58 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, richardcochran@gmail.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
-        foss@0leil.net
-Subject: Re: [PATCH net-next v2 5/8] net: phy: mscc: 1588 block
- initialization
-Message-ID: <20200617093258.52614fd8@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <20200617133127.628454-6-antoine.tenart@bootlin.com>
-References: <20200617133127.628454-1-antoine.tenart@bootlin.com>
-        <20200617133127.628454-6-antoine.tenart@bootlin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1592411745;
+        bh=KsOzPr2BKHtev42Ot9U8rSfD+Tz9IgpBEpcHiLowtOY=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=YSuMA0oTL7EC7wfSuOaYD8yJ+6mpmEwiRRDh1Rdz+c2tbGh2F/wk2+keg+gv0N+h2
+         kHehOrbhRtVM2BUEBbRAnuHFlgjJIh0AoYs0EQDGNXOI8B/7uI7Ctf/0hPvwVBG4ER
+         BP3ywuIpx0AR41z80L0VVaZ/PnyPQCeeUfiXKMkw=
+Date:   Wed, 17 Jun 2020 17:35:43 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     patches@opensource.cirrus.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20200617152129.19655-1-ckeepax@opensource.cirrus.com>
+References: <20200617152129.19655-1-ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH] regmap: Fix memory leak from regmap_register_patch
+Message-Id: <159241174305.13689.2474185985692181953.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 15:31:24 +0200 Antoine Tenart wrote:
-> +/* Two PHYs share the same 1588 processor and it's to be entirely configured
-> + * through the base PHY of this processor.
-> + */
-> +/* phydev->bus->mdio_lock should be locked when using this function */
-> +static inline int phy_ts_base_write(struct phy_device *phydev, u32 regnum,
-> +				    u16 val)
+On Wed, 17 Jun 2020 16:21:29 +0100, Charles Keepax wrote:
+> When a register patch is registered the reg_sequence is copied but the
+> memory allocated is never freed. Add a kfree in regmap_exit to clean it
+> up.
 
-Please don't use static inline outside of headers in networking code.
-The compiler will know best what to inline and when.
+Applied to
 
-> +{
-> +	struct vsc8531_private *priv = phydev->priv;
-> +
-> +	WARN_ON_ONCE(!mutex_is_locked(&phydev->mdio.bus->mdio_lock));
-> +	return __mdiobus_write(phydev->mdio.bus, priv->ts_base_addr, regnum,
-> +			       val);
-> +}
-> +
-> +/* phydev->bus->mdio_lock should be locked when using this function */
-> +static inline int phy_ts_base_read(struct phy_device *phydev, u32 regnum)
-> +{
-> +	struct vsc8531_private *priv = phydev->priv;
-> +
-> +	WARN_ON_ONCE(!mutex_is_locked(&phydev->mdio.bus->mdio_lock));
-> +	return __mdiobus_read(phydev->mdio.bus, priv->ts_base_addr, regnum);
-> +}
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
+
+Thanks!
+
+[1/1] regmap: Fix memory leak from regmap_register_patch
+      commit: 95b2c3ec4cb1689db2389c251d39f64490ba641c
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
