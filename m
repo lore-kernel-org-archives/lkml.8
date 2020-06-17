@@ -2,196 +2,138 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA6AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FC4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 290D6208D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06A1A208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:39:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SEgxChRf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgFQGde (ORCPT
+        id S1726864AbgFQGjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 02:33:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36212 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgFQGdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 02:33:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B7C0DAD04;
-        Wed, 17 Jun 2020 06:33:33 +0000 (UTC)
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Emil Velikov <emil.velikov@collabora.com>
-References: <20200617105929.534edd34@canb.auug.org.au>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <c82b9c52-d4e6-9eef-e37d-0a26ee9f1183@suse.de>
-Date:   Wed, 17 Jun 2020 08:33:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 17 Jun 2020 02:39:17 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:57366 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725929AbgFQGjQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 02:39:16 -0400
+X-UUID: 7f818db80e15441b99f7a3d522cb58f9-20200617
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Yi8qckVCoc/BpINGsirl4HLvfSQpKF4ywGxOTUuDyXs=;
+        b=SEgxChRfS3LDVMAH8o9E5uWCg9fLjKKTSOErgn2Nj2djudDtMkh4zDkU8uJX0nPmQS6NEBwXHv2ChHZbeOUu8K7LK0FFvc6fOeMThRxRH/QQIjZ4/aeuPNQz/jC/uFUPYP2YcpGAaQnH/e2DRLpCjC9Ob3Dk6t6bo9lEd/5Rvek=;
+X-UUID: 7f818db80e15441b99f7a3d522cb58f9-20200617
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1088638800; Wed, 17 Jun 2020 14:39:12 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 17 Jun 2020 14:39:10 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 17 Jun 2020 14:39:09 +0800
+Message-ID: <1592375950.27894.0.camel@mtksdaap41>
+Subject: Re: [PATCH v15 06/11] soc: mediatek: Add subsys clock control for
+ bus protection
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Date:   Wed, 17 Jun 2020 14:39:10 +0800
+In-Reply-To: <CANMq1KBRe81Sa4A6sCM2egOVRWCJbUNPsXHpfzkT33XGVZXBhg@mail.gmail.com>
+References: <1590051985-29149-1-git-send-email-weiyi.lu@mediatek.com>
+         <1590051985-29149-7-git-send-email-weiyi.lu@mediatek.com>
+         <CANMq1KBRe81Sa4A6sCM2egOVRWCJbUNPsXHpfzkT33XGVZXBhg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200617105929.534edd34@canb.auug.org.au>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="9f3F1hth8h3MULKD8eNFEKS2PH808P58m"
+X-TM-SNTS-SMTP: FDDAF576199A3C79306B7E064DC94874A65BB2656A13F2F45D65F88AF7F8449F2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---9f3F1hth8h3MULKD8eNFEKS2PH808P58m
-Content-Type: multipart/mixed; boundary="KpPvdyfxUEtwj1YULHclQa5IHqeHhOHNp";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Daniel Vetter <daniel.vetter@ffwll.ch>,
- Intel Graphics <intel-gfx@lists.freedesktop.org>,
- DRI <dri-devel@lists.freedesktop.org>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- Felix Kuehling <Felix.Kuehling@amd.com>,
- Linux Next Mailing List <linux-next@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Emil Velikov <emil.velikov@collabora.com>
-Message-ID: <c82b9c52-d4e6-9eef-e37d-0a26ee9f1183@suse.de>
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-References: <20200617105929.534edd34@canb.auug.org.au>
-In-Reply-To: <20200617105929.534edd34@canb.auug.org.au>
+T24gVGh1LCAyMDIwLTA2LTA0IGF0IDEwOjI5ICswODAwLCBOaWNvbGFzIEJvaWNoYXQgd3JvdGU6
+DQo+IE9uIFRodSwgTWF5IDIxLCAyMDIwIGF0IDU6MDYgUE0gV2VpeWkgTHUgPHdlaXlpLmx1QG1l
+ZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGb3IgdGhlIGJ1cyBwcm90ZWN0aW9uIG9wZXJh
+dGlvbnMsIHNvbWUgc3Vic3lzIGNsb2NrcyBuZWVkIHRvIGJlIGVuYWJsZWQNCj4gPiBiZWZvcmUg
+cmVsZWFzaW5nIHRoZSBwcm90ZWN0aW9uLCBhbmQgdmljZSB2ZXJzYS4NCj4gPiBCdXQgdGhvc2Ug
+c3Vic3lzIGNsb2NrcyBjb3VsZCBvbmx5IGJlIGNvbnRyb2xsZWQgb25jZSBpdHMgY29ycmVzcG9u
+ZGluZw0KPiA+IHBvd2VyIGRvbWFpbiBpcyB0dXJuZWQgb24gZmlyc3QuDQo+ID4gSW4gdGhpcyBw
+YXRjaCwgd2UgYWRkIHRoZSBzdWJzeXMgY2xvY2sgY29udHJvbCBpbnRvIGl0cyByZWxldmFudCBz
+dGVwcy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlaXlpIEx1IDx3ZWl5aS5sdUBtZWRpYXRl
+ay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1zY3BzeXMuYyB8
+IDYyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLQ0KPiA+ICAxIGZpbGUg
+Y2hhbmdlZCwgNjAgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nwc3lzLmMgYi9kcml2ZXJzL3NvYy9t
+ZWRpYXRlay9tdGstc2Nwc3lzLmMNCj4gPiBpbmRleCA1OWE1MjVhLi5lZjJjNjY4IDEwMDY0NA0K
+PiA+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1zY3BzeXMuYw0KPiA+ICsrKyBiL2Ry
+aXZlcnMvc29jL21lZGlhdGVrL210ay1zY3BzeXMuYw0KPiA+IFtzbmlwXQ0KPiA+ICAgICAgICAg
+dmFsIHw9IFBXUl9JU09fQklUOw0KPiA+IEBAIC00OTgsNiArNTExLDM5IEBAIHN0YXRpYyBpbnQg
+c2Nwc3lzX3Bvd2VyX29mZihzdHJ1Y3QgZ2VuZXJpY19wbV9kb21haW4gKmdlbnBkKQ0KPiA+ICAg
+ICAgICAgcmV0dXJuIHJldDsNCj4gPiAgfQ0KPiA+DQo+ID4gK3N0YXRpYyBpbnQgaW5pdF9zdWJz
+eXNfY2xrcyhzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LA0KPiA+ICsgICAgICAgICAgICAg
+ICBjb25zdCBjaGFyICpwcmVmaXgsIHN0cnVjdCBjbGsgKipjbGspDQo+ID4gK3sNCj4gPiArICAg
+ICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSA9IHBkZXYtPmRldi5vZl9ub2RlOw0KPiA+ICsg
+ICAgICAgdTMyIHByZWZpeF9sZW4sIHN1Yl9jbGtfY250ID0gMDsNCj4gPiArICAgICAgIHN0cnVj
+dCBwcm9wZXJ0eSAqcHJvcDsNCj4gPiArICAgICAgIGNvbnN0IGNoYXIgKmNsa19uYW1lOw0KPiA+
+ICsNCj4gPiArICAgICAgIHByZWZpeF9sZW4gPSBzdHJsZW4ocHJlZml4KTsNCj4gPiArDQo+ID4g
+KyAgICAgICBvZl9wcm9wZXJ0eV9mb3JfZWFjaF9zdHJpbmcobm9kZSwgImNsb2NrLW5hbWVzIiwg
+cHJvcCwgY2xrX25hbWUpIHsNCj4gPiArICAgICAgICAgICAgICAgaWYgKCFzdHJuY21wKGNsa19u
+YW1lLCBwcmVmaXgsIHByZWZpeF9sZW4pICYmDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAoY2xrX25hbWVbcHJlZml4X2xlbl0gPT0gJy0nKSkgew0KPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGlmIChzdWJfY2xrX2NudCA+PSBNQVhfU1VCU1lTX0NMS1MpIHsNCj4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRldl9lcnIoJnBkZXYtPmRldiwNCj4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInN1YnN5cyBjbGsgb3V0IG9m
+IHJhbmdlICVkXG4iLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBzdWJfY2xrX2NudCk7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1
+cm4gLUVJTlZBTDsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB9DQo+ID4gKw0KPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIGNsa1tzdWJfY2xrX2NudF0gPSBkZXZtX2Nsa19nZXQoJnBk
+ZXYtPmRldiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBjbGtfbmFtZSk7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmIChJ
+U19FUlIoY2xrW3N1Yl9jbGtfY250XSkpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICByZXR1cm4gUFRSX0VSUihjbGtbc3ViX2Nsa19jbnRdKTsNCj4gPiArDQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgc3ViX2Nsa19jbnQrKzsNCj4gPiArICAgICAgICAgICAgICAgfQ0K
+PiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiBzdWJfY2xrX2NudDsNCj4g
+PiArfQ0KPiA+ICsNCj4gPiAgc3RhdGljIGludCBpbml0X2Jhc2ljX2Nsa3Moc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldiwgc3RydWN0IGNsayAqKmNsaywNCj4gPiAgICAgICAgICAgICAgICAg
+ICAgICAgICBjb25zdCBjaGFyICogY29uc3QgKm5hbWUpDQo+ID4gIHsNCj4gPiBAQCAtNTk2LDYg
+KzY0MiwxOCBAQCBzdGF0aWMgc3RydWN0IHNjcCAqaW5pdF9zY3Aoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldiwNCj4gPiAgICAgICAgICAgICAgICAgaWYgKHJldCkNCj4gPiAgICAgICAgICAg
+ICAgICAgICAgICAgICByZXR1cm4gRVJSX1BUUihyZXQpOw0KPiA+DQo+ID4gKyAgICAgICAgICAg
+ICAgIGlmIChkYXRhLT5zdWJzeXNfY2xrX3ByZWZpeCkgew0KPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgIHJldCA9IGluaXRfc3Vic3lzX2Nsa3MocGRldiwNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgZGF0YS0+c3Vic3lzX2Nsa19wcmVmaXgsDQo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNjcGQtPnN1YnN5c19jbGspOw0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmIChyZXQgPCAwKSB7DQo+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJyKCZwZGV2LT5kZXYsDQo+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICIlczogc3Vic3lzIGNsayB1bmF2YWlsYWJs
+ZVxuIiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGF0YS0+
+bmFtZSk7DQo+IA0KPiBpbml0X3N1YnN5c19jbGtzIHNob3VsZCBhbHJlYWR5IGhhdmUgcHJpbnRl
+ZCBhbiBlcnJvciAoZGlyZWN0bHkgb3INCj4gaW5kaXJlY3RseSksIHNvIHRoaXMgaXMgbm90IG5l
+ZWRlZC4NCj4gDQoNCllvdSdyZSByaWdodC4gSSdsbCByZW1vdmUgaXQgaW4gbmV4dCB2ZXJzaW9u
+IHYxNi4NCg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIEVSUl9Q
+VFIocmV0KTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB9DQo+ID4gKyAgICAgICAgICAg
+ICAgIH0NCj4gPiArDQo+ID4gICAgICAgICAgICAgICAgIGdlbnBkLT5uYW1lID0gZGF0YS0+bmFt
+ZTsNCj4gPiAgICAgICAgICAgICAgICAgZ2VucGQtPnBvd2VyX29mZiA9IHNjcHN5c19wb3dlcl9v
+ZmY7DQo+ID4gICAgICAgICAgICAgICAgIGdlbnBkLT5wb3dlcl9vbiA9IHNjcHN5c19wb3dlcl9v
+bjsNCj4gPiAtLQ0KPiA+IDEuOC4xLjEuZGlydHkNCg0K
 
---KpPvdyfxUEtwj1YULHclQa5IHqeHhOHNp
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-Hi
-
-Am 17.06.20 um 02:59 schrieb Stephen Rothwell:
-> Hi all,
->=20
-> After merging the drm-misc tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->=20
-> drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c: In function 'amdgpu_a=
-mdkfd_gpuvm_free_memory_of_gpu':
-> drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c:1357:2: error: implici=
-t declaration of function 'drm_gem_object_put_unlocked'; did you mean 'dr=
-m_gem_object_put_locked'? [-Werror=3Dimplicit-function-declaration]
->  1357 |  drm_gem_object_put_unlocked(&mem->bo->tbo.base);
->       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->       |  drm_gem_object_put_locked
->=20
-> Caused by commit
->=20
->   ab15d56e27be ("drm: remove transient drm_gem_object_put_unlocked()")
->=20
-> interacting with commit
->=20
->   fd9a9f8801de ("drm/amdgpu: Use GEM obj reference for KFD BOs")
->=20
-> from Linus' tree.
->=20
-> I have applied the following merge fix up patch for today.
->=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Wed, 17 Jun 2020 10:55:32 +1000
-> Subject: [PATCH] drm/amdgpu: remove stray drm_gem_object_put_unlocked
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers=
-/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> index b91b5171270f..9015c7b76d60 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-> @@ -1354,7 +1354,7 @@ int amdgpu_amdkfd_gpuvm_free_memory_of_gpu(
->  	}
-> =20
->  	/* Free the BO*/
-> -	drm_gem_object_put_unlocked(&mem->bo->tbo.base);
-> +	drm_gem_object_put(&mem->bo->tbo.base);
-
-We recently dropped the _unlock() suffix from drm_gem_object_put(). This
-patch should be ok.
-
-Best regards
-Thomas
-
->  	mutex_destroy(&mem->lock);
->  	kfree(mem);
-> =20
->=20
->=20
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-(HRB 36809, AG N=FCrnberg)
-Gesch=E4ftsf=FChrer: Felix Imend=F6rffer
-
-
---KpPvdyfxUEtwj1YULHclQa5IHqeHhOHNp--
-
---9f3F1hth8h3MULKD8eNFEKS2PH808P58m
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl7puTQACgkQaA3BHVML
-eiN0nQgAvsZCT69rEUsA3tUpzZFwC705X8mKMKckywWtoJ+/kuQZqbCkGlq+p1Tk
-LGn7sXGHxrYO1vyPLiqnV/3bvFi2d7jmqkMKkNS2n2nR0yxIEkUsphfFcnUemM7b
-5IS7Z7nmKO5NmuUsiVZHvRGffvLw1+zuhV7NXygjE/fWX6o1SyIhQBD6W1sCq2QM
-cH19eSryZ8/+tTotQzHGcBGzcI7nsppq99gsASWgV0snoGKHpC+DmIwv5GpNge13
-SFaKJjbld60mY1Q0J158zkssxhbhk/AgS0YsrkCKaifDSdDIhE+LEsV/d2huiUVH
-rby49zaP8OSsO2wSrRP+KSWEG+rDxg==
-=Enbr
------END PGP SIGNATURE-----
-
---9f3F1hth8h3MULKD8eNFEKS2PH808P58m--
