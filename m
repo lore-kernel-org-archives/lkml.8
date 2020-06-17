@@ -2,101 +2,155 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 129A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DED422100A
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A465120888
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:53:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bVyqlbjO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zhIwFYvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgFQPuz (ORCPT
+        id S1726896AbgFQPxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:50:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43534 "EHLO
+        Wed, 17 Jun 2020 11:53:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbgFQPuz (ORCPT
+        with ESMTP id S1726496AbgFQPxU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:50:55 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B6D4C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:50:55 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l26so2330740wme.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:50:54 -0700 (PDT)
+        Wed, 17 Jun 2020 11:53:20 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 284A2C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:53:20 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id 9so3482468ljv.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:53:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Gz0TiWBmw+aJjacnLXnbSuMlgOySP03BitSmuW5/pTg=;
-        b=bVyqlbjOxknCYKDUBm2TKAn89gyvC0qZPTZc+AA89SQykLSHdAZRKlj9ZdaUj9wHmT
-         RLp3tLreNr5mzSZs6X7pvHQexd7t8zr0JE7K73pFDBTJBa1fKMRWzns7cYHccZ246Xc+
-         rIuhZaJJYEg3C4xUTt4U6/nu1r+oYuzHIvJlY0D5y/fR14Av74tmFTlDm7sld8elr94X
-         UMAGtN20nYrKTx6OxZ1LzlWE5z1Ybvg/Tc+nQ+iyNrdHnrJgInLqL/oRGGtwy3xQ3GVo
-         lLDk7pmHGU8/Hf3Omb/hL+0lsXobmy2QDxMm0AlvcN5HOmdm8EpwsyJBOEHOlkFrEq81
-         AjLA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Iil/oRjunCxRdn4O9EnhL5vFoe9sKPuHAAfETKSmZUw=;
+        b=zhIwFYvqS5d/Wg1MMLhDRV3GH6WnWZlkpKF5Gvf2n+o3mBbraSv6/+gF1/wVQ7Kcyp
+         adAODQsWOEjXxtmaTAY8OOgeomh977J+Ip2X4RUs+QJLXP8fCHiBMryYWwGWY4gfVz+j
+         OiEw3dpJmeQ9Ih8zjHeprM4Gt9tFC88PRlY3V32JvNQHp+cM065+LxGIkdQfR1HdKSbO
+         xKOJtEAbSIP0jDNqHyXlIFM3pvnyIAdrXeT9Vjt+d3kXsBP5VgSVyDytRxe/UXnnLsyA
+         sJ7nJiD9AsZ7Gc1Ka2IK/tLWXp9TnAK5clcp93WHPbbonXUq5u2axMTwgQjbamGfwQSH
+         D6KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Gz0TiWBmw+aJjacnLXnbSuMlgOySP03BitSmuW5/pTg=;
-        b=JMgyQ5PmNe0T3VHkVuA4YAnIK53BBSAV7LiyIHLwRrom2qCoc2pwYmFufPt92PNDzd
-         wvNOKrkPYJW6aCpjdnBzMCRbnPfI77/JS2s/WBr5e/tZQO7KVAi2fksmF3I9qg8EJUgW
-         vTinWUSZUhb+hMHECT0BXrjX5rXFtg1PYnYWd6z8W0kiWwt6kCjl7/D+NhuVQo3oFTVt
-         Dgb5XysHQmafp/yRyqqd6x8bPZ7kZFH9q3/jcxu/QYkOSXtVtS70l/7xe5xupbpgYT+s
-         SaSoAWQ1vwDXL/ZZzmAD0gFPr7x3KKJaMVVoLbGThZzaEgfUQWJbILDMonacu1uvfVtE
-         /X7w==
-X-Gm-Message-State: AOAM532LJ2HYHo1E10TMxMENn7vZQ3YrMRt7hbhIvM41rIy0rXRRDcG7
-        RRPY+n33zemCIi/gt75kNIPjDQ==
-X-Google-Smtp-Source: ABdhPJxoFCcxZsYTJQxAd05X6iz1WmWLFZIak3GIqhWjq+mPPpM+Rj1kPj6E5du6HY1VHwaN1pd9Cg==
-X-Received: by 2002:a7b:c090:: with SMTP id r16mr9732160wmh.105.1592409053716;
-        Wed, 17 Jun 2020 08:50:53 -0700 (PDT)
-Received: from localhost.localdomain (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.googlemail.com with ESMTPSA id d24sm139646wmb.45.2020.06.17.08.50.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 08:50:53 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH] ASoC: meson: imply acodec glue on axg sound card
-Date:   Wed, 17 Jun 2020 17:50:47 +0200
-Message-Id: <20200617155047.1187256-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.25.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Iil/oRjunCxRdn4O9EnhL5vFoe9sKPuHAAfETKSmZUw=;
+        b=C5dLL+VS63oWU05Jj+cf7CMTGOONO2Zrn3jwph0+1Eu0FUdMB7775Q7hxRrcaRrC2L
+         aGFHY74p/lsOfC+MPoOfZ/hT23zJvqgwLu0XxyfMJrRa4ngdIyz2WDxyFVDsUO61SYGb
+         HD2SW0/fnBtIJ4dujsE9EPZzPjNjDitJhPmaB2VZNuClPR9gQxm91sJcH5dGm+F4WEXB
+         HXbCtma7rSDTq9f2ub9rUSQ6ID/2XiSnjvIA31LG2eHZg8H41Evi8W0GCfhPtuBSODAz
+         0NNR87cuyegjhJHJMEOWHzhUU/4BpaNX6YwY0YY8gcqTeIfnmT6C2dncck9vN6NLPLtb
+         Q8Fg==
+X-Gm-Message-State: AOAM531U7/23MTJyeWO9yt3qDOr/7WraLTlEHRGOqLceMyuLMNh0/FQ3
+        HMmUCM1mzWGZ6RGsjmFrebF2cWMZMkZBrau+eEDVhg==
+X-Google-Smtp-Source: ABdhPJwm+SOMxQr6ZmVaQG7EF/eaCNB4joE8BGqCN9p7milYkBjvhRKAPIHCQedzXSIf3foSUUfPOKBfz2Igul1hd1Q=
+X-Received: by 2002:a2e:911:: with SMTP id 17mr4655723ljj.411.1592409197458;
+ Wed, 17 Jun 2020 08:53:17 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <20200519075213.GF32497@dhcp22.suse.cz> <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
+ <20200519084535.GG32497@dhcp22.suse.cz> <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
+ <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
+ <20200520190906.GA558281@chrisdown.name> <20200521095515.GK6462@dhcp22.suse.cz>
+ <20200521163450.GV6462@dhcp22.suse.cz> <CA+G9fYsdsgRmwLtSKJSzB1eWcUQ1z-_aaU+BNcQpker34XT6_w@mail.gmail.com>
+ <20200617135758.GA548179@chrisdown.name> <20200617141155.GQ9499@dhcp22.suse.cz>
+In-Reply-To: <20200617141155.GQ9499@dhcp22.suse.cz>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 17 Jun 2020 21:23:05 +0530
+Message-ID: <CA+G9fYu+FB1PE0AMmE-9MrHpayE9kChwTyc3zfM6V83uQ0zcQA@mail.gmail.com>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+To:     Chris Down <chris@chrisdown.name>, Michal Hocko <mhocko@kernel.org>
+Cc:     Yafang Shao <laoar.shao@gmail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When axg card driver support is enabled, lets enable the related
-internal DAC glue by default.
+On Wed, 17 Jun 2020 at 19:41, Michal Hocko <mhocko@kernel.org> wrote:
+>
+> [Our emails have crossed]
+>
+> On Wed 17-06-20 14:57:58, Chris Down wrote:
+> > Naresh Kamboju writes:
+> > > mkfs -t ext4 /dev/disk/by-id/ata-TOSHIBA_MG04ACA100N_Y8RQK14KF6XF
+> > > mke2fs 1.43.8 (1-Jan-2018)
+> > > Creating filesystem with 244190646 4k blocks and 61054976 inodes
+> > > Filesystem UUID: 7c380766-0ed8-41ba-a0de-3c08e78f1891
+> > > Superblock backups stored on blocks:
+> > > 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+> > > 4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
+> > > 102400000, 214990848
+> > > Allocating group tables:    0/7453 done
+> > > Writing inode tables:    0/7453 done
+> > > Creating journal (262144 blocks): [   51.544525] under min:0 emin:0
+> > > [   51.845304] under min:0 emin:0
+> > > [   51.848738] under min:0 emin:0
+> > > [   51.858147] under min:0 emin:0
+> > > [   51.861333] under min:0 emin:0
+> > > [   51.862034] under min:0 emin:0
+> > > [   51.862442] under min:0 emin:0
+> > > [   51.862763] under min:0 emin:0
+> >
+> > Thanks, this helps a lot. Somehow we're entering mem_cgroup_below_min even
+> > when min/emin is 0 (which should indeed be the case if you haven't set them
+> > in the hierarchy).
+> >
+> > My guess is that page_counter_read(&memcg->memory) is 0, which means
+> > mem_cgroup_below_min will return 1.
+>
+> Yes this is the case because this is likely the root memcg which skips
+> all charges.
+>
+> > However, I don't know for sure why that should then result in the OOM killer
+> > coming along. My guess is that since this memcg has 0 pages to scan anyway,
+> > we enter premature OOM under some conditions. I don't know why we wouldn't
+> > have hit that with the old version of mem_cgroup_protected that returned
+> > MEMCG_PROT_* members, though.
+>
+> Not really. There is likely no other memcg to reclaim from and assuming
+> min limit protection will result in no reclaimable memory and thus the
+> OOM killer.
+>
+> > Can you please try the patch with the `>=` checks in mem_cgroup_below_min
+> > and mem_cgroup_below_low changed to `>`? If that fixes it, then that gives a
+> > strong hint about what's going on here.
+>
+> This would work but I believe an explicit check for the root memcg would
+> be easier to spot the reasoning.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/meson/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+May I request you to send debugging or proposed fix patches here.
+I am happy to do more testing.
 
-diff --git a/sound/soc/meson/Kconfig b/sound/soc/meson/Kconfig
-index 8b6295283989..363dc3b1bbe4 100644
---- a/sound/soc/meson/Kconfig
-+++ b/sound/soc/meson/Kconfig
-@@ -68,6 +68,7 @@ config SND_MESON_AXG_SOUND_CARD
- 	imply SND_MESON_AXG_SPDIFOUT
- 	imply SND_MESON_AXG_SPDIFIN
- 	imply SND_MESON_AXG_PDM
-+	imply SND_MESON_G12A_TOACODEC
- 	imply SND_MESON_G12A_TOHDMITX if DRM_MESON_DW_HDMI
- 	help
- 	  Select Y or M to add support for the AXG SoC sound card
--- 
-2.25.4
+FYI,
+Here is my repository for testing.
+git: https://github.com/nareshkamboju/linux/tree/printk
+branch: printk
 
+- Naresh
