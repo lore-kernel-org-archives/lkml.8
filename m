@@ -2,167 +2,155 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D00C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A501C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D63B420734
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E91020734
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:11:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U1Ux5UkW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AM1E9sG1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgFQPKy (ORCPT
+        id S1727835AbgFQPLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:10:54 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:32914 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbgFQPKi (ORCPT
+        Wed, 17 Jun 2020 11:11:21 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36756 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726496AbgFQPLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:10:38 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05HFAY3W117103;
-        Wed, 17 Jun 2020 10:10:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592406634;
-        bh=9rbi449bFmHQundQ8dlXaifDs/ndof179QCH2fsw94w=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=U1Ux5UkWyrzcnsjGMe1sMuzKSkQglXL1ZX79Wu9vSPEUKUX0ZCDp+rDcZ8motJwHb
-         mA4nw1lzM/o1x7wozV2ALcsK3tT1lQWzILGdIHKuAqdrOTZtaqeSd0gU8h2XcdfavB
-         QAUPyJ6zQgQz8VEguEX4Tpw9mOyJrmlfS26fzU5Y=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05HFAYZE110953
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jun 2020 10:10:34 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 17
- Jun 2020 10:10:34 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 17 Jun 2020 10:10:34 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05HFAXkF107745;
-        Wed, 17 Jun 2020 10:10:34 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v28 14/15] leds: lp55xx: Fix file permissions to use DEVICE_ATTR macros
-Date:   Wed, 17 Jun 2020 10:09:23 -0500
-Message-ID: <20200617150924.12665-15-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200617150924.12665-1-dmurphy@ti.com>
-References: <20200617150924.12665-1-dmurphy@ti.com>
+        Wed, 17 Jun 2020 11:11:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592406679;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kAhDrMvU6clWQTo7oSKR54eeGeEEWBU/2DQIntg4cUE=;
+        b=AM1E9sG1hwdat9cYJwvA4yKYiN4TnbG+6kW9ry8/yBZAEtexT4Yc/rxT2Uas8qWYzqJUVP
+        0NBlfU0BrLXe5l0+T9KWo74i8l+nSB5kwipMe2/y6MJPtw8VV+JlcK79gpljAwdtHv1Asq
+        XAgGwJVlU6KenKQaxbvLIcFVgUaEp/M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-140-jP_8C3t7PhyYQDR-j_UjWA-1; Wed, 17 Jun 2020 11:11:16 -0400
+X-MC-Unique: jP_8C3t7PhyYQDR-j_UjWA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 530631100F67;
+        Wed, 17 Jun 2020 15:11:15 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A749A60BF4;
+        Wed, 17 Jun 2020 15:11:08 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05HFB8tP029064;
+        Wed, 17 Jun 2020 11:11:08 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05HFB8dA029060;
+        Wed, 17 Jun 2020 11:11:08 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Wed, 17 Jun 2020 11:11:07 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Eric Biggers <ebiggers@kernel.org>
+cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Mike Snitzer <msnitzer@redhat.com>,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
+        linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Milan Broz <mbroz@redhat.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        George Cherian <gcherian@marvell.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Zaibo Xu <xuzaibo@Huawei.com>
+Subject: [PATCH 3/3] dm-crypt: don't use drivers that have
+ CRYPTO_ALG_ALLOCATES_MEMORY
+In-Reply-To: <alpine.LRH.2.02.2006171107220.18714@file01.intranet.prod.int.rdu2.redhat.com>
+Message-ID: <alpine.LRH.2.02.2006171110270.18714@file01.intranet.prod.int.rdu2.redhat.com>
+References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com> <20200610010450.GA6449@gondor.apana.org.au> <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com> <20200610121106.GA23137@gondor.apana.org.au>
+ <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2006161101080.28052@file01.intranet.prod.int.rdu2.redhat.com> <20200616173620.GA207319@gmail.com>
+ <alpine.LRH.2.02.2006171107220.18714@file01.intranet.prod.int.rdu2.redhat.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the checkpatch warnings for the use of the file permission macros.
-In converting the file permissions to the DEVICE_ATTR_XX macros the
-call back function names needed to be updated within the code.
+Don't use crypto drivers that have the flag CRYPTO_ALG_ALLOCATES_MEMORY
+set. These drivers allocate memory and thus they are unsuitable for block
+I/O processing.
 
-This means that the lp55xx_ needed to be dropped in the name to keep in
-harmony with the ABI documentation.
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/leds/leds-lp55xx-common.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ drivers/md/dm-crypt.c |   17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
-index d33564aef563..59c3234ba1d7 100644
---- a/drivers/leds/leds-lp55xx-common.c
-+++ b/drivers/leds/leds-lp55xx-common.c
-@@ -83,7 +83,7 @@ static int lp55xx_post_init_device(struct lp55xx_chip *chip)
- 	return cfg->post_init_device(chip);
- }
+Index: linux-2.6/drivers/md/dm-crypt.c
+===================================================================
+--- linux-2.6.orig/drivers/md/dm-crypt.c
++++ linux-2.6/drivers/md/dm-crypt.c
+@@ -419,7 +419,8 @@ static int crypt_iv_lmk_ctr(struct crypt
+ 		return -EINVAL;
+ 	}
  
--static ssize_t lp55xx_show_current(struct device *dev,
-+static ssize_t led_current_show(struct device *dev,
- 			    struct device_attribute *attr,
- 			    char *buf)
- {
-@@ -92,7 +92,7 @@ static ssize_t lp55xx_show_current(struct device *dev,
- 	return scnprintf(buf, PAGE_SIZE, "%d\n", led->led_current);
- }
+-	lmk->hash_tfm = crypto_alloc_shash("md5", 0, 0);
++	lmk->hash_tfm = crypto_alloc_shash("md5", 0,
++					   CRYPTO_ALG_ALLOCATES_MEMORY);
+ 	if (IS_ERR(lmk->hash_tfm)) {
+ 		ti->error = "Error initializing LMK hash";
+ 		return PTR_ERR(lmk->hash_tfm);
+@@ -581,7 +582,8 @@ static int crypt_iv_tcw_ctr(struct crypt
+ 		return -EINVAL;
+ 	}
  
--static ssize_t lp55xx_store_current(struct device *dev,
-+static ssize_t led_current_store(struct device *dev,
- 			     struct device_attribute *attr,
- 			     const char *buf, size_t len)
- {
-@@ -116,7 +116,7 @@ static ssize_t lp55xx_store_current(struct device *dev,
- 	return len;
- }
+-	tcw->crc32_tfm = crypto_alloc_shash("crc32", 0, 0);
++	tcw->crc32_tfm = crypto_alloc_shash("crc32", 0,
++					    CRYPTO_ALG_ALLOCATES_MEMORY);
+ 	if (IS_ERR(tcw->crc32_tfm)) {
+ 		ti->error = "Error initializing CRC32 in TCW";
+ 		return PTR_ERR(tcw->crc32_tfm);
+@@ -768,7 +770,8 @@ static int crypt_iv_elephant_ctr(struct
+ 	struct iv_elephant_private *elephant = &cc->iv_gen_private.elephant;
+ 	int r;
  
--static ssize_t lp55xx_show_max_current(struct device *dev,
-+static ssize_t max_current_show(struct device *dev,
- 			    struct device_attribute *attr,
- 			    char *buf)
- {
-@@ -125,9 +125,8 @@ static ssize_t lp55xx_show_max_current(struct device *dev,
- 	return scnprintf(buf, PAGE_SIZE, "%d\n", led->max_current);
- }
+-	elephant->tfm = crypto_alloc_skcipher("ecb(aes)", 0, 0);
++	elephant->tfm = crypto_alloc_skcipher("ecb(aes)", 0,
++					      CRYPTO_ALG_ALLOCATES_MEMORY);
+ 	if (IS_ERR(elephant->tfm)) {
+ 		r = PTR_ERR(elephant->tfm);
+ 		elephant->tfm = NULL;
+@@ -2088,7 +2091,8 @@ static int crypt_alloc_tfms_skcipher(str
+ 		return -ENOMEM;
  
--static DEVICE_ATTR(led_current, S_IRUGO | S_IWUSR, lp55xx_show_current,
--		lp55xx_store_current);
--static DEVICE_ATTR(max_current, S_IRUGO , lp55xx_show_max_current, NULL);
-+static DEVICE_ATTR_RW(led_current);
-+static DEVICE_ATTR_RO(max_current);
+ 	for (i = 0; i < cc->tfms_count; i++) {
+-		cc->cipher_tfm.tfms[i] = crypto_alloc_skcipher(ciphermode, 0, 0);
++		cc->cipher_tfm.tfms[i] = crypto_alloc_skcipher(ciphermode, 0,
++						CRYPTO_ALG_ALLOCATES_MEMORY);
+ 		if (IS_ERR(cc->cipher_tfm.tfms[i])) {
+ 			err = PTR_ERR(cc->cipher_tfm.tfms[i]);
+ 			crypt_free_tfms(cc);
+@@ -2114,7 +2118,8 @@ static int crypt_alloc_tfms_aead(struct
+ 	if (!cc->cipher_tfm.tfms)
+ 		return -ENOMEM;
  
- static struct attribute *lp55xx_led_attrs[] = {
- 	&dev_attr_led_current.attr,
-@@ -271,7 +270,7 @@ static int lp55xx_request_firmware(struct lp55xx_chip *chip)
- 				GFP_KERNEL, chip, lp55xx_firmware_loaded);
- }
+-	cc->cipher_tfm.tfms_aead[0] = crypto_alloc_aead(ciphermode, 0, 0);
++	cc->cipher_tfm.tfms_aead[0] = crypto_alloc_aead(ciphermode, 0,
++						CRYPTO_ALG_ALLOCATES_MEMORY);
+ 	if (IS_ERR(cc->cipher_tfm.tfms_aead[0])) {
+ 		err = PTR_ERR(cc->cipher_tfm.tfms_aead[0]);
+ 		crypt_free_tfms(cc);
+@@ -2565,7 +2570,7 @@ static int crypt_ctr_auth_cipher(struct
+ 		return -ENOMEM;
+ 	strncpy(mac_alg, start, end - start);
  
--static ssize_t lp55xx_show_engine_select(struct device *dev,
-+static ssize_t select_engine_show(struct device *dev,
- 			    struct device_attribute *attr,
- 			    char *buf)
- {
-@@ -281,7 +280,7 @@ static ssize_t lp55xx_show_engine_select(struct device *dev,
- 	return sprintf(buf, "%d\n", chip->engine_idx);
- }
+-	mac = crypto_alloc_ahash(mac_alg, 0, 0);
++	mac = crypto_alloc_ahash(mac_alg, 0, CRYPTO_ALG_ALLOCATES_MEMORY);
+ 	kfree(mac_alg);
  
--static ssize_t lp55xx_store_engine_select(struct device *dev,
-+static ssize_t select_engine_store(struct device *dev,
- 			     struct device_attribute *attr,
- 			     const char *buf, size_t len)
- {
-@@ -323,7 +322,7 @@ static inline void lp55xx_run_engine(struct lp55xx_chip *chip, bool start)
- 		chip->cfg->run_engine(chip, start);
- }
- 
--static ssize_t lp55xx_store_engine_run(struct device *dev,
-+static ssize_t run_engine_store(struct device *dev,
- 			     struct device_attribute *attr,
- 			     const char *buf, size_t len)
- {
-@@ -348,9 +347,8 @@ static ssize_t lp55xx_store_engine_run(struct device *dev,
- 	return len;
- }
- 
--static DEVICE_ATTR(select_engine, S_IRUGO | S_IWUSR,
--		   lp55xx_show_engine_select, lp55xx_store_engine_select);
--static DEVICE_ATTR(run_engine, S_IWUSR, NULL, lp55xx_store_engine_run);
-+static DEVICE_ATTR_RW(select_engine);
-+static DEVICE_ATTR_WO(run_engine);
- 
- static struct attribute *lp55xx_engine_attributes[] = {
- 	&dev_attr_select_engine.attr,
--- 
-2.26.2
+ 	if (IS_ERR(mac))
 
