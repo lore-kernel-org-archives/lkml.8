@@ -4,118 +4,127 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C02C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75379207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A6822080D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AerThIy8"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ldFy59vn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgFQGEz (ORCPT
+        id S1726912AbgFQGFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 02:04:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbgFQGEx (ORCPT
+        Wed, 17 Jun 2020 02:05:17 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57064 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbgFQGFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 02:04:53 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AFC3C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 23:04:53 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 10so590691pfx.8
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 23:04:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=+W1HskNxeMqmgYOmVvqy0OMnUXy8c78K9pX9cxdCWkg=;
-        b=AerThIy8W5NjPzus3O6oc0DurA5f17iYlxWXW/rE8ReH9SyjfP5yA6uY1duCKNMltk
-         wtnGFR5QlIZAMlrESr1tAiR0XPoClsVFK3zAwQff+rl1K+zwRGxB6ppnR3ZmQMaMpeOp
-         jUepAOa0o9ha9dKyVpOLjoAufW3hf5QEvJ5rs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=+W1HskNxeMqmgYOmVvqy0OMnUXy8c78K9pX9cxdCWkg=;
-        b=NK2t4iEGUMco4qq3Ka2n+KpGQlijnth7ENam9JqJ8Hr7AfDGC9UlvMdzuZTDxdxps3
-         3q4Vyebu2ilovsZyxVeN5h+5Hn672yYHrmTtV8p2xgbu8J5QEYhksq2FSHZV08rwfkI4
-         CZra8L05UPUoLi+3RIcRAFwxqSqGBkGBr9hfl7yIOcnrplF4qh8zkr0SOxmccw0zcKfb
-         c8JhMQt+hljQDvL6vATAiZ5zIM1uyyZJtpco0pOdEQvz5tP8GgpGTkazye8Zn7hIubmP
-         fGGgE3bvZDwoC+PonNBwG8/C3EYjT0Y+mu+JhY83/uAsjc29Qcd0uaYLI0FoNHXYCIew
-         IgPQ==
-X-Gm-Message-State: AOAM533ofrJpF50oVjCcgOlP/Udve+wldhjVcPc2YiAj7ockZRTLiAHD
-        LGTWW9EvUESEOCouG8zdSZzvug==
-X-Google-Smtp-Source: ABdhPJwsHOJcpJiPWpog9WnRcLYf0++sxWkr4zCCyszCJLrbOv3D5/SciaDYJ7vzeuO6a1I6Fam7+Q==
-X-Received: by 2002:a62:9242:: with SMTP id o63mr5456277pfd.310.1592373892584;
-        Tue, 16 Jun 2020 23:04:52 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id t76sm17095737pfc.220.2020.06.16.23.04.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 23:04:51 -0700 (PDT)
-Subject: Re: [PATCH] fs: move kernel_read_file* to its own include file
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-References: <20200617033152.16883-1-scott.branden@broadcom.com>
- <20200617052633.GA1351336@kroah.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <8d70da48-7c3c-5d24-ed43-2d705417e7b5@broadcom.com>
-Date:   Tue, 16 Jun 2020 23:04:48 -0700
+        Wed, 17 Jun 2020 02:05:16 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05H651rG119792;
+        Wed, 17 Jun 2020 01:05:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592373901;
+        bh=pjgQJY6FtV2aSO68aw+isVN5H6rQrBZ0BarV7CeclmA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ldFy59vnuaLA/u87+fSXcqQRsUB1FMfZ07OUnq32bevnq5CuqguFk6/XIN+tU3b5b
+         QzajJXonGLbCTYhJ7liLkJqF8XcR6NM3wvFilkEO57mLXav1z5rVRgnlWTAQRsftd+
+         mmEMIUL1z+KZBoKQCcf3OXJ7dxO5ulRadfJySHJE=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05H651lZ051995
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 17 Jun 2020 01:05:01 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 17
+ Jun 2020 01:05:00 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 17 Jun 2020 01:05:00 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05H64vko028969;
+        Wed, 17 Jun 2020 01:04:57 -0500
+Subject: Re: [PATCH 1/5] drm/omap: Fix suspend resume regression after
+ platform data removal
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+CC:     <linux-omap@vger.kernel.org>, "Andrew F . Davis" <afd@ti.com>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+References: <20200531193941.13179-1-tony@atomide.com>
+ <20200531193941.13179-2-tony@atomide.com>
+ <16ba1808-5c7f-573d-8dd0-c80cac2f476e@ti.com>
+ <20200603140639.GG37466@atomide.com>
+ <47e286dd-f87a-4440-5bde-1f7b53e8b672@ti.com>
+ <20200609151943.GL37466@atomide.com>
+ <9ed70121-2a53-d2b3-051a-88eb83e6c53f@ti.com>
+ <d03dd04f-6f2c-25ba-fe1f-d5fc0dfb5c68@ti.com>
+ <592501c9-2d94-b266-ae76-e383d3bffa29@ti.com>
+ <20200616153042.GZ37466@atomide.com>
+ <3f2855cc-48b8-ecb8-5d92-beeabe344b26@ti.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <d0488631-e2d8-115f-9900-5838147ec674@ti.com>
+Date:   Wed, 17 Jun 2020 09:04:56 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200617052633.GA1351336@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <3f2855cc-48b8-ecb8-5d92-beeabe344b26@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On 16/06/2020 19:56, Grygorii Strashko wrote:
+> 
+> 
+> On 16/06/2020 18:30, Tony Lindgren wrote:
+>> * Tomi Valkeinen <tomi.valkeinen@ti.com> [200616 13:02]:
+>>> On 11/06/2020 17:00, Grygorii Strashko wrote:
+>>>> I think, suspend might be fixed if all devices, which are now child of ti-sysc, will do
+>>>> pm_runtime_force_xxx() calls at noirq suspend stage by adding:
+>>>>
+>>>>       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>>>>                         pm_runtime_force_resume)
+>>>>
+>>>> Am I missing smth?
+>>>
+>>> Isn't this almost exactly the same my patch does? I just used suspend_late
+>>> and resume_early. Is noirq phase better than late & early?
+>>
+>> Well up to you as far as I'm concerned. The noirq phase comes with serious
+>> limitations, for let's say i2c bus usage if needed. Probably also harder
+>> to debug for suspend and resume.
+> 
+> Unfortunately, you can't use PM runtime force API at .suspend() stage as pm_runtime_get will still 
+> work and
+> there is no sync between suspend and pm_runtime.
+> The PM runtime force API can be used only during late/noirq as at this time pm_runtime is disabled.
 
-On 2020-06-16 10:26 p.m., Greg Kroah-Hartman wrote:
-> On Tue, Jun 16, 2020 at 08:31:52PM -0700, Scott Branden wrote:
->> Move kernel_read_file* to it own kernel_read_file.h include file.
-> That says what you did, but not _why_ you are doing it :(
->
-I have no real opinion as to where these functions end up.
-I simply wish to add kernel_pread_file* support and current comment is 
-the existing kernel_read_file* functions
-are in linux/fs.h and I shouldn't add more to that file.
+Yes, but which one... Do you know what the diff is with late/noirq from driver's perspective? I 
+guess noirq is atomic context, late is nto?
 
-I'd be quite happy to leave them in linux/fs.h if that is desired as well.
+Dispc's suspend uses synchronize_irq(), so that rules out noirq. Although the call is not needed if 
+using noirq version, so that could also be managed with small change. But I wonder if there's any 
+benefit in using noirq versus late.
 
-I can update the commit according to Christoph's comment:
+  Tomi
 
-"Can you also move kernel_read_* out of fs.h?  That header gets pulled
-in just about everywhere and doesn't really need function not related
-to the general fs interface."
-
-
-
-
-
-
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
