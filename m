@@ -2,260 +2,199 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24AF1207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073862070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcQtj99p"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="KcZz2hZo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgFQJJQ (ORCPT
+        id S1726853AbgFQJKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 05:09:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgFQJJQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 05:09:16 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B476BC061573;
-        Wed, 17 Jun 2020 02:09:15 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f185so1167509wmf.3;
-        Wed, 17 Jun 2020 02:09:15 -0700 (PDT)
+        Wed, 17 Jun 2020 05:10:05 -0400
+Received: from mail-mw2nam10on2066.outbound.protection.outlook.com ([40.107.94.66]:33818
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725554AbgFQJKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 05:10:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jKar8ccK+a9Z73gEhS56P7WWaLVOobJnSsNB6MLCi+3yuZ+Pqik4bDVPN9nY99JUydwUjFhLeKDE3hSzj40axY/WxW2A9BibgwCgkligQqmwPBFXfgLnzh7H5ce3kJyxMngU0zqxyDFkzeQMUpL/78TXygeWRfVXZS0W9JtCHtnoe6goU6K58W720xWBItdlwCmYrliqQ6yNgq9y4GeP0L7GtQCW3T7j1dS9rCOXdbA6o3NyUARCBPesWH+P+uegjk7/8+zfNc71qi3FeiQNpQ9Rgl1Vzoc8fMyyKSm3zmXOOXONRGHomJTcQ6F+ISSJcROzm4ZAlqBdd9rQYGuYVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ghsglx5Qj0Pj+1kzXmrRaFLLSlgw6L4f9W4MYf1Fj5A=;
+ b=Ko4L6ddCSkUU7L9cDvs+HLIFsYfzi+LNxGTxW4Nvb2XAKo2RzpIr+SGFj3evEPw1ORpvIM7sj0/T+G7oGCwdw6S4RNafB1JlG4hQYMMhUTqREiNUBPnLizPtEV3R+y5D6g+CGwWO2mxp5c4M/KE2FPkQTbBgpClY6LCAM59kRSInwJOESoNkc2FuSuicBxC5xueT6f5cS127ZW+3pGViKWadJj0b8xLSI3sckCRuTbrgX1Xjx/VFABv6yL23Y5AtCfg0dJVWz17YUj6EnRHgTbuPYiZl9x0mLXWn/RggRle/okvf5nAMB4BbwAMeLo7BcxooAkSllc4I73hfin/h1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uMSOx0yXZqitbI4EA4+8qEegvLLFbpBxcQUD2ZznNJU=;
-        b=kcQtj99p1hhCKKH4Bf8X3daskyTX3r/AxRI3VTHeQ89tsYc/LA3hJWbU+UVR1E1dGO
-         mmyF8T4pFsHLGiOuMLIvLxeg5V088yFrTLtGn8WAhxc5Dw3Z+Zn2QMLLVSoNnUYMhnTl
-         V28j2XSBLrtLIdMCJ1LrH8vSLBlUUxa/G64pLcoRq+D/RROMtDF6eJplen/R4uxi867Q
-         c+XTXpc5k9tJ8PtYMw8lGF+vqLDcCc5J+JxuzOKNIJPStbXimDNgOlCwJXyT+uyY29oW
-         9hBZWYAi0jKt++j9JB1f1+CWF3EzQ/5o/3NXH4Adqm58xCcKA5fc+4WGbNulkadY6IMo
-         RrQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=uMSOx0yXZqitbI4EA4+8qEegvLLFbpBxcQUD2ZznNJU=;
-        b=XvS6xF4SpLYXPXv3r+RobHKaCcvs/AyqYmCCPkwEAD4garUb3MMYD+CaB3w9kxrtc+
-         8W+IW3V0CmHmbd+zZwM5jjyuYWomGFueVUXAs24ZLVumyGvMMg72RMpBSM1msN58Sb7w
-         lNS9IF8pCYJPdImwnol5boEp9foGkKfiRKkyQ1qg2PKVIaZg2Ko3Ae40v1ZnxMWR5UDK
-         3rAyt7lkdRxr2IhZnXsqyyyJ2Sf/R9oUwS7stvxfyAhNri6s25WOhQUqjHP69laxtILM
-         Kyo5FTJU3fwNlXKMywyLWI260a56cMBUgAQ9C1YccwgTeEQogTgYq2sQ2zNwlEFVy+0k
-         QXFw==
-X-Gm-Message-State: AOAM532M6YYK4obu7i8EmRseNsrN5i8V93bYqfnohPmKwMm3h1nSX0Di
-        bYB55YiKD4rgm0IZ40HvKd4=
-X-Google-Smtp-Source: ABdhPJwfbfTaSvdYKVov5UP00YWEnOog2TJ3RBfl4ScIqNG4NwjmiaYSeLV90wP53nkqmQnaj5Xx1Q==
-X-Received: by 2002:a7b:c937:: with SMTP id h23mr7278034wml.113.1592384954463;
-        Wed, 17 Jun 2020 02:09:14 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.114.138])
-        by smtp.gmail.com with ESMTPSA id r14sm4374358wrx.42.2020.06.17.02.09.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 02:09:13 -0700 (PDT)
-Subject: Re: [PATCH v4 4/7] iommu/mediatek: Move inv_sel_reg into the
- plat_data
-To:     Chao Hao <chao.hao@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
-        Yong Wu <yong.wu@mediatek.com>, FY Yang <fy.yang@mediatek.com>
-References: <20200617030029.4082-1-chao.hao@mediatek.com>
- <20200617030029.4082-5-chao.hao@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
- fL3eT7ZsYV5nur7zctmJ+vbszoOASXUpfq8M+S5hU2w7sBaVk5rpH9yW8CUWz2+ZpQXPJcFa
- OhLZuSKB1F5JcvLbETRjNzNU7B3TdS2+zkgQQdEyt7Ij2HXGLJ2w+yG2GuR9/iyCJRf10Okq
- gTh//XESJZ8S6KlOWbLXRE+yfkKDXQx2Jr1XuVvM3zPqH5FMg8reRVFsQ+vI0b+OlyekT/Xe
- 0Hwvqkev95GG6x7yseJwI+2ydDH6M5O7fPKFW5mzAdDE2g/K9B4e2tYK6/rA7Fq4cqiAw1+u
- EgO44+eFgv082xtBez5WNkGn18vtw0LW3ESmKh19u6kEGoi0WZwslCNaGFrS4M7OH+aOJeqK
- fx5dIv2CEbxc6xnHY7dwkcHikTA4QdbdFeUSuj4YhIZ+0QlDVtS1QEXyvZbZky7ur9rHkZvP
- ZqlUsLJ2nOqsmahMTIQ8Mgx9SLEShWqD4kOF4zNfPJsgEMB49KbS2o9jxbGB+JKupjNddfxZ
- HlH1KF8QwCMZEYaTNogrVazuEJzx6JdRpR3sFda/0x5qjTadwIW6Cl9tkqe2h391dOGX1eOA
- 1ntn9O/39KqSrWNGvm+1raHK+Ev1yPtn0Wxn+0oy1tl67TxUjQARAQABtClNYXR0aGlhcyBC
- cnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPokCUgQTAQIAPAIbAwYLCQgHAwIGFQgC
- CQoLBBYCAwECHgECF4AWIQTmuZIYwPLDJRwsOhfZFAuyVhMC8QUCWt3scQIZAQAKCRDZFAuy
- VhMC8WzRD/4onkC+gCxG+dvui5SXCJ7bGLCu0xVtiGC673Kz5Aq3heITsERHBV0BqqctOEBy
- ZozQQe2Hindu9lasOmwfH8+vfTK+2teCgWesoE3g3XKbrOCB4RSrQmXGC3JYx6rcvMlLV/Ch
- YMRR3qv04BOchnjkGtvm9aZWH52/6XfChyh7XYndTe5F2bqeTjt+kF/ql+xMc4E6pniqIfkv
- c0wsH4CkBHqoZl9w5e/b9MspTqsU9NszTEOFhy7p2CYw6JEa/vmzR6YDzGs8AihieIXDOfpT
- DUr0YUlDrwDSrlm/2MjNIPTmSGHH94ScOqu/XmGW/0q1iar/Yr0leomUOeeEzCqQtunqShtE
- 4Mn2uEixFL+9jiVtMjujr6mphznwpEqObPCZ3IcWqOFEz77rSL+oqFiEA03A2WBDlMm++Sve
- 9jpkJBLosJRhAYmQ6ey6MFO6Krylw1LXcq5z1XQQavtFRgZoruHZ3XlhT5wcfLJtAqrtfCe0
- aQ0kJW+4zj9/So0uxJDAtGuOpDYnmK26dgFN0tAhVuNInEVhtErtLJHeJzFKJzNyQ4GlCaLw
- jKcwWcqDJcrx9R7LsCu4l2XpKiyxY6fO4O8DnSleVll9NPfAZFZvf8AIy3EQ8BokUsiuUYHz
- wUo6pclk55PZRaAsHDX/fNr24uC6Eh5oNQ+v4Pax/gtyybkCDQRd1TkHARAAt1BBpmaH+0o+
- deSyJotkrpzZZkbSs5ygBniCUGQqXpWqgrc7Uo/qtxOFL91uOsdX1/vsnJO9FyUv3ZNI2Thw
- NVGCTvCP9E6u4gSSuxEfVyVThCSPvRJHCG2rC+EMAOUMpxokcX9M2b7bBEbcSjeP/E4KTa39
- q+JJSeWliaghUfMXXdimT/uxpP5Aa2/D/vcUUGHLelf9TyihHyBohdyNzeEF3v9rq7kdqamZ
- Ihb+WYrDio/SzqTd1g+wnPJbnu45zkoQrYtBu58n7u8oo+pUummOuTR2b6dcsiB9zJaiVRIg
- OqL8p3K2fnE8Ewwn6IKHnLTyx5T/r2Z0ikyOeijDumZ0VOPPLTnwmb780Nym3LW1OUMieKtn
- I3v5GzZyS83NontvsiRd4oPGQDRBT39jAyBr8vDRl/3RpLKuwWBFTs1bYMLu0sYarwowOz8+
- Mn+CRFUvRrXxociw5n0P1PgJ7vQey4muCZ4VynH1SeVb3KZ59zcQHksKtpzz2OKhtX8FCeVO
- mHW9u4x8s/oUVMZCXEq9QrmVhdIvJnBCqq+1bh5UC2Rfjm/vLHwt5hes0HDstbCzLyiA0LTI
- ADdP77RN2OJbzBkCuWE21YCTLtc8kTQlP+G8m23K5w8k2jleCSKumprCr/5qPyNlkie1HC4E
- GEAfdfN+uLsFw6qPzSAsmukAEQEAAYkEbAQYAQgAIBYhBOa5khjA8sMlHCw6F9kUC7JWEwLx
- BQJd1TkHAhsCAkAJENkUC7JWEwLxwXQgBBkBCAAdFiEEUdvKHhzqrUYPB/u8L21+TfbCqH4F
- Al3VOQcACgkQL21+TfbCqH79RRAAtlb6oAL9y8JM5R1T3v02THFip8OMh7YvEJCnezle9Apq
- C6Vx26RSQjBV1JwSBv6BpgDBNXarTGCPXcre6KGfX8u1r6hnXAHZNHP7bFGJQiBv5RqGFf45
- OhOhbjXCyHc0jrnNjY4M2jTkUC+KIuOzasvggU975nolC8MiaBqfgMB2ab5W+xEiTcNCOg3+
- 1SRs5/ZkQ0iyyba2FihSeSw3jTUjPsJBF15xndexoc9jpi0RKuvPiJ191Xa3pzNntIxpsxqc
- ZkS1HSqPI63/urNezeSejBzW0Xz2Bi/b/5R9Hpxp1AEC3OzabOBATY/1Bmh2eAVK3xpN2Fe1
- Zj7HrTgmzBmSefMcSXN0oKQWEI5tHtBbw5XUj0Nw4hMhUtiMfE2HAqcaozsL34sEzi3eethZ
- IvKnIOTmllsDFMbOBa8oUSoaNg7GzkWSKJ59a9qPJkoj/hJqqeyEXF+WTCUv6FcA8BtBJmVf
- FppFzLFM/QzF5fgDZmfjc9czjRJHAGHRMMnQlW88iWamjYVye57srNq9pUql6A4lITF7w00B
- 5PXINFk0lMcNUdkWipu24H6rJhOO6xSP4n6OrCCcGsXsAR5oH3d4TzA9iPYrmfXAXD+hTp82
- s+7cEbTsCJ9MMq09/GTCeroTQiqkp50UaR0AvhuPdfjJwVYZfmMS1+5IXA/KY6DbGBAAs5ti
- AK0ieoZlCv/YxOSMCz10EQWMymD2gghjxojf4iwB2MbGp8UN4+++oKLHz+2j+IL08rd2ioFN
- YCJBFDVoDRpF/UnrQ8LsH55UZBHuu5XyMkdJzMaHRVQc1rzfluqx+0a/CQ6Cb2q7J2d45nYx
- 8jMSCsGj1/iU/bKjMBtuh91hsbdWCxMRW0JnGXxcEUklbhA5uGj3W4VYCfTQxwK6JiVt7JYp
- bX7JdRKIyq3iMDcsTXi7dhhwqsttQRwbBci0UdFGAG4jT5p6u65MMDVTXEgYfZy0674P06qf
- uSyff73ivwvLR025akzJui8MLU23rWRywXOyTINz8nsPFT4ZSGT1hr5VnIBs/esk/2yFmVoc
- FAxs1aBO29iHmjJ8D84EJvOcKfh9RKeW8yeBNKXHrcOV4MbMOts9+vpJgBFDnJeLFQPtTHuI
- kQXT4+yLDvwOVAW9MPLfcHlczq/A/nhGVaG+RKWDfJWNSu/mbhqUQt4J+RFpfx1gmL3yV8NN
- 7JXABPi5M97PeKdx6qc/c1o3oEHH8iBkWZIYMS9fd6rtAqV3+KH5Ors7tQVtwUIDYEvttmeO
- ifvpW6U/4au4zBYfvvXagbyXJhG9mZvz+jN1cr0/G2ZC93IbjFFwUmHtXS4ttQ4pbrX6fjTe
- lq5vmROjiWirpZGm+WA3Vx9QRjqfMdS5Ag0EXdU5SAEQAJu/Jk58uOB8HSGDSuGUB+lOacXC
- bVOOSywZkq+Ayv+3q/XIabyeaYMwhriNuXHjUxIORQoWHIHzTCqsAgHpJFfSHoM4ulCuOPFt
- XjqfEHkA0urB6S0jnvJ6ev875lL4Yi6JJO7WQYRs/l7OakJiT13GoOwDIn7hHH/PGUqQoZlA
- d1n5SVdg6cRd7EqJ+RMNoud7ply6nUSCRMNWbNqbgyWjKsD98CMjHa33SB9WQQSQyFlf+dz+
- dpirWENCoY3vvwKJaSpfeqKYuqPVSxnqpKXqqyjNnG9W46OWZp+JV5ejbyUR/2U+vMwbTilL
- cIUpTgdmxPCA6J0GQjmKNsNKKYgIMn6W4o/LoiO7IgROm1sdn0KbJouCa2QZoQ0+p/7mJXhl
- tA0XGZhNlI3npD1lLpjdd42lWboU4VeuUp4VNOXIWU/L1NZwEwMIqzFXl4HmRi8MYbHHbpN5
- zW+VUrFfeRDPyjrYpax+vWS+l658PPH+sWmhj3VclIoAU1nP33FrsNfp5BiQzao30rwe4ntd
- eEdPENvGmLfCwiUV2DNVrmJaE3CIUUl1KIRoB5oe7rJeOvf0WuQhWjIU98glXIrh3WYd7vsf
- jtbEXDoWhVtwZMShMvp7ccPCe2c4YBToIthxpDhoDPUdNwOssHNLD8G4JIBexwi4q7IT9lP6
- sVstwvA5ABEBAAGJAjYEGAEIACAWIQTmuZIYwPLDJRwsOhfZFAuyVhMC8QUCXdU5SAIbDAAK
- CRDZFAuyVhMC8bXXD/4xyfbyPGnRYtR0KFlCgkG2XWeWSR2shSiM1PZGRPxR888zA2WBYHAk
- 7NpJlFchpaErV6WdFrXQjDAd9YwaEHucfS7SAhxIqdIqzV5vNFrMjwhB1N8MfdUJDpgyX7Zu
- k/Phd5aoZXNwsCRqaD2OwFZXr81zSXwE2UdPmIfTYTjeVsOAI7GZ7akCsRPK64ni0XfoXue2
- XUSrUUTRimTkuMHrTYaHY3544a+GduQQLLA+avseLmjvKHxsU4zna0p0Yb4czwoJj+wSkVGQ
- NMDbxcY26CMPK204jhRm9RG687qq6691hbiuAtWABeAsl1AS+mdS7aP/4uOM4kFCvXYgIHxP
- /BoVz9CZTMEVAZVzbRKyYCLUf1wLhcHzugTiONz9fWMBLLskKvq7m1tlr61mNgY9nVwwClMU
- uE7i1H9r/2/UXLd+pY82zcXhFrfmKuCDmOkB5xPsOMVQJH8I0/lbqfLAqfsxSb/X1VKaP243
- jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
- +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
- y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <c18e7d76-4bd0-51ff-999e-01afd2fa14dc@gmail.com>
-Date:   Wed, 17 Jun 2020 11:09:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200617030029.4082-5-chao.hao@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ghsglx5Qj0Pj+1kzXmrRaFLLSlgw6L4f9W4MYf1Fj5A=;
+ b=KcZz2hZox+0/82sIq1arACNQH8UqSvLmGK7SZLfdslZwfq7hLdBJL5IuRpe2fqJYGCtHY5nX7fOscjQzeR/Hf5qBE7sHv+lnMA4/BjTbL3nHzFm3SzJrWIYD7SY+ct+8JGcF06UbWA76xuSUq0DTiaT3NBep4OWsCorNZ33fWSc=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=synaptics.com;
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
+ by BYAPR03MB3751.namprd03.prod.outlook.com (2603:10b6:a03:62::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.25; Wed, 17 Jun
+ 2020 09:10:01 +0000
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d1ae:8ea7:ea:8998]) by BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d1ae:8ea7:ea:8998%7]) with mapi id 15.20.3088.028; Wed, 17 Jun 2020
+ 09:10:00 +0000
+Date:   Wed, 17 Jun 2020 17:09:26 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: phy: realtek: clear interrupt during init for
+ rtl8211f
+Message-ID: <20200617170926.5e582bad@xhacker.debian>
+In-Reply-To: <e81ad573-ba30-a449-4529-d9a578ce0ee7@gmail.com>
+References: <20200512184601.40b1758a@xhacker.debian>
+        <7735a257-21ff-e6c0-acdc-f5ee187b1f57@gmail.com>
+        <20200513145151.04a6ee46@xhacker.debian>
+        <a0aac85d-064f-2672-370b-404fd83e83f3@gmail.com>
+        <20200514142537.63b478fd@xhacker.debian>
+        <bbb70281-d477-d227-d1d2-aeecffdb6299@gmail.com>
+        <20200515154128.41ee2afa@xhacker.debian>
+        <18d7bdc7-b9f3-080f-f9df-a6ff61cd6a87@gmail.com>
+        <e81ad573-ba30-a449-4529-d9a578ce0ee7@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TY2PR0101CA0042.apcprd01.prod.exchangelabs.com
+ (2603:1096:404:8000::28) To BYAPR03MB3573.namprd03.prod.outlook.com
+ (2603:10b6:a02:ae::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by TY2PR0101CA0042.apcprd01.prod.exchangelabs.com (2603:1096:404:8000::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Wed, 17 Jun 2020 09:09:58 +0000
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a45b5faf-9ed8-4121-c6ca-08d8129e36b9
+X-MS-TrafficTypeDiagnostic: BYAPR03MB3751:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB3751063D8FE37BC004914A16ED9A0@BYAPR03MB3751.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 04371797A5
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YQAzo23BxEcSGk3yR/wdZJVms8XIovhFwbw6L+PTNSmis44vIFKnTxkykXlIbcJh7kQ/ZSMSPf/iQm/Jd4hu8xDfF3wgFqsAaH5KbontZi2616E7YQ4gLhiRqaFJBteDFrI+tiIA8mtZeZSzhONjmuqEanPWcilwKod9i1r0oTYSpu/6Iw/8ff2Zcqerhkfvv1FRIzZxSXzLXMuheUTXhfuWIDq1RP3jnwHI3oQx35XUCRd4yqfiRUWgrX7K6LmuG4VJTZSnD8NgNCm/BtjUmogEeMlJq5QlhrxZoHAm8rlo3lko6ZgUArjWM6WApEAXyou01xmONB75c8vwVugWWw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(366004)(136003)(39850400004)(396003)(376002)(4326008)(52116002)(66476007)(66556008)(6506007)(7696005)(316002)(66946007)(956004)(53546011)(478600001)(9686003)(55016002)(16526019)(186003)(83380400001)(26005)(86362001)(1076003)(6666004)(8936002)(8676002)(54906003)(5660300002)(6916009)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 7J/aQkzf1x8clHefJ1AwcG7iWFeEjeav5e2AyMBK5YmJ9l+5BJqLbimoutVbiEP9M3hr9wVLSOpo/QA0b7jGELxnDVkNYt/Z1yJzAD20mTafJuyn60/k2UML4GjDXwrfqVP5upBNUMF/91ymcYaAqljg3iQzwjUuZgJ5voGEFnAjtvOeCvjqG6MkM5zcmi/8S7xc1w5YIeRXoPXQ6x4zHfhoL5/59uME73j/DZ8L5WNQVNjXO/OibOO7+fxEUTEYaaDzq8FzUwglkRXNnD1jR70sbxH0Or0rDWGyYIvtky1D5VUPdGwPIXC1jXjPaywVrUW9yqnQkycJ2Q/29vBCtYSGzD/Eoyeb9fQzRQVx6zvV/RD9JTa+XazNpnQtDUcyx9LxwmwFiNfjSbunV/voVJDTvSGFANGsGoHmCxy4QY5pPJZMtFsw7AExi7PQlu7TvhBN04pfxnJiGAv3UsxU/y2UqCoWry+NVewEBR6H5KpF+Vx2X+svS2Q1rEXtm11j
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a45b5faf-9ed8-4121-c6ca-08d8129e36b9
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 09:10:00.8320
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: h0I5M/U3LrnN7kZFHsqfI4fJgI2uJj5lwEp5keN25Vd9kZjU7+zs2BK51GSfRn4r8qZAadmv4WioxtFgmYtaTA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3751
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 15 May 2020 19:30:38 +0200 Heiner Kallweit wrote:
 
 
-On 17/06/2020 05:00, Chao Hao wrote:
-> For mt6779, MMU_INV_SEL register's offset is changed from
-> 0x38 to 0x2c, so we can put inv_sel_reg in the plat_data to
-> use it.
-> In addition, we renamed it to REG_MMU_INV_SEL_GEN1 and use it
-> before mt6779.
 > 
-> Change since v3:
-> 1. Fix coding style
 > 
-> Cc: Yong Wu <yong.wu@mediatek.com>
-> Signed-off-by: Chao Hao <chao.hao@mediatek.com>
+> On 15.05.2020 18:18, Florian Fainelli wrote:
+> >
+> >
+> > On 5/15/2020 12:41 AM, Jisheng Zhang wrote:  
+> >> On Thu, 14 May 2020 21:50:53 +0200 Heiner Kallweit wrote:
+> >>  
+> >>>
+> >>>
+> >>> On 14.05.2020 08:25, Jisheng Zhang wrote:  
+> >>>> On Wed, 13 May 2020 20:45:13 +0200 Heiner Kallweit wrote:
+> >>>>  
+> >>>>>
+> >>>>> On 13.05.2020 08:51, Jisheng Zhang wrote:  
+> >>>>>> Hi,
+> >>>>>>
+> >>>>>> On Tue, 12 May 2020 20:43:40 +0200 Heiner Kallweit wrote:
+> >>>>>>  
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> On 12.05.2020 12:46, Jisheng Zhang wrote:  
+> >>>>>>>> The PHY Register Accessible Interrupt is enabled by default, so
+> >>>>>>>> there's such an interrupt during init. In PHY POLL mode case, the
+> >>>>>>>> INTB/PMEB pin is alway active, it is not good. Clear the interrupt by
+> >>>>>>>> calling rtl8211f_ack_interrupt().  
+> >>>>>>>
+> >>>>>>> As you say "it's not good" w/o elaborating a little bit more on it:
+> >>>>>>> Do you face any actual issue? Or do you just think that it's not nice?  
+> >>>>>>
+> >>>>>>
+> >>>>>> The INTB/PMEB pin can be used in two different modes:
+> >>>>>> INTB: used for interrupt
+> >>>>>> PMEB: special mode for Wake-on-LAN
+> >>>>>>
+> >>>>>> The PHY Register Accessible Interrupt is enabled by
+> >>>>>> default, there's always such an interrupt during the init. In PHY POLL mode
+> >>>>>> case, the pin is always active. If platforms plans to use the INTB/PMEB pin
+> >>>>>> as WOL, then the platform will see WOL active. It's not good.
+> >>>>>>  
+> >>>>> The platform should listen to this pin only once WOL has been configured and
+> >>>>> the pin has been switched to PMEB function. For the latter you first would
+> >>>>> have to implement the set_wol callback in the PHY driver.
+> >>>>> Or where in which code do you plan to switch the pin function to PMEB?  
+> >>>>
+> >>>> I think it's better to switch the pin function in set_wol callback. But this
+> >>>> is another story. No matter WOL has been configured or not, keeping the
+> >>>> INTB/PMEB pin active is not good. what do you think?
+> >>>>  
+> >>>
+> >>> It shouldn't hurt (at least it didn't hurt for the last years), because no
+> >>> listener should listen to the pin w/o having it configured before.
+> >>> So better extend the PHY driver first (set_wol, ..), and then do the follow-up
+> >>> platform changes (e.g. DT config of a connected GPIO).  
+> >>
+> >> There are two sides involved here: the listener, it should not listen to the pin
+> >> as you pointed out; the phy side, this patch tries to make the phy side
+> >> behave normally -- not keep the INTB/PMEB pin always active. The listener
+> >> side behaves correctly doesn't mean the phy side could keep the pin active.
+> >>
+> >> When .set_wol isn't implemented, this patch could make the system suspend/resume
+> >> work properly.
+> >>
+> >> PS: even with set_wol implemented as configure the pin mode, I think we
+> >> still need to clear the interrupt for phy poll mode either in set_wol
+> >> or as this patch does.  
+> >
+> > I agree with Jisheng here, Heiner, is there a reason you are pushing
+> > back on the change? Acknowledging prior interrupts while configuring the
+> > PHY is a common and established practice.
+> >  
+> First it's about the justification of the change as such, and second about the
+> question whether the change should be in the driver or in phylib.
+> 
+> Acking interrupts we do already if the PHY is configured for interrupt mode,
+> we call phy_clear_interrupt() at the beginning of phy_enable_interrupts()
+> and at the end of phy_disable_interrupts().
+> When using polling mode there is no strict need to ack interrupts.
+> If we say however that interrupts should be acked in general, then I think
+> it's not specific to RTL8211F, but it's something for phylib. Most likely
+> we would have to add a call to phy_clear_interrupt() to phy_init_hw().
 
-Reviewed-by: Mattias Brugger <matthias.bgg@gmail.com>
+it's specific to RTL8211F from the following two PoV:
+1. the PIN is shared between INTB and PMEB.
+2. the PHY Register Accessible Interrupt is enabled by default
 
-> ---
->  drivers/iommu/mtk_iommu.c | 19 +++++++++++--------
->  drivers/iommu/mtk_iommu.h |  1 +
->  2 files changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index 239d2cdbbc9f..f23919feba4e 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -37,7 +37,7 @@
->  #define REG_MMU_INVLD_START_A			0x024
->  #define REG_MMU_INVLD_END_A			0x028
->  
-> -#define REG_MMU_INV_SEL				0x038
-> +#define REG_MMU_INV_SEL_GEN1			0x038
->  #define F_INVLD_EN0				BIT(0)
->  #define F_INVLD_EN1				BIT(1)
->  
-> @@ -168,7 +168,7 @@ static void mtk_iommu_tlb_flush_all(void *cookie)
->  
->  	for_each_m4u(data) {
->  		writel_relaxed(F_INVLD_EN1 | F_INVLD_EN0,
-> -			       data->base + REG_MMU_INV_SEL);
-> +			       data->base + data->plat_data->inv_sel_reg);
->  		writel_relaxed(F_ALL_INVLD, data->base + REG_MMU_INVALIDATE);
->  		wmb(); /* Make sure the tlb flush all done */
->  	}
-> @@ -185,7 +185,7 @@ static void mtk_iommu_tlb_flush_range_sync(unsigned long iova, size_t size,
->  	for_each_m4u(data) {
->  		spin_lock_irqsave(&data->tlb_lock, flags);
->  		writel_relaxed(F_INVLD_EN1 | F_INVLD_EN0,
-> -			       data->base + REG_MMU_INV_SEL);
-> +			       data->base + data->plat_data->inv_sel_reg);
->  
->  		writel_relaxed(iova, data->base + REG_MMU_INVLD_START_A);
->  		writel_relaxed(iova + size - 1,
-> @@ -773,11 +773,12 @@ static const struct dev_pm_ops mtk_iommu_pm_ops = {
->  };
->  
->  static const struct mtk_iommu_plat_data mt2712_data = {
-> -	.m4u_plat     = M4U_MT2712,
-> -	.has_4gb_mode = true,
-> -	.has_bclk     = true,
-> -	.has_vld_pa_rng   = true,
-> -	.larbid_remap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
-> +	.m4u_plat       = M4U_MT2712,
-> +	.has_4gb_mode   = true,
-> +	.has_bclk       = true,
-> +	.has_vld_pa_rng = true,
-> +	.inv_sel_reg    = REG_MMU_INV_SEL_GEN1,
-> +	.larbid_remap   = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
->  };
->  
->  static const struct mtk_iommu_plat_data mt8173_data = {
-> @@ -785,12 +786,14 @@ static const struct mtk_iommu_plat_data mt8173_data = {
->  	.has_4gb_mode = true,
->  	.has_bclk     = true,
->  	.reset_axi    = true,
-> +	.inv_sel_reg  = REG_MMU_INV_SEL_GEN1,
->  	.larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
->  };
->  
->  static const struct mtk_iommu_plat_data mt8183_data = {
->  	.m4u_plat     = M4U_MT8183,
->  	.reset_axi    = true,
-> +	.inv_sel_reg  = REG_MMU_INV_SEL_GEN1,
->  	.larbid_remap = {0, 4, 5, 6, 7, 2, 3, 1},
->  };
->  
-> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-> index d711ac630037..afd7a2de5c1e 100644
-> --- a/drivers/iommu/mtk_iommu.h
-> +++ b/drivers/iommu/mtk_iommu.h
-> @@ -43,6 +43,7 @@ struct mtk_iommu_plat_data {
->  	bool		    has_misc_ctrl;
->  	bool                has_vld_pa_rng;
->  	bool                reset_axi;
-> +	u32                 inv_sel_reg;
->  	unsigned char       larbid_remap[MTK_LARB_NR_MAX];
->  };
->  
-> 
+I didn't see such behaviors with other PHYs.
+
+Thanks
