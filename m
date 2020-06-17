@@ -2,99 +2,78 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C752C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5E1208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:03:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NH8Kf57H"
+	by mail.kernel.org (Postfix) with ESMTP id B74792080D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726025AbgFQHDN (ORCPT
+        id S1726494AbgFQHD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 03:03:13 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43197 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgFQHDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 03:03:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49mwy44sBYz9sSc;
-        Wed, 17 Jun 2020 17:03:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1592377391;
-        bh=GrjcWt65On8ptPVGkgLJTte3NXkx9HklLRUHmriiWTE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NH8Kf57H5XFN9+75JQ4RTRnSV80r8jFNzsf1pR+WMUsjiDDl1X9ZkGZpdJ0I2npgh
-         HaTtpseUxYG26zgx6KEHKl78LqI0cm2i2Ss3c/iqh7OrtReFKRCabmkk65zd9RTZZa
-         OvqSuqd/yrC9XhXjtdvZ5irrABE+tny5s6jkYnb+H4L8sFMJyHBc5CQhmv3z2AdAhw
-         LG12zvroCmFPk6BZE9hQtUMb8LewkSvPUVtEGvHSRIzFW4lFooPxYpvlwWiitQbkg/
-         GKxxydfLszEAycBAxz0qMyoAsCGtCDSEC5mb68qYZKK5ZmpDAt8a/2KO7/A5YMAKOQ
-         nDp0wGn51DWEA==
-Date:   Wed, 17 Jun 2020 17:03:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Wed, 17 Jun 2020 03:03:29 -0400
+Received: from 167-179-156-38.a7b39c.bne.nbn.aussiebb.net ([167.179.156.38]:35725
+        "EHLO fornost.hmeau.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726134AbgFQHD3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 03:03:29 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jlS6P-0003NX-8t; Wed, 17 Jun 2020 17:03:18 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 17 Jun 2020 17:03:17 +1000
+Date:   Wed, 17 Jun 2020 17:03:17 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
         Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Emil Velikov <emil.velikov@collabora.com>
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-Message-ID: <20200617170307.3c87be5a@canb.auug.org.au>
-In-Reply-To: <c82b9c52-d4e6-9eef-e37d-0a26ee9f1183@suse.de>
-References: <20200617105929.534edd34@canb.auug.org.au>
-        <c82b9c52-d4e6-9eef-e37d-0a26ee9f1183@suse.de>
+        netdev@vger.kernel.org
+Subject: Re: linux-next: build failures after merge of the vfs tree
+Message-ID: <20200617070316.GA30348@gondor.apana.org.au>
+References: <20200616103330.2df51a58@canb.auug.org.au>
+ <20200616103440.35a80b4b@canb.auug.org.au>
+ <20200616010502.GA28834@gondor.apana.org.au>
+ <20200616033849.GL23230@ZenIV.linux.org.uk>
+ <20200616143807.GA1359@gondor.apana.org.au>
+ <20200617165715.577aa76d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CFuhTYCQOJWS.N4Fev1VXiA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617165715.577aa76d@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/CFuhTYCQOJWS.N4Fev1VXiA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jun 17, 2020 at 04:57:15PM +1000, Stephen Rothwell wrote:
+> 
+> Presumably another include needed:
+> 
+> arch/s390/lib/test_unwind.c:49:2: error: implicit declaration of function 'kmalloc' [-Werror=implicit-function-declaration]
+> arch/s390/lib/test_unwind.c:99:2: error: implicit declaration of function 'kfree' [-Werror=implicit-function-declaration]
 
-Hi Thomas,
+Hi Stephen:
 
-On Wed, 17 Jun 2020 08:33:24 +0200 Thomas Zimmermann <tzimmermann@suse.de> =
-wrote:
->
-> We recently dropped the _unlock() suffix from drm_gem_object_put(). This
-> patch should be ok.
+It's not clear how this file manages to include linux/uio.h but
+here is a patch for it anyway:
 
-Yes, but what it shows is that the drm-misc tree is still based on
-v5.7-rc1 and v5.8-rc1 has about 16000 more commits for you to get
-conflicts against :-)
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/CFuhTYCQOJWS.N4Fev1VXiA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7pwCsACgkQAVBC80lX
-0GxDGQf8CC2+Ktdz5dyuFmZlGHbsWC27PbUpPtzHBtyTU7lyG+622BZAGyeE5LYa
-kMsFA/a6lSE5IHC5z/8C+3g+MGjsLhl85AFPR1GRxCxNK4Y5UcBfxWxhKcOhM+Pd
-OcOjaSc3VRr3Dt2IG3DCdo63H5IN6xrIDPKiDzIMXlBZwaGf/33lXYap/dUsJF5U
-9wZwnGFpcpxkRqUHmuJjGCDZyzGryu2qiiTSclw3ys1OpIG9WVLqD5iqoxvOsnOV
-KQ6IyGoHyd+0hpSIQx7Ach0AbQ0n0bAE76F0dWCRj5ujykjWIcN5Px2aksXPvOj4
-fSKxyqpYyh+B3uhof+0hQ5HMyEGH5A==
-=zVg0
------END PGP SIGNATURE-----
-
---Sig_/CFuhTYCQOJWS.N4Fev1VXiA--
+diff --git a/arch/s390/lib/test_unwind.c b/arch/s390/lib/test_unwind.c
+index 32b7a30b2485..eb382ceaa116 100644
+--- a/arch/s390/lib/test_unwind.c
++++ b/arch/s390/lib/test_unwind.c
+@@ -9,6 +9,7 @@
+ #include <linux/kallsyms.h>
+ #include <linux/kthread.h>
+ #include <linux/module.h>
++#include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/kprobes.h>
+ #include <linux/wait.h>
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
