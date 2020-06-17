@@ -2,84 +2,142 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF97AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3102C20C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A53A20C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:23:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rH0fZhhf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbgFQIVd (ORCPT
+        id S1726303AbgFQIX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:21:33 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:58112 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726025AbgFQIVd (ORCPT
+        Wed, 17 Jun 2020 04:23:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgFQIXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:21:33 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-151-NNVoDzt9NdeCYy0h9mSXPw-1; Wed, 17 Jun 2020 09:21:29 +0100
-X-MC-Unique: NNVoDzt9NdeCYy0h9mSXPw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 17 Jun 2020 09:21:28 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 17 Jun 2020 09:21:28 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Charan Teja Kalla' <charante@codeaurora.org>,
-        "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        "DRI mailing list" <dri-devel@lists.freedesktop.org>
-CC:     Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
-        "vinmenon@codeaurora.org" <vinmenon@codeaurora.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] dmabuf: use spinlock to access dmabuf->name
-Thread-Topic: [PATCH] dmabuf: use spinlock to access dmabuf->name
-Thread-Index: AQHWRHCUCFGeEhsHd0uEJ3SlJWBlmajcdwBw
-Date:   Wed, 17 Jun 2020 08:21:28 +0000
-Message-ID: <b686a288cff640acaea1111fed650b02@AcuMS.aculab.com>
-References: <316a5cf9-ca71-6506-bf8b-e79ded9055b2@codeaurora.org>
- <14063C7AD467DE4B82DEDB5C278E8663010F365EF5@fmsmsx107.amr.corp.intel.com>
- <14063C7AD467DE4B82DEDB5C278E8663010F365F7D@fmsmsx107.amr.corp.intel.com>
- <5b960c9a-ef9d-b43d-716d-113efc793fe5@codeaurora.org>
-In-Reply-To: <5b960c9a-ef9d-b43d-716d-113efc793fe5@codeaurora.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 17 Jun 2020 04:23:55 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC7E5C061573
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 01:23:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=a/IWE9tuWU/BmtPxRrORlx+aawbeDdwRRzSkJeb8s9Y=; b=rH0fZhhfvUQCC0iP8g+rroEKQ0
+        0PrTZ6CzBteWMOYTVz97ZF0m5GkXiXfGvqzzLRtoDSXm82VB7NmLzTi9ONiIM4AJhWMSObMCQ7qpO
+        ROOAPicz0WYEKAS1u8hdkfs/CfeKI0/OkZImdqs+mxh3t3brugjXum5h6jm/6QjY49r3JGEM+O+ut
+        MmkyqsE/bHVSQfy6W880QJFq3NwZy7Q33B7CJ19swFhyEjIE8TyxrGYoTDwXs3NjGVeh9hHmj8m0c
+        M1SNK0hmYXZWgYIgiuoSe9DmsQcGQclymLiZp+Ty1jhNI/v/XlVF23+dWa/G8vpf0SO28fw+ENiea
+        Tf0VtR1A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlTML-0000IQ-5W; Wed, 17 Jun 2020 08:23:49 +0000
+Date:   Wed, 17 Jun 2020 01:23:49 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, paulmck@kernel.org, frederic@kernel.org,
+        tsbogend@alpha.franken.de, axboe@kernel.dk, rjw@rjwysocki.net,
+        daniel.lezcano@linaro.org, dchickles@marvell.com,
+        davem@davemloft.net, kuba@kernel.org, daniel.thompson@linaro.org,
+        gerald.schaefer@de.ibm.com
+Subject: Re: [PATCH 6/6] smp: Cleanup smp_call_function*()
+Message-ID: <20200617082349.GA19894@infradead.org>
+References: <20200615125654.678940605@infradead.org>
+ <20200615131143.434079683@infradead.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615131143.434079683@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQ2hhcmFuIFRlamEgS2FsbGENCj4gU2VudDogMTcgSnVuZSAyMDIwIDA3OjI5DQouLi4N
-Cj4gPj4gSWYgbmFtZSBpcyBmcmVlZCB5b3Ugd2lsbCBjb3B5IGdhcmJhZ2UsIGJ1dCB0aGUgb25s
-eSB3YXkNCj4gPj4gZm9yIHRoYXQgdG8gaGFwcGVuIGlzIHRoYXQgX3NldF9uYW1lIG9yIF9yZWxl
-YXNlIGhhdmUgdG8gYmUgY2FsbGVkDQo+ID4+IGF0IGp1c3QgdGhlIHJpZ2h0IHRpbWUuDQo+ID4+
-DQo+ID4+IEFuZCB0aGUgYWJvdmUgd291bGQgcHJvYmFibHkgb25seSBiZSBhbiBpc3N1ZSBpZiB0
-aGUgc2V0X25hbWUNCj4gPj4gd2FzIGNhbGxlZCwgc28geW91IHdpbGwgZ2V0IE5VTEwgb3IgYSBy
-ZWFsIG5hbWUuDQo+IA0KPiBBbmQgdGhlcmUgZXhpc3RzIGEgdXNlLWFmdGVyLWZyZWUgdG8gYXZv
-aWQgd2hpY2ggcmVxdWlyZXMgdGhlIGxvY2suIFNheQ0KPiB0aGF0IG1lbWNweSgpIGluIGRtYWJ1
-ZmZzX2RuYW1lIGlzIGluIHByb2dyZXNzIGFuZCBpbiBwYXJhbGxlbCBfc2V0X25hbWUNCj4gd2ls
-bCBmcmVlIHRoZSBzYW1lIGJ1ZmZlciB0aGF0IG1lbWNweSBpcyBvcGVyYXRpbmcgb24uDQoNCklm
-IHRoZSBuYW1lIGlzIGJlaW5nIGxvb2tlZCBhdCB3aGlsZSB0aGUgaXRlbSBpcyBiZWluZyBmcmVl
-ZA0KeW91IGFsbW9zdCBjZXJ0YWlubHkgaGF2ZSBtdWNoIGJpZ2dlciBwcm9ibGVtcyB0aGF0IGp1
-c3QNCnRoZSBuYW1lIGJlaW5nIGEgJ2p1bmsnIHBvaW50ZXIuDQoNCglEYXZpZC4NCg0KLQ0KUmVn
-aXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRv
-biBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+> -static DEFINE_PER_CPU(call_single_data_t, backtrace_csd);
+> +static DEFINE_PER_CPU(call_single_data_t, backtrace_csd) = CSD_INIT(handle_backtrace, NULL);
+>  static struct cpumask backtrace_csd_busy;
 
+Besides the crazy long line: does assigning to a DEFINE_PER_CPU
+really work and initialize all the members?
+
+> @@ -178,9 +178,7 @@ static void zpci_handle_fallback_irq(voi
+>  		if (atomic_inc_return(&cpu_data->scheduled) > 1)
+>  			continue;
+>  
+> -		cpu_data->csd.func = zpci_handle_remote_irq;
+> -		cpu_data->csd.info = &cpu_data->scheduled;
+> -		cpu_data->csd.flags = 0;
+> +		cpu_data->csd = CSD_INIT(zpci_handle_remote_irq, &cpu_data->scheduled);
+
+This looks weird.  I'd much rather see an initialization ala INIT_WORK:
+
+		INIT_CSD(&cpu_data->csd, zpci_handle_remote_irq,
+			 &cpu_data->scheduled);
+
+Also for many smp_call_function_* users it would be trivial and actually
+lead to nicer code if the data argument went away and we'd just use
+container_of to get to the containing structure.  For the remaining
+ones we can trivially general a container strucuture that has the
+extra data pointer.
+
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -629,9 +629,7 @@ void blk_mq_force_complete_rq(struct req
+>  		shared = cpus_share_cache(cpu, ctx->cpu);
+>  
+>  	if (cpu != ctx->cpu && !shared && cpu_online(ctx->cpu)) {
+> -		rq->csd.func = __blk_mq_complete_request_remote;
+> -		rq->csd.info = rq;
+> -		rq->csd.flags = 0;
+> +		rq->csd = CSD_INIT(__blk_mq_complete_request_remote, rq);
+>  		smp_call_function_single_async(ctx->cpu, &rq->csd);
+>  	} else {
+>  		q->mq_ops->complete(rq);
+> --- a/block/blk-softirq.c
+> +++ b/block/blk-softirq.c
+> @@ -57,13 +57,8 @@ static void trigger_softirq(void *data)
+>  static int raise_blk_irq(int cpu, struct request *rq)
+>  {
+>  	if (cpu_online(cpu)) {
+> -		call_single_data_t *data = &rq->csd;
+> -
+> -		data->func = trigger_softirq;
+> -		data->info = rq;
+> -		data->flags = 0;
+> -
+> -		smp_call_function_single_async(cpu, data);
+> +		rq->csd = CSD_INIT(trigger_softirq, rq);
+> +		smp_call_function_single_async(cpu, &rq->csd);
+>  		return 0;
+>  	}
+
+FYI, I rewrote much of the blk code in this series:
+
+https://lore.kernel.org/linux-block/20200611064452.12353-1-hch@lst.de/T/#t
+
+that you also were Cced on.
+
+>  struct __call_single_data {
+> -	union {
+> -		struct __call_single_node node;
+> -		struct {
+> -			struct llist_node llist;
+> -			unsigned int flags;
+> -		};
+> -	};
+> +	struct __call_single_node node;
+>  	smp_call_func_t func;
+>  	void *info;
+>  };
+
+Can we rename this to struct call_single_data without the __prefix
+and switch all the users you touch anyway away from the typedef?
