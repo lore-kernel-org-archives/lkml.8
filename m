@@ -2,220 +2,107 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A80C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D07C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5F022073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A31522073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:42:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="kNHdvK3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgFQImV (ORCPT
+        id S1726909AbgFQIma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:42:21 -0400
-Received: from mga12.intel.com ([192.55.52.136]:41178 "EHLO mga12.intel.com"
+        Wed, 17 Jun 2020 04:42:30 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:60767 "EHLO mail.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgFQImT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:42:19 -0400
-IronPort-SDR: caG6HPTLXi2+qer1q2221r1UP9uLFdzKvyMUTvqcu9Q8kB9eRJNfxF+a/2SQyu9GHa0gEpd8rK
- B0NC2C35ywbw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 01:42:18 -0700
-IronPort-SDR: HqtkOXXxfARW5VNTB+CfbUCqgLEsAWxV0I8YeKzLoPIG0FzWYi8KpGFIk7HjWWwDo8dcw31rn7
- XHPUIsnlUhLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,522,1583222400"; 
-   d="scan'208";a="277208314"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 17 Jun 2020 01:42:18 -0700
-Received: from [10.249.225.191] (abudanko-mobl.ccr.corp.intel.com [10.249.225.191])
-        by linux.intel.com (Postfix) with ESMTP id E8B81580223;
-        Wed, 17 Jun 2020 01:42:15 -0700 (PDT)
-Subject: [PATCH v8 10/13] perf stat: introduce --control fd:ctl-fd[,ack-fd]
- options
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <38b206d9-0038-be6f-66bb-eecbf82016e6@linux.intel.com>
-Date:   Wed, 17 Jun 2020 11:42:14 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726282AbgFQIm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:42:29 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id b17dc5b8;
+        Wed, 17 Jun 2020 08:24:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=E3dus0mAltY1TrmmLK9MI4DIxAo=; b=kNHdvK
+        3FaQNYPUv5TymrpkWVzfZzVTDe507P8fhJ03uL/03VzTw+Qg21NKlUH9M3N4BOEh
+        56nXQ2H2yWz9xb/rWcckNYXaIFR4sO0YGMzUXGDRBbLPU6iSx5AHaT6U4zq20E7J
+        qFYTpQZe29DcZcbqDzEvpBK4fASn87ZPn2RWUft/Ls7ykyBjBWSPd1T7myDkuaEJ
+        vB4w0fZBSUKUmHFYPcrGSGGqIULaIBlkMkHFTqtM/ieSXF3j/Lmuh117ECYdCaeA
+        vZ1bUbzIyml3Ok3KToC58msuB5QP3ZU4E0eAwxEdvIt3O1H0sTZKTULS+9P7d8AW
+        mW0L6Q4ZWdnaXvyw==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 1b7c5c05 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Wed, 17 Jun 2020 08:24:23 +0000 (UTC)
+Received: by mail-il1-f170.google.com with SMTP id 9so1318086ilg.12;
+        Wed, 17 Jun 2020 01:42:27 -0700 (PDT)
+X-Gm-Message-State: AOAM5306PkNhTu3gBiu5wb/2/UjcMDUC1uja3pUsZNxhblwrTXs6IqOs
+        lxUpYGFo0de6+wJYhMFVn8QFjCSmODkX2eL+sKs=
+X-Google-Smtp-Source: ABdhPJzTYz/LscR65/jJ5KTsW005C2jHQ0GnnD/0q1WTL5nI6l6/fHsGGDp5lRZC/lYo1q8nIBivZ/dL9+SC3Q1A6mI=
+X-Received: by 2002:a92:c852:: with SMTP id b18mr7539915ilq.224.1592383346674;
+ Wed, 17 Jun 2020 01:42:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAHmME9rmAznrAmEQTOaLeMM82iMFTfCNfpxDGXw4CJjuVEF_gQ@mail.gmail.com>
+ <20200615104332.901519-1-Jason@zx2c4.com> <CAHmME9oemScgo2mg8fzqtJCbKJfu-op0WvG5RcpBCS1hHNmpZw@mail.gmail.com>
+ <CAMj1kXGWma7T+C5TJ2wYZ22MJr=3FQRqDjF--YuGuzFdAygP-g@mail.gmail.com>
+In-Reply-To: <CAMj1kXGWma7T+C5TJ2wYZ22MJr=3FQRqDjF--YuGuzFdAygP-g@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Wed, 17 Jun 2020 02:42:15 -0600
+X-Gmail-Original-Message-ID: <CAHmME9oJGOH-LwAocAknHFm385Ee_v_itMV4UKj1Sq00SiM4ng@mail.gmail.com>
+Message-ID: <CAHmME9oJGOH-LwAocAknHFm385Ee_v_itMV4UKj1Sq00SiM4ng@mail.gmail.com>
+Subject: Re: [PATCH] acpi: disallow loading configfs acpi tables when locked down
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 17, 2020 at 2:38 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Wed, 17 Jun 2020 at 00:21, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> >
+> > Hi Rafael, Len,
+> >
+> > Looks like I should have CC'd you on this patch. This is probably
+> > something we should get into 5.8-rc2, so that it can then get put into
+> > stable kernels, as some people think this is security sensitive.
+> > Bigger picture is this:
+> >
+> > https://data.zx2c4.com/american-unsigned-language-2.gif
+> > https://data.zx2c4.com/american-unsigned-language-2-fedora-5.8.png
+> >
+> > Also, somebody mentioned to me that Microsoft's ACPI implementation
+> > disallows writes to system memory as a security mitigation. I haven't
+> > looked at what that actually entails, but I wonder if entirely
+> > disabling support for ACPI_ADR_SPACE_SYSTEM_MEMORY would be sensible.
+> > I haven't looked at too many DSDTs. Would that break real hardware, or
+> > does nobody do that? Alternatively, the range of acceptable addresses
+> > for SystemMemory could exclude kernel memory. Would that break
+> > anything? Have you heard about Microsoft's mitigation to know more
+> > details on what they figured out they could safely restrict without
+> > breaking hardware? Either way, food for thought I suppose.
+> >
+>
+> ACPI_ADR_SPACE_SYSTEM_MEMORY may be used for everything that is memory
+> mapped, i.e., PCIe ECAM space, GPIO control registers etc.
+>
+> I agree that using ACPI_ADR_SPACE_SYSTEM_MEMORY for any memory that is
+> under the kernel's control is a bad idea, and this should be easy to
+> filter out: the SystemMemory address space handler needs the ACPI
+> support routines to map the physical addresses used by AML into
+> virtual kernel addresses, so all these accesses go through
+> acpi_os_ioremap(). So as a first step, it should be reasonable to put
+> a lockdown check there, and fail any access to OS owned memory if
+> lockdown is enabled, and print a warning if it is not.
 
-Introduce --control fd:ctl-fd[,ack-fd] options to pass open file
-descriptors numbers from command line. Extend perf-stat.txt file
-with --control fd:ctl-fd[,ack-fd] options description. Document
-possible usage model introduced by --control fd:ctl-fd[,ack-fd]
-options by providing example bash shell script.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/Documentation/perf-stat.txt | 39 ++++++++++++++++++++++++++
- tools/perf/builtin-stat.c              | 38 +++++++++++++++++++++++++
- tools/perf/util/stat.h                 |  2 ++
- 3 files changed, 79 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 9f32f6cd558d..c9bfefc051fb 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -176,6 +176,45 @@ with it.  --append may be used here.  Examples:
-      3>results  perf stat --log-fd 3          -- $cmd
-      3>>results perf stat --log-fd 3 --append -- $cmd
- 
-+--control fd:ctl-fd[,ack-fd]
-+Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
-+'disable': disable events). Measurements can be started with events disabled using
-+--delay=-1 option. Optionally send control command completion ('ack\n') to ack-fd descriptor
-+to synchronize with the controlling process. Example of bash shell script to enable and
-+disable events during measurements:
-+
-+#!/bin/bash
-+
-+ctl_dir=/tmp/
-+
-+ctl_fifo=${ctl_dir}perf_ctl.fifo
-+test -p ${ctl_fifo} && unlink ${ctl_fifo}
-+mkfifo ${ctl_fifo}
-+exec {ctl_fd}<>${ctl_fifo}
-+
-+ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
-+test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
-+mkfifo ${ctl_ack_fifo}
-+exec {ctl_fd_ack}<>${ctl_ack_fifo}
-+
-+perf stat -D -1 -e cpu-cycles -a -I 1000       \
-+          --control fd:${ctl_fd},${ctl_fd_ack} \
-+          -- sleep 30 &
-+perf_pid=$!
-+
-+sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
-+sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
-+
-+exec {ctl_fd_ack}>&-
-+unlink ${ctl_ack_fifo}
-+
-+exec {ctl_fd}>&-
-+unlink ${ctl_fifo}
-+
-+wait -n ${perf_pid}
-+exit $?
-+
-+
- --pre::
- --post::
- 	Pre and post measurement hooks, e.g.:
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index cc56d71a3ed5..4cb29b40b860 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -188,6 +188,8 @@ static struct perf_stat_config stat_config = {
- 	.metric_only_len	= METRIC_ONLY_LEN,
- 	.walltime_nsecs_stats	= &walltime_nsecs_stats,
- 	.big_num		= true,
-+	.ctl_fd			= -1,
-+	.ctl_fd_ack		= -1
- };
- 
- static bool cpus_map_matched(struct evsel *a, struct evsel *b)
-@@ -1032,6 +1034,33 @@ static int parse_metric_groups(const struct option *opt,
- 					 &stat_config.metric_events);
- }
- 
-+static int parse_control_option(const struct option *opt,
-+				const char *str,
-+				int unset __maybe_unused)
-+{
-+	char *comma = NULL, *endptr = NULL;
-+	struct perf_stat_config *config = (struct perf_stat_config *)opt->value;
-+
-+	if (strncmp(str, "fd:", 3))
-+		return -EINVAL;
-+
-+	config->ctl_fd = strtoul(&str[3], &endptr, 0);
-+	if (endptr == &str[3])
-+		return -EINVAL;
-+
-+	comma = strchr(str, ',');
-+	if (comma) {
-+		if (endptr != comma)
-+			return -EINVAL;
-+
-+		config->ctl_fd_ack = strtoul(comma + 1, &endptr, 0);
-+		if (endptr == comma + 1 || *endptr != '\0')
-+			return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static struct option stat_options[] = {
- 	OPT_BOOLEAN('T', "transaction", &transaction_run,
- 		    "hardware transaction statistics"),
-@@ -1133,6 +1162,10 @@ static struct option stat_options[] = {
- 		"libpfm4 event selector. use 'perf list' to list available events",
- 		parse_libpfm_events_option),
- #endif
-+	OPT_CALLBACK(0, "control", &stat_config, "fd:ctl-fd[,ack-fd]",
-+		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
-+		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.",
-+		      parse_control_option),
- 	OPT_END()
- };
- 
-@@ -2304,6 +2337,9 @@ int cmd_stat(int argc, const char **argv)
- 	signal(SIGALRM, skip_signal);
- 	signal(SIGABRT, skip_signal);
- 
-+	if (evlist__initialize_ctlfd(evsel_list, stat_config.ctl_fd, stat_config.ctl_fd_ack))
-+		goto out;
-+
- 	status = 0;
- 	for (run_idx = 0; forever || run_idx < stat_config.run_count; run_idx++) {
- 		if (stat_config.run_count != 1 && verbose > 0)
-@@ -2323,6 +2359,8 @@ int cmd_stat(int argc, const char **argv)
- 	if (!forever && status != -1 && (!interval || stat_config.summary))
- 		print_counters(NULL, argc, argv);
- 
-+	evlist__finalize_ctlfd(evsel_list);
-+
- 	if (STAT_RECORD) {
- 		/*
- 		 * We synthesize the kernel mmap record just so that older tools
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 626421ef35c2..06f0baabe775 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -133,6 +133,8 @@ struct perf_stat_config {
- 	struct perf_cpu_map		*cpus_aggr_map;
- 	u64			*walltime_run;
- 	struct rblist		 metric_events;
-+	int			 ctl_fd;
-+	int			 ctl_fd_ack;
- };
- 
- void perf_stat__set_big_num(int set);
--- 
-2.24.1
-
-
+Makes sense. Though I was thinking of doing this unconditionally, not
+just for lockdown, as a "realer" security mitigation (hence CCing
+kernel-hardening), against bugs that manage to mess with acpi things.
+A second mitigation might be marking inmemory acpi bytecode pages as
+read only.
