@@ -2,102 +2,71 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD53C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2107721789
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592419679;
-	bh=d7ylVfQ7C8f2oiLX16FaR4UvGdVUfh/XyCv910N2yMQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=WYtKtD9GeSYFNDeyo3th7GP7X3BZ7A8pTpU5kcNJkhG5IA0LaRduFQETVJ4knqbng
-	 cSCV5augmecHwTcSGyOpMkSOSDxlmmwgEbnK16h0tWRRocWwn0cKV3l+hdO2+8Qxg/
-	 42puKddhELMY3rT5BH40/LXkAPT0ZgtSrQ4BSauQ=
+	by mail.kernel.org (Postfix) with ESMTP id 72FF621532
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgFQSr6 (ORCPT
+        id S1727904AbgFQStE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:47:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39120 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 14:49:04 -0400
+Received: from mga03.intel.com ([134.134.136.65]:43887 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727015AbgFQSr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 14:47:57 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB3DC206DB;
-        Wed, 17 Jun 2020 18:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592419677;
-        bh=d7ylVfQ7C8f2oiLX16FaR4UvGdVUfh/XyCv910N2yMQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Oe3lqD5tc7ICJ0ZaE02Nynb15FVm8s2kKNBfgWHYI4crwrnNU5QtTFNXiQtTRro1L
-         48d81RfPM9qt5MLMGAkP+DgIWYaEI6CendR2lnGRBP+b071ivNt8pZszGY+J4Lxg4R
-         C4YNp14OmGBjB+7yNFngyvJxeZD3+k5LmUwrVFbo=
-Date:   Wed, 17 Jun 2020 13:53:17 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] enetc: Use struct_size() helper in kzalloc()
-Message-ID: <20200617185317.GA623@embeddedor>
+        id S1726835AbgFQStD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 14:49:03 -0400
+IronPort-SDR: AgB3EHHOqcmXJqAoiZkPc9x9DMxkIhrWGT1ADco5W4/mYDxJq1pUaHdx7oPpjwE+jH0g/9KkyM
+ hLflplTRjtnw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 11:49:03 -0700
+IronPort-SDR: rQlCPzqKvWW49g3x119dkXNz5t6mV47/X/As+esF/JyCfluuw/Q8Z7rWHLT9i+p8/7YK/++dYP
+ ilF5fwgCCkvQ==
+X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
+   d="scan'208";a="450353444"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 11:49:02 -0700
+Date:   Wed, 17 Jun 2020 11:49:01 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     "Song, Youquan" <youquan.song@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/mce: Add Skylake quirk for patrol scrub reported
+ errors
+Message-ID: <20200617184901.GA387@agluck-desk2.amr.corp.intel.com>
+References: <20200615184056.26531-1-tony.luck@intel.com>
+ <20200616192952.GO13515@zn.tnic>
+ <3908561D78D1C84285E8C5FCA982C28F7F670974@ORSMSX115.amr.corp.intel.com>
+ <20200617074158.GB10118@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200617074158.GB10118@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes.
+On Wed, Jun 17, 2020 at 09:41:58AM +0200, Borislav Petkov wrote:
+> On Tue, Jun 16, 2020 at 10:33:08PM +0000, Luck, Tony wrote:
+> > If the BIOS option is left in the default setting, uncorrectable errors found
+> > by the patrol scrubber are reported with a machine check. Those MSCOD
+> > and MCACOD signatures are the same ... but that's not important because
+> > MCi_STATUS.UC==1. So Linux doesn't need to jump through hoops to
+> > "upgrade" the severity.
+> 
+> No, this is not what I meant: I meant when you have the setting enabled
+> to downgrade those errors, can they be detected as part of another MCE
+> being raised...
 
-This code was detected with the help of Coccinelle and, audited and
-fixed manually.
+Yes one of these downgraded error logs could be sitting in a bank
+whe a different machine check fires. But the severity calculation will
+ignore it as MCi_STATUS.EN==0
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/ethernet/freescale/enetc/enetc.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
-index 298c55786fd9..61dbf19075fb 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc.c
-@@ -1687,7 +1687,7 @@ int enetc_ioctl(struct net_device *ndev, struct ifreq *rq, int cmd)
- int enetc_alloc_msix(struct enetc_ndev_priv *priv)
- {
- 	struct pci_dev *pdev = priv->si->pdev;
--	int size, v_tx_rings;
-+	int v_tx_rings;
- 	int i, n, err, nvec;
- 
- 	nvec = ENETC_BDR_INT_BASE_IDX + priv->bdr_int_num;
-@@ -1702,15 +1702,13 @@ int enetc_alloc_msix(struct enetc_ndev_priv *priv)
- 
- 	/* # of tx rings per int vector */
- 	v_tx_rings = priv->num_tx_rings / priv->bdr_int_num;
--	size = sizeof(struct enetc_int_vector) +
--	       sizeof(struct enetc_bdr) * v_tx_rings;
- 
- 	for (i = 0; i < priv->bdr_int_num; i++) {
- 		struct enetc_int_vector *v;
- 		struct enetc_bdr *bdr;
- 		int j;
- 
--		v = kzalloc(size, GFP_KERNEL);
-+		v = kzalloc(struct_size(v, tx_ring, v_tx_rings), GFP_KERNEL);
- 		if (!v) {
- 			err = -ENOMEM;
- 			goto fail;
--- 
-2.27.0
-
+-Tony
