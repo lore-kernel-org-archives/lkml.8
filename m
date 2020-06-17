@@ -2,105 +2,196 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34190C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1073F2088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7648420888
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:39:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zc3NNU9C"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K1P4icbm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgFQOix (ORCPT
+        id S1726959AbgFQOjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 10:38:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60672 "EHLO
+        Wed, 17 Jun 2020 10:39:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgFQOix (ORCPT
+        with ESMTP id S1726355AbgFQOjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 10:38:53 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84DF7C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Kz+LMLXOVZt0DhWuklquEirxsE+Y/8beNA/Kd+7/KLk=; b=Zc3NNU9CE/FA3EHevP4Wvy/DuS
-        rPJVvum9vS4DXvB7GyGP/8H/UMmfIUTxk6PeluJOy7vk8JPg15tEY6xlEgc0F2gRKq8ezhPWPALwN
-        UpIEIDhfYr49Z43uzuRCQuvtbQFTsbS4DvAm2Zd0IfHLbJDBSmSWnH0zokWENblhaHWUPGsJ/cdbR
-        nHKvmLmdU+cvsMP3a35uS3EfDG8NifkmMbP9JX4zBy3okUv7uOPgVeY511J/NQcQUL/gwE+y+YwW7
-        P0TRxeyJVJR288qi6jFtJZNSgCNG/mnmqQqAJr6OONb2iAxquFrCmcFklCLFNV3bQ77frYWq4rVIH
-        Ihc5AFoA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlZCx-0007S4-A5; Wed, 17 Jun 2020 14:38:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C2736301A32;
-        Wed, 17 Jun 2020 16:38:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A5C0A203CE7EE; Wed, 17 Jun 2020 16:38:26 +0200 (CEST)
-Date:   Wed, 17 Jun 2020 16:38:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 3/3] powerpc/8xx: Provide ptep_get() with 16k pages
-Message-ID: <20200617143826.GJ2531@hirez.programming.kicks-ass.net>
-References: <cover.1592225557.git.christophe.leroy@csgroup.eu>
- <341688399c1b102756046d19ea6ce39db1ae4742.1592225558.git.christophe.leroy@csgroup.eu>
- <20200615132244.GR2531@hirez.programming.kicks-ass.net>
- <87wo45db8d.fsf@mpe.ellerman.id.au>
+        Wed, 17 Jun 2020 10:39:23 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351C6C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:39:22 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id k11so2573008ejr.9
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:39:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Hp21piGHsn7agUSyXFgTrryIp2qf2aW4dX8w1tTdFAQ=;
+        b=K1P4icbmrpXAkcV9YDVqQ37pfEGBzuBW3Ramc+WC17uKN5rl13MHwBI51R3kWEeHD1
+         RPShy1U/CpBqrsloZYaVylODq+KGw2xSOkKxF2agc/KVt1EKIval0NZumgyRJZELNTgO
+         190/ZjceYSb3+Ip+Y8Y/5she3fLhpEoXh4j5/sC6EU6bI8B7i8haV1/yDLMRmuJeGppO
+         yhS/D19DQVPGoOMCgXjXv8KXT+n9ApVTB1WI38fs1ObO2AGLTUvxNnFMIG7exIFmMw9V
+         4nJz/h4/nl7PgVf2CCGEYD9TMF7cxq7cZqjg6tdphAwY2Rz9KSYHv4+s27XlDiuF3Do0
+         LWuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Hp21piGHsn7agUSyXFgTrryIp2qf2aW4dX8w1tTdFAQ=;
+        b=OuP76cPz+yGG7F587I+Nm8VEzfuGXRWzfROObdt4z6rhrdTA8V0qXi/v414+6LYx/7
+         qoyi5c1wYLUWUgU1AxAFk+zM4etNHZhGBlfihn6NP6LTKpM7UBd/+CaUeYGLgC6DYt+v
+         8adjl6py7LTfizYt5Xaux7Xmc0w8BMePPJ+40ZEMwqvE0DFyPIMHmUNvggS8T5UWtrux
+         aqBrM6pZhuqOVhAUDffJBwanNFZ94XERJHNUmeIsUbsWkRTK+0hY/RsUTIP8qbyeen9S
+         rGS1NcLJjErqRMZgEqIhFi6Mh/g4XjA7mdNiHQrI42wzKsHyYogXoEZSNbYlYQZ5VWU3
+         moAA==
+X-Gm-Message-State: AOAM530RhGkQtbaShL7gUND8p0Y8NMOSLVGEct0FmejaJv0DodU6W2c0
+        gkHVvj0Okfc6tXR0f5OQV5Mw0Q==
+X-Google-Smtp-Source: ABdhPJxLaOaRToMf9UF6SdNB0Ecr2eORyxp0pZiau38To63+9MZNptlFFfGl++IztCMMaBaouHNWgA==
+X-Received: by 2002:a17:906:22d0:: with SMTP id q16mr7685367eja.455.1592404760889;
+        Wed, 17 Jun 2020 07:39:20 -0700 (PDT)
+Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id dn17sm12374349edb.26.2020.06.17.07.39.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 07:39:20 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 16:39:09 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Liu Yi L <yi.l.liu@intel.com>
+Cc:     alex.williamson@redhat.com, eric.auger@redhat.com,
+        baolu.lu@linux.intel.com, joro@8bytes.org, kevin.tian@intel.com,
+        jacob.jun.pan@linux.intel.com, ashok.raj@intel.com,
+        jun.j.tian@intel.com, yi.y.sun@intel.com, peterx@redhat.com,
+        hao.wu@intel.com, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, will@kernel.org,
+        robin.murphy@arm.com
+Subject: Re: [PATCH v2 02/15] iommu: Report domain nesting info
+Message-ID: <20200617143909.GA886590@myrica>
+References: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
+ <1591877734-66527-3-git-send-email-yi.l.liu@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87wo45db8d.fsf@mpe.ellerman.id.au>
+In-Reply-To: <1591877734-66527-3-git-send-email-yi.l.liu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 12:21:22AM +1000, Michael Ellerman wrote:
-> Peter Zijlstra <peterz@infradead.org> writes:
-> > On Mon, Jun 15, 2020 at 12:57:59PM +0000, Christophe Leroy wrote:
+[+ Will and Robin]
 
-> >> +#if defined(CONFIG_PPC_8xx) && defined(CONFIG_PPC_16K_PAGES)
-> >> +#define __HAVE_ARCH_PTEP_GET
-> >> +static inline pte_t ptep_get(pte_t *ptep)
-> >> +{
-> >> +	pte_t pte = {READ_ONCE(ptep->pte), 0, 0, 0};
-> >> +
-> >> +	return pte;
-> >> +}
-> >> +#endif
-> >
-> > Would it make sense to have a comment with this magic? The casual reader
-> > might wonder WTH just happened when he stumbles on this :-)
+Hi Yi,
+
+On Thu, Jun 11, 2020 at 05:15:21AM -0700, Liu Yi L wrote:
+> IOMMUs that support nesting translation needs report the capability info
+> to userspace, e.g. the format of first level/stage paging structures.
 > 
-> I tried writing a helpful comment but it's too late for my brain to form
-> sensible sentences.
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+> @Jean, Eric: as nesting was introduced for ARM, but looks like no actual
+> user of it. right? So I'm wondering if we can reuse DOMAIN_ATTR_NESTING
+> to retrieve nesting info? how about your opinions?
+
+Sure, I think we could rework the getters for DOMAIN_ATTR_NESTING since
+they aren't used, but we do need to keep the setters as is.
+
+Before attaching a domain, VFIO sets DOMAIN_ATTR_NESTING if userspace
+requested a VFIO_TYPE1_NESTING_IOMMU container. This is necessary for the
+SMMU driver to know how to attach later, but at that point we don't know
+whether the SMMU does support nesting (since the domain isn't attached to
+any endpoint). During attach, the SMMU driver adapts to the SMMU's
+capabilities, and may well fallback to one stage if the SMMU doesn't
+support nesting.
+
+VFIO should check after attaching that the nesting attribute held, by
+calling iommu_domain_get_attr(NESTING). At the moment it does not, and
+since your 03/15 patch does that with additional info, I agree with
+reusing DOMAIN_ATTR_NESTING instead of adding DOMAIN_ATTR_NESTING_INFO.
+
+However it requires changing the get_attr(NESTING) implementations in both
+SMMU drivers as a precursor of this series, to avoid breaking
+VFIO_TYPE1_NESTING_IOMMU on Arm. Since we haven't yet defined the
+nesting_info structs for SMMUv2 and v3, I suppose we could return an empty
+struct iommu_nesting_info for now?
+
 > 
-> Christophe can you send a follow-up with a comment explaining it? In
-> particular the zero entries stand out, it's kind of subtle that those
-> entries are only populated with the right value when we write to the
-> page table.
+>  include/linux/iommu.h      |  1 +
+>  include/uapi/linux/iommu.h | 34 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 35 insertions(+)
+> 
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 78a26ae..f6e4b49 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -126,6 +126,7 @@ enum iommu_attr {
+>  	DOMAIN_ATTR_FSL_PAMUV1,
+>  	DOMAIN_ATTR_NESTING,	/* two stages of translation */
+>  	DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
+> +	DOMAIN_ATTR_NESTING_INFO,
+>  	DOMAIN_ATTR_MAX,
+>  };
+>  
+> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> index 303f148..02eac73 100644
+> --- a/include/uapi/linux/iommu.h
+> +++ b/include/uapi/linux/iommu.h
+> @@ -332,4 +332,38 @@ struct iommu_gpasid_bind_data {
+>  	};
+>  };
+>  
+> +struct iommu_nesting_info {
+> +	__u32	size;
+> +	__u32	format;
 
-static inline pte_t ptep_get(pte_t *ptep)
-{
-	unsigned long val = READ_ONCE(ptep->pte);
-	/* 16K pages have 4 identical value 4K entries */
-	pte_t pte = {val, val, val, val);
-	return pte;
-}
+What goes into format? And flags? This structure needs some documentation.
 
-Maybe something like that?
+Thanks,
+Jean
+
+> +	__u32	features;
+> +#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
+> +#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
+> +#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
+> +	__u32	flags;
+> +	__u8	data[];
+> +};
+> +
+> +/*
+> + * @flags:	VT-d specific flags. Currently reserved for future
+> + *		extension.
+> + * @addr_width:	The output addr width of first level/stage translation
+> + * @pasid_bits:	Maximum supported PASID bits, 0 represents no PASID
+> + *		support.
+> + * @cap_reg:	Describe basic capabilities as defined in VT-d capability
+> + *		register.
+> + * @cap_mask:	Mark valid capability bits in @cap_reg.
+> + * @ecap_reg:	Describe the extended capabilities as defined in VT-d
+> + *		extended capability register.
+> + * @ecap_mask:	Mark the valid capability bits in @ecap_reg.
+> + */
+> +struct iommu_nesting_info_vtd {
+> +	__u32	flags;
+> +	__u16	addr_width;
+> +	__u16	pasid_bits;
+> +	__u64	cap_reg;
+> +	__u64	cap_mask;
+> +	__u64	ecap_reg;
+> +	__u64	ecap_mask;
+> +};
+> +
+>  #endif /* _UAPI_IOMMU_H */
+> -- 
+> 2.7.4
+> 
