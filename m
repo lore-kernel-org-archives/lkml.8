@@ -2,138 +2,241 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80815C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30FD62080D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:14:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="rzAm3ReT"
+	by mail.kernel.org (Postfix) with ESMTP id 626042080D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgFQQOZ (ORCPT
+        id S1726969AbgFQQPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:14:25 -0400
-Received: from mout.web.de ([212.227.15.4]:36499 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726597AbgFQQOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:14:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592410449;
-        bh=L7NPJqF6WRIs5fDwphZDoi0ha33NtLh00PGn9Tln6uw=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=rzAm3ReTB7xW84XXFZjVlk6orUzEsOfEIafImpvArAgnv+Sd8yuNX1m99W4NurWvZ
-         WeNZ/eAgqnh1EkaQoLPxQxoElJDT4YhbgmCI2/GOBboFUNjRzeqKKsKP1EXiGL99Wd
-         4cMaogv7Tl/iBJTNLg9t0Vmsy5qEUWnYb60lBJR4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.115.66]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N0qqv-1j0esW1xjB-00wlu8; Wed, 17
- Jun 2020 18:14:09 +0200
-Cc:     "Gustavo A. R. Silva" <garsilva@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] coccinelle: misc: add array_size_dup script to detect
- missed overflow checks
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Denis Efremov <efremov@linux.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Coccinelle <cocci@systeme.lip6.fr>
-Message-ID: <3d375680-cf02-5e2d-fcf0-69b3bdcbf748@web.de>
-Date:   Wed, 17 Jun 2020 18:14:08 +0200
+        Wed, 17 Jun 2020 12:15:02 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20582 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726511AbgFQQPB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 12:15:01 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05HG2O91113581;
+        Wed, 17 Jun 2020 12:15:00 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31qg6p5e5p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 12:14:59 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05HG2Jsd113089;
+        Wed, 17 Jun 2020 12:14:59 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31qg6p5e4j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 12:14:58 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05HGBHwi030547;
+        Wed, 17 Jun 2020 16:14:56 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 31q6bs9bej-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 16:14:56 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05HGErQF12714460
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jun 2020 16:14:54 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E3A2142041;
+        Wed, 17 Jun 2020 16:14:53 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4787E42042;
+        Wed, 17 Jun 2020 16:14:53 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.185.179])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 17 Jun 2020 16:14:53 +0000 (GMT)
+Subject: Re: [PATCH 19/25] mm/s390: Use mm_fault_accounting()
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
+References: <20200615221607.7764-1-peterx@redhat.com>
+ <20200615222302.8452-1-peterx@redhat.com>
+ <20200616155933.GA12897@oc3871087118.ibm.com> <20200616163510.GD11838@xz-x1>
+ <edb88596-6f2c-2648-748d-591a0b1e0131@de.ibm.com>
+ <20200617160617.GD76766@xz-x1>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
+ J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
+ CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
+ 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
+ 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
+ +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
+ T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
+ OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
+ /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
+ IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABzUNDaHJpc3RpYW4g
+ Qm9ybnRyYWVnZXIgKDJuZCBJQk0gYWRkcmVzcykgPGJvcm50cmFlZ2VyQGxpbnV4LmlibS5j
+ b20+wsF5BBMBAgAjBQJdP/hMAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQEXu8
+ gLWmHHy/pA/+JHjpEnd01A0CCyfVnb5fmcOlQ0LdmoKWLWPvU840q65HycCBFTt6V62cDljB
+ kXFFxMNA4y/2wqU0H5/CiL963y3gWIiJsZa4ent+KrHl5GK1nIgbbesfJyA7JqlB0w/E/SuY
+ NRQwIWOo/uEvOgXnk/7+rtvBzNaPGoGiiV1LZzeaxBVWrqLtmdi1iulW/0X/AlQPuF9dD1Px
+ hx+0mPjZ8ClLpdSp5d0yfpwgHtM1B7KMuQPQZGFKMXXTUd3ceBUGGczsgIMipZWJukqMJiJj
+ QIMH0IN7XYErEnhf0GCxJ3xAn/J7iFpPFv8sFZTvukntJXSUssONnwiKuld6ttUaFhSuSoQg
+ OFYR5v7pOfinM0FcScPKTkrRsB5iUvpdthLq5qgwdQjmyINt3cb+5aSvBX2nNN135oGOtlb5
+ tf4dh00kUR8XFHRrFxXx4Dbaw4PKgV3QLIHKEENlqnthH5t0tahDygQPnSucuXbVQEcDZaL9
+ WgJqlRAAj0pG8M6JNU5+2ftTFXoTcoIUbb0KTOibaO9zHVeGegwAvPLLNlKHiHXcgLX1tkjC
+ DrvE2Z0e2/4q7wgZgn1kbvz7ZHQZB76OM2mjkFu7QNHlRJ2VXJA8tMXyTgBX6kq1cYMmd/Hl
+ OhFrAU3QO1SjCsXA2CDk9MM1471mYB3CTXQuKzXckJnxHkHOwU0ETpw8+AEQAJjyNXvMQdJN
+ t07BIPDtbAQk15FfB0hKuyZVs+0lsjPKBZCamAAexNRk11eVGXK/YrqwjChkk60rt3q5i42u
+ PpNMO9aS8cLPOfVft89Y654Qd3Rs1WRFIQq9xLjdLfHh0i0jMq5Ty+aiddSXpZ7oU6E+ud+X
+ Czs3k5RAnOdW6eV3+v10sUjEGiFNZwzN9Udd6PfKET0J70qjnpY3NuWn5Sp1ZEn6lkq2Zm+G
+ 9G3FlBRVClT30OWeiRHCYB6e6j1x1u/rSU4JiNYjPwSJA8EPKnt1s/Eeq37qXXvk+9DYiHdT
+ PcOa3aNCSbIygD3jyjkg6EV9ZLHibE2R/PMMid9FrqhKh/cwcYn9FrT0FE48/2IBW5mfDpAd
+ YvpawQlRz3XJr2rYZJwMUm1y+49+1ZmDclaF3s9dcz2JvuywNq78z/VsUfGz4Sbxy4ShpNpG
+ REojRcz/xOK+FqNuBk+HoWKw6OxgRzfNleDvScVmbY6cQQZfGx/T7xlgZjl5Mu/2z+ofeoxb
+ vWWM1YCJAT91GFvj29Wvm8OAPN/+SJj8LQazd9uGzVMTz6lFjVtH7YkeW/NZrP6znAwv5P1a
+ DdQfiB5F63AX++NlTiyA+GD/ggfRl68LheSskOcxDwgI5TqmaKtX1/8RkrLpnzO3evzkfJb1
+ D5qh3wM1t7PZ+JWTluSX8W25ABEBAAHCwV8EGAECAAkFAk6cPPgCGwwACgkQEXu8gLWmHHz8
+ 2w//VjRlX+tKF3szc0lQi4X0t+pf88uIsvR/a1GRZpppQbn1jgE44hgF559K6/yYemcvTR7r
+ 6Xt7cjWGS4wfaR0+pkWV+2dbw8Xi4DI07/fN00NoVEpYUUnOnupBgychtVpxkGqsplJZQpng
+ v6fauZtyEcUK3dLJH3TdVQDLbUcL4qZpzHbsuUnTWsmNmG4Vi0NsEt1xyd/Wuw+0kM/oFEH1
+ 4BN6X9xZcG8GYUbVUd8+bmio8ao8m0tzo4pseDZFo4ncDmlFWU6hHnAVfkAs4tqA6/fl7RLN
+ JuWBiOL/mP5B6HDQT9JsnaRdzqF73FnU2+WrZPjinHPLeE74istVgjbowvsgUqtzjPIG5pOj
+ cAsKoR0M1womzJVRfYauWhYiW/KeECklci4TPBDNx7YhahSUlexfoftltJA8swRshNA/M90/
+ i9zDo9ySSZHwsGxG06ZOH5/MzG6HpLja7g8NTgA0TD5YaFm/oOnsQVsf2DeAGPS2xNirmknD
+ jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
+ ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <8bd8dcf6-f2f0-d44e-9bf8-6fd4fe299aa9@de.ibm.com>
+Date:   Wed, 17 Jun 2020 18:14:52 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200617160617.GD76766@xz-x1>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ZWtQepdeNIFRFkkAOBrgKMXcCzYvDhWc/KNRvcjJjTFR5a39IEU
- y9bPS0wnH5WCew+ACOlBKaPqlGOyVJCVU2m6cNTtkitTAZyTz+J8y5liIR4PRzq1tjxh7hu
- AlBaebq3mPjCyp3OvYmiFdfxi3VL25YQU+PKfxGal+gCk8HEycJM41JJgtVxws+2s4ZAwwZ
- g6TviPTlWfXg3xy33/jGQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Lhx4k/MhV0U=:rmtZNedd+LkTRKx6Cicttr
- RkqwG9R8kuQdAuPbhrgjgIyo2vKgUCPEaJ7/2wu4h4/HU0OCxHagcSkSStN9MQlUcpaL/Ito4
- b/6qIZeyxTuu7gKQemszVgf4uveQWPS/f0EE4CljMkmveqH0i+B9fh38sILAo6dg0PtmMFybL
- zqXPT7QUrmE+dFi2YgyHWTrVgDzQ9AO7zVQ5jnDotUV28QRUc2SqBt8s5JtsACJPIFJkfgU6q
- jaxRycaw+Hj/rGAKSFDiSS/7sJ/9C7eVmJ9Xv3Mm84etVobqTJJpPrapdN1rZPxgY+Gp9eudW
- R+B8VQqzXF2YF0fYdfgFFadbUp1b8HB7I9AikBJ+MKpAoyaC7MBpZDh/KYL5b670bHZGxYsAw
- fgdlzYeNWurREwgwxwhWb9wQJXgXqBqg80j7d2LhbFcS28DZPVdpVCyXlRJvq28Za+NpFYKwX
- YYP6Lfxi9IjAl6NwAhXlIwKjri7HjALeRt8PNDX2hSzChj4Ri2jPpXFyWur1/qOGI31qYXmT8
- Uu8aYhMkLQovakmYmBfwgW+yqFDt/y6o1AaQd9k2mvTjpVWYIbsJZpb/mFRjf5TEiPA/3xMV8
- qw4qIi+LJb42u3y3a14H3RFdusQpid6QfUtQHIzksp9oG9zYUqJYGEaD3z/eLTCeDeO1x37yd
- IBOR2Rioj/VM6BJSubRNUSx6+41yOs1Kxyh7XC0+pbsqTIQWZ5KpKr+58lUhdX9rwT0Lbp94s
- 0tgeZhkWVrkMOqSn+8/hrb3conl6jxBH+6L8xQi7gtWIM2/U8YAs+4O+gcpxngSU/el4pqdT3
- 7RQ67iWvlinzV9t+YwgVFVKsXMI0oXHJhMLRkvYfCP33udURnG6659QsIF8BoJ2c9Rxc1zxBM
- Mqsvx73TNqwjwRBkqbA9p/tUxXIjZ8IZLsgu5cxmpGgOFvH5ICBe/Paps97uxBhy/YL4Zs9px
- SoNclFit7SktxXCV9iJHWueX2ohwSxp7gKLPbn2XRCwKw+2BoUarznXmNoG35R8GlqOOq5wyL
- gxI6XjAZyJIn7GoYPwi2+FlmnlmaRQ9Yg4Zu7nGwnxoQ42yWEzKRwNjd43bMdsVU6N9XIfpQv
- DJbyvaJBNnfny/o3kLuL84WkTA5BgXQB6+CymvIwrgyjRQutf2DFW4dKrgs5HP4sSQZlTfVHe
- CyIEqET9rA6FXdpxqyfSyPrgOaPXWBf6h5YIgJCvAQu1hMhacvXf+H1xf1JJXkC9CE6Ry8D1p
- 7Jyo5fESOL7wOcbnt
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-17_06:2020-06-17,2020-06-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ mlxscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
+ cotscore=-2147483648 bulkscore=0 phishscore=0 impostorscore=0 adultscore=0
+ malwarescore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006170122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> (
-> * size =3D E1 * E2;@p
-> |
-> * size =3D E1 * E2 * E3;@p
-> |
-> * size =3D E1 * E2 + E3;@p
-> )
 
-I suggest to reconsider also the order of elements for such a SmPL disjunc=
-tion.
 
-Can a computation like =E2=80=9CE2 * E3=E2=80=9D also be matched by the ex=
-pression
-metavariable =E2=80=9CE2=E2=80=9D alone?
+On 17.06.20 18:06, Peter Xu wrote:
+> Hi, Christian,
+> 
+> On Wed, Jun 17, 2020 at 08:19:29AM +0200, Christian Borntraeger wrote:
+>>
+>>
+>> On 16.06.20 18:35, Peter Xu wrote:
+>>> Hi, Alexander,
+>>>
+>>> On Tue, Jun 16, 2020 at 05:59:33PM +0200, Alexander Gordeev wrote:
+>>>>> @@ -489,21 +489,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+>>>>>  	if (unlikely(fault & VM_FAULT_ERROR))
+>>>>>  		goto out_up;
+>>>>>
+>>>>> -	/*
+>>>>> -	 * Major/minor page fault accounting is only done on the
+>>>>> -	 * initial attempt. If we go through a retry, it is extremely
+>>>>> -	 * likely that the page will be found in page cache at that point.
+>>>>> -	 */
+>>>>>  	if (flags & FAULT_FLAG_ALLOW_RETRY) {
+>>>>> -		if (fault & VM_FAULT_MAJOR) {
+>>>>> -			tsk->maj_flt++;
+>>>>> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
+>>>>> -				      regs, address);
+>>>>> -		} else {
+>>>>> -			tsk->min_flt++;
+>>>>> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
+>>>>> -				      regs, address);
+>>>>> -		}
+>>>>>  		if (fault & VM_FAULT_RETRY) {
+>>>>>  			if (IS_ENABLED(CONFIG_PGSTE) && gmap &&
+>>>>>  			    (flags & FAULT_FLAG_RETRY_NOWAIT)) {
+> 
+> [1]
+> 
+>>>>
+>>>> Seems like the call to mm_fault_accounting() will be missed if
+>>>> we entered here with FAULT_FLAG_RETRY_NOWAIT flag set, since it
+>>>> jumps to "out_up"...
+>>>
+>>> This is true as a functional change.  However that also means that we've got a
+>>> VM_FAULT_RETRY, which hints that this fault has been requested to retry rather
+>>> than handled correctly (for instance, due to some try_lock failed during the
+>>> fault process).
+>>>
+>>> To me, that case should not be counted as a page fault at all?  Or we might get
+>>> the same duplicated accounting when the page fault retried from a higher stack.
+>>>
+>>> Thanks
+>>
+>> This case below (the one with the gmap) is the KVM case for doing a so called
+>> pseudo page fault to our guests. (we notify our guests about major host page
+>> faults and let it reschedule to something else instead of halting the vcpu).
+>> This is being resolved with either gup or fixup_user_fault asynchronously by
+>> KVM code (this can also be sync when the guest does not match some conditions)
+>> We do not change the counters in that code as far as I can tell so we should
+>> continue to do it here.
+>>
+>> (see arch/s390/kvm/kvm-s390.c
+>> static int vcpu_post_run(struct kvm_vcpu *vcpu, int exit_reason)
+>> {
+>> [...]
+>>         } else if (current->thread.gmap_pfault) {
+>>                 trace_kvm_s390_major_guest_pfault(vcpu);
+>>                 current->thread.gmap_pfault = 0;
+>>                 if (kvm_arch_setup_async_pf(vcpu))
+>>                         return 0;
+>>                 return kvm_arch_fault_in_page(vcpu, current->thread.gmap_addr, 1);
+>>         }
+> 
+> Please correct me if I'm wrong... but I still think what this patch does is the
+> right thing to do.
+> 
+> Note again that IMHO when reached [1] above it means the page fault is not
+> handled correctly so we need to fallback to KVM async page fault, then we
+> shouldn't increment the accountings until it's finally handled correctly. That
+> final accounting should be done in the async pf path in gup code where the page
+> fault is handled:
+> 
+>   kvm_arch_fault_in_page
+>     gmap_fault
+>       fixup_user_fault
+> 
+> Where in fixup_user_fault() we have:
+> 
+> 	if (tsk) {
+> 		if (major)
+> 			tsk->maj_flt++;
+> 		else
+> 			tsk->min_flt++;
+> 	}
+> 
 
-Regards,
-Markus
+Right that case does work. Its the case where we do not inject a pseudo pagefault and
+instead fall back to synchronous fault-in.
+What is about the other case:
+
+kvm_setup_async_pf
+	->workqueue
+		async_pf_execute
+			get_user_pages_remote
+
+Does get_user_pages_remote do the accounting as well? I cant see that.
