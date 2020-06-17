@@ -2,252 +2,145 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D07C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF2AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA1920679
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645FB2080D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kma4vbXH"
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="tMv/lU6r";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iFTBANDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgFQEBB (ORCPT
+        id S1726620AbgFQECy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 00:01:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgFQEAi (ORCPT
+        Wed, 17 Jun 2020 00:02:54 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:38745 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725808AbgFQECx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 00:00:38 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2E0C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 21:00:36 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g12so313131pll.10
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 21:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SlQ5igEsh5KDwoixNwY0LLGl50IR6ZlWr1kPj8X7CoQ=;
-        b=Kma4vbXHFqBrO4xMrAauPTUefYukJYvQE4Oen/Q5PnIWkf/92pL9prUePtRX003eSP
-         B0ZwK6gIJAPYk8TVsOLhwP5Wq/DA1q9/vqOdQfWdhN7/R/jsFIqE9Fupl2UAFuKZ9HDz
-         TS7N/eFleOWflvN/8vzgDFDwKf4uE+2/IyVH0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SlQ5igEsh5KDwoixNwY0LLGl50IR6ZlWr1kPj8X7CoQ=;
-        b=k0t+rvBwbKTd8TxIQny1F//Et1Gnog2xZ8rWFTcuZUicYDfI3L+rJuofHaz23GTyJC
-         4y3GNxoLh3MsPn1IDhd+nhJRG/lQhY2hzypvq4yHTO0cWHH7KL9AgU7AZHVGwX/YOwIM
-         +lBXzBhleTwGWdVS2JMlo1r8Yz7oNp+Z98JOATDIIg4soeg2yLE3IraRbpgRf/RnYmSS
-         5y2qaG1K+Hb6WnVsQvj1cChy2VP9YOIg/ZTOmo9rR83kPbkOrmOpLv62q3dBiTfp3XOY
-         js80t8B/HLyJVksfHkkh4wuV8bQQUU0YXEJmmXVQ0TikuLnsyRmednE1TDMq1kUGJjCJ
-         eQfQ==
-X-Gm-Message-State: AOAM531Quo/hsNxM0jakSVzb+MyfaOTL7dhqwjbgSI0SccgPmbTe6/yL
-        US/MjRzHOm5XoVAwprlZenMazg==
-X-Google-Smtp-Source: ABdhPJwq/11e42VrUCeaJmKkcZfECkB69efRQz9evTXpw2YJ/ExLfgLG2WDEPqnTSa9yzHZFSaTOhw==
-X-Received: by 2002:a17:902:bc4c:: with SMTP id t12mr4729669plz.141.1592366436465;
-        Tue, 16 Jun 2020 21:00:36 -0700 (PDT)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id q1sm20013089pfk.132.2020.06.16.21.00.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 21:00:36 -0700 (PDT)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     marcel@holtmann.org, linux-bluetooth@vger.kernel.org
-Cc:     alainm@chromium.org, chromeos-bluetooth-upstreaming@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 1/4] Bluetooth: Add bdaddr_list_with_flags for classic whitelist
-Date:   Tue, 16 Jun 2020 21:00:19 -0700
-Message-Id: <20200616210008.1.I31e5a748e9aacdf5494c1904c59066415cb5b097@changeid>
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-In-Reply-To: <20200617040022.174448-1-abhishekpandit@chromium.org>
-References: <20200617040022.174448-1-abhishekpandit@chromium.org>
+        Wed, 17 Jun 2020 00:02:53 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.nyi.internal (Postfix) with ESMTP id 9AE115C0050;
+        Wed, 17 Jun 2020 00:02:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Wed, 17 Jun 2020 00:02:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+         h=date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=YYfJzkXxS3bKe9mypfnLuAbDv5C
+        wQbW2dSJq5UHVJgA=; b=tMv/lU6rziRX8vMJK0RP3UNwwkzQPkkASC1azokuB7o
+        JzwZ/OAYXqJXmhqWWR8tFbguPhMBHC3+lsxBafWgCG5Z2RdvVOivcsR7nLfZenyX
+        9QdJj+qRHgEkklK1NfaGTRNPKlHH5k4h3WqNZZ7UWWEIXtOxrGrhF/C9TPWnlcT4
+        NBrOlSFHu0C802isDcUEV7ObyZXVAlGEDM4z1BA+i6EUoXSO41EtAtOTKL63nbz2
+        4HS6JTzZxiWFABZ2PUcxH3WOZG5Z8aS3xhIVAplV9rNdLqaTapFGQoi4xGq6ToBw
+        0v5zcsDcp5sUcJ9jggEX/ll/ULeZXy6taXIV4R/8OFw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=YYfJzk
+        XxS3bKe9mypfnLuAbDv5CwQbW2dSJq5UHVJgA=; b=iFTBANDef1uVZIASdwZtlV
+        KUMAApAWapczbvCdtT46CSwFOm70VvUCkHbVvOt5Uf0bCLqeozPIjDro9wjR0fq/
+        8iPQ9g622IKVwnnhaFZUnGTlVtZwm2G6smbmIsQI+lnEMq0f/IM36uRd9Lhs3iKZ
+        crHRBeQJhrTx3XOaS1z589gKDNtbfGQVGiscqmRS6WKMrRwN+iQ1TW+ZI3vmkAdJ
+        3uDus4PBJ9agxmvZ5uOikpv4S17G+bw3vDBgDiG9XLki6qseXjj6jborQaxsuu0U
+        4U81j6Oqko3QU+WPvjcl4CMPqN5M4s8LSg5WZr6aCUn/g1nu/8INdMwkmfyICZZQ
+        ==
+X-ME-Sender: <xms:65XpXhmyZslBjYMgPVcjxboYZt0CUejcs2VInyJ-fEMT9j22HPp0Bg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudejuddgkeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvrghkrghs
+    hhhiucfurghkrghmohhtohcuoehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjh
+    hpqeenucggtffrrghtthgvrhhnpeelhfeugedvjefgjefgudekfedutedvtddutdeuieev
+    tddtgeetjeekvdefgeefhfenucfkphepudektddrvdefhedrfedrheegnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgrshhhihes
+    shgrkhgrmhhotggthhhirdhjph
+X-ME-Proxy: <xmx:65XpXs1mvilYNFFOcQtaq9yll2Tg90qliADAccjqNEYx3hihwMFDDA>
+    <xmx:65XpXnpLyljMgiaa4NQrPfCULRiHbwVjjzhnVVYFLBjTrWRsDOZBEw>
+    <xmx:65XpXhkrTTNZGkQY4OZDLUe9k_lXfp4t_X2iOE2Zsg4JIk75PlLHEw>
+    <xmx:7JXpXs-d4-1Pbnj-rTDLcUs9hCTiz1FPvDJEgNauHyqVZwV5dALKIA>
+Received: from workstation (ad003054.dynamic.ppp.asahi-net.or.jp [180.235.3.54])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BAE9D3280060;
+        Wed, 17 Jun 2020 00:02:50 -0400 (EDT)
+Date:   Wed, 17 Jun 2020 13:02:48 +0900
+From:   Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To:     JaeHun Jung <jh0801.jung@samsung.com>
+Cc:     tiwai@suse.de, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ANDROID: sound: usb: Add vendor's hooking interface
+Message-ID: <20200617040248.GA245386@workstation>
+Mail-Followup-To: JaeHun Jung <jh0801.jung@samsung.com>, tiwai@suse.de,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <CGME20200617022554epcas2p214a49f03a15e504d8faa28148e06e796@epcas2p2.samsung.com>
+ <1592360304-29621-1-git-send-email-jh0801.jung@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592360304-29621-1-git-send-email-jh0801.jung@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to more easily add device flags to classic devices, create
-a new type of bdaddr_list that supports setting flags.
+Hi,
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Reviewed-by: Alain Michaud <alainm@chromium.org>
----
+On Wed, Jun 17, 2020 at 11:18:24AM +0900, JaeHun Jung wrote:
+> In mobile, a co-processor is used when using USB audio
+> to improve power consumption.
+> hooking is required for sync-up when operating
+> the co-processor. So register call-back function.
+> The main operation of the call-back function is as follows:
+> - Initialize the co-processor by transmitting data
+>   when initializing.
+> - Change the co-processor setting value through
+>   the interface function.
+> - Configure sampling rate
+> - pcm open/close
+> 
+> Bug: 156315379
+> 
+> Change-Id: I32e1dd408e64aaef68ee06c480c4b4d4c95546dc
+> Signed-off-by: JaeHun Jung <jh0801.jung@samsung.com>
+> ---
+>  sound/usb/card.c     | 16 ++++++++++++++++
+>  sound/usb/card.h     |  1 +
+>  sound/usb/clock.c    |  5 +++++
+>  sound/usb/pcm.c      | 33 +++++++++++++++++++++++++++++++++
+>  sound/usb/usbaudio.h | 30 ++++++++++++++++++++++++++++++
+>  5 files changed, 85 insertions(+)
 
- include/net/bluetooth/hci_core.h | 18 ++++++++--
- net/bluetooth/hci_core.c         | 58 ++++++++++++++++++++++++++++++++
- net/bluetooth/hci_event.c        |  8 ++---
- net/bluetooth/mgmt.c             |  5 +--
- 4 files changed, 81 insertions(+), 8 deletions(-)
+> diff --git a/sound/usb/card.c b/sound/usb/card.c
+> index fd6fd17..2f3fa14 100644
+> --- a/sound/usb/card.c
+> +++ b/sound/usb/card.c
+> @@ -111,6 +111,7 @@ MODULE_PARM_DESC(skip_validation, "Skip unit descriptor validation (default: no)
+>  static DEFINE_MUTEX(register_mutex);
+>  static struct snd_usb_audio *usb_chip[SNDRV_CARDS];
+>  static struct usb_driver usb_audio_driver;
+> +struct snd_usb_audio_vendor_ops *usb_audio_ops;
+>  
+>  /*
+>   * disconnect streams
+> @@ -210,6 +211,12 @@ static int snd_usb_create_stream(struct snd_usb_audio *chip, int ctrlif, int int
+>  	return 0;
+>  }
+>  
+> +void snd_set_vender_interface(struct snd_usb_audio_vendor_ops *vendor_ops)
+> +{
+> +	usb_audio_ops = vendor_ops;
+> +}
+> +EXPORT_SYMBOL_GPL(snd_set_vender_interface);
 
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 0d5dbb6cb5a089..95a3935325bbbc 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -136,6 +136,13 @@ struct bdaddr_list_with_irk {
- 	u8 local_irk[16];
- };
- 
-+struct bdaddr_list_with_flags {
-+	struct list_head list;
-+	bdaddr_t bdaddr;
-+	u8 bdaddr_type;
-+	u32 current_flags;
-+};
-+
- struct bt_uuid {
- 	struct list_head list;
- 	u8 uuid[16];
-@@ -1169,12 +1176,19 @@ struct bdaddr_list *hci_bdaddr_list_lookup(struct list_head *list,
- struct bdaddr_list_with_irk *hci_bdaddr_list_lookup_with_irk(
- 				    struct list_head *list, bdaddr_t *bdaddr,
- 				    u8 type);
-+struct bdaddr_list_with_flags *
-+hci_bdaddr_list_lookup_with_flags(struct list_head *list, bdaddr_t *bdaddr,
-+				  u8 type);
- int hci_bdaddr_list_add(struct list_head *list, bdaddr_t *bdaddr, u8 type);
- int hci_bdaddr_list_add_with_irk(struct list_head *list, bdaddr_t *bdaddr,
--					u8 type, u8 *peer_irk, u8 *local_irk);
-+				 u8 type, u8 *peer_irk, u8 *local_irk);
-+int hci_bdaddr_list_add_with_flags(struct list_head *list, bdaddr_t *bdaddr,
-+				   u8 type, u32 flags);
- int hci_bdaddr_list_del(struct list_head *list, bdaddr_t *bdaddr, u8 type);
- int hci_bdaddr_list_del_with_irk(struct list_head *list, bdaddr_t *bdaddr,
--								u8 type);
-+				 u8 type);
-+int hci_bdaddr_list_del_with_flags(struct list_head *list, bdaddr_t *bdaddr,
-+				   u8 type);
- void hci_bdaddr_list_clear(struct list_head *list);
- 
- struct hci_conn_params *hci_conn_params_lookup(struct hci_dev *hdev,
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 4f1052a7c488e5..8a471bec2731ed 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -3023,6 +3023,20 @@ struct bdaddr_list_with_irk *hci_bdaddr_list_lookup_with_irk(
- 	return NULL;
- }
- 
-+struct bdaddr_list_with_flags *
-+hci_bdaddr_list_lookup_with_flags(struct list_head *bdaddr_list,
-+				  bdaddr_t *bdaddr, u8 type)
-+{
-+	struct bdaddr_list_with_flags *b;
-+
-+	list_for_each_entry(b, bdaddr_list, list) {
-+		if (!bacmp(&b->bdaddr, bdaddr) && b->bdaddr_type == type)
-+			return b;
-+	}
-+
-+	return NULL;
-+}
-+
- void hci_bdaddr_list_clear(struct list_head *bdaddr_list)
- {
- 	struct bdaddr_list *b, *n;
-@@ -3084,6 +3098,30 @@ int hci_bdaddr_list_add_with_irk(struct list_head *list, bdaddr_t *bdaddr,
- 	return 0;
- }
- 
-+int hci_bdaddr_list_add_with_flags(struct list_head *list, bdaddr_t *bdaddr,
-+				   u8 type, u32 flags)
-+{
-+	struct bdaddr_list_with_flags *entry;
-+
-+	if (!bacmp(bdaddr, BDADDR_ANY))
-+		return -EBADF;
-+
-+	if (hci_bdaddr_list_lookup(list, bdaddr, type))
-+		return -EEXIST;
-+
-+	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	bacpy(&entry->bdaddr, bdaddr);
-+	entry->bdaddr_type = type;
-+	entry->current_flags = flags;
-+
-+	list_add(&entry->list, list);
-+
-+	return 0;
-+}
-+
- int hci_bdaddr_list_del(struct list_head *list, bdaddr_t *bdaddr, u8 type)
- {
- 	struct bdaddr_list *entry;
-@@ -3123,6 +3161,26 @@ int hci_bdaddr_list_del_with_irk(struct list_head *list, bdaddr_t *bdaddr,
- 	return 0;
- }
- 
-+int hci_bdaddr_list_del_with_flags(struct list_head *list, bdaddr_t *bdaddr,
-+				   u8 type)
-+{
-+	struct bdaddr_list_with_flags *entry;
-+
-+	if (!bacmp(bdaddr, BDADDR_ANY)) {
-+		hci_bdaddr_list_clear(list);
-+		return 0;
-+	}
-+
-+	entry = hci_bdaddr_list_lookup_with_flags(list, bdaddr, type);
-+	if (!entry)
-+		return -ENOENT;
-+
-+	list_del(&entry->list);
-+	kfree(entry);
-+
-+	return 0;
-+}
-+
- /* This function requires the caller holds hdev->lock */
- struct hci_conn_params *hci_conn_params_lookup(struct hci_dev *hdev,
- 					       bdaddr_t *addr, u8 addr_type)
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index cfeaee347db32d..8981954ff4c47d 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -2697,10 +2697,10 @@ static void hci_conn_request_evt(struct hci_dev *hdev, struct sk_buff *skb)
- 	 */
- 	if (hci_dev_test_flag(hdev, HCI_MGMT) &&
- 	    !hci_dev_test_flag(hdev, HCI_CONNECTABLE) &&
--	    !hci_bdaddr_list_lookup(&hdev->whitelist, &ev->bdaddr,
--				    BDADDR_BREDR)) {
--		    hci_reject_conn(hdev, &ev->bdaddr);
--		    return;
-+	    !hci_bdaddr_list_lookup_with_flags(&hdev->whitelist, &ev->bdaddr,
-+					       BDADDR_BREDR)) {
-+		hci_reject_conn(hdev, &ev->bdaddr);
-+		return;
- 	}
- 
- 	/* Connection accepted */
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index 99fbfd467d0465..6d996e5e5bcc2d 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -5997,8 +5997,9 @@ static int add_device(struct sock *sk, struct hci_dev *hdev,
- 			goto unlock;
- 		}
- 
--		err = hci_bdaddr_list_add(&hdev->whitelist, &cp->addr.bdaddr,
--					  cp->addr.type);
-+		err = hci_bdaddr_list_add_with_flags(&hdev->whitelist,
-+						     &cp->addr.bdaddr,
-+						     cp->addr.type, 0);
- 		if (err)
- 			goto unlock;
- 
--- 
-2.27.0.290.gba653c62da-goog
+I think the symbol name has typo; 'vender' against 'vendor'.
 
+Anyway, this feature is not widely used at present. I suggest to add
+kernel configuration for the feature at kernel compilation time, IMO.
+
+
+Regards
+
+Takashi Sakamoto
