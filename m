@@ -2,353 +2,221 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB779C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 02:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 02:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1C9920810
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 02:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F0720810
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 02:59:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e3JiYK2+"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GDEj5KuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgFQC6J (ORCPT
+        id S1726695AbgFQC7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 22:58:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgFQC6I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 22:58:08 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36FFFC061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 19:58:07 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id y11so976751ljm.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 19:58:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w0iLmDwGkwJdY6xXNUfSksH8/GBYhs2+eI9Ld/xQ1Es=;
-        b=e3JiYK2+sSY2tORGWVkPE0YcQQR8gcGNAV18A10wNtrgMdf06eEc/seQggIvvg/bqV
-         n3amATKjFquRwsWWXIDQRrZ0xM1neyRqlandS8iYxx+1m/h0v3oZ3W+yT8jmPPHaqjq8
-         CGGc4IzevDLj0yOV8vEUuAEZmn6vEYIpJurcXbyAQsoEuUFkPtayKfzApxXhgrtUARs6
-         GyVWPAj1B8x7zmgVgalRh/A8dfmFarn+ziy1slglVixNl9fNm2jtwq7YF0FrzifgvyTX
-         tvHLpmzmXf5Dg6ZyKvKzNM00amfis/CEu2FB1iBh8KxEiEtmy0RBgbRNvmXjuPnaw3d4
-         K/sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w0iLmDwGkwJdY6xXNUfSksH8/GBYhs2+eI9Ld/xQ1Es=;
-        b=OCx2sfvx0lxOIkadEJheURIBI9k0UfrND0u2g7lOdVxxBzmCDNsW3I2Cf51dYfpx1n
-         /MQ3zvuRi1iKOXup7I9/hWQDgPdIYLevixXnwHS1vxO7e5ZEc2qitfpPqBFrKdQMrZJG
-         HKDu0GFbJ9tGi2jnk5nGSrhHKM0x8TN8tGH1imHexq3btV3hjC1diukxLGT/3+BZvHXI
-         FmqGwFqgAFYw6i0KAGLZqZHBcxtwS/Y0J84zTf1aR/syhueMFv13Gf/n8STdz+WttrmT
-         aMoDr28jo5Fi+EoiKHkJu2rHKY7t0KUvXgEsabjYFGF9LkDfs5+VGgovOUJAjY7/vvb5
-         c0Rw==
-X-Gm-Message-State: AOAM530pEk1HWFQs/KyJbW3SduwhfuDxD5hOG9y6fsfvPsg0cJI34Dpv
-        NUcMOlfFnJQFjK7et+jue/RLgw+Zu4SRgBdD6wr3ow==
-X-Google-Smtp-Source: ABdhPJx9o3orf/QdjPJQGACW46Ai5aYZtCTE+RoEG0L0RrKNoRBOrmlQB+trxEMIxnkADI4icH+AqZjMahEpFJOXVo0=
-X-Received: by 2002:a2e:960b:: with SMTP id v11mr2860722ljh.77.1592362685133;
- Tue, 16 Jun 2020 19:58:05 -0700 (PDT)
+        Tue, 16 Jun 2020 22:59:22 -0400
+Received: from mail-eopbgr00063.outbound.protection.outlook.com ([40.107.0.63]:39490
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726044AbgFQC7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 22:59:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PGSA4sT8exO1X0Zhwf2+HwB51YVNvJWA4DKV6kyZ5jKwV40QgR3bAByZkkVtkZ3maZbgQka60+GiokMHAaqs3Gv+w5oaOA/22pEmqJM8zzSYYaZypmZnQI3pD5i3kVP/scVZFxjNNPr+7juTFGp7ahtk41urPPKVZpvg1dr6SMRejCufomxe4sRiYXaDczzai5/70t9lr85mjE5GPH4GrxzMaOeuUB2fYClyjeE/vbgpzXPOi5zoipPRFKoAMDubQZLuioiUXKQC6Ch+8ClZZUK80jIRBUezrlF0F5cYIdZY+JNJvv1Dtxobityw6+ATQPIv8mH2egIcnjim283tBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zvnfV5fWd7qgzRnRhY8xAwF5FPID5Zq83EGA0La5AJQ=;
+ b=Isg5QxUVNQ3Tzt3owm+/ytN8DS0fjAtq18cyMJe9aG3epqWa8EqWfAPAgfMVQvANIvFoJiMx2EVT/14qNXwwvFuCeLkpt9Xg5OcD9T7UxotwC9KBeqdW4Q2jvswHuIiqP7pZ4/d3D/iWn0QBeUqBDp7OArQeYxWxpZ3ADcTAc+4uigYPkvqeK64jlZ7beQewY6cCZ2d+sHhyGmxoynHxy2gV1m00c+w/WeEC9+/8W/qKJSGp1ZAti2EQ2bRh4SuSFYrKS4uiYbFK30B2bbsZSjn0p1DwVf2mtFHa4o2sUgzB5R0KbPXarC/UkUkTgxpfVbrajS6VaYsrkp/rIke1Kw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zvnfV5fWd7qgzRnRhY8xAwF5FPID5Zq83EGA0La5AJQ=;
+ b=GDEj5KuAACE7uSnTWQDtvocUSpcYC7UQaP4AT8FTTPWF84gEneQFPNg9gDH4aRHYFipQg0I17KPzSw0S0cr/h1B/8CB+fxLkulJXXQeG36PEupav+V3N0Ju2/yZAGvkoPkNnYtt2xrPDlVlimleNF6u5f8m+wPL0TDy75Ieht4A=
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
+ by AM6PR04MB3959.eurprd04.prod.outlook.com (2603:10a6:209:4f::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.24; Wed, 17 Jun
+ 2020 02:59:17 +0000
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3088.028; Wed, 17 Jun 2020
+ 02:59:16 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V5 1/9] pinctrl: imx: Support building SCU pinctrl driver
+ as module
+Thread-Topic: [PATCH V5 1/9] pinctrl: imx: Support building SCU pinctrl driver
+ as module
+Thread-Index: AQHWP+Xe3FoK7wvcIE2WhqslqxeLCKja/NXggAAZlYCAAQ64MA==
+Date:   Wed, 17 Jun 2020 02:59:16 +0000
+Message-ID: <AM6PR04MB49661AA8A25B73D04FFF6769809A0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+References: <1591875295-19427-1-git-send-email-Anson.Huang@nxp.com>
+ <1591875295-19427-2-git-send-email-Anson.Huang@nxp.com>
+ <AM6PR04MB4966C661D52B43E6938FCBF4809D0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916610502199D90B4BFC5E3F59D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916610502199D90B4BFC5E3F59D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 43eac679-3431-4927-0411-08d8126a6c8a
+x-ms-traffictypediagnostic: AM6PR04MB3959:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB3959CA9B2678BEFB9B32307C809A0@AM6PR04MB3959.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 04371797A5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2+KRgXfryBWYuWW92HtcaNHhlVRVzYIj7Y6Vrh4jcTpBUkFAQmPNjGogUkGEyXHM1LKOwZGPUfMOvKQ9G1MJESJHrNnaXw77zVS/HH8ZCSg1JbOo4tX8piVm9WYgWunRygH01qoiA5myU88eTx24wYarkGR8bXPqNSf8g9ahQhjW8I0AsN5vl6yte64nOYAklbiEFZZTy0vXx2OASKyWKb3h3UDf5nYEhc/styRyzYtCgParLt9sLHKNhD/CgcWymtKcKY8Dfafa3DaC6aBNJ7MWQoddsr/E5S3j5N0+3/aA6Q8n8MO4mHlXcKa2y50l8BZ5OqtKWfWX7JoCaeYWP1TqMXRdGTcDj3jw8dGuza0zoB/zf03ldDRrAkt9tkXa
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(376002)(366004)(39860400002)(136003)(33656002)(4326008)(8676002)(316002)(110136005)(478600001)(55016002)(8936002)(26005)(9686003)(2906002)(7696005)(83380400001)(186003)(6506007)(86362001)(52536014)(66446008)(64756008)(66556008)(53546011)(76116006)(66946007)(66476007)(44832011)(5660300002)(71200400001)(921003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: JRxRSL3rdnznkJ2ACxWhFq/dk85VYY463wwplu6U64lg1LKrDXnKyVdWwNn5yeVb4r7ffvdnnbHygjHZ7BoVkTE70zSMYZrZ7WZW4WoegsHwsbkNn0m8TPEFjgPlPOaY6fO381pZxl8yHYpg1Of8+h9dpHlR7awjJG+lYONr/kUa7EJroUspyIVhk5krKbMQ4//X5xUiS7HTImMMdtmD75T1jzVM82fFT3k3qxLSfcSQJGb337K6nPAHE9Yl1NK5QO0l+Cf+mhBVMBvLJ9VXqY80bvBFdCmsMLUwiaWik/mrABJs1uGttt3/XQIfVxyHoQIMjPpHYKP+3SehZuyxlcINt0gmypQGU/+B76bLOr2KAz4fAAnLgTXlhu+Mhm1o1pqYuaTE0J1kYEXxUXF6d0kn5iZc2qewqQkGJYPMMG9G4TwiNt6CAq/sNMbRfRTmm8xOLkPsX2IA4oa6pFv8DyVJx/lTBF9NDzjeEjr2tDU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-3-guro@fb.com>
-In-Reply-To: <20200608230654.828134-3-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 16 Jun 2020 19:57:54 -0700
-Message-ID: <CALvZod7B9NFtAZS_cd8pPt0=BUB0sL4WuDtbOhvfMhroGs9PMg@mail.gmail.com>
-Subject: Re: [PATCH v6 02/19] mm: memcg: prepare for byte-sized vmstat items
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43eac679-3431-4927-0411-08d8126a6c8a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2020 02:59:16.7843
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bXBQhWKU04zRhkSosSt5QoWKOlaG8P/AFJFyulNZXuXM1trDwNDAxqOWYC1pFi98cTanl8gaeXM4yBnyxt7zFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB3959
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
->
-> To implement per-object slab memory accounting, we need to
-> convert slab vmstat counters to bytes. Actually, out of
-> 4 levels of counters: global, per-node, per-memcg and per-lruvec
-> only two last levels will require byte-sized counters.
-> It's because global and per-node counters will be counting the
-> number of slab pages, and per-memcg and per-lruvec will be
-> counting the amount of memory taken by charged slab objects.
->
-> Converting all vmstat counters to bytes or even all slab
-> counters to bytes would introduce an additional overhead.
-> So instead let's store global and per-node counters
-> in pages, and memcg and lruvec counters in bytes.
->
-> To make the API clean all access helpers (both on the read
-> and write sides) are dealing with bytes.
->
-
-The "dealing with bytes" is only for slab stats or all vmstat stats?
-
-> To avoid back-and-forth conversions a new flavor of read-side
-> helpers is introduced, which always returns values in pages:
-> node_page_state_pages() and global_node_page_state_pages().
->
-> Actually new helpers are just reading raw values. Old helpers are
-> simple wrappers, which will complain on an attempt to read
-> byte value, because at the moment no one actually needs bytes.
->
-> Thanks to Johannes Weiner for the idea of having the byte-sized API
-> on top of the page-sized internal storage.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  drivers/base/node.c    |  2 +-
->  include/linux/mmzone.h | 10 ++++++++++
->  include/linux/vmstat.h | 14 +++++++++++++-
->  mm/memcontrol.c        | 14 ++++++++++----
->  mm/vmstat.c            | 30 ++++++++++++++++++++++++++----
->  5 files changed, 60 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index 5b02f69769e8..e21e31359297 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -513,7 +513,7 @@ static ssize_t node_read_vmstat(struct device *dev,
->
->         for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
->                 n += sprintf(buf+n, "%s %lu\n", node_stat_name(i),
-> -                            node_page_state(pgdat, i));
-> +                            node_page_state_pages(pgdat, i));
->
->         return n;
->  }
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index c4c37fd12104..fa8eb49d9898 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -206,6 +206,16 @@ enum node_stat_item {
->         NR_VM_NODE_STAT_ITEMS
->  };
->
-> +/*
-> + * Returns true if the value is measured in bytes (most vmstat values are
-> + * measured in pages). This defines the API part, the internal representation
-> + * might be different.
-> + */
-> +static __always_inline bool vmstat_item_in_bytes(enum node_stat_item item)
-> +{
-> +       return false;
-> +}
-> +
->  /*
->   * We do arithmetic on the LRU lists in various places in the code,
->   * so it is important to keep the active lists LRU_ACTIVE higher in
-> diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
-> index aa961088c551..91220ace31da 100644
-> --- a/include/linux/vmstat.h
-> +++ b/include/linux/vmstat.h
-> @@ -8,6 +8,7 @@
->  #include <linux/vm_event_item.h>
->  #include <linux/atomic.h>
->  #include <linux/static_key.h>
-> +#include <linux/mmdebug.h>
->
->  extern int sysctl_stat_interval;
->
-> @@ -192,7 +193,8 @@ static inline unsigned long global_zone_page_state(enum zone_stat_item item)
->         return x;
->  }
->
-> -static inline unsigned long global_node_page_state(enum node_stat_item item)
-> +static inline
-> +unsigned long global_node_page_state_pages(enum node_stat_item item)
->  {
->         long x = atomic_long_read(&vm_node_stat[item]);
->  #ifdef CONFIG_SMP
-> @@ -202,6 +204,13 @@ static inline unsigned long global_node_page_state(enum node_stat_item item)
->         return x;
->  }
->
-> +static inline unsigned long global_node_page_state(enum node_stat_item item)
-> +{
-> +       VM_WARN_ON_ONCE(vmstat_item_in_bytes(item));
-> +
-> +       return global_node_page_state_pages(item);
-> +}
-> +
->  static inline unsigned long zone_page_state(struct zone *zone,
->                                         enum zone_stat_item item)
->  {
-> @@ -242,9 +251,12 @@ extern unsigned long sum_zone_node_page_state(int node,
->  extern unsigned long sum_zone_numa_state(int node, enum numa_stat_item item);
->  extern unsigned long node_page_state(struct pglist_data *pgdat,
->                                                 enum node_stat_item item);
-> +extern unsigned long node_page_state_pages(struct pglist_data *pgdat,
-> +                                          enum node_stat_item item);
->  #else
->  #define sum_zone_node_page_state(node, item) global_zone_page_state(item)
->  #define node_page_state(node, item) global_node_page_state(item)
-> +#define node_page_state_pages(node, item) global_node_page_state_pages(item)
->  #endif /* CONFIG_NUMA */
->
->  #ifdef CONFIG_SMP
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index e8a91e98556b..07d02e61a73e 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -681,13 +681,16 @@ mem_cgroup_largest_soft_limit_node(struct mem_cgroup_tree_per_node *mctz)
->   */
->  void __mod_memcg_state(struct mem_cgroup *memcg, int idx, int val)
->  {
-> -       long x;
-> +       long x, threshold = MEMCG_CHARGE_BATCH;
->
->         if (mem_cgroup_disabled())
->                 return;
->
-> +       if (vmstat_item_in_bytes(idx))
-> +               threshold <<= PAGE_SHIFT;
-> +
-
-From the above am I understanding correctly that even after moving to
-byte-level accounting, we can still see stats with potential error
-limited by (BATCH-1)*PAGE_SIZE*nr_cpus?
-
->         x = val + __this_cpu_read(memcg->vmstats_percpu->stat[idx]);
-> -       if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
-> +       if (unlikely(abs(x) > threshold)) {
->                 struct mem_cgroup *mi;
->
->                 /*
-> @@ -718,7 +721,7 @@ void __mod_memcg_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
->  {
->         struct mem_cgroup_per_node *pn;
->         struct mem_cgroup *memcg;
-> -       long x;
-> +       long x, threshold = MEMCG_CHARGE_BATCH;
->
->         pn = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
->         memcg = pn->memcg;
-> @@ -729,8 +732,11 @@ void __mod_memcg_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
->         /* Update lruvec */
->         __this_cpu_add(pn->lruvec_stat_local->count[idx], val);
->
-> +       if (vmstat_item_in_bytes(idx))
-> +               threshold <<= PAGE_SHIFT;
-> +
->         x = val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
-> -       if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
-> +       if (unlikely(abs(x) > threshold)) {
->                 pg_data_t *pgdat = lruvec_pgdat(lruvec);
->                 struct mem_cgroup_per_node *pi;
->
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 80c9b6221535..f1c321e1d6d3 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -341,6 +341,11 @@ void __mod_node_page_state(struct pglist_data *pgdat, enum node_stat_item item,
->         long x;
->         long t;
->
-> +       if (vmstat_item_in_bytes(item)) {
-> +               VM_WARN_ON_ONCE(delta & (PAGE_SIZE - 1));
-> +               delta >>= PAGE_SHIFT;
-> +       }
-> +
->         x = delta + __this_cpu_read(*p);
->
->         t = __this_cpu_read(pcp->stat_threshold);
-> @@ -398,6 +403,8 @@ void __inc_node_state(struct pglist_data *pgdat, enum node_stat_item item)
->         s8 __percpu *p = pcp->vm_node_stat_diff + item;
->         s8 v, t;
->
-> +       VM_WARN_ON_ONCE(vmstat_item_in_bytes(item));
-> +
->         v = __this_cpu_inc_return(*p);
->         t = __this_cpu_read(pcp->stat_threshold);
->         if (unlikely(v > t)) {
-> @@ -442,6 +449,8 @@ void __dec_node_state(struct pglist_data *pgdat, enum node_stat_item item)
->         s8 __percpu *p = pcp->vm_node_stat_diff + item;
->         s8 v, t;
->
-> +       VM_WARN_ON_ONCE(vmstat_item_in_bytes(item));
-> +
->         v = __this_cpu_dec_return(*p);
->         t = __this_cpu_read(pcp->stat_threshold);
->         if (unlikely(v < - t)) {
-> @@ -541,6 +550,11 @@ static inline void mod_node_state(struct pglist_data *pgdat,
->         s8 __percpu *p = pcp->vm_node_stat_diff + item;
->         long o, n, t, z;
->
-> +       if (vmstat_item_in_bytes(item)) {
-> +               VM_WARN_ON_ONCE(delta & (PAGE_SIZE - 1));
-> +               delta >>= PAGE_SHIFT;
-> +       }
-> +
->         do {
->                 z = 0;  /* overflow to node counters */
->
-> @@ -989,8 +1003,8 @@ unsigned long sum_zone_numa_state(int node,
->  /*
->   * Determine the per node value of a stat item.
->   */
-> -unsigned long node_page_state(struct pglist_data *pgdat,
-> -                               enum node_stat_item item)
-> +unsigned long node_page_state_pages(struct pglist_data *pgdat,
-> +                                   enum node_stat_item item)
->  {
->         long x = atomic_long_read(&pgdat->vm_stat[item]);
->  #ifdef CONFIG_SMP
-> @@ -999,6 +1013,14 @@ unsigned long node_page_state(struct pglist_data *pgdat,
->  #endif
->         return x;
->  }
-> +
-> +unsigned long node_page_state(struct pglist_data *pgdat,
-> +                             enum node_stat_item item)
-> +{
-> +       VM_WARN_ON_ONCE(vmstat_item_in_bytes(item));
-> +
-> +       return node_page_state_pages(pgdat, item);
-> +}
-
-So, for non-slab, node_page_state and node_page_state_pages will be
-the same but different for slab vmstats. However we should not be
-calling node_page_state with slab vmstats because we don't need it,
-right?
-
->  #endif
->
->  #ifdef CONFIG_COMPACTION
-> @@ -1581,7 +1603,7 @@ static void zoneinfo_show_print(struct seq_file *m, pg_data_t *pgdat,
->                 seq_printf(m, "\n  per-node stats");
->                 for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++) {
->                         seq_printf(m, "\n      %-12s %lu", node_stat_name(i),
-> -                                  node_page_state(pgdat, i));
-> +                                  node_page_state_pages(pgdat, i));
->                 }
->         }
->         seq_printf(m,
-> @@ -1702,7 +1724,7 @@ static void *vmstat_start(struct seq_file *m, loff_t *pos)
->  #endif
->
->         for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
-> -               v[i] = global_node_page_state(i);
-> +               v[i] = global_node_page_state_pages(i);
->         v += NR_VM_NODE_STAT_ITEMS;
->
->         global_dirty_limits(v + NR_DIRTY_BG_THRESHOLD,
-> --
-> 2.25.4
->
+PiBGcm9tOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gU2VudDogVHVlc2Rh
+eSwgSnVuZSAxNiwgMjAyMCA2OjQ0IFBNDQo+IA0KPiA+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggVjUg
+MS85XSBwaW5jdHJsOiBpbXg6IFN1cHBvcnQgYnVpbGRpbmcgU0NVIHBpbmN0cmwNCj4gPiBkcml2
+ZXIgYXMgbW9kdWxlDQo+ID4NCj4gPiA+IEZyb206IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0Bu
+eHAuY29tPg0KPiA+ID4gU2VudDogVGh1cnNkYXksIEp1bmUgMTEsIDIwMjAgNzozNSBQTQ0KPiA+
+ID4NCj4gPiA+IFRvIHN1cHBvcnQgYnVpbGRpbmcgaS5NWCBTQ1UgcGluY3RybCBkcml2ZXIgYXMg
+bW9kdWxlLCBiZWxvdyB0aGluZ3MNCj4gPiA+IG5lZWQgdG8gYmUNCj4gPiA+IGNoYW5nZWQ6DQo+
+ID4gPg0KPiA+ID4gICAgIC0gRXhwb3J0IFNDVSByZWxhdGVkIGZ1bmN0aW9ucyBhbmQgdXNlICJJ
+U19FTkFCTEVEIiBpbnN0ZWFkIG9mDQo+ID4gPiAgICAgICAiaWZkZWYiIHRvIHN1cHBvcnQgU0NV
+IHBpbmN0cmwgZHJpdmVyIHVzZXIgYW5kIGl0c2VsZiB0byBiZQ0KPiA+ID4gICAgICAgYnVpbHQg
+YXMgbW9kdWxlOw0KPiA+ID4gICAgIC0gVXNlIGZ1bmN0aW9uIGNhbGxiYWNrcyBmb3IgU0NVIHJl
+bGF0ZWQgZnVuY3Rpb25zIGluIHBpbmN0cmwtaW14LmMNCj4gPiA+ICAgICAgIGluIG9yZGVyIHRv
+IHN1cHBvcnQgdGhlIHNjZW5hcmlvIG9mIFBJTkNUUkxfSU1YIGlzIGJ1aWx0IGluDQo+ID4gPiAg
+ICAgICB3aGlsZSBQSU5DVFJMX0lNWF9TQ1UgaXMgYnVpbHQgYXMgbW9kdWxlOw0KPiA+ID4gICAg
+IC0gQWxsIGRyaXZlcnMgdXNpbmcgU0NVIHBpbmN0cmwgZHJpdmVyIG5lZWQgdG8gaW5pdGlhbGl6
+ZSB0aGUNCj4gPiA+ICAgICAgIFNDVSByZWxhdGVkIGZ1bmN0aW9uIGNhbGxiYWNrOw0KPiA+ID4g
+ICAgIC0gQ2hhbmdlIFBJTkNUUl9JTVhfU0NVIHRvIHRyaXN0YXRlOw0KPiA+ID4gICAgIC0gQWRk
+IG1vZHVsZSBhdXRob3IsIGRlc2NyaXB0aW9uIGFuZCBsaWNlbnNlLg0KPiA+ID4NCj4gPiA+IFdp
+dGggYWJvdmUgY2hhbmdlcywgaS5NWCBTQ1UgcGluY3RybCBkcml2ZXIgY2FuIGJlIGJ1aWx0IGFz
+IG1vZHVsZS4NCj4gPiA+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24u
+SHVhbmdAbnhwLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gQ2hhbmdlcyBzaW5jZSBWNDoNCj4gPiA+
+IAktIGFkZCBtb2R1bGUgYXV0aG9yIGFuZCBkZXNjcmlwdGlvbi4NCj4gPiA+IC0tLQ0KPiA+ID4g
+IGRyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvS2NvbmZpZyAgICAgICAgICAgfCAgMiArLQ0KPiA+
+ID4gIGRyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXguYyAgICAgfCAxOCArKysr
+LS0tLS0NCj4gPiA+ICBkcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14LmggICAg
+IHwgNTcNCj4gKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiA+ICBkcml2ZXJzL3Bp
+bmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14OGR4bC5jIHwgIDMgKysNCj4gPiA+IGRyaXZlcnMv
+cGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXg4cW0uYyAgfCAgMyArKw0KPiA+ID4gZHJpdmVy
+cy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteDhxeHAuYyB8ICAzICsrDQo+ID4gPiAgZHJp
+dmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLXNjdS5jICAgICB8ICA5ICsrKysrDQo+ID4g
+PiAgNyBmaWxlcyBjaGFuZ2VkLCA1MSBpbnNlcnRpb25zKCspLCA0NCBkZWxldGlvbnMoLSkNCj4g
+PiA+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9LY29uZmln
+DQo+ID4gPiBiL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvS2NvbmZpZw0KPiA+ID4gaW5kZXgg
+NGNhNDRkZC4uYTNhMzBmMWQgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvZnJl
+ZXNjYWxlL0tjb25maWcNCj4gPiA+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvS2Nv
+bmZpZw0KPiA+ID4gQEAgLTcsNyArNyw3IEBAIGNvbmZpZyBQSU5DVFJMX0lNWA0KPiA+ID4gIAlz
+ZWxlY3QgUkVHTUFQDQo+ID4gPg0KPiA+ID4gIGNvbmZpZyBQSU5DVFJMX0lNWF9TQ1UNCj4gPiA+
+IC0JYm9vbA0KPiA+ID4gKwl0cmlzdGF0ZSAiSU1YIFNDVSBwaW5jdHJsIGRyaXZlciINCj4gPiA+
+ICAJZGVwZW5kcyBvbiBJTVhfU0NVDQo+ID4gPiAgCXNlbGVjdCBQSU5DVFJMX0lNWA0KPiA+ID4N
+Cj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14
+LmMNCj4gPiA+IGIvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteC5jDQo+ID4g
+PiBpbmRleCBjYjdlMGYwLi5jMWZhYWUxIDEwMDY0NA0KPiA+ID4gLS0tIGEvZHJpdmVycy9waW5j
+dHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteC5jDQo+ID4gPiArKysgYi9kcml2ZXJzL3BpbmN0cmwv
+ZnJlZXNjYWxlL3BpbmN0cmwtaW14LmMNCj4gPiA+IEBAIC0zNzIsOCArMzcyLDggQEAgc3RhdGlj
+IGludCBpbXhfcGluY29uZl9nZXQoc3RydWN0IHBpbmN0cmxfZGV2DQo+ID4gKnBjdGxkZXYsDQo+
+ID4gPiAgCXN0cnVjdCBpbXhfcGluY3RybCAqaXBjdGwgPSBwaW5jdHJsX2Rldl9nZXRfZHJ2ZGF0
+YShwY3RsZGV2KTsNCj4gPiA+ICAJY29uc3Qgc3RydWN0IGlteF9waW5jdHJsX3NvY19pbmZvICpp
+bmZvID0gaXBjdGwtPmluZm87DQo+ID4gPg0KPiA+ID4gLQlpZiAoaW5mby0+ZmxhZ3MgJiBJTVhf
+VVNFX1NDVSkNCj4gPiA+IC0JCXJldHVybiBpbXhfcGluY29uZl9nZXRfc2N1KHBjdGxkZXYsIHBp
+bl9pZCwgY29uZmlnKTsNCj4gPiA+ICsJaWYgKChpbmZvLT5mbGFncyAmIElNWF9VU0VfU0NVKSAm
+JiBpbmZvLT5pbXhfcGluY29uZl9nZXQpDQo+ID4gPiArCQlyZXR1cm4gaW5mby0+aW14X3BpbmNv
+bmZfZ2V0KHBjdGxkZXYsIHBpbl9pZCwgY29uZmlnKTsNCj4gPg0KPiA+IFBvaW50ZXIgY2hlY2sg
+aGVyZSBzZWVtcyBub3QgYmUgbmVjZXNzYXJ5DQo+IA0KPiBJIHRoaW5rIGl0IGlzIE5PVCBoYXJt
+ZnVsIGFuZCBpdCBpcyBqdXN0IGluIGNhc2UgdGhlIGRyaXZlcnMgdXNpbmcgc2N1IHBpbmN0cmwg
+ZG8gTk9UDQo+IGluaXRpYWxpemUgdGhlc2UgZnVuY3Rpb25zIGNhbGxiYWNrIGFuZCBsZWFkIHRv
+IE5VTEwgcG9pbnRlciBkdW1wLg0KPiANCg0KSXQgaXMgYSBiaXQgaGFybWZ1bCB0byB0aGUgY29k
+ZSByZWFkYWJpbGl0eSBhcyB3ZSBhbHJlYWR5IHVzZSBmbGFnIElNWF9VU0VfU0NVIHRvIGRpc3Rp
+bmd1aXNoDQp0aGUgZGlmZmVyZW5jZS4gTm90IG5lZWQgZG91YmxlIGNoZWNrIHRoZSBwb2ludGVy
+IGFnYWluIGJlY2F1c2UgcGxhdGZvcm1zIGRyaXZlciBtdXN0IGhhdmUNCmRlZmluZWQgaXQuDQoN
+Cj4gPg0KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3Ry
+bC1pbXguaA0KPiA+ID4gYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14LmgN
+Cj4gPiA+IGluZGV4IDMzM2QzMmIuLmJkYjg2YzIgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJz
+L3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14LmgNCj4gPiA+ICsrKyBiL2RyaXZlcnMvcGlu
+Y3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXguaA0KPiA+ID4gQEAgLTc1LDYgKzc1LDIxIEBAIHN0
+cnVjdCBpbXhfY2ZnX3BhcmFtc19kZWNvZGUgew0KPiA+ID4gIAlib29sIGludmVydDsNCj4gPiA+
+ICB9Ow0KPiA+ID4NCj4gPiA+ICsvKioNCj4gPiA+ICsgKiBAZGV2OiBhIHBvaW50ZXIgYmFjayB0
+byBjb250YWluaW5nIGRldmljZQ0KPiA+ID4gKyAqIEBiYXNlOiB0aGUgb2Zmc2V0IHRvIHRoZSBj
+b250cm9sbGVyIGluIHZpcnR1YWwgbWVtb3J5ICAqLyBzdHJ1Y3QNCj4gPiA+ICtpbXhfcGluY3Ry
+bCB7DQo+ID4gPiArCXN0cnVjdCBkZXZpY2UgKmRldjsNCj4gPiA+ICsJc3RydWN0IHBpbmN0cmxf
+ZGV2ICpwY3RsOw0KPiA+ID4gKwl2b2lkIF9faW9tZW0gKmJhc2U7DQo+ID4gPiArCXZvaWQgX19p
+b21lbSAqaW5wdXRfc2VsX2Jhc2U7DQo+ID4gPiArCWNvbnN0IHN0cnVjdCBpbXhfcGluY3RybF9z
+b2NfaW5mbyAqaW5mbzsNCj4gPiA+ICsJc3RydWN0IGlteF9waW5fcmVnICpwaW5fcmVnczsNCj4g
+PiA+ICsJdW5zaWduZWQgaW50IGdyb3VwX2luZGV4Ow0KPiA+ID4gKwlzdHJ1Y3QgbXV0ZXggbXV0
+ZXg7DQo+ID4gPiArfTsNCj4gPiA+ICsNCj4gPiA+ICBzdHJ1Y3QgaW14X3BpbmN0cmxfc29jX2lu
+Zm8gew0KPiA+ID4gIAljb25zdCBzdHJ1Y3QgcGluY3RybF9waW5fZGVzYyAqcGluczsNCj4gPiA+
+ICAJdW5zaWduZWQgaW50IG5waW5zOw0KPiA+ID4gQEAgLTk4LDIxICsxMTMsMTMgQEAgc3RydWN0
+IGlteF9waW5jdHJsX3NvY19pbmZvIHsNCj4gPiA+ICAJCQkJICBzdHJ1Y3QgcGluY3RybF9ncGlv
+X3JhbmdlICpyYW5nZSwNCj4gPiA+ICAJCQkJICB1bnNpZ25lZCBvZmZzZXQsDQo+ID4gPiAgCQkJ
+CSAgYm9vbCBpbnB1dCk7DQo+ID4gPiAtfTsNCj4gPiA+IC0NCj4gPiA+IC0vKioNCj4gPiA+IC0g
+KiBAZGV2OiBhIHBvaW50ZXIgYmFjayB0byBjb250YWluaW5nIGRldmljZQ0KPiA+ID4gLSAqIEBi
+YXNlOiB0aGUgb2Zmc2V0IHRvIHRoZSBjb250cm9sbGVyIGluIHZpcnR1YWwgbWVtb3J5DQo+ID4g
+PiAtICovDQo+ID4gPiAtc3RydWN0IGlteF9waW5jdHJsIHsNCj4gPiA+IC0Jc3RydWN0IGRldmlj
+ZSAqZGV2Ow0KPiA+ID4gLQlzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGw7DQo+ID4gPiAtCXZvaWQg
+X19pb21lbSAqYmFzZTsNCj4gPiA+IC0Jdm9pZCBfX2lvbWVtICppbnB1dF9zZWxfYmFzZTsNCj4g
+PiA+IC0JY29uc3Qgc3RydWN0IGlteF9waW5jdHJsX3NvY19pbmZvICppbmZvOw0KPiA+ID4gLQlz
+dHJ1Y3QgaW14X3Bpbl9yZWcgKnBpbl9yZWdzOw0KPiA+ID4gLQl1bnNpZ25lZCBpbnQgZ3JvdXBf
+aW5kZXg7DQo+ID4gPiAtCXN0cnVjdCBtdXRleCBtdXRleDsNCj4gPiA+ICsJaW50ICgqaW14X3Bp
+bmNvbmZfZ2V0KShzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsIHVuc2lnbmVkIGludCBwaW5f
+aWQsDQo+ID4gPiArCQkJICAgICAgIHVuc2lnbmVkIGxvbmcgKmNvbmZpZyk7DQo+ID4gPiArCWlu
+dCAoKmlteF9waW5jb25mX3NldCkoc3RydWN0IHBpbmN0cmxfZGV2ICpwY3RsZGV2LCB1bnNpZ25l
+ZCBpbnQgcGluX2lkLA0KPiA+ID4gKwkJCSAgICAgICB1bnNpZ25lZCBsb25nICpjb25maWdzLCB1
+bnNpZ25lZCBpbnQgbnVtX2NvbmZpZ3MpOw0KPiA+ID4gKwl2b2lkICgqaW14X3BpbmN0cmxfcGFy
+c2VfcGluKShzdHJ1Y3QgaW14X3BpbmN0cmwgKmlwY3RsLA0KPiA+ID4gKwkJCQkgICAgICB1bnNp
+Z25lZCBpbnQgKnBpbl9pZCwgc3RydWN0IGlteF9waW4gKnBpbiwNCj4gPiA+ICsJCQkJICAgICAg
+Y29uc3QgX19iZTMyICoqbGlzdF9wKTsNCj4gPg0KPiA+IENvbXBhcmVkIHdpdGggVjQsIHRoaXMg
+bmV3IGltcGxlbWVudGF0aW9uIHNlZW1zIGEgYml0IGNvbXBsaWNhdGVkLg0KPiA+IEkgZ3Vlc3Mg
+d2UgZG9uJ3QgaGF2ZSB0byBzdXBwb3J0IFBJTkNUUkxfSU1YPXkgJiYgUElOQ1RSTF9JTVhfU0NV
+PW0NCj4gPiBjYXNlLg0KPiA+IFdpbGwgdGhhdCBtYWtlIHRoZSBzdXBwb3J0IGEgYml0IGVhc2ll
+cj8NCj4gDQo+IEkgYW0gTk9UIHN1cmUgaWYgc3VjaCBzY2VuYXJpbyBtZWV0cyByZXF1aXJlbWVu
+dCwgdGhlIGZhY3QgaXMgb3RoZXIgbm9uLWkuTVgNCj4gU29DIGFsc28gc2VsZWN0cyB0aGUgUElO
+Q1RSTF9JTVggd2hpY2ggd2lsbCBtYWtlIFBJTkNUUkxfSU1YPXksIHNvIGluIHRoYXQNCj4gY2Fz
+ZSwgZXZlbiBhbGwgaS5NWCBQSU5DVFJMIGRyaXZlcnMgYXJlIHNldCB0byBtb2R1bGUsIGl0IHdp
+bGwgc3RpbGwgaGF2ZQ0KPiBQSU5DVFJMX0lNWD15IGFuZCBQSU5DVFJMX0lNWF9TQ1U9bSwgdGhl
+biBidWlsZCB3aWxsIGZhaWwuIEFuZCBJIGJlbGlldmUgdGhlDQo+IGF1dG8gYnVpbGQgdGVzdCBt
+YXkgYWxzbyBjb3ZlciBzdWNoIGNhc2UgYW5kIGJ1aWxkIGVycm9yIHdpbGwgYmUgcmVwb3J0ZWQs
+IHRoYXQgaXMNCj4gd2h5IHRoaXMgY2hhbmdlIGlzIG5lZWRlZCBhbmQgd2l0aCB0aGlzIGNoYW5n
+ZSwgZnVuY3Rpb24gaXMgTk9UIGltcGFjdGVkLA0KPiANCg0KSXMgaXQgcG9zc2libGUgdG8gYWRk
+IHNvbWUgY29uc3RyYWluc3QgdG8gbWFrZSBzdXJlIFBJTkNUUkxfSU1YX1NDVSB2YWx1ZSBpcyB0
+aGUgc2FtZQ0KYXMgUElOQ1RSTF9JTVg/IE9yIGNvbWJpbmUgdGhlbSBpbnRvIG9uZT8NCklmIHdl
+IGNhbiBkbyB0aGF0LCBpdCBtYXkgZWFzZSB0aGUgaW1wbGVtZW50YXRpb24gYSBsb3QgYW5kIG1h
+a2UgdGhlIGNvZGUgc3RpbGwgY2xlYW4uDQoNClJlZ2FyZHMNCkFpc2hlbmcNCg0KPiBBbnNvbi4N
+Cg==
