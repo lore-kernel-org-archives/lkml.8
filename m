@@ -2,189 +2,188 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA122C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 840A72089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D6912089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:47:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiyuOqzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgFQQrq (ORCPT
+        id S1726974AbgFQQrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:47:46 -0400
-Received: from mga07.intel.com ([134.134.136.100]:38653 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726341AbgFQQro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:47:44 -0400
-IronPort-SDR: xB0vKM40OvCWJ+9AVCs2aepMwW4P9F4Qmia6kzGPzRxYE5GRB4Lc+Wl87NandXdcQbg5GyCH3h
- qTWBzI9hS9Fw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 09:47:44 -0700
-IronPort-SDR: jwBaGwhoNJA9mG3WriS4hCOCqBqWn6L4T0PBfJ/snlp33T/HWpJ36NOtOscoBx2f83UXl2qf3P
- T8pepo39EUrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
-   d="scan'208";a="450314232"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 17 Jun 2020 09:47:36 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 35D63109; Wed, 17 Jun 2020 19:47:34 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org,
-        =?UTF-8?q?Benoit=20Gr=C3=A9goire?= <benoitg@coeus.ca>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        juhapekka.heikkila@gmail.com, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] x86/resource: Do not exclude regions that are marked as MMIO in EFI memmap
-Date:   Wed, 17 Jun 2020 19:47:34 +0300
-Message-Id: <20200617164734.84845-1-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.27.0.rc2
+        Wed, 17 Jun 2020 12:47:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgFQQru (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 12:47:50 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9F9BC06174E;
+        Wed, 17 Jun 2020 09:47:49 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r9so2525024wmh.2;
+        Wed, 17 Jun 2020 09:47:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6engyuOwypyI3Dw6jjWo3u6+DC6COU5y4JipbUMiSp8=;
+        b=BiyuOqzzti6otT+VT3iiPu7P9zmdvcw3vbiDskCudqkKcVZqVB1kIuDzfqyBZYuNvh
+         uzjrbBlNpN0vDzFI2xLgPLDX/ixiQ6gi6eYCqrkw2pPKn7ECf8vzSRjJEOVoWOIBIVsP
+         gsYhAhTsbHkFrhaVZhcstfK4SYh2bNd88CxE/htecCQfUIr4eqJSczMUurfYidMfzuR2
+         B7TSstWTTpi2K8YVEP/hDcuf6xZ4KX5Di6KbIupcq/o4mC+/yGFhO/ImEO46rvDKTZ2P
+         d8D/rZ54qkKvbZRC6e11eb6hnc8sKoFWTIRCgZJri7pyxItxPL1ss+dS1l4sqFywXhty
+         sFNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6engyuOwypyI3Dw6jjWo3u6+DC6COU5y4JipbUMiSp8=;
+        b=H6icQFgUvy90dkEt8VrDWXFPpP6XHIp+E7W85oGCwIXzIRFyyMm02u1QGJsTr71GWq
+         hvzddSsUQ8xt2g5wOMFHiNMVzURh2lGF0mALon+ziSCOHJRZOlTaOF+fqbOFEsC9EUDB
+         DVa+uvnWDTZMFHUSfzo08UZuX0iZYQpmoMhUEwLL+D67Goz/hloPFm7rn1o9505dU4CL
+         noJ87g0cQRzLFzkZG+iop2pb55fS+Qw095ZqG35hex3Sn9WyroW0YXtiu6uke7d2KBlq
+         Ov7kJeFbxh/zrWWi1+7+2rAtxZTewTyoXRkmHbdc/F1/3GPIHkfUYBPyD4TnGgvy6Pjv
+         9ebQ==
+X-Gm-Message-State: AOAM532HVkeLr9f5e8/xID5/BUmOnFu3tIVXtgExEtcxyTwqOnllT/Nt
+        /FuC/g80DdOnNjSUH0MDHd4=
+X-Google-Smtp-Source: ABdhPJwB33pIboDz5LqbU+1BPle+pXQ2IYzHDz9JJ04TpCWTfYU50GaR7fuw/esvXWLnSridVvjqYA==
+X-Received: by 2002:a1c:1946:: with SMTP id 67mr963199wmz.59.1592412468380;
+        Wed, 17 Jun 2020 09:47:48 -0700 (PDT)
+Received: from localhost.localdomain (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
+        by smtp.gmail.com with ESMTPSA id g3sm199165wrb.46.2020.06.17.09.47.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 09:47:47 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH 1/8] Drivers: hv: vmbus: Remove the target_vp field from the vmbus_channel struct
+Date:   Wed, 17 Jun 2020 18:46:35 +0200
+Message-Id: <20200617164642.37393-2-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200617164642.37393-1-parri.andrea@gmail.com>
+References: <20200617164642.37393-1-parri.andrea@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
-space") made the resource allocation code to avoid all regions that are
-in E820 table. This prevents the kernel to assign MMIO resources to
-regions that may be real RAM for example.
+The field is read only in __vmbus_open() and it is already stored twice
+(after a call to hv_cpu_number_to_vp_number()) in target_cpu_store() and
+init_vp_index(); there is no need to "cache" its value in the channel
+data structure.
 
-However, at least with Lenovo Yoca C940 and S740 this causes problems
-when allocating resources for PCIe devices behind Thunderbolt port(s).
-
-On Yoga S740 the E820 table contains an entry like this:
-
-  BIOS-e820: [mem 0x000000002bc50000-0x00000000cfffffff] reserved
-
-and ACPI _CRS method for the host bridge returns these windows:
-
-  pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
-  pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
-  pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
-  pci_bus 0000:00: root bus resource [mem 0x45400000-0xbfffffff window]
-  pci_bus 0000:00: root bus resource [mem 0x4000000000-0x7fffffffff window]
-
-Note that the 0x45400000-0xbfffffff entry is also included in the E820
-table and marked as "reserved".
-
-When Thunderbolt device is connected and the PCIe gets tunneled PCI core
-tries to allocate memory for the new devices but it fails because all
-the resources are inside this reserved region so arch_remove_reservations()
-clips them which makes the resource assignment fail as in below log:
-
-  pci 0000:00:07.0: PCI bridge to [bus 01-2a]
-  pci 0000:00:07.0:   bridge window [mem 0x46000000-0x521fffff]
-  pci 0000:00:07.0:   bridge window [mem 0x6000000000-0x601bffffff 64bit pref]
-  ...
-  pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 07-2a] add_size 100000 add_align 100000
-  pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff] to [bus 07-2a] add_size 100000 add_align 100000
-  pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff 64bit pref] to [bus 02-2a] add_size 100000 add_align 100000
-  pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff] to [bus 02-2a] add_size 100000 add_align 100000
-  pci 0000:01:00.0: bridge window [io  0x1000-0x5fff] shrunken by 0x0000000000004000
-  pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff] extended by 0x000000000bd00000
-  pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff 64bit pref] extended by 0x000000001bb00000
-  pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff] extended by 0x000000000bd00000
-  pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] extended by 0x000000001bb00000
-  pci 0000:01:00.0: BAR 8: no space for [mem size 0x0c200000]
-  pci 0000:01:00.0: BAR 8: failed to assign [mem size 0x0c200000]
-  pci 0000:01:00.0: BAR 9: assigned [mem 0x6000000000-0x601bffffff 64bit pref]
-  pci 0000:01:00.0: BAR 7: assigned [io  0x4000-0x4fff]
-
-The 01:00.0 is the upstream port of the PCIe switch that is connected to
-the PCIe root port (00:07.1) over Thunderbolt link.
-
-If I add "efi=debug" to the command line I can see that the EFI memory
-map actually contains several entries:
-
-  [Reserved           |   |  |  |  |  |  |  | |   |WB|WT|WC|UC] range=[0x000000002bc50000-0x000000003fffffff] (323MB)
-  [Reserved           |   |  |  |  |  |  |  | |   |WB|  |  |UC] range=[0x0000000040000000-0x0000000040ffffff] (16MB)
-  [Reserved           |   |  |  |  |  |  |  | |   |  |  |  |  ] range=[0x0000000041000000-0x00000000453fffff] (68MB)
-  [Memory Mapped I/O  |RUN|  |  |  |  |  |  | |   |  |  |  |UC] range=[0x0000000045400000-0x00000000cfffffff] (2220MB)
-
-I think the EFI stub merges these consecutive entries into that single
-E820 entry showed above. The last region marked as EFI_MEMORY_MAPPED_IO
-actually covers the PCI host bridge window entirely. However, since
-there is corresponding E820 type for this it is simply marked as
-E820_TYPE_RESERVED.
-
-All in all, I think we can fix this by modifying arch_remove_reservations()
-to check the EFI type as well and if it is EFI_MEMORY_MAPPED_IO skip the
-clipping in that case.
-
-Reported-by: Benoit Grégoire <benoitg@coeus.ca>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206459
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Suggested-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 ---
- arch/x86/kernel/resource.c | 34 +++++++++++++++++++++++++++++++++-
- 1 file changed, 33 insertions(+), 1 deletion(-)
+ drivers/hv/channel.c      |  3 ++-
+ drivers/hv/channel_mgmt.c |  3 ---
+ drivers/hv/vmbus_drv.c    |  2 --
+ include/linux/hyperv.h    | 15 +++++++--------
+ 4 files changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
-index 9b9fb7882c20..c0bc9117dd7d 100644
---- a/arch/x86/kernel/resource.c
-+++ b/arch/x86/kernel/resource.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <linux/efi.h>
- #include <linux/ioport.h>
- #include <asm/e820/api.h>
+diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+index 90070b337c10d..8848d1548b3f2 100644
+--- a/drivers/hv/channel.c
++++ b/drivers/hv/channel.c
+@@ -18,6 +18,7 @@
+ #include <linux/uio.h>
+ #include <linux/interrupt.h>
+ #include <asm/page.h>
++#include <asm/mshyperv.h>
  
-@@ -36,6 +37,36 @@ static void remove_e820_regions(struct resource *avail)
- 	}
+ #include "hyperv_vmbus.h"
+ 
+@@ -176,7 +177,7 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
+ 	open_msg->child_relid = newchannel->offermsg.child_relid;
+ 	open_msg->ringbuffer_gpadlhandle = newchannel->ringbuffer_gpadlhandle;
+ 	open_msg->downstream_ringbuffer_pageoffset = newchannel->ringbuffer_send_offset;
+-	open_msg->target_vp = newchannel->target_vp;
++	open_msg->target_vp = hv_cpu_number_to_vp_number(newchannel->target_cpu);
+ 
+ 	if (userdatalen)
+ 		memcpy(open_msg->userdata, userdata, userdatalen);
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 417a95e5094dd..278e392218079 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -704,8 +704,6 @@ static void init_vp_index(struct vmbus_channel *channel)
+ 		 */
+ 		channel->numa_node = cpu_to_node(VMBUS_CONNECT_CPU);
+ 		channel->target_cpu = VMBUS_CONNECT_CPU;
+-		channel->target_vp =
+-			hv_cpu_number_to_vp_number(VMBUS_CONNECT_CPU);
+ 		if (perf_chn)
+ 			hv_set_alloced_cpu(VMBUS_CONNECT_CPU);
+ 		return;
+@@ -739,7 +737,6 @@ static void init_vp_index(struct vmbus_channel *channel)
+ 	cpumask_set_cpu(target_cpu, alloced_mask);
+ 
+ 	channel->target_cpu = target_cpu;
+-	channel->target_vp = hv_cpu_number_to_vp_number(target_cpu);
+ 
+ 	free_cpumask_var(available_mask);
  }
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 47747755d2e1d..7e244727f5686 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -23,7 +23,6 @@
+ #include <linux/cpu.h>
+ #include <linux/sched/task_stack.h>
  
-+#ifdef CONFIG_EFI
-+static bool efi_mmio_mem(const struct resource *avail)
-+{
-+	resource_size_t start, end;
-+	efi_memory_desc_t desc;
-+
-+	if (!efi_enabled(EFI_MEMMAP) ||
-+	    efi_mem_desc_lookup(avail->start, &desc))
-+		return false;
-+
-+	start = desc.phys_addr;
-+	end = desc.phys_addr + (desc.num_pages << EFI_PAGE_SHIFT) - 1;
-+
-+	/*
-+	 * No need to clip the resource if it is fully contained in an
-+	 * EFI memory mapped region.
-+	 */
-+	if (avail->start >= start && avail->end <= end &&
-+	    desc.type == EFI_MEMORY_MAPPED_IO)
-+		return true;
-+
-+	return false;
-+}
-+#else
-+static inline bool efi_mmio_mem(const struct resource *avail)
-+{
-+	return false;
-+}
-+#endif
-+
- void arch_remove_reservations(struct resource *avail)
- {
+-#include <asm/mshyperv.h>
+ #include <linux/delay.h>
+ #include <linux/notifier.h>
+ #include <linux/ptrace.h>
+@@ -1765,7 +1764,6 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
+ 	 */
+ 
+ 	channel->target_cpu = target_cpu;
+-	channel->target_vp = hv_cpu_number_to_vp_number(target_cpu);
+ 	channel->numa_node = cpu_to_node(target_cpu);
+ 
+ 	/* See init_vp_index(). */
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 40df3103e890b..738efdb194b09 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -803,15 +803,14 @@ struct vmbus_channel {
+ 	u64 sig_event;
+ 
  	/*
-@@ -46,6 +77,7 @@ void arch_remove_reservations(struct resource *avail)
- 	if (avail->flags & IORESOURCE_MEM) {
- 		resource_clip(avail, BIOS_ROM_BASE, BIOS_ROM_END);
- 
--		remove_e820_regions(avail);
-+		if (!efi_mmio_mem(avail))
-+			remove_e820_regions(avail);
- 	}
- }
+-	 * Starting with win8, this field will be used to specify
+-	 * the target virtual processor on which to deliver the interrupt for
+-	 * the host to guest communication.
+-	 * Prior to win8, incoming channel interrupts would only
+-	 * be delivered on cpu 0. Setting this value to 0 would
+-	 * preserve the earlier behavior.
++	 * Starting with win8, this field will be used to specify the
++	 * target CPU on which to deliver the interrupt for the host
++	 * to guest communication.
++	 *
++	 * Prior to win8, incoming channel interrupts would only be
++	 * delivered on CPU 0. Setting this value to 0 would preserve
++	 * the earlier behavior.
+ 	 */
+-	u32 target_vp;
+-	/* The corresponding CPUID in the guest */
+ 	u32 target_cpu;
+ 	int numa_node;
+ 	/*
 -- 
-2.27.0.rc2
+2.25.1
 
