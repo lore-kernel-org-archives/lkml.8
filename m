@@ -2,124 +2,132 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EF2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 856332078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592384565;
-	bh=lKJDeJuupMVdMZ7QYn0cK7NOPDbwSGLJj/Ax2MSDRxw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dCNUIkoxWfbdKZh+XCKStUd4DA1vX8nAsnWEmYyi3+GYs1Drs7/AtO0i7XQnbbmmo
-	 mew9LYa9iUR4ee9ywHmBhH0T0Ex2TVNrcbSbIKEqd5hf5HjEoGsHWdGk5PloTS+a4k
-	 8cmh/fdvitVOSw2NNv8u/YTw3nC4DfT9rHWSkKak=
+	by mail.kernel.org (Postfix) with ESMTP id 94AA32078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:03:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJezgYXO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726662AbgFQJCo (ORCPT
+        id S1726542AbgFQJDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 05:02:44 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:46902 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgFQJCn (ORCPT
+        Wed, 17 Jun 2020 05:03:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgFQJDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 05:02:43 -0400
-Received: by mail-ej1-f65.google.com with SMTP id p20so1441080ejd.13;
-        Wed, 17 Jun 2020 02:02:42 -0700 (PDT)
+        Wed, 17 Jun 2020 05:03:32 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E124DC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 02:03:31 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id v24so627102plo.6
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 02:03:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O8uusENFHgtRiLU833qE274616Po1yGCg5u4oskG+Pc=;
+        b=BJezgYXOSuWVS6fopqT6ic6EXVlT4CnCbhywI6aSA+lD5URJTr9n4660kaqw0qb8RL
+         N5Ia+vAa6op1xONrEv+0OQ8cJX2cxKWf4YeQOpo27ZqoXvVmeakNsAQoXHYK6BAHUIhi
+         ONf1+fdHrU5zC2GOeLgQl5AOiYtpnJa78Agz7K5VkGstFCBObC4xOeiifszZCN7/lqBy
+         PsG2LGaNdh2kaYWigLmATnheEjRzkan8JKA/NLGPJLDMoMuqn79v387mGkWbPabO0qwi
+         qnF9pI0/PkOM0kM05ioKKhthnLRsnQzhqhHmDiyaC/K1UEFCUbhXJBlh8EW2S5NCGjtt
+         r54Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aPLbKCcLFxl1OYczOtRfssOCjY0N1FBAdnF/euGOa8U=;
-        b=F0z1PNtOaVlORtP8Yo9r67u5bU9fonGlJDeequnlfveUR1zxcdX+Pl0qNawxFdiXVB
-         7pZeEkKQgVoOeEJ4rmgt5wf0Wpae9nwr915Z9OpH/Pr/IN3vUTjOzOxDSstZBQBTN0ne
-         q2rIs1bq5keKORwAWHbVzB+Pdkf6/AB2FfjWPqGeDhx55peOQJNL+tmiCPAbhTOu9KWi
-         Fe/nZQh/OjfhBESga0AjrZ6Jd2fp6xuhfXaY/WSVFN3inTvG1nxYCXWkkcVEWoNf9GbB
-         f7fEPlkS6Z3PrYhkOt6qBa+LDJ/aL9J19WT/kVpgdApliGB31xRcir9cXTOi76ZmCyWX
-         Iqcw==
-X-Gm-Message-State: AOAM530ObgalcNIcNnCAZ0VuNYvyCweBujF/aaEyjZQ9WvrhdVsL/Ylk
-        0HXQBUM1oS9XkgK9kayH9Ew=
-X-Google-Smtp-Source: ABdhPJz9cRH3gFwGsBLpKSYu/Sr7jAiuc3F/XaPoq0AFgqX1mWyTqW7nax4d9owsvqFpOA9HCu0BOw==
-X-Received: by 2002:a17:906:f53:: with SMTP id h19mr6420723ejj.491.1592384561419;
-        Wed, 17 Jun 2020 02:02:41 -0700 (PDT)
-Received: from localhost (ip-37-188-158-19.eurotel.cz. [37.188.158.19])
-        by smtp.gmail.com with ESMTPSA id z10sm12950424ejb.9.2020.06.17.02.02.39
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O8uusENFHgtRiLU833qE274616Po1yGCg5u4oskG+Pc=;
+        b=Z6XAwiKSLXW9JXF9W9v0di9Uxg/lx9x8tlz9+UQ/eichuV0s0MthiZ/vMl2EQnh3nK
+         Cw6HSR+4R8UsOpwumfIhkqcLk53yYPjtyk1qvQkURoDgsNK1jZDqT4x0vOsxMuS4uAxL
+         ia7UA6DZVutL1exK7LVWEKW12hRn4dQWr3uUNr/339VUvsimrh8bNngSQ7t+ShGhbVNu
+         ZjQsGeGbaejpKKocIv+EuaeLRwWcrQixgHmycPpl/XBHHEsg1q2MfsdGO8JgzI5z0Fab
+         EMYjPs3ahLalsqZKuuFdZ/CrEFIed481nuGLCFcrpTmtRuJczMbTj5Gp6qqYI3g0/neh
+         8pqw==
+X-Gm-Message-State: AOAM532UpTcH0wPtiuOwz4qDVN/RNjO27cgYUsWFdCBq6X3UZcSmYwY3
+        zSP6BgAa511eLbWx+PDMP790ikNtg4Y=
+X-Google-Smtp-Source: ABdhPJyWwTn9mkKYeHt3moriBB1llX8dynovBjZ9NI5N5zPBLZzrO3Bqsz0HOtk1lgZ8FwyRE07RHg==
+X-Received: by 2002:a17:902:8c84:: with SMTP id t4mr5681414plo.315.1592384610948;
+        Wed, 17 Jun 2020 02:03:30 -0700 (PDT)
+Received: from localhost (g228.115-65-196.ppp.wakwak.ne.jp. [115.65.196.228])
+        by smtp.gmail.com with ESMTPSA id b5sm19768965pfg.191.2020.06.17.02.03.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 02:02:40 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 11:02:38 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Joonsoo Kim <js1304@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH for 5.8] mm: do_swap_page fix up the error code
- instantiation
-Message-ID: <20200617090238.GL9499@dhcp22.suse.cz>
-References: <20200508183105.225460-1-hannes@cmpxchg.org>
- <20200508183105.225460-17-hannes@cmpxchg.org>
- <20200611093523.GB20450@dhcp22.suse.cz>
- <20200617084927.GK9499@dhcp22.suse.cz>
+        Wed, 17 Jun 2020 02:03:29 -0700 (PDT)
+From:   Stafford Horne <shorne@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Michel Lespinasse <walken@google.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Steven Price <steven.price@arm.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        openrisc@lists.librecores.org
+Subject: [PATCH] openrisc: Fix boot oops when DEBUG_VM is enabled
+Date:   Wed, 17 Jun 2020 18:02:46 +0900
+Message-Id: <20200617090247.1680188-1-shorne@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617084927.GK9499@dhcp22.suse.cz>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Damn, I forgot to commit my last change (s@err@ret@). Sorry about the
-noise.
+Since v5.8-rc1 OpenRISC Linux fails to boot when DEBUG_VM is enabled.
+This has been bisected to commit 42fc541404f2 ("mmap locking API: add
+mmap_assert_locked() and mmap_assert_write_locked()").
 
-From 50297dd026ebf71fe901e1945a9ce1e8d8aa083b Mon Sep 17 00:00:00 2001
-From: Michal Hocko <mhocko@suse.com>
-Date: Wed, 17 Jun 2020 10:40:47 +0200
-Subject: [PATCH] mm: do_swap_page fix up the error code
+The added locking checks exposed the issue that OpenRISC was not taking
+this mmap lock when during page walks for DMA operations.  This patch
+locks and unlocks the mmap lock for page walking.
 
-do_swap_page returns error codes from the VM_FAULT* space. try_charge
-might return -ENOMEM, though, and then do_swap_page simply returns 0
-which means a success.
-
-We almost never return ENOMEM for GFP_KERNEL single page charge. Except
-for async OOM handling (oom_disabled v1). So this needs translation to
-VM_FAULT_OOM otherwise the the page fault path will not notify the
-userspace and wait for an action.
-
-Fixes: 4c6355b25e8b ("mm: memcontrol: charge swapin pages on instantiation")
-Signed-off-by: Michal Hocko <mhocko@suse.com>
+Fixes: 42fc541404f2 ("mmap locking API: add mmap_assert_locked() and mmap_assert_write_locked()"
+Cc: Michel Lespinasse <walken@google.com>
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 ---
- mm/memory.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/openrisc/kernel/dma.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index dc7f3543b1fd..1c632faa2611 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3140,8 +3140,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 				err = mem_cgroup_charge(page, vma->vm_mm,
- 							GFP_KERNEL);
- 				ClearPageSwapCache(page);
--				if (err)
-+				if (err) {
-+					ret = VM_FAULT_OOM;
- 					goto out_page;
-+				}
+diff --git a/arch/openrisc/kernel/dma.c b/arch/openrisc/kernel/dma.c
+index c152a68811dd..345727638d52 100644
+--- a/arch/openrisc/kernel/dma.c
++++ b/arch/openrisc/kernel/dma.c
+@@ -74,8 +74,11 @@ void *arch_dma_set_uncached(void *cpu_addr, size_t size)
+ 	 * We need to iterate through the pages, clearing the dcache for
+ 	 * them and setting the cache-inhibit bit.
+ 	 */
++	mmap_read_lock(&init_mm);
+ 	error = walk_page_range(&init_mm, va, va + size, &set_nocache_walk_ops,
+ 			NULL);
++	mmap_read_unlock(&init_mm);
++
+ 	if (error)
+ 		return ERR_PTR(error);
+ 	return cpu_addr;
+@@ -85,9 +88,11 @@ void arch_dma_clear_uncached(void *cpu_addr, size_t size)
+ {
+ 	unsigned long va = (unsigned long)cpu_addr;
  
- 				lru_cache_add(page);
- 				swap_readpage(page, true);
++	mmap_read_lock(&init_mm);
+ 	/* walk_page_range shouldn't be able to fail here */
+ 	WARN_ON(walk_page_range(&init_mm, va, va + size,
+ 			&clear_nocache_walk_ops, NULL));
++	mmap_read_unlock(&init_mm);
+ }
+ 
+ void arch_sync_dma_for_device(phys_addr_t addr, size_t size,
 -- 
 2.26.2
 
--- 
-Michal Hocko
-SUSE Labs
