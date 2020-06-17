@@ -2,96 +2,92 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80027C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 321F1207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F56F206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:16:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592367390;
+	bh=YSs3rS7jimINWeUYP1cnNHyH0AxuWxWgoOijCC6+TGw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nDIrWuKIyN20xWfKNpFRlyVDtUFaJFrF9CvHceUAcVnRjyAEFQD4/eOz41XStKR/D
+	 oaz6FZNPB2Hiq3uYI5Pn7q+xyCYUwAVarz5v5kHWK6XbbYI9kPP2llfxExZYs51xn6
+	 FRPt5zb5GjHThAQTGhdXCT2hVNvWrj67OyitNmw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726028AbgFQEM3 (ORCPT
+        id S1726568AbgFQEQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 00:12:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:50892 "EHLO foss.arm.com"
+        Wed, 17 Jun 2020 00:16:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgFQEM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 00:12:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8943E1FB;
-        Tue, 16 Jun 2020 21:12:28 -0700 (PDT)
-Received: from [10.163.80.128] (unknown [10.163.80.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A09C03F71F;
-        Tue, 16 Jun 2020 21:12:24 -0700 (PDT)
-Subject: Re: [PATCH v2] arm64: mm: reserve hugetlb CMA after numa_init
-To:     Barry Song <song.bao.hua@hisilicon.com>, catalin.marinas@arm.com,
-        will@kernel.org, nsaenzjulienne@suse.de, steve.capper@arm.com,
-        rppt@linux.ibm.com, akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linuxarm@huawei.com,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200616221924.74780-1-song.bao.hua@hisilicon.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <4489e307-1ce8-a883-2dae-1aa7e1c881fc@arm.com>
-Date:   Wed, 17 Jun 2020 09:42:18 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725776AbgFQEQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 00:16:25 -0400
+Received: from kernel.org (unknown [87.70.103.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1E78206D8;
+        Wed, 17 Jun 2020 04:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592367385;
+        bh=YSs3rS7jimINWeUYP1cnNHyH0AxuWxWgoOijCC6+TGw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VyUAIohaqZorUXwTkRH2qBJCKLfdZvByHmqUzFZW7GdZb1lS4b+q8M1JrPeSpsERq
+         kkY/b+DZfIuDP7TQMB0ubgyezfg8YBTEV5Wdvj6Kiuvzf5zUfTIiJmKvIp1vBs+SOC
+         hVA54LY75gmPA9Nr3sNmUHwkfzx4I+RfAZut/9sY=
+Date:   Wed, 17 Jun 2020 07:16:17 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH] powerpc/8xx: use pmd_off() to access a PMD entry in
+ pte_update()
+Message-ID: <20200617041617.GA6571@kernel.org>
+References: <20200615092229.23142-1-rppt@kernel.org>
+ <20200616124304.bbe36933fcd48c5f467f4be9@linux-foundation.org>
+ <87o8piegvt.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20200616221924.74780-1-song.bao.hua@hisilicon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o8piegvt.fsf@mpe.ellerman.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 06/17/2020 03:49 AM, Barry Song wrote:
-> hugetlb_cma_reserve() is called at the wrong place. numa_init has not been
-> done yet. so all reserved memory will be located at node0.
+On Wed, Jun 17, 2020 at 09:21:42AM +1000, Michael Ellerman wrote:
+> Andrew Morton <akpm@linux-foundation.org> writes:
+> > On Mon, 15 Jun 2020 12:22:29 +0300 Mike Rapoport <rppt@kernel.org> wrote:
+> >
+> >> From: Mike Rapoport <rppt@linux.ibm.com>
+> >> 
+> >> The pte_update() implementation for PPC_8xx unfolds page table from the PGD
+> >> level to access a PMD entry. Since 8xx has only 2-level page table this can
+> >> be simplified with pmd_off() shortcut.
+> >> 
+> >> Replace explicit unfolding with pmd_off() and drop defines of pgd_index()
+> >> and pgd_offset() that are no longer needed.
+> >> 
+> >> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> >> ---
+> >> 
+> >> I think it's powerpc material, but I won't mind if Andrew picks it up :)
+> >
+> > Via the powerpc tree would be better, please.
 > 
-> Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages using cma")
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Acked-by: Roman Gushchin <guro@fb.com>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> ---
->  -v2: add Fixes tag according to Matthias Brugger's comment
-> 
->  arch/arm64/mm/init.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index e631e6425165..41914b483d54 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -404,11 +404,6 @@ void __init arm64_memblock_init(void)
->  	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
->  
->  	dma_contiguous_reserve(arm64_dma32_phys_limit);
-> -
-> -#ifdef CONFIG_ARM64_4K_PAGES
-> -	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
-> -#endif
-> -
->  }
->  
->  void __init bootmem_init(void)
-> @@ -424,6 +419,11 @@ void __init bootmem_init(void)
->  	min_low_pfn = min;
->  
->  	arm64_numa_init();
-> +
-> +#ifdef CONFIG_ARM64_4K_PAGES
-> +	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
-> +#endif
+> I'll take it into next for v5.9, unless there's a reason it needs to go
+> into v5.8.
 
-arm64_numa_init() calls numa_init() which initializes node_online_map
-that gets used in hugetlb_cma_reserve() while allocating required CMA
-size across online nodes.
+I consider it a fixup for 5.8 merge window conflicts. Besides, mering it
+now may avoid new conflicts in 5.9 ;-)
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> cheers
+
+-- 
+Sincerely yours,
+Mike.
