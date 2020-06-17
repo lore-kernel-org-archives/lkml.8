@@ -2,107 +2,150 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D07C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A31522073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:42:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="kNHdvK3F"
+	by mail.kernel.org (Postfix) with ESMTP id DEBAD2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:43:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgFQIma (ORCPT
+        id S1726953AbgFQInE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:42:30 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:60767 "EHLO mail.zx2c4.com"
+        Wed, 17 Jun 2020 04:43:04 -0400
+Received: from mga07.intel.com ([134.134.136.100]:63544 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgFQIm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:42:29 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id b17dc5b8;
-        Wed, 17 Jun 2020 08:24:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=E3dus0mAltY1TrmmLK9MI4DIxAo=; b=kNHdvK
-        3FaQNYPUv5TymrpkWVzfZzVTDe507P8fhJ03uL/03VzTw+Qg21NKlUH9M3N4BOEh
-        56nXQ2H2yWz9xb/rWcckNYXaIFR4sO0YGMzUXGDRBbLPU6iSx5AHaT6U4zq20E7J
-        qFYTpQZe29DcZcbqDzEvpBK4fASn87ZPn2RWUft/Ls7ykyBjBWSPd1T7myDkuaEJ
-        vB4w0fZBSUKUmHFYPcrGSGGqIULaIBlkMkHFTqtM/ieSXF3j/Lmuh117ECYdCaeA
-        vZ1bUbzIyml3Ok3KToC58msuB5QP3ZU4E0eAwxEdvIt3O1H0sTZKTULS+9P7d8AW
-        mW0L6Q4ZWdnaXvyw==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 1b7c5c05 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Wed, 17 Jun 2020 08:24:23 +0000 (UTC)
-Received: by mail-il1-f170.google.com with SMTP id 9so1318086ilg.12;
-        Wed, 17 Jun 2020 01:42:27 -0700 (PDT)
-X-Gm-Message-State: AOAM5306PkNhTu3gBiu5wb/2/UjcMDUC1uja3pUsZNxhblwrTXs6IqOs
-        lxUpYGFo0de6+wJYhMFVn8QFjCSmODkX2eL+sKs=
-X-Google-Smtp-Source: ABdhPJzTYz/LscR65/jJ5KTsW005C2jHQ0GnnD/0q1WTL5nI6l6/fHsGGDp5lRZC/lYo1q8nIBivZ/dL9+SC3Q1A6mI=
-X-Received: by 2002:a92:c852:: with SMTP id b18mr7539915ilq.224.1592383346674;
- Wed, 17 Jun 2020 01:42:26 -0700 (PDT)
+        id S1726282AbgFQInE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:43:04 -0400
+IronPort-SDR: ZVVbIsstGNhnAyeW/D3Y9DaUTMbdRCpJg9id1jS6RH4CwUf9YplxupTxRc0ceByFzaRaTj7apH
+ aCa3V4tMxx6g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 01:43:03 -0700
+IronPort-SDR: d/9cHf3Pz6Xc/GbvVkEqvVC7CkmAiltndnzu2aq+8YEkTxcesgjakChYZEHzacyoHbOaeT6s6l
+ EI8ZsYBiALKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,522,1583222400"; 
+   d="scan'208";a="383130882"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Jun 2020 01:43:03 -0700
+Received: from [10.249.225.191] (abudanko-mobl.ccr.corp.intel.com [10.249.225.191])
+        by linux.intel.com (Postfix) with ESMTP id DAB0F580290;
+        Wed, 17 Jun 2020 01:43:00 -0700 (PDT)
+Subject: [PATCH v8 11/13] perf record: extend -D,--delay option with -1 value
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <99e3a472-836a-66c3-b8e8-49a2675e5d5e@linux.intel.com>
+Date:   Wed, 17 Jun 2020 11:42:59 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <CAHmME9rmAznrAmEQTOaLeMM82iMFTfCNfpxDGXw4CJjuVEF_gQ@mail.gmail.com>
- <20200615104332.901519-1-Jason@zx2c4.com> <CAHmME9oemScgo2mg8fzqtJCbKJfu-op0WvG5RcpBCS1hHNmpZw@mail.gmail.com>
- <CAMj1kXGWma7T+C5TJ2wYZ22MJr=3FQRqDjF--YuGuzFdAygP-g@mail.gmail.com>
-In-Reply-To: <CAMj1kXGWma7T+C5TJ2wYZ22MJr=3FQRqDjF--YuGuzFdAygP-g@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 17 Jun 2020 02:42:15 -0600
-X-Gmail-Original-Message-ID: <CAHmME9oJGOH-LwAocAknHFm385Ee_v_itMV4UKj1Sq00SiM4ng@mail.gmail.com>
-Message-ID: <CAHmME9oJGOH-LwAocAknHFm385Ee_v_itMV4UKj1Sq00SiM4ng@mail.gmail.com>
-Subject: Re: [PATCH] acpi: disallow loading configfs acpi tables when locked down
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 2:38 AM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Wed, 17 Jun 2020 at 00:21, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> >
-> > Hi Rafael, Len,
-> >
-> > Looks like I should have CC'd you on this patch. This is probably
-> > something we should get into 5.8-rc2, so that it can then get put into
-> > stable kernels, as some people think this is security sensitive.
-> > Bigger picture is this:
-> >
-> > https://data.zx2c4.com/american-unsigned-language-2.gif
-> > https://data.zx2c4.com/american-unsigned-language-2-fedora-5.8.png
-> >
-> > Also, somebody mentioned to me that Microsoft's ACPI implementation
-> > disallows writes to system memory as a security mitigation. I haven't
-> > looked at what that actually entails, but I wonder if entirely
-> > disabling support for ACPI_ADR_SPACE_SYSTEM_MEMORY would be sensible.
-> > I haven't looked at too many DSDTs. Would that break real hardware, or
-> > does nobody do that? Alternatively, the range of acceptable addresses
-> > for SystemMemory could exclude kernel memory. Would that break
-> > anything? Have you heard about Microsoft's mitigation to know more
-> > details on what they figured out they could safely restrict without
-> > breaking hardware? Either way, food for thought I suppose.
-> >
->
-> ACPI_ADR_SPACE_SYSTEM_MEMORY may be used for everything that is memory
-> mapped, i.e., PCIe ECAM space, GPIO control registers etc.
->
-> I agree that using ACPI_ADR_SPACE_SYSTEM_MEMORY for any memory that is
-> under the kernel's control is a bad idea, and this should be easy to
-> filter out: the SystemMemory address space handler needs the ACPI
-> support routines to map the physical addresses used by AML into
-> virtual kernel addresses, so all these accesses go through
-> acpi_os_ioremap(). So as a first step, it should be reasonable to put
-> a lockdown check there, and fail any access to OS owned memory if
-> lockdown is enabled, and print a warning if it is not.
 
-Makes sense. Though I was thinking of doing this unconditionally, not
-just for lockdown, as a "realer" security mitigation (hence CCing
-kernel-hardening), against bugs that manage to mess with acpi things.
-A second mitigation might be marking inmemory acpi bytecode pages as
-read only.
+Extend -D,--delay option with -1 to start collection with events
+disabled to be enabled later by 'enable' command provided via
+control file descriptor.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/Documentation/perf-record.txt |  5 +++--
+ tools/perf/builtin-record.c              | 12 ++++++++----
+ tools/perf/builtin-trace.c               |  2 +-
+ tools/perf/util/record.h                 |  2 +-
+ 4 files changed, 13 insertions(+), 8 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index fa8a5fcd27ab..a84376605805 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -407,8 +407,9 @@ if combined with -a or -C options.
+ 
+ -D::
+ --delay=::
+-After starting the program, wait msecs before measuring. This is useful to
+-filter out the startup phase of the program, which is often very different.
++After starting the program, wait msecs before measuring (-1: start with events
++disabled). This is useful to filter out the startup phase of the program, which
++is often very different.
+ 
+ -I::
+ --intr-regs::
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index e108d90ae2ed..d0b29a1070a0 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1749,8 +1749,12 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	}
+ 
+ 	if (opts->initial_delay) {
+-		usleep(opts->initial_delay * USEC_PER_MSEC);
+-		evlist__enable(rec->evlist);
++		pr_info(EVLIST_DISABLED_MSG);
++		if (opts->initial_delay > 0) {
++			usleep(opts->initial_delay * USEC_PER_MSEC);
++			evlist__enable(rec->evlist);
++			pr_info(EVLIST_ENABLED_MSG);
++		}
+ 	}
+ 
+ 	trigger_ready(&auxtrace_snapshot_trigger);
+@@ -2462,8 +2466,8 @@ static struct option __record_options[] = {
+ 	OPT_CALLBACK('G', "cgroup", &record.evlist, "name",
+ 		     "monitor event in cgroup name only",
+ 		     parse_cgroups),
+-	OPT_UINTEGER('D', "delay", &record.opts.initial_delay,
+-		  "ms to wait before starting measurement after program start"),
++	OPT_INTEGER('D', "delay", &record.opts.initial_delay,
++		  "ms to wait before starting measurement after program start (-1: start with events disabled)"),
+ 	OPT_BOOLEAN(0, "kcore", &record.opts.kcore, "copy /proc/kcore"),
+ 	OPT_STRING('u', "uid", &record.opts.target.uid_str, "user",
+ 		   "user to profile"),
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 4cbb64edc998..290149b1b3b5 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -4813,7 +4813,7 @@ int cmd_trace(int argc, const char **argv)
+ 			"per thread proc mmap processing timeout in ms"),
+ 	OPT_CALLBACK('G', "cgroup", &trace, "name", "monitor event in cgroup name only",
+ 		     trace__parse_cgroups),
+-	OPT_UINTEGER('D', "delay", &trace.opts.initial_delay,
++	OPT_INTEGER('D', "delay", &trace.opts.initial_delay,
+ 		     "ms to wait before starting measurement after program "
+ 		     "start"),
+ 	OPTS_EVSWITCH(&trace.evswitch),
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 39d1de4b2a36..da138dcb4d34 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -61,7 +61,7 @@ struct record_opts {
+ 	const char    *auxtrace_snapshot_opts;
+ 	const char    *auxtrace_sample_opts;
+ 	bool	      sample_transaction;
+-	unsigned      initial_delay;
++	int	      initial_delay;
+ 	bool	      use_clockid;
+ 	clockid_t     clockid;
+ 	u64	      clockid_res_ns;
+-- 
+2.24.1
+
+
