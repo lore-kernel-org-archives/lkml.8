@@ -3,138 +3,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDCEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 618F62088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F7C2186A
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:24:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KUwEnnVu"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J5MKLGjX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgFQUXO (ORCPT
+        id S1726893AbgFQUYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:23:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57650 "EHLO
+        Wed, 17 Jun 2020 16:24:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgFQUXO (ORCPT
+        with ESMTP id S1726758AbgFQUYv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:23:14 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C8F8C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:23:14 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d4so1834857pgk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:23:14 -0700 (PDT)
+        Wed, 17 Jun 2020 16:24:51 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ACCCC061755
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:24:51 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id a45so2628819pje.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:24:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=eps4Ei5p4v0C3v2/fz1NIeuMiErn9v1jAL+UTG1cAZ4=;
-        b=KUwEnnVuoDexMEaNIhuG4RLuBUPsEa0c8mx/p66yeGTJknY5jo5chKwZr87y1L3H+5
-         FLevFJUpgH8KfcLzKSALX5DDxCB7+s9Mqo++j4RM5/MFcO9wC+IcBRKXSPpo8C7wyHud
-         dj86nf9Qb1XbOuSKdsBKTtZI7uk0dkGUjuwmM=
+        bh=Oi8WdEL0xHPWSjEuRn/3DpBy4qY4ecDATBbe5otJXBE=;
+        b=J5MKLGjXGUT07r4aFv5ozaZuu3kZvZznC8PH0oHKeVzwG4W7Sa5yT0nuHpVqc/yDGr
+         EpYlaHHELjEmVUclc9MW/pBhcdy5ZfMfADf6QXsfUlXnphGBrNvgWoHmfSM/D7wydIJD
+         DxHhTS3nbziS/wq5ocHsECn/Sk9PC9wTRmhqE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=eps4Ei5p4v0C3v2/fz1NIeuMiErn9v1jAL+UTG1cAZ4=;
-        b=QnPvWcKErSL6Hx5fF8YNd0ZvDTnu333PYiHVj6QqqMa9B76ax4ahh7c+k7Uyj08DNb
-         yX8a+U4DQQ/QLxEhqliFVPDGQhjHWiwYaeqU157z6Hdg5PBSrvBLZHIsNHCQYzthdbwS
-         1iapNocsrLJHcBT3AaSKLVmJyeer3tjunFsV2dexc1krvDORfnF2nbNknEmYzmhIrMdg
-         2+JARULCHZVFLUiXDMUv/qUJtsMEyjo83FjjS1PDgiAZfnqhPAV65KtWYgp7vVkEcYDm
-         XTByiJlSfHceZHF8jV+zfLwDCJNrokKBHAToeIlk2gk660oGj2RqP4VCTCFzJU+GXlXo
-         Ytig==
-X-Gm-Message-State: AOAM532xlX7yhaR/3as733nTxDtA9cCt+pmRucvLjNUaJsN29aSSJtMF
-        xUGJdYnS0LoiMwMmkejFziRi7A==
-X-Google-Smtp-Source: ABdhPJwWQgEdOfbFG7zAFOTYs510ibb89tg4xrESspvF0suYJlxtlkHG0lqpc/fh7RGBgnoPvxH+kg==
-X-Received: by 2002:a65:6550:: with SMTP id a16mr452402pgw.183.1592425393877;
-        Wed, 17 Jun 2020 13:23:13 -0700 (PDT)
+        bh=Oi8WdEL0xHPWSjEuRn/3DpBy4qY4ecDATBbe5otJXBE=;
+        b=heRXhWfzaDaZSa4dCpK9COLSvGa9SDiZO/By6RtqGMFhrT82K0YDB9vWYBhlXqJWeg
+         ga794dWVyCCSLstyRPFEDOqPFpZ3jUBIaXMGD4F0ltdwcMCsyD711dJLxFnDAcWvQ2ie
+         NdQH7B+CeFSB7CqjL8AaQ+XthADvkodA2P5CYFbs8z55LuSxh9BAygx+ks0qk1Fp69d0
+         qkV1CoV4gEfNRddVbolvzFNKq3pGPAKUzOQJQheBzsry5CYeNbSx1jZ5jLgLf8IaPOlU
+         XX4UZbwKHJ9feyANsKoYYi472cGNds7gGex5bHmlYYPCaSpgZzQ+8ntrsq0E31/BQgX5
+         GhdA==
+X-Gm-Message-State: AOAM532Gz8cwp7JHMqSlZO37MqMEqAVOYP1SOqSX76yz4AVjsMr9DscC
+        ZFC4KT1gCOIrLSUhhlVWOJ1wGw==
+X-Google-Smtp-Source: ABdhPJyZmGniT2GeQsnfQbcp1rjOQ22uxwwhX/RB7fTaW7sfeOWTkRvWtF86/hVCPycnzfrvFiY5Uw==
+X-Received: by 2002:a17:90a:fa8f:: with SMTP id cu15mr811773pjb.9.1592425490882;
+        Wed, 17 Jun 2020 13:24:50 -0700 (PDT)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id s21sm615275pgg.8.2020.06.17.13.23.13
+        by smtp.gmail.com with ESMTPSA id b24sm637675pfo.112.2020.06.17.13.24.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 13:23:13 -0700 (PDT)
+        Wed, 17 Jun 2020 13:24:50 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200617113851.607706-7-alexandru.elisei@arm.com>
-References: <20200617113851.607706-1-alexandru.elisei@arm.com> <20200617113851.607706-7-alexandru.elisei@arm.com>
-Subject: Re: [PATCH v5 6/7] arm_pmu: Introduce pmu_irq_ops
+In-Reply-To: <20200616034044.v3.1.Ic50cccdf27d42420a63485082f8b5bf86ed1a2b6@changeid>
+References: <20200616104050.84764-1-dianders@chromium.org> <20200616034044.v3.1.Ic50cccdf27d42420a63485082f8b5bf86ed1a2b6@changeid>
+Subject: Re: [PATCH v3 1/5] spi: spi-geni-qcom: No need for irqsave variant of spinlock calls
 From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     mark.rutland@arm.com, Julien Thierry <julien.thierry@arm.com>,
-        maz@kernel.org, Will Deacon <will.deacon@arm.com>,
-        catalin.marinas@arm.com, will@kernel.org,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-To:     Alexandru Elisei <alexandru.elisei@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Wed, 17 Jun 2020 13:23:12 -0700
-Message-ID: <159242539231.62212.11549121838391298623@swboyd.mtv.corp.google.com>
+Cc:     Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+To:     Douglas Anderson <dianders@chromium.org>,
+        Mark Brown <broonie@kernel.org>
+Date:   Wed, 17 Jun 2020 13:24:49 -0700
+Message-ID: <159242548959.62212.17168767504846192201@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Alexandru Elisei (2020-06-17 04:38:50)
-> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-> index df352b334ea7..17e5952d21e4 100644
-> --- a/drivers/perf/arm_pmu.c
-> +++ b/drivers/perf/arm_pmu.c
-> @@ -26,8 +26,46 @@
-> =20
->  #include <asm/irq_regs.h>
-> =20
-> +static int armpmu_count_irq_users(const int irq);
-> +
-> +struct pmu_irq_ops {
-> +       void (*enable_pmuirq)(unsigned int irq);
-> +       void (*disable_pmuirq)(unsigned int irq);
-> +       void (*free_pmuirq)(unsigned int irq, int cpu, void __percpu *dev=
-id);
+Quoting Douglas Anderson (2020-06-16 03:40:46)
+> The driver locks its locks in two places.
+>=20
+> In the first usage of the lock the function doing the locking already
+> has a sleeping call and thus we know we can't be called from interrupt
+> context.  That means we can use the "spin_lock_irq" variant of the
+> function.
+>=20
+> In the second usage of the lock the function is the interrupt handler
+> and we know interrupt handlers are called with interrupts disabled.
+> That means we can use the "spin_lock" variant of the function.
+>=20
+> This patch is expected to be a no-op and is just a cleanup / slight
+> optimization.
+>=20
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 
-Does 'cpu' need to be signed?
-
-> +};
-> +
-> +static void armpmu_free_pmuirq(unsigned int irq, int cpu, void __percpu =
-*devid)
-> +{
-> +       free_irq(irq, per_cpu_ptr(devid, cpu));
-> +}
-> +
-> +static const struct pmu_irq_ops pmuirq_ops =3D {
-> +       .enable_pmuirq =3D enable_irq,
-> +       .disable_pmuirq =3D disable_irq_nosync,
-> +       .free_pmuirq =3D armpmu_free_pmuirq
-> +};
-> +
-> +static void armpmu_enable_percpu_pmuirq(unsigned int irq)
-> +{
-> +       enable_percpu_irq(irq, IRQ_TYPE_NONE);
-> +}
-> +
-> +static void armpmu_free_percpu_pmuirq(unsigned int irq, int cpu,
-> +                                  void __percpu *devid)
-> +{
-> +       if (armpmu_count_irq_users(irq) =3D=3D 1)
-> +               free_percpu_irq(irq, devid);
-> +}
-> +
-> +static const struct pmu_irq_ops percpu_pmuirq_ops =3D {
-> +       .enable_pmuirq =3D armpmu_enable_percpu_pmuirq,
-> +       .disable_pmuirq =3D disable_percpu_irq,
-> +       .free_pmuirq =3D armpmu_free_percpu_pmuirq
-> +};
-> +
->  static DEFINE_PER_CPU(struct arm_pmu *, cpu_armpmu);
->  static DEFINE_PER_CPU(int, cpu_irq);
-
-Same question as above.
-
-> +static DEFINE_PER_CPU(const struct pmu_irq_ops *, cpu_irq_ops);
-> =20
->  static inline u64 arm_pmu_event_max_period(struct perf_event *event)
->  {
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
