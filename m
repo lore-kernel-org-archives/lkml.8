@@ -2,119 +2,196 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C41EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCE7E206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:18:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="V8PHZVtK"
+	by mail.kernel.org (Postfix) with ESMTP id 87D3F208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgFQGSP (ORCPT
+        id S1726864AbgFQGTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 02:18:15 -0400
-Received: from ozlabs.org ([203.11.71.1]:52297 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726681AbgFQGSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 02:18:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49mvyC3vtXz9sRW;
-        Wed, 17 Jun 2020 16:18:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1592374692;
-        bh=mJkXDcG+JBwronSGoBFKwHoOQWlgz+qa4gI2fl3s5OA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=V8PHZVtKEWbc4Z1DZixbQ0OxxIkURvtvl5Fh5EXAMbvxsk+fcG4V1fq2X6bQcKmf6
-         LFm/ID0UE2wWBOLBVbOHTwYbzddwK/qc3Ndi9qkuZHZ8GapyzcPKb0r3hXObURz925
-         n0FfWZdIVfDY896dB7j5dHkSYZvZY/a5MXd3Y0fpHdY2adTX1ogqNhHUM/uhwXn5Ap
-         5YFxggXNkehaHJqWA3nKptq6XmFmZg4n670PI0SNMH5Jojs9+YM3gIQKVV9Ph4QoSN
-         ZoDlIoBcE7EHnlcMHaOIbSPtlEIzJkXUq5FwJVeeZlas4sm3iUOpCWXKXjw5UNDKuz
-         K+CMdNUbIuxyw==
-Date:   Wed, 17 Jun 2020 16:18:10 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linux-kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 1/2] Explicitly include linux/major.h where it is
- needed
-Message-ID: <20200617161810.256ff93f@canb.auug.org.au>
-In-Reply-To: <20200617055843.GB25631@kroah.com>
-References: <20200617092614.7897ccb2@canb.auug.org.au>
-        <20200617092747.0cadb2de@canb.auug.org.au>
-        <20200617055843.GB25631@kroah.com>
+        Wed, 17 Jun 2020 02:19:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33708 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726497AbgFQGTh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 02:19:37 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05H62ZIm076934;
+        Wed, 17 Jun 2020 02:19:35 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31q6hpjb14-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 02:19:35 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05H6JZwm127070;
+        Wed, 17 Jun 2020 02:19:35 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31q6hpjb0j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 02:19:35 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05H6G345020586;
+        Wed, 17 Jun 2020 06:19:33 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 31q6ch8gbq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 06:19:33 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05H6JUD33277096
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jun 2020 06:19:30 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A10B8AE045;
+        Wed, 17 Jun 2020 06:19:30 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3590DAE04D;
+        Wed, 17 Jun 2020 06:19:30 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.5.222])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 17 Jun 2020 06:19:30 +0000 (GMT)
+Subject: Re: [PATCH 19/25] mm/s390: Use mm_fault_accounting()
+To:     Peter Xu <peterx@redhat.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
+References: <20200615221607.7764-1-peterx@redhat.com>
+ <20200615222302.8452-1-peterx@redhat.com>
+ <20200616155933.GA12897@oc3871087118.ibm.com> <20200616163510.GD11838@xz-x1>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <edb88596-6f2c-2648-748d-591a0b1e0131@de.ibm.com>
+Date:   Wed, 17 Jun 2020 08:19:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/SR24Am7bJk6gmzp1XI0YNUE";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200616163510.GD11838@xz-x1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_13:2020-06-16,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 spamscore=0 impostorscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006170044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/SR24Am7bJk6gmzp1XI0YNUE
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Greg,
 
-On Wed, 17 Jun 2020 07:58:43 +0200 Greg KH <gregkh@linuxfoundation.org> wro=
-te:
->
-> On Wed, Jun 17, 2020 at 09:27:47AM +1000, Stephen Rothwell wrote:
-> > This is in preparation for removing the include of major.h where it is
-> > not needed.
-> >=20
-> > These files were found using
-> >=20
-> > 	grep -E -L '[<"](uapi/)?linux/major\.h' $(git grep -l -w -f /tmp/xx)
-> >=20
-> > where /tmp/xx contains all the symbols defined in major.h.  There were
-> > a couple of files in that list that did not need the include since the
-> > references are in comments.
-> >=20
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au> =20
->=20
-> Any reason this had an RFC, but patch 2/2 did not?
+On 16.06.20 18:35, Peter Xu wrote:
+> Hi, Alexander,
+> 
+> On Tue, Jun 16, 2020 at 05:59:33PM +0200, Alexander Gordeev wrote:
+>>> @@ -489,21 +489,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+>>>  	if (unlikely(fault & VM_FAULT_ERROR))
+>>>  		goto out_up;
+>>>
+>>> -	/*
+>>> -	 * Major/minor page fault accounting is only done on the
+>>> -	 * initial attempt. If we go through a retry, it is extremely
+>>> -	 * likely that the page will be found in page cache at that point.
+>>> -	 */
+>>>  	if (flags & FAULT_FLAG_ALLOW_RETRY) {
+>>> -		if (fault & VM_FAULT_MAJOR) {
+>>> -			tsk->maj_flt++;
+>>> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
+>>> -				      regs, address);
+>>> -		} else {
+>>> -			tsk->min_flt++;
+>>> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
+>>> -				      regs, address);
+>>> -		}
+>>>  		if (fault & VM_FAULT_RETRY) {
+>>>  			if (IS_ENABLED(CONFIG_PGSTE) && gmap &&
+>>>  			    (flags & FAULT_FLAG_RETRY_NOWAIT)) {
+>>
+>> Seems like the call to mm_fault_accounting() will be missed if
+>> we entered here with FAULT_FLAG_RETRY_NOWAIT flag set, since it
+>> jumps to "out_up"...
+> 
+> This is true as a functional change.  However that also means that we've got a
+> VM_FAULT_RETRY, which hints that this fault has been requested to retry rather
+> than handled correctly (for instance, due to some try_lock failed during the
+> fault process).
+> 
+> To me, that case should not be counted as a page fault at all?  Or we might get
+> the same duplicated accounting when the page fault retried from a higher stack.
+> 
+> Thanks
 
-I forgot :-)  I added RFC just to hopefully get some attention as this
-is just the start of a long slow use of my "spare" time.
+This case below (the one with the gmap) is the KVM case for doing a so called
+pseudo page fault to our guests. (we notify our guests about major host page
+faults and let it reschedule to something else instead of halting the vcpu).
+This is being resolved with either gup or fixup_user_fault asynchronously by
+KVM code (this can also be sync when the guest does not match some conditions)
+We do not change the counters in that code as far as I can tell so we should
+continue to do it here.
 
-> They look good to me, I will be glad to take these, but do you still
-> want reviews from others for this?  It seems simple enough to me...
-
-Yeah, well, we all know the simplest patches usually cause the most pain :-)
-
-However, I have been fairly careful and it is an easy include file to
-work with.  And I have done my usual build checks, so the linux-next
-maintainer won't complain about build problems :-)
-
-I would like to hear from Arnd, at least, as I don't want to step on
-his toes (he is having a larger look at our include files).
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/SR24Am7bJk6gmzp1XI0YNUE
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7ptaIACgkQAVBC80lX
-0GzKewf8D3i2VcdXPYbwXP1LbIeTDCjjxRMksxmNwVqp+V+AnAGCrFNYjpXQ0XLG
-0gS30xMjpcoGedPZ7TlbKO2u8Gyz5VgUgicU+JXaDbCzkgcxtFEdIZCmkeWg9527
-WzQZzxpBeEscgR3FvLylhGKrYbdfQT14dQsbnRQhlm+wHANvZdAC1mpmUPjeS7vn
-IbG/sr4xzvnHiup3Vy2j0oqgroHqmqCHKUMKaJEdfFBQSHjWsvfvOBFwAiATow3o
-eq9imn6UvaSEHU/VFKLNHhYtQKt3a4liB9ScnxlFXFyyYgRx/0ZziBcU6ffHqubd
-in7WwTgUBtvePKUxSDd2tctZFT8VlQ==
-=YfaS
------END PGP SIGNATURE-----
-
---Sig_/SR24Am7bJk6gmzp1XI0YNUE--
+(see arch/s390/kvm/kvm-s390.c
+static int vcpu_post_run(struct kvm_vcpu *vcpu, int exit_reason)
+{
+[...]
+        } else if (current->thread.gmap_pfault) {
+                trace_kvm_s390_major_guest_pfault(vcpu);
+                current->thread.gmap_pfault = 0;
+                if (kvm_arch_setup_async_pf(vcpu))
+                        return 0;
+                return kvm_arch_fault_in_page(vcpu, current->thread.gmap_addr, 1);
+        }
