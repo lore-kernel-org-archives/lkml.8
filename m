@@ -2,121 +2,103 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC17FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96D682073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:38:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="s4niYvrh";
-	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="iNRgLuzI"
+	by mail.kernel.org (Postfix) with ESMTP id 5C027212CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 19:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgFQTit (ORCPT
+        id S1726942AbgFQTjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 15:38:49 -0400
-Received: from djelibeybi.uuid.uk ([45.91.101.70]:57950 "EHLO
-        djelibeybi.uuid.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbgFQTis (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 15:38:48 -0400
-X-Greylist: delayed 389 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Jun 2020 15:38:46 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=CBFAg6s+vq5P374WzvzyZ5LF5sqRXWLUvi7gDQCysuQ=; b=s4niYvrhMPjKxPqwZfV/XTAR6X
-        iqawHB1UE2brS2dFuRjx2BU/xoVl7uZN77L6+lV00LVJkldfRno8zX0HrZ8wLzQdqfWS1RYGNUgEu
-        rfjfFsLmKcHLU3hTd5Diwj/dmRc8qPan8G0sp3/FftcuLt5Ba9RdqUkStAUskP6k0Kx/yDwP3Wb0b
-        XCllNmx+7J9zxkPSem743Ksy483GZJmUUgmMYghnHdRlEJB/iXU8KT10IWJeNkfI0tDnSHHVsB49/
-        IRKXRKuVWIyJCGM0wRLfS3VDQGu1ovwVtYT5QcfRPRUFDpo95gN0uE4Jjqh31rs3pD6tLCX+D3iQM
-        tYodPY3w==;
-Received: by djelibeybi.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <simon@octiron.net>)
-        id 1jldn9-0001NO-4a; Wed, 17 Jun 2020 20:32:15 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:To:Subject;
-        bh=CBFAg6s+vq5P374WzvzyZ5LF5sqRXWLUvi7gDQCysuQ=; b=iNRgLuzImYOvm7B2xpgqc+VmTG
-        wSOj8XmLpCXMk8XZWAPtXq10UdhX85+0B0vNcO7HZS7RxhBYV60tW8QQ0G1zeuLYXnzFYf4MgO00K
-        dphadsBfZCgcLuk1U1LytGUTHTEz4bSPbumr0a8kRhAfRS4PeJm+7sfPW4kfv3J5QPlI1FDfZ08VT
-        jFBZOdQ3FM7D3Ah5tDYzMnAASIc2JR94Uq4v76bohe315pkXZ5Gqyrrevf48Sb2bftgKr98QEL8P3
-        njaYk/7yR6fHUz9GoQ9zq5EDv2Hj/t8KtGtMluUIwXM7Hl+7XiA3e4l3AQjNBT08bFnMYKgQUDt3u
-        43Jqp2ZA==;
-Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <simon@octiron.net>)
-        id 1jldn7-00062R-3q; Wed, 17 Jun 2020 20:32:09 +0100
-Subject: Re: [PATCH] scsi: sd: stop SSD (non-rotational) disks before reboot
-To:     Bart Van Assche <bvanassche@acm.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-scsi@vger.kernel.org, linux-doc@vger.kernel.org
-References: <499138c8-b6d5-ef4a-2780-4f750ed337d3@0882a8b5-c6c3-11e9-b005-00805fc181fe>
- <b92ce48a-55d8-9377-f6c5-510d7e3beb1b@acm.org>
-From:   Simon Arlott <simon@octiron.net>
-Message-ID: <04bf3c02-85f4-3fbc-525a-4189aadf9241@0882a8b5-c6c3-11e9-b005-00805fc181fe>
-Date:   Wed, 17 Jun 2020 20:32:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 17 Jun 2020 15:39:46 -0400
+Received: from mga07.intel.com ([134.134.136.100]:52522 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726558AbgFQTjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 15:39:45 -0400
+IronPort-SDR: wS7tIFarexy0u+Xai9N0UFpJqNPYfGSUT0f/mB8oJikfhiaWgUXBn9qQn6cGa7+5gqdDfWNFJM
+ EW18WHN9QlVA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 12:39:45 -0700
+IronPort-SDR: XlOkZWuUqUJIMX3YBJ641L9Zny0vHQ3jjFJ0lLYzgPZoGdYYh0V+M5UafI1dtz9Eglt47VJwI7
+ 0sv5dlw7OpgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
+   d="scan'208";a="476968932"
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by fmsmga005.fm.intel.com with ESMTP; 17 Jun 2020 12:39:44 -0700
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.56]) by
+ ORSMSX107.amr.corp.intel.com ([169.254.1.92]) with mapi id 14.03.0439.000;
+ Wed, 17 Jun 2020 12:39:43 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Christoph Hellwig <hch@infradeed.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Mehta, Sohil" <sohil.mehta@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu <iommu@lists.linux-foundation.org>
+Subject: RE: [PATCH v3 01/13] iommu: Change type of pasid to unsigned int
+Thread-Topic: [PATCH v3 01/13] iommu: Change type of pasid to unsigned int
+Thread-Index: AQHWRNSCgq6s3Eb3TUCTrKgNEKKtfajdqISA//+LkWA=
+Date:   Wed, 17 Jun 2020 19:39:43 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F67216A@ORSMSX115.amr.corp.intel.com>
+References: <1592418233-17762-1-git-send-email-fenghua.yu@intel.com>
+ <1592418233-17762-2-git-send-email-fenghua.yu@intel.com>
+ <CALCETrXFHa_05-sGAy5M9YGJWUfTn9MfM-ZYk+hp12tqHNJA0Q@mail.gmail.com>
+In-Reply-To: <CALCETrXFHa_05-sGAy5M9YGJWUfTn9MfM-ZYk+hp12tqHNJA0Q@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <b92ce48a-55d8-9377-f6c5-510d7e3beb1b@acm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/06/2020 20:19, Bart Van Assche wrote:
-> On 2020-06-17 11:49, Simon Arlott wrote:
->> @@ -3576,9 +3582,19 @@ static void sd_shutdown(struct device *dev)
->>  		sd_sync_cache(sdkp, NULL);
->>  	}
->>  
->> -	if (system_state != SYSTEM_RESTART && sdkp->device->manage_start_stop) {
->> -		sd_printk(KERN_NOTICE, sdkp, "Stopping disk\n");
->> -		sd_start_stop_device(sdkp, 0);
->> +	if (sdkp->device->manage_start_stop) {
->> +		bool stop_disk = (system_state != SYSTEM_RESTART);
->> +
->> +		if (stop_before_reboot > 1) { /* stop all disks */
->> +			stop_disk = true;
->> +		} else if (stop_before_reboot) { /* non-rotational only */
->> +			stop_disk |= blk_queue_nonrot(sdkp->disk->queue);
->> +		}
->> +
->> +		if (stop_disk) {
->> +			sd_printk(KERN_NOTICE, sdkp, "Stopping disk\n");
->> +			sd_start_stop_device(sdkp, 0);
->> +		}
->>  	}
->>  }
-> 
-> Is introduction of a new kernel module parameter essential?
-
-It is system-dependent whether or not a reboot is going to result in a
-loss of power, so it's required to be able to stop the HDDs too.
-
-They're already always stopped on shutdown where power is definitely
-going to be lost. I can't do that by default on a reboot because the
-usual convention is that the power stays on during a reboot and it would
-be expected that the HDDs keep spinning.
-
-> Or in other
-> words, has it been considered to apply the new behavior to all SSDs?
-
-The default value is 1, so it does apply to all SSDs. I want to be able
-to configure it to apply to HDDs too.
-
--- 
-Simon Arlott
+PiBJcyBQQVNJRCBpbiB0aGUgdWFwaSBhdCBhbGw/DQoNCg0KJCBncmVwIHBhc2lkIGluY2x1ZGUv
+dWFwaS9saW51eC9pb21tdS5oDQoqIEBwYXNpZDogUHJvY2VzcyBBZGRyZXNzIFNwYWNlIElEDQog
+ICAgICAgIF9fdTMyICAgcGFzaWQ7DQogKiBAcGFzaWQ6IFByb2Nlc3MgQWRkcmVzcyBTcGFjZSBJ
+RA0KICAgICAgICBfX3UzMiAgIHBhc2lkOw0KICogQHBhc2lkOiBQcm9jZXNzIEFkZHJlc3MgU3Bh
+Y2UgSUQNCiAgICAgICAgX191MzIgICBwYXNpZDsNCiAqIC0gSWYgdGhlIFBBU0lEIGJpdCBpcyBz
+ZXQsIHRoZSBAcGFzaWQgZmllbGQgaXMgcG9wdWxhdGVkIGFuZCB0aGUgaW52YWxpZGF0aW9uDQog
+KiBAcGFzaWQ6IHByb2Nlc3MgYWRkcmVzcyBzcGFjZSBJRA0KICAgICAgICBfX3U2NCAgIHBhc2lk
+Ow0KICogc3RydWN0IGlvbW11X2ludl9wYXNpZF9pbmZvIC0gUEFTSUQgU2VsZWN0aXZlIEludmFs
+aWRhdGlvbiBTdHJ1Y3R1cmUNCiAqIC0gSWYgdGhlIFBBU0lEIGJpdCBpcyBzZXQsIHRoZSBAcGFz
+aWQgZmllbGQgaXMgcG9wdWxhdGVkIGFuZCB0aGUgaW52YWxpZGF0aW9uDQogKiBAcGFzaWQ6IHBy
+b2Nlc3MgYWRkcmVzcyBzcGFjZSBJRA0Kc3RydWN0IGlvbW11X2ludl9wYXNpZF9pbmZvIHsNCiAg
+ICAgICAgX191NjQgICBwYXNpZDsNCiAqIEBwYXNpZF9pbmZvOiBpbnZhbGlkYXRpb24gZGF0YSB3
+aGVuIEBncmFudWxhcml0eSBpcyAlSU9NTVVfSU5WX0dSQU5VX1BBU0lEDQogICAgICAgICAgICAg
+ICAgc3RydWN0IGlvbW11X2ludl9wYXNpZF9pbmZvIHBhc2lkX2luZm87DQogKiBzdHJ1Y3QgaW9t
+bXVfZ3Bhc2lkX2JpbmRfZGF0YV92dGQgLSBJbnRlbCBWVC1kIHNwZWNpZmljIGRhdGEgb24gZGV2
+aWNlIGFuZCBndWVzdA0Kc3RydWN0IGlvbW11X2dwYXNpZF9iaW5kX2RhdGFfdnRkIHsNCiAqIHN0
+cnVjdCBpb21tdV9ncGFzaWRfYmluZF9kYXRhIC0gSW5mb3JtYXRpb24gYWJvdXQgZGV2aWNlIGFu
+ZCBndWVzdCBQQVNJRCBiaW5kaW5nDQogKiBAaHBhc2lkOiAgICAgUHJvY2VzcyBhZGRyZXNzIHNw
+YWNlIElEIHVzZWQgZm9yIHRoZSBndWVzdCBtbSBpbiBob3N0IElPTU1VDQogKiBAZ3Bhc2lkOiAg
+ICAgUHJvY2VzcyBhZGRyZXNzIHNwYWNlIElEIHVzZWQgZm9yIHRoZSBndWVzdCBtbSBpbiBndWVz
+dCBJT01NVQ0Kc3RydWN0IGlvbW11X2dwYXNpZF9iaW5kX2RhdGEgew0KICAgICAgICBfX3U2NCBo
+cGFzaWQ7DQogICAgICAgIF9fdTY0IGdwYXNpZDsNCiAgICAgICAgICAgICAgICBzdHJ1Y3QgaW9t
+bXVfZ3Bhc2lkX2JpbmRfZGF0YV92dGQgdnRkOw0K
