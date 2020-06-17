@@ -6,136 +6,102 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBCCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBABC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F91E21548
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FDD214DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgFQU1r (ORCPT
+        id S1726899AbgFQU2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:27:47 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:29098 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726758AbgFQU1q (ORCPT
+        Wed, 17 Jun 2020 16:28:00 -0400
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:36975 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbgFQU16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:27:46 -0400
-X-IronPort-AV: E=Sophos;i="5.73,523,1583190000"; 
-   d="scan'208";a="455254845"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 22:27:43 +0200
-Date:   Wed, 17 Jun 2020 22:27:43 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Denis Efremov <efremov@linux.com>
-cc:     linux-kernel@vger.kernel.org, cocci@systeme.lip6.fr
-Subject: Re: [Cocci] [PATCH] coccinelle: api: add device_attr_show script
-In-Reply-To: <20200615130242.11825-1-efremov@linux.com>
-Message-ID: <alpine.DEB.2.22.394.2006172225570.3083@hadrien>
-References: <20200615130242.11825-1-efremov@linux.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Wed, 17 Jun 2020 16:27:58 -0400
+Received: from [192.168.42.210] ([93.23.15.97])
+        by mwinf5d07 with ME
+        id sLTv2200325enVZ03LTvKh; Wed, 17 Jun 2020 22:27:56 +0200
+X-ME-Helo: [192.168.42.210]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 17 Jun 2020 22:27:56 +0200
+X-ME-IP: 93.23.15.97
+Subject: Re: [PATCH] pcmcia/electra_cf: Fix some return values in
+ 'electra_cf_probe()' in case of error
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+References: <20200617195326.732863-1-christophe.jaillet@wanadoo.fr>
+ <CAOesGMjC_KttO0T89UbWpnsWsGqWeSnpqJr9JTEn2OtQ=xWtoQ@mail.gmail.com>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <295b82c9-510d-262c-8b88-206372d839ed@wanadoo.fr>
+Date:   Wed, 17 Jun 2020 22:27:55 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAOesGMjC_KttO0T89UbWpnsWsGqWeSnpqJr9JTEn2OtQ=xWtoQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Le 17/06/2020 à 22:10, Olof Johansson a écrit :
+> On Wed, Jun 17, 2020 at 12:54 PM Christophe JAILLET
+> <christophe.jaillet@wanadoo.fr> wrote:
+>> 'status' is known to be 0 at this point. It must be set to a meaningful
+>> value in order to return an error code if one of the 'of_get_property()'
+>> call fails.
+>>
+>> Return -EINVAL in such a case.
+>>
+>> Fixes: 2b571a066a2f("pcmcia: CompactFlash driver for PA Semi Electra boards")
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>> ---
+>>   drivers/pcmcia/electra_cf.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/pcmcia/electra_cf.c b/drivers/pcmcia/electra_cf.c
+>> index 35158cfd9c1a..40a5cffe24a4 100644
+>> --- a/drivers/pcmcia/electra_cf.c
+>> +++ b/drivers/pcmcia/electra_cf.c
+>> @@ -229,6 +229,8 @@ static int electra_cf_probe(struct platform_device *ofdev)
+>>
+>>          cf->socket.pci_irq = cf->irq;
+>>
+>> +       status = -EINVAL;
+>> +
+>>          prop = of_get_property(np, "card-detect-gpio", NULL);
+>>          if (!prop)
+>>                  goto fail1;
+> The pcmcia_register_socket() call site sets status explicitly before
+> jumping to fail1, which is a bit clearer.
 
+Agreed, but as as you say below, this is not the most active driver in 
+the kernel and PCMCIA, well, does anyone still uses it?
 
-On Mon, 15 Jun 2020, Denis Efremov wrote:
+> Still, this is a legacy driver, I'm not sure there are any active
+> users of it these days, and surely nobody that's tinkering around and
+> editing the device tree (it comes from CFE on these systems, not from
+> a .dts in the kernel tree). The fix isn't invalid, but it's also not
+> likely to be an issue in the real world. So, let's just say:
 
-> According to the documentation[1] show() methods of device attributes
-> should return the number of bytes printed into the buffer. This is
-> the return value of scnprintf(). show() must not use snprintf()
-> when formatting the value to be returned to user space. snprintf()
-> returns the length the resulting string would be, assuming it all
-> fit into the destination array[2]. scnprintf() return the length of
-> the string actually created in buf. If one can guarantee that an
-> overflow will never happen sprintf() can be used otherwise scnprintf().
+In fact this patch has been in my tree for years, because the driver is 
+mostly untouched and certainly used by no one, nowadays.
+However, 2 weeks ago, commit b274014c6d19 made me think of a revived 
+interest.
+So I decided to post the patch, just in case.
 
-The semantic patch looks fine.  Do you have any accepted patches from
-this?
-
-julia
-
-
+> Acked-by: Olof Johansson <olof@lixom.net>
 >
-> [1] Documentation/filesystems/sysfs.txt
-> [2] "snprintf() confusion" https://lwn.net/Articles/69419/
 >
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  scripts/coccinelle/api/device_attr_show.cocci | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 scripts/coccinelle/api/device_attr_show.cocci
+> -Olof
 >
-> diff --git a/scripts/coccinelle/api/device_attr_show.cocci b/scripts/coccinelle/api/device_attr_show.cocci
-> new file mode 100644
-> index 000000000000..d8ec4bb8ac41
-> --- /dev/null
-> +++ b/scripts/coccinelle/api/device_attr_show.cocci
-> @@ -0,0 +1,55 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +///
-> +/// From Documentation/filesystems/sysfs.txt:
-> +///  show() must not use snprintf() when formatting the value to be
-> +///  returned to user space. If you can guarantee that an overflow
-> +///  will never happen you can use sprintf() otherwise you must use
-> +///  scnprintf().
-> +///
-> +// Confidence: High
-> +// Copyright: (C) 2020 Denis Efremov ISPRAS
-> +// Options: --no-includes --include-headers
-> +//
-> +
-> +virtual report
-> +virtual org
-> +virtual context
-> +virtual patch
-> +
-> +@r depends on !patch@
-> +identifier show, dev, attr, buf;
-> +position p;
-> +@@
-> +
-> +ssize_t show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	<...
-> +*	return snprintf@p(...);
-> +	...>
-> +}
-> +
-> +@rp depends on patch@
-> +identifier show, dev, attr, buf;
-> +@@
-> +
-> +ssize_t show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	<...
-> +	return
-> +-		snprintf
-> ++		scnprintf
-> +			(...);
-> +	...>
-> +}
-> +
-> +@script: python depends on report@
-> +p << r.p;
-> +@@
-> +
-> +coccilib.report.print_report(p[0], "WARNING: use scnprintf or sprintf")
-> +
-> +@script: python depends on org@
-> +p << r.p;
-> +@@
-> +
-> +coccilib.org.print_todo(p[0], "WARNING: use scnprintf or sprintf")
-> --
-> 2.26.2
->
-> _______________________________________________
-> Cocci mailing list
-> Cocci@systeme.lip6.fr
-> https://systeme.lip6.fr/mailman/listinfo/cocci
->
+
