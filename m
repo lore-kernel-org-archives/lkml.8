@@ -2,133 +2,134 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6638AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF55C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46CC220897
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:29:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="X4atcg3Q"
+	by mail.kernel.org (Postfix) with ESMTP id 8B19820897
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592407800;
+	bh=27jdkWmDRhhCwAMVdzVBNUCaMhK3ANLmpo6tDzme/RY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sv7i1xjsKoWKLp/w++h5hw8x9OIKjUUKgoLn6eGvHPC+y/ICbxQanzWqDWeCio2fD
+	 wrORmRpl0RcXb3tfn9MAuC9nDLgnBu5pLZXn+JzAlWaQXxXdg7CQfgSV+fJq3vz4i+
+	 +wQM1UU/sJ/IXatiYJfR/HYWxn71kSpLDwC0vqMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgFQP3n (ORCPT
+        id S1727010AbgFQP36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgFQP3m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:29:42 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B444DC06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:29:42 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id r16so1207944qvm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:29:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=v5BdIMSU0SgDrZuQSRW4xvIrY4rZ7WnbUK5J5TOXFb0=;
-        b=X4atcg3QCitKJdCOr5ja2tE2bUBLSFF91J0CzDtXnsV5WejCzsk2eajJzTjXjsFLTA
-         5s+gkYE18Kz4f7uWFKMYMARjm17DhKgqFhDle7hMjPDQJSHTF3vHPDJzf/g8gfXm1XCc
-         xS0VLL2kkFYRGpHsv6IKsvfpDgxixqoGb1C7eZAdpsByKmZrD/PLYevp7FEa9NQdLxHk
-         yZFftabPuFhyEj1G7fMasvfilN4m93P/kXM+Vvvx/r/xyhIpvBM0x0Ha3wX71m2O7A/a
-         L0H0SGP2pZKrl4si0m+rtOCOCb+j5CVmE5xryjAmjELn7Uqp0ivvBvKuiMRBNAyyx2kG
-         itRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v5BdIMSU0SgDrZuQSRW4xvIrY4rZ7WnbUK5J5TOXFb0=;
-        b=O+z6B/QuXJwH+Kajg2U0IZiKT11qC246q3X7wmCrl6s/ufiyN0WX1Pmkbba0PinFuE
-         obwuYCnyIm4hEh4kZLzgRkEqPdYXHLaJgLWo23Mt5ZhmXA+zvG+vE/GMokDq2jmV3RI2
-         DmjvO4/lB6hYLH+NeoLbMFVv1vN2J9DZouBgtf+Qsma11FgMcaebZiGQPcgcUjfF4sui
-         UvqJc7fZiKQoSfUYVktrPTHkRS4QZy/BcuZRJFFr1oFGq8M+/vwm4Fg7F5/Qwi2IuhQ1
-         Ce77+QNdsc2K3reBGbmwiVl9y2HYPxujVG9pSCr+GGHkVG5qBUvjY9hqPhnARKB1mBLr
-         ESQQ==
-X-Gm-Message-State: AOAM533kww+l+vqZroPcww6V/LCQrwZWpU8wKZdcBiqshCALQxxsPOt2
-        n7XvqdIJE+qpVh7OSmWRIJgM+rvGhO109w==
-X-Google-Smtp-Source: ABdhPJyWaY8mWagCAPiiX7EhWCqcjbxUamRd5/mDpg63tRR7xxsYdOaA9ycSUwn3S5FVu3UfHzBj0g==
-X-Received: by 2002:a0c:f388:: with SMTP id i8mr8163963qvk.224.1592407781973;
-        Wed, 17 Jun 2020 08:29:41 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id y13sm204954qto.23.2020.06.17.08.29.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 08:29:41 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jla0S-009d9h-Uc; Wed, 17 Jun 2020 12:29:40 -0300
-Date:   Wed, 17 Jun 2020 12:29:40 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
-        <thomas_os@shipmail.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
- annotations
-Message-ID: <20200617152940.GG6578@ziepe.ca>
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-5-daniel.vetter@ffwll.ch>
- <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
- <20200611083430.GD20149@phenom.ffwll.local>
- <20200611141515.GW6578@ziepe.ca>
- <20200616120719.GL20149@phenom.ffwll.local>
- <20200616145312.GC6578@ziepe.ca>
- <CAKMK7uER6ax1zr14xYLKqDfDZp+ycBsY9Yx7JaVkKQ849VfSPg@mail.gmail.com>
+        Wed, 17 Jun 2020 11:29:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726833AbgFQP36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 11:29:58 -0400
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 205F420CC7
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 15:29:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592407797;
+        bh=27jdkWmDRhhCwAMVdzVBNUCaMhK3ANLmpo6tDzme/RY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=m8E4I8fP6RGkvsWHgoknUnkuc8ycHHihswytSXi0vOMfarjSX/vKNYOQbZCYirpJ6
+         c+x6u/nfAEbMdakQHJLhYn22GlGz0CY8+uK6fcid7nztrcpcl2vBDSjexLE/SY95fS
+         Eseay/9LVF+5kSGvGguIjHnmw9OocqZ+PR3tQd00=
+Received: by mail-wm1-f54.google.com with SMTP id t194so2449448wmt.4
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:29:57 -0700 (PDT)
+X-Gm-Message-State: AOAM533vSZ3dH6BkA0Dy54RhB6KmDqdnC+lxtEXDxFbM+CB+kLUKXIcD
+        x5+keqeDn6BMduFqwqsffH4wdC6nwEa5iEO6pUcutg==
+X-Google-Smtp-Source: ABdhPJyj+JMcQ7Phb3gXIEZj015gqcyGEenjatOi3367DXj7oRIdA90no7VMeGQFL4GMEzknHcaRDz+kzB4C7HZbXAQ=
+X-Received: by 2002:a1c:46c3:: with SMTP id t186mr8801236wma.36.1592407795664;
+ Wed, 17 Jun 2020 08:29:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uER6ax1zr14xYLKqDfDZp+ycBsY9Yx7JaVkKQ849VfSPg@mail.gmail.com>
+References: <20200616074934.1600036-1-keescook@chromium.org>
+ <20200616074934.1600036-4-keescook@chromium.org> <CAG48ez0-jSSaw85=ku35UM3vMe98Vz97B68LsUoNd8ftwpunkQ@mail.gmail.com>
+In-Reply-To: <CAG48ez0-jSSaw85=ku35UM3vMe98Vz97B68LsUoNd8ftwpunkQ@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 17 Jun 2020 08:29:44 -0700
+X-Gmail-Original-Message-ID: <CALCETrUTsPHt4P=bWB-8r7bbpvgXXu3VBf4TS9S=XYxqxVt=DA@mail.gmail.com>
+Message-ID: <CALCETrUTsPHt4P=bWB-8r7bbpvgXXu3VBf4TS9S=XYxqxVt=DA@mail.gmail.com>
+Subject: Re: [PATCH 3/8] seccomp: Introduce SECCOMP_PIN_ARCHITECTURE
+To:     Jann Horn <jannh@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Will Drewry <wad@chromium.org>,
+        Christian Brauner <christian@brauner.io>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Tycho Andersen <tycho@tycho.ws>,
+        "zhujianwei (C)" <zhujianwei7@huawei.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Matt Denton <mpdenton@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Hehuazhen <hehuazhen@huawei.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 09:57:54AM +0200, Daniel Vetter wrote:
+On Wed, Jun 17, 2020 at 8:25 AM Jann Horn <jannh@google.com> wrote:
+>
+> On Tue, Jun 16, 2020 at 9:49 AM Kees Cook <keescook@chromium.org> wrote:
+> > For systems that provide multiple syscall maps based on architectures
+> > (e.g. AUDIT_ARCH_X86_64 and AUDIT_ARCH_I386 via CONFIG_COMPAT), allow
+> > a fast way to pin the process to a specific syscall mapping, instead of
+> > needing to generate all filters with an architecture check as the first
+> > filter action.
+>
+> This seems reasonable; but can we maybe also add X86-specific handling
+> for that X32 mess? AFAIK there are four ways to do syscalls with
+> AUDIT_ARCH_X86_64:
 
-> > At the very least I think there should be some big warning that
-> > dma_fence in notifiers should be avoided.
-> 
-> Yeah I'm working on documentation, and also the notifiers here
-> hopefully make it clear it's massive pain. I think we could even make
-> a hard rule that dma_fence in mmu notifier outside of drivers/gpu is a
-> bug/misfeature.
+You're out of date :)  I fixed the mess.
 
-Yep!
- 
-> Might be a good idea to add a MAINTAINERS entry with a K: regex
-> pattern, so that you can catch such modifiers. We do already have such
-> a pattern for dma-fence, to catch abuse. So if you want I could type
-> up a documentation patch for this, get your and others acks and the
-> dri-devel folks would enforce that the dma_fence_wait madness doesn't
-> leak beyond drivers/gpu
+commit 6365b842aae4490ebfafadfc6bb27a6d3cc54757
+Author: Andy Lutomirski <luto@kernel.org>
+Date:   Wed Jul 3 13:34:04 2019 -0700
 
-It seems like the best thing
- 
-> Oded has agreed to remove the dma-fence usage, since they really don't
-> need it (and all the baggage that comes with it), plain old completion
-> is enough for their use. This use is also why I added the regex to
-> MAINTAINERS, so that in the future we can catch people who try to use
-> dma_fence because it looks cute and useful, and are completely
-> oblivious to all the pain and headaches involved.
+    x86/syscalls: Split the x32 syscalls into their own table
 
-This is good!
 
-Thanks,
-Jason 
+
+>
+> 1. normal x86-64 syscall, X32 bit unset (native case)
+> 2. normal x86-64 syscall, X32 bit set (for X32 code calling syscalls
+> with no special X32 version)
+
+Returns -ENOSYS now if an x32 version was supposed to be used.
+
+> 3. x32-specific syscall, X32 bit unset (never happens legitimately)
+
+Returns -ENOSYS now.
+
+> 4. x32-specific syscall, X32 bit set (for X32 code calling syscalls
+> with special X32 version)
+>
+> (I got this wrong when I wrote the notes on x32 in the seccomp manpage...)
+>
+> Can we add a flag for AUDIT_ARCH_X86_64 that says either "I want
+> native x64-64" (enforcing case 1) or "I want X32" (enforcing case 2 or
+> 4, and in case 2 checking that the syscall has no X32 equivalent)? (Of
+> course, if the kernel is built without X32 support, we can leave out
+> these extra checks.)
+
+No extra checks needed.  Trying to do a syscall with a wrongly-encoded
+x32 nr just generates -ENOSYS now.
+
+Henceforth, all new syscalls will have the same number for native and
+x32 and will differ only in the presence of the x32 bit.
+
+--Andy
