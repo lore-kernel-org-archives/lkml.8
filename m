@@ -2,108 +2,113 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A626BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A112212CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 841EF212CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Rl+zBYdf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="efU6uev9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgFQSXD (ORCPT
+        id S1727830AbgFQSYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:23:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39056 "EHLO
+        Wed, 17 Jun 2020 14:24:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbgFQSXC (ORCPT
+        with ESMTP id S1726835AbgFQSYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 14:23:02 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ADB9C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:23:02 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id i4so1477332pjd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:23:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yx0AFE8bnkOZ+0HVx0qf6qzKz6YFaE2RtkaHNSdil4Q=;
-        b=Rl+zBYdfFS3UwL0fHb2iZoQ9Mc0+vQWPd3YXCCRD1mPlxoeRAcVPDQkxKV8SJrTMw1
-         0uVOGChTPPkRXt2gXmGHyHS7MuBR5lINpp+c1q8L4VIrLfva85BsqCqe0Q/lQ6hbyqYw
-         M7z8dS62N0oA81W8wwi5f7w6ypjp5Ha/apnbNJhYccBZOhTAqA5kI0oP6iXrQ7mxM750
-         SGxtVl3LOsDfWu/N65yyLkiqgaRtHKfbRCBnpX3duQtiXd7vSgu08C/cyqK6onmC38Eg
-         sLrjq65a14O+OqVEnlAbCOB1wrQV40nEhY+n3uw1YZ6HvsxfohLyT56332gWPtq2F8fT
-         1r+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yx0AFE8bnkOZ+0HVx0qf6qzKz6YFaE2RtkaHNSdil4Q=;
-        b=Vrjdilu2wMbbRlHQupLij4pfJTwUyGGThJZVY+XofjqGr7JNppJx0r9rQBDNhdOji0
-         gy7vJxiSOpxgeQ/8+Jrm3IRog5cg8BdZpgYtCcfOQcmBMsi2fFjLZAJInMs2lpgo9dlE
-         n8L3iNPIMQ7f6wcXFj4jSGOGaE7XBaZ5ErZs9JPUD1v4rMNh/0ZRirfTaAC1/ike1S9Z
-         kJOAgM+n8iaU7/B65mNwFppBL8UgvLjxeDULVfmAjiqG8EEtZAU5a0ZAarE8DuKQkG8+
-         xH5QNQC7jSTFlQ/UajbdosDD+CgEhP+WBSyKYpdS7tLqmfxhxAmpUVfVLhAgAZU8TL0d
-         mHiA==
-X-Gm-Message-State: AOAM530dYA/mCaHIDaBoiR9XY5ha5LNzVmi9dg15X2sekNhPMj8o5yVK
-        KF3Wn5zdZhpUwUJ1Ui0dcr4xCQ==
-X-Google-Smtp-Source: ABdhPJw15kXy8cl4re5NSa1ZgN8/0tpd5wuHfQ34K+X7a+RmU4ua2X9k8+4MCLa7CIrMdOVgxb3ZWg==
-X-Received: by 2002:a17:90b:307:: with SMTP id ay7mr370815pjb.48.1592418181918;
-        Wed, 17 Jun 2020 11:23:01 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id b1sm525823pfr.89.2020.06.17.11.23.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 11:23:01 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jlciC-009iIR-1W; Wed, 17 Jun 2020 15:23:00 -0300
-Date:   Wed, 17 Jun 2020 15:23:00 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Divya Indi <divya.indi@oracle.com>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
-        Gerd Rausch <gerd.rausch@oracle.com>,
-        =?utf-8?B?SMOla29u?= Bugge <haakon.bugge@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
-        Doug Ledford <dledford@redhat.com>
-Subject: Re: [PATCH v3] IB/sa: Resolving use-after-free in ib_nl_send_msg
-Message-ID: <20200617182300.GJ6578@ziepe.ca>
-References: <1591627576-920-1-git-send-email-divya.indi@oracle.com>
- <1591627576-920-2-git-send-email-divya.indi@oracle.com>
- <20200609070026.GJ164174@unreal>
- <ee7139ff-465e-6c43-1b55-eab502044e0f@oracle.com>
- <20200614064156.GB2132762@unreal>
- <09bbe749-7eb2-7caa-71a9-3ead4e51e5ed@oracle.com>
- <20200617051739.GH2383158@unreal>
+        Wed, 17 Jun 2020 14:24:01 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97C61C06174E;
+        Wed, 17 Jun 2020 11:24:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=2JxFcdU42ObPBh8Obojgx0LW54eTcsGAMnNoN8L8osU=; b=efU6uev9blzLuor50T8JkcriDD
+        q2Ww3RTkU+S32alqB2ewQAXjZG/PV2OAUjPMDEsqlKR88BFzsFshxf5Tu7/rc0KO9ji/0AVHFhdox
+        HB1TgBwBCDHx1ydYEy8O405OmEOoBKWG/ZNyJ9nmnmWxljKlTO+TpybST6adg0uNr4U531GdVZKrH
+        JGIhyUErq6fpvGTpc9ZSzAW+1KqrcrfPZBq6k57NsxgBx6dR0sJOgekIjXKwxz8l96cqmxII6Mndm
+        A0dF/inOIGs8dyYaHWm8dC4EKJH/3KrsAWjuYYdGqbWn1c0xR4ep5Y2REx3yw5gmODbRRFWA11YtE
+        IkTerRlQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlcjA-00078M-Bn; Wed, 17 Jun 2020 18:24:00 +0000
+Subject: Re: [PATCH v3 4/6] regulator: Add support for QCOM PMIC VBUS booster
+To:     Wesley Cheng <wcheng@codeaurora.org>,
+        heikki.krogerus@linux.intel.com, mark.rutland@arm.com,
+        broonie@kernel.org, bjorn.andersson@linaro.org,
+        gregkh@linuxfoundation.org, lgirdwood@gmail.com, agross@kernel.org,
+        robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jackp@codeaurora.org, bryan.odonoghue@linaro.org,
+        lijun.kernel@gmail.com
+References: <20200617180209.5636-1-wcheng@codeaurora.org>
+ <20200617180209.5636-5-wcheng@codeaurora.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <60c0f7c9-f986-bf54-6112-1c71a317ae5b@infradead.org>
+Date:   Wed, 17 Jun 2020 11:23:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617051739.GH2383158@unreal>
+In-Reply-To: <20200617180209.5636-5-wcheng@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 08:17:39AM +0300, Leon Romanovsky wrote:
-> 
-> My thoughts that everything here hints me that state machine and
-> locking are implemented wrongly. In ideal world, the expectation
-> is that REQ message will have a state in it (PREPARED, SENT, ACK
-> e.t.c.) and list manipulations are done accordingly with proper
-> locks, while rdma_nl_multicast() is done outside of the locks.
+Hi--
 
-It can't be done outside the lock without creating races - once
-rdma_nl_multicast happens it is possible for the other leg of the
-operation to begin processing. 
+On 6/17/20 11:02 AM, Wesley Cheng wrote:
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index 074a2ef55943..79d6b7596f0b 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -797,6 +797,16 @@ config REGULATOR_QCOM_SPMI
+>  	  Qualcomm SPMI PMICs as a module. The module will be named
+>  	  "qcom_spmi-regulator".
+>  
+> +config REGULATOR_QCOM_USB_VBUS
+> +	tristate "Qualcomm USB Vbus regulator driver"
+> +	depends on SPMI || COMPILE_TEST
+> +	help
+> +	  If you say yes to this option, support will be included for the
+> +	  regulator used to enable the VBUS output.
+> +
+> +	  Say M here if you want to include support for enabling the VBUS output
+> +	  as a module. The module will be named "qcom_usb_vbus-regulator".
 
-The list must be updated before this happens.
+Since '-' in a module name is converted to '_' when the module is loaded, it
+probably makes more sense to tell the user that the module name will be
+qcom_usb_vbus_regulator.
 
-What is missing here is refcounting - the lifetime model of this data
-is too implicit, but it is not worth adding I think
+> +
+>  config REGULATOR_RC5T583
+>  	tristate "RICOH RC5T583 Power regulators"
+>  	depends on MFD_RC5T583
+> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+> index c0d6b96ebd78..cbab28aa7b56 100644
+> --- a/drivers/regulator/Makefile
+> +++ b/drivers/regulator/Makefile
+> @@ -89,6 +89,7 @@ obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
+>  obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
+>  obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
+>  obj-$(CONFIG_REGULATOR_QCOM_SPMI) += qcom_spmi-regulator.o
+> +obj-$(CONFIG_REGULATOR_QCOM_USB_VBUS) += qcom_usb_vbus-regulator.o
+>  obj-$(CONFIG_REGULATOR_PALMAS) += palmas-regulator.o
+>  obj-$(CONFIG_REGULATOR_PFUZE100) += pfuze100-regulator.o
+>  obj-$(CONFIG_REGULATOR_PV88060) += pv88060-regulator.o
 
-Jason
+thanks.
+-- 
+~Randy
+
