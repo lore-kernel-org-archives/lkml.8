@@ -2,135 +2,168 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD865C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93541C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8283521527
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750BE21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:53:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="JPuav7mB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F4Bj6FmN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgFQRwh (ORCPT
+        id S1726965AbgFQRxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 13:52:37 -0400
-Received: from mail-vi1eur05on2061.outbound.protection.outlook.com ([40.107.21.61]:60641
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726558AbgFQRwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 13:52:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W8kWsCi06pBkWlhnDxkRuk/B8k0Kg2wtbE+3j93UTpMUunYe5WMFZo3ABpSM6cVtp195PKxxFQGBKcH4fE4WDo6PTf4kBJ1ET61zzkvKaZYtiZhMlAkzlqn47cgC4Ivc9OsgM3C9VSqpUtzU+4UMBHQQAHfxKtICN8NYydqKiOhcKforHxaO8OIYu1F50z89B5ia42ynfj6U1LoVERDWTFDm41PvNJRgqkMHnQy0yRLO/J/PafZZEEtkQNb7o5IgP9TBl1kjAaUuj8MAM6FeOv3ANnkPZjEF/LEUsOkwt3XBJw1af+i9FLJJ7Q4oSEmKrLGFsPrVEe7JXse3qXvf/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iwIjAcLD6MIDhxGQPvri6Bmo8h9g4AfYVMXzl3t426g=;
- b=La2lwAWyqg27yRA6MevjbPOZwMc6hmyM4M3mP/vixymQWwKsJVfi3eLop4rwU1rJu369MRYtzriIw6IsPVhRuprV7AyUApinjGqL60oMTTTQDRHmXqSabLOWAaO/zNjamECq5ash+fOaak0sdZYPmN8OtAfbAK7oeA+laxn70/e2xL+vBtRBXWUEeKoRrGCqcNJJGRYq6puqF57h0KHmtgQICX6yQlbWwDXixSvPUGYeo0dQsxnOtUMeTy1tkbXjEh+lwLHS2gDyiTKOQBn+ogMlv1GWQj3r21o0dm1hToHNGFH98KluZ2IYUQay8GVsIuKgjmV6XaxCiRqKrSQ7sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iwIjAcLD6MIDhxGQPvri6Bmo8h9g4AfYVMXzl3t426g=;
- b=JPuav7mBwwLI5320axaDpD7hGEq3mqnjCTjna8k8k73jT/svKIgIxQLQbnZAHzktwvKVnPFZoflmVOtPGTGhch9pql6FN4fSH+X6ln7PF/ItUajTc0/yV5Htkah9EtZtl+RI2Bu57DNT4bwQVLSe5r/2PEdxj8OtdMz5+2hCfgM=
-Authentication-Results: canonical.com; dkim=none (message not signed)
- header.d=none;canonical.com; dmarc=none action=none header.from=mellanox.com;
-Received: from AM0PR05MB6754.eurprd05.prod.outlook.com (2603:10a6:20b:15a::7)
- by AM0PR05MB6481.eurprd05.prod.outlook.com (2603:10a6:208:13c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Wed, 17 Jun
- 2020 17:52:26 +0000
-Received: from AM0PR05MB6754.eurprd05.prod.outlook.com
- ([fe80::c0cc:a656:610c:88f2]) by AM0PR05MB6754.eurprd05.prod.outlook.com
- ([fe80::c0cc:a656:610c:88f2%3]) with mapi id 15.20.3109.021; Wed, 17 Jun 2020
- 17:52:26 +0000
-Date:   Wed, 17 Jun 2020 20:52:19 +0300
-From:   Ido Schimmel <idosch@mellanox.com>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Petr Machata <petrm@mellanox.com>, netdev@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: mlxsw: spectrum: Adjust headroom buffers for 8x ports
-Message-ID: <20200617175219.GB296888@splinter>
-References: <bae3b4f6-3e9b-bdde-72b0-b8f1e7575fd4@canonical.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bae3b4f6-3e9b-bdde-72b0-b8f1e7575fd4@canonical.com>
-X-ClientProxiedBy: AM3PR05CA0105.eurprd05.prod.outlook.com
- (2603:10a6:207:1::31) To AM0PR05MB6754.eurprd05.prod.outlook.com
- (2603:10a6:20b:15a::7)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost (79.179.90.32) by AM3PR05CA0105.eurprd05.prod.outlook.com (2603:10a6:207:1::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend Transport; Wed, 17 Jun 2020 17:52:25 +0000
-X-Originating-IP: [79.179.90.32]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0d9ee03c-1b16-4f43-4a85-08d812e731fa
-X-MS-TrafficTypeDiagnostic: AM0PR05MB6481:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR05MB64818C1F9290366334325253BF9A0@AM0PR05MB6481.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 04371797A5
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: b4H4rv2OQusqglTARkhzxdXXdWcPgZQ6ZkhVMEubIyCBiOFm/He2cpv3qVHovDlRF9jb6OCR7sVTSGdxvVrmP9GJm7kdz/YVFrY6qcp/pBzwbDx32jUMT56h31Uhz9bssxcqNjGA7boeo0nOIosDugE/3nkdl+hhEN3xc3XrWEjmaKdpo247Kaja/YxvFpqIEDyn4OoJXGCS0nykWfLDPm5P5B+wLsaVdkBkN2ri7RpC+fJHUaJGr+vuV+x1Ch7NtIwj/2ZRorgO8bBGQd0HDE/Itv7JP+578Z2p8edM2V3viBGkPyADoeYOS3laTvTXyeHEAs+jG8HrTzp1N5fqDg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB6754.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(366004)(39860400002)(376002)(346002)(396003)(136003)(16526019)(83380400001)(186003)(6496006)(52116002)(478600001)(33716001)(2906002)(26005)(86362001)(66556008)(6486002)(9686003)(6916009)(66476007)(33656002)(66946007)(4326008)(6666004)(1076003)(8936002)(316002)(8676002)(54906003)(956004)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 4WSgzOTR0Pf/ATytoCYTtJlp0JUA33/Pu9NyR0l6lVloeP2Hyzw/NqhN0PJlhTkNQf3FL2Z4aAT6EwPlufQ/IxIAYRa6QSjVQYTjmXZWlbzGlE96NvN8g+w+2A52ZQNhE0DSh837XvVqs0NNV3Cs8quFexodW5sYolHIQ5VwQfdN3v4on/+DnJHYvQPZcm8OU4ikepz4SvLqXbWK+E97q9Xb+j9cLbeH1NSsIq3i40m1h2vEUoywbnaYV3lI9mewZ4h5V8vjv9NbaK9yi1tP/upYhA6hD6bep9hXetfjx6NM9WXdTMguo5a/GADfFhXN3BoGRghBFLpXfiwzNz/+grtEkl3HOL2y4HnKgFogb2LaYSN/T7wsV0JtN6IEE6IbESPQU/uR5EleLagd+ue+BKGtRFGjDInOckgYut64Dnqm/MUDhSEQKmpjX3TuCj2BFTfyFHkgXC0l82vhSR+5Us74UNJZnv5iWZpWVdzFWUo=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d9ee03c-1b16-4f43-4a85-08d812e731fa
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 17:52:25.9750
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: m8yhBCAFKApdo+XU+vQyhmQtYXYny/6OcJmq34u79Gy7D7qIajTKf6FJBUAhkwqT+YrqM5SlkWRXB8jOslVoFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB6481
+        Wed, 17 Jun 2020 13:53:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39601 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726853AbgFQRxg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 13:53:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592416414;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=lG9PxYF7wNWi6hdGvEHaNfAME07JvyZSXBUC+6tT7+4=;
+        b=F4Bj6FmNfBmdijjTVhEN+kjobPTw2LjPj4z0Okvuo2h70kiRF8xImVLCkoG7tdcktnh0xl
+        4AKzIhXXqGL2Llt9axTh1DCen4QVTUnPIzkOdFaM6xX4IO3YsJBgHCEGSOjuhY5HhQUOfK
+        14ileFFk4L2nLe4KZcWe89oDtOp0aCI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-442-9JqNYd6PPsKY6Z_JJ4UIBQ-1; Wed, 17 Jun 2020 13:53:33 -0400
+X-MC-Unique: 9JqNYd6PPsKY6Z_JJ4UIBQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7A01100CCCB;
+        Wed, 17 Jun 2020 17:53:31 +0000 (UTC)
+Received: from llong.com (ovpn-117-167.rdu2.redhat.com [10.10.117.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D9C57BA1D;
+        Wed, 17 Jun 2020 17:53:30 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v2 1/2] sched: Add PF_MEMALLOC_NOLOCKDEP flag
+Date:   Wed, 17 Jun 2020 13:53:09 -0400
+Message-Id: <20200617175310.20912-2-longman@redhat.com>
+In-Reply-To: <20200617175310.20912-1-longman@redhat.com>
+References: <20200617175310.20912-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 06:15:35PM +0100, Colin Ian King wrote:
-> Hi
-> 
-> Static analysis with Coverity has detected an issue that relies on the
-> machine endianness to work. The commit in question is:
-> 
-> commit 60833d54d56c21e7538296eb2e00e104768fd047
-> Author: Ido Schimmel <idosch@mellanox.com>
-> Date:   Tue Jun 16 10:14:58 2020 +0300
-> 
->     mlxsw: spectrum: Adjust headroom buffers for 8x ports
-> 
-> in line:
->     mlxsw_sp_port_headroom_8x_adjust(mlxsw_sp_port, (u16 *) &buffsize);
-> 
-> 
-> The cast of the u32 buffsize to (u16 *) to scale buffsize in the call to
-> to mlxsw_sp_port_headroom_8x_adjust() will behave differently on big
-> endian architectures to that of little endian architectures.  I'm not
-> sure if this is intentional or not.
+There are cases where calling kmalloc() can lead to false positive
+lockdep splat. One notable example that can happen in the freezing of
+the xfs filesystem is as follows:
 
-Not intentional. The hardware interface is quite weird. The buffer size
-can be configured via two registers. One takes size as 24 bits and the
-second as 16 bits. Either way, the max size is much lower than 2^16-1.
+ Possible unsafe locking scenario:
 
-> One solution is to either make buffsize a u16, but I am concerned this
-> may be incorrect as the buffsize is assigned from the call
-> mlxsw_sp_span_buffsize_get() and this returns a u32 so we may have
-> overflow issues. Probably better to make
-> mlxsw_sp_port_headroom_8x_adjust handle u32 integers and to return the
-> adjusted value rather than modifying it by pass-by-reference.
+       CPU0                    CPU1
+       ----                    ----
+  lock(sb_internal);
+                               lock(fs_reclaim);
+                               lock(sb_internal);
+  lock(fs_reclaim);
 
-Thanks for the report, will fix.
+ *** DEADLOCK ***
 
-> 
-> Colin
-> 
+This is a false positive as all the dirty pages are flushed out before
+the filesystem can be frozen. However, there is no easy way to modify
+lockdep to handle this situation properly.
+
+One possible workaround is to disable lockdep by setting __GFP_NOLOCKDEP
+in the appropriate kmalloc() calls.  However, it will be cumbersome to
+locate all the right kmalloc() calls to insert __GFP_NOLOCKDEP and it
+is easy to miss some especially when the code is updated in the future.
+
+Another alternative is to have a per-process global state that indicates
+the equivalent of __GFP_NOLOCKDEP without the need to set the gfp_t flag
+individually. To allow the latter case, a new PF_MEMALLOC_NOLOCKDEP
+per-process flag is now added. After adding this new bit, there are
+still 2 free bits left.
+
+Suggested-by: Dave Chinner <david@fromorbit.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ include/linux/sched.h    |  7 +++++++
+ include/linux/sched/mm.h | 15 ++++++++++-----
+ 2 files changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index b62e6aaf28f0..44247cbc9073 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1508,6 +1508,7 @@ extern struct pid *cad_pid;
+ #define PF_MEMALLOC_NOIO	0x00080000	/* All allocation requests will inherit GFP_NOIO */
+ #define PF_LOCAL_THROTTLE	0x00100000	/* Throttle writes only against the bdi I write to,
+ 						 * I am cleaning dirty pages from some other bdi. */
++#define __PF_MEMALLOC_NOLOCKDEP	0x00100000	/* All allocation requests will inherit __GFP_NOLOCKDEP */
+ #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
+ #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
+ #define PF_SWAPWRITE		0x00800000	/* Allowed to write to swap */
+@@ -1519,6 +1520,12 @@ extern struct pid *cad_pid;
+ #define PF_FREEZER_SKIP		0x40000000	/* Freezer should not count it as freezable */
+ #define PF_SUSPEND_TASK		0x80000000      /* This thread called freeze_processes() and should not be frozen */
+ 
++#ifdef CONFIG_LOCKDEP
++#define PF_MEMALLOC_NOLOCKDEP	__PF_MEMALLOC_NOLOCKDEP
++#else
++#define PF_MEMALLOC_NOLOCKDEP	0
++#endif
++
+ /*
+  * Only the _current_ task can read/write to tsk->flags, but other
+  * tasks can access tsk->flags in readonly mode for example
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index 480a4d1b7dd8..4a076a148568 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -177,22 +177,27 @@ static inline bool in_vfork(struct task_struct *tsk)
+  * Applies per-task gfp context to the given allocation flags.
+  * PF_MEMALLOC_NOIO implies GFP_NOIO
+  * PF_MEMALLOC_NOFS implies GFP_NOFS
++ * PF_MEMALLOC_NOLOCKDEP implies __GFP_NOLOCKDEP
+  * PF_MEMALLOC_NOCMA implies no allocation from CMA region.
+  */
+ static inline gfp_t current_gfp_context(gfp_t flags)
+ {
+-	if (unlikely(current->flags &
+-		     (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS | PF_MEMALLOC_NOCMA))) {
++	unsigned int pflags = current->flags;
++
++	if (unlikely(pflags & (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS |
++			       PF_MEMALLOC_NOCMA | PF_MEMALLOC_NOLOCKDEP))) {
+ 		/*
+ 		 * NOIO implies both NOIO and NOFS and it is a weaker context
+ 		 * so always make sure it makes precedence
+ 		 */
+-		if (current->flags & PF_MEMALLOC_NOIO)
++		if (pflags & PF_MEMALLOC_NOIO)
+ 			flags &= ~(__GFP_IO | __GFP_FS);
+-		else if (current->flags & PF_MEMALLOC_NOFS)
++		else if (pflags & PF_MEMALLOC_NOFS)
+ 			flags &= ~__GFP_FS;
++		if (pflags & PF_MEMALLOC_NOLOCKDEP)
++			flags |= __GFP_NOLOCKDEP;
+ #ifdef CONFIG_CMA
+-		if (current->flags & PF_MEMALLOC_NOCMA)
++		if (pflags & PF_MEMALLOC_NOCMA)
+ 			flags &= ~__GFP_MOVABLE;
+ #endif
+ 	}
+-- 
+2.18.1
+
