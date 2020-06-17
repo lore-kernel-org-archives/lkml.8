@@ -2,145 +2,112 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D63DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78405C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63AE12082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:16:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="rVePF/SN"
+	by mail.kernel.org (Postfix) with ESMTP id 4A10B20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592389112;
+	bh=t3O3UqUPbUfT6U+LwvmDhf8VfLM3fmdWGiN7u6Z4cqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j6xZVtm38uKETNB8HgAgXscWaTPVxOT7oZ5Zf4OQ6y9rc0Eni/EIANG7hlMqI90vZ
+	 +5vZz5Kj1dJT/FC9zbjTZTe7PPAn66gFjI0Burz+IOke9mRoMeeO9Z8B6lCbS8Ddxo
+	 1QcRPh6SotMuIhRe8Um2f2lFvaXgStkgneHs4iAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbgFQKQW (ORCPT
+        id S1726341AbgFQKSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 06:16:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgFQKQV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 06:16:21 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65424C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 03:16:21 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 17 Jun 2020 06:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgFQKSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 06:18:30 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49n1Dw45gvz9sSg;
-        Wed, 17 Jun 2020 20:16:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1592388978;
-        bh=VpnojUfZvzc1jD45rNjZmQOrHUNS3Ez8W1Vr9svA5gs=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=rVePF/SNLlw42VJ/FE8J8DFyaHW4QhbXRnFyFXRqXS63pbbSJDo6VqHs+2MIMVsHE
-         ep7Pe0HPaC2DsqRxhK766JjJBFDXIabDUSDyJXNHNzFphcG96FfppS7JZkh6edam7U
-         EPmYWcTP+j9VK89dBFP32gCxKZa1mE75MTtJ5TdkLxf4rj4HCmTrM32BkQ12RovoGM
-         aZBlTysJvKS/kLOUlC/7lFILCgW8eE+FUdY3fL9Ij1ftnTxqszHIv5tUoaBFDvozKb
-         ZxKQAMVV6GwgktrqBt8jGVwliMUYV6/qiASqbGX91gPSCv5YqGMehYIM+gsUlu7IQe
-         UOkENCnwGe5Mw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Michal Simek <michal.simek@xilinx.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, arnd@arndb.de,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v5 01/13] powerpc: Remove Xilinx PPC405/PPC440 support
-In-Reply-To: <50fb2dd6-4e8f-a550-6eda-073beb86f2ff@xilinx.com>
-References: <cover.1590079968.git.christophe.leroy@csgroup.eu> <8c593895e2cb57d232d85ce4d8c3a1aa7f0869cc.1590079968.git.christophe.leroy@csgroup.eu> <20200616002720.GA1307277@ubuntu-n2-xlarge-x86> <68503e5e-7456-b81c-e43d-27cb331a4b72@xilinx.com> <20200616181630.GA3403678@ubuntu-n2-xlarge-x86> <50fb2dd6-4e8f-a550-6eda-073beb86f2ff@xilinx.com>
-Date:   Wed, 17 Jun 2020 20:16:43 +1000
-Message-ID: <87bllidmk4.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 66A1C208B8;
+        Wed, 17 Jun 2020 10:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592389110;
+        bh=t3O3UqUPbUfT6U+LwvmDhf8VfLM3fmdWGiN7u6Z4cqU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cTOqgPvE3c8CfIz5eGN+H1QWmhHhx4qZ+OBY53vIa2enZtatW6BqM01MylBKK03hc
+         xUemYqn0zAIhcnztlOTQh46+2RDBriTxkSiLc839HNanIu3LJCYD7uwQnbYqsaW7Rk
+         waEGqqsU7FVhnt5on9cwwAaNoUkeM0EySg/70Rek=
+Date:   Wed, 17 Jun 2020 11:18:25 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Barry Song <song.bao.hua@hisilicon.com>
+Cc:     catalin.marinas@arm.com, nsaenzjulienne@suse.de,
+        steve.capper@arm.com, rppt@linux.ibm.com,
+        akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH v2] arm64: mm: reserve hugetlb CMA after numa_init
+Message-ID: <20200617101824.GB3368@willie-the-truck>
+References: <20200616221924.74780-1-song.bao.hua@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616221924.74780-1-song.bao.hua@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Simek <michal.simek@xilinx.com> writes:
-> On 16. 06. 20 20:16, Nathan Chancellor wrote:
->> On Tue, Jun 16, 2020 at 04:45:20PM +0200, Michal Simek wrote:
->>> On 16. 06. 20 2:27, Nathan Chancellor wrote:
->>>> On Thu, May 21, 2020 at 04:55:52PM +0000, Christophe Leroy wrote:
->>>>> From: Michal Simek <michal.simek@xilinx.com>
->>>>>
->>>>> The latest Xilinx design tools called ISE and EDK has been released in
->>>>> October 2013. New tool doesn't support any PPC405/PPC440 new designs.
->>>>> These platforms are no longer supported and tested.
->>>>>
->>>>> PowerPC 405/440 port is orphan from 2013 by
->>>>> commit cdeb89943bfc ("MAINTAINERS: Fix incorrect status tag") and
->>>>> commit 19624236cce1 ("MAINTAINERS: Update Grant's email address and maintainership")
->>>>> that's why it is time to remove the support fot these platforms.
->>>>>
->>>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
->>>>> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
->>>>
->>>> This patch causes qemu-system-ppc to fail to load ppc44x_defconfig:
-<snip>
+On Wed, Jun 17, 2020 at 10:19:24AM +1200, Barry Song wrote:
+> hugetlb_cma_reserve() is called at the wrong place. numa_init has not been
+> done yet. so all reserved memory will be located at node0.
+> 
+> Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages using cma")
 
-> I have took a look at it and was able to run qemu and also saw your
-> issue. What happened is that when xilinx platforms were removed zImage
-> is generated but it is not u-boot legacy image.
-> Don't know details about zImage/uImage in ppc world but if you dump
-> zImage you should see this.
+Damn, wasn't CC'd on that :/
 
-<snip>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Acked-by: Roman Gushchin <guro@fb.com>
+> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+> ---
+>  -v2: add Fixes tag according to Matthias Brugger's comment
+> 
+>  arch/arm64/mm/init.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index e631e6425165..41914b483d54 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -404,11 +404,6 @@ void __init arm64_memblock_init(void)
+>  	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+>  
+>  	dma_contiguous_reserve(arm64_dma32_phys_limit);
+> -
+> -#ifdef CONFIG_ARM64_4K_PAGES
+> -	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+> -#endif
 
-> It means only Xilinx platforms have been asking for uImage format and
-> bamboo doesn't require it. It also looks like that qemu expect uImage
-> format.
+Why is this dependent on CONFIG_ARM64_4K_PAGES? We unconditionally
+select ARCH_HAS_GIGANTIC_PAGE so this seems unnecessary.
 
-Yeah, prior to the patch the result of make ppc44x_defconfig contains
-CONFIG_DEFAULT_UIMAGE, afterward it doesn't.
+> -
+>  }
+>  
+>  void __init bootmem_init(void)
+> @@ -424,6 +419,11 @@ void __init bootmem_init(void)
+>  	min_low_pfn = min;
+>  
+>  	arm64_numa_init();
+> +
+> +#ifdef CONFIG_ARM64_4K_PAGES
+> +	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+> +#endif
 
-That means previously arch/powerpc/boot/zImage was just a hardlink to
-the uImage:
+A comment here wouldn't hurt, as it does look a lot more natural next
+to dma_contiguous_reserve().
 
-  $ ls -li build~/arch/powerpc/boot/{z,u}Image
-  7472 -rw-rw-r-- 2 michael michael 3073824 Jun 17 20:02 build~/arch/powerpc/boot/uImage
-  7472 -rw-rw-r-- 2 michael michael 3073824 Jun 17 20:02 build~/arch/powerpc/boot/zImage
-
-  $ file build~/arch/powerpc/boot/zImage
-  build~/arch/powerpc/boot/zImage: u-boot legacy uImage,
-  Linux-5.7.0-rc2-00247-g0bdad33d6\037\213\010, Linux/PowerPC, OS Kernel
-  Image (gzip), 3073760 bytes, Wed Jun 17 10:14:32 2020, Load Address:
-  0x00000000, Entry Point: 0x00000000, Header CRC: 0xF0283815, Data CRC:
-  0x5E5A4D98
-
-> You should know what format qemu expects.
-> Anyway if you build it by make uImage and then pass it to qemu you
-> should boot just fine.
-
-Yep so you can explicitly build the uImage with:
-
-$ make -skj"$(nproc)" ARCH=powerpc CROSS_COMPILE=powerpc-linux- O=out/ppc distclean ppc44x_defconfig uImage
-
-> Or if bamboo requires uImage to be built by default you can do it via
-> Kconfig.
->
-> diff --git a/arch/powerpc/platforms/44x/Kconfig
-> b/arch/powerpc/platforms/44x/Kconfig
-> index 39e93d23fb38..300864d7b8c9 100644
-> --- a/arch/powerpc/platforms/44x/Kconfig
-> +++ b/arch/powerpc/platforms/44x/Kconfig
-> @@ -13,6 +13,7 @@ config BAMBOO
->         select PPC44x_SIMPLE
->         select 440EP
->         select FORCE_PCI
-> +       select DEFAULT_UIMAGE
->         help
->           This option enables support for the IBM PPC440EP evaluation board.
-
-Who knows what the actual bamboo board used. But I'd be happy to take a
-SOB'ed patch to do the above, because these days the qemu emulation is
-much more likely to be used than the actual board.
-
-cheers
+Will
