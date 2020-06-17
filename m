@@ -2,160 +2,134 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B72C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2739EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7EAD208B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037FC208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:29:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CvnTOWt8"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="IKYCmDQZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgFQR2m (ORCPT
+        id S1726946AbgFQR3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 13:28:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgFQR2k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 13:28:40 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC26AC06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:28:39 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id b10so1045665uaf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:28:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UWll59MdN+ez6rWdnCElUjlRL1alI73PEwi04U04HAI=;
-        b=CvnTOWt81baGdhjQChJpjeoBAJiA931fOK8jDOKIWzJx1WjRaeTmgcPKQ4GL8/VAnF
-         CBPWQHyMTNs23BL/btIg4GSiZYTRy7ApJShGSsKJQ3Jmk61PA1L5zC6owRPNNDAkzFiU
-         R7uHZ9DL3iZnfWBtoC9Mb9tZYMgBB1+aIBo7A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UWll59MdN+ez6rWdnCElUjlRL1alI73PEwi04U04HAI=;
-        b=iK/ek1YVg0iT9NUV/t6eeCxVMzZnTDFkZ/eqj+vgNUS1K59vtOlf5RaXDb3AaZrK6C
-         HaJRc+3GAcNlnCgAwPIwHN6ix7bc4BpVHpslZesKNr9Uy1Lyj6OQEvfS6QvGQR5C6Js7
-         YPeLcW87NZHBnwaVuADWOWNiJUITHk4awGBbXDTZ9+N12mgF/woiSW7vecUEdKc416b1
-         ONm+mqGueqFrZQ6nt//kgBdE/5bsy/8ABysBvDS1k+yV6ZZmwC83jafifXKBriYRI779
-         w6wuPo7XZT0I45w+ZTMjx8nI7zwNtaLg5ZPKZQBAWKmeQ4xWNTggUnUYRLeU83JyREUB
-         Es+g==
-X-Gm-Message-State: AOAM530qvM1Y65/M4FvxmAS/jFa9fMiWWoqTqx6LA4X+8WvPO/hRn8nr
-        AhzDwOFpgEA3cDsj2xUTUHnVgNGwyU8=
-X-Google-Smtp-Source: ABdhPJz/2BJlV8pll/SWD7Eq/8xQm8RfsC7CpWiis6ek6jGNjFDto4RhRdJJgmauKRAz9ayHCBknAA==
-X-Received: by 2002:ab0:6341:: with SMTP id f1mr47329uap.42.1592414918560;
-        Wed, 17 Jun 2020 10:28:38 -0700 (PDT)
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
-        by smtp.gmail.com with ESMTPSA id w21sm41306vkd.13.2020.06.17.10.28.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 10:28:37 -0700 (PDT)
-Received: by mail-ua1-f44.google.com with SMTP id b13so1036974uav.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:28:37 -0700 (PDT)
-X-Received: by 2002:a9f:3b1c:: with SMTP id i28mr55758uah.22.1592414917295;
- Wed, 17 Jun 2020 10:28:37 -0700 (PDT)
+        Wed, 17 Jun 2020 13:29:47 -0400
+Received: from mail-db8eur05on2070.outbound.protection.outlook.com ([40.107.20.70]:6257
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726558AbgFQR3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 13:29:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LcTYWDkhF+qO+TGJaDlS5uvhazARcZfUPTDHS8KfPWcG3UdBcbalvL/F8fuHE/m3ybxbFajXStN0xOSw7y+ba/aGTIRpqTDNdse097WgJ6ODawxMzroemHonwAStEjM+VBSq/+7lbwTx0pn+JcTAIEw1H8flx7qLEGcs5Gntl0UNnMMvHo8poY62V/WvgX44MXOKxBf+m21862lOkgvis3qhtIiE1mPkbLk1zcodxzWSXj/kbwRC3otUeMAmBBQ6fkveepcTEY/pvVPL9fEl7EvDSvjPLuB75iy4yecTcDpTFNnjbNohvKXd5QSWn+VvILP8vmNm0V3tonzvyzrQZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H53V2O8t14YvfY+kTJ8iDPeEYI3EtEb6mSz+J8AtsOc=;
+ b=ZI9kuepJvfZ5MDE/dlDpTLm/i/KoV6c1f0PIRW++RsN2Sau+JJN62dR+rY9HpQn7IBOWyM/nr2TozjE9jlla99HDlRPPAeFg2u9pAdPUnUPEC+zU/mANz1LGaB3jF4fApMrdBJb10K3DDfEduHcYz9PDZSZwuupxDwje8AoS+qbN9Yd4KcF6gl8JprXUp24leQUpDOSyBD3/szZnmK9i2UbGNnVPBIhn82p9mBnt/xSlfYNTVz5aqQ8j0fWC+QxUYP5WF4SE6yn+1G5YtmlStFxFqltYiUdhceb95Ocaa9nmGFcSk3oWjKLjvZ+CA1pceVZSRCkuTQ+YWCOLSn+TDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H53V2O8t14YvfY+kTJ8iDPeEYI3EtEb6mSz+J8AtsOc=;
+ b=IKYCmDQZnALkbArj5gPrZHnyU5TlQZDyahO+WZVJ2AlcgGZNQJITYAhGEM+CglHRxB6soOBCmB4yci3jiehXRRZHFkzdK7T0O4yAC6Ns/fXxdf2Fb1f1S9/yapWxXp/UHhyBuBvPWRlLwJYcnoq0EcmuCJRWyljaLM0EkIeSxWY=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=mellanox.com;
+Received: from AM0PR05MB6754.eurprd05.prod.outlook.com (2603:10a6:20b:15a::7)
+ by AM0PR05MB4548.eurprd05.prod.outlook.com (2603:10a6:208:ae::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Wed, 17 Jun
+ 2020 17:29:42 +0000
+Received: from AM0PR05MB6754.eurprd05.prod.outlook.com
+ ([fe80::c0cc:a656:610c:88f2]) by AM0PR05MB6754.eurprd05.prod.outlook.com
+ ([fe80::c0cc:a656:610c:88f2%3]) with mapi id 15.20.3109.021; Wed, 17 Jun 2020
+ 17:29:42 +0000
+Date:   Wed, 17 Jun 2020 20:29:34 +0300
+From:   Ido Schimmel <idosch@mellanox.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Ido Schimmel <idosch@idosch.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.7 264/274] vxlan: Avoid infinite loop when
+ suppressing NS messages with invalid options
+Message-ID: <20200617172934.GA296888@splinter>
+References: <20200608230607.3361041-1-sashal@kernel.org>
+ <20200608230607.3361041-264-sashal@kernel.org>
+ <20200609065548.GA2113611@splinter>
+ <20200617162823.GR1931@sasha-vm>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617162823.GR1931@sasha-vm>
+X-ClientProxiedBy: AM4PR05CA0009.eurprd05.prod.outlook.com (2603:10a6:205::22)
+ To AM0PR05MB6754.eurprd05.prod.outlook.com (2603:10a6:20b:15a::7)
 MIME-Version: 1.0
-References: <20200617145116.247432-1-dianders@chromium.org>
- <20200617074930.v3.1.Iea2704ec2cb40c00eca47781c310a6330ac5dd41@changeid>
- <ed6d22a1-0d38-9874-d5cc-efe39f360baa@linaro.org> <0181cfe3-6627-e599-8f2f-1f433d9e0596@codeaurora.org>
-In-Reply-To: <0181cfe3-6627-e599-8f2f-1f433d9e0596@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 17 Jun 2020 10:28:26 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WJeWudDDp79pZepX3o7yXUqEojy9_VM6ER4z-u=LK9eA@mail.gmail.com>
-Message-ID: <CAD=FV=WJeWudDDp79pZepX3o7yXUqEojy9_VM6ER4z-u=LK9eA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: nvmem: qfprom: Convert to yaml
-To:     "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, dhavalp@codeaurora.org,
-        mturney@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        sparate@codeaurora.org, mkurumel@codeaurora.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (79.179.90.32) by AM4PR05CA0009.eurprd05.prod.outlook.com (2603:10a6:205::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Wed, 17 Jun 2020 17:29:42 +0000
+X-Originating-IP: [79.179.90.32]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: cc7f35a3-1ac6-4775-0023-08d812e4055e
+X-MS-TrafficTypeDiagnostic: AM0PR05MB4548:
+X-Microsoft-Antispam-PRVS: <AM0PR05MB4548448E255F660211210E1BBF9A0@AM0PR05MB4548.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:357;
+X-Forefront-PRVS: 04371797A5
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: eVq3wlUpJAjNXwhIqC4mMCXJYaM5zfPRhxz3xqoqscSt8o1vfMfQaqJIGLEOolt+kTbYYm+Bw2mnXWcXzwB0JetA8g8GVJvPbCeTLj0ZrxsUw5f/FNl8BaicRJYwsw2WXJ9f2Rd7ovS8IyvyKonPj0AlAJ6IgsUHK2QHU3pChItJ3vBjsLkqq8+cCLEycT4GpFTT5zeiyaooxbed/VrX8k93ip4S1uGvbWgj0KqqxkgAsU/vwY79dQH6E74f1al/E7IL+kt5wswPgXgraNCmym5caRrneALI2H93q9JAHB+MurtofWWTMPm9JoZN/fBbohG7iAjjSPkXaBhy+X4x4qbqnyA+Cou/x+APrtRl+ZZT5KgRjJLejLGH9dOBTjktiBptGQ17e3JDJESfS9Rd/A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB6754.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(7916004)(4636009)(366004)(39860400002)(376002)(346002)(396003)(136003)(4326008)(6486002)(316002)(33656002)(6496006)(52116002)(956004)(966005)(66476007)(16526019)(186003)(6666004)(66556008)(54906003)(6916009)(8936002)(478600001)(86362001)(5660300002)(33716001)(1076003)(66946007)(26005)(9686003)(2906002)(8676002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: K+iK/wL3wQYPsQPs7HzaIkX1WZfg+XXF9s2HbphNCw98ZD5XdRP9vvYM10i7klSnyD0PfdfcmdqhmQbkfveILEx72d4LYPpVfJDcXEhHhhaIYmn4bj0j7DGOGholgOfgvrquc2mhe1KlIhKKgdRzJm11osNzOFUNtNuOtYEswzKrfoPE4GddQVtV9+Xc6bjjge8r+bIih4jjajEd6GPuoqQnWT9t8h8HgK37raXIQNsAj+agbwHfYvt9ur+WxV33MI1bQnAC57jusXVugHN5BfY9tqVFflH7ScYP7BHSXrTv/emsnYwcFt/0Mcz4v8oCNfPP68CRXbnNSKwN21FZHhuB5gA4eV2cqWmjlRr0YZePeMqe0Qjm/ig2esXuZPZwQkCZenHDRQASHLbNdh99VjoThm21/HnHrBLvZ4qaPhuQ/MQFqgxYIakL7zZPePhn2381w2/rChvT00PuSrkEGE5Kn1l9hPt9vdMn1b3WwqI=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc7f35a3-1ac6-4775-0023-08d812e4055e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 17:29:42.6487
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dXelFj/cjLcNIjema3T1MEFVUFQtyUTLNZkes81z0y6UD52ZU7vqm49c5UspbEfDJc75/2Rpkx93Jl1HIBBtsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4548
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jun 17, 2020 at 12:28:23PM -0400, Sasha Levin wrote:
+> On Tue, Jun 09, 2020 at 09:55:48AM +0300, Ido Schimmel wrote:
+> > On Mon, Jun 08, 2020 at 07:05:57PM -0400, Sasha Levin wrote:
+> > > From: Ido Schimmel <idosch@mellanox.com>
+> > > 
+> > > [ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
+> > 
+> > Hi,
+> > 
+> > In the same patch set I also included a similar fix for the bridge
+> > module:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=53fc685243bd6fb90d90305cea54598b78d3cbfc
+> > 
+> > But I don't see it in the patch sets you sent.
+> > 
+> > Don't see it here as well:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-5.7
+> > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/?h=linux-5.7.y
+> > 
+> > Did it get lost or it's just pending somewhere else?
+> 
+> AUTOSEL ignores net/ patches that are maintained by David Miller.
+> 
+> I can pick it up manually.
 
-On Wed, Jun 17, 2020 at 9:26 AM Ravi Kumar Bokka (Temp)
-<rbokka@codeaurora.org> wrote:
->
->
->
-> On 6/17/2020 8:48 PM, Srinivas Kandagatla wrote:
-> >
-> >
-> > On 17/06/2020 15:51, Douglas Anderson wrote:
-> >> From: Ravi Kumar Bokka <rbokka@codeaurora.org>
-> >>
-> >> This switches the bindings over from txt to yaml.
-> >>
-> >> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
-> >> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> >> ---
-> >>
-> >> Changes in v3:
-> >> - Split conversion to yaml into separate patch new in v3.
-> >> - Use 'const' for compatible instead of a 1-entry enum.
-> >> - Changed filename to match compatible string.
-> >> - Add #address-cells and #size-cells to list of properties.
-> >> - Fixed up example.
-> >>
-> >>   .../bindings/nvmem/qcom,qfprom.yaml           | 45 +++++++++++++++++++
-> >>   .../devicetree/bindings/nvmem/qfprom.txt      | 35 ---------------
-> >>   2 files changed, 45 insertions(+), 35 deletions(-)
-> >>   create mode 100644
-> >> Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-> >>   delete mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-> >> b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-> >> new file mode 100644
-> >> index 000000000000..5efa5e7c4d81
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-> >> @@ -0,0 +1,45 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/nvmem/qcom,qfprom.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Qualcomm Technologies Inc, QFPROM Efuse bindings
-> >> +
-> >> +maintainers:
-> >> +  - Ravi Kumar Bokka <rbokka@codeaurora.org>
-> >> +
-> >
-> > Am not sure this was intentional, but the old maintainer name is totally
-> > lost in this patch!
-> >
-> > Please fix this!
-> >
->
-> Hi Srinivas,
-> The existed qfprom dt-bindings in .txt format.
-> I will make it as it is to merge whole content in .yaml format once
-> confirm all the parameters with this new driver changes.
+No need. Dave queued both patches to stable and they are already in
+5.7.y:
 
-Ah, right.  It makes more sense to set you as the maintainer since you
-were listed as the maintainer for the Linux driver and also the author
-of the old bindings.  I'll change it to you then.
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.7.y&id=f3f4183f6d36df54f5a867653c30852ec6b5ab9d
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.7.y&id=ecf0b3c5a6684fcf27073365d576164390bc000e
 
-Unless I hear otherwise, I'll plan to send out a v4 tomorrow with
-feedback I've gotten today.
-
--Doug
+> 
+> -- 
+> Thanks,
+> Sasha
