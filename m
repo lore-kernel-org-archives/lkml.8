@@ -2,123 +2,100 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0437C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9194FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 884D420734
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69941207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:14:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="opw6v2If"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgFQOOE (ORCPT
+        id S1726996AbgFQOOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 10:14:04 -0400
-Received: from mailout2n.rrzn.uni-hannover.de ([130.75.2.113]:39520 "EHLO
-        mailout2n.rrzn.uni-hannover.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726495AbgFQOOD (ORCPT
+        Wed, 17 Jun 2020 10:14:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgFQOOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 10:14:03 -0400
-X-Greylist: delayed 334 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Jun 2020 10:14:02 EDT
-Received: from lab-pc01.sra.uni-hannover.de (lab.sra.uni-hannover.de [130.75.33.87])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailout2n.rrzn.uni-hannover.de (Postfix) with ESMTPSA id D0C281F477;
-        Wed, 17 Jun 2020 16:08:26 +0200 (CEST)
-From:   Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     rostedt@goodmis.org, mingo@redhat.com,
-        linux-trace-devel@vger.kernel.org,
-        Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>,
-        linux-kernel@i4.cs.fau.de,
-        Maximilian Werner <maximilian.werner96@gmail.com>
-Subject: [PATCH] tracing/boottime: Fix kprobe multiple events
-Date:   Wed, 17 Jun 2020 16:08:17 +0200
-Message-Id: <20200617140817.17161-1-sascha.ortmann@stud.uni-hannover.de>
+        Wed, 17 Jun 2020 10:14:23 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A61BC06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:14:22 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id z63so1211210pfb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:14:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=3KiZ0hsFJ+V+TJvcKVSj6rh18GdO0J2gStEd7h7xqpg=;
+        b=opw6v2IfUvgqBueRp51a44SpADRCD96H75Z9wgZYxdRCL0z489mhKZdp3w6BhKGn7t
+         imuobN/052eagO4Plk+U+r6h27UBQyguV7j+LWeAHR7DlfPcUfmoByA/ZRxUxrLDo+nK
+         3Pn2KCCRYkLoFnLYxqD0b5hSOq2uH5dYv1b793wlErhDxR1+Gjvpu37adroL85qwURSz
+         D2wMbmnS6l5VZik962yZARVB+rBzk+j8osOK7H1sD2ZSSmy8dxEU2UUUnk0NubHrwrKX
+         L7EeKFqc/en249INHm9DrfYw5QtCmvFCJfOssPwdxi5ykozbb7s6yqXbpEEVpcazSVxk
+         oDcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=3KiZ0hsFJ+V+TJvcKVSj6rh18GdO0J2gStEd7h7xqpg=;
+        b=Kbq18FcdIXCRGCLjgOhw9rY7+0Y0G0X34HViKRPer+nWcDFy6qI1lOClQEd3FDapu3
+         TzpxojiiqO02k1WXpLx3OoU1kxjWJCJhxQ4tscZjb53GPprdM9HSahAuZI3Jpsv/slrM
+         NzKbM+I4adkHaSJvotCr/g2Yy1SYTsNEyfLjpH8yfwIvp3N+Urn6Xr3O4LYIlFfcmb97
+         b0Sm42XaFJvxAcT8yuefrVC6vPFmG0gEeO43CQ2RnyFm5HP2k4fE2YwPBbbKfg8Ckpky
+         NH4BpqS7GsQadEoCh+HX8x9eM/goEgLcjX91CzHqPra+1YOlrxCftQc4LebV6NSP/MFq
+         JAhQ==
+X-Gm-Message-State: AOAM53010vR8uQwX/HajU9VycPQ8xL5R6q0sfiOiEDSpHdtzd9GR3AeA
+        Dtp9FcOajpA+YX7QqHjghTE=
+X-Google-Smtp-Source: ABdhPJzLuh+VgNQ2uDJCaxCsaAhu2mSppIYfZN9hPqQRVgrswIbvTNxTg1+ifHt2G84jaeCsPvWu2w==
+X-Received: by 2002:a62:1d8e:: with SMTP id d136mr6797346pfd.323.1592403261956;
+        Wed, 17 Jun 2020 07:14:21 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 67sm85375pga.44.2020.06.17.07.14.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Jun 2020 07:14:20 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Mark Gross <mgross@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH] cpu/speculation: Add prototype for cpu_show_srbds
+Date:   Wed, 17 Jun 2020 07:14:10 -0700
+Message-Id: <20200617141410.93338-1-linux@roeck-us.net>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix boottime kprobe events to add multiple events even if one fails
-and report probe generation failures.
+0-day is not happy that there is no prototype for cpu_show_srbds().
 
-As an example, when we try to set multiprobe kprobe events in
-bootconfig like this:
+drivers/base/cpu.c:565:16: error:
+		no previous prototype for 'cpu_show_srbds'
 
-ftrace.event.kprobes.vfsevents {
-	probes = "vfs_read $arg1 $arg2,,
-                 !error! not reported;?", // leads to error
-		 "vfs_write $arg1 $arg2"
-}
-
-this will not work like expected. After commit
-da0f1f4167e3af69e1d8b32d6d65195ddd2bfb64 ("tracing/boottime:
-Fix kprobe event API usage"), the function
-trace_boot_add_kprobe_event will not produce any error message,
-aborting the function and stopping subsequent probes from getting
-installed when adding a probe fails at kprobe_event_gen_cmd_start.
-Furthermore, probes continue when kprobe_event_gen_cmd_end fails
-(and kprobe_event_gen_cmd_start did not fail). In this case the
-function even returns successfully when the last call to
-kprobe_event_gen_cmd_end is successful.
-
-The behaviour of reporting and aborting after failures is not
-consistent.
-
-The function trace_boot_add_kprobe_event now continues even when
-one of the multiple events fails. Each failure is now reported
-individually. Since the function can only return one result to the
-caller, the function returns now the last failure (or none, if
-nothing fails).
-
-Cc: linux-kernel@i4.cs.fau.de
-Signed-off-by: Maximilian Werner <maximilian.werner96@gmail.com>
-Signed-off-by: Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
+Reported-by: kernel test robot <lkp@intel.com>
+Fixes: 7e5b3c267d25 ("x86/speculation: Add Special Register Buffer Data Sampling (SRBDS) mitigation")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- kernel/trace/trace_boot.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ include/linux/cpu.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index 9de29bb45a27..dbb50184e060 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -95,18 +95,24 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
- 	struct xbc_node *anode;
- 	char buf[MAX_BUF_LEN];
- 	const char *val;
-+	int error = 0;
- 	int ret = 0;
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 52692587f7fe..8aa84c052fdf 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -64,6 +64,7 @@ extern ssize_t cpu_show_tsx_async_abort(struct device *dev,
+ 					char *buf);
+ extern ssize_t cpu_show_itlb_multihit(struct device *dev,
+ 				      struct device_attribute *attr, char *buf);
++extern ssize_t cpu_show_srbds(struct device *dev, struct device_attribute *attr, char *buf);
  
- 	xbc_node_for_each_array_value(node, "probes", anode, val) {
- 		kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
- 
--		ret = kprobe_event_gen_cmd_start(&cmd, event, val);
--		if (ret)
--			break;
-+		error = kprobe_event_gen_cmd_start(&cmd, event, val);
-+		if (error) {
-+			pr_err("Failed to generate probe: %s\n", buf);
-+			ret = error;
-+			continue;
-+		}
- 
--		ret = kprobe_event_gen_cmd_end(&cmd);
--		if (ret)
-+		error = kprobe_event_gen_cmd_end(&cmd);
-+		if (error) {
- 			pr_err("Failed to add probe: %s\n", buf);
-+			ret = error;
-+		}
- 	}
- 
- 	return ret;
+ extern __printf(4, 5)
+ struct device *cpu_device_create(struct device *parent, void *drvdata,
 -- 
 2.17.1
 
