@@ -2,109 +2,84 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CDBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86613C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3A9821548
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:36:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VK86r/2s"
+	by mail.kernel.org (Postfix) with ESMTP id 56FC820810
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:38:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592433525;
+	bh=1bceH48u3US0sEni5o4DME2+GH0aueJ4slRn8oPq3g8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qBsQYOSEmjPOoEjBLG93jioefxFsvQu1Ak/z/gMywpD/u+2ZTHNk+ZI+WgrS9KGrT
+	 Y7JMzQL2fq+QrDvxuKpNfZbB/JWElRpS5hEsQ98eWhIwVcRIjnRj0yHsY2kikWOfT1
+	 eHoJlxVeBMpE1nhTBNLVRDCguQVSLlUAn4KgxSTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgFQWg5 (ORCPT
+        id S1727071AbgFQWio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:36:57 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50199 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726758AbgFQWgz (ORCPT
+        Wed, 17 Jun 2020 18:38:44 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42402 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbgFQWin (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:36:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592433414;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PqSlpxZ3YN58ZRJ/BXA2pFGBO/xB6CvZLuRPE0ix/fQ=;
-        b=VK86r/2sMvOxyXXnWT7Nd7cBr5q1FYTPMQ8/ojjkj5qF1enO0Z7NOzp9QycqXO6kgVLI0a
-        A3NYc6k+yPs9DgYYXO0B53pjmETs2YkEM4Gm0qKzK40Uq2zoryixvWsZGmLzNTbnUS7qwg
-        +dkPJZRw7eA6mB8SGGaGbBHyMuBIjrE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-405-XNWeQA5YO767oZg56rfV3A-1; Wed, 17 Jun 2020 18:36:51 -0400
-X-MC-Unique: XNWeQA5YO767oZg56rfV3A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21CC91800D42;
-        Wed, 17 Jun 2020 22:36:50 +0000 (UTC)
-Received: from x2.localnet (ovpn-114-52.phx2.redhat.com [10.3.114.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D25BD19931;
-        Wed, 17 Jun 2020 22:36:43 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, bauerman@linux.ibm.com, nayna@linux.ibm.com,
-        paul@paul-moore.com, rgb@redhat.com,
-        linux-integrity@vger.kernel.org, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] integrity: Add errno field in audit message
-Date:   Wed, 17 Jun 2020 18:36:43 -0400
-Message-ID: <3369897.H5lpGJDj0b@x2>
-Organization: Red Hat
-In-Reply-To: <20200617204436.2226-2-nramas@linux.microsoft.com>
-References: <20200617204436.2226-1-nramas@linux.microsoft.com> <20200617204436.2226-2-nramas@linux.microsoft.com>
+        Wed, 17 Jun 2020 18:38:43 -0400
+Received: by mail-io1-f65.google.com with SMTP id x189so4838389iof.9;
+        Wed, 17 Jun 2020 15:38:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zvm6Wi/JhfHZije2TzVP/BE8Hn0bB8Py76ZIIBYPOgw=;
+        b=Si4UXLksSwbPfgm16FNIn1VFO4N614aZ8ylouk8VSjyI6F2wXll++8Dvkso6CuCcIs
+         tg1qXnBkeAyfHjBs3JiWsPLcmaS+2MGw+EffI/GRTjVbJOzPqAz0AB2jE3EhdwsQfJ0z
+         ABOwbsJ/Z7IsROCf68liwapOMKCCbbhz6cuRFjj4CRobNdkaW65Q1pH0C3ZaOT5RI7yP
+         lTIxHOh41pZ+IQAvXapGhQTLXlLJaG7x/xM+H6PFcXJV9sFGoi5iKiB153u4inlb5Hge
+         QcpL7565Uc+zAV2Qh42Huk/jO6I+s/CB7XicboI/KYF0HwUt/TNZ3FkFESdycupF9YlP
+         uZvA==
+X-Gm-Message-State: AOAM531sTlHEJxCyFVSXGFweJrfkXhaB5XHb1C9UO8NyYMX2dKtnlgZm
+        MuKB7NTN+/9iuOviDMs5RQ==
+X-Google-Smtp-Source: ABdhPJwRjmmjDo55yNTup3etyMo8kIw88xo+I0teA6HCDNX/YZbUsYSz1qb0GmfH4mDQpVpYEEtbLg==
+X-Received: by 2002:a02:29ca:: with SMTP id p193mr1530021jap.129.1592433522665;
+        Wed, 17 Jun 2020 15:38:42 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id t14sm488074ilp.73.2020.06.17.15.38.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 15:38:42 -0700 (PDT)
+Received: (nullmailer pid 2967167 invoked by uid 1000);
+        Wed, 17 Jun 2020 22:38:41 -0000
+Date:   Wed, 17 Jun 2020 16:38:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-fpga@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Anatolij Gustschin <agust@denx.de>,
+        linux-kernel@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Moritz Fischer <mdf@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/5] dt-bindings: fpga: xilinx-slave-serial: valid for
+ the 7 Series too
+Message-ID: <20200617223841.GA2967136@bogus>
+References: <20200611211144.9421-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611211144.9421-1-luca@lucaceresoli.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, June 17, 2020 4:44:36 PM EDT Lakshmi Ramasubramanian wrote:
-> Error code is not included in the audit messages logged by
-> the integrity subsystem. Add "errno" field in the audit messages
-> logged by the integrity subsystem and set the value to the error code
-> passed to integrity_audit_msg() in the "result" parameter.
+On Thu, 11 Jun 2020 23:11:40 +0200, Luca Ceresoli wrote:
+> The Xilinx 7-series uses the same protocol, mention that.
 > 
-> Sample audit messages:
-> 
-> [    6.284329] audit: type=1804 audit(1591756723.627:2): pid=1 uid=0
-> auid=4294967295 ses=4294967295 subj=kernel op=add_boot_aggregate
-> cause=alloc_entry comm="swapper/0" name="boot_aggregate" res=0 errno=-12
-> 
-> [    8.085456] audit: type=1802 audit(1592005947.297:9): pid=1 uid=0
-> auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0
-> op=policy_update cause=completed comm="systemd" res=1 errno=0
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> Suggested-by: Steve Grubb <sgrubb@redhat.com>
-
-Acked-by: Steve Grubb <sgrubb@redhat.com>
-
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 > ---
->  security/integrity/integrity_audit.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../devicetree/bindings/fpga/xilinx-slave-serial.txt     | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> diff --git a/security/integrity/integrity_audit.c
-> b/security/integrity/integrity_audit.c index 5109173839cc..a265024f82f3
-> 100644
-> --- a/security/integrity/integrity_audit.c
-> +++ b/security/integrity/integrity_audit.c
-> @@ -53,6 +53,6 @@ void integrity_audit_msg(int audit_msgno, struct inode
-> *inode, audit_log_untrustedstring(ab, inode->i_sb->s_id);
->  		audit_log_format(ab, " ino=%lu", inode->i_ino);
->  	}
-> -	audit_log_format(ab, " res=%d", !result);
-> +	audit_log_format(ab, " res=%d errno=%d", !result, result);
->  	audit_log_end(ab);
->  }
 
-
-
-
+Acked-by: Rob Herring <robh@kernel.org>
