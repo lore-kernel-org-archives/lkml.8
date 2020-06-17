@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63ECC433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D744BC433E1
 	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89F052082F
+	by mail.kernel.org (Postfix) with ESMTP id B34FF208C3
 	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:26:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TMAH0J/Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RhsRvMKj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgFQF0u (ORCPT
+        id S1726889AbgFQF0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 01:26:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59896 "EHLO
+        Wed, 17 Jun 2020 01:26:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgFQF0r (ORCPT
+        with ESMTP id S1726858AbgFQF0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 01:26:47 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD564C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 22:26:46 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d66so559826pfd.6
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 22:26:46 -0700 (PDT)
+        Wed, 17 Jun 2020 01:26:50 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B49AC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 22:26:50 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id jz3so458349pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 22:26:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vmRNk7yUM9fFqnh0E7GxTLrrZ7/Cn3kew7vDIw5Ffcg=;
-        b=TMAH0J/YV3EgCO2B24mOeRYf+GljszWc1juopRAukGyNhrhIu0pxSoeoQH0Mefjsel
-         mTxmBgo0NSMkTzkzw4opm8QcsRXNtmEtHkAdQqXCJihNdmP19DXrQxKiV1nYaw2pGx63
-         JPlPwVPpIcfnC4YPFvwlNcqU1g+flpKvdeAlgbTCnGUekVSYvkOfFhE5wj4OyKlGFzEt
-         g96ZI8n8CkV0iiukLGBV2aSB9wcDEa/HfK5N7roFIsAdI0NWeJDU6MvjvXvWrWyiNVKF
-         ZnGrYDmqZYFNoYs+dXJY3j+Rdi6dZDRCBkeBshJ1UUNQ5P3NEDBvOpfrPBh0IONgsj9H
-         WvNg==
+        bh=LqAOrLNplaMBqdY/rTyoQrQcxqZrPjXktX70kNlPxVs=;
+        b=RhsRvMKjie6x723miQooKnqgSSbdE9r7uTdUvENQTq+FVnX42ve0e5PcTXw657lo8G
+         nLywbBbWJNegPWhAcn7UZEIuw1HzUBxVtune9XA37/3FN7Xgddmtd+tGv2RP9skb1mKL
+         eysC6e2IZ7YmtaHyI8nQkWaPhLKLkJZYe7drnQWbqjsdyfRzTBofndFYu26NS1NO5nrx
+         U2IiVS//aXASmtjpBJPxam85oTZaBv4G5Io/dlA0G8DrHc5a3LV+TnlY1Q53UyV4Sldd
+         PhrhcjXHZF6CwIfb8XHtUiAQEWLRb3oZnZkcRzrocHUYK2l85O1bYbaoMY7Xxap27gaj
+         HtIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=vmRNk7yUM9fFqnh0E7GxTLrrZ7/Cn3kew7vDIw5Ffcg=;
-        b=ij2nXMiC9tQXz8u9lNPecTCikoSb1NnMLy8B1SxCyj9QBbxkIQ3zbtIHftb3ig4JOw
-         qSEgfjdOEagt532u3k1Z+IsZaCpW3CoBUDhoGZ8n2tJejEIWvg4fCjAntgd/3WM0/rRZ
-         Q4+DEjA8o69h9K9hMkGPNalEPthh5fevsB/F8H6TRT5fnMFzzntlAFt+iXPk1VpHdD+z
-         LD6XtNW6NfguCTZHgxo+1cRA29MlrGhL8xiAMewrXHOaZFTVo3VRAdJbF+Z2E2NKE8ES
-         9o/2pxdIBEQz9ip00GibVySC9fUs1RhqSP/yXEhkvsq+b6hzN4eOjJ72sBholAqKkjHO
-         M76g==
-X-Gm-Message-State: AOAM533mHWW2ZIyOnvZZMBd6oTofmXE+iStV5clZnV0iWXmwUS++FnJ5
-        S/oMKhyWKkXdbdvKbSNLdWA=
-X-Google-Smtp-Source: ABdhPJxQJ58nlLN/jPiwSln6bfax/824jahBqbjTJu4Rk5OAUgjB1BlzIFtp813Dmc83EmnX4JK1Ew==
-X-Received: by 2002:a63:35cc:: with SMTP id c195mr4813470pga.180.1592371606108;
-        Tue, 16 Jun 2020 22:26:46 -0700 (PDT)
+        bh=LqAOrLNplaMBqdY/rTyoQrQcxqZrPjXktX70kNlPxVs=;
+        b=S1FHCS64PAltP5jEbcy7ToOFxFQURUV99ionElxlSiXUE05szbSfI5Nkr0ozc+KCyX
+         Xjs0nP6FRpNHU8KujcWapiyEptzyBKu2XtrQuecU43B3NL6V17FrO4EFx7Fx5VyoA/AC
+         1hAej1w2wQHStxjpBQSz98fobmA9/cGTbQDOGbVtTtdFffgy28N85wK8n8mV7YKuPMC5
+         +YI0CbTrP/5xByJ54NTnmlLFWlVnZbfDxmI7wxMW2cwUoE4NAD4WMR3ft+j8f+fjoYNN
+         ttovSs95hw0yDfpmjh/mV3Y1o1fFLzzHbeVrIZo5Dyq0Le+ymOrx0YkZ4WSmJrMubr1o
+         s5gw==
+X-Gm-Message-State: AOAM532FhQGBACgA+iofRLVtStzESSgbyVr8umvJxrXHIpCBLJFGEbi9
+        I2JAlwwvX9QM7CS2XBkmCfY=
+X-Google-Smtp-Source: ABdhPJzKADQ5ElC8hqTHmAdFLRipScrGlc0p5LLDRIHX9sWKdEgBxG0YNVeIT/vP5g3vj9UrE8EIbw==
+X-Received: by 2002:a17:90b:390e:: with SMTP id ob14mr5695642pjb.221.1592371609477;
+        Tue, 16 Jun 2020 22:26:49 -0700 (PDT)
 Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id d184sm8830068pfd.85.2020.06.16.22.26.43
+        by smtp.gmail.com with ESMTPSA id d184sm8830068pfd.85.2020.06.16.22.26.46
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jun 2020 22:26:45 -0700 (PDT)
+        Tue, 16 Jun 2020 22:26:48 -0700 (PDT)
 From:   js1304@gmail.com
 X-Google-Original-From: iamjoonsoo.kim@lge.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -70,9 +70,9 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Vlastimil Babka <vbabka@suse.cz>,
         Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v6 2/6] mm/vmscan: protect the workingset on anonymous LRU
-Date:   Wed, 17 Jun 2020 14:26:19 +0900
-Message-Id: <1592371583-30672-3-git-send-email-iamjoonsoo.kim@lge.com>
+Subject: [PATCH v6 3/6] mm/workingset: extend the workingset detection for anon LRU
+Date:   Wed, 17 Jun 2020 14:26:20 +0900
+Message-Id: <1592371583-30672-4-git-send-email-iamjoonsoo.kim@lge.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592371583-30672-1-git-send-email-iamjoonsoo.kim@lge.com>
 References: <1592371583-30672-1-git-send-email-iamjoonsoo.kim@lge.com>
@@ -83,273 +83,193 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-In current implementation, newly created or swap-in anonymous page
-is started on active list. Growing active list results in rebalancing
-active/inactive list so old pages on active list are demoted to inactive
-list. Hence, the page on active list isn't protected at all.
+In the following patch, workingset detection will be applied to
+anonymous LRU. To prepare it, this patch adds some code to
+distinguish/handle the both LRUs.
 
-Following is an example of this situation.
-
-Assume that 50 hot pages on active list. Numbers denote the number of
-pages on active/inactive list (active | inactive).
-
-1. 50 hot pages on active list
-50(h) | 0
-
-2. workload: 50 newly created (used-once) pages
-50(uo) | 50(h)
-
-3. workload: another 50 newly created (used-once) pages
-50(uo) | 50(uo), swap-out 50(h)
-
-This patch tries to fix this issue.
-Like as file LRU, newly created or swap-in anonymous pages will be
-inserted to the inactive list. They are promoted to active list if
-enough reference happens. This simple modification changes the above
-example as following.
-
-1. 50 hot pages on active list
-50(h) | 0
-
-2. workload: 50 newly created (used-once) pages
-50(h) | 50(uo)
-
-3. workload: another 50 newly created (used-once) pages
-50(h) | 50(uo), swap-out 50(uo)
-
-As you can see, hot pages on active list would be protected.
-
-Note that, this implementation has a drawback that the page cannot
-be promoted and will be swapped-out if re-access interval is greater than
-the size of inactive list but less than the size of total(active+inactive).
-To solve this potential issue, following patch will apply workingset
-detection that is applied to file LRU some day before.
-
-v6: Before this patch, all anon pages (inactive + active) are considered
-as workingset. However, with this patch, only active pages are considered
-as workingset. So, file refault formula which uses the number of all
-anon pages is changed to use only the number of active anon pages.
+v6: do not introduce a new nonresident_age for anon LRU since
+we need to use *unified* nonresident_age to implement workingset
+detection for anon LRU.
 
 Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
- include/linux/swap.h    |  2 +-
- kernel/events/uprobes.c |  2 +-
- mm/huge_memory.c        |  2 +-
- mm/khugepaged.c         |  2 +-
- mm/memory.c             |  9 ++++-----
- mm/migrate.c            |  2 +-
- mm/swap.c               | 13 +++++++------
- mm/swapfile.c           |  2 +-
- mm/userfaultfd.c        |  2 +-
- mm/vmscan.c             |  4 +---
- mm/workingset.c         |  2 --
- 11 files changed, 19 insertions(+), 23 deletions(-)
+ include/linux/mmzone.h | 16 +++++++++++-----
+ mm/memcontrol.c        | 16 +++++++++++-----
+ mm/vmscan.c            | 15 ++++++++++-----
+ mm/vmstat.c            |  9 ++++++---
+ mm/workingset.c        |  8 +++++---
+ 5 files changed, 43 insertions(+), 21 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 5b3216b..f4f5f94 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -353,7 +353,7 @@ extern void deactivate_page(struct page *page);
- extern void mark_page_lazyfree(struct page *page);
- extern void swap_setup(void);
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index f6f8849..8e9d0b9 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -179,9 +179,15 @@ enum node_stat_item {
+ 	NR_ISOLATED_ANON,	/* Temporary isolated pages from anon lru */
+ 	NR_ISOLATED_FILE,	/* Temporary isolated pages from file lru */
+ 	WORKINGSET_NODES,
+-	WORKINGSET_REFAULT,
+-	WORKINGSET_ACTIVATE,
+-	WORKINGSET_RESTORE,
++	WORKINGSET_REFAULT_BASE,
++	WORKINGSET_REFAULT_ANON = WORKINGSET_REFAULT_BASE,
++	WORKINGSET_REFAULT_FILE,
++	WORKINGSET_ACTIVATE_BASE,
++	WORKINGSET_ACTIVATE_ANON = WORKINGSET_ACTIVATE_BASE,
++	WORKINGSET_ACTIVATE_FILE,
++	WORKINGSET_RESTORE_BASE,
++	WORKINGSET_RESTORE_ANON = WORKINGSET_RESTORE_BASE,
++	WORKINGSET_RESTORE_FILE,
+ 	WORKINGSET_NODERECLAIM,
+ 	NR_ANON_MAPPED,	/* Mapped anonymous pages */
+ 	NR_FILE_MAPPED,	/* pagecache pages mapped into pagetables.
+@@ -259,8 +265,8 @@ struct lruvec {
+ 	unsigned long			file_cost;
+ 	/* Non-resident age, driven by LRU movement */
+ 	atomic_long_t			nonresident_age;
+-	/* Refaults at the time of last reclaim cycle */
+-	unsigned long			refaults;
++	/* Refaults at the time of last reclaim cycle, anon=0, file=1 */
++	unsigned long			refaults[2];
+ 	/* Various lruvec state flags (enum lruvec_flags) */
+ 	unsigned long			flags;
+ #ifdef CONFIG_MEMCG
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 0b38b6a..2127dd1 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1425,12 +1425,18 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
+ 	seq_buf_printf(&s, "%s %lu\n", vm_event_name(PGMAJFAULT),
+ 		       memcg_events(memcg, PGMAJFAULT));
  
--extern void lru_cache_add_active_or_unevictable(struct page *page,
-+extern void lru_cache_add_inactive_or_unevictable(struct page *page,
- 						struct vm_area_struct *vma);
- 
- /* linux/mm/vmscan.c */
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index bb08628..67814de 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -184,7 +184,7 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
- 	if (new_page) {
- 		get_page(new_page);
- 		page_add_new_anon_rmap(new_page, vma, addr, false);
--		lru_cache_add_active_or_unevictable(new_page, vma);
-+		lru_cache_add_inactive_or_unevictable(new_page, vma);
- 	} else
- 		/* no new page, just dec_mm_counter for old_page */
- 		dec_mm_counter(mm, MM_ANONPAGES);
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 78c84be..ffbf5ad 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -640,7 +640,7 @@ static vm_fault_t __do_huge_pmd_anonymous_page(struct vm_fault *vmf,
- 		entry = mk_huge_pmd(page, vma->vm_page_prot);
- 		entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
- 		page_add_new_anon_rmap(page, vma, haddr, true);
--		lru_cache_add_active_or_unevictable(page, vma);
-+		lru_cache_add_inactive_or_unevictable(page, vma);
- 		pgtable_trans_huge_deposit(vma->vm_mm, vmf->pmd, pgtable);
- 		set_pmd_at(vma->vm_mm, haddr, vmf->pmd, entry);
- 		add_mm_counter(vma->vm_mm, MM_ANONPAGES, HPAGE_PMD_NR);
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index b043c40..02fb51f 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1173,7 +1173,7 @@ static void collapse_huge_page(struct mm_struct *mm,
- 	spin_lock(pmd_ptl);
- 	BUG_ON(!pmd_none(*pmd));
- 	page_add_new_anon_rmap(new_page, vma, address, true);
--	lru_cache_add_active_or_unevictable(new_page, vma);
-+	lru_cache_add_inactive_or_unevictable(new_page, vma);
- 	pgtable_trans_huge_deposit(mm, pmd, pgtable);
- 	set_pmd_at(mm, address, pmd, _pmd);
- 	update_mmu_cache_pmd(vma, address, pmd);
-diff --git a/mm/memory.c b/mm/memory.c
-index 3359057..f221f96 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2711,7 +2711,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
- 		 */
- 		ptep_clear_flush_notify(vma, vmf->address, vmf->pte);
- 		page_add_new_anon_rmap(new_page, vma, vmf->address, false);
--		lru_cache_add_active_or_unevictable(new_page, vma);
-+		lru_cache_add_inactive_or_unevictable(new_page, vma);
- 		/*
- 		 * We call the notify macro here because, when using secondary
- 		 * mmu page tables (such as kvm shadow page tables), we want the
-@@ -3260,10 +3260,9 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 	/* ksm created a completely new copy */
- 	if (unlikely(page != swapcache && swapcache)) {
- 		page_add_new_anon_rmap(page, vma, vmf->address, false);
--		lru_cache_add_active_or_unevictable(page, vma);
-+		lru_cache_add_inactive_or_unevictable(page, vma);
- 	} else {
- 		do_page_add_anon_rmap(page, vma, vmf->address, exclusive);
--		activate_page(page);
- 	}
- 
- 	swap_free(entry);
-@@ -3408,7 +3407,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
- 
- 	inc_mm_counter_fast(vma->vm_mm, MM_ANONPAGES);
- 	page_add_new_anon_rmap(page, vma, vmf->address, false);
--	lru_cache_add_active_or_unevictable(page, vma);
-+	lru_cache_add_inactive_or_unevictable(page, vma);
- setpte:
- 	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, entry);
- 
-@@ -3666,7 +3665,7 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct page *page)
- 	if (write && !(vma->vm_flags & VM_SHARED)) {
- 		inc_mm_counter_fast(vma->vm_mm, MM_ANONPAGES);
- 		page_add_new_anon_rmap(page, vma, vmf->address, false);
--		lru_cache_add_active_or_unevictable(page, vma);
-+		lru_cache_add_inactive_or_unevictable(page, vma);
- 	} else {
- 		inc_mm_counter_fast(vma->vm_mm, mm_counter_file(page));
- 		page_add_file_rmap(page, false);
-diff --git a/mm/migrate.c b/mm/migrate.c
-index c95912f..f0ec043 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2856,7 +2856,7 @@ static void migrate_vma_insert_page(struct migrate_vma *migrate,
- 	inc_mm_counter(mm, MM_ANONPAGES);
- 	page_add_new_anon_rmap(page, vma, addr, false);
- 	if (!is_zone_device_page(page))
--		lru_cache_add_active_or_unevictable(page, vma);
-+		lru_cache_add_inactive_or_unevictable(page, vma);
- 	get_page(page);
- 
- 	if (flush) {
-diff --git a/mm/swap.c b/mm/swap.c
-index c5d5114..7cf3ab5 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -476,23 +476,24 @@ void lru_cache_add(struct page *page)
- EXPORT_SYMBOL(lru_cache_add);
- 
- /**
-- * lru_cache_add_active_or_unevictable
-+ * lru_cache_add_inactive_or_unevictable
-  * @page:  the page to be added to LRU
-  * @vma:   vma in which page is mapped for determining reclaimability
-  *
-- * Place @page on the active or unevictable LRU list, depending on its
-+ * Place @page on the inactive or unevictable LRU list, depending on its
-  * evictability.  Note that if the page is not evictable, it goes
-  * directly back onto it's zone's unevictable list, it does NOT use a
-  * per cpu pagevec.
-  */
--void lru_cache_add_active_or_unevictable(struct page *page,
-+void lru_cache_add_inactive_or_unevictable(struct page *page,
- 					 struct vm_area_struct *vma)
- {
-+	bool unevictable;
-+
- 	VM_BUG_ON_PAGE(PageLRU(page), page);
- 
--	if (likely((vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) != VM_LOCKED))
--		SetPageActive(page);
--	else if (!TestSetPageMlocked(page)) {
-+	unevictable = (vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) == VM_LOCKED;
-+	if (unevictable && !TestSetPageMlocked(page)) {
- 		/*
- 		 * We use the irq-unsafe __mod_zone_page_stat because this
- 		 * counter is not modified from interrupt context, and the pte
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index c047789..38f6433 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -1920,7 +1920,7 @@ static int unuse_pte(struct vm_area_struct *vma, pmd_t *pmd,
- 		page_add_anon_rmap(page, vma, addr, false);
- 	} else { /* ksm created a completely new copy */
- 		page_add_new_anon_rmap(page, vma, addr, false);
--		lru_cache_add_active_or_unevictable(page, vma);
-+		lru_cache_add_inactive_or_unevictable(page, vma);
- 	}
- 	swap_free(entry);
- 	/*
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index b804193..9a3d451 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -123,7 +123,7 @@ static int mcopy_atomic_pte(struct mm_struct *dst_mm,
- 
- 	inc_mm_counter(dst_mm, MM_ANONPAGES);
- 	page_add_new_anon_rmap(page, dst_vma, dst_addr, false);
--	lru_cache_add_active_or_unevictable(page, dst_vma);
-+	lru_cache_add_inactive_or_unevictable(page, dst_vma);
- 
- 	set_pte_at(dst_mm, dst_addr, dst_pte, _dst_pte);
+-	seq_buf_printf(&s, "workingset_refault %lu\n",
+-		       memcg_page_state(memcg, WORKINGSET_REFAULT));
+-	seq_buf_printf(&s, "workingset_activate %lu\n",
+-		       memcg_page_state(memcg, WORKINGSET_ACTIVATE));
++	seq_buf_printf(&s, "workingset_refault_anon %lu\n",
++		       memcg_page_state(memcg, WORKINGSET_REFAULT_ANON));
++	seq_buf_printf(&s, "workingset_refault_file %lu\n",
++		       memcg_page_state(memcg, WORKINGSET_REFAULT_FILE));
++	seq_buf_printf(&s, "workingset_activate_anon %lu\n",
++		       memcg_page_state(memcg, WORKINGSET_ACTIVATE_ANON));
++	seq_buf_printf(&s, "workingset_activate_file %lu\n",
++		       memcg_page_state(memcg, WORKINGSET_ACTIVATE_FILE));
+ 	seq_buf_printf(&s, "workingset_restore %lu\n",
+-		       memcg_page_state(memcg, WORKINGSET_RESTORE));
++		       memcg_page_state(memcg, WORKINGSET_RESTORE_ANON));
++	seq_buf_printf(&s, "workingset_restore %lu\n",
++		       memcg_page_state(memcg, WORKINGSET_RESTORE_FILE));
+ 	seq_buf_printf(&s, "workingset_nodereclaim %lu\n",
+ 		       memcg_page_state(memcg, WORKINGSET_NODERECLAIM));
  
 diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 9f940c4..4745e88 100644
+index 4745e88..3caa35f 100644
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
-@@ -1003,8 +1003,6 @@ static enum page_references page_check_references(struct page *page,
- 		return PAGEREF_RECLAIM;
+@@ -2695,7 +2695,10 @@ static void shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+ 	if (!sc->force_deactivate) {
+ 		unsigned long refaults;
  
- 	if (referenced_ptes) {
--		if (PageSwapBacked(page))
--			return PAGEREF_ACTIVATE;
- 		/*
- 		 * All mapped pages start out with page table
- 		 * references from the instantiating fault, so we need
-@@ -1027,7 +1025,7 @@ static enum page_references page_check_references(struct page *page,
- 		/*
- 		 * Activate file-backed executable pages after first usage.
+-		if (inactive_is_low(target_lruvec, LRU_INACTIVE_ANON))
++		refaults = lruvec_page_state(target_lruvec,
++				WORKINGSET_ACTIVATE_ANON);
++		if (refaults != target_lruvec->refaults[0] ||
++			inactive_is_low(target_lruvec, LRU_INACTIVE_ANON))
+ 			sc->may_deactivate |= DEACTIVATE_ANON;
+ 		else
+ 			sc->may_deactivate &= ~DEACTIVATE_ANON;
+@@ -2706,8 +2709,8 @@ static void shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+ 		 * rid of any stale active pages quickly.
  		 */
--		if (vm_flags & VM_EXEC)
-+		if ((vm_flags & VM_EXEC) && !PageSwapBacked(page))
- 			return PAGEREF_ACTIVATE;
+ 		refaults = lruvec_page_state(target_lruvec,
+-					     WORKINGSET_ACTIVATE);
+-		if (refaults != target_lruvec->refaults ||
++				WORKINGSET_ACTIVATE_FILE);
++		if (refaults != target_lruvec->refaults[1] ||
+ 		    inactive_is_low(target_lruvec, LRU_INACTIVE_FILE))
+ 			sc->may_deactivate |= DEACTIVATE_FILE;
+ 		else
+@@ -2984,8 +2987,10 @@ static void snapshot_refaults(struct mem_cgroup *target_memcg, pg_data_t *pgdat)
+ 	unsigned long refaults;
  
- 		return PAGEREF_KEEP;
+ 	target_lruvec = mem_cgroup_lruvec(target_memcg, pgdat);
+-	refaults = lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE);
+-	target_lruvec->refaults = refaults;
++	refaults = lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE_ANON);
++	target_lruvec->refaults[0] = refaults;
++	refaults = lruvec_page_state(target_lruvec, WORKINGSET_ACTIVATE_FILE);
++	target_lruvec->refaults[1] = refaults;
+ }
+ 
+ /*
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index 80c9b62..8843e75 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1149,9 +1149,12 @@ const char * const vmstat_text[] = {
+ 	"nr_isolated_anon",
+ 	"nr_isolated_file",
+ 	"workingset_nodes",
+-	"workingset_refault",
+-	"workingset_activate",
+-	"workingset_restore",
++	"workingset_refault_anon",
++	"workingset_refault_file",
++	"workingset_activate_anon",
++	"workingset_activate_file",
++	"workingset_restore_anon",
++	"workingset_restore_file",
+ 	"workingset_nodereclaim",
+ 	"nr_anon_pages",
+ 	"nr_mapped",
 diff --git a/mm/workingset.c b/mm/workingset.c
-index 50b7937..fc16d97c 100644
+index fc16d97c..8395e60 100644
 --- a/mm/workingset.c
 +++ b/mm/workingset.c
-@@ -357,8 +357,6 @@ void workingset_refault(struct page *page, void *shadow)
- 	workingset_size = lruvec_page_state(eviction_lruvec, NR_ACTIVE_FILE);
- 	if (mem_cgroup_get_nr_swap_pages(memcg) > 0) {
- 		workingset_size += lruvec_page_state(eviction_lruvec,
--						     NR_INACTIVE_ANON);
--		workingset_size += lruvec_page_state(eviction_lruvec,
- 						     NR_ACTIVE_ANON);
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/memcontrol.h>
++#include <linux/mm_inline.h>
+ #include <linux/writeback.h>
+ #include <linux/shmem_fs.h>
+ #include <linux/pagemap.h>
+@@ -280,6 +281,7 @@ void *workingset_eviction(struct page *page, struct mem_cgroup *target_memcg)
+  */
+ void workingset_refault(struct page *page, void *shadow)
+ {
++	bool file = page_is_file_lru(page);
+ 	struct mem_cgroup *eviction_memcg;
+ 	struct lruvec *eviction_lruvec;
+ 	unsigned long refault_distance;
+@@ -346,7 +348,7 @@ void workingset_refault(struct page *page, void *shadow)
+ 	memcg = page_memcg(page);
+ 	lruvec = mem_cgroup_lruvec(memcg, pgdat);
+ 
+-	inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
++	inc_lruvec_state(lruvec, WORKINGSET_REFAULT_BASE + file);
+ 
+ 	/*
+ 	 * Compare the distance to the existing workingset size. We
+@@ -364,7 +366,7 @@ void workingset_refault(struct page *page, void *shadow)
+ 
+ 	SetPageActive(page);
+ 	workingset_age_nonresident(lruvec, hpage_nr_pages(page));
+-	inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
++	inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE_BASE + file);
+ 
+ 	/* Page was active prior to eviction */
+ 	if (workingset) {
+@@ -373,7 +375,7 @@ void workingset_refault(struct page *page, void *shadow)
+ 		spin_lock_irq(&page_pgdat(page)->lru_lock);
+ 		lru_note_cost_page(page);
+ 		spin_unlock_irq(&page_pgdat(page)->lru_lock);
+-		inc_lruvec_state(lruvec, WORKINGSET_RESTORE);
++		inc_lruvec_state(lruvec, WORKINGSET_RESTORE_BASE + file);
  	}
- 	if (refault_distance > workingset_size)
+ out:
+ 	rcu_read_unlock();
 -- 
 2.7.4
 
