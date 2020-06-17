@@ -2,156 +2,97 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05787C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFD4F20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54949207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:05:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QAExVmYq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgFQMEA (ORCPT
+        id S1726510AbgFQMFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 08:04:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23034 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726044AbgFQMEA (ORCPT
+        Wed, 17 Jun 2020 08:05:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgFQMFI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 08:04:00 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05HC2Mmo164384;
-        Wed, 17 Jun 2020 08:03:56 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6hjvh2q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 08:03:56 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05HC2L9P164249;
-        Wed, 17 Jun 2020 08:03:56 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6hjvh1j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 08:03:55 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05HBuEaE022230;
-        Wed, 17 Jun 2020 12:03:54 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma01dal.us.ibm.com with ESMTP id 31q9v5yp9q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 12:03:54 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05HC2YLu25362754
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jun 2020 12:02:34 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6EDCD78064;
-        Wed, 17 Jun 2020 12:02:35 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 46C247805F;
-        Wed, 17 Jun 2020 12:02:34 +0000 (GMT)
-Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.146.208])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 17 Jun 2020 12:02:34 +0000 (GMT)
-Subject: Re: [PATCH v8 02/16] s390/vfio-ap: use new AP bus interface to search
- for queue devices
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
-        pasic@linux.ibm.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com, fiuczy@linux.ibm.com
-References: <20200605214004.14270-1-akrowiak@linux.ibm.com>
- <20200605214004.14270-3-akrowiak@linux.ibm.com>
- <93492fa3-31f1-a551-4b26-e46bc277e351@de.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <ba6e460c-36f5-051f-3549-9b826ae1d5ab@linux.ibm.com>
-Date:   Wed, 17 Jun 2020 08:02:33 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 17 Jun 2020 08:05:08 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73F4BC061573
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 05:05:06 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id s1so1144590ybo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 05:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ce5ijYOF0B5Aqlf57GOv1H78E2Rpwmzo3WdEJEFGYSE=;
+        b=QAExVmYqjdDJlSzYO0zRvYtLurMgwAeu8aVFVB8OL8VsADCePe+QaZgfl9OkXCKMAQ
+         VKuabSPfs5so+ExviNS0jK0/pg8P+SUO6EisqEr5iBs8D8GfHdHzEXPMQyrTW/GvPWaU
+         S/rpxTYOoPblTuhGcsXkbxUjMFdffWjZaJAH2Yf+MrKACpx9oUwzd7a6Iv6gA4XIx3Ky
+         EP5jCZdtRVa34VO/VJ6okmLDOWuzJ1+ygmLdjT9hXqVNFsvAHysGhxo8YQ4tMhkd7Lkr
+         wrif3VT2UfRTXX5dSLWVZ1RRUUPVoYECIfDkG5oeJD/zmqgSnw5qI33u0VsoZflYnWiZ
+         wFIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ce5ijYOF0B5Aqlf57GOv1H78E2Rpwmzo3WdEJEFGYSE=;
+        b=YWz0AA2c3sfvw02brwLDdL0onCDzh+cKc8jxK+ms86BIVfVZ/9n9LF7SC8ODjOXgLL
+         /8vf+JK9cIifyHcxUu8bRro5s5cW1lq34H6VbYLKGXew4Z3aCu1aciJIbnZviPqB93cC
+         OzdbhtK43FvAziqRmL9x7L9P1s8bc8+qARfn91ht6w6WvLu8Kt+nn+ph7IqFU6NuQbEh
+         UV+P7y7EuIzYWpxB2mFwy6VD6qZUaFflWzxVr04Pn3eHstAx2Vd0GOn4mcvNEO8EeIkn
+         ABZWvek0GScVcDBYG6bXxq1JSKkTt6BBYj8PVZq4ngtjLZJN+sSrg1MqLp0cJFXK1PNL
+         3l5A==
+X-Gm-Message-State: AOAM533x/bbSHhcHUnireQ479XM5YT4hYXRazpy9bgC6TCS2flKXb+dk
+        zPop1Ff0aBxfVTK30ou0adLfybFp+E9i+MmB0paF/g==
+X-Google-Smtp-Source: ABdhPJwVwzsytVeAA15ADKunV37yJHXmL+R8PoOsnbw37rc75bwoSG0DAvnfoh+gLdkshu8DPeRsyLit2wi1veXDijQ=
+X-Received: by 2002:a25:7b82:: with SMTP id w124mr11825940ybc.320.1592395505465;
+ Wed, 17 Jun 2020 05:05:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <93492fa3-31f1-a551-4b26-e46bc277e351@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-17_03:2020-06-17,2020-06-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 suspectscore=3 spamscore=0 phishscore=0 impostorscore=0
- cotscore=-2147483648 priorityscore=1501 clxscore=1015 malwarescore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006170091
+References: <20200617090247.1680188-1-shorne@gmail.com>
+In-Reply-To: <20200617090247.1680188-1-shorne@gmail.com>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Wed, 17 Jun 2020 05:04:52 -0700
+Message-ID: <CANN689E_oP3T6J3Rw2rWv1KG3GO3JOJtCdCb3yMLz+u8hFN=Qw@mail.gmail.com>
+Subject: Re: [PATCH] openrisc: Fix boot oops when DEBUG_VM is enabled
+To:     Stafford Horne <shorne@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Steven Price <steven.price@arm.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        openrisc@lists.librecores.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/16/20 11:45 AM, Christian Borntraeger wrote:
+On Wed, Jun 17, 2020 at 2:03 AM Stafford Horne <shorne@gmail.com> wrote:
+> Since v5.8-rc1 OpenRISC Linux fails to boot when DEBUG_VM is enabled.
+> This has been bisected to commit 42fc541404f2 ("mmap locking API: add
+> mmap_assert_locked() and mmap_assert_write_locked()").
 >
-> On 05.06.20 23:39, Tony Krowiak wrote:
->> This patch refactor's the vfio_ap device driver to use the AP bus's
->> ap_get_qdev() function to retrieve the vfio_ap_queue struct containing
->> information about a queue that is bound to the vfio_ap device driver.
->> The bus's ap_get_qdev() function retrieves the queue device from a
->> hashtable keyed by APQN. This is much more efficient than looping over
->> the list of devices attached to the AP bus by several orders of
->> magnitude.
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> ---
->>   drivers/s390/crypto/vfio_ap_drv.c     | 27 ++-------
->>   drivers/s390/crypto/vfio_ap_ops.c     | 82 +++++++++++++++------------
->>   drivers/s390/crypto/vfio_ap_private.h |  8 ++-
->>   3 files changed, 58 insertions(+), 59 deletions(-)
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
->> index be2520cc010b..59233cf7419d 100644
->> --- a/drivers/s390/crypto/vfio_ap_drv.c
->> +++ b/drivers/s390/crypto/vfio_ap_drv.c
->> @@ -51,15 +51,9 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
->>    */
->>   static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
->>   {
->> -	struct vfio_ap_queue *q;
->> -
->> -	q = kzalloc(sizeof(*q), GFP_KERNEL);
->> -	if (!q)
->> -		return -ENOMEM;
->> -	dev_set_drvdata(&apdev->device, q);
->> -	q->apqn = to_ap_queue(&apdev->device)->qid;
->> -	q->saved_isc = VFIO_AP_ISC_INVALID;
->> -	return 0;
->> +	struct ap_queue *queue = to_ap_queue(&apdev->device);
->> +
->> +	return vfio_ap_mdev_probe_queue(queue);
->>   }
-> Here we did not hold a mutex in the old code
-> [...]
+> The added locking checks exposed the issue that OpenRISC was not taking
+> this mmap lock when during page walks for DMA operations.  This patch
+> locks and unlocks the mmap lock for page walking.
 >
->> +int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
->> +{
->> +	struct vfio_ap_queue *q;
->> +
->> +	q = kzalloc(sizeof(*q), GFP_KERNEL);
->> +	if (!q)
->> +		return -ENOMEM;
->> +
->> +	mutex_lock(&matrix_dev->lock);
->> +	dev_set_drvdata(&queue->ap_dev.device, q);
->> +	q->apqn = queue->qid;
->> +	q->saved_isc = VFIO_AP_ISC_INVALID;
->> +	mutex_unlock(&matrix_dev->lock);
->> +
-> here we do. Why do we need the matrix_dev->lock here?
+> Fixes: 42fc541404f2 ("mmap locking API: add mmap_assert_locked() and mmap_assert_write_locked()"
+> Cc: Michel Lespinasse <walken@google.com>
+> Signed-off-by: Stafford Horne <shorne@gmail.com>
 
-You are correct, we don't need it here; but, we will need it
-in a subsequent patch where we introduce linking the
-q to the matrix mdev to which it is assigned. Perhaps
-the locking should be introduced in that patch.
+Thanks for the fix.
 
->
-
+Reviewed-by: Michel Lespinasse <walken@google.com>
