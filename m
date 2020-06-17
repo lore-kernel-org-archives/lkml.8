@@ -2,89 +2,135 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC04FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 938E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E28B2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:06:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592417169;
-	bh=1KE2XXvZBw6ABjIUl6aRNNUR2Z7JBARQO8kTjeAHPuE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=YZ/6BEn+35JNCRFZLjyW3S47Uw+2ZHDdI/1RLyEgRLS+MKMNxN3w+fjVPS92tvjTm
-	 0ueBxStNxM3Ffcm1vOcTCyg0mqR/Gj6jb8rD1yEja4aUPDvispLRMp6z0Nthm8oJDf
-	 tyzydltFpisvNhJLym/wHkmFsFMRnik/3eWEZ4Ic=
+	by mail.kernel.org (Postfix) with ESMTP id 6CBAD21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:06:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kNUKj3I5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgFQSGI (ORCPT
+        id S1726987AbgFQSGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:06:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbgFQSGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 14:06:07 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDEB320897;
-        Wed, 17 Jun 2020 18:06:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592417166;
-        bh=1KE2XXvZBw6ABjIUl6aRNNUR2Z7JBARQO8kTjeAHPuE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=unW1BDEecxeoXqgGlEIs/lOci+UozQYght2iIvY1GsBDa/48ncqbRzBOVGStpWR/4
-         Kac+7VhLsg9gu50a26jpFTSSruSWrTE528zyusWhwyy3fAvjQ9tf+VdxuQqORvEiOt
-         JiudZfIvO5XjoB9gHDoVqhHbVaGWQKN3H1zcBFPM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 9D72D352353C; Wed, 17 Jun 2020 11:06:06 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 11:06:06 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>
-Subject: Re: [PATCH] rcu/performance: Fix kfree_perf_init() build warning on
- 32-bit kernels
-Message-ID: <20200617180606.GA23728@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <158923078019.390.12609597570329519463.tip-bot2@tip-bot2>
- <20200526182744.GA3722128@gmail.com>
- <20200527011413.GD149611@google.com>
- <20200603181109.GA5438@paulmck-ThinkPad-P72>
+        Wed, 17 Jun 2020 14:06:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgFQSGa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 14:06:30 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 493B1C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:06:29 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id t194so2997429wmt.4
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:06:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yum1itbYwGCVmrfngXbrZP6sf+Nn+eNmWkfS6zoUuA0=;
+        b=kNUKj3I5DxcPPrd4rg6poK4TXuYGuPA4GWwH7m9/L1+j8/qA8vNttplARLe4t6GEvA
+         hr6XzgtXNWeJboRDI7DdmZVxc/RnuJ+J3ceRfmPyxF2Hx/yIHbSTqacmyESlUQ11bsaz
+         l0HPpQI1VCILiAX72sbGMqh4jL/tR9N4xytd7DzkoKA+jeN9FxeYorJsNMCh1IyYPW5C
+         +1ZRdZK43LZdU23YSkFTHM9mh+n6u77dfh9+XSgJ305z2g5GxKllrPP7hAeT0/EdUzoJ
+         9HdFp1fWFlO3KnbVS0W580RzlzXSa26kQSL9k+jerVnhgku4kBTqiVrRTJKkKeIDCa1p
+         wpTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yum1itbYwGCVmrfngXbrZP6sf+Nn+eNmWkfS6zoUuA0=;
+        b=Vk1YYbjxijJZo2Z0Fe3lEo/jn4l5lJNRsIdUPSAqR+aMCWH+C23FOxFlqeqnlduKK/
+         +aa4XL8IaCC0+Lub9TuMRATVD+LrMMZSKe82bnO9O83QVy0/RkS09dEj9klKVNQTa0BB
+         rSkgCJ1yJed2DKs8F8W6YzCGbuF0bw67gBradZ2zUIxpQsyapzPUKo5dqLux8eF/HE3N
+         SOhZ+idrXlbT/dJkyof0Fem+mJ8NJbl9yFKt+AgzHc+S/M6vOFpshdtPUNldmSHO29DX
+         rfxWctWum2jIXzrczvnBf6VJCvLFWKU+ax+IZLyJD8nkbwNMgunSTbL5f70BAXoAZLGD
+         HdUg==
+X-Gm-Message-State: AOAM530VkCq/xmeLo566JNJmzMiWDZP55uXvIYbIBHt1VBD7lnZWTt1Q
+        oNuIEA+nHEEDdj3GVeF2lJXatw==
+X-Google-Smtp-Source: ABdhPJxNGCblnLoo9BcEjo2ZUEvANSjruUEwVXonY+vNUkeiPbtiRleDMtIqkO+huPLBEZuwzUY/qA==
+X-Received: by 2002:a1c:3b8b:: with SMTP id i133mr9658094wma.111.1592417187758;
+        Wed, 17 Jun 2020 11:06:27 -0700 (PDT)
+Received: from elver.google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id 5sm477701wrr.5.2020.06.17.11.06.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 11:06:26 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 20:06:21 +0200
+From:   Marco Elver <elver@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, ndesaulniers@google.com,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH -tip v3 1/2] kcov: Make runtime functions
+ noinstr-compatible
+Message-ID: <20200617180621.GD56208@elver.google.com>
+References: <CANpmjNM+Tcn40MsfFKvKxNTtev-TXDsosN+z9ATL8hVJdK1yug@mail.gmail.com>
+ <20200615142949.GT2531@hirez.programming.kicks-ass.net>
+ <20200615145336.GA220132@google.com>
+ <20200615150327.GW2531@hirez.programming.kicks-ass.net>
+ <20200615152056.GF2554@hirez.programming.kicks-ass.net>
+ <20200617143208.GA56208@elver.google.com>
+ <20200617144949.GA576905@hirez.programming.kicks-ass.net>
+ <20200617151959.GB56208@elver.google.com>
+ <20200617155517.GB576905@hirez.programming.kicks-ass.net>
+ <20200617163635.GC576905@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200603181109.GA5438@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200617163635.GC576905@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.13.2 (2019-12-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 11:11:09AM -0700, Paul E. McKenney wrote:
-> On Tue, May 26, 2020 at 09:14:13PM -0400, Joel Fernandes wrote:
-> > On Tue, May 26, 2020 at 08:27:44PM +0200, Ingo Molnar wrote:
-
-[ . . . ]
-
-> > > BTW., could we please also rename this code from 'PERF_TEST'/'perf test'
-> > > to 'PERFORMANCE_TEST'/'performance test'? At first glance I always
-> > > mistakenly believe that it's somehow related to perf, while it isn't. =B-)
+On Wed, Jun 17, 2020 at 06:36PM +0200, Peter Zijlstra wrote:
+> On Wed, Jun 17, 2020 at 05:55:17PM +0200, Peter Zijlstra wrote:
+> > On Wed, Jun 17, 2020 at 05:19:59PM +0200, Marco Elver wrote:
 > > 
-> > Would it be better to call it 'RCUPERF_TEST' instead of the
-> > 'RCU_PERFORMANCE_TEST' you are proposing? I feel the word 'PERFORMANCE' is
-> > too long.  Also, 'rcuperf test' instead of the 'rcu performance test' you are
-> > proposing.  I am Ok with doing it however you and Paul want it though, let me
-> > know.
+> > > > Does GCC (8, as per the new KASAN thing) have that
+> > > > __builtin_memcpy_inline() ?
+> > > 
+> > > No, sadly it doesn't. Only Clang 11. :-/
+> > > 
+> > > But using a call to __memcpy() somehow breaks with Clang+KCSAN. Yet,
+> > > it's not the memcpy that BUGs, but once again check_preemption_disabled
+> > > (which is noinstr!). Just adding calls anywhere here seems to results in
+> > > unpredictable behaviour. Are we running out of stack space?
+> > 
+> > Very likely, bad_iret is running on that entry_stack you found, and as
+> > you found, it is puny.
+> > 
+> > Andy wanted to make it a full page a while ago, so I suppose the
+> > question is do we do that now?
 > 
-> As long as we are bikeshedding the name...  How about refscale.c and
-> RCU_REF_SCALE_TEST on the one hand and rcuscale.c and RCU_SCALE_TEST on
-> the other?  That keeps the names reasonably short and does not allude
-> to perf at all.
+> Andy suggested doing the full page; untested patches here:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/entry
 
-Hearing no objections, I will go with the scale/SCALE names.
+Yeah, that works, thanks! I think the stack increase alone fixes any
+kind of crash due to the reproducer.
 
-						Thanx, Paul
+Also, my guess is this is not a hot function, right? One caveat to keep
+in mind is that because it's not 'memcpy', the compiler will never
+inline these memcpys (unlike before). Whether or not that actually makes
+things faster or slower is anyone's guess though.
+
+Thanks,
+-- Marco
