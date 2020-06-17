@@ -2,196 +2,177 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1407C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87D3F208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD4D2080D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 06:20:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="woQv3CqS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgFQGTi (ORCPT
+        id S1726883AbgFQGUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 02:19:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33708 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726497AbgFQGTh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 02:19:37 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05H62ZIm076934;
-        Wed, 17 Jun 2020 02:19:35 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31q6hpjb14-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 02:19:35 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05H6JZwm127070;
-        Wed, 17 Jun 2020 02:19:35 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31q6hpjb0j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 02:19:35 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05H6G345020586;
-        Wed, 17 Jun 2020 06:19:33 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 31q6ch8gbq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 06:19:33 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05H6JUD33277096
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jun 2020 06:19:30 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A10B8AE045;
-        Wed, 17 Jun 2020 06:19:30 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3590DAE04D;
-        Wed, 17 Jun 2020 06:19:30 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.5.222])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 17 Jun 2020 06:19:30 +0000 (GMT)
-Subject: Re: [PATCH 19/25] mm/s390: Use mm_fault_accounting()
-To:     Peter Xu <peterx@redhat.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-References: <20200615221607.7764-1-peterx@redhat.com>
- <20200615222302.8452-1-peterx@redhat.com>
- <20200616155933.GA12897@oc3871087118.ibm.com> <20200616163510.GD11838@xz-x1>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
- J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
- CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
- 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
- 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
- +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
- T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
- OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
- /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
- IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABzUNDaHJpc3RpYW4g
- Qm9ybnRyYWVnZXIgKDJuZCBJQk0gYWRkcmVzcykgPGJvcm50cmFlZ2VyQGxpbnV4LmlibS5j
- b20+wsF5BBMBAgAjBQJdP/hMAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQEXu8
- gLWmHHy/pA/+JHjpEnd01A0CCyfVnb5fmcOlQ0LdmoKWLWPvU840q65HycCBFTt6V62cDljB
- kXFFxMNA4y/2wqU0H5/CiL963y3gWIiJsZa4ent+KrHl5GK1nIgbbesfJyA7JqlB0w/E/SuY
- NRQwIWOo/uEvOgXnk/7+rtvBzNaPGoGiiV1LZzeaxBVWrqLtmdi1iulW/0X/AlQPuF9dD1Px
- hx+0mPjZ8ClLpdSp5d0yfpwgHtM1B7KMuQPQZGFKMXXTUd3ceBUGGczsgIMipZWJukqMJiJj
- QIMH0IN7XYErEnhf0GCxJ3xAn/J7iFpPFv8sFZTvukntJXSUssONnwiKuld6ttUaFhSuSoQg
- OFYR5v7pOfinM0FcScPKTkrRsB5iUvpdthLq5qgwdQjmyINt3cb+5aSvBX2nNN135oGOtlb5
- tf4dh00kUR8XFHRrFxXx4Dbaw4PKgV3QLIHKEENlqnthH5t0tahDygQPnSucuXbVQEcDZaL9
- WgJqlRAAj0pG8M6JNU5+2ftTFXoTcoIUbb0KTOibaO9zHVeGegwAvPLLNlKHiHXcgLX1tkjC
- DrvE2Z0e2/4q7wgZgn1kbvz7ZHQZB76OM2mjkFu7QNHlRJ2VXJA8tMXyTgBX6kq1cYMmd/Hl
- OhFrAU3QO1SjCsXA2CDk9MM1471mYB3CTXQuKzXckJnxHkHOwU0ETpw8+AEQAJjyNXvMQdJN
- t07BIPDtbAQk15FfB0hKuyZVs+0lsjPKBZCamAAexNRk11eVGXK/YrqwjChkk60rt3q5i42u
- PpNMO9aS8cLPOfVft89Y654Qd3Rs1WRFIQq9xLjdLfHh0i0jMq5Ty+aiddSXpZ7oU6E+ud+X
- Czs3k5RAnOdW6eV3+v10sUjEGiFNZwzN9Udd6PfKET0J70qjnpY3NuWn5Sp1ZEn6lkq2Zm+G
- 9G3FlBRVClT30OWeiRHCYB6e6j1x1u/rSU4JiNYjPwSJA8EPKnt1s/Eeq37qXXvk+9DYiHdT
- PcOa3aNCSbIygD3jyjkg6EV9ZLHibE2R/PMMid9FrqhKh/cwcYn9FrT0FE48/2IBW5mfDpAd
- YvpawQlRz3XJr2rYZJwMUm1y+49+1ZmDclaF3s9dcz2JvuywNq78z/VsUfGz4Sbxy4ShpNpG
- REojRcz/xOK+FqNuBk+HoWKw6OxgRzfNleDvScVmbY6cQQZfGx/T7xlgZjl5Mu/2z+ofeoxb
- vWWM1YCJAT91GFvj29Wvm8OAPN/+SJj8LQazd9uGzVMTz6lFjVtH7YkeW/NZrP6znAwv5P1a
- DdQfiB5F63AX++NlTiyA+GD/ggfRl68LheSskOcxDwgI5TqmaKtX1/8RkrLpnzO3evzkfJb1
- D5qh3wM1t7PZ+JWTluSX8W25ABEBAAHCwV8EGAECAAkFAk6cPPgCGwwACgkQEXu8gLWmHHz8
- 2w//VjRlX+tKF3szc0lQi4X0t+pf88uIsvR/a1GRZpppQbn1jgE44hgF559K6/yYemcvTR7r
- 6Xt7cjWGS4wfaR0+pkWV+2dbw8Xi4DI07/fN00NoVEpYUUnOnupBgychtVpxkGqsplJZQpng
- v6fauZtyEcUK3dLJH3TdVQDLbUcL4qZpzHbsuUnTWsmNmG4Vi0NsEt1xyd/Wuw+0kM/oFEH1
- 4BN6X9xZcG8GYUbVUd8+bmio8ao8m0tzo4pseDZFo4ncDmlFWU6hHnAVfkAs4tqA6/fl7RLN
- JuWBiOL/mP5B6HDQT9JsnaRdzqF73FnU2+WrZPjinHPLeE74istVgjbowvsgUqtzjPIG5pOj
- cAsKoR0M1womzJVRfYauWhYiW/KeECklci4TPBDNx7YhahSUlexfoftltJA8swRshNA/M90/
- i9zDo9ySSZHwsGxG06ZOH5/MzG6HpLja7g8NTgA0TD5YaFm/oOnsQVsf2DeAGPS2xNirmknD
- jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
- ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <edb88596-6f2c-2648-748d-591a0b1e0131@de.ibm.com>
-Date:   Wed, 17 Jun 2020 08:19:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200616163510.GD11838@xz-x1>
-Content-Type: text/plain; charset=utf-8
+        Wed, 17 Jun 2020 02:20:15 -0400
+Received: from mga01.intel.com ([192.55.52.88]:64575 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726681AbgFQGUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 02:20:12 -0400
+IronPort-SDR: iq5xu5h1ERmvk9CSMCnaZDccMNAW+A03VLysRxq4tGUWjb0MxSct4a0vjoWX297KKFPGrlQumV
+ 7MjnM2zsA6iA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 23:20:11 -0700
+IronPort-SDR: E3djOXlMJuiS0FW6yIg3Jv1GUJd0AT/+V7wDbWoUUzJRKuPl7kb6aIFXI9dSqRUJkKPyJzWfJP
+ EkF2ECK4nGQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,521,1583222400"; 
+   d="scan'208";a="261651842"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Jun 2020 23:20:10 -0700
+Received: from orsmsx606.amr.corp.intel.com (10.22.229.19) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 16 Jun 2020 23:20:09 -0700
+Received: from orsmsx606.amr.corp.intel.com (10.22.229.19) by
+ ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 16 Jun 2020 23:20:09 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ orsmsx606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 16 Jun 2020 23:20:09 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (104.47.38.59) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Tue, 16 Jun 2020 23:20:09 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AZX9d8JIXn6kvUhQ8H771NLyVUahttHK6OpOdS+7JV3caPyN7PJc1WH/URIYCLXghDcnkVHwh7YfnqHJrOVJYorzzykZgsrmrDH5X0aZIxuFZ2T3wNMGWkHhynxv9/Hmma26oQgwZ1R/QPLYK9G8FgIbU5S4ajitBsGstUrbIQr8a56RhaupqRcyP6Tmi3RjZN13dQlcrI1dpnE4m5ug2KfDjkGcl0EuxW4VWLaqCz90NZzp+r/ERynUMcRy7dIax2o8P616A0gSVsh6In+IFCmKmT7l5Iy9X+9dmMucJ5mb3qtOgxN3LahHvqQg9qMwAzztGTN6ktEQTYDbcunUdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yM6L+V7NUoXojsv8Q2UDdD+OmL9oAR2YGJgq68CkPNs=;
+ b=OezTqIelIWFufsL/e79loMDTX4DBxFgwZ7aDbvd5fdws4YJfLRg4H1pUeMZqB1r0PAHdcIOKHSnUqwJF/JGdVm1PE0E748+ZkxKXdNUjw2lP4bVHTuGZ+7+rXzZ5DZiGRJsexCAv8KnPTOwE/aJdo6YDtNpwhaX5RXVg8rBlSfAzmJeyjxr71RpiGhGZBhnv3+M7zKQn0SLEOPtSjOzo1s+l51RwVamsYd7lRjzsKscPmrC49jFNr9iCcQoyuVwIDmbokTk92Q3wiiCjIkz7UKdHhGNa4tzoAsOZFltd7thoPb5Bog+gr5a+Gc03i2Tlpv7mm4orRoxQk1PgqSwuyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yM6L+V7NUoXojsv8Q2UDdD+OmL9oAR2YGJgq68CkPNs=;
+ b=woQv3CqS8qHMlqD09TrHcKZSEpYR3sPFsSpDIe1293wkBUTmSAjR68JksTjSTrpzpb4i8Q1okAARLxh1WbsbPDK1ZoPv77cgW2vQDDIgvQdFYvfZJAhIQFaoCXQhxJglslQEOIqra/TLsnPZxPFjLlABUccppO9TpLVQOKAXgDg=
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
+ DM6PR11MB2986.namprd11.prod.outlook.com (2603:10b6:5:61::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3088.18; Wed, 17 Jun 2020 06:20:07 +0000
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::2c3d:98d9:4e81:c86c]) by DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::2c3d:98d9:4e81:c86c%6]) with mapi id 15.20.3088.029; Wed, 17 Jun 2020
+ 06:20:07 +0000
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        "Jonathan Corbet" <corbet@lwn.net>
+Subject: RE: [PATCH v2 1/3] docs: IOMMU user API
+Thread-Topic: [PATCH v2 1/3] docs: IOMMU user API
+Thread-Index: AQHWP6WkhOQLPQDE2EquIdJoSq1UYKjTj/yAgABESYCAAA2bgIAAP1SAgAdDUQCAAPjyYA==
+Date:   Wed, 17 Jun 2020 06:20:07 +0000
+Message-ID: <DM5PR11MB1435DD578488DA08A1E699ACC39A0@DM5PR11MB1435.namprd11.prod.outlook.com>
+References: <1591848735-12447-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1591848735-12447-2-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200611094741.6d118fa8@w520.home>     <20200611125205.1e0280d3@jacob-builder>
+        <20200611144047.79613c32@x1.home>       <20200611172727.78dbb822@jacob-builder>
+ <20200616082212.0c1611dd@jacob-builder>
+In-Reply-To: <20200616082212.0c1611dd@jacob-builder>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-16_13:2020-06-16,2020-06-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- bulkscore=0 phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999
- clxscore=1015 lowpriorityscore=0 mlxscore=0 spamscore=0 impostorscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006170044
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.217]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4751b5e2-4953-46bd-6dee-08d812867b2e
+x-ms-traffictypediagnostic: DM6PR11MB2986:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB2986A2C36323999114E44655C39A0@DM6PR11MB2986.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 04371797A5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yxSRuU9FmgA6h8RjwYcxnWqJVXxxu1XSxJ/dRent0sb3LErJ13HxlbiBbt5TAgARqDIJ6iGjxRS/3bTbfXp5VaYR+8HwIB2GDcSlDHg9jl24CSzJwtZR0JdcOa4YVs5WzIisqijBmsRRkFccxOtCN7RqHAuWaZrmPRVHcC0dArWEbZY64LlFoHZYYBl1bUGXmMLpCpPSnz8+RHrQiVPN8FueQzCL6Bv7+4fbOSIhTmuJk5D2PbKIGBIsS9FnTqMlDAs6gq5pHQa5IzlJdBiUhGsLbYA04BaBWzy3ZJkdwqxpK+RCm018z5f1jEhyvl7T
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(396003)(366004)(136003)(86362001)(66946007)(186003)(8936002)(52536014)(26005)(5660300002)(76116006)(4326008)(7696005)(8676002)(33656002)(6506007)(66556008)(66446008)(64756008)(66476007)(316002)(71200400001)(7416002)(110136005)(54906003)(2906002)(9686003)(83380400001)(478600001)(55016002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: LkkuNl146gSOEJ6uWZkX8S1Vj3gFmp4xbSKuQ8FQI0sB629HRneVxh9GAnL42dejZ8y+dFNPp154F8fDm0W26w2lRTHbYz4lTm4fr8CJzfMhPz0/xkb+/BXhP4zZGlpj92s9fu3LASlYf/bK2iR1CVt5T0Qnp0DKY3ZpVtfB8NewohRe6wl/9PidEw+2y5YTkv3dcr6E72aOLiT4truUWF0EnATGX0rSpJbNl5gt/kCR3bBy9XjW0YDUUKMwMIgM455QJZeopl+fjP9Zj0rtcgcMsNaw2OZojxrSDdAcaTLrr0RT/q20X6dxHxViXy6c4pXEzGDh2OrYYLLsRhY6k+ZAd+SZDN0VCksCeTM1gPUVj8bQYQdjm8MWsIxe5uUtmO/oPyBWPz3mo026+Eet9CuUMlaqo5qHgU/wgFhB2hh4YvuZtP6dOIJiRWc2Snf5SQhfJRJhvVMqGQA1730XG8yZ1j6QqWFRHbXMTxCYkQ8spGdbcEQHQg+hQSRb6xR2
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4751b5e2-4953-46bd-6dee-08d812867b2e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2020 06:20:07.3223
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6wLnhyZeV7j/opHG+zQpnhnKoZhd8nBHL4xMcgDsiKdhRp+mYJOlcLjqUKEJ7MB0rN7xK8uCdqZs2hiajCGRLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2986
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Sent: Tuesday, June 16, 2020 11:22 PM
+>=20
+> On Thu, 11 Jun 2020 17:27:27 -0700
+> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+>=20
+> > >
+> > > But then I thought it even better if VFIO leaves the entire
+> > > copy_from_user() to the layer consuming it.
+> > >
+> > OK. Sounds good, that was what Kevin suggested also. I just wasn't
+> > sure how much VFIO wants to inspect, I thought VFIO layer wanted to do
+> > a sanity check.
+> >
+> > Anyway, I will move copy_from_user to iommu uapi layer.
+>=20
+> Just one more point brought up by Yi when we discuss this offline.
+>=20
+> If we move copy_from_user to iommu uapi layer, then there will be multipl=
+e
+> copy_from_user calls for the same data when a VFIO container has multiple=
+ domains,
+> devices. For bind, it might be OK. But might be additional overhead for T=
+LB flush
+> request from the guest.
 
+I think it is the same with bind and TLB flush path. will be multiple
+copy_from_user.
 
-On 16.06.20 18:35, Peter Xu wrote:
-> Hi, Alexander,
-> 
-> On Tue, Jun 16, 2020 at 05:59:33PM +0200, Alexander Gordeev wrote:
->>> @@ -489,21 +489,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
->>>  	if (unlikely(fault & VM_FAULT_ERROR))
->>>  		goto out_up;
->>>
->>> -	/*
->>> -	 * Major/minor page fault accounting is only done on the
->>> -	 * initial attempt. If we go through a retry, it is extremely
->>> -	 * likely that the page will be found in page cache at that point.
->>> -	 */
->>>  	if (flags & FAULT_FLAG_ALLOW_RETRY) {
->>> -		if (fault & VM_FAULT_MAJOR) {
->>> -			tsk->maj_flt++;
->>> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
->>> -				      regs, address);
->>> -		} else {
->>> -			tsk->min_flt++;
->>> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
->>> -				      regs, address);
->>> -		}
->>>  		if (fault & VM_FAULT_RETRY) {
->>>  			if (IS_ENABLED(CONFIG_PGSTE) && gmap &&
->>>  			    (flags & FAULT_FLAG_RETRY_NOWAIT)) {
->>
->> Seems like the call to mm_fault_accounting() will be missed if
->> we entered here with FAULT_FLAG_RETRY_NOWAIT flag set, since it
->> jumps to "out_up"...
-> 
-> This is true as a functional change.  However that also means that we've got a
-> VM_FAULT_RETRY, which hints that this fault has been requested to retry rather
-> than handled correctly (for instance, due to some try_lock failed during the
-> fault process).
-> 
-> To me, that case should not be counted as a page fault at all?  Or we might get
-> the same duplicated accounting when the page fault retried from a higher stack.
-> 
-> Thanks
+BTW. for moving data copy to iommy layer, there is another point which
+need to consider. VFIO needs to do unbind in bind path if bind failed,
+so it will assemble unbind_data and pass to iommu layer. If iommu layer
+do the copy_from_user, I think it will be failed. any idea?
 
-This case below (the one with the gmap) is the KVM case for doing a so called
-pseudo page fault to our guests. (we notify our guests about major host page
-faults and let it reschedule to something else instead of halting the vcpu).
-This is being resolved with either gup or fixup_user_fault asynchronously by
-KVM code (this can also be sync when the guest does not match some conditions)
-We do not change the counters in that code as far as I can tell so we should
-continue to do it here.
+Regards,
+Yi Liu
 
-(see arch/s390/kvm/kvm-s390.c
-static int vcpu_post_run(struct kvm_vcpu *vcpu, int exit_reason)
-{
-[...]
-        } else if (current->thread.gmap_pfault) {
-                trace_kvm_s390_major_guest_pfault(vcpu);
-                current->thread.gmap_pfault = 0;
-                if (kvm_arch_setup_async_pf(vcpu))
-                        return 0;
-                return kvm_arch_fault_in_page(vcpu, current->thread.gmap_addr, 1);
-        }
+> Thoughts?
+>=20
+> Jacob
