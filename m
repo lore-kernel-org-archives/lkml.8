@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093E0C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4E7421927
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C455A21927
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgFQSYR (ORCPT
+        id S1727949AbgFQSYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:24:17 -0400
-Received: from mga11.intel.com ([192.55.52.93]:18905 "EHLO mga11.intel.com"
+        Wed, 17 Jun 2020 14:24:24 -0400
+Received: from mga11.intel.com ([192.55.52.93]:18901 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbgFQSYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 14:24:16 -0400
-IronPort-SDR: G3SRuyEoI31dlWJF/yHSAlj1q4XLUD9bB19np90+9NnYVhyNjfVMpqAJAPioSZvMfXgA+hbKAA
- vQ1AMChHDuag==
+        id S1727921AbgFQSYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 14:24:21 -0400
+IronPort-SDR: 6lsV2gwDszsEuaFAI0t/017GkmUk/3GXEr5UEKkCYa53w0z0f0FH9m8RarOguBXkIpc0xc8Scm
+ un127dZB1vEQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 11:24:15 -0700
-IronPort-SDR: LcoPq0c48x17JS0rxsa8AWZ6uhU+zz4Hf4xIxQM+83snMxY+jAznwPlghheKk9kJ2oTiwgOKsZ
- TL97BHIxndvA==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 11:24:17 -0700
+IronPort-SDR: ApHMan8Gbbrd/5wl5AoMhoLs5wz3Zf7SVm84PLn/uhWYRo+xdGWfQ0JkLDSoM2h5ppjcFgcJhi
+ bXNG5wyXJzXg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
-   d="scan'208";a="308874153"
+   d="scan'208";a="308874175"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga008.jf.intel.com with ESMTP; 17 Jun 2020 11:24:14 -0700
+  by orsmga008.jf.intel.com with ESMTP; 17 Jun 2020 11:24:16 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
@@ -51,9 +51,9 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, iommu@lists.linux-foundation.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v3 03/13] iommu/vt-d: Change flags type to unsigned int in binding mm
-Date:   Wed, 17 Jun 2020 11:23:43 -0700
-Message-Id: <1592418233-17762-4-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v3 08/13] mm: Define pasid in mm
+Date:   Wed, 17 Jun 2020 11:23:48 -0700
+Message-Id: <1592418233-17762-9-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1592418233-17762-1-git-send-email-fenghua.yu@intel.com>
 References: <1592418233-17762-1-git-send-email-fenghua.yu@intel.com>
@@ -62,67 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"flags" passed to intel_svm_bind_mm() is a bit mask and should be
-defined as "unsigned int" instead of "int".
+PASID is shared by all threads in a process. So the logical place to keep
+track of it is in the "mm". Both ARM and X86 need to use the PASID in the
+"mm".
 
-Change its type to "unsigned int".
-
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Suggested-by: Christoph Hellwig <hch@infradeed.org>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
+v3:
+- Change CONFIG_PCI_PASID to CONFIG_IOMMU_SUPPORT because non-PCI device
+  can have PASID in ARM (Jean)
+
 v2:
-- Add this new patch per Thomas' comment.
+- This new patch moves "pasid" from x86 specific mm_context_t to generic
+  struct mm_struct per Christopher's comment: https://lore.kernel.org/linux-iommu/20200414170252.714402-1-jean-philippe@linaro.org/T/#mb57110ffe1aaa24750eeea4f93b611f0d1913911
+- Jean-Philippe Brucker released a virtually same patch. I still put this
+  patch in the series for better review. The upstream kernel only needs one
+  of the two patches eventually.
+https://lore.kernel.org/linux-iommu/20200519175502.2504091-2-jean-philippe@linaro.org/
+- Change CONFIG_IOASID to CONFIG_PCI_PASID (Ashok)
 
- drivers/iommu/intel/svm.c   | 7 ++++---
- include/linux/intel-iommu.h | 2 +-
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ include/linux/mm_types.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index b5618341b4b1..4e775e12ae52 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -427,7 +427,8 @@ int intel_svm_unbind_gpasid(struct device *dev, unsigned int pasid)
- 
- /* Caller must hold pasid_mutex, mm reference */
- static int
--intel_svm_bind_mm(struct device *dev, int flags, struct svm_dev_ops *ops,
-+intel_svm_bind_mm(struct device *dev, unsigned int flags,
-+		  struct svm_dev_ops *ops,
- 		  struct mm_struct *mm, struct intel_svm_dev **sd)
- {
- 	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
-@@ -954,7 +955,7 @@ intel_svm_bind(struct device *dev, struct mm_struct *mm, void *drvdata)
- {
- 	struct iommu_sva *sva = ERR_PTR(-EINVAL);
- 	struct intel_svm_dev *sdev = NULL;
--	int flags = 0;
-+	unsigned int flags = 0;
- 	int ret;
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 64ede5f150dc..1ad0e54ebbba 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -538,6 +538,10 @@ struct mm_struct {
+ 		atomic_long_t hugetlb_usage;
+ #endif
+ 		struct work_struct async_put_work;
++
++#ifdef CONFIG_IOMMU_SUPPORT
++		unsigned int pasid;
++#endif
+ 	} __randomize_layout;
  
  	/*
-@@ -963,7 +964,7 @@ intel_svm_bind(struct device *dev, struct mm_struct *mm, void *drvdata)
- 	 * and intel_svm etc.
- 	 */
- 	if (drvdata)
--		flags = *(int *)drvdata;
-+		flags = *(unsigned int *)drvdata;
- 	mutex_lock(&pasid_mutex);
- 	ret = intel_svm_bind_mm(dev, flags, NULL, mm, &sdev);
- 	if (ret)
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 44fa8879f829..9abc30cf10fc 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -759,7 +759,7 @@ struct intel_svm {
- 	struct mm_struct *mm;
- 
- 	struct intel_iommu *iommu;
--	int flags;
-+	unsigned int flags;
- 	unsigned int pasid;
- 	int gpasid; /* In case that guest PASID is different from host PASID */
- 	struct list_head devs;
 -- 
 2.19.1
 
