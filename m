@@ -2,137 +2,102 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60F3C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6CAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDAF4207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C1B207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbgFQMUr (ORCPT
+        id S1726541AbgFQMV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 08:20:47 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43415 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbgFQMUq (ORCPT
+        Wed, 17 Jun 2020 08:21:27 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51904 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725901AbgFQMVZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 08:20:46 -0400
-Received: by mail-oi1-f194.google.com with SMTP id j189so1554849oih.10;
-        Wed, 17 Jun 2020 05:20:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a0etkep4Rd918jvO2ZHID3EJxiQAW+0eFuu/af9OvSg=;
-        b=du0mRv5SGDDkovbJS8x4ItuUVwqKS2iOaaLoxwfdXvbSXHc8Imhtsb9TUCaFeECA9X
-         kdZAK4Cx5xbbhOAzSE8QFNAKG/zI6WwiqIZ+DJg3Zs5uLb/lrs2W8Okzd+Rdg5DwZ7QK
-         U33EYzJ+h4z8pU/lAlCuj6POXI9gswukXG+bguwTIA2REpm2FQeLqljpT0Bddj3QgjsF
-         4d5vKovT1ttAzFWWhO74j3FQaNi6p0gH9E0KpSxEa46eOH6MGV6wiLFbo0iecZMV1+xr
-         e5tfW/4v2EZAYLvdCMiKll4/T/GInr76jUHh0RB+III0wdpjnwqNIaFZE6shce55E5nT
-         pqnA==
-X-Gm-Message-State: AOAM532K44vaw9Ii9OMks0WlGQeRuNL5OaGQa1mJIE+d7cHL6Nj7NHKt
-        B0xqyZzgDytAf18JWl3xaNib+PQHey/UneIBMB4=
-X-Google-Smtp-Source: ABdhPJx1wNFLvdG+kMPq1cVWjzPAn3tXuSHpnFN2crKJE10atFy356OIl7/gvqW9/EsYOSoXfgB9Wz20pr0EJ93Zz9w=
-X-Received: by 2002:aca:1a19:: with SMTP id a25mr7137097oia.54.1592396444910;
- Wed, 17 Jun 2020 05:20:44 -0700 (PDT)
+        Wed, 17 Jun 2020 08:21:25 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05HC1nIN044749;
+        Wed, 17 Jun 2020 08:21:23 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6j9muec-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 08:21:23 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05HC385C052939;
+        Wed, 17 Jun 2020 08:21:22 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6j9mue2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 08:21:22 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05HCKw65030695;
+        Wed, 17 Jun 2020 12:21:22 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma03dal.us.ibm.com with ESMTP id 31q6c5huvq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 12:21:21 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05HCLIF337093640
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jun 2020 12:21:18 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7FE2A78067;
+        Wed, 17 Jun 2020 12:21:18 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 483CE78070;
+        Wed, 17 Jun 2020 12:21:17 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.146.208])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 17 Jun 2020 12:21:17 +0000 (GMT)
+Subject: Re: [PATCH v8 00/16] s390/vfio-ap: dynamic configuration support
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
+        pasic@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com, fiuczy@linux.ibm.com
+References: <20200605214004.14270-1-akrowiak@linux.ibm.com>
+ <cf889ee5-ae5c-4752-507b-a31a4c42e1c8@linux.ibm.com>
+ <9981d271-1936-c93e-1609-8e306c343b50@de.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <ceb2680b-ba8a-4b44-7783-02a3de6fa25c@linux.ibm.com>
+Date:   Wed, 17 Jun 2020 08:21:16 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200515053500.215929-1-saravanak@google.com> <20200515053500.215929-5-saravanak@google.com>
-In-Reply-To: <20200515053500.215929-5-saravanak@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 17 Jun 2020 14:20:33 +0200
-Message-ID: <CAMuHMdUnbDvn6GdK51MN-+5iRp6zYRf-yzKY+OwcQOGrYqOZPA@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding all
- top level devices
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ji Luo <ji.luo@nxp.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9981d271-1936-c93e-1609-8e306c343b50@de.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-17_03:2020-06-17,2020-06-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 adultscore=0 spamscore=0 clxscore=1015 suspectscore=3
+ mlxlogscore=999 lowpriorityscore=0 bulkscore=0 malwarescore=0 mlxscore=0
+ phishscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006170091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Saravana,
 
-On Fri, May 15, 2020 at 7:38 AM Saravana Kannan <saravanak@google.com> wrote:
-> The fw_devlink_pause() and fw_devlink_resume() APIs allow batching the
-> parsing of the device tree nodes when a lot of devices are added. This
-> will significantly cut down parsing time (as much a 1 second on some
-> systems). So, use them when adding devices for all the top level device
-> tree nodes in a system.
+
+On 6/16/20 11:31 AM, Christian Borntraeger wrote:
+> On 16.06.20 16:26, Tony Krowiak wrote:
+>> I would greatly appreciate some attention to this patch series ... Please?
+> Any idea about the kernel test build mails? Are these patches maybe against
+> a wrong tree?
+
+I'm not sure why I don't see any of those warning messages; maybe I
+need to set some build flag. In any case, I fixed them all.
+
 >
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-
-This is now commit 93d2e4322aa74c1a ("of: platform: Batch fwnode parsing
-when adding all top level devices") in v5.8-rc1, and I have bisected a
-regression to it: on r8a7740/armadillo and sh73a0/kzm9g, the system can
-no longer be woken up from s2ram by a GPIO key. Reverting the commit
-fixes the issue.
-
-On these systems, the GPIO/PFC block has its interrupt lines connected
-to intermediate interrupt controllers (Renesas INTC), which are in turn
-connected to the main interrupt controller (ARM GIC).  The INTC block is
-part of a power and clock domain.  Hence if a GPIO is enabled as a
-wake-up source, the INTC is part of the wake-up path, and thus must be
-kept enabled when entering s2ram.
-
-While this commit has no impact on probe order for me (unlike in Marek's
-case), it does have an impact on suspend order:
-  - Before this commit:
-      1. The keyboard (gpio-keys) is suspended, and calls
-         enable_irq_wake() to inform the upstream interrupt controller
-         (INTC) that it is part of the wake-up path,
-      2. INTC is suspended, and calls device_set_wakeup_path() to inform
-         the device core that it must be kept enabled,
-      3. The system is woken by pressing a wake-up key.
-
-  - After this commit:
-      1. INTC is suspended, and is not aware it is part of the wake-up
-         path, so it is disabled by the device core,
-      2. gpio-keys is suspended, and calls enable_irq_wake() in vain,
-      3. Pressing a wake-up key has no effect, as INTC is disabled, and
-         the interrupt does not come through.
-
-It looks like no device links are involved, as both gpio-keys and INTC have
-no links.
-Do you have a clue?
-
-Thanks!
-
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -538,7 +538,9 @@ static int __init of_platform_default_populate_init(void)
->         }
 >
->         /* Populate everything else. */
-> +       fw_devlink_pause();
->         of_platform_default_populate(NULL, NULL, NULL);
-> +       fw_devlink_resume();
->
->         return 0;
->  }
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
