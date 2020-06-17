@@ -2,103 +2,114 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FF7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF99CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA59720CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4C520CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592408209;
-	bh=Ija7pWEEhwwlfG6l3Wt+WLYZWPuXJEBLmjFze1p/mOs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rdBSYL2n7hx7zGcui+SuMjS+JohZyJsU2GmeR4oyjCWStrFrDV0mmVrQsuhQBBOZX
-	 7lO/IqmYKu9QDX9o7gXtexb0nlMtEG/701mKTUDS9+Tv8/6mXHyZ9EAHUg9vGkV7EQ
-	 EZ0lKbNIZoIt7rUHLiH6PRxyA0KArXDcOqyQkrAU=
+	s=default; t=1592408315;
+	bh=Mmp7l8nOqzeof+dCZUf8iwFZM9Tbqs2liNaByHyvJTY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qMtbeyjxQ+ddJi9uek3dw2j19Ww0QO/TBkQ1K9QUqg/DPW95FQJiz59iPXJcbEcgJ
+	 fX5SIcsrCr9nifS/PVZSrdidUEyHrbK4Uj8TrvDFGe4hy3xfR8b4Ccecta93fUOwB1
+	 VYYFVv/I9cHjzXy42Oy8OnlhowQglkQ/DMEqt4Ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726919AbgFQPgs (ORCPT
+        id S1726899AbgFQPie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:36:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35058 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 11:38:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726758AbgFQPgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:36:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726597AbgFQPid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 11:38:33 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FAAC20890;
-        Wed, 17 Jun 2020 15:36:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8E0921527;
+        Wed, 17 Jun 2020 15:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592408207;
-        bh=Ija7pWEEhwwlfG6l3Wt+WLYZWPuXJEBLmjFze1p/mOs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WNnlKLwwT0RM/nS8LvP0duamjn8PGmfZ8D8Y3dFb1pg9qnV1/tZUXrw05Ts2gWas2
-         1YqSFmHq7FE61/q8ZQApKHBU6HXsAytxm2hiMMOsmXAyxriHINNQx2hwkrOZtv71ag
-         Bds0At2fVG8yqPXF91y7bSa07XnMQtjvBl6Jtssg=
-Date:   Wed, 17 Jun 2020 17:36:39 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] fs: move kernel_read_file* to its own include file
-Message-ID: <20200617153639.GA2702068@kroah.com>
-References: <20200617151710.16613-1-scott.branden@broadcom.com>
+        s=default; t=1592408313;
+        bh=Mmp7l8nOqzeof+dCZUf8iwFZM9Tbqs2liNaByHyvJTY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=USXaaW6m3HgNXWONtUd4GS+12X3vlrQ2BIvKWKCz+S7WUOSD+FgPuGUBLy+80HhnC
+         QQZlhSL97CRpS8wMlCVCmBYzPVGQeqxfK0ZOSHdVCQ5redR969T0BmYdNxZNYaehvO
+         5UNFUMqKg9dyyc8FECvUdiSMwisPSJDXrY4Ec1CU=
+Received: by mail-ot1-f45.google.com with SMTP id e5so1944121ote.11;
+        Wed, 17 Jun 2020 08:38:32 -0700 (PDT)
+X-Gm-Message-State: AOAM533megbuNEP/iL4ZKX++IfcJPJWYdF0TAPYmzaMbRoP0cuQ2/z2R
+        bRIrGOhPIm0/N88h4Mn6U2iZhFVNJXWo50Vj3g==
+X-Google-Smtp-Source: ABdhPJx+PoYXKyeUx8MAjbYQ1LRx9EEpUKsbhPm2Dbg1Vw8A/V17ptpVa4zGODoB4OocpKHaH/C7MvTr0HCPXdlZSBA=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr7446929ots.192.1592408312183;
+ Wed, 17 Jun 2020 08:38:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617151710.16613-1-scott.branden@broadcom.com>
+References: <20200612015030.16072-1-tanmay@codeaurora.org> <20200612015030.16072-2-tanmay@codeaurora.org>
+ <159230611219.62212.8262135380349283774@swboyd.mtv.corp.google.com>
+In-Reply-To: <159230611219.62212.8262135380349283774@swboyd.mtv.corp.google.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 17 Jun 2020 09:38:20 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLsp6gR_=nA36usk67n7+EJOoxt-87R5zc1_DXpap5cag@mail.gmail.com>
+Message-ID: <CAL_JsqLsp6gR_=nA36usk67n7+EJOoxt-87R5zc1_DXpap5cag@mail.gmail.com>
+Subject: Re: [PATCH v6 1/5] dt-bindings: msm/dp: add bindings of DP/DP-PLL
+ driver for Snapdragon
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Tanmay Shah <tanmay@codeaurora.org>,
+        Sam Ravnborg <sam@ravnborg.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, aravindh@codeaurora.org,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 08:17:10AM -0700, Scott Branden wrote:
-> Move kernel_read_file* out of linux/fs.h to its own linux/kernel_read_file.h
-> include file. That header gets pulled in just about everywhere
-> and doesn't really need functions not related to the general fs interface.
-> 
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->  drivers/base/firmware_loader/main.c |  1 +
->  fs/exec.c                           |  1 +
->  include/linux/fs.h                  | 39 ----------------------
->  include/linux/ima.h                 |  1 +
->  include/linux/kernel_read_file.h    | 52 +++++++++++++++++++++++++++++
->  include/linux/security.h            |  1 +
->  kernel/kexec_file.c                 |  1 +
->  kernel/module.c                     |  1 +
->  security/integrity/digsig.c         |  1 +
->  security/integrity/ima/ima_fs.c     |  1 +
->  security/integrity/ima/ima_main.c   |  1 +
->  security/integrity/ima/ima_policy.c |  1 +
->  security/loadpin/loadpin.c          |  1 +
->  security/security.c                 |  1 +
->  security/selinux/hooks.c            |  1 +
->  15 files changed, 65 insertions(+), 39 deletions(-)
->  create mode 100644 include/linux/kernel_read_file.h
+On Tue, Jun 16, 2020 at 5:15 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Tanmay Shah (2020-06-11 18:50:26)
+> > diff --git a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+> > new file mode 100644
+> > index 000000000000..5fdb9153df00
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+> > @@ -0,0 +1,142 @@
+> > +        data-lanes = <0 1>;
+> > +
+> > +        ports {
+> > +            #address-cells = <1>;
+> > +            #size-cells = <0>;
+> > +
+> > +            port@0 {
+> > +                reg = <0>;
+> > +                dp_in: endpoint {
+> > +                    remote-endpoint = <&dpu_intf0_out>;
+> > +                };
+> > +            };
+> > +
+> > +            port@1 {
+> > +                reg = <1>;
+> > +                dp_out: endpoint {
+>
+> Just curious what is eventually connected here? This is possibly a
+> question for Rob Herring, but I can't figure out how we're supposed to
+> connect this to the USB type-c connector that is receiving the DP
+> signal. Does the type-c connector binding support connecting to this end
+> of the graph? Or should this connect to the DP phy and then the phy
+> connects to the USB type-c connector node? Right now it is empty which
+> seems wrong.
 
-What changed from v1?  Always put that below the --- line.
+It should connect to the Type-C connector perhaps thru some sort of
+switching/muxing node, but that's not really flushed out though. See
+'dt-bindings: chrome: Add cros-ec-typec mux props' discussion with
+your CrOS colleagues.
 
-thanks,
-
-greg k-h
+Rob
