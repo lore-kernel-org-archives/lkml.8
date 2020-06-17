@@ -2,131 +2,213 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F276C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D39C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 572932082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:16:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gMJvLtSi"
+	by mail.kernel.org (Postfix) with ESMTP id EBBE3212CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:18:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgFQSQ4 (ORCPT
+        id S1727090AbgFQSSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:16:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgFQSQz (ORCPT
+        Wed, 17 Jun 2020 14:18:17 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:38194 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbgFQSSQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 14:16:55 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5AFBC06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:16:55 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r18so1666556pgk.11
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9iHpdxTSsJV8Zk3XZ13SNgoX2KXs00CS5Ze28gN8oq4=;
-        b=gMJvLtSibvq67YGso8XYpxFnSmLZoRjXPPUqyKDRwnWdCpcHeBmiNXdCbfKIchRtS/
-         hSrhpIY5G7Y545ckpnYuA0wk9iqFRhMBkVDUmF6WUUfqekbbOSIevevUjfvYN4Ajzg10
-         JOlCYV4rfTaZeQjmKY2lxB1ix82WlXrDuFdOrFqYvVFVv3+83qGR6eAk+PqJSucsnE25
-         Hb99nFfaWuFRgy0aSWVLAUOlzrVOWXFzx8nqFIvPjvOLp+sIB6Wbbbt3E2kymty5XyHK
-         uuj9vWZadGn6o20m/C7bRAb/vv7JfEx3QnVGPygvY0Qm7ipcvW5t+9VJoz8Au7Mkpd0O
-         nRqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9iHpdxTSsJV8Zk3XZ13SNgoX2KXs00CS5Ze28gN8oq4=;
-        b=UkW8Tj/+KSKzeuGiBk8OutyIF/uJfTceWncBBsdbrEJz0kt11dfZYCTRbM4dViMb8F
-         lqnwgAFushrx8FvxA37PHXYmn3yMWNTe+UX4a7GKs06hpy8omq8Wo8Dv2I0jm99hcCuH
-         OGGzWnGhlPMJRMQSsibFwUmK6izHijeDvd8DU40zJCcx+pm9sXeU5xHlvoddNQOOd5wz
-         hVUAtbMmV3HInB9lM7doTGeuwZsGia4LPqGwJ8Z+7MPwMh9laa+i5rfb72x5iD5BB73e
-         bkEOd19eqtJy3F2lktA7r2u9cNOu/aaFRZ/ZdFg4n45xos7ZdxXCTIDUvA1OWPEr6fzq
-         BiAA==
-X-Gm-Message-State: AOAM532Oz8JffJ4/TZQrEcUkKoKmGXWJPIiN8miaTW9jLq6fTXGoYM7c
-        74Ig2cShvkY5v4opWsL4EwaH14rtmlWrcw9I9xDKdw==
-X-Google-Smtp-Source: ABdhPJzfTBWS0aJ5XI2zVM6jazuKCFG/ugBxDHwAZofS2hb3/+lnVHVZ9XQKA3bIEz+6O/pqZK+UEL1W9pWZ+PUEU/4=
-X-Received: by 2002:a05:6a00:15ca:: with SMTP id o10mr247pfu.169.1592417814250;
- Wed, 17 Jun 2020 11:16:54 -0700 (PDT)
+        Wed, 17 Jun 2020 14:18:16 -0400
+IronPort-SDR: efYVrKFao1abJfgAjuK3Z7ZhcR4PPWKob2D0Sc0JUt0fxhdrIifeNFsfw4j787EcYLyq0puyF2
+ 8SuFunk0L7IEehqBId+wX9i+j/VH5Yv2fLbyYDwXquJteTC8znMTAMj+UOSMnJ/R3Vd9uDEGmI
+ VuNJOv7wXFdQ6KzOc4d80QFvy17O9dySPk22vdYYoQfaZ5OyGCIrpDYhQ5ZYiCeneAYwUFqecg
+ /tE6vIdEEjJdrpNVhvr+PhJAI6/88xeUDSb0U/MoY2bJJ4/UCr//4NX9EA429+iiUpInuti+/4
+ vj0=
+X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
+   d="scan'208";a="49938173"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa3.mentor.iphmx.com with ESMTP; 17 Jun 2020 10:18:15 -0800
+IronPort-SDR: wGbn1KzcJ5/BWQql3TKTC64LOt6hWVJy0IhGWCQ5oxSBO0w2LzdQodM1mTQSpcGF+INKHZcuId
+ KbyDtj0Fjq+skL/iCZOkpSXdtR/vvNTtgkXY7JTt4XvnTA8VvPnT5pxJfgeysIA8a/nf8Q8HQ+
+ nCx+d7eNxggs0e3Tmyp9HjQ9okWZJDcmruAYLUiZtC56+mMtR3Kdzm1ZH63sZ+d5pE1fdZiuqL
+ EzvPW4lbnxHIjaDIeKJOSxg5BaglbmWhF611PqhKVu5Oa8MBy+EMfyRQgtMCGS/mpBfpzj+urO
+ HPM=
+Subject: Re: [PATCH] media: rcar-vin: Move media_device_register to async
+ completion
+To:     =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        Michael Rodin <mrodin@de.adit-jv.com>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <michael@rodin.online>,
+        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>
+References: <1592328696-84533-1-git-send-email-mrodin@de.adit-jv.com>
+ <20200617105646.GB2850317@oden.dyn.berto.se>
+ <20200617151537.GB88066@vmlxhi-121.adit-jv.com>
+ <20200617152857.GA2936315@oden.dyn.berto.se>
+From:   Steve Longerbeam <steve_longerbeam@mentor.com>
+Message-ID: <888de4f6-3d89-5b74-750c-376173404832@mentor.com>
+Date:   Wed, 17 Jun 2020 11:18:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <cover.1590079968.git.christophe.leroy@csgroup.eu>
- <8c593895e2cb57d232d85ce4d8c3a1aa7f0869cc.1590079968.git.christophe.leroy@csgroup.eu>
- <20200616002720.GA1307277@ubuntu-n2-xlarge-x86> <68503e5e-7456-b81c-e43d-27cb331a4b72@xilinx.com>
- <20200616181630.GA3403678@ubuntu-n2-xlarge-x86> <50fb2dd6-4e8f-a550-6eda-073beb86f2ff@xilinx.com>
- <87bllidmk4.fsf@mpe.ellerman.id.au> <878sgmdmcv.fsf@mpe.ellerman.id.au>
-In-Reply-To: <878sgmdmcv.fsf@mpe.ellerman.id.au>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 17 Jun 2020 11:16:42 -0700
-Message-ID: <CAKwvOdnkcjLGay0jdQ77kHTmKhE56F9jvzh01XWwEE8rjbhLAA@mail.gmail.com>
-Subject: Re: [PATCH v5 01/13] powerpc: Remove Xilinx PPC405/PPC440 support
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200617152857.GA2936315@oden.dyn.berto.se>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
+ svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 3:20 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
->
-> Michael Ellerman <mpe@ellerman.id.au> writes:
-> > Michal Simek <michal.simek@xilinx.com> writes:
-> <snip>
->
-> >> Or if bamboo requires uImage to be built by default you can do it via
-> >> Kconfig.
-> >>
-> >> diff --git a/arch/powerpc/platforms/44x/Kconfig
-> >> b/arch/powerpc/platforms/44x/Kconfig
-> >> index 39e93d23fb38..300864d7b8c9 100644
-> >> --- a/arch/powerpc/platforms/44x/Kconfig
-> >> +++ b/arch/powerpc/platforms/44x/Kconfig
-> >> @@ -13,6 +13,7 @@ config BAMBOO
-> >>         select PPC44x_SIMPLE
-> >>         select 440EP
-> >>         select FORCE_PCI
-> >> +       select DEFAULT_UIMAGE
-> >>         help
-> >>           This option enables support for the IBM PPC440EP evaluation board.
-> >
-> > Who knows what the actual bamboo board used. But I'd be happy to take a
-> > SOB'ed patch to do the above, because these days the qemu emulation is
-> > much more likely to be used than the actual board.
->
-> I just went to see why my CI boot of 44x didn't catch this, and it's
-> because I don't use the uImage, I just boot the vmlinux directly:
->
->   $ qemu-system-ppc -M bamboo -m 128m -display none -kernel build~/vmlinux -append "console=ttyS0" -display none -nodefaults -serial mon:stdio
->   Linux version 5.8.0-rc1-00118-g69119673bd50 (michael@alpine1-p1) (gcc (Ubuntu 9.3.0-10ubuntu2) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #4 Wed Jun 17 20:19:22 AEST 2020
->   Using PowerPC 44x Platform machine description
->   ioremap() called early from find_legacy_serial_ports+0x690/0x770. Use early_ioremap() instead
->   printk: bootconsole [udbg0] enabled
->
->
-> So that's probably the simplest solution?
+Hi Niklas, Michael,
 
-If the uImage or zImage self decompresses, I would prefer to test that as well.
+On 6/17/20 8:28 AM, Niklas Söderlund wrote:
+> Hi Michael,
+>
+> On 2020-06-17 17:15:37 +0200, Michael Rodin wrote:
+>> Hi Niklas and Steve,
+>>
+>> On Wed, Jun 17, 2020 at 12:56:46PM +0200, Niklas Söderlund wrote:
+>>> Hi Michael and Steve,
+>>>
+>>> On 2020-06-16 19:31:36 +0200, Michael Rodin wrote:
+>>>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
+>>>>
+>>>> The media_device is registered during driver probe, before async
+>>>> completion, so it is possible for .link_notify to be called before
+>>>> all devices are bound.
+>>>>
+>>>> Fix this by moving media_device_register() to rvin_group_notify_complete().
+>>>> This ensures that all devices are now bound (the rcar-csi2 subdevices and
+>>>> and video capture devices) before .link_notify can be called.
+>>> I'm curious to what situation created the need for this change. I'm
+>>> currently trying to take the VIN driver in the opposite direction [1]
+>>> with the end goal of registering video devices at probe time and then
+>>> allow the media graph to populate as devices becomes available.
+>> It looks like almost all platform drivers call media_device_register() in
+>> the completion callback. From my understaning it is necessary to ensure
+>> that all subdevices are bound and all links are created before the user
+>> can enable any link (which would trigger link_notify callback execution)
+>> and set formats. If I am not mistaken, Steve could observe an "OOPS" or
+>> at least it is theoretically possible.
+> If an OOPS have been observed I would be interested to see it. That way
+> we can fix the OOPS and keep the media graph registration where it is
+> today.
 
-> That means previously arch/powerpc/boot/zImage was just a hardlink to
-> the uImage:
+It's been a long time since I looked at this on a Salvator-X. But I do 
+remember there was an OOPS if an attempt was made to enable a link 
+before all devices had bound. Unfortunately I no longer have access to 
+RCAR h/w to prove this point.
 
-It sounds like we can just boot the zImage, or is that no longer
-created with the uImage?
--- 
-Thanks,
-~Nick Desaulniers
+>> Actually I found that this patch alone is not enough even if it is correct,
+>> because we also have to register the media device in rvin_parallel_notify_complete()
+>> in case if there is only a parallel video input device attached.
+>>
+>>> My reason for this is that we could have a functional pipeline inside
+>>> the graph even if it's not complete. This came out of the GMSL work done
+>>> a while pack where I had a faulty camera that would prevent the other 7
+>>> in the system to function.
+>> I agree that if a probe of a faulty subdevice fails, this should not affect
+>> functionality of the other attached subdevices. The "complete" callback of
+>> the async notifier is probably not executed in this case, so I guess, we
+>> would have to register the media device in the "bound" callback after the first
+>> subdevice has been probed? Otherwise there is not much sense to have video
+>> capture devices, which are not connected to any source.
+> Calling it in the bound callback is mostly the same as it is today, as
+> link_notify could then be called when not all entities are in the graph.
+> In fact even if we where tp move the media device registration to the t
+> complete callback we have this problem if any of the subdevices are
+> unbound. Then we are back to the state with a registerd media device
+> where not all entities are present.
+>
+> I think the solution here is to address the issue (if any) in the
+> link_notify callback when the graph is not fully populated.
+
+I like the idea of allowing a functional pipeline without all devices 
+bound. So I understand the desire to keep media device registration in 
+probe.
+
+So in that case I agree link_notify should be fixed if it still needs 
+fixing to handle non-bound subdevices.
+
+Steve
+
+>> (Delayed) population of the media graph after media device registration
+>> sounds also like a requirement for device tree overlay support, which would
+>> also be a nice feature.
+>>
+>>> 1. [PATCH 0/5] media-device: Report if graph is complete
+>>>
+>>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+>>>> Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
+>>>> ---
+>>>>   drivers/media/platform/rcar-vin/rcar-core.c | 14 ++++++--------
+>>>>   1 file changed, 6 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
+>>>> index 7440c89..e70f83b 100644
+>>>> --- a/drivers/media/platform/rcar-vin/rcar-core.c
+>>>> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+>>>> @@ -253,7 +253,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
+>>>>   	struct media_device *mdev = &group->mdev;
+>>>>   	const struct of_device_id *match;
+>>>>   	struct device_node *np;
+>>>> -	int ret;
+>>>>   
+>>>>   	mutex_init(&group->lock);
+>>>>   
+>>>> @@ -266,7 +265,6 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
+>>>>   	vin_dbg(vin, "found %u enabled VIN's in DT", group->count);
+>>>>   
+>>>>   	mdev->dev = vin->dev;
+>>>> -	mdev->ops = &rvin_media_ops;
+>>>>   
+>>>>   	match = of_match_node(vin->dev->driver->of_match_table,
+>>>>   			      vin->dev->of_node);
+>>>> @@ -278,11 +276,7 @@ static int rvin_group_init(struct rvin_group *group, struct rvin_dev *vin)
+>>>>   
+>>>>   	media_device_init(mdev);
+>>>>   
+>>>> -	ret = media_device_register(&group->mdev);
+>>>> -	if (ret)
+>>>> -		rvin_group_cleanup(group);
+>>>> -
+>>>> -	return ret;
+>>>> +	return 0;
+>>>>   }
+>>>>   
+>>>>   static void rvin_group_release(struct kref *kref)
+>>>> @@ -688,6 +682,8 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
+>>>>   		return ret;
+>>>>   	}
+>>>>   
+>>>> +	vin->group->mdev.ops = &rvin_media_ops;
+>>>> +
+>>>>   	/* Register all video nodes for the group. */
+>>>>   	for (i = 0; i < RCAR_VIN_NUM; i++) {
+>>>>   		if (vin->group->vin[i] &&
+>>>> @@ -736,8 +732,10 @@ static int rvin_group_notify_complete(struct v4l2_async_notifier *notifier)
+>>>>   		}
+>>>>   	}
+>>>>   	mutex_unlock(&vin->group->lock);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>>   
+>>>> -	return ret;
+>>>> +	return media_device_register(&vin->group->mdev);
+>>>>   }
+>>>>   
+>>>>   static void rvin_group_notify_unbind(struct v4l2_async_notifier *notifier,
+>>>> -- 
+>>>> 2.7.4
+>>>>
+>>> -- 
+>>> Regards,
+>>> Niklas Söderlund
+>> -- 
+>> Best Regards,
+>> Michael
+
