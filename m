@@ -2,251 +2,158 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1354C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE172073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4D92073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:03:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n7fvTs+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgFQICG (ORCPT
+        id S1726727AbgFQIDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:02:06 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:39311 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725894AbgFQICG (ORCPT
+        Wed, 17 Jun 2020 04:03:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgFQIDf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:02:06 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from eli@mellanox.com)
-        with SMTP; 17 Jun 2020 11:02:00 +0300
-Received: from nps-server-21.mtl.labs.mlnx (nps-server-21.mtl.labs.mlnx [10.237.240.120])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 05H820Nr008962;
-        Wed, 17 Jun 2020 11:02:00 +0300
-Received: from nps-server-21.mtl.labs.mlnx (localhost [127.0.0.1])
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 05H820eJ023457;
-        Wed, 17 Jun 2020 11:02:00 +0300
-Received: (from eli@localhost)
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 05H81rtK023454;
-        Wed, 17 Jun 2020 11:01:54 +0300
-From:   Eli Cohen <eli@mellanox.com>
-To:     jasowang@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, mst@redhat.com
-Cc:     eli@mellanox.com, lulu@redhat.com
-Subject: [PATCH] net/vdpa: Use struct for set/get vq state
-Date:   Wed, 17 Jun 2020 11:01:51 +0300
-Message-Id: <20200617080152.23408-1-eli@mellanox.com>
-X-Mailer: git-send-email 2.26.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 17 Jun 2020 04:03:35 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41063C061573;
+        Wed, 17 Jun 2020 01:03:35 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id l12so1285680ejn.10;
+        Wed, 17 Jun 2020 01:03:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=IoLOTj4N/UivUbV7Xr+eQksZLmcOCCkaL8Z2FZzpaSE=;
+        b=n7fvTs+/AIa8pMpfW6aPzMLlPj+Dgki9bUAxy/WJhTzuhCBbd+H1VjHgPGq499Rpv/
+         5d/Fu/pYEKH1b6nUOp+B/0rVShHG5a3F5X6E9yohIERXhGRB+jfz7fG7aLScoIpx8e+F
+         hoa3YKo1A1lDCasydfb4WIy1UyVUOIk9DfVXXMnVNv4WGz8gFNusqZ8XbJsGTDUN9Fqb
+         G31mdXjKpT3KyemJTlD9XocjfZeFc/GyLV2zWtdzsLpQAbvFvS3y1YSYDd18MIgGQFXl
+         /yNkjvwU7T7hVY2TKYobQ4wa9+HTev7V+Zm0ABk5R4hLFzxjXuIxIeh+PmN3kmrE6ePT
+         RYtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=IoLOTj4N/UivUbV7Xr+eQksZLmcOCCkaL8Z2FZzpaSE=;
+        b=jiLIz11oqSNjc2SP5LyCp2jkPisspss3j65ZNRUaw9w+8ujRPTvsRNJNRTOzt9UCqO
+         CkJoYN1ozIyl2yV2NkknJRahzMnR8wIEfUD3jEwmLf7YEh82TYbZs4ITMKoMA6JU0Qgy
+         5E4JdEu0wuEbd4dcQp0HwzKTunELRegEZKrvC9chA40eOeDdd5Y6Dnbm880ESU2xXhBU
+         Ri3jhCemPZ2NxSkGDCDc7SUoDgS6C/gtMLOculhQMooavcLMQ/+QpNmvVwIn7g+pBHEK
+         r5OB6ydm5yQX8w69zxxlDv4mRLOyAmhBC3pRMRg16Q3yUc4+AI+mqe7z5P6o74XJEPC7
+         wJHQ==
+X-Gm-Message-State: AOAM530ZXMiz4zDB7R5q3N2Y63hQJrZ6XN6RU90IfoLxuBpRuWcEUr4p
+        wGzayyuAkrReA9+fnLlHBjk=
+X-Google-Smtp-Source: ABdhPJwEiLAyKqBWSBg/9gW1RJJ++WW+xletvVfauJvMuZRCPanBDVczGoSWbdvhRqSEjwIJMjoADg==
+X-Received: by 2002:a17:906:1149:: with SMTP id i9mr6779545eja.100.1592381013809;
+        Wed, 17 Jun 2020 01:03:33 -0700 (PDT)
+Received: from [10.31.1.6] ([194.187.249.54])
+        by smtp.gmail.com with ESMTPSA id n16sm12971271ejl.70.2020.06.17.01.03.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jun 2020 01:03:33 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v4 0/3] mm, treewide: Rename kzfree() to kfree_sensitive()
+From:   Jo -l <joel.voyer@gmail.com>
+In-Reply-To: <20200617003711.GD8681@bombadil.infradead.org>
+Date:   Wed, 17 Jun 2020 10:03:30 +0200
+Cc:     dsterba@suse.cz, Joe Perches <joe@perches.com>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-ppp@vger.kernel.org, wireguard@lists.zx2c4.com,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <29829792-2C3E-44D1-A337-E206F1B6C92A@gmail.com>
+References: <20200616015718.7812-1-longman@redhat.com>
+ <fe3b9a437be4aeab3bac68f04193cb6daaa5bee4.camel@perches.com>
+ <20200616230130.GJ27795@twin.jikos.cz>
+ <20200617003711.GD8681@bombadil.infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For now VQ state involves 16 bit available index value encoded in u64
-variable. In the future it will be extended to contain more fields. Use
-struct to contain the state, now containing only a single u16 for the
-available index. In the future we can add fields to this struct.
+Bonjour,
+D=C3=A9sol=C3=A9, aucune traduction possible,=20
+En fran=C3=A7ais pour comprendre!
+Merci
+slts
 
-Acked-by: Jason Wang <jasowang@redhat.com>
-Signed-off-by: Eli Cohen <eli@mellanox.com>
----
- drivers/vdpa/ifcvf/ifcvf_base.c  |  4 ++--
- drivers/vdpa/ifcvf/ifcvf_base.h  |  4 ++--
- drivers/vdpa/ifcvf/ifcvf_main.c  |  9 +++++----
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 10 ++++++----
- drivers/vhost/vdpa.c             | 10 +++++++---
- include/linux/vdpa.h             | 18 ++++++++++++++----
- 6 files changed, 36 insertions(+), 19 deletions(-)
+> Le 17 06 2020 =C3=A0 02:37, Matthew Wilcox <willy@infradead.org> a =
+=C3=A9crit :
+>=20
+> On Wed, Jun 17, 2020 at 01:01:30AM +0200, David Sterba wrote:
+>> On Tue, Jun 16, 2020 at 11:53:50AM -0700, Joe Perches wrote:
+>>> On Mon, 2020-06-15 at 21:57 -0400, Waiman Long wrote:
+>>>> v4:
+>>>> - Break out the memzero_explicit() change as suggested by Dan =
+Carpenter
+>>>>  so that it can be backported to stable.
+>>>> - Drop the "crypto: Remove unnecessary memzero_explicit()" patch =
+for
+>>>>  now as there can be a bit more discussion on what is best. It will =
+be
+>>>>  introduced as a separate patch later on after this one is merged.
+>>>=20
+>>> To this larger audience and last week without reply:
+>>> =
+https://lore.kernel.org/lkml/573b3fbd5927c643920e1364230c296b23e7584d.came=
+l@perches.com/
+>>>=20
+>>> Are there _any_ fastpath uses of kfree or vfree?
+>>=20
+>> I'd consider kfree performance critical for cases where it is called
+>> under locks. If possible the kfree is moved outside of the critical
+>> section, but we have rbtrees or lists that get deleted under locks =
+and
+>> restructuring the code to do eg. splice and free it outside of the =
+lock
+>> is not always possible.
+>=20
+> Not just performance critical, but correctness critical.  Since =
+kvfree()
+> may allocate from the vmalloc allocator, I really think that kvfree()
+> should assert that it's !in_atomic().  Otherwise we can get into =
+trouble
+> if we end up calling vfree() and have to take the mutex.
 
-diff --git a/drivers/vdpa/ifcvf/ifcvf_base.c b/drivers/vdpa/ifcvf/ifcvf_base.c
-index e24371d644b5..763cb5ed4745 100644
---- a/drivers/vdpa/ifcvf/ifcvf_base.c
-+++ b/drivers/vdpa/ifcvf/ifcvf_base.c
-@@ -269,7 +269,7 @@ static int ifcvf_config_features(struct ifcvf_hw *hw)
- 	return 0;
- }
- 
--u64 ifcvf_get_vq_state(struct ifcvf_hw *hw, u16 qid)
-+u16 ifcvf_get_vq_state(struct ifcvf_hw *hw, u16 qid)
- {
- 	struct ifcvf_lm_cfg __iomem *ifcvf_lm;
- 	void __iomem *avail_idx_addr;
-@@ -284,7 +284,7 @@ u64 ifcvf_get_vq_state(struct ifcvf_hw *hw, u16 qid)
- 	return last_avail_idx;
- }
- 
--int ifcvf_set_vq_state(struct ifcvf_hw *hw, u16 qid, u64 num)
-+int ifcvf_set_vq_state(struct ifcvf_hw *hw, u16 qid, u16 num)
- {
- 	struct ifcvf_lm_cfg __iomem *ifcvf_lm;
- 	void __iomem *avail_idx_addr;
-diff --git a/drivers/vdpa/ifcvf/ifcvf_base.h b/drivers/vdpa/ifcvf/ifcvf_base.h
-index e80307092351..d929748d0664 100644
---- a/drivers/vdpa/ifcvf/ifcvf_base.h
-+++ b/drivers/vdpa/ifcvf/ifcvf_base.h
-@@ -112,7 +112,7 @@ void ifcvf_set_status(struct ifcvf_hw *hw, u8 status);
- void io_write64_twopart(u64 val, u32 *lo, u32 *hi);
- void ifcvf_reset(struct ifcvf_hw *hw);
- u64 ifcvf_get_features(struct ifcvf_hw *hw);
--u64 ifcvf_get_vq_state(struct ifcvf_hw *hw, u16 qid);
--int ifcvf_set_vq_state(struct ifcvf_hw *hw, u16 qid, u64 num);
-+u16 ifcvf_get_vq_state(struct ifcvf_hw *hw, u16 qid);
-+int ifcvf_set_vq_state(struct ifcvf_hw *hw, u16 qid, u16 num);
- struct ifcvf_adapter *vf_to_adapter(struct ifcvf_hw *hw);
- #endif /* _IFCVF_H_ */
-diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf_main.c
-index abf6a061cab6..09588c67b520 100644
---- a/drivers/vdpa/ifcvf/ifcvf_main.c
-+++ b/drivers/vdpa/ifcvf/ifcvf_main.c
-@@ -143,19 +143,20 @@ static u16 ifcvf_vdpa_get_vq_num_max(struct vdpa_device *vdpa_dev)
- 	return IFCVF_QUEUE_MAX;
- }
- 
--static u64 ifcvf_vdpa_get_vq_state(struct vdpa_device *vdpa_dev, u16 qid)
-+static void ifcvf_vdpa_get_vq_state(struct vdpa_device *vdpa_dev, u16 qid,
-+				    struct vdpa_vq_state *state)
- {
- 	struct ifcvf_hw *vf = vdpa_to_vf(vdpa_dev);
- 
--	return ifcvf_get_vq_state(vf, qid);
-+	state->avail_index = ifcvf_get_vq_state(vf, qid);
- }
- 
- static int ifcvf_vdpa_set_vq_state(struct vdpa_device *vdpa_dev, u16 qid,
--				   u64 num)
-+				   struct vdpa_vq_state *state)
- {
- 	struct ifcvf_hw *vf = vdpa_to_vf(vdpa_dev);
- 
--	return ifcvf_set_vq_state(vf, qid, num);
-+	return ifcvf_set_vq_state(vf, qid, state->avail_index);
- }
- 
- static void ifcvf_vdpa_set_vq_cb(struct vdpa_device *vdpa_dev, u16 qid,
-diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-index bd9686726dcd..a25d4b6abfcd 100644
---- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-+++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-@@ -413,26 +413,28 @@ static bool vdpasim_get_vq_ready(struct vdpa_device *vdpa, u16 idx)
- 	return vq->ready;
- }
- 
--static int vdpasim_set_vq_state(struct vdpa_device *vdpa, u16 idx, u64 state)
-+static int vdpasim_set_vq_state(struct vdpa_device *vdpa, u16 idx,
-+				struct vdpa_vq_state *state)
- {
- 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
- 	struct vdpasim_virtqueue *vq = &vdpasim->vqs[idx];
- 	struct vringh *vrh = &vq->vring;
- 
- 	spin_lock(&vdpasim->lock);
--	vrh->last_avail_idx = state;
-+	vrh->last_avail_idx = state->avail_index;
- 	spin_unlock(&vdpasim->lock);
- 
- 	return 0;
- }
- 
--static u64 vdpasim_get_vq_state(struct vdpa_device *vdpa, u16 idx)
-+static void vdpasim_get_vq_state(struct vdpa_device *vdpa, u16 idx,
-+				 struct vdpa_vq_state *state)
- {
- 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
- 	struct vdpasim_virtqueue *vq = &vdpasim->vqs[idx];
- 	struct vringh *vrh = &vq->vring;
- 
--	return vrh->last_avail_idx;
-+	state->avail_index = vrh->last_avail_idx;
- }
- 
- static u32 vdpasim_get_vq_align(struct vdpa_device *vdpa)
-diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-index 55c2575ffadf..9cd9d4617a8d 100644
---- a/drivers/vhost/vdpa.c
-+++ b/drivers/vhost/vdpa.c
-@@ -294,6 +294,7 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
- {
- 	struct vdpa_device *vdpa = v->vdpa;
- 	const struct vdpa_config_ops *ops = vdpa->config;
-+	struct vdpa_vq_state vq_state;
- 	struct vdpa_callback cb;
- 	struct vhost_virtqueue *vq;
- 	struct vhost_vring_state s;
-@@ -317,8 +318,10 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
- 		return 0;
- 	}
- 
--	if (cmd == VHOST_GET_VRING_BASE)
--		vq->last_avail_idx = ops->get_vq_state(v->vdpa, idx);
-+	if (cmd == VHOST_GET_VRING_BASE) {
-+		ops->get_vq_state(v->vdpa, idx, &vq_state);
-+		vq->last_avail_idx = vq_state.avail_index;
-+	}
- 
- 	r = vhost_vring_ioctl(&v->vdev, cmd, argp);
- 	if (r)
-@@ -334,7 +337,8 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
- 		break;
- 
- 	case VHOST_SET_VRING_BASE:
--		if (ops->set_vq_state(vdpa, idx, vq->last_avail_idx))
-+		vq_state.avail_index = vq->last_avail_idx;
-+		if (ops->set_vq_state(vdpa, idx, &vq_state))
- 			r = -EINVAL;
- 		break;
- 
-diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
-index 5453af87a33e..9253477e6e38 100644
---- a/include/linux/vdpa.h
-+++ b/include/linux/vdpa.h
-@@ -17,6 +17,14 @@ struct vdpa_callback {
- 	void *private;
- };
- 
-+/**
-+ * vDPA vq_state definition
-+ * @avail_index: available index
-+ */
-+struct vdpa_vq_state {
-+	u16	avail_index;
-+};
-+
- /**
-  * vDPA device - representation of a vDPA device
-  * @dev: underlying device
-@@ -67,12 +75,12 @@ struct vdpa_device {
-  * @set_vq_state:		Set the state for a virtqueue
-  *				@vdev: vdpa device
-  *				@idx: virtqueue index
-- *				@state: virtqueue state (last_avail_idx)
-+ *				@state: pointer to set virtqueue state (last_avail_idx)
-  *				Returns integer: success (0) or error (< 0)
-  * @get_vq_state:		Get the state for a virtqueue
-  *				@vdev: vdpa device
-  *				@idx: virtqueue index
-- *				Returns virtqueue state (last_avail_idx)
-+ *				@state: pointer to returned state (last_avail_idx)
-  * @get_vq_align:		Get the virtqueue align requirement
-  *				for the device
-  *				@vdev: vdpa device
-@@ -160,8 +168,10 @@ struct vdpa_config_ops {
- 			  struct vdpa_callback *cb);
- 	void (*set_vq_ready)(struct vdpa_device *vdev, u16 idx, bool ready);
- 	bool (*get_vq_ready)(struct vdpa_device *vdev, u16 idx);
--	int (*set_vq_state)(struct vdpa_device *vdev, u16 idx, u64 state);
--	u64 (*get_vq_state)(struct vdpa_device *vdev, u16 idx);
-+	int (*set_vq_state)(struct vdpa_device *vdev, u16 idx,
-+			    struct vdpa_vq_state *state);
-+	void (*get_vq_state)(struct vdpa_device *vdev, u16 idx,
-+			     struct vdpa_vq_state *state);
- 
- 	/* Device ops */
- 	u32 (*get_vq_align)(struct vdpa_device *vdev);
--- 
-2.26.0
+Jo-l
+joel.voyer@gmail.com
+
+
 
