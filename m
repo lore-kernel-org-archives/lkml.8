@@ -2,146 +2,115 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584C7C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3A42073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592427092;
-	bh=/qLQ3yM3XyTNFyNc2XcraHnlEAHClADyfYVFSkCRAz4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T1eF+ehZ6MxER/TsCYA0CbUEkOOHPaJYEvNHBD+CvDUwQmpNrXAL94PBufi4UgZvO
-	 n7dyKNhfycWrl/xTnhqj9ivQuwG6hQEUvGPCAgGL8TfSscp8w8BUp6g3/1hOyf4l5R
-	 EhGmf6qS1BtrTAg81DUUF3YUcIj5z08yRUx2ZNiQ=
+	by mail.kernel.org (Postfix) with ESMTP id 98C6721556
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:51:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="WHB3heK0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgFQUvb (ORCPT
+        id S1726954AbgFQUvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:51:31 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33971 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgFQUva (ORCPT
+        Wed, 17 Jun 2020 16:51:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726931AbgFQUvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:51:30 -0400
-Received: by mail-io1-f66.google.com with SMTP id m81so4602225ioa.1;
-        Wed, 17 Jun 2020 13:51:30 -0700 (PDT)
+        Wed, 17 Jun 2020 16:51:48 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA52C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:51:47 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id w16so4062808ejj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:51:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r7d9D7DdOBCkM3WVfrd5zaJp7zmJiHbkabHOk+GNLzg=;
+        b=WHB3heK02RYqhtR3KBCfEAY1anEU5eNIbCqZeFyh4umG6SHs/pxirhfkrcZguGC2uI
+         Pv4pKoM8JCf5BgObp/El9D556uBr+jPuURqa6sI/MGoO1flZH7hQNhsKHWd4PYo7EMza
+         aOka3zm67A/gc3Nc3nNSY9/w6AtLi+49g3t2ZydOFcijMcWOe2KTDA89Sa3+UfCh8mWZ
+         ofTwgLi3HOhjwakYHlC9cefjBiMgR6yrZcdCUpSk32j1K2cvSciElvUSmtpoH+x/6zsx
+         2xOjp7E0J8/I/uTfs0ZkJ5EV9KxVqmy7yI9jfusnYrDWcdrFc2Ni2/WdhHrXaQJNvvDd
+         Uvrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PUqIc1amV3ysKKM5W4S+0rwIlkHs1OWVj0o1X7NJhus=;
-        b=f0uo371ilNSIT/d5nA0fkO0xNCU0ytlWuvQrrO4ckyymMnnWXvDpTj2BpSpw/R4Aor
-         gG7WOkRyX400w2Qv53NNrGBENssWQlEqu+TWflNhIihzUsqTsMQftQ3FGzczGJuFo9/+
-         uziPrPVx039fxr0grGg6VyrUZL8B9lji78A2tGKj8BRXrimWHAExCsvdb4N1QgVhzYED
-         Gchooae0p+zFZdmm39R8vm7GAWD7QTqW8p/9+b5UeV7ELRCsXN1gcK1DChykF+LYdwyh
-         I2eCLmqLpmF2jP3eh1NOWpZGmq3MPZxBVazsWEvQSW1zz5iHeC/ffHJgd5BbvzGxtIRX
-         qZWQ==
-X-Gm-Message-State: AOAM531GEOgfJoQdGQ9IlwhuJ7XR65RavH/M7qURfUhM60KjLq/fyUrr
-        +HVAB12BzQP5G1GBJOoPfg==
-X-Google-Smtp-Source: ABdhPJwZIV2ss3INJ+tsnBpvrYC2Z4/eH7cHvST4htrIX2MjMYRjwva7DROSce3iqzSeOIIBCpc7gQ==
-X-Received: by 2002:a05:6602:228c:: with SMTP id d12mr1349903iod.43.1592427089990;
-        Wed, 17 Jun 2020 13:51:29 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id p25sm516493iog.47.2020.06.17.13.51.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 13:51:29 -0700 (PDT)
-Received: (nullmailer pid 2784859 invoked by uid 1000);
-        Wed, 17 Jun 2020 20:51:28 -0000
-Date:   Wed, 17 Jun 2020 14:51:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Iskren Chernev <iskren.chernev@gmail.com>
-Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 1/2] dt-bindints: power: supply: Document max17040
- extensions
-Message-ID: <20200617205128.GA2775414@bogus>
-References: <20200608182642.592848-1-iskren.chernev@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r7d9D7DdOBCkM3WVfrd5zaJp7zmJiHbkabHOk+GNLzg=;
+        b=bCG5NEYRorH4wJiqyHEoLkyjpiSH93Q3hvJFAqtCHaKGWpzTCgNmy1IEb8yOW5pL0Z
+         Onnp/picLI5iCBCuR39j3NnsvXvhDGloQKVmVsrmYTQTRji6EAIWFIRz3cZI6kepwCz8
+         X/q8wPeARJaKm0zMAaHNaqUKuMnOQ7IpEZ7YfBdkCH1WsirtCWhJroops2DaT+5Z+0Zm
+         G46vKR5BcJmQcDkF6QvbUJT4gdNoDt2KLZfjkKsZQYDZpT1scSbPn76oEkcoef514Awd
+         0qfkbJlRv+xHk4Ni/UMxXYvNl6DC4JV0kCw6y1OzRg1HmkoqMMyuwDAJ5BsJVKZ0Jqwx
+         M21w==
+X-Gm-Message-State: AOAM530B7HV73TTvNJLBRme7EpU5C0boFpvj/cg+Vyy7HnH9HEsrBC8Y
+        V4kU9lCd3UaoG3YjLKJVC2f57SFUlS9/cYKIfPcf
+X-Google-Smtp-Source: ABdhPJz9hItxcmRzrDNjTZGtBxaQNc6TKqZsdmfqLsX90TBETGCVk3qgfIre0UJ61l4pYuwSEk2Jya74/urncX+8RdA=
+X-Received: by 2002:a17:906:434f:: with SMTP id z15mr951887ejm.178.1592427105550;
+ Wed, 17 Jun 2020 13:51:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608182642.592848-1-iskren.chernev@gmail.com>
+References: <20200617124028.14130-1-trix@redhat.com> <CAEjxPJ5uGV-SjKL7v5J=7YYEBOjyHwK625SX8fzCrbatuB=9hg@mail.gmail.com>
+In-Reply-To: <CAEjxPJ5uGV-SjKL7v5J=7YYEBOjyHwK625SX8fzCrbatuB=9hg@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 17 Jun 2020 16:51:34 -0400
+Message-ID: <CAHC9VhT_mAd8pkboQX1xQpxmYkFvK=HW3pUB8_UzbgnW4+=RjA@mail.gmail.com>
+Subject: Re: [PATCH] selinux: fix undefined return of cond_evaluate_expr
+To:     trix@redhat.com
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>, weiyongjun1@huawei.com,
+        SElinux list <selinux@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-typo in the subject
+On Wed, Jun 17, 2020 at 9:58 AM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+> On Wed, Jun 17, 2020 at 8:40 AM <trix@redhat.com> wrote:
+> >
+> > From: Tom Rix <trix@redhat.com>
+> >
+> > clang static analysis reports an undefined return
+> >
+> > security/selinux/ss/conditional.c:79:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
+> >         return s[0];
+> >         ^~~~~~~~~~~
+> >
+> > static int cond_evaluate_expr( ...
+> > {
+> >         u32 i;
+> >         int s[COND_EXPR_MAXDEPTH];
+> >
+> >         for (i = 0; i < expr->len; i++)
+> >           ...
+> >
+> >         return s[0];
+> >
+> > When expr->len is 0, the loop which sets s[0] never runs.
+> >
+> > So return -1 if the loop never runs.
+> >
+> > Signed-off-by: Tom Rix <trix@redhat.com>
+>
+> Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+>
+> clang didn't complain about the similar pattern in
+> security/selinux/ss/services.c:constraint_expr_eval()?
 
-On Mon, Jun 08, 2020 at 09:26:41PM +0300, Iskren Chernev wrote:
-> Maxim max17040 is a fuel gauge from a larger family utilising the Model
-> Gauge thechnology. Document all different compatible strings that the
+Related question: I appreciate the work you are doing Tom, can you
+share how far along you are testing the SELinux code with clang?  I
+ask because it would be nice to roll all of these patches up into one
+PR for Linus instead of sending multiple updates.
 
-typo
-
-> max17040 driver recognizes.
-> 
-> Some devices in the wild report double the capacity. The
-> maxim,double-soc (from State-Of-Charge) property fixes that.
-> 
-> To compensate for the battery chemistry and operating conditions the
-> chips support a compensation value. Specify one or two byte compensation
-> via the maxim,rcomp byte array.
-> 
-> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
-> ---
->  .../power/supply/max17040_battery.txt         | 22 ++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-> index 4e0186b8380fa..be11cab4530b9 100644
-> --- a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
-> @@ -2,7 +2,9 @@ max17040_battery
->  ~~~~~~~~~~~~~~~~
->  
->  Required properties :
-> - - compatible : "maxim,max17040" or "maxim,max77836-battery"
-> + - compatible : "maxim,max17040", "maxim,max17041", "maxim,max17043",
-> + 		"maxim,max17044", "maxim,max17048", "maxim,max17049",
-> +		"maxim,max17058", "maxim,max17059" or "maxim,max77836-battery"
->   - reg: i2c slave address
->  
->  Optional properties :
-> @@ -11,6 +13,15 @@ Optional properties :
->  				generated. Can be configured from 1 up to 32
->  				(%). If skipped the power up default value of
->  				4 (%) will be used.
-> +- maxim,double-soc : 		Certain devices return double the capacity.
-> +				Specify this boolean property to divide the
-> +				reported value in 2 and thus normalize it.
-> +				SOC == State of Charge == Capacity.
-> +- maxim,rcomp :			A value to compensate readings for various
-> +				battery chemistries and operating temperatures.
-> +				max17040,41 have 2 byte rcomp, default to
-> +				0x97 0x00. All other devices have one byte
-> +				rcomp, default to 0x97.
->  - interrupts : 			Interrupt line see Documentation/devicetree/
->  				bindings/interrupt-controller/interrupts.txt
->  - wakeup-source :		This device has wakeup capabilities. Use this
-> @@ -27,7 +38,16 @@ Example:
->  		compatible = "maxim,max77836-battery";
->  		reg = <0x36>;
->  		maxim,alert-low-soc-level = <10>;
-> +		maxim,rcomp = /bits/ 8 <0x97 0x00>;
->  		interrupt-parent = <&gpio7>;
->  		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
->  		wakeup-source;
->  	};
-> +
-> +	battery-fuel-gauge@36 {
-> +		compatible = "maxim,max17048";
-> +		reg = <0x36>;
-> +		maxim,rcomp = /bits/ 8 <0x97>;
-> +		maxim,alert-low-soc-level = <10>;
-> +		maxim,double-soc;
-> +	};
-> 
-> base-commit: 1713116fa907cc7290020f0d8632ec646d2936f8
-> -- 
-> 2.27.0
-> 
+-- 
+paul moore
+www.paul-moore.com
