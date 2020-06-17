@@ -2,476 +2,174 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68ACBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51245208B3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:27:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XYMyBezd"
+	by mail.kernel.org (Postfix) with ESMTP id 450F5208B3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgFQJ1Q (ORCPT
+        id S1726594AbgFQJ1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 05:27:16 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40299 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725554AbgFQJ1Q (ORCPT
+        Wed, 17 Jun 2020 05:27:21 -0400
+Received: from mo-csw1515.securemx.jp ([210.130.202.154]:41064 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgFQJ1U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 05:27:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592386034;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wgE4oQBPaBXGd9y+T9dxDYyT6pfub6p/F1iRpwd02mg=;
-        b=XYMyBezd9L1FlUWKmVBKMRUOPue/IIk+2t2Rn78fcrcLVwdZ0wo/8Iuj8tJbIiYuOCHftp
-        z9qUsIT5C4Id1F8p5TkvoNG3SdYpBoaGxozC9kWmPb5Pu6Dnglnai1KgK0+ZR9B1f4PssX
-        IhTTl20zrxzdyaR2K1LTB7fz621CPTw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-124-OrKBEi2PNeqgdauWxE9pmQ-1; Wed, 17 Jun 2020 05:27:11 -0400
-X-MC-Unique: OrKBEi2PNeqgdauWxE9pmQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B384F8C31E5;
-        Wed, 17 Jun 2020 09:27:09 +0000 (UTC)
-Received: from krava (unknown [10.40.193.76])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2E1D51001B07;
-        Wed, 17 Jun 2020 09:27:06 +0000 (UTC)
-Date:   Wed, 17 Jun 2020 11:27:06 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 01/13] tools/libperf: introduce notion of static
- polled file descriptors
-Message-ID: <20200617092706.GB2210496@krava>
-References: <20200605113834.GC1404794@krava>
- <be40edeb-0cb9-5e11-2a22-8392316cdced@linux.intel.com>
- <49eca46e-4d0e-2ae5-d7d9-e37a4d680270@linux.intel.com>
- <20200608084344.GA1520715@krava>
- <2d80a43a-54cf-3d12-92fd-066217c95d76@linux.intel.com>
- <20200608160758.GD1558310@krava>
- <bde9bcc3-9ec0-6e37-26f6-139b038ad3de@linux.intel.com>
- <20200615123048.GB2088119@krava>
- <8b29e324-eb8d-2266-562b-ca46aec76a3e@linux.intel.com>
- <20200615165802.GD2088119@krava>
+        Wed, 17 Jun 2020 05:27:20 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 05H9R9P1016297; Wed, 17 Jun 2020 18:27:09 +0900
+X-Iguazu-Qid: 34trcFcTTcnf7jvp5N
+X-Iguazu-QSIG: v=2; s=0; t=1592386029; q=34trcFcTTcnf7jvp5N; m=zsIHo39DpcHb4LeDkX+xuQO10PPLqkJHF/C46IDj/YA=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1510) id 05H9R8a9008789;
+        Wed, 17 Jun 2020 18:27:08 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id 05H9R87p008587;
+        Wed, 17 Jun 2020 18:27:08 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 05H9R89i017125;
+        Wed, 17 Jun 2020 18:27:08 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ifVWP6CaqoHjkCyJrsYfMNbzLeKOSpbincQmczR7Gk/sqMBA6/EL3WfK47nvycBGNjydfNf0/y18C1EmTD1SkxEaePtLebaG05Kho0zNpWf+E3412aRSFX/MtyTS4yUitHfbpcEnOx2ZlunsVjQf+6NUk/1f8/nUuW/JaWyjbInmqhnN9Txa7yM0iozj9gbVq1ajYc+GMAM0j97PlpSe4OeO5qQFLkCKNrUTAHUYeJOcWVT7dCOJ8jXNm1jfNzrxqeaq2Ry5JFoXrBIH44TLVWalHfULG51OcoQRxZp05fygYRXp1XSDZG8qhfLiTfBC0C/erU2bMTnBZU+YJnfhWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I/NiHfYfeGGfEefQf/VvmAgtYVvup8cNasYS9XCTUr8=;
+ b=G39Tju9Qt/16EtKEgFtQH2Xw07TuVOutJ+KOVFyMxzCdykVh6Ivf9kyzKN01Pa18pLMHzw9D2TgGblwkyAxIRaTCqk0H0dF5KrPG/QOvfjIkJqB8zUerPFpHR0SW5uWBJ7wOJG5ta/YvC5LXOa6JVU7F1Ene75NXZTM7GVn7+wLEL3z8kJAF3968k+5R7tykwLJOqCTn+WUlTNoBOrEsl9Jiwf3nJDxqN9P5ud30FNKGbDK47bVimYDeGP4jMtbn802fGAOeLPMzCN2jYKRdZSM517beG/ma1/HzPXNiMRnsKag43niIXkBxbWSrVbQMsE2NTz4ev/D7ynolVyhG1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toshiba.co.jp; dmarc=pass action=none
+ header.from=toshiba.co.jp; dkim=pass header.d=toshiba.co.jp; arc=none
+From:   <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>
+CC:     <stable@vger.kernel.org>, <ardb@kernel.org>,
+        <rafael.j.wysocki@intel.com>
+Subject: RE: [PATCH 5.4 064/134] ACPI: GED: add support for _Exx / _Lxx
+ handler methods
+Thread-Topic: [PATCH 5.4 064/134] ACPI: GED: add support for _Exx / _Lxx
+ handler methods
+Thread-Index: AQHWQ/Q8j4hpKScBzEO+XPSykaTGM6jciEDAgAACHMA=
+Date:   Wed, 17 Jun 2020 09:26:41 +0000
+X-TSB-HOP: ON
+Message-ID: <OSBPR01MB2983F4C32B052F1438964A93929A0@OSBPR01MB2983.jpnprd01.prod.outlook.com>
+References: <20200616153100.633279950@linuxfoundation.org>
+ <20200616153103.838898964@linuxfoundation.org>
+ <OSBPR01MB29835381F4879AF2614194F3929A0@OSBPR01MB2983.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB29835381F4879AF2614194F3929A0@OSBPR01MB2983.jpnprd01.prod.outlook.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=toshiba.co.jp;
+x-originating-ip: [103.91.184.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d0fdf65d-d3e8-4ce1-ccc5-08d812a08b53
+x-ms-traffictypediagnostic: OSBPR01MB1912:
+x-microsoft-antispam-prvs: <OSBPR01MB19123D58EFD95C70065E917C929A0@OSBPR01MB1912.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:849;
+x-forefront-prvs: 04371797A5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tzZCtfPnu/dE90jnN73lodK03JZYScKMT8kYPJ/gciVmrK/BRhBe2OfxvSj3rDipgFIebGacDclRHLnhc/x6KfX8y64c48GJzoFgaY3kXi9S/8UEmZNplNpbgVG5nMh3/ojEUbU2rx8R7ovW+Eh7r/OVDGtNlKkClJtNsy+vU5qpFtDD4y+51goQf5J/hsHca3X+SP1KxGKqATgHvxYcgvgNvWb7jd9XDBKg4YyRLPBw8dN7h2CdVMOruObQgywVvYr0o5hn2Hqeh2Fypup0hfDaiI73QpBUxeJu3TI7oNXTJrDdPH0nP5IYjwKcP71u2J58zaN8K+4TkWGL1EboAw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB2983.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(376002)(346002)(396003)(136003)(53546011)(6506007)(316002)(2940100002)(4326008)(7696005)(33656002)(52536014)(54906003)(478600001)(110136005)(2906002)(186003)(66946007)(64756008)(66476007)(66556008)(83380400001)(66446008)(76116006)(9686003)(5660300002)(8676002)(26005)(8936002)(86362001)(71200400001)(55016002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: UKVgtd3BqLfGAb0CJfU+Scp8+/QGCNn+n0Z+jXAbhmVzZbFeAqz2X/LtJFeJrOZx3UVFc/8YscQDLtEj5H0ptgwATmeMNKNdH8+UEWKnoBK0qY+SJZCHIPgpaYD7QbLZQS7FogIttCyZR88ESyLlP8cmimuEErIiRKq5eo0wal01h+eeeLpuXOXXr8FPSRARKDyWGEYC/p6kGeWN/BeHlc0E5l2CTzz84jkvlNYuuI1LsJKZ5SM5OxyyhrYhlt0ZHNpMs30LiqT+IX7cqsYGgTN2PR4JqN7o+NqC302R4VDkhAR8JZW+Jv49BrLTLM0XNhWi+RAM5iYx/2cHrUu+o2Q1mW81NNnAKHHJ6jbr9vilpeV2xI5ykkY7FdSCJbfyxVTMejOKel3l1BYLKN68OKBai45cXNKHug32dGsRZNiDAO00rAM2jVeL1uBs1GtDECNLpm4uc/BLx16+ewt+v3tDbpL3YG78qB/JoK72bQY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615165802.GD2088119@krava>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0fdf65d-d3e8-4ce1-ccc5-08d812a08b53
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2020 09:26:41.3388
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f109924e-fb71-4ba0-b2cc-65dcdf6fbe4f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7y82D41GdEXz9Dn65R0II+YJjK7cswJFyQMLy5apFuF6oKPottx2KGoSYSUSj7+f0kHe6Xhw3gntzUg4dz3nP2/JkCsqiFC+S22amObpSfjJi70Re+baFBpsi38YUWYE
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB1912
+X-OriginatorOrg: toshiba.co.jp
+MSSCP.TransferMailToMossAgent: 103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 06:58:04PM +0200, Jiri Olsa wrote:
-> On Mon, Jun 15, 2020 at 05:37:53PM +0300, Alexey Budankov wrote:
-> > 
-> > On 15.06.2020 15:30, Jiri Olsa wrote:
-> > > On Mon, Jun 15, 2020 at 08:20:38AM +0300, Alexey Budankov wrote:
-> > >>
-> > >> On 08.06.2020 19:07, Jiri Olsa wrote:
-> > >>> On Mon, Jun 08, 2020 at 12:54:31PM +0300, Alexey Budankov wrote:
-> > >>>>
-> > >>>> On 08.06.2020 11:43, Jiri Olsa wrote:
-> > >>>>> On Mon, Jun 08, 2020 at 11:08:56AM +0300, Alexey Budankov wrote:
-> > >>>>>>
-> > >>>>>> On 05.06.2020 19:15, Alexey Budankov wrote:
-> > >>>>>>>
-> > >>>>>>> On 05.06.2020 14:38, Jiri Olsa wrote:
-> > >> <SNIP>
-> > >>>>>>> revents = fdarray_fixed_revents(array, pos);
-> > >>>>>>> fdarray__del(array, pos);
-> > >>>>>>
-> > >>>>>> So how is it about just adding _revents() and _del() for fixed fds with
-> > >>>>>> correction of retval to bool for fdarray__add()?
-> > >>>>>
-> > >>>>> I don't like the separation for fixed and non-fixed fds,
-> > >>>>> why can't we make generic?
-> > >>>>
-> > >>>> Usage models are different but they want still to be parts of the same class
-> > >>>> for atomic poll(). The distinction is filterable vs. not filterable.
-> > >>>> The distinction should be somehow provided in API. Options are:
-> > >>>> 1. expose separate API calls like __add_nonfilterable(), __del_nonfilterable();
-> > >>>>    use nonfilterable quality in __filter() and __poll() and, perhaps, other internals;
-> > >>>> 2. extend fdarray__add(, nonfilterable) with the nonfilterable quality
-> > >>>>    use the type in __filter() and __poll() and, perhaps, other internals;
-> > >>>>    expose less API calls in comparison with option 1
-> > >>>>
-> > >>>> Exposure of pos for filterable fds should be converted to bool since currently
-> > >>>> the returned pos can become stale and there is no way in API to check its state.
-> > >>>> So it could look like this:
-> > >>>>
-> > >>>> fdkey = fdarray__add(array, fd, events, type)
-> > >>>> type: filterable, nonfilterable, somthing else
-> > >>>> revents = fdarray__get_revents(fdkey);
-> > >>>> fdarray__del(array, fdkey);
-> > >>>
-> > >>> I think there's solution without having filterable type,
-> > >>> I'm not sure why you think this is needed
-> > >>>
-> > >>> I'm busy with other things this week, but I think I can
-> > >>> come up with some patch early next week if needed
-> > >>
-> > >> Friendly reminder.
-> > > 
-> > > hm? I believe we discussed this in here:
-> > >   https://lore.kernel.org/lkml/20200609145611.GI1558310@krava/
-> > 
-> > Do you want it to be implemented like in the patch posted by the link?
-> 
-> no idea.. looking for good solution ;-)
-
-Friendly reminder.
-
-jirka
-
-> 
-> how about switching completely to epoll? I tried and it
-> does not look that bad
-> 
-> there might be some loose ends (interface change), but
-> I think this would solve our problems with fdarray
-> 
-> I'll be able to get back to it by the end of the week,
-> but if you want to check/finish this patch earlier go ahead
-> 
-> jirka
-> 
-> 
-> ---
->  tools/lib/perf/evlist.c                  | 134 +++++++++++++++++------
->  tools/lib/perf/include/internal/evlist.h |   9 +-
->  tools/perf/builtin-kvm.c                 |   8 +-
->  tools/perf/builtin-record.c              |  14 ++-
->  4 files changed, 120 insertions(+), 45 deletions(-)
-> 
-> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> index 6a875a0f01bb..8569cdd8bbd8 100644
-> --- a/tools/lib/perf/evlist.c
-> +++ b/tools/lib/perf/evlist.c
-> @@ -23,6 +23,7 @@
->  #include <perf/cpumap.h>
->  #include <perf/threadmap.h>
->  #include <api/fd/array.h>
-> +#include <sys/epoll.h>
->  
->  void perf_evlist__init(struct perf_evlist *evlist)
->  {
-> @@ -32,7 +33,10 @@ void perf_evlist__init(struct perf_evlist *evlist)
->  		INIT_HLIST_HEAD(&evlist->heads[i]);
->  	INIT_LIST_HEAD(&evlist->entries);
->  	evlist->nr_entries = 0;
-> -	fdarray__init(&evlist->pollfd, 64);
-> +	INIT_LIST_HEAD(&evlist->poll_data);
-> +	evlist->poll_cnt = 0;
-> +	evlist->poll_act = 0;
-> +	evlist->poll_fd = -1;
->  }
->  
->  static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
-> @@ -120,6 +124,23 @@ static void perf_evlist__purge(struct perf_evlist *evlist)
->  	evlist->nr_entries = 0;
->  }
->  
-> +struct poll_data {
-> +	int		  fd;
-> +	void		 *ptr;
-> +	struct list_head  list;
-> +};
-> +
-> +static void perf_evlist__exit_pollfd(struct perf_evlist *evlist)
-> +{
-> +	struct poll_data *data, *tmp;
-> +
-> +	if (evlist->poll_fd != -1)
-> +		close(evlist->poll_fd);
-> +
-> +	list_for_each_entry_safe(data, tmp, &evlist->poll_data, list)
-> +		free(data);
-> +}
-> +
->  void perf_evlist__exit(struct perf_evlist *evlist)
->  {
->  	perf_cpu_map__put(evlist->cpus);
-> @@ -128,7 +149,7 @@ void perf_evlist__exit(struct perf_evlist *evlist)
->  	evlist->cpus = NULL;
->  	evlist->all_cpus = NULL;
->  	evlist->threads = NULL;
-> -	fdarray__exit(&evlist->pollfd);
-> +	perf_evlist__exit_pollfd(evlist);
->  }
->  
->  void perf_evlist__delete(struct perf_evlist *evlist)
-> @@ -285,56 +306,105 @@ int perf_evlist__id_add_fd(struct perf_evlist *evlist,
->  
->  int perf_evlist__alloc_pollfd(struct perf_evlist *evlist)
->  {
-> -	int nr_cpus = perf_cpu_map__nr(evlist->cpus);
-> -	int nr_threads = perf_thread_map__nr(evlist->threads);
-> -	int nfds = 0;
-> -	struct perf_evsel *evsel;
-> -
-> -	perf_evlist__for_each_entry(evlist, evsel) {
-> -		if (evsel->system_wide)
-> -			nfds += nr_cpus;
-> -		else
-> -			nfds += nr_cpus * nr_threads;
-> -	}
-> +	int poll_fd;
->  
-> -	if (fdarray__available_entries(&evlist->pollfd) < nfds &&
-> -	    fdarray__grow(&evlist->pollfd, nfds) < 0)
-> -		return -ENOMEM;
-> +	poll_fd = epoll_create1(EPOLL_CLOEXEC);
-> +	if (!poll_fd)
-> +		return -1;
->  
-> +	evlist->poll_fd = poll_fd;
->  	return 0;
->  }
->  
-> -int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
-> -			    void *ptr, short revent)
-> +static int __perf_evlist__add_pollfd(struct perf_evlist *evlist,
-> +				     struct poll_data *data,
-> +				     short revent)
->  {
-> -	int pos = fdarray__add(&evlist->pollfd, fd, revent | POLLERR | POLLHUP);
-> +	struct epoll_event *events, ev = {
-> +		.data.ptr = data,
-> +		.events   = revent | EPOLLERR | EPOLLHUP,
-> +	};
-> +	int err;
-> +
-> +	err = epoll_ctl(evlist->poll_fd, EPOLL_CTL_ADD, data->fd, &ev);
-> +	if (err)
-> +		return err;
->  
-> -	if (pos >= 0) {
-> -		evlist->pollfd.priv[pos].ptr = ptr;
-> -		fcntl(fd, F_SETFL, O_NONBLOCK);
-> +	events = realloc(evlist->poll_events, sizeof(ev) * evlist->poll_cnt);
-> +	if (events) {
-> +		evlist->poll_events = events;
-> +		evlist->poll_cnt++;
->  	}
->  
-> -	return pos;
-> +	return events ? 0 : -ENOMEM;
->  }
->  
-> -static void perf_evlist__munmap_filtered(struct fdarray *fda, int fd,
-> -					 void *arg __maybe_unused)
-> +int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
-> +			    void *ptr, short revent)
->  {
-> -	struct perf_mmap *map = fda->priv[fd].ptr;
-> +	struct poll_data *data = zalloc(sizeof(*data));
-> +	int err;
->  
-> -	if (map)
-> -		perf_mmap__put(map);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->fd  = fd;
-> +	data->ptr = ptr;
-> +
-> +	err = __perf_evlist__add_pollfd(evlist, data, revent);
-> +	if (!err)
-> +		list_add_tail(&data->list, &evlist->poll_data);
-> +
-> +	return err;
->  }
->  
->  int perf_evlist__filter_pollfd(struct perf_evlist *evlist, short revents_and_mask)
->  {
-> -	return fdarray__filter(&evlist->pollfd, revents_and_mask,
-> -			       perf_evlist__munmap_filtered, NULL);
-> +	struct epoll_event *events = evlist->poll_events;
-> +	int i, removed = 0;
-> +
-> +	for (i = 0; i < evlist->poll_act; i++) {
-> +		if (events[i].events & revents_and_mask) {
-> +			struct poll_data *data = events[i].data.ptr;
-> +
-> +			if (data->ptr)
-> +				perf_mmap__put(data->ptr);
-> +
-> +			epoll_ctl(evlist->poll_fd, EPOLL_CTL_DEL, data->fd, &events[i]);
-> +
-> +			list_del(&data->list);
-> +			free(data);
-> +			removed++;
-> +		}
-> +	}
-> +
-> +	return evlist->poll_cnt -= removed;
-> +}
-> +
-> +bool perf_evlist__pollfd_data(struct perf_evlist *evlist, int fd)
-> +{
-> +	int i;
-> +
-> +	if (evlist->poll_act < 0)
-> +		return false;
-> +
-> +	for (i = 0; i < evlist->poll_act; i++) {
-> +		struct poll_data *data = evlist->poll_events[i].data.ptr;
-> +
-> +		if (data->fd == fd)
-> +			return true;
-> +	}
-> +
-> +	return false;
->  }
->  
->  int perf_evlist__poll(struct perf_evlist *evlist, int timeout)
->  {
-> -	return fdarray__poll(&evlist->pollfd, timeout);
-> +	evlist->poll_act = epoll_wait(evlist->poll_fd,
-> +				      evlist->poll_events,
-> +				      evlist->poll_cnt,
-> +				      timeout);
-> +	return evlist->poll_act;
->  }
->  
->  static struct perf_mmap* perf_evlist__alloc_mmap(struct perf_evlist *evlist, bool overwrite)
-> @@ -593,7 +663,7 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
->  			return -ENOMEM;
->  	}
->  
-> -	if (evlist->pollfd.entries == NULL && perf_evlist__alloc_pollfd(evlist) < 0)
-> +	if (evlist->poll_fd == -1 && perf_evlist__alloc_pollfd(evlist) < 0)
->  		return -ENOMEM;
->  
->  	if (perf_cpu_map__empty(cpus))
-> diff --git a/tools/lib/perf/include/internal/evlist.h b/tools/lib/perf/include/internal/evlist.h
-> index 74dc8c3f0b66..39b08a04b992 100644
-> --- a/tools/lib/perf/include/internal/evlist.h
-> +++ b/tools/lib/perf/include/internal/evlist.h
-> @@ -3,7 +3,6 @@
->  #define __LIBPERF_INTERNAL_EVLIST_H
->  
->  #include <linux/list.h>
-> -#include <api/fd/array.h>
->  #include <internal/evsel.h>
->  
->  #define PERF_EVLIST__HLIST_BITS 8
-> @@ -12,6 +11,7 @@
->  struct perf_cpu_map;
->  struct perf_thread_map;
->  struct perf_mmap_param;
-> +struct epoll_event;
->  
->  struct perf_evlist {
->  	struct list_head	 entries;
-> @@ -22,7 +22,11 @@ struct perf_evlist {
->  	struct perf_thread_map	*threads;
->  	int			 nr_mmaps;
->  	size_t			 mmap_len;
-> -	struct fdarray		 pollfd;
-> +	int			 poll_fd;
-> +	int			 poll_cnt;
-> +	int			 poll_act;
-> +	struct epoll_event	*poll_events;
-> +	struct list_head	 poll_data;
->  	struct hlist_head	 heads[PERF_EVLIST__HLIST_SIZE];
->  	struct perf_mmap	*mmap;
->  	struct perf_mmap	*mmap_ovw;
-> @@ -124,4 +128,5 @@ int perf_evlist__id_add_fd(struct perf_evlist *evlist,
->  			   struct perf_evsel *evsel,
->  			   int cpu, int thread, int fd);
->  
-> +bool perf_evlist__pollfd_data(struct perf_evlist *evlist, int fd);
->  #endif /* __LIBPERF_INTERNAL_EVLIST_H */
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index 95a77058023e..decc75745395 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -940,7 +940,7 @@ static int perf_kvm__handle_stdin(void)
->  
->  static int kvm_events_live_report(struct perf_kvm_stat *kvm)
->  {
-> -	int nr_stdin, ret, err = -EINVAL;
-> +	int ret, err = -EINVAL;
->  	struct termios save;
->  
->  	/* live flag must be set first */
-> @@ -971,8 +971,7 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
->  	if (evlist__add_pollfd(kvm->evlist, kvm->timerfd) < 0)
->  		goto out;
->  
-> -	nr_stdin = evlist__add_pollfd(kvm->evlist, fileno(stdin));
-> -	if (nr_stdin < 0)
-> +	if (evlist__add_pollfd(kvm->evlist, fileno(stdin)))
->  		goto out;
->  
->  	if (fd_set_nonblock(fileno(stdin)) != 0)
-> @@ -982,7 +981,6 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
->  	evlist__enable(kvm->evlist);
->  
->  	while (!done) {
-> -		struct fdarray *fda = &kvm->evlist->core.pollfd;
->  		int rc;
->  
->  		rc = perf_kvm__mmap_read(kvm);
-> @@ -993,7 +991,7 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
->  		if (err)
->  			goto out;
->  
-> -		if (fda->entries[nr_stdin].revents & POLLIN)
-> +		if (perf_evlist__pollfd_data(&kvm->evlist->core, fileno(stdin)))
->  			done = perf_kvm__handle_stdin();
->  
->  		if (!rc && !done)
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index e108d90ae2ed..a49bf4186aab 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1576,12 +1576,6 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
->  		status = -1;
->  		goto out_delete_session;
->  	}
-> -	err = evlist__add_pollfd(rec->evlist, done_fd);
-> -	if (err < 0) {
-> -		pr_err("Failed to add wakeup eventfd to poll list\n");
-> -		status = err;
-> -		goto out_delete_session;
-> -	}
->  #endif // HAVE_EVENTFD_SUPPORT
->  
->  	session->header.env.comp_type  = PERF_COMP_ZSTD;
-> @@ -1624,6 +1618,14 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
->  	}
->  	session->header.env.comp_mmap_len = session->evlist->core.mmap_len;
->  
-> +#ifdef HAVE_EVENTFD_SUPPORT
-> +	err = evlist__add_pollfd(rec->evlist, done_fd);
-> +	if (err < 0) {
-> +		pr_err("Failed to add wakeup eventfd to poll list\n");
-> +		goto out_child;
-> +	}
-> +#endif // HAVE_EVENTFD_SUPPORT
-> +
->  	if (rec->opts.kcore) {
->  		err = record__kcore_copy(&session->machines.host, data);
->  		if (err) {
-> -- 
-> 2.25.4
-> 
-
+SGkgYWdhaW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogaXdhbWF0
+c3Ugbm9idWhpcm8o5bKp5p2+IOS/oea0iyDilqHvvLPvvLfvvKPil6/vvKHvvKPvvLQpDQo+IFNl
+bnQ6IFdlZG5lc2RheSwgSnVuZSAxNywgMjAyMCA2OjIzIFBNDQo+IFRvOiBHcmVnIEtyb2FoLUhh
+cnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZw0KPiBDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZzsgQXJkIEJpZXNoZXV2ZWwgPGFy
+ZGJAa2VybmVsLm9yZz47IFJhZmFlbCBKLiBXeXNvY2tpIDxyYWZhZWwuai53eXNvY2tpQGludGVs
+LmNvbT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSCA1LjQgMDY0LzEzNF0gQUNQSTogR0VEOiBhZGQg
+c3VwcG9ydCBmb3IgX0V4eCAvIF9MeHggaGFuZGxlciBtZXRob2RzDQo+IA0KPiBIaSwNCj4gDQo+
+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBzdGFibGUtb3duZXJAdmdl
+ci5rZXJuZWwub3JnIFttYWlsdG86c3RhYmxlLW93bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVo
+YWxmIE9mIEdyZWcgS3JvYWgtSGFydG1hbg0KPiA+IFNlbnQ6IFdlZG5lc2RheSwgSnVuZSAxNywg
+MjAyMCAxMjozNCBBTQ0KPiA+IFRvOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4g
+Q2M6IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBzdGFi
+bGVAdmdlci5rZXJuZWwub3JnOyBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwub3JnPjsNCj4g
+UmFmYWVsDQo+ID4gSi4gV3lzb2NraSA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+DQo+ID4g
+U3ViamVjdDogW1BBVENIIDUuNCAwNjQvMTM0XSBBQ1BJOiBHRUQ6IGFkZCBzdXBwb3J0IGZvciBf
+RXh4IC8gX0x4eCBoYW5kbGVyIG1ldGhvZHMNCj4gPg0KPiA+IEZyb206IEFyZCBCaWVzaGV1dmVs
+IDxhcmRiQGtlcm5lbC5vcmc+DQo+ID4NCj4gPiBjb21taXQgZWE2ZjNhZjRjNWU2M2Y2OTgxYzBi
+MGFiOGViZWM0MzhlMmQ1ZWY0MCB1cHN0cmVhbS4NCj4gPg0KPiA+IFBlciB0aGUgQUNQSSBzcGVj
+LCBpbnRlcnJ1cHRzIGluIHRoZSByYW5nZSBbMCwgMjU1XSBtYXkgYmUgaGFuZGxlZA0KPiA+IGlu
+IEFNTCB1c2luZyBpbmRpdmlkdWFsIG1ldGhvZHMgd2hvc2UgbmFtaW5nIGlzIGJhc2VkIG9uIHRo
+ZSBmb3JtYXQNCj4gPiBfRXh4IG9yIF9MeHgsIHdoZXJlIHh4IGlzIHRoZSBoZXggcmVwcmVzZW50
+YXRpb24gb2YgdGhlIGludGVycnVwdA0KPiA+IGluZGV4Lg0KPiA+DQo+ID4gQWRkIHN1cHBvcnQg
+Zm9yIHRoaXMgbWlzc2luZyBmZWF0dXJlIHRvIG91ciBBQ1BJIEdFRCBkcml2ZXIuDQo+ID4NCj4g
+PiBDYzogdjQuOSsgPHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc+ICMgdjQuOSsNCj4gPiBTaWduZWQt
+b2ZmLWJ5OiBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwub3JnPg0KPiA+IFNpZ25lZC1vZmYt
+Ynk6IFJhZmFlbCBKLiBXeXNvY2tpIDxyYWZhZWwuai53eXNvY2tpQGludGVsLmNvbT4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24u
+b3JnPg0KPiA+DQo+IA0KPiBUaGlzIHBhdGNoIGFsc28gcmVxdWlyZXMgdGhlIGZvbGxvd2luZyBw
+YXRjaC4NCj4gUGxlYXNlIGFwcGx5IHRvIHRoaXMga2VybmVsIHZlcnNpb24sIDQuOSwgNC4xNCwg
+NC4xOSwgNS42IGFuZCA1LjcuDQo+IA0KPiBGcm9tIGU1YzM5OWIwYmQ2NDkwYzEyYzBhZjJhOWVh
+YTlkN2NkODA1ZDUyYzkgTW9uIFNlcCAxNyAwMDowMDowMCAyMDAxDQo+IEZyb206IEFyZCBCaWVz
+aGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+DQo+IERhdGU6IFdlZCwgMjcgTWF5IDIwMjAgMTM6Mzc6
+MDAgKzAyMDANCg0KSSB1cGRhdGUgd2l0aCB0aGUgY29ycmVjdCBpbmZvcm1hdGlvbi4NCg0KY29t
+bWl0IGU1YzM5OWIwYmQ2NDkwYzEyYzBhZjJhOWVhYTlkN2NkODA1ZDUyYzkNCkF1dGhvcjogQXJk
+IEJpZXNoZXV2ZWwgPGFyZGJAa2VybmVsLm9yZz4NCkRhdGU6ICAgV2VkIE1heSAyNyAxMzozNzow
+MCAyMDIwICswMjAwDQoNCi4uLi4NCg0KQmVzdCByZWdhcmRzLA0KICBOb2J1aGlybw0KDQo+IA0K
+PiAgICAgQUNQSTogR0VEOiB1c2UgY29ycmVjdCB0cmlnZ2VyIHR5cGUgZmllbGQgaW4gX0V4eCAv
+IF9MeHggaGFuZGxpbmcNCj4gDQo+ICAgICBDb21taXQgZWE2ZjNhZjRjNWU2M2Y2OSAoIkFDUEk6
+IEdFRDogYWRkIHN1cHBvcnQgZm9yIF9FeHggLyBfTHh4IGhhbmRsZXINCj4gICAgIG1ldGhvZHMi
+KSBhZGRlZCBhIHJlZmVyZW5jZSB0byB0aGUgJ3RyaWdnZXJpbmcnIGZpZWxkIG9mIGVpdGhlciB0
+aGUNCj4gICAgIG5vcm1hbCBvciB0aGUgZXh0ZW5kZWQgQUNQSSBJUlEgcmVzb3VyY2Ugc3RydWN0
+LCBidXQgaW5hZHZlcnRlbnRseSB1c2VkDQo+ICAgICB0aGUgd3JvbmcgcG9pbnRlciBpbiB0aGUg
+bGF0dGVyIGNhc2UuIE5vdGUgdGhhdCBib3RoIHBvaW50ZXJzIHJlZmVyIHRvIHRoZQ0KPiAgICAg
+c2FtZSB1bmlvbiwgYW5kIHRoZSAndHJpZ2dlcmluZycgZmllbGQgYXBwZWFycyBhdCB0aGUgc2Ft
+ZSBvZmZzZXQgaW4gYm90aA0KPiAgICAgc3RydWN0IHR5cGVzLCBzbyBpdCBjdXJyZW50bHkgaGFw
+cGVucyB0byB3b3JrIGJ5IGFjY2lkZW50LiBCdXQgbGV0J3MgZml4DQo+ICAgICBpdCBub25ldGhl
+bGVzcw0KPiANCj4gICAgIEZpeGVzOiBlYTZmM2FmNGM1ZTYzZjY5ICgiQUNQSTogR0VEOiBhZGQg
+c3VwcG9ydCBmb3IgX0V4eCAvIF9MeHggaGFuZGxlciBtZXRob2RzIikNCj4gICAgIFNpZ25lZC1v
+ZmYtYnk6IEFyZCBCaWVzaGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+DQo+ICAgICBTaWduZWQtb2Zm
+LWJ5OiBSYWZhZWwgSi4gV3lzb2NraSA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+DQo+IA0K
+PiBCZXN0IHJlZ2FyZHMsDQo+ICAgTm9idWhpcm8NCj4gDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMv
+YWNwaS9ldmdlZC5jIHwgICAyMiArKysrKysrKysrKysrKysrKysrLS0tDQo+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gLS0tIGEv
+ZHJpdmVycy9hY3BpL2V2Z2VkLmMNCj4gPiArKysgYi9kcml2ZXJzL2FjcGkvZXZnZWQuYw0KPiA+
+IEBAIC03OSw2ICs3OSw4IEBAIHN0YXRpYyBhY3BpX3N0YXR1cyBhY3BpX2dlZF9yZXF1ZXN0X2lu
+dGUNCj4gPiAgCXN0cnVjdCByZXNvdXJjZSByOw0KPiA+ICAJc3RydWN0IGFjcGlfcmVzb3VyY2Vf
+aXJxICpwID0gJmFyZXMtPmRhdGEuaXJxOw0KPiA+ICAJc3RydWN0IGFjcGlfcmVzb3VyY2VfZXh0
+ZW5kZWRfaXJxICpwZXh0ID0gJmFyZXMtPmRhdGEuZXh0ZW5kZWRfaXJxOw0KPiA+ICsJY2hhciBl
+dl9uYW1lWzVdOw0KPiA+ICsJdTggdHJpZ2dlcjsNCj4gPg0KPiA+ICAJaWYgKGFyZXMtPnR5cGUg
+PT0gQUNQSV9SRVNPVVJDRV9UWVBFX0VORF9UQUcpDQo+ID4gIAkJcmV0dXJuIEFFX09LOw0KPiA+
+IEBAIC04NywxNCArODksMjggQEAgc3RhdGljIGFjcGlfc3RhdHVzIGFjcGlfZ2VkX3JlcXVlc3Rf
+aW50ZQ0KPiA+ICAJCWRldl9lcnIoZGV2LCAidW5hYmxlIHRvIHBhcnNlIElSUSByZXNvdXJjZVxu
+Iik7DQo+ID4gIAkJcmV0dXJuIEFFX0VSUk9SOw0KPiA+ICAJfQ0KPiA+IC0JaWYgKGFyZXMtPnR5
+cGUgPT0gQUNQSV9SRVNPVVJDRV9UWVBFX0lSUSkNCj4gPiArCWlmIChhcmVzLT50eXBlID09IEFD
+UElfUkVTT1VSQ0VfVFlQRV9JUlEpIHsNCj4gPiAgCQlnc2kgPSBwLT5pbnRlcnJ1cHRzWzBdOw0K
+PiA+IC0JZWxzZQ0KPiA+ICsJCXRyaWdnZXIgPSBwLT50cmlnZ2VyaW5nOw0KPiA+ICsJfSBlbHNl
+IHsNCj4gPiAgCQlnc2kgPSBwZXh0LT5pbnRlcnJ1cHRzWzBdOw0KPiA+ICsJCXRyaWdnZXIgPSBw
+LT50cmlnZ2VyaW5nOw0KPiA+ICsJfQ0KPiA+DQo+ID4gIAlpcnEgPSByLnN0YXJ0Ow0KPiA+DQo+
+ID4gLQlpZiAoQUNQSV9GQUlMVVJFKGFjcGlfZ2V0X2hhbmRsZShoYW5kbGUsICJfRVZUIiwgJmV2
+dF9oYW5kbGUpKSkgew0KPiA+ICsJc3dpdGNoIChnc2kpIHsNCj4gPiArCWNhc2UgMCAuLi4gMjU1
+Og0KPiA+ICsJCXNwcmludGYoZXZfbmFtZSwgIl8lYyUwMmhoWCIsDQo+ID4gKwkJCXRyaWdnZXIg
+PT0gQUNQSV9FREdFX1NFTlNJVElWRSA/ICdFJyA6ICdMJywgZ3NpKTsNCj4gPiArDQo+ID4gKwkJ
+aWYgKEFDUElfU1VDQ0VTUyhhY3BpX2dldF9oYW5kbGUoaGFuZGxlLCBldl9uYW1lLCAmZXZ0X2hh
+bmRsZSkpKQ0KPiA+ICsJCQlicmVhazsNCj4gPiArCQkvKiBmYWxsIHRocm91Z2ggKi8NCj4gPiAr
+CWRlZmF1bHQ6DQo+ID4gKwkJaWYgKEFDUElfU1VDQ0VTUyhhY3BpX2dldF9oYW5kbGUoaGFuZGxl
+LCAiX0VWVCIsICZldnRfaGFuZGxlKSkpDQo+ID4gKwkJCWJyZWFrOw0KPiA+ICsNCj4gPiAgCQlk
+ZXZfZXJyKGRldiwgImNhbm5vdCBsb2NhdGUgX0VWVCBtZXRob2RcbiIpOw0KPiA+ICAJCXJldHVy
+biBBRV9FUlJPUjsNCj4gPiAgCX0NCj4gPg0KDQo=
