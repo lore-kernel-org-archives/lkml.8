@@ -2,115 +2,114 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F38C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DD5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6EF0208B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2BE208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:33:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sSpczcE6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jL7+9eMJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgFQPca (ORCPT
+        id S1726946AbgFQPdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:32:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
+        Wed, 17 Jun 2020 11:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbgFQPc2 (ORCPT
+        with ESMTP id S1726558AbgFQPdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:32:28 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE4B5C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:32:27 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id n24so3364586lji.10
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:32:27 -0700 (PDT)
+        Wed, 17 Jun 2020 11:33:51 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A39B5C06174E;
+        Wed, 17 Jun 2020 08:33:51 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z63so1316485pfb.1;
+        Wed, 17 Jun 2020 08:33:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l32XRyEkePlebWnUae8i7rcm+cLkXuxHO0S9jd5PcS8=;
-        b=sSpczcE6lMjOla0Qq7Ojd8fn4tDSWBrhMmLDDt6LJ86Y9mjbQV+bTQXs9ttXlzP4j6
-         kbP2DWE/BTuY4ZH4z2UoHE/D5Jj6eentsfqgd+Z7BrEVUdToZJhvZGbLyWrjbNkkK+hU
-         CquzCzK5nJvm44QjUxLVvNdw6EDRR42+qHY4xHcMCKUv2aNHRlMxEMZ2vgU+oDZT2j7s
-         aHEu6RVQo91uJ/ZRi4J/bntJVWz8VDfVO9ZuRCll0hoHo0KvtsN0OG6rk19jkQYPFLOe
-         6TSwCIE1a9yX0Dp6wEJkiLCMlX/avsVKvOWBggMzfFxk9XYZKknnkyDOu++F6eSC8j1p
-         T2ZA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9XYCr6Zy0SFc/eo2kKcuSj+TDFOwpW8ayTc9YaNvQW4=;
+        b=jL7+9eMJJS22Gqpqh5AtGiabAxqRW3TL1kfyDKeARpjfoLdm5DlqJPm2YFc7Uf2c8e
+         iiXwaEi5/fNkce1wIJhXRk5+bQ1nCxWhul9bHB4167Y9RMJMWBw2YopUQUWoSDLXDuZS
+         +rY9HipdU7tLK1LoKHontQjuq9r+qSThpIrGluB/AKf7YfFg9jNJtlnXehv7kzDxTm9R
+         4QbAp+jlWm3Z+fCjTP6ye3jh32Tc6LNPVgR7Lo/ykgiuJaRgmIEtz5Y2sKstd+Xh3hxo
+         e8ePuyiGn6mK8Zba3CyfQtU/sMJ1zad3OTRRdBXTlNjWAmXL5WxVq+7IIewimQzUzQUw
+         mLVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l32XRyEkePlebWnUae8i7rcm+cLkXuxHO0S9jd5PcS8=;
-        b=Pknj8LihDfG+7EH1VKxZbyo8Q9PhLrM2E6RZ48dX3IsOl3dHIe0PpXfmKezfmiLiTB
-         eJYDZBru24dmJXdZgECMAg7/L84hBVyJb+gSPrGHGtPaDsEQKLJqbRHRSGzAp30KZ7Rr
-         9oJ4guvMyC7r5LqootHWSCMrMGlqHryjCUGp+drKUzWJdpdiKQSlaInA2c+SPnMNbrLR
-         okeDR9+P71r1ZS3QJ8CkEa6uIpvz1+0ZBKGeXjL/dX27UQppoVvx8FtOyVusP9ir7lVO
-         H6Lsv7bEJQyxc8ZCL75GhfD8M0MF+5lBrNUNZ2XkLfxsK2xx7NkwvbM02Xg334YYp56H
-         DaBw==
-X-Gm-Message-State: AOAM530a0LYJsbAjzM8DSkKM+AEN6gRs/cF4LeE9H/qpmr9X053fg/mJ
-        iBwiPXMqlv6syDDXGFw/1TLcgJrsI7TKVNGHdUwT3A==
-X-Google-Smtp-Source: ABdhPJyauhbkn3VnOnpdJHtl3A9kM8iVF5IJzfX+GgrITFSBm3aQ4wPhFZD6DFnpmXCZvji7QIuycv8yUAKBuu+HrkY=
-X-Received: by 2002:a2e:541e:: with SMTP id i30mr3989852ljb.156.1592407945965;
- Wed, 17 Jun 2020 08:32:25 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9XYCr6Zy0SFc/eo2kKcuSj+TDFOwpW8ayTc9YaNvQW4=;
+        b=uMBjfvJti32wVXU6Conak5YaUsyuyAvUtCOq9v/WGWdjQw0WWHQ6ekHbx0I/B9b6YO
+         OWCa4g6+ELSTwExuL6R/ZIatS+MkJ+eHQCppLB+vNmRDfg/0L9ohfiYQAnTGAVsSKk5K
+         3eRfb0fLdRT68E0UL/E6LkIkKRZQxvHovFjUbrG7zn1ef8v54Vf/hsBn0+rDfVKGUonL
+         988oSNre1yr0TX6jHZfC+0BpSc6foZSDFXMjX7hC3VPMmsjwAgupANTEc1CAXSTyvq45
+         G5MptyS7x1zVdl75qJkC5F3aziyja3OYeGfyGKoHvf4g9Wm92z60aS/O10BaGXh6JodR
+         pQWw==
+X-Gm-Message-State: AOAM532wQKLf05fjYaOTlZUZFXTS3wsjx7JiyWwYTlnjwLMLQB5MM/2M
+        Q8/3ymvpSnY2379FNqs3z1c0QsF7oR8=
+X-Google-Smtp-Source: ABdhPJy0mCD2xf2PUcMQKbv+6h9HAiiov65Br/IND4/ngNnMk7XnTejRwTuypmQ49c+OUM7F+J5fRQ==
+X-Received: by 2002:aa7:9404:: with SMTP id x4mr7284949pfo.158.1592408031222;
+        Wed, 17 Jun 2020 08:33:51 -0700 (PDT)
+Received: from localhost ([144.34.193.30])
+        by smtp.gmail.com with ESMTPSA id g17sm24275pju.11.2020.06.17.08.33.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Jun 2020 08:33:50 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        Kevin Groeneveld <kgroeneveld@gmail.com>
+Subject: [PATCH net v1] net: phy: smsc: fix printing too many logs
+Date:   Wed, 17 Jun 2020 23:33:40 +0800
+Message-Id: <20200617153340.17371-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200616074934.1600036-1-keescook@chromium.org>
- <20200616074934.1600036-4-keescook@chromium.org> <CAG48ez0-jSSaw85=ku35UM3vMe98Vz97B68LsUoNd8ftwpunkQ@mail.gmail.com>
- <CALCETrUTsPHt4P=bWB-8r7bbpvgXXu3VBf4TS9S=XYxqxVt=DA@mail.gmail.com>
-In-Reply-To: <CALCETrUTsPHt4P=bWB-8r7bbpvgXXu3VBf4TS9S=XYxqxVt=DA@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 17 Jun 2020 17:31:59 +0200
-Message-ID: <CAG48ez23QKhv4CGPTgGAhCVM8KUCm-wWy2H6EV2Sc9nz0Hmckg@mail.gmail.com>
-Subject: Re: [PATCH 3/8] seccomp: Introduce SECCOMP_PIN_ARCHITECTURE
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Will Drewry <wad@chromium.org>,
-        Christian Brauner <christian@brauner.io>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Tycho Andersen <tycho@tycho.ws>,
-        "zhujianwei (C)" <zhujianwei7@huawei.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Matt Denton <mpdenton@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Hehuazhen <hehuazhen@huawei.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 5:30 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> On Wed, Jun 17, 2020 at 8:25 AM Jann Horn <jannh@google.com> wrote:
-> >
-> > On Tue, Jun 16, 2020 at 9:49 AM Kees Cook <keescook@chromium.org> wrote:
-> > > For systems that provide multiple syscall maps based on architectures
-> > > (e.g. AUDIT_ARCH_X86_64 and AUDIT_ARCH_I386 via CONFIG_COMPAT), allow
-> > > a fast way to pin the process to a specific syscall mapping, instead of
-> > > needing to generate all filters with an architecture check as the first
-> > > filter action.
-> >
-> > This seems reasonable; but can we maybe also add X86-specific handling
-> > for that X32 mess? AFAIK there are four ways to do syscalls with
-> > AUDIT_ARCH_X86_64:
->
-> You're out of date :)  I fixed the mess.
->
-> commit 6365b842aae4490ebfafadfc6bb27a6d3cc54757
-> Author: Andy Lutomirski <luto@kernel.org>
-> Date:   Wed Jul 3 13:34:04 2019 -0700
->
->     x86/syscalls: Split the x32 syscalls into their own table
+Commit 7ae7ad2f11ef47 ("net: phy: smsc: use phy_read_poll_timeout()
+to simplify the code") will print a lot of logs as follows when Ethernet
+cable is not connected:
 
-Oooooh, beautiful. Thank you very much for that.
+[    4.473105] SMSC LAN8710/LAN8720 2188000.ethernet-1:00: lan87xx_read_status failed: -110
+
+So fix it by read_poll_timeout().
+
+Fixes: 7ae7ad2f11ef47 ("net: phy: smsc: use phy_read_poll_timeout() to simplify the code")
+Reported-by: Kevin Groeneveld <kgroeneveld@gmail.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/net/phy/smsc.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/phy/smsc.c b/drivers/net/phy/smsc.c
+index 93da7d3d0954..36c5a57917b8 100644
+--- a/drivers/net/phy/smsc.c
++++ b/drivers/net/phy/smsc.c
+@@ -123,9 +123,10 @@ static int lan87xx_read_status(struct phy_device *phydev)
+ 			return rc;
+ 
+ 		/* Wait max 640 ms to detect energy */
+-		phy_read_poll_timeout(phydev, MII_LAN83C185_CTRL_STATUS, rc,
+-				      rc & MII_LAN83C185_ENERGYON, 10000,
+-				      640000, true);
++		read_poll_timeout(phy_read, rc,
++				  rc & MII_LAN83C185_ENERGYON || rc < 0,
++				  10000, 640000, true, phydev,
++				  MII_LAN83C185_CTRL_STATUS);
+ 		if (rc < 0)
+ 			return rc;
+ 
+-- 
+2.25.0
+
