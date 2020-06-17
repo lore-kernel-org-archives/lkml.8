@@ -2,82 +2,104 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2CBC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F25C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B275321548
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:41:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9gVA7VK"
+	by mail.kernel.org (Postfix) with ESMTP id 38BD820897
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgFQVlt (ORCPT
+        id S1726964AbgFQVml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:41:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgFQVls (ORCPT
+        Wed, 17 Jun 2020 17:42:41 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35113 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgFQVmk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:41:48 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50961C06174E;
-        Wed, 17 Jun 2020 14:41:48 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id p20so4150855ejd.13;
-        Wed, 17 Jun 2020 14:41:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cf3kkLok1ZPnk0qEHa7HqMsxq6OFGLjYN5CTh27kkEo=;
-        b=Z9gVA7VKLdv6qupqkJF1jLR6nSPpqDZ9dLJibhVqvReijtfSFJfbMdD9PPYoNR6Tze
-         RbNj3wNVh5qWZ58cHeGm/tPi67KC9UJ0B1PterfqQDQvd20UXdogvFirRp3tmI7HqQzg
-         iQS01DNZ+O+/W7fQHQCp9xwNcFqWRSTxMqs4DtQQ+Fg+yfOPG99s3ZEUUSz1z/Wd5vjm
-         6kHdTNW4Xj/eqi4Du//LWLvhFRtcH2kBQvBwnTo+apUAPg73yqAAF7pdk/QczBSj3s1x
-         atLgfXz10KMKNxp/2m4ce/a/g/fO52fzXlX6ZrY9D61gh1tN02apgIcxWZZ9LaaxU8i6
-         gYnw==
+        Wed, 17 Jun 2020 17:42:40 -0400
+Received: by mail-lf1-f67.google.com with SMTP id t74so2245836lff.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 14:42:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cf3kkLok1ZPnk0qEHa7HqMsxq6OFGLjYN5CTh27kkEo=;
-        b=c5uRaUJHkzCWvWPT6nZgKLOqiVwtQBiKH4JFlduUSOn073avGnBCU8VyAQnRouK1aJ
-         OCuOBp51Ry60Vu9+9c8bDBRkq2UqTOEamkfY2MuaaaCtUbHBc0V3N9o+SogzdsywPHr5
-         iv1p6RVnTJ9mA82VIdgjgJZBmZ51ExQvyDbIM4FCGZeZ3V28PKZmnGVkmHvOyriuJS6Q
-         1Vv25n4gUlW73opPrt3YsxjT14C7q2u8Q/JlNOljcNs0pyzPE93Z4ZYHHsAcWaQ1URYq
-         +yMgYl1FGZwSWbPt7p1RY9MwmprgLNHcOWtrC6CKdTySh8/n5kJ3SUZoHFMVj/dnX2XJ
-         3gMw==
-X-Gm-Message-State: AOAM530mjuFzE/znz8+sCkzSeuP9vYKDkCYoONpnd7gmJaSL03miGAfN
-        DMOzlVzYKwb+wp09+bvys8090pMo
-X-Google-Smtp-Source: ABdhPJz56pKG6gDWHVpqU/LtOwYyWyJ8Rz6y88kGeZInLamhVFQw3fPUi/5NzxgQ4IpK0I9gooSf5w==
-X-Received: by 2002:a17:906:cede:: with SMTP id si30mr1128605ejb.315.1592430106800;
-        Wed, 17 Jun 2020 14:41:46 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:54e4:c127:a142:2ade? ([2a01:110f:b59:fd00:54e4:c127:a142:2ade])
-        by smtp.gmail.com with ESMTPSA id b11sm743222eju.91.2020.06.17.14.41.45
+        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=kNH2cxY4KDrC9kt0EU9vsV9hFe1zPGyyBSCC5XdOrc4=;
+        b=GzPeL1TqX/N8lHDd3bSEac7ZUIFe4Ksp9+nV06NVUGHHfNH2tE4KM1ZR2/60ujxUHk
+         XsPYbp9WSVEzdWkoZV4//+mrXZ7ZBdAXpoQzffiQT7glN+YfG+9LVkk3AJ7a5KU8+N9E
+         8mlebzx/0BfkTwUo+FmdDyAlNQVEkst7Hy0z9/PsAgdlgyzNmjh5KI3odAW8tnkLCOhs
+         9q0bPe0BnsA1nl89Yb4+uRjpTIznD8B0l9lttGajP+5xs2SsYI4KJG8RJxCKxKfhdcGe
+         16eE4Or8pJQ2C0npO5ozGxBPpqmcWjvLRbQMMTLW4xswUTRo7a+CRu9NXih0mLtgvD7F
+         dniQ==
+X-Gm-Message-State: AOAM5324OGie6yBd4fzXAm4kjDY83CxrwAosyK/G963apz1EFDxJSiE6
+        t+EG3gQ8A2xdaBYYapaIlcJoxIDL3x4=
+X-Google-Smtp-Source: ABdhPJxbyv8n0cUmymuW254O6ynvXgcg385sriRZBtdIhEjontUTprmL77f3Vwia0A51nQCweqWdjQ==
+X-Received: by 2002:ac2:5e6c:: with SMTP id a12mr501765lfr.35.1592430156447;
+        Wed, 17 Jun 2020 14:42:36 -0700 (PDT)
+Received: from [192.168.1.8] ([213.87.137.195])
+        by smtp.gmail.com with ESMTPSA id r11sm223288lfc.29.2020.06.17.14.42.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 14:41:46 -0700 (PDT)
-Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
- support to lp55xx
-To:     Dan Murphy <dmurphy@ti.com>, kernel test robot <lkp@intel.com>,
-        pavel@ucw.cz, robh@kernel.org
-Cc:     kbuild-all@lists.01.org, devicetree@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200615201522.19677-12-dmurphy@ti.com>
- <202006180032.JW0i39C6%lkp@intel.com>
- <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <58ad7723-131f-6930-00d7-1144c993110c@gmail.com>
-Date:   Wed, 17 Jun 2020 23:41:44 +0200
+        Wed, 17 Jun 2020 14:42:35 -0700 (PDT)
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
+References: <20200604140805.111613-1-efremov@linux.com>
+ <20200614215414.40034-1-efremov@linux.com>
+ <alpine.DEB.2.22.394.2006172241551.3083@hadrien>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ mQINBFsJUXwBEADDnzbOGE/X5ZdHqpK/kNmR7AY39b/rR+2Wm/VbQHV+jpGk8ZL07iOWnVe1
+ ZInSp3Ze+scB4ZK+y48z0YDvKUU3L85Nb31UASB2bgWIV+8tmW4kV8a2PosqIc4wp4/Qa2A/
+ Ip6q+bWurxOOjyJkfzt51p6Th4FTUsuoxINKRMjHrs/0y5oEc7Wt/1qk2ljmnSocg3fMxo8+
+ y6IxmXt5tYvt+FfBqx/1XwXuOSd0WOku+/jscYmBPwyrLdk/pMSnnld6a2Fp1zxWIKz+4VJm
+ QEIlCTe5SO3h5sozpXeWS916VwwCuf8oov6706yC4MlmAqsQpBdoihQEA7zgh+pk10sCvviX
+ FYM4gIcoMkKRex/NSqmeh3VmvQunEv6P+hNMKnIlZ2eJGQpz/ezwqNtV/przO95FSMOQxvQY
+ 11TbyNxudW4FBx6K3fzKjw5dY2PrAUGfHbpI3wtVUNxSjcE6iaJHWUA+8R6FLnTXyEObRzTS
+ fAjfiqcta+iLPdGGkYtmW1muy/v0juldH9uLfD9OfYODsWia2Ve79RB9cHSgRv4nZcGhQmP2
+ wFpLqskh+qlibhAAqT3RQLRsGabiTjzUkdzO1gaNlwufwqMXjZNkLYu1KpTNUegx3MNEi2p9
+ CmmDxWMBSMFofgrcy8PJ0jUnn9vWmtn3gz10FgTgqC7B3UvARQARAQABtCFEZW5pcyBFZnJl
+ bW92IDxlZnJlbW92QGxpbnV4LmNvbT6JAlcEEwEIAEECGwMFCwkIBwIGFQoJCAsCBBYCAwEC
+ HgECF4ACGQEWIQR2VAM2ApQN8ZIP5AO1IpWwM1AwHwUCXsQtuwUJB31DPwAKCRC1IpWwM1Aw
+ H3dQD/9E/hFd2yPwWA5cJ5jmBeQt4lBi5wUXd2+9Y0mBIn40F17Xrjebo+D8E5y6S/wqfImW
+ nSDYaMfIIljdjmUUanR9R7Cxd/Z548Qaa4F1AtB4XN3W1L49q21h942iu0yxSLZtq9ayeja6
+ flCB7a+gKjHMWFDB4nRi4gEJvZN897wdJp2tAtUfErXvvxR2/ymKsIf5L0FZBnIaGpqRbfgG
+ Slu2RSpCkvxqlLaYGeYwGODs0QR7X2i70QGeEzznN1w1MGKLOFYw6lLeO8WPi05fHzpm5pK6
+ mTKkpZ53YsRfWL/HY3kLZPWm1cfAxa/rKvlhom+2V8cO4UoLYOzZLNW9HCFnNxo7zHoJ1shR
+ gYcCq8XgiJBF6jfM2RZYkOAJd6E3mVUxctosNq6av3NOdsp1Au0CYdQ6Whi13azZ81pDlJQu
+ Hdb0ZpDzysJKhORsf0Hr0PSlYKOdHuhl8fXKYOGQxpYrWpOnjrlEORl7NHILknXDfd8mccnf
+ 4boKIZP7FbqSLw1RSaeoCnqH4/b+ntsIGvY3oJjzbQVq7iEpIhIoQLxeklFl1xvJAOuSQwII
+ I9S0MsOm1uoT/mwq+wCYux4wQhALxSote/EcoUxK7DIW9ra4fCCo0bzaX7XJ+dJXBWb0Ixxm
+ yLl39M+7gnhvZyU+wkTYERp1qBe9ngjd0QTZNVi7MbkCDQRbCVF8ARAA3ITFo8OvvzQJT2cY
+ nPR718Npm+UL6uckm0Jr0IAFdstRZ3ZLW/R9e24nfF3A8Qga3VxJdhdEOzZKBbl1nadZ9kKU
+ nq87te0eBJu+EbcuMv6+njT4CBdwCzJnBZ7ApFpvM8CxIUyFAvaz4EZZxkfEpxaPAivR1Sa2
+ 2x7OMWH/78laB6KsPgwxV7fir45VjQEyJZ5ac5ydG9xndFmb76upD7HhV7fnygwf/uIPOzNZ
+ YVElGVnqTBqisFRWg9w3Bqvqb/W6prJsoh7F0/THzCzp6PwbAnXDedN388RIuHtXJ+wTsPA0
+ oL0H4jQ+4XuAWvghD/+RXJI5wcsAHx7QkDcbTddrhhGdGcd06qbXe2hNVgdCtaoAgpCEetW8
+ /a8H+lEBBD4/iD2La39sfE+dt100cKgUP9MukDvOF2fT6GimdQ8TeEd1+RjYyG9SEJpVIxj6
+ H3CyGjFwtIwodfediU/ygmYfKXJIDmVpVQi598apSoWYT/ltv+NXTALjyNIVvh5cLRz8YxoF
+ sFI2VpZ5PMrr1qo+DB1AbH00b0l2W7HGetSH8gcgpc7q3kCObmDSa3aTGTkawNHzbceEJrL6
+ mRD6GbjU4GPD06/dTRIhQatKgE4ekv5wnxBK6v9CVKViqpn7vIxiTI9/VtTKndzdnKE6C72+
+ jTwSYVa1vMxJABtOSg8AEQEAAYkCPAQYAQgAJgIbDBYhBHZUAzYClA3xkg/kA7UilbAzUDAf
+ BQJexC4MBQkHfUOQAAoJELUilbAzUDAfPYoQAJdBGd9WZIid10FCoI30QXA82SHmxWe0Xy7h
+ r4bbZobDPc7GbTHeDIYmUF24jI15NZ/Xy9ADAL0TpEg3fNVad2eslhCwiQViWfKOGOLLMe7v
+ zod9dwxYdGXnNRlW+YOCdFNVPMvPDr08zgzXaZ2+QJjp44HSyzxgONmHAroFcqCFUlfAqUDO
+ T30gV5bQ8BHqvfWyEhJT+CS3JJyP8BmmSgPa0Adlp6Do+pRsOO1YNNO78SYABhMi3fEa7X37
+ WxL31TrNCPnIauTgZtf/KCFQJpKaakC3ffEkPhyTjEl7oOE9xccNjccZraadi+2uHV0ULA1m
+ ycHhb817A03n1I00QwLf2wOkckdqTqRbFFI/ik69hF9hemK/BmAHpShI+z1JsYT9cSs8D7wb
+ aF/jQVy4URensgAPkgXsRiboqOj/rTz9F5mpd/gPU/IOUPFEMoo4TInt/+dEVECHioU3RRrW
+ EahrGMfRngbdp/mKs9aBR56ECMfFFUPyI3VJsNbgpcIJjV/0N+JdJKQpJ/4uQ2zNm0wH/RU8
+ CRJvEwtKemX6fp/zLI36Gvz8zJIjSBIEqCb7vdgvWarksrhmi6/Jay5zRZ03+k6YwiqgX8t7
+ ANwvYa1h1dQ36OiTqm1cIxRCGl4wrypOVGx3OjCar7sBLD+NkwO4RaqFvdv0xuuy4x01VnOF
+Subject: Re: [Cocci] [PATCH v3] coccinelle: api: add kzfree script
+Message-ID: <aa7613e9-8152-0022-6d67-0706ce5983d0@linux.com>
+Date:   Thu, 18 Jun 2020 00:42:33 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <alpine.DEB.2.22.394.2006172241551.3083@hadrien>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -85,99 +107,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
 
-On 6/17/20 9:22 PM, Dan Murphy wrote:
-> Pavel/Jacek
+>> +@rp_memset depends on patch@
+>> +expression E, size;
+>> +position p : script:python() { relevant(p) };
+>> +type T;
+>> +@@
+>> +
+>> +- memset((T)E, size)@p;
 > 
-> On 6/17/20 11:28 AM, kernel test robot wrote:
->> Hi Dan,
->>
->> I love your patch! Yet something to improve:
->>
->> [auto build test ERROR on pavel-linux-leds/for-next]
->> [cannot apply to j.anaszewski-leds/for-next]
->> [if your patch is applied to the wrong git tree, please drop us a note 
->> to help
->> improve the system. BTW, we also suggest to use '--base' option to 
->> specify the
->> base tree in git format-patch, please see 
->> https://stackoverflow.com/a/37406982]
->>
->> url:    
->> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217 
->>
->> base:   
->> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git 
->> for-next
->> config: ia64-randconfig-r015-20200617 (attached as .config)
->> compiler: ia64-linux-gcc (GCC) 9.3.0
->> reproduce (this is a W=1 build):
->>          wget 
->> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross 
->> -O ~/bin/make.cross
->>          chmod +x ~/bin/make.cross
->>          # save the attached .config to linux build tree
->>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 
->> make.cross ARCH=ia64
->>
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kernel test robot <lkp@intel.com>
->>
->> All errors (new ones prefixed by >>, old ones prefixed by <<):
->>
->> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
->> `lp55xx_set_mc_brightness':
->>>> drivers/leds/leds-lp55xx-common.c:146: undefined reference to 
->>>> `led_mc_calc_color_components'
->> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
->> `devm_led_classdev_multicolor_register':
->>>> include/linux/led-class-multicolor.h:74: undefined reference to 
->>>> `devm_led_classdev_multicolor_register_ext'
->> vim +146 drivers/leds/leds-lp55xx-common.c
->>
->>     138
->>     139    static int lp55xx_set_mc_brightness(struct led_classdev *cdev,
->>     140                        enum led_brightness brightness)
->>     141    {
->>     142        struct led_classdev_mc *mc_dev = lcdev_to_mccdev(cdev);
->>     143        struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
->>     144        struct lp55xx_device_config *cfg = led->chip->cfg;
->>     145
->>   > 146        led_mc_calc_color_components(&led->mc_cdev, brightness);
->>     147        return cfg->multicolor_brightness_fn(led);
->>     148
+> This is missing a 0 argument.
 > 
-> Well this was a mess to figure out.
-> 
-> The only fix I can figure out here is to remove the
-> 
->      depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
-> 
-> from each child device and add
-> 
->      select LEDS_CLASS_MULTI_COLOR
-> 
-> to the LP55XX_COMMON
-> 
-> This way the Multi color framework will inherit the symbol that was set 
-> by the COMMON flag which is inherited by majority from the child flags.
 
-Did you try this?
+Thanks, I will send v4.
 
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -398,6 +398,7 @@ config LEDS_LP50XX
-  config LEDS_LP55XX_COMMON
-         tristate "Common Driver for TI/National 
-LP5521/5523/55231/5562/8501"
-         depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || LEDS_LP8501
-+       depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
-         depends on OF
-         select FW_LOADER
-         select FW_LOADER_USER_HELPER
+> 
+> 
+>> +  ... when != E
+>> +      when strict
+>> +(
+>> +- kfree(E);
+>> ++ kzfree(E);
+>> +|
+>> +- \(vfree\|kvfree\)(E);
+>> ++ kvfree_sensitive(E, size);
+>> +)
+> 
+> I'm not sure why you want kzfree in the first case, but kvfree_sensitive
+> in the second case.
+> 
 
+As for now in kernel:
 
--- 
-Best regards,
-Jacek Anaszewski
+memset(E,0,...) && kfree(E) is kzfree()
+
+There are no vzfree or kvzfree functions.
+Thus, we use kvfree_sensitive().
+
+Maybe it's worth to wait for this patchset:
+https://lkml.org/lkml/2020/6/16/1163
+
+With it the rule will use:
+
+(
+- kfree(E);
++ kfree_sensitive(E);
+|
+- \(vfree\|kvfree\)(E);
++ kvfree_sensitive(E, size);
+)
+
+Thanks,
+Denis
