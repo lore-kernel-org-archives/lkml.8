@@ -2,123 +2,98 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F1EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D1EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0652A20739
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E69F120739
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:31:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="FQGFaMBo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgFQRak (ORCPT
+        id S1726979AbgFQRbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 13:30:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgFQRak (ORCPT
+        Wed, 17 Jun 2020 13:31:20 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:12320 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbgFQRbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 13:30:40 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D5E1C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:30:40 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jlbtR-00074W-BJ; Wed, 17 Jun 2020 19:30:33 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jlbtP-00036W-Nq; Wed, 17 Jun 2020 19:30:31 +0200
-Date:   Wed, 17 Jun 2020 19:30:31 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Guru Das Srinagesh <gurus@codeaurora.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] video: ssd1307fb: Print PWM period using 64-bit
- format specifier
-Message-ID: <20200617173031.tzzpzihcxtf4e6t6@taurus.defre.kleine-koenig.org>
-References: <20200615141606.2814208-1-thierry.reding@gmail.com>
- <20200615141606.2814208-2-thierry.reding@gmail.com>
- <CAMuHMdWaKgNOz02eVXkFnGRpsjdNNGVtuCf0setigH31-9aXQg@mail.gmail.com>
+        Wed, 17 Jun 2020 13:31:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592415079; x=1623951079;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=OM6axmQ3Y7wpPN2+W/tJEyq6eZpGAQXID7u+0+rJwys=;
+  b=FQGFaMBoXTzk1F+TbLWCCzNuplOTDmP9GZzTu7opE44vSnePJyX4xxD1
+   tEAJrfC+wi2w7BKvvL8zgffAY1O5BbkrT8+BqVzyCfgUn2mMblQWQsKGr
+   rl65KCvzgrFogsia/3W/lO99E3gr1GYIdRH5PqJuGSqp7mATB2s1o3zd2
+   kHen/mxITOGXdvH6JUb7BdhJJV24K1nwh5ba3BHNm9KVonEWLnAIRwQNR
+   xwpxWdvd8VsypE0Q67wbVlMpZbebQvR0qlfnQBbB1JcsrXoEAUKkfDB5H
+   OHvwM+xgDKLE74nC56mY3n2kOcW/4GzxSd4rjgeN2PZYj2uA7KTSbLfV+
+   w==;
+IronPort-SDR: tDf5rt3WZ359d84RruxG0xFqoomjLnn7oUYTMNnFz1jTUCH3vRLn6KhM7744ruAkcuBq20//Ag
+ cd2tDnzv/ronCnFkoIG/xEa8/DTrQgM+oiBzbXxzUDPmMmNjEFOHV1q8lFnSIa90b0bTQ20Ayi
+ xNVBMuE8XR08ZmyKYnSrMFLvLnAfpvBJlEF8c360LafHqvFmra24weZn4tXNJq9U9yFrM+b2gD
+ BMrHusqFJZs5azDooyBUSKwZo8H/kLf7EA3jkxIr1OI7++TNz6I+vUvoExgzbuBv7JFUP8Ub19
+ m5w=
+X-IronPort-AV: E=Sophos;i="5.73,523,1583218800"; 
+   d="scan'208";a="84030284"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Jun 2020 10:31:19 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 17 Jun 2020 10:31:19 -0700
+Received: from [10.171.246.62] (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Wed, 17 Jun 2020 10:31:16 -0700
+Subject: Re: [PATCH] net: macb: undo operations in case of failure
+To:     Jakub Kicinski <kuba@kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+CC:     <davem@davemloft.net>, <linux@armlinux.org.uk>,
+        <antoine.tenart@bootlin.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1592400235-11833-1-git-send-email-claudiu.beznea@microchip.com>
+ <20200617092935.4e3616c1@kicinski-fedora-PC1C0HJN>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+Message-ID: <89e629e3-6fe7-3e9e-0800-0ca97a9217ce@microchip.com>
+Date:   Wed, 17 Jun 2020 19:31:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rxl2imxmh4ztjdin"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWaKgNOz02eVXkFnGRpsjdNNGVtuCf0setigH31-9aXQg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200617092935.4e3616c1@kicinski-fedora-PC1C0HJN>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 17/06/2020 at 18:29, Jakub Kicinski wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> On Wed, 17 Jun 2020 16:23:55 +0300 Claudiu Beznea wrote:
+>> Undo previously done operation in case macb_phylink_connect()
+>> fails. Since macb_reset_hw() is the 1st undo operation the
+>> napi_exit label was renamed to reset_hw.
+>>
+>> Fixes: b2b041417299 ("net: macb: convert to phylink")
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> 
+> Fixes tag: Fixes: b2b041417299 ("net: macb: convert to phylink")
+> Has these problem(s):
+>          - Target SHA1 does not exist
 
---rxl2imxmh4ztjdin
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It must be:
+Fixes: 7897b071ac3b ("net: macb: convert to phylink")
 
-On Wed, Jun 17, 2020 at 09:18:34AM +0200, Geert Uytterhoeven wrote:
-> Hi Thierry,
->=20
-> On Mon, Jun 15, 2020 at 4:17 PM Thierry Reding <thierry.reding@gmail.com>=
- wrote:
-> > The PWM core will soon change the duty cycle and period of PWMs to 64
-> > bits to allow for a broader range of values. Use a 64-bit format
-> > specifier to avoid a warning when that change is made.
-> >
-> > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
->=20
-> > --- a/drivers/video/fbdev/ssd1307fb.c
-> > +++ b/drivers/video/fbdev/ssd1307fb.c
-> > @@ -312,7 +312,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
-> >                 /* Enable the PWM */
-> >                 pwm_enable(par->pwm);
-> >
-> > -               dev_dbg(&par->client->dev, "Using PWM%d with a %dns per=
-iod.\n",
-> > +               dev_dbg(&par->client->dev, "Using PWM%d with a %lluns p=
-eriod.\n",
-> >                         par->pwm->pwm, pwm_get_period(par->pwm));
-> >         }
->=20
-> This change must be done together with changing the return type of
-> pwm_get_period(), else you will get a compiler warning, and will print a
-> bogus value.
 
-Right, or we must change to passing (unsigned long
-long)pwm_get_period(par->pwm), then change the prototype and then drop
-the cast again.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---rxl2imxmh4ztjdin
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7qUzQACgkQwfwUeK3K
-7Al5CggAh8+r0Y0C/ThEZNWlCxMmhx0L8XAMh5KCzFqGs4RtUTs/gCzwKDD13y1o
-YOA7JbWwL44I06iFwXbFpYcEbnRR8Id9ZWsTjNQ9tdAyqu69Ms675Rcl+BOIAWtZ
-RZoc0OUnFc2JxTDUMomnk+lPNNqELa8U/MX6ipDfXFhKYOv83XI0/9Ili3yknjfO
-tl6couylxCAO7zcLoG6WEHXAjj+nHmtTTshlrNEg0yeLsrmGPVZX+QNwkR04nuiP
-CPe63DiY6BtaWhW9tsZ9BD0y2lio1SYHrQeb1t5eLpf52dk0SXl0hzAUOb1e8TS4
-C6vvvqC7ecm1+rPBEBDiW2479HVP4w==
-=laBW
------END PGP SIGNATURE-----
-
---rxl2imxmh4ztjdin--
+-- 
+Nicolas Ferre
