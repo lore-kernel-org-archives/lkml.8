@@ -2,110 +2,180 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB648C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97A1020853
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:27:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnsDu/n7"
+	by mail.kernel.org (Postfix) with ESMTP id 2CDB72080D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgFQF1F (ORCPT
+        id S1726891AbgFQF2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 01:27:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbgFQF1A (ORCPT
+        Wed, 17 Jun 2020 01:28:38 -0400
+Received: from mailgate-2.ics.forth.gr ([139.91.1.5]:44432 "EHLO
+        mailgate-2.ics.forth.gr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgFQF2h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 01:27:00 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28366C061573
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 22:27:00 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k2so452588pjs.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 22:27:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=1xjkUNXRrltW0v367905hcdOUoCgRbDmUvJ+4nENETw=;
-        b=EnsDu/n7ObTOMuNzMgWv+/zLljv5adhFJhPwWDW0B+zK20kJONNEtDVAGtRUm+eNdN
-         yFiJ7UJqUa51Gynnn8GlKK14oTD4h7g0VEOiEsXn2rVeLyUdbvJbCjaJHCsiRKFsTlXz
-         1FWIAGZYRNj/Z7jwW8YM6sqyPkrV5ca3trdH2iAJbi7J0wvX5sMLVP0N9BoXjbqWLLpu
-         jJ9VIOgjoL562ZRdzLEL2bRA8dhfzZqrvecZYMLi/1ifbxpmalhtwJHo9Gjp/MeZN23v
-         b5lHMeEy9GcGCNTfkeF4AyFDOqmn70EIg3NorqBg2xZCPU8uUZXxqjcC4kDK6WzqoMMg
-         6rzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=1xjkUNXRrltW0v367905hcdOUoCgRbDmUvJ+4nENETw=;
-        b=SDOVrGHOLFd6d+TTSvMwf3PTaHIzgIq/4inEFRQLNypDJFbFMJ3ykhAM2B7iUoL+Bk
-         RanYs7pL4z1JVcBhC0StsYaUBOX7co5zEcYWztsbjSOknaipzmeXEaViQQiCSjhuJm9c
-         WXqtmiw+hqApj+P9paoyzfaPYkRbaOY4tzgqzagRP7FWDx+ZXCA8FyBkk2Kl7lzEMi/I
-         m7jCmy8KgNlwGYYj4rwZEU55ALz/uYP4sD+mwDY8x06+LIMx91ioep8mqQgAW/JomWCF
-         xbXWSpkY+X8YMB7dhlV2u2/hoQXu35ViHShZHiRSud8yBLoSzcN/4OL5C20z9kpnIZoh
-         vCjw==
-X-Gm-Message-State: AOAM533krJZ4mh3CjLii4X0LCVYSn0JT2Z2QywWGhMckhDGyfd2J6RXX
-        VL3aZAADJEGJnVokYv/zb90=
-X-Google-Smtp-Source: ABdhPJyXLZtdfd5w3dIrNxpAD+EcH91c6nLcyKwApnjCfWiCWHpzt+5xo/Beb011cKcVfXvfO09q3g==
-X-Received: by 2002:a17:902:6947:: with SMTP id k7mr5232713plt.258.1592371619698;
-        Tue, 16 Jun 2020 22:26:59 -0700 (PDT)
-Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id d184sm8830068pfd.85.2020.06.16.22.26.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jun 2020 22:26:58 -0700 (PDT)
-From:   js1304@gmail.com
-X-Google-Original-From: iamjoonsoo.kim@lge.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v6 6/6] mm/vmscan: restore active/inactive ratio for anonymous LRU
-Date:   Wed, 17 Jun 2020 14:26:23 +0900
-Message-Id: <1592371583-30672-7-git-send-email-iamjoonsoo.kim@lge.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592371583-30672-1-git-send-email-iamjoonsoo.kim@lge.com>
-References: <1592371583-30672-1-git-send-email-iamjoonsoo.kim@lge.com>
+        Wed, 17 Jun 2020 01:28:37 -0400
+Received: from av3.ics.forth.gr (av3in [139.91.1.77])
+        by mailgate-2.ics.forth.gr (8.14.4/ICS-FORTH/V10-1.8-GATE) with ESMTP id 05H5SIbw014773;
+        Wed, 17 Jun 2020 05:28:20 GMT
+X-AuditID: 8b5b014d-257ff700000045c5-8c-5ee9a9f1b299
+Received: from enigma.ics.forth.gr (enigma.ics.forth.gr [139.91.151.35])
+        by av3.ics.forth.gr (Symantec Messaging Gateway) with SMTP id B3.12.17861.1F9A9EE5; Wed, 17 Jun 2020 08:28:18 +0300 (EEST)
+X-ICS-AUTH-INFO: Authenticated user:  at ics.forth.gr
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 17 Jun 2020 08:28:17 +0300
+From:   Nick Kossifidis <mick@ics.forth.gr>
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Nick Kossifidis <mick@ics.forth.gr>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] riscv: Support CONFIG_STRICT_DEVMEM
+Organization: FORTH
+In-Reply-To: <CANXhq0pMutK0+hHchQPOaZLqm9B-=MTKv8Xig4hM71_B=5+2bg@mail.gmail.com>
+References: <cover.1592292685.git.zong.li@sifive.com>
+ <7faa60aa4a606b5c5c1ae374d82a7eee6c764b38.1592292685.git.zong.li@sifive.com>
+ <29425dbf7d54bab2733d28480d3adb61@mailhost.ics.forth.gr>
+ <CANXhq0pMutK0+hHchQPOaZLqm9B-=MTKv8Xig4hM71_B=5+2bg@mail.gmail.com>
+Message-ID: <6e6cf39ae6ed91bbe086adbade5786cb@mailhost.ics.forth.gr>
+X-Sender: mick@mailhost.ics.forth.gr
+User-Agent: Roundcube Webmail/1.3.9
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsXSHT1dWffTypdxBvsOMVlc3jWHzWLb5xY2
+        i+Z359gtXl7uYbZom8Vv8eHubDYHNo83L1+yeDzcdInJY/OSeo9LzdfZPT5vkgtgjeKySUnN
+        ySxLLdK3S+DKWP3yJVvBA7mK2d0z2RoY34p3MXJwSAiYSNy7nNTFyMUhJHCUUWLXxk1MXYyc
+        QHFTidl7OxlBbF4BQYmTM5+wgNjMAhYSU6/sZ4Sw5SWat85mBrFZBFQl9h15ARZnE9CUmH/p
+        IFi9iICCxJUlG1lAFjALTGaSWN9/hBUkISxgI/HrxQqwIn4BYYlPdy+yghzEKRAo0f9ZAeKg
+        NiaJ47dvMEMc4SKxfPdRdojjVCQ+/H4AZosKKEvcPPycfQKj4Cwkt85CcussJLcuYGRexSiQ
+        WGasl5lcrJeWX1SSoZdetIkRHOSMvjsYb29+q3eIkYmD8RCjBAezkgiv8+8XcUK8KYmVValF
+        +fFFpTmpxYcYpTlYlMR587iXxwoJpCeWpGanphakFsFkmTg4pRqYMmVKsrVfCJZure/K92j8
+        8nr7Xr0XzDO43eZ8m7FPI1ZdR9H/u2ebGK/446k7pt/SODwr1PH+H73VBfk3zjIv4rv548Pf
+        OoM1R5dePSOpl89/u9h53jzLvQWCl2YYlbe/LVd4q54SP/3fmoJV5XseXfy0pqJ+2kf53Kq6
+        4LlFEivbMmqP7EhZZnhAWPHgnjkXIg7nuOz13nz7yZ6ICXerfG2kyy4sXpdT5V4sp/G4Qvq/
+        3Fk3SbcDR6tFe2uuP7vZe2375eNfdTdzH49QiZrq5+HO8Zlb8MpLnXPPYzr6pzN3CXx84L7z
+        xM25ctWiXDVe7w5G87AERUSvPLYovMTRXexH7/HzTG9r/7Aw89xYp8RSnJFoqMVcVJwIAHwp
+        EdrhAgAA
+X-Greylist: inspected by milter-greylist-4.6.2 (mailgate-2.ics.forth.gr [139.91.1.5]); Wed, 17 Jun 2020 05:28:20 +0000 (GMT) for IP:'139.91.1.77' DOMAIN:'av3in' HELO:'av3.ics.forth.gr' FROM:'mick@ics.forth.gr' RCPT:''
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mailgate-2.ics.forth.gr [139.91.1.5]); Wed, 17 Jun 2020 05:28:20 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Στις 2020-06-17 04:56, Zong Li έγραψε:
+> On Tue, Jun 16, 2020 at 8:27 PM Nick Kossifidis <mick@ics.forth.gr> 
+> wrote:
+>> 
+>> Στις 2020-06-16 10:45, Zong Li έγραψε:
+>> > Implement the 'devmem_is_allowed()' interface for RISC-V, like some of
+>> > other architectures have done. It will be called from
+>> > range_is_allowed()
+>> > when userpsace attempts to access /dev/mem.
+>> >
+>> > Access to exclusive IOMEM and kernel RAM is denied unless
+>> > CONFIG_STRICT_DEVMEM is set to 'n'.
+>> >
+>> > Test it by devmem, the result as follows:
+>> >
+>> >  - CONFIG_STRICT_DEVMEM=y
+>> >       $ devmem 0x10010000
+>> >       0x00000000
+>> >       $ devmem 0x80200000
+>> >       0x0000106F
+>> >
+>> >  - CONFIG_STRICT_DEVMEM is not set
+>> >       $ devmem 0x10010000
+>> >       devmem: mmap: Operation not permitted
+>> >       $ devmem 0x80200000
+>> >       devmem: mmap: Operation not permitted
+>> >
+>> > Signed-off-by: Zong Li <zong.li@sifive.com>
+>> > ---
+>> >  arch/riscv/Kconfig          |  1 +
+>> >  arch/riscv/include/asm/io.h |  2 ++
+>> >  arch/riscv/mm/init.c        | 19 +++++++++++++++++++
+>> >  3 files changed, 22 insertions(+)
+>> >
+>> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>> > index 128192e14ff2..ffd7841ede4c 100644
+>> > --- a/arch/riscv/Kconfig
+>> > +++ b/arch/riscv/Kconfig
+>> > @@ -16,6 +16,7 @@ config RISCV
+>> >       select ARCH_HAS_BINFMT_FLAT
+>> >       select ARCH_HAS_DEBUG_VIRTUAL if MMU
+>> >       select ARCH_HAS_DEBUG_WX
+>> > +     select ARCH_HAS_DEVMEM_IS_ALLOWED
+>> >       select ARCH_HAS_GCOV_PROFILE_ALL
+>> >       select ARCH_HAS_GIGANTIC_PAGE
+>> >       select ARCH_HAS_MMIOWB
+>> > diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
+>> > index 3835c3295dc5..04ac65ab93ce 100644
+>> > --- a/arch/riscv/include/asm/io.h
+>> > +++ b/arch/riscv/include/asm/io.h
+>> > @@ -147,4 +147,6 @@ __io_writes_outs(outs, u64, q, __io_pbr(),
+>> > __io_paw())
+>> >
+>> >  #include <asm-generic/io.h>
+>> >
+>> > +extern int devmem_is_allowed(unsigned long pfn);
+>> > +
+>> >  #endif /* _ASM_RISCV_IO_H */
+>> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+>> > index bbe816e03b2f..5e7e61519acc 100644
+>> > --- a/arch/riscv/mm/init.c
+>> > +++ b/arch/riscv/mm/init.c
+>> > @@ -517,6 +517,25 @@ void mark_rodata_ro(void)
+>> >  }
+>> >  #endif
+>> >
+>> > +#ifdef CONFIG_STRICT_DEVMEM
+>> > +#include <linux/ioport.h>
+>> > +/*
+>> > + * devmem_is_allowed() checks to see if /dev/mem access to a certain
+>> > address
+>> > + * is valid. The argument is a physical page number.
+>> > + *
+>> > + * Disallow access to system RAM as well as device-exclusive MMIO
+>> > regions.
+>> > + * This effectively disable read()/write() on /dev/mem.
+>> > + */
+>> > +int devmem_is_allowed(unsigned long pfn)
+>> > +{
+>> > +     if (iomem_is_exclusive(pfn << PAGE_SHIFT))
+>> > +             return 0;
+>> > +     if (!page_is_ram(pfn))
+>> > +             return 1;
+>> > +     return 0;
+>> > +}
+>> > +#endif
+>> > +
+>> >  void __init resource_init(void)
+>> >  {
+>> >       struct memblock_region *region;
+>> 
+>> This shouldn't be part of /mm/init.c, it has nothing to do with memory
+>> initialization, I suggest we move it to another file like mmap.c on
+> 
+> Let me move it, thanks.
+> 
+>> arm/arm64. Also before using iomem_is_exclusive we should probably 
+>> also
+>> mark any reserved regions with the no-map attribute as busy|exclusive,
+>> reserved-memory regions are not necessarily part of the main memory so
+>> the page_is_ram check may pass and iomem_is_exclusive won't do any 
+>> good.
+> 
+> What do you think if we mark the reserved region in
+> kdump_resource_init, and change the kdump_resource_init to a more
+> generic name for initializing resources?
 
-Now, workingset detection is implemented for anonymous LRU.
-We don't have to worry about the misfound for workingset due to
-the ratio of active/inactive. Let's restore the ratio.
-
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
----
- mm/vmscan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index eb02d18..ec77691 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2211,7 +2211,7 @@ static bool inactive_is_low(struct lruvec *lruvec, enum lru_list inactive_lru)
- 	active = lruvec_page_state(lruvec, NR_LRU_BASE + active_lru);
- 
- 	gb = (inactive + active) >> (30 - PAGE_SHIFT);
--	if (gb && is_file_lru(inactive_lru))
-+	if (gb)
- 		inactive_ratio = int_sqrt(10 * gb);
- 	else
- 		inactive_ratio = 1;
--- 
-2.7.4
-
+Sounds good to me, I'll work on this within the week. Do you agree with 
+marking the no-map reserved-memory regions as exclusive ?
