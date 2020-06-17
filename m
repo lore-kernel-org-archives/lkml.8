@@ -2,123 +2,97 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A943EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 882622088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CAF20FC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:39:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="bWeuEGbx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CmwYkf8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgFQVj1 (ORCPT
+        id S1727113AbgFQVjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:39:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41190 "EHLO
+        Wed, 17 Jun 2020 17:39:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbgFQVj0 (ORCPT
+        with ESMTP id S1726763AbgFQVjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:39:26 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2417C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 14:39:25 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id p20so4144817ejd.13
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 14:39:25 -0700 (PDT)
+        Wed, 17 Jun 2020 17:39:35 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86D3C06174E;
+        Wed, 17 Jun 2020 14:39:35 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id jz3so1600062pjb.0;
+        Wed, 17 Jun 2020 14:39:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ImI8Ok+4hTrVgMnlUOodKQsTvi7BmFR+KaXLQR11ZeI=;
-        b=bWeuEGbxKUp0jXrRtQ/5nd/WrZaDrcxBK6Jyx8TLWnAVAx3o6u9Sqc+OZNGYldS5ed
-         jIkDNUmJId0Z1cmQzbrgTgrHQhpdtSRR3HltaFucCJfncZJIhyNbr3xWbH05F2HoMQFS
-         MyyRMQ2yKC1B8mI6JQ53DdiNlSiD9w5QPcU0BmcgaDdwjCQeXGDWQjq76W5ISLWOF+Zu
-         IDhMdmHHGwe+kOHXmkkSB52LBxhlfAy6iHSRoQKoeLlyJnoMVwPbBUhxeKV3QVJx4+0f
-         9GZElLuH4ywSm2+p9yievsmbujUlOkEqyCIGA3086WPOiUxLd5ow0xCLPMSrifpozBkQ
-         mHyA==
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=rLvBGjiO+L3wUJwmseM5JxfmJEyzpxUO8YmO65Td4oc=;
+        b=CmwYkf8AEsp0zIcYic3FHDk2QqCd3RwkLH0UnvSHyICn2Ad2q+hF9SH2ORd/yNl6s3
+         ZT/M2d6xzBzUtAmCU+OgLV/HIkIqJXsbUGPmD51AMcp8jTnx1/Zhqb/a/6zpU4A1GabR
+         yo6P55EPKhbfefcvRXfu+y3IsBrjGa5IKLYv3q0ID13USatYvqNaieO8ub5+X3t6PsO+
+         rSzrrI2RlHniSG08RmBO1DX/gxosK4Kqkcqmo0NDxNhAzf+5JP0rLIstSJK06tcOKm4h
+         NZsNJq5dh7VWAO6bDXza4RQGeZDonVwI27aUX7C0tYT5uaT+p7q0Y3a58ozefA6cvNi9
+         B3Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ImI8Ok+4hTrVgMnlUOodKQsTvi7BmFR+KaXLQR11ZeI=;
-        b=YBz4HRCOFKVJNLUu4rO7P6cyhCtK9ecI9YQEHANe+nBcXzU2RTPNX2+lgbCEvTdLsZ
-         aa4Y4of2TXXd9dkbZRtzJxN4oO3di2Twa3/Lq8uI+qdm49WMrX4MzwDIx5WAXGVqE5AO
-         H32Xl/iJFLQe2SI67T68Wj0Bjp0QusKVVvriXzUoen9qOM8wPIuaeHN0K23vUG9R9UE4
-         0on+W+Mh5IHd6jObk/gb/noP35/Na+q8gpvvkMCFyST2fndb5L+alQFR+17fO0kgzSx8
-         XRNO97LehUi2j4x8eFQNh+zg2iJG5A2WKYy6zac0Ec/yzsTPcG7WDZnqqEbV8+7VEMd1
-         Ce5w==
-X-Gm-Message-State: AOAM530Qp7dyHdg/wt228lllMUy2lw/iARGPhru/BZhYLWb+2p5Sc6QJ
-        R27Niq+01kmGI3vQMR+Tp7lUt9d95UnWO+4MWi38Sb8=
-X-Google-Smtp-Source: ABdhPJzk7u5uzrlLrFOB9CSpiyqTMZ6XeRa6IVwfWOgSjylCa8wf4CDed5CzCQUYQmqTFjOu3KaiA+TOznkJdjqC7oo=
-X-Received: by 2002:a17:906:ecef:: with SMTP id qt15mr1075750ejb.91.1592429964536;
- Wed, 17 Jun 2020 14:39:24 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rLvBGjiO+L3wUJwmseM5JxfmJEyzpxUO8YmO65Td4oc=;
+        b=rE8Q6xhLskHDkKxdx2jo4RGjbOeye19y1HDVqzG0m6PM9zHMwavyTyV3CDwmz0czZb
+         daWaOKNVVYa2P4i61da92Bqs/CsNGf1KNISB0qt4qGpMeei+h6CIJuCBcu6PgzCIl5Be
+         FH8a4sAFC+k2+aJJjHwx/BmY+o/Z9rf0+0EMkpJuauLYHssIiEWFfi0dB2Sg+K541QJL
+         B+KrYrIRBlxqokzmOTnBeI1Ln7X73LRLXWB+VHivN5MSE4+lX+0h9nLdj9awiQUpxfEz
+         SIXZJQK978lUexKLTjtxKCsGVonnKl1QoXFGwI6ajoxX+g/k+EaW6PEn/S9g1eJbUUZ2
+         9Fpg==
+X-Gm-Message-State: AOAM5328R0oafBT+ieUIHgZ529HCpove34gA4magGmg3ZlGIfeoqTEzo
+        cQngjXAF2pY1EwvyQxxw9QI+hBJI
+X-Google-Smtp-Source: ABdhPJy3b4v8K4VFeWwtC/1UQfJbYMEh0TRO2v4ppeU3sOMOh5f7pqjt9dp5gfEn27JISvSVTMx//A==
+X-Received: by 2002:a17:90a:fe88:: with SMTP id co8mr960302pjb.209.1592429974942;
+        Wed, 17 Jun 2020 14:39:34 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a12sm431101pjw.35.2020.06.17.14.39.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2020 14:39:34 -0700 (PDT)
+Subject: Re: [PATCH 3/8] mips: bmips: add BCM6328 clock definitions
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        mturquette@baylibre.com, sboyd@kernel.org, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, robh+dt@kernel.org,
+        julia.lawall@lip6.fr, jonas.gorski@gmail.com, lkp@intel.com,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+References: <20200615090231.2932696-1-noltari@gmail.com>
+ <20200615090231.2932696-4-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <8d3d8a53-02f6-b780-b380-b07e275a1b27@gmail.com>
+Date:   Wed, 17 Jun 2020 14:39:32 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200617124028.14130-1-trix@redhat.com> <CAEjxPJ5uGV-SjKL7v5J=7YYEBOjyHwK625SX8fzCrbatuB=9hg@mail.gmail.com>
- <CAHC9VhT_mAd8pkboQX1xQpxmYkFvK=HW3pUB8_UzbgnW4+=RjA@mail.gmail.com>
-In-Reply-To: <CAHC9VhT_mAd8pkboQX1xQpxmYkFvK=HW3pUB8_UzbgnW4+=RjA@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 17 Jun 2020 17:39:13 -0400
-Message-ID: <CAHC9VhRb7W3NkXADz9+tW_FVNE=gR1-hikHdBYGg+O-ZAdY+bw@mail.gmail.com>
-Subject: Re: [PATCH] selinux: fix undefined return of cond_evaluate_expr
-To:     trix@redhat.com
-Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>, weiyongjun1@huawei.com,
-        SElinux list <selinux@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200615090231.2932696-4-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 4:51 PM Paul Moore <paul@paul-moore.com> wrote:
-> On Wed, Jun 17, 2020 at 9:58 AM Stephen Smalley
-> <stephen.smalley.work@gmail.com> wrote:
-> > On Wed, Jun 17, 2020 at 8:40 AM <trix@redhat.com> wrote:
-> > >
-> > > From: Tom Rix <trix@redhat.com>
-> > >
-> > > clang static analysis reports an undefined return
-> > >
-> > > security/selinux/ss/conditional.c:79:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
-> > >         return s[0];
-> > >         ^~~~~~~~~~~
-> > >
-> > > static int cond_evaluate_expr( ...
-> > > {
-> > >         u32 i;
-> > >         int s[COND_EXPR_MAXDEPTH];
-> > >
-> > >         for (i = 0; i < expr->len; i++)
-> > >           ...
-> > >
-> > >         return s[0];
-> > >
-> > > When expr->len is 0, the loop which sets s[0] never runs.
-> > >
-> > > So return -1 if the loop never runs.
-> > >
-> > > Signed-off-by: Tom Rix <trix@redhat.com>
-> >
-> > Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> >
-> > clang didn't complain about the similar pattern in
-> > security/selinux/ss/services.c:constraint_expr_eval()?
->
-> Related question: I appreciate the work you are doing Tom, can you
-> share how far along you are testing the SELinux code with clang?  I
-> ask because it would be nice to roll all of these patches up into one
-> PR for Linus instead of sending multiple updates.
 
-Regardless, this patch looks good to me too so I've merged it into the
-selinux/stable-5.8 branch with the others.  Thank you.
 
-It would still be nice to know if there are other clang failures you
-are working on fixing or if this is it for awhile.
+On 6/15/2020 2:02 AM, Álvaro Fernández Rojas wrote:
+> Add header with BCM6328 definitions in order to be able to include it from
+> device tree files.
+> 
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-paul moore
-www.paul-moore.com
+Florian
