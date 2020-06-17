@@ -2,183 +2,86 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36172C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D55C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11A9B21548
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276C421556
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592432221;
-	bh=KowlxG65tz9vfiybuZAojROsw0Pm5+V1piEoxV5K5yc=;
+	s=default; t=1592432302;
+	bh=D5bbCEiWFwi5ijhmE4iq3GumgRgrcYXrR+dhiHw2LNY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T3rP8eeg53vaspGBgp34joA+1Xaut4Pa2cJfj9XOASbE6i4L+aNgB35DiZP8phpdD
-	 onTcYe6xocHZ8cqIODj3ii2MJO//W277Hi79YSlZnZwt1BdCZ8/UWlx7PvYlJvMW7Q
-	 n2MGB6AsjoCIbj6ieg7Ttwglcdem2SqxxH69H0pQ=
+	b=dk8p9VIX4hX6xmo2OUz+apl0gX1rZWx29QefWyf+TxNtQQ9+gEA8lx1OUq9sgx6o6
+	 uRJtCZFyIAy3aGOcbGtHZS4nrSwg1in3WETSDjE2d95Y+IcTMY5eaiQXSLTD3OVHlj
+	 4lavxz+xs8Tu/nAfzLdD/yElapyRcyNwov0IyYas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgFQWRA (ORCPT
+        id S1726966AbgFQWSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:17:00 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:33870 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726919AbgFQWQ7 (ORCPT
+        Wed, 17 Jun 2020 18:18:20 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36329 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgFQWST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:16:59 -0400
-Received: by mail-il1-f194.google.com with SMTP id x18so3916181ilp.1;
-        Wed, 17 Jun 2020 15:16:58 -0700 (PDT)
+        Wed, 17 Jun 2020 18:18:19 -0400
+Received: by mail-il1-f193.google.com with SMTP id a13so3918571ilh.3;
+        Wed, 17 Jun 2020 15:18:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=/dcY53hMYQl/W+BZuZm5AIbg/CG1JMRTeXapBxnAQnQ=;
-        b=cCD97buxR44ylCSMBDeJRaiGlYT7TPaUN6hqN5+C/w2NXW4ALb8n6hDmqw8UXg7AEV
-         bvugJmJhcevikmtf/A/h7QlekyEELynR9CI7r3aU8ZHmE6fbZP3uprHmhzRQMOGeLDw5
-         olEh3WH3TffXcVEyRfujtkzvZJi5BL0BFBqVkxH5uLEqfKSZQBfvQjcAHt+sTmv6efLb
-         EGWU81wphAGUTN4Pw8CBeYfQE2IbuJjHhsCn8U6leidgbOt/KUs7IUY07fROUuC741kz
-         DUQ+5kYD4VjKNna69fwX5fweIHiO2ndKF5rT7KZhBuD1Zvp2R31RLXZh3XvOImk93SIG
-         fo6w==
-X-Gm-Message-State: AOAM530gm0LOvzxXcavQstZci8sU0gfr0dw+3J3XH1iK3JIQKaA5w/tz
-        9aUI1FUyjzmeYUDBXlABtg==
-X-Google-Smtp-Source: ABdhPJy/RDAuO2ERCKKVsMEchWk9PFvHKMyA40PezXAcNnCIINfQN0maDzTb8FiPAk/8JZR1aEbqIg==
-X-Received: by 2002:a92:db01:: with SMTP id b1mr1140964iln.233.1592432218330;
-        Wed, 17 Jun 2020 15:16:58 -0700 (PDT)
+        bh=Uz7g0bB18ztxeQgM+/H4yxv4w/AtkVlw+WDwFr6g8Ao=;
+        b=gKnmsvCwb1c5MwxE5ncNighG3ZLEm6eIoRgbRC8yJE56pcW7BSSH4W+uR6GuBbWpIG
+         df1d6wKOi7ahmSH7A5zqdexHYNk1y0y8Ksr/2LgeKznv0DlOHZrTwzTDUtTNNii5rqnS
+         4zkUEvKHsUYE6gsf60Rq+j0zXHUstfKtrylEwCjFXBRCzRZqmt7OVD3Ou6WYuot0F4LE
+         QlXEZBFJW6r2nVv0ZshZKokJoWj1T2Y8t7oOdFGYJ5LKk4lQYzZr2Uf8mOUDLHA9gGq2
+         RvZHVECmk/hzh4RNFHvcrVEPup8aWMUCz/Dj93jpSCiIEdjYWonFJ/NpCDZ8nj8m9G+5
+         A++Q==
+X-Gm-Message-State: AOAM532u1V6Am3S1iVlDJvBpHZ3xZLAsb9aE4T6kSVWg/ZAo5blB/b91
+        PPlDn/ahcrh2KT1AxbtxPQ==
+X-Google-Smtp-Source: ABdhPJwldBKKgVwMhWTp6+BTPDjZ5+GjxiMRxxsH5coqpGLhBPEg/c67Ti4jXWHLFczF1LllOIWBwg==
+X-Received: by 2002:a92:cb03:: with SMTP id s3mr1132707ilo.161.1592432298592;
+        Wed, 17 Jun 2020 15:18:18 -0700 (PDT)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id c62sm523052ill.62.2020.06.17.15.16.57
+        by smtp.gmail.com with ESMTPSA id t72sm552531ilk.23.2020.06.17.15.18.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 15:16:57 -0700 (PDT)
-Received: (nullmailer pid 2931941 invoked by uid 1000);
-        Wed, 17 Jun 2020 22:16:56 -0000
-Date:   Wed, 17 Jun 2020 16:16:56 -0600
+        Wed, 17 Jun 2020 15:18:18 -0700 (PDT)
+Received: (nullmailer pid 2934152 invoked by uid 1000);
+        Wed, 17 Jun 2020 22:18:17 -0000
+Date:   Wed, 17 Jun 2020 16:18:17 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     wg@grandegger.com, mkl@pengutronix.de, kernel@martin.sperl.org,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [RESEND PATCH 1/6] dt-bindings: can: Document devicetree
- bindings for MCP25XXFD
-Message-ID: <20200617221656.GA2927781@bogus>
-References: <20200610074711.10969-1-manivannan.sadhasivam@linaro.org>
- <20200610074711.10969-2-manivannan.sadhasivam@linaro.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Dmitry Shmidt <dimitrysh@google.com>, jbrunet@baylibre.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: clk: g12a-clkc: Add NNA CLK Source
+ clock IDs
+Message-ID: <20200617221817.GA2934098@bogus>
+References: <20200610083012.5024-1-narmstrong@baylibre.com>
+ <20200610083012.5024-2-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200610074711.10969-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20200610083012.5024-2-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 01:17:06PM +0530, Manivannan Sadhasivam wrote:
-> From: Martin Sperl <kernel@martin.sperl.org>
+On Wed, 10 Jun 2020 10:30:11 +0200, Neil Armstrong wrote:
+> From: Dmitry Shmidt <dimitrysh@google.com>
 > 
-> Add devicetree YAML bindings for Microchip MCP25XXFD CAN controller.
+> This adds the Neural Network Accelerator IP source clocks.
 > 
-> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-> [mani: converted to YAML binding]
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Dmitry Shmidt <dimitrysh@google.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  .../bindings/net/can/microchip,mcp25xxfd.yaml | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.yaml
+>  include/dt-bindings/clock/g12a-clkc.h | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.yaml b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.yaml
-> new file mode 100644
-> index 000000000000..7b87ec328515
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.yaml
-> @@ -0,0 +1,82 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/can/microchip,mcp25xxfd.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip MCP25XXFD stand-alone CAN controller binding
-> +
-> +maintainers:
-> +  -  Martin Sperl <kernel@martin.sperl.org>
-> +  -  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +
-> +properties:
-> +  compatible:
-> +    const: microchip,mcp2517fd
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  vdd-supply:
-> +    description: Regulator that powers the CAN controller
-> +
-> +  xceiver-supply:
-> +    description: Regulator that powers the CAN transceiver
-> +
-> +  microchip,clock-out-div:
-> +    description: Clock output pin divider
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
 
-You can drop the 'allOf' now.
-
-> +    enum: [0, 1, 2, 4, 10]
-> +    default: 10
-> +
-> +  microchip,clock-div2:
-> +    description: Divide the internal clock by 2
-> +    type: boolean
-> +
-> +  microchip,gpio-open-drain:
-> +    description: Enable open-drain for all pins
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - interrupts
-> +  - gpio-controller
-
-And '#gpio-cells'?
-
-> +  - vdd-supply
-> +  - xceiver-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +           #address-cells = <1>;
-> +           #size-cells = <0>;
-> +
-> +           can0: can@1 {
-> +                   compatible = "microchip,mcp2517fd";
-> +                   reg = <1>;
-> +                   clocks = <&clk24m>;
-> +                   interrupt-parent = <&gpio4>;
-> +                   interrupts = <13 0x8>;
-> +                   vdd-supply = <&reg5v0>;
-> +                   xceiver-supply = <&reg5v0>;
-> +                   gpio-controller;
-> +                   #gpio-cells = <2>;
-> +           };
-> +    };
-> +
-> +...
-> -- 
-> 2.17.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
