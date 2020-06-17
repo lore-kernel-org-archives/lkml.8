@@ -2,82 +2,82 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D7BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2CBC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2E9820897
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B275321548
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:41:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STIQ91+m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9gVA7VK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgFQVk7 (ORCPT
+        id S1726960AbgFQVlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41432 "EHLO
+        Wed, 17 Jun 2020 17:41:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726868AbgFQVk6 (ORCPT
+        with ESMTP id S1726758AbgFQVls (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:40:58 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C4DC06174E;
-        Wed, 17 Jun 2020 14:40:57 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r7so3962121wro.1;
-        Wed, 17 Jun 2020 14:40:57 -0700 (PDT)
+        Wed, 17 Jun 2020 17:41:48 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50961C06174E;
+        Wed, 17 Jun 2020 14:41:48 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id p20so4150855ejd.13;
+        Wed, 17 Jun 2020 14:41:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=L8KQGYBNXCs44/bdoqCRORNs1kx4kRZ8Xd0B+XPcWlQ=;
-        b=STIQ91+m6JuleAes4P5UdW4kW6ecexAAcwd95QzWO0ocf+lpG74ag4wecLCIYg+nsC
-         zr3UqChiw7EVoYpRPzjbIXHDtdkJUhtzINvCUkp+FhuBpzs76SXLQ6i6kdKVxzAfspU6
-         p6Yl71sO4l71ECbA+SyUZqaC/v+WUJWS0VizYb3DS9mXSY09VP09wQiL7siAGx4WLp8x
-         Eyj3dXKKQa7/dh7OU2tnuB5EzXGcjG1Q10lXc0WM4w1Xd2IAO99Kdj/f7NbB4tG7UwPM
-         NSx/D2QVGcZ/Z5VFauIAUbmihZPDIR/2o3O2XpMfd5hFEj0oyCo6e4288r0TRy9cYPAd
-         oBNg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cf3kkLok1ZPnk0qEHa7HqMsxq6OFGLjYN5CTh27kkEo=;
+        b=Z9gVA7VKLdv6qupqkJF1jLR6nSPpqDZ9dLJibhVqvReijtfSFJfbMdD9PPYoNR6Tze
+         RbNj3wNVh5qWZ58cHeGm/tPi67KC9UJ0B1PterfqQDQvd20UXdogvFirRp3tmI7HqQzg
+         iQS01DNZ+O+/W7fQHQCp9xwNcFqWRSTxMqs4DtQQ+Fg+yfOPG99s3ZEUUSz1z/Wd5vjm
+         6kHdTNW4Xj/eqi4Du//LWLvhFRtcH2kBQvBwnTo+apUAPg73yqAAF7pdk/QczBSj3s1x
+         atLgfXz10KMKNxp/2m4ce/a/g/fO52fzXlX6ZrY9D61gh1tN02apgIcxWZZ9LaaxU8i6
+         gYnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=L8KQGYBNXCs44/bdoqCRORNs1kx4kRZ8Xd0B+XPcWlQ=;
-        b=MAaLjVvQeVewAwzm6Pdk8FAd5QXddJpVok011lw/J7xAO0d4zFxjEBnm+L1DTAiw0H
-         TejipUpaOIF/u68WE22gmFs8d/xajj/a9+azPdXtKnYyY/2/IbukTQ9iaghMgpmaQr22
-         27/adAa+y0KuQVP++nnqJqfaSxLG97UwPJWY0Rk87VF2DVVWBNoSwbELlp/ZESlExKEK
-         eSDZgU6eJtXbJisRA4tdOsB5YBwzBP+kSJmJo8bHPQu4dA6KLmDE9Gfck39auxi/r9uh
-         2dTy0zpWLjHpArkd91Hq/c12/04aTasyzlr6YFFd7TSqNlkzeTiHn7X2ih0IX87oOtR/
-         8qkw==
-X-Gm-Message-State: AOAM5325+L4dMLxM3nZOI9LMvA+dCmiRF8skmNTSuUOQ1lZ3crtI/bhW
-        OuBkQ+oWsY48eXeWF+4Pn93IMEGe
-X-Google-Smtp-Source: ABdhPJzMdWex6wUFcFECN0CEWPasEMZbh90C++J8UTRk4A1GUy5WzH/OGa6jFsQFkZ2aKNlPQzROvA==
-X-Received: by 2002:adf:910e:: with SMTP id j14mr1176209wrj.278.1592430055834;
-        Wed, 17 Jun 2020 14:40:55 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id y16sm910876wro.71.2020.06.17.14.40.52
+        bh=cf3kkLok1ZPnk0qEHa7HqMsxq6OFGLjYN5CTh27kkEo=;
+        b=c5uRaUJHkzCWvWPT6nZgKLOqiVwtQBiKH4JFlduUSOn073avGnBCU8VyAQnRouK1aJ
+         OCuOBp51Ry60Vu9+9c8bDBRkq2UqTOEamkfY2MuaaaCtUbHBc0V3N9o+SogzdsywPHr5
+         iv1p6RVnTJ9mA82VIdgjgJZBmZ51ExQvyDbIM4FCGZeZ3V28PKZmnGVkmHvOyriuJS6Q
+         1Vv25n4gUlW73opPrt3YsxjT14C7q2u8Q/JlNOljcNs0pyzPE93Z4ZYHHsAcWaQ1URYq
+         +yMgYl1FGZwSWbPt7p1RY9MwmprgLNHcOWtrC6CKdTySh8/n5kJ3SUZoHFMVj/dnX2XJ
+         3gMw==
+X-Gm-Message-State: AOAM530mjuFzE/znz8+sCkzSeuP9vYKDkCYoONpnd7gmJaSL03miGAfN
+        DMOzlVzYKwb+wp09+bvys8090pMo
+X-Google-Smtp-Source: ABdhPJz56pKG6gDWHVpqU/LtOwYyWyJ8Rz6y88kGeZInLamhVFQw3fPUi/5NzxgQ4IpK0I9gooSf5w==
+X-Received: by 2002:a17:906:cede:: with SMTP id si30mr1128605ejb.315.1592430106800;
+        Wed, 17 Jun 2020 14:41:46 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:54e4:c127:a142:2ade? ([2a01:110f:b59:fd00:54e4:c127:a142:2ade])
+        by smtp.gmail.com with ESMTPSA id b11sm743222eju.91.2020.06.17.14.41.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 14:40:55 -0700 (PDT)
-Subject: Re: [PATCH 8/8] clk: bcm63xx-gate: switch to dt-bindings definitions
-To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        mturquette@baylibre.com, sboyd@kernel.org, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, robh+dt@kernel.org,
-        julia.lawall@lip6.fr, jonas.gorski@gmail.com, lkp@intel.com,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-References: <20200615090231.2932696-1-noltari@gmail.com>
- <20200615090231.2932696-9-noltari@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <80971cc7-3a69-730b-e3b0-bd963d47ed47@gmail.com>
-Date:   Wed, 17 Jun 2020 14:40:50 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Wed, 17 Jun 2020 14:41:46 -0700 (PDT)
+Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
+ support to lp55xx
+To:     Dan Murphy <dmurphy@ti.com>, kernel test robot <lkp@intel.com>,
+        pavel@ucw.cz, robh@kernel.org
+Cc:     kbuild-all@lists.01.org, devicetree@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200615201522.19677-12-dmurphy@ti.com>
+ <202006180032.JW0i39C6%lkp@intel.com>
+ <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <58ad7723-131f-6930-00d7-1144c993110c@gmail.com>
+Date:   Wed, 17 Jun 2020 23:41:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200615090231.2932696-9-noltari@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -85,14 +85,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Dan,
 
-
-On 6/15/2020 2:02 AM, √Ålvaro Fern√°ndez Rojas wrote:
-> Now that there are header files for each SoC, let's use them in the
-> bcm63xx-gate controller driver.
+On 6/17/20 9:22 PM, Dan Murphy wrote:
+> Pavel/Jacek
 > 
-> Signed-off-by: √Ålvaro Fern√°ndez Rojas <noltari@gmail.com>
+> On 6/17/20 11:28 AM, kernel test robot wrote:
+>> Hi Dan,
+>>
+>> I love your patch! Yet something to improve:
+>>
+>> [auto build test ERROR on pavel-linux-leds/for-next]
+>> [cannot apply to j.anaszewski-leds/for-next]
+>> [if your patch is applied to the wrong git tree, please drop us a note 
+>> to help
+>> improve the system. BTW, we also suggest to use '--base' option to 
+>> specify the
+>> base tree in git format-patch, please see 
+>> https://stackoverflow.com/a/37406982]
+>>
+>> url:    
+>> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217 
+>>
+>> base:   
+>> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git 
+>> for-next
+>> config: ia64-randconfig-r015-20200617 (attached as .config)
+>> compiler: ia64-linux-gcc (GCC) 9.3.0
+>> reproduce (this is a W=1 build):
+>> †††††††† wget 
+>> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross 
+>> -O ~/bin/make.cross
+>> †††††††† chmod +x ~/bin/make.cross
+>> †††††††† # save the attached .config to linux build tree
+>> †††††††† COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 
+>> make.cross ARCH=ia64
+>>
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kernel test robot <lkp@intel.com>
+>>
+>> All errors (new ones prefixed by >>, old ones prefixed by <<):
+>>
+>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
+>> `lp55xx_set_mc_brightness':
+>>>> drivers/leds/leds-lp55xx-common.c:146: undefined reference to 
+>>>> `led_mc_calc_color_components'
+>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
+>> `devm_led_classdev_multicolor_register':
+>>>> include/linux/led-class-multicolor.h:74: undefined reference to 
+>>>> `devm_led_classdev_multicolor_register_ext'
+>> vim +146 drivers/leds/leds-lp55xx-common.c
+>>
+>> ††† 138
+>> ††† 139††† static int lp55xx_set_mc_brightness(struct led_classdev *cdev,
+>> ††† 140††††††††††††††††††††††† enum led_brightness brightness)
+>> ††† 141††† {
+>> ††† 142††††††† struct led_classdev_mc *mc_dev = lcdev_to_mccdev(cdev);
+>> ††† 143††††††† struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
+>> ††† 144††††††† struct lp55xx_device_config *cfg = led->chip->cfg;
+>> ††† 145
+>> † > 146††††††† led_mc_calc_color_components(&led->mc_cdev, brightness);
+>> ††† 147††††††† return cfg->multicolor_brightness_fn(led);
+>> ††† 148
+> 
+> Well this was a mess to figure out.
+> 
+> The only fix I can figure out here is to remove the
+> 
+>  ††† depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+> 
+> from each child device and add
+> 
+>  ††† select LEDS_CLASS_MULTI_COLOR
+> 
+> to the LP55XX_COMMON
+> 
+> This way the Multi color framework will inherit the symbol that was set 
+> by the COMMON flag which is inherited by majority from the child flags.
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Did you try this?
+
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -398,6 +398,7 @@ config LEDS_LP50XX
+  config LEDS_LP55XX_COMMON
+         tristate "Common Driver for TI/National 
+LP5521/5523/55231/5562/8501"
+         depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || LEDS_LP8501
++       depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+         depends on OF
+         select FW_LOADER
+         select FW_LOADER_USER_HELPER
+
+
 -- 
-Florian
+Best regards,
+Jacek Anaszewski
