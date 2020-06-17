@@ -2,142 +2,140 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ACBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57777C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9AF2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01AEA20707
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:40:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jMr2h/lB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgFQIkJ (ORCPT
+        id S1726600AbgFQIku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:40:09 -0400
-Received: from mga14.intel.com ([192.55.52.115]:19781 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725964AbgFQIkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:40:07 -0400
-IronPort-SDR: UqyG/sIexTxmOAvcc7k58pmSCAvlb7sGmKtHUQKd3E6KjZz6+g5UWhtELO/prkMzu1lxiUNni/
- oDM8EoAtKqzg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 01:40:06 -0700
-IronPort-SDR: kWq66butJxzFD0zp9h1iSEDUpj3DuYl0iFbc57uy4fSBNxjo/VqcyG1NtBfk2/p98ysX/Je8E+
- 1Q5uLLRVNtLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,522,1583222400"; 
-   d="scan'208";a="277207732"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 17 Jun 2020 01:40:06 -0700
-Received: from [10.249.225.191] (abudanko-mobl.ccr.corp.intel.com [10.249.225.191])
-        by linux.intel.com (Postfix) with ESMTP id 3C50B58026B;
-        Wed, 17 Jun 2020 01:40:03 -0700 (PDT)
-Subject: [PATCH v8 07/13] perf stat: factor out event handling loop into
- dispatch_events()
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <4d90938c-429a-586c-0cc7-767f804c6bce@linux.intel.com>
-Date:   Wed, 17 Jun 2020 11:40:03 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 17 Jun 2020 04:40:50 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:17853 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgFQIkt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:40:49 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200617084046epoutp02f53fca33e467f31181b483e7293ad3d4~ZSCAiEmQY2118821188epoutp02N
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:40:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200617084046epoutp02f53fca33e467f31181b483e7293ad3d4~ZSCAiEmQY2118821188epoutp02N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592383246;
+        bh=DfAiU3R8rPHuEDdEz8zHDdo36LP4pVwp6GrKwVYFRhQ=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=jMr2h/lBjQXsGChrMaazBUaB7cWVoIvJCXctFQYwQ/Kv0KYahQWoOb92JZ9TKUzVq
+         5X+84Sz5oXyAvpfzvCKt4/ZWYbT0CPmlOj+dVetwmyhsKTFExjNsmOrKR/Dpzrf3QV
+         p2Nv21NDjyWY5J3jm7JKK+zooQjGvj2d9CdMq9OU=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200617084045epcas1p467ebb25cd31b77adf6c73ffb0ce22006~ZSB-j6oUN1251312513epcas1p4a;
+        Wed, 17 Jun 2020 08:40:45 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.159]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 49mz6h3646zMqYkn; Wed, 17 Jun
+        2020 08:40:44 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B6.6A.29173.C07D9EE5; Wed, 17 Jun 2020 17:40:44 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200617084043epcas1p15b9a0ede7d9e129af942799f3f54de00~ZSB_T2WA60087000870epcas1p1P;
+        Wed, 17 Jun 2020 08:40:43 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200617084043epsmtrp1b9b69fcb3186e35cb27ade2cf908f1f2~ZSB_TU5xG2448424484epsmtrp1s;
+        Wed, 17 Jun 2020 08:40:43 +0000 (GMT)
+X-AuditID: b6c32a37-9cdff700000071f5-3b-5ee9d70c408f
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        62.90.08382.B07D9EE5; Wed, 17 Jun 2020 17:40:43 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200617084043epsmtip236c0b2a92a173f2620a0020cbaaa22d8~ZSB_FdE0F1759117591epsmtip2F;
+        Wed, 17 Jun 2020 08:40:43 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        "'Hyunchul Lee'" <hyc.lee@gmail.com>
+Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <42fb01d6447e$c372d860$4a588920$@samsung.com>
+Subject: RE: [PATCH v2] exfat: call sync_filesystem for read-only remount
+Date:   Wed, 17 Jun 2020 17:40:43 +0900
+Message-ID: <001e01d64482$fd03cbd0$f70b6370$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJvI9IWjSo26kFx55d3RL5JRBWksAG87Uq/ArpcdCinhwPs8A==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDKsWRmVeSWpSXmKPExsWy7bCmni7P9ZdxBl/+i1hcu/+e3WLP3pMs
+        Fpd3zWGz2PLvCKsDi8fOWXfZPfq2rGL0+LxJLoA5KscmIzUxJbVIITUvOT8lMy/dVsk7ON45
+        3tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB2ibkkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRW
+        KbUgJafA0KBArzgxt7g0L10vOT/XytDAwMgUqDIhJ+PI43msBedYKg4fPMXSwHiVuYuRk0NC
+        wETi2oFJLF2MXBxCAjsYJeaua2QHSQgJfGKUaPjEBpH4xijRufw7I0zH1obpLBBFexklzi9P
+        gyh6yShxeuZ6JpAEm4CuxL8/+9lAbBGBUImTV5eBTWUWcJY4fOMU2GpOASuJKQufAw3i4BAW
+        8JT48SEGJMwioCrxcvtKVhCbV8BSYl/Ld2YIW1Di5MwnLBBj5CW2v50D9YGCxM+ny1ghVjlJ
+        LNx1mgmiRkRidmcbM8htEgIf2SUun2tgh2hwkfh5pYsFwhaWeHV8C1RcSuJlfxs7yD0SAtUS
+        H/dDze9glHjx3RbCNpa4uX4DK0gJs4CmxPpd+hBhRYmdv+cyQqzlk3j3tYcVYgqvREebEESJ
+        qkTfpcNMELa0RFf7B/YJjEqzkDw2C8ljs5A8MAth2QJGllWMYqkFxbnpqcWGBcbIMb2JEZwM
+        tcx3ME57+0HvECMTB+MhRgkOZiURXuffL+KEeFMSK6tSi/Lji0pzUosPMZoCg3ois5Rocj4w
+        HeeVxBuaGhkbG1uYmJmbmRorifP6Wl2IExJITyxJzU5NLUgtgulj4uCUamDisvPwLdryJfbT
+        tut9dmVyczfIbnI93aGk+m0hq9vumgX8Jl0u9qdsNFQzFpvVdXDka7IsiY1Z33ytTF4gds0L
+        /fWFnz9tPzi3bd6ZP2wFyned1hytOc7byfR9Q39yaezJ3qp3zMfatxaclnkQsWZha/nB8oJz
+        ZsVBLqmGKzILueTNdESZ1L68nV37LuFAlv/J+Ye+3xZnLHdQNJG5t/uPw+qA7SuXMRrLhFkk
+        9539mJB8WpLzZezzUrtJzz6fO1enVKoxJ0j4oU16wh976/17rjeI9J05wjPn4tkD7PvOpc3h
+        P7iCfd7+OdYve7ZmdN42EN3U7TgzZum0Zu7zscEV8jJHP7NMX1W6PuHrbUYlluKMREMt5qLi
+        RADn6fyMDwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJLMWRmVeSWpSXmKPExsWy7bCSvC739ZdxBveOq1hcu/+e3WLP3pMs
+        Fpd3zWGz2PLvCKsDi8fOWXfZPfq2rGL0+LxJLoA5issmJTUnsyy1SN8ugSvjyON5rAXnWCoO
+        HzzF0sB4lbmLkZNDQsBEYmvDdJYuRi4OIYHdjBIfZq1ig0hISxw7cQaoiAPIFpY4fLgYouY5
+        o8Suk5NZQGrYBHQl/v3ZD1YvIhAq0dp1DCzOLOAqMf/5ajaIhm2MErNOPmcCSXAKWElMWfic
+        BWSosICnxI8PMSBhFgFViZfbV7KC2LwClhL7Wr4zQ9iCEidnPoGaqS3R+7CVEcKWl9j+dg7U
+        AwoSP58uY4W4wUli4a7TTBA1IhKzO9uYJzAKz0IyahaSUbOQjJqFpGUBI8sqRsnUguLc9Nxi
+        wwLDvNRyveLE3OLSvHS95PzcTYzg2NDS3MG4fdUHvUOMTByMhxglOJiVRHidf7+IE+JNSays
+        Si3Kjy8qzUktPsQozcGiJM57o3BhnJBAemJJanZqakFqEUyWiYNTqoEpZvnLZ2XvzVi+PGAw
+        NZwcVrbrWVtNrpONrsSHOxflDA2DNCZez2v8fCb6fp7Y+sJTHHM3f55wVrvQp4hL35836qmA
+        ovfklL+FrBz6B9jZ3aeL+ud0HClr62cJfqGzQGLdtQNvF2wXs+oWWcNV7mTtne1ou3mTWWrO
+        x8uLA734Lv6ycT7IzxY+ZbVeV+5Jm706zt+XTXDv9zu6+rJ62vuthfJbThyunrN18vPbDSdy
+        Hfw3Tvi2LDZtxzZn17VN/nqlz8I2vnS0dfi9cK0J865nCZGTPF9kXwnjPJegI+1kdnfanEqh
+        wiDbPTu3Tfh0LGoKo1dfc85HD8dLNi6sL9f8MY+4VnrK9uamLwtyJigosRRnJBpqMRcVJwIA
+        b4fvbPwCAAA=
+X-CMS-MailID: 20200617084043epcas1p15b9a0ede7d9e129af942799f3f54de00
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200616053459epcas1p4e7a4908eda3785d6f5cbb71150cbe50b
+References: <CGME20200616053459epcas1p4e7a4908eda3785d6f5cbb71150cbe50b@epcas1p4.samsung.com>
+        <20200616053445.18125-1-hyc.lee@gmail.com>
+        <42fb01d6447e$c372d860$4a588920$@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Consolidate event dispatching loops for fork, attach and system
-wide monitoring use cases into common dispatch_events() function.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-stat.c | 35 ++++++++++++++++++++++++-----------
- 1 file changed, 24 insertions(+), 11 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 3bc538576607..39749c290508 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -557,6 +557,27 @@ static bool is_target_alive(struct target *_target,
- 	return false;
- }
- 
-+static int dispatch_events(bool forks, int timeout, int interval, int *times, struct timespec *ts)
-+{
-+	bool stop = false;
-+	int child = 0, status = 0;
-+
-+	while (1) {
-+		if (forks)
-+			child = waitpid(child_pid, &status, WNOHANG);
-+		else
-+			child = !is_target_alive(&target, evsel_list->core.threads) ? 1 : 0;
-+
-+		if (done || stop || child)
-+			break;
-+
-+		nanosleep(ts, NULL);
-+		stop = process_timeout(timeout, interval, times);
-+	}
-+
-+	return status;
-+}
-+
- enum counter_recovery {
- 	COUNTER_SKIP,
- 	COUNTER_RETRY,
-@@ -628,7 +649,6 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	struct affinity affinity;
- 	int i, cpu;
- 	bool second_pass = false;
--	bool stop = false;
- 
- 	if (interval) {
- 		ts.tv_sec  = interval / USEC_PER_MSEC;
-@@ -797,12 +817,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 		perf_evlist__start_workload(evsel_list);
- 		enable_counters();
- 
--		if (interval || timeout) {
--			while (!stop && !waitpid(child_pid, &status, WNOHANG)) {
--				nanosleep(&ts, NULL);
--				stop = process_timeout(timeout, interval, &times);
--			}
--		}
-+		if (interval || timeout)
-+			status = dispatch_events(forks, timeout, interval, &times, &ts);
- 		if (child_pid != -1) {
- 			if (timeout)
- 				kill(child_pid, SIGTERM);
-@@ -819,10 +835,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 			psignal(WTERMSIG(status), argv[0]);
- 	} else {
- 		enable_counters();
--		while (!done && !stop && is_target_alive(&target, evsel_list->core.threads)) {
--			nanosleep(&ts, NULL);
--			stop = process_timeout(timeout, interval, &times);
--		}
-+		dispatch_events(forks, timeout, interval, &times, &ts);
- 	}
- 
- 	disable_counters();
--- 
-2.24.1
-
+> > We need to commit dirty metadata and pages to disk before remounting
+> > exfat as read-only.
+> >
+> > This fixes a failure in xfstests generic/452
+> >
+> > generic/452 does the following:
+> > cp something <exfat>/
+> > mount -o remount,ro <exfat>
+> >
+> > the <exfat>/something is corrupted. because while exfat is remounted
+> > as read-only, exfat doesn't have a chance to commit metadata and vfs
+> > invalidates page caches in a block device.
+> >
+> > Signed-off-by: Hyunchul Lee <hyc.lee@gmail.com>
+> 
+> Acked-by: Sungjong Seo <sj1557.seo@samsung.com>
+Applied. Thanks!
 
