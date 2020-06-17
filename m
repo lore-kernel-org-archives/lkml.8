@@ -2,118 +2,68 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD1221527
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592412816;
-	bh=BeaXBdaarZVLXWFzDTXzvJ/Qb8JF+BXuA1Ss3tfBBvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jzr1X1lsGu6v/4b2/KMLeQo6EXxOlm6qWitUyIy3VlcppBMEeOMObJ8eFCREmo7p7
-	 7sqwlPx6aVSdwMr07ZhNHC8uIvwV2kIRHveeqE96h8A1xcy821cWklJ11opSaRcRLn
-	 5YqS+zp949Lt4ZJCW9MLDIU3Tol4WA6hTFmZfu+o=
+	by mail.kernel.org (Postfix) with ESMTP id 2999320897
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgFQQxf (ORCPT
+        id S1726998AbgFQQzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:53:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45460 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 12:55:46 -0400
+Received: from muru.com ([72.249.23.125]:58134 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbgFQQxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:53:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11BEB20897;
-        Wed, 17 Jun 2020 16:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592412814;
-        bh=BeaXBdaarZVLXWFzDTXzvJ/Qb8JF+BXuA1Ss3tfBBvk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dB2CoxrjtiI9CKWgdcKuO0er4duvCEbBVyDsLWAY8jsXORKDJnEBEOv4ozAPaV+5v
-         08Xruf9sUygmbd6JUEY5CCvi4/USHX+V6/AhoFo4Ft63HD+HBE8lk0Dv7KpfB8DupV
-         7TUNKbcXbepE6aZ4htZThyvpXTqh6beKzC7DXzo0=
-Date:   Wed, 17 Jun 2020 18:53:27 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     nobuhiro1.iwamatsu@toshiba.co.jp
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        ardb@kernel.org, rafael.j.wysocki@intel.com
-Subject: Re: [PATCH 5.4 064/134] ACPI: GED: add support for _Exx / _Lxx
- handler methods
-Message-ID: <20200617165327.GD3794995@kroah.com>
-References: <20200616153100.633279950@linuxfoundation.org>
- <20200616153103.838898964@linuxfoundation.org>
- <OSBPR01MB29835381F4879AF2614194F3929A0@OSBPR01MB2983.jpnprd01.prod.outlook.com>
- <OSBPR01MB2983F4C32B052F1438964A93929A0@OSBPR01MB2983.jpnprd01.prod.outlook.com>
+        id S1726959AbgFQQzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 12:55:45 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 7191880F3;
+        Wed, 17 Jun 2020 16:56:36 +0000 (UTC)
+Date:   Wed, 17 Jun 2020 09:55:41 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Suman Anna <s-anna@ti.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, jkridner@beagleboard.org,
+        robertcnelson@gmail.com
+Subject: Re: [PATCH] ARM: dts: AM33xx-l4: add gpio-ranges
+Message-ID: <20200617165541.GH37466@atomide.com>
+References: <20200602131428.GA496390@x1>
+ <803e2d78-28ba-0816-dbb5-d441d7659a91@ti.com>
+ <20200602135155.GE37466@atomide.com>
+ <20200602163458.GA847883@x1>
+ <20200617162740.GA4181112@x1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <OSBPR01MB2983F4C32B052F1438964A93929A0@OSBPR01MB2983.jpnprd01.prod.outlook.com>
+In-Reply-To: <20200617162740.GA4181112@x1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 09:26:41AM +0000, nobuhiro1.iwamatsu@toshiba.co.jp wrote:
-> Hi again,
+* Drew Fustini <drew@beagleboard.org> [200617 16:28]:
+> These gpio-ranges are correct for all the platforms that included
+> am33xx-l4.dtsi.
 > 
-> > -----Original Message-----
-> > From: iwamatsu nobuhiro(岩松 信洋 □ＳＷＣ◯ＡＣＴ)
-> > Sent: Wednesday, June 17, 2020 6:23 PM
-> > To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; linux-kernel@vger.kernel.org
-> > Cc: stable@vger.kernel.org; Ard Biesheuvel <ardb@kernel.org>; Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Subject: RE: [PATCH 5.4 064/134] ACPI: GED: add support for _Exx / _Lxx handler methods
-> > 
-> > Hi,
-> > 
-> > > -----Original Message-----
-> > > From: stable-owner@vger.kernel.org [mailto:stable-owner@vger.kernel.org] On Behalf Of Greg Kroah-Hartman
-> > > Sent: Wednesday, June 17, 2020 12:34 AM
-> > > To: linux-kernel@vger.kernel.org
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; stable@vger.kernel.org; Ard Biesheuvel <ardb@kernel.org>;
-> > Rafael
-> > > J. Wysocki <rafael.j.wysocki@intel.com>
-> > > Subject: [PATCH 5.4 064/134] ACPI: GED: add support for _Exx / _Lxx handler methods
-> > >
-> > > From: Ard Biesheuvel <ardb@kernel.org>
-> > >
-> > > commit ea6f3af4c5e63f6981c0b0ab8ebec438e2d5ef40 upstream.
-> > >
-> > > Per the ACPI spec, interrupts in the range [0, 255] may be handled
-> > > in AML using individual methods whose naming is based on the format
-> > > _Exx or _Lxx, where xx is the hex representation of the interrupt
-> > > index.
-> > >
-> > > Add support for this missing feature to our ACPI GED driver.
-> > >
-> > > Cc: v4.9+ <stable@vger.kernel.org> # v4.9+
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > >
-> > 
-> > This patch also requires the following patch.
-> > Please apply to this kernel version, 4.9, 4.14, 4.19, 5.6 and 5.7.
-> > 
-> > From e5c399b0bd6490c12c0af2a9eaa9d7cd805d52c9 Mon Sep 17 00:00:00 2001
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> > Date: Wed, 27 May 2020 13:37:00 +0200
+> I think it makes sense to add gpio-ranges properties as they describe
+> the relationship between a gpio line and pin control register that
+> exists in the hardware.
 > 
-> I update with the correct information.
-> 
-> commit e5c399b0bd6490c12c0af2a9eaa9d7cd805d52c9
-> Author: Ard Biesheuvel <ardb@kernel.org>
-> Date:   Wed May 27 13:37:00 2020 +0200
-> 
-> ....
+> Are there changes you would like to see in this patch?
 
-Now queued up, thanks!
+Looks good to me, will apply when I'm done with the fixes
+now that we have -rc1 out.
 
-greg k-h
+Regards,
+
+Tony
