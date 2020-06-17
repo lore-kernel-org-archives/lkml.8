@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D477C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1904A20707
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B46420707
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fwikWo4w"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RJpGoT7g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgFQPKO (ORCPT
+        id S1727080AbgFQPKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:10:14 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40512 "EHLO
+        Wed, 17 Jun 2020 11:10:20 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40532 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgFQPKJ (ORCPT
+        with ESMTP id S1727001AbgFQPKR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:10:09 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05HFA3Bc005046;
-        Wed, 17 Jun 2020 10:10:03 -0500
+        Wed, 17 Jun 2020 11:10:17 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05HFADhZ005071;
+        Wed, 17 Jun 2020 10:10:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592406603;
-        bh=8IVrLn2oGajwW9HenWpKeQ4KhS7i7iRwTrL7dy0Erd8=;
+        s=ti-com-17Q1; t=1592406613;
+        bh=6kv4oPPzDnEU5/icPEIdws3eUefH8b8hua+2r+1UQCA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=fwikWo4wlJ0pVdEnxwRQptMeO2xI5zmjZ3aPVmLzb6HMRRc8FwfpDJpOKxn/8N3QL
-         +7QH8YxdfDnSLQhCziFlORB1Wk+542Jt8qGXVsHeyiJrLed9U7iiac06xbXGkvSJzl
-         ioZU7C/V/IkoD/QscBnwEbVGR5R3gXUHBFaAzuiw=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05HFA2aw111646;
-        Wed, 17 Jun 2020 10:10:03 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+        b=RJpGoT7gkdz/7ELsfFzAxz2w4YQlVQYH0Z+8D2AoMuSDPdUH5OoixSqBDHLKLAD0+
+         RwrP27nKR1zdbZeGzLz+PurPu3euSY3yAai6KTYi7s0dYp+MVqmprFcArsULG0q2XF
+         xn7d4lO5/uFRfiAai9DOYEsDeJl3Bx+Csya6oa1Y=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05HFADOB110690
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 17 Jun 2020 10:10:13 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 17
- Jun 2020 10:10:02 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2020 10:10:13 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 17 Jun 2020 10:10:02 -0500
+ Frontend Transport; Wed, 17 Jun 2020 10:10:13 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05HFA22a041222;
-        Wed, 17 Jun 2020 10:10:02 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05HFAC0l107424;
+        Wed, 17 Jun 2020 10:10:13 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>
 CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
-Subject: [PATCH v28 07/15] ARM: dts: n900: Add reg property to the LP5523 channel node
-Date:   Wed, 17 Jun 2020 10:09:16 -0500
-Message-ID: <20200617150924.12665-8-dmurphy@ti.com>
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v28 09/15] ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
+Date:   Wed, 17 Jun 2020 10:09:18 -0500
+Message-ID: <20200617150924.12665-10-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200617150924.12665-1-dmurphy@ti.com>
 References: <20200617150924.12665-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -75,102 +75,65 @@ and allow designs to skip channels as opposed to requiring
 sequential order.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-CC: Tony Lindgren <tony@atomide.com>
-CC: "Benoît Cousson" <bcousson@baylibre.com>
+CC: Linus Walleij <linus.walleij@linaro.org>
 Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- arch/arm/boot/dts/omap3-n900.dts | 29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/ste-href.dtsi | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 4089d97405c9..ebe93b06b4f7 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -618,63 +618,74 @@ indicator {
- 	};
- 
- 	lp5523: lp5523@32 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 		compatible = "national,lp5523";
- 		reg = <0x32>;
- 		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
- 		enable-gpio = <&gpio2 9 GPIO_ACTIVE_HIGH>; /* 41 */
- 
--		chan0 {
-+		chan@0 {
- 			chan-name = "lp5523:kb1";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <0>;
- 		};
- 
--		chan1 {
-+		chan@1 {
- 			chan-name = "lp5523:kb2";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <1>;
- 		};
- 
--		chan2 {
-+		chan@2 {
- 			chan-name = "lp5523:kb3";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <2>;
- 		};
- 
--		chan3 {
-+		chan@3 {
- 			chan-name = "lp5523:kb4";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <3>;
- 		};
- 
--		chan4 {
-+		chan@4 {
- 			chan-name = "lp5523:b";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <4>;
- 		};
- 
--		chan5 {
-+		chan@5 {
- 			chan-name = "lp5523:g";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <5>;
- 		};
- 
--		chan6 {
-+		chan@6 {
- 			chan-name = "lp5523:r";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <6>;
- 		};
- 
--		chan7 {
-+		chan@7 {
- 			chan-name = "lp5523:kb5";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <7>;
- 		};
- 
--		chan8 {
-+		chan@8 {
- 			chan-name = "lp5523:kb6";
- 			led-cur = /bits/ 8 <50>;
- 			max-cur = /bits/ 8 <100>;
-+			reg = <8>;
- 		};
- 	};
- 
+diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
+index 33e3b0b3c53d..ff47cbf6ed3b 100644
+--- a/arch/arm/boot/dts/ste-href.dtsi
++++ b/arch/arm/boot/dts/ste-href.dtsi
+@@ -58,16 +58,21 @@ lp5521@33 {
+ 				reg = <0x33>;
+ 				label = "lp5521_pri";
+ 				clock-mode = /bits/ 8 <2>;
+-				chan0 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				chan@0 {
++					reg = <0>;
+ 					led-cur = /bits/ 8 <0x2f>;
+ 					max-cur = /bits/ 8 <0x5f>;
+ 					linux,default-trigger = "heartbeat";
+ 				};
+-				chan1 {
++				chan@1 {
++					reg = <1>;
+ 					led-cur = /bits/ 8 <0x2f>;
+ 					max-cur = /bits/ 8 <0x5f>;
+ 				};
+-				chan2 {
++				chan@2 {
++					reg = <2>;
+ 					led-cur = /bits/ 8 <0x2f>;
+ 					max-cur = /bits/ 8 <0x5f>;
+ 				};
+@@ -77,15 +82,20 @@ lp5521@34 {
+ 				reg = <0x34>;
+ 				label = "lp5521_sec";
+ 				clock-mode = /bits/ 8 <2>;
+-				chan0 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				chan@0 {
++					reg = <0>;
+ 					led-cur = /bits/ 8 <0x2f>;
+ 					max-cur = /bits/ 8 <0x5f>;
+ 				};
+-				chan1 {
++				chan@1 {
++					reg = <1>;
+ 					led-cur = /bits/ 8 <0x2f>;
+ 					max-cur = /bits/ 8 <0x5f>;
+ 				};
+-				chan2 {
++				chan@2 {
++					reg = <2>;
+ 					led-cur = /bits/ 8 <0x2f>;
+ 					max-cur = /bits/ 8 <0x5f>;
+ 				};
 -- 
 2.26.2
 
