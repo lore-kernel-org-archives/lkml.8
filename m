@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AE8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BC5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6652D20888
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FE9A20888
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:10:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BRAsVLqV"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gJR4GqFK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgFQPKm (ORCPT
+        id S1727813AbgFQPKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:10:42 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:32904 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbgFQPKd (ORCPT
+        Wed, 17 Jun 2020 11:10:46 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54592 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbgFQPKn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:10:33 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05HFAT6J117083;
-        Wed, 17 Jun 2020 10:10:29 -0500
+        Wed, 17 Jun 2020 11:10:43 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05HFAdYF004749;
+        Wed, 17 Jun 2020 10:10:39 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592406629;
-        bh=lMIaogbEfi0+ny6Ex1XJobeenrR+G5V3/yTQPvhRgXI=;
+        s=ti-com-17Q1; t=1592406639;
+        bh=4Fus+1STo6fJcdmND8htjDFw0u7LkR/zKPWh9+ob2Js=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=BRAsVLqVAhptVUelnTlV0cbILICQhKyB/go8+/8doCSV0CV4fQJi7zNt/VKip7YWi
-         Nmyg9SSQsShJwjt7cwmFEWDAh0uKdsxwj8qoX+iLYZKm4thSb8bKP3pNrwNv3SMz+A
-         kR8duJv+i5LksU+tHn43IDIukzq4rDuzpB3DNJ2Q=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05HFATmV119104
+        b=gJR4GqFKYZYMhkoam6gYQ6C6qacYrV/6tUJ1QRcZGSIho7zzYm4XJkGzRkUcPmbJ4
+         Q3w0TLusJcap1zfj/nKfZ2nMbj1A9mYQKrwPG4Iak4f4IJh6KaeluXd58ubcYt0UK7
+         wtzaynW8cMmeAeaRraAVRK6uWe9c+UEEcxQsLTx4=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05HFAdAH111001
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jun 2020 10:10:29 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 17 Jun 2020 10:10:39 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 17
- Jun 2020 10:10:28 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2020 10:10:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 17 Jun 2020 10:10:28 -0500
+ Frontend Transport; Wed, 17 Jun 2020 10:10:39 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05HFASJR108741;
-        Wed, 17 Jun 2020 10:10:28 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05HFAdVx108887;
+        Wed, 17 Jun 2020 10:10:39 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>
 CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v28 13/15] leds: lp5521: Add multicolor framework multicolor brightness support
-Date:   Wed, 17 Jun 2020 10:09:22 -0500
-Message-ID: <20200617150924.12665-14-dmurphy@ti.com>
+Subject: [PATCH v28 15/15] leds: lp5523: Fix various formatting issues in the code
+Date:   Wed, 17 Jun 2020 10:09:24 -0500
+Message-ID: <20200617150924.12665-16-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200617150924.12665-1-dmurphy@ti.com>
 References: <20200617150924.12665-1-dmurphy@ti.com>
@@ -67,68 +67,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the multicolor brightness call back to support the multicolor
-framework. This function allows setting the brightness across
-grouped LED channels in a single call.
+Fix checkpatch errors and warnings for the LP5523.c device
+driver.
 
 Acked-by: Pavel Machek <pavel@ucw.cz>
 Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/leds/Kconfig       |  1 +
- drivers/leds/leds-lp5521.c | 20 ++++++++++++++++++++
- 2 files changed, 21 insertions(+)
+ drivers/leds/leds-lp5523.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 44d8b2293436..adfa762cb291 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -408,6 +408,7 @@ config LEDS_LP55XX_COMMON
- config LEDS_LP5521
- 	tristate "LED Support for N.S. LP5521 LED driver chip"
- 	depends on LEDS_CLASS && I2C
-+	depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
- 	select LEDS_LP55XX_COMMON
- 	help
- 	  If you say yes here you get support for the National Semiconductor
-diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
-index 6ff81d6be789..ef8c3bfa8f3c 100644
---- a/drivers/leds/leds-lp5521.c
-+++ b/drivers/leds/leds-lp5521.c
-@@ -349,6 +349,25 @@ static int lp5521_run_selftest(struct lp55xx_chip *chip, char *buf)
- 	return 0;
- }
+diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
+index 9776dc72a764..f55d97258d5e 100644
+--- a/drivers/leds/leds-lp5523.c
++++ b/drivers/leds/leds-lp5523.c
+@@ -23,13 +23,13 @@
  
-+static int lp5521_multicolor_brightness(struct lp55xx_led *led)
-+{
-+	struct lp55xx_chip *chip = led->chip;
-+	int ret;
-+	int i;
-+
-+	mutex_lock(&chip->lock);
-+	for (i = 0; i < led->mc_cdev.num_colors; i++) {
-+		ret = lp55xx_write(chip,
-+				   LP5521_REG_LED_PWM_BASE +
-+				   led->mc_cdev.subled_info[i].channel,
-+				   led->mc_cdev.subled_info[i].brightness);
-+		if (ret)
-+			break;
-+	}
-+	mutex_unlock(&chip->lock);
-+	return ret;
-+}
-+
- static int lp5521_led_brightness(struct lp55xx_led *led)
+ #define LP5523_PROGRAM_LENGTH		32	/* bytes */
+ /* Memory is used like this:
+-   0x00 engine 1 program
+-   0x10 engine 2 program
+-   0x20 engine 3 program
+-   0x30 engine 1 muxing info
+-   0x40 engine 2 muxing info
+-   0x50 engine 3 muxing info
+-*/
++ * 0x00 engine 1 program
++ * 0x10 engine 2 program
++ * 0x20 engine 3 program
++ * 0x30 engine 1 muxing info
++ * 0x40 engine 2 muxing info
++ * 0x50 engine 3 muxing info
++ */
+ #define LP5523_MAX_LEDS			9
+ 
+ /* Registers */
+@@ -326,7 +326,7 @@ static int lp5523_update_program_memory(struct lp55xx_chip *chip,
+ 					const u8 *data, size_t size)
  {
- 	struct lp55xx_chip *chip = led->chip;
-@@ -490,6 +509,7 @@ static struct lp55xx_device_config lp5521_cfg = {
- 	.max_channel  = LP5521_MAX_LEDS,
- 	.post_init_device   = lp5521_post_init_device,
- 	.brightness_fn      = lp5521_led_brightness,
-+	.multicolor_brightness_fn = lp5521_multicolor_brightness,
- 	.set_led_current    = lp5521_set_led_current,
- 	.firmware_cb        = lp5521_firmware_loaded,
- 	.run_engine         = lp5521_run_engine,
+ 	u8 pattern[LP5523_PROGRAM_LENGTH] = {0};
+-	unsigned cmd;
++	unsigned int cmd;
+ 	char c[3];
+ 	int nrchars;
+ 	int ret;
+@@ -468,6 +468,7 @@ static int lp5523_mux_parse(const char *buf, u16 *mux, size_t len)
+ static void lp5523_mux_to_array(u16 led_mux, char *array)
+ {
+ 	int i, pos = 0;
++
+ 	for (i = 0; i < LP5523_MAX_LEDS; i++)
+ 		pos += sprintf(array + pos, "%x", LED_ACTIVE(led_mux, i));
+ 
+@@ -506,7 +507,7 @@ static int lp5523_load_mux(struct lp55xx_chip *chip, u16 mux, int nr)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = lp55xx_write(chip, LP5523_REG_PROG_MEM , (u8)(mux >> 8));
++	ret = lp55xx_write(chip, LP5523_REG_PROG_MEM, (u8)(mux >> 8));
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.26.2
 
