@@ -2,192 +2,71 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC7DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A349C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4328820734
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14928207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:13:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Awadm/m6"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="SxAHuubO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgFQONK (ORCPT
+        id S1726969AbgFQON1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 10:13:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56514 "EHLO
+        Wed, 17 Jun 2020 10:13:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgFQONJ (ORCPT
+        with ESMTP id S1726480AbgFQON0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 10:13:09 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 373A1C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:13:08 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id j202so1342681ybg.6
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:13:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w7Sk4BmGiurLqmgxw2Dzz1OAQhCbcvIbUaVFjs9AqkE=;
-        b=Awadm/m6rOqaV6Y5mlaX9Gfsg4s6zvEHdiKJzd33cFxAGPhfc6fxVxk9vji8B76pwn
-         WI6WLVUJuJer03q0E2LmtIdQ8qom8Bpcu4BUFhOGFqkZALehT38njMGF6IkdOKPIhpV+
-         FXkzC77+bRqUllloHbP2B9aNgjd6kT3yq/C+LJcQKBgJ+3WbFgloQetLZa2Hy4C3hTui
-         1L6MC/UioAkNRtWg0mFoBwH0sfwbY69FC/wS6CfAO6hivd0RhfyRVQyaN8FPYD55ruzx
-         D1uGYEMQKSp0QnHfz4ehko8OIfs71dlk/238m6xXPl/bytH0wg00cHZQcat8+7VINud1
-         Ke+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w7Sk4BmGiurLqmgxw2Dzz1OAQhCbcvIbUaVFjs9AqkE=;
-        b=E8UIe+lwrXvGOchpaOniA9bYwJW1xURBlQ7BjnhBlUkTMggO8PZ6UpNWZXd6G7y3xL
-         i4x1m+jQjdpx91q+eFDli6ACwXY1IYTUcJQKF2hiE/ACspq2bVZ/xWhnu6c6vMg7Nfe4
-         3cFbNYglCOdywBQ68gSoMnMffD5T4saXoEI99YnX1n6t8J3OZlMYSdgJpNWrTgradtX5
-         PUiEQVHLkfzmGcy/oypKuuhK+92gg1Q3rjg8454hjYHj/hETXp7zufg1wr1dcRejT23x
-         eF6u/sxS2GLIL6sZyYJ6NkrU2gJOqGYAal8d/9nROocL2JodcCDt1XUDJtXM7i47PMZT
-         22Mw==
-X-Gm-Message-State: AOAM5309uC08Gbm/i8KHF6O407MNlYUgcHGHI39wa98FL2hH5P7g2uUa
-        yJ/8ZUyQuV5vBlgbsovDBdxW6Oxvofx9hoKyI502Rw==
-X-Google-Smtp-Source: ABdhPJxR5WKL9bWfdzNlZuOGFZs0xv21TnQVWWVSPRx/9BSk+4es74k7/DHIIHxLcqG0kL7DixeloEZGAQDnq/R0wsQ=
-X-Received: by 2002:a25:be81:: with SMTP id i1mr12981047ybk.243.1592403187417;
- Wed, 17 Jun 2020 07:13:07 -0700 (PDT)
+        Wed, 17 Jun 2020 10:13:26 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CEA5C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:13:26 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49n6VR1MmCz9sRf;
+        Thu, 18 Jun 2020 00:13:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1592403200;
+        bh=iKIq8vuYeYX0Liw4N1hUdZiiIKKAWR4aRgSKwYCo4VU=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=SxAHuubOLTxXEBrKZxUGgkOv8/nYpMumvh7ICW2/2wVzLDnDbDd6MLaJ8ygYP5CBc
+         3RzbyVwNnFrQhvPChoX94B0TVOMOjbHKC3OPSSoZscEyAmtIbsfIfen2waMuGmx01A
+         mUt6pGk7kzqo+FzmX89QPR97jG6AnB/MNDDeNCjg0Fvl3fOelQk8w8pI1WJWJvQYNm
+         06ipbGO6rHZs/5xywfkrK3cFItbvH9K9MsnPtQipCZa64HA/H5//iunD4Xw0Hyx1sJ
+         Fv0imAEyiD/9VTj4mmRZMfJIMglU0jbeXswqj1HjOzwOIorDnwsH49nAH+jK0WNuSX
+         RSuTm1LS9eJTA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 0/3] Fix build failure with v5.8-rc1
+In-Reply-To: <cover.1592225557.git.christophe.leroy@csgroup.eu>
+References: <cover.1592225557.git.christophe.leroy@csgroup.eu>
+Date:   Thu, 18 Jun 2020 00:13:45 +1000
+Message-ID: <871rmdeq5i.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
- <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
-In-Reply-To: <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
-From:   Maxim Uvarov <maxim.uvarov@linaro.org>
-Date:   Wed, 17 Jun 2020 17:12:56 +0300
-Message-ID: <CAD8XO3axk-_BP1Nk_vT=u08OSuLmuEzXoSnmdB8pHKR_G2A1dw@mail.gmail.com>
-Subject: Re: [PATCHv8 1/3] optee: use uuid for sysfs driver entry
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        peterhuewe@gmx.de,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 at 16:58, Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> Hi Maxim,
->
-> On Thu, 4 Jun 2020 at 23:28, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
-> >
-> > With the evolving use-cases for TEE bus, now it's required to support
-> > multi-stage enumeration process. But using a simple index doesn't
-> > suffice this requirement and instead leads to duplicate sysfs entries.
-> > So instead switch to use more informative device UUID for sysfs entry
-> > like:
-> > /sys/bus/tee/devices/optee-ta-<uuid>
-> >
-> > Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-> > Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
-> >  MAINTAINERS                                       | 1 +
-> >  drivers/tee/optee/device.c                        | 9 ++++++---
-> >  3 files changed, 15 insertions(+), 3 deletions(-)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
-> > new file mode 100644
-> > index 000000000000..0ae04ae5374a
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
-> > @@ -0,0 +1,8 @@
-> > +What:          /sys/bus/tee/devices/optee-ta-<uuid>/
-> > +Date:           May 2020
-> > +KernelVersion   5.7
-> > +Contact:        tee-dev@lists.linaro.org
-> > +Description:
-> > +               OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
-> > +               matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
-> > +               are free to create needed API under optee-ta-<uuid> directory.
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index ecc0749810b0..6717afef2de3 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -12516,6 +12516,7 @@ OP-TEE DRIVER
-> >  M:     Jens Wiklander <jens.wiklander@linaro.org>
-> >  L:     tee-dev@lists.linaro.org
-> >  S:     Maintained
-> > +F:     Documentation/ABI/testing/sysfs-bus-optee-devices
-> >  F:     drivers/tee/optee/
-> >
-> >  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
-> > diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
-> > index e3a148521ec1..23d264c8146e 100644
-> > --- a/drivers/tee/optee/device.c
-> > +++ b/drivers/tee/optee/device.c
-> > @@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
-> >         return 0;
-> >  }
-> >
-> > -static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
-> > +static int optee_register_device(const uuid_t *device_uuid)
-> >  {
-> >         struct tee_client_device *optee_device = NULL;
-> >         int rc;
-> > @@ -75,7 +75,10 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
-> >                 return -ENOMEM;
-> >
-> >         optee_device->dev.bus = &tee_bus_type;
-> > -       dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
-> > +       if (dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid)) {
->
-> You should be using format specifier as: "%pUb" instead of "%pUl" as
-> UUID representation for TAs is in big endian format. See below:
->
-> # ls /sys/bus/tee/devices/
-> optee-ta-405b6ad9-e5c3-e321-8794-1002a5d5c61b
-> optee-ta-71d950bc-c9d4-c442-82cb-343fb7f37896
-> optee-ta-e70f4af0-5d1f-9b4b-abf7-619b85b4ce8c
->
-> While UUID for fTPM TA is in big endian format:
-> bc50d971-d4c9-42c4-82cb-343fb7f37896
->
-> Sorry that I missed it during review and noticed this while testing.
->
-> With the above fix included, I tested this series using fTPM early TA
-> on Qemu for aarch64 and used basic random number generation test using
-> tpm2-tools. So feel free to add:
->
-> Tested-by: Sumit Garg <sumit.garg@linaro.org>
->
-> -Sumit
->
-Oh, thanks. I will do v9 with this change and mailing list change.
-Probalby you also need to check which prints are inside optee-os. I
-think I copypasted this print from somewhere.
+Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+> Commit 2ab3a0a02905 ("READ_ONCE: Enforce atomicity for
+> {READ,WRITE}_ONCE() memory accesses") leads to following build
+> failure on powerpc 8xx.
 
-Maxim.
+I've put this in my fixes branch.
 
-> > +               kfree(optee_device);
-> > +               return -ENOMEM;
-> > +       }
-> >         uuid_copy(&optee_device->id.uuid, device_uuid);
-> >
-> >         rc = device_register(&optee_device->dev);
-> > @@ -144,7 +147,7 @@ int optee_enumerate_devices(void)
-> >         num_devices = shm_size / sizeof(uuid_t);
-> >
-> >         for (idx = 0; idx < num_devices; idx++) {
-> > -               rc = optee_register_device(&device_uuid[idx], idx);
-> > +               rc = optee_register_device(&device_uuid[idx]);
-> >                 if (rc)
-> >                         goto out_shm;
-> >         }
-> > --
-> > 2.17.1
-> >
+cheers
