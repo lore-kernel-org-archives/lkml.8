@@ -2,244 +2,233 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AB5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54312C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF4B20707
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F8D208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:53:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J72awWjh"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="rfjEiE8H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgFQNuO (ORCPT
+        id S1726558AbgFQNxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:50:14 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46720 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726329AbgFQNuN (ORCPT
+        Wed, 17 Jun 2020 09:53:11 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:64690 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726328AbgFQNxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:50:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592401811;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ioXcL3QMX02vikzo+YkXrpxao9Z43eW1SnDtYQWia3Y=;
-        b=J72awWjhixyGoo5yPfwxspZNLYNo5KPTuwvC7w34M90O/ck/tB2A5YmQK/M54iq/q2vcjT
-        kQkCWkibs4pigzeHCIXs/FVYCpzvGZN5qsmslHShtEGkY6EUF+hW7xQ1w+uWoqyo9Jx+TV
-        IQuTPo4ID/vuV80K99zfNgCM/ED4JoI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-495-z-8NSJsZM5KiN1zMAi_L5A-1; Wed, 17 Jun 2020 09:49:57 -0400
-X-MC-Unique: z-8NSJsZM5KiN1zMAi_L5A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0E5BD18FE87C;
-        Wed, 17 Jun 2020 13:49:56 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F3F919D9E;
-        Wed, 17 Jun 2020 13:49:53 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05HDnqos022507;
-        Wed, 17 Jun 2020 09:49:52 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05HDnqqS022503;
-        Wed, 17 Jun 2020 09:49:52 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Wed, 17 Jun 2020 09:49:52 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Eric Biggers <ebiggers@kernel.org>,
-        George Cherian <gcherian@marvell.com>,
-        Wei Xu <xuwei5@hisilicon.com>, Zaibo Xu <xuzaibo@huawei.com>
-cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Mike Snitzer <msnitzer@redhat.com>,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
-        linux-crypto@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Milan Broz <mbroz@redhat.com>
-Subject: [PATCH 2/2] hisilicon-crypto: don't sleep of CRYPTO_TFM_REQ_MAY_SLEEP
- was not specified
-In-Reply-To: <alpine.LRH.2.02.2006170940510.18714@file01.intranet.prod.int.rdu2.redhat.com>
-Message-ID: <alpine.LRH.2.02.2006170949010.18714@file01.intranet.prod.int.rdu2.redhat.com>
-References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com> <20200610010450.GA6449@gondor.apana.org.au> <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com> <20200610121106.GA23137@gondor.apana.org.au>
- <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2006161102250.28052@file01.intranet.prod.int.rdu2.redhat.com> <20200616175022.GD207319@gmail.com> <alpine.LRH.2.02.2006161416510.12390@file01.intranet.prod.int.rdu2.redhat.com>
- <20200616182327.GE207319@gmail.com> <alpine.LRH.2.02.2006170940510.18714@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        Wed, 17 Jun 2020 09:53:10 -0400
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05HDjXdd020968;
+        Wed, 17 Jun 2020 09:52:39 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-00128a01.pphosted.com with ESMTP id 31q64v29re-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 09:52:39 -0400
+Received: from m0167091.ppops.net (m0167091.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05HDqdfJ028642;
+        Wed, 17 Jun 2020 09:52:39 -0400
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
+        by mx0b-00128a01.pphosted.com with ESMTP id 31q64v29ra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 09:52:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eU00gBt7LOVgxhXPyoXwxHNrpKzosG+U5hXxMKOOWjEE7nKtQSr9+VZ3jwKzpkx5FNkDw/Zic8Lo7WwWU14mhDFGn9eGhqONmywBmyQp5aNfyPOZvQ+lbBe2IFgVMpXoUiQyS+F7FfTsdQ/8QQpJrDLLDXLaslVIb1OJ1I38k4b4qNJimAoKGHyT7MVHST0qbymBX8pxRSlinDKYAmed3AkXuv6rQW1JYVBl7+4vaOzCWjiH2Y6glWuZCag+og5tAgyzGA0/JUP7WTfiyKVuby5bSliz2UYsIRej1qtZ8uewy6r66NtGlExQUMNQUhEi4xhPnSKWzZ+FkAYfBips+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zxrlPdcZi9XB0ktRpTqucbfjtiSTKEgPyOV9Q3whs+k=;
+ b=XmrLbeJfraoP0xVkpdAh/c8eYeKTFoKxwvi51AobNVlerPVOCWzkEno+MCN8MKAT37Z/6E0OctsCDbY0sGpRBTQ+jw4kw+lA3yzNeuS47zNBD7UTGojlZ4/oKad0LTyEMeXs0r6S4sc0YoDFOFC8ApXYXf6RhObptEE3qfX2vJjo77yT/r1hJsTypDSA0fsUdO0PR4XwqfEQD3FJkfOrnL7stzXY6UJoVpFKnb742KX643WMvhxiY3bZdqTTRLyb7T2wl82mQdEXIUJjEy5YFJ5WjfTYW7LkTfsMM6yp5Hfl5+/S2pY34uzJv5oEA+HGBV157DEdc2QLcSfVhBD9Yg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zxrlPdcZi9XB0ktRpTqucbfjtiSTKEgPyOV9Q3whs+k=;
+ b=rfjEiE8HuMyWTs3oG5ahjddt4EjHa3MorpVHkA0pF21YVpaj8eZKgx/5ZfC6xvRLz96CO37EdzB4PKGaygqSMplXdorQatJ1hqknV4BLrXEowzqSDeCKHNpb+meXas9KKa4awxToKjQHCnO9a+EoKSn5e4RKchulm9g286JIqJo=
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
+ by DM5PR03MB2427.namprd03.prod.outlook.com (2603:10b6:3:6d::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Wed, 17 Jun
+ 2020 13:52:37 +0000
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::e02f:b3c0:d1e9:5eaf]) by DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::e02f:b3c0:d1e9:5eaf%3]) with mapi id 15.20.3109.021; Wed, 17 Jun 2020
+ 13:52:37 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>,
+        "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>
+CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "lorenzo.bianconi83@gmail.com" <lorenzo.bianconi83@gmail.com>,
+        "songqiang1304521@gmail.com" <songqiang1304521@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 3/3] iio: remove
+ iio_triggered_buffer_postenable()/iio_triggered_buffer_predisable()
+Thread-Topic: [PATCH v2 3/3] iio: remove
+ iio_triggered_buffer_postenable()/iio_triggered_buffer_predisable()
+Thread-Index: AQHWMosiebcsgWLmWUu0dbt01y27SqjCXn4AgAKhWwCAABHOAIAX4hsAgAAEbQA=
+Date:   Wed, 17 Jun 2020 13:52:37 +0000
+Message-ID: <0eeae8e8c2c1a3f21e15c1931bacb197a8245104.camel@analog.com>
+References: <20200525113855.178821-1-alexandru.ardelean@analog.com>
+         <20200525113855.178821-3-alexandru.ardelean@analog.com>
+         <20200531164020.765822dc@archlinux>
+         <a0253d719a4390f65668789e5fc182ec19355f17.camel@analog.com>
+         <20200602095406.00005add@Huawei.com>
+         <37ef45f4-9330-86ea-77c1-3138bb88601b@microchip.com>
+In-Reply-To: <37ef45f4-9330-86ea-77c1-3138bb88601b@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: microchip.com; dkim=none (message not signed)
+ header.d=none;microchip.com; dmarc=none action=none header.from=analog.com;
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 27d821c3-8996-4626-e87f-08d812c5b1fa
+x-ms-traffictypediagnostic: DM5PR03MB2427:
+x-microsoft-antispam-prvs: <DM5PR03MB24273C5F91A52F8AA63BE08BF99A0@DM5PR03MB2427.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 04371797A5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: keL2ccCBHfOu0mDkpE9KnSHxx5Zld/aoIaaQvlB8LZdCWgSusN4ySy1mhFbLgtedIyMeq5SJtEUuoVQAl1kq69DXuA6qbBa8nfIWKloX7kvF757zbOJb4shdhkbzYKQckwUQBd0GgZ1QTI/mdwDf8kM53yyLxMgFlgQshwoXbpY82P216FnoV4JmZuEQ0mR+VoZyAJYh6z5q0+PywAEPAQBuTFZrSKF8Hj2ZPFmMt2Lu5D0kY9RJo4sCF4HccU08Admx/WFt+oZjz4BwreR4dODXDd7BJ1jj1wYV4twydsnYNRl9XgjkDZC0lkgOhjgbPFkG5ayx/PGGzpnBn3YBzqLow0mPOT+UL3Sp/+EMifxXW+rmtCjMc0mCeeNd8XoAwjBb8GnbV7iA97aPx9Qhvw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(346002)(136003)(376002)(39860400002)(366004)(6486002)(8936002)(53546011)(6506007)(83380400001)(4326008)(86362001)(36756003)(316002)(8676002)(2906002)(76116006)(91956017)(26005)(186003)(66476007)(66446008)(64756008)(6512007)(2616005)(478600001)(7416002)(54906003)(66946007)(5660300002)(71200400001)(110136005)(66556008)(966005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: c4b98K1rkPENED0QAhd5k51XyWQaa7szKM+1anvo57NOKpiu5QkZ8FGkUeAAZilwPh9yORn6RS/tPmsMqaXaRl+ChBZiMLqBV58yCF6D8cs94Ws9aTF0ykU/xqO7VFM4j541VwtQveZ5iAl+kN/g+4cdMneQtz3YUEshN5dwgM5iC0miFt3ppq4fGRhQmOl2rlo6BumgCAZytNPVadN8AtAnOhZ4lx5Oozn8r3TxclFnmf2to8rjmAEphMyy/UchxCn8VDx1jvWOYYgAjSIx+WhxofEak25ErSxQY2rg4ej0gfkHTrAORPHEFcSrpCU74uce4VQTT5JyyVM+2Y1OPBPXioa9LW0F23aUaRNCa4ehOisQ9dt1oBAU9k0EpVLY31WMrkMVKGgwYLmNcFW0N0T1YH+AnpwubsCQG/lVi4IfNlBnB2MZ6OUoBSDmnxDZlTkzUgmGj2cJTTJ2Fv/6iFwR+CbJjNIxTMn0F01T6ZQ=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B22721042D510B4B8DEF4ECD8FF6481B@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27d821c3-8996-4626-e87f-08d812c5b1fa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2020 13:52:37.6043
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gdLmnjTgdzZDAWhI2FwbuisxOQEulBK0+54UNSS6vtQAHOgUZ0Il1xr4HYg9W5IxH8WrwjPNR7L4syZygVo0Sg7L/fVSVPYivtMHHXjXJoI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR03MB2427
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-17_04:2020-06-17,2020-06-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ suspectscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 priorityscore=1501
+ mlxscore=0 phishscore=0 adultscore=0 lowpriorityscore=0 malwarescore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006170107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is this call chain:
-sec_alg_skcipher_encrypt -> sec_alg_skcipher_crypto ->
-sec_alg_alloc_and_calc_split_sizes -> kcalloc
-where we call sleeping allocator function even if CRYPTO_TFM_REQ_MAY_SLEEP
-was not specified.
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: stable@vger.kernel.org	# v4.19+
-Fixes: 915e4e8413da ("crypto: hisilicon - SEC security accelerator driver")
-
----
- drivers/crypto/hisilicon/sec/sec_algs.c |   34 ++++++++++++++++----------------
- 1 file changed, 18 insertions(+), 16 deletions(-)
-
-Index: linux-2.6/drivers/crypto/hisilicon/sec/sec_algs.c
-===================================================================
---- linux-2.6.orig/drivers/crypto/hisilicon/sec/sec_algs.c
-+++ linux-2.6/drivers/crypto/hisilicon/sec/sec_algs.c
-@@ -175,7 +175,8 @@ static int sec_alloc_and_fill_hw_sgl(str
- 				     dma_addr_t *psec_sgl,
- 				     struct scatterlist *sgl,
- 				     int count,
--				     struct sec_dev_info *info)
-+				     struct sec_dev_info *info,
-+				     gfp_t gfp)
- {
- 	struct sec_hw_sgl *sgl_current = NULL;
- 	struct sec_hw_sgl *sgl_next;
-@@ -190,7 +191,7 @@ static int sec_alloc_and_fill_hw_sgl(str
- 		sge_index = i % SEC_MAX_SGE_NUM;
- 		if (sge_index == 0) {
- 			sgl_next = dma_pool_zalloc(info->hw_sgl_pool,
--						   GFP_KERNEL, &sgl_next_dma);
-+						   gfp, &sgl_next_dma);
- 			if (!sgl_next) {
- 				ret = -ENOMEM;
- 				goto err_free_hw_sgls;
-@@ -545,14 +546,14 @@ void sec_alg_callback(struct sec_bd_info
- }
- 
- static int sec_alg_alloc_and_calc_split_sizes(int length, size_t **split_sizes,
--					      int *steps)
-+					      int *steps, gfp_t gfp)
- {
- 	size_t *sizes;
- 	int i;
- 
- 	/* Split into suitable sized blocks */
- 	*steps = roundup(length, SEC_REQ_LIMIT) / SEC_REQ_LIMIT;
--	sizes = kcalloc(*steps, sizeof(*sizes), GFP_KERNEL);
-+	sizes = kcalloc(*steps, sizeof(*sizes), gfp);
- 	if (!sizes)
- 		return -ENOMEM;
- 
-@@ -568,7 +569,7 @@ static int sec_map_and_split_sg(struct s
- 				int steps, struct scatterlist ***splits,
- 				int **splits_nents,
- 				int sgl_len_in,
--				struct device *dev)
-+				struct device *dev, gfp_t gfp)
- {
- 	int ret, count;
- 
-@@ -576,12 +577,12 @@ static int sec_map_and_split_sg(struct s
- 	if (!count)
- 		return -EINVAL;
- 
--	*splits = kcalloc(steps, sizeof(struct scatterlist *), GFP_KERNEL);
-+	*splits = kcalloc(steps, sizeof(struct scatterlist *), gfp);
- 	if (!*splits) {
- 		ret = -ENOMEM;
- 		goto err_unmap_sg;
- 	}
--	*splits_nents = kcalloc(steps, sizeof(int), GFP_KERNEL);
-+	*splits_nents = kcalloc(steps, sizeof(int), gfp);
- 	if (!*splits_nents) {
- 		ret = -ENOMEM;
- 		goto err_free_splits;
-@@ -589,7 +590,7 @@ static int sec_map_and_split_sg(struct s
- 
- 	/* output the scatter list before and after this */
- 	ret = sg_split(sgl, count, 0, steps, split_sizes,
--		       *splits, *splits_nents, GFP_KERNEL);
-+		       *splits, *splits_nents, gfp);
- 	if (ret) {
- 		ret = -ENOMEM;
- 		goto err_free_splits_nents;
-@@ -630,13 +631,13 @@ static struct sec_request_el
- 			   int el_size, bool different_dest,
- 			   struct scatterlist *sgl_in, int n_ents_in,
- 			   struct scatterlist *sgl_out, int n_ents_out,
--			   struct sec_dev_info *info)
-+			   struct sec_dev_info *info, gfp_t gfp)
- {
- 	struct sec_request_el *el;
- 	struct sec_bd_info *req;
- 	int ret;
- 
--	el = kzalloc(sizeof(*el), GFP_KERNEL);
-+	el = kzalloc(sizeof(*el), gfp);
- 	if (!el)
- 		return ERR_PTR(-ENOMEM);
- 	el->el_length = el_size;
-@@ -668,7 +669,7 @@ static struct sec_request_el
- 	el->sgl_in = sgl_in;
- 
- 	ret = sec_alloc_and_fill_hw_sgl(&el->in, &el->dma_in, el->sgl_in,
--					n_ents_in, info);
-+					n_ents_in, info, gfp);
- 	if (ret)
- 		goto err_free_el;
- 
-@@ -679,7 +680,7 @@ static struct sec_request_el
- 		el->sgl_out = sgl_out;
- 		ret = sec_alloc_and_fill_hw_sgl(&el->out, &el->dma_out,
- 						el->sgl_out,
--						n_ents_out, info);
-+						n_ents_out, info, gfp);
- 		if (ret)
- 			goto err_free_hw_sgl_in;
- 
-@@ -720,6 +721,7 @@ static int sec_alg_skcipher_crypto(struc
- 	int *splits_out_nents = NULL;
- 	struct sec_request_el *el, *temp;
- 	bool split = skreq->src != skreq->dst;
-+	gfp_t gfp = skreq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP ? GFP_KERNEL : GFP_ATOMIC;
- 
- 	mutex_init(&sec_req->lock);
- 	sec_req->req_base = &skreq->base;
-@@ -728,13 +730,13 @@ static int sec_alg_skcipher_crypto(struc
- 	sec_req->len_in = sg_nents(skreq->src);
- 
- 	ret = sec_alg_alloc_and_calc_split_sizes(skreq->cryptlen, &split_sizes,
--						 &steps);
-+						 &steps, gfp);
- 	if (ret)
- 		return ret;
- 	sec_req->num_elements = steps;
- 	ret = sec_map_and_split_sg(skreq->src, split_sizes, steps, &splits_in,
- 				   &splits_in_nents, sec_req->len_in,
--				   info->dev);
-+				   info->dev, gfp);
- 	if (ret)
- 		goto err_free_split_sizes;
- 
-@@ -742,7 +744,7 @@ static int sec_alg_skcipher_crypto(struc
- 		sec_req->len_out = sg_nents(skreq->dst);
- 		ret = sec_map_and_split_sg(skreq->dst, split_sizes, steps,
- 					   &splits_out, &splits_out_nents,
--					   sec_req->len_out, info->dev);
-+					   sec_req->len_out, info->dev, gfp);
- 		if (ret)
- 			goto err_unmap_in_sg;
- 	}
-@@ -775,7 +777,7 @@ static int sec_alg_skcipher_crypto(struc
- 					       splits_in[i], splits_in_nents[i],
- 					       split ? splits_out[i] : NULL,
- 					       split ? splits_out_nents[i] : 0,
--					       info);
-+					       info, gfp);
- 		if (IS_ERR(el)) {
- 			ret = PTR_ERR(el);
- 			goto err_free_elements;
-
+T24gV2VkLCAyMDIwLTA2LTE3IGF0IDEzOjM3ICswMDAwLCBFdWdlbi5IcmlzdGV2QG1pY3JvY2hp
+cC5jb20gd3JvdGU6DQo+IFtFeHRlcm5hbF0NCj4gDQo+IE9uIDAyLjA2LjIwMjAgMTE6NTQsIEpv
+bmF0aGFuIENhbWVyb24gd3JvdGU6DQo+ID4gT24gVHVlLCAyIEp1biAyMDIwIDA3OjUwOjIzICsw
+MDAwDQo+ID4gIkFyZGVsZWFuLCBBbGV4YW5kcnUiIDxhbGV4YW5kcnUuQXJkZWxlYW5AYW5hbG9n
+LmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gPiBPbiBTdW4sIDIwMjAtMDUtMzEgYXQgMTY6NDAgKzAx
+MDAsIEpvbmF0aGFuIENhbWVyb24gd3JvdGU6DQo+ID4gPiA+IE9uIE1vbiwgMjUgTWF5IDIwMjAg
+MTQ6Mzg6NTUgKzAzMDANCj4gPiA+ID4gQWxleGFuZHJ1IEFyZGVsZWFuIDxhbGV4YW5kcnUuYXJk
+ZWxlYW5AYW5hbG9nLmNvbT4gd3JvdGU6DQo+ID4gPiA+IA0KPiA+ID4gPiA+IEZyb206IExhcnMt
+UGV0ZXIgQ2xhdXNlbiA8bGFyc0BtZXRhZm9vLmRlPg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IFRo
+aXMgcGF0Y2ggc2hvdWxkIGJlIHNxdWFzaGVkIGludG8gdGhlIGZpcnN0IG9uZSwgYXMgdGhlIGZp
+cnN0IG9uZSBpcw0KPiA+ID4gPiA+IGJyZWFraW5nIHRoZSBidWlsZCAoaW50ZW50aW9uYWxseSkg
+dG8gbWFrZSB0aGUgSUlPIGNvcmUgZmlsZXMgZWFzaWVyDQo+ID4gPiA+ID4gdG8NCj4gPiA+ID4g
+PiByZXZpZXcuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogTGFycy1QZXRl
+ciBDbGF1c2VuIDxsYXJzQG1ldGFmb28uZGU+DQo+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogQWxl
+eGFuZHJ1IEFyZGVsZWFuIDxhbGV4YW5kcnUuYXJkZWxlYW5AYW5hbG9nLmNvbT4NCj4gPiA+ID4g
+PiAtLS0NCj4gPiA+ID4gDQo+ID4gPiA+IEZyaWVuZCBwb2tlLiAgVmVyc2lvbiBsb2c/DQo+ID4g
+PiANCj4gPiA+IFZlcnNpb24gbG9nIGlzIGluIHRoZSBmaXJzdCBwYXRjaC4NCj4gPiA+IEkgd2Fz
+IHdvbmRlcmluZyBpZiBJIG9taXR0ZWQgaXQuDQo+ID4gPiBTZWVtcywgdGhpcyB0aW1lIEkgZGlk
+bid0LiBCdXQgSSBhZG1pdCwgaXQgcHJvYmFibHkgd291bGQgaGF2ZSBiZWVuIGJldHRlcg0KPiA+
+ID4gaGVyZS4NCj4gPiBBaCBmYWlyIGVub3VnaC4gIFRoYXQgd29ya3MgZmluZSBpZiB0aGVyZSBp
+cyBhIGNvdmVyIGxldHRlciBidXQgbm90DQo+ID4gc28gbXVjaCBqdXN0IHB1dHRpbmcgdGhpbmdz
+IGluIHRoZSBmaXJzdCBwYXRjaCENCj4gPiA+ID4gT3RoZXIgdGhhbiB0aGUgd2lzdGZ1bCBjb21t
+ZW50IGJlbG93ICh3aGljaCBJJ20gbm90IGV4cGVjdGluZyB5b3UgdG8NCj4gPiA+ID4gZG8gYW55
+dGhpbmcgYWJvdXQgYnR3ISkgd2hvbGUgc2VyaWVzIGxvb2tzIGdvb2QgdG8gbWUuDQo+ID4gPiA+
+IA0KPiA+ID4gPiBUaGVzZSBhcmUgb2J2aW91c2x5IG5vIGZ1bmN0aW9uYWwgY2hhbmdlcyAoSSB0
+aGluaykgc28gaXQncyBvbmx5IHJlYWxseQ0KPiA+ID4gPiBwYXRjaCAyIHRoYXQNCj4gPiA+ID4g
+Y291bGQgZG8gd2l0aCBtb3JlIGV5ZXMgYW5kIGFja3MuDQo+ID4gPiA+IA0KPiA+ID4gPiBGYXIg
+YXMgSSBjYW4gdGVsbCB0aGF0IGNhc2UgaXMgZmluZSBhcyB3ZWxsIGJlY2F1c2Ugb2YgdGhlIHBy
+b3RlY3Rpb25zDQo+ID4gPiA+IG9uIGJlaW5nIGluIHRoZSByaWdodCBtb2RlLCBidXQgbW9yZSBl
+eWVzIG9uIHRoYXQgd291bGQgYmUgZ3JlYXQuDQo+ID4gPiA+IA0KPiA+ID4gPiBTbyBhc3N1bWlu
+ZyB0aGF0J3MgZmluZSwgd2hhdCBjb21taXQgbWVzc2FnZSBkbyB5b3Ugd2FudCBtZSB0byB1c2Ug
+Zm9yDQo+ID4gPiA+IHRoZSBmdXNlZCBzaW5nbGUgcGF0Y2g/DQo+ID4gPiANCj4gPiA+IENvbW1p
+dCBtZXNzYWdlLXdpc2U6IEkgdGhpbmsgdGhlIG1lc3NhZ2UgaW4gdGhlIGZpcnN0IGNvbW1pdCB3
+b3VsZCBiZQ0KPiA+ID4gbW9zdGx5IHN1ZmZpY2llbnQuDQo+ID4gPiBObyBpZGVhIHdoYXQgb3Ro
+ZXIgZGVzY3JpcHRpb24gd291bGQgYmUgbmVlZGVkLg0KPiA+ID4gDQo+ID4gPiBTbywgbWF5YmUg
+c29tZXRoaW5nIGxpa2U6DQo+ID4gPiANCj4gPiA+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiA+IEFsbCBk
+ZXZpY2VzIHVzaW5nIGEgdHJpZ2dlcmVkIGJ1ZmZlciBuZWVkIHRvIGF0dGFjaCBhbmQgZGV0YWNo
+IHRoZSB0cmlnZ2VyDQo+ID4gPiB0byB0aGUgZGV2aWNlIGluIG9yZGVyIHRvIHByb3Blcmx5IHdv
+cmsuIEluc3RlYWQgb2YgZG9pbmcgdGhpcyBpbiBlYWNoIGFuZA0KPiA+ID4gZXZlcnkgZHJpdmVy
+IGJ5IGhhbmQgbW92ZSB0aGlzIGludG8gdGhlIGNvcmUuDQo+ID4gPiANCj4gPiA+IEF0IHRoaXMg
+cG9pbnQgaW4gdGltZSwgYWxsIGRyaXZlcnMgc2hvdWxkIGhhdmUgYmVlbiByZXNvbHZlZCB0bw0K
+PiA+ID4gYXR0YWNoL2RldGFjaCB0aGUgcG9sbC1mdW5jdGlvbiBpbiB0aGUgc2FtZSBvcmRlci4N
+Cj4gPiA+IA0KPiA+ID4gVGhpcyBwYXRjaCByZW1vdmVzIGFsbCBleHBsaWNpdCBjYWxscyBvZiBp
+aW9fdHJpZ2dlcmVkX2J1ZmZlcl9wb3N0ZW5hYmxlKCkNCj4gPiA+ICYgaWlvX3RyaWdnZXJlZF9i
+dWZmZXJfcHJlZGlzYWJsZSgpIGluIGFsbCBkcml2ZXJzLCBzaW5jZSB0aGUgY29yZSBoYW5kbGVz
+DQo+ID4gPiBub3cgdGhlIHBvbGxmdW5jIGF0dGFjaC9kZXRhY2guDQo+ID4gPiANCj4gPiA+IFRo
+ZSBtb3JlIHBlY3VsaWFyIGNoYW5nZSBpcyBmb3IgdGhlICdhdDkxLXNhbWE1ZDJfYWRjJyBkcml2
+ZXIsIHNpbmNlIGl0J3MNCj4gPiA+IG5vdCBvYnZpb3VzIHRoYXQgcmVtb3ZpbmcgdGhlIGhvb2tz
+IGRvZXNuJ3QgYnJlYWsgYW55dGhpbmcqKg0KPiA+ID4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gDQo+
+ID4gDQo+ID4gTG9va3MgZ29vZC4NCj4gPiANCj4gPiA+ICoqIGZvciB0aGUgY29tbWVudCBhYm91
+dCAnYXQ5MS1zYW1hNWQyX2FkYycsIHdlIHJlYWxseSBkbyBuZWVkIHRvIGdldCBzb21lDQo+ID4g
+PiB0ZXN0aW5nOyBvdGhlcndpc2UgdGhpcyByaXNrcyBicmVha2luZyBpdC4NCj4gDQo+IEhpLA0K
+PiANCj4gSSBjYW4gdGVzdCBpdCwgZG8gd2UgaGF2ZSBhbnkgcGF0Y2h3b3JrIHNvIEkgY2FuIGVh
+c2lseSBkb3dubG9hZCB0aGUgDQo+IHBhdGNoZXMgPw0KPiBJIGhhdmUgaXNzdWVzIHdoZW4gYXBw
+bHlpbmcgdGhlbS4NCg0KSXMgdGhpcyBnb29kPw0KDQpodHRwczovL3BhdGNod29yay5rZXJuZWwu
+b3JnL3BhdGNoLzExNTY4NzQzLw0KU2VyaWVzOg0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9y
+Zy9wcm9qZWN0L2xpbnV4LWlpby9saXN0Lz9zZXJpZXM9MjkzMTQxDQoNCk1hbnkgdGhhbmtzDQpB
+bGV4DQoNCj4gDQo+IFRoYW5rcyAhDQo+IA0KPiA+IEFncmVlZC4NCj4gPiANCj4gPiA+IA0KPiA+
+ID4gPiBUaGFua3MsDQo+ID4gPiA+IA0KPiA+ID4gPiBKb25hdGhhbg0KPiA+ID4gPiANCj4gPiA+
+ID4gPiAgIHN0YXRpYyBjb25zdCBzdHJ1Y3QgaWlvX3RyaWdnZXJfb3BzIGF0bGFzX2ludGVycnVw
+dF90cmlnZ2VyX29wcyA9IHsNCj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vZHVt
+bXkvaWlvX3NpbXBsZV9kdW1teV9idWZmZXIuYw0KPiA+ID4gPiA+IGIvZHJpdmVycy9paW8vZHVt
+bXkvaWlvX3NpbXBsZV9kdW1teV9idWZmZXIuYw0KPiA+ID4gPiA+IGluZGV4IDE3NjA2ZWNhNDJi
+NC4uOGUxM2M1M2Q0MzYwIDEwMDY0NA0KPiA+ID4gPiA+IC0tLSBhL2RyaXZlcnMvaWlvL2R1bW15
+L2lpb19zaW1wbGVfZHVtbXlfYnVmZmVyLmMNCj4gPiA+ID4gPiArKysgYi9kcml2ZXJzL2lpby9k
+dW1teS9paW9fc2ltcGxlX2R1bW15X2J1ZmZlci5jDQo+ID4gPiA+ID4gQEAgLTk5LDIwICs5OSw2
+IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBpaW9fc2ltcGxlX2R1bW15X3RyaWdnZXJfaChpbnQNCj4g
+PiA+ID4gPiBpcnEsIHZvaWQgKnApDQo+ID4gPiA+ID4gICB9DQo+ID4gPiA+ID4gDQo+ID4gPiA+
+ID4gICBzdGF0aWMgY29uc3Qgc3RydWN0IGlpb19idWZmZXJfc2V0dXBfb3BzDQo+ID4gPiA+ID4g
+aWlvX3NpbXBsZV9kdW1teV9idWZmZXJfc2V0dXBfb3BzID0gew0KPiA+ID4gPiA+IC0gLyoNCj4g
+PiA+ID4gPiAtICAqIGlpb190cmlnZ2VyZWRfYnVmZmVyX3Bvc3RlbmFibGU6DQo+ID4gPiA+ID4g
+LSAgKiBHZW5lcmljIGZ1bmN0aW9uIHRoYXQgc2ltcGx5IGF0dGFjaGVzIHRoZSBwb2xsZnVuYyB0
+byB0aGUNCj4gPiA+ID4gPiB0cmlnZ2VyLg0KPiA+ID4gPiA+IC0gICogUmVwbGFjZSB0aGlzIHRv
+IG1lc3Mgd2l0aCBoYXJkd2FyZSBzdGF0ZSBiZWZvcmUgd2UgYXR0YWNoIHRoZQ0KPiA+ID4gPiA+
+IC0gICogdHJpZ2dlci4NCj4gPiA+ID4gPiAtICAqLw0KPiA+ID4gPiA+IC0gLnBvc3RlbmFibGUg
+PSAmaWlvX3RyaWdnZXJlZF9idWZmZXJfcG9zdGVuYWJsZSwNCj4gPiA+ID4gPiAtIC8qDQo+ID4g
+PiA+ID4gLSAgKiBpaW9fdHJpZ2dlcmVkX2J1ZmZlcl9wcmVkaXNhYmxlOg0KPiA+ID4gPiA+IC0g
+ICogR2VuZXJpYyBmdW5jdGlvbiB0aGF0IHNpbXBsZSBkZXRhY2hlcyB0aGUgcG9sbGZ1bmMgZnJv
+bSB0aGUNCj4gPiA+ID4gPiB0cmlnZ2VyLg0KPiA+ID4gPiA+IC0gICogUmVwbGFjZSB0aGlzIHRv
+IHB1dCBoYXJkd2FyZSBzdGF0ZSBiYWNrIGFnYWluIGFmdGVyIHRoZSB0cmlnZ2VyDQo+ID4gPiA+
+ID4gaXMNCj4gPiA+ID4gPiAtICAqIGRldGFjaGVkIGJ1dCBiZWZvcmUgdXNlcnNwYWNlIGtub3dz
+IHdlIGhhdmUgZGlzYWJsZWQgdGhlIHJpbmcuDQo+ID4gPiA+ID4gLSAgKi8NCj4gPiA+ID4gPiAt
+IC5wcmVkaXNhYmxlID0gJmlpb190cmlnZ2VyZWRfYnVmZmVyX3ByZWRpc2FibGUsDQo+ID4gPiA+
+ID4gICB9Ow0KPiA+ID4gPiA+IA0KPiA+ID4gPiBIbW0uIEd1ZXNzIHdlIHNob3VsZCBwcm9iYWJs
+eSAnaW52ZW50JyBhIHJlYXNvbiB0byBpbGx1c3RyYXRlIHRoZSBidWZlcg0KPiA+ID4gPiBvcHMg
+aW4gdGhlIGR1bW15IGV4YW1wbGUuICBBbnlvbmUgZmVlbGluZyBjcmVhdGl2ZT8NCj4gPiA+IF9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+ID4gPiBsaW51
+eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdA0KPiA+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnDQo+ID4gPiBodHRwczovL3VybGRlZmVuc2UuY29tL3YzL19faHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsX187ISFB
+M05pOENTMHkyWSF1bEg5MlMzb19KV0xNUWZnNVZCckZrbndjXy1hMEs1QUhwSkJyVEVCLVJ0WUVw
+N1BuUko5akFfRWFjT3pGUW1iTklLTy1RJCANCg==
