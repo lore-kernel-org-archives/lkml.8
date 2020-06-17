@@ -2,89 +2,283 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E3EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2BA206F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:05:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592431531;
-	bh=JSeLug0sSnrq7o5yOmfaKokWEPo67TTSdR0YA461jao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2iIkIGllWOgev6Z0KSL1uIlaxKTaZWlFDfhqju6dMO0P22tKt55vZt+MEZGyFqR4j
-	 HGLQ9C0YiJaVVLy77hBsrcYSkzcccxeu99EeY4vvG44FlpHZffbKUXIzqRB6ZoLhWX
-	 7WMRyfXFY1TUFMdW5z8FweneedMWZez2m8lMY8ro=
+	by mail.kernel.org (Postfix) with ESMTP id C774221548
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgFQWF3 (ORCPT
+        id S1726954AbgFQWJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:05:29 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44461 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgFQWF1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:05:27 -0400
-Received: by mail-io1-f67.google.com with SMTP id i4so1723693iov.11;
-        Wed, 17 Jun 2020 15:05:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bIUyJbST3ILF2B5W5XHarSpDJ5TWO+TqPDggu/ATjbE=;
-        b=guWuXQDuUeyJW6wPzc6PCDL9wZl+rgRxAnT/Db17RfGQGPqDHghtxpcLUUB1wtCNSg
-         MOR30J74BV2zZDIwpxushvbugPNwj+d8k4OBfz309o9srqt62Z6ohuf+JBLCl6ZgsbKI
-         rM2E+bxM/My08EFc1rg+zehYtAey59GG3DAOAMI1FlqQGnOtwr+3rdfArimGQqRL8Vu7
-         eQoPocmWffdhYjzcOhusVD5XnT+pmbjw/Nf6sJAypO5iFnDEVOAvbD9fnOuxqzAZ0TWP
-         D4cpHqzuzIrlfocHnlLUibLJMxP0MPslEFTB1rhHvJRJ2BKcjtbqQALuJdFwC+3RmuwC
-         5Itg==
-X-Gm-Message-State: AOAM533ecF01Ahp0i3sRsmTzOF7zs193KDyONfpKUWk90nlWymjlMGuh
-        c14+YC/KN+qh3ivxBu/SODzTg+GH1g==
-X-Google-Smtp-Source: ABdhPJy+l4gL0/jpC1lHY9VpNr7LIfu5zc9ll9NHo0F7QdjgaK+SdSHKI5mgaI6ATemem9fRGF4/Iw==
-X-Received: by 2002:a02:3402:: with SMTP id x2mr1362929jae.11.1592431526609;
-        Wed, 17 Jun 2020 15:05:26 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id d11sm636626iod.11.2020.06.17.15.05.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 15:05:26 -0700 (PDT)
-Received: (nullmailer pid 2913414 invoked by uid 1000);
-        Wed, 17 Jun 2020 22:05:24 -0000
-Date:   Wed, 17 Jun 2020 16:05:24 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "moderated list:ARM SMMU DRIVERS" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 1/8] dt-bindings: arm-smmu: Add sm8150 and sm8250
- compatible strings
-Message-ID: <20200617220524.GA2913365@bogus>
-References: <20200609194030.17756-1-jonathan@marek.ca>
- <20200609194030.17756-2-jonathan@marek.ca>
+        Wed, 17 Jun 2020 18:09:17 -0400
+Received: from mga18.intel.com ([134.134.136.126]:26464 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726761AbgFQWJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 18:09:16 -0400
+IronPort-SDR: Edr0V9CIMAsxx5JUMOeCXV5O5qGAYrFlcM1iAF0w6Ozb6PFAVRPXPgErKyddCteoMnkeuoCR1L
+ tbf3Ec3depiQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 15:09:14 -0700
+IronPort-SDR: kNUdHfSV+GbUQs6pvXKn1vw4Yw6nA3hcYe7F3VaI65yydYEbowpujbhuBaViIuiKQLYx8P+Dtv
+ EbKNuAPGkb8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
+   d="scan'208";a="421287755"
+Received: from ysharon1-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.49.131])
+  by orsmga004.jf.intel.com with ESMTP; 17 Jun 2020 15:09:01 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     x86@kernel.org, linux-sgx@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: [PATCH v33 01/21] x86/cpufeatures: x86/msr: Add Intel SGX hardware bits
+Date:   Thu, 18 Jun 2020 01:08:23 +0300
+Message-Id: <20200617220844.57423-2-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200609194030.17756-2-jonathan@marek.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 09 Jun 2020 15:40:19 -0400, Jonathan Marek wrote:
-> Add compatible strings for sm8150 and sm8250 iommus to documentation.
-> 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Add X86_FEATURE_SGX from CPUID.(EAX=7, ECX=1), which informs whether the
+CPU has SGX.
+
+Add X86_FEATURE_SGX1 and X86_FEATURE_SGX2 from CPUID.(EAX=12H, ECX=0),
+which describe the level of SGX support available [1].
+
+Add IA32_FEATURE_CONTROL_SGX_ENABLE. BIOS can use this bit to opt-in SGX
+before locking the feature control MSR [2].
+
+[1] Intel SDM: 36.7.2 Intel® SGX Resource Enumeration Leaves
+[2] Intel SDM: 36.7.1 Intel® SGX Opt-In Configuration
+
+Cc: Borislav Petkov <bp@alien8.de>
+Acked-by: Jethro Beekman <jethro@fortanix.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ arch/x86/include/asm/cpufeature.h        |  5 +++--
+ arch/x86/include/asm/cpufeatures.h       |  7 ++++++-
+ arch/x86/include/asm/disabled-features.h | 18 +++++++++++++++---
+ arch/x86/include/asm/msr-index.h         |  1 +
+ arch/x86/include/asm/required-features.h |  2 +-
+ arch/x86/kernel/cpu/common.c             |  4 ++++
+ tools/arch/x86/include/asm/cpufeatures.h |  7 ++++++-
+ 7 files changed, 36 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index 59bf91c57aa8..efbdba5170a3 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -30,6 +30,7 @@ enum cpuid_leafs
+ 	CPUID_7_ECX,
+ 	CPUID_8000_0007_EBX,
+ 	CPUID_7_EDX,
++	CPUID_12_EAX,
+ };
+ 
+ #ifdef CONFIG_X86_FEATURE_NAMES
+@@ -89,7 +90,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+ 	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 17, feature_bit) ||	\
+ 	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 18, feature_bit) ||	\
+ 	   REQUIRED_MASK_CHECK					  ||	\
+-	   BUILD_BUG_ON_ZERO(NCAPINTS != 19))
++	   BUILD_BUG_ON_ZERO(NCAPINTS != 20))
+ 
+ #define DISABLED_MASK_BIT_SET(feature_bit)				\
+ 	 ( CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  0, feature_bit) ||	\
+@@ -112,7 +113,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+ 	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 17, feature_bit) ||	\
+ 	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 18, feature_bit) ||	\
+ 	   DISABLED_MASK_CHECK					  ||	\
+-	   BUILD_BUG_ON_ZERO(NCAPINTS != 19))
++	   BUILD_BUG_ON_ZERO(NCAPINTS != 20))
+ 
+ #define cpu_has(c, bit)							\
+ 	(__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :	\
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 02dabc9e77b0..545ac3e0e269 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -13,7 +13,7 @@
+ /*
+  * Defines x86 CPU feature bits
+  */
+-#define NCAPINTS			19	   /* N 32-bit words worth of info */
++#define NCAPINTS			20	   /* N 32-bit words worth of info */
+ #define NBUGINTS			1	   /* N 32-bit bug flags */
+ 
+ /*
+@@ -238,6 +238,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
+ #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
+ #define X86_FEATURE_TSC_ADJUST		( 9*32+ 1) /* TSC adjustment MSR 0x3B */
++#define X86_FEATURE_SGX			( 9*32+ 2) /* Software Guard Extensions */
+ #define X86_FEATURE_BMI1		( 9*32+ 3) /* 1st group bit manipulation extensions */
+ #define X86_FEATURE_HLE			( 9*32+ 4) /* Hardware Lock Elision */
+ #define X86_FEATURE_AVX2		( 9*32+ 5) /* AVX2 instructions */
+@@ -373,6 +374,10 @@
+ #define X86_FEATURE_CORE_CAPABILITIES	(18*32+30) /* "" IA32_CORE_CAPABILITIES MSR */
+ #define X86_FEATURE_SPEC_CTRL_SSBD	(18*32+31) /* "" Speculative Store Bypass Disable */
+ 
++/* Intel-defined SGX features, CPUID level 0x00000012:0 (EAX), word 19 */
++#define X86_FEATURE_SGX1		(19*32+ 0) /* SGX1 leaf functions */
++#define X86_FEATURE_SGX2		(19*32+ 1) /* SGX2 leaf functions */
++
+ /*
+  * BUG word(s)
+  */
+diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+index 4ea8584682f9..dbe534d5153f 100644
+--- a/arch/x86/include/asm/disabled-features.h
++++ b/arch/x86/include/asm/disabled-features.h
+@@ -28,13 +28,18 @@
+ # define DISABLE_CYRIX_ARR	(1<<(X86_FEATURE_CYRIX_ARR & 31))
+ # define DISABLE_CENTAUR_MCR	(1<<(X86_FEATURE_CENTAUR_MCR & 31))
+ # define DISABLE_PCID		0
++# define DISABLE_SGX1		0
++# define DISABLE_SGX2		0
+ #else
+ # define DISABLE_VME		0
+ # define DISABLE_K6_MTRR	0
+ # define DISABLE_CYRIX_ARR	0
+ # define DISABLE_CENTAUR_MCR	0
+ # define DISABLE_PCID		(1<<(X86_FEATURE_PCID & 31))
+-#endif /* CONFIG_X86_64 */
++# define DISABLE_SGX1		(1<<(X86_FEATURE_SGX1 & 31))
++# define DISABLE_SGX2		(1<<(X86_FEATURE_SGX2 & 31))
++ #endif /* CONFIG_X86_64 */
++
+ 
+ #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
+ # define DISABLE_PKU		0
+@@ -56,6 +61,12 @@
+ # define DISABLE_PTI		(1 << (X86_FEATURE_PTI & 31))
+ #endif
+ 
++#ifdef CONFIG_INTEL_SGX
++# define DISABLE_SGX	0
++#else
++# define DISABLE_SGX	(1 << (X86_FEATURE_SGX & 31))
++#endif
++
+ /*
+  * Make sure to add features to the correct mask
+  */
+@@ -68,7 +79,7 @@
+ #define DISABLED_MASK6	0
+ #define DISABLED_MASK7	(DISABLE_PTI)
+ #define DISABLED_MASK8	0
+-#define DISABLED_MASK9	(DISABLE_SMAP)
++#define DISABLED_MASK9	(DISABLE_SMAP|DISABLE_SGX)
+ #define DISABLED_MASK10	0
+ #define DISABLED_MASK11	0
+ #define DISABLED_MASK12	0
+@@ -78,6 +89,7 @@
+ #define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP)
+ #define DISABLED_MASK17	0
+ #define DISABLED_MASK18	0
+-#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 19)
++#define DISABLED_MASK19	(DISABLE_SGX1|DISABLE_SGX2)
++#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 20)
+ 
+ #endif /* _ASM_X86_DISABLED_FEATURES_H */
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index e8370e64a155..18e08da19f16 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -582,6 +582,7 @@
+ #define FEAT_CTL_LOCKED				BIT(0)
+ #define FEAT_CTL_VMX_ENABLED_INSIDE_SMX		BIT(1)
+ #define FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX	BIT(2)
++#define FEAT_CTL_SGX_ENABLED			BIT(18)
+ #define FEAT_CTL_LMCE_ENABLED			BIT(20)
+ 
+ #define MSR_IA32_TSC_ADJUST             0x0000003b
+diff --git a/arch/x86/include/asm/required-features.h b/arch/x86/include/asm/required-features.h
+index 6847d85400a8..039e58be2fe6 100644
+--- a/arch/x86/include/asm/required-features.h
++++ b/arch/x86/include/asm/required-features.h
+@@ -101,6 +101,6 @@
+ #define REQUIRED_MASK16	0
+ #define REQUIRED_MASK17	0
+ #define REQUIRED_MASK18	0
+-#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 19)
++#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 20)
+ 
+ #endif /* _ASM_X86_REQUIRED_FEATURES_H */
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 043d93cdcaad..93105b14effd 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -914,6 +914,10 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+ 		c->x86_capability[CPUID_D_1_EAX] = eax;
+ 	}
+ 
++	/* Additional Intel-defined SGX flags: level 0x00000012 */
++	if (c->cpuid_level >= 0x00000012)
++		c->x86_capability[CPUID_12_EAX] = cpuid_eax(0x00000012);
++
+ 	/* AMD-defined flags: level 0x80000001 */
+ 	eax = cpuid_eax(0x80000000);
+ 	c->extended_cpuid_level = eax;
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index db189945e9b0..fc4422f747d5 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -13,7 +13,7 @@
+ /*
+  * Defines x86 CPU feature bits
+  */
+-#define NCAPINTS			19	   /* N 32-bit words worth of info */
++#define NCAPINTS			20	   /* N 32-bit words worth of info */
+ #define NBUGINTS			1	   /* N 32-bit bug flags */
+ 
+ /*
+@@ -238,6 +238,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
+ #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
+ #define X86_FEATURE_TSC_ADJUST		( 9*32+ 1) /* TSC adjustment MSR 0x3B */
++#define X86_FEATURE_SGX			( 9*32+ 2) /* Software Guard Extensions */
+ #define X86_FEATURE_BMI1		( 9*32+ 3) /* 1st group bit manipulation extensions */
+ #define X86_FEATURE_HLE			( 9*32+ 4) /* Hardware Lock Elision */
+ #define X86_FEATURE_AVX2		( 9*32+ 5) /* AVX2 instructions */
+@@ -372,6 +373,10 @@
+ #define X86_FEATURE_CORE_CAPABILITIES	(18*32+30) /* "" IA32_CORE_CAPABILITIES MSR */
+ #define X86_FEATURE_SPEC_CTRL_SSBD	(18*32+31) /* "" Speculative Store Bypass Disable */
+ 
++/* Intel-defined SGX features, CPUID level 0x00000012:0 (EAX), word 19 */
++#define X86_FEATURE_SGX1		(19*32+ 0) /* SGX1 leaf functions */
++#define X86_FEATURE_SGX2		(19*32+ 1) /* SGX2 leaf functions */
++
+ /*
+  * BUG word(s)
+  */
+-- 
+2.25.1
+
