@@ -5,39 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46779C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2BC321655
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1467F2098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:39:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="R9HtHlXz"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IRk0LbrV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgFQBjh (ORCPT
+        id S1726760AbgFQBjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 21:39:37 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18372 "EHLO
+        Tue, 16 Jun 2020 21:39:42 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18379 "EHLO
         hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgFQBjc (ORCPT
+        with ESMTP id S1726698AbgFQBjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 21:39:32 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee974230000>; Tue, 16 Jun 2020 18:38:43 -0700
+        Tue, 16 Jun 2020 21:39:35 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ee974260000>; Tue, 16 Jun 2020 18:38:46 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 16 Jun 2020 18:39:32 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 16 Jun 2020 18:39:35 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 16 Jun 2020 18:39:32 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jun
- 2020 01:39:32 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 17 Jun 2020 01:39:31 +0000
+        by hqpgpgate101.nvidia.com on Tue, 16 Jun 2020 18:39:35 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jun
+ 2020 01:39:35 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 17 Jun 2020 01:39:34 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.171.186]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ee974520003>; Tue, 16 Jun 2020 18:39:31 -0700
+        id <B5ee974550003>; Tue, 16 Jun 2020 18:39:34 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -47,9 +47,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v2 03/18] i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
-Date:   Tue, 16 Jun 2020 18:41:19 -0700
-Message-ID: <1592358094-23459-4-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v2 06/18] i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra210 vi i2c
+Date:   Tue, 16 Jun 2020 18:41:22 -0700
+Message-ID: <1592358094-23459-7-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
 References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
@@ -57,59 +57,44 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592357923; bh=zxB65TqmmcKmPfWkLJU50AtZToCBrCGEYlb/JsyjY+U=;
+        t=1592357926; bh=0OuCjrabnjZNSWZBX+Waj7ikSIdYTTfQz4eoEiBUxOY=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=R9HtHlXzTVVjP1wNAEo31UCWcFBl06uOj2AaJJajUFXl1Fwq966rDUZuYlzSecJuh
-         5GQME+WBuTrspesWWsbW21X1VPfz0EPdz6MwM/5Q2f/tQj6dLnvx4trOHrDvsiIg83
-         nJ/wNM9qQTaGGn8l0uJdJsgaHKXlGXbQ/CT51G2Tw+reVCb8j/QXmA4KbqvT7kciiK
-         z/TaDnWn7QpB2fDxyby1XcwqPM60gnIzlTiEFCk2udvQ594fX3PVWODaPZxsD9v7FW
-         +kfJyC0hx8jfMhKwh5Sco762+WBKukvT5IFAoummgbHzsofaBMeyP3ZqP4KRRSnCcv
-         T722aktUXRXYA==
+        b=IRk0LbrV+LKwJyjoWLfOdWptknzlWv8TvzfFU0Ejz04VertO7g1I/oOkw9aCWV2Y4
+         VUXCvQehTdsTuokE2A+gnlOVzxy11/Gxu61JgXEXXZJkNVSY/kOlzZ1rOCWr1IYqFs
+         NUPtUiLulJlK4pAhlWtfnZWzt+nwY64SA68r9aqukzBqYHAxxhQq/CVc0zeyq+fKFn
+         Zi4c5zTiU4N6ehey239ehDJ2cmFKUF6nECke9O97kYKMPUpU9m5jWIyprdpeugDfOX
+         PsN8L797lfsf2pJTFI/1ya6L+3v64I83wNQ6msPjA+5vLsQiLvcMWN8eF4sgThOw4b
+         bodA1ZJMXe9WQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra VI I2C is part of VE power domain and typically used for
-camera usecases.
+VI I2C is on host1x bus so APB DMA can't be used for Tegra210 VI
+I2C and there are no tx and rx dma channels for VI I2C.
 
-VE power domain is not always on and is non-IRQ safe. So, IRQ safe
-device cannot be attached to a non-IRQ safe domain as it prevents
-powering off the PM domain and generic power domain driver will warn.
-
-Current driver marks all I2C devices as IRQ safe and VI I2C device
-does not require IRQ safe as it will not be used for atomic transfers.
-
-This patch has fix to make VI I2C as non-IRQ safe.
+So, avoid attempt of requesting DMA channels.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 1577296..3be1018 100644
+index e7aad64..9a80aa6 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -1750,7 +1750,15 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 		goto unprepare_slow_clk;
- 	}
+@@ -421,7 +421,7 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
+ 	dma_addr_t dma_phys;
+ 	int err;
  
--	pm_runtime_irq_safe(&pdev->dev);
-+	/*
-+	 * VI I2C is in VE power domain which is not always on and not
-+	 * an IRQ safe. So, IRQ safe device can't be attached to a non-IRQ
-+	 * safe domain as it prevents powering off the PM domain.
-+	 * Also, VI I2C device don't need to use runtime IRQ safe as it will
-+	 * not be used for atomic transfers.
-+	 */
-+	if (!i2c_dev->is_vi)
-+		pm_runtime_irq_safe(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 	if (!pm_runtime_enabled(&pdev->dev)) {
- 		ret = tegra_i2c_runtime_resume(&pdev->dev);
+-	if (!i2c_dev->hw->has_apb_dma)
++	if (!i2c_dev->hw->has_apb_dma || i2c_dev->is_vi)
+ 		return 0;
+ 
+ 	if (!IS_ENABLED(CONFIG_TEGRA20_APB_DMA)) {
 -- 
 2.7.4
 
