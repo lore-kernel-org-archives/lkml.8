@@ -2,126 +2,95 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DED5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0DBE208B3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592393530;
-	bh=fr4yw7Y4RXS9qx53ov+dyDcFDQ09hDGLpfxJ2iXjlsQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Egpp8/X/S57GMBgSDMEV7P2ipEQLYJ3try7vNnv28+XYWq35H4vv2JgNkhG00Ec8r
-	 2YJRx84rk5Nqqc4bsiMYhBnFB7/gp52NMj3a9X+iHqaEN+UNozLfTwEoFuPeMs8xuN
-	 7x5DqCs7JfzY830sAovKIYuriSf4unj6UTZdVAvA=
+	by mail.kernel.org (Postfix) with ESMTP id DF5B020CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:34:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="P1xngMJC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgFQLcH (ORCPT
+        id S1726341AbgFQLeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:32:07 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39020 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725964AbgFQLcF (ORCPT
+        Wed, 17 Jun 2020 07:34:13 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:9271 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbgFQLeN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:32:05 -0400
-Received: by mail-ed1-f68.google.com with SMTP id g1so1650415edv.6;
-        Wed, 17 Jun 2020 04:32:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FYdkGKfQbhF4PHnRrzgzko0Pu9PmmGSrtwLwQw3bXCE=;
-        b=t8D2E0uBDkYjK1y9Qs1EMyA1SUGqB3Mf6ObN+D0ClXDCL+b2/gfY7/GEK+Lot5Uzqv
-         R4l3KI70Oy/KwE3FGhOK0fOJ1XSMm/EHYTINBBMe0Ju25U5dY5dJWMyeQmJv1ok57RAS
-         /PwUXvaoimMBOhvt/pGQ2C1w+tTPuV1V7nOLWMkQgpUzsCvY/UvoyMMhlBuN/0PdaOJb
-         eOFhsxolqE/KGMV7kWtLHkfYq5BWOFt7MFrWRfXAL7Tjvu8bIx5sxOh/EyZDl7kVYRXc
-         HaHuSpXefROoULG/euaDqznSpLhnbEAwtR7vFkV66F7GWpd/nhUoMUYYLfAjjqCRnfeD
-         CZyA==
-X-Gm-Message-State: AOAM5328JULnro5t04L3QQinjDJy6snLbZxdNjE6sAZzb61df7uD1Bik
-        5ZqFQ33fzMuGN70B2C132qWDrIA8Y5E=
-X-Google-Smtp-Source: ABdhPJzbijHiPBJ8QWNf9hQXsnh9CB5HA28VxqbN6FIY1pPr6HYmH8EGA0XHv2KQOLuy+zTeoR016w==
-X-Received: by 2002:a05:6402:3106:: with SMTP id dc6mr6587998edb.375.1592393520398;
-        Wed, 17 Jun 2020 04:32:00 -0700 (PDT)
-Received: from localhost (ip-37-188-158-19.eurotel.cz. [37.188.158.19])
-        by smtp.gmail.com with ESMTPSA id y62sm12010608edy.61.2020.06.17.04.31.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 04:31:59 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 13:31:57 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dsterba@suse.cz, Joe Perches <joe@perches.com>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-ppp@vger.kernel.org, wireguard@lists.zx2c4.com,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] mm, treewide: Rename kzfree() to kfree_sensitive()
-Message-ID: <20200617113157.GM9499@dhcp22.suse.cz>
-References: <20200616015718.7812-1-longman@redhat.com>
- <fe3b9a437be4aeab3bac68f04193cb6daaa5bee4.camel@perches.com>
- <20200616230130.GJ27795@twin.jikos.cz>
- <20200617003711.GD8681@bombadil.infradead.org>
- <20200617071212.GJ9499@dhcp22.suse.cz>
- <20200617110820.GG8681@bombadil.infradead.org>
+        Wed, 17 Jun 2020 07:34:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592393653; x=1623929653;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kQsP/yVJQUNUJxvLd2o3N1wn7VHKUz9qL3WSHlmLZFk=;
+  b=P1xngMJCZ5dKWh7iwAksVWFKWrKsiUVtY095aVDUL5SYbARZ+QXF5g/3
+   zd2jmCPSBalYQb0LGEK11w7jtyvQsF784QDt9T/SuPWdJzgdRdL+ANxPx
+   SQ2mPZXVU66E3DYM0PwUrOL1VFsMzmKLZBiZ/keQGcaewXkQXhm8gYLsL
+   Tn9CbbdQS3v/mq590ju7NF2alStU9pJq2qyt7cJUQN5J+DiMHntS+xxcp
+   YMYWOJU58QxRNYUsbqsG/JI5WC/oHJv2FVZHsp9ScLwbyogFtJ3PMCUTg
+   stB2xoHRbaKAUfoDB8qqU7GG7qFcvqDexQADoyxFO1Nv/1CUM57QmIFcP
+   Q==;
+IronPort-SDR: g4ofiiEUYk3qfKBvdRaUwrDkrrQWuz/cgJ8wbSU7yz5q73bo2xNuwQlaTzPJ0Jd9vs80iw0zAA
+ RzJV5u9MzHZ66Tky/1XjZ/6YUqkhit9+DzCdDv4rGeBSoy2CYt6IbLhgNEB/XIAYu9LcJO8TJy
+ UXRbf6pRXRKwjE8eE75lQ+n7uF2BA80imXFmVhWraf77+wu83ibfBdIV65wGH7vA8NrC/rC5WU
+ di/teQH4U4CtV7Qseni/nbk3ShCwa9d9T55bmIoKInutsMKDmt/VhvOV3NHmsrzz+IA37KlqdN
+ wOM=
+X-IronPort-AV: E=Sophos;i="5.73,522,1583218800"; 
+   d="scan'208";a="79790505"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Jun 2020 04:34:13 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 17 Jun 2020 04:34:11 -0700
+Received: from soft-dev3.localdomain (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Wed, 17 Jun 2020 04:34:10 -0700
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     <nikolay@cumulusnetworks.com>, <davem@davemloft.net>,
+        <UNGLinuxDriver@microchip.com>, <linux-kernel@vger.kernel.org>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH net] bridge: uapi: mrp: Fix MRP_PORT_ROLE
+Date:   Wed, 17 Jun 2020 13:32:49 +0200
+Message-ID: <20200617113249.2001901-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617110820.GG8681@bombadil.infradead.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 17-06-20 04:08:20, Matthew Wilcox wrote:
-> On Wed, Jun 17, 2020 at 09:12:12AM +0200, Michal Hocko wrote:
-> > On Tue 16-06-20 17:37:11, Matthew Wilcox wrote:
-> > > Not just performance critical, but correctness critical.  Since kvfree()
-> > > may allocate from the vmalloc allocator, I really think that kvfree()
-> > > should assert that it's !in_atomic().  Otherwise we can get into trouble
-> > > if we end up calling vfree() and have to take the mutex.
-> > 
-> > FWIW __vfree already checks for atomic context and put the work into a
-> > deferred context. So this should be safe. It should be used as a last
-> > resort, though.
-> 
-> Actually, it only checks for in_interrupt().
+Currently the MRP_PORT_ROLE_NONE has the value 0x2 but this is in conflict
+with the IEC 62439-2 standard. The standard defines the following port
+roles: primary (0x0), secondary(0x1), interconnect(0x2).
+Therefore remove the port role none.
 
-You are right. I have misremembered. You have made me look (thanks) ...
+Fixes: 4714d13791f831 ("bridge: uapi: mrp: Add mrp attributes.")
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+---
+ include/uapi/linux/mrp_bridge.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-> If you call vfree() under
-> a spinlock, you're in trouble.  in_atomic() only knows if we hold a
-> spinlock for CONFIG_PREEMPT, so it's not safe to check for in_atomic()
-> in __vfree().  So we need the warning in order that preempt people can
-> tell those without that there is a bug here.
-
-... Unless I am missing something in_interrupt depends on preempt_count() as
-well so neither of the two is reliable without PREEMPT_COUNT configured.
-
+diff --git a/include/uapi/linux/mrp_bridge.h b/include/uapi/linux/mrp_bridge.h
+index 84f15f48a7cb1..bee3665402129 100644
+--- a/include/uapi/linux/mrp_bridge.h
++++ b/include/uapi/linux/mrp_bridge.h
+@@ -36,7 +36,6 @@ enum br_mrp_port_state_type {
+ enum br_mrp_port_role_type {
+ 	BR_MRP_PORT_ROLE_PRIMARY,
+ 	BR_MRP_PORT_ROLE_SECONDARY,
+-	BR_MRP_PORT_ROLE_NONE,
+ };
+ 
+ enum br_mrp_tlv_header_type {
 -- 
-Michal Hocko
-SUSE Labs
+2.26.2
+
