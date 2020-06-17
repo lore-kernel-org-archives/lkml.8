@@ -2,190 +2,137 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF73C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5538BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A43A721556
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:53:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gjcf4NZZ"
+	by mail.kernel.org (Postfix) with ESMTP id 2DEE621582
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:53:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592427196;
+	bh=fn2yk/yFjARGWSEFsjLDcqp5WNIOynxfyeyLoNcKW+k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cdPG7hDYrPdAnndWD9BFyteKXkTjwo3YXCBexXUSNct+KptHqtiBRGBIx92T7SqPn
+	 tOb46nK9K6NBmUqueZ50QYV0mzoGzKOMZzQgQldBNXvrL9ESemNu4jqcucLCRAtAgv
+	 DBxyhl0u/LpElLDesZgk27OyZuoqvvnnYy4fScoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgFQUxM (ORCPT
+        id S1726998AbgFQUxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:53:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgFQUxL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:53:11 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D7EC0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:53:10 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id v14so1878886pgl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:53:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=QnReyXxnOu9ZZjgV+0fELmFBwkF8t9sS5NXbAXaUWrU=;
-        b=gjcf4NZZMPS/xxo/MEuRK7uaEen6br1tQkcKD5yijmxio5vLdECcP+aSbIWeRjCx/b
-         NlAV2NUWyZ94TjFrq0dy46OI8j5tp/dLwbwKETZPL8g7FBo9F/9PObvOAjkPYbfLOAR3
-         9OcA/XGNM7veXfhq9dPzOxnL3VYn1fTd56S6I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=QnReyXxnOu9ZZjgV+0fELmFBwkF8t9sS5NXbAXaUWrU=;
-        b=rkyeQb051salTp67Vwfg6uPtS4W2aMuz3jyZ1GG3AUp3XZ7VIeExWdNGFfNeR2ModV
-         zCB2sHKpsjjRwlZcYq3DxVqGx6w2RW1vq/McaX6XeeTcAimotvRZHL6dXkkd8bBqSbSD
-         /hlV2zn9mZUwEFavWHLdeiukCcJ1r4UovXCFMaykul+olInUYqY2CtrvdN7qdMFSoR2F
-         VgVh+G4AeFkNEz7xFzFiK69oKis1cyZWUrrYfKRdvqadwVNpSHeTs5811Ux1NIkNGKTD
-         Z4ZqIjuTLSllq7RS3CDcE9QkNNBQhET6LYaUibqyPK46vUFKayZhQwGqrdQyQfJuh1G/
-         g/Yg==
-X-Gm-Message-State: AOAM531/am3DLO3rw60I5VJp3H513HZalAZz4nYBIVNAhX91zQA23aSv
-        WKSPx3DYut3oZeipUpElEG6BMg==
-X-Google-Smtp-Source: ABdhPJw75FLzMY2EKLhIE4fbWx+vsu2fEfVEDYxgCAyGOn+B2hfOzc2yzg04DadvCVQtW9r1VEj5FA==
-X-Received: by 2002:a63:1a11:: with SMTP id a17mr552466pga.227.1592427189951;
-        Wed, 17 Jun 2020 13:53:09 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id k101sm406682pjb.26.2020.06.17.13.53.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 13:53:09 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200616034044.v3.2.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
-References: <20200616104050.84764-1-dianders@chromium.org> <20200616034044.v3.2.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
-Subject: Re: [PATCH v3 2/5] spi: spi-geni-qcom: Mo' betta locking
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dilip Kota <dkota@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-To:     Douglas Anderson <dianders@chromium.org>,
-        Mark Brown <broonie@kernel.org>
-Date:   Wed, 17 Jun 2020 13:53:08 -0700
-Message-ID: <159242718864.62212.18160698526818943096@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Wed, 17 Jun 2020 16:53:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726761AbgFQUxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 16:53:13 -0400
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8E2B2073E;
+        Wed, 17 Jun 2020 20:53:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592427193;
+        bh=fn2yk/yFjARGWSEFsjLDcqp5WNIOynxfyeyLoNcKW+k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HjDClTRvr8xAI8oqRuscDf1288YkY+vBcA9xL8LlWBqGpFC63d80YZKXAwaGmhu1K
+         yGOghB/CWY2PlFivh46jtSNKt6QlJIjws2MSND/pfhsIvwOdqe4tW1IP4F5Hkv0qqi
+         3kZqLpHGln4q7kjDM/Ap/jAyMTb1W6Y2n8fXtibc=
+Date:   Wed, 17 Jun 2020 13:53:12 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Nitin Gupta <nigupta@nvidia.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Oleksandr Natalenko <oleksandr@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Nitin Gupta <ngupta@nitingupta.dev>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v8] mm: Proactive compaction
+Message-Id: <20200617135312.4f395479454c55a8d021b023@linux-foundation.org>
+In-Reply-To: <20200616204527.19185-1-nigupta@nvidia.com>
+References: <20200616204527.19185-1-nigupta@nvidia.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-06-16 03:40:47)
-> If you added a bit of a delay (like a trace_printk) into the ISR for
-> the spi-geni-qcom driver, you would suddenly start seeing some errors
-> spit out.  The problem was that, though the ISR itself held a lock,
-> other parts of the driver didn't always grab the lock.
->=20
-> One example race was this:
-> a) Driver queues off a command to set a Chip Select (CS).
-> b) ISR fires indicating the CS is done.
-> c) Done bit is set, so we complete().
-> d) Second CPU gallops off and starts a transfer.
-> e) Second CPU starts messing with hardware / software state (not under
->    spinlock).
-> f) ISR now does things like set "mas->cur_mcmd" to CMD_NONE, prints
->    errors if "tx_rem_bytes" / "rx_rem_bytes" have been set, and also
->    Acks all interrupts it handled.
+On Tue, 16 Jun 2020 13:45:27 -0700 Nitin Gupta <nigupta@nvidia.com> wrote:
 
-Can we get a CPU0/CPU1 diagram here? At point e) I got sort of lost. And
-maybe it's not even a dual CPU problem? i.e. it can happen on one CPU?
+> For some applications, we need to allocate almost all memory as
+> hugepages. However, on a running system, higher-order allocations can
+> fail if the memory is fragmented. Linux kernel currently does on-demand
+> compaction as we request more hugepages, but this style of compaction
+> incurs very high latency. Experiments with one-time full memory
+> compaction (followed by hugepage allocations) show that kernel is able
+> to restore a highly fragmented memory state to a fairly compacted memory
+> state within <1 sec for a 32G system. Such data suggests that a more
+> proactive compaction can help us allocate a large fraction of memory as
+> hugepages keeping allocation latencies low.
+>
+> ...
+>
 
-    CPU0
-    ----
- a) spi_geni_set_cs()
-     mas->cur_mcmd =3D CMD_CS
-     wait_for_completion_timeout(&xfer_done)
- b)  <INTERRUPT>
-     geni_spi_isr()
- c)   complete(&xfer_done);
-     <END INTERRUPT>
-     pm_runtime_put(mas->dev);
- d) galloping?
+All looks straightforward to me and easy to disable if it goes wrong.
 
-I got lost... Sorry!
-   =20
->=20
-> Let's fix this.  Before we start messing with hardware, we'll grab the
-> lock to make sure that the IRQ handler from some previous command has
-> really finished.  We don't need to hold the lock unless we're in a
-> state where more interrupts can come in, but we at least need to make
-> sure the previous IRQ is done.  This lock is used exclusively to
-> prevent the IRQ handler and non-IRQ from stomping on each other.  The
-> SPI core handles all other mutual exclusion.
+All the hard-coded magic numbers are a worry, but such is life.
 
-Ok maybe the problem is the completion at c) never happens until the
-wait_for_completion_timeout() times out?
+One teeny complaint:
 
->=20
-> As part of this, we change the way that the IRQ handler detects
-> spurious interrupts.  Previously we checked for our state variable
-> being set to IRQ_NONE, but that was done outside the spinlock.  We
-> could move it into the spinlock, but instead let's just change it to
-> look for the lack of any IRQ status bits being set.  This can be done
-> outside the lock--the hardware certainly isn't grabbing or looking at
-> the spinlock when it updates its status register.
->=20
-> It's possible that this will fix real (but very rare) errors seen in
-> the field that look like:
->   irq ...: nobody cared (try booting with the "irqpoll" option)
->=20
-> NOTE: an alternate strategy considered here was to always make the
-> complete() / spi_finalize_current_transfer() the very last thing in
-> our IRQ handler.  With such a change you could consider that we could
-> be "lockless".  In that case, though, we'd have to be very careful w/
-> memory barriers so we made sure we didn't have any bugs with weakly
-> ordered memory.  Using spinlocks makes the driver much easier to
-> understand.
->=20
-> Fixes: 561de45f72bd ("spi: spi-geni-qcom: Add SPI driver support for GENI=
- based QUP")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->=20
-> Changes in v3:
-> - Split out some lock cleanup to previous patch.
-> - Don't need to read IRQ status register inside spinlock.
-> - Don't check for state CMD_NONE; later patch is removing state var.
-> - Don't hold the lock for all of setup_fifo_xfer().
-> - Comment about why it's safe to Ack interrupts at the end.
-> - Subject/desc changed since race is definitely there.
->=20
-> Changes in v2:
-> - Detect true spurious interrupt.
-> - Still return IRQ_NONE for state machine mismatch, but print warn.
->=20
->  drivers/spi/spi-geni-qcom.c | 45 ++++++++++++++++++++++++++++++++++---
->  1 file changed, 42 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-> index c7d2c7e45b3f..e0f0e5c241f3 100644
-> --- a/drivers/spi/spi-geni-qcom.c
-> +++ b/drivers/spi/spi-geni-qcom.c
-> @@ -367,6 +384,12 @@ static void setup_fifo_xfer(struct spi_transfer *xfe=
-r,
->         }
->         writel(spi_tx_cfg, se->base + SE_SPI_TRANS_CFG);
->         mas->cur_mcmd =3D CMD_XFER;
+>
+> ...
+>
+> @@ -2650,12 +2801,34 @@ static int kcompactd(void *p)
+>  		unsigned long pflags;
+>  
+>  		trace_mm_compaction_kcompactd_sleep(pgdat->node_id);
+> -		wait_event_freezable(pgdat->kcompactd_wait,
+> -				kcompactd_work_requested(pgdat));
+> +		if (wait_event_freezable_timeout(pgdat->kcompactd_wait,
+> +			kcompactd_work_requested(pgdat),
+> +			msecs_to_jiffies(HPAGE_FRAG_CHECK_INTERVAL_MSEC))) {
 > +
-> +       /*
-> +        * Lock around right before we start the transfer since our
-> +        * interrupt controller could come in at any time now.
+> +			psi_memstall_enter(&pflags);
+> +			kcompactd_do_work(pgdat);
+> +			psi_memstall_leave(&pflags);
+> +			continue;
+> +		}
+>  
+> -		psi_memstall_enter(&pflags);
+> -		kcompactd_do_work(pgdat);
+> -		psi_memstall_leave(&pflags);
+> +		/* kcompactd wait timeout */
+> +		if (should_proactive_compact_node(pgdat)) {
+> +			unsigned int prev_score, score;
 
-drop 'controller'?
+Everywhere else, scores have type `int'.  Here they are unsigned.  How come?
 
-> +        */
-> +       spin_lock_irq(&mas->lock);
->         geni_se_setup_m_cmd(se, m_cmd, FRAGMENTATION);
-> =20
->         /*
+Would it be better to make these unsigned throughout?  I don't think a
+score can ever be negative?
+
+> +			if (proactive_defer) {
+> +				proactive_defer--;
+> +				continue;
+> +			}
+> +			prev_score = fragmentation_score_node(pgdat);
+> +			proactive_compact_node(pgdat);
+> +			score = fragmentation_score_node(pgdat);
+> +			/*
+> +			 * Defer proactive compaction if the fragmentation
+> +			 * score did not go down i.e. no progress made.
+> +			 */
+> +			proactive_defer = score < prev_score ?
+> +					0 : 1 << COMPACT_MAX_DEFER_SHIFT;
+> +		}
+>  	}
+
