@@ -2,146 +2,99 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1785C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0038EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8765521532
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGPuDDIv"
+	by mail.kernel.org (Postfix) with ESMTP id D0A302158C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:51:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592412705;
+	bh=yJIMgYmxE2b021HNjLcZ5z539vezI9aKTyvm8qWgNZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=faRCOCQhFbmWkZl60V6ZaKQit3eEpisuZ+F1zFz1JQ9hMi6UGTfjWdFw/U4Pzd6co
+	 LwGQN9QhKinLSgvs5VMZyiYg9BQzpIYsDBRCx2R7FdG3ZJIAhy6d71hXttu6ID52R9
+	 k+mugm9H/lo8kvkvPqy85OtRTici4INS5UcD1EJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgFQQtY (ORCPT
+        id S1726912AbgFQQvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:49:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgFQQsJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:48:09 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34B91C0613ED;
-        Wed, 17 Jun 2020 09:48:09 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id e1so3088678wrt.5;
-        Wed, 17 Jun 2020 09:48:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jO6YYKLcVc4zVnNFJ3vwcO4SaIx1I79j4ycIlYEFriM=;
-        b=dGPuDDIvXNEAfIMnvc6hzhIro0ysybgDo0L+ZYIyozSv6xaJx9m7uAQkGe1x+2DC0+
-         eiAABPwv27e67/k3fYv9ibRHiBjborGi+5GkyFUFaXD9CAKOmgGXw5nNMjtoRd2Scqkr
-         LBGoYPjTRBntsJCj9OmNIRRAeAwfpAMT8nxp+G4O3zp4hNCEexTbdsbhSIq1ymKpDYBN
-         VPv7d84x2hO/SBcBMgj+kiI1Ik7HSo0Km4HOuNiUHd9V24IAUT3Vp1qgTRAXdQZrEO6k
-         Uq6ceySpT6bIhxV36j3uk9imhs0UJDBjrWkqXGFeV5m2zK5A3Ygu0o/sxMTpGAVq9TI0
-         2YLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jO6YYKLcVc4zVnNFJ3vwcO4SaIx1I79j4ycIlYEFriM=;
-        b=ISP7Vm+l0GNDPazJaoc6OpR1KZk8cz8YgqaN3loS6SNwPLkDACjlCPql1b7B93xaYG
-         86aOhxxAE5GALQqhJNkUenDMTC5Zx0Gd+F5tqn5J1SGEVd20aoXXSxzkiV1Rp5tJat+g
-         lvRSVMVeUl0eSTLRyxbxeTBiZkHSP4P8Ui0mh8aWWpazRRr1BXf3UVD3WpRs6T5YVjXq
-         /8JF1oGLlNi4zjOGAncdurMai7q/7xjmPcRQvhTII/Or1ZXj2r+CboArZWw9TXCsBq5m
-         oeXuRF3csKDLdc9nHK+q1fI5/yJasTeC8yrgxO86NVRGaB53TVXqAWrZcmNJzvpbPBix
-         vQOg==
-X-Gm-Message-State: AOAM530JSMrrOP0mvfz18dsZwin1fiCWdJW89Z3fskhHX88grKrFQpj/
-        OAQnEOAQ+5kNGj4sdvFIMfxe41l7Z2BZhw==
-X-Google-Smtp-Source: ABdhPJx9FS5yJVTtenmTcnSfeuEKkEeHMt/a8Qf3ZsJoYR/a/YC2asbMiQpE/WXs3evNgivi1BbVoA==
-X-Received: by 2002:a5d:468d:: with SMTP id u13mr150370wrq.73.1592412487715;
-        Wed, 17 Jun 2020 09:48:07 -0700 (PDT)
-Received: from localhost.localdomain (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
-        by smtp.gmail.com with ESMTPSA id g3sm199165wrb.46.2020.06.17.09.48.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:48:07 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH 8/8] Drivers: hv: vmbus: Remove the lock field from the vmbus_channel struct
-Date:   Wed, 17 Jun 2020 18:46:42 +0200
-Message-Id: <20200617164642.37393-9-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200617164642.37393-1-parri.andrea@gmail.com>
-References: <20200617164642.37393-1-parri.andrea@gmail.com>
+        Wed, 17 Jun 2020 12:51:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726597AbgFQQvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 12:51:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E19A220897;
+        Wed, 17 Jun 2020 16:51:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592412703;
+        bh=yJIMgYmxE2b021HNjLcZ5z539vezI9aKTyvm8qWgNZ8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cldD3ElD8yqoB76E4PyeMP7F89GQLxHb0bzpP4BRLOSM2q7MkRU/jGZPSLhPDV6PN
+         reHpz1KbRt+UwiyRS8ii7eEDQlLJF1pr6q6QGK25H6y6mjkzCgssKuow5mU8kMutAo
+         arEspLenHqyJUAiJ3Gnn4XNYqz7YnEzeEsiwcAgA=
+Date:   Wed, 17 Jun 2020 18:51:36 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.7 000/162] 5.7.3-rc2 review
+Message-ID: <20200617165136.GA3794995@kroah.com>
+References: <20200616172615.453746383@linuxfoundation.org>
+ <77015800-d0a2-38f7-e70a-e6dcbc6325f9@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77015800-d0a2-38f7-e70a-e6dcbc6325f9@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The spinlock is (now) *not used to protect test-and-set accesses
-to attributes of the structure or sc_list operations.
+On Tue, Jun 16, 2020 at 09:21:09PM +0100, Jon Hunter wrote:
+> 
+> On 16/06/2020 18:27, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.7.3 release.
+> > There are 162 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 18 Jun 2020 17:25:43 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.3-rc2.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.7:
+>     11 builds:	11 pass, 0 fail
+>     26 boots:	26 pass, 0 fail
+>     56 tests:	56 pass, 0 fail
+> 
+> Linux version:	5.7.3-rc2-g55b987cbccd9
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra210-p3450-0000,
+>                 tegra30-cardhu-a04
+> 
 
-There is, AFAICT, a distinct lack of {WRITE,READ}_ONCE()s in the
-handling of channel->state, but the changes below do not seem to
-make things "worse".  ;-)
+Thanks for testing all of these and letting me know.
 
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
----
- drivers/hv/channel.c      | 6 +-----
- drivers/hv/channel_mgmt.c | 1 -
- include/linux/hyperv.h    | 6 ------
- 3 files changed, 1 insertion(+), 12 deletions(-)
-
-diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-index 8848d1548b3f2..3ebda7707e46a 100644
---- a/drivers/hv/channel.c
-+++ b/drivers/hv/channel.c
-@@ -129,12 +129,8 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
- 	send_pages = newchannel->ringbuffer_send_offset;
- 	recv_pages = newchannel->ringbuffer_pagecount - send_pages;
- 
--	spin_lock_irqsave(&newchannel->lock, flags);
--	if (newchannel->state != CHANNEL_OPEN_STATE) {
--		spin_unlock_irqrestore(&newchannel->lock, flags);
-+	if (newchannel->state != CHANNEL_OPEN_STATE)
- 		return -EINVAL;
--	}
--	spin_unlock_irqrestore(&newchannel->lock, flags);
- 
- 	newchannel->state = CHANNEL_OPENING_STATE;
- 	newchannel->onchannel_callback = onchannelcallback;
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 92f8bb2077a94..591106cf58fc0 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -317,7 +317,6 @@ static struct vmbus_channel *alloc_channel(void)
- 		return NULL;
- 
- 	spin_lock_init(&channel->sched_lock);
--	spin_lock_init(&channel->lock);
- 	init_completion(&channel->rescind_event);
- 
- 	INIT_LIST_HEAD(&channel->sc_list);
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 690394b79d727..38100e80360ac 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -840,12 +840,6 @@ struct vmbus_channel {
- 	 */
- 	void (*chn_rescind_callback)(struct vmbus_channel *channel);
- 
--	/*
--	 * The spinlock to protect the structure. It is being used to protect
--	 * test-and-set access to various attributes of the structure as well
--	 * as all sc_list operations.
--	 */
--	spinlock_t lock;
- 	/*
- 	 * All Sub-channels of a primary channel are linked here.
- 	 */
--- 
-2.25.1
-
+greg k-h
