@@ -2,112 +2,187 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C764BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EF2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A455C206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C361620707
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:08:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VG51dWDT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="haxkbwqY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgFQPHl (ORCPT
+        id S1726836AbgFQPIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:07:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgFQPHk (ORCPT
+        Wed, 17 Jun 2020 11:08:53 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38110 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726329AbgFQPIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:07:40 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45F25C06174E;
-        Wed, 17 Jun 2020 08:07:39 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id h10so1402549pgq.10;
-        Wed, 17 Jun 2020 08:07:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ITzc3JaPDxAKOQYTX8/bmia/YNb0R8QCocUSGMg4MW4=;
-        b=VG51dWDTTWJ1BPPW1x9m5auHEl5lcctVlIPQsjXbZ75e1gNtgey2/ZD45gcGBNt916
-         ws0vWK4I64S1xgVA6oVdIvk2H5XqtTpkqPqujNLecnm7mczvz1ArFATx+GDbq3ZY+/5V
-         Z7jG9jxAT+tTlvqHYzATpTbTuNZ2f6imtacT2t2JYwmHUHKm5ScwWxcL0LhnIBKcGPK/
-         CKPAlqZDhwvJ3z4HrJRbhfUkLv7eNzjgFj4gTU0FecsQXB6+Cwlla2TjsUVZsoT2weQZ
-         lHp0XaIO5h3j2JatvLCX25R0L0UOeV4EpsBXrqqvTd342LWsr3V2EqZBQCb9Ecd4OAtl
-         0jOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ITzc3JaPDxAKOQYTX8/bmia/YNb0R8QCocUSGMg4MW4=;
-        b=HwQJ14jxNKq21nUC1+krYkjnsXpdklJ7ZwOc96P16hF6T8mnaPwyNFAm8Zy7pC/dVP
-         WihbccUdyJxIsEwKE2jma8qLmI2E7Y3psStENg23M3KJEzISE3dy/GIOs1LDsqX0XVLf
-         K1zbZQRRofa+ZvHpK/k2Z088lsqaHu7iS5o4Vil0fpqbca/EEatXf/RPqUSW979c2mx0
-         1Gv9eQxKrMuEE6NjxUgELKgUpTIPpJ9e8hBMPIrLyRyvZu88mfFVFApE1nfGcEQIDvqj
-         f4qlB5/Sf8g0Q18toA0tXO5YXFA+p5Pn24r4ONLTmm5CT//mz9bHVO1B7TKPU67p+rJo
-         48Bw==
-X-Gm-Message-State: AOAM531jlx1qSPqVCYEPRm4Nj2Isg42SjJoDJv7AlWgqATe2vvl+1hqU
-        KjrgZA1qMKdlK1jtZqrYhA==
-X-Google-Smtp-Source: ABdhPJzO6j5bZRD8LqIHF8Z2IMbxZA9qtExXNUxiLO5wdupsF2FLJsKpQeAda5aI+I/XkaqLWQAPIg==
-X-Received: by 2002:a63:5d19:: with SMTP id r25mr6666766pgb.360.1592406458466;
-        Wed, 17 Jun 2020 08:07:38 -0700 (PDT)
-Received: from localhost (98.86.92.34.bc.googleusercontent.com. [34.92.86.98])
-        by smtp.gmail.com with ESMTPSA id y4sm177251pfr.182.2020.06.17.08.07.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 08:07:37 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 23:07:35 +0800
-From:   Jacky Hu <hengqing.hu@gmail.com>
-To:     Alexander Monakov <amonakov@ispras.ru>
-Cc:     Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tony.luck@intel.com, x86@kernel.org, yazen.ghannam@amd.com,
-        bp@alien8.de, clemens@ladisch.de
-Subject: Re: [PATCH] hwmon: (k10temp) Add AMD family 17h model 60h probe
-Message-ID: <20200617150735.GA405893@i716>
-References: <20200616180940.GN13515@zn.tnic>
- <20200617013255.391975-1-hengqing.hu@gmail.com>
- <20200617034028.GA1614@roeck-us.net>
- <20200617071927.GA398128@i716>
- <alpine.LNX.2.20.13.2006171739010.31660@monopod.intra.ispras.ru>
+        Wed, 17 Jun 2020 11:08:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592406531;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FEK6XNclhxuYzDS0FsacZ9NhZwGmRowURBIeQOb6/qc=;
+        b=haxkbwqYFxsFn4RCiiZn6yi8k1WF0iu9xNW4Ea9I6gdQKecc7EPPmsSgMShv1ZyZK0qBDn
+        dZX7euSnRpLgG6CsMsr3HaRj3z7vljC/pY8J6ahbjm5O2WJxIDr2oi8gVIavYTaCbx2N99
+        ARXeLseVFhqFP4ksNvKdB4WaeABpr98=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-417-cZ6_ZyNyPqqsXk0mSd_y2Q-1; Wed, 17 Jun 2020 11:08:47 -0400
+X-MC-Unique: cZ6_ZyNyPqqsXk0mSd_y2Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B70F8735C9;
+        Wed, 17 Jun 2020 15:08:45 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B4FF6E9F3;
+        Wed, 17 Jun 2020 15:08:41 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05HF8eKu028836;
+        Wed, 17 Jun 2020 11:08:40 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05HF8dow028832;
+        Wed, 17 Jun 2020 11:08:39 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Wed, 17 Jun 2020 11:08:39 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Eric Biggers <ebiggers@kernel.org>
+cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Mike Snitzer <msnitzer@redhat.com>,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com,
+        linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Milan Broz <mbroz@redhat.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        George Cherian <gcherian@marvell.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Zaibo Xu <xuzaibo@Huawei.com>
+Subject: Re: [dm-devel] [PATCH 1/4] crypto: introduce
+ CRYPTO_ALG_ALLOCATES_MEMORY
+In-Reply-To: <20200616173620.GA207319@gmail.com>
+Message-ID: <alpine.LRH.2.02.2006171107220.18714@file01.intranet.prod.int.rdu2.redhat.com>
+References: <alpine.LRH.2.02.2006091259250.30590@file01.intranet.prod.int.rdu2.redhat.com> <20200610010450.GA6449@gondor.apana.org.au> <alpine.LRH.2.02.2006100756270.27811@file01.intranet.prod.int.rdu2.redhat.com> <20200610121106.GA23137@gondor.apana.org.au>
+ <alpine.LRH.2.02.2006161052540.28052@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2006161101080.28052@file01.intranet.prod.int.rdu2.redhat.com> <20200616173620.GA207319@gmail.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.LNX.2.20.13.2006171739010.31660@monopod.intra.ispras.ru>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+I'm resending the patches with your comments resolved...
 
-Sorry, I apologize for didn't do much lookup that you already did the patch
-submission before I submitted the patch.
-I have to say we are all programmed by the programs.
-Also I didn't submit to either of the lists.
-A few places I did looked at are below before I did the submission.
-https://pci-ids.ucw.cz/v2.2/pci.ids
-https://lore.kernel.org/patchwork/project/lkml/list/
+Mikulas
 
-Jacky
-On Wed, Jun 17, 2020 at 05:54:36PM +0300, Alexander Monakov wrote:
-> Hi,
+
+
+On Tue, 16 Jun 2020, Eric Biggers wrote:
+
+> On Tue, Jun 16, 2020 at 11:01:31AM -0400, Mikulas Patocka wrote:
+> > Introduce a new flag CRYPTO_ALG_ALLOCATES_MEMORY and modify dm-crypt, so
+> > that it uses only drivers without this flag.
+> > 
+> > If the flag is set, then the crypto driver allocates memory in its request
+> > routine. Such drivers are not suitable for disk encryption because
+> > GFP_ATOMIC allocation can fail anytime (causing random I/O errors) and
+> > GFP_KERNEL allocation can recurse into the block layer, causing a
+> > deadlock.
+> > 
+> > Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+> > 
+> > Index: linux-2.6/include/linux/crypto.h
+> > ===================================================================
+> > --- linux-2.6.orig/include/linux/crypto.h
+> > +++ linux-2.6/include/linux/crypto.h
+> > @@ -97,9 +97,15 @@
+> >  #define CRYPTO_ALG_OPTIONAL_KEY		0x00004000
+> >  
+> >  /*
+> > + * The driver is allocating emmory in its encrypt or decrypt callback,
+> > + * so it should not be used to encrypt block devices.
+> > + */
 > 
-> I've already said in my patch submission (which was Cc'ed to LKML,
-> linux-edac and linux-hwmon so you should have been able to find it):
+> "is allocating emmory" => "may allocate memory"
 > 
-> >> It appears SMU offsets for reading current/voltage and CCD temperature
-> >> have changed for this generation (reads from currently used offsets
-> >> yield zeros), so those features cannot be enabled so trivially.
+> "so it should not be used to encrypt block devices" =>
+> "so it shouldn't be used in cases where memory allocation failures aren't
+>  acceptable, such as during block device encryption".
 > 
-> In https://github.com/FlyGoat/ryzen_nb_smu/issues/3 there some
-> reverse-engineered info that indicates that for Renoir, SMU region has been
-> moved to 0x6F000. Its layout also changed, as far as I can tell.
+> Also, which types of algorithms does this flag apply to?  E.g. if it applies to
+> hash algorithms too, it's not sufficient to say "encrypt or decrypt callback".
 > 
-> (also, please ask yourself if you want to offer the maintainers an apology)
+> How about:
 > 
-> Alexander
+>  /*
+>   * The driver may allocate memory during request processing, so it shouldn't be
+>   * used in cases where memory allocation failures aren't acceptable, such as
+>   * during block device encryption.
+>   */
+> 
+> > +#define CRYPTO_ALG_ALLOCATES_MEMORY	0x00008000
+> > +
+> > +/*
+> >   * Don't trigger module loading
+> >   */
+> > -#define CRYPTO_NOLOAD			0x00008000
+> > +#define CRYPTO_NOLOAD			0x00010000
+> >  
+> >  /*
+> >   * Transform masks and values (for crt_flags).
+> > Index: linux-2.6/drivers/md/dm-crypt.c
+> > ===================================================================
+> 
+> This would better belong as two separate patches: one to introduce
+> CRYPTO_ALG_ALLOCATES_MEMORY, and one to make dm-crypt use it.
+> 
+> > --- linux-2.6.orig/drivers/md/dm-crypt.c
+> > +++ linux-2.6/drivers/md/dm-crypt.c
+> > @@ -419,7 +419,7 @@ static int crypt_iv_lmk_ctr(struct crypt
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > -	lmk->hash_tfm = crypto_alloc_shash("md5", 0, 0);
+> > +	lmk->hash_tfm = crypto_alloc_shash("md5", 0, CRYPTO_ALG_ALLOCATES_MEMORY);
+> >  	if (IS_ERR(lmk->hash_tfm)) {
+> >  		ti->error = "Error initializing LMK hash";
+> >  		return PTR_ERR(lmk->hash_tfm);
+> > @@ -581,7 +581,7 @@ static int crypt_iv_tcw_ctr(struct crypt
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > -	tcw->crc32_tfm = crypto_alloc_shash("crc32", 0, 0);
+> > +	tcw->crc32_tfm = crypto_alloc_shash("crc32", 0, CRYPTO_ALG_ALLOCATES_MEMORY);
+> >  	if (IS_ERR(tcw->crc32_tfm)) {
+> >  		ti->error = "Error initializing CRC32 in TCW";
+> >  		return PTR_ERR(tcw->crc32_tfm);
+> > @@ -768,7 +768,7 @@ static int crypt_iv_elephant_ctr(struct
+> >  	struct iv_elephant_private *elephant = &cc->iv_gen_private.elephant;
+> >  	int r;
+> >  
+> > -	elephant->tfm = crypto_alloc_skcipher("ecb(aes)", 0, 0);
+> > +	elephant->tfm = crypto_alloc_skcipher("ecb(aes)", 0, CRYPTO_ALG_ALLOCATES_MEMORY);
+> >  	if (IS_ERR(elephant->tfm)) {
+> >  		r = PTR_ERR(elephant->tfm);
+> >  		elephant->tfm = NULL;
+> > @@ -2088,7 +2088,7 @@ static int crypt_alloc_tfms_skcipher(str
+> >  		return -ENOMEM;
+> >  
+> >  	for (i = 0; i < cc->tfms_count; i++) {
+> > -		cc->cipher_tfm.tfms[i] = crypto_alloc_skcipher(ciphermode, 0, 0);
+> > +		cc->cipher_tfm.tfms[i] = crypto_alloc_skcipher(ciphermode, 0, CRYPTO_ALG_ALLOCATES_MEMORY);
+> 
+> Despite the recent relaxation in rules, the preferred length of a line is still
+> 80 columns.
+> 
+> - Eric
+> 
+
