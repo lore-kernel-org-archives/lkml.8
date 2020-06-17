@@ -2,88 +2,169 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF17C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48A1F21532
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FCCA206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgFQUPH (ORCPT
+        id S1726965AbgFQUPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:15:07 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:57492 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726597AbgFQUPH (ORCPT
+        Wed, 17 Jun 2020 16:15:11 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:16901
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726597AbgFQUPJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:15:07 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R491e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U.uEVD-_1592424896;
-Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0U.uEVD-_1592424896)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 18 Jun 2020 04:15:03 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     kirill.shutemov@linux.intel.com, ziy@nvidia.com,
-        akpm@linux-foundation.org, corbet@lwn.net
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] doc: THP CoW fault no longer allocate THP
-Date:   Thu, 18 Jun 2020 04:14:55 +0800
-Message-Id: <1592424895-5421-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 17 Jun 2020 16:15:09 -0400
+X-IronPort-AV: E=Sophos;i="5.73,523,1583190000"; 
+   d="scan'208";a="351904443"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 22:15:07 +0200
+Date:   Wed, 17 Jun 2020 22:15:07 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Denis Efremov <efremov@linux.com>
+cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        cocci@systeme.lip6.fr
+Subject: Re: [Cocci] [PATCH] coccinelle: misc: add array_size_dup script to
+ detect missed overlow checks
+In-Reply-To: <alpine.DEB.2.22.394.2006172154040.3083@hadrien>
+Message-ID: <alpine.DEB.2.22.394.2006172214360.3083@hadrien>
+References: <20200615102045.4558-1-efremov@linux.com> <202006151123.3C2CB7782@keescook> <a28543e5-4f93-bf16-930b-42d7b24ab902@linux.com> <4dd9c371-0c37-a4bb-e957-3848cb1a13ff@embeddedor.com> <e34b7e26-6f07-19b6-39ad-e3bc939551fc@linux.com>
+ <alpine.DEB.2.22.394.2006172154040.3083@hadrien>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 3917c80280c93a7123f ("thp: change CoW semantics for
-anon-THP"), THP CoW page fault is rewritten. Now it just splits pmd then
-fallback to base page fault, it doesn't try to allocate THP anymore.  So
-it is no longer counted in THP_FAULT_ALLOC.
 
-Remove the obsolete statement in documentation about THP CoW allocation to
-avoid confusion.
 
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Zi Yan <ziy@nvidia.com>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- Documentation/admin-guide/cgroup-v2.rst    | 4 ++--
- Documentation/admin-guide/mm/transhuge.rst | 3 +--
- 2 files changed, 3 insertions(+), 4 deletions(-)
+On Wed, 17 Jun 2020, Julia Lawall wrote:
 
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index ce3e05e..d09471a 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -1356,8 +1356,8 @@ PAGE_SIZE multiple when read back.
- 
- 	  thp_fault_alloc
- 		Number of transparent hugepages which were allocated to satisfy
--		a page fault, including COW faults. This counter is not present
--		when CONFIG_TRANSPARENT_HUGEPAGE is not set.
-+		a page fault. This counter is not present when CONFIG_TRANSPARENT_HUGEPAGE
-+                is not set.
- 
- 	  thp_collapse_alloc
- 		Number of transparent hugepages which were allocated to allow
-diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-index 6a233e4..b2acd0d 100644
---- a/Documentation/admin-guide/mm/transhuge.rst
-+++ b/Documentation/admin-guide/mm/transhuge.rst
-@@ -305,8 +305,7 @@ monitor how successfully the system is providing huge pages for use.
- 
- thp_fault_alloc
- 	is incremented every time a huge page is successfully
--	allocated to handle a page fault. This applies to both the
--	first time a page is faulted and for COW faults.
-+	allocated to handle a page fault.
- 
- thp_collapse_alloc
- 	is incremented by khugepaged when it has found
--- 
-1.8.3.1
+>
+>
+> On Wed, 17 Jun 2020, Denis Efremov wrote:
+>
+> >
+> > >
+> > > Awesome! I'll take a look into this. :)
+> > >
+> > Here is another script for your #83 ticket.
+> > Currently, it issues 598 warnings.
+> >
+> > // SPDX-License-Identifier: GPL-2.0-only
+> > ///
+> > /// Check for missing overflow checks in allocation functions.
+> > /// Low confidence because it's pointless to check for overflow
+> > /// relatively small allocations.
+> > ///
+> > // Confidence: Low
+> > // Copyright: (C) 2020 Denis Efremov ISPRAS
+> > // Options: --no-includes --include-headers
+> >
+> > virtual patch
+> > virtual context
+> > virtual org
+> > virtual report
+> >
+> > @depends on patch@
+> > expression E1, E2, E3, E4, size;
+> > @@
+> >
+> > (
+> > - size = E1 * E2;
+> > + size = array_size(E1, E2);
+> > |
+> > - size = E1 * E2 * E3;
+> > + size = array3_size(E1, E2, E3);
+> > |
+> > - size = E1 * E2 + E3;
+> > + size = struct_size(E1, E2, E3);
+>
+> Should the arguments be checked to see if they have something to do with
+> arrays and structures?
 
+Sorry for the noise, I see that this comment makes no sense.
+
+julia
+
+>
+> > )
+> >   ... when != size = E4
+> >       when != size += E4
+> >       when != size -= E4
+> >       when != size *= E4
+>
+> Here you can have a metavariable
+>
+> assignment operator aop;
+>
+> and then say size aop E4
+>
+> It doesn't really look like an assignment any more, but it could be a
+> little safer.
+>
+> julia
+>
+> >       when != &size
+> >   \(kmalloc\|krealloc\|kzalloc\|kzalloc_node\|
+> >     vmalloc\|vzalloc\|vzalloc_node\|
+> >     kvmalloc\|kvzalloc\|kvzalloc_node\|
+> >     sock_kmalloc\|
+> >     f2fs_kmalloc\|f2fs_kzalloc\|f2fs_kvmalloc\|f2fs_kvzalloc\|
+> >     devm_kmalloc\|devm_kzalloc\)
+> >   (..., size, ...)
+> >
+> > @r depends on !patch@
+> > expression E1, E2, E3, E4, size;
+> > position p;
+> > @@
+> >
+> > (
+> > * size = E1 * E2;@p
+> > |
+> > * size = E1 * E2 * E3;@p
+> > |
+> > * size = E1 * E2 + E3;@p
+> > )
+> >   ... when != size = E4
+> >       when != size += E4
+> >       when != size -= E4
+> >       when != size *= E4
+> >       when != &size
+> > * \(kmalloc\|krealloc\|kzalloc\|kzalloc_node\|
+> >     vmalloc\|vzalloc\|vzalloc_node\|
+> >     kvmalloc\|kvzalloc\|kvzalloc_node\|
+> >     sock_kmalloc\|
+> >     f2fs_kmalloc\|f2fs_kzalloc\|f2fs_kvmalloc\|f2fs_kvzalloc\|
+> >     devm_kmalloc\|devm_kzalloc\)
+> >   (..., size, ...)
+> >
+> > @script:python depends on report@
+> > p << r.p;
+> > @@
+> >
+> > coccilib.report.print_report(p[0], "WARNING: missing overflow check")
+> >
+> > @script:python depends on org@
+> > p << r.p;
+> > @@
+> >
+> > coccilib.org.print_todo(p[0], "WARNING: missing overflow check")
+> > _______________________________________________
+> > Cocci mailing list
+> > Cocci@systeme.lip6.fr
+> > https://systeme.lip6.fr/mailman/listinfo/cocci
+> >
+> _______________________________________________
+> Cocci mailing list
+> Cocci@systeme.lip6.fr
+> https://systeme.lip6.fr/mailman/listinfo/cocci
+>
