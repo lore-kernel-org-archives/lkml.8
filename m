@@ -4,44 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E214BC433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41200C433E2
 	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA46821556
+	by mail.kernel.org (Postfix) with ESMTP id 2AD0221556
 	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgFQXkp (ORCPT
+        id S1726959AbgFQXko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 19:40:45 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57800 "EHLO
+        Wed, 17 Jun 2020 19:40:44 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57786 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726854AbgFQXko (ORCPT
+        with ESMTP id S1726848AbgFQXko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 19:40:44 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id DB729803202E;
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9C82580045E5;
         Wed, 17 Jun 2020 23:40:41 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id QUcOk74t3rAu; Thu, 18 Jun 2020 02:40:40 +0300 (MSK)
+        with ESMTP id 5XwaylCJVy4X; Thu, 18 Jun 2020 02:40:39 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
+        Rob Herring <robh+dt@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 3/9] dmaengine: Introduce min burst length capability
-Date:   Thu, 18 Jun 2020 02:40:22 +0300
-Message-ID: <20200617234028.25808-4-Sergey.Semin@baikalelectronics.ru>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-mips@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6 2/9] dt-bindings: dma: dw: Add max burst transaction length property
+Date:   Thu, 18 Jun 2020 02:40:21 +0300
+Message-ID: <20200617234028.25808-3-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200617234028.25808-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200617234028.25808-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,78 +54,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some hardware aside from default 0/1 may have greater minimum burst
-transactions length constraints. Here we introduce the DMA device
-and slave capability, which if required can be initialized by the DMA
-engine driver with the device-specific value.
+This array property is used to indicate the maximum burst transaction
+length supported by each DMA channel.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
 
 ---
+
+Changelog v2:
+- Rearrange SoBs.
+- Move $ref to the root level of the properties. So do with the
+  constraints.
+- Set default max-burst-len to 256 TR-WIDTH words.
 
 Changelog v3:
-- This is a new patch created as a result of the discussion with Vinud and
-  Andy in the framework of DW DMA burst and LLP capabilities.
+- Add more details into the property description about what limitations
+  snps,max-burst-len defines.
 ---
- drivers/dma/dmaengine.c   | 1 +
- include/linux/dmaengine.h | 4 ++++
- 2 files changed, 5 insertions(+)
+ .../bindings/dma/snps,dma-spear1340.yaml          | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index d31076d9ef25..b332ffe52780 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -590,6 +590,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
- 	caps->src_addr_widths = device->src_addr_widths;
- 	caps->dst_addr_widths = device->dst_addr_widths;
- 	caps->directions = device->directions;
-+	caps->min_burst = device->min_burst;
- 	caps->max_burst = device->max_burst;
- 	caps->residue_granularity = device->residue_granularity;
- 	caps->descriptor_reuse = device->descriptor_reuse;
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index e1c03339918f..0c7403b27133 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -465,6 +465,7 @@ enum dma_residue_granularity {
-  *	Since the enum dma_transfer_direction is not defined as bit flag for
-  *	each type, the dma controller should set BIT(<TYPE>) and same
-  *	should be checked by controller as well
-+ * @min_burst: min burst capability per-transfer
-  * @max_burst: max burst capability per-transfer
-  * @cmd_pause: true, if pause is supported (i.e. for reading residue or
-  *	       for resume later)
-@@ -478,6 +479,7 @@ struct dma_slave_caps {
- 	u32 src_addr_widths;
- 	u32 dst_addr_widths;
- 	u32 directions;
-+	u32 min_burst;
- 	u32 max_burst;
- 	bool cmd_pause;
- 	bool cmd_resume;
-@@ -769,6 +771,7 @@ struct dma_filter {
-  *	Since the enum dma_transfer_direction is not defined as bit flag for
-  *	each type, the dma controller should set BIT(<TYPE>) and same
-  *	should be checked by controller as well
-+ * @min_burst: min burst capability per-transfer
-  * @max_burst: max burst capability per-transfer
-  * @residue_granularity: granularity of the transfer residue reported
-  *	by tx_status
-@@ -839,6 +842,7 @@ struct dma_device {
- 	u32 src_addr_widths;
- 	u32 dst_addr_widths;
- 	u32 directions;
-+	u32 min_burst;
- 	u32 max_burst;
- 	bool descriptor_reuse;
- 	enum dma_residue_granularity residue_granularity;
+diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+index e7611840a7cf..20870f5c14dd 100644
+--- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
++++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+@@ -120,6 +120,21 @@ properties:
+         enum: [0, 1]
+         default: 1
+ 
++  snps,max-burst-len:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: |
++      Maximum length of the burst transactions supported by the controller.
++      This property defines the upper limit of the run-time burst setting
++      (CTLx.SRC_MSIZE/CTLx.DST_MSIZE fields) so the allowed burst length
++      will be from 1 to max-burst-len words. It's an array property with one
++      cell per channel in the units determined by the value set in the
++      CTLx.SRC_TR_WIDTH/CTLx.DST_TR_WIDTH fields (data width).
++    items:
++      maxItems: 8
++      items:
++        enum: [4, 8, 16, 32, 64, 128, 256]
++        default: 256
++
+   snps,dma-protection-control:
+     $ref: /schemas/types.yaml#definitions/uint32
+     description: |
 -- 
 2.26.2
 
