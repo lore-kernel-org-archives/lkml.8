@@ -2,76 +2,92 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA94DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45330C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF79420739
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243DB20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:34:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592390063;
+	bh=05pv3vIG2hLtGzWurD18/Pe9Bk8FpvgeJDdod0TO2p8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=T2gKoo90Lx/Oca33aV2YbDa5T1UpdoGFdCkrc0JkKBdIWUN9UeVZkv02hI8R1vv+4
+	 NGi8DqMWxSa2QF/Gw/qXKqfrnZpudP8adg7YD31HHKLJGMVZaMH6PEDgHY2vbhWSJN
+	 OGNN85QBLb0proafDTpRwQWnNwCRVS62kXof829I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgFQKdu convert rfc822-to-8bit (ORCPT
+        id S1726694AbgFQKeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 06:33:50 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:60498 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgFQKdt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 06:33:49 -0400
-Received: from marcel-macbook.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 66051CECD1;
-        Wed, 17 Jun 2020 12:43:39 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v2] Bluetooth: Terminate the link if pairing is cancelled
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200616092341.v2.1.I9dd050ead919f2cc3ef83d4e866de537c7799cf3@changeid>
-Date:   Wed, 17 Jun 2020 12:33:47 +0200
-Cc:     Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Bluetooth Kernel Mailing List 
-        <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Alain Michaud <alainm@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <4F76321E-918F-4A16-B35A-888733D5B75D@holtmann.org>
-References: <20200616092341.v2.1.I9dd050ead919f2cc3ef83d4e866de537c7799cf3@changeid>
-To:     Manish Mandlik <mmandlik@google.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 17 Jun 2020 06:34:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgFQKeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 06:34:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DC4F208B3;
+        Wed, 17 Jun 2020 10:34:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592390060;
+        bh=05pv3vIG2hLtGzWurD18/Pe9Bk8FpvgeJDdod0TO2p8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NN6jxyzu2WEdh1EfQLHcBJLBZzI23Xm+ouHzjpn8BMpGFWUypYcLlnvqInOSKzIZ2
+         6d2cqTCv8OEjdbF5L0TDJEKgQI7M6HIZh6xjHHonPCPPErydpZHRtn42pUdGizDGyy
+         olB2BCXFKWDWIA4kRsLYKlpre4YBfJvK3RXqu1J0=
+Date:   Wed, 17 Jun 2020 12:34:12 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wade Mealing <wmealing@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH] Revert "zram: convert remaining CLASS_ATTR() to
+ CLASS_ATTR_RO()"
+Message-ID: <20200617103412.GA2027053@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manish,
+From: Wade Mealing <wmealing@redhat.com>
 
-> If user decides to cancel the ongoing pairing process (e.g. by clicking
-> the cancel button on pairing/passkey window), abort any ongoing pairing
-> and then terminate the link if it was created because of the pair
-> device action.
-> 
-> Signed-off-by: Manish Mandlik <mmandlik@google.com>
-> ---
-> 
-> Changes in v2:
-> - Added code to track if the connection was triggered because of the pair
->  device action and then only terminate the link on pairing cancel.
-> 
-> include/net/bluetooth/hci_core.h | 14 ++++++++++++--
-> net/bluetooth/hci_conn.c         | 11 ++++++++---
-> net/bluetooth/l2cap_core.c       |  6 ++++--
-> net/bluetooth/mgmt.c             | 22 ++++++++++++++++++----
-> 4 files changed, 42 insertions(+), 11 deletions(-)
+Turns out that the permissions for 0400 really are what we want here,
+otherwise any user can write to this file.
 
-patch has been added to my local tree. I will send an update with all pending patches in a bit.
+[fixed formatting and made static - gregkh]
 
-Regards
+Reported-by: Wade Mealing <wmealing@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Fixes: f40609d1591f ("zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()")
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1847832
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/block/zram/zram_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Marcel
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 6e2ad90b17a3..270dd810be54 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -2021,7 +2021,8 @@ static ssize_t hot_add_show(struct class *class,
+ 		return ret;
+ 	return scnprintf(buf, PAGE_SIZE, "%d\n", ret);
+ }
+-static CLASS_ATTR_RO(hot_add);
++static struct class_attribute class_attr_hot_add =
++	__ATTR(hot_add, 0400, hot_add_show, NULL);
+ 
+ static ssize_t hot_remove_store(struct class *class,
+ 			struct class_attribute *attr,
+-- 
+2.27.0
+
 
