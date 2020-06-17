@@ -5,39 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326B9C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2838DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE612100A
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 049852100A
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:41:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KkYEVn8K"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZZeNnIeq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgFQBjf (ORCPT
+        id S1727025AbgFQBlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 21:39:35 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13776 "EHLO
+        Tue, 16 Jun 2020 21:41:24 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13786 "EHLO
         hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbgFQBjb (ORCPT
+        with ESMTP id S1726690AbgFQBjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 21:39:31 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee974450003>; Tue, 16 Jun 2020 18:39:17 -0700
+        Tue, 16 Jun 2020 21:39:35 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ee974490000>; Tue, 16 Jun 2020 18:39:21 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 16 Jun 2020 18:39:30 -0700
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 16 Jun 2020 18:39:34 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 16 Jun 2020 18:39:30 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jun
- 2020 01:39:30 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 17 Jun 2020 01:39:30 +0000
+        by hqpgpgate102.nvidia.com on Tue, 16 Jun 2020 18:39:34 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jun
+ 2020 01:39:34 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 17 Jun 2020 01:39:33 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.171.186]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ee974510000>; Tue, 16 Jun 2020 18:39:29 -0700
+        id <B5ee974540002>; Tue, 16 Jun 2020 18:39:33 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -47,9 +47,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v2 02/18] arm64: tegra: Add missing clocks and power-domains to Tegra210 VI I2C
-Date:   Tue, 16 Jun 2020 18:41:18 -0700
-Message-ID: <1592358094-23459-3-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v2 05/18] i2c: tegra: Fix runtime resume to re-init VI I2C
+Date:   Tue, 16 Jun 2020 18:41:21 -0700
+Message-ID: <1592358094-23459-6-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
 References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
@@ -57,51 +57,71 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592357957; bh=aZpfEHCdQO79JYgaC0ZbsOUqg2JPUB+AZNA7nau630I=;
+        t=1592357961; bh=amcwP8TlSGCRNDP9S1LB/JftLvG4ejWcYGZTopYF82w=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=KkYEVn8Kf6GcKAVADnWt6lNIC/7yA1teAFAB6cF2S3qLTpTLS4x0lyNSPT6022CcP
-         0zU0jKf9rIVqHCYfb+ftFkWwgweOsCD6xMMt4ChrjNtyK7gBJsfzgzoc0trx/qopjF
-         w/F9zmodADSjCvu1a8Bukk+M7SMTVzLj7tKpKJTCCF0fRIbt6Q/S9Av14lTuuTc3ou
-         KJu9kgEcD8EVoQSYmBMitknwrvx4R0B1IbqQBUShgEapSn1gW5XkXeFm9nzf21haMF
-         kh2C4pzWkNyZbjfgw+fGw1yYdHk2x3O2VpCMhs17q8HKE6OKMBWi24Chzjv+0ieZ7U
-         PTEpX41W+JLxg==
+        b=ZZeNnIeqp37VbpO/lmvDDHCX3R59inRvK4yheucNlLWh306A5g/p+jkm12sLojpix
+         06xDWuZxfIuJqeC6n8KpI39aAhNDgT1M05bentSZFgOraCY2mflsRSPHB65bXAyIQ8
+         lSBuFWNvSeUc+A3Fqt0XLLuwVQY7NIwFBqw4Hkz0SBIStxRZssFODOfsEsasYFv+hI
+         Bu+SOsNR5Yn/Dyv2Rt24ttTQzZA27Cv+dP5iokU0piD+muTdW7MGAocah8kXLWcrd0
+         0C6GlXwVUKVoK+HLK4hiORFY010mlXICUHo1+yw4b5X5/TL6pg8ybEC9/TKNNpZvPK
+         kpDb8RcisvAUA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra210 VI I2C is in VE power domain and i2c-vi node should have
-power-domains property.
+VI I2C is on host1x bus and is part of VE power domain.
 
-Current Tegra210 i2c-vi device node is missing both VI I2C clocks
-and power-domains property.
+During suspend/resume VE power domain goes through power off/on.
 
-This patch adds them.
+So, controller reset followed by i2c re-initialization is required
+after the domain power up.
+
+This patch fixes it.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/i2c/busses/i2c-tegra.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 0865508..3a4ed10 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -376,6 +376,12 @@
- 			compatible = "nvidia,tegra210-i2c-vi";
- 			reg = <0x0 0x546c0000 0x0 0x00040000>;
- 			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&tegra_car TEGRA210_CLK_VI_I2C>,
-+				 <&tegra_car TEGRA210_CLK_I2CSLOW>;
-+			clock-names = "div-clk", "slow";
-+			resets = <&tegra_car TEGRA210_CLK_VI_I2C>;
-+			reset-names = "i2c";
-+			power-domains = <&pd_venc>;
- 			status = "disabled";
- 		};
- 	};
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 1b459ca..e7aad64 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -293,6 +293,8 @@ struct tegra_i2c_dev {
+ 	bool is_curr_atomic_xfer;
+ };
+ 
++static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reinit);
++
+ static void dvc_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
+ 		       unsigned long reg)
+ {
+@@ -679,8 +681,22 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
+ 		goto disable_slow_clk;
+ 	}
+ 
++	/*
++	 * VI I2C device is attached to VE power domain which goes through
++	 * power ON/OFF during PM runtime resume/suspend. So, controller
++	 * should go through reset and need to re-initialize after power
++	 * domain ON.
++	 */
++	if (i2c_dev->is_vi) {
++		ret = tegra_i2c_init(i2c_dev, true);
++		if (ret)
++			goto disable_div_clk;
++	}
++
+ 	return 0;
+ 
++disable_div_clk:
++	clk_disable(i2c_dev->div_clk);
+ disable_slow_clk:
+ 	clk_disable(i2c_dev->slow_clk);
+ disable_fast_clk:
 -- 
 2.7.4
 
