@@ -2,111 +2,106 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB9DB208B3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C46E020CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:26:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REjFk9Pl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgFQKZ6 (ORCPT
+        id S1726681AbgFQK0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 06:25:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49512 "EHLO
+        Wed, 17 Jun 2020 06:26:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725964AbgFQKZ5 (ORCPT
+        with ESMTP id S1725964AbgFQK0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 06:25:57 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2CA3C061573;
-        Wed, 17 Jun 2020 03:25:57 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlVGP-0006kb-Q9; Wed, 17 Jun 2020 12:25:49 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 65D6F1C0089;
-        Wed, 17 Jun 2020 12:25:49 +0200 (CEST)
-Date:   Wed, 17 Jun 2020 10:25:49 -0000
-From:   "tip-bot2 for Dan Carpenter" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/resctrl: Fix a NULL vs IS_ERR() static checker
- warning in rdt_cdp_peer_get()
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Borislav Petkov <bp@suse.de>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200602193611.GA190851@mwanda>
-References: <20200602193611.GA190851@mwanda>
+        Wed, 17 Jun 2020 06:26:01 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A840C061573;
+        Wed, 17 Jun 2020 03:26:00 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id c3so1710351wru.12;
+        Wed, 17 Jun 2020 03:26:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bUsNDRJx4UdhHJ9XZ2hWvZsvpKhRR87KicV5rBQcMlA=;
+        b=REjFk9PljVEzzc8bmjLN3vf+ZmWBNUGi/7sn+3Rw9k9s1UO32qTb5nIbKbMQ6j15sJ
+         IqSnMuNHZjEuGKuhFm7XR53lHucGJ8yVPgzNyeKhR5J2vKcc6MhDIH6EWOnpuPWR2hbu
+         Ql02vpK5F2WUrK5Zapm2RmgkwtMiBRYBBJ8C05PViIow0Su/oqlpqx80qCmfTkedgb+w
+         9leTVqNlADqzPADiijWc5h+4161ZBfc5/g8IMYgET5FH03vb4aqTstvNDnSllHiFg46U
+         6EUzorPt7IrzMFksl6KlnRGHW0NyvGBji6ywZS3BYmcDkTypvKjS5aKb+TQomeYTEdFL
+         fUKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bUsNDRJx4UdhHJ9XZ2hWvZsvpKhRR87KicV5rBQcMlA=;
+        b=c0cmcBPy8svecV8JynhLBWU80mQYquNXY25n7FHhbNGPswOGydEHzbYc2J2FnlA6pi
+         nnr65FEiw3ujh/Pu9T+WJeHZsIzgpNSYuPGVKKJvXHtxuQ63D7XnlFoyF4fEECpRowwl
+         umX+v6/bOtzimudVgxgLqA20GZ/KZG+b77Kwv9rWU3YbQI4xZseHo6V7ueb1uOX1FzF9
+         l9njx4RYT8V/qF0LM8FMntWnZQx5Y1/FnUgJWCbS87LqIHE5yDhFYpMHdrtqprcg+OTm
+         f+DGK/soWGUrGJ0BWqWE29joI+H1eqc3yAGIBzHgweurUv5sDxFXgdoyg2Qpi9rOJu3Z
+         tvSw==
+X-Gm-Message-State: AOAM532Evp6nr6L2p5be8gmcBnJfTXgtiNQfk1ns5/ujyH63q8TSsWEG
+        V3uctyw/K0pYcf6jdk6PTf0=
+X-Google-Smtp-Source: ABdhPJw/BV83JYk1Qad+8wyFBqupdYqj3LlDIYo3Vsn7/VdgTbvcdpxEfsQuXw7pA3hk0bdKQShlBw==
+X-Received: by 2002:a5d:4f0d:: with SMTP id c13mr8192114wru.357.1592389558982;
+        Wed, 17 Jun 2020 03:25:58 -0700 (PDT)
+Received: from skynet.lan (90.red-88-20-62.staticip.rima-tde.net. [88.20.62.90])
+        by smtp.gmail.com with ESMTPSA id z206sm7569847wmg.30.2020.06.17.03.25.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 03:25:58 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     bhelgaas@google.com, robh+dt@kernel.org, tsbogend@alpha.franken.de,
+        lorenzo.pieralisi@arm.com, p.zabel@pengutronix.de,
+        jiaxun.yang@flygoat.com, paulburton@kernel.org, info@metux.net,
+        allison@lohutok.net, kstewart@linuxfoundation.org,
+        tglx@linutronix.de, jonas.gorski@gmail.com, f.fainelli@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH 0/3] mips: bmips: add BCM6328 PCIe support
+Date:   Wed, 17 Jun 2020 12:25:53 +0200
+Message-Id: <20200617102556.3792821-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Message-ID: <159238954915.16989.17873846610570577082.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+BCM6328 PCIe host controller is found on BCM6328, BCM6362 and BCM63268 SoCs.
 
-Commit-ID:     cc5277fe66cf3ad68f41f1c539b2ef0d5e432974
-Gitweb:        https://git.kernel.org/tip/cc5277fe66cf3ad68f41f1c539b2ef0d5e432974
-Author:        Dan Carpenter <dan.carpenter@oracle.com>
-AuthorDate:    Tue, 02 Jun 2020 22:36:11 +03:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 17 Jun 2020 12:18:34 +02:00
+Álvaro Fernández Rojas (3):
+  mips: bmips: add PCI support
+  dt-bindings: Document BCM6328 PCIe Host Controller
+  pci: add BCM6328 PCIe controller support
 
-x86/resctrl: Fix a NULL vs IS_ERR() static checker warning in rdt_cdp_peer_get()
+ .../bindings/pci/brcm,bcm6328-pcie.yaml       | 109 ++++++
+ arch/mips/Kconfig                             |   1 +
+ arch/mips/pci/Makefile                        |   1 +
+ arch/mips/pci/fixup-bmips.c                   |  17 +
+ drivers/pci/controller/Kconfig                |   8 +
+ drivers/pci/controller/Makefile               |   1 +
+ drivers/pci/controller/pcie-bcm6328.c         | 346 ++++++++++++++++++
+ 7 files changed, 483 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,bcm6328-pcie.yaml
+ create mode 100644 arch/mips/pci/fixup-bmips.c
+ create mode 100644 drivers/pci/controller/pcie-bcm6328.c
 
-The callers don't expect *d_cdp to be set to an error pointer, they only
-check for NULL.  This leads to a static checker warning:
+-- 
+2.27.0
 
-  arch/x86/kernel/cpu/resctrl/rdtgroup.c:2648 __init_one_rdt_domain()
-  warn: 'd_cdp' could be an error pointer
-
-This would not trigger a bug in this specific case because
-__init_one_rdt_domain() calls it with a valid domain that would not have
-a negative id and thus not trigger the return of the ERR_PTR(). If this
-was a negative domain id then the call to rdt_find_domain() in
-domain_add_cpu() would have returned the ERR_PTR() much earlier and the
-creation of the domain with an invalid id would have been prevented.
-
-Even though a bug is not triggered currently the right and safe thing to
-do is to set the pointer to NULL because that is what can be checked for
-when the caller is handling the CDP and non-CDP cases.
-
-Fixes: 52eb74339a62 ("x86/resctrl: Fix rdt_find_domain() return value and checks")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Reinette Chatre <reinette.chatre@intel.com>
-Acked-by: Fenghua Yu <fenghua.yu@intel.com>
-Link: https://lkml.kernel.org/r/20200602193611.GA190851@mwanda
----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 23b4b61..3f844f1 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1117,6 +1117,7 @@ static int rdt_cdp_peer_get(struct rdt_resource *r, struct rdt_domain *d,
- 	_d_cdp = rdt_find_domain(_r_cdp, d->id, NULL);
- 	if (WARN_ON(IS_ERR_OR_NULL(_d_cdp))) {
- 		_r_cdp = NULL;
-+		_d_cdp = NULL;
- 		ret = -EINVAL;
- 	}
- 
