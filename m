@@ -2,171 +2,143 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D59C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF15F2071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2B52071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:35:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgFQIfP (ORCPT
+        id S1726873AbgFQIfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:35:15 -0400
-Received: from mga09.intel.com ([134.134.136.24]:54407 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725967AbgFQIfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:35:15 -0400
-IronPort-SDR: qXqrtrXfFse8L5uWRcPTIcU8M6fviWNgYm//+Go/Wb8wUqBjTOHHrftrLOm9tKSRLVf33Gn0jj
- D18SQvKPflqQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 01:35:14 -0700
-IronPort-SDR: CPl2CAlGSHear34zg8DRRs2qY4HgWSkP5KExPyafBurCQ2F9vlc6vK65blbeJgeng2Ekj631cJ
- krCOo1coEnMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,522,1583222400"; 
-   d="scan'208";a="273449186"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 17 Jun 2020 01:35:14 -0700
-Received: from [10.249.225.191] (abudanko-mobl.ccr.corp.intel.com [10.249.225.191])
-        by linux.intel.com (Postfix) with ESMTP id BE20B580223;
-        Wed, 17 Jun 2020 01:35:12 -0700 (PDT)
-Subject: [PATCH v8 01/13] tools/libperf: avoid moving of fds at
- fdarray__filter() call
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <3d36dc7a-4249-096c-7554-80e6d290eac5@linux.intel.com>
-Date:   Wed, 17 Jun 2020 11:35:11 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 17 Jun 2020 04:35:41 -0400
+Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:38612 "EHLO
+        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725967AbgFQIfl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:35:41 -0400
+Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: KfZvMvC1oYnZ7gi+KDWOviH4clxbHShSY7Yli+xfkrqN6LkJMaGowI1WLqHxqcACgMUrxfkUAD
+ Ay5pg5WGOeqKL0CCypgK4qhxMgOHjyTIf64e1aNhYRAm71VGxZrK78hisJYBoO7fnRxdMgfY7b
+ vDubhXWnqwLSYTQ7ryxlfakGFVKT1POd8dRmcMBv35hFYrPvNJEhPlc4qaSrLIUxHxgq6p86dI
+ Fvz6UQo69l4R4knwvEj6X3MlFh19OkyWqWkPIwHX3MDCwr+2pRlebLitMY4MMI8I/Szkk6yaRS
+ 9UE=
+X-SBRS: 2.7
+X-MesageID: 20261029
+X-Ironport-Server: esa2.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.73,522,1583211600"; 
+   d="scan'208";a="20261029"
+Date:   Wed, 17 Jun 2020 10:35:28 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Anchal Agarwal <anchalag@amazon.com>
+CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "Kamata, Munehisa" <kamatam@amazon.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "Valentin, Eduardo" <eduval@amazon.com>,
+        "Singh, Balbir" <sblbir@amazon.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Subject: Re: [PATCH 06/12] xen-blkfront: add callbacks for PM suspend and
+ hibernation]
+Message-ID: <20200617083528.GW735@Air-de-Roger>
+References: <7FD7505E-79AA-43F6-8D5F-7A2567F333AB@amazon.com>
+ <20200604070548.GH1195@Air-de-Roger>
+ <20200616214925.GA21684@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200616214925.GA21684@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 16, 2020 at 09:49:25PM +0000, Anchal Agarwal wrote:
+> On Thu, Jun 04, 2020 at 09:05:48AM +0200, Roger Pau Monné wrote:
+> > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > On Wed, Jun 03, 2020 at 11:33:52PM +0000, Agarwal, Anchal wrote:
+> > >  CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > >     > +             xenbus_dev_error(dev, err, "Freezing timed out;"
+> > >     > +                              "the device may become inconsistent state");
+> > >
+> > >     Leaving the device in this state is quite bad, as it's in a closed
+> > >     state and with the queues frozen. You should make an attempt to
+> > >     restore things to a working state.
+> > >
+> > > You mean if backend closed after timeout? Is there a way to know that? I understand it's not good to
+> > > leave it in this state however, I am still trying to find if there is a good way to know if backend is still connected after timeout.
+> > > Hence the message " the device may become inconsistent state".  I didn't see a timeout not even once on my end so that's why
+> > > I may be looking for an alternate perspective here. may be need to thaw everything back intentionally is one thing I could think of.
+> > 
+> > You can manually force this state, and then check that it will behave
+> > correctly. I would expect that on a failure to disconnect from the
+> > backend you should switch the frontend to the 'Init' state in order to
+> > try to reconnect to the backend when possible.
+> > 
+> From what I understand forcing manually is, failing the freeze without
+> disconnect and try to revive the connection by unfreezing the
+> queues->reconnecting to backend [which never got diconnected]. May be even
+> tearing down things manually because I am not sure what state will frontend
+> see if backend fails to to disconnect at any point in time. I assumed connected.
+> Then again if its "CONNECTED" I may not need to tear down everything and start
+> from Initialising state because that may not work.
+> 
+> So I am not so sure about backend's state so much, lets say if  xen_blkif_disconnect fail,
+> I don't see it getting handled in the backend then what will be backend's state?
+> Will it still switch xenbus state to 'Closed'? If not what will frontend see, 
+> if it tries to read backend's state through xenbus_read_driver_state ?
+> 
+> So the flow be like:
+> Front end marks XenbusStateClosing
+> Backend marks its state as XenbusStateClosing
+>     Frontend marks XenbusStateClosed
+>     Backend disconnects calls xen_blkif_disconnect
+>        Backend fails to disconnect, the above function returns EBUSY
+>        What will be state of backend here?
 
-Skip fds with zeroed revents field from count and avoid fds moving
-at fdarray__filter() call so fds indices returned by fdarray__add()
-call stay the same and can be used for direct access and processing
-of fd revents status field at entries array of struct fdarray object.
+Backend should stay in state 'Closing' then, until it can finish
+tearing down.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/lib/api/fd/array.c   | 11 +++++------
- tools/perf/tests/fdarray.c | 20 ++------------------
- 2 files changed, 7 insertions(+), 24 deletions(-)
+>        Frontend did not tear down the rings if backend does not switches the
+>        state to 'Closed' in case of failure.
+> 
+> If backend stays in CONNECTED state, then even if we mark it Initialised in frontend, backend
 
-diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-index 58d44d5eee31..97843a837370 100644
---- a/tools/lib/api/fd/array.c
-+++ b/tools/lib/api/fd/array.c
-@@ -93,22 +93,21 @@ int fdarray__filter(struct fdarray *fda, short revents,
- 		return 0;
- 
- 	for (fd = 0; fd < fda->nr; ++fd) {
-+		if (!fda->entries[fd].revents)
-+			continue;
-+
- 		if (fda->entries[fd].revents & revents) {
- 			if (entry_destructor)
- 				entry_destructor(fda, fd, arg);
- 
-+			fda->entries[fd].revents = fda->entries[fd].events = 0;
- 			continue;
- 		}
- 
--		if (fd != nr) {
--			fda->entries[nr] = fda->entries[fd];
--			fda->priv[nr]	 = fda->priv[fd];
--		}
--
- 		++nr;
- 	}
- 
--	return fda->nr = nr;
-+	return nr;
- }
- 
- int fdarray__poll(struct fdarray *fda, int timeout)
-diff --git a/tools/perf/tests/fdarray.c b/tools/perf/tests/fdarray.c
-index c7c81c4a5b2b..d0c8a05aab2f 100644
---- a/tools/perf/tests/fdarray.c
-+++ b/tools/perf/tests/fdarray.c
-@@ -12,6 +12,7 @@ static void fdarray__init_revents(struct fdarray *fda, short revents)
- 
- 	for (fd = 0; fd < fda->nr; ++fd) {
- 		fda->entries[fd].fd	 = fda->nr - fd;
-+		fda->entries[fd].events  = revents;
- 		fda->entries[fd].revents = revents;
- 	}
- }
-@@ -29,7 +30,7 @@ static int fdarray__fprintf_prefix(struct fdarray *fda, const char *prefix, FILE
- 
- int test__fdarray__filter(struct test *test __maybe_unused, int subtest __maybe_unused)
- {
--	int nr_fds, expected_fd[2], fd, err = TEST_FAIL;
-+	int nr_fds, err = TEST_FAIL;
- 	struct fdarray *fda = fdarray__new(5, 5);
- 
- 	if (fda == NULL) {
-@@ -55,7 +56,6 @@ int test__fdarray__filter(struct test *test __maybe_unused, int subtest __maybe_
- 
- 	fdarray__init_revents(fda, POLLHUP);
- 	fda->entries[2].revents = POLLIN;
--	expected_fd[0] = fda->entries[2].fd;
- 
- 	pr_debug("\nfiltering all but fda->entries[2]:");
- 	fdarray__fprintf_prefix(fda, "before", stderr);
-@@ -66,17 +66,9 @@ int test__fdarray__filter(struct test *test __maybe_unused, int subtest __maybe_
- 		goto out_delete;
- 	}
- 
--	if (fda->entries[0].fd != expected_fd[0]) {
--		pr_debug("\nfda->entries[0].fd=%d != %d\n",
--			 fda->entries[0].fd, expected_fd[0]);
--		goto out_delete;
--	}
--
- 	fdarray__init_revents(fda, POLLHUP);
- 	fda->entries[0].revents = POLLIN;
--	expected_fd[0] = fda->entries[0].fd;
- 	fda->entries[3].revents = POLLIN;
--	expected_fd[1] = fda->entries[3].fd;
- 
- 	pr_debug("\nfiltering all but (fda->entries[0], fda->entries[3]):");
- 	fdarray__fprintf_prefix(fda, "before", stderr);
-@@ -88,14 +80,6 @@ int test__fdarray__filter(struct test *test __maybe_unused, int subtest __maybe_
- 		goto out_delete;
- 	}
- 
--	for (fd = 0; fd < 2; ++fd) {
--		if (fda->entries[fd].fd != expected_fd[fd]) {
--			pr_debug("\nfda->entries[%d].fd=%d != %d\n", fd,
--				 fda->entries[fd].fd, expected_fd[fd]);
--			goto out_delete;
--		}
--	}
--
- 	pr_debug("\n");
- 
- 	err = 0;
--- 
-2.24.1
+Backend will stay in state 'Closing' I think.
 
+> won't be calling connect(). {From reading code in frontend_changed}
+> IMU, Initialising will fail since backend dev->state != XenbusStateClosed plus
+> we did not tear down anything so calling talk_to_blkback may not be needed
+> 
+> Does that sound correct?
+
+I think switching to the initial state in order to try to attempt a
+reconnection would be our best bet here.
+
+Thanks, Roger.
