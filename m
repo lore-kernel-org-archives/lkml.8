@@ -2,187 +2,150 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1293C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDD92065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:06:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592409995;
-	bh=TDAkV5Jw68GE23y3fEU7BN2SFiTSUZC3oZl2Y+atGMU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GCykcaVH+biO2XwrLgPSRdUx7txd7UE5gpuGd9LAO3h86qiIxJU+ue4VPFqpsvkEN
-	 2YxLWZhDbrgeb9K8U6K0VtZkYmZbHY43CN0dtR470Cy3q7B5+olwLa194Fb+HadrDV
-	 eAYfozEymuXgQ0iHtkPGf7Q/RUNtXYpzxY4zH1xo=
+	by mail.kernel.org (Postfix) with ESMTP id CD6FF2080D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:10:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FIlQShFU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgFQQGd (ORCPT
+        id S1726835AbgFQQK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:06:33 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:44822 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgFQQGa (ORCPT
+        Wed, 17 Jun 2020 12:10:57 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39867 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726496AbgFQQK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:06:30 -0400
-Received: by mail-ej1-f65.google.com with SMTP id gl26so2918786ejb.11;
-        Wed, 17 Jun 2020 09:06:28 -0700 (PDT)
+        Wed, 17 Jun 2020 12:10:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592410254;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pwPndLdm35gmxUTd/yGdLqQ8FsjkAPP7/6FDJCdV2mM=;
+        b=FIlQShFUpHaVXIsePnoHC1W1OkcqaZqCtukZ4mqpuf7wwU4hEHqFZaneFC4Hr8zS0aOvXq
+        28aAw31xUOtmFiOT1i39WZznxjCXAs5hqoZw2OHmljcrSEGvOuX6DAQ+QDXUtrv4lOP8J2
+        Ss5p50Cfhoc1G9Ci4HohIrTKsh8ynoo=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-207-n-62ueSoPRyZZHKPoBePtQ-1; Wed, 17 Jun 2020 12:10:52 -0400
+X-MC-Unique: n-62ueSoPRyZZHKPoBePtQ-1
+Received: by mail-qk1-f197.google.com with SMTP id p138so2205719qke.7
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 09:10:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=tlbxG54rgd+6fqV6RAW61FEmri3bgkhNHXx9gI+QO08=;
-        b=jb16FbQVFpFEpuyqs/N22alEgPwD8x9ngTuRZ0vTRYYthZqmFk3V7LoVQ2wj9AkjlF
-         J2JXtJG0NfWhxIZzNulG008V2/eAYR5Z7AEaLbZc+hCNbGa+66gI5I2lLRnmbz8VQe4y
-         mNN2U/EeslehTuMbG464S57WoSSt8hPHA/yg5LNAVOdzPgKrR4WvbPhjiUjLUqFi3DAf
-         5aN1UO3M0SFAsjZMRyyZPCDl2zCZ6HSByHVsIrPI62j2ruOZRqRu6HqEtItCV9csBzI6
-         +Otk4KpUCr011snxsdVvHNpefAIlqoD2qvds7b0ewCSDPnhh4CwyATc4dajf+Sjxzp4M
-         g8Ow==
-X-Gm-Message-State: AOAM530gKbqJj/uHcWAZXcXH69lQ3PxM477ZJ6SyO2WEtEg9vR2CeD4L
-        7aZA2kR6eMAVmVh/GEbnoEIR2KWx
-X-Google-Smtp-Source: ABdhPJyTNwsKkxV+Do4IZBMmhJD8BUFelJmhG68Wk1D+d/Hsq8QURbAiEkw9lH4smi6/Pd/IOgjrnQ==
-X-Received: by 2002:a17:906:d0d7:: with SMTP id bq23mr8491327ejb.259.1592409987418;
-        Wed, 17 Jun 2020 09:06:27 -0700 (PDT)
-Received: from localhost (ip-37-188-158-19.eurotel.cz. [37.188.158.19])
-        by smtp.gmail.com with ESMTPSA id yw17sm276521ejb.83.2020.06.17.09.06.25
+        bh=pwPndLdm35gmxUTd/yGdLqQ8FsjkAPP7/6FDJCdV2mM=;
+        b=pTFXFiTbDCjO01K1QfErtmjcUKesgT46jNvFes+3AUjjF0IBQTRVyL4B47l+rouDzG
+         rqyQMBw8sCo4MJZJVC9/wroxbznft0Ge5ICoZ0us1P6HRuu8rz9n0J8lyvalNoP077bW
+         YUyRioJt7enWZcxiwVyIFZ4APNWN2WUlVkZNEAxs3GFjTepO4Q28ayAfO/ZwqA7CDu82
+         8qAd6iNd2eT9309+XT4eTQCW6C6jMWcbsr//wq2a2l51h6wbvWypsmIw3tslPjn0tHkx
+         OVkxXod0KkAV8IDtWk+SrhpLQRUNRGGrCBeXOFYAZAxdZmTsGZhhHb3S8rF2EC6OPyDu
+         uarg==
+X-Gm-Message-State: AOAM530SqkbKltDD1N8QzpS45h1/lhZBtC6gtCKESj7KVtyq3HeMqOgz
+        YlPeR1cxES2EFM/92/jZllZZuetSuLqrARyAOGAYYpVfsULtoufQ0R37J2YXBTP069gm2NvB/Sn
+        j9la16I6R8tA9A9PdCYK6tGyY
+X-Received: by 2002:ac8:fb4:: with SMTP id b49mr27502905qtk.323.1592410252034;
+        Wed, 17 Jun 2020 09:10:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxHPvRTdazh3ByXAbV1+DQb3IK/Hxo+xAXMp5hAEJHzAOp6L2Jx/mkBgpOD51Mg4XUcXd/11g==
+X-Received: by 2002:ac8:fb4:: with SMTP id b49mr27502878qtk.323.1592410251778;
+        Wed, 17 Jun 2020 09:10:51 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id b4sm265252qka.133.2020.06.17.09.10.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:06:26 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 18:06:24 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
+        Wed, 17 Jun 2020 09:10:51 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 12:10:49 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
         Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-Message-ID: <20200617160624.GS9499@dhcp22.suse.cz>
-References: <20200519084535.GG32497@dhcp22.suse.cz>
- <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
- <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
- <20200520190906.GA558281@chrisdown.name>
- <20200521095515.GK6462@dhcp22.suse.cz>
- <20200521163450.GV6462@dhcp22.suse.cz>
- <CA+G9fYsdsgRmwLtSKJSzB1eWcUQ1z-_aaU+BNcQpker34XT6_w@mail.gmail.com>
- <20200617135758.GA548179@chrisdown.name>
- <20200617141155.GQ9499@dhcp22.suse.cz>
- <CA+G9fYu+FB1PE0AMmE-9MrHpayE9kChwTyc3zfM6V83uQ0zcQA@mail.gmail.com>
+        openrisc@lists.librecores.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 00/25] mm: Page fault accounting cleanups
+Message-ID: <20200617161049.GE76766@xz-x1>
+References: <20200615221607.7764-1-peterx@redhat.com>
+ <CAHk-=wiTjaXHu+uxMi0xCZQOm4KVr0MucECAK=Zm4p4YZZ1XEg@mail.gmail.com>
+ <87imfqecjx.fsf@mpe.ellerman.id.au>
+ <20200617080405.GA3208@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYu+FB1PE0AMmE-9MrHpayE9kChwTyc3zfM6V83uQ0zcQA@mail.gmail.com>
+In-Reply-To: <20200617080405.GA3208@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 17-06-20 21:23:05, Naresh Kamboju wrote:
-> On Wed, 17 Jun 2020 at 19:41, Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > [Our emails have crossed]
-> >
-> > On Wed 17-06-20 14:57:58, Chris Down wrote:
-> > > Naresh Kamboju writes:
-> > > > mkfs -t ext4 /dev/disk/by-id/ata-TOSHIBA_MG04ACA100N_Y8RQK14KF6XF
-> > > > mke2fs 1.43.8 (1-Jan-2018)
-> > > > Creating filesystem with 244190646 4k blocks and 61054976 inodes
-> > > > Filesystem UUID: 7c380766-0ed8-41ba-a0de-3c08e78f1891
-> > > > Superblock backups stored on blocks:
-> > > > 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
-> > > > 4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
-> > > > 102400000, 214990848
-> > > > Allocating group tables:    0/7453 done
-> > > > Writing inode tables:    0/7453 done
-> > > > Creating journal (262144 blocks): [   51.544525] under min:0 emin:0
-> > > > [   51.845304] under min:0 emin:0
-> > > > [   51.848738] under min:0 emin:0
-> > > > [   51.858147] under min:0 emin:0
-> > > > [   51.861333] under min:0 emin:0
-> > > > [   51.862034] under min:0 emin:0
-> > > > [   51.862442] under min:0 emin:0
-> > > > [   51.862763] under min:0 emin:0
+On Wed, Jun 17, 2020 at 09:04:06AM +0100, Will Deacon wrote:
+> On Wed, Jun 17, 2020 at 10:55:14AM +1000, Michael Ellerman wrote:
+> > Linus Torvalds <torvalds@linux-foundation.org> writes:
+> > > On Mon, Jun 15, 2020 at 3:16 PM Peter Xu <peterx@redhat.com> wrote:
+> > >> This series tries to address all of them by introducing mm_fault_accounting()
+> > >> first, so that we move all the page fault accounting into the common code base,
+> > >> then call it properly from arch pf handlers just like handle_mm_fault().
 > > >
-> > > Thanks, this helps a lot. Somehow we're entering mem_cgroup_below_min even
-> > > when min/emin is 0 (which should indeed be the case if you haven't set them
-> > > in the hierarchy).
+> > > Hmm.
 > > >
-> > > My guess is that page_counter_read(&memcg->memory) is 0, which means
-> > > mem_cgroup_below_min will return 1.
-> >
-> > Yes this is the case because this is likely the root memcg which skips
-> > all charges.
-> >
-> > > However, I don't know for sure why that should then result in the OOM killer
-> > > coming along. My guess is that since this memcg has 0 pages to scan anyway,
-> > > we enter premature OOM under some conditions. I don't know why we wouldn't
-> > > have hit that with the old version of mem_cgroup_protected that returned
-> > > MEMCG_PROT_* members, though.
-> >
-> > Not really. There is likely no other memcg to reclaim from and assuming
-> > min limit protection will result in no reclaimable memory and thus the
-> > OOM killer.
-> >
-> > > Can you please try the patch with the `>=` checks in mem_cgroup_below_min
-> > > and mem_cgroup_below_low changed to `>`? If that fixes it, then that gives a
-> > > strong hint about what's going on here.
-> >
-> > This would work but I believe an explicit check for the root memcg would
-> > be easier to spot the reasoning.
+> > > So having looked at this a bit more, I'd actually like to go even
+> > > further, and just get rid of the per-architecture code _entirely_.
+> > 
+> > <snip>
+> > 
+> > > One detail worth noting: I do wonder if we should put the
+> > >
+> > >     perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
+> > >
+> > > just in the arch code at the top of the fault handling, and consider
+> > > it entirely unrelated to the major/minor fault handling. The
+> > > major/minor faults fundamnetally are about successes. But the plain
+> > > PERF_COUNT_SW_PAGE_FAULTS could be about things that fail, including
+> > > things that never even get to this point at all.
+> > 
+> > Yeah I think we should keep it in the arch code at roughly the top.
 > 
-> May I request you to send debugging or proposed fix patches here.
-> I am happy to do more testing.
+> I agree. It's a nice idea to consolidate the code, but I don't see that
+> it's really possible for PERF_COUNT_SW_PAGE_FAULTS without significantly
+> changing the semantics (and a potentially less useful way. Of course,
+> moving more of do_page_fault() out of the arch code would be great, but
+> that's a much bigger effort.
+> 
+> > If it's moved to the end you could have a process spinning taking bad
+> > page faults (and fixing them up), and see no sign of it from the perf
+> > page fault counters.
+> 
+> The current arm64 behaviour is that we record PERF_COUNT_SW_PAGE_FAULTS
+> if _all_ of the following are true:
+> 
+>   1. The fault isn't handled by kprobes
+>   2. The pagefault handler is enabled
+>   3. We have an mm (current->mm)
+>   4. The fault isn't an unexpected kernel fault on a user address (we oops
+>      and kill the task in this case)
+> 
+> Which loosely corresponds to "we took a fault on a user address that it
+> looks like we can handle".
+> 
+> That said, I'm happy to tweak this if it brings us into line with other
+> architectures.
 
-Sure, here is the diff to test.
+I see.  I'll keep the semantics for PERF_COUNT_SW_PAGE_FAULTS in the next
+version.  Thanks for all the comments!
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index c74a8f2323f1..6b5a31672fbe 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -392,6 +392,13 @@ static inline bool mem_cgroup_below_low(struct mem_cgroup *memcg)
- 	if (mem_cgroup_disabled())
- 		return false;
- 
-+	/*
-+	 * Root memcg doesn't account charges and doesn't support
-+	 * protection
-+	 */
-+	if (mem_cgroup_is_root(memcg))
-+		return false;
-+
- 	return READ_ONCE(memcg->memory.elow) >=
- 		page_counter_read(&memcg->memory);
- }
-@@ -401,6 +408,13 @@ static inline bool mem_cgroup_below_min(struct mem_cgroup *memcg)
- 	if (mem_cgroup_disabled())
- 		return false;
- 
-+	/*
-+	 * Root memcg doesn't account charges and doesn't support
-+	 * protection
-+	 */
-+	if (mem_cgroup_is_root(memcg))
-+		return false;
-+
- 	return READ_ONCE(memcg->memory.emin) >=
- 		page_counter_read(&memcg->memory);
- }
 -- 
-Michal Hocko
-SUSE Labs
+Peter Xu
+
