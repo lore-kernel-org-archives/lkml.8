@@ -2,191 +2,133 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6638AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A906208B3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:29:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592407748;
-	bh=SD+fejC18TjS7/DoA5KE5YrnoAqS1yLaxfx11ISwTbM=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=rZKQwXYsrJ3rDGR4PcSz4OSzgVzCHuhFqW06PMfK1sv3SbLZmm0XElf8l2CmSBFLx
-	 wBKiTc5iTfhhhwkysNDaq3ZXrv1q6+03vFlwCVbQcsk/GeHpQMrre2iHW/QazgD2l9
-	 kfE1guw5lyb1UosAVejNuZQoyNPD6aLGFuR0XVMM=
+	by mail.kernel.org (Postfix) with ESMTP id 46CC220897
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:29:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="X4atcg3Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgFQP3G (ORCPT
+        id S1726982AbgFQP3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:29:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726848AbgFQP3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:29:03 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E7AE20897;
-        Wed, 17 Jun 2020 15:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592407742;
-        bh=SD+fejC18TjS7/DoA5KE5YrnoAqS1yLaxfx11ISwTbM=;
-        h=From:To:Subject:Date:From;
-        b=nF/JSFGNj+SedrGskz4bgXFzZUfgizp2OmgNo4HUP37JHEcCY9Ov9Wqps/KNaLklv
-         KfoizibFHs7fTzlwFxrmfoL6igIyNTVeH5qaWhJCnQ6UcGaSLcnGGzEkrCkEOZukVy
-         nSHRUgttSJF7pXr7+g8rKFIDbICS7nwgJ0RvAuFA=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] serial: samsung: Minor whitespace cleanups
-Date:   Wed, 17 Jun 2020 17:28:56 +0200
-Message-Id: <20200617152856.18086-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 17 Jun 2020 11:29:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbgFQP3m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 11:29:42 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B444DC06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:29:42 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id r16so1207944qvm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:29:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=v5BdIMSU0SgDrZuQSRW4xvIrY4rZ7WnbUK5J5TOXFb0=;
+        b=X4atcg3QCitKJdCOr5ja2tE2bUBLSFF91J0CzDtXnsV5WejCzsk2eajJzTjXjsFLTA
+         5s+gkYE18Kz4f7uWFKMYMARjm17DhKgqFhDle7hMjPDQJSHTF3vHPDJzf/g8gfXm1XCc
+         xS0VLL2kkFYRGpHsv6IKsvfpDgxixqoGb1C7eZAdpsByKmZrD/PLYevp7FEa9NQdLxHk
+         yZFftabPuFhyEj1G7fMasvfilN4m93P/kXM+Vvvx/r/xyhIpvBM0x0Ha3wX71m2O7A/a
+         L0H0SGP2pZKrl4si0m+rtOCOCb+j5CVmE5xryjAmjELn7Uqp0ivvBvKuiMRBNAyyx2kG
+         itRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=v5BdIMSU0SgDrZuQSRW4xvIrY4rZ7WnbUK5J5TOXFb0=;
+        b=O+z6B/QuXJwH+Kajg2U0IZiKT11qC246q3X7wmCrl6s/ufiyN0WX1Pmkbba0PinFuE
+         obwuYCnyIm4hEh4kZLzgRkEqPdYXHLaJgLWo23Mt5ZhmXA+zvG+vE/GMokDq2jmV3RI2
+         DmjvO4/lB6hYLH+NeoLbMFVv1vN2J9DZouBgtf+Qsma11FgMcaebZiGQPcgcUjfF4sui
+         UvqJc7fZiKQoSfUYVktrPTHkRS4QZy/BcuZRJFFr1oFGq8M+/vwm4Fg7F5/Qwi2IuhQ1
+         Ce77+QNdsc2K3reBGbmwiVl9y2HYPxujVG9pSCr+GGHkVG5qBUvjY9hqPhnARKB1mBLr
+         ESQQ==
+X-Gm-Message-State: AOAM533kww+l+vqZroPcww6V/LCQrwZWpU8wKZdcBiqshCALQxxsPOt2
+        n7XvqdIJE+qpVh7OSmWRIJgM+rvGhO109w==
+X-Google-Smtp-Source: ABdhPJyWaY8mWagCAPiiX7EhWCqcjbxUamRd5/mDpg63tRR7xxsYdOaA9ycSUwn3S5FVu3UfHzBj0g==
+X-Received: by 2002:a0c:f388:: with SMTP id i8mr8163963qvk.224.1592407781973;
+        Wed, 17 Jun 2020 08:29:41 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id y13sm204954qto.23.2020.06.17.08.29.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 08:29:41 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jla0S-009d9h-Uc; Wed, 17 Jun 2020 12:29:40 -0300
+Date:   Wed, 17 Jun 2020 12:29:40 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200617152940.GG6578@ziepe.ca>
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+ <20200604081224.863494-5-daniel.vetter@ffwll.ch>
+ <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
+ <20200611083430.GD20149@phenom.ffwll.local>
+ <20200611141515.GW6578@ziepe.ca>
+ <20200616120719.GL20149@phenom.ffwll.local>
+ <20200616145312.GC6578@ziepe.ca>
+ <CAKMK7uER6ax1zr14xYLKqDfDZp+ycBsY9Yx7JaVkKQ849VfSPg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uER6ax1zr14xYLKqDfDZp+ycBsY9Yx7JaVkKQ849VfSPg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the code slightly more readable by removing unneeded line breaks,
-adding missing line breaks and white spaces.  This also fixes few strict
-checkpatch suggestions:
+On Wed, Jun 17, 2020 at 09:57:54AM +0200, Daniel Vetter wrote:
 
-	CHECK: spaces preferred around that '-' (ctx:VxV)
-	CHECK: Unbalanced braces around else statement
-	CHECK: Lines should not end with a '('
+> > At the very least I think there should be some big warning that
+> > dma_fence in notifiers should be avoided.
+> 
+> Yeah I'm working on documentation, and also the notifiers here
+> hopefully make it clear it's massive pain. I think we could even make
+> a hard rule that dma_fence in mmu notifier outside of drivers/gpu is a
+> bug/misfeature.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/tty/serial/samsung_tty.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+Yep!
+ 
+> Might be a good idea to add a MAINTAINERS entry with a K: regex
+> pattern, so that you can catch such modifiers. We do already have such
+> a pattern for dma-fence, to catch abuse. So if you want I could type
+> up a documentation patch for this, get your and others acks and the
+> dri-devel folks would enforce that the dma_fence_wait madness doesn't
+> leak beyond drivers/gpu
 
-diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-index d913d9b2762a..7be9579216b8 100644
---- a/drivers/tty/serial/samsung_tty.c
-+++ b/drivers/tty/serial/samsung_tty.c
-@@ -327,7 +327,6 @@ static void s3c24xx_serial_tx_dma_complete(void *args)
- 	unsigned long flags;
- 	int count;
+It seems like the best thing
  
--
- 	dmaengine_tx_status(dma->tx_chan, dma->tx_cookie, &state);
- 	count = dma->tx_bytes_requested - state.residue;
- 	async_tx_ack(dma->tx_desc);
-@@ -409,7 +408,6 @@ static int s3c24xx_serial_start_tx_dma(struct s3c24xx_uart_port *ourport,
- 	struct circ_buf *xmit = &port->state->xmit;
- 	struct s3c24xx_uart_dma *dma = ourport->dma;
- 
--
- 	if (ourport->tx_mode != S3C24XX_TX_DMA)
- 		enable_tx_dma(ourport);
- 
-@@ -816,7 +814,6 @@ static irqreturn_t s3c24xx_serial_rx_chars_pio(void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--
- static irqreturn_t s3c24xx_serial_rx_chars(int irq, void *dev_id)
- {
- 	struct s3c24xx_uart_port *ourport = dev_id;
-@@ -842,8 +839,8 @@ static irqreturn_t s3c24xx_serial_tx_chars(int irq, void *id)
- 	    count >= ourport->min_dma_size) {
- 		int align = dma_get_cache_alignment() -
- 			(xmit->tail & (dma_get_cache_alignment() - 1));
--		if (count-align >= ourport->min_dma_size) {
--			dma_count = count-align;
-+		if (count - align >= ourport->min_dma_size) {
-+			dma_count = count - align;
- 			count = align;
- 		}
- 	}
-@@ -1589,7 +1586,6 @@ s3c24xx_serial_verify_port(struct uart_port *port, struct serial_struct *ser)
- 	return 0;
- }
- 
--
- #ifdef CONFIG_SERIAL_SAMSUNG_CONSOLE
- 
- static struct console s3c24xx_serial_console;
-@@ -1672,7 +1668,6 @@ s3c24xx_serial_ports[CONFIG_SERIAL_SAMSUNG_UARTS] = {
- 		}
- 	},
- #if CONFIG_SERIAL_SAMSUNG_UARTS > 2
--
- 	[2] = {
- 		.port = {
- 			.lock		= __PORT_LOCK_UNLOCKED(2),
-@@ -1728,7 +1723,6 @@ static void s3c24xx_serial_resetport(struct uart_port *port,
- 	udelay(1);
- }
- 
--
- #ifdef CONFIG_ARM_S3C24XX_CPUFREQ
- 
- static int s3c24xx_serial_cpufreq_transition(struct notifier_block *nb,
-@@ -1903,9 +1897,9 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
- 
- 	port->mapbase = res->start;
- 	ret = platform_get_irq(platdev, 0);
--	if (ret < 0)
-+	if (ret < 0) {
- 		port->irq = 0;
--	else {
-+	} else {
- 		port->irq = ret;
- 		ourport->rx_irq = ret;
- 		ourport->tx_irq = ret + 1;
-@@ -1977,8 +1971,8 @@ static const struct of_device_id s3c24xx_uart_dt_match[];
- 
- static int probe_index;
- 
--static inline struct s3c24xx_serial_drv_data *s3c24xx_get_driver_data(
--			struct platform_device *pdev)
-+static inline struct s3c24xx_serial_drv_data *
-+s3c24xx_get_driver_data(struct platform_device *pdev)
- {
- #ifdef CONFIG_OF
- 	if (pdev->dev.of_node) {
-@@ -2329,7 +2323,6 @@ s3c24xx_serial_get_options(struct uart_port *port, int *baud,
- 		*baud = rate / (16 * (ubrdiv + 1));
- 		dev_dbg(port->dev, "calculated baud %d\n", *baud);
- 	}
--
- }
- 
- static int __init
-@@ -2696,6 +2689,7 @@ static int __init s3c2410_early_console_setup(struct earlycon_device *device,
- 	device->port.private_data = &s3c2410_early_console_data;
- 	return samsung_early_console_setup(device, opt);
- }
-+
- OF_EARLYCON_DECLARE(s3c2410, "samsung,s3c2410-uart",
- 			s3c2410_early_console_setup);
- 
-@@ -2710,6 +2704,7 @@ static int __init s3c2440_early_console_setup(struct earlycon_device *device,
- 	device->port.private_data = &s3c2440_early_console_data;
- 	return samsung_early_console_setup(device, opt);
- }
-+
- OF_EARLYCON_DECLARE(s3c2412, "samsung,s3c2412-uart",
- 			s3c2440_early_console_setup);
- OF_EARLYCON_DECLARE(s3c2440, "samsung,s3c2440-uart",
-@@ -2728,6 +2723,7 @@ static int __init s5pv210_early_console_setup(struct earlycon_device *device,
- 	device->port.private_data = &s5pv210_early_console_data;
- 	return samsung_early_console_setup(device, opt);
- }
-+
- OF_EARLYCON_DECLARE(s5pv210, "samsung,s5pv210-uart",
- 			s5pv210_early_console_setup);
- OF_EARLYCON_DECLARE(exynos4210, "samsung,exynos4210-uart",
--- 
-2.17.1
+> Oded has agreed to remove the dma-fence usage, since they really don't
+> need it (and all the baggage that comes with it), plain old completion
+> is enough for their use. This use is also why I added the regex to
+> MAINTAINERS, so that in the future we can catch people who try to use
+> dma_fence because it looks cute and useful, and are completely
+> oblivious to all the pain and headaches involved.
 
+This is good!
+
+Thanks,
+Jason 
