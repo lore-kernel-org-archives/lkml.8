@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A5CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E195C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2282C2100A
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5C520C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:32:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="XdZlr/C+"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="iFZWG7Jk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgFQAcf (ORCPT
+        id S1726595AbgFQAcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 20:32:35 -0400
-Received: from vps.xff.cz ([195.181.215.36]:44244 "EHLO vps.xff.cz"
+        Tue, 16 Jun 2020 20:32:17 -0400
+Received: from vps.xff.cz ([195.181.215.36]:44146 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726544AbgFQAcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 20:32:18 -0400
+        id S1726275AbgFQAcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 20:32:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1592353935; bh=3S3w0uvAKPDUtGD8MIYTKombkxXLzYzAQMsH7sPMsH4=;
+        t=1592353934; bh=V8lg3QrmlL/+ORB8+T8iagnNb4aO75aHpHs9Ov8wOuQ=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=XdZlr/C+ImanUaucvoM7Ogvp30ybO9Q3X6aCNQJV3IDhDN4WzrZKOVMOP0siuMnBv
-         QW47juFN6MrxA00Jv3Mntgqx/RJ1G8mdK4YMDjJxMkVA59dTDabUhUnG9ZNU7+i9WM
-         1nXx7Eofz5qkagJHmEm/rIgQESZIUvnNVYIhtlJ0=
+        b=iFZWG7Jk4cGe0wnGo0yrSN6+U5rgFqkyH8eIktOW7n56R2p856nCoJ1v+VvwN+4I/
+         g/Z3xsN9cFb8Tkost21g70ouI4VdW5S1oU30IoY+uQIpVz2S+Qqp6CgcwrzPZGMvby
+         +RdEsQGjErwFbTBbDoTt0kbluFoYxx60oAPE1EI4=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -43,10 +43,12 @@ Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>, Ondrej Jirman <megous@megous.com>
-Subject: [PATCH v4 4/5] arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
-Date:   Wed, 17 Jun 2020 02:32:08 +0200
-Message-Id: <20200617003209.670819-5-megous@megous.com>
+        Bhushan Shah <bshah@kde.org>,
+        Ondrej Jirman <megous@megous.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 1/5] dt-bindings: vendor-prefixes: Add Xingbangda
+Date:   Wed, 17 Jun 2020 02:32:05 +0200
+Message-Id: <20200617003209.670819-2-megous@megous.com>
 In-Reply-To: <20200617003209.670819-1-megous@megous.com>
 References: <20200617003209.670819-1-megous@megous.com>
 MIME-Version: 1.0
@@ -58,109 +60,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Icenowy Zheng <icenowy@aosc.io>
 
-PinePhone uses PWM backlight and a XBD599 LCD panel over DSI for
-display.
+Shenzhen Xingbangda Display Technology Co., Ltd is a company which
+produces LCD modules. It supplies the LCD panels for the PinePhone.
 
-Backlight levels curve was optimized by Martijn Braam using a
-lux meter.
-
-Add its device nodes.
+Add the vendor prefix of it.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Martijn Braam <martijn@brixit.nl>
 Signed-off-by: Ondrej Jirman <megous@megous.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../allwinner/sun50i-a64-pinephone-1.1.dts    | 19 ++++++++++
- .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 35 +++++++++++++++++++
- 2 files changed, 54 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-index 06a775c41664..3e99a87e9ce5 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-@@ -9,3 +9,22 @@ / {
- 	model = "Pine64 PinePhone Braveheart (1.1)";
- 	compatible = "pine64,pinephone-1.1", "allwinner,sun50i-a64";
- };
-+
-+&backlight {
-+	power-supply = <&reg_ldo_io0>;
-+	/*
-+	 * PWM backlight circuit on this PinePhone revision was changed since
-+	 * 1.0, and the lowest PWM duty cycle that doesn't lead to backlight
-+	 * being off is around 20%. Duty cycle for the lowest brightness level
-+	 * also varries quite a bit between individual boards, so the lowest
-+	 * value here was chosen as a safe default.
-+	 */
-+	brightness-levels = <
-+		774  793  814  842
-+		882  935  1003 1088
-+		1192 1316 1462 1633
-+		1830 2054 2309 2596
-+		2916 3271 3664 4096>;
-+	num-interpolated-steps = <50>;
-+	default-brightness-level = <400>;
-+};
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-index cefda145c3c9..e60b57f8ac14 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-@@ -16,6 +16,13 @@ aliases {
- 		serial0 = &uart0;
- 	};
- 
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		enable-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
-+		/* Backlight configuration differs per PinePhone revision. */
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -84,6 +91,30 @@ &dai {
- 	status = "okay";
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
-+&dphy {
-+	status = "okay";
-+};
-+
-+&dsi {
-+	vcc-dsi-supply = <&reg_dldo1>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "xingbangda,xbd599", "sitronix,st7703";
-+		reg = <0>;
-+		reset-gpios = <&pio 3 23 GPIO_ACTIVE_LOW>; /* PD23 */
-+		iovcc-supply = <&reg_dldo2>;
-+		vcc-supply = <&reg_ldo_io0>;
-+		backlight = <&backlight>;
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -188,6 +219,10 @@ &r_pio {
- 	 */
- };
- 
-+&r_pwm {
-+	status = "okay";
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 9aeab66be85f..740b116b179f 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1157,6 +1157,8 @@ patternProperties:
+     description: Xiaomi Technology Co., Ltd.
+   "^xillybus,.*":
+     description: Xillybus Ltd.
++  "^xingbangda,.*":
++    description: Shenzhen Xingbangda Display Technology Co., Ltd
+   "^xinpeng,.*":
+     description: Shenzhen Xinpeng Technology Co., Ltd
+   "^xlnx,.*":
 -- 
 2.27.0
 
