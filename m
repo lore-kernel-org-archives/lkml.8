@@ -2,350 +2,221 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57705C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B12C12082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B606206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:16:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Uu2SH/LN"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="CJmxwOE9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgFQBMN (ORCPT
+        id S1726559AbgFQBP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 21:12:13 -0400
-Received: from mail-bn7nam10on2070.outbound.protection.outlook.com ([40.107.92.70]:6071
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726253AbgFQBML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 21:12:11 -0400
+        Tue, 16 Jun 2020 21:15:59 -0400
+Received: from mga06.intel.com ([134.134.136.31]:53098 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgFQBP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 21:15:58 -0400
+IronPort-SDR: MV/P9hV+KTDI9b6QJqX1XL//S8BZKXreqyObi+98spi9biHRiZHwkkhJZS4O+Ao3aS8ZfG/Mra
+ KZ7B9gRd2ZjA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 18:15:57 -0700
+IronPort-SDR: 6XKvzaYvZkI333oXkdm3hOvg/3mh1mkdI8t1JFwR+IThkr8Qo74Aa/qT+7pu8DQfZzsyk9L0pW
+ 8SkLJykiHnzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,520,1583222400"; 
+   d="scan'208";a="351921126"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by orsmga001.jf.intel.com with ESMTP; 16 Jun 2020 18:15:57 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 16 Jun 2020 18:15:56 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.174)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 16 Jun 2020 18:15:56 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FGHx7NkT3Z5oSQEDl0fxz5+nyiZVnKJaxE2rxLzxoQOUxCvA9NyBPMebvu6rUyRP80WEZwFsUiXdKgIPy3i6XEyKsD+07DBmhFwVHJzLdUZGY65/6NQuGH/m6hJPokenv7SwiU+sIr0VZg5w4Fxb+Aoxo2aCJq3a5sJ1+uz9EaTFSLJZ1EwZ647i6lMAegoaktpTob67rVQE8XWEhpWPX/+hMWUdEQ8UQHt2UxQ+qB2OA9kdaSwq4qM/xjZFDj1DSXFfoNqwhFR2Wr4GhIxoZIJpudBv8fz7eC/SQ/xd9RPpOHyzYwysXNOG+k9M3FtbCeRiozNwARfMF5+zn1ulNA==
+ b=S0KIGg9C6Kvuj+nxfr0pb7P183wPFJpXrfHGPf+ejWQ+ROdbxmeY8rW5YLAxhrNUxICei58Du5/yluMWItOpKr+XJFCaMeiKzwZc8GpL8vg5nRNJq5pnIJUclL6ikgt3VzFc8BIqEgUi3zk/EcF5IDoA4dlcbO/tNXCKM3mEG4dQpebForskuLCr7Xsof7Iq4rmh0VJte2aDMPxPzozki2EYYK7/UPOI8X11xYiGNl3jzpdm0w284OPna7Yzh0ytOQ4taqKFJQvbU+xLiZHVILZsMs0/Escx2zlFPvBRIdR7S+vzO2GVd4dkhiCMa3wUOxMzlMoCrc6kJe/QxItXow==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nC8Oxkxs1wUzhNOdHZwUpW/SKj3mk1jlF80dLwUxzkc=;
- b=dliP1bcEuumtIkPsBqJvwu/BXLJHUgdN3S1KoY6btiJYUxOTUq+Hkp/Gk6ObsQAQqGVAHbysO65Da+ytJE4cRQNWbZcXa6NiNj9MuqBUUeq3B2jE+3hqhTO0Y9L04XrWKfou6+vurUWFgfQEztiZzhwE+pSVvcDyoKbxWDoFmc3Fx9adRwL8VnslJ6IRNszaWFtnAuTm8ivo0LCqgGYjyxM839GRrEt7SUvpfu5TU8Y2O2LeLXBppL5YLY798UYWZPtNX6cT1AWa2R6/JoLd6Y1Q5MeNzXDHoA2bZa7hL5oNit6fPGv95DkHv6fKeyAzkvcPhLCctBw2sKCp2ctH6Q==
+ bh=5790AA55H4JdUT+IE8gj9wzPQK0vInuHrn+T6DEaReo=;
+ b=dfwmNFRmjLSIk+l58wY1/IFZQkmRuS1WjLcMOm9mLDHMPS7Gx/PMJmxTs39qp0aoT0PgEzeyCX5on1Sr12fi/oRzYKpBZQSbwp1ClPyTW7twnUNlq90m+GACSHLKKJtwbypj1reujvgtoMIh9a3/qM7gMU0ZH13EL2GprynJJlE8/461RlSGpCGLsOI+jwQ3zdkGthfnjqAvj0d254RnD/5ZgOzuGr8B7+q5RPDxKAV/9gKwlvniET5Y3nXx2ZMlnmkcGm3WSsFl0N+9gU5IQuMtPx6NtHk3SidOaJB0N61Ce6ZUWACHOKFudznrvAOCrMtBSb9x+qEzBAy5N05hDw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nC8Oxkxs1wUzhNOdHZwUpW/SKj3mk1jlF80dLwUxzkc=;
- b=Uu2SH/LNk8MS7NLRmqGyiD0EK88OPgZAhMdg/5+jsnT6i12MyB7lP28TXzg3Zs3d8Q9UQcnLBu7r+SeSOehWbB+eRtgGLUFVH8pF7VtaGo2xppA+SCYtAxjtlCXHDl58PIr6ajYAEl2DfbEcKUWJ26UFsV/hd7Bn88c56aAd3sw=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from MN2PR12MB3421.namprd12.prod.outlook.com (2603:10b6:208:cd::24)
- by MN2PR12MB3502.namprd12.prod.outlook.com (2603:10b6:208:c9::10) with
+ bh=5790AA55H4JdUT+IE8gj9wzPQK0vInuHrn+T6DEaReo=;
+ b=CJmxwOE9C/oDiv0SBJhwjpblFwGFU4RJ9Dhgxiv81EzSmWsNRfpRg2R3nPOfG/oA3LGw+HvW8WSLiN6DMIa+mksdPnFB2nUAjCgT7kHaQjOHgt7QWCAiQQ2Ncw9EeitDl96gKJgIqmR6RsodxCjZXRHRXI3uNLrV60xdInEkBWY=
+Received: from BN6PR11MB4132.namprd11.prod.outlook.com (2603:10b6:405:81::10)
+ by BN6PR1101MB2164.namprd11.prod.outlook.com (2603:10b6:405:51::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.25; Wed, 17 Jun
- 2020 01:12:07 +0000
-Received: from MN2PR12MB3421.namprd12.prod.outlook.com
- ([fe80::956f:e98c:37b4:25aa]) by MN2PR12MB3421.namprd12.prod.outlook.com
- ([fe80::956f:e98c:37b4:25aa%7]) with mapi id 15.20.3088.029; Wed, 17 Jun 2020
- 01:12:07 +0000
-From:   Sanjay R Mehta <Sanju.Mehta@amd.com>
-To:     vkoul@kernel.org
-Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
-        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: [PATCH v5 3/3] dmaengine: ptdma: Add debugfs entries for PTDMA information
-Date:   Tue, 16 Jun 2020 20:11:28 -0500
-Message-Id: <1592356288-42064-4-git-send-email-Sanju.Mehta@amd.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592356288-42064-1-git-send-email-Sanju.Mehta@amd.com>
-References: <1592356288-42064-1-git-send-email-Sanju.Mehta@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA1PR0101CA0003.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:21::13) To MN2PR12MB3421.namprd12.prod.outlook.com
- (2603:10b6:208:cd::24)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.24; Wed, 17 Jun
+ 2020 01:15:55 +0000
+Received: from BN6PR11MB4132.namprd11.prod.outlook.com
+ ([fe80::f1fa:3128:2198:e48d]) by BN6PR11MB4132.namprd11.prod.outlook.com
+ ([fe80::f1fa:3128:2198:e48d%4]) with mapi id 15.20.3088.028; Wed, 17 Jun 2020
+ 01:15:55 +0000
+From:   "Williams, Dan J" <dan.j.williams@intel.com>
+To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>
+CC:     "raven@themaw.net" <raven@themaw.net>,
+        "kzak@redhat.com" <kzak@redhat.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "dray@redhat.com" <dray@redhat.com>,
+        "swhiteho@redhat.com" <swhiteho@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "mszeredi@redhat.com" <mszeredi@redhat.com>,
+        "jlayton@redhat.com" <jlayton@redhat.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "andres@anarazel.de" <andres@anarazel.de>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "christian.brauner@ubuntu.com" <christian.brauner@ubuntu.com>
+Subject: Re: [GIT PULL] General notification queue and key notifications
+Thread-Topic: [GIT PULL] General notification queue and key notifications
+Thread-Index: AQHWRETZu9Qa754vaUCnrXuOChkHiQ==
+Date:   Wed, 17 Jun 2020 01:15:55 +0000
+Message-ID: <23219b787ed1c20a63017ab53839a0d1c794ec53.camel@intel.com>
+References: <1503686.1591113304@warthog.procyon.org.uk>
+In-Reply-To: <1503686.1591113304@warthog.procyon.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+authentication-results: linux-foundation.org; dkim=none (message not signed)
+ header.d=none;linux-foundation.org; dmarc=none action=none
+ header.from=intel.com;
+x-originating-ip: [192.55.52.220]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 38604e8c-cc1b-4235-8c91-08d8125bfc0d
+x-ms-traffictypediagnostic: BN6PR1101MB2164:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR1101MB21648E30E4F434A23B1306CAC69A0@BN6PR1101MB2164.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 04371797A5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /44bpQ24wTp2xXq3O0++yewDsqklLahu6RyMUruMb0OFPyu6P0aquLD314x9gPq2Oo/pc4JMKfvcuE2IH34ZJBPbs9CAfvHrScYuxYeLH3Wa6yjjUhlkSLWECiJI1yehMQcC1YrckuqXggBxhPAtEFWGZDaws9KzykLoSbPeLBVefMHeUnDMjvE0TQmn0lFi0NR1J/mBN803HFlty55IdaFpQsn7n7Wxk20ruBqg/J3HfPxpEzPDflecVO2yHQ/BA/c4LAt1kHGB71BkSv2Sygc6cJbXNCmibT6Y5/xVWDQyCXcZ/DkjyLU6b1nFUBn8ZSPuElPaUywg8pvUkvNT6A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR11MB4132.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(136003)(346002)(376002)(366004)(36756003)(6512007)(478600001)(4326008)(45080400002)(7416002)(91956017)(110136005)(8676002)(71200400001)(316002)(83380400001)(8936002)(54906003)(2616005)(86362001)(66946007)(66446008)(76116006)(66476007)(66556008)(64756008)(6486002)(6506007)(26005)(15650500001)(5660300002)(2906002)(186003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: v14VlWprYwg1XKo1s5Jr1maAI+RtSXlt4IntiDE4+MGCRU5ZQT40jW8irLK1b9H23t+ws/nrBNA6w2uiY+7oDJ+IlXHJL07mUtH1Tj+eilvBp0pawUvGwXp+v724F5Ee72lMJdJZCTbHozLAhz02lLGTP2wff66JNPfqGJhzgnxi8GnXB17FgwPoqZfqtUk/5GMaj1iwPmMnpaIYFwqPYrNmUpKaWR+9U9WaD9Ogs71VEQ9qVIcsp3kIx+x9uNy5U0qdVnnEnwbtm+F0hWW2YstWFi7Pd1Lw/CsauxazUQoTG10m3wrOGX2+v7Mgv9CHPs4Y/rQdyIPa9K+b3BBhEYLsa7VfsJQTyA3yU/KvnIoMzMX+yVD+iHqieLvBEVfrs4jy88rb/TUYG2u5AOYBgVs19M17SOOvo4q/1/9ivXlL4VzPR9fpdg0SaY76y+xWr4Gjgb4EsAu9kyPThvcafYHSHvEti5cipgF1ie/t/f8=
+Content-Type: text/plain; charset="utf-7"
+Content-ID: <4CECB5C7212778419344C3402AF6ECB4@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from sanjuamdntb2.amd.com (165.204.156.251) by MA1PR0101CA0003.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:21::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3109.21 via Frontend Transport; Wed, 17 Jun 2020 01:12:03 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 903cf98c-97ef-4ece-7fc8-08d8125b73e6
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3502:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB35021BD1BC92D209AD1CE2CCE59A0@MN2PR12MB3502.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:22;
-X-Forefront-PRVS: 04371797A5
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0C7v+3FfNmKlHz4bZ7BjB8Jz3oVNfo3fRQE0OcmvVSe+EekQLAytfMwd+rqmLzizjnlMI/xIRD/QlAxf0Gjof/sGy8/NdJ6S2TfIEyNtZSeVus/j5MODyPavPkTqXwLzILkV1NOd1G/3YcSu24iP83wlUjeRUglAczsBwOffH/nwoJEcks2gS2rkZCx1VwbLFFSRg8nbKdKhWs//GMq+9Bx8ilxTgaLRdTzMxW4vFgTDiEtpE3jcoHaYzUbC8vxSNJpBgWJeHVVscarH5HzwL8YQGPOD0si7l//f4EGoNvpyMKOyFb/aNOpeOJU0SLRTDNQLmM3udybicoQuIEIOtA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3421.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(5660300002)(4326008)(36756003)(66476007)(956004)(86362001)(7696005)(52116002)(2906002)(6916009)(2616005)(66556008)(66946007)(6666004)(83380400001)(16526019)(316002)(6486002)(478600001)(8676002)(8936002)(26005)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: I5/ScXOxCdy9KQzU6Pi8NJmt1ESVUnpy1lo6UibYaZOAUi+cdDZXE0Pn1TAO1NzSAyFMtmFR2qWNX1/oW8PMMD13hkkmlKbJYyU9VbEVP64nMjvi5EoRZeLyzlK0pnWs4dNghhx7VcsiUJbF80sY6aQhqU+detCm6dpA6TtWu0FjFV7CZaroSflQdKxZX65jbeRFzfvWhrtHQ/Je+vyMIIbmCY2PIoQt4CXfWw/29ZhvBWDVrQqfVUHgLrW/x8mo6XgxJHAM0LZqjC9rNcMfmk6RRJuCkUF4ThWe1+aksMz1KeHuedLrulb1pvqeuV0WyoiDyz3S7aLyg7nwq1JtTdyPNuihRbm/RzgUyd7h/BciudJtYUySwGYx8uwYvrGLoIwOv+AJav3lXheNRJc8olDeuGS+qSc1v0/wfeERYDZ4W9d9Xl5KDkkmP/d8nMrc5zWBlzu3sQCArTFnfatZj1WmfELkSM+EffUam8hrDIjAbXBh+HHkzIOf9PopUrrv
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 903cf98c-97ef-4ece-7fc8-08d8125b73e6
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 01:12:07.2692
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38604e8c-cc1b-4235-8c91-08d8125bfc0d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2020 01:15:55.1906
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Opqlh8mv7OJVUUt2LDIMHR+5IfY0bLdidlRagvU0BquO7pwJ7QHtE0NASeyDfgrAh4PITcAmeaXxKUPQkzNgCA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3502
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LWZB+zGBKM3Grueufj7dIhI3cRzubqBXgb9EWN8fu5zTM8F3GatD6x+dvRHRBeECyGqmQ6EXn8v4lKEPbDJDpkqOnK/TumqRLS2xeGk0ODQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1101MB2164
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+Hi David,
 
-Expose data about the configuration and operation of the
-PTDMA through debugfs entries: device name, capabilities,
-configuration, statistics.
+On Tue, 2020-06-02 at 16:55 +-0100, David Howells wrote:
++AD4- Date: Tue, 02 Jun 2020 16:51:44 +-0100
++AD4-=20
++AD4- Hi Linus,
++AD4-=20
++AD4- Can you pull this, please?  It adds a general notification queue
++AD4- concept
++AD4- and adds an event source for keys/keyrings, such as linking and
++AD4- unlinking
++AD4- keys and changing their attributes.
++AFs-..+AF0-
 
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
+This commit:
+
++AD4-       keys: Make the KEY+AF8-NEED+AF8AKg- perms an enum rather than a=
+ mask
+
+...upstream as:
+
+    8c0637e950d6 keys: Make the KEY+AF8-NEED+AF8AKg- perms an enum rather t=
+han a mask
+
+...triggers a regression in the libnvdimm unit test that exercises the
+encrypted keys used to store nvdimm passphrases. It results in the
+below warning.
+
 ---
- drivers/dma/ptdma/Makefile        |   3 +-
- drivers/dma/ptdma/ptdma-debugfs.c | 130 ++++++++++++++++++++++++++++++++++++++
- drivers/dma/ptdma/ptdma-dev.c     |   8 +++
- drivers/dma/ptdma/ptdma.h         |   9 +++
- 4 files changed, 149 insertions(+), 1 deletion(-)
- create mode 100644 drivers/dma/ptdma/ptdma-debugfs.c
 
-diff --git a/drivers/dma/ptdma/Makefile b/drivers/dma/ptdma/Makefile
-index 6fcb4ad..60e7c10 100644
---- a/drivers/dma/ptdma/Makefile
-+++ b/drivers/dma/ptdma/Makefile
-@@ -6,6 +6,7 @@
- obj-$(CONFIG_AMD_PTDMA) += ptdma.o
- 
- ptdma-objs := ptdma-dev.o \
--	      ptdma-dmaengine.o
-+	      ptdma-dmaengine.o \
-+	      ptdma-debugfs.o
- 
- ptdma-$(CONFIG_PCI) += ptdma-pci.o
-diff --git a/drivers/dma/ptdma/ptdma-debugfs.c b/drivers/dma/ptdma/ptdma-debugfs.c
-new file mode 100644
-index 0000000..506c148b
---- /dev/null
-+++ b/drivers/dma/ptdma/ptdma-debugfs.c
-@@ -0,0 +1,130 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * AMD Passthrough DMA device driver
-+ * -- Based on the CCP driver
-+ *
-+ * Copyright (C) 2016,2020 Advanced Micro Devices, Inc.
-+ *
-+ * Author: Sanjay R Mehta <sanju.mehta@amd.com>
-+ * Author: Gary R Hook <gary.hook@amd.com>
-+ */
-+
-+#include <linux/debugfs.h>
-+#include <linux/seq_file.h>
-+
-+#include "ptdma.h"
-+
-+/* DebugFS helpers */
-+#define	MAX_NAME_LEN	20
-+#define	RI_VERSION_NUM	0x0000003F
-+
-+#define	RI_NUM_VQM	0x00078000
-+#define	RI_NVQM_SHIFT	15
-+
-+static struct dentry *pt_debugfs_dir;
-+static DEFINE_MUTEX(pt_debugfs_lock);
-+
-+static int pt_debugfs_info_show(struct seq_file *s, void *p)
-+{
-+	struct pt_device *pt = s->private;
-+	unsigned int regval;
-+
-+	if (!pt)
-+		return 0;
-+
-+	seq_printf(s, "Device name: %s\n", pt->name);
-+	seq_printf(s, "   # Queues: %d\n", 1);
-+	seq_printf(s, "     # Cmds: %d\n", pt->cmd_count);
-+
-+	regval = ioread32(pt->io_regs + CMD_PT_VERSION);
-+
-+	seq_printf(s, "    Version: %d\n", regval & RI_VERSION_NUM);
-+	seq_puts(s, "    Engines:");
-+	seq_puts(s, "\n");
-+	seq_printf(s, "     Queues: %d\n", (regval & RI_NUM_VQM) >> RI_NVQM_SHIFT);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Return a formatted buffer containing the current
-+ * statistics of queue for PTDMA
-+ */
-+static int pt_debugfs_stats_show(struct seq_file *s, void *p)
-+{
-+	struct pt_device *pt = s->private;
-+
-+	seq_printf(s, "Total Interrupts Handled: %ld\n", pt->total_interrupts);
-+
-+	return 0;
-+}
-+
-+static int pt_debugfs_queue_show(struct seq_file *s, void *p)
-+
-+{
-+	struct pt_cmd_queue *cmd_q = s->private;
-+	unsigned int regval;
-+
-+	if (!cmd_q)
-+		return 0;
-+
-+	seq_printf(s, "               Pass-Thru: %ld\n", cmd_q->total_pt_ops);
-+
-+	regval = ioread32(cmd_q->reg_int_enable);
-+
-+	seq_puts(s, "      Enabled Interrupts:");
-+	if (regval & INT_EMPTY_QUEUE)
-+		seq_puts(s, " EMPTY");
-+	if (regval & INT_QUEUE_STOPPED)
-+		seq_puts(s, " STOPPED");
-+	if (regval & INT_ERROR)
-+		seq_puts(s, " ERROR");
-+	if (regval & INT_COMPLETION)
-+		seq_puts(s, " COMPLETION");
-+	seq_puts(s, "\n");
-+
-+	return 0;
-+}
-+
-+DEFINE_SHOW_ATTRIBUTE(pt_debugfs_info);
-+DEFINE_SHOW_ATTRIBUTE(pt_debugfs_queue);
-+DEFINE_SHOW_ATTRIBUTE(pt_debugfs_stats);
-+
-+void ptdma_debugfs_setup(struct pt_device *pt)
-+{
-+	struct pt_cmd_queue *cmd_q;
-+	char name[MAX_NAME_LEN + 1];
-+	struct dentry *debugfs_q_instance;
-+
-+	if (!debugfs_initialized())
-+		return;
-+
-+	mutex_lock(&pt_debugfs_lock);
-+	if (!pt_debugfs_dir)
-+		pt_debugfs_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
-+	mutex_unlock(&pt_debugfs_lock);
-+
-+	pt->dma_dev.dbg_dev_root = debugfs_create_dir(pt->name, pt_debugfs_dir);
-+
-+	debugfs_create_file("info", 0400, pt->dma_dev.dbg_dev_root, pt,
-+			    &pt_debugfs_info_fops);
-+
-+	debugfs_create_file("stats", 0600, pt->dma_dev.dbg_dev_root, pt,
-+			    &pt_debugfs_stats_fops);
-+
-+	cmd_q = &pt->cmd_q;
-+
-+	snprintf(name, MAX_NAME_LEN - 1, "q");
-+
-+	debugfs_q_instance =
-+		debugfs_create_dir(name, pt->dma_dev.dbg_dev_root);
-+
-+	debugfs_create_file("stats", 0600, debugfs_q_instance, cmd_q,
-+			    &pt_debugfs_queue_fops);
-+}
-+
-+void ptdma_debugfs_destroy(struct dma_device *dma_dev)
-+{
-+	debugfs_remove_recursive(dma_dev->dbg_dev_root);
-+	dma_dev->dbg_dev_root = NULL;
-+}
-diff --git a/drivers/dma/ptdma/ptdma-dev.c b/drivers/dma/ptdma/ptdma-dev.c
-index ef10be5..8b13208 100644
---- a/drivers/dma/ptdma/ptdma-dev.c
-+++ b/drivers/dma/ptdma/ptdma-dev.c
-@@ -14,6 +14,7 @@
- #include <linux/pci.h>
- #include <linux/dma-mapping.h>
- #include <linux/interrupt.h>
-+#include <linux/debugfs.h>
- 
- #include "ptdma.h"
- 
-@@ -107,6 +108,7 @@ int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
- 
- 	cmd_q->cmd_error = 0;
- 
-+	cmd_q->total_pt_ops++;
- 	memset(&desc, 0, Q_DESC_SIZE);
- 
- 	desc.dw0.val = CMD_DESC_DW0_VAL;
-@@ -159,6 +161,7 @@ static irqreturn_t pt_core_irq_handler(int irq, void *data)
- 	u32 status;
- 
- 	pt_core_disable_queue_interrupts(pt);
-+	pt->total_interrupts++;
- 
- 	status = ioread32(cmd_q->reg_interrupt_status);
- 	if (status) {
-@@ -290,6 +293,9 @@ int pt_core_init(struct pt_device *pt)
- 	if (ret)
- 		goto e_dmaengine;
- 
-+	/* Set up debugfs entries */
-+	ptdma_debugfs_setup(pt);
-+
- 	return 0;
- 
- e_dmaengine:
-@@ -310,6 +316,8 @@ void pt_core_destroy(struct pt_device *pt)
- 	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
- 	struct pt_cmd *cmd;
- 
-+	ptdma_debugfs_destroy(&pt->dma_dev);
-+
- 	/* Unregister the DMA engine */
- 	pt_dmaengine_unregister(pt);
- 
-diff --git a/drivers/dma/ptdma/ptdma.h b/drivers/dma/ptdma/ptdma.h
-index 661be6b..db39a4a 100644
---- a/drivers/dma/ptdma/ptdma.h
-+++ b/drivers/dma/ptdma/ptdma.h
-@@ -239,6 +239,9 @@ struct pt_cmd_queue {
- 	u32 q_status;
- 	u32 q_int_status;
- 	u32 cmd_error;
-+
-+	/* queue Statistics */
-+	unsigned long total_pt_ops;
- } ____cacheline_aligned;
- 
- struct pt_device {
-@@ -277,6 +280,9 @@ struct pt_device {
- 
- 	wait_queue_head_t lsb_queue;
- 
-+	/* Device Statistics */
-+	unsigned long total_interrupts;
-+
- 	struct pt_tasklet_data tdata;
- };
- 
-@@ -343,6 +349,9 @@ struct pt_dev_vdata {
- int pt_dmaengine_register(struct pt_device *pt);
- void pt_dmaengine_unregister(struct pt_device *pt);
- 
-+void ptdma_debugfs_setup(struct pt_device *pt);
-+void ptdma_debugfs_destroy(struct dma_device *dma_dev);
-+
- int pt_core_init(struct pt_device *pt);
- void pt_core_destroy(struct pt_device *pt);
- 
--- 
-2.7.4
+WARNING: CPU: 15 PID: 6276 at security/keys/permission.c:35 key+AF8-task+AF=
+8-permission+-0xd3/0x140
+Modules linked in: nd+AF8-blk(OE) nfit+AF8-test(OE) device+AF8-dax(OE) ebta=
+ble+AF8-filter(E) ebtables(E) ip6table+AF8-filter(E) ip6+AF8-tables(E) kvm+=
+AF8-intel(E) kvm(E) irqbypass(E) nd+AF8-pmem(OE) dax+AF8-pmem(OE) nd+AF8-bt=
+t(OE) dax+AF8-p
+ct10dif+AF8-pclmul(E) nd+AF8-e820(OE) nfit(OE) crc32+AF8-pclmul(E) libnvdim=
+m(OE) crc32c+AF8-intel(E) ghash+AF8-clmulni+AF8-intel(E) serio+AF8-raw(E) e=
+ncrypted+AF8-keys(E) trusted(E) nfit+AF8-test+AF8-iomap(OE) tpm(E) drm(E)
+CPU: 15 PID: 6276 Comm: lt-ndctl Tainted: G           OE     5.7.0-rc6+- +A=
+CM-155
+Hardware name: QEMU Standard PC (i440FX +- PIIX, 1996), BIOS 0.0.0 02/06/20=
+15
+RIP: 0010:key+AF8-task+AF8-permission+-0xd3/0x140
+Code: c8 21 d9 39 d9 75 25 48 83 c4 08 4c 89 e6 48 89 ef 5b 5d 41 5c 41 5d =
+e9 1b a7 00 00 bb 01 00 00 00 83 fa 01 0f 84 68 ff ff ff +ADw-0f+AD4- 0b 48=
+ 83 c4 08 b8 f3 ff ff ff 5b 5d 41 5c 41 5d c3 83 fa 06
+
+RSP: 0018:ffffaddc42db7c90 EFLAGS: 00010297
+RAX: 0000000000000001 RBX: 0000000000000001 RCX: ffffaddc42db7c7c
+RDX: 0000000000000000 RSI: ffff985e1c46e840 RDI: ffff985e3a03de01
+RBP: ffff985e3a03de01 R08: 0000000000000000 R09: 5461e7bc000002a0
+R10: 0000000000000004 R11: 0000000066666666 R12: ffff985e1c46e840
+R13: 0000000000000000 R14: ffffaddc42db7cd8 R15: ffff985e248c6540
+FS:  00007f863c18a780(0000) GS:ffff985e3bbc0000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000006d3708 CR3: 0000000125a1e006 CR4: 0000000000160ee0
+Call Trace:
+ lookup+AF8-user+AF8-key+-0xeb/0x6b0
+ ? vsscanf+-0x3df/0x840
+ ? key+AF8-validate+-0x50/0x50
+ ? key+AF8-default+AF8-cmp+-0x20/0x20
+ nvdimm+AF8-get+AF8-user+AF8-key+AF8-payload.part.0+-0x21/0x110 +AFs-libnvd=
+imm+AF0-
+ nvdimm+AF8-security+AF8-store+-0x67d/0xb20 +AFs-libnvdimm+AF0-
+ security+AF8-store+-0x67/0x1a0 +AFs-libnvdimm+AF0-
+ kernfs+AF8-fop+AF8-write+-0xcf/0x1c0
+ vfs+AF8-write+-0xde/0x1d0
+ ksys+AF8-write+-0x68/0xe0
+ do+AF8-syscall+AF8-64+-0x5c/0xa0
+ entry+AF8-SYSCALL+AF8-64+AF8-after+AF8-hwframe+-0x49/0xb3
+RIP: 0033:0x7f863c624547
+Code: 0d 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa =
+64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 +ADw-48+AD4- 3d 00=
+ f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+RSP: 002b:00007ffd61d8f5e8 EFLAGS: 00000246 ORIG+AF8-RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007ffd61d8f640 RCX: 00007f863c624547
+RDX: 0000000000000014 RSI: 00007ffd61d8f640 RDI: 0000000000000005
+RBP: 0000000000000005 R08: 0000000000000014 R09: 00007ffd61d8f4a0
+R10: fffffffffffff455 R11: 0000000000000246 R12: 00000000006dbbf0
+R13: 00000000006cd710 R14: 00007f863c18a6a8 R15: 00007ffd61d8fae0
+irq event stamp: 36976
+hardirqs last  enabled at (36975): +AFsAPA-ffffffff9131fa40+AD4AXQ- +AF8AXw=
+-slab+AF8-alloc+-0x70/0x90
+hardirqs last disabled at (36976): +AFsAPA-ffffffff910049c7+AD4AXQ- trace+A=
+F8-hardirqs+AF8-off+AF8-thunk+-0x1a/0x1c
+softirqs last  enabled at (35474): +AFsAPA-ffffffff91e00357+AD4AXQ- +AF8AXw=
+-do+AF8-softirq+-0x357/0x466
+softirqs last disabled at (35467): +AFsAPA-ffffffff910eae96+AD4AXQ- irq+AF8=
+-exit+-0xe6/0xf0
 
