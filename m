@@ -2,428 +2,82 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F17D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EACCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBDD020853
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FD8E20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:31:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592425880;
+	bh=B1YJNVezz+4ZMGoHs4RXcOFqtzQ+8swirTSFOqof3qQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O2sXr/kzkTEtxafnCkqcdgFzOhOCvA50l4zCVt5HXgJYoG1BliKW9A1cBJgS0jOxi
+	 4Piroiv+My8b4yp9Nux4/rgbkSCW9Du6W4FXF5hy1Mdq4lvV1nDATlQ08KcX1DkmH8
+	 auPPjRrZVS8KZGOlRXipw0TcTEqcIqmRzQG4+pSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgFQUas (ORCPT
+        id S1726931AbgFQUbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:30:48 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:29316 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726496AbgFQUas (ORCPT
+        Wed, 17 Jun 2020 16:31:18 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:47009 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgFQUbS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:30:48 -0400
-X-IronPort-AV: E=Sophos;i="5.73,523,1583190000"; 
-   d="scan'208";a="455255405"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 22:30:43 +0200
-Date:   Wed, 17 Jun 2020 22:30:43 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Denis Efremov <efremov@linux.com>
-cc:     Kees Cook <keescook@chromium.org>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Cocci] [PATCH] coccinelle: misc: add array_size_dup script to
- detect missed overlow checks
-In-Reply-To: <20200615102045.4558-1-efremov@linux.com>
-Message-ID: <alpine.DEB.2.22.394.2006172229550.3083@hadrien>
-References: <20200615102045.4558-1-efremov@linux.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Wed, 17 Jun 2020 16:31:18 -0400
+Received: by mail-io1-f65.google.com with SMTP id t9so4449006ioj.13;
+        Wed, 17 Jun 2020 13:31:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bBXYSk1/ATYeub4n9kMvAH2hmCPII0+QncDRP+7+Htw=;
+        b=bk65cOTNA43Ik1iHnbZlK7AuKOUFauOyqGDG+1JnsCzAFxz9vtZ6ZSbHVd+zS6I7Rm
+         TjpIvAfq/r2CrfriJZpD70WohnQNRLmxx/MePr4z+mL8p9/tX1FKG4NTw/99noHo7+ep
+         kj4I3fJcUFR1p1DH1OJWtY6zIbeezkjdpeLByWmbE5IYcEdJhQiwTM1oHK8SIMeszQNV
+         k1uiW/b2C3MkD8odV32SYqVgXqjCe4m5x9Teg9F6M5RBpqwAPzmg5q/8tQ14eQi4ZJ7G
+         T+ffCEeSX9RHoWkYDrFqh4iRPRrfskq4DVlFcxPH8anOJdQAL8GK//pSXOue0u5PDSJa
+         uZJg==
+X-Gm-Message-State: AOAM532UOxHdLKyYexu2N8UaK/ZdcnLNqn4MZDYF5eYY2td0naIT0gU4
+        0zwCXG0ykFNwM6VESPlxvSx1WY048w==
+X-Google-Smtp-Source: ABdhPJwJ3J48mh8YLrWWaH382tu/CTB8ZZ5/9hfRxSeLhpiWZor9+iKA/OgTvoX4RkqqBCty76mFxw==
+X-Received: by 2002:a6b:1785:: with SMTP id 127mr1302084iox.136.1592425877505;
+        Wed, 17 Jun 2020 13:31:17 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id h23sm485548ioj.39.2020.06.17.13.31.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 13:31:16 -0700 (PDT)
+Received: (nullmailer pid 2740358 invoked by uid 1000);
+        Wed, 17 Jun 2020 20:31:15 -0000
+Date:   Wed, 17 Jun 2020 14:31:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Cc:     andy.shevchenko@gmail.com, devicetree@vger.kernel.org,
+        pmeerw@pmeerw.net, jic23@kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH v5 4/4] dt-bindings: iio: scd30: add device binding file
+Message-ID: <20200617203115.GA2740308@bogus>
+References: <20200607175812.95777-5-tomasz.duszynski@octakon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200607175812.95777-5-tomasz.duszynski@octakon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Mon, 15 Jun 2020, Denis Efremov wrote:
-
-> Detect an opencoded expression that is used before or after
-> array_size()/array3_size()/struct_size() to compute the same size.
-
-This would benefit from the assignemnt operator metavariables as well.
-
-Also, it could be better to put the python rules up next the SmPL pattern
-matching rules that they are associated with.
-
-julia
-
-
->
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+On Sun, 07 Jun 2020 19:58:12 +0200, Tomasz Duszynski wrote:
+> Add SCD30 sensor binding file.
+> 
+> Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
 > ---
->  scripts/coccinelle/misc/array_size_dup.cocci | 347 +++++++++++++++++++
->  1 file changed, 347 insertions(+)
->  create mode 100644 scripts/coccinelle/misc/array_size_dup.cocci
->
-> diff --git a/scripts/coccinelle/misc/array_size_dup.cocci b/scripts/coccinelle/misc/array_size_dup.cocci
-> new file mode 100644
-> index 000000000000..08919a938754
-> --- /dev/null
-> +++ b/scripts/coccinelle/misc/array_size_dup.cocci
-> @@ -0,0 +1,347 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +///
-> +/// Check for array_size(), array3_size(), struct_size() duplicates.
-> +/// Three types of patterns for these functions:
-> +///  1. An opencoded expression is used before array_size() to compute the same size
-> +///  2. An opencoded expression is used after array_size() to compute the same size
-> +///  3. Consecutive calls of array_size() with the same values
-> +/// From security point of view only first case is relevant. These functions
-> +/// perform arithmetic overflow check. Thus, if we use an opencoded expression
-> +/// before a call to the *_size() function we can miss an overflow.
-> +///
-> +// Confidence: High
-> +// Copyright: (C) 2020 Denis Efremov ISPRAS
-> +// Options: --no-includes --include-headers --no-loops
-> +
-> +virtual context
-> +virtual report
-> +virtual org
-> +
-> +@as@
-> +expression E1, E2;
-> +@@
-> +
-> +array_size(E1, E2)
-> +
-> +@as_next@
-> +expression subE1 <= as.E1;
-> +expression as.E1;
-> +expression subE2 <= as.E2;
-> +expression as.E2;
-> +expression E3;
-> +position p1, p2;
-> +@@
-> +
-> +* E1 * E2@p1
-> +  ... when != \(E1\|E2\|subE1\|subE2\)=E3
-> +      when != \(E1\|E2\|subE1\|subE2\)+=E3
-> +      when != \(E1\|E2\|subE1\|subE2\)-=E3
-> +      when != \(E1\|E2\|subE1\|subE2\)*=E3
-> +      when != \(&E1\|&E2\|&subE1\|&subE2\)
-> +* array_size(E1, E2)@p2
-> +
-> +@as_prev@
-> +expression subE1 <= as.E1;
-> +expression as.E1;
-> +expression subE2 <= as.E2;
-> +expression as.E2;
-> +expression E3;
-> +position p1, p2;
-> +@@
-> +
-> +* array_size(E1, E2)@p1
-> +  ... when != \(E1\|E2\|subE1\|subE2\)=E3
-> +      when != \(E1\|E2\|subE1\|subE2\)+=E3
-> +      when != \(E1\|E2\|subE1\|subE2\)-=E3
-> +      when != \(E1\|E2\|subE1\|subE2\)*=E3
-> +      when != \(&E1\|&E2\|&subE1\|&subE2\)
-> +* E1 * E2@p2
-> +
-> +@as_dup@
-> +expression subE1 <= as.E1;
-> +expression as.E1;
-> +expression subE2 <= as.E2;
-> +expression as.E2;
-> +expression E3;
-> +position p1, p2;
-> +@@
-> +
-> +* array_size(E1, E2)@p1
-> +  ... when != \(E1\|E2\|subE1\|subE2\)=E3
-> +      when != \(E1\|E2\|subE1\|subE2\)+=E3
-> +      when != \(E1\|E2\|subE1\|subE2\)-=E3
-> +      when != \(E1\|E2\|subE1\|subE2\)*=E3
-> +      when != \(&E1\|&E2\|&subE1\|&subE2\)
-> +* array_size(E1, E2)@p2
-> +
-> +@as3@
-> +expression E1, E2, E3;
-> +@@
-> +
-> +array3_size(E1, E2, E3)
-> +
-> +@as3_next@
-> +expression subE1 <= as3.E1;
-> +expression as3.E1;
-> +expression subE2 <= as3.E2;
-> +expression as3.E2;
-> +expression subE3 <= as3.E3;
-> +expression as3.E3;
-> +expression E4;
-> +position p1, p2;
-> +@@
-> +
-> +* E1 * E2 * E3@p1
-> +  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)+=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)-=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)*=E4
-> +      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
-> +* array3_size(E1, E2, E3)@p2
-> +
-> +@as3_prev@
-> +expression subE1 <= as3.E1;
-> +expression as3.E1;
-> +expression subE2 <= as3.E2;
-> +expression as3.E2;
-> +expression subE3 <= as3.E3;
-> +expression as3.E3;
-> +expression E4;
-> +position p1, p2;
-> +@@
-> +
-> +* array3_size(E1, E2, E3)@p1
-> +  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)+=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)-=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)*=E4
-> +      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
-> +* E1 * E2 * E3@p2
-> +
-> +@as3_dup@
-> +expression subE1 <= as3.E1;
-> +expression as3.E1;
-> +expression subE2 <= as3.E2;
-> +expression as3.E2;
-> +expression subE3 <= as3.E3;
-> +expression as3.E3;
-> +expression E4;
-> +position p1, p2;
-> +@@
-> +
-> +* array3_size(E1, E2, E3)@p1
-> +  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)+=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)-=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)*=E4
-> +      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
-> +* array3_size(E1, E2, E3)@p2
-> +
-> +@ss@
-> +expression E1, E2, E3;
-> +@@
-> +
-> +struct_size(E1, E2, E3)
-> +
-> +@ss_next@
-> +expression subE1 <= ss.E1;
-> +expression ss.E1;
-> +expression subE2 <= ss.E2;
-> +expression ss.E2;
-> +expression subE3 <= ss.E3;
-> +expression ss.E3;
-> +expression E4;
-> +position p1, p2;
-> +@@
-> +
-> +* E1 * E2 + E3@p1
-> +  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)+=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)-=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)*=E4
-> +      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
-> +* struct_size(E1, E2, E3)@p2
-> +
-> +@ss_prev@
-> +expression subE1 <= ss.E1;
-> +expression ss.E1;
-> +expression subE2 <= ss.E2;
-> +expression ss.E2;
-> +expression subE3 <= ss.E3;
-> +expression ss.E3;
-> +expression E4;
-> +position p1, p2;
-> +@@
-> +
-> +* struct_size(E1, E2, E3)@p1
-> +  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)+=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)-=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)*=E4
-> +      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
-> +* E1 * E2 + E3@p2
-> +
-> +@ss_dup@
-> +expression subE1 <= ss.E1;
-> +expression ss.E1;
-> +expression subE2 <= ss.E2;
-> +expression ss.E2;
-> +expression subE3 <= ss.E3;
-> +expression ss.E3;
-> +expression E4;
-> +position p1, p2;
-> +@@
-> +
-> +* struct_size(E1, E2, E3)@p1
-> +  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)+=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)-=E4
-> +      when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\)*=E4
-> +      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
-> +* struct_size(E1, E2, E3)@p2
-> +
-> +@script:python depends on report@
-> +p1 << as_next.p1;
-> +p2 << as_next.p2;
-> +@@
-> +
-> +msg = "WARNING: array_size is used down the code (line %s) to compute the same size" % (p2[0].line)
-> +coccilib.report.print_report(p1[0], msg)
-> +
-> +@script:python depends on org@
-> +p1 << as_next.p1;
-> +p2 << as_next.p2;
-> +@@
-> +
-> +msg = "WARNING: array_size is used down the code (line %s) to compute the same size" % (p2[0].line)
-> +coccilib.org.print_todo(p1[0], msg)
-> +
-> +@script:python depends on report@
-> +p1 << as_prev.p1;
-> +p2 << as_prev.p2;
-> +@@
-> +
-> +msg = "WARNING: array_size is already used (line %s) to compute the same size" % (p1[0].line)
-> +coccilib.report.print_report(p2[0], msg)
-> +
-> +@script:python depends on org@
-> +p1 << as_prev.p1;
-> +p2 << as_prev.p2;
-> +@@
-> +
-> +msg = "WARNING: array_size is already used (line %s) to compute the same size" % (p1[0].line)
-> +coccilib.org.print_todo(p2[0], msg)
-> +
-> +@script:python depends on report@
-> +p1 << as_dup.p1;
-> +p2 << as_dup.p2;
-> +@@
-> +
-> +msg = "WARNING: same array_size (line %s)" % (p1[0].line)
-> +coccilib.report.print_report(p2[0], msg)
-> +
-> +@script:python depends on org@
-> +p1 << as_dup.p1;
-> +p2 << as_dup.p2;
-> +@@
-> +
-> +msg = "WARNING: same array_size (line %s)" % (p1[0].line)
-> +coccilib.org.print_todo(p2[0], msg)
-> +
-> +
-> +@script:python depends on report@
-> +p1 << as3_next.p1;
-> +p2 << as3_next.p2;
-> +@@
-> +
-> +msg = "WARNING: array3_size is used down the code (line %s) to compute the same size" % (p2[0].line)
-> +coccilib.report.print_report(p1[0], msg)
-> +
-> +@script:python depends on org@
-> +p1 << as3_next.p1;
-> +p2 << as3_next.p2;
-> +@@
-> +
-> +msg = "WARNING: array3_size is used down the code (line %s) to compute the same size" % (p2[0].line)
-> +coccilib.org.print_todo(p1[0], msg)
-> +
-> +@script:python depends on report@
-> +p1 << as3_prev.p1;
-> +p2 << as3_prev.p2;
-> +@@
-> +
-> +msg = "WARNING: array3_size is already used (line %s) to compute the same size" % (p1[0].line)
-> +coccilib.report.print_report(p2[0], msg)
-> +
-> +@script:python depends on org@
-> +p1 << as3_prev.p1;
-> +p2 << as3_prev.p2;
-> +@@
-> +
-> +msg = "WARNING: array3_size is already used (line %s) to compute the same size" % (p1[0].line)
-> +coccilib.org.print_todo(p2[0], msg)
-> +
-> +@script:python depends on report@
-> +p1 << as3_dup.p1;
-> +p2 << as3_dup.p2;
-> +@@
-> +
-> +msg = "WARNING: same array3_size (line %s)" % (p1[0].line)
-> +coccilib.report.print_report(p2[0], msg)
-> +
-> +@script:python depends on org@
-> +p1 << as3_dup.p1;
-> +p2 << as3_dup.p2;
-> +@@
-> +
-> +msg = "WARNING: same array3_size (line %s)" % (p1[0].line)
-> +coccilib.org.print_todo(p2[0], msg)
-> +
-> +
-> +@script:python depends on report@
-> +p1 << ss_next.p1;
-> +p2 << ss_next.p2;
-> +@@
-> +
-> +msg = "WARNING: struct_size is used down the code (line %s) to compute the same size" % (p2[0].line)
-> +coccilib.report.print_report(p1[0], msg)
-> +
-> +@script:python depends on org@
-> +p1 << ss_next.p1;
-> +p2 << ss_next.p2;
-> +@@
-> +
-> +msg = "WARNING: struct_size is used down the code (line %s) to compute the same size" % (p2[0].line)
-> +coccilib.org.print_todo(p1[0], msg)
-> +
-> +@script:python depends on report@
-> +p1 << ss_prev.p1;
-> +p2 << ss_prev.p2;
-> +@@
-> +
-> +msg = "WARNING: struct_size is already used (line %s) to compute the same size" % (p1[0].line)
-> +coccilib.report.print_report(p2[0], msg)
-> +
-> +@script:python depends on org@
-> +p1 << ss_prev.p1;
-> +p2 << ss_prev.p2;
-> +@@
-> +
-> +msg = "WARNING: struct_size is already used (line %s) to compute the same size" % (p1[0].line)
-> +coccilib.org.print_todo(p2[0], msg)
-> +
-> +@script:python depends on report@
-> +p1 << ss_dup.p1;
-> +p2 << ss_dup.p2;
-> +@@
-> +
-> +msg = "WARNING: same struct_size (line %s)" % (p1[0].line)
-> +coccilib.report.print_report(p2[0], msg)
-> +
-> +@script:python depends on org@
-> +p1 << ss_dup.p1;
-> +p2 << ss_dup.p2;
-> +@@
-> +
-> +msg = "WARNING: same struct_size (line %s)" % (p1[0].line)
-> +coccilib.org.print_todo(p2[0], msg)
-> --
-> 2.26.2
->
-> _______________________________________________
-> Cocci mailing list
-> Cocci@systeme.lip6.fr
-> https://systeme.lip6.fr/mailman/listinfo/cocci
->
+>  .../iio/chemical/sensirion,scd30.yaml         | 68 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
