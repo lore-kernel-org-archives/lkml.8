@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB99C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF94C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 532F0207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2247207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:38:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="RmD0g3Rr"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ZxioYcMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgFQLiB (ORCPT
+        id S1726878AbgFQLiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:38:01 -0400
-Received: from mail-eopbgr760083.outbound.protection.outlook.com ([40.107.76.83]:42570
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        Wed, 17 Jun 2020 07:38:06 -0400
+Received: from mail-co1nam11on2045.outbound.protection.outlook.com ([40.107.220.45]:6229
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726769AbgFQLhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:37:53 -0400
+        id S1726857AbgFQLiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 07:38:03 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iIRoYX4PPtSI3SvzPZD/Jfosq0UlNu0DsrrOIZrRzl/f4/ZKkoeCvcko/NfxVO22CvK0tbB1cOuQeO/WDCUtHmiw5cEja006ycVBniFdZTD5f8dBGjS77GSGRKYXtKtFrdKOm+AGrlsUhc3j5UtmtKD28SCaGP3Jbw2E2GDSONIXXh9ThwGWHPSQNacQA4nu1rmp5JAhduwVR5IeAVefrLa5FO6u4ggKnziS0S942Sfvt+g5Jxn95bVQ4MBUPTc5yCkjbkbQfJ6sl+mfpPwE5cP6zjichy/fCEdWV9kpfDQfTJNl4s4QLb9euLdEOV/jBthaAVsm8t8OXj9sDHXOEg==
+ b=JPnBMs4a9C2Uz8mY9GC+tAyhROL72+tAfRJGVCPqK3/d1nNsyePdy2HxIDJz5qJPRhfpu5VWKmBTHOEtSVomEahugZ5LRP9bo5eoDwHne5TT9Ndk3/HJjSlIIPkQd7ogiWFYD5qLMIZo8T/InDsOQ3D1JfRstGAn8yKJTm5eM+cM+WzEvDJULKSd7MlMamUnms6vvl3dvhOd1SHyKDTKhNT5i9dKSO4CC/Iszp5pya5YIdtyNNL9Qa2dFn3yT4ZoKUNnjXE+swysTtAD05RyBvPZOt/Eks1PUE4Z0gBL/AGHWCo8N0kuQX7UY1qDXDI4EW+vlJFJTtFhaxYPyAJDgA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZfCAluQT+BkcOujX1CojNyUo+PO4qbrtmhtOI76lcn8=;
- b=TYKeSNQZML9kGanp97g9bbpqXP+m2BoIkkv6umBu0qUtMob3Gbj6zm8aUnhtKO5QA74IUnQwvv0JPxZKvRfzXwVJaTwJHFNVLwgRhDzCo11LhKlkXF0u+ceU/oT7UXd1LyL5p9vgZOCO+nUCOit3f2fchWGENuyUmQBGV8xaotswY4CIGURAfciKsL/uUKez+23ZfyRX4B2+AwJIAc9TOEKFSxdPBM84ZpAxYiZiU1amNYZxSJztFr50sI9pS0eT2E0HtNz1anLv18LljNt7ryKgIjroPjcCvO5I/S1hldi5RIv4MxuTajwyjnXF0hZA5JUKonaSQX/Q6Zavqycopg==
+ bh=LQz9KqmcLaeruV4C2BriXBrjty1fuGu0xbZU8uSeooM=;
+ b=aDgkBWovprJ/in0kbZTX3ScNqd6pBRK2zzj+7c+vC2ynUWdDrt8Gx5N2bt1SvaP9cqvv8g7xhGd9OqnJ1alLUoNDQS0wY27+vbC39Zn+YhD4AqJm8Z7WERr9TxllTzrAI13Yag32LHVYVmck8WCoatIavQhiCrZ/QLhMLVydv/ro5RIfYaBaPjAFVYs0lOcJ5yZokEtNKpSsFa9xrUOkd66Z27WQTJtmQutzh4v+48TWwqDNnS2Zq71NyXHJL8K7YfOO5MzldRQhE5Jau0S0NVSH6frRYN6Z2TEy9rfQlVGVAv4Pmh/OhXpiCtUzPXMRBRrGNJl6fB0shlZfQ3RDSg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -37,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZfCAluQT+BkcOujX1CojNyUo+PO4qbrtmhtOI76lcn8=;
- b=RmD0g3RrvK8lwczytfZQSnsuZaDOSkL5J3M19A7jGDzHiI3H7bwXvhEEwPyuiQclKTiffqXit93M21jqbg6oeiJWVc9TLfiXw3FjJg4q/KAOYQ6CBGERg+emASF9T54tGctf9caTPLM3bYyQOXi3vJM3tfTPM3FcwT7HNBntCP4=
-Received: from SN4PR0501CA0093.namprd05.prod.outlook.com
- (2603:10b6:803:22::31) by BYAPR02MB5032.namprd02.prod.outlook.com
- (2603:10b6:a03:71::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.26; Wed, 17 Jun
- 2020 11:37:50 +0000
-Received: from SN1NAM02FT042.eop-nam02.prod.protection.outlook.com
- (2603:10b6:803:22:cafe::a0) by SN4PR0501CA0093.outlook.office365.com
- (2603:10b6:803:22::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.11 via Frontend
- Transport; Wed, 17 Jun 2020 11:37:50 +0000
+ bh=LQz9KqmcLaeruV4C2BriXBrjty1fuGu0xbZU8uSeooM=;
+ b=ZxioYcMKwFRiH89cKVcX1uf10bpPMSJ1BFb4owRzbFr24xMOXWMYh7SYb3qRJOVlbvwucWwXm9Krxa6t9KaKB9jfd+VGWjIA+WLntUqdbFVUxw6GBwUcxUHoin1bzidzbcW2Sx7wL45CZjUpLqYwY7/4EdlP49Q6gL6KNRjSDGs=
+Received: from BL0PR02CA0055.namprd02.prod.outlook.com (2603:10b6:207:3d::32)
+ by BYAPR02MB5830.namprd02.prod.outlook.com (2603:10b6:a03:122::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Wed, 17 Jun
+ 2020 11:38:00 +0000
+Received: from BL2NAM02FT060.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:207:3d:cafe::de) by BL0PR02CA0055.outlook.office365.com
+ (2603:10b6:207:3d::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend
+ Transport; Wed, 17 Jun 2020 11:38:00 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
@@ -57,33 +57,33 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT042.mail.protection.outlook.com (10.152.73.149) with Microsoft SMTP
- Server id 15.20.3088.18 via Frontend Transport; Wed, 17 Jun 2020 11:37:50
+ BL2NAM02FT060.mail.protection.outlook.com (10.152.76.124) with Microsoft SMTP
+ Server id 15.20.3088.18 via Frontend Transport; Wed, 17 Jun 2020 11:38:00
  +0000
-Received: from [149.199.38.66] (port=36166 helo=xsj-pvapsmtp01)
+Received: from [149.199.38.66] (port=36286 helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
         (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jlWN3-0001I5-Gl; Wed, 17 Jun 2020 04:36:45 -0700
+        id 1jlWND-0001IO-Ob; Wed, 17 Jun 2020 04:36:55 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jlWO5-0007aG-R6; Wed, 17 Jun 2020 04:37:49 -0700
-Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 05HBbdGj032541;
-        Wed, 17 Jun 2020 04:37:39 -0700
+        id 1jlWOG-0007dH-2T; Wed, 17 Jun 2020 04:38:00 -0700
+Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 05HBboaL032674;
+        Wed, 17 Jun 2020 04:37:50 -0700
 Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jlWNu-0007TR-PP; Wed, 17 Jun 2020 04:37:39 -0700
+        id 1jlWO5-0007TR-OO; Wed, 17 Jun 2020 04:37:50 -0700
 From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com,
         sgoud@xilinx.com
 Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: [PATCH V4 3/7] devicetree-binding: Add pmc gpio node
-Date:   Wed, 17 Jun 2020 17:07:23 +0530
-Message-Id: <1592393847-1415-4-git-send-email-srinivas.neeli@xilinx.com>
+Subject: [PATCH V4 7/7] gpio: zynq: Remove error prints in EPROBE_DEFER
+Date:   Wed, 17 Jun 2020 17:07:27 +0530
+Message-Id: <1592393847-1415-8-git-send-email-srinivas.neeli@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
 References: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
@@ -92,27 +92,27 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(396003)(376002)(39860400002)(136003)(46966005)(9786002)(26005)(316002)(336012)(44832011)(966005)(82310400002)(8676002)(70586007)(356005)(2906002)(8936002)(6666004)(70206006)(7696005)(107886003)(2616005)(5660300002)(186003)(4326008)(47076004)(82740400003)(81166007)(6636002)(478600001)(36756003)(83380400001)(426003);DIR:OUT;SFP:1101;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(396003)(376002)(39860400002)(136003)(46966005)(82740400003)(8676002)(4326008)(6636002)(26005)(81166007)(4744005)(336012)(356005)(83380400001)(107886003)(82310400002)(9786002)(5660300002)(70586007)(426003)(316002)(478600001)(70206006)(2616005)(44832011)(8936002)(7696005)(186003)(2906002)(47076004)(36756003)(6666004);DIR:OUT;SFP:1101;
 X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 1aa2a848-40f9-4464-3f35-08d812b2dd6e
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5032:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB5032D9A4F8F3604504A9379AAF9A0@BYAPR02MB5032.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: bc23b71e-78ab-4bfa-3099-08d812b2e393
+X-MS-TrafficTypeDiagnostic: BYAPR02MB5830:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB5830E373928941C832563E2EAF9A0@BYAPR02MB5830.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Oob-TLC-OOBClassifiers: OLM:274;
 X-Forefront-PRVS: 04371797A5
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jvxNgKTw5isnXs+neDWsJWiiUFOV+Vp0Inx2V4mHbLrBOdf3fSNMzHit8tiqS6MBZvBnrrOoIsQZ+wxXt1681y6MeAuol02Bz9LYJQP5v0t/SbDvoqg0Pmd55fv3ys3bIIrfFOy50ClbB3CPJUEAVtFmJ6d3Ty/8FvKPAitsTzeO2N0yc5/QxkCz82oAAmiVVsrJxG4nTe1mZqM1h/vM0cGAwpCwhptVw5KjefspTLxslSoD1A9BPQ+sGmQ/XTZAy6GDS65fyY98HxDKikjUNSAllAjwf+dVJTrVrd1+jIQ2P7RJHMHaHnZG9kTQbwwf70D1cxmlHtVlBxOyb8ENvDCtaF2IaqALbuOv8AvJ9ZNN9ZtDmAtFDBYqZqKh+RInd2ovTyZldoMgBQV+INi4J6A/JhZ0gkxX8l9/tI0w2ybzo5veF+Kb4RMarMdi/LvRKCr94lA1FoqBw0fLulYMKBk29iz3iExC13lbt5p1FQo=
+X-Microsoft-Antispam-Message-Info: CHrTSJQjQY2YEno4fzHDMQjkIR6xKxKueYLBWm9i29H0Pz+uN1D2VN85+ypkeU6kN2WZ6+62XkOXpkbJcTfY721SNKx7SMMYIIkATa5fVIjUKhYRYunvTjeTaou6hycqFJxnnfHCmxYzPbYh6SaoRubk412G1bknFm7Kf+BXiMBBG78Nqd5o25580BX2ZPIT8v8qoJisLmIRUQCkF764vSaeXa7YKWscM9epBnC0Q1Xwh3PjGzKEqu3dJv+zX2KFFyifPLD/dX8ORfZ27vb5HvBpA5qY1gb2T0AxGtSpsFtxh7Wm8GgkTR52g044E80fnh01igMC0fxUquphPOn+LhAKphg4lZTy7JbkVNs32EUyjFFY+6XoKz176A1tR+65WeDHr9Yy8jGUGwtWm8jlPA==
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 11:37:50.1293
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 11:38:00.4338
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1aa2a848-40f9-4464-3f35-08d812b2dd6e
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc23b71e-78ab-4bfa-3099-08d812b2e393
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5032
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5830
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -120,42 +120,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Add the pmc gpio node to the device tree.
-
-Versal devices are the industry's first adaptive compute
-acceleration platforms.
-https://www.xilinx.com/support/documentation/data_sheets/ds950-versal-overview.pdf
-
-On the Versal platform, we are using two customized GPIO controllers(IP)
-which were used in Zynq/ZynqMp platform.
-One of them present in the Platform Management Controller(PMC) block and
-other in Processing System(PS) block.
-
-In PMC_GPIO only Bank0,1,3 & 4 are enabled and in PS_GPIO only
-Bank 0 & 3 are enabled.
-
-You can find more details of GPIO IP in ZynqMP TRM General Purpose
-I/O(Chapter-27).
-https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf
+In case of probe is deferred do not print the errors.
 
 Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
- Documentation/devicetree/bindings/gpio/gpio-zynq.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpio/gpio-zynq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-zynq.txt b/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
-index 4806d846c0fc..f693e82b4c0f 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
-@@ -8,6 +8,7 @@ Required properties:
- 			    parameters (unused)
- - compatible		: Should be "xlnx,zynq-gpio-1.0" or
- 			  "xlnx,zynqmp-gpio-1.0" or "xlnx,versal-gpio-1.0
-+			  or "xlnx,pmc-gpio-1.0
- - clocks		: Clock specifier (see clock bindings for details)
- - gpio-controller	: Marks the device node as a GPIO controller.
- - interrupts		: Interrupt specifier (see interrupt bindings for
+diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+index 2ddb59b242e7..53d1387592fd 100644
+--- a/drivers/gpio/gpio-zynq.c
++++ b/drivers/gpio/gpio-zynq.c
+@@ -930,7 +930,8 @@ static int zynq_gpio_probe(struct platform_device *pdev)
+ 	/* Retrieve GPIO clock */
+ 	gpio->clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(gpio->clk)) {
+-		dev_err(&pdev->dev, "input clock not found.\n");
++		if (PTR_ERR(gpio->clk) != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "input clock not found.\n");
+ 		return PTR_ERR(gpio->clk);
+ 	}
+ 	ret = clk_prepare_enable(gpio->clk);
 -- 
 2.7.4
 
