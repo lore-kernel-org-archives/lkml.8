@@ -2,97 +2,108 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E43FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D078E20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEAA52098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 13:24:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="dJ5QT2RB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgFQNR3 (ORCPT
+        id S1726597AbgFQNYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 09:17:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54196 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbgFQNR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 09:17:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D269EAD11;
-        Wed, 17 Jun 2020 13:17:30 +0000 (UTC)
-Date:   Wed, 17 Jun 2020 15:17:42 +0200
-From:   Cyril Hrubis <chrubis@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, ltp@lists.linux.it
-Subject: Re: [LTP] [x86/entry] 2bbc68f837: ltp.ptrace08.fail
-Message-ID: <20200617131742.GD8389@yuki.lan>
-References: <87y2onbdtb.fsf@nanos.tec.linutronix.de>
- <8E41B15F-D567-4C52-94E9-367015480345@amacapital.net>
- <20200616132705.GW2531@hirez.programming.kicks-ass.net>
+        Wed, 17 Jun 2020 09:24:02 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:6663 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgFQNYC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 09:24:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592400241; x=1623936241;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=ZSKIFjgWSGvcd2TA1EkZxZotKMUxU9qjgTH4dFWXe7w=;
+  b=dJ5QT2RBb6TREMLewoZ5nJrPloU2s1PgL9itXqkjpjWcTCP3L2yNG16K
+   PdlbNbHDKS38CMgYlR9tfnUp11yK6SKxzB35MBcjLYVyKb9c8tg1Hc8Lq
+   sZOOYzPc/V6pSUhq9bBbH/rkYtQ7kvc2bBLr/Y4Wsmwjw6Slzr9UX558i
+   l4yCW+/+YFtZvxl37n1R6dwHHHSvcYmJwWO58xP+Iw1fmhPR8Z+v0Wo26
+   0Iy5c0fkct9z/tzDJZ7bmPNxhBrX60wvmRZU42JSKFh39VHooCaV9rnO8
+   XDogxPGLBwS2ps8dfgFqcEpLAc0tRum3orSAjWwxYSQtnF5qInCymPhPW
+   A==;
+IronPort-SDR: SM6Y4i1it7Ug8rGDOTz14WiIWZ+m/ZhnSVBWLDzhhMGCoOkE3bgT8aXPKCxWQMIpMqkvCXjMX6
+ 764rj56As5fjMwFSDn7r6qNQHh5Y3qkLxU4XfYrRn5lvxC33C+LE1KHwvuNMZlJix56L9PwGD1
+ Z19kM3oiZoOa+Fji+mTh3V88izo/NaOp3SXEN0PqPN+I+NI1MpxXVXnMnJbwC0vGMsg/bsvNSz
+ MNWj6ygAh8y8galIbj0bEiR08ayQzwgNhTfcP18onXlqbuSbig19DCuRdgqyIisg/QMh5aai1r
+ 408=
+X-IronPort-AV: E=Sophos;i="5.73,522,1583218800"; 
+   d="scan'208";a="16108969"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Jun 2020 06:24:00 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 17 Jun 2020 06:24:00 -0700
+Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Wed, 17 Jun 2020 06:23:52 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <nicolas.ferre@microchip.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <linux@armlinux.org.uk>
+CC:     <antoine.tenart@bootlin.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH] net: macb: undo operations in case of failure
+Date:   Wed, 17 Jun 2020 16:23:55 +0300
+Message-ID: <1592400235-11833-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616132705.GW2531@hirez.programming.kicks-ass.net>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-> > >> FYI, we noticed the following commit (built with gcc-9):
-> > >> 
-> > >> commit: 2bbc68f8373c0631ebf137f376fbea00e8086be7 ("x86/entry: Convert Debug exception to IDTENTRY_DB")
-> > >> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> > > 
-> > > Is the head of linux.git exposing the same problem or is this an
-> > > intermittent failure, which only affects bisectability?
-> > 
-> > It sure looks deterministic:
-> > 
-> > ptrace08.c:62: BROK: Cannot find address of kernel symbol "do_debug"
-> 
-> ROFL
+Undo previously done operation in case macb_phylink_connect()
+fails. Since macb_reset_hw() is the 1st undo operation the
+napi_exit label was renamed to reset_hw.
 
-It's nice to have a good laugh, however I would really appreciate if any
-of you would help me to fix the test.
+Fixes: b2b041417299 ("net: macb: convert to phylink")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ drivers/net/ethernet/cadence/macb_main.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-The test in question is a regression test for:
-
-commit f67b15037a7a50c57f72e69a6d59941ad90a0f0f
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon Mar 26 15:39:07 2018 -1000
-
-    perf/hwbp: Simplify the perf-hwbp code, fix documentation
-
-    Annoyingly, modify_user_hw_breakpoint() unnecessarily complicates the
-    modification of a breakpoint - simplify it and remove the pointless
-    local variables.
-
-And as far as I can tell it uses ptrace() with PTRACE_POKEUSER in order to
-trigger it. But I'm kind of lost on how exactly we trigger the kernel
-crash.
-
-What is does is to write:
-
-	(void*)1 to u_debugreg[0]
-	(void*)1 to u_debugreg[7]
-	do_debug addr to u_debugreg[0]
-
-Looking at the kernel code the write to register 7 enables the breakpoints and
-what we attempt here is to change an invalid address to a valid one after we
-enabled the breakpoint but that's as far I can go.
-
-So does anyone has an idea how to trigger the bug without the do_debug function
-address? Would any valid kernel function address suffice?
-
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 67933079aeea..257c4920cb88 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -2558,7 +2558,7 @@ static int macb_open(struct net_device *dev)
+ 
+ 	err = macb_phylink_connect(bp);
+ 	if (err)
+-		goto napi_exit;
++		goto reset_hw;
+ 
+ 	netif_tx_start_all_queues(dev);
+ 
+@@ -2567,9 +2567,11 @@ static int macb_open(struct net_device *dev)
+ 
+ 	return 0;
+ 
+-napi_exit:
++reset_hw:
++	macb_reset_hw(bp);
+ 	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue)
+ 		napi_disable(&queue->napi);
++	macb_free_consistent(bp);
+ pm_exit:
+ 	pm_runtime_put_sync(&bp->pdev->dev);
+ 	return err;
 -- 
-Cyril Hrubis
-chrubis@suse.cz
+2.7.4
+
