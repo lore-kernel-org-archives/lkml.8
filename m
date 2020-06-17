@@ -2,174 +2,220 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68ACBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F47C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 450F5208B3
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C640206E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgFQJ1V (ORCPT
+        id S1726600AbgFQJ2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 05:27:21 -0400
-Received: from mo-csw1515.securemx.jp ([210.130.202.154]:41064 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgFQJ1U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 05:27:20 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 05H9R9P1016297; Wed, 17 Jun 2020 18:27:09 +0900
-X-Iguazu-Qid: 34trcFcTTcnf7jvp5N
-X-Iguazu-QSIG: v=2; s=0; t=1592386029; q=34trcFcTTcnf7jvp5N; m=zsIHo39DpcHb4LeDkX+xuQO10PPLqkJHF/C46IDj/YA=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1510) id 05H9R8a9008789;
-        Wed, 17 Jun 2020 18:27:08 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id 05H9R87p008587;
-        Wed, 17 Jun 2020 18:27:08 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 05H9R89i017125;
-        Wed, 17 Jun 2020 18:27:08 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ifVWP6CaqoHjkCyJrsYfMNbzLeKOSpbincQmczR7Gk/sqMBA6/EL3WfK47nvycBGNjydfNf0/y18C1EmTD1SkxEaePtLebaG05Kho0zNpWf+E3412aRSFX/MtyTS4yUitHfbpcEnOx2ZlunsVjQf+6NUk/1f8/nUuW/JaWyjbInmqhnN9Txa7yM0iozj9gbVq1ajYc+GMAM0j97PlpSe4OeO5qQFLkCKNrUTAHUYeJOcWVT7dCOJ8jXNm1jfNzrxqeaq2Ry5JFoXrBIH44TLVWalHfULG51OcoQRxZp05fygYRXp1XSDZG8qhfLiTfBC0C/erU2bMTnBZU+YJnfhWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I/NiHfYfeGGfEefQf/VvmAgtYVvup8cNasYS9XCTUr8=;
- b=G39Tju9Qt/16EtKEgFtQH2Xw07TuVOutJ+KOVFyMxzCdykVh6Ivf9kyzKN01Pa18pLMHzw9D2TgGblwkyAxIRaTCqk0H0dF5KrPG/QOvfjIkJqB8zUerPFpHR0SW5uWBJ7wOJG5ta/YvC5LXOa6JVU7F1Ene75NXZTM7GVn7+wLEL3z8kJAF3968k+5R7tykwLJOqCTn+WUlTNoBOrEsl9Jiwf3nJDxqN9P5ud30FNKGbDK47bVimYDeGP4jMtbn802fGAOeLPMzCN2jYKRdZSM517beG/ma1/HzPXNiMRnsKag43niIXkBxbWSrVbQMsE2NTz4ev/D7ynolVyhG1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toshiba.co.jp; dmarc=pass action=none
- header.from=toshiba.co.jp; dkim=pass header.d=toshiba.co.jp; arc=none
-From:   <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>
-CC:     <stable@vger.kernel.org>, <ardb@kernel.org>,
-        <rafael.j.wysocki@intel.com>
-Subject: RE: [PATCH 5.4 064/134] ACPI: GED: add support for _Exx / _Lxx
- handler methods
-Thread-Topic: [PATCH 5.4 064/134] ACPI: GED: add support for _Exx / _Lxx
- handler methods
-Thread-Index: AQHWQ/Q8j4hpKScBzEO+XPSykaTGM6jciEDAgAACHMA=
-Date:   Wed, 17 Jun 2020 09:26:41 +0000
-X-TSB-HOP: ON
-Message-ID: <OSBPR01MB2983F4C32B052F1438964A93929A0@OSBPR01MB2983.jpnprd01.prod.outlook.com>
-References: <20200616153100.633279950@linuxfoundation.org>
- <20200616153103.838898964@linuxfoundation.org>
- <OSBPR01MB29835381F4879AF2614194F3929A0@OSBPR01MB2983.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSBPR01MB29835381F4879AF2614194F3929A0@OSBPR01MB2983.jpnprd01.prod.outlook.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-authentication-results: linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=none action=none
- header.from=toshiba.co.jp;
-x-originating-ip: [103.91.184.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d0fdf65d-d3e8-4ce1-ccc5-08d812a08b53
-x-ms-traffictypediagnostic: OSBPR01MB1912:
-x-microsoft-antispam-prvs: <OSBPR01MB19123D58EFD95C70065E917C929A0@OSBPR01MB1912.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:849;
-x-forefront-prvs: 04371797A5
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tzZCtfPnu/dE90jnN73lodK03JZYScKMT8kYPJ/gciVmrK/BRhBe2OfxvSj3rDipgFIebGacDclRHLnhc/x6KfX8y64c48GJzoFgaY3kXi9S/8UEmZNplNpbgVG5nMh3/ojEUbU2rx8R7ovW+Eh7r/OVDGtNlKkClJtNsy+vU5qpFtDD4y+51goQf5J/hsHca3X+SP1KxGKqATgHvxYcgvgNvWb7jd9XDBKg4YyRLPBw8dN7h2CdVMOruObQgywVvYr0o5hn2Hqeh2Fypup0hfDaiI73QpBUxeJu3TI7oNXTJrDdPH0nP5IYjwKcP71u2J58zaN8K+4TkWGL1EboAw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB2983.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(376002)(346002)(396003)(136003)(53546011)(6506007)(316002)(2940100002)(4326008)(7696005)(33656002)(52536014)(54906003)(478600001)(110136005)(2906002)(186003)(66946007)(64756008)(66476007)(66556008)(83380400001)(66446008)(76116006)(9686003)(5660300002)(8676002)(26005)(8936002)(86362001)(71200400001)(55016002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: UKVgtd3BqLfGAb0CJfU+Scp8+/QGCNn+n0Z+jXAbhmVzZbFeAqz2X/LtJFeJrOZx3UVFc/8YscQDLtEj5H0ptgwATmeMNKNdH8+UEWKnoBK0qY+SJZCHIPgpaYD7QbLZQS7FogIttCyZR88ESyLlP8cmimuEErIiRKq5eo0wal01h+eeeLpuXOXXr8FPSRARKDyWGEYC/p6kGeWN/BeHlc0E5l2CTzz84jkvlNYuuI1LsJKZ5SM5OxyyhrYhlt0ZHNpMs30LiqT+IX7cqsYGgTN2PR4JqN7o+NqC302R4VDkhAR8JZW+Jv49BrLTLM0XNhWi+RAM5iYx/2cHrUu+o2Q1mW81NNnAKHHJ6jbr9vilpeV2xI5ykkY7FdSCJbfyxVTMejOKel3l1BYLKN68OKBai45cXNKHug32dGsRZNiDAO00rAM2jVeL1uBs1GtDECNLpm4uc/BLx16+ewt+v3tDbpL3YG78qB/JoK72bQY=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 17 Jun 2020 05:28:07 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:43622 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgFQJ2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 05:28:05 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jlUMF-0006WM-DR; Wed, 17 Jun 2020 11:27:47 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     Sandy Huang <hjc@rock-chips.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Ben Davis <ben.davis@arm.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] drm: rockchip: add NV15 and NV20 support
+Date:   Wed, 17 Jun 2020 11:27:46 +0200
+Message-ID: <19910776.xcDMAuBTMJ@diego>
+In-Reply-To: <20200607202521.18438-3-jonas@kwiboo.se>
+References: <20200607202521.18438-1-jonas@kwiboo.se> <20200607202521.18438-3-jonas@kwiboo.se>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0fdf65d-d3e8-4ce1-ccc5-08d812a08b53
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2020 09:26:41.3388
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f109924e-fb71-4ba0-b2cc-65dcdf6fbe4f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7y82D41GdEXz9Dn65R0II+YJjK7cswJFyQMLy5apFuF6oKPottx2KGoSYSUSj7+f0kHe6Xhw3gntzUg4dz3nP2/JkCsqiFC+S22amObpSfjJi70Re+baFBpsi38YUWYE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB1912
-X-OriginatorOrg: toshiba.co.jp
-MSSCP.TransferMailToMossAgent: 103
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgYWdhaW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogaXdhbWF0
-c3Ugbm9idWhpcm8o5bKp5p2+IOS/oea0iyDilqHvvLPvvLfvvKPil6/vvKHvvKPvvLQpDQo+IFNl
-bnQ6IFdlZG5lc2RheSwgSnVuZSAxNywgMjAyMCA2OjIzIFBNDQo+IFRvOiBHcmVnIEtyb2FoLUhh
-cnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZw0KPiBDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZzsgQXJkIEJpZXNoZXV2ZWwgPGFy
-ZGJAa2VybmVsLm9yZz47IFJhZmFlbCBKLiBXeXNvY2tpIDxyYWZhZWwuai53eXNvY2tpQGludGVs
-LmNvbT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSCA1LjQgMDY0LzEzNF0gQUNQSTogR0VEOiBhZGQg
-c3VwcG9ydCBmb3IgX0V4eCAvIF9MeHggaGFuZGxlciBtZXRob2RzDQo+IA0KPiBIaSwNCj4gDQo+
-ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBzdGFibGUtb3duZXJAdmdl
-ci5rZXJuZWwub3JnIFttYWlsdG86c3RhYmxlLW93bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVo
-YWxmIE9mIEdyZWcgS3JvYWgtSGFydG1hbg0KPiA+IFNlbnQ6IFdlZG5lc2RheSwgSnVuZSAxNywg
-MjAyMCAxMjozNCBBTQ0KPiA+IFRvOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4g
-Q2M6IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBzdGFi
-bGVAdmdlci5rZXJuZWwub3JnOyBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwub3JnPjsNCj4g
-UmFmYWVsDQo+ID4gSi4gV3lzb2NraSA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+DQo+ID4g
-U3ViamVjdDogW1BBVENIIDUuNCAwNjQvMTM0XSBBQ1BJOiBHRUQ6IGFkZCBzdXBwb3J0IGZvciBf
-RXh4IC8gX0x4eCBoYW5kbGVyIG1ldGhvZHMNCj4gPg0KPiA+IEZyb206IEFyZCBCaWVzaGV1dmVs
-IDxhcmRiQGtlcm5lbC5vcmc+DQo+ID4NCj4gPiBjb21taXQgZWE2ZjNhZjRjNWU2M2Y2OTgxYzBi
-MGFiOGViZWM0MzhlMmQ1ZWY0MCB1cHN0cmVhbS4NCj4gPg0KPiA+IFBlciB0aGUgQUNQSSBzcGVj
-LCBpbnRlcnJ1cHRzIGluIHRoZSByYW5nZSBbMCwgMjU1XSBtYXkgYmUgaGFuZGxlZA0KPiA+IGlu
-IEFNTCB1c2luZyBpbmRpdmlkdWFsIG1ldGhvZHMgd2hvc2UgbmFtaW5nIGlzIGJhc2VkIG9uIHRo
-ZSBmb3JtYXQNCj4gPiBfRXh4IG9yIF9MeHgsIHdoZXJlIHh4IGlzIHRoZSBoZXggcmVwcmVzZW50
-YXRpb24gb2YgdGhlIGludGVycnVwdA0KPiA+IGluZGV4Lg0KPiA+DQo+ID4gQWRkIHN1cHBvcnQg
-Zm9yIHRoaXMgbWlzc2luZyBmZWF0dXJlIHRvIG91ciBBQ1BJIEdFRCBkcml2ZXIuDQo+ID4NCj4g
-PiBDYzogdjQuOSsgPHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc+ICMgdjQuOSsNCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwub3JnPg0KPiA+IFNpZ25lZC1vZmYt
-Ynk6IFJhZmFlbCBKLiBXeXNvY2tpIDxyYWZhZWwuai53eXNvY2tpQGludGVsLmNvbT4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24u
-b3JnPg0KPiA+DQo+IA0KPiBUaGlzIHBhdGNoIGFsc28gcmVxdWlyZXMgdGhlIGZvbGxvd2luZyBw
-YXRjaC4NCj4gUGxlYXNlIGFwcGx5IHRvIHRoaXMga2VybmVsIHZlcnNpb24sIDQuOSwgNC4xNCwg
-NC4xOSwgNS42IGFuZCA1LjcuDQo+IA0KPiBGcm9tIGU1YzM5OWIwYmQ2NDkwYzEyYzBhZjJhOWVh
-YTlkN2NkODA1ZDUyYzkgTW9uIFNlcCAxNyAwMDowMDowMCAyMDAxDQo+IEZyb206IEFyZCBCaWVz
-aGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+DQo+IERhdGU6IFdlZCwgMjcgTWF5IDIwMjAgMTM6Mzc6
-MDAgKzAyMDANCg0KSSB1cGRhdGUgd2l0aCB0aGUgY29ycmVjdCBpbmZvcm1hdGlvbi4NCg0KY29t
-bWl0IGU1YzM5OWIwYmQ2NDkwYzEyYzBhZjJhOWVhYTlkN2NkODA1ZDUyYzkNCkF1dGhvcjogQXJk
-IEJpZXNoZXV2ZWwgPGFyZGJAa2VybmVsLm9yZz4NCkRhdGU6ICAgV2VkIE1heSAyNyAxMzozNzow
-MCAyMDIwICswMjAwDQoNCi4uLi4NCg0KQmVzdCByZWdhcmRzLA0KICBOb2J1aGlybw0KDQo+IA0K
-PiAgICAgQUNQSTogR0VEOiB1c2UgY29ycmVjdCB0cmlnZ2VyIHR5cGUgZmllbGQgaW4gX0V4eCAv
-IF9MeHggaGFuZGxpbmcNCj4gDQo+ICAgICBDb21taXQgZWE2ZjNhZjRjNWU2M2Y2OSAoIkFDUEk6
-IEdFRDogYWRkIHN1cHBvcnQgZm9yIF9FeHggLyBfTHh4IGhhbmRsZXINCj4gICAgIG1ldGhvZHMi
-KSBhZGRlZCBhIHJlZmVyZW5jZSB0byB0aGUgJ3RyaWdnZXJpbmcnIGZpZWxkIG9mIGVpdGhlciB0
-aGUNCj4gICAgIG5vcm1hbCBvciB0aGUgZXh0ZW5kZWQgQUNQSSBJUlEgcmVzb3VyY2Ugc3RydWN0
-LCBidXQgaW5hZHZlcnRlbnRseSB1c2VkDQo+ICAgICB0aGUgd3JvbmcgcG9pbnRlciBpbiB0aGUg
-bGF0dGVyIGNhc2UuIE5vdGUgdGhhdCBib3RoIHBvaW50ZXJzIHJlZmVyIHRvIHRoZQ0KPiAgICAg
-c2FtZSB1bmlvbiwgYW5kIHRoZSAndHJpZ2dlcmluZycgZmllbGQgYXBwZWFycyBhdCB0aGUgc2Ft
-ZSBvZmZzZXQgaW4gYm90aA0KPiAgICAgc3RydWN0IHR5cGVzLCBzbyBpdCBjdXJyZW50bHkgaGFw
-cGVucyB0byB3b3JrIGJ5IGFjY2lkZW50LiBCdXQgbGV0J3MgZml4DQo+ICAgICBpdCBub25ldGhl
-bGVzcw0KPiANCj4gICAgIEZpeGVzOiBlYTZmM2FmNGM1ZTYzZjY5ICgiQUNQSTogR0VEOiBhZGQg
-c3VwcG9ydCBmb3IgX0V4eCAvIF9MeHggaGFuZGxlciBtZXRob2RzIikNCj4gICAgIFNpZ25lZC1v
-ZmYtYnk6IEFyZCBCaWVzaGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+DQo+ICAgICBTaWduZWQtb2Zm
-LWJ5OiBSYWZhZWwgSi4gV3lzb2NraSA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+DQo+IA0K
-PiBCZXN0IHJlZ2FyZHMsDQo+ICAgTm9idWhpcm8NCj4gDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMv
-YWNwaS9ldmdlZC5jIHwgICAyMiArKysrKysrKysrKysrKysrKysrLS0tDQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gLS0tIGEv
-ZHJpdmVycy9hY3BpL2V2Z2VkLmMNCj4gPiArKysgYi9kcml2ZXJzL2FjcGkvZXZnZWQuYw0KPiA+
-IEBAIC03OSw2ICs3OSw4IEBAIHN0YXRpYyBhY3BpX3N0YXR1cyBhY3BpX2dlZF9yZXF1ZXN0X2lu
-dGUNCj4gPiAgCXN0cnVjdCByZXNvdXJjZSByOw0KPiA+ICAJc3RydWN0IGFjcGlfcmVzb3VyY2Vf
-aXJxICpwID0gJmFyZXMtPmRhdGEuaXJxOw0KPiA+ICAJc3RydWN0IGFjcGlfcmVzb3VyY2VfZXh0
-ZW5kZWRfaXJxICpwZXh0ID0gJmFyZXMtPmRhdGEuZXh0ZW5kZWRfaXJxOw0KPiA+ICsJY2hhciBl
-dl9uYW1lWzVdOw0KPiA+ICsJdTggdHJpZ2dlcjsNCj4gPg0KPiA+ICAJaWYgKGFyZXMtPnR5cGUg
-PT0gQUNQSV9SRVNPVVJDRV9UWVBFX0VORF9UQUcpDQo+ID4gIAkJcmV0dXJuIEFFX09LOw0KPiA+
-IEBAIC04NywxNCArODksMjggQEAgc3RhdGljIGFjcGlfc3RhdHVzIGFjcGlfZ2VkX3JlcXVlc3Rf
-aW50ZQ0KPiA+ICAJCWRldl9lcnIoZGV2LCAidW5hYmxlIHRvIHBhcnNlIElSUSByZXNvdXJjZVxu
-Iik7DQo+ID4gIAkJcmV0dXJuIEFFX0VSUk9SOw0KPiA+ICAJfQ0KPiA+IC0JaWYgKGFyZXMtPnR5
-cGUgPT0gQUNQSV9SRVNPVVJDRV9UWVBFX0lSUSkNCj4gPiArCWlmIChhcmVzLT50eXBlID09IEFD
-UElfUkVTT1VSQ0VfVFlQRV9JUlEpIHsNCj4gPiAgCQlnc2kgPSBwLT5pbnRlcnJ1cHRzWzBdOw0K
-PiA+IC0JZWxzZQ0KPiA+ICsJCXRyaWdnZXIgPSBwLT50cmlnZ2VyaW5nOw0KPiA+ICsJfSBlbHNl
-IHsNCj4gPiAgCQlnc2kgPSBwZXh0LT5pbnRlcnJ1cHRzWzBdOw0KPiA+ICsJCXRyaWdnZXIgPSBw
-LT50cmlnZ2VyaW5nOw0KPiA+ICsJfQ0KPiA+DQo+ID4gIAlpcnEgPSByLnN0YXJ0Ow0KPiA+DQo+
-ID4gLQlpZiAoQUNQSV9GQUlMVVJFKGFjcGlfZ2V0X2hhbmRsZShoYW5kbGUsICJfRVZUIiwgJmV2
-dF9oYW5kbGUpKSkgew0KPiA+ICsJc3dpdGNoIChnc2kpIHsNCj4gPiArCWNhc2UgMCAuLi4gMjU1
-Og0KPiA+ICsJCXNwcmludGYoZXZfbmFtZSwgIl8lYyUwMmhoWCIsDQo+ID4gKwkJCXRyaWdnZXIg
-PT0gQUNQSV9FREdFX1NFTlNJVElWRSA/ICdFJyA6ICdMJywgZ3NpKTsNCj4gPiArDQo+ID4gKwkJ
-aWYgKEFDUElfU1VDQ0VTUyhhY3BpX2dldF9oYW5kbGUoaGFuZGxlLCBldl9uYW1lLCAmZXZ0X2hh
-bmRsZSkpKQ0KPiA+ICsJCQlicmVhazsNCj4gPiArCQkvKiBmYWxsIHRocm91Z2ggKi8NCj4gPiAr
-CWRlZmF1bHQ6DQo+ID4gKwkJaWYgKEFDUElfU1VDQ0VTUyhhY3BpX2dldF9oYW5kbGUoaGFuZGxl
-LCAiX0VWVCIsICZldnRfaGFuZGxlKSkpDQo+ID4gKwkJCWJyZWFrOw0KPiA+ICsNCj4gPiAgCQlk
-ZXZfZXJyKGRldiwgImNhbm5vdCBsb2NhdGUgX0VWVCBtZXRob2RcbiIpOw0KPiA+ICAJCXJldHVy
-biBBRV9FUlJPUjsNCj4gPiAgCX0NCj4gPg0KDQo=
+Am Sonntag, 7. Juni 2020, 22:25:26 CEST schrieb Jonas Karlman:
+> Add support for displaying 10-bit 4:2:0 and 4:2:2 formats produced by the
+> Rockchip Video Decoder on RK322X, RK3288, RK3328, RK3368 and RK3399.
+> 
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
+> ---
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 27 ++++++++++++++++--
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop.h |  1 +
+>  drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 31 +++++++++++++++++----
+>  3 files changed, 51 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> index 33463b79a37b..13a0682d438b 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> @@ -261,6 +261,17 @@ static bool has_rb_swapped(uint32_t format)
+>  	}
+>  }
+>  
+> +static bool is_fmt_10(uint32_t format)
+> +{
+> +	switch (format) {
+> +	case DRM_FORMAT_NV15:
+> +	case DRM_FORMAT_NV20:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+>  static enum vop_data_format vop_convert_format(uint32_t format)
+>  {
+>  	switch (format) {
+> @@ -276,8 +287,10 @@ static enum vop_data_format vop_convert_format(uint32_t format)
+>  	case DRM_FORMAT_BGR565:
+>  		return VOP_FMT_RGB565;
+>  	case DRM_FORMAT_NV12:
+> +	case DRM_FORMAT_NV15:
+>  		return VOP_FMT_YUV420SP;
+>  	case DRM_FORMAT_NV16:
+> +	case DRM_FORMAT_NV20:
+>  		return VOP_FMT_YUV422SP;
+>  	case DRM_FORMAT_NV24:
+>  		return VOP_FMT_YUV444SP;
+> @@ -922,7 +935,12 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
+>  	dsp_sty = dest->y1 + crtc->mode.vtotal - crtc->mode.vsync_start;
+>  	dsp_st = dsp_sty << 16 | (dsp_stx & 0xffff);
+>  
+> -	offset = (src->x1 >> 16) * fb->format->cpp[0];
+> +	if (fb->format->block_w[0])
+> +		offset = (src->x1 >> 16) * fb->format->char_per_block[0] /
+> +			 fb->format->block_w[0];
+> +	else
+> +		offset = (src->x1 >> 16) * fb->format->cpp[0];
+> +
+>  	offset += (src->y1 >> 16) * fb->pitches[0];
+>  	dma_addr = rk_obj->dma_addr + offset + fb->offsets[0];
+>  
+> @@ -948,6 +966,7 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
+>  	}
+>  
+>  	VOP_WIN_SET(vop, win, format, format);
+> +	VOP_WIN_SET(vop, win, fmt_10, is_fmt_10(fb->format->format));
+>  	VOP_WIN_SET(vop, win, yrgb_vir, DIV_ROUND_UP(fb->pitches[0], 4));
+>  	VOP_WIN_SET(vop, win, yrgb_mst, dma_addr);
+>  	VOP_WIN_YUV2YUV_SET(vop, win_yuv2yuv, y2r_en, is_yuv);
+> @@ -964,7 +983,11 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
+>  		uv_obj = fb->obj[1];
+>  		rk_uv_obj = to_rockchip_obj(uv_obj);
+>  
+> -		offset = (src->x1 >> 16) * bpp / hsub;
+> +		if (fb->format->block_w[1])
+> +			offset = (src->x1 >> 16) * bpp /
+> +				 fb->format->block_w[1] / hsub;
+> +		else
+> +			offset = (src->x1 >> 16) * bpp / hsub;
+>  		offset += (src->y1 >> 16) * fb->pitches[1] / vsub;
+>  
+>  		dma_addr = rk_uv_obj->dma_addr + offset + fb->offsets[1];
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+> index d03bdb531ef2..db1138da2bd4 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
+> @@ -154,6 +154,7 @@ struct vop_win_phy {
+>  	struct vop_reg enable;
+>  	struct vop_reg gate;
+>  	struct vop_reg format;
+> +	struct vop_reg fmt_10;
+>  	struct vop_reg rb_swap;
+>  	struct vop_reg act_info;
+>  	struct vop_reg dsp_info;
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+> index 2413deded22c..503736c8b6c4 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
+> @@ -50,6 +50,22 @@ static const uint32_t formats_win_full[] = {
+>  	DRM_FORMAT_NV24,
+>  };
+>  
+> +static const uint32_t formats_win_full_10[] = {
+> +	DRM_FORMAT_XRGB8888,
+> +	DRM_FORMAT_ARGB8888,
+> +	DRM_FORMAT_XBGR8888,
+> +	DRM_FORMAT_ABGR8888,
+> +	DRM_FORMAT_RGB888,
+> +	DRM_FORMAT_BGR888,
+> +	DRM_FORMAT_RGB565,
+> +	DRM_FORMAT_BGR565,
+> +	DRM_FORMAT_NV12,
+> +	DRM_FORMAT_NV16,
+> +	DRM_FORMAT_NV24,
+> +	DRM_FORMAT_NV15,
+> +	DRM_FORMAT_NV20,
+> +};
+> +
+>  static const uint64_t format_modifiers_win_full[] = {
+>  	DRM_FORMAT_MOD_LINEAR,
+>  	DRM_FORMAT_MOD_INVALID,
+> @@ -570,11 +586,12 @@ static const struct vop_scl_regs rk3288_win_full_scl = {
+>  
+>  static const struct vop_win_phy rk3288_win01_data = {
+>  	.scl = &rk3288_win_full_scl,
+> -	.data_formats = formats_win_full,
+> -	.nformats = ARRAY_SIZE(formats_win_full),
+> +	.data_formats = formats_win_full_10,
+> +	.nformats = ARRAY_SIZE(formats_win_full_10),
+>  	.format_modifiers = format_modifiers_win_full,
+>  	.enable = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 0),
+>  	.format = VOP_REG(RK3288_WIN0_CTRL0, 0x7, 1),
+> +	.fmt_10 = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 4),
+>  	.rb_swap = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 12),
+>  	.act_info = VOP_REG(RK3288_WIN0_ACT_INFO, 0x1fff1fff, 0),
+>  	.dsp_info = VOP_REG(RK3288_WIN0_DSP_INFO, 0x0fff0fff, 0),
+> @@ -704,11 +721,12 @@ static const struct vop_intr rk3368_vop_intr = {
+>  
+>  static const struct vop_win_phy rk3368_win01_data = {
+>  	.scl = &rk3288_win_full_scl,
+> -	.data_formats = formats_win_full,
+> -	.nformats = ARRAY_SIZE(formats_win_full),
+> +	.data_formats = formats_win_full_10,
+> +	.nformats = ARRAY_SIZE(formats_win_full_10),
+>  	.format_modifiers = format_modifiers_win_full,
+>  	.enable = VOP_REG(RK3368_WIN0_CTRL0, 0x1, 0),
+>  	.format = VOP_REG(RK3368_WIN0_CTRL0, 0x7, 1),
+> +	.fmt_10 = VOP_REG(RK3368_WIN0_CTRL0, 0x1, 4),
+>  	.rb_swap = VOP_REG(RK3368_WIN0_CTRL0, 0x1, 12),
+>  	.x_mir_en = VOP_REG(RK3368_WIN0_CTRL0, 0x1, 21),
+>  	.y_mir_en = VOP_REG(RK3368_WIN0_CTRL0, 0x1, 22),
+> @@ -853,11 +871,12 @@ static const struct vop_win_yuv2yuv_data rk3399_vop_big_win_yuv2yuv_data[] = {
+>  
+>  static const struct vop_win_phy rk3399_win01_data = {
+>  	.scl = &rk3288_win_full_scl,
+> -	.data_formats = formats_win_full,
+> -	.nformats = ARRAY_SIZE(formats_win_full),
+> +	.data_formats = formats_win_full_10,
+> +	.nformats = ARRAY_SIZE(formats_win_full_10),
+>  	.format_modifiers = format_modifiers_win_full_afbc,
+>  	.enable = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 0),
+>  	.format = VOP_REG(RK3288_WIN0_CTRL0, 0x7, 1),
+> +	.fmt_10 = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 4),
+>  	.rb_swap = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 12),
+>  	.y_mir_en = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 22),
+>  	.act_info = VOP_REG(RK3288_WIN0_ACT_INFO, 0x1fff1fff, 0),
+> 
+
+
+
+
