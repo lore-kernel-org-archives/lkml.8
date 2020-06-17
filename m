@@ -2,87 +2,409 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCBDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8AC02184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592432059;
-	bh=/270UX6h2k5gxPi06yMqpjAVFVEu5xKU10OxRUn3RMw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S/JVnmLHHY0gHjaEVqKsrDpmvlTd0nGBP6+uOVoCzyi469Q47I+R/NIRh1ua6bA3A
-	 p0aJYG+CkclFcgxWzbWxsJ+EnO3eZJ0PT+U+SqZ3gaXJZ4jIWYphJAXa0yx6TqrrFy
-	 VzQaU2lmcQ8jxsRFBbRWJt5qX+hpAG3rDAYrIcGU=
+	by mail.kernel.org (Postfix) with ESMTP id A76FE21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 22:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgFQWOS (ORCPT
+        id S1727093AbgFQWOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 18:14:18 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46042 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgFQWOQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 18:14:16 -0400
-Received: by mail-io1-f68.google.com with SMTP id y5so4738827iob.12;
-        Wed, 17 Jun 2020 15:14:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DRXryslTGLkMJqQMxB14CHKUq6hyTDjdoN304utJi9Y=;
-        b=A86biCGZ7pKnsRQEEStEZdz59LmUrWX+8fti3y48EXk5NieYJgoOZwPz0+aUeZ3CI5
-         KD6NpsHz1v8LyLsGZ1N5YGJAHhiJzbUO6cnnoBHYSNOSQpNVuQCXfkzaQQjBeH5UTImY
-         p2rN+lJywhel8QhIpBNXmz0Hc37bJNPFHiLM5j4n8YrmGbir27yusQzTlnj04LLvUoXN
-         LJXcPSiYiMqct+CI0ogCwfNs709/T2Ehe7K1L9YldBL2emq9sIot8EJ8RObPlRdR7WL9
-         DZNwDlIJVnU27XPghZovC5UVMpEVyGX/bRvTHOHKdC5lIiCl7UI6Mycu9kjhcTeDtmuX
-         Nlpg==
-X-Gm-Message-State: AOAM532zcyyOqjEJ/MP0hZQ91tKgA8sb3rImTeDNXXpgEAfFScO+XMrR
-        2yegpUmVNZb0ha4PqTD65g==
-X-Google-Smtp-Source: ABdhPJz7QUutK4RE5S/N61ajEcfcIYnRVvw0B0Br3nuAULonfWSMZqjN0BZ4yZD6EFLd0+qnRQpNQQ==
-X-Received: by 2002:a05:6638:35d:: with SMTP id x29mr1434644jap.71.1592432054953;
-        Wed, 17 Jun 2020 15:14:14 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id f1sm494482ilh.17.2020.06.17.15.14.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 15:14:14 -0700 (PDT)
-Received: (nullmailer pid 2927550 invoked by uid 1000);
-        Wed, 17 Jun 2020 22:14:11 -0000
-Date:   Wed, 17 Jun 2020 16:14:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com,
-        digetx@gmail.com, sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Subject: Re: [RFC PATCH v1 10/18] dt-bindings: tegra: Document VI and CSI
- port nodes
-Message-ID: <20200617221411.GB2923473@bogus>
-References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
- <1591768960-31648-11-git-send-email-skomatineni@nvidia.com>
+        Wed, 17 Jun 2020 18:14:46 -0400
+Received: from mga12.intel.com ([192.55.52.136]:52691 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726965AbgFQWOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 18:14:45 -0400
+IronPort-SDR: kGTu37fftxt0EqZAGAzjBxGDQr94Nl2ToW0q78nqQ4rzpfCqGZ564pfh9yDc1Vj6m6ooS1aVnN
+ sdrtag2izx8w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 15:12:43 -0700
+IronPort-SDR: //cyqJ7pVmg1HZADJQurWDPDoGynxxkvxXe6MuJ5VSKO5lSlZoJJBwEFmB2j5g9xB3Nc3OfJZF
+ nMTCQcCmMVgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
+   d="scan'208";a="421288581"
+Received: from ysharon1-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.49.131])
+  by orsmga004.jf.intel.com with ESMTP; 17 Jun 2020 15:12:30 -0700
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     x86@kernel.org, linux-sgx@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, bp@alien8.de, cedric.xing@intel.com,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: [PATCH v33 15/21] x86/vdso: Add support for exception fixup in vDSO functions
+Date:   Thu, 18 Jun 2020 01:08:37 +0300
+Message-Id: <20200617220844.57423-16-jarkko.sakkinen@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591768960-31648-11-git-send-email-skomatineni@nvidia.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 11:02:32PM -0700, Sowjanya Komatineni wrote:
-> This patch documents Tegra VI and CSI port and endpoint nodes along
-> with the other required properties.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  .../display/tegra/nvidia,tegra20-host1x.txt        | 87 ++++++++++++++++++++++
->  1 file changed, 87 insertions(+)
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-This is getting converted to schema by Thierry.
+The basic concept and implementation is very similar to the kernel's
+exception fixup mechanism.  The key differences are that the kernel
+handler is hardcoded and the fixup entry addresses are relative to
+the overall table as opposed to individual entries.
 
-Rob
+Hardcoding the kernel handler avoids the need to figure out how to
+get userspace code to point at a kernel function.  Given that the
+expected usage is to propagate information to userspace, dumping all
+fault information into registers is likely the desired behavior for
+the vast majority of yet-to-be-created functions.  Use registers
+DI, SI and DX to communicate fault information, which follows Linux's
+ABI for register consumption and hopefully avoids conflict with
+hardware features that might leverage the fixup capabilities, e.g.
+register usage for SGX instructions was at least partially designed
+with calling conventions in mind.
+
+Making fixup addresses relative to the overall table allows the table
+to be stripped from the final vDSO image (it's a kernel construct)
+without complicating the offset logic, e.g. entry-relative addressing
+would also need to account for the table's location relative to the
+image.
+
+Regarding stripping the table, modify vdso2c to extract the table from
+the raw, a.k.a. unstripped, data and dump it as a standalone byte array
+in the resulting .c file.  The original base of the table, its length
+and a pointer to the byte array are captured in struct vdso_image.
+Alternatively, the table could be dumped directly into the struct,
+but because the number of entries can vary per image, that would
+require either hardcoding a max sized table into the struct definition
+or defining the table as a flexible length array.  The flexible length
+array approach has zero benefits, e.g. the base/size are still needed,
+and prevents reusing the extraction code, while hardcoding the max size
+adds ongoing maintenance just to avoid exporting the explicit size.
+
+The immediate use case is for Intel Software Guard Extensions (SGX).
+SGX introduces a new CPL3-only "enclave" mode that runs as a sort of
+black box shared object that is hosted by an untrusted "normal" CPl3
+process.
+
+Entering an enclave can only be done through SGX-specific instructions,
+EENTER and ERESUME, and is a non-trivial process.  Because of the
+complexity of transitioning to/from an enclave, the vast majority of
+enclaves are expected to utilize a library to handle the actual
+transitions.  This is roughly analogous to how e.g. libc implementations
+are used by most applications.
+
+Another crucial characteristic of SGX enclaves is that they can generate
+exceptions as part of their normal (at least as "normal" as SGX can be)
+operation that need to be handled *in* the enclave and/or are unique
+to SGX.
+
+And because they are essentially fancy shared objects, a process can
+host any number of enclaves, each of which can execute multiple threads
+simultaneously.
+
+Putting everything together, userspace enclaves will utilize a library
+that must be prepared to handle any and (almost) all exceptions any time
+at least one thread may be executing in an enclave.  Leveraging signals
+to handle the enclave exceptions is unpleasant, to put it mildly, e.g.
+the SGX library must constantly (un)register its signal handler based
+on whether or not at least one thread is executing in an enclave, and
+filter and forward exceptions that aren't related to its enclaves.  This
+becomes particularly nasty when using multiple levels of libraries that
+register signal handlers, e.g. running an enclave via cgo inside of the
+Go runtime.
+
+Enabling exception fixup in vDSO allows the kernel to provide a vDSO
+function that wraps the low-level transitions to/from the enclave, i.e.
+the EENTER and ERESUME instructions.  The vDSO function can intercept
+exceptions that would otherwise generate a signal and return the fault
+information directly to its caller, thus avoiding the need to juggle
+signal handlers.
+
+Note that unlike the kernel's _ASM_EXTABLE_HANDLE implementation, the
+'C' version of _ASM_VDSO_EXTABLE_HANDLE doesn't use a pre-compiled
+assembly macro.  Duplicating four lines of code is simpler than adding
+the necessary infrastructure to generate pre-compiled assembly and the
+intended benefit of massaging GCC's inlining algorithm is unlikely to
+realized in the vDSO any time soon, if ever.
+
+Suggested-by: Andy Lutomirski <luto@amacapital.net>
+Acked-by: Jethro Beekman <jethro@fortanix.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+---
+ arch/x86/entry/vdso/Makefile          |  6 ++--
+ arch/x86/entry/vdso/extable.c         | 46 ++++++++++++++++++++++++
+ arch/x86/entry/vdso/extable.h         | 29 ++++++++++++++++
+ arch/x86/entry/vdso/vdso-layout.lds.S |  9 ++++-
+ arch/x86/entry/vdso/vdso2c.h          | 50 ++++++++++++++++++++++++++-
+ arch/x86/include/asm/vdso.h           |  5 +++
+ 6 files changed, 140 insertions(+), 5 deletions(-)
+ create mode 100644 arch/x86/entry/vdso/extable.c
+ create mode 100644 arch/x86/entry/vdso/extable.h
+
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index 04e65f0698f6..ebe82b7aecda 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -31,7 +31,7 @@ vobjs32-y := vdso32/note.o vdso32/system_call.o vdso32/sigreturn.o
+ vobjs32-y += vdso32/vclock_gettime.o
+ 
+ # files to link into kernel
+-obj-y				+= vma.o
++obj-y				+= vma.o extable.o
+ KASAN_SANITIZE_vma.o		:= y
+ UBSAN_SANITIZE_vma.o		:= y
+ KCSAN_SANITIZE_vma.o		:= y
+@@ -130,8 +130,8 @@ $(obj)/%-x32.o: $(obj)/%.o FORCE
+ 
+ targets += vdsox32.lds $(vobjx32s-y)
+ 
+-$(obj)/%.so: OBJCOPYFLAGS := -S
+-$(obj)/%.so: $(obj)/%.so.dbg FORCE
++$(obj)/%.so: OBJCOPYFLAGS := -S --remove-section __ex_table
++$(obj)/%.so: $(obj)/%.so.dbg
+ 	$(call if_changed,objcopy)
+ 
+ $(obj)/vdsox32.so.dbg: $(obj)/vdsox32.lds $(vobjx32s) FORCE
+diff --git a/arch/x86/entry/vdso/extable.c b/arch/x86/entry/vdso/extable.c
+new file mode 100644
+index 000000000000..afcf5b65beef
+--- /dev/null
++++ b/arch/x86/entry/vdso/extable.c
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/err.h>
++#include <linux/mm.h>
++#include <asm/current.h>
++#include <asm/traps.h>
++#include <asm/vdso.h>
++
++struct vdso_exception_table_entry {
++	int insn, fixup;
++};
++
++bool fixup_vdso_exception(struct pt_regs *regs, int trapnr,
++			  unsigned long error_code, unsigned long fault_addr)
++{
++	const struct vdso_image *image = current->mm->context.vdso_image;
++	const struct vdso_exception_table_entry *extable;
++	unsigned int nr_entries, i;
++	unsigned long base;
++
++	/*
++	 * Do not attempt to fixup #DB or #BP.  It's impossible to identify
++	 * whether or not a #DB/#BP originated from within an SGX enclave and
++	 * SGX enclaves are currently the only use case for vDSO fixup.
++	 */
++	if (trapnr == X86_TRAP_DB || trapnr == X86_TRAP_BP)
++		return false;
++
++	if (!current->mm->context.vdso)
++		return false;
++
++	base =  (unsigned long)current->mm->context.vdso + image->extable_base;
++	nr_entries = image->extable_len / (sizeof(*extable));
++	extable = image->extable;
++
++	for (i = 0; i < nr_entries; i++) {
++		if (regs->ip == base + extable[i].insn) {
++			regs->ip = base + extable[i].fixup;
++			regs->di = trapnr;
++			regs->si = error_code;
++			regs->dx = fault_addr;
++			return true;
++		}
++	}
++
++	return false;
++}
+diff --git a/arch/x86/entry/vdso/extable.h b/arch/x86/entry/vdso/extable.h
+new file mode 100644
+index 000000000000..aafdac396948
+--- /dev/null
++++ b/arch/x86/entry/vdso/extable.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __VDSO_EXTABLE_H
++#define __VDSO_EXTABLE_H
++
++/*
++ * Inject exception fixup for vDSO code.  Unlike normal exception fixup,
++ * vDSO uses a dedicated handler the addresses are relative to the overall
++ * exception table, not each individual entry.
++ */
++#ifdef __ASSEMBLY__
++#define _ASM_VDSO_EXTABLE_HANDLE(from, to)	\
++	ASM_VDSO_EXTABLE_HANDLE from to
++
++.macro ASM_VDSO_EXTABLE_HANDLE from:req to:req
++	.pushsection __ex_table, "a"
++	.long (\from) - __ex_table
++	.long (\to) - __ex_table
++	.popsection
++.endm
++#else
++#define _ASM_VDSO_EXTABLE_HANDLE(from, to)	\
++	".pushsection __ex_table, \"a\"\n"      \
++	".long (" #from ") - __ex_table\n"      \
++	".long (" #to ") - __ex_table\n"        \
++	".popsection\n"
++#endif
++
++#endif /* __VDSO_EXTABLE_H */
++
+diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
+index 4d152933547d..dc8da7695859 100644
+--- a/arch/x86/entry/vdso/vdso-layout.lds.S
++++ b/arch/x86/entry/vdso/vdso-layout.lds.S
+@@ -75,11 +75,18 @@ SECTIONS
+ 	 * stuff that isn't used at runtime in between.
+ 	 */
+ 
+-	.text		: { *(.text*) }			:text	=0x90909090,
++	.text		: {
++		*(.text*)
++		*(.fixup)
++	}						:text	=0x90909090,
++
++
+ 
+ 	.altinstructions	: { *(.altinstructions) }	:text
+ 	.altinstr_replacement	: { *(.altinstr_replacement) }	:text
+ 
++	__ex_table		: { *(__ex_table) }		:text
++
+ 	/DISCARD/ : {
+ 		*(.discard)
+ 		*(.discard.*)
+diff --git a/arch/x86/entry/vdso/vdso2c.h b/arch/x86/entry/vdso/vdso2c.h
+index 6f46e11ce539..1c7cfac7e64a 100644
+--- a/arch/x86/entry/vdso/vdso2c.h
++++ b/arch/x86/entry/vdso/vdso2c.h
+@@ -5,6 +5,41 @@
+  * are built for 32-bit userspace.
+  */
+ 
++static void BITSFUNC(copy)(FILE *outfile, const unsigned char *data, size_t len)
++{
++	size_t i;
++
++	for (i = 0; i < len; i++) {
++		if (i % 10 == 0)
++			fprintf(outfile, "\n\t");
++		fprintf(outfile, "0x%02X, ", (int)(data)[i]);
++	}
++}
++
++
++/*
++ * Extract a section from the input data into a standalone blob.  Used to
++ * capture kernel-only data that needs to persist indefinitely, e.g. the
++ * exception fixup tables, but only in the kernel, i.e. the section can
++ * be stripped from the final vDSO image.
++ */
++static void BITSFUNC(extract)(const unsigned char *data, size_t data_len,
++			      FILE *outfile, ELF(Shdr) *sec, const char *name)
++{
++	unsigned long offset;
++	size_t len;
++
++	offset = (unsigned long)GET_LE(&sec->sh_offset);
++	len = (size_t)GET_LE(&sec->sh_size);
++
++	if (offset + len > data_len)
++		fail("section to extract overruns input data");
++
++	fprintf(outfile, "static const unsigned char %s[%lu] = {", name, len);
++	BITSFUNC(copy)(outfile, data + offset, len);
++	fprintf(outfile, "\n};\n\n");
++}
++
+ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 			 void *stripped_addr, size_t stripped_len,
+ 			 FILE *outfile, const char *image_name)
+@@ -15,7 +50,7 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 	ELF(Ehdr) *hdr = (ELF(Ehdr) *)raw_addr;
+ 	unsigned long i, syms_nr;
+ 	ELF(Shdr) *symtab_hdr = NULL, *strtab_hdr, *secstrings_hdr,
+-		*alt_sec = NULL;
++		*alt_sec = NULL, *extable_sec = NULL;
+ 	ELF(Dyn) *dyn = 0, *dyn_end = 0;
+ 	const char *secstrings;
+ 	INT_BITS syms[NSYMS] = {};
+@@ -77,6 +112,8 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 		if (!strcmp(secstrings + GET_LE(&sh->sh_name),
+ 			    ".altinstructions"))
+ 			alt_sec = sh;
++		if (!strcmp(secstrings + GET_LE(&sh->sh_name), "__ex_table"))
++			extable_sec = sh;
+ 	}
+ 
+ 	if (!symtab_hdr)
+@@ -155,6 +192,9 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 			(int)((unsigned char *)stripped_addr)[i]);
+ 	}
+ 	fprintf(outfile, "\n};\n\n");
++	if (extable_sec)
++		BITSFUNC(extract)(raw_addr, raw_len, outfile,
++				  extable_sec, "extable");
+ 
+ 	fprintf(outfile, "const struct vdso_image %s = {\n", image_name);
+ 	fprintf(outfile, "\t.data = raw_data,\n");
+@@ -165,6 +205,14 @@ static void BITSFUNC(go)(void *raw_addr, size_t raw_len,
+ 		fprintf(outfile, "\t.alt_len = %lu,\n",
+ 			(unsigned long)GET_LE(&alt_sec->sh_size));
+ 	}
++	if (extable_sec) {
++		fprintf(outfile, "\t.extable_base = %lu,\n",
++			(unsigned long)GET_LE(&extable_sec->sh_offset));
++		fprintf(outfile, "\t.extable_len = %lu,\n",
++			(unsigned long)GET_LE(&extable_sec->sh_size));
++		fprintf(outfile, "\t.extable = extable,\n");
++	}
++
+ 	for (i = 0; i < NSYMS; i++) {
+ 		if (required_syms[i].export && syms[i])
+ 			fprintf(outfile, "\t.sym_%s = %" PRIi64 ",\n",
+diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
+index bbcdc7b8f963..b5d23470f56b 100644
+--- a/arch/x86/include/asm/vdso.h
++++ b/arch/x86/include/asm/vdso.h
+@@ -15,6 +15,8 @@ struct vdso_image {
+ 	unsigned long size;   /* Always a multiple of PAGE_SIZE */
+ 
+ 	unsigned long alt, alt_len;
++	unsigned long extable_base, extable_len;
++	const void *extable;
+ 
+ 	long sym_vvar_start;  /* Negative offset to the vvar area */
+ 
+@@ -45,6 +47,9 @@ extern void __init init_vdso_image(const struct vdso_image *image);
+ 
+ extern int map_vdso_once(const struct vdso_image *image, unsigned long addr);
+ 
++extern bool fixup_vdso_exception(struct pt_regs *regs, int trapnr,
++				 unsigned long error_code,
++				 unsigned long fault_addr);
+ #endif /* __ASSEMBLER__ */
+ 
+ #endif /* _ASM_X86_VDSO_H */
+-- 
+2.25.1
+
