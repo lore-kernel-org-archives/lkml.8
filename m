@@ -2,130 +2,149 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C449EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBF3520CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A8C62098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:31:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YFGy50Ru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgFQM20 (ORCPT
+        id S1726491AbgFQMbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 08:28:26 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39652 "EHLO huawei.com"
+        Wed, 17 Jun 2020 08:31:42 -0400
+Received: from mail-eopbgr10079.outbound.protection.outlook.com ([40.107.1.79]:38766
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726308AbgFQM2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 08:28:25 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7EC3826641B5BDBD1DA9;
-        Wed, 17 Jun 2020 20:28:21 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 17 Jun
- 2020 20:28:16 +0800
-Subject: Re: [PATCH] f2fs: fix a race condition between f2fs_write_end_io and
- f2fs_del_fsync_node_entry
-To:     <zhaowuyun@wingtech.com>, <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <1592384659-20203-1-git-send-email-zhaowuyun@wingtech.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <86069ba3-cba3-7bc9-c90b-e931abd0dde5@huawei.com>
-Date:   Wed, 17 Jun 2020 20:28:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <1592384659-20203-1-git-send-email-zhaowuyun@wingtech.com>
-Content-Type: text/plain; charset="windows-1252"
+        id S1725860AbgFQMbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 08:31:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hgFdiNAJ9KNmUUY8iQXd76aAtM1j3f7eGJgJiK5oyWKpoGSXOSpY19N4mkuZo9IuOV0fP89yRqhbAQRP3kYejSB3GP5TsksBIjiZ8O+KeFxzeZCSBCmom89EqFO5uFPHE7nsQFO520SrmhqTF9HS86d5LZvMVJKTQI++P1PaFsD82ZAIkMER1Fc8lh8dblwgx+VEBdY+NyXzs/nN/3ObnYGuQ5dmZpp8v8dny7ZLWGPzf++2CRBHbCjeCZlRJ0CdmZ3FAReoaYdOJx5mDARnCKLORmsrXIKYVR2aopmym8rE/aOlPjkTD9NH9J8Vxmtn68gmNOZaUhqIXSKQylYJEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Li3kh4MLDOJ1/8cznkgPZE1JxjJ2O+9lKERAUqgj7k8=;
+ b=BeE8wrEQBL3KIwzWFi5noBXsRi4qYAK2ATE/mUy+kvGzW343+A0X123U5R9gXOPUbBJQ1QVRTgqNLw+XeQEiIZLsgZA3s941+UZyMSpgs/bMt7reKOmk3DO5hPnTjl0c2dstMk3frW2JwZWQnwtisXx158ZFg4yaxXe6nvEMRtTRdj+X4fNM2awSLXrgjo+f0Gq4oKuM3s0teQzffthyhoQzFNKXBicK6nW72/0+ltWfI/6aoTaPVjSbwGM7uF9VA/JxMt1cBjsSriJzBzLDbU8kSJdzAvMoDoOpw3wJBllhN9mjQwKSMp6gcELhrvel8qnvFziyMSeB64MR0Ew7Rg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Li3kh4MLDOJ1/8cznkgPZE1JxjJ2O+9lKERAUqgj7k8=;
+ b=YFGy50Rud6J8FVcvEHCY/WBTxesQaAnjapH0wbv430R4zeqhGsHFA7pPJoKd/ZCUeFoMsmO7BRl7I/a9WJ/gSxylf1SxeUC0g4U5wXFxkt0zFecqjmDZBN1VKhrDwGdbBS5TnS+Juqj9U0+5rAZ/O/AJJhkkpfk3m5v0esMd1Ec=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB3PR0402MB3818.eurprd04.prod.outlook.com (2603:10a6:8:e::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Wed, 17 Jun
+ 2020 12:31:36 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3109.021; Wed, 17 Jun 2020
+ 12:31:36 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, Abel Vesa <abel.vesa@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "info@metux.net" <info@metux.net>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Andy Duan <fugang.duan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2 1/9] clk: composite: Export clk_hw_register_composite()
+Thread-Topic: [PATCH V2 1/9] clk: composite: Export
+ clk_hw_register_composite()
+Thread-Index: AQHWPjGiF9uPvLda2kWeKUSGmuz6tKjcoooAgAAmlXA=
+Date:   Wed, 17 Jun 2020 12:31:35 +0000
+Message-ID: <DB3PR0402MB3916CD2DEFC64796E7869EEDF59A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1591687933-19495-1-git-send-email-Anson.Huang@nxp.com>
+ <1591687933-19495-2-git-send-email-Anson.Huang@nxp.com>
+ <AM6PR04MB49665E5D93C2FFA8221F8660809A0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR04MB49665E5D93C2FFA8221F8660809A0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [183.192.13.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 50167d62-306d-45c2-8bf2-08d812ba6041
+x-ms-traffictypediagnostic: DB3PR0402MB3818:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3818B5678A1D052042EDE0F3F59A0@DB3PR0402MB3818.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3383;
+x-forefront-prvs: 04371797A5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8uMBnudk81htzmBCpv0xbJzzI8VYeL0wr8Y3eMYEl+cDzZzeH3YRsNSq57e562E48vsZBVHgxwiP530WH5HygtwKe3vHxdoUUnhzCoJg9EJNSHsOV8IBkSTI6aoWGwqtCnaiefxJG/OSHX9TebzJom8ad7twOjZ9QPdXPAY9kp4WiofL9JGT67AZJYowDWStUXHaItYXeL1PftwsQiyHBEF7l80PX22uJJ4UY8FsuITTXqiSdwvZaKze5yq39GVdT8wVpeNVlkiAjspVTqJ8Iw25Yk/tviBdpri8IBaRw0blZdAPzZGzOQrnTNqF/qX4Rfys5RLVeqVHPgdC9i9knfub9BAIZ7cw2fz5H6fNU44TH8J1smtY5FV2WSCkxhlv
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(39860400002)(396003)(366004)(346002)(186003)(8936002)(5660300002)(86362001)(2906002)(71200400001)(52536014)(6506007)(26005)(33656002)(83380400001)(8676002)(4326008)(7416002)(7696005)(316002)(478600001)(9686003)(44832011)(66476007)(66556008)(66946007)(76116006)(64756008)(66446008)(110136005)(55016002)(921003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: +B8UFrimNTTbV9P6c538d3YktTI6yheOEtvwsVz+m6HJlXUVEQdu/G+Tp0RmjN4jw611HjvDz+JBjTgTvdNkmzS4wwgH6lD2DgbygMMz4pvvIPYw31Dyn7/qVN599RG5b6oe+NRskpjdjXB55DLGdZpEGvxahVSZnwFgz9TbizUZT3nbZZRcjkAtFc56941vWVRhA3/I3CVRpTvLDLMooWUeWsIM75dPH2eY8DJsMYj3zkh2DJnErr+hAAH2rBekwSjUUxJwmlg1IuoUoZhLUOXq/RyDidRo2CGKLn46hRz+3L3Bl2jlLqUQvHUf6gbcSmaLEqJ1bNSzxC7PvbY73ywFoUjrZ9ujqceMF2BhbrNGir1tCwCp/XMx8dl2/AZGDoCZBtFiXen7MLmr7KczhamLyxQI8e9EirMgqd3wyvOoQ4qJahl6nBlB8x8qzxIfLGDbC0vMTeNsptAfN527JL86kg3euU6TNRbeIbjkGtdhd1JbwaP8ujBV0GaSNfQe
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50167d62-306d-45c2-8bf2-08d812ba6041
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2020 12:31:35.9881
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nB4ctq9WoaAU3FEkRHOnD+U6RtdO/JjLvUXughHBkI3jdiEr8lDc7tIsfGZvsAkPid/2wuRRS5aCRlvwRxHS2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3818
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/6/17 17:04, zhaowuyun@wingtech.com wrote:
-> From: Wuyun Zhao <zhaowuyun@wingtech.com>
-> 
-> Under some condition, the __write_node_page will submit a page which is not
-> f2fs_in_warm_node_list and will not call f2fs_add_fsync_node_entry.
-> f2fs_gc continue to run to invoke f2fs_iget -> do_read_inode to read the same node page
-> and set code node, which make f2fs_in_warm_node_list become true,
-> that will cause f2fs_bug_on in f2fs_del_fsync_node_entry when f2fs_write_end_io called.
-Could you please add below race condition description into commit message?
-
-- f2fs_write_end_io
-					- f2fs_iget
-					 - do_read_inode
-					  - set_cold_node
-					  recover cold node flag
- - f2fs_in_warm_node_list
-  - is_cold_node
-  if node is cold, assume we have added
-  node to fsync_node_list during writepages()
- - f2fs_del_fsync_node_entry
-  - f2fs_bug_on() due to node page
-  is not in fsync_node_list
-
-BTW, I'm curious about why we can lose cold flag for non-dir inode?
-any clue to reproduce this bug (I mean losing cold flag)?
-
-> 
-> [   34.966133] Call trace:
-> [   34.969902]  f2fs_del_fsync_node_entry+0x100/0x108
-> [   34.976071]  f2fs_write_end_io+0x1e0/0x288
-> [   34.981539]  bio_endio+0x248/0x270
-> [   34.986289]  blk_update_request+0x2b0/0x4d8
-> [   34.991841]  scsi_end_request+0x40/0x440
-> [   34.997126]  scsi_io_completion+0xa4/0x748
-> [   35.002593]  scsi_finish_command+0xdc/0x110
-> [   35.008143]  scsi_softirq_done+0x118/0x150
-> [   35.013610]  blk_done_softirq+0x8c/0xe8
-> [   35.018811]  __do_softirq+0x2e8/0x578
-> [   35.023828]  irq_exit+0xfc/0x120
-> [   35.028398]  handle_IPI+0x1d8/0x330
-> [   35.033233]  gic_handle_irq+0x110/0x1d4
-> [   35.038433]  el1_irq+0xb4/0x130
-> [   35.042917]  kmem_cache_alloc+0x3f0/0x418
-> [   35.048288]  radix_tree_node_alloc+0x50/0xf8
-> [   35.053933]  __radix_tree_create+0xf8/0x188
-> [   35.059484]  __radix_tree_insert+0x3c/0x128
-> [   35.065035]  add_gc_inode+0x90/0x118
-> [   35.069967]  f2fs_gc+0x1b80/0x2d70
-> [   35.074718]  f2fs_disable_checkpoint+0x94/0x1d0
-> [   35.080621]  f2fs_fill_super+0x10c4/0x1b88
-> [   35.086088]  mount_bdev+0x194/0x1e0
-> [   35.090923]  f2fs_mount+0x40/0x50
-> [   35.095589]  mount_fs+0xb4/0x190
-> [   35.100159]  vfs_kern_mount+0x80/0x1d8
-> [   35.105260]  do_mount+0x478/0xf18
-> [   35.109926]  ksys_mount+0x90/0xd0
-> [   35.114592]  __arm64_sys_mount+0x24/0x38
-> 
-> Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
-
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-
-Thanks,
-
-> ---
->  fs/f2fs/inode.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> index be6ac33..0df5c8c 100644
-> --- a/fs/f2fs/inode.c
-> +++ b/fs/f2fs/inode.c
-> @@ -402,6 +402,7 @@ static int do_read_inode(struct inode *inode)
->  
->  	/* try to recover cold bit for non-dir inode */
->  	if (!S_ISDIR(inode->i_mode) && !is_cold_node(node_page)) {
-> +		f2fs_wait_on_page_writeback(node_page, NODE, true, true);
->  		set_cold_node(node_page, false);
->  		set_page_dirty(node_page);
->  	}
-> 
+DQoNCj4gU3ViamVjdDogUkU6IFtQQVRDSCBWMiAxLzldIGNsazogY29tcG9zaXRlOiBFeHBvcnQN
+Cj4gY2xrX2h3X3JlZ2lzdGVyX2NvbXBvc2l0ZSgpDQo+IA0KPiA+IEZyb206IEFuc29uIEh1YW5n
+IDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IFNlbnQ6IFR1ZXNkYXksIEp1bmUgOSwgMjAyMCAz
+OjMyIFBNDQo+ID4NCj4gPiBFeHBvcnQgY2xrX2h3X3JlZ2lzdGVyX2NvbXBvc2l0ZSgpIHRvIHN1
+cHBvcnQgdXNlciBidWlsdCBhcyBtb2R1bGUuDQo+ID4NCj4gPiBFUlJPUjogbW9kcG9zdDogImNs
+a19od19yZWdpc3Rlcl9jb21wb3NpdGUiDQo+ID4gW2RyaXZlcnMvY2xrL2lteC9teGMtY2xrLmtv
+XSB1bmRlZmluZWQhDQo+ID4gc2NyaXB0cy9NYWtlZmlsZS5tb2Rwb3N0OjExMTogcmVjaXBlIGZv
+ciB0YXJnZXQgJ01vZHVsZS5zeW12ZXJzJw0KPiA+IGZhaWxlZA0KPiA+IG1ha2VbMV06ICoqKiBb
+TW9kdWxlLnN5bXZlcnNdIEVycm9yIDENCj4gPiBtYWtlWzFdOiAqKiogRGVsZXRpbmcgZmlsZSAn
+TW9kdWxlLnN5bXZlcnMnDQo+ID4gTWFrZWZpbGU6MTM4NDogcmVjaXBlIGZvciB0YXJnZXQgJ21v
+ZHVsZXMnIGZhaWxlZA0KPiA+IG1ha2U6ICoqKiBbbW9kdWxlc10gRXJyb3IgMg0KPiA+DQo+ID4g
+U2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gLS0t
+DQo+ID4gTm8gY2hhbmdlLg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2Nsay9jbGstY29tcG9zaXRl
+LmMgfCAxICsNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4NCj4gPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvY2xrLWNvbXBvc2l0ZS5jIGIvZHJpdmVycy9jbGsvY2xr
+LWNvbXBvc2l0ZS5jDQo+ID4gaW5kZXggNzM3NmY1Ny4uMmRkYjU0ZiAxMDA2NDQNCj4gPiAtLS0g
+YS9kcml2ZXJzL2Nsay9jbGstY29tcG9zaXRlLmMNCj4gPiArKysgYi9kcml2ZXJzL2Nsay9jbGst
+Y29tcG9zaXRlLmMNCj4gPiBAQCAtMzI4LDYgKzMyOCw3IEBAIHN0cnVjdCBjbGtfaHcgKmNsa19o
+d19yZWdpc3Rlcl9jb21wb3NpdGUoc3RydWN0DQo+ID4gZGV2aWNlICpkZXYsIGNvbnN0IGNoYXIg
+Km5hbWUsDQo+ID4gIAkJCQkJICAgcmF0ZV9odywgcmF0ZV9vcHMsIGdhdGVfaHcsDQo+ID4gIAkJ
+CQkJICAgZ2F0ZV9vcHMsIGZsYWdzKTsNCj4gPiAgfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChj
+bGtfaHdfcmVnaXN0ZXJfY29tcG9zaXRlKTsNCj4gPg0KPiA+ICBzdHJ1Y3QgY2xrX2h3ICpjbGtf
+aHdfcmVnaXN0ZXJfY29tcG9zaXRlX3BkYXRhKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiAgCQkJ
+Y29uc3QgY2hhciAqbmFtZSwNCj4gDQo+IEkgZ3Vlc3MgeW91J2QgYmV0dGVyIGFkZCB0aGlzIG9u
+ZSBhcyB3ZWxsLg0KDQpJIGRpZCBOT1Qgc2VlIHRoaXMgaXMgdXNlZCBpbiB1cHN0cmVhbSBpLk1Y
+IGNsb2NrIGRyaXZlciwgZnJvbSBteSB0ZXN0LCBpdCBpcyBub3QgbmVjZXNzYXJ5IHNvIGZhci4N
+Cg0KQW5zb24NCg==
