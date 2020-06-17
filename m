@@ -2,394 +2,191 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B26C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD252C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68F5020786
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E6AE20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:38:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SsMdoAiJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgFQDhl (ORCPT
+        id S1726775AbgFQDil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 23:37:41 -0400
-Received: from mga05.intel.com ([192.55.52.43]:27990 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbgFQDhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 23:37:40 -0400
-IronPort-SDR: uAlw7LI3jkXAmpmsI4KCunxK1n8X0Zl6w+REE2YweiUl41jHqrUBjcJsps7aY7MWXrdKc6Iloc
- UaO/dtZP4ljQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 20:37:38 -0700
-IronPort-SDR: ZbylSxN7rm20kO/rgvbRyoWIjReIZG+eEDDr5ytXeLp+Y/00v0ZlXWrssB08zYj055XjhGDn6v
- VGfZQtAlDe2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,521,1583222400"; 
-   d="scan'208";a="273377259"
-Received: from xpf-desktop.sh.intel.com ([10.239.13.107])
-  by orsmga003.jf.intel.com with ESMTP; 16 Jun 2020 20:37:36 -0700
-From:   Pengfei Xu <pengfei.xu@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@intel.com>
-Cc:     Pengfei Xu <pengfei.xu@intel.com>, linux-kernel@vger.kernel.org,
-        Kai Svahn <kai.svahn@intel.com>
-Subject: [Linux] [PATCH] Kernel selftests: tpm2: upgrade tpm2 tests from python2 to python3
-Date:   Wed, 17 Jun 2020 11:47:31 +0800
-Message-Id: <20200617034731.3256-1-pengfei.xu@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 16 Jun 2020 23:38:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgFQDil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 23:38:41 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D15FCC061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 20:38:39 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id m2so488860otr.12
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 20:38:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=38TmDk1O1wwxXumtDkSDguPbkWoEgQBxlXN5tB3XErM=;
+        b=SsMdoAiJoMXnVfBDAJBzK8i4vsrlwdjyvj4UQggdqA3FGk4qedQf8PJbv5/gEW5r98
+         u0MxgfeQpi+wTpngK7++3uOk9j7elt+8UWF2hdfzxxuJ0EpXVMyCDK1x+7t6PLazTBef
+         1bhrMSQPEQfusinDndI9G/Ydi+n50bg6RkCDuqL2PMX1JMv6bv5bQ+toPGfmRuIJufni
+         dzWXG1CfpzpvBDtDSmnLJuEsffL2P0WZmuSuZYsliGic1LK95ywkprYDULwGvWTISTzQ
+         CGnJd7fyEzhXmQXSZCbV5//DMyhlMhwjqU1ZYDw8vMuUzQOSkq55JpHuGiXjF6kdcZ8t
+         5fdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=38TmDk1O1wwxXumtDkSDguPbkWoEgQBxlXN5tB3XErM=;
+        b=VbqOdikONdp8qlqVlu8o0M6MRg3ygn518TovQYXaJgN9vpd9bYIbciZ4TYIlEDb2hP
+         WpWLNL2D6evUZHgisHNNXqFzoXMBbXOZ/Lub4IyAXcjvYIMzq+azgz6Qk0RUVXUl+DUr
+         hNQexD6q6sc0E+9vPZwsU8uqZK6VE8HO0kpJlPId+3Vsqs22mWzhAzXADF4Pw4aEmne6
+         hFQNqmA8n5ctxfG7srfw2AF72/37BYxZYICsy+5PT1C39uvRrWxFGT9/dkAlLEOmmfkH
+         E7i9jARL+ZwrNTFsmQzd7imSTe2rA4sH87TYwe0SfzAOwuNgqOzOfEUFHYQrc00zvs/l
+         +KLA==
+X-Gm-Message-State: AOAM531g/jDoFf0z06CbfJl5SN8hIDXVkWJIInvRcJKCLoNEMLg1qLKq
+        kh4B7W4eSdSqoJoQKD+shLQ71tWrGJ2w9LGx/k2uqw==
+X-Google-Smtp-Source: ABdhPJwEliJlrsvIplobqlJKZ7S6Mjcj+jiCJ7puzAlF0ec1bFcCnb1Nqk5TRvKwqSZ/CBzLW5DixTsprZ0hyE5k3y0=
+X-Received: by 2002:a9d:4c0b:: with SMTP id l11mr5412819otf.139.1592365118848;
+ Tue, 16 Jun 2020 20:38:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200605222257.44882-1-saravanak@google.com> <20200616213953.GA2561@willie-the-truck>
+In-Reply-To: <20200616213953.GA2561@willie-the-truck>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 16 Jun 2020 20:38:03 -0700
+Message-ID: <CAGETcx9=GBDMd0BUt6rmfLt_BFmYvDthLjT1ts=E1JQJ8GT0kw@mail.gmail.com>
+Subject: Re: [PATCH v1] arm64/module: Optimize module load time by optimizing
+ PLT counting
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some Linux OS will never support python2 anymore, so upgrade tpm2 selftests
-to python3.
+On Tue, Jun 16, 2020 at 2:40 PM Will Deacon <will@kernel.org> wrote:
+>
+> On Fri, Jun 05, 2020 at 03:22:57PM -0700, Saravana Kannan wrote:
+> > When loading a module, module_frob_arch_sections() tries to figure out
+> > the number of PLTs that'll be needed to handle all the RELAs. While
+> > doing this, it tries to dedupe PLT allocations for multiple
+> > R_AARCH64_CALL26 relocations to the same symbol. It does the same for
+> > R_AARCH64_JUMP26 relocations too.
+> >
+> > To make checks for duplicates easier/faster, it sorts the relocation
+> > list by type, symbol and addend. That way, to check for a duplicate
+> > relocation, it just needs to compare with the previous entry.
+> >
+> > However, sorting the entire relocation array is unnecessary and
+> > expensive (O(n log n)) because there are a lot of other relocation types
+> > that don't need deduping or can't be deduped.
+> >
+> > So this commit partitions the array into entries that need deduping and
+> > those that don't. And then sorts just the part that needs deduping. And
+> > when CONFIG_RANDOMIZE_BASE is disabled, the sorting is skipped entirely
+> > because PLTs are not allocated for R_AARCH64_CALL26 and R_AARCH64_JUMP26
+> > if it's disabled.
+> >
+> > This gives significant reduction in module load time for modules with
+> > large number of relocations with no measurable impact on modules with a
+> > small number of relocations. In my test setup with CONFIG_RANDOMIZE_BASE
+> > enabled, the load time for one module went down from 268ms to 100ms.
+> > Another module went down from 143ms to 83ms.
+>
+> Whilst I can see that's a significant relative saving, what proportion of
+> actual boot time are we talking about here? It would be interesting to
+> know if there are bigger potential savings elsewhere.
 
-Signed-off-by: Pengfei Xu <pengfei.xu@intel.com>
----
- tools/testing/selftests/tpm2/test_smoke.sh |  4 +-
- tools/testing/selftests/tpm2/test_space.sh |  2 +-
- tools/testing/selftests/tpm2/tpm2.py       | 68 ++++++++++++++--------
- tools/testing/selftests/tpm2/tpm2_tests.py | 24 +++++---
- 4 files changed, 61 insertions(+), 37 deletions(-)
+100ms if pretty big in terms of boot time from a phone OEM
+perspective. It adds up. And for these two modules I profiled, it adds
+up to 228 ms. That's quite a lot.
 
-diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
-index 663062701d5a..d05467f6d258 100755
---- a/tools/testing/selftests/tpm2/test_smoke.sh
-+++ b/tools/testing/selftests/tpm2/test_smoke.sh
-@@ -6,8 +6,8 @@ ksft_skip=4
- 
- [ -f /dev/tpm0 ] || exit $ksft_skip
- 
--python -m unittest -v tpm2_tests.SmokeTest
--python -m unittest -v tpm2_tests.AsyncTest
-+python3 -m unittest -v tpm2_tests.SmokeTest
-+python3 -m unittest -v tpm2_tests.AsyncTest
- 
- CLEAR_CMD=$(which tpm2_clear)
- if [ -n $CLEAR_CMD ]; then
-diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
-index 36c9d030a1c6..151c64e8ee9f 100755
---- a/tools/testing/selftests/tpm2/test_space.sh
-+++ b/tools/testing/selftests/tpm2/test_space.sh
-@@ -6,4 +6,4 @@ ksft_skip=4
- 
- [ -f /dev/tpmrm0 ] || exit $ksft_skip
- 
--python -m unittest -v tpm2_tests.SpaceTest
-+python3 -m unittest -v tpm2_tests.SpaceTest
-diff --git a/tools/testing/selftests/tpm2/tpm2.py b/tools/testing/selftests/tpm2/tpm2.py
-index d0fcb66a88a6..b0ccc1499c53 100644
---- a/tools/testing/selftests/tpm2/tpm2.py
-+++ b/tools/testing/selftests/tpm2/tpm2.py
-@@ -247,14 +247,18 @@ class ProtocolError(Exception):
- class AuthCommand(object):
-     """TPMS_AUTH_COMMAND"""
- 
--    def __init__(self, session_handle=TPM2_RS_PW, nonce='', session_attributes=0,
--                 hmac=''):
-+    def __init__(self, session_handle=TPM2_RS_PW, nonce=''.encode(),
-+                 session_attributes=0, hmac=''.encode()):
-+        if not isinstance(nonce, bytes):
-+            nonce = nonce.encode()
-+        if not isinstance(hmac, bytes):
-+            hmac = hmac.encode()
-         self.session_handle = session_handle
-         self.nonce = nonce
-         self.session_attributes = session_attributes
-         self.hmac = hmac
- 
--    def __str__(self):
-+    def __bytes__(self):
-         fmt = '>I H%us B H%us' % (len(self.nonce), len(self.hmac))
-         return struct.pack(fmt, self.session_handle, len(self.nonce),
-                            self.nonce, self.session_attributes, len(self.hmac),
-@@ -268,11 +272,15 @@ class AuthCommand(object):
- class SensitiveCreate(object):
-     """TPMS_SENSITIVE_CREATE"""
- 
--    def __init__(self, user_auth='', data=''):
-+    def __init__(self, user_auth=''.encode(), data=''.encode()):
-+        if not isinstance(user_auth, bytes):
-+            user_auth = user_auth.encode()
-+        if not isinstance(data, bytes):
-+            data = data.encode()
-         self.user_auth = user_auth
-         self.data = data
- 
--    def __str__(self):
-+    def __bytes__(self):
-         fmt = '>H%us H%us' % (len(self.user_auth), len(self.data))
-         return struct.pack(fmt, len(self.user_auth), self.user_auth,
-                            len(self.data), self.data)
-@@ -296,8 +304,15 @@ class Public(object):
-         return '>HHIH%us%usH%us' % \
-             (len(self.auth_policy), len(self.parameters), len(self.unique))
- 
--    def __init__(self, object_type, name_alg, object_attributes, auth_policy='',
--                 parameters='', unique=''):
-+    def __init__(self, object_type, name_alg, object_attributes,
-+                 auth_policy=''.encode(), parameters=''.encode(),
-+                 unique=''.encode()):
-+        if not isinstance(auth_policy, bytes):
-+            auth_policy = auth_policy.encode()
-+        if not isinstance(parameters, bytes):
-+            parameters = parameters.encode()
-+        if not isinstance(unique, bytes):
-+            unique = unique.encode()
-         self.object_type = object_type
-         self.name_alg = name_alg
-         self.object_attributes = object_attributes
-@@ -305,7 +320,7 @@ class Public(object):
-         self.parameters = parameters
-         self.unique = unique
- 
--    def __str__(self):
-+    def __bytes__(self):
-         return struct.pack(self.__fmt(),
-                            self.object_type,
-                            self.name_alg,
-@@ -343,7 +358,7 @@ def get_algorithm(name):
- 
- def hex_dump(d):
-     d = [format(ord(x), '02x') for x in d]
--    d = [d[i: i + 16] for i in xrange(0, len(d), 16)]
-+    d = [d[i: i + 16] for i in range(0, len(d), 16)]
-     d = [' '.join(x) for x in d]
-     d = os.linesep.join(d)
- 
-@@ -401,7 +416,7 @@ class Client:
-         pcrsel_len = max((i >> 3) + 1, 3)
-         pcrsel = [0] * pcrsel_len
-         pcrsel[i >> 3] = 1 << (i & 7)
--        pcrsel = ''.join(map(chr, pcrsel))
-+        pcrsel = ''.join(map(chr, pcrsel)).encode()
- 
-         fmt = '>HII IHB%us' % (pcrsel_len)
-         cmd = struct.pack(fmt,
-@@ -430,6 +445,8 @@ class Client:
-         return rsp
- 
-     def extend_pcr(self, i, dig, bank_alg = TPM2_ALG_SHA1):
-+        if not isinstance(dig, bytes):
-+            dig = dig.encode()
-         ds = get_digest_size(bank_alg)
-         assert(ds == len(dig))
- 
-@@ -443,7 +460,7 @@ class Client:
-             TPM2_CC_PCR_EXTEND,
-             i,
-             len(auth_cmd),
--            str(auth_cmd),
-+            bytes(auth_cmd),
-             1, bank_alg, dig)
- 
-         self.send_cmd(cmd)
-@@ -457,7 +474,7 @@ class Client:
-                           TPM2_RH_NULL,
-                           TPM2_RH_NULL,
-                           16,
--                          '\0' * 16,
-+                          ('\0' * 16).encode(),
-                           0,
-                           session_type,
-                           TPM2_ALG_NULL,
-@@ -472,7 +489,7 @@ class Client:
- 
-         for i in pcrs:
-             pcr = self.read_pcr(i, bank_alg)
--            if pcr == None:
-+            if pcr is None:
-                 return None
-             x += pcr
- 
-@@ -489,7 +506,7 @@ class Client:
-         pcrsel = [0] * pcrsel_len
-         for i in pcrs:
-             pcrsel[i >> 3] |= 1 << (i & 7)
--        pcrsel = ''.join(map(chr, pcrsel))
-+        pcrsel = ''.join(map(chr, pcrsel)).encode()
- 
-         fmt = '>HII IH%usIHB3s' % ds
-         cmd = struct.pack(fmt,
-@@ -497,7 +514,8 @@ class Client:
-                           struct.calcsize(fmt),
-                           TPM2_CC_POLICY_PCR,
-                           handle,
--                          len(dig), str(dig),
-+                          len(dig),
-+                          bytes(dig),
-                           1,
-                           bank_alg,
-                           pcrsel_len, pcrsel)
-@@ -570,11 +588,11 @@ class Client:
-             TPM2_CC_CREATE_PRIMARY,
-             TPM2_RH_OWNER,
-             len(auth_cmd),
--            str(auth_cmd),
-+            bytes(auth_cmd),
-             len(sensitive),
--            str(sensitive),
-+            bytes(sensitive),
-             len(public),
--            str(public),
-+            bytes(public),
-             0, 0)
- 
-         return struct.unpack('>I', self.send_cmd(cmd)[10:14])[0]
-@@ -608,11 +626,11 @@ class Client:
-             TPM2_CC_CREATE,
-             parent_key,
-             len(auth_cmd),
--            str(auth_cmd),
-+            bytes(auth_cmd),
-             len(sensitive),
--            str(sensitive),
-+            bytes(sensitive),
-             len(public),
--            str(public),
-+            bytes(public),
-             0, 0)
- 
-         rsp = self.send_cmd(cmd)
-@@ -635,7 +653,7 @@ class Client:
-             TPM2_CC_LOAD,
-             parent_key,
-             len(auth_cmd),
--            str(auth_cmd),
-+            bytes(auth_cmd),
-             blob)
- 
-         data_handle = struct.unpack('>I', self.send_cmd(cmd)[10:14])[0]
-@@ -653,7 +671,7 @@ class Client:
-             TPM2_CC_UNSEAL,
-             data_handle,
-             len(auth_cmd),
--            str(auth_cmd))
-+            bytes(auth_cmd))
- 
-         try:
-             rsp = self.send_cmd(cmd)
-@@ -675,7 +693,7 @@ class Client:
-             TPM2_CC_DICTIONARY_ATTACK_LOCK_RESET,
-             TPM2_RH_LOCKOUT,
-             len(auth_cmd),
--            str(auth_cmd))
-+            bytes(auth_cmd))
- 
-         self.send_cmd(cmd)
- 
-@@ -693,7 +711,7 @@ class Client:
-         more_data, cap, cnt = struct.unpack('>BII', rsp[:9])
-         rsp = rsp[9:]
- 
--        for i in xrange(0, cnt):
-+        for i in range(0, cnt):
-             handle = struct.unpack('>I', rsp[:4])[0]
-             handles.append(handle)
-             rsp = rsp[4:]
-diff --git a/tools/testing/selftests/tpm2/tpm2_tests.py b/tools/testing/selftests/tpm2/tpm2_tests.py
-index 728be7c69b76..e134033e6f67 100644
---- a/tools/testing/selftests/tpm2/tpm2_tests.py
-+++ b/tools/testing/selftests/tpm2/tpm2_tests.py
-@@ -25,7 +25,9 @@ class SmokeTest(unittest.TestCase):
- 
-         blob = self.client.seal(self.root_key, data, auth, None)
-         result = self.client.unseal(self.root_key, blob, auth, None)
--        self.assertEqual(data, result)
-+        if not isinstance(result, bytes):
-+            result = result.encode()
-+        self.assertEqual(data.encode(), result)
- 
-     def test_seal_with_policy(self):
-         handle = self.client.start_auth_session(tpm2.TPM2_SE_TRIAL)
-@@ -51,11 +53,13 @@ class SmokeTest(unittest.TestCase):
-             self.client.policy_password(handle)
- 
-             result = self.client.unseal(self.root_key, blob, auth, handle)
-+            if not isinstance(result, bytes):
-+                result = result.encode()
-         except:
-             self.client.flush_context(handle)
-             raise
- 
--        self.assertEqual(data, result)
-+        self.assertEqual(data.encode(), result)
- 
-     def test_unseal_with_wrong_auth(self):
-         data = 'X' * 64
-@@ -65,7 +69,7 @@ class SmokeTest(unittest.TestCase):
-         blob = self.client.seal(self.root_key, data, auth, None)
-         try:
-             result = self.client.unseal(self.root_key, blob, auth[:-1] + 'B', None)
--        except ProtocolError, e:
-+        except ProtocolError as e:
-             rc = e.rc
- 
-         self.assertEqual(rc, tpm2.TPM2_RC_AUTH_FAIL)
-@@ -100,11 +104,13 @@ class SmokeTest(unittest.TestCase):
-             self.client.policy_password(handle)
- 
-             result = self.client.unseal(self.root_key, blob, auth, handle)
-+            if not isinstance(result, bytes):
-+                result = result.encode()
-         except:
-             self.client.flush_context(handle)
-             raise
- 
--        self.assertEqual(data, result)
-+        self.assertEqual(data.encode(), result)
- 
-         # Then, extend a PCR that is part of the policy and try to unseal.
-         # This should fail.
-@@ -119,7 +125,7 @@ class SmokeTest(unittest.TestCase):
-             self.client.policy_password(handle)
- 
-             result = self.client.unseal(self.root_key, blob, auth, handle)
--        except ProtocolError, e:
-+        except ProtocolError as e:
-             rc = e.rc
-             self.client.flush_context(handle)
-         except:
-@@ -136,7 +142,7 @@ class SmokeTest(unittest.TestCase):
-         rc = 0
-         try:
-             blob = self.client.seal(self.root_key, data, auth, None)
--        except ProtocolError, e:
-+        except ProtocolError as e:
-             rc = e.rc
- 
-         self.assertEqual(rc, tpm2.TPM2_RC_SIZE)
-@@ -152,7 +158,7 @@ class SmokeTest(unittest.TestCase):
-                               0xDEADBEEF)
- 
-             self.client.send_cmd(cmd)
--        except IOError, e:
-+        except IOError as e:
-             rejected = True
-         except:
-             pass
-@@ -212,7 +218,7 @@ class SmokeTest(unittest.TestCase):
-             self.client.tpm.write(cmd)
-             rsp = self.client.tpm.read()
- 
--        except IOError, e:
-+        except IOError as e:
-             # read the response
-             rsp = self.client.tpm.read()
-             rejected = True
-@@ -283,7 +289,7 @@ class SpaceTest(unittest.TestCase):
-         rc = 0
-         try:
-             space1.send_cmd(cmd)
--        except ProtocolError, e:
-+        except ProtocolError as e:
-             rc = e.rc
- 
-         self.assertEqual(rc, tpm2.TPM2_RC_COMMAND_CODE |
--- 
-2.17.1
+Also, if you look at just the kernel init time and all the module load
+time, it comes to around 2.2 seconds in the hardware I'm testing on.
+That's a 10% reduction in the "kernel init" time. Also, this 2.2
+seconds is without async probing. If we do that, this becomes and even
+larger % of the kernel init time.
 
+> > This commit also disables the sorting if CONFIG_RANDOMIZE_BASE is
+> > disabled because it looks like PLTs are not allocated for
+> > R_AARCH64_CALL26 and R_AARCH64_JUMP26 if it's disabled.
+> >
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  arch/arm64/kernel/module-plts.c | 37 ++++++++++++++++++++++++++++++++-
+> >  1 file changed, 36 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/kernel/module-plts.c b/arch/arm64/kernel/module-plts.c
+> > index 65b08a74aec6..bf5118b3b828 100644
+> > --- a/arch/arm64/kernel/module-plts.c
+> > +++ b/arch/arm64/kernel/module-plts.c
+> > @@ -253,6 +253,36 @@ static unsigned int count_plts(Elf64_Sym *syms, Elf64_Rela *rela, int num,
+> >       return ret;
+> >  }
+> >
+> > +static bool rela_needs_dedup(Elf64_Rela *rela)
+> > +{
+> > +     return ELF64_R_TYPE(rela->r_info) == R_AARCH64_JUMP26
+> > +            || ELF64_R_TYPE(rela->r_info) == R_AARCH64_CALL26;
+> > +}
+>
+> Does this handle A53 erratum 843419 correctly? I'm worried that we skip
+> the ADRP PLTs there.
+
+So this isn't really skipping any PLTs or RELAs. It's just picking the
+RELAs that can benefit from deduping using sort. Even if I delete the
+entire sort() call, all the modules load and the device seems to be
+working fine (Video streaming over Wifi works). The catch there is
+that the module takes up more memory (because the PLTs are duplicated
+often) and you might potentially lose some caching benefits for PLTs
+that have a significant amount of repetition (say, printk or something
+like that).
+
+You'll see that the duplicate_rel() call isn't even called in any code
+related to that erratum. So, I think this is safe.
+
+> > +
+> > +/* Group the CALL26/JUMP26 relas toward the beginning of the array. */
+> > +static int partition_dedup_relas(Elf64_Rela *rela, int numrels)
+> > +{
+> > +     int i = 0, j = numrels - 1;
+> > +     Elf64_Rela t;
+> > +
+> > +     while (i < j) {
+> > +             while (rela_needs_dedup(rela + i) && i < j)
+> > +                     i++;
+> > +             while (!rela_needs_dedup(rela + j) && i < j)
+> > +                     j--;
+> > +             if (i < j) {
+> > +                     t = *(rela + j);
+> > +                     *(rela + j) = *(rela + i);
+> > +                     *(rela + i) = t;
+> > +             }
+> > +     }
+>
+> This is very hard to read and I think some of the 'i < j' comparisons are
+> redundant.
+
+I have no strong opinion on how this function is written. It's a
+trivial partitioning code. I'll be happy to copy paste any clean up
+anyone wants to suggest. I think all the i < j checks are necessary
+for my current implementation.
+
+> Would it make more sense to assign a temporary rather than
+> post-inc/decrement and recheck?
+
+I'm not sure I get what you are trying to say.
+
+-Saravana
