@@ -2,52 +2,66 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 572D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73232C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30F6D206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E302206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:20:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eOiyRfkt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KHJyeHZ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgFQPT7 (ORCPT
+        id S1726978AbgFQPUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:19:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38790 "EHLO
+        Wed, 17 Jun 2020 11:20:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgFQPT7 (ORCPT
+        with ESMTP id S1726491AbgFQPUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:19:59 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 499FAC06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:19:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=9xgWNrz/EjgA9082VEmXpJMV85vsTTWYygZBrxi4Mgg=; b=eOiyRfktcbd7m8heLEaqnQxZWe
-        ZvGIuBrWN6bL9I+RWtsFHpmsMTH0r/L8xuLwvz/pstcX/6q+WwZOLJiNU2QmBTbP8bO0tvExGMvH/
-        8zwpfwve/mBAmpMmvinNHLW33N7Tc9iCOt8XWeNVv8Jr18wCSJMRrCi3lfWuQMdGXvfHoThZPAo9f
-        +1HTAiYV4wT/v9gwqanDuH35MFPNPAeVpEhMjqpGkBCKtYyyuA1sA2Wdqo0cnbVIbh/2efmdWGSim
-        sRiIb7C+4DoDSxbkj0e+yi9rqMqgPxJKe3a3gY/EMINztbFcOnvhshvy7pw3zNBufLKljSXzaEfuH
-        b/jyx2YQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlZqd-0007cZ-05; Wed, 17 Jun 2020 15:19:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 42D57301DFC;
-        Wed, 17 Jun 2020 17:19:28 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2DDD220C227A8; Wed, 17 Jun 2020 17:19:28 +0200 (CEST)
-Date:   Wed, 17 Jun 2020 17:19:28 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
+        Wed, 17 Jun 2020 11:20:07 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4909EC06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:20:07 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id f185so2429790wmf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:20:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qQ975hNqevvgdpm9NCP0Rb6tLrxCJzAg5/lXYcYf+h8=;
+        b=KHJyeHZ10s41JrpZB5Pc/j1c0X6zwewzhIcG6+slF3BXsbLNgM68q19y6KINW6c6hy
+         PCxOrAWwzVEhxy99/vLZbzGr7lFQM+sg/uZ4BV6KaCaq8NPT5UZzsLfn333MrMJBDWom
+         FhoE3j3hY/XwZLX7TMKVRyDwBCTAhD+bxH4N6thblp8zewokqlW2IFGupUCSR4HF0m4l
+         +5MG0QxTH9MdGya3P8+AfKe5RaBGHF5yqrpsgAyvykNXjWatfDv7xdSvPXqKxrEprDf2
+         XBhjLSJV3kAWfaAqmK5o8gGMeBy0WEY2c8rEhuB0GDRvmPAZc46/iEFVXhJQfpuAlxDL
+         tJbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qQ975hNqevvgdpm9NCP0Rb6tLrxCJzAg5/lXYcYf+h8=;
+        b=YUQamQKP+ikmIYpKkSS12lOUJFMg1VjA/GT1iFX6uy5OqwJKGxzYUMiu3k7HxeuQuf
+         OZlDfecVijvDmCXuDEhbEEjqzJFRcJLm7gYyme87GcoE+WPgHuNgTyfOf3eRcLYOEcst
+         N6+jYvx9iZD9X9xSbZHg32W0zvJAE6sqjwtAFi1UGknbVJTwvE90vY+kFWq/hYfPRIXT
+         /Ppa/WCxk21yf+2qtmA3Ebs1vId9cxlb8yPrm2KeIOpoY5ssZB4G6uIesJPLm7yMFk5M
+         372n0hxbgkX5CwCWozrmXnP142/Gw+8pzev0w1sYV+Sf4dM8MjWhLmB6j65uTjwSjlw7
+         HU4g==
+X-Gm-Message-State: AOAM533SZMXOFkGSIqtS9YGVecF/D1CCR7Oc/H+lyT3PIc3mUW/pcF4L
+        XuFhRBGCxqqN3Uj3z30md2CENA==
+X-Google-Smtp-Source: ABdhPJzxXi+k4xt6/8AjeT5X6w4VGU6MH0iQudesf13obIJDxGt0ltGvw7qXmHobQjAGY4eLn0WMZQ==
+X-Received: by 2002:a1c:5fd4:: with SMTP id t203mr8524133wmb.184.1592407205801;
+        Wed, 17 Jun 2020 08:20:05 -0700 (PDT)
+Received: from elver.google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id y14sm76303wma.25.2020.06.17.08.20.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 08:20:05 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 17:19:59 +0200
+From:   Marco Elver <elver@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Dmitry Vyukov <dvyukov@google.com>,
         Andrey Konovalov <andreyknvl@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -64,7 +78,7 @@ Cc:     Dmitry Vyukov <dvyukov@google.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>, ndesaulniers@google.com
 Subject: Re: [PATCH -tip v3 1/2] kcov: Make runtime functions
  noinstr-compatible
-Message-ID: <20200617151928.GA577403@hirez.programming.kicks-ass.net>
+Message-ID: <20200617151959.GB56208@elver.google.com>
 References: <CACT4Y+aKVKEp1yoBYSH0ebJxeqKj8TPR9MVtHC1Mh=jgX0ZvLw@mail.gmail.com>
  <20200612114900.GA187027@google.com>
  <CACT4Y+bBtCbEk2tg60gn5bgfBjARQFBgtqkQg8VnLLg5JwyL5g@mail.gmail.com>
@@ -79,72 +93,50 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20200617144949.GA576905@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.13.2 (2019-12-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 04:49:49PM +0200, Peter Zijlstra wrote:
-
+On Wed, Jun 17, 2020 at 04:49PM +0200, Peter Zijlstra wrote:
+> On Wed, Jun 17, 2020 at 04:32:08PM +0200, Marco Elver wrote:
+> > On Mon, Jun 15, 2020 at 05:20PM +0200, Peter Zijlstra wrote:
+> > > On Mon, Jun 15, 2020 at 05:03:27PM +0200, Peter Zijlstra wrote:
+> > > 
+> > > > Yes, I think so. x86_64 needs lib/memcpy_64.S in .noinstr.text then. For
+> > > > i386 it's an __always_inline inline-asm thing.
+> > > 
+> > > Bah, I tried writing it without memcpy, but clang inserts memcpy anyway
+> > > :/
+> > 
+> > Hmm, __builtin_memcpy() won't help either.
+> > 
+> > Turns out, Clang 11 got __builtin_memcpy_inline(): https://reviews.llvm.org/D73543
+> > 
+> > The below works, no more crash on either KASAN or KCSAN with Clang. We
+> > can test if we have it with __has_feature(__builtin_memcpy_inline)
+> > (although that's currently not working as expected, trying to fix :-/).
+> > 
+> > Would a memcpy_inline() be generally useful? It's not just Clang but
+> > also GCC that isn't entirely upfront about which memcpy is inlined and
+> > which isn't. If the compiler has __builtin_memcpy_inline(), we can use
+> > it, otherwise the arch likely has to provide the implementation.
+> > 
+> > Thoughts?
+> 
 > I had the below, except of course that yields another objtool
 > complaint, and I was still looking at that.
+> 
+> Does GCC (8, as per the new KASAN thing) have that
+> __builtin_memcpy_inline() ?
 
-This cures it.
+No, sadly it doesn't. Only Clang 11. :-/
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 5fbb90a80d239..fe0d6f1b28d7c 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2746,7 +2746,7 @@ int check(const char *_objname, bool orc)
- 
- 	INIT_LIST_HEAD(&file.insn_list);
- 	hash_init(file.insn_hash);
--	file.c_file = find_section_by_name(file.elf, ".comment");
-+	file.c_file = !vmlinux && find_section_by_name(file.elf, ".comment");
- 	file.ignore_unreachables = no_unreachable;
- 	file.hints = false;
+But using a call to __memcpy() somehow breaks with Clang+KCSAN. Yet,
+it's not the memcpy that BUGs, but once again check_preemption_disabled
+(which is noinstr!). Just adding calls anywhere here seems to results in
+unpredictable behaviour. Are we running out of stack space?
 
-
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index af75109485c26..a7d1570905727 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -690,13 +690,13 @@ struct bad_iret_stack *fixup_bad_iret(struct bad_iret_stack *s)
->  		(struct bad_iret_stack *)__this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
->  
->  	/* Copy the IRET target to the temporary storage. */
-> -	memcpy(&tmp.regs.ip, (void *)s->regs.sp, 5*8);
-> +	__memcpy(&tmp.regs.ip, (void *)s->regs.sp, 5*8);
->  
->  	/* Copy the remainder of the stack from the current stack. */
-> -	memcpy(&tmp, s, offsetof(struct bad_iret_stack, regs.ip));
-> +	__memcpy(&tmp, s, offsetof(struct bad_iret_stack, regs.ip));
->  
->  	/* Update the entry stack */
-> -	memcpy(new_stack, &tmp, sizeof(tmp));
-> +	__memcpy(new_stack, &tmp, sizeof(tmp));
->  
->  	BUG_ON(!user_mode(&new_stack->regs));
->  	return new_stack;
-> diff --git a/arch/x86/lib/memcpy_64.S b/arch/x86/lib/memcpy_64.S
-> index 56b243b14c3a2..bbcc05bcefadb 100644
-> --- a/arch/x86/lib/memcpy_64.S
-> +++ b/arch/x86/lib/memcpy_64.S
-> @@ -8,6 +8,8 @@
->  #include <asm/alternative-asm.h>
->  #include <asm/export.h>
->  
-> +.pushsection .noinstr.text, "ax"
-> +
->  /*
->   * We build a jump to memcpy_orig by default which gets NOPped out on
->   * the majority of x86 CPUs which set REP_GOOD. In addition, CPUs which
-> @@ -184,6 +186,8 @@ SYM_FUNC_START_LOCAL(memcpy_orig)
->  	retq
->  SYM_FUNC_END(memcpy_orig)
->  
-> +.popsection
-> +
->  #ifndef CONFIG_UML
->  
->  MCSAFE_TEST_CTL
+Thanks,
+-- Marco
