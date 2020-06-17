@@ -2,100 +2,86 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1632C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB700206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B1E62184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 21:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592430322;
-	bh=qnlxVinVyT7lut4ohdDMv4I7X4RFGs0jbU4lvgIPGBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ToWzLs2y1oUEMCKj7iNx/4Lsnfj9WRpc/c47jyyzweldKc1Vwdm+O9yYAdM7zqBQ0
-	 I5czoI+znnhoxB5bM5sjF5+AnNP0FP3vbt3f4TNjOc3w+dRLUtSp1Xw/6FG3bVTiur
-	 Vkn0wkwiQ5ZBdJywue7pv9TG4fIY31ClLJj6OAAc=
+	s=default; t=1592430386;
+	bh=UbiWUnRCkAGGdldl4FnZG+4FjPU7hucL7ZHTarruCGY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=XMCk50vcqLkCFN6XFk74pDNBvbDfQG7+tWcfAQSDE93qhgf4dKEpCFSM4TBOaX4M0
+	 CpRcozO2nt0NVK8qbUBRE2x6+P9g16MdKhnauyQ3ll7s6UfYDw2Bjd/WkE+o22RjPA
+	 hAdXxb9hdviu8YRV1yScKUhPelI5T8jr6f69i4aI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgFQVpV (ORCPT
+        id S1727052AbgFQVqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 17:45:21 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:36732 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgFQVpV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 17:45:21 -0400
-Received: by mail-il1-f195.google.com with SMTP id a13so3844722ilh.3;
-        Wed, 17 Jun 2020 14:45:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BjlvMBzIShcaQWGwkxItv+d8i6VW4N+SZUqHAYVlP6c=;
-        b=icg8bqXT3GZfqczOBTTP/AhCkJ00b3/DRtVKtGZ6K9SgwZZRxrqcqtwkvCfLjir4ga
-         WYd1N8VkNl7cf+7ZLV7djMYE5pfhg3hjhQMFJImkQGcWs4pYBHIEJeILJ0W7SfHJNkKz
-         wQWo0V3LTZ+rSq+b+U4oMBPbI9weuqF0JCDE9lJpeuKfXJ3ei6qk+fDE4vo8pE53Kf+i
-         +f7TK38/vUJAdT2GfSNhAFyiBFnO2JuAXhAxFB+1SxVodVuNsSJnBm2T1x65NgIeQcca
-         1tuz69EgskuYsChZ9k7A8ofFvB/GWg+cveKHgSx5FpEvNB1qAEdtC2jyXHaAy5bC9B5d
-         T8lg==
-X-Gm-Message-State: AOAM531bQDU4fqw0IX5Avhjehi5JaXFMfgIAcd5L9V0zX1j68G5dXT61
-        cUlAnaQPNErbv03oowxapw==
-X-Google-Smtp-Source: ABdhPJyvZVvGEx/9dKdHyeObJsISCkDue5qqG3CloGJl6BqE//sfd8r9FcJk5NTDFBcfxE/37cgxUg==
-X-Received: by 2002:a05:6e02:1212:: with SMTP id a18mr889632ilq.159.1592430320379;
-        Wed, 17 Jun 2020 14:45:20 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id l26sm468583ild.59.2020.06.17.14.45.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 14:45:19 -0700 (PDT)
-Received: (nullmailer pid 2881862 invoked by uid 1000);
-        Wed, 17 Jun 2020 21:45:18 -0000
-Date:   Wed, 17 Jun 2020 15:45:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     davem@davemloft.net, kuba@kernel.org, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH v2 2/2] net: phy: mscc: handle the clkout control on some
- phy variants
-Message-ID: <20200617214518.GA2870745@bogus>
-References: <20200609133140.1421109-1-heiko@sntech.de>
- <20200609133140.1421109-2-heiko@sntech.de>
+        Wed, 17 Jun 2020 17:46:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34876 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726763AbgFQVqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 17:46:24 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CFAE2070A;
+        Wed, 17 Jun 2020 21:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592430384;
+        bh=UbiWUnRCkAGGdldl4FnZG+4FjPU7hucL7ZHTarruCGY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=f87SYItZuGTNKJh02sXVIPBzJpsmgkahJtpOr0RouYOG8QfVe/sEaNYeO9Kvil2ch
+         AXSPNMa8agohwn8Iivxu5YM4ZkLZpCOoctwMJO7/b1TrKHBEh2dMFnt4xWBdEl5ndN
+         EIhPcioC/TMCpwCewUVkAQxYG9SHOmbqfINgqMas=
+Date:   Wed, 17 Jun 2020 16:51:44 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Roland Scheidegger <sroland@vmware.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] drm/vmwgfx: Use struct_size() helper
+Message-ID: <20200617215144.GA15547@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200609133140.1421109-2-heiko@sntech.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 03:31:40PM +0200, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> At least VSC8530/8531/8540/8541 contain a clock output that can emit
-> a predefined rate of 25, 50 or 125MHz.
-> 
-> This may then feed back into the network interface as source clock.
-> So follow the example the at803x already set and introduce a
-> vsc8531,clk-out-frequency property to set that output.
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> ---
-> Hi Andrew,
-> 
-> I didn't change the property yet, do you have a suggestion on
-> how to name it though? Going by the other examples in the
-> ethernet-phy.yamls, something like enet-phy-clock-out-frequency ?
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
-The correct thing to do here is make the phy a clock provider and then 
-the client side use 'assigned-clock-rate' to set the rate. That has the 
-advantage that it also describes the connection of the clock signal. You 
-might not need that for a simple case, but I could imagine needing that 
-in a more complex case.
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
 
-Rob
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/gpu/drm/vmwgfx/vmwgfx_surface.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
+index 126f93c0b0b8..3914bfee0533 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
+@@ -1969,7 +1969,7 @@ static int vmw_surface_dirty_alloc(struct vmw_resource *res)
+ 		num_mip = 1;
+ 
+ 	num_subres = num_layers * num_mip;
+-	dirty_size = sizeof(*dirty) + num_subres * sizeof(dirty->boxes[0]);
++	dirty_size = struct_size(dirty, boxes, num_subres);
+ 	acc_size = ttm_round_pot(dirty_size);
+ 	ret = ttm_mem_global_alloc(vmw_mem_glob(res->dev_priv),
+ 				   acc_size, &ctx);
+-- 
+2.27.0
+
