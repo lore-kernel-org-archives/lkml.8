@@ -2,269 +2,316 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B96521527
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2EF2158C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:21:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WkhgoKnE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vCMeek6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgFQRSO (ORCPT
+        id S1726918AbgFQRVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 13:18:14 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34902 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbgFQRSN (ORCPT
+        Wed, 17 Jun 2020 13:21:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbgFQRVC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 13:18:13 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05HHHmcZ103922;
-        Wed, 17 Jun 2020 17:17:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=9VQqTPZpR0kzjjfzvsdc4Cd29YvF0dcmDmbQ6puPfZE=;
- b=WkhgoKnEal4c9PClFZzLziJhMWKcbyIeQUkNxg7Qso6eH8O9emFNz5Yxyn80BZRLSz6q
- +YgycPyZ+vfek55tD//ARjQCfv9w2jKX0ln7oZX06tsBb7B1pfRCTtLxs4Ova+2nhHxd
- ukCTajQ4fUmm4HjcdFXx0OK1NUiK8w7UBM97bjqI8coEjQM+bMlEBIaJge8yY5pLDNwB
- gpBp8atNBQgx818Es5Bagq/yfskFLGaS/F9sHbA+G3aSiCbG7a+XkfOKaOUKBO9Mx1PO
- 1cNgg2RPzBTk2TXBhe7JW4fAiqXYeptpaqcVA5skwU61al7p/63LNcan8tHYeuDtnGyy XQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 31q65yvmda-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Jun 2020 17:17:59 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05HHDADm140357;
-        Wed, 17 Jun 2020 17:15:58 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 31q66netxq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jun 2020 17:15:58 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05HHFuNR021623;
-        Wed, 17 Jun 2020 17:15:57 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 17 Jun 2020 10:15:56 -0700
-Date:   Wed, 17 Jun 2020 20:15:50 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH v2] coresight: cti: Fix error handling in probe
-Message-ID: <20200617171549.GA9686@kadam>
+        Wed, 17 Jun 2020 13:21:02 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DC21C061755;
+        Wed, 17 Jun 2020 10:21:02 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id d5so748977vkb.12;
+        Wed, 17 Jun 2020 10:21:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=h4+kQBpcsw7AL0bB0KTWEGS4omPeS4od+scoObArtv4=;
+        b=vCMeek6pX8ft+4TPLuouef677C9IkED3okJfBDTsTF3mXlOo3gUQDSRmECG3rXUsZB
+         HbgH3gQcipcJ7YnpuwlucOaUGWP//vzqvvhLVyUZzHFbz0/lnpJGPW93xrMBYa77EU4x
+         AmoITbxLw+lP0qB6b93FriUgEEQQYXKfPtOfxv9yPqY1nDuesbC2hAGH3Uqth2tL2Aky
+         CQ/HZzZuJJbeE8IzM1lA6aqY7YmevxLKAzCXz3P9Ona/mT8iECbTB8jlypOYjAU4UpKv
+         Go0EKB0mfY8srPwTgkPwEtKZo1XqVF23JZAl3JhLMEn43LmiqRO7oFyaGRVbz8Zzdndg
+         8kwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=h4+kQBpcsw7AL0bB0KTWEGS4omPeS4od+scoObArtv4=;
+        b=I8eugcgs4wVf8yKa609+pGj0wqAEV5k5EBbIEn6SZMkDpEp7uOgaloyNokvsLKZYWb
+         jJYQFLpjVbrk3Ajudaf2NB2w+7t10I6YzQnqY2QuqZepkf2qiambjxdQb+eoy28T3ozS
+         GXRA9RO8sQ+2p3balXE+UP3uBpKRs2+1+AlJJY1kwbyOufjgb5In3GDXmnQZrMn9uHS3
+         wO+vO2KbB/e9DIdfKpWCcpdmqUikNitxpziIMSAVrZwfGcSrXAyNFjx9y1rBOIAlr73U
+         mRyv9Rz9zgPJcUZQgsL+FUvQr2TW/88TNA2WdX+IMD6egcOceVyPVbKhz8PksOuTozZ8
+         n6Fw==
+X-Gm-Message-State: AOAM533YyNm2VTINRxScr+D9edTm0VXA8QNrmcefwToN/NucyrQQdwyx
+        UZZn7UDCkHjSSBNNltOcIT6VHKTVw1lWHIT4SRHbu/UO
+X-Google-Smtp-Source: ABdhPJyvWQn1qHMUj3921o1IlM3jAx+R+tQE1S9ifDLIpYEE1AZJzTawc1EEGAr7F2AazEGxLkPITIyZjbdFGBgZvSw=
+X-Received: by 2002:a1f:e8c4:: with SMTP id f187mr419884vkh.24.1592414459859;
+ Wed, 17 Jun 2020 10:20:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJ9a7Vjn-1gvOY0h5eiffXgqiNu4rz=Z18hgV33WExGnLEV-nA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9655 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
- mlxscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006170136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9655 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- spamscore=0 clxscore=1015 mlxlogscore=999 suspectscore=0 impostorscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006170137
+References: <20200617162746.3780660-1-boris@bur.io>
+In-Reply-To: <20200617162746.3780660-1-boris@bur.io>
+Reply-To: fdmanana@gmail.com
+From:   Filipe Manana <fdmanana@gmail.com>
+Date:   Wed, 17 Jun 2020 18:20:48 +0100
+Message-ID: <CAL3q7H47P6E9zn3Zk9C2LX8-1g2QNiCGgbcRMDQDk+JBCoOhzg@mail.gmail.com>
+Subject: Re: [PATCH btrfs/for-next] btrfs: fix fatal extent_buffer readahead
+ vs releasepage race
+To:     Boris Burkov <boris@bur.io>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-team@fb.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There were a couple problems with error handling in the probe function:
-1)  If the "drvdata" allocation failed then it lead to a NULL
-    dereference.
-2)  On several error paths we decremented "nr_cti_cpu" before it was
-    incremented which lead to a reference counting bug.
+On Wed, Jun 17, 2020 at 5:32 PM Boris Burkov <boris@bur.io> wrote:
+>
+> Under somewhat convoluted conditions, it is possible to attempt to
+> release an extent_buffer that is under io, which triggers a BUG_ON in
+> btrfs_release_extent_buffer_pages.
+>
+> This relies on a few different factors. First, extent_buffer reads done
+> as readahead for searching use WAIT_NONE, so they free the local extent
+> buffer reference while the io is outstanding. However, they should still
+> be protected by TREE_REF. However, if the system is doing signficant
+> reclaim, and simultaneously heavily accessing the extent_buffers, it is
+> possible for releasepage to race with two concurrent readahead attempts
+> in a way that leaves TREE_REF unset when the readahead extent buffer is
+> released.
+>
+> Essentially, if two tasks race to allocate a new extent_buffer, but the
+> winner who attempts the first io is rebuffed by a page being locked
+> (likely by the reclaim itself) then the loser will still go ahead with
+> issuing the readahead. The loser's call to find_extent_buffer must also
+> race with the reclaim task reading the extent_buffer's refcount as 1 in
+> a way that allows the reclaim to re-clear the TREE_REF checked by
+> find_extent_buffer.
+>
+> The following represents an example execution demonstrating the race:
+>
+>             CPU0                                                         =
+CPU1                                           CPU2
+> reada_for_search                                            reada_for_sea=
+rch
+>   readahead_tree_block                                        readahead_t=
+ree_block
+>     find_create_tree_block                                      find_crea=
+te_tree_block
+>       alloc_extent_buffer                                         alloc_e=
+xtent_buffer
+>                                                                   find_ex=
+tent_buffer // not found
+>                                                                   allocat=
+es eb
+>                                                                   lock pa=
+ges
+>                                                                   associa=
+te pages to eb
+>                                                                   insert =
+eb into radix tree
+>                                                                   set TRE=
+E_REF, refs =3D=3D 2
+>                                                                   unlock =
+pages
+>                                                               read_extent=
+_buffer_pages // WAIT_NONE
+>                                                                 not uptod=
+ate (brand new eb)
+>                                                                          =
+                                   lock_page
+>                                                                 if !trylo=
+ck_page
+>                                                                   goto un=
+lock_exit // not an error
+>                                                               free_extent=
+_buffer
+>                                                                 release_e=
+xtent_buffer
+>                                                                   atomic_=
+dec_and_test refs to 1
+>         find_extent_buffer // found
+>                                                                          =
+                                   try_release_extent_buffer
+>                                                                          =
+                                     take refs_lock
+>                                                                          =
+                                     reads refs =3D=3D 1; no io
+>           atomic_inc_not_zero refs to 2
+>           mark_buffer_accessed
+>             check_buffer_tree_ref
+>               // not STALE, won't take refs_lock
+>               refs =3D=3D 2; TREE_REF set // no action
+>     read_extent_buffer_pages // WAIT_NONE
+>                                                                          =
+                                     clear TREE_REF
+>                                                                          =
+                                     release_extent_buffer
+>                                                                          =
+                                       atomic_dec_and_test refs to 1
+>                                                                          =
+                                       unlock_page
+>       still not uptodate (CPU1 read failed on trylock_page)
+>       locks pages
+>       set io_pages > 0
+>       submit io
+>       return
+>     release_extent_buffer
 
-There were also some parts of the error handling which were not bugs but
-were messy.  The error handling was confusing to read.  It printed some
-unnecessary error messages.
+Small detail, missing the call to free_extent_buffer() from
+readahead_tree_block(), which is what ends calling
+release_extent_buffer().
 
-The simplest way to fix these problems was to create a cti_pm_setup()
-function that did all the power management setup in one go.  That way
-when we call cti_pm_release() we don't have to deal with the
-complications of a partially configured power management config.
+>       dec refs to 0
+>       delete from radix tree
+>       btrfs_release_extent_buffer_pages
+>         BUG_ON(io_pages > 0)!!!
+>
+> We observe this at a very low rate in production and were also able to
+> reproduce it in a test environment by introducing some spurious delays
+> and by introducing probabilistic trylock_page failures.
+>
+> To fix it, we apply check_tree_ref at a point where it could not
+> possibly be unset by a competing task: after io_pages has been
+> incremented. There is no race in write_one_eb, that we know of, but for
+> consistency, apply it there too. All the codepaths that clear TREE_REF
+> check for io, so they would not be able to clear it after this point.
+>
+> Signed-off-by: Boris Burkov <boris@bur.io>
 
-I reversed the "if (drvdata->ctidev.cpu >= 0)" condition in cti_pm_release()
-so that it mirros the new cti_pm_setup() function.
+Btw, if you have a stack trace, it would be good to include it in the
+change log for grep-ability in case someone runs into the same
+problem.
 
-Fixes: 6a0953ce7de9 ("coresight: cti: Add CPU idle pm notifer to CTI devices")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-v2: I accidentally introduced a bug in cti_pm_release() in v1.
+> ---
+>  fs/btrfs/extent_io.c | 45 ++++++++++++++++++++++++++++----------------
+>  1 file changed, 29 insertions(+), 16 deletions(-)
+>
+> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> index c59e07360083..f6758ebbb6a2 100644
+> --- a/fs/btrfs/extent_io.c
+> +++ b/fs/btrfs/extent_io.c
+> @@ -3927,6 +3927,11 @@ static noinline_for_stack int write_one_eb(struct =
+extent_buffer *eb,
+>         clear_bit(EXTENT_BUFFER_WRITE_ERR, &eb->bflags);
+>         num_pages =3D num_extent_pages(eb);
+>         atomic_set(&eb->io_pages, num_pages);
+> +       /*
+> +        * It is possible for releasepage to clear the TREE_REF bit befor=
+e we
+> +        * set io_pages. See check_buffer_tree_ref for a more detailed co=
+mment.
+> +        */
+> +       check_buffer_tree_ref(eb);
 
- drivers/hwtracing/coresight/coresight-cti.c | 96 ++++++++++++---------
- 1 file changed, 54 insertions(+), 42 deletions(-)
+This is a whole different case from the one described in the
+changelog, as this is in the write path.
+Why do we need this one?
 
-diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
-index 40387d58c8e7..d2da5bf9f552 100644
---- a/drivers/hwtracing/coresight/coresight-cti.c
-+++ b/drivers/hwtracing/coresight/coresight-cti.c
-@@ -747,17 +747,50 @@ static int cti_dying_cpu(unsigned int cpu)
- 	return 0;
- }
- 
-+static int cti_pm_setup(struct cti_drvdata *drvdata)
-+{
-+	int ret;
-+
-+	if (drvdata->ctidev.cpu == -1)
-+		return 0;
-+
-+	if (nr_cti_cpu)
-+		goto done;
-+
-+	cpus_read_lock();
-+	ret = cpuhp_setup_state_nocalls_cpuslocked(
-+			CPUHP_AP_ARM_CORESIGHT_CTI_STARTING,
-+			"arm/coresight_cti:starting",
-+			cti_starting_cpu, cti_dying_cpu);
-+	if (ret) {
-+		cpus_read_unlock();
-+		return ret;
-+	}
-+
-+	ret = cpu_pm_register_notifier(&cti_cpu_pm_nb);
-+	cpus_read_unlock();
-+	if (ret) {
-+		cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_CTI_STARTING);
-+		return ret;
-+	}
-+
-+done:
-+	nr_cti_cpu++;
-+	cti_cpu_drvdata[drvdata->ctidev.cpu] = drvdata;
-+
-+	return 0;
-+}
-+
- /* release PM registrations */
- static void cti_pm_release(struct cti_drvdata *drvdata)
- {
--	if (drvdata->ctidev.cpu >= 0) {
--		if (--nr_cti_cpu == 0) {
--			cpu_pm_unregister_notifier(&cti_cpu_pm_nb);
-+	if (drvdata->ctidev.cpu == -1)
-+		return;
- 
--			cpuhp_remove_state_nocalls(
--				CPUHP_AP_ARM_CORESIGHT_CTI_STARTING);
--		}
--		cti_cpu_drvdata[drvdata->ctidev.cpu] = NULL;
-+	cti_cpu_drvdata[drvdata->ctidev.cpu] = NULL;
-+	if (--nr_cti_cpu == 0) {
-+		cpu_pm_unregister_notifier(&cti_cpu_pm_nb);
-+		cpuhp_remove_state_nocalls(CPUHP_AP_ARM_CORESIGHT_CTI_STARTING);
- 	}
- }
- 
-@@ -823,19 +856,14 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
- 
- 	/* driver data*/
- 	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
--	if (!drvdata) {
--		ret = -ENOMEM;
--		dev_info(dev, "%s, mem err\n", __func__);
--		goto err_out;
--	}
-+	if (!drvdata)
-+		return -ENOMEM;
- 
- 	/* Validity for the resource is already checked by the AMBA core */
- 	base = devm_ioremap_resource(dev, res);
--	if (IS_ERR(base)) {
--		ret = PTR_ERR(base);
--		dev_err(dev, "%s, remap err\n", __func__);
--		goto err_out;
--	}
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
- 	drvdata->base = base;
- 
- 	dev_set_drvdata(dev, drvdata);
-@@ -854,8 +882,7 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
- 	pdata = coresight_cti_get_platform_data(dev);
- 	if (IS_ERR(pdata)) {
- 		dev_err(dev, "coresight_cti_get_platform_data err\n");
--		ret =  PTR_ERR(pdata);
--		goto err_out;
-+		return  PTR_ERR(pdata);
- 	}
- 
- 	/* default to powered - could change on PM notifications */
-@@ -867,35 +894,20 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
- 					       drvdata->ctidev.cpu);
- 	else
- 		cti_desc.name = coresight_alloc_device_name(&cti_sys_devs, dev);
--	if (!cti_desc.name) {
--		ret = -ENOMEM;
--		goto err_out;
--	}
-+	if (!cti_desc.name)
-+		return -ENOMEM;
- 
- 	/* setup CPU power management handling for CPU bound CTI devices. */
--	if (drvdata->ctidev.cpu >= 0) {
--		cti_cpu_drvdata[drvdata->ctidev.cpu] = drvdata;
--		if (!nr_cti_cpu++) {
--			cpus_read_lock();
--			ret = cpuhp_setup_state_nocalls_cpuslocked(
--				CPUHP_AP_ARM_CORESIGHT_CTI_STARTING,
--				"arm/coresight_cti:starting",
--				cti_starting_cpu, cti_dying_cpu);
--
--			if (!ret)
--				ret = cpu_pm_register_notifier(&cti_cpu_pm_nb);
--			cpus_read_unlock();
--			if (ret)
--				goto err_out;
--		}
--	}
-+	ret = cti_pm_setup(drvdata);
-+	if (ret)
-+		return ret;
- 
- 	/* create dynamic attributes for connections */
- 	ret = cti_create_cons_sysfs(dev, drvdata);
- 	if (ret) {
- 		dev_err(dev, "%s: create dynamic sysfs entries failed\n",
- 			cti_desc.name);
--		goto err_out;
-+		goto pm_release;
- 	}
- 
- 	/* set up coresight component description */
-@@ -908,7 +920,7 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
- 	drvdata->csdev = coresight_register(&cti_desc);
- 	if (IS_ERR(drvdata->csdev)) {
- 		ret = PTR_ERR(drvdata->csdev);
--		goto err_out;
-+		goto pm_release;
- 	}
- 
- 	/* add to list of CTI devices */
-@@ -927,7 +939,7 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
- 	dev_info(&drvdata->csdev->dev, "CTI initialized\n");
- 	return 0;
- 
--err_out:
-+pm_release:
- 	cti_pm_release(drvdata);
- 	return ret;
- }
--- 
-2.27.0
+At this point the eb pages are marked with the dirty bit, and
+btree_releasepage() returns 0 if the page is dirty and we don't end up
+calling try_release_extent_buffer().
+So I don't understand why this hunk is needed, what variant of the
+problem it's trying to solve.
+
+>
+>         /* set btree blocks beyond nritems with 0 to avoid stale content.=
+ */
+>         nritems =3D btrfs_header_nritems(eb);
+> @@ -5086,25 +5091,28 @@ struct extent_buffer *alloc_dummy_extent_buffer(s=
+truct btrfs_fs_info *fs_info,
+>  static void check_buffer_tree_ref(struct extent_buffer *eb)
+>  {
+>         int refs;
+> -       /* the ref bit is tricky.  We have to make sure it is set
+> -        * if we have the buffer dirty.   Otherwise the
+> -        * code to free a buffer can end up dropping a dirty
+> -        * page
+> +       /*
+> +        * The TREE_REF bit is first set when the extent_buffer is added
+> +        * to the radix tree. It is also reset, if unset, when a new refe=
+rence
+> +        * is created by find_extent_buffer.
+>          *
+> -        * Once the ref bit is set, it won't go away while the
+> -        * buffer is dirty or in writeback, and it also won't
+> -        * go away while we have the reference count on the
+> -        * eb bumped.
+> +        * It is only cleared in two cases: freeing the last non-tree
+> +        * reference to the extent_buffer when its STALE bit is set or
+> +        * calling releasepage when the tree reference is the only refere=
+nce.
+>          *
+> -        * We can't just set the ref bit without bumping the
+> -        * ref on the eb because free_extent_buffer might
+> -        * see the ref bit and try to clear it.  If this happens
+> -        * free_extent_buffer might end up dropping our original
+> -        * ref by mistake and freeing the page before we are able
+> -        * to add one more ref.
+> +        * In both cases, care is taken to ensure that the extent_buffer'=
+s
+> +        * pages are not under io. However, releasepage can be concurrent=
+ly
+> +        * called with creating new references, which is prone to race
+> +        * conditions between the calls to check_tree_ref in those codepa=
+ths
+> +        * and clearing TREE_REF in try_release_extent_buffer.
+>          *
+> -        * So bump the ref count first, then set the bit.  If someone
+> -        * beat us to it, drop the ref we added.
+> +        * The actual lifetime of the extent_buffer in the radix tree is
+> +        * adequately protected by the refcount, but the TREE_REF bit and
+> +        * its corresponding reference are not. To protect against this
+> +        * class of races, we call check_buffer_tree_ref from the codepat=
+hs
+> +        * which trigger io after they set eb->io_pages. Note that once i=
+o is
+> +        * initiated, TREE_REF can no longer be cleared, so that is the
+> +        * moment at which any such race is best fixed.
+>          */
+>         refs =3D atomic_read(&eb->refs);
+>         if (refs >=3D 2 && test_bit(EXTENT_BUFFER_TREE_REF, &eb->bflags))
+> @@ -5555,6 +5563,11 @@ int read_extent_buffer_pages(struct extent_buffer =
+*eb, int wait, int mirror_num)
+>         clear_bit(EXTENT_BUFFER_READ_ERR, &eb->bflags);
+>         eb->read_mirror =3D 0;
+>         atomic_set(&eb->io_pages, num_reads);
+> +       /*
+> +        * It is possible for releasepage to clear the TREE_REF bit befor=
+e we
+> +        * set io_pages. See check_buffer_tree_ref for a more detailed co=
+mment.
+> +        */
+> +       check_buffer_tree_ref(eb);
+
+This is the hunk that fixes the problem described in the change log,
+and it looks good to me.
+
+Thanks.
+
+>         for (i =3D 0; i < num_pages; i++) {
+>                 page =3D eb->pages[i];
+>
+> --
+> 2.24.1
+>
+
+
+--=20
+Filipe David Manana,
+
+=E2=80=9CWhether you think you can, or you think you can't =E2=80=94 you're=
+ right.=E2=80=9D
