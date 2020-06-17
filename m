@@ -2,182 +2,411 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A15EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E5EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3264F20C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 775D820C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:09:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g15sK8fO"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="NywT8DBe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgFQRIS (ORCPT
+        id S1726927AbgFQRJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 13:08:18 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:52031 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgFQRIQ (ORCPT
+        Wed, 17 Jun 2020 13:09:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbgFQRJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 13:08:16 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200617170812epoutp034cce8f9f6ebd9146692881a5690c8d33~ZY9D0788J0080500805epoutp03F
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:08:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200617170812epoutp034cce8f9f6ebd9146692881a5690c8d33~ZY9D0788J0080500805epoutp03F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592413692;
-        bh=8uegeGaZQaXzOszaS/XO+h1hPJdbqLK/6+7/IxX9QPk=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=g15sK8fOD3w4KJNmtjBxHErPstHjksqLtMEXx0r2rSgdTYAj8rmm03bkoBSsA7ulo
-         HAiwj6oJOtvxIz07Tdj766S7zvd4GyIPtd/uq5IeCAC3xJueu0owdtw//jlC+YZazr
-         F/msr4G6Cnw3lUr4H8pR8acd+X0+XCv9NMr/udac=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20200617170811epcas5p4b3769a525def33d34ae8e9fadcf56672~ZY9DUx7FO0730007300epcas5p41;
-        Wed, 17 Jun 2020 17:08:11 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D0.A0.09703.BFD4AEE5; Thu, 18 Jun 2020 02:08:11 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200617170810epcas5p3ea5ed916115df0f5e5908ad81b2b7b53~ZY9CPAygZ1441714417epcas5p3x;
-        Wed, 17 Jun 2020 17:08:10 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200617170810epsmtrp1f826008bae2346c4157b9e7fb37b1e40~ZY9COS6mE0839208392epsmtrp1k;
-        Wed, 17 Jun 2020 17:08:10 +0000 (GMT)
-X-AuditID: b6c32a4a-4cbff700000025e7-95-5eea4dfb862e
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CA.9B.08382.AFD4AEE5; Thu, 18 Jun 2020 02:08:10 +0900 (KST)
-Received: from mshams01 (unknown [107.122.43.244]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200617170806epsmtip2e8aa64209a416af5b6427f0b90d27713~ZY8_eTan80225202252epsmtip29;
-        Wed, 17 Jun 2020 17:08:06 +0000 (GMT)
-From:   "M Tamseel Shams" <m.shams@samsung.com>
-To:     "'Robin Murphy'" <robin.murphy@arm.com>, <kgene@kernel.org>,
-        <krzk@kernel.org>, <gregkh@linuxfoundation.org>, <jslaby@suse.com>
-Cc:     <linux-samsung-soc@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <alim.akhtar@samsung.com>, <linux-arm-kernel@lists.infradead.org>
-In-Reply-To: <027c0955-3246-8c1e-4d0d-053a2a177dc6@arm.com>
-Subject: RE: [RFC PATCH] serial: samsung: Re-factors UART IRQ resource for
- various Samsung SoC
-Date:   Wed, 17 Jun 2020 22:38:01 +0530
-Message-ID: <000101d644c9$e06bba40$a1432ec0$@samsung.com>
+        Wed, 17 Jun 2020 13:09:20 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12C9C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:09:19 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id mb16so3229883ejb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:09:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=llgLOWawE+Jl+FflrGgL/bECe1/T60fUq6NAZEDO5Bg=;
+        b=NywT8DBeLXU7gPTKju8ZORuwIBRNKoEQ8CzSNeSkghidLKMXthxxsmYHxOBwBPVIym
+         ePaceGIC3QILwRqDVQawL5zeNci31L8cq7/0DXFOXqs1vhDkaievRY1qJPL6kzrYS0xM
+         M5yzVukHVoSdsB/TqcnBZWuVecoXv9o56sNoeinolplH4tmCaryja0LqTkAArsDGkdns
+         auDiS4XnaeivzMT63N84+oQwZ69UdsqMBCRYBU7ebk3dGgl2d9oLyni6iTv4bC6gfgeu
+         D7UlOF3y0mpuMcZu4lIx6yuKgFsJLYOXfTS9GGPR2l9cJqOTMNFvd8y6gMABtQGpkiSo
+         I11g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=llgLOWawE+Jl+FflrGgL/bECe1/T60fUq6NAZEDO5Bg=;
+        b=K6eWiwkrILPPQZUc8Km83lUCnt93KRHfk8d9nmLWJRRcxzbVLmLrzGR7mvKz1ZSjXx
+         B1WR0I8FbU0XxebY4W850aL6U7isbDIIEmxisT1VpoYoPTo13X/WsuVUiZ6Fk5A4392w
+         0L1hBFR5VcdJgpemHGzEThcDPFhOC5xUJJddpfNmNdKfblEY0Vyh0ViVw7gWuzE8DVRT
+         /MsMqA09coGqtINvW4rC2xYhcz06wCCH/P7f7ROzpoVfe8YYWWYLiaqTEGl/ya4JpgYO
+         aH3T+V46POSbgkwNLVy8CHm/xeeI97XFaRtXrOm7nYRkuDp6By0xTR043O+bIkKU40Co
+         NgKQ==
+X-Gm-Message-State: AOAM530rQw8n00LPy91PZ4aXotE/l/6Wc2tbbdiLp1i3yXKYwHPmaQvm
+        EJVxZ8TZkn5YV9IIRzi48m/Y3FN3dk+R6zrT
+X-Google-Smtp-Source: ABdhPJzkgIaYd7/sDY2Mg75w7NmhdszT6dg/5U2LRj3uYZ+sq/glgTTmVOwxLfj6DcbvGttpuEXDdw==
+X-Received: by 2002:a17:906:5410:: with SMTP id q16mr141105ejo.103.1592413758506;
+        Wed, 17 Jun 2020 10:09:18 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id ew9sm364844ejb.121.2020.06.17.10.09.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 10:09:17 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 19:09:15 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH] arm: dts: am335x-pocketbeagle: add gpio-line-names
+Message-ID: <20200617170915.GA4185472@x1>
+References: <20200609142504.GA2955236@x1>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQKFLyHxHkUNw6bP6pRUtYOiC7jR2QHTNgWiAZJI3VmnY///wA==
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOKsWRmVeSWpSXmKPExsWy7bCmpu5v31dxBgeu6Vo8mLeNzaJ58Xo2
-        iykbPjBZ9D9+zWxx/vwGdotNj6+xWlzeNYfNYsb5fUwWZxb3slsc/PCE1YHLY828NYwem1Z1
-        snnsn7uG3WPzknqPvi2rGD3Wb7nK4vF5k1wAexSXTUpqTmZZapG+XQJXxom7Z1kKTgtUPDum
-        2MDYytvFyMkhIWAi8bNtF0sXIxeHkMBuRolJS36xQzifGCVuP1/MCOF8Y5RYN+0bO0zLt/V7
-        mSESexkl7tz5ClX1nFHi/5ZmJpAqNgFdiUkH28CqRARaGSVaJ80ASzALrGOUaP8hAGJzClhL
-        PP+5hxHEFhZIkNi8ZwUziM0ioCrRsXsDWD2vgKXExbndbBC2oMTJmU9YIOZoSyxb+JoZ4iQF
-        iZ9Pl7GC2CICThJ7Dz5mhqgRl3h59AjU2Xs4JF7/r4SwXST2rJkOFReWeHV8C5QtJfGyvw3K
-        zpeYP28V1PwKiZUX3kDZ9hIHrswBuoEDaL6mxPpd+hCr+CR6fz9hAglLCPBKdLQJQVQrSvzf
-        3Q81UVzi3YoprBC2h0T7pamsExgVZyF5bBaSx2YheWAWwrIFjCyrGCVTC4pz01OLTQuM8lLL
-        9YoTc4tL89L1kvNzNzGC05aW1w7Ghw8+6B1iZOJgPMQowcGsJMLr/PtFnBBvSmJlVWpRfnxR
-        aU5q8SFGaQ4WJXFepR9n4oQE0hNLUrNTUwtSi2CyTBycUg1M2WmpGkJZx2QCOvMrNXO7kjyV
-        frR3H7uUdnaGSqQjWxELe97ndq1XKlsqOH/vUXi+9cKdgqSEr3ONNP97aa+7X1hU2+q9INVm
-        Qq+y0YPDHxL+aP+dIWe5t8DF0H+/mUh13qZv7SekfiqovXl+P6uQyej3l/9Bi6ZJ1D4wMKyY
-        nNbsuvbo19TvYb4bnJZwrndRj2Hi/npKoKXEOoHtm8Lz7x9eHSuwt5/CpZzymyOi26pnyeuZ
-        u471Lmaqv5MmxDmx5LbwAZO3KrMqD77k37LZY8b5yk8nJj+fFJTyeXKwTQqX5JfD/zcHb9vQ
-        scBF938y12Fh35XJ5TXxfIyhue/4XI8cjmjxjbkS/j301g0lluKMREMt5qLiRABPF+rlygMA
-        AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsWy7bCSvO4v31dxBocvylk8mLeNzaJ58Xo2
-        iykbPjBZ9D9+zWxx/vwGdotNj6+xWlzeNYfNYsb5fUwWZxb3slsc/PCE1YHLY828NYwem1Z1
-        snnsn7uG3WPzknqPvi2rGD3Wb7nK4vF5k1wAexSXTUpqTmZZapG+XQJXxsRt+1gKZgpUPJzy
-        nrmB8TJPFyMnh4SAicS39XuZuxi5OIQEdjNKLJ5ylQkiIS4x7dd+RghbWGLlv+fsILaQwFNG
-        iZOHxEFsNgFdiUkH28CaRQS6GSWe/tzNAuIwC2xilPjz7i4TxNidjBIPO5exgrRwClhLPP+5
-        B2yssECcxIWdfSwgNouAqkTH7g1gq3kFLCUuzu1mg7AFJU7OfAJWwyygLfH05lM4e9nC18wQ
-        5ylI/HwKMV9EwEli78HHzBA14hIvjx5hn8AoPAvJqFlIRs1CMmoWkpYFjCyrGCVTC4pz03OL
-        DQsM81LL9YoTc4tL89L1kvNzNzGCY1BLcwfj9lUf9A4xMnEwHmKU4GBWEuF1/v0iTog3JbGy
-        KrUoP76oNCe1+BCjNAeLkjjvjcKFcUIC6YklqdmpqQWpRTBZJg5OqQamap/gE6w8VVVHpeR9
-        xeaeve2+U/bRqdveAZ1fbz9ak8g4o1FWe/7vX9XsFwJjvEzmcHJ6qB6Y6CnydMWRztNMDzef
-        scg4KW0tZWarKdeQ9vVcx9+Db5ckfrfJneuxSrrXa9m7xXmxFj/9Q4I/Tf+VtsWoUpq99mvp
-        amlr42Dt/Ud/KOvorJj2+kvF6W61p618XBsTgoutX7ltuVm/1qXr8FaWgIwplyffKUy9ZKpi
-        7Vj33XntDM3Ll/Lzdh9wDvkgYLdVumxfmFaKDWP28vPSTazq4lO/3VRlq/zV/6t59ZXuTxYf
-        S9+c3KNSUyQm9OWx5bbXgkq8u+w/XTOLnXBe/Lalwr1Gt8vxB7tf7F6pxFKckWioxVxUnAgA
-        UA4NIjADAAA=
-X-CMS-MailID: 20200617170810epcas5p3ea5ed916115df0f5e5908ad81b2b7b53
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200615124355epcas5p446ae2f1b63331ef87334cd7d696c3c43
-References: <CGME20200615124355epcas5p446ae2f1b63331ef87334cd7d696c3c43@epcas5p4.samsung.com>
-        <20200615122609.71884-1-m.shams@samsung.com>
-        <027c0955-3246-8c1e-4d0d-053a2a177dc6@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200609142504.GA2955236@x1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+On Tue, Jun 09, 2020 at 04:25:04PM +0200, Drew Fustini wrote:
+> The BeagleBoard.org PocketBeagle has P1 and P2 headers [0] which expose
+> many of the TI AM3358 SoC balls to stacking expansion boards called 
+> "capes", or to other external connections like jumper wires connected
+> to a breadboard.
+> 
+> Note: the AM3358 die is actually embedded inside of the OSD335x-SM
+> System-in-Package (SiP) [1] but that is irrelevant to the gpio driver.
+> 
+> Many of the P1 and P2 header pins can muxed to a GPIO line.  The
+> gpio-line-names describe which P1 or P2 pin that line goes to and the
+> default mux for that P1 or P2 pin if it is not GPIO.
+>     
+> Some GPIO lines are named "[NC]" as the corresponding balls are not
+> routed to anything on the PCB.
+> 
+> The goal for these names is to make it easier for a user viewing the
+> output of gpioinfo to determine which P1 or P2 pin is connected to a
+> GPIO line.  The output of gpioinfo on a PocketBeagle would be:
+> 
+> gpiochip0 - 32 lines:
+> 	line   0:       "[NC]"       unused   input  active-high 
+> 	line   1:       "[NC]"       unused   input  active-high 
+> 	line   2: "P1.08 [SPI0_CLK]" unused input active-high 
+> 	line   3: "P1.10 [SPI0_MISO]" unused input active-high 
+> 	line   4: "P1.12 [SPI0_MOSI]" unused input active-high 
+> 	line   5: "P1.06 [SPI0_CS]" unused input active-high 
+> 	line   6:  "[MMC0_CD]"         "cd"   input   active-low [used]
+> 	line   7: "P2.29 [SPI1_CLK]" unused input active-high 
+> 	line   8:       "[NC]"       unused   input  active-high 
+> 	line   9:       "[NC]"       unused   input  active-high 
+> 	line  10:       "[NC]"       unused   input  active-high 
+> 	line  11:       "[NC]"       unused   input  active-high 
+> 	line  12: "P1.26 [I2C2_SDA]" unused input active-high 
+> 	line  13: "P1.28 [I2C2_SCL]" unused input active-high 
+> 	line  14: "P2.11 [I2C1_SDA]" unused input active-high 
+> 	line  15: "P2.09 [I2C1_SCL]" unused input active-high 
+> 	line  16:       "[NC]"       unused   input  active-high 
+> 	line  17:       "[NC]"       unused   input  active-high 
+> 	line  18:       "[NC]"       unused   input  active-high 
+> 	line  19: "P2.31 [SPI1_CS]" unused input active-high 
+> 	line  20: "P1.20 [PRU0.16]" unused input active-high 
+> 	line  21:       "[NC]"       unused   input  active-high 
+> 	line  22:       "[NC]"       unused   input  active-high 
+> 	line  23:      "P2.03"       unused   input  active-high 
+> 	line  24:       "[NC]"       unused   input  active-high 
+> 	line  25:       "[NC]"       unused   input  active-high 
+> 	line  26:      "P1.34"       unused   input  active-high 
+> 	line  27:      "P2.19"       unused   input  active-high 
+> 	line  28:       "[NC]"       unused   input  active-high 
+> 	line  29:       "[NC]"       unused   input  active-high 
+> 	line  30: "P2.05 [UART4_RX]" unused input active-high 
+> 	line  31: "P2.07 [UART4_TX]" unused input active-high 
+> gpiochip1 - 32 lines:
+> 	line   0:       "[NC]"       unused   input  active-high 
+> 	line   1:       "[NC]"       unused   input  active-high 
+> 	line   2:       "[NC]"       unused   input  active-high 
+> 	line   3:       "[NC]"       unused   input  active-high 
+> 	line   4:       "[NC]"       unused   input  active-high 
+> 	line   5:       "[NC]"       unused   input  active-high 
+> 	line   6: "P1.06 [SPI0_CS]" unused input active-high 
+> 	line   7: "P1.06 [SPI0_CS]" unused input active-high 
+> 	line   8: "P2.27 [SPI1_MISO]" unused input active-high 
+> 	line   9: "P2.25 [SPI1_MOSI]" unused input active-high 
+> 	line  10: "P1.32 [UART0_RX]" unused input active-high 
+> 	line  11: "P1.30 [UART0_TX]" unused input active-high 
+> 	line  12:      "P2.24"       unused   input  active-high 
+> 	line  13:      "P2.33"       unused   input  active-high 
+> 	line  14:      "P2.22"       unused   input  active-high 
+> 	line  15:      "P2.18"       unused   input  active-high 
+> 	line  16:       "[NC]"       unused   input  active-high 
+> 	line  17:       "[NC]"       unused   input  active-high 
+> 	line  18: "P2.01 [PWM1A]" unused input active-high 
+> 	line  19:       "[NC]"       unused   input  active-high 
+> 	line  20:      "P2.10"       unused   input  active-high 
+> 	line  21: "[user led 0]" "beaglebone:green:usr0" output active-high [used]
+> 	line  22: "[user led 1]" "beaglebone:green:usr1" output active-high [used]
+> 	line  23: "[user led 2]" "beaglebone:green:usr2" output active-high [used]
+> 	line  24: "[user led 3]" "beaglebone:green:usr3" output active-high [used]
+> 	line  25:      "P2.06"       unused   input  active-high 
+> 	line  26:      "P2.04"       unused   input  active-high 
+> 	line  27:      "P2.02"       unused   input  active-high 
+> 	line  28:      "P2.08"       unused   input  active-high 
+> 	line  29:       "[NC]"       unused   input  active-high 
+> 	line  30:       "[NC]"       unused   input  active-high 
+> 	line  31:       "[NC]"       unused   input  active-high 
+> gpiochip2 - 32 lines:
+> 	line   0:       "[NC]"       unused   input  active-high 
+> 	line   1:      "P2.17"       unused   input  active-high 
+> 	line   2:       "[NC]"       unused   input  active-high 
+> 	line   3:       "[NC]"       unused   input  active-high 
+> 	line   4:       "[NC]"       unused   input  active-high 
+> 	line   5: "[EEPROM_WP]" unused input active-high 
+> 	line   6:       "[NC]"       unused   input  active-high 
+> 	line   7:       "[NC]"       unused   input  active-high 
+> 	line   8:       "[NC]"       unused   input  active-high 
+> 	line   9:       "[NC]"       unused   input  active-high 
+> 	line  10:       "[NC]"       unused   input  active-high 
+> 	line  11:       "[NC]"       unused   input  active-high 
+> 	line  12:       "[NC]"       unused   input  active-high 
+> 	line  13:       "[NC]"       unused   input  active-high 
+> 	line  14:       "[NC]"       unused   input  active-high 
+> 	line  15:       "[NC]"       unused   input  active-high 
+> 	line  16:       "[NC]"       unused   input  active-high 
+> 	line  17:       "[NC]"       unused   input  active-high 
+> 	line  18:       "[NC]"       unused   input  active-high 
+> 	line  19:       "[NC]"       unused   input  active-high 
+> 	line  20:       "[NC]"       unused   input  active-high 
+> 	line  21:       "[NC]"       unused   input  active-high 
+> 	line  22: "P2.35 [AIN5]" unused input active-high 
+> 	line  23: "P1.02 [AIN6]" unused input active-high 
+> 	line  24: "P1.35 [PRU1.10]" unused input active-high 
+> 	line  25: "P1.04 [PRU1.11]" unused input active-high 
+> 	line  26: "[MMC0_DAT3]" unused input active-high 
+> 	line  27: "[MMC0_DAT2]" unused input active-high 
+> 	line  28: "[MMC0_DAT1]" unused input active-high 
+> 	line  29: "[MMC0_DAT0]" unused input active-high 
+> 	line  30: "[MMC0_CLK]"       unused   input  active-high 
+> 	line  31: "[MMC0_CMD]"       unused   input  active-high 
+> gpiochip3 - 32 lines:
+> 	line   0:       "[NC]"       unused   input  active-high 
+> 	line   1:       "[NC]"       unused   input  active-high 
+> 	line   2:       "[NC]"       unused   input  active-high 
+> 	line   3:       "[NC]"       unused   input  active-high 
+> 	line   4:       "[NC]"       unused   input  active-high 
+> 	line   5: "[I2C0_SDA]"       unused   input  active-high 
+> 	line   6: "[I2C0_SCL]"       unused   input  active-high 
+> 	line   7:     "[JTAG]"       unused   input  active-high 
+> 	line   8:     "[JTAG]"       unused   input  active-high 
+> 	line   9:       "[NC]"       unused   input  active-high 
+> 	line  10:       "[NC]"       unused   input  active-high 
+> 	line  11:       "[NC]"       unused   input  active-high 
+> 	line  12:       "[NC]"       unused   input  active-high 
+> 	line  13: "P1.03 [USB1]" unused input active-high 
+> 	line  14: "P1.36 [PWM0A]" unused input active-high 
+> 	line  15: "P1.33 [PRU0.1]" unused input active-high 
+> 	line  16: "P2.32 [PRU0.2]" unused input active-high 
+> 	line  17: "P2.30 [PRU0.3]" unused input active-high 
+> 	line  18: "P1.31 [PRU0.4]" unused input active-high 
+> 	line  19: "P2.34 [PRU0.5]" unused input active-high 
+> 	line  20: "P2.28 [PRU0.6]" unused input active-high 
+> 	line  21: "P1.29 [PRU0.7]" unused input active-high 
+> 	line  22:       "[NC]"       unused   input  active-high 
+> 	line  23:       "[NC]"       unused   input  active-high 
+> 	line  24:       "[NC]"       unused   input  active-high 
+> 	line  25:       "[NC]"       unused   input  active-high 
+> 	line  26:       "[NC]"       unused   input  active-high 
+> 	line  27:       "[NC]"       unused   input  active-high 
+> 	line  28:       "[NC]"       unused   input  active-high 
+> 	line  29:       "[NC]"       unused   input  active-high 
+> 	line  30:       "[NC]"       unused   input  active-high 
+> 	line  31:       "[NC]"       unused   input  active-high 
+> 
+> [0] https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#71_Expansion_Header_Connectors
+> [1] https://octavosystems.com/app_notes/osd335x-family-pin-assignments/
+> 
+> Reviewed-by: Jason Kridner <jason@beagleboard.org>
+> Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> ---
+>  arch/arm/boot/dts/am335x-pocketbeagle.dts | 144 ++++++++++++++++++++++
+>  1 file changed, 144 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+> index 4da719098028..60e5fa2b9156 100644
+> --- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
+> +++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+> @@ -59,6 +59,150 @@ vmmcsd_fixed: fixedregulator0 {
+>  	};
+>  };
+>  
+> +&gpio0 {
+> +	gpio-line-names =
+> +		"[NC]",
+> +		"[NC]",
+> +		"P1.08 [SPI0_CLK]",
+> +		"P1.10 [SPI0_MISO]",
+> +		"P1.12 [SPI0_MOSI]",
+> +		"P1.06 [SPI0_CS]",
+> +		"[MMC0_CD]",
+> +		"P2.29 [SPI1_CLK]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"P1.26 [I2C2_SDA]",
+> +		"P1.28 [I2C2_SCL]",
+> +		"P2.11 [I2C1_SDA]",
+> +		"P2.09 [I2C1_SCL]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"P2.31 [SPI1_CS]",
+> +		"P1.20 [PRU0.16]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"P2.03",
+> +		"[NC]",
+> +		"[NC]",
+> +		"P1.34",
+> +		"P2.19",
+> +		"[NC]",
+> +		"[NC]",
+> +		"P2.05 [UART4_RX]",
+> +		"P2.07 [UART4_TX]";
+> +};
+> +
+> +&gpio1 {
+> +	gpio-line-names =
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"P1.06 [SPI0_CS]",
+> +		"P1.06 [SPI0_CS]",
+> +		"P2.27 [SPI1_MISO]",
+> +		"P2.25 [SPI1_MOSI]",
+> +		"P1.32 [UART0_RX]",
+> +		"P1.30 [UART0_TX]",
+> +		"P2.24",
+> +		"P2.33",
+> +		"P2.22",
+> +		"P2.18",
+> +		"[NC]",
+> +		"[NC]",
+> +		"P2.01 [PWM1A]",
+> +		"[NC]",
+> +		"P2.10",
+> +		"[user led 0]",
+> +		"[user led 1]",
+> +		"[user led 2]",
+> +		"[user led 3]",
+> +		"P2.06",
+> +		"P2.04",
+> +		"P2.02",
+> +		"P2.08",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]";
+> +};
+> +
+> +&gpio2 {
+> +	gpio-line-names =
+> +		"[NC]",
+> +		"P2.17",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[EEPROM_WP]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"P2.35 [AIN5]",
+> +		"P1.02 [AIN6]",
+> +		"P1.35 [PRU1.10]",
+> +		"P1.04 [PRU1.11]",
+> +		"[MMC0_DAT3]",
+> +		"[MMC0_DAT2]",
+> +		"[MMC0_DAT1]",
+> +		"[MMC0_DAT0]",
+> +		"[MMC0_CLK]",
+> +		"[MMC0_CMD]";
+> +};
+> +
+> +&gpio3 {
+> +	gpio-line-names =
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[I2C0_SDA]",
+> +		"[I2C0_SCL]",
+> +		"[JTAG]",
+> +		"[JTAG]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"P1.03 [USB1]",
+> +		"P1.36 [PWM0A]",
+> +		"P1.33 [PRU0.1]",
+> +		"P2.32 [PRU0.2]",
+> +		"P2.30 [PRU0.3]",
+> +		"P1.31 [PRU0.4]",
+> +		"P2.34 [PRU0.5]",
+> +		"P2.28 [PRU0.6]",
+> +		"P1.29 [PRU0.7]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]",
+> +		"[NC]";
+> +};
+> +
+>  &am33xx_pinmux {
+>  	i2c2_pins: pinmux-i2c2-pins {
+>  		pinctrl-single,pins = <
+> -- 
+> 2.25.1
+> 
 
-> -----Original Message-----
-> From: Robin Murphy <robin.murphy=40arm.com>
-> Sent: Monday, June 15, 2020 6:43 PM
-> To: Tamseel Shams <m.shams=40samsung.com>; kgene=40kernel.org;
-> krzk=40kernel.org; gregkh=40linuxfoundation.org; jslaby=40suse.com
-> Cc: linux-samsung-soc=40vger.kernel.org; linux-serial=40vger.kernel.org; =
-linux-
-> kernel=40vger.kernel.org; alim.akhtar=40samsung.com; linux-arm-
-> kernel=40lists.infradead.org
-> Subject: Re: =5BRFC PATCH=5D serial: samsung: Re-factors UART IRQ resourc=
-e for
-> various Samsung SoC
->=20
-> On 2020-06-15 13:26, Tamseel Shams wrote:
-> >   	else =7B
-> >   		port->irq =3D ret;
-> >   		ourport->rx_irq =3D ret;
-> > -		ourport->tx_irq =3D ret + 1;
-> > +		if (ourport->info->irq_cnt =3D=3D 1)
-> > +			ourport->tx_irq =3D ret;
-> > +		else
-> > +			ourport->tx_irq =3D ret + 1;
-> >   	=7D
-> >
-> > -	ret =3D platform_get_irq(platdev, 1);
-> > -	if (ret > 0)
-> > -		ourport->tx_irq =3D ret;
-> > +	if (ourport->info->irq_cnt =21=3D 1) =7B
-> > +		ret =3D platform_get_irq(platdev, 1);
-> > +		if (ret > 0)
-> > +			ourport->tx_irq =3D ret;
->=20
-> FWIW, if you're not going to do anything in the error case then you may a=
-s well
-> just call platform_get_irq_optional() unconditionally.
->=20
-> Robin.
->=20
-My intention behind not using 'platform_get_irq_optional' was that it does =
-not prints the error when the 2nd interrupt resource is missing for the old=
-er UART's. I am just using it to give information to the user in error case=
-. I can use 'platform_get_irq_optional' too.
+Tony - does this look ok for 5.9?
 
-Thanks & Regards
-Tamseel
+If so, I might start making other variants like BeagleBone Blue and
+BeagleBone {Green,Black} Wireless and submit those when ready.
 
-> > +	=7D
-> >   	/*
-> >   	 * DMA is currently supported only on DT platforms, if DMA propertie=
-s
-> >   	 * are specified.
-> > =40=40 -2387,6 +2393,7 =40=40 static struct s3c24xx_serial_drv_data
-> s3c2410_serial_drv_data =3D =7B
-> >   		.name		=3D =22Samsung S3C2410 UART=22,
-> >   		.type		=3D PORT_S3C2410,
-> >   		.fifosize	=3D 16,
-> > +		.irq_cnt	=3D 2,
-> >   		.rx_fifomask	=3D S3C2410_UFSTAT_RXMASK,
-> >   		.rx_fifoshift	=3D S3C2410_UFSTAT_RXSHIFT,
-> >   		.rx_fifofull	=3D S3C2410_UFSTAT_RXFULL,
-
+thanks,
+drew
