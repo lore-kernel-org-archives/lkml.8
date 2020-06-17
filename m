@@ -2,187 +2,756 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1476C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBF3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7380A2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 892AE20853
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 07:37:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="dbNJ1iHZ"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="c73PawB7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="g2uJnk59"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbgFQHev (ORCPT
+        id S1726282AbgFQHhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 03:34:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgFQHeu (ORCPT
+        Wed, 17 Jun 2020 03:37:22 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:47449 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725901AbgFQHhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 03:34:50 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF888C061573
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 00:34:48 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id q25so877621wmj.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 00:34:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fwngVWkjY9fLUGwy3ivvNT4X5Xvq6DSDUdpByq/8Ym4=;
-        b=dbNJ1iHZuhQ+KrxrQ57v93tTtorXC26arOGU1ZaPPFFFaaG0teuhLyDWIXJPGLAjh4
-         feWSRbSxsJ4CL+QUgOaEFCJTfL160TYhRjvwn5OZuvuBs824bOd2fF8tsgkFf5XUwWS9
-         sSepUeOHSQh/2elEzN8RkF4NAFTgvGfIau9To=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fwngVWkjY9fLUGwy3ivvNT4X5Xvq6DSDUdpByq/8Ym4=;
-        b=RV4+8XcbkyDVX/oThqm092vwdvM+X/zQdf+LECQa8/pXIvKJi1VIh20rsnW1+ebfyi
-         /giTEWRiL901rYhF8218W1BVJ+5tHI3UW0CNYkEY0RNdhOMQc1/eE6I/FFE/jyqXQ2u7
-         L7t8gWjbsxOEeFO+3cVs4cpFD3bwFumyQdkHP5JGis9qf0I0p/mt15CnaXxir0R0lKaR
-         ZLf5Qn9ptSWAyv1RlqQtGxB17hOvs3sIeQSeuRJR+XR53WuTir8XO4NNJQfng7YXzoNC
-         +mpfk1NtMCfGnZ+gEKHs0ZR10tu8YskD7uUFwq0ZEjMnkg69mZP6vonvcv7xJdcJODXu
-         /VbA==
-X-Gm-Message-State: AOAM533Jrb1WF3dG+9j7q1PmG7JrlwtmSvb4jMxUDpRNCtJuQM/Q8Dj6
-        r+IXrnipfcrHT25eaJRPqEuSM25RSESdCx/Ayb8a
-X-Google-Smtp-Source: ABdhPJyGJa9kRlJPnXVr4b2Z/d3r29W3OQ5lMNq2+wIIXKD0swRKDv0pYf5f0nWusXRDmmDZUj/VlmT89ROLCtNOtPU=
-X-Received: by 2002:a1c:2e0e:: with SMTP id u14mr7119944wmu.55.1592379287504;
- Wed, 17 Jun 2020 00:34:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200616045108.GP75760@lianli.shorne-pla.net> <mhng-b86477b3-4134-4023-968e-532ca0b33125@palmerdabbelt-glaptop1>
- <CANN689GkUUfpTn+fkjsC-a=RwGsxVwsg-QXKDnVe6zXLjvuZWA@mail.gmail.com>
- <20200616191943.GA1401039@lianli.shorne-pla.net> <CAOnJCUL52Ch3QHikik=DYJYciFE0e8zhrSL-AgaZPensXyZqyg@mail.gmail.com>
- <CANN689Ek3szVSVC4H0NKpkdZes82VW_Xvs4+GLTGCWES7A-ySQ@mail.gmail.com>
- <20200617053539.GB1401039@lianli.shorne-pla.net> <20200617060734.GC1401039@lianli.shorne-pla.net>
- <CANN689F=LKGprNx9_Wb5HOvT-Fvv8WUR_T2DJPhy0u2HeT-A7g@mail.gmail.com>
-In-Reply-To: <CANN689F=LKGprNx9_Wb5HOvT-Fvv8WUR_T2DJPhy0u2HeT-A7g@mail.gmail.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Wed, 17 Jun 2020 00:34:36 -0700
-Message-ID: <CAOnJCUKgZcY2G+3ADZ5aJy4sXb8mhmkDczULQUbPDpra3vLkaw@mail.gmail.com>
-Subject: Re: mm lock issue while booting Linux on 5.8-rc1 for RISC-V
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Stafford Horne <shorne@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Topel <bjorn.topel@gmail.com>
+        Wed, 17 Jun 2020 03:37:21 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.west.internal (Postfix) with ESMTP id 8FD32478;
+        Wed, 17 Jun 2020 03:37:19 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Wed, 17 Jun 2020 03:37:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        YonVXNFXgWwnOqtvSjCFlB7hX3ROmKa9lkk1j8ZWFRA=; b=c73PawB7Wh+rMwjf
+        iVIWEOp/G0COswNHvslGgLQIL21MSsaS1WABC8p+3Rxy7nIKt6ju6Nk+e7KayUMs
+        AiL4qKlhGw1ZBq94oP03yFUqt9aUtU/A2PA41j7rCss/Nc33Wy0igiJJ5PTdORzg
+        XTWn2KZ4gif9Cop1PV0vbEtLQaX82RxKJc541HP9Eu8JvxU7ZvMT8Fegvto7I/+Q
+        Wx6Ut+v7I8Plm1qYkOZZVboxVXp3JVegmdkBb6xO9uwG6WSO9ZlLySfphFueM02F
+        fsXbfjDfQBX2SMhW5V/nrhR/U00ZXKg1eLuLL0IgVOgdRdMHGRbTNSnmg1LP5I8y
+        JZNJZQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=YonVXNFXgWwnOqtvSjCFlB7hX3ROmKa9lkk1j8ZWF
+        RA=; b=g2uJnk59BWyXAP9+jwORqRfXOERCDqD3qF+Yq20mrLMXfXtSiFsSpaVGx
+        2TmYbPbnCYPZ4+E+qsXFCD3ouO6QncMVWRybLwjZk4HVGFxrWYcMYGL4/xoKhQIG
+        zDuCuGJp1xp1Eaem396R/YmsdLI6qXbkqsSd5A5RuQzVskDjDqgaulgelokEVtYM
+        1mRyyg80KBI9wUUcYBHDoRoPMVMzTWXCcBG7z38wVVhOCt3K58bYERZMd783vevO
+        fshJmv/Q9kFUn2l6q/J0unD2LcEXtM1BnmMVPvmamHVJNFQJEajFPUhGIyGU0+e2
+        duaeAZxgwvFAvpONr0kGmPZBbYmBg==
+X-ME-Sender: <xms:LsjpXqx_g_Z1pcjFdLszjOvmGzuWDhx7Db3-MuVnqW6ZGnTV_yGG7g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudejuddguddvgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghn
+    ucfmvghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnh
+    epfeefteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecu
+    kfhppeehkedrjedrudelgedrkeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprhgrvhgvnhesthhhvghmrgifrdhnvght
+X-ME-Proxy: <xmx:LsjpXmQAOD0gg-awuDqAj6y7iOot1KID354yzO6DdLSKlkZUZZL2pQ>
+    <xmx:LsjpXsVawmxFYij6nXgigz_QAT6zgBilxSDicTza5e7Wsc2tpTcR7g>
+    <xmx:LsjpXggQzbRUKzDSzO7NxWQ0xmQDpq2knbI66f-a237fO2YtwqdxNw>
+    <xmx:L8jpXr4CnnMEkPjCOhiD29pqnwn7JxjBMFfLErRrWroMc5pmcVo5pA>
+Received: from mickey.themaw.net (58-7-194-87.dyn.iinet.net.au [58.7.194.87])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AD6A5328005A;
+        Wed, 17 Jun 2020 03:37:14 -0400 (EDT)
+Message-ID: <cc9aeedc4bfa0be6d6250b01f809240cbf5ded3c.camel@themaw.net>
+Subject: Re: [PATCH v2 1/6] kernfs: switch kernfs to use an rwsem
+From:   Ian Kent <raven@themaw.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Tejun Heo <tj@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Rick Lindsley <ricklind@linux.vnet.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 17 Jun 2020 15:37:10 +0800
+In-Reply-To: <159237904699.89384.5185766359925629819.stgit@mickey.themaw.net>
+References: <159237904699.89384.5185766359925629819.stgit@mickey.themaw.net>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 11:30 PM Michel Lespinasse <walken@google.com> wrote:
->
-> On Tue, Jun 16, 2020 at 11:07 PM Stafford Horne <shorne@gmail.com> wrote:
-> > On Wed, Jun 17, 2020 at 02:35:39PM +0900, Stafford Horne wrote:
-> > > On Tue, Jun 16, 2020 at 01:47:24PM -0700, Michel Lespinasse wrote:
-> > > > This makes me wonder actually - maybe there is a latent bug that got
-> > > > exposed after my change added the rwsem_is_locked assertion to the
-> > > > lockdep_assert_held one. If that is the case, it may be helpful to
-> > > > bisect when that issue first appeared, by testing before my patchset
-> > > > with VM_BUG_ON(!rwsem_is_locked(&walk.mm->mmap_lock)) added to
-> > > > walk_page_range() / walk_page_range_novma() / walk_page_vma() ...
-> > >
-> > > Hello,
-> > >
-> > > I tried to bisect it, but I think this issue goes much further back.
-> > >
-> > > Just with the below patch booting fails all the way back to v5.7.
-> > >
-> > > What does this mean by they way, why would mmap_assert_locked() want to assert
-> > > that the rwsem_is_locked() is not true?
->
-> It's the opposite - VM_BUG_ON(cond) triggers if cond is true, so in
-> other words it asserts that cond is false. Yeah, I agree it is kinda
-> confusing. But in our case, it asserts that the rwsem is locked, which
-> is what we want.
->
-> > The openrisc code that was walking the page ranges was not locking mm. I have
-> > added the  below patch to v5.8-rc1 and it seems to work fine.  I will send a
-> > better patch in a bit.
-> >
-> > iff --git a/arch/openrisc/kernel/dma.c b/arch/openrisc/kernel/dma.c
-> > index c152a68811dd..bd5f05dd9174 100644
-> > --- a/arch/openrisc/kernel/dma.c
-> > +++ b/arch/openrisc/kernel/dma.c
-> > @@ -74,8 +74,10 @@ void *arch_dma_set_uncached(void *cpu_addr, size_t size)
-> >          * We need to iterate through the pages, clearing the dcache for
-> >          * them and setting the cache-inhibit bit.
-> >          */
-> > +       mmap_read_lock(&init_mm);
-> >         error = walk_page_range(&init_mm, va, va + size, &set_nocache_walk_ops,
-> >                         NULL);
-> > +       mmap_read_unlock(&init_mm);
-> >         if (error)
-> >                 return ERR_PTR(error);
-> >         return cpu_addr;
-> > @@ -85,9 +87,11 @@ void arch_dma_clear_uncached(void *cpu_addr, size_t size)
-> >  {
-> >         unsigned long va = (unsigned long)cpu_addr;
-> >
-> > +       mmap_read_lock(&init_mm);
-> >         /* walk_page_range shouldn't be able to fail here */
-> >         WARN_ON(walk_page_range(&init_mm, va, va + size,
-> >                         &clear_nocache_walk_ops, NULL));
-> > +       mmap_read_unlock(&init_mm);
-> >  }
->
-> Thanks a lot for getting to the bottom of this. I think this is the proper fix.
+On Wed, 2020-06-17 at 15:30 +0800, Ian Kent wrote:
+> The kernfs global lock restricts the ability to perform kernfs node
+> lookup operations in parallel.
+> 
+> Change the kernfs mutex to an rwsem so that, when oppertunity arises,
+> node searches can be done in parallel.
 
-A similar patch works for RISC-V as well. Thanks for debugging it.
-To sum it up, mm should be locked before walk_page_range and
-walk_page_range_novma.
+Please ignore, false start with a missing option!
 
-Here is a diff that works for RISC-V. I will send the patch soon.
+> 
+> Signed-off-by: Ian Kent <raven@themaw.net>
+> ---
+>  fs/kernfs/dir.c             |  119 +++++++++++++++++++++++--------
+> ------------
+>  fs/kernfs/file.c            |    4 +
+>  fs/kernfs/inode.c           |   16 +++---
+>  fs/kernfs/kernfs-internal.h |    5 +-
+>  fs/kernfs/mount.c           |   12 ++--
+>  fs/kernfs/symlink.c         |    4 +
+>  6 files changed, 86 insertions(+), 74 deletions(-)
+> 
+> diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+> index 9aec80b9d7c6..d8213fc65eba 100644
+> --- a/fs/kernfs/dir.c
+> +++ b/fs/kernfs/dir.c
+> @@ -17,7 +17,7 @@
+>  
+>  #include "kernfs-internal.h"
+>  
+> -DEFINE_MUTEX(kernfs_mutex);
+> +DECLARE_RWSEM(kernfs_rwsem);
+>  static DEFINE_SPINLOCK(kernfs_rename_lock);	/* kn->parent and
+> ->name */
+>  static char kernfs_pr_cont_buf[PATH_MAX];	/* protected by
+> rename_lock */
+>  static DEFINE_SPINLOCK(kernfs_idr_lock);	/* root->ino_idr */
+> @@ -26,10 +26,21 @@ static DEFINE_SPINLOCK(kernfs_idr_lock);	/*
+> root->ino_idr */
+>  
+>  static bool kernfs_active(struct kernfs_node *kn)
+>  {
+> -	lockdep_assert_held(&kernfs_mutex);
+>  	return atomic_read(&kn->active) >= 0;
+>  }
+>  
+> +static bool kernfs_active_write(struct kernfs_node *kn)
+> +{
+> +	lockdep_assert_held_write(&kernfs_rwsem);
+> +	return kernfs_active(kn);
+> +}
+> +
+> +static bool kernfs_active_read(struct kernfs_node *kn)
+> +{
+> +	lockdep_assert_held_read(&kernfs_rwsem);
+> +	return kernfs_active(kn);
+> +}
+> +
+>  static bool kernfs_lockdep(struct kernfs_node *kn)
+>  {
+>  #ifdef CONFIG_DEBUG_LOCK_ALLOC
+> @@ -340,7 +351,7 @@ static int kernfs_sd_compare(const struct
+> kernfs_node *left,
+>   *	@kn->parent->dir.children.
+>   *
+>   *	Locking:
+> - *	mutex_lock(kernfs_mutex)
+> + *	kernfs_rwsem write lock
+>   *
+>   *	RETURNS:
+>   *	0 on susccess -EEXIST on failure.
+> @@ -385,7 +396,7 @@ static int kernfs_link_sibling(struct kernfs_node
+> *kn)
+>   *	removed, %false if @kn wasn't on the rbtree.
+>   *
+>   *	Locking:
+> - *	mutex_lock(kernfs_mutex)
+> + *	kernfs_rwsem write lock
+>   */
+>  static bool kernfs_unlink_sibling(struct kernfs_node *kn)
+>  {
+> @@ -455,14 +466,14 @@ void kernfs_put_active(struct kernfs_node *kn)
+>   * return after draining is complete.
+>   */
+>  static void kernfs_drain(struct kernfs_node *kn)
+> -	__releases(&kernfs_mutex) __acquires(&kernfs_mutex)
+> +	__releases(&kernfs_rwsem) __acquires(&kernfs_rwsem)
+>  {
+>  	struct kernfs_root *root = kernfs_root(kn);
+>  
+> -	lockdep_assert_held(&kernfs_mutex);
+> +	lockdep_assert_held_write(&kernfs_rwsem);
+>  	WARN_ON_ONCE(kernfs_active(kn));
+>  
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  
+>  	if (kernfs_lockdep(kn)) {
+>  		rwsem_acquire(&kn->dep_map, 0, 0, _RET_IP_);
+> @@ -481,7 +492,7 @@ static void kernfs_drain(struct kernfs_node *kn)
+>  
+>  	kernfs_drain_open_files(kn);
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  }
+>  
+>  /**
+> @@ -560,10 +571,10 @@ static int kernfs_dop_revalidate(struct dentry
+> *dentry, unsigned int flags)
+>  		goto out_bad_unlocked;
+>  
+>  	kn = kernfs_dentry_node(dentry);
+> -	mutex_lock(&kernfs_mutex);
+> +	down_read(&kernfs_rwsem);
+>  
+>  	/* The kernfs node has been deactivated */
+> -	if (!kernfs_active(kn))
+> +	if (!kernfs_active_read(kn))
+>  		goto out_bad;
+>  
+>  	/* The kernfs node has been moved? */
+> @@ -579,10 +590,10 @@ static int kernfs_dop_revalidate(struct dentry
+> *dentry, unsigned int flags)
+>  	    kernfs_info(dentry->d_sb)->ns != kn->ns)
+>  		goto out_bad;
+>  
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_read(&kernfs_rwsem);
+>  	return 1;
+>  out_bad:
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_read(&kernfs_rwsem);
+>  out_bad_unlocked:
+>  	return 0;
+>  }
+> @@ -764,7 +775,7 @@ int kernfs_add_one(struct kernfs_node *kn)
+>  	bool has_ns;
+>  	int ret;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  
+>  	ret = -EINVAL;
+>  	has_ns = kernfs_ns_enabled(parent);
+> @@ -779,7 +790,7 @@ int kernfs_add_one(struct kernfs_node *kn)
+>  	if (parent->flags & KERNFS_EMPTY_DIR)
+>  		goto out_unlock;
+>  
+> -	if ((parent->flags & KERNFS_ACTIVATED) &&
+> !kernfs_active(parent))
+> +	if ((parent->flags & KERNFS_ACTIVATED) &&
+> !kernfs_active_write(parent))
+>  		goto out_unlock;
+>  
+>  	kn->hash = kernfs_name_hash(kn->name, kn->ns);
+> @@ -795,7 +806,7 @@ int kernfs_add_one(struct kernfs_node *kn)
+>  		ps_iattr->ia_mtime = ps_iattr->ia_ctime;
+>  	}
+>  
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  
+>  	/*
+>  	 * Activate the new node unless CREATE_DEACTIVATED is
+> requested.
+> @@ -809,7 +820,7 @@ int kernfs_add_one(struct kernfs_node *kn)
+>  	return 0;
+>  
+>  out_unlock:
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  	return ret;
+>  }
+>  
+> @@ -830,7 +841,7 @@ static struct kernfs_node *kernfs_find_ns(struct
+> kernfs_node *parent,
+>  	bool has_ns = kernfs_ns_enabled(parent);
+>  	unsigned int hash;
+>  
+> -	lockdep_assert_held(&kernfs_mutex);
+> +	lockdep_assert_held(&kernfs_rwsem);
+>  
+>  	if (has_ns != (bool)ns) {
+>  		WARN(1, KERN_WARNING "kernfs: ns %s in '%s' for
+> '%s'\n",
+> @@ -862,7 +873,7 @@ static struct kernfs_node *kernfs_walk_ns(struct
+> kernfs_node *parent,
+>  	size_t len;
+>  	char *p, *name;
+>  
+> -	lockdep_assert_held(&kernfs_mutex);
+> +	lockdep_assert_held_read(&kernfs_rwsem);
+>  
+>  	/* grab kernfs_rename_lock to piggy back on kernfs_pr_cont_buf
+> */
+>  	spin_lock_irq(&kernfs_rename_lock);
+> @@ -902,10 +913,10 @@ struct kernfs_node
+> *kernfs_find_and_get_ns(struct kernfs_node *parent,
+>  {
+>  	struct kernfs_node *kn;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_read(&kernfs_rwsem);
+>  	kn = kernfs_find_ns(parent, name, ns);
+>  	kernfs_get(kn);
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_read(&kernfs_rwsem);
+>  
+>  	return kn;
+>  }
+> @@ -926,10 +937,10 @@ struct kernfs_node
+> *kernfs_walk_and_get_ns(struct kernfs_node *parent,
+>  {
+>  	struct kernfs_node *kn;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_read(&kernfs_rwsem);
+>  	kn = kernfs_walk_ns(parent, path, ns);
+>  	kernfs_get(kn);
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_read(&kernfs_rwsem);
+>  
+>  	return kn;
+>  }
+> @@ -1084,7 +1095,7 @@ static struct dentry *kernfs_iop_lookup(struct
+> inode *dir,
+>  	struct inode *inode;
+>  	const void *ns = NULL;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_read(&kernfs_rwsem);
+>  
+>  	if (kernfs_ns_enabled(parent))
+>  		ns = kernfs_info(dir->i_sb)->ns;
+> @@ -1107,7 +1118,7 @@ static struct dentry *kernfs_iop_lookup(struct
+> inode *dir,
+>  	/* instantiate and hash dentry */
+>  	ret = d_splice_alias(inode, dentry);
+>   out_unlock:
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_read(&kernfs_rwsem);
+>  	return ret;
+>  }
+>  
+> @@ -1226,7 +1237,7 @@ static struct kernfs_node
+> *kernfs_next_descendant_post(struct kernfs_node *pos,
+>  {
+>  	struct rb_node *rbn;
+>  
+> -	lockdep_assert_held(&kernfs_mutex);
+> +	lockdep_assert_held_write(&kernfs_rwsem);
+>  
+>  	/* if first iteration, visit leftmost descendant which may be
+> root */
+>  	if (!pos)
+> @@ -1262,7 +1273,7 @@ void kernfs_activate(struct kernfs_node *kn)
+>  {
+>  	struct kernfs_node *pos;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  
+>  	pos = NULL;
+>  	while ((pos = kernfs_next_descendant_post(pos, kn))) {
+> @@ -1276,14 +1287,14 @@ void kernfs_activate(struct kernfs_node *kn)
+>  		pos->flags |= KERNFS_ACTIVATED;
+>  	}
+>  
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  }
+>  
+>  static void __kernfs_remove(struct kernfs_node *kn)
+>  {
+>  	struct kernfs_node *pos;
+>  
+> -	lockdep_assert_held(&kernfs_mutex);
+> +	lockdep_assert_held_write(&kernfs_rwsem);
+>  
+>  	/*
+>  	 * Short-circuit if non-root @kn has already finished removal.
+> @@ -1298,7 +1309,7 @@ static void __kernfs_remove(struct kernfs_node
+> *kn)
+>  	/* prevent any new usage under @kn by deactivating all nodes */
+>  	pos = NULL;
+>  	while ((pos = kernfs_next_descendant_post(pos, kn)))
+> -		if (kernfs_active(pos))
+> +		if (kernfs_active_write(pos))
+>  			atomic_add(KN_DEACTIVATED_BIAS, &pos->active);
+>  
+>  	/* deactivate and unlink the subtree node-by-node */
+> @@ -1306,7 +1317,7 @@ static void __kernfs_remove(struct kernfs_node
+> *kn)
+>  		pos = kernfs_leftmost_descendant(kn);
+>  
+>  		/*
+> -		 * kernfs_drain() drops kernfs_mutex temporarily and
+> @pos's
+> +		 * kernfs_drain() drops kernfs_rwsem temporarily and
+> @pos's
+>  		 * base ref could have been put by someone else by the
+> time
+>  		 * the function returns.  Make sure it doesn't go away
+>  		 * underneath us.
+> @@ -1353,9 +1364,9 @@ static void __kernfs_remove(struct kernfs_node
+> *kn)
+>   */
+>  void kernfs_remove(struct kernfs_node *kn)
+>  {
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  	__kernfs_remove(kn);
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  }
+>  
+>  /**
+> @@ -1442,17 +1453,17 @@ bool kernfs_remove_self(struct kernfs_node
+> *kn)
+>  {
+>  	bool ret;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  	kernfs_break_active_protection(kn);
+>  
+>  	/*
+>  	 * SUICIDAL is used to arbitrate among competing
+> invocations.  Only
+>  	 * the first one will actually perform removal.  When the
+> removal
+>  	 * is complete, SUICIDED is set and the active ref is restored
+> -	 * while holding kernfs_mutex.  The ones which lost arbitration
+> -	 * waits for SUICDED && drained which can happen only after the
+> -	 * enclosing kernfs operation which executed the winning
+> instance
+> -	 * of kernfs_remove_self() finished.
+> +	 * while holding kernfs_rwsem for write.  The ones which lost
+> +	 * arbitration waits for SUICIDED && drained which can happen
+> only
+> +	 * after the enclosing kernfs operation which executed the
+> winning
+> +	 * instance of kernfs_remove_self() finished.
+>  	 */
+>  	if (!(kn->flags & KERNFS_SUICIDAL)) {
+>  		kn->flags |= KERNFS_SUICIDAL;
+> @@ -1470,9 +1481,9 @@ bool kernfs_remove_self(struct kernfs_node *kn)
+>  			    atomic_read(&kn->active) ==
+> KN_DEACTIVATED_BIAS)
+>  				break;
+>  
+> -			mutex_unlock(&kernfs_mutex);
+> +			up_write(&kernfs_rwsem);
+>  			schedule();
+> -			mutex_lock(&kernfs_mutex);
+> +			down_write(&kernfs_rwsem);
+>  		}
+>  		finish_wait(waitq, &wait);
+>  		WARN_ON_ONCE(!RB_EMPTY_NODE(&kn->rb));
+> @@ -1480,12 +1491,12 @@ bool kernfs_remove_self(struct kernfs_node
+> *kn)
+>  	}
+>  
+>  	/*
+> -	 * This must be done while holding kernfs_mutex; otherwise,
+> waiting
+> -	 * for SUICIDED && deactivated could finish prematurely.
+> +	 * This must be done while holding kernfs_rwsem for write;
+> otherwise,
+> +	 * waiting for SUICIDED && deactivated could finish
+> prematurely.
+>  	 */
+>  	kernfs_unbreak_active_protection(kn);
+>  
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  	return ret;
+>  }
+>  
+> @@ -1509,13 +1520,13 @@ int kernfs_remove_by_name_ns(struct
+> kernfs_node *parent, const char *name,
+>  		return -ENOENT;
+>  	}
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  
+>  	kn = kernfs_find_ns(parent, name, ns);
+>  	if (kn)
+>  		__kernfs_remove(kn);
+>  
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  
+>  	if (kn)
+>  		return 0;
+> @@ -1541,10 +1552,10 @@ int kernfs_rename_ns(struct kernfs_node *kn,
+> struct kernfs_node *new_parent,
+>  	if (!kn->parent)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  
+>  	error = -ENOENT;
+> -	if (!kernfs_active(kn) || !kernfs_active(new_parent) ||
+> +	if (!kernfs_active_write(kn) ||
+> !kernfs_active_write(new_parent) ||
+>  	    (new_parent->flags & KERNFS_EMPTY_DIR))
+>  		goto out;
+>  
+> @@ -1595,7 +1606,7 @@ int kernfs_rename_ns(struct kernfs_node *kn,
+> struct kernfs_node *new_parent,
+>  
+>  	error = 0;
+>   out:
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  	return error;
+>  }
+>  
+> @@ -1615,7 +1626,7 @@ static struct kernfs_node *kernfs_dir_pos(const
+> void *ns,
+>  	struct kernfs_node *parent, loff_t hash, struct kernfs_node
+> *pos)
+>  {
+>  	if (pos) {
+> -		int valid = kernfs_active(pos) &&
+> +		int valid = kernfs_active_read(pos) &&
+>  			pos->parent == parent && hash == pos->hash;
+>  		kernfs_put(pos);
+>  		if (!valid)
+> @@ -1635,7 +1646,7 @@ static struct kernfs_node *kernfs_dir_pos(const
+> void *ns,
+>  		}
+>  	}
+>  	/* Skip over entries which are dying/dead or in the wrong
+> namespace */
+> -	while (pos && (!kernfs_active(pos) || pos->ns != ns)) {
+> +	while (pos && (!kernfs_active_read(pos) || pos->ns != ns)) {
+>  		struct rb_node *node = rb_next(&pos->rb);
+>  		if (!node)
+>  			pos = NULL;
+> @@ -1656,7 +1667,7 @@ static struct kernfs_node
+> *kernfs_dir_next_pos(const void *ns,
+>  				pos = NULL;
+>  			else
+>  				pos = rb_to_kn(node);
+> -		} while (pos && (!kernfs_active(pos) || pos->ns !=
+> ns));
+> +		} while (pos && (!kernfs_active_read(pos) || pos->ns !=
+> ns));
+>  	}
+>  	return pos;
+>  }
+> @@ -1670,7 +1681,7 @@ static int kernfs_fop_readdir(struct file
+> *file, struct dir_context *ctx)
+>  
+>  	if (!dir_emit_dots(file, ctx))
+>  		return 0;
+> -	mutex_lock(&kernfs_mutex);
+> +	down_read(&kernfs_rwsem);
+>  
+>  	if (kernfs_ns_enabled(parent))
+>  		ns = kernfs_info(dentry->d_sb)->ns;
+> @@ -1687,12 +1698,12 @@ static int kernfs_fop_readdir(struct file
+> *file, struct dir_context *ctx)
+>  		file->private_data = pos;
+>  		kernfs_get(pos);
+>  
+> -		mutex_unlock(&kernfs_mutex);
+> +		up_read(&kernfs_rwsem);
+>  		if (!dir_emit(ctx, name, len, ino, type))
+>  			return 0;
+> -		mutex_lock(&kernfs_mutex);
+> +		down_read(&kernfs_rwsem);
+>  	}
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_read(&kernfs_rwsem);
+>  	file->private_data = NULL;
+>  	ctx->pos = INT_MAX;
+>  	return 0;
+> diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
+> index 34366db3620d..455caea6ab0b 100644
+> --- a/fs/kernfs/file.c
+> +++ b/fs/kernfs/file.c
+> @@ -879,7 +879,7 @@ static void kernfs_notify_workfn(struct
+> work_struct *work)
+>  	spin_unlock_irq(&kernfs_notify_lock);
+>  
+>  	/* kick fsnotify */
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  
+>  	list_for_each_entry(info, &kernfs_root(kn)->supers, node) {
+>  		struct kernfs_node *parent;
+> @@ -916,7 +916,7 @@ static void kernfs_notify_workfn(struct
+> work_struct *work)
+>  		iput(inode);
+>  	}
+>  
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  	kernfs_put(kn);
+>  	goto repeat;
+>  }
+> diff --git a/fs/kernfs/inode.c b/fs/kernfs/inode.c
+> index fc2469a20fed..23a7996d06a9 100644
+> --- a/fs/kernfs/inode.c
+> +++ b/fs/kernfs/inode.c
+> @@ -106,9 +106,9 @@ int kernfs_setattr(struct kernfs_node *kn, const
+> struct iattr *iattr)
+>  {
+>  	int ret;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  	ret = __kernfs_setattr(kn, iattr);
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  	return ret;
+>  }
+>  
+> @@ -121,7 +121,7 @@ int kernfs_iop_setattr(struct dentry *dentry,
+> struct iattr *iattr)
+>  	if (!kn)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  	error = setattr_prepare(dentry, iattr);
+>  	if (error)
+>  		goto out;
+> @@ -134,7 +134,7 @@ int kernfs_iop_setattr(struct dentry *dentry,
+> struct iattr *iattr)
+>  	setattr_copy(inode, iattr);
+>  
+>  out:
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  	return error;
+>  }
+>  
+> @@ -189,9 +189,9 @@ int kernfs_iop_getattr(const struct path *path,
+> struct kstat *stat,
+>  	struct inode *inode = d_inode(path->dentry);
+>  	struct kernfs_node *kn = inode->i_private;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  	kernfs_refresh_inode(kn, inode);
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_writeread(&kernfs_rwsem);
+>  
+>  	generic_fillattr(inode, stat);
+>  	return 0;
+> @@ -281,9 +281,9 @@ int kernfs_iop_permission(struct inode *inode,
+> int mask)
+>  
+>  	kn = inode->i_private;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  	kernfs_refresh_inode(kn, inode);
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  
+>  	return generic_permission(inode, mask);
+>  }
+> diff --git a/fs/kernfs/kernfs-internal.h b/fs/kernfs/kernfs-
+> internal.h
+> index 7ee97ef59184..097c1a989aa4 100644
+> --- a/fs/kernfs/kernfs-internal.h
+> +++ b/fs/kernfs/kernfs-internal.h
+> @@ -13,6 +13,7 @@
+>  #include <linux/lockdep.h>
+>  #include <linux/fs.h>
+>  #include <linux/mutex.h>
+> +#include <linux/rwsem.h>
+>  #include <linux/xattr.h>
+>  
+>  #include <linux/kernfs.h>
+> @@ -69,7 +70,7 @@ struct kernfs_super_info {
+>  	 */
+>  	const void		*ns;
+>  
+> -	/* anchored at kernfs_root->supers, protected by kernfs_mutex
+> */
+> +	/* anchored at kernfs_root->supers, protected by kernfs_rwsem
+> */
+>  	struct list_head	node;
+>  };
+>  #define kernfs_info(SB) ((struct kernfs_super_info *)(SB-
+> >s_fs_info))
+> @@ -99,7 +100,7 @@ int __kernfs_setattr(struct kernfs_node *kn, const
+> struct iattr *iattr);
+>  /*
+>   * dir.c
+>   */
+> -extern struct mutex kernfs_mutex;
+> +extern struct rw_semaphore kernfs_rwsem;
+>  extern const struct dentry_operations kernfs_dops;
+>  extern const struct file_operations kernfs_dir_fops;
+>  extern const struct inode_operations kernfs_dir_iops;
+> diff --git a/fs/kernfs/mount.c b/fs/kernfs/mount.c
+> index 9dc7e7a64e10..baa4155ba2ed 100644
+> --- a/fs/kernfs/mount.c
+> +++ b/fs/kernfs/mount.c
+> @@ -255,9 +255,9 @@ static int kernfs_fill_super(struct super_block
+> *sb, struct kernfs_fs_context *k
+>  	sb->s_shrink.seeks = 0;
+>  
+>  	/* get root inode, initialize and unlock it */
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  	inode = kernfs_get_inode(sb, info->root->kn);
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  	if (!inode) {
+>  		pr_debug("kernfs: could not get root inode\n");
+>  		return -ENOMEM;
+> @@ -344,9 +344,9 @@ int kernfs_get_tree(struct fs_context *fc)
+>  		}
+>  		sb->s_flags |= SB_ACTIVE;
+>  
+> -		mutex_lock(&kernfs_mutex);
+> +		down_write(&kernfs_rwsem);
+>  		list_add(&info->node, &info->root->supers);
+> -		mutex_unlock(&kernfs_mutex);
+> +		up_write(&kernfs_rwsem);
+>  	}
+>  
+>  	fc->root = dget(sb->s_root);
+> @@ -372,9 +372,9 @@ void kernfs_kill_sb(struct super_block *sb)
+>  {
+>  	struct kernfs_super_info *info = kernfs_info(sb);
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  	list_del(&info->node);
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  
+>  	/*
+>  	 * Remove the superblock from fs_supers/s_instances
+> diff --git a/fs/kernfs/symlink.c b/fs/kernfs/symlink.c
+> index 5432883d819f..7246b470de3c 100644
+> --- a/fs/kernfs/symlink.c
+> +++ b/fs/kernfs/symlink.c
+> @@ -116,9 +116,9 @@ static int kernfs_getlink(struct inode *inode,
+> char *path)
+>  	struct kernfs_node *target = kn->symlink.target_kn;
+>  	int error;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_write(&kernfs_rwsem);
+>  	error = kernfs_get_target_path(parent, target, path);
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_write(&kernfs_rwsem);
+>  
+>  	return error;
+>  }
+> 
+> 
 
-diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-index ec2c70f84994..289a9a5ea5b5 100644
---- a/arch/riscv/mm/pageattr.c
-+++ b/arch/riscv/mm/pageattr.c
-@@ -151,6 +151,7 @@ int set_memory_nx(unsigned long addr, int numpages)
-
- int set_direct_map_invalid_noflush(struct page *page)
- {
-+       int ret;
-        unsigned long start = (unsigned long)page_address(page);
-        unsigned long end = start + PAGE_SIZE;
-        struct pageattr_masks masks = {
-@@ -158,11 +159,16 @@ int set_direct_map_invalid_noflush(struct page *page)
-                .clear_mask = __pgprot(_PAGE_PRESENT)
-        };
-
--       return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
-+       mmap_read_lock(&init_mm);
-+       ret = walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
-+       mmap_read_unlock(&init_mm);
-+
-+       return ret;
- }
-
- int set_direct_map_default_noflush(struct page *page)
- {
-+       int ret;
-        unsigned long start = (unsigned long)page_address(page);
-        unsigned long end = start + PAGE_SIZE;
-        struct pageattr_masks masks = {
-@@ -170,7 +176,11 @@ int set_direct_map_default_noflush(struct page *page)
-                .clear_mask = __pgprot(0)
-        };
-
--       return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
-+       mmap_read_lock(&init_mm);
-+       ret = walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
-+       mmap_read_unlock(&init_mm);
-+
-+       return ret;
- }
-
-
-
--- 
-Regards,
-Atish
