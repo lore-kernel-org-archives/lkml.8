@@ -2,109 +2,123 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27505C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E20C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED7FD2085B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:52:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592358741;
-	bh=uFwEvioPdY25k+iaSRM4juNnEfP76+Y6d1RD/Cqp/GM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ySPcmV9xryECNo/rFhueb+pTOVbR3o8syS/xKhRPtBUsT7lwaLfOSJkvQMjlkOqZA
-	 phjC2fMbvIewWL/y0Z02GJdkRLmksnDlBqtjGemNjSF1mY2N4XchPyk0ChLDIPMLu/
-	 0ufhbbRWd/XhQUk5WWqHDBGXKoGQy/x+qKQHpJMk=
+	by mail.kernel.org (Postfix) with ESMTP id 722B620C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:52:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HeT5Exh5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgFQBwT (ORCPT
+        id S1726639AbgFQBwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 21:52:19 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:28804 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgFQBwS (ORCPT
+        Tue, 16 Jun 2020 21:52:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbgFQBwX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 21:52:18 -0400
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 05H1q28Y015200
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:52:03 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05H1q28Y015200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592358723;
-        bh=gOutOJhSmQlsr80xF0eYyx9mawYN/OMZTxoCZcFjFmI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=oDgv2GajdFeii4IVs5n5DgOWqeWkAfxuEz2jZ6Y38/MP0PJYxCbQwPIfl8EsF8niO
-         CfIkZViIx+5RjA3XEJNsCVghqYPBdJbTfH1CBeuYLWrmaNKLqrxYi4qB0Xf5c0B+JE
-         hOoJSudnmZoZAJwtssJLqWLfMQEdzynMCwZBhRsZRAxq2s2/yI7BTsMx6Kwe1jc7Rz
-         ClwjTasooicw4UtxANfKLixMZG25GfiEAIpDIzYKf1u7y9wrphAK4gJwup0lLsVee2
-         j0JQrfihZZWM5hwvPh6UoWCfB/cj1YvkDV1lYLqS6SmkQ5DvnFjQHMEdAuqa2XzC+V
-         xny9IjzIInCLg==
-X-Nifty-SrcIP: [209.85.222.44]
-Received: by mail-ua1-f44.google.com with SMTP id b13so244450uav.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 18:52:03 -0700 (PDT)
-X-Gm-Message-State: AOAM5318VSTkziHPZ2qecYBd54/8dE7A7ahPsnfp154TdbaoF2Y3GWBU
-        NlizTJNY5khgtG1EKExjsrd4uxK7yWfIjPFdeUc=
-X-Google-Smtp-Source: ABdhPJzeJtlp/QCzdGks/6crfp82QrV68OobORFcwhb6vAOC3RVqFY2TmgxK0oVWTShbYwf7NS7+UKPzc20YQzJHHEM=
-X-Received: by 2002:a9f:3791:: with SMTP id q17mr4504203uaq.95.1592358722288;
- Tue, 16 Jun 2020 18:52:02 -0700 (PDT)
+        Tue, 16 Jun 2020 21:52:23 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B01D4C061573
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 18:52:22 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id n24so837189lji.10
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 18:52:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Hs8Cat8bZTOs/g3e5u5zu4I8c3QADLQ9ogPtTS3pDjQ=;
+        b=HeT5Exh5fEtOJpP//JnKtRjulLeFEmNguq4snh/ycH/k8l1/xgJXSTeONIWqNrNwbk
+         Dh3R7WwjUOPd8YAXlE/2Syp+7ZZD8ajyyrTVPP92h2pfUclYacudqJ1MycXtqx6DS6lP
+         j1XMVtKsUdK9PPBqtzue5nI1/AjJmuCaoY0RaD2GX3IqM8kK6V47CiCLddl1pgjJI/y1
+         I9o5eYIsVGMh47jO0kTMI7z9cAwZ4NQlhYH0KIn/qGVGBIWWmw1ItXIf156cwVzZFEzv
+         0TEU6ez+9EnAtjUOyAewoI1Hw4fdOoL2q1Qn80o9FklGP6ot7ds1gDAQ0K5wAeiDVgFu
+         mBpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hs8Cat8bZTOs/g3e5u5zu4I8c3QADLQ9ogPtTS3pDjQ=;
+        b=JK+sCn3YMZ7ukPIdMKHFfaWj9kjiZO0Rkx6hSHy8BA6sQkVJQOjcm8Ya8n3W2skq5V
+         omUbXnhFnYA008oioVzBU6OkfllwtbAiwckGEDp19Q/vWTkXjGkPlc40GZNaPShCMcda
+         DoqgQUs4h6blhEvOXORlCNL8R/7Dk7OM0UKgMYDjzKnfJbsbuMk603pzhKgZmZRNWGIO
+         ACy3c9aDcvlFaeCEoKCeftmixHlWvcB34GTapzqpbOTl97vy2aDJKQR4Bo7dIvunOJYV
+         sOr6RpQRvgRKlHTY9K9MYkmdY+HyQX4rTpsFeB3C8hHb835ghMeTIQxXvMn/7NUrD5R2
+         9OrA==
+X-Gm-Message-State: AOAM531sAzv17jFmItaY56tzOmQdzcQO1OKdTATMZWZKbSl26mYk+DGK
+        NHzxOwS42EgxQFE1+aWpjcCa8iTqD4T8rpeqEIdEig==
+X-Google-Smtp-Source: ABdhPJwDS8HadRR7DfyOCxHk13sgCYSWmuDmmAtr6leoevRVwgAlb9iHKtjEpLx/xEhXbTWRULjmZcUEwC6nURs67GU=
+X-Received: by 2002:a2e:9ac4:: with SMTP id p4mr3013566ljj.446.1592358740700;
+ Tue, 16 Jun 2020 18:52:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200616125132.1586086-1-standby24x7@gmail.com>
-In-Reply-To: <20200616125132.1586086-1-standby24x7@gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 17 Jun 2020 10:51:25 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR5537+Jy7c0uWSH1YcdkSopuyoWhfoSj7wqRuzjfDrcg@mail.gmail.com>
-Message-ID: <CAK7LNAR5537+Jy7c0uWSH1YcdkSopuyoWhfoSj7wqRuzjfDrcg@mail.gmail.com>
-Subject: Re: [PATCH] scripts: Fix typo in headers_install.sh
-To:     Masanari Iida <standby24x7@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
+References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-2-guro@fb.com>
+In-Reply-To: <20200608230654.828134-2-guro@fb.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Tue, 16 Jun 2020 18:52:09 -0700
+Message-ID: <CALvZod7yPUMuakhmaKV8Z0DVr0RO1pyw9vW7YOkmDH=oW3xyDA@mail.gmail.com>
+Subject: Re: [PATCH v6 01/19] mm: memcg: factor out memcg- and lruvec-level
+ changes out of __mod_lruvec_state()
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 9:51 PM Masanari Iida <standby24x7@gmail.com> wrote:
+On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
 >
-> This patch fix a spelling typo in scripts/headers_install.sh
+> To convert memcg and lruvec slab counters to bytes there must be
+> a way to change these counters without touching node counters.
+> Factor out __mod_memcg_lruvec_state() out of __mod_lruvec_state().
 >
-> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
-
-
-Applied to linux-kbuild. Thanks.
-
-(I fixed another typo in the commit description; "fix" -> "fixes")
-
-
-
-
-
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 > ---
->  scripts/headers_install.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  include/linux/memcontrol.h | 17 +++++++++++++++
+>  mm/memcontrol.c            | 43 +++++++++++++++++++++-----------------
+>  2 files changed, 41 insertions(+), 19 deletions(-)
 >
-> diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
-> index 955cf3aedf21..224f51012b6e 100755
-> --- a/scripts/headers_install.sh
-> +++ b/scripts/headers_install.sh
-> @@ -11,7 +11,7 @@ then
->         echo "asm/inline/volatile keywords."
->         echo
->         echo "INFILE: header file to operate on"
-> -       echo "OUTFILE: output file which the processed header is writen to"
-> +       echo "OUTFILE: output file which the processed header is written to"
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index bbf624a7f5a6..93dbc7f9d8b8 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -679,11 +679,23 @@ static inline unsigned long lruvec_page_state_local(struct lruvec *lruvec,
+>         return x;
+>  }
 >
->         exit 1
->  fi
-> --
-> 2.27.0.83.g0313f36c6ebe
+> +void __mod_memcg_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
+> +                             int val);
+>  void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
+>                         int val);
+>  void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val);
+>  void mod_memcg_obj_state(void *p, int idx, int val);
 >
+> +static inline void mod_memcg_lruvec_state(struct lruvec *lruvec,
+> +                                         enum node_stat_item idx, int val)
 
+Is this function used in later patches? Any benefit introducing it
+here instead of in the patch where it is used for the first time?
 
--- 
-Best Regards
-Masahiro Yamada
+> +{
+> +       unsigned long flags;
+> +
+> +       local_irq_save(flags);
+> +       __mod_memcg_lruvec_state(lruvec, idx, val);
+> +       local_irq_restore(flags);
+> +}
+> +
+[...]
