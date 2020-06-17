@@ -4,125 +4,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5713C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EF2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78D85207DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856332078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592384530;
-	bh=MPSZ6N2p6Aa3SX2HTxDBxuLOHNXxyEpcY3Iy+6QVNpU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XnVbClosYujRO0HKf/sBhMR36HikuGWhmF7W9ejicUL5ixAcqEmvNJ8D9iDp91ADg
-	 SMG+DcmKwLZLBLKgKtmmcF7qx1RD3CTDZoYwiVHCfm5h+J7Dd+SH9zVO1RT2CLnYxK
-	 mho3iOuKH4m4kbZjOOmJGALa1UsDucRT9xPx1UwA=
+	s=default; t=1592384565;
+	bh=lKJDeJuupMVdMZ7QYn0cK7NOPDbwSGLJj/Ax2MSDRxw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dCNUIkoxWfbdKZh+XCKStUd4DA1vX8nAsnWEmYyi3+GYs1Drs7/AtO0i7XQnbbmmo
+	 mew9LYa9iUR4ee9ywHmBhH0T0Ex2TVNrcbSbIKEqd5hf5HjEoGsHWdGk5PloTS+a4k
+	 8cmh/fdvitVOSw2NNv8u/YTw3nC4DfT9rHWSkKak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgFQJCI (ORCPT
+        id S1726662AbgFQJCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 05:02:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbgFQJCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 05:02:07 -0400
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B997D207DD;
-        Wed, 17 Jun 2020 09:02:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592384526;
-        bh=MPSZ6N2p6Aa3SX2HTxDBxuLOHNXxyEpcY3Iy+6QVNpU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rAuIDXQlFGWl7gFPDU4znFh2dqMD47uIJuoVgXvi/Ciw4s+FpXtlOwBLQtTegCF3p
-         FMQsr/jkK0VSSblZBGkNsb+4Nr+sgjSv5OkzLSmO8gKHwXNlTk+ew7XO6oCEZ/H1XB
-         fr4qBuyDsDntIRVjBeJwNKZdIyywfzw2zBkVyEd0=
-Received: by mail-oi1-f178.google.com with SMTP id t25so1125660oij.7;
-        Wed, 17 Jun 2020 02:02:06 -0700 (PDT)
-X-Gm-Message-State: AOAM533gmDBRy6FOHUN3pNLiRGMg56KFWaudQKcTfR0b/UDmzmdJVtFG
-        AqXB89AtGsUCjgW4MM6d6FYGxmBxj6M1ROgA/CQ=
-X-Google-Smtp-Source: ABdhPJxR1Ijvnfs7Ry+C5b6BcLJX5IK9RCHmTER5sipSJ1w2SVITb2URmm4SUNWUPPkSJOf/LX54yTF3sjDqFDs0z84=
-X-Received: by 2002:aca:b241:: with SMTP id b62mr6301244oif.47.1592384526109;
- Wed, 17 Jun 2020 02:02:06 -0700 (PDT)
+        Wed, 17 Jun 2020 05:02:44 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:46902 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgFQJCn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 05:02:43 -0400
+Received: by mail-ej1-f65.google.com with SMTP id p20so1441080ejd.13;
+        Wed, 17 Jun 2020 02:02:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aPLbKCcLFxl1OYczOtRfssOCjY0N1FBAdnF/euGOa8U=;
+        b=F0z1PNtOaVlORtP8Yo9r67u5bU9fonGlJDeequnlfveUR1zxcdX+Pl0qNawxFdiXVB
+         7pZeEkKQgVoOeEJ4rmgt5wf0Wpae9nwr915Z9OpH/Pr/IN3vUTjOzOxDSstZBQBTN0ne
+         q2rIs1bq5keKORwAWHbVzB+Pdkf6/AB2FfjWPqGeDhx55peOQJNL+tmiCPAbhTOu9KWi
+         Fe/nZQh/OjfhBESga0AjrZ6Jd2fp6xuhfXaY/WSVFN3inTvG1nxYCXWkkcVEWoNf9GbB
+         f7fEPlkS6Z3PrYhkOt6qBa+LDJ/aL9J19WT/kVpgdApliGB31xRcir9cXTOi76ZmCyWX
+         Iqcw==
+X-Gm-Message-State: AOAM530ObgalcNIcNnCAZ0VuNYvyCweBujF/aaEyjZQ9WvrhdVsL/Ylk
+        0HXQBUM1oS9XkgK9kayH9Ew=
+X-Google-Smtp-Source: ABdhPJz9cRH3gFwGsBLpKSYu/Sr7jAiuc3F/XaPoq0AFgqX1mWyTqW7nax4d9owsvqFpOA9HCu0BOw==
+X-Received: by 2002:a17:906:f53:: with SMTP id h19mr6420723ejj.491.1592384561419;
+        Wed, 17 Jun 2020 02:02:41 -0700 (PDT)
+Received: from localhost (ip-37-188-158-19.eurotel.cz. [37.188.158.19])
+        by smtp.gmail.com with ESMTPSA id z10sm12950424ejb.9.2020.06.17.02.02.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 02:02:40 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 11:02:38 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Joonsoo Kim <js1304@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH for 5.8] mm: do_swap_page fix up the error code
+ instantiation
+Message-ID: <20200617090238.GL9499@dhcp22.suse.cz>
+References: <20200508183105.225460-1-hannes@cmpxchg.org>
+ <20200508183105.225460-17-hannes@cmpxchg.org>
+ <20200611093523.GB20450@dhcp22.suse.cz>
+ <20200617084927.GK9499@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20200615202408.2242614-1-pjones@redhat.com> <CAMj1kXGLwyk9ibSDXBfeu06HV4x4VtbWbKv20KNzkXpbTxBSXg@mail.gmail.com>
-In-Reply-To: <CAMj1kXGLwyk9ibSDXBfeu06HV4x4VtbWbKv20KNzkXpbTxBSXg@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 17 Jun 2020 11:01:54 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFPCeYmnkksL=j2qWfY5q9QRcUhDf1qMK_OgCD9=XDK=A@mail.gmail.com>
-Message-ID: <CAMj1kXFPCeYmnkksL=j2qWfY5q9QRcUhDf1qMK_OgCD9=XDK=A@mail.gmail.com>
-Subject: Re: [PATCH] Make it possible to disable efivar_ssdt entirely
-To:     Peter Jones <pjones@redhat.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617084927.GK9499@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020 at 00:47, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Mon, 15 Jun 2020 at 22:24, Peter Jones <pjones@redhat.com> wrote:
-> >
-> > In most cases, such as CONFIG_ACPI_CUSTOM_DSDT and
-> > CONFIG_ACPI_TABLE_UPGRADE, boot-time modifications to firmware tables
-> > are tied to specific Kconfig options.  Currently this is not the case
-> > for modifying the ACPI SSDT via the efivar_ssdt kernel command line
-> > option and associated EFI variable.
-> >
-> > This patch adds CONFIG_EFI_CUSTOM_SSDT_OVERLAYS, which defaults
-> > disabled, in order to allow enabling or disabling that feature during
-> > the build.
-> >
-> > Signed-off-by: Peter Jones <pjones@redhat.com>
->
-> Thanks Peter.
->
-> > ---
-> >  drivers/firmware/efi/efi.c   |  2 +-
-> >  drivers/firmware/efi/Kconfig | 11 +++++++++++
-> >  2 files changed, 12 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> > index 48d0188936c..4b12a598ccf 100644
-> > --- a/drivers/firmware/efi/efi.c
-> > +++ b/drivers/firmware/efi/efi.c
-> > @@ -192,7 +192,7 @@ static void generic_ops_unregister(void)
-> >         efivars_unregister(&generic_efivars);
-> >  }
-> >
-> > -#if IS_ENABLED(CONFIG_ACPI)
-> > +#if IS_ENABLED(CONFIG_EFI_CUSTOM_SSDT_OVERLAYS)
-> >  #define EFIVAR_SSDT_NAME_MAX   16
-> >  static char efivar_ssdt[EFIVAR_SSDT_NAME_MAX] __initdata;
-> >  static int __init efivar_ssdt_setup(char *str)
-> > diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> > index 6b38f9e5d20..fe433f76b03 100644
-> > --- a/drivers/firmware/efi/Kconfig
-> > +++ b/drivers/firmware/efi/Kconfig
-> > @@ -278,3 +278,14 @@ config EFI_EARLYCON
-> >         depends on SERIAL_EARLYCON && !ARM && !IA64
-> >         select FONT_SUPPORT
-> >         select ARCH_USE_MEMREMAP_PROT
-> > +
-> > +config EFI_CUSTOM_SSDT_OVERLAYS
-> > +       bool "Load custom ACPI SSDT overlay from an EFI variable"
-> > +       depends on EFI_VARS
->
-> Shouldn't this depend on ACPI too?
->
+Damn, I forgot to commit my last change (s@err@ret@). Sorry about the
+noise.
 
-I'll pick this up as a fix (with the ACPI dependency added)
+From 50297dd026ebf71fe901e1945a9ce1e8d8aa083b Mon Sep 17 00:00:00 2001
+From: Michal Hocko <mhocko@suse.com>
+Date: Wed, 17 Jun 2020 10:40:47 +0200
+Subject: [PATCH] mm: do_swap_page fix up the error code
 
-> > +       default ACPI_TABLE_UPGRADE
-> > +       help
-> > +         Allow loading of an ACPI SSDT overlay from an EFI variable specified
-> > +         by a kernel command line option.
-> > +
-> > +         See Documentation/admin-guide/acpi/ssdt-overlays.rst for more
-> > +         information.
-> > --
-> > 2.26.2
-> >
+do_swap_page returns error codes from the VM_FAULT* space. try_charge
+might return -ENOMEM, though, and then do_swap_page simply returns 0
+which means a success.
+
+We almost never return ENOMEM for GFP_KERNEL single page charge. Except
+for async OOM handling (oom_disabled v1). So this needs translation to
+VM_FAULT_OOM otherwise the the page fault path will not notify the
+userspace and wait for an action.
+
+Fixes: 4c6355b25e8b ("mm: memcontrol: charge swapin pages on instantiation")
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+---
+ mm/memory.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/mm/memory.c b/mm/memory.c
+index dc7f3543b1fd..1c632faa2611 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -3140,8 +3140,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 				err = mem_cgroup_charge(page, vma->vm_mm,
+ 							GFP_KERNEL);
+ 				ClearPageSwapCache(page);
+-				if (err)
++				if (err) {
++					ret = VM_FAULT_OOM;
+ 					goto out_page;
++				}
+ 
+ 				lru_cache_add(page);
+ 				swap_readpage(page, true);
+-- 
+2.26.2
+
+-- 
+Michal Hocko
+SUSE Labs
