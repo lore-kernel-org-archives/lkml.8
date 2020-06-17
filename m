@@ -2,317 +2,150 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D17C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7717206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE042085B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:32:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="19BCn1wk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CKfuFKGD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgFQOb4 (ORCPT
+        id S1727018AbgFQOcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 10:31:56 -0400
-Received: from mail-co1nam11on2069.outbound.protection.outlook.com ([40.107.220.69]:64864
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725901AbgFQObz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 10:31:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WqgggNHiEXumx3dH/7wV/7xPWUyB3ftisSfos+NJMwFxiIP6jpz/Hx+0Ig7wCk1iwnk6GnJQIS/OB8Crd/mD67ufSu+eyhI8SheGqF5Nu7laH/WwGyyeGlPmh9hD0uhFQrlz/UhUE6ooeSPs3zmV9xRcydltdG0nnXOgou3tr817LAI4KC6zMOHwiIooiyE/0SziqGvwy5+KCvZiyXmsDyKSxmFpK3lo6shofAR6X/OlS2gFiDh3WUoGEwScFIKxlePYYKL16Qle6cxgL8YwuewUtL1fk760ZljQdpYxeditBN27ccnHZdA2O/GaZigLMq4aAJYC8pWH43cR+l5QvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tfWz3PIqrkamLlmlOCr+AV/rcamarW7jRGTriFTBqFE=;
- b=ezSHaJ9c3n1vf5DX9FzkuqvdgAidQTgTCMdeawS47So/KRvToO3dWno2gzshj02BD0/IdOHM4wHsKQn8MbJ6TknnOtzhU2h/8nA6oKXDRbJqrpChBOU3BpCbaBMpA1VR5fX3hZYEJBLShuUJzV2xBtKf3JFGWpi1JYbB9x71Ri7fzTB0xzkClqpWAfvxut7wSco+es9OXCspMqfaE7qfKq5IaZBiadifJ+ESUWZJmSB02eUTEpSRJM0RS0oWqsUDSSj15zuqXYgMzLWhfCybc3Ii9hHanRwsP1VL3f1oYwPwUq6Z87ZT6MCPJOEHNr0K3JVjJNLEPS1AAIygpGOj4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 17 Jun 2020 10:32:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgFQOcR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 10:32:17 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D0EC06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:32:16 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id y20so2242893wmi.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:32:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tfWz3PIqrkamLlmlOCr+AV/rcamarW7jRGTriFTBqFE=;
- b=19BCn1wkc86HUt0aur9FNMBQfgYymqidOsOWUIHCIiE1t7KA2RYaNK2OscF3WAH0SWh9DrVjORq45TXGJvw4DFj50kFoTUvZnQkJBci6fft7G4aRh5SrSbhjhha1+AIsWB0bROZpVqiAoqdapzCaRxpZIpPiSN3x5wHrX50gERk=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SA0PR12MB4350.namprd12.prod.outlook.com (2603:10b6:806:92::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Wed, 17 Jun
- 2020 14:31:52 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::2102:cc6b:b2db:4c2]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::2102:cc6b:b2db:4c2%3]) with mapi id 15.20.3088.029; Wed, 17 Jun 2020
- 14:31:52 +0000
-Subject: RE: [PATCH v2 2/3] KVM:SVM: Add extended intercept support
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jmattson@google.com" <jmattson@google.com>
-References: <159234483706.6230.13753828995249423191.stgit@bmoger-ubuntu>
- <159234502394.6230.5169466123693241678.stgit@bmoger-ubuntu>
- <87r1udhpeh.fsf@vitty.brq.redhat.com>
-From:   Babu Moger <babu.moger@amd.com>
-Message-ID: <9f6d7fde-590e-b5c8-33b3-15b9de40dab2@amd.com>
-Date:   Wed, 17 Jun 2020 09:31:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <87r1udhpeh.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DM5PR15CA0026.namprd15.prod.outlook.com
- (2603:10b6:4:4b::12) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/NUSA9pglzD7yNhWCpeHZkfqenFsYSN7ZT6sKeOF1qQ=;
+        b=CKfuFKGDV8j2Tll2XFCQJlY/kaHRQmZ/hX9qH1Zz4l3by7rS7EgfRVTc8Mw7hDh5lH
+         Gl25mKlwQs2nfxqXeJiw8Xh4inDN5W+lHwBBw2amk1+5spkXnQ61kK5RXoZn4AfeUzsv
+         /sVeJpsEauHghysJ852dBvFupPJuINrajqtyze1B2t6u41PKf/efhftv8kwNlUyWWp/6
+         Mwt/vOZaEA2wG5yC4heBhsUg5KDPNhZCKyHZLTrn9JQHVgSYySIF0H61iaByymWlaMQg
+         wIFjAJsvQxXG8aj3zSouyHk0TRrJzcN4Z+5x96APUyWUPVsIysfAQmGLhopGm7GIDVAc
+         Me6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/NUSA9pglzD7yNhWCpeHZkfqenFsYSN7ZT6sKeOF1qQ=;
+        b=W3GQD1gr1MputcSSwD/qKSn2UZ7CpeZXF8vGWO1kqQtzmdaieBFyelkS/XMzn4zj9Y
+         sU3LZxPUiM9VoFqIqIddulvWAh0SaTPz3/vTQB4/GjYhZj3fgig5zZteuxx0h9TvoSRN
+         v85X47nBzPQW3yG9100undZYmnBLFSTewDnjMa60AmicKcOOdCgrVQg7chkUxq2Q37lL
+         m/BnTUnSbfAoBsEiPuGEZd7EBFl4xVVqGVGnJQoeolZeCnfUuY/3EPbyYcqk1/Gy/QZa
+         9uHhBBfDuRH/3Uvlo9wQl0/kcbCj6X2pAGDl2l4yJXQyQKh0UIfXAn+60bqkq0PhEOb3
+         PLqQ==
+X-Gm-Message-State: AOAM531HSwcUIvqp3jy9zReta+s7vWiWdbOD0/vQ4cpRQBBpzJTK6h0/
+        uPobm4DAElyz4j6hXH+4o1ZIZA==
+X-Google-Smtp-Source: ABdhPJxDNwNN+dguaLV1N6nCZ8uF/v5ILPkkjsz6De5cIuagmhqadcAl1QeLepQ9h6DDhby8o2EzBg==
+X-Received: by 2002:a1c:2d83:: with SMTP id t125mr9257993wmt.187.1592404335139;
+        Wed, 17 Jun 2020 07:32:15 -0700 (PDT)
+Received: from elver.google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id h7sm628623wml.24.2020.06.17.07.32.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 07:32:14 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 16:32:08 +0200
+From:   Marco Elver <elver@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, ndesaulniers@google.com
+Subject: Re: [PATCH -tip v3 1/2] kcov: Make runtime functions
+ noinstr-compatible
+Message-ID: <20200617143208.GA56208@elver.google.com>
+References: <20200608110108.GB2497@hirez.programming.kicks-ass.net>
+ <20200611215538.GE4496@worktop.programming.kicks-ass.net>
+ <CACT4Y+aKVKEp1yoBYSH0ebJxeqKj8TPR9MVtHC1Mh=jgX0ZvLw@mail.gmail.com>
+ <20200612114900.GA187027@google.com>
+ <CACT4Y+bBtCbEk2tg60gn5bgfBjARQFBgtqkQg8VnLLg5JwyL5g@mail.gmail.com>
+ <CANpmjNM+Tcn40MsfFKvKxNTtev-TXDsosN+z9ATL8hVJdK1yug@mail.gmail.com>
+ <20200615142949.GT2531@hirez.programming.kicks-ass.net>
+ <20200615145336.GA220132@google.com>
+ <20200615150327.GW2531@hirez.programming.kicks-ass.net>
+ <20200615152056.GF2554@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.31.79] (165.204.77.1) by DM5PR15CA0026.namprd15.prod.outlook.com (2603:10b6:4:4b::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Wed, 17 Jun 2020 14:31:50 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2b6d00ca-b6a2-4b08-009d-08d812cb2d27
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4350:
-X-Microsoft-Antispam-PRVS: <SA0PR12MB43503AD5B5FE14CFC44268E2959A0@SA0PR12MB4350.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1824;
-X-Forefront-PRVS: 04371797A5
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wjjAn20gs2uPjRYCqig8VDSLVGLbL2HP3INYZTintMY/7RXQCGz7G/fHicyD19GLt5aDw/C+0F9IlUC5lnOfNuMaSAwwIIdZgFlNGfsF/V5mkKPEYVddj+QPoe/20Z6II3o9JAbqV1wshDHCLSdqfnvMIxrrSnSZVT0PPrsROztDqXe+QS3EKGAeQzczLXnCSObteW0gZCYzPYmCzUzr5ZthO1uZ5S6NUDxrW4hYc6vvnR+MNOLir9lxj/G3rjOKmOTIQsG7+PdzVzWueXOmi/CcPD5rgpcf+FtA1H67MoyR98TrahRaRhiEIErOZ43LtMuLqfC8IhHOU6cpazuQBeV1x0/iNBsebB2Z5dYZzIxfzoDWi6lkACEq3zalQlA8upX5P46mXwTEG6kJbmzbQlN+S6Mmf2MvlThkQxTANdEbkvuzm+LJhx2M0uj+/w+FekeOvoIt7MSALwm4BYMycA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(376002)(346002)(396003)(136003)(36756003)(83380400001)(83080400001)(16526019)(186003)(52116002)(53546011)(6916009)(26005)(478600001)(66556008)(86362001)(45080400002)(6486002)(2906002)(66476007)(66946007)(31696002)(7416002)(31686004)(8936002)(16576012)(316002)(8676002)(44832011)(956004)(54906003)(2616005)(4326008)(966005)(5660300002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: yy/4iu6XhfSy7ZqsCktnr9eaDTzzhRdBss7cWpBKfhXEFeouL50eL92pN8h2aiYZrsKYqtNAAkraJ8MHa/lUe73jt2cgOQOS80H6Jh8EXVl0GiQrj+Xv/UXr+jmt5n1g4MfZarkMbKiofDlPETlsaVZejWksN4IafL1qVqn5M0expv+Ww/KnM8iS0DtbKQimMaGRTzRfo0ubAqUTe3UIkaajC+IwYIQMhWPj+WqP/69JAfNVy/keGd4nABGPgNl2Cz1Hl4GDtLdeLnoHI/xxlkWUEstI5EvNBBRIB2ZIwFI20v4UEW+HryH55NdxJCZSuyIjexutCZze2aqSq8dCIEnR5FtFjackdoWKDJDS0+TdRc93LNGxPEtjicOQLMHkagj4vzd58/0XldSui2x30iksXCeVMQm3SAr04jbUD3r7eHNMzTpGXjZ/+vNay9iPLNTK9R4sTc71SPYp719dPdhHL8/dAHS5tkQHr7a1DbM=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b6d00ca-b6a2-4b08-009d-08d812cb2d27
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 14:31:51.9356
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Dfwordu19J+sI7mqGyZdQvYCsOsA74TIa47ePjVkbZmjeWLktnuSnLhnejirFdi+
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4350
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615152056.GF2554@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.13.2 (2019-12-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Sent: Wednesday, June 17, 2020 7:02 AM
-> To: Moger, Babu <Babu.Moger@amd.com>
-> Cc: linux-kernel@vger.kernel.org; kvm@vger.kernel.org;
-> wanpengli@tencent.com; joro@8bytes.org; x86@kernel.org;
-> sean.j.christopherson@intel.com; mingo@redhat.com; bp@alien8.de;
-> hpa@zytor.com; pbonzini@redhat.com; tglx@linutronix.de;
-> jmattson@google.com
-> Subject: Re: [PATCH v2 2/3] KVM:SVM: Add extended intercept support
+On Mon, Jun 15, 2020 at 05:20PM +0200, Peter Zijlstra wrote:
+> On Mon, Jun 15, 2020 at 05:03:27PM +0200, Peter Zijlstra wrote:
 > 
-> Babu Moger <babu.moger@amd.com> writes:
+> > Yes, I think so. x86_64 needs lib/memcpy_64.S in .noinstr.text then. For
+> > i386 it's an __always_inline inline-asm thing.
 > 
-> > The new intercept bits have been added in vmcb control
-> > area to support the interception of INVPCID instruction.
-> >
-> > The following bit is added to the VMCB layout control area
-> > to control intercept of INVPCID:
-> >
-> > Byte Offset     Bit(s)          Function
-> > 14h             2               intercept INVPCID
-> >
-> > Add the interfaces to support these extended interception.
-> > Also update the tracing for extended intercepts.
-> >
-> > AMD documentation for INVPCID feature is available at "AMD64
-> > Architecture Programmer’s Manual Volume 2: System Programming,
-> > Pub. 24593 Rev. 3.34(or later)"
-> >
-> > The documentation can be obtained at the links below:
-> > Link:
-> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.a
-> md.com%2Fsystem%2Ffiles%2FTechDocs%2F24593.pdf&amp;data=02%7C01%7
-> Cbabu.moger%40amd.com%7Cbacf7250d8b644d984e308d812b63d74%7C3dd8
-> 961fe4884e608e11a82d994e183d%7C0%7C0%7C637279922105581873&amp;s
-> data=%2BGi374uikkiw2c35jk6w%2FYjMnh49R9%2FCw9twf%2BG6i%2FQ%3D&a
-> mp;reserved=0
-> > Link:
-> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.
-> kernel.org%2Fshow_bug.cgi%3Fid%3D206537&amp;data=02%7C01%7Cbabu.m
-> oger%40amd.com%7Cbacf7250d8b644d984e308d812b63d74%7C3dd8961fe488
-> 4e608e11a82d994e183d%7C0%7C0%7C637279922105581873&amp;sdata=dMz
-> wBL9AfZAGYdqLFN9hHtC3BTTkuJLixFHNBl%2FnJbM%3D&amp;reserved=0
-> >
-> > Signed-off-by: Babu Moger <babu.moger@amd.com>
-> > ---
-> >  arch/x86/include/asm/svm.h |    3 ++-
-> >  arch/x86/kvm/svm/nested.c  |    6 +++++-
-> >  arch/x86/kvm/svm/svm.c     |    1 +
-> >  arch/x86/kvm/svm/svm.h     |   18 ++++++++++++++++++
-> >  arch/x86/kvm/trace.h       |   12 ++++++++----
-> >  5 files changed, 34 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-> > index 8a1f5382a4ea..62649fba8908 100644
-> > --- a/arch/x86/include/asm/svm.h
-> > +++ b/arch/x86/include/asm/svm.h
-> > @@ -61,7 +61,8 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
-> >  	u32 intercept_dr;
-> >  	u32 intercept_exceptions;
-> >  	u64 intercept;
-> > -	u8 reserved_1[40];
-> > +	u32 intercept_extended;
-> > +	u8 reserved_1[36];
-> >  	u16 pause_filter_thresh;
-> >  	u16 pause_filter_count;
-> >  	u64 iopm_base_pa;
-> > diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> > index 8a6db11dcb43..7f6d0f2533e2 100644
-> > --- a/arch/x86/kvm/svm/nested.c
-> > +++ b/arch/x86/kvm/svm/nested.c
-> > @@ -121,6 +121,7 @@ void recalc_intercepts(struct vcpu_svm *svm)
-> >  	c->intercept_dr = h->intercept_dr;
-> >  	c->intercept_exceptions = h->intercept_exceptions;
-> >  	c->intercept = h->intercept;
-> > +	c->intercept_extended = h->intercept_extended;
-> >
-> >  	if (g->int_ctl & V_INTR_MASKING_MASK) {
-> >  		/* We only want the cr8 intercept bits of L1 */
-> > @@ -142,6 +143,7 @@ void recalc_intercepts(struct vcpu_svm *svm)
-> >  	c->intercept_dr |= g->intercept_dr;
-> >  	c->intercept_exceptions |= g->intercept_exceptions;
-> >  	c->intercept |= g->intercept;
-> > +	c->intercept_extended |= g->intercept_extended;
-> >  }
-> >
-> >  static void copy_vmcb_control_area(struct vmcb_control_area *dst,
-> > @@ -151,6 +153,7 @@ static void copy_vmcb_control_area(struct
-> vmcb_control_area *dst,
-> >  	dst->intercept_dr         = from->intercept_dr;
-> >  	dst->intercept_exceptions = from->intercept_exceptions;
-> >  	dst->intercept            = from->intercept;
-> > +	dst->intercept_extended   = from->intercept_extended;
-> >  	dst->iopm_base_pa         = from->iopm_base_pa;
-> >  	dst->msrpm_base_pa        = from->msrpm_base_pa;
-> >  	dst->tsc_offset           = from->tsc_offset;
-> > @@ -433,7 +436,8 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
-> >  	trace_kvm_nested_intercepts(nested_vmcb->control.intercept_cr &
-> 0xffff,
-> >  				    nested_vmcb->control.intercept_cr >> 16,
-> >  				    nested_vmcb->control.intercept_exceptions,
-> > -				    nested_vmcb->control.intercept);
-> > +				    nested_vmcb->control.intercept,
-> > +				    nested_vmcb->control.intercept_extended);
-> >
-> >  	/* Clear internal status */
-> >  	kvm_clear_exception_queue(&svm->vcpu);
-> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> > index 9e333b91ff78..285e5e1ff518 100644
-> > --- a/arch/x86/kvm/svm/svm.c
-> > +++ b/arch/x86/kvm/svm/svm.c
-> > @@ -2801,6 +2801,7 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
-> >  	pr_err("%-20s%04x\n", "dr_write:", control->intercept_dr >> 16);
-> >  	pr_err("%-20s%08x\n", "exceptions:", control->intercept_exceptions);
-> >  	pr_err("%-20s%016llx\n", "intercepts:", control->intercept);
-> > +	pr_err("%-20s%08x\n", "intercepts (extended):", control-
-> >intercept_extended);
-> >  	pr_err("%-20s%d\n", "pause filter count:", control->pause_filter_count);
-> >  	pr_err("%-20s%d\n", "pause filter threshold:",
-> >  	       control->pause_filter_thresh);
-> > diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> > index 6ac4c00a5d82..935d08fac03d 100644
-> > --- a/arch/x86/kvm/svm/svm.h
-> > +++ b/arch/x86/kvm/svm/svm.h
-> > @@ -311,6 +311,24 @@ static inline void clr_intercept(struct vcpu_svm *svm,
-> int bit)
-> >  	recalc_intercepts(svm);
-> >  }
-> >
-> > +static inline void set_extended_intercept(struct vcpu_svm *svm, int bit)
-> > +{
-> > +	struct vmcb *vmcb = get_host_vmcb(svm);
-> > +
-> > +	vmcb->control.intercept_extended |= (1U << bit);
-> > +
-> > +	recalc_intercepts(svm);
-> > +}
-> > +
-> > +static inline void clr_extended_intercept(struct vcpu_svm *svm, int bit)
-> > +{
-> > +	struct vmcb *vmcb = get_host_vmcb(svm);
-> > +
-> > +	vmcb->control.intercept_extended &= ~(1U << bit);
-> > +
-> > +	recalc_intercepts(svm);
-> > +}
-> > +
-> >  static inline bool is_intercept(struct vcpu_svm *svm, int bit)
-> >  {
-> >  	return (svm->vmcb->control.intercept & (1ULL << bit)) != 0;
-> > diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-> > index b66432b015d2..5c841c42b33d 100644
-> > --- a/arch/x86/kvm/trace.h
-> > +++ b/arch/x86/kvm/trace.h
-> > @@ -544,14 +544,16 @@ TRACE_EVENT(kvm_nested_vmrun,
-> >  );
-> >
-> >  TRACE_EVENT(kvm_nested_intercepts,
-> > -	    TP_PROTO(__u16 cr_read, __u16 cr_write, __u32 exceptions, __u64
-> intercept),
-> > -	    TP_ARGS(cr_read, cr_write, exceptions, intercept),
-> > +	    TP_PROTO(__u16 cr_read, __u16 cr_write, __u32 exceptions, __u64
-> intercept,
-> > +		     __u32 extended),
-> > +	    TP_ARGS(cr_read, cr_write, exceptions, intercept, extended),
-> >
-> >  	TP_STRUCT__entry(
-> >  		__field(	__u16,		cr_read		)
-> >  		__field(	__u16,		cr_write	)
-> >  		__field(	__u32,		exceptions	)
-> >  		__field(	__u64,		intercept	)
-> > +		__field(	__u32,		extended	)
-> >  	),
-> >
-> >  	TP_fast_assign(
-> > @@ -559,11 +561,13 @@ TRACE_EVENT(kvm_nested_intercepts,
-> >  		__entry->cr_write	= cr_write;
-> >  		__entry->exceptions	= exceptions;
-> >  		__entry->intercept	= intercept;
-> > +		__entry->extended	= extended;
-> >  	),
-> >
-> > -	TP_printk("cr_read: %04x cr_write: %04x excp: %08x intercept:
-> %016llx",
-> > +	TP_printk("cr_read: %04x cr_write: %04x excp: %08x intercept: %016llx"
-> > +		  "intercept (extended): %08x",
-> >  		__entry->cr_read, __entry->cr_write, __entry->exceptions,
-> > -		__entry->intercept)
-> > +		__entry->intercept, __entry->extended)
-> 
-> Nit: I would've renamed 'extended' to something like 'intercept_ext' as
-> it is not clear what it is about otherwise. Also, if you decide to do
-> so, you may as well shorten 'intercept_extended' to 'intercept_ext'
-> everywhere else to be consistent. Or just use 'intercept_extended', with
-> no 80-character-per-line limitation we no longer need to be concise.
+> Bah, I tried writing it without memcpy, but clang inserts memcpy anyway
+> :/
 
-With new suggestion from Jim, we probably don’t need this change. Thanks
+Hmm, __builtin_memcpy() won't help either.
 
-> 
-> >  );
-> >  /*
-> >   * Tracepoint for #VMEXIT while nested
-> >
-> 
-> --
-> Vitaly
+Turns out, Clang 11 got __builtin_memcpy_inline(): https://reviews.llvm.org/D73543
 
+The below works, no more crash on either KASAN or KCSAN with Clang. We
+can test if we have it with __has_feature(__builtin_memcpy_inline)
+(although that's currently not working as expected, trying to fix :-/).
+
+Would a memcpy_inline() be generally useful? It's not just Clang but
+also GCC that isn't entirely upfront about which memcpy is inlined and
+which isn't. If the compiler has __builtin_memcpy_inline(), we can use
+it, otherwise the arch likely has to provide the implementation.
+
+Thoughts?
+
+Thanks,
+-- Marco
+
+------ >8 ------
+
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index af75109485c2..3e07beae2a75 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -690,13 +690,13 @@ struct bad_iret_stack *fixup_bad_iret(struct bad_iret_stack *s)
+ 		(struct bad_iret_stack *)__this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
+ 
+ 	/* Copy the IRET target to the temporary storage. */
+-	memcpy(&tmp.regs.ip, (void *)s->regs.sp, 5*8);
++	__builtin_memcpy_inline(&tmp.regs.ip, (void *)s->regs.sp, 5*8);
+ 
+ 	/* Copy the remainder of the stack from the current stack. */
+-	memcpy(&tmp, s, offsetof(struct bad_iret_stack, regs.ip));
++	__builtin_memcpy_inline(&tmp, s, offsetof(struct bad_iret_stack, regs.ip));
+ 
+ 	/* Update the entry stack */
+-	memcpy(new_stack, &tmp, sizeof(tmp));
++	__builtin_memcpy_inline(new_stack, &tmp, sizeof(tmp));
+ 
+ 	BUG_ON(!user_mode(&new_stack->regs));
+ 	return new_stack;
