@@ -2,150 +2,87 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB328C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A20B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8724920CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592390871;
-	bh=6JWW2IP5OHhYePQHs/w7+V8xyYWD4Gc3HpAFhwrnPQQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0CPbNchqMEfMGl/Gb2IbUkr7be6kVwCDPMZF3NRtFhE/5pRU7ijHHM6on7S9ic4aB
-	 g2BJDwkMByQZ3zTF9ktsZwHvLnvvGn5qwiMjg4hIP0CNBdZfZtRD4dJ+vl3SWOe1fI
-	 cfP2CAQppCebDfzPgW+LvHBfb0y3zWgLB4ExYuoY=
+	by mail.kernel.org (Postfix) with ESMTP id 7220D20CC7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:48:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="abUfTcNo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbgFQKrt (ORCPT
+        id S1726541AbgFQKsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 06:47:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49508 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgFQKro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 06:47:44 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 17 Jun 2020 06:48:24 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27669 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725554AbgFQKsK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 06:48:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592390889;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=rL7vM9X5R7rzCkf4aWP47i5M17Wpex2MeAc4fEf3LAk=;
+        b=abUfTcNoO47gXlT3I4YRJmGySvKNZnfH3cflo4QIpn7uAykmSvZLdV6jkYR06Wj0gZvTHG
+        m5DEFAssk2CaE++a+vZBtCLt0GLPQzz9FCEi0kcoP3LCD/YWzELZou5z6rsR/8wi68ZMne
+        r9GFzRjgaooEeUUGnWHCl3z3+KQVURU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-364-trWxPL4hMDG7xdUqBz0QUA-1; Wed, 17 Jun 2020 06:48:06 -0400
+X-MC-Unique: trWxPL4hMDG7xdUqBz0QUA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BF7A208B3;
-        Wed, 17 Jun 2020 10:47:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592390863;
-        bh=6JWW2IP5OHhYePQHs/w7+V8xyYWD4Gc3HpAFhwrnPQQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GJUFTinrfqpCCrY4NycRdNUZ2Hro8zeipOC3ZMeVPii/BDDvlXnBMP143bd1M6+3w
-         jZJdMZR9Zt9pg5mpCY2oNSQW932LM+KXWtSA8g/yE6ibZpH3DnLHhf5Rx/J4TtcA8a
-         KLSepr+obpjiYgiYjluC3GM0PJa+Dmzj2i7W5jug=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jlVbZ-003l3h-Ua; Wed, 17 Jun 2020 11:47:42 +0100
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3694680B71D;
+        Wed, 17 Jun 2020 10:48:05 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-112-122.ams2.redhat.com [10.36.112.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B85065D9D3;
+        Wed, 17 Jun 2020 10:47:57 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org,
+        David Hildenbrand <david@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Subject: [PATCH v1] MAINTAINERS: add URL for virtio-mem
+Date:   Wed, 17 Jun 2020 12:47:56 +0200
+Message-Id: <20200617104756.6312-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 17 Jun 2020 11:47:41 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH] KVM: arm64: kvm_reset_vcpu() return code incorrect with
- SVE
-In-Reply-To: <20200617104339.35094-1-steven.price@arm.com>
-References: <20200617104339.35094-1-steven.price@arm.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <c9761495762abe174e6546122916fc38@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: steven.price@arm.com, catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dave.Martin@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
+Let's add the status/info page, which is still under construction, however,
+already contains valuable documentation/information.
 
-On 2020-06-17 11:43, Steven Price wrote:
-> If SVE is enabled then 'ret' can be assigned the return value of
-> kvm_vcpu_enable_sve() which may be 0 causing future "goto out" sites to
-> erroneously return 0 on failure rather than -EINVAL as expected.
-> 
-> Remove the initialisation of 'ret' and make setting the return value
-> explicit to avoid this situation in the future.
-> 
-> Fixes: 9a3cdf26e336 ("KVM: arm64/sve: Allow userspace to enable SVE for 
-> vcpus")
-> Reported-by: James Morse <james.morse@arm.com>
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
-> The problematic chunk isn't visible in the diff, so reproduced here:
-> 
-> 	if (!kvm_arm_vcpu_sve_finalized(vcpu)) {
-> 		if (test_bit(KVM_ARM_VCPU_SVE, vcpu->arch.features)) {
-> 			ret = kvm_vcpu_enable_sve(vcpu);
-> 			if (ret)
-> 				goto out;
-> 		}
-> 	} else {
-> 		kvm_vcpu_reset_sve(vcpu);
-> 	}
-> 
->  arch/arm64/kvm/reset.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-> index d3b209023727..f1057603b756 100644
-> --- a/arch/arm64/kvm/reset.c
-> +++ b/arch/arm64/kvm/reset.c
-> @@ -245,7 +245,7 @@ static int kvm_vcpu_enable_ptrauth(struct kvm_vcpu 
-> *vcpu)
->   */
->  int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
->  {
-> -	int ret = -EINVAL;
-> +	int ret;
->  	bool loaded;
->  	u32 pstate;
-> 
-> @@ -269,15 +269,19 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
-> 
->  	if (test_bit(KVM_ARM_VCPU_PTRAUTH_ADDRESS, vcpu->arch.features) ||
->  	    test_bit(KVM_ARM_VCPU_PTRAUTH_GENERIC, vcpu->arch.features)) {
-> -		if (kvm_vcpu_enable_ptrauth(vcpu))
-> +		if (kvm_vcpu_enable_ptrauth(vcpu)) {
-> +			ret = -EINVAL;
->  			goto out;
-> +		}
->  	}
-> 
->  	switch (vcpu->arch.target) {
->  	default:
->  		if (test_bit(KVM_ARM_VCPU_EL1_32BIT, vcpu->arch.features)) {
-> -			if (!cpus_have_const_cap(ARM64_HAS_32BIT_EL1))
-> +			if (cpus_have_const_cap(ARM64_HAS_32BIT_EL1)) {
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Do you really mean this? Seems counter-productive... :-(
-
-> +				ret = -EINVAL;
->  				goto out;
-> +			}
->  			pstate = VCPU_RESET_PSTATE_SVC;
->  		} else {
->  			pstate = VCPU_RESET_PSTATE_EL1;
-
-Thanks,
-
-         M.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 301330e02bca7..3470c5bfbdc7b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18234,6 +18234,7 @@ VIRTIO MEM DRIVER
+ M:	David Hildenbrand <david@redhat.com>
+ L:	virtualization@lists.linux-foundation.org
+ S:	Maintained
++W:	https://virtio-mem.gitlab.io/
+ F:	drivers/virtio/virtio_mem.c
+ F:	include/uapi/linux/virtio_mem.h
+ 
 -- 
-Jazz is not dead. It just smells funny...
+2.26.2
+
