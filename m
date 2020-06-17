@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3225EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEE7021973
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169DD21924
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgFQSYZ (ORCPT
+        id S1727985AbgFQSY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:24:25 -0400
+        Wed, 17 Jun 2020 14:24:29 -0400
 Received: from mga11.intel.com ([192.55.52.93]:18901 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727925AbgFQSYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 14:24:22 -0400
-IronPort-SDR: oBXY9vq7UDE83w4ZzCyjQ7tbjzK0u7pNRsm5qgtEQDu8Oc01ZpI6/r4vP+uCfJy8Tm8Mgw68+r
- f2imLeM/u4oQ==
+        id S1727925AbgFQSY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 14:24:27 -0400
+IronPort-SDR: cFbPS1jVP2jJkiSQMoZEPoYR+/3oSzvgG8vARyw5AZtc+hhynsh4fbS4F41TsIn0VU3yB5aq8Q
+ 0vDsqnCT3aFA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 11:24:17 -0700
-IronPort-SDR: egWrbiEXg17v9stifD1XVCuUqYflp+Waw9xJV2VEL9xiiyorhLubrnXQzh/YCKmcr+edSQoeOM
- 9yCQkPHtUM6g==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 11:24:18 -0700
+IronPort-SDR: lL/BToVjMpD1fUwWCLQRcQZO8S1gXAr5ZsBvwjVGCYbg1/4SpfczDkBipwS7B/5qB3w69Ru/Mh
+ XGG8rWQvjFMQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
-   d="scan'208";a="308874179"
+   d="scan'208";a="308874192"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga008.jf.intel.com with ESMTP; 17 Jun 2020 11:24:17 -0700
+  by orsmga008.jf.intel.com with ESMTP; 17 Jun 2020 11:24:18 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
@@ -51,9 +51,9 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, iommu@lists.linux-foundation.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v3 09/13] fork: Clear PASID for new mm
-Date:   Wed, 17 Jun 2020 11:23:49 -0700
-Message-Id: <1592418233-17762-10-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v3 12/13] sched: Define and initialize a flag to identify valid PASID in the task
+Date:   Wed, 17 Jun 2020 11:23:52 -0700
+Message-Id: <1592418233-17762-13-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1592418233-17762-1-git-send-email-fenghua.yu@intel.com>
 References: <1592418233-17762-1-git-send-email-fenghua.yu@intel.com>
@@ -62,58 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a new mm is created, its PASID should be cleared, i.e. the PASID is
-initialized to its init state 0 on both ARM and X86.
+From: Peter Zijlstra <peterz@infradead.org>
 
+The flag is defined for the task to identify if the task has a valid
+PASID. Its initial value is 0 when the task is forked/cloned. It will
+be used shortly.
+
+Signed-off-by: Peter Zijlstra <peterz@infradead.org>
+Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
 v2:
-- Add this patch to initialize PASID value for a new mm.
+- Add this patch to define the flag to identify valid PASID MSR (PeterZ)
 
- include/linux/mm_types.h | 2 ++
- kernel/fork.c            | 8 ++++++++
- 2 files changed, 10 insertions(+)
+ include/linux/sched.h | 3 +++
+ kernel/fork.c         | 4 ++++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 1ad0e54ebbba..9a209c1cf7ec 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -22,6 +22,8 @@
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index b62e6aaf28f0..1b5a6e5c74ca 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -801,6 +801,9 @@ struct task_struct {
+ 	/* Stalled due to lack of memory */
+ 	unsigned			in_memstall:1;
  #endif
- #define AT_VECTOR_SIZE (2*(AT_VECTOR_SIZE_ARCH + AT_VECTOR_SIZE_BASE + 1))
++#ifdef CONFIG_IOMMU_SUPPORT
++	unsigned			has_valid_pasid:1;
++#endif
  
-+/* Initial PASID value is 0. */
-+#define INIT_PASID	0
+ 	unsigned long			atomic_flags; /* Flags requiring atomic access. */
  
- struct address_space;
- struct mem_cgroup;
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 142b23645d82..43b5f112604d 100644
+index 43b5f112604d..0a962bebdf88 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -1007,6 +1007,13 @@ static void mm_init_owner(struct mm_struct *mm, struct task_struct *p)
+@@ -955,6 +955,10 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
+ 	tsk->use_memdelay = 0;
  #endif
- }
  
-+static void mm_init_pasid(struct mm_struct *mm)
-+{
 +#ifdef CONFIG_IOMMU_SUPPORT
-+	mm->pasid = INIT_PASID;
++	tsk->has_valid_pasid = 0;
 +#endif
-+}
 +
- static void mm_init_uprobes_state(struct mm_struct *mm)
- {
- #ifdef CONFIG_UPROBES
-@@ -1035,6 +1042,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
- 	mm_init_cpumask(mm);
- 	mm_init_aio(mm);
- 	mm_init_owner(mm, p);
-+	mm_init_pasid(mm);
- 	RCU_INIT_POINTER(mm->exe_file, NULL);
- 	mmu_notifier_subscriptions_init(mm);
- 	init_tlb_flush_pending(mm);
+ #ifdef CONFIG_MEMCG
+ 	tsk->active_memcg = NULL;
+ #endif
 -- 
 2.19.1
 
