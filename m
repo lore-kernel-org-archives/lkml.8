@@ -2,367 +2,174 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A542C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E04FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71E702078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F31207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbgFQJ7C convert rfc822-to-8bit (ORCPT
+        id S1726573AbgFQJ7W convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 05:59:02 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:50686 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgFQJ7B (ORCPT
+        Wed, 17 Jun 2020 05:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgFQJ7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 05:59:01 -0400
-Received: from marcel-macbook.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 3CDC4CECD1;
-        Wed, 17 Jun 2020 12:08:49 +0200 (CEST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 4/4] Bluetooth: Add get/set device flags mgmt op
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200616210008.4.If379101eba01fd9f0903e04cc817eb2c8e7f7d96@changeid>
-Date:   Wed, 17 Jun 2020 11:58:57 +0200
-Cc:     Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        Alain Michaud <alainm@chromium.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
+        Wed, 17 Jun 2020 05:59:22 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13F7C061573;
+        Wed, 17 Jun 2020 02:59:21 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jlUqj-0006ED-Qa; Wed, 17 Jun 2020 11:59:17 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 60E621C0089;
+        Wed, 17 Jun 2020 11:59:17 +0200 (CEST)
+Date:   Wed, 17 Jun 2020 09:59:17 -0000
+From:   "tip-bot2 for Benjamin Thiel" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/mm: Fix -Wmissing-prototypes warnings for
+ arch/x86/mm/init.c
+Cc:     Benjamin Thiel <b.thiel@posteo.de>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200606122629.2720-1-b.thiel@posteo.de>
+References: <20200606122629.2720-1-b.thiel@posteo.de>
+MIME-Version: 1.0
+Message-ID: <159238795712.16989.2186114908664268731.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
-Message-Id: <6439C541-257B-4CF0-B171-118B374C5B72@holtmann.org>
-References: <20200617040022.174448-1-abhishekpandit@chromium.org>
- <20200616210008.4.If379101eba01fd9f0903e04cc817eb2c8e7f7d96@changeid>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+The following commit has been merged into the x86/cleanups branch of tip:
 
-> Add the get device flags and set device flags mgmt ops and the device
-> flags changed event. Their behavior is described in detail in
-> mgmt-api.txt in bluez.
-> 
-> Sample btmon trace when a HID device is added (trimmed to 75 chars):
-> 
-> @ MGMT Command: Unknown (0x0050) plen 11        {0x0001} [hci0] 18:06:14.98
->        90 c5 13 cd f3 cd 02 01 00 00 00                 ...........
-> @ MGMT Event: Unknown (0x002a) plen 15          {0x0004} [hci0] 18:06:14.98
->        90 c5 13 cd f3 cd 02 01 00 00 00 01 00 00 00     ...............
-> @ MGMT Event: Unknown (0x002a) plen 15          {0x0003} [hci0] 18:06:14.98
->        90 c5 13 cd f3 cd 02 01 00 00 00 01 00 00 00     ...............
-> @ MGMT Event: Unknown (0x002a) plen 15          {0x0002} [hci0] 18:06:14.98
->        90 c5 13 cd f3 cd 02 01 00 00 00 01 00 00 00     ...............
-> @ MGMT Event: Command Compl.. (0x0001) plen 10  {0x0001} [hci0] 18:06:14.98
->      Unknown (0x0050) plen 7
->        Status: Success (0x00)
->        90 c5 13 cd f3 cd 02                             .......
-> @ MGMT Command: Add Device (0x0033) plen 8      {0x0001} [hci0] 18:06:14.98
->        LE Address: CD:F3:CD:13:C5:90 (Static)
->        Action: Auto-connect remote device (0x02)
-> @ MGMT Event: Device Added (0x001a) plen 8      {0x0004} [hci0] 18:06:14.98
->        LE Address: CD:F3:CD:13:C5:90 (Static)
->        Action: Auto-connect remote device (0x02)
-> @ MGMT Event: Device Added (0x001a) plen 8      {0x0003} [hci0] 18:06:14.98
->        LE Address: CD:F3:CD:13:C5:90 (Static)
->        Action: Auto-connect remote device (0x02)
-> @ MGMT Event: Device Added (0x001a) plen 8      {0x0002} [hci0] 18:06:14.98
->        LE Address: CD:F3:CD:13:C5:90 (Static)
->        Action: Auto-connect remote device (0x02)
-> @ MGMT Event: Unknown (0x002a) plen 15          {0x0004} [hci0] 18:06:14.98
->        90 c5 13 cd f3 cd 02 01 00 00 00 01 00 00 00     ...............
-> @ MGMT Event: Unknown (0x002a) plen 15          {0x0003} [hci0] 18:06:14.98
->        90 c5 13 cd f3 cd 02 01 00 00 00 01 00 00 00     ...............
-> @ MGMT Event: Unknown (0x002a) plen 15          {0x0002} [hci0] 18:06:14.98
->        90 c5 13 cd f3 cd 02 01 00 00 00 01 00 00 00     ...............
-> @ MGMT Event: Unknown (0x002a) plen 15          {0x0001} [hci0] 18:06:14.98
->        90 c5 13 cd f3 cd 02 01 00 00 00 01 00 00 00     ...............
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> Reviewed-by: Alain Michaud <alainm@chromium.org>
-> ---
-> 
-> include/net/bluetooth/hci.h  |   1 +
-> include/net/bluetooth/mgmt.h |  28 ++++++++
-> net/bluetooth/hci_sock.c     |   1 +
-> net/bluetooth/mgmt.c         | 134 +++++++++++++++++++++++++++++++++++
-> 4 files changed, 164 insertions(+)
-> 
-> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> index 16ab6ce8788341..5e03aac76ad47f 100644
-> --- a/include/net/bluetooth/hci.h
-> +++ b/include/net/bluetooth/hci.h
-> @@ -259,6 +259,7 @@ enum {
-> 	HCI_MGMT_LOCAL_NAME_EVENTS,
-> 	HCI_MGMT_OOB_DATA_EVENTS,
-> 	HCI_MGMT_EXP_FEATURE_EVENTS,
-> +	HCI_MGMT_DEVICE_FLAGS_EVENTS,
+Commit-ID:     d5249bc7a1a8869da90ba668b331b0b3f8996924
+Gitweb:        https://git.kernel.org/tip/d5249bc7a1a8869da90ba668b331b0b3f8996924
+Author:        Benjamin Thiel <b.thiel@posteo.de>
+AuthorDate:    Sat, 06 Jun 2020 14:26:29 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 17 Jun 2020 10:45:46 +02:00
 
-this part is not needed. We are doing this for commands where a client has to initiate a read command first before things get enabled. In this case the triggering command is Add Device and that has been there for a while. So no need to extra guard this.
+x86/mm: Fix -Wmissing-prototypes warnings for arch/x86/mm/init.c
 
-> };
-> 
-> /*
-> diff --git a/include/net/bluetooth/mgmt.h b/include/net/bluetooth/mgmt.h
-> index e515288f328f47..8e47b0c5fe52bb 100644
-> --- a/include/net/bluetooth/mgmt.h
-> +++ b/include/net/bluetooth/mgmt.h
-> @@ -720,6 +720,27 @@ struct mgmt_rp_set_exp_feature {
-> #define MGMT_OP_SET_DEF_RUNTIME_CONFIG	0x004e
-> #define MGMT_SET_DEF_RUNTIME_CONFIG_SIZE	0
-> 
-> +#define MGMT_OP_GET_DEVICE_FLAGS	0x004F
-> +#define MGMT_GET_DEVICE_FLAGS_SIZE	7
-> +struct mgmt_cp_get_device_flags {
-> +	struct mgmt_addr_info addr;
-> +} __packed;
-> +struct mgmt_rp_get_device_flags {
-> +	struct mgmt_addr_info addr;
-> +	__le32 supported_flags;
-> +	__le32 current_flags;
-> +} __packed;
-> +
-> +#define MGMT_OP_SET_DEVICE_FLAGS	0x0050
-> +#define MGMT_SET_DEVICE_FLAGS_SIZE	11
-> +struct mgmt_cp_set_device_flags {
-> +	struct mgmt_addr_info addr;
-> +	__le32 current_flags;
-> +} __packed;
-> +struct mgmt_rp_set_device_flags {
-> +	struct mgmt_addr_info addr;
-> +} __packed;
-> +
-> #define MGMT_EV_CMD_COMPLETE		0x0001
-> struct mgmt_ev_cmd_complete {
-> 	__le16	opcode;
-> @@ -951,3 +972,10 @@ struct mgmt_ev_exp_feature_changed {
-> 	__u8	uuid[16];
-> 	__le32	flags;
-> } __packed;
-> +
-> +#define MGMT_EV_DEVICE_FLAGS_CHANGED		0x002a
-> +struct mgmt_ev_device_flags_changed {
-> +	struct mgmt_addr_info addr;
-> +	__le32 supported_flags;
-> +	__le32 current_flags;
-> +} __packed;
-> diff --git a/net/bluetooth/hci_sock.c b/net/bluetooth/hci_sock.c
-> index d5627967fc254f..a7903b6206620c 100644
-> --- a/net/bluetooth/hci_sock.c
-> +++ b/net/bluetooth/hci_sock.c
-> @@ -1354,6 +1354,7 @@ static int hci_sock_bind(struct socket *sock, struct sockaddr *addr,
-> 			hci_sock_set_flag(sk, HCI_MGMT_SETTING_EVENTS);
-> 			hci_sock_set_flag(sk, HCI_MGMT_DEV_CLASS_EVENTS);
-> 			hci_sock_set_flag(sk, HCI_MGMT_LOCAL_NAME_EVENTS);
-> +			hci_sock_set_flag(sk, HCI_MGMT_DEVICE_FLAGS_EVENTS);
+Fix -Wmissing-prototypes warnings:
 
-This is actually wrong. The other flags are there for event where you have multiple versions of the same event. If we ever introduce an Add Extended Device command, then yes, we need to guard things here. Right now, we don’t.
+  arch/x86/mm/init.c:81:6:
+  warning: no previous prototype for ‘x86_has_pat_wp’ [-Wmissing-prototypes]
+  bool x86_has_pat_wp(void)
 
-> 		}
-> 		break;
-> 	}
-> diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-> index 6d996e5e5bcc2d..2805f662d85695 100644
-> --- a/net/bluetooth/mgmt.c
-> +++ b/net/bluetooth/mgmt.c
-> @@ -114,6 +114,8 @@ static const u16 mgmt_commands[] = {
-> 	MGMT_OP_SET_EXP_FEATURE,
-> 	MGMT_OP_READ_DEF_SYSTEM_CONFIG,
-> 	MGMT_OP_SET_DEF_SYSTEM_CONFIG,
-> +	MGMT_OP_GET_DEVICE_FLAGS,
-> +	MGMT_OP_SET_DEVICE_FLAGS,
-> };
-> 
-> static const u16 mgmt_events[] = {
-> @@ -154,6 +156,7 @@ static const u16 mgmt_events[] = {
-> 	MGMT_EV_EXT_INFO_CHANGED,
-> 	MGMT_EV_PHY_CONFIGURATION_CHANGED,
-> 	MGMT_EV_EXP_FEATURE_CHANGED,
-> +	MGMT_EV_DEVICE_FLAGS_CHANGED,
-> };
-> 
-> static const u16 mgmt_untrusted_commands[] = {
-> @@ -3853,6 +3856,122 @@ static int set_exp_feature(struct sock *sk, struct hci_dev *hdev,
-> 			       MGMT_STATUS_NOT_SUPPORTED);
-> }
-> 
-> +#define SUPPORTED_DEVICE_FLAGS() ((1U << HCI_CONN_FLAG_MAX) - 1)
-> +
-> +static int get_device_flags(struct sock *sk, struct hci_dev *hdev, void *data,
-> +			    u16 data_len)
-> +{
-> +	struct mgmt_cp_get_device_flags *cp = data;
-> +	struct mgmt_rp_get_device_flags rp;
-> +	struct bdaddr_list_with_flags *br_params;
-> +	struct hci_conn_params *params;
-> +	u32 supported_flags = SUPPORTED_DEVICE_FLAGS();
-> +	u32 current_flags = 0;
-> +	u8 status = MGMT_STATUS_INVALID_PARAMS;
-> +
-> +	bt_dev_dbg(hdev, "Get device flags %pMR (type 0x%x)\n",
-> +		   &cp->addr.bdaddr, cp->addr.type);
-> +
-> +	if (cp->addr.type == BDADDR_BREDR) {
-> +		br_params = hci_bdaddr_list_lookup_with_flags(&hdev->whitelist,
-> +							      &cp->addr.bdaddr,
-> +							      cp->addr.type);
-> +		if (!br_params)
-> +			goto done;
-> +
-> +		current_flags = br_params->current_flags;
-> +	} else {
-> +		params = hci_conn_params_lookup(hdev, &cp->addr.bdaddr,
-> +						le_addr_type(cp->addr.type));
-> +
-> +		if (!params)
-> +			goto done;
-> +
-> +		current_flags = params->current_flags;
-> +	}
-> +
-> +	bacpy(&rp.addr.bdaddr, &cp->addr.bdaddr);
-> +	rp.addr.type = cp->addr.type;
-> +	rp.supported_flags = cpu_to_le32(supported_flags);
-> +	rp.current_flags = cpu_to_le32(current_flags);
-> +
-> +	status = MGMT_STATUS_SUCCESS;
-> +
-> +done:
-> +	return mgmt_cmd_complete(sk, hdev->id, MGMT_OP_GET_DEVICE_FLAGS, status,
-> +				&rp, sizeof(rp));
-> +}
-> +
-> +static int device_flags_changed(struct hci_dev *hdev, bdaddr_t *bdaddr,
-> +				u8 bdaddr_type, u32 supported_flags,
-> +				u32 current_flags, struct sock *skip)
-> +{
-> +	struct mgmt_ev_device_flags_changed ev;
-> +
-> +	bacpy(&ev.addr.bdaddr, bdaddr);
-> +	ev.addr.type = bdaddr_type;
-> +	ev.supported_flags = cpu_to_le32(supported_flags);
-> +	ev.current_flags = cpu_to_le32(current_flags);
-> +
-> +	return mgmt_limited_event(MGMT_EV_DEVICE_FLAGS_CHANGED, hdev, &ev,
-> +				  sizeof(ev), HCI_MGMT_DEVICE_FLAGS_EVENTS,
-> +				  skip);
-> +}
-> +
-> +static int set_device_flags(struct sock *sk, struct hci_dev *hdev, void *data,
-> +			    u16 len)
-> +{
-> +	struct mgmt_cp_set_device_flags *cp = data;
-> +	struct bdaddr_list_with_flags *br_params;
-> +	struct hci_conn_params *params;
-> +	u8 status = MGMT_STATUS_INVALID_PARAMS;
-> +	u32 supported_flags = SUPPORTED_DEVICE_FLAGS();
-> +	u32 current_flags = __le32_to_cpu(cp->current_flags);
-> +
-> +	bt_dev_dbg(hdev, "Set device flags %pMR (type 0x%x) = 0x%x",
-> +		   &cp->addr.bdaddr, cp->addr.type,
-> +		   __le32_to_cpu(current_flags));
-> +
-> +	if ((supported_flags | current_flags) != supported_flags) {
-> +		bt_dev_warn(hdev, "Bad flag given (0x%x) vs supported (0x%0x)",
-> +			    current_flags, supported_flags);
-> +		goto done;
-> +	}
-> +
-> +	if (cp->addr.type == BDADDR_BREDR) {
-> +		br_params = hci_bdaddr_list_lookup_with_flags(&hdev->whitelist,
-> +							      &cp->addr.bdaddr,
-> +							      cp->addr.type);
-> +
-> +		if (br_params) {
-> +			br_params->current_flags = current_flags;
-> +			status = MGMT_STATUS_SUCCESS;
-> +		} else {
-> +			bt_dev_warn(hdev, "No such BR/EDR device %pMR (0x%x)",
-> +				    &cp->addr.bdaddr, cp->addr.type);
-> +		}
-> +	} else {
-> +		params = hci_conn_params_lookup(hdev, &cp->addr.bdaddr,
-> +						le_addr_type(cp->addr.type));
-> +		if (params) {
-> +			params->current_flags = current_flags;
-> +			status = MGMT_STATUS_SUCCESS;
-> +		} else {
-> +			bt_dev_warn(hdev, "No such LE device %pMR (0x%x)",
-> +				    &cp->addr.bdaddr,
-> +				    le_addr_type(cp->addr.type));
-> +		}
-> +	}
-> +
-> +done:
-> +	if (status == MGMT_STATUS_SUCCESS)
-> +		device_flags_changed(hdev, &cp->addr.bdaddr, cp->addr.type,
-> +				     supported_flags, current_flags, sk);
-> +
-> +	return mgmt_cmd_complete(sk, hdev->id, MGMT_OP_SET_DEVICE_FLAGS, status,
-> +				 &cp->addr, sizeof(cp->addr));
-> +}
-> +
-> static void read_local_oob_data_complete(struct hci_dev *hdev, u8 status,
-> 				         u16 opcode, struct sk_buff *skb)
-> {
-> @@ -5970,7 +6089,9 @@ static int add_device(struct sock *sk, struct hci_dev *hdev,
-> {
-> 	struct mgmt_cp_add_device *cp = data;
-> 	u8 auto_conn, addr_type;
-> +	struct hci_conn_params *params;
-> 	int err;
-> +	u32 current_flags = 0;
-> 
-> 	bt_dev_dbg(hdev, "sock %p", sk);
-> 
-> @@ -6038,12 +6159,19 @@ static int add_device(struct sock *sk, struct hci_dev *hdev,
-> 					MGMT_STATUS_FAILED, &cp->addr,
-> 					sizeof(cp->addr));
-> 		goto unlock;
-> +	} else {
-> +		params = hci_conn_params_lookup(hdev, &cp->addr.bdaddr,
-> +						addr_type);
-> +		if (params)
-> +			current_flags = params->current_flags;
-> 	}
-> 
-> 	hci_update_background_scan(hdev);
-> 
-> added:
-> 	device_added(sk, hdev, &cp->addr.bdaddr, cp->addr.type, cp->action);
-> +	device_flags_changed(hdev, &cp->addr.bdaddr, cp->addr.type,
-> +			     SUPPORTED_DEVICE_FLAGS(), current_flags, NULL);
-> 
-> 	err = mgmt_cmd_complete(sk, hdev->id, MGMT_OP_ADD_DEVICE,
-> 				MGMT_STATUS_SUCCESS, &cp->addr,
-> @@ -7306,6 +7434,12 @@ static const struct hci_mgmt_handler mgmt_handlers[] = {
-> 						HCI_MGMT_UNTRUSTED },
-> 	{ set_def_system_config,   MGMT_SET_DEF_SYSTEM_CONFIG_SIZE,
-> 						HCI_MGMT_VAR_LEN },
-> +
-> +	{ NULL }, /* Read default runtime config */
-> +	{ NULL }, /* Set default runtime config */
-> +
-> +	{ get_device_flags,        MGMT_GET_DEVICE_FLAGS_SIZE },
-> +	{ set_device_flags,        MGMT_SET_DEVICE_FLAGS_SIZE },
-> };
+  arch/x86/mm/init.c:86:22:
+  warning: no previous prototype for ‘pgprot2cachemode’ [-Wmissing-prototypes]
+  enum page_cache_mode pgprot2cachemode(pgprot_t pgprot)
 
-I have create a local tree that has the read/set runtime config commands already in there. I added your patches 1-3 to the tree already. I might just remove the HCI_MGMT_DEVICE_FLAGS_EVENTS and add this patch as well. Everything else looks good.
+by including the respective header containing prototypes. Also fix:
 
-Regards
+  arch/x86/mm/init.c:893:13:
+  warning: no previous prototype for ‘mem_encrypt_free_decrypted_mem’ [-Wmissing-prototypes]
+  void __weak mem_encrypt_free_decrypted_mem(void) { }
 
-Marcel
+by making it static inline for the !CONFIG_AMD_MEM_ENCRYPT case. This
+warning happens when CONFIG_AMD_MEM_ENCRYPT is not enabled (defconfig
+for example):
 
+  ./arch/x86/include/asm/mem_encrypt.h:80:27:
+  warning: inline function ‘mem_encrypt_free_decrypted_mem’ declared weak [-Wattributes]
+  static inline void __weak mem_encrypt_free_decrypted_mem(void) { }
+                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It's ok to convert to static inline because the function is used only in
+x86. Is not shared with other architectures so drop the __weak too.
+
+ [ bp: Massage and adjust __weak comments while at it. ]
+
+Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200606122629.2720-1-b.thiel@posteo.de
+---
+ arch/x86/include/asm/mem_encrypt.h | 5 ++++-
+ arch/x86/mm/init.c                 | 3 +--
+ arch/x86/mm/mem_encrypt.c          | 2 +-
+ 3 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+index 848ce43..5049f6c 100644
+--- a/arch/x86/include/asm/mem_encrypt.h
++++ b/arch/x86/include/asm/mem_encrypt.h
+@@ -43,9 +43,10 @@ void __init sme_enable(struct boot_params *bp);
+ int __init early_set_memory_decrypted(unsigned long vaddr, unsigned long size);
+ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size);
+ 
++void __init mem_encrypt_free_decrypted_mem(void);
++
+ /* Architecture __weak replacement functions */
+ void __init mem_encrypt_init(void);
+-void __init mem_encrypt_free_decrypted_mem(void);
+ 
+ bool sme_active(void);
+ bool sev_active(void);
+@@ -77,6 +78,8 @@ early_set_memory_decrypted(unsigned long vaddr, unsigned long size) { return 0; 
+ static inline int __init
+ early_set_memory_encrypted(unsigned long vaddr, unsigned long size) { return 0; }
+ 
++static inline void mem_encrypt_free_decrypted_mem(void) { }
++
+ #define __bss_decrypted
+ 
+ #endif	/* CONFIG_AMD_MEM_ENCRYPT */
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index 001dd7d..c7a4760 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -25,6 +25,7 @@
+ #include <asm/cpufeature.h>
+ #include <asm/pti.h>
+ #include <asm/text-patching.h>
++#include <asm/memtype.h>
+ 
+ /*
+  * We need to define the tracepoints somewhere, and tlb.c
+@@ -912,8 +913,6 @@ void free_kernel_image_pages(const char *what, void *begin, void *end)
+ 		set_memory_np_noalias(begin_ul, len_pages);
+ }
+ 
+-void __weak mem_encrypt_free_decrypted_mem(void) { }
+-
+ void __ref free_initmem(void)
+ {
+ 	e820__reallocate_tables();
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index 4a781cf..9f1177e 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -376,7 +376,6 @@ bool force_dma_unencrypted(struct device *dev)
+ 	return false;
+ }
+ 
+-/* Architecture __weak replacement functions */
+ void __init mem_encrypt_free_decrypted_mem(void)
+ {
+ 	unsigned long vaddr, vaddr_end, npages;
+@@ -401,6 +400,7 @@ void __init mem_encrypt_free_decrypted_mem(void)
+ 	free_init_pages("unused decrypted", vaddr, vaddr_end);
+ }
+ 
++/* Architecture __weak replacement functions */
+ void __init mem_encrypt_init(void)
+ {
+ 	if (!sme_me_mask)
