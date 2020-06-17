@@ -2,99 +2,87 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13593C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDC1920786
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65CB20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:56:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qqIvT076"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XbJV2lmW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgFQEwy (ORCPT
+        id S1726777AbgFQE4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 00:52:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgFQEwu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 00:52:50 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4728C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 21:52:50 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k2so421927pjs.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Jun 2020 21:52:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=h0vhA/U1QaPFJFPPSjv2ooCi1yzJ6bifslhy6/ILfNA=;
-        b=qqIvT076Ge1qMBfJZRudD6kJOw7/2aACm4VFEGmTFxFn+fCQL61SzYuS80vLfgU0EO
-         1arc/y+G8q/3e4CymS8UeG6vnphqJUxbkEX9ScUZ9sskxZa5SyNwTR6p51GO3N4XLJ8Y
-         CpOdAaHvmQgc3foOQzxQDusX6yi6ARQogN6GxF6/ZZvu2dTxQNvTkoxtZPcEI45AjFku
-         znd+4BS7UNWJ3KPwSGmrwyp0c39/7x5UkacWCK/fcA+yUIUQJYTWbWxX2mDZtkHRPzH6
-         CiHPsaN+s9EVhHoAeYUMPxQqhZHqk8ptbYyNQqHdCH0TfckHERqD1a75k2FQOhfuhHgs
-         MLJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h0vhA/U1QaPFJFPPSjv2ooCi1yzJ6bifslhy6/ILfNA=;
-        b=uD/SqSMx/xTuettYGWjE/P2MCCy6eU44Yvo+SnQisOcy0MBBgCrTWiHotz3V088VIr
-         KFSVwTDKhf+7poiwYITRFNe2/C72iOjeoNzFWAHvGxIRXyu9uM4gA5f64yvNVWvqsqnw
-         bwpDyfWvXU77K5A9jo+Mk1FRVrK8buVtBW/4wx2kTDTlAiYQS7LO68kgGxreuhZ6fOV0
-         Rjbs4prkbzhK4E78BUJ2YFct4wHq2hMkp+xnBbcSumCpkxePPOpQD42GCdiXliFdfT/4
-         m26hkzYJO8H0xPdIkMLesmL1Hq1bqe1seUHwV/tlxQAIb1geArLMFNSIniu/Kt8z+6XY
-         S9mA==
-X-Gm-Message-State: AOAM5314WMO3uIhMghUW8GcfnQ6Nh4QvZwNgcUQdzSOSslp4GJvonj59
-        lMsQY2gusNQ2KKzWH+4PP9jM3A==
-X-Google-Smtp-Source: ABdhPJzUPNYD737LZ9mvXjpLQCfZmh5Gx+UdS29xXQW9wm49nYfnbVwYV0zTgJAUSgpio21zZQQuuQ==
-X-Received: by 2002:a17:90a:930c:: with SMTP id p12mr6662433pjo.2.1592369570118;
-        Tue, 16 Jun 2020 21:52:50 -0700 (PDT)
-Received: from localhost ([122.172.119.132])
-        by smtp.gmail.com with ESMTPSA id h17sm18753333pfo.168.2020.06.16.21.52.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Jun 2020 21:52:49 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 10:22:47 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Sibi Sankar <sibis@codeaurora.org>, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        lukasz.luba@arm.com, sudeep.holla@arm.com, smasetty@codeaurora.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v6 4/5] cpufreq: qcom: Update the bandwidth levels on
- frequency change
-Message-ID: <20200617045247.zet624tyloxzj5fx@vireshk-i7>
-References: <20200605213332.609-1-sibis@codeaurora.org>
- <20200605213332.609-5-sibis@codeaurora.org>
- <20200615172553.GU4525@google.com>
- <e21f85d64d72ec637c10dae93e8323bb@codeaurora.org>
- <20200616221157.GA4525@google.com>
+        Wed, 17 Jun 2020 00:56:10 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45553 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725769AbgFQE4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 00:56:08 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49mt7V1sHFz9s1x;
+        Wed, 17 Jun 2020 14:56:05 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592369766;
+        bh=1gdm9ZrSKsjKBYEwem8jcpdmVCouRwYdbuLtL4gYPjI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=XbJV2lmWmbuHe+BlQLSY/zVbVXWu/k68Kta20s7fqZwjLUBgrGrPAmCgs6uSGyKFl
+         W4WTf59UyVjQyePVQEnks1/WOR2NPUfIftXVQurGHfuQJzkQT1u/StxnxJIzdRYCpS
+         CX2/hugohJXuvw0/g46elAcuZzrmVuzVkq2s/Tp35ZbL4lpy4obN8kUn7CSZgP3kku
+         KjGJ8QvQShhhMFxGt0eX9m0/a7B5olwwaJh0ET97TN9iQ7K/GTxpOOYw9dNClKIbhf
+         x9H/peqLznjd5sX0MyijRcLiu3fV7H4npAqBNSYbmKLhvId2alrLyQc8vMR67Q3DWe
+         aNu9C7oNi93dw==
+Date:   Wed, 17 Jun 2020 14:56:05 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the tpmdd tree
+Message-ID: <20200617145605.726f0885@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616221157.GA4525@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: multipart/signed; boundary="Sig_/kRCB5HOX0rq+DXSB7y/_sC3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-06-20, 15:11, Matthias Kaehlcke wrote:
-> Hi Sibi,
-> 
-> after doing the review I noticed that Viresh replied on the cover letter
-> that he picked the series up for v5.9, so I'm not sure if it makes sense
-> to send a v7.
+--Sig_/kRCB5HOX0rq+DXSB7y/_sC3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Its okay, you can send a new version and I will apply that instead.
+Hi all,
 
--- 
-viresh
+Commit
+
+  b4988ccd41f4 ("tpm: Make read{16, 32}() and write32() in tpm_tis_phy_ops =
+optional")
+
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/kRCB5HOX0rq+DXSB7y/_sC3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7pomUACgkQAVBC80lX
+0Gxl2wf/W6Shz3LTwnTEtise0I5wRd4+r3l06prbkIh2PVC1ELPdj0ffr8hNDlMj
+3oGY5Byrhja4lFAPFb2LonIlcVks/GycZuoaIvclJ7Tg5ghDpl9Z16bB/0aUnJzS
+2BsRaWY6iKhtkf2R3+QuJ6CPX8eOLMFMc9WdTWkMcF/fibzlO9MjznRALhabAm84
+w9vh0Uc0Jqj90iyc4nOrzRN3PlZIwRQQXk4PpqoinWgI0KalbYxcVnedyiJo2yZp
+RmT9BR5AUZy5ui8kDXUjiev2iuCGNdHMwetoXPObqa35Lk5Y9y1CywGJ+rs6tKjV
+ijahXBmwbgZ6sC+SxT2k57uaSUrRjQ==
+=ax8Q
+-----END PGP SIGNATURE-----
+
+--Sig_/kRCB5HOX0rq+DXSB7y/_sC3--
