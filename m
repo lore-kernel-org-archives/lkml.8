@@ -2,180 +2,90 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDB72080D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8656F208B3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 05:34:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tSonHfit"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgFQF2i (ORCPT
+        id S1726814AbgFQFec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 01:28:38 -0400
-Received: from mailgate-2.ics.forth.gr ([139.91.1.5]:44432 "EHLO
-        mailgate-2.ics.forth.gr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgFQF2h (ORCPT
+        Wed, 17 Jun 2020 01:34:32 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:54663 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726681AbgFQFeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 01:28:37 -0400
-Received: from av3.ics.forth.gr (av3in [139.91.1.77])
-        by mailgate-2.ics.forth.gr (8.14.4/ICS-FORTH/V10-1.8-GATE) with ESMTP id 05H5SIbw014773;
-        Wed, 17 Jun 2020 05:28:20 GMT
-X-AuditID: 8b5b014d-257ff700000045c5-8c-5ee9a9f1b299
-Received: from enigma.ics.forth.gr (enigma.ics.forth.gr [139.91.151.35])
-        by av3.ics.forth.gr (Symantec Messaging Gateway) with SMTP id B3.12.17861.1F9A9EE5; Wed, 17 Jun 2020 08:28:18 +0300 (EEST)
-X-ICS-AUTH-INFO: Authenticated user:  at ics.forth.gr
+        Wed, 17 Jun 2020 01:34:31 -0400
+X-UUID: 282f662e3dfe49c896731f25cc10017e-20200617
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Bbt8y3TNU0+UzptSCtll+QC7nia8mpUm1Ua9AtI/usM=;
+        b=tSonHfitkoLdQVGXS1FwEzcLik2YnyVxq8JHL29VOa+cOhvkZCKX1iCeD4fdGj2ca8wFjVtLfaEcEKQFi1GbCjMkbnIRPOkqazILARgywkS9tozDMBjImeVMiuNT91M5/jEX4Z5m4yiDXeJk0K6dEpoopXUybypI/v3HlVSMgIU=;
+X-UUID: 282f662e3dfe49c896731f25cc10017e-20200617
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2126771182; Wed, 17 Jun 2020 13:34:24 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 17 Jun 2020 13:34:19 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 17 Jun 2020 13:34:19 +0800
+Message-ID: <1592372060.4086.1.camel@mtkswgap22>
+Subject: Re: [PATCH v2] usb: gadget: u_serial: improve performance for large
+ data
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Alan Stern <stern@rowland.harvard.edu>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        =?UTF-8?Q?Micha=C5=82_Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Sergey Organov <sorganov@gmail.com>,
+        "Fabrice Gasnier" <fabrice.gasnier@st.com>,
+        <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>
+Date:   Wed, 17 Jun 2020 13:34:20 +0800
+In-Reply-To: <20200617051422.GA1331778@kroah.com>
+References: <1592310884-4307-1-git-send-email-macpaul.lin@mediatek.com>
+         <1592362007-7120-1-git-send-email-macpaul.lin@mediatek.com>
+         <20200617051422.GA1331778@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 17 Jun 2020 08:28:17 +0300
-From:   Nick Kossifidis <mick@ics.forth.gr>
-To:     Zong Li <zong.li@sifive.com>
-Cc:     Nick Kossifidis <mick@ics.forth.gr>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] riscv: Support CONFIG_STRICT_DEVMEM
-Organization: FORTH
-In-Reply-To: <CANXhq0pMutK0+hHchQPOaZLqm9B-=MTKv8Xig4hM71_B=5+2bg@mail.gmail.com>
-References: <cover.1592292685.git.zong.li@sifive.com>
- <7faa60aa4a606b5c5c1ae374d82a7eee6c764b38.1592292685.git.zong.li@sifive.com>
- <29425dbf7d54bab2733d28480d3adb61@mailhost.ics.forth.gr>
- <CANXhq0pMutK0+hHchQPOaZLqm9B-=MTKv8Xig4hM71_B=5+2bg@mail.gmail.com>
-Message-ID: <6e6cf39ae6ed91bbe086adbade5786cb@mailhost.ics.forth.gr>
-X-Sender: mick@mailhost.ics.forth.gr
-User-Agent: Roundcube Webmail/1.3.9
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsXSHT1dWffTypdxBvsOMVlc3jWHzWLb5xY2
-        i+Z359gtXl7uYbZom8Vv8eHubDYHNo83L1+yeDzcdInJY/OSeo9LzdfZPT5vkgtgjeKySUnN
-        ySxLLdK3S+DKWP3yJVvBA7mK2d0z2RoY34p3MXJwSAiYSNy7nNTFyMUhJHCUUWLXxk1MXYyc
-        QHFTidl7OxlBbF4BQYmTM5+wgNjMAhYSU6/sZ4Sw5SWat85mBrFZBFQl9h15ARZnE9CUmH/p
-        IFi9iICCxJUlG1lAFjALTGaSWN9/hBUkISxgI/HrxQqwIn4BYYlPdy+yghzEKRAo0f9ZAeKg
-        NiaJ47dvMEMc4SKxfPdRdojjVCQ+/H4AZosKKEvcPPycfQKj4Cwkt85CcussJLcuYGRexSiQ
-        WGasl5lcrJeWX1SSoZdetIkRHOSMvjsYb29+q3eIkYmD8RCjBAezkgiv8+8XcUK8KYmVValF
-        +fFFpTmpxYcYpTlYlMR587iXxwoJpCeWpGanphakFsFkmTg4pRqYMmVKsrVfCJZure/K92j8
-        8nr7Xr0XzDO43eZ8m7FPI1ZdR9H/u2ebGK/446k7pt/SODwr1PH+H73VBfk3zjIv4rv548Pf
-        OoM1R5dePSOpl89/u9h53jzLvQWCl2YYlbe/LVd4q54SP/3fmoJV5XseXfy0pqJ+2kf53Kq6
-        4LlFEivbMmqP7EhZZnhAWPHgnjkXIg7nuOz13nz7yZ6ICXerfG2kyy4sXpdT5V4sp/G4Qvq/
-        3Fk3SbcDR6tFe2uuP7vZe2375eNfdTdzH49QiZrq5+HO8Zlb8MpLnXPPYzr6pzN3CXx84L7z
-        xM25ctWiXDVe7w5G87AERUSvPLYovMTRXexH7/HzTG9r/7Aw89xYp8RSnJFoqMVcVJwIAHwp
-        EdrhAgAA
-X-Greylist: inspected by milter-greylist-4.6.2 (mailgate-2.ics.forth.gr [139.91.1.5]); Wed, 17 Jun 2020 05:28:20 +0000 (GMT) for IP:'139.91.1.77' DOMAIN:'av3in' HELO:'av3.ics.forth.gr' FROM:'mick@ics.forth.gr' RCPT:''
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mailgate-2.ics.forth.gr [139.91.1.5]); Wed, 17 Jun 2020 05:28:20 +0000 (GMT)
+X-TM-SNTS-SMTP: EF0DEE7F6D93BC783FEA22B064A2D9C2B297A884208A2D82E82201A07707A16D2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Στις 2020-06-17 04:56, Zong Li έγραψε:
-> On Tue, Jun 16, 2020 at 8:27 PM Nick Kossifidis <mick@ics.forth.gr> 
-> wrote:
->> 
->> Στις 2020-06-16 10:45, Zong Li έγραψε:
->> > Implement the 'devmem_is_allowed()' interface for RISC-V, like some of
->> > other architectures have done. It will be called from
->> > range_is_allowed()
->> > when userpsace attempts to access /dev/mem.
->> >
->> > Access to exclusive IOMEM and kernel RAM is denied unless
->> > CONFIG_STRICT_DEVMEM is set to 'n'.
->> >
->> > Test it by devmem, the result as follows:
->> >
->> >  - CONFIG_STRICT_DEVMEM=y
->> >       $ devmem 0x10010000
->> >       0x00000000
->> >       $ devmem 0x80200000
->> >       0x0000106F
->> >
->> >  - CONFIG_STRICT_DEVMEM is not set
->> >       $ devmem 0x10010000
->> >       devmem: mmap: Operation not permitted
->> >       $ devmem 0x80200000
->> >       devmem: mmap: Operation not permitted
->> >
->> > Signed-off-by: Zong Li <zong.li@sifive.com>
->> > ---
->> >  arch/riscv/Kconfig          |  1 +
->> >  arch/riscv/include/asm/io.h |  2 ++
->> >  arch/riscv/mm/init.c        | 19 +++++++++++++++++++
->> >  3 files changed, 22 insertions(+)
->> >
->> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
->> > index 128192e14ff2..ffd7841ede4c 100644
->> > --- a/arch/riscv/Kconfig
->> > +++ b/arch/riscv/Kconfig
->> > @@ -16,6 +16,7 @@ config RISCV
->> >       select ARCH_HAS_BINFMT_FLAT
->> >       select ARCH_HAS_DEBUG_VIRTUAL if MMU
->> >       select ARCH_HAS_DEBUG_WX
->> > +     select ARCH_HAS_DEVMEM_IS_ALLOWED
->> >       select ARCH_HAS_GCOV_PROFILE_ALL
->> >       select ARCH_HAS_GIGANTIC_PAGE
->> >       select ARCH_HAS_MMIOWB
->> > diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
->> > index 3835c3295dc5..04ac65ab93ce 100644
->> > --- a/arch/riscv/include/asm/io.h
->> > +++ b/arch/riscv/include/asm/io.h
->> > @@ -147,4 +147,6 @@ __io_writes_outs(outs, u64, q, __io_pbr(),
->> > __io_paw())
->> >
->> >  #include <asm-generic/io.h>
->> >
->> > +extern int devmem_is_allowed(unsigned long pfn);
->> > +
->> >  #endif /* _ASM_RISCV_IO_H */
->> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
->> > index bbe816e03b2f..5e7e61519acc 100644
->> > --- a/arch/riscv/mm/init.c
->> > +++ b/arch/riscv/mm/init.c
->> > @@ -517,6 +517,25 @@ void mark_rodata_ro(void)
->> >  }
->> >  #endif
->> >
->> > +#ifdef CONFIG_STRICT_DEVMEM
->> > +#include <linux/ioport.h>
->> > +/*
->> > + * devmem_is_allowed() checks to see if /dev/mem access to a certain
->> > address
->> > + * is valid. The argument is a physical page number.
->> > + *
->> > + * Disallow access to system RAM as well as device-exclusive MMIO
->> > regions.
->> > + * This effectively disable read()/write() on /dev/mem.
->> > + */
->> > +int devmem_is_allowed(unsigned long pfn)
->> > +{
->> > +     if (iomem_is_exclusive(pfn << PAGE_SHIFT))
->> > +             return 0;
->> > +     if (!page_is_ram(pfn))
->> > +             return 1;
->> > +     return 0;
->> > +}
->> > +#endif
->> > +
->> >  void __init resource_init(void)
->> >  {
->> >       struct memblock_region *region;
->> 
->> This shouldn't be part of /mm/init.c, it has nothing to do with memory
->> initialization, I suggest we move it to another file like mmap.c on
-> 
-> Let me move it, thanks.
-> 
->> arm/arm64. Also before using iomem_is_exclusive we should probably 
->> also
->> mark any reserved regions with the no-map attribute as busy|exclusive,
->> reserved-memory regions are not necessarily part of the main memory so
->> the page_is_ram check may pass and iomem_is_exclusive won't do any 
->> good.
-> 
-> What do you think if we mark the reserved region in
-> kdump_resource_init, and change the kdump_resource_init to a more
-> generic name for initializing resources?
+T24gV2VkLCAyMDIwLTA2LTE3IGF0IDA3OjE0ICswMjAwLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3Jv
+dGU6DQo+IE9uIFdlZCwgSnVuIDE3LCAyMDIwIGF0IDEwOjQ2OjQ3QU0gKzA4MDAsIE1hY3BhdWwg
+TGluIHdyb3RlOg0KPiA+IE5vd2FkYXlzIHNvbWUgZW1iZWRkZWQgc3lzdGVtcyB1c2UgVkNPTSB0
+byB0cmFuc2ZlciBsYXJnZSBsb2cgYW5kIGRhdGEuDQo+ID4gVGFrZSBMVEUgTU9ERU0gYXMgYW4g
+ZXhhbXBsZSwgZHVyaW5nIHRoZSBsb25nIGRlYnVnZ2luZyBzdGFnZSwgbGFyZ2UNCj4gPiBsb2cg
+YW5kIGRhdGEgd2VyZSB0cmFuc2ZlciB0aHJvdWdoIFZDT00gd2hlbiBkb2luZyBmaWVsZCB0cnkg
+b3IgaW4NCj4gPiBvcGVyYXRvcidzIGxhYi4gSGVyZSB3ZSBzdWdnZXN0IHNsaWdodGx5IGluY3Jl
+YXNlIHRoZSB0cmFuc2ZlciBidWZmZXINCj4gPiBpbiB1X3NlcmlhbC5jIGZvciBwZXJmb3JtYW5j
+ZSBpbXByb3ZpbmcuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTWFjcGF1bCBMaW4gPG1hY3Bh
+dWwubGluQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy91c2IvZ2FkZ2V0L2Z1
+bmN0aW9uL3Vfc2VyaWFsLmMgfCAgICA1ICsrKy0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGlu
+c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBXaGF0IGNoYW5nZWQgZnJvbSB2MT8g
+IEFsd2F5cyBwdXQgdGhhdCBiZWxvdyB0aGUgLS0tIGxpbmUgYXMgdGhlDQo+IGRvY3VtZW50YXRp
+b24gYXNrcyBmb3IuDQo+IA0KPiB2Mz8NClNvcnJ5LCBJIGp1c3QgZm9yZ2V0IHRvIGFkZCBjaGFu
+Z2UgbG9nLCBJJ2xsIHNlbmQgdjMgbGF0ZXIuDQoNClRoYW5rcyENCg0KQlIsDQpNYWNwYXVsIExp
+bg0K
 
-Sounds good to me, I'll work on this within the week. Do you agree with 
-marking the no-map reserved-memory regions as exclusive ?
