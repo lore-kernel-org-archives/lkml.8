@@ -2,95 +2,80 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DED5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8887EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF5B020CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:34:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="P1xngMJC"
+	by mail.kernel.org (Postfix) with ESMTP id 67A5F207DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 11:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592393802;
+	bh=i3CHHkWt7uTtcIUvnX49srUPMnVlFyiU7GS37fP3xcM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J7Hk/Pa24Ik3XpQ6Le/PnPzvj2+4w8tXrObti0yXSv9Mi4EWn8GAM73Fz5P4Iyd59
+	 T7WBMiyEUUgoYKRGlYYbm/dgiRIDCIeFbx5S7uAsaQxeET2RmenMzRCxHCHFlRWVYA
+	 Lk+dVy6synMKaIBJluj/8C4xeCG8DAQNMKgI7kSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgFQLeN (ORCPT
+        id S1726497AbgFQLgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 07:34:13 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:9271 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgFQLeN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 07:34:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592393653; x=1623929653;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kQsP/yVJQUNUJxvLd2o3N1wn7VHKUz9qL3WSHlmLZFk=;
-  b=P1xngMJCZ5dKWh7iwAksVWFKWrKsiUVtY095aVDUL5SYbARZ+QXF5g/3
-   zd2jmCPSBalYQb0LGEK11w7jtyvQsF784QDt9T/SuPWdJzgdRdL+ANxPx
-   SQ2mPZXVU66E3DYM0PwUrOL1VFsMzmKLZBiZ/keQGcaewXkQXhm8gYLsL
-   Tn9CbbdQS3v/mq590ju7NF2alStU9pJq2qyt7cJUQN5J+DiMHntS+xxcp
-   YMYWOJU58QxRNYUsbqsG/JI5WC/oHJv2FVZHsp9ScLwbyogFtJ3PMCUTg
-   stB2xoHRbaKAUfoDB8qqU7GG7qFcvqDexQADoyxFO1Nv/1CUM57QmIFcP
-   Q==;
-IronPort-SDR: g4ofiiEUYk3qfKBvdRaUwrDkrrQWuz/cgJ8wbSU7yz5q73bo2xNuwQlaTzPJ0Jd9vs80iw0zAA
- RzJV5u9MzHZ66Tky/1XjZ/6YUqkhit9+DzCdDv4rGeBSoy2CYt6IbLhgNEB/XIAYu9LcJO8TJy
- UXRbf6pRXRKwjE8eE75lQ+n7uF2BA80imXFmVhWraf77+wu83ibfBdIV65wGH7vA8NrC/rC5WU
- di/teQH4U4CtV7Qseni/nbk3ShCwa9d9T55bmIoKInutsMKDmt/VhvOV3NHmsrzz+IA37KlqdN
- wOM=
-X-IronPort-AV: E=Sophos;i="5.73,522,1583218800"; 
-   d="scan'208";a="79790505"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Jun 2020 04:34:13 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 17 Jun 2020 04:34:11 -0700
-Received: from soft-dev3.localdomain (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 17 Jun 2020 04:34:10 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <nikolay@cumulusnetworks.com>, <davem@davemloft.net>,
-        <UNGLinuxDriver@microchip.com>, <linux-kernel@vger.kernel.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH net] bridge: uapi: mrp: Fix MRP_PORT_ROLE
-Date:   Wed, 17 Jun 2020 13:32:49 +0200
-Message-ID: <20200617113249.2001901-1-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 17 Jun 2020 07:36:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbgFQLgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 07:36:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D6CE207DD;
+        Wed, 17 Jun 2020 11:36:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592393798;
+        bh=i3CHHkWt7uTtcIUvnX49srUPMnVlFyiU7GS37fP3xcM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0Bwomn1DFCBh+zuPVslZbNNswQt+pREc3VF2v/kD14PWS24GC78Aoq88ele/98rNi
+         7LTQjzh3AA8+JTORfKUlXbsrpF9NXaRtj8AzuWdRU9wvJXeZ9aKc7x9JT55SYh3EQ9
+         SN/X1YBbT7DVIMEjP5N78S6fOEViA3S5sofqJilE=
+Date:   Wed, 17 Jun 2020 13:36:31 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Steffen Maier <maier@linux.ibm.com>
+Cc:     Minchan Kim <minchan@kernel.org>, Nitin Gupta <ngupta@vflare.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wade Mealing <wmealing@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH] Revert "zram: convert remaining CLASS_ATTR() to
+ CLASS_ATTR_RO()"
+Message-ID: <20200617113631.GA2115184@kroah.com>
+References: <20200617103412.GA2027053@kroah.com>
+ <5cde1d94-275e-2555-b13d-0b04a7a70fc7@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5cde1d94-275e-2555-b13d-0b04a7a70fc7@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the MRP_PORT_ROLE_NONE has the value 0x2 but this is in conflict
-with the IEC 62439-2 standard. The standard defines the following port
-roles: primary (0x0), secondary(0x1), interconnect(0x2).
-Therefore remove the port role none.
+On Wed, Jun 17, 2020 at 01:05:54PM +0200, Steffen Maier wrote:
+> On 6/17/20 12:34 PM, Greg Kroah-Hartman wrote:
+> > From: Wade Mealing <wmealing@redhat.com>
+> > 
+> > Turns out that the permissions for 0400 really are what we want here,
+> > otherwise any user can write to this file.
+> 
+> Minor confusion on my side:
+> Did you mean "read from" instead of "write to"?
+> I.e. only owner may read but not group nor others.
+> Whereas using CLASS_ATTR_RO would resolve into 0444.
 
-Fixes: 4714d13791f831 ("bridge: uapi: mrp: Add mrp attributes.")
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- include/uapi/linux/mrp_bridge.h | 1 -
- 1 file changed, 1 deletion(-)
+Sorry, you are correct, I'll fix the changelog text and send this out
+again.
 
-diff --git a/include/uapi/linux/mrp_bridge.h b/include/uapi/linux/mrp_bridge.h
-index 84f15f48a7cb1..bee3665402129 100644
---- a/include/uapi/linux/mrp_bridge.h
-+++ b/include/uapi/linux/mrp_bridge.h
-@@ -36,7 +36,6 @@ enum br_mrp_port_state_type {
- enum br_mrp_port_role_type {
- 	BR_MRP_PORT_ROLE_PRIMARY,
- 	BR_MRP_PORT_ROLE_SECONDARY,
--	BR_MRP_PORT_ROLE_NONE,
- };
- 
- enum br_mrp_tlv_header_type {
--- 
-2.26.2
+It's a "fun" file, reading from it causes something to happen, not the
+normal way things work :(
 
+greg k-h
