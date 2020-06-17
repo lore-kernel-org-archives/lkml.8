@@ -2,139 +2,212 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDC7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1216EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A98D20707
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA5F5206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgFQPGV (ORCPT
+        id S1726941AbgFQPHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:06:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbgFQPGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:06:20 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 420A8206FA;
-        Wed, 17 Jun 2020 15:06:19 +0000 (UTC)
-Date:   Wed, 17 Jun 2020 11:06:17 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        linux-trace-devel@vger.kernel.org, linux-kernel@i4.cs.fau.de,
-        Maximilian Werner <maximilian.werner96@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH] tracing/boottime: Fix kprobe multiple events
-Message-ID: <20200617110617.2a06c143@oasis.local.home>
-In-Reply-To: <20200617110521.7ed41fdd@oasis.local.home>
-References: <20200617140817.17161-1-sascha.ortmann@stud.uni-hannover.de>
-        <20200617110521.7ed41fdd@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 17 Jun 2020 11:07:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgFQPHA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 11:07:00 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6887C06174E;
+        Wed, 17 Jun 2020 08:06:59 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jlZeP-0003FY-Px; Wed, 17 Jun 2020 17:06:53 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3E5C71C0089;
+        Wed, 17 Jun 2020 17:06:53 +0200 (CEST)
+Date:   Wed, 17 Jun 2020 15:06:52 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/misc] x86/msr: Filter MSR writes
+Cc:     kernel test robot <lkp@intel.com>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200612105026.GA22660@zn.tnic>
+References: <20200612105026.GA22660@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <159240641292.16989.16267248536029944582.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 11:05:21 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+The following commit has been merged into the x86/misc branch of tip:
 
-> On Wed, 17 Jun 2020 16:08:17 +0200
-> Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de> wrote:
-> 
-> > Fix boottime kprobe events to add multiple events even if one fails
-> > and report probe generation failures.
-> > 
-> > As an example, when we try to set multiprobe kprobe events in
-> > bootconfig like this:
-> > 
-> > ftrace.event.kprobes.vfsevents {
-> > 	probes = "vfs_read $arg1 $arg2,,
-> >                  !error! not reported;?", // leads to error
-> > 		 "vfs_write $arg1 $arg2"
-> > }
-> > 
-> > this will not work like expected. After commit
-> > da0f1f4167e3af69e1d8b32d6d65195ddd2bfb64 ("tracing/boottime:
-> > Fix kprobe event API usage"), the function
-> > trace_boot_add_kprobe_event will not produce any error message,
-> > aborting the function and stopping subsequent probes from getting
-> > installed when adding a probe fails at kprobe_event_gen_cmd_start.
-> > Furthermore, probes continue when kprobe_event_gen_cmd_end fails
-> > (and kprobe_event_gen_cmd_start did not fail). In this case the
-> > function even returns successfully when the last call to
-> > kprobe_event_gen_cmd_end is successful.
-> > 
-> > The behaviour of reporting and aborting after failures is not
-> > consistent.
-> > 
-> > The function trace_boot_add_kprobe_event now continues even when
-> > one of the multiple events fails. Each failure is now reported
-> > individually. Since the function can only return one result to the
-> > caller, the function returns now the last failure (or none, if
-> > nothing fails).
-> > 
-> > Cc: linux-kernel@i4.cs.fau.de
-> > Signed-off-by: Maximilian Werner <maximilian.werner96@gmail.com>
-> > Signed-off-by: Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>  
-> 
-> Why the double signed off by?
-> 
-> Masami, I'm fine with this, but needs your review.
+Commit-ID:     5603119e48d0fee163a827c2342b372f1a0e913c
+Gitweb:        https://git.kernel.org/tip/5603119e48d0fee163a827c2342b372f1a0e913c
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Wed, 10 Jun 2020 21:37:49 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 17 Jun 2020 15:46:52 +02:00
 
-[ It appears that Masami wasn't in the Cc ]
+x86/msr: Filter MSR writes
 
+Add functionality to disable writing to MSRs from userspace. Writes can
+still be allowed by supplying the allow_writes=on module parameter. The
+kernel will be tainted so that it shows in oopses.
 
-> 
-> -- Steve
-> 
-> > ---
-> >  kernel/trace/trace_boot.c | 16 +++++++++++-----
-> >  1 file changed, 11 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-> > index 9de29bb45a27..dbb50184e060 100644
-> > --- a/kernel/trace/trace_boot.c
-> > +++ b/kernel/trace/trace_boot.c
-> > @@ -95,18 +95,24 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
-> >  	struct xbc_node *anode;
-> >  	char buf[MAX_BUF_LEN];
-> >  	const char *val;
-> > +	int error = 0;
-> >  	int ret = 0;
-> >  
-> >  	xbc_node_for_each_array_value(node, "probes", anode, val) {
-> >  		kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
-> >  
-> > -		ret = kprobe_event_gen_cmd_start(&cmd, event, val);
-> > -		if (ret)
-> > -			break;
-> > +		error = kprobe_event_gen_cmd_start(&cmd, event, val);
-> > +		if (error) {
-> > +			pr_err("Failed to generate probe: %s\n", buf);
-> > +			ret = error;
-> > +			continue;
-> > +		}
-> >  
-> > -		ret = kprobe_event_gen_cmd_end(&cmd);
-> > -		if (ret)
-> > +		error = kprobe_event_gen_cmd_end(&cmd);
-> > +		if (error) {
-> >  			pr_err("Failed to add probe: %s\n", buf);
-> > +			ret = error;
-> > +		}
-> >  	}
-> >  
-> >  	return ret;  
-> 
+Having unfettered access to all MSRs on a system is and has always been
+a disaster waiting to happen. Think performance counter MSRs, MSRs with
+sticky or locked bits, MSRs making major system changes like loading
+microcode, MTRRs, PAT configuration, TSC counter, security mitigations
+MSRs, you name it.
 
+This also destroys all the kernel's caching of MSR values for
+performance, as the recent case with MSR_AMD64_LS_CFG showed.
+
+Another example is writing MSRs by mistake by simply typing the wrong
+MSR address. System freezes have been experienced that way.
+
+In general, poking at MSRs under the kernel's feet is a bad bad idea.
+
+So log writing to MSRs by default. Longer term, such writes will be
+disabled by default.
+
+If userspace still wants to do that, then proper interfaces should be
+defined which are under the kernel's control and accesses to those MSRs
+can be synchronized and sanitized properly.
+
+[ Fix sparse warnings. ]
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200612105026.GA22660@zn.tnic
+---
+ arch/x86/kernel/msr.c | 69 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 69 insertions(+)
+
+diff --git a/arch/x86/kernel/msr.c b/arch/x86/kernel/msr.c
+index 1547be3..576c43e 100644
+--- a/arch/x86/kernel/msr.c
++++ b/arch/x86/kernel/msr.c
+@@ -42,6 +42,14 @@
+ static struct class *msr_class;
+ static enum cpuhp_state cpuhp_msr_state;
+ 
++enum allow_write_msrs {
++	MSR_WRITES_ON,
++	MSR_WRITES_OFF,
++	MSR_WRITES_DEFAULT,
++};
++
++static enum allow_write_msrs allow_writes = MSR_WRITES_DEFAULT;
++
+ static ssize_t msr_read(struct file *file, char __user *buf,
+ 			size_t count, loff_t *ppos)
+ {
+@@ -70,6 +78,24 @@ static ssize_t msr_read(struct file *file, char __user *buf,
+ 	return bytes ? bytes : err;
+ }
+ 
++static int filter_write(u32 reg)
++{
++	switch (allow_writes) {
++	case MSR_WRITES_ON:  return 0;		break;
++	case MSR_WRITES_OFF: return -EPERM;	break;
++	default: break;
++	}
++
++	if (reg == MSR_IA32_ENERGY_PERF_BIAS)
++		return 0;
++
++	pr_err_ratelimited("Write to unrecognized MSR 0x%x by %s\n"
++			   "Please report to x86@kernel.org\n",
++			   reg, current->comm);
++
++	return 0;
++}
++
+ static ssize_t msr_write(struct file *file, const char __user *buf,
+ 			 size_t count, loff_t *ppos)
+ {
+@@ -84,6 +110,10 @@ static ssize_t msr_write(struct file *file, const char __user *buf,
+ 	if (err)
+ 		return err;
+ 
++	err = filter_write(reg);
++	if (err)
++		return err;
++
+ 	if (count % 8)
+ 		return -EINVAL;	/* Invalid chunk size */
+ 
+@@ -92,9 +122,13 @@ static ssize_t msr_write(struct file *file, const char __user *buf,
+ 			err = -EFAULT;
+ 			break;
+ 		}
++
++		add_taint(TAINT_CPU_OUT_OF_SPEC, LOCKDEP_STILL_OK);
++
+ 		err = wrmsr_safe_on_cpu(cpu, reg, data[0], data[1]);
+ 		if (err)
+ 			break;
++
+ 		tmp += 2;
+ 		bytes += 8;
+ 	}
+@@ -242,6 +276,41 @@ static void __exit msr_exit(void)
+ }
+ module_exit(msr_exit)
+ 
++static int set_allow_writes(const char *val, const struct kernel_param *cp)
++{
++	/* val is NUL-terminated, see kernfs_fop_write() */
++	char *s = strstrip((char *)val);
++
++	if (!strcmp(s, "on"))
++		allow_writes = MSR_WRITES_ON;
++	else if (!strcmp(s, "off"))
++		allow_writes = MSR_WRITES_OFF;
++	else
++		allow_writes = MSR_WRITES_DEFAULT;
++
++	return 0;
++}
++
++static int get_allow_writes(char *buf, const struct kernel_param *kp)
++{
++	const char *res;
++
++	switch (allow_writes) {
++	case MSR_WRITES_ON:  res = "on"; break;
++	case MSR_WRITES_OFF: res = "off"; break;
++	default: res = "default"; break;
++	}
++
++	return sprintf(buf, "%s\n", res);
++}
++
++static const struct kernel_param_ops allow_writes_ops = {
++	.set = set_allow_writes,
++	.get = get_allow_writes
++};
++
++module_param_cb(allow_writes, &allow_writes_ops, NULL, 0600);
++
+ MODULE_AUTHOR("H. Peter Anvin <hpa@zytor.com>");
+ MODULE_DESCRIPTION("x86 generic MSR driver");
+ MODULE_LICENSE("GPL");
