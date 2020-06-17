@@ -2,107 +2,184 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96898C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18047C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75EB52082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:57:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=adit-jv.com header.i=@adit-jv.com header.b="5kAE5zEe"
+	by mail.kernel.org (Postfix) with ESMTP id E9A422082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 04:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgFQE5o (ORCPT
+        id S1726786AbgFQE6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 00:57:44 -0400
-Received: from ma-dnext03.denso.co.jp ([133.192.181.78]:60653 "EHLO
-        ma-dnext03.denso.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbgFQE5n (ORCPT
+        Wed, 17 Jun 2020 00:58:47 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49158 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbgFQE6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 00:57:43 -0400
-Received: from grdma01h.denso.co.jp (unknown [133.192.24.24])
-        by ma-dnext03.denso.co.jp (Postfix) with ESMTP id DC4FD5D038B;
-        Wed, 17 Jun 2020 13:57:40 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=adit-jv.com;
-        s=jpadit-jvmail2011; t=1592369860;
-        bh=+trNuZ/6D8LtwN5zjuN0TnCITVnaRRbPnaBDq3L5rDU=;
-        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-         MIME-Version:Content-Type;
-        b=5kAE5zEek0E1lY6Eqf2DFTvMxc8qwEiCJR/pixaChEZtkBkiSSew1a9bYWOdk2hWq
-         0lCV/CNADEkdWV1NftdEvymav0teeXIoOarjNf3Y9/Fo9unOClFRC1GmaK8UdHkN2X
-         53Bbfj2yf+Tq2t3fWxA0rySTXAkOXrVauKVlbjfHcHy9yTIGfLA1aR1Q8jVZB5De0H
-         xhQSwsJZltFrG271MbXNZyE+Svcho+ppVKmeMdyGgkYh4BmzQYQcE6MRrEMKwuhLQY
-         WNoNkamRx0KdscmCJg2D/QNyFDnu6zxh04+BvKMxTo2vlnAiqi1dXooFcfZOojCPDC
-         oqhnGDWhMUoOw==
-Received: by grdma01h.denso.co.jp (Postfix, from userid 0)
-        id D8F17C0BDAB; Wed, 17 Jun 2020 13:57:40 +0900 (JST)
-Received: from smtp0.denso.co.jp [133.192.24.87] 
-         by grdma01h. with ESMTP id PAA08272;
-         Wed, 17 Jun 2020 13:57:40 +0900
-Received: from ky0exch01.adit-jv.com ([10.71.113.8])
-        by smtp00.denso.co.jp (MOS 4.4.7-GA)
-        with ESMTP id GBI96730;
-        Wed, 17 Jun 2020 13:57:40 +0900
-Received: from jp-u0004.adit-jv.com (10.71.112.120) by ky0exch01.adit-jv.com
- (10.71.113.8) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 17 Jun
- 2020 13:57:40 +0900
-From:   Suresh Udipi <sudipi@jp.adit-jv.com>
-To:     <niklas.soderlund@ragnatech.se>
-CC:     <akiyama@nds-osk.co.jp>, <efriedrich@de.adit-jv.com>,
-        <erosca@de.adit-jv.com>, <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <mchehab@kernel.org>, <michael@rodin.online>,
-        <mrodin@de.adit-jv.com>, <securitycheck@denso.co.jp>,
-        <sudipi@jp.adit-jv.com>
-Subject: [PATCH v7 2/2] media: rcar-csi2: Add warning for PHY speed less than minimum
-Date:   Wed, 17 Jun 2020 13:57:23 +0900
-Message-ID: <1592369843-32217-2-git-send-email-sudipi@jp.adit-jv.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592369843-32217-1-git-send-email-sudipi@jp.adit-jv.com>
-References: <20200615141126.GE915368@oden.dyn.berto.se>
- <1592369843-32217-1-git-send-email-sudipi@jp.adit-jv.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.71.112.120]
+        Wed, 17 Jun 2020 00:58:47 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jlQ9g-0006w0-U0; Wed, 17 Jun 2020 04:58:33 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     tiwai@suse.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Hui Wang <hui.wang@canonical.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Wenwen Wang <wenwen@cs.uga.edu>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Kailang Yang <kailang@realtek.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Tomas Espeleta <tomas.espeleta@gmail.com>,
+        Thomas Hebb <tommyhebb@gmail.com>,
+        alsa-devel@alsa-project.org (moderated list:SOUND),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/2] ALSA: hda/realtek: Add COEF controlled micmute LED support
+Date:   Wed, 17 Jun 2020 12:58:24 +0800
+Message-Id: <20200617045828.3735-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a warning message when the selected PHY speed is less
-than supported minimum PHY speed given in the hsfreq table[1].
+Currently, HDA codec LED class can only used by by GPIO controlled LED.
+However, there are some new systems that control LED via COEF instead of
+GPIO.
 
-For raspberry pi camera capture on Kingfisher board with resolution
-640x480, the calculated PHY speed is 48 mbps which is less than
-the minimum PHY speed 80 Mbps from the table[1]. But in this cases
-capture is successful.
+In order to support those systems, create a new helper that can be
+facilitated by both COEF controlled and GPIO controlled LED, and use
+generic call_micmute_led_update() to control both case.
 
-[1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
+In addition to that, add LED_CORE_SUSPENDRESUME flag since some systems
+don't restore the LED properly after suspend.
 
-Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
- drivers/media/platform/rcar-vin/rcar-csi2.c | 4 ++++
- 1 file changed, 4 insertions(+)
+v2:
+ - Prevent platforms like Dell, Lenovoe and Huawei create double LED
+   class devices.
 
-diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-index f18dedc..1184527 100644
---- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-+++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-@@ -433,6 +433,10 @@ static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
- 	const struct rcsi2_mbps_reg *hsfreq;
- 	const struct rcsi2_mbps_reg *hsfreq_prev = NULL;
+ sound/pci/hda/hda_generic.c   |  3 ++-
+ sound/pci/hda/hda_generic.h   |  1 +
+ sound/pci/hda/patch_realtek.c | 29 ++++++++++++++++-------------
+ 3 files changed, 19 insertions(+), 14 deletions(-)
+
+diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
+index f4e9d9445e18..9c3f1990c621 100644
+--- a/sound/pci/hda/hda_generic.c
++++ b/sound/pci/hda/hda_generic.c
+@@ -3897,7 +3897,7 @@ enum {
+ 	MICMUTE_LED_FOLLOW_MUTE,
+ };
  
-+	if (mbps < priv->info->hsfreqrange->mbps)
-+		dev_warn(priv->dev, "%u Mbps less than min PHY speed %u Mbps",
-+			 mbps, priv->info->hsfreqrange->mbps);
+-static void call_micmute_led_update(struct hda_codec *codec)
++void call_micmute_led_update(struct hda_codec *codec)
+ {
+ 	struct hda_gen_spec *spec = codec->spec;
+ 	unsigned int val;
+@@ -3924,6 +3924,7 @@ static void call_micmute_led_update(struct hda_codec *codec)
+ 	if (spec->micmute_led.update)
+ 		spec->micmute_led.update(codec);
+ }
++EXPORT_SYMBOL_GPL(call_micmute_led_update);
+ 
+ static void update_micmute_led(struct hda_codec *codec,
+ 			       struct snd_kcontrol *kcontrol,
+diff --git a/sound/pci/hda/hda_generic.h b/sound/pci/hda/hda_generic.h
+index fb9f1a90238b..9f08a9ee9112 100644
+--- a/sound/pci/hda/hda_generic.h
++++ b/sound/pci/hda/hda_generic.h
+@@ -353,6 +353,7 @@ unsigned int snd_hda_gen_path_power_filter(struct hda_codec *codec,
+ void snd_hda_gen_stream_pm(struct hda_codec *codec, hda_nid_t nid, bool on);
+ int snd_hda_gen_fix_pin_power(struct hda_codec *codec, hda_nid_t pin);
+ 
++void call_micmute_led_update(struct hda_codec *codec);
+ int snd_hda_gen_add_micmute_led(struct hda_codec *codec,
+ 				void (*hook)(struct hda_codec *));
+ void snd_hda_gen_fixup_micmute_led(struct hda_codec *codec,
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 6d73f8beadb6..9691af8241cf 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -4114,10 +4114,10 @@ static int micmute_led_set(struct led_classdev *led_cdev,
+ 			   enum led_brightness brightness)
+ {
+ 	struct hda_codec *codec = dev_to_hda_codec(led_cdev->dev->parent);
+-	struct alc_spec *spec = codec->spec;
++	struct hda_gen_spec *spec = codec->spec;
+ 
+-	alc_update_gpio_led(codec, spec->gpio_mic_led_mask,
+-			    spec->micmute_led_polarity, !!brightness);
++	spec->micmute_led.led_mode = !brightness;
++	call_micmute_led_update(codec);
+ 	return 0;
+ }
+ 
+@@ -4126,7 +4126,17 @@ static struct led_classdev micmute_led_cdev = {
+ 	.max_brightness = 1,
+ 	.brightness_set_blocking = micmute_led_set,
+ 	.default_trigger = "audio-micmute",
++	.flags = LED_CORE_SUSPENDRESUME,
+ };
 +
- 	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++) {
- 		if (hsfreq->mbps >= mbps)
- 			break;
++static void alc_register_micmute_led(struct hda_codec *codec)
++{
++		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
++		if (devm_led_classdev_register(&codec->core.dev, &micmute_led_cdev))
++			codec_warn(codec, "failed to register micmute LED\n");
++}
++#else
++static inline void alc_register_micmute_led(struct hda_codec *codec) {}
+ #endif
+ 
+ /* setup mute and mic-mute GPIO bits, add hooks appropriately */
+@@ -4136,9 +4146,6 @@ static void alc_fixup_hp_gpio_led(struct hda_codec *codec,
+ 				  unsigned int micmute_mask)
+ {
+ 	struct alc_spec *spec = codec->spec;
+-#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+-	int err;
+-#endif
+ 
+ 	alc_fixup_gpio(codec, action, mute_mask | micmute_mask);
+ 
+@@ -4151,13 +4158,7 @@ static void alc_fixup_hp_gpio_led(struct hda_codec *codec,
+ 	if (micmute_mask) {
+ 		spec->gpio_mic_led_mask = micmute_mask;
+ 		snd_hda_gen_add_micmute_led(codec, alc_gpio_micmute_update);
+-
+-#if IS_REACHABLE(CONFIG_LEDS_TRIGGER_AUDIO)
+-		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+-		err = devm_led_classdev_register(&codec->core.dev, &micmute_led_cdev);
+-		if (err)
+-			codec_warn(codec, "failed to register micmute LED\n");
+-#endif
++		alc_register_micmute_led(codec);
+ 	}
+ }
+ 
+@@ -4305,6 +4306,7 @@ static void alc285_fixup_hp_coef_micmute_led(struct hda_codec *codec,
+ 		spec->mic_led_coefbit_on = 1<<13;
+ 		spec->mic_led_coefbit_off = 0;
+ 		snd_hda_gen_add_micmute_led(codec, alc_hp_cap_micmute_update);
++		alc_register_micmute_led(codec);
+ 	}
+ }
+ 
+@@ -4319,6 +4321,7 @@ static void alc236_fixup_hp_coef_micmute_led(struct hda_codec *codec,
+ 		spec->mic_led_coefbit_on = 2<<2;
+ 		spec->mic_led_coefbit_off = 1<<2;
+ 		snd_hda_gen_add_micmute_led(codec, alc_hp_cap_micmute_update);
++		alc_register_micmute_led(codec);
+ 	}
+ }
+ 
 -- 
-2.7.4
+2.17.1
 
