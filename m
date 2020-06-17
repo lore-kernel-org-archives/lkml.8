@@ -2,84 +2,129 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E214BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B07B821534
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA46821556
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgFQXiB (ORCPT
+        id S1727016AbgFQXkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 19:38:01 -0400
-Received: from mga04.intel.com ([192.55.52.120]:7144 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbgFQXiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 19:38:00 -0400
-IronPort-SDR: BBFZnbB5vBg1oliEtwKNsC01vHmy1P8e7BXT0FwAA+t1Xn6I34tw83bZVbyZ0dJK9f4LlUjYsf
- n2kZx+EMTwMw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 16:38:00 -0700
-IronPort-SDR: 9udcIeQ/AhDiQtSp6pKpzPBRgYHEH9Bg1XRnHRe1czU/QLTfHe4bsebxkhmxjEdol1AMF07O9l
- ifiG6TUrVHNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,523,1583222400"; 
-   d="scan'208";a="317669933"
-Received: from kleeve-mobl.ger.corp.intel.com (HELO localhost) ([10.252.50.166])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Jun 2020 16:37:56 -0700
-Date:   Thu, 18 Jun 2020 02:37:55 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jens Wiklander <jens.wiklander@linaro.org>
-Cc:     Maxim Uvarov <maxim.uvarov@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        peterhuewe@gmx.de, Jason Gunthorpe <jgg@ziepe.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
-        Sumit Garg <sumit.garg@linaro.org>
-Subject: Re: [PATCHv8 0/3] optee: register drivers on optee bus
-Message-ID: <20200617233755.GI62794@linux.intel.com>
-References: <20200604175851.758-1-maxim.uvarov@linaro.org>
- <CAD8XO3YTz=xN2k5h8HsrYsLUgmC6dD57XbBj63e+3_xFF1H0rw@mail.gmail.com>
- <20200616082907.GA2305431@jade>
+        Wed, 17 Jun 2020 19:40:45 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57800 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726854AbgFQXko (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 19:40:44 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id DB729803202E;
+        Wed, 17 Jun 2020 23:40:41 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id QUcOk74t3rAu; Thu, 18 Jun 2020 02:40:40 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6 3/9] dmaengine: Introduce min burst length capability
+Date:   Thu, 18 Jun 2020 02:40:22 +0300
+Message-ID: <20200617234028.25808-4-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200617234028.25808-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200617234028.25808-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616082907.GA2305431@jade>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 10:29:07AM +0200, Jens Wiklander wrote:
-> Hi Maxim and Jarkko,
-> 
-> On Mon, Jun 15, 2020 at 05:32:40PM +0300, Maxim Uvarov wrote:
-> > ping.
-> > Patchset was reviewed and all comments are codeverd. Optee-os patches
-> > were merged. These kernel patches look like they are hanging
-> > somewhere...
-> 
-> I'm almost OK with this patchset, except that
-> Documentation/ABI/testing/sysfs-bus-optee-devices needs to be updated
-> for the new kernel version and TEE mailing list which we're changing right
-> now.
-> 
-> The last patch touches files I'm not maintainer of. That patch depends
-> on the previous patches so it makes sense to keep them together.  If a
-> TPM device driver maintainer would ack that patch I can take it via my
-> tree. Or we can do it the other way around (with a v9 patchset),
-> whichever is preferred.
-> 
-> Cheers,
-> Jens
+Some hardware aside from default 0/1 may have greater minimum burst
+transactions length constraints. Here we introduce the DMA device
+and slave capability, which if required can be initialized by the DMA
+engine driver with the device-specific value.
 
-Probably easier if you pick all three and I ack the one touching TPM.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 
-/Jarkko
+---
+
+Changelog v3:
+- This is a new patch created as a result of the discussion with Vinud and
+  Andy in the framework of DW DMA burst and LLP capabilities.
+---
+ drivers/dma/dmaengine.c   | 1 +
+ include/linux/dmaengine.h | 4 ++++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index d31076d9ef25..b332ffe52780 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -590,6 +590,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+ 	caps->src_addr_widths = device->src_addr_widths;
+ 	caps->dst_addr_widths = device->dst_addr_widths;
+ 	caps->directions = device->directions;
++	caps->min_burst = device->min_burst;
+ 	caps->max_burst = device->max_burst;
+ 	caps->residue_granularity = device->residue_granularity;
+ 	caps->descriptor_reuse = device->descriptor_reuse;
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index e1c03339918f..0c7403b27133 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -465,6 +465,7 @@ enum dma_residue_granularity {
+  *	Since the enum dma_transfer_direction is not defined as bit flag for
+  *	each type, the dma controller should set BIT(<TYPE>) and same
+  *	should be checked by controller as well
++ * @min_burst: min burst capability per-transfer
+  * @max_burst: max burst capability per-transfer
+  * @cmd_pause: true, if pause is supported (i.e. for reading residue or
+  *	       for resume later)
+@@ -478,6 +479,7 @@ struct dma_slave_caps {
+ 	u32 src_addr_widths;
+ 	u32 dst_addr_widths;
+ 	u32 directions;
++	u32 min_burst;
+ 	u32 max_burst;
+ 	bool cmd_pause;
+ 	bool cmd_resume;
+@@ -769,6 +771,7 @@ struct dma_filter {
+  *	Since the enum dma_transfer_direction is not defined as bit flag for
+  *	each type, the dma controller should set BIT(<TYPE>) and same
+  *	should be checked by controller as well
++ * @min_burst: min burst capability per-transfer
+  * @max_burst: max burst capability per-transfer
+  * @residue_granularity: granularity of the transfer residue reported
+  *	by tx_status
+@@ -839,6 +842,7 @@ struct dma_device {
+ 	u32 src_addr_widths;
+ 	u32 dst_addr_widths;
+ 	u32 directions;
++	u32 min_burst;
+ 	u32 max_burst;
+ 	bool descriptor_reuse;
+ 	enum dma_residue_granularity residue_granularity;
+-- 
+2.26.2
+
