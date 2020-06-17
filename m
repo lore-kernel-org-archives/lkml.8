@@ -2,98 +2,257 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80678C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E69F120739
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 535B520739
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:33:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="FQGFaMBo"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Fe61Js+M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgFQRbU (ORCPT
+        id S1726840AbgFQRdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 13:31:20 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:12320 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbgFQRbU (ORCPT
+        Wed, 17 Jun 2020 13:33:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbgFQRdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 13:31:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592415079; x=1623951079;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=OM6axmQ3Y7wpPN2+W/tJEyq6eZpGAQXID7u+0+rJwys=;
-  b=FQGFaMBoXTzk1F+TbLWCCzNuplOTDmP9GZzTu7opE44vSnePJyX4xxD1
-   tEAJrfC+wi2w7BKvvL8zgffAY1O5BbkrT8+BqVzyCfgUn2mMblQWQsKGr
-   rl65KCvzgrFogsia/3W/lO99E3gr1GYIdRH5PqJuGSqp7mATB2s1o3zd2
-   kHen/mxITOGXdvH6JUb7BdhJJV24K1nwh5ba3BHNm9KVonEWLnAIRwQNR
-   xwpxWdvd8VsypE0Q67wbVlMpZbebQvR0qlfnQBbB1JcsrXoEAUKkfDB5H
-   OHvwM+xgDKLE74nC56mY3n2kOcW/4GzxSd4rjgeN2PZYj2uA7KTSbLfV+
-   w==;
-IronPort-SDR: tDf5rt3WZ359d84RruxG0xFqoomjLnn7oUYTMNnFz1jTUCH3vRLn6KhM7744ruAkcuBq20//Ag
- cd2tDnzv/ronCnFkoIG/xEa8/DTrQgM+oiBzbXxzUDPmMmNjEFOHV1q8lFnSIa90b0bTQ20Ayi
- xNVBMuE8XR08ZmyKYnSrMFLvLnAfpvBJlEF8c360LafHqvFmra24weZn4tXNJq9U9yFrM+b2gD
- BMrHusqFJZs5azDooyBUSKwZo8H/kLf7EA3jkxIr1OI7++TNz6I+vUvoExgzbuBv7JFUP8Ub19
- m5w=
-X-IronPort-AV: E=Sophos;i="5.73,523,1583218800"; 
-   d="scan'208";a="84030284"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Jun 2020 10:31:19 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 17 Jun 2020 10:31:19 -0700
-Received: from [10.171.246.62] (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Wed, 17 Jun 2020 10:31:16 -0700
-Subject: Re: [PATCH] net: macb: undo operations in case of failure
-To:     Jakub Kicinski <kuba@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-CC:     <davem@davemloft.net>, <linux@armlinux.org.uk>,
-        <antoine.tenart@bootlin.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1592400235-11833-1-git-send-email-claudiu.beznea@microchip.com>
- <20200617092935.4e3616c1@kicinski-fedora-PC1C0HJN>
-From:   Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-Message-ID: <89e629e3-6fe7-3e9e-0800-0ca97a9217ce@microchip.com>
-Date:   Wed, 17 Jun 2020 19:31:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 17 Jun 2020 13:33:01 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A03DAC06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:33:00 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id y78so343946wmc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:33:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0QNRuJcws82P7uD3W5Xs1rYxppxPq6ASHSPM69pBKQM=;
+        b=Fe61Js+MQ1NB3hDW2FqZX6bK8y0TfX5sBHTNEU2Yk0JzXcTVSvMsGzfAwL++w0EQLB
+         gvg4q3+aUrOL9iaNWSM/h2bqDpSD3Vin8EmXucGR/bq6V6PQc6smK+NR7dHcQXgMaWzD
+         UgjU7cA2bLrL+Byh9BAxtmivf+9accbbBQyCc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0QNRuJcws82P7uD3W5Xs1rYxppxPq6ASHSPM69pBKQM=;
+        b=sHX+YO+/MNPvgty7U4THmCME+mVVroREl53hSLyJjEoY13pXdbDXY9L/AGBkCQphsg
+         1W81fdnA3fzf0AlVeGhiGqNEQ4iSZ/61z7qZGviuib+lmq1yFNY/zUJDPOyn2SNVqSFP
+         WK2lkCXvJ0K/gJHPdxbqghF2QROYLLYKH1yFLsdBOMNTQjZXP0DNIZbV/Mh7otnojj/a
+         WE8QR0t5GhevypVRwG2h+RqMimMpEhuiFsqjBoIiGMWTSH1MYg/6bQCoUBNPOwStU1Ur
+         Seo8ky9qkzfsOV3UHs9pmO1Gxbac+iq13Pr5BIqdF+jnTyASJ3vdFY2sZh6mpkgx6T9G
+         hFFA==
+X-Gm-Message-State: AOAM5335F8Tfg/oJJVWPA72MzA9VEZm2g8mP+xHCmYG0i4XQ5lzVyJw2
+        IYsbr7J+tFBOKnVDvuaqwf/aQxp0I4jRT+pn+mcfGA==
+X-Google-Smtp-Source: ABdhPJxnOs2MLe3C0AP9rvozUlSx2/nymavZrjsSjsvAn9I5kRCXHvTT2TSpRqQfMipTr/dlVrVwhPVh03aW+M/MoWI=
+X-Received: by 2002:a7b:c0cc:: with SMTP id s12mr9971856wmh.111.1592415179181;
+ Wed, 17 Jun 2020 10:32:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200617092935.4e3616c1@kicinski-fedora-PC1C0HJN>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200616205533.3513-8-james.quinlan@broadcom.com> <20200616220523.GA1984295@bjorn-Precision-5520>
+In-Reply-To: <20200616220523.GA1984295@bjorn-Precision-5520>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Wed, 17 Jun 2020 13:32:46 -0400
+Message-ID: <CA+-6iNzFVmFp9MkYkRU=nf-sXSFPZY0gqmA0ZT4rfR0q1sueiA@mail.gmail.com>
+Subject: Re: [PATCH v5 07/12] PCI: brcmstb: Add control of rescal reset
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/06/2020 at 18:29, Jakub Kicinski wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On Wed, 17 Jun 2020 16:23:55 +0300 Claudiu Beznea wrote:
->> Undo previously done operation in case macb_phylink_connect()
->> fails. Since macb_reset_hw() is the 1st undo operation the
->> napi_exit label was renamed to reset_hw.
->>
->> Fixes: b2b041417299 ("net: macb: convert to phylink")
->> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> 
-> Fixes tag: Fixes: b2b041417299 ("net: macb: convert to phylink")
-> Has these problem(s):
->          - Target SHA1 does not exist
+On Tue, Jun 16, 2020 at 6:05 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Tue, Jun 16, 2020 at 04:55:14PM -0400, Jim Quinlan wrote:
+> > From: Jim Quinlan <jquinlan@broadcom.com>
+> >
+> > Some STB chips have a special purpose reset controller named RESCAL (reset
+> > calibration).  The PCIe HW can now control RESCAL to start and stop its
+> > operation.
+>
+> The HW *can* now control RESCAL, but what does this patch do?
+>
+> I guess maybe this patch uses RESCAL to turn on the PHY in probe and
+> resume and turn it off in suspend and remove?
+Yes, I will redo this text with a better description.
 
-It must be:
-Fixes: 7897b071ac3b ("net: macb: convert to phylink")
+Thanks,
+Jim
 
-
--- 
-Nicolas Ferre
+PS Will attend to your other responses as well in the V6.
+>
+> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 81 ++++++++++++++++++++++++++-
+> >  1 file changed, 80 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > index d0e256d8578a..9189406fd35c 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -23,6 +23,7 @@
+> >  #include <linux/of_platform.h>
+> >  #include <linux/pci.h>
+> >  #include <linux/printk.h>
+> > +#include <linux/reset.h>
+> >  #include <linux/sizes.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/string.h>
+> > @@ -158,6 +159,16 @@
+> >  #define DATA_ADDR(pcie)                      (pcie->reg_offsets[EXT_CFG_DATA])
+> >  #define PCIE_RGR1_SW_INIT_1(pcie)    (pcie->reg_offsets[RGR1_SW_INIT_1])
+> >
+> > +/* Rescal registers */
+> > +#define PCIE_DVT_PMU_PCIE_PHY_CTRL                           0xc700
+> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS                       0x3
+> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_MASK              0x4
+> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_SHIFT     0x2
+> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_MASK          0x2
+> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_SHIFT         0x1
+> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_MASK          0x1
+> > +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_SHIFT         0x0
+> > +
+> >  enum {
+> >       RGR1_SW_INIT_1,
+> >       EXT_CFG_INDEX,
+> > @@ -248,6 +259,7 @@ struct brcm_pcie {
+> >       const int               *reg_offsets;
+> >       const int               *reg_field_info;
+> >       enum pcie_type          type;
+> > +     struct reset_control    *rescal;
+> >  };
+> >
+> >  /*
+> > @@ -963,6 +975,47 @@ static void brcm_pcie_enter_l23(struct brcm_pcie *pcie)
+> >               dev_err(pcie->dev, "failed to enter low-power link state\n");
+> >  }
+> >
+> > +static int brcm_phy_cntl(struct brcm_pcie *pcie, const int start)
+> > +{
+> > +     static const u32 shifts[PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS] = {
+> > +             PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_SHIFT,
+> > +             PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_SHIFT,
+> > +             PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_SHIFT,};
+> > +     static const u32 masks[PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS] = {
+> > +             PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_MASK,
+> > +             PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_MASK,
+> > +             PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_MASK,};
+> > +     const int beg = start ? 0 : PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS - 1;
+> > +     const int end = start ? PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS : -1;
+> > +     u32 tmp, combined_mask = 0;
+> > +     u32 val = !!start;
+> > +     void __iomem *base = pcie->base;
+> > +     int i;
+> > +
+> > +     for (i = beg; i != end; start ? i++ : i--) {
+> > +             tmp = readl(base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
+> > +             tmp = (tmp & ~masks[i]) | ((val << shifts[i]) & masks[i]);
+> > +             writel(tmp, base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
+> > +             usleep_range(50, 200);
+> > +             combined_mask |= masks[i];
+> > +     }
+> > +
+> > +     tmp = readl(base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
+> > +     val = start ? combined_mask : 0;
+> > +
+> > +     return (tmp & combined_mask) == val ? 0 : -EIO;
+> > +}
+> > +
+> > +static inline int brcm_phy_start(struct brcm_pcie *pcie)
+> > +{
+> > +     return pcie->rescal ? brcm_phy_cntl(pcie, 1) : 0;
+> > +}
+> > +
+> > +static inline int brcm_phy_stop(struct brcm_pcie *pcie)
+> > +{
+> > +     return pcie->rescal ? brcm_phy_cntl(pcie, 0) : 0;
+> > +}
+> > +
+> >  static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+> >  {
+> >       void __iomem *base = pcie->base;
+> > @@ -990,11 +1043,15 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+> >  static int brcm_pcie_suspend(struct device *dev)
+> >  {
+> >       struct brcm_pcie *pcie = dev_get_drvdata(dev);
+> > +     int ret;
+> >
+> >       brcm_pcie_turn_off(pcie);
+> > +     ret = brcm_phy_stop(pcie);
+> > +     if (ret)
+> > +             dev_err(pcie->dev, "failed to stop phy\n");
+> >       clk_disable_unprepare(pcie->clk);
+> >
+> > -     return 0;
+> > +     return ret;
+> >  }
+> >
+> >  static int brcm_pcie_resume(struct device *dev)
+> > @@ -1007,6 +1064,12 @@ static int brcm_pcie_resume(struct device *dev)
+> >       base = pcie->base;
+> >       clk_prepare_enable(pcie->clk);
+> >
+> > +     ret = brcm_phy_start(pcie);
+> > +     if (ret) {
+> > +             dev_err(pcie->dev, "failed to start phy\n");
+> > +             return ret;
+> > +     }
+> > +
+> >       /* Take bridge out of reset so we can access the SERDES reg */
+> >       brcm_pcie_bridge_sw_init_set(pcie, 0);
+> >
+> > @@ -1032,6 +1095,9 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
+> >  {
+> >       brcm_msi_remove(pcie);
+> >       brcm_pcie_turn_off(pcie);
+> > +     if (brcm_phy_stop(pcie))
+> > +             dev_err(pcie->dev, "failed to stop phy\n");
+> > +     reset_control_assert(pcie->rescal);
+> >       clk_disable_unprepare(pcie->clk);
+> >  }
+> >
+> > @@ -1117,6 +1183,19 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+> >               dev_err(&pdev->dev, "could not enable clock\n");
+> >               return ret;
+> >       }
+> > +     pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
+> > +     if (IS_ERR(pcie->rescal))
+> > +             return PTR_ERR(pcie->rescal);
+> > +
+> > +     ret = reset_control_deassert(pcie->rescal);
+> > +     if (ret)
+> > +             dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
+> > +
+> > +     ret = brcm_phy_start(pcie);
+> > +     if (ret) {
+> > +             dev_err(pcie->dev, "failed to start phy\n");
+> > +             return ret;
+> > +     }
+> >
+> >       ret = brcm_pcie_setup(pcie);
+> >       if (ret)
+> > --
+> > 2.17.1
+> >
