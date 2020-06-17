@@ -2,94 +2,111 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8180720CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:24:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592389453;
-	bh=q4XtEUaNAPjAlHRDzfBXndousVziD4EzqeUrETXxBjM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xfg9KgtlyUQRgFWpmxImkinWheIutxpM/dtet1j9tJ9fPlnJCPd8g6gY4jEBV5oMM
-	 PKZ/J4ibTxvw0GtbQzDT66lCjrqeeUeU5nVlDjyi7QcznxbgeEEqB4YgW08QKJyNiC
-	 Nh4t6iVRif5VH7xMheqlsD6p1oXkhmhuzdcL/lFU=
+	by mail.kernel.org (Postfix) with ESMTP id DB9DB208B3
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 10:25:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgFQKYI (ORCPT
+        id S1726497AbgFQKZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 06:24:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725964AbgFQKXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 06:23:15 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C418214D8;
-        Wed, 17 Jun 2020 10:23:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592389394;
-        bh=q4XtEUaNAPjAlHRDzfBXndousVziD4EzqeUrETXxBjM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0MCVuvHI4/1WTFEjLx/PerIQCGJWPkXUx8NmAPAuT+j6OWVH2KxRnjyvdt2jK8+s0
-         7ayqOmzHDqBByicUIi1G7WN6rwNZdX4ChqzQOGRlVZ9muaJ7ewvrGl8DKhbpe34EPM
-         MzliQlc5UYP6C7dFO4dXAxjMjubYHD0FWHaRvuYg=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Laurentiu Palcu <laurentiu.palcu@intel.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: power: supply: bq25890: Document required interrupt
-Date:   Wed, 17 Jun 2020 12:23:05 +0200
-Message-Id: <20200617102305.14241-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200617102305.14241-1-krzk@kernel.org>
-References: <20200617102305.14241-1-krzk@kernel.org>
+        Wed, 17 Jun 2020 06:25:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725964AbgFQKZ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 06:25:57 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2CA3C061573;
+        Wed, 17 Jun 2020 03:25:57 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jlVGP-0006kb-Q9; Wed, 17 Jun 2020 12:25:49 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 65D6F1C0089;
+        Wed, 17 Jun 2020 12:25:49 +0200 (CEST)
+Date:   Wed, 17 Jun 2020 10:25:49 -0000
+From:   "tip-bot2 for Dan Carpenter" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/resctrl: Fix a NULL vs IS_ERR() static checker
+ warning in rdt_cdp_peer_get()
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Borislav Petkov <bp@suse.de>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200602193611.GA190851@mwanda>
+References: <20200602193611.GA190851@mwanda>
+MIME-Version: 1.0
+Message-ID: <159238954915.16989.17873846610570577082.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver requires interrupts (fails probe if it is not provided) so
-document this requirement in bindings.
+The following commit has been merged into the x86/urgent branch of tip:
 
-Fixes: 4aeae9cb0dad ("power_supply: Add support for TI BQ25890 charger chip")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Commit-ID:     cc5277fe66cf3ad68f41f1c539b2ef0d5e432974
+Gitweb:        https://git.kernel.org/tip/cc5277fe66cf3ad68f41f1c539b2ef0d5e432974
+Author:        Dan Carpenter <dan.carpenter@oracle.com>
+AuthorDate:    Tue, 02 Jun 2020 22:36:11 +03:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 17 Jun 2020 12:18:34 +02:00
+
+x86/resctrl: Fix a NULL vs IS_ERR() static checker warning in rdt_cdp_peer_get()
+
+The callers don't expect *d_cdp to be set to an error pointer, they only
+check for NULL.  This leads to a static checker warning:
+
+  arch/x86/kernel/cpu/resctrl/rdtgroup.c:2648 __init_one_rdt_domain()
+  warn: 'd_cdp' could be an error pointer
+
+This would not trigger a bug in this specific case because
+__init_one_rdt_domain() calls it with a valid domain that would not have
+a negative id and thus not trigger the return of the ERR_PTR(). If this
+was a negative domain id then the call to rdt_find_domain() in
+domain_add_cpu() would have returned the ERR_PTR() much earlier and the
+creation of the domain with an invalid id would have been prevented.
+
+Even though a bug is not triggered currently the right and safe thing to
+do is to set the pointer to NULL because that is what can be checked for
+when the caller is handling the CDP and non-CDP cases.
+
+Fixes: 52eb74339a62 ("x86/resctrl: Fix rdt_find_domain() return value and checks")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Reinette Chatre <reinette.chatre@intel.com>
+Acked-by: Fenghua Yu <fenghua.yu@intel.com>
+Link: https://lkml.kernel.org/r/20200602193611.GA190851@mwanda
 ---
- Documentation/devicetree/bindings/power/supply/bq25890.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq25890.txt b/Documentation/devicetree/bindings/power/supply/bq25890.txt
-index 51ecc756521f..3b4c69a7fa70 100644
---- a/Documentation/devicetree/bindings/power/supply/bq25890.txt
-+++ b/Documentation/devicetree/bindings/power/supply/bq25890.txt
-@@ -10,6 +10,7 @@ Required properties:
-     * "ti,bq25895"
-     * "ti,bq25896"
- - reg: integer, i2c address of the device.
-+- interrupts: interrupt line;
- - ti,battery-regulation-voltage: integer, maximum charging voltage (in uV);
- - ti,charge-current: integer, maximum charging current (in uA);
- - ti,termination-current: integer, charge will be terminated when current in
-@@ -39,6 +40,9 @@ bq25890 {
- 	compatible = "ti,bq25890";
- 	reg = <0x6a>;
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 23b4b61..3f844f1 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1117,6 +1117,7 @@ static int rdt_cdp_peer_get(struct rdt_resource *r, struct rdt_domain *d,
+ 	_d_cdp = rdt_find_domain(_r_cdp, d->id, NULL);
+ 	if (WARN_ON(IS_ERR_OR_NULL(_d_cdp))) {
+ 		_r_cdp = NULL;
++		_d_cdp = NULL;
+ 		ret = -EINVAL;
+ 	}
  
-+	interrupt-parent = <&gpio1>;
-+	interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
-+
- 	ti,battery-regulation-voltage = <4200000>;
- 	ti,charge-current = <1000000>;
- 	ti,termination-current = <50000>;
--- 
-2.17.1
-
