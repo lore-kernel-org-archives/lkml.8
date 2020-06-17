@@ -2,170 +2,156 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D746BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B15B32080D
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F420C20DD4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="VFBZaSOM"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IfZLhQ5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgFQBey (ORCPT
+        id S1726651AbgFQBjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 21:34:54 -0400
-Received: from mga18.intel.com ([134.134.136.126]:52759 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgFQBex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 21:34:53 -0400
-IronPort-SDR: yJgWcJR9ZBNxFpYzizYj1wpXho34+jQyIIuCMp+voCbSiUdwYTz2GsMORQwNvwJECQLDPWFwVi
- M9LZocYKQ+8A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 18:34:53 -0700
-IronPort-SDR: qZT80fhhjld5H1CFihUxcNTKuFzHUZmfyeJlsQwfljD3yn6THCLCTW8QhM0fURpH7Be8NbOEId
- 3TU7523keGVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,520,1583222400"; 
-   d="scan'208";a="291260708"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga002.jf.intel.com with ESMTP; 16 Jun 2020 18:34:52 -0700
-Received: from fmsmsx151.amr.corp.intel.com (10.18.125.4) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 16 Jun 2020 18:34:52 -0700
-Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
- FMSMSX151.amr.corp.intel.com (10.18.125.4) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 16 Jun 2020 18:34:52 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
- edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Tue, 16 Jun 2020 18:34:52 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cpXrx3oJZlCqUdkHXf9FFUrqCKJ+37+ouvkp2umF8xqjEJyg361zt5CRIU+hJ++kSZlwryOvg6HUmPMP/5pASo+1CR0mJjOLmmQXCwsjlOzmovPhMK3kVdELZCy4STsXIuctiyQe7IjAKDHX2in47YW+0I6wdTQt0ajVlOi7ulSpSAX7Wf7NvFvUnZC8Ox+BDpUAv703RviQ+BnzN1GRHxxNyB8vkfVA556ErNbET5Cy5tGb+KWRQ0BUIVok/A3dAGI2n9TkZRR251YPPRvJRP0cLHgtn3Hzzyi4gZiuK1udbBuISZMkX/d8HccV/q6O8YHvnhU7z+ML6KebPuaKCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7XxKq6EdYyQPjMNBZSvnjIgXh1ijk2VdbwrN1WVRKjg=;
- b=OOEWvPEkO+6hn9EyOIkvw2JFSmcNpXrv5S20Y7I5CIW43XtAtdc8lUgQbHFVIRnll66CSnlkVxCILwxIFMDs8i1gfhmMDP/w25WVcSlBqkqTqi+I5gQgVs9nxGV4n3RoNGAHaJ2w6dCHaNAiak/N24WTY9e/CpnZRHQWEwvbuIV7REq6agvtyySBKyLiJfnWzb6KJsbUOfyjQ9DT16+4JobsNhGvm9dZVz7HPT0coQxp7RFSbH6OyPVm3/+8lqhXxRh78SrulGsdNyvSQTsP+ozZCr+PbPRKmUL3pS+Nws1Rcdv9637divHzswzPbYQGL7+YPY9M7o3T0KIxQQpjTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7XxKq6EdYyQPjMNBZSvnjIgXh1ijk2VdbwrN1WVRKjg=;
- b=VFBZaSOM6T386F7ldok/ALxxyjDBjS7yi1TKR52S2QgfSWSEIKSE1YunhUtqElqGGYKDenUQj8iAE/dadORtFMhNxsjAZ/1kcGOzCNfaEgR1E0mSdRDMkiWSSUuMM2+m/44G2bVZffB+Dy8Y1e+TpS9nDv4wH7R2MyitPENLrm8=
-Received: from DM6PR11MB3721.namprd11.prod.outlook.com (2603:10b6:5:142::10)
- by DM6PR11MB4691.namprd11.prod.outlook.com (2603:10b6:5:2a6::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19; Wed, 17 Jun
- 2020 01:34:51 +0000
-Received: from DM6PR11MB3721.namprd11.prod.outlook.com
- ([fe80::b0cf:aaa:bc78:e0cc]) by DM6PR11MB3721.namprd11.prod.outlook.com
- ([fe80::b0cf:aaa:bc78:e0cc%4]) with mapi id 15.20.3088.029; Wed, 17 Jun 2020
- 01:34:50 +0000
-From:   "Wan Mohamad, Wan Ahmad Zainie" 
-        <wan.ahmad.zainie.wan.mohamad@intel.com>
-To:     "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-CC:     "kishon@ti.com" <kishon@ti.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Hunter, Adrian" <adrian.hunter@intel.com>
-Subject: RE: [PATCH v5 2/2] phy: intel: Add Keem Bay eMMC PHY support
-Thread-Topic: [PATCH v5 2/2] phy: intel: Add Keem Bay eMMC PHY support
-Thread-Index: AQHWQ+wc04c1VDLsCUu4H/RWl0c5TajbcusAgACRWLA=
-Date:   Wed, 17 Jun 2020 01:34:50 +0000
-Message-ID: <DM6PR11MB3721BFF25B5377B28E56F69DDD9A0@DM6PR11MB3721.namprd11.prod.outlook.com>
-References: <20200616143818.13579-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200616143818.13579-3-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200616164420.GZ2428291@smile.fi.intel.com>
-In-Reply-To: <20200616164420.GZ2428291@smile.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.192]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a86fdf67-1b60-4950-aa2a-08d8125ea0fa
-x-ms-traffictypediagnostic: DM6PR11MB4691:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB46912F7C91D380D2205B50C4DD9A0@DM6PR11MB4691.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 04371797A5
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jlG5hxfifBHNK8ak6afKG0p9qh1QMUcApYrquGmdCtfHQcn5hP01XY45y6i//4kU+7E7I9ROzfsKc37Bl7SlVumwZNGkODathn6/b5eeufWS9gx0U7MVy4dwf2EfgiFwC0x05jr0uyIqH8gGeNCTz+4f08LwpbFtrxnb1JQa8AewVWZM8dGZQrZI9NlE3oz16yXt7APRntcno1zpjfRN0bzImBvs7ys2lcOXY6Ra8kknc+vz0OH+yBRbSmvGnA7o24IAyc/pFBpGBhFv0cJpG+O77fpbg35VAYF6VoQWWIhY2C65ln165nziDyHmrKRL5eswBucm7f6zXY5L9yiG3A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3721.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(39860400002)(346002)(396003)(376002)(33656002)(64756008)(66476007)(54906003)(316002)(71200400001)(66556008)(8676002)(9686003)(76116006)(66446008)(83380400001)(8936002)(6506007)(53546011)(5660300002)(26005)(6862004)(6636002)(186003)(478600001)(66946007)(86362001)(107886003)(55016002)(4326008)(52536014)(2906002)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: +1gLhuKvcCly+Qvgihbad2PcGIaR8S3gDajiBZYitRQa6ICMo3gcUflZcpjyVJT1lyRxTNEc1ZudIP+tq2MDiK5syVMvSV8Qk6LToUSoXHSTG+e87EyWID5yPBlVYB8nhSO34gEAvPXpDujaFi6iMuZk3+yngZ4WWONyRnQqcj39S1Hyi+cnas/Rz13u8w+QCFeJooSp88v/rfYZSbezNYBu4ubKs3KIBm7abgIy2XoWRG36LIpELiH1H8JsDjxnaXhqahSoXebYiE2qKvMTf1c5w77hW+vWpAODEZP5QFd+hyBZ2kdrjuehzzWOnJCuPYpVb0DbtDCNveCtgPGELcAkD6Fkfas26Soqy24ctraud3rEQd5tovw0ox/6TrRGthTuStGR7KfDdfVBggqFwO1ibAAlfQNQOKur15Mxk84fUBri48nbsKmLAaQ+ABlOGGFaE3ajZebfHk6BmRNTY27HYCq+ue3DEdtJb9RBiUXp0dS6Gz0rQGVEpttEbxVO
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 16 Jun 2020 21:39:31 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18351 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbgFQBj3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 21:39:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ee9741f0001>; Tue, 16 Jun 2020 18:38:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 16 Jun 2020 18:39:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 16 Jun 2020 18:39:28 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jun
+ 2020 01:39:28 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 17 Jun 2020 01:39:28 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.171.186]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ee9744e0003>; Tue, 16 Jun 2020 18:39:27 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+Subject: [RFC PATCH v2 00/18] Support for Tegra video capture from external sensor
+Date:   Tue, 16 Jun 2020 18:41:16 -0700
+Message-ID: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: a86fdf67-1b60-4950-aa2a-08d8125ea0fa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2020 01:34:50.9003
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2TqBohwMq9XZaGq/l/5rJiFG4l3KNlOIAiqSNOBYGRvN7rgdNLG4baVQG09iLtVBevVHZLL78SEvOeKax5SLzhTXZ82EWWFapvF5hhCUDQ+djjDZekGPzsx6Nv1aII4K
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4691
-X-OriginatorOrg: intel.com
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592357919; bh=gWJwcLfB8TP7ne2xW3jA7ozKDaLwQXfkMd5LOGS0z78=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=IfZLhQ5hB7cGuJ/USmZo7CRzbANYE85R3t0OG3oRA2hZjSD+q25+3S5tEo5rR5SBs
+         HtasZpBxfa4dUE51F75iy41+kqsq0xW60S/eUm+AqMYMcWYENB8MIxiTYMNQKBxeSP
+         EwPig+75NSu3HuPoJ3FJrLEXbHKA2eGfCHvHRJO0GwI/3hiXRyzn4no2CBpc4lI+1P
+         sLiaaKlkyBKNXYAF6JIPw8+3pOO++Ek36ie5b4D7xQpaqCLTUzVITr4al90oHP98os
+         l1pKcgNR/oHLuxqv8gn+9q8obRg6lg2NsS0xurw3aKm39+t8jgqZxWhCd0FQEHlzke
+         ipbo0Qidv1kAg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series adds support for video capture from external camera sensor to
+Tegra video driver.
+
+Jetson TX1 has camera expansion connector and supports custom camera module
+designed as per TX1 design specification.
+
+This series also enables camera capture support for Jetson Nano which has
+Raspberry PI camera header.
+
+This series is tested with IMX219 camera sensor.
+
+This series include,
+
+VI I2C related fixes
+- Camera sensor programming happens through VI I2C which is on host1x bus.
+- These patches includes device tree and I2C driver fixes for VI I2C.
+
+Tegra video driver updates
+- TPG Vs Non-TPG based on Kconfig
+- Support for external sensor video capture based on device graph from DT.
+- Support for selection ioctl operations
+- Tegra MIPI CSI pads calibration
+- CSI T-CLK and T-HS settle time computation based on clock rates.
+
+Host1x driver updates
+- Adds API to allow creating mipi device for specific device node.
+- Splits MIPI pads calibrate start and waiting for calibration to be done.
+
+Device tree updates
+- Adds camera connector 2V8, 1V8, 1V2 regulator supplies to Jetson TX1 DT.
+- Enabled VI and CSI support in Jetson Nano DT.
 
 
-> -----Original Message-----
-> From: Shevchenko, Andriy <andriy.shevchenko@intel.com>
-> Sent: Wednesday, June 17, 2020 12:44 AM
-> To: Wan Mohamad, Wan Ahmad Zainie
-> <wan.ahmad.zainie.wan.mohamad@intel.com>
-> Cc: kishon@ti.com; vkoul@kernel.org; robh+dt@kernel.org; linux-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org; Hunter, Adrian
-> <adrian.hunter@intel.com>
-> Subject: Re: [PATCH v5 2/2] phy: intel: Add Keem Bay eMMC PHY support
->=20
-> On Tue, Jun 16, 2020 at 10:38:18PM +0800, Wan Ahmad Zainie wrote:
-> > Add support for eMMC PHY on Intel Keem Bay SoC.
->=20
-> ...
->=20
-> > +	ret =3D regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
-> > +				       dllrdy, IS_DLLRDY(dllrdy),
-> > +				       0, 50 * USEC_PER_MSEC);
-> > +	if (ret) {
-> > +		dev_err(&phy->dev, "dllrdy failed, ret=3D%d\n", ret);
->=20
-> > +		return ret;
-> > +	}
-> > +
-> > +	return ret;
->=20
-> return ret;
->=20
-> (Since it's only one minor issue, it's up to maintainers to decide if new
-> version is needed)
+Delta between patch versions:
 
-This was addressed in v4, together with another 2 changes.
-I was careless when modifying Kconfig in my older working branch.
+[v2]:	Includes below changes based on v1 feedback
+	- dt-binding document and the driver update for device graph to use
+	  separate ports for sink endpoint and source endpoint for csi.
+	- Use data-lanes endpoint property for csi.
+	- Update tegra_mipi_request() to take device node pointer argument
+	  rather than adding extra API.
+	- Remove checking for clk pointer before clk_disable.
 
-I resend v5.
 
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
->=20
+Sowjanya Komatineni (18):
+  dt-bindings: i2c: tegra: Document Tegra210 VI I2C clocks and
+    power-domains
+  arm64: tegra: Add missing clocks and power-domains to Tegra210 VI I2C
+  i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
+  i2c: tegra: Fix the error path in tegra_i2c_runtime_resume
+  i2c: tegra: Fix runtime resume to re-init VI I2C
+  i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra210 vi i2c
+  media: tegra-video: Fix channel format alignment
+  media: tegra-video: Enable TPG based on kernel config
+  media: tegra-video: Update format lookup to offset based
+  dt-bindings: tegra: Update VI and CSI bindings with port info
+  media: tegra-video: Add support for external sensor capture
+  media: tegra-video: Add support for selection ioctl ops
+  gpu: host1x: mipi: Update tegra_mipi_request() to be node based
+  gpu: host1x: mipi: Split tegra_mipi_calibrate and tegra_mipi_wait
+  media: tegra-video: Add CSI MIPI pads calibration
+  media: tegra-video: Compute settle times based on the clock rate
+  arm64: tegra: jetson-tx1: Add camera supplies
+  arm64: tegra: Enable Tegra VI CSI support for Jetson Nano
+
+ .../display/tegra/nvidia,tegra20-host1x.txt        |  92 ++-
+ .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt |  19 +-
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |  41 ++
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts |  10 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +
+ drivers/gpu/drm/tegra/dsi.c                        |   9 +-
+ drivers/gpu/host1x/mipi.c                          |  30 +-
+ drivers/i2c/busses/i2c-tegra.c                     |  39 +-
+ drivers/staging/media/tegra-video/Kconfig          |   7 +
+ drivers/staging/media/tegra-video/csi.c            | 245 ++++++-
+ drivers/staging/media/tegra-video/csi.h            |   8 +
+ drivers/staging/media/tegra-video/tegra210.c       |  25 +-
+ drivers/staging/media/tegra-video/vi.c             | 770 +++++++++++++++++++--
+ drivers/staging/media/tegra-video/vi.h             |  23 +-
+ drivers/staging/media/tegra-video/video.c          |  23 +-
+ include/linux/host1x.h                             |   4 +-
+ 16 files changed, 1251 insertions(+), 100 deletions(-)
+
+-- 
+2.7.4
 
