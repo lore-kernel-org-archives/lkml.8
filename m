@@ -2,105 +2,127 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C09C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E57C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46A492098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:53:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="2DziLIZz"
+	by mail.kernel.org (Postfix) with ESMTP id 3873F2098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 12:56:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592398567;
+	bh=nYFO/oI254U78ynuhC4MshoQshU2kuGAPO7lVMtzojE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FYl23GPPSthDGtENJZrZPaE1Xs3alUpvOQY3ziH0nbSFxYkXwdD/z/+tE1887o9Dv
+	 7L1Cq+F8w5QL6/wEAEUn28I/qOFkyQNcNIIFsZJNZqECpZxK/rl4cc5++EaQoXK5nN
+	 mVod5hRBAbwWXjoWTuk5yer3Kh8A6LAuo+zXqg0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgFQMx4 (ORCPT
+        id S1726758AbgFQM4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 08:53:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgFQMxz (ORCPT
+        Wed, 17 Jun 2020 08:56:05 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:46289 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgFQM4B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 08:53:55 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 045B6C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 05:53:55 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id c3so2191255wru.12
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 05:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OUb64193SWqYIql7DIKLMy9V1uabiBdxixXk3fqRnNs=;
-        b=2DziLIZzTZeDGGUTlRaBxWRYbxmn6E+JLiHPzp1Mk53M3nNvoyxiNjIU+bIQV7aFI1
-         rZzChTIg3GCeTEAockNd7uXAD8MYY45FStielAJqB8cueELLXv/Do3yJV6c6YH7/zCbs
-         WPECD0nmen+IaZSwSZshVGFFTpN8AN677eCBYyZ9gZl/VVbsJUJjPbgbVh3K8AobF2Up
-         Lsyj5SefZrKalz21AG0xcpF7mYIwUCXoN/0UJOfBXYdkb/aUoKmKSXIbEoMcHVYVKCr5
-         F4BnAaM6p3OcGPizYpa1CfisBWhwy+3UZShh0O/n/bwEQ0EPAccE9+ZEk2C96/TwLKEc
-         misg==
+        Wed, 17 Jun 2020 08:56:01 -0400
+Received: by mail-ej1-f67.google.com with SMTP id p20so2155867ejd.13;
+        Wed, 17 Jun 2020 05:55:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OUb64193SWqYIql7DIKLMy9V1uabiBdxixXk3fqRnNs=;
-        b=R9QiyL+MVyno/HhLFo0ytgWsBG4thJYrNkIb3/rfV2BiMiASB+Zw6POg3G/0qecoBn
-         O3fsq7jbHhfDdgNaYtw6ziRKkIvkmocRWWvwO8I8D8OSs+vgVTuxZHHmhhRDZyyuTCWR
-         NLJx162mylqyVkvjeYPjwf9SDkkZwfRverDjzmirRL4av0Rw34B3IF1eDr6vy+Co88FC
-         7+NR93byHlO2zepuoa6yWmrrZMB12dxzauboDD+6KFVgXuadmxPspA5a4LGfhcGYgLBW
-         MZM5V5BnyGJkxf8pRNjmxZsrWPR8Psl+U6GNgmLUlKK+ZVEQKuGGGRuTCj9EhhWupXzh
-         5dUw==
-X-Gm-Message-State: AOAM5303rBjyZmtUDQD/MtmLaoE3CLWGKmyGXsyScNyre3Fi9M0YD1/J
-        mwxXZE3+2uL7NHhheX/9r/TKAA==
-X-Google-Smtp-Source: ABdhPJw8wkqbz32oAgpEFT7agRATCW2IXTTcvN5ZJw5GOdwURx9gtNd8s4EpB21kZp+UwN5ZuB65FQ==
-X-Received: by 2002:a5d:6751:: with SMTP id l17mr9020528wrw.179.1592398433677;
-        Wed, 17 Jun 2020 05:53:53 -0700 (PDT)
-Received: from localhost.localdomain (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.googlemail.com with ESMTPSA id h29sm36233697wrc.78.2020.06.17.05.53.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fOVgSeVqTVqWvUfLoOdj4nt+48hh42lucWZp1VWswtg=;
+        b=dH49tmuZwIi2AW45bvCm3iTsdIn3uF71ykSn9PsnXeadpR8w4CiekLmYpZM958HwJD
+         ibgE+xf/ARAeXcjze6WrTSv5kWz7b8jTpIZP8lCgh3Ylunh3gjcMdzhvwrFj+vqHznwg
+         rXWDmWvWLvm2e4k8WV0pN2mW4Bnb86WB17lGi1mJqvxtygd7za3zqTFaYjfZJY22Zxhx
+         82tjvjiERWaV0Yt8ZqtypoDKflVAblaEOMwz6De3hPO1oN+J4thsHfe7IhMjPM4f9vzY
+         7KAKmVbgfZKj2sH/BeUJ6fCaZrsjP79n5Sfl/vPFusfBPpcILYmSLk3eh1Dy43dOJL87
+         2WTw==
+X-Gm-Message-State: AOAM530bhtu6+RkmEZpogtJgUxdROzQTUK2XsEI7R0YXnSFuAtjx2e2X
+        yl1V8OEEuJPvrEpbgOi6IDA=
+X-Google-Smtp-Source: ABdhPJz5smjYQcDGdXsq8Ug+fgHwHPeIMnfqM9kX0E57nHrzErZZpyVOrifVPC/iAZURBZCGoIl/9Q==
+X-Received: by 2002:a17:906:aad8:: with SMTP id kt24mr7265073ejb.527.1592398555771;
+        Wed, 17 Jun 2020 05:55:55 -0700 (PDT)
+Received: from localhost (ip-37-188-158-19.eurotel.cz. [37.188.158.19])
+        by smtp.gmail.com with ESMTPSA id mh14sm13501385ejb.116.2020.06.17.05.55.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 05:53:52 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: meson: add missing gxl rng clock
-Date:   Wed, 17 Jun 2020 14:53:46 +0200
-Message-Id: <20200617125346.1163527-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.25.4
+        Wed, 17 Jun 2020 05:55:54 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 14:55:53 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     dsterba@suse.cz, Joe Perches <joe@perches.com>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-ppp@vger.kernel.org, wireguard@lists.zx2c4.com,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] mm, treewide: Rename kzfree() to kfree_sensitive()
+Message-ID: <20200617125553.GO9499@dhcp22.suse.cz>
+References: <20200616015718.7812-1-longman@redhat.com>
+ <fe3b9a437be4aeab3bac68f04193cb6daaa5bee4.camel@perches.com>
+ <20200616230130.GJ27795@twin.jikos.cz>
+ <20200617003711.GD8681@bombadil.infradead.org>
+ <20200617071212.GJ9499@dhcp22.suse.cz>
+ <20200617110820.GG8681@bombadil.infradead.org>
+ <20200617113157.GM9499@dhcp22.suse.cz>
+ <20200617122321.GJ8681@bombadil.infradead.org>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617122321.GJ8681@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The peripheral clock of the RNG is missing for gxl while it is present
-for gxbb.
+On Wed 17-06-20 05:23:21, Matthew Wilcox wrote:
+> On Wed, Jun 17, 2020 at 01:31:57PM +0200, Michal Hocko wrote:
+> > On Wed 17-06-20 04:08:20, Matthew Wilcox wrote:
+> > > If you call vfree() under
+> > > a spinlock, you're in trouble.  in_atomic() only knows if we hold a
+> > > spinlock for CONFIG_PREEMPT, so it's not safe to check for in_atomic()
+> > > in __vfree().  So we need the warning in order that preempt people can
+> > > tell those without that there is a bug here.
+> > 
+> > ... Unless I am missing something in_interrupt depends on preempt_count() as
+> > well so neither of the two is reliable without PREEMPT_COUNT configured.
+> 
+> preempt_count() always tracks whether we're in interrupt context,
+> regardless of CONFIG_PREEMPT.  The difference is that CONFIG_PREEMPT
+> will track spinlock acquisitions as well.
 
-Fixes: 1b3f6d148692 ("ARM64: dts: meson-gx: add clock CLKID_RNG0 to hwrng node")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+Right you are! Thanks for the clarification. I find the situation
+around preempt_count quite confusing TBH. Looking at existing users
+of in_atomic() (e.g. a random one zd_usb_iowrite16v_async which check
+in_atomic and then does GFP_KERNEL allocation which would be obviously
+broken on !PREEMPT if the function can be called from an atomic
+context), I am wondering whether it would make sense to track atomic
+context also for !PREEMPT. This check is just terribly error prone.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index fc59c8534c0f..6c8b189884ca 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -337,6 +337,11 @@ clkc: clock-controller {
- 	};
- };
- 
-+&hwrng {
-+	clocks = <&clkc CLKID_RNG0>;
-+	clock-names = "core";
-+};
-+
- &i2c_A {
- 	clocks = <&clkc CLKID_I2C>;
- };
 -- 
-2.25.4
-
+Michal Hocko
+SUSE Labs
