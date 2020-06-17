@@ -2,102 +2,92 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A540CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 433BB2100A
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592383093;
-	bh=eWxs3nB/7UcJdvfwSzWTNvyv1bWD2Dy3QiER8xtR+Qo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BqvGDv9SjLOS1KmHLrAm8pbuP8HCPKhHSZEfhSFmF8+jdAE6KwSp2YBGSIbuDB4Wv
-	 evqWSF3AZNS9UW0iAGqErY2M+lGNqvtGz63tJC13fd3u0PK+uJKycoU2fa/nV4DxrX
-	 SdiW8YTgo2hN0uaaBrvyhw6ECMdIXbHLJ9lUNGEk=
+	by mail.kernel.org (Postfix) with ESMTP id 861462073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 08:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgFQIiF (ORCPT
+        id S1726454AbgFQIi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 04:38:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51294 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 04:38:26 -0400
+Received: from mga12.intel.com ([192.55.52.136]:40870 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725964AbgFQIiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:38:04 -0400
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06C0B212CC;
-        Wed, 17 Jun 2020 08:38:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592383084;
-        bh=eWxs3nB/7UcJdvfwSzWTNvyv1bWD2Dy3QiER8xtR+Qo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=E5Pk/q21L4XYpxwsPRqpQvJFKWBqQfH+fQbSfBBfdgjkN2G2l+qH5bfVBVKN5b3zV
-         RFdwLJkO66yeNRhrwzK/X/NwGgJyf3k8yhT4nSlZ3UZxgXSzrNJp4JfGoIRc/dfHaw
-         S+/yBwBXAg3GryE113CQ8pbAaumSZ7nQ0HV4/VCM=
-Received: by mail-ot1-f54.google.com with SMTP id m2so962168otr.12;
-        Wed, 17 Jun 2020 01:38:03 -0700 (PDT)
-X-Gm-Message-State: AOAM533k56lQ6d9JJ9xFX0FtFrZFn+G22QNlDOv8HZSYz2YeO3Tm3+i6
-        J/Xb5NRJ0IfTTyP03jIz9L3A9GAUG0+ylbuPgzs=
-X-Google-Smtp-Source: ABdhPJznxjKPV69wdlQPGPVd/LwNYP59TKkGepzbjZIAhXvJ+C+a7wEcmwlw4MwfiLqy0B/zTH9gnBN96UqNEJURyu8=
-X-Received: by 2002:a9d:476:: with SMTP id 109mr6237581otc.77.1592383083393;
- Wed, 17 Jun 2020 01:38:03 -0700 (PDT)
+        id S1725964AbgFQIiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:38:25 -0400
+IronPort-SDR: 5DaxtBAa9QBwtD12v+6JVwCmc8qgB4KMvejiY11M3XDJQV1H6WBN766kUbT6/STJLNJd1Gdtw2
+ EQEfzwZ7fFiA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 01:38:24 -0700
+IronPort-SDR: 8amOh+3DEq9xGRjv9O9S0/x7SUFY94jbNqYOxXV3EJS4pR0n4U0GH9eJLp/COzVsuh/0i7uhwP
+ 0YrsLt4Iopog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,522,1583222400"; 
+   d="scan'208";a="299218015"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Jun 2020 01:38:24 -0700
+Received: from [10.249.225.191] (abudanko-mobl.ccr.corp.intel.com [10.249.225.191])
+        by linux.intel.com (Postfix) with ESMTP id 60F0358026B;
+        Wed, 17 Jun 2020 01:38:22 -0700 (PDT)
+Subject: [PATCH v8 05/13] perf stat: move target check to loop control
+ statement
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <62dc7c05-7195-9001-fbb0-425c6287ad21@linux.intel.com>
+Date:   Wed, 17 Jun 2020 11:38:21 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <CAHmME9rmAznrAmEQTOaLeMM82iMFTfCNfpxDGXw4CJjuVEF_gQ@mail.gmail.com>
- <20200615104332.901519-1-Jason@zx2c4.com> <CAHmME9oemScgo2mg8fzqtJCbKJfu-op0WvG5RcpBCS1hHNmpZw@mail.gmail.com>
-In-Reply-To: <CAHmME9oemScgo2mg8fzqtJCbKJfu-op0WvG5RcpBCS1hHNmpZw@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 17 Jun 2020 10:37:52 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGWma7T+C5TJ2wYZ22MJr=3FQRqDjF--YuGuzFdAygP-g@mail.gmail.com>
-Message-ID: <CAMj1kXGWma7T+C5TJ2wYZ22MJr=3FQRqDjF--YuGuzFdAygP-g@mail.gmail.com>
-Subject: Re: [PATCH] acpi: disallow loading configfs acpi tables when locked down
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 at 00:21, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> Hi Rafael, Len,
->
-> Looks like I should have CC'd you on this patch. This is probably
-> something we should get into 5.8-rc2, so that it can then get put into
-> stable kernels, as some people think this is security sensitive.
-> Bigger picture is this:
->
-> https://data.zx2c4.com/american-unsigned-language-2.gif
-> https://data.zx2c4.com/american-unsigned-language-2-fedora-5.8.png
->
-> Also, somebody mentioned to me that Microsoft's ACPI implementation
-> disallows writes to system memory as a security mitigation. I haven't
-> looked at what that actually entails, but I wonder if entirely
-> disabling support for ACPI_ADR_SPACE_SYSTEM_MEMORY would be sensible.
-> I haven't looked at too many DSDTs. Would that break real hardware, or
-> does nobody do that? Alternatively, the range of acceptable addresses
-> for SystemMemory could exclude kernel memory. Would that break
-> anything? Have you heard about Microsoft's mitigation to know more
-> details on what they figured out they could safely restrict without
-> breaking hardware? Either way, food for thought I suppose.
->
 
-ACPI_ADR_SPACE_SYSTEM_MEMORY may be used for everything that is memory
-mapped, i.e., PCIe ECAM space, GPIO control registers etc.
+Check for target existence in loop control statement jointly with 'stop'
+indicator based on command line values and external asynchronous 'done'
+signal.
 
-I agree that using ACPI_ADR_SPACE_SYSTEM_MEMORY for any memory that is
-under the kernel's control is a bad idea, and this should be easy to
-filter out: the SystemMemory address space handler needs the ACPI
-support routines to map the physical addresses used by AML into
-virtual kernel addresses, so all these accesses go through
-acpi_os_ioremap(). So as a first step, it should be reasonable to put
-a lockdown check there, and fail any access to OS owned memory if
-lockdown is enabled, and print a warning if it is not.
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/builtin-stat.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 31f7ccf9537b..62bad2df13ba 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -823,10 +823,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 			psignal(WTERMSIG(status), argv[0]);
+ 	} else {
+ 		enable_counters();
+-		while (!done && !stop) {
++		while (!done && !stop && is_target_alive(&target, evsel_list->core.threads)) {
+ 			nanosleep(&ts, NULL);
+-			if (!is_target_alive(&target, evsel_list->core.threads))
+-				break;
+ 			stop = process_timeout(timeout, interval, &times);
+ 		}
+ 	}
+-- 
+2.24.1
+
+
