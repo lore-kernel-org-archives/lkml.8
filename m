@@ -2,80 +2,97 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50E9920CC7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6E52078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 09:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgFQJoT (ORCPT
+        id S1726271AbgFQJw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 05:44:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:54466 "EHLO foss.arm.com"
+        Wed, 17 Jun 2020 05:52:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47000 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgFQJoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 05:44:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37DD031B;
-        Wed, 17 Jun 2020 02:44:18 -0700 (PDT)
-Received: from ubuntu.arm.com (unknown [10.57.54.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BD12C3F6CF;
-        Wed, 17 Jun 2020 02:44:15 -0700 (PDT)
-From:   Nicola Mazzucato <nicola.mazzucato@arm.com>
-To:     linux-kernel@vger.kernel.org, sudeep.holla@arm.com,
-        rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Cc:     lukasz.luba@arm.com
-Subject: [PATCH 2/2] cpufreq: arm_scmi: Set fast_switch_possible conditionally
-Date:   Wed, 17 Jun 2020 10:43:32 +0100
-Message-Id: <20200617094332.8391-2-nicola.mazzucato@arm.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200617094332.8391-1-nicola.mazzucato@arm.com>
-References: <20200617094332.8391-1-nicola.mazzucato@arm.com>
+        id S1725894AbgFQJw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 05:52:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CD345AC52;
+        Wed, 17 Jun 2020 09:53:00 +0000 (UTC)
+Date:   Wed, 17 Jun 2020 11:52:55 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>,
+        jbaron@akamai.com, linux-kernel@vger.kernel.org,
+        akpm@linuxfoundation.org, gregkh@linuxfoundation.org,
+        linux@rasmusvillemoes.dk
+Subject: Re: [PATCH v2 20/24] dyndbg: WIP towards debug-print-class based
+ callsite controls
+Message-ID: <20200617095255.GU31238@alley>
+References: <20200613155738.2249399-1-jim.cromie@gmail.com>
+ <20200613155738.2249399-21-jim.cromie@gmail.com>
+ <20200616134507.GO31238@alley>
+ <5b0fade06c46da0a469266738c684ba55d8e39f0.camel@perches.com>
+ <20200617093154.v7mf5355faa4c7ob@holly.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617093154.v7mf5355faa4c7ob@holly.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the fast_switch_possible flag is set unconditionally
-to true. Based on this, schedutil does not create a
-thread for frequency switching and would always use the
-fast switch path.
-However, if the platform does not support frequency
-fast switch, this may cause the governor to attempt an
-operation that is not supported by the platform.
+On Wed 2020-06-17 10:31:54, Daniel Thompson wrote:
+> On Tue, Jun 16, 2020 at 02:05:27PM -0700, Joe Perches wrote:
+> > On Tue, 2020-06-16 at 15:45 +0200, Petr Mladek wrote:
+> > > On Sat 2020-06-13 09:57:34, Jim Cromie wrote:
+> > > > There are *lots* of ad-hoc debug printing solutions in kernel,
+> > > > this is a 1st attempt at providing a common mechanism for many of them.
+> > > 
+> > > I agree that it might make sense to provide some common mechanism.
+> > []
+> > > My problem with this approach is that it is too generic. Each class
+> > > would have different meaning in each subsystem.
+> > > 
+> > > It might help to replace any existing variants. But it would be hard
+> > > for developers debugging the code. They would need to study/remember
+> > > the meaning of these groups for particular subsystems. They would
+> > > need to set different values for different messages.
+> > > 
+> > > Could you please provide more details about the potential users?
+> > > Would be possible to find some common patterns and common
+> > > meaning of the groups?
+> > 
+> > I doubt the utility of common patterns.
+> > Verbosity is common but groupings are not.
+> > 
+> > Look at the DRM patterns vs other groups.
+> 
+> I've seen drm.debug mentioned a couple of times but the comments about
+> it seem to only learn part of what is shows us.
+> 
+> drm.debug is a form of common grouping but it acts at a sub-system level
+> rather then whole system (and gives a whole sub-system enable/disable).
+> This is where grouping makes most sense.
+> 
+> The result is that drm.debug is easy to document, both in official
+> kernel docs and in other resources (like the arch distro documentation).
+> Having controls that are easy to document makes them easy to find and
+> thus sub-system grouping leads directly to higher quality bug reports.
 
-Fix this by correctly retrieve the fast_switch capability
-from the driver which knows if the platform can support
-this feature.
+Thanks a lot for explanation.
 
-Suggested-by: Lukasz Luba <lukasz.luba@arm.com>
-Signed-off-by: Nicola Mazzucato <nicola.mazzucato@arm.com>
----
- drivers/cpufreq/scmi-cpufreq.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Now, could anyone please tell me how this new dynamic debug feature
+would allow to replace drm.debug option?
 
-diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
-index 61623e2ff149..1cf688fcb56b 100644
---- a/drivers/cpufreq/scmi-cpufreq.c
-+++ b/drivers/cpufreq/scmi-cpufreq.c
-@@ -198,7 +198,8 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
- 
- 	policy->cpuinfo.transition_latency = latency;
- 
--	policy->fast_switch_possible = true;
-+	policy->fast_switch_possible =
-+		handle->perf_ops->fast_switch_possible(handle, cpu_dev);
- 
- 	em_register_perf_domain(policy->cpus, nr_opp, &em_cb);
- 
--- 
-2.27.0
+I mean what steps/commands will be needed instead of, for example
+drm.debug=0x3 command line option?
 
+Best Regards,
+Petr
