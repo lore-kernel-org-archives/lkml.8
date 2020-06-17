@@ -5,62 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE974C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF466C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A42E8206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22AF20707
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 15:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fsMfiiib"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I7REmT73"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgFQPSz (ORCPT
+        id S1726943AbgFQPTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 11:18:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38616 "EHLO
+        Wed, 17 Jun 2020 11:19:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgFQPSz (ORCPT
+        with ESMTP id S1726833AbgFQPTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 11:18:55 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD50C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:18:54 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id q2so319748wrv.8
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:18:54 -0700 (PDT)
+        Wed, 17 Jun 2020 11:19:05 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B49BC0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:19:05 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id r9so2237316wmh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 08:19:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nOG0UtY2za22TlTsW6IA1FmIm57v4naVYZ9ilTcx5CM=;
-        b=fsMfiiibuqG6akdSQnzrD4GC6gUPfpTZDDI52tTMqnj5bM2I1kerXDP14X/ts9aqvE
-         TIdcw3a+5spAFtXSrwI3cD72XgQDRLpl716Iv9t0xeYELa8CQiNFElHaCIog6LNHAuUQ
-         D9rDbplRVr9J7UdP+DNWn3g11Bqu5DVuan4Ivs25AqII5eaTOzefmkTWzyYzMappin2Z
-         LZVqW5/ZiIAiTTjzGqdL9yM2HEFbM14K7gimyIXkVdCR17FPSvXT4PchjuheItKSxWQ7
-         XmV25d06zC5vjCZcFB6nCMaMYHeoGnNwR2yr+RJMbxxASTjdA72m6raA6Lk61BDnhT65
-         Ul8w==
+        bh=s8n+t7GKh3Gj29VbKmMJNzCidqU4PlfPQU8WVnQB0IA=;
+        b=I7REmT73IfDFvu63aqYDtJbNMihndgSlsHwxtwEaifjpmkJiPPPYmo/UmhKIreG01j
+         U1MCIyLANCzR3zsOFnAb4VdQiJHfPANnqXofkWP++8FiU/FRzt3hOP23SQkBB4zK8rVR
+         2EE7/0qNK2ZKCpEJ5F6q1Qaar/+q1Hc2wwwy0HBo9uw8F5lqHmvg+tesCc/zmASpcDQr
+         ef3BYwgN3Y6INjYRMHhdnusDXnEX9Xuscrabua6sBF7vlW22VYSKSSoj+06NUp51nl89
+         vfofMnX18zAFF4Uc80NV483Uf8oqUxadFMAzb66FwkvbAt1x34NFsY169zHLILCBMDT4
+         bHBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=nOG0UtY2za22TlTsW6IA1FmIm57v4naVYZ9ilTcx5CM=;
-        b=KsFNY3mEGUzrjGGlTJNLxTOb4MFqEDX7drmhuKz7F8gIxOmrrvOc86/RXYOyFGLum/
-         msM33YcC+zihJq94o+qc5Vzw2VInEOuUHMZJTAhG5m07lNZ9858AIADci4kLeTo6Tpq4
-         Ez8DYQrTvwAuYmOfhs0pbeHQHQU3pSmN7NPJdWYoQgLpIPiILKKyS6jzmcr54vnI0heJ
-         Zq+VJhryB2GF2cG51j3Qtm7q8RhI6Ypz9fiSX0wx8l/XSXOpj1Z+7rZZU/ksD8uJLA35
-         v6LgO5HAu+5go/RSKw58HAaq6B8UbvjuuYet1lss+fQPlq5gpQ6hlnnJ4VbdFXLlPwSU
-         c6xw==
-X-Gm-Message-State: AOAM5327hedhZgL42LVFRtY7MYAVaN+h4KDCr3Xc2mbU762Bv4vcLPYO
-        F654FyS31zCfBDvAQWqgQXUqzmiZ1lo=
-X-Google-Smtp-Source: ABdhPJxvnLZaqv9dijqUO1+TxOJ98HoKGLjmUk5Y1yky55Wvx/EeQvVMbgNEeMFa+Nm3e87FZQYlVQ==
-X-Received: by 2002:a5d:4f0d:: with SMTP id c13mr9582813wru.357.1592407133117;
-        Wed, 17 Jun 2020 08:18:53 -0700 (PDT)
+        bh=s8n+t7GKh3Gj29VbKmMJNzCidqU4PlfPQU8WVnQB0IA=;
+        b=O0GgqNCXsaD0s1Nd+xUb+ItJ+ylM2fEsJLlcbl1ZQuw+l9RaZ/mr13rAKB7QhQDerQ
+         kU+XXqtIle8Ez6carlRKLY3Rpkt6OeqvQkQcAf73jdokh5cWV4CsZKCooNdnRwA6AJLK
+         qswXfWtVDI+ObFi0gUEio4uLT4CIabg4VePiRQbbWeESSnIsEkR1ty8M84IbJ/7qSRwB
+         btqCxNcDnyzzgVhYzmM0g7hyazG+ofEvYqPEnmHNUrOfqS1h0uPPrPgrco8mM6HByK0J
+         BVqMfBfv4LrxYz8Lo4eItm2WhjLVuMRVdbr5H/h5wgP5HlHQ0xyG5wgyzSWi5vKBtrFG
+         4SWw==
+X-Gm-Message-State: AOAM531dWbgxnRh2PL7JVhFutLaPViGy56PBYUmmTaVl4Lyh88VvMEzA
+        75PTVRCQzkVfa/8m3CZJ2VGYb37sWc4=
+X-Google-Smtp-Source: ABdhPJwSJHXfP8SKdVG5+kRfmeZPSM3QIlEIPVrIYrhG2skOzNwr3S9gC6WwQGn/4TcLlQE8oJA2MA==
+X-Received: by 2002:a1c:4189:: with SMTP id o131mr8622246wma.183.1592407143164;
+        Wed, 17 Jun 2020 08:19:03 -0700 (PDT)
 Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id c143sm7671498wmd.1.2020.06.17.08.18.51
+        by smtp.googlemail.com with ESMTPSA id 89sm7171745wrg.56.2020.06.17.08.19.01
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Jun 2020 08:18:52 -0700 (PDT)
-Subject: Re: [PATCH v3 3/4] nvmem: qfprom: Add fuse blowing support
+        Wed, 17 Jun 2020 08:19:02 -0700 (PDT)
+Subject: Re: [PATCH v3 2/4] dt-bindings: nvmem: Add properties needed for
+ blowing fuses
 To:     Douglas Anderson <dianders@chromium.org>,
         Rob Herring <robh+dt@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -69,16 +70,16 @@ Cc:     dhavalp@codeaurora.org, mturney@codeaurora.org,
         rnayak@codeaurora.org, Ravi Kumar Bokka <rbokka@codeaurora.org>,
         linux-arm-msm@vger.kernel.org, saiprakash.ranjan@codeaurora.org,
         sparate@codeaurora.org, mkurumel@codeaurora.org,
-        linux-kernel@vger.kernel.org
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20200617145116.247432-1-dianders@chromium.org>
- <20200617074930.v3.3.I68222d0b5966f652f29dd3a73ab33551a6e3b7e0@changeid>
+ <20200617074930.v3.2.I3b5c3bfaf5fb2d28d63f1b5ee92980900e3f8251@changeid>
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <ca00ca5c-eb8b-5662-d73a-e222735347eb@linaro.org>
-Date:   Wed, 17 Jun 2020 16:18:51 +0100
+Message-ID: <254998b9-c45e-bd6b-bc9a-b5934c0fea8e@linaro.org>
+Date:   Wed, 17 Jun 2020 16:19:01 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200617074930.v3.3.I68222d0b5966f652f29dd3a73ab33551a6e3b7e0@changeid>
+In-Reply-To: <20200617074930.v3.2.I3b5c3bfaf5fb2d28d63f1b5ee92980900e3f8251@changeid>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,175 +88,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Doug,
-Overall the patch is looking good, I have few minor comments below!
+
 
 On 17/06/2020 15:51, Douglas Anderson wrote:
 > From: Ravi Kumar Bokka <rbokka@codeaurora.org>
 > 
-> This patch adds support for blowing fuses to the qfprom driver if the
-> required properties are defined in the device tree.
+> On some systems it's possible to actually blow the fuses in the qfprom
+> from the kernel.  Add properties to support that.
+> 
+> NOTE: Whether this is possible depends on the BIOS settings and
+> whether the kernel has permissions here, so not all boards will be
+> able to blow fuses in the kernel.
 > 
 > Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
-> Please double-check that I got the major/minor version logic right
-> here.  I don't have documentation for this, but Srinivas mentioned
-> that it was at address 0x6000 and I happened to find an "8" and a "7"
-> on sc7180 so I assumed that was the major and minor version.
 > 
 > Changes in v3:
-> - Don't provide "reset" value for things; just save/restore.
-> - Use the major/minor version read from 0x6000.
-> - Reading should still read "corrected", not "raw".
-> - Added a sysfs knob to allow you to read "raw" instead of "corrected"
-> - Simplified the SoC data structure.
-> - No need for quite so many levels of abstraction for clocks/regulator.
-> - Don't set regulator voltage.  Rely on device tree to make sure it's right.
-> - Properly undo things in the case of failure.
-> - Don't just keep enabling the regulator over and over again.
-> - Enable / disable the clock each time
-> - Polling every 100 us but timing out in 10 us didn't make sense; swap.
-> - No reason for 100 us to be SoC specific.
-> - No need for reg-names.
-> - We shouldn't be creating two separate nvmem devices.
+> - Add an extra reg range (at 0x6000 offset for SoCs checked)
+> - Define two options for reg: 1 item or 4 items.
+> - No reg-names.
+> - Add "clocks" and "clock-names" to list of properties.
+> - Clock is now "sec", not "secclk".
+> - Add "vcc-supply" to list of properties.
+> - Fixed up example.
 > 
->   drivers/nvmem/qfprom.c | 314 +++++++++++++++++++++++++++++++++++++++--
->   1 file changed, 303 insertions(+), 11 deletions(-)
+>   .../bindings/nvmem/qcom,qfprom.yaml           | 45 ++++++++++++++++++-
+>   1 file changed, 43 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/nvmem/qfprom.c b/drivers/nvmem/qfprom.c
-> index 8a91717600be..486202860f84 100644
-> --- a/drivers/nvmem/qfprom.c
-> +++ b/drivers/nvmem/qfprom.c
-> @@ -3,57 +3,349 @@
->    * Copyright (C) 2015 Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->    */
+> diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+> index 5efa5e7c4d81..b195212c6193 100644
+> --- a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+> +++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+> @@ -17,8 +17,27 @@ properties:
+>       const: qcom,qfprom
 >   
-> +#include <linux/clk.h>
->   #include <linux/device.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/kernel.h>
->   #include <linux/module.h>
->   #include <linux/mod_devicetable.h>
-> -#include <linux/io.h>
->   #include <linux/nvmem-provider.h>
->   #include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
+>     reg:
+> -    items:
+> -      - description: The corrected region.
+> +    # If the QFPROM is read-only OS image then only the corrected region
+> +    # needs to be provided.  If the QFPROM is writable then all 4 regions
+> +    # must be provided.
+> +    oneOf:
+> +      - items:
+> +          - description: The corrected region.
+> +      - items:
+> +          - description: The corrected region.
+> +          - description: The raw region.
+> +          - description: The config region.
+> +          - description: The security control region.
 > +
-> +/* Blow timer clock frequency in Mhz */
-> +#define QFPROM_BLOW_TIMER_OFFSET 0x03c
-> +
-> +/* Amount of time required to hold charge to blow fuse in micro-seconds */
-> +#define QFPROM_FUSE_BLOW_POLL_US	10
-> +#define QFPROM_FUSE_BLOW_TIMEOUT_US	100
-> +
-> +#define QFPROM_BLOW_STATUS_OFFSET	0x048
-> +#define QFPROM_BLOW_STATUS_BUSY		0x1
-> +#define QFPROM_BLOW_STATUS_READY	0x0
-> +
-> +#define QFPROM_ACCEL_OFFSET		0x044
-> +
-> +#define QFPROM_VERSION_OFFSET		0x0
-> +#define QFPROM_MAJOR_VERSION_SHIFT	28
-> +#define QFPROM_MAJOR_VERSION_MASK	0xf
-> +#define QFPROM_MINOR_VERSION_SHIFT	16
-> +#define QFPROM_MINOR_VERSION_MASK	0xf
-
-Using GENMASK here makes it much readable!
-
-...
-
->   
->   static int qfprom_probe(struct platform_device *pdev)
->   {
-> +	struct nvmem_config econfig = {
-> +		.name = "qfprom",
-> +		.stride = 1,
-> +		.word_size = 1,
-> +		.reg_read = qfprom_reg_read,
-> +	};
->   	struct device *dev = &pdev->dev;
->   	struct resource *res;
->   	struct nvmem_device *nvmem;
->   	struct qfprom_priv *priv;
-> +	int ret;
->   
->   	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->   	if (!priv)
->   		return -ENOMEM;
->   
-> +	/* The corrected section is always provided */
->   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	priv->base = devm_ioremap_resource(dev, res);
-> -	if (IS_ERR(priv->base))
-> -		return PTR_ERR(priv->base);
-> +	priv->qfpcorrected = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(priv->qfpcorrected))
-> +		return PTR_ERR(priv->qfpcorrected);
->   
->   	econfig.size = resource_size(res);
->   	econfig.dev = dev;
->   	econfig.priv = priv;
->   
-> +	priv->dev = dev;
-> +
-> +	/*
-> +	 * If more than one region is provided then the OS has the ability
-> +	 * to write.
-> +	 */
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	if (res) {
-> +		u32 version;
-> +		int major_version, minor_version;
-> +
-> +		priv->qfpraw = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(priv->qfpraw))
-> +			return PTR_ERR(priv->qfpraw);
-> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
-> +		priv->qfpconf = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(priv->qfpconf))
-> +			return PTR_ERR(priv->qfpconf);
-> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
-> +		priv->qfpsecurity = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(priv->qfpsecurity))
-> +			return PTR_ERR(priv->qfpsecurity);
-> +
-> +		version = readl(priv->qfpsecurity + QFPROM_VERSION_OFFSET);
-> +		major_version = (version >> QFPROM_MAJOR_VERSION_SHIFT) &
-> +				QFPROM_MAJOR_VERSION_MASK;
-> +		minor_version = (version >> QFPROM_MINOR_VERSION_SHIFT) &
-> +				QFPROM_MINOR_VERSION_MASK;
-> +
-> +		if (major_version == 7 && minor_version == 8)
-> +			priv->soc_data = &qfprom_7_8_data;
-> +
-> +		/* Only enable writing if we have SoC data. */
-> +		if (priv->soc_data)
-> +			econfig.reg_write = qfprom_reg_write;
-> +	}
-> +
-
-<----------snip
-> +	priv->vcc = devm_regulator_get(&pdev->dev, "vcc");
-> +	if (IS_ERR(priv->vcc))
-> +		return PTR_ERR(priv->vcc);
-> +
-> +	priv->secclk = devm_clk_get_optional(dev, "sec");
-> +	if (IS_ERR(priv->secclk)) {
-> +		ret = PTR_ERR(priv->secclk);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "sec error getting : %d\n", ret);
-> +		return ret;
-> +	}
-> +
------------>
-should you move both clk and regulator into the previous if (res) {} 
-block? As I don't see them marked as optional for write cases.
+> +  # Clock must be provided if QFPROM is writable from the OS image.
+> +  clocks:
+> +    maxItems: 1
 
 
+> +  clock-names:
+> +    const: sec
 
->   	nvmem = devm_nvmem_register(dev, &econfig);
+Do we need clock-names for just one clock here?
+
+> +
+> +  # Supply reference must be provided if QFPROM is writable from the OS image.
+> +  vcc-supply:
+> +    description: Our power supply.
 >   
->   	return PTR_ERR_OR_ZERO(nvmem);
+>     # Needed if any child nodes are present.
+>     "#address-cells":
+> @@ -31,6 +50,28 @@ required:
+>      - reg
+>   
+>   examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+> +
+> +    efuse@784000 {
+> +      compatible = "qcom,qfprom";
+> +      reg = <0 0x00784000 0 0x8ff>,
+> +            <0 0x00780000 0 0x7a0>,
+> +            <0 0x00782000 0 0x100>,
+> +            <0 0x00786000 0 0x1fff>;
+> +      clocks = <&gcc GCC_SEC_CTRL_CLK_SRC>;
+> +      clock-names = "sec";
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +
+> +      vcc-supply = <&vreg_l11a_1p8>;
+> +
+> +      hstx-trim-primary@25b {
+> +        reg = <0x25b 0x1>;
+> +        bits = <1 3>;
+> +      };
+> +    };
+> +
+>     - |
+>       efuse@784000 {
+>         compatible = "qcom,qfprom";
 > 
