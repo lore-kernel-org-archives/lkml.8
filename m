@@ -2,100 +2,118 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDCEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07F7C2186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF5A2088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 20:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J5MKLGjX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="slSTfydK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgFQUYw (ORCPT
+        id S1726953AbgFQUZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 16:24:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57900 "EHLO
+        Wed, 17 Jun 2020 16:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbgFQUYv (ORCPT
+        with ESMTP id S1726758AbgFQUZC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 16:24:51 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ACCCC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:24:51 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id a45so2628819pje.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 13:24:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=Oi8WdEL0xHPWSjEuRn/3DpBy4qY4ecDATBbe5otJXBE=;
-        b=J5MKLGjXGUT07r4aFv5ozaZuu3kZvZznC8PH0oHKeVzwG4W7Sa5yT0nuHpVqc/yDGr
-         EpYlaHHELjEmVUclc9MW/pBhcdy5ZfMfADf6QXsfUlXnphGBrNvgWoHmfSM/D7wydIJD
-         DxHhTS3nbziS/wq5ocHsECn/Sk9PC9wTRmhqE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=Oi8WdEL0xHPWSjEuRn/3DpBy4qY4ecDATBbe5otJXBE=;
-        b=heRXhWfzaDaZSa4dCpK9COLSvGa9SDiZO/By6RtqGMFhrT82K0YDB9vWYBhlXqJWeg
-         ga794dWVyCCSLstyRPFEDOqPFpZ3jUBIaXMGD4F0ltdwcMCsyD711dJLxFnDAcWvQ2ie
-         NdQH7B+CeFSB7CqjL8AaQ+XthADvkodA2P5CYFbs8z55LuSxh9BAygx+ks0qk1Fp69d0
-         qkV1CoV4gEfNRddVbolvzFNKq3pGPAKUzOQJQheBzsry5CYeNbSx1jZ5jLgLf8IaPOlU
-         XX4UZbwKHJ9feyANsKoYYi472cGNds7gGex5bHmlYYPCaSpgZzQ+8ntrsq0E31/BQgX5
-         GhdA==
-X-Gm-Message-State: AOAM532Gz8cwp7JHMqSlZO37MqMEqAVOYP1SOqSX76yz4AVjsMr9DscC
-        ZFC4KT1gCOIrLSUhhlVWOJ1wGw==
-X-Google-Smtp-Source: ABdhPJyZmGniT2GeQsnfQbcp1rjOQ22uxwwhX/RB7fTaW7sfeOWTkRvWtF86/hVCPycnzfrvFiY5Uw==
-X-Received: by 2002:a17:90a:fa8f:: with SMTP id cu15mr811773pjb.9.1592425490882;
-        Wed, 17 Jun 2020 13:24:50 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b24sm637675pfo.112.2020.06.17.13.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 13:24:50 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 17 Jun 2020 16:25:02 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D94B3C06174E;
+        Wed, 17 Jun 2020 13:25:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dvRlFCNZ5WqBJoYVHQscJZfIgwl7qkr7xPvAM2TJ7JI=; b=slSTfydKereZYoUl7eRXHy/lx
+        /tj9poDu6lkttVRXTZTNqdn/bcNnY7CrUgkVU3Xb70f/2qKRYmqNTY/RJs7bSYgOcu85ZQJl1RrjM
+        u8lhMacg+PY3rsqpB7yENX73lo12IBBvz00iy7gFEwxQ+DCj4FC0Ko+L8S+bDeb5j7tg0Mfr+HTKO
+        nCCx81ZJNcF6ii3IcgzttY9N3nOOv+syjgDfKjZ11jID3o9K+DLJYZLZupQ5PglkIiHir18dm8H7v
+        FZJdWvSQ5IECEnzbmLd0gPm9ojfBmnuuBWMsGiSmxEUNHqPzQY17FDK4RWPADBfcqQVuZG7GDTeAS
+        WyB0/hkhw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58624)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jlecB-00042o-0W; Wed, 17 Jun 2020 21:24:55 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jlec6-000427-N7; Wed, 17 Jun 2020 21:24:50 +0100
+Date:   Wed, 17 Jun 2020 21:24:50 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Dejin Zheng <zhengdejin5@gmail.com>, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kevin Groeneveld <kgroeneveld@gmail.com>
+Subject: Re: [PATCH net v1] net: phy: smsc: fix printing too many logs
+Message-ID: <20200617202450.GX1551@shell.armlinux.org.uk>
+References: <20200617153340.17371-1-zhengdejin5@gmail.com>
+ <20200617161925.GE205574@lunn.ch>
+ <20200617175039.GA18631@nuc8i5>
+ <20200617184334.GA240559@lunn.ch>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200616034044.v3.1.Ic50cccdf27d42420a63485082f8b5bf86ed1a2b6@changeid>
-References: <20200616104050.84764-1-dianders@chromium.org> <20200616034044.v3.1.Ic50cccdf27d42420a63485082f8b5bf86ed1a2b6@changeid>
-Subject: Re: [PATCH v3 1/5] spi: spi-geni-qcom: No need for irqsave variant of spinlock calls
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-To:     Douglas Anderson <dianders@chromium.org>,
-        Mark Brown <broonie@kernel.org>
-Date:   Wed, 17 Jun 2020 13:24:49 -0700
-Message-ID: <159242548959.62212.17168767504846192201@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617184334.GA240559@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-06-16 03:40:46)
-> The driver locks its locks in two places.
->=20
-> In the first usage of the lock the function doing the locking already
-> has a sleeping call and thus we know we can't be called from interrupt
-> context.  That means we can use the "spin_lock_irq" variant of the
-> function.
->=20
-> In the second usage of the lock the function is the interrupt handler
-> and we know interrupt handlers are called with interrupts disabled.
-> That means we can use the "spin_lock" variant of the function.
->=20
-> This patch is expected to be a no-op and is just a cleanup / slight
-> optimization.
->=20
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+On Wed, Jun 17, 2020 at 08:43:34PM +0200, Andrew Lunn wrote:
+> You have explained what the change does. But not why it is
+> needed. What exactly is happening. To me, the key thing is
+> understanding why we get -110, and why it is not an actual error we
+> should be reporting as an error. That is what needs explaining.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+The patch author really ought to be explaining this... but let me
+have a go.  It's worth pointing out that the comments in the file
+aren't good English either, so don't really describe what is going
+on.
+
+When this PHY is in EDPD mode, it doesn't always detect a connected
+cable.  The workaround for it involves, when the link is down, and
+at each read_status() call:
+
+- disable EDPD mode, forcing the PHY out of low-power mode
+- waiting 640ms to see if we have any energy detected from the media
+- re-enable entry to EDPD mode
+
+This is presumably enough to allow the PHY to notice that a cable is
+connected, and resume normal operations to negotiate with the partner.
+
+The problem is that when no media is detected, the 640ms wait times
+out (as it should, we don't want to wait forever) and the kernel
+prints a warning.
+
+This bug was introduced by an inappropriate conversion of:
+
+                /* Wait max 640 ms to detect energy */
+-               for (i = 0; i < 64; i++) {
+-                       /* Sleep to allow link test pulses to be sent */
+-                       msleep(10);
+-                       rc = phy_read(phydev, MII_LAN83C185_CTRL_STATUS);
+-                       if (rc < 0)
+-                               return rc;
+-                       if (rc & MII_LAN83C185_ENERGYON)
+-                               break;
+-               }
+
+to phy_read_poll_timeout() in the belief that it was "cleaning up"
+the code, but it actually results in a functional change of printing
+an error at the end of the 640ms window which wasn't there before.
+The patch that does this even states that it's about "simplifying"
+the code, yet it introduced a bug by doing so - that being the
+extra kernel log message.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
