@@ -8,70 +8,72 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C342C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1785C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF510217A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8765521532
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:49:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkLw1Qi3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGPuDDIv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgFQQtS (ORCPT
+        id S1727899AbgFQQtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52706 "EHLO
+        Wed, 17 Jun 2020 12:49:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgFQQsV (ORCPT
+        with ESMTP id S1727035AbgFQQsJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:48:21 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3580BC06174E;
-        Wed, 17 Jun 2020 09:48:21 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id n24so3162325ejd.0;
-        Wed, 17 Jun 2020 09:48:21 -0700 (PDT)
+        Wed, 17 Jun 2020 12:48:09 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34B91C0613ED;
+        Wed, 17 Jun 2020 09:48:09 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id e1so3088678wrt.5;
+        Wed, 17 Jun 2020 09:48:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=q+5BoVRG0VffCCrfTH/S4zSbtLgUTIBUYTPvbWiSrIw=;
-        b=GkLw1Qi3/TTudWObG01QoJrFLKxkdf91mx1SL4oWeEOC8q6Gv/ljjmyt8pVbLHdDgq
-         3OWdR2KGw70+qrKXmtMD9Dj1U6QqT0QwZMe2fqPvA9wh7DzpH17z3QzMgUDhwKP8dAbK
-         5Thl1mj79F3RlP0hosvkJkBfjhvKNzKilAp8o2cMRog5w5lUwKjl3HA9DwS7UlF3rtbt
-         65TRG1tAO34jE5GgX3b93Qm1fNwFzmOeI5CmZ3fBOB21ntxet87PXhmNSkWo/2HYdDZM
-         dWP8u6vrcMoxXDbyZPaoqLJ3YbVRCV4ZDaneO8CTFeiPmpZyz3NEWd2LOBYUV/GOfq1p
-         CwIA==
+        bh=jO6YYKLcVc4zVnNFJ3vwcO4SaIx1I79j4ycIlYEFriM=;
+        b=dGPuDDIvXNEAfIMnvc6hzhIro0ysybgDo0L+ZYIyozSv6xaJx9m7uAQkGe1x+2DC0+
+         eiAABPwv27e67/k3fYv9ibRHiBjborGi+5GkyFUFaXD9CAKOmgGXw5nNMjtoRd2Scqkr
+         LBGoYPjTRBntsJCj9OmNIRRAeAwfpAMT8nxp+G4O3zp4hNCEexTbdsbhSIq1ymKpDYBN
+         VPv7d84x2hO/SBcBMgj+kiI1Ik7HSo0Km4HOuNiUHd9V24IAUT3Vp1qgTRAXdQZrEO6k
+         Uq6ceySpT6bIhxV36j3uk9imhs0UJDBjrWkqXGFeV5m2zK5A3Ygu0o/sxMTpGAVq9TI0
+         2YLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=q+5BoVRG0VffCCrfTH/S4zSbtLgUTIBUYTPvbWiSrIw=;
-        b=J08s87O4hvptKvecMrH+Z6Do1/jZjpPbiv72UeoBvR9kGwDZ/f3EpDUjQZRl5T6fno
-         IrU5dwp70IOx/TIt/p/gIOVYBz89ou7vwn4G4dyic06LztSPq6DB0oX6h0Ihbi5QUiRY
-         uRmjpWjrKzFzNJXQY4DaIsI4xwT4zRZbQDteGt4CGBfxWZ2Q2FFWgIC93dXPubeaa+by
-         ptA+eg7pCE6LH8BqGtw0/MPoJewDuS4oLhhEDJTefXskcb9FOY3e7j5xaHSxab2WeHOV
-         r5uDaqgQzGRPWD2W5/Ecu6TsJk7+dnh/U2w+FqvBm0SgheaXIprOqkz39SOV5SFObSCZ
-         8Dpg==
-X-Gm-Message-State: AOAM530X9nI/oPmrXrWIRlBlheO2R+XMAjWXo+mD/gykDHwr7uJjkaR2
-        lcOk0hZPzivqX6Vbhkgijew=
-X-Google-Smtp-Source: ABdhPJzya/QUz9hu7DpG378s/WItmQR2ysBmEx0/RnQh/KMg8YjHmMTNVtBDCdDe9YqjZVf+sNcS2A==
-X-Received: by 2002:a17:906:365a:: with SMTP id r26mr60093ejb.466.1592412499978;
-        Wed, 17 Jun 2020 09:48:19 -0700 (PDT)
-Received: from localhost.localdomain ([188.24.129.96])
-        by smtp.gmail.com with ESMTPSA id v3sm127124edj.89.2020.06.17.09.48.19
+        bh=jO6YYKLcVc4zVnNFJ3vwcO4SaIx1I79j4ycIlYEFriM=;
+        b=ISP7Vm+l0GNDPazJaoc6OpR1KZk8cz8YgqaN3loS6SNwPLkDACjlCPql1b7B93xaYG
+         86aOhxxAE5GALQqhJNkUenDMTC5Zx0Gd+F5tqn5J1SGEVd20aoXXSxzkiV1Rp5tJat+g
+         lvRSVMVeUl0eSTLRyxbxeTBiZkHSP4P8Ui0mh8aWWpazRRr1BXf3UVD3WpRs6T5YVjXq
+         /8JF1oGLlNi4zjOGAncdurMai7q/7xjmPcRQvhTII/Or1ZXj2r+CboArZWw9TXCsBq5m
+         oeXuRF3csKDLdc9nHK+q1fI5/yJasTeC8yrgxO86NVRGaB53TVXqAWrZcmNJzvpbPBix
+         vQOg==
+X-Gm-Message-State: AOAM530JSMrrOP0mvfz18dsZwin1fiCWdJW89Z3fskhHX88grKrFQpj/
+        OAQnEOAQ+5kNGj4sdvFIMfxe41l7Z2BZhw==
+X-Google-Smtp-Source: ABdhPJx9FS5yJVTtenmTcnSfeuEKkEeHMt/a8Qf3ZsJoYR/a/YC2asbMiQpE/WXs3evNgivi1BbVoA==
+X-Received: by 2002:a5d:468d:: with SMTP id u13mr150370wrq.73.1592412487715;
+        Wed, 17 Jun 2020 09:48:07 -0700 (PDT)
+Received: from localhost.localdomain (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
+        by smtp.gmail.com with ESMTPSA id g3sm199165wrb.46.2020.06.17.09.48.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 09:48:19 -0700 (PDT)
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 04/11] arm: dts: owl-s500-roseapplepi: Use UART clock from CMU
-Date:   Wed, 17 Jun 2020 19:48:04 +0300
-Message-Id: <255941aa76e1eec8224c7a88b99924f3bae2cec8.1592407030.git.cristian.ciocaltea@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <cover.1592407030.git.cristian.ciocaltea@gmail.com>
-References: <cover.1592407030.git.cristian.ciocaltea@gmail.com>
+        Wed, 17 Jun 2020 09:48:07 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH 8/8] Drivers: hv: vmbus: Remove the lock field from the vmbus_channel struct
+Date:   Wed, 17 Jun 2020 18:46:42 +0200
+Message-Id: <20200617164642.37393-9-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200617164642.37393-1-parri.andrea@gmail.com>
+References: <20200617164642.37393-1-parri.andrea@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,36 +81,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the UART fixed clock and enable using the one provided by CMU.
+The spinlock is (now) *not used to protect test-and-set accesses
+to attributes of the structure or sc_list operations.
 
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+There is, AFAICT, a distinct lack of {WRITE,READ}_ONCE()s in the
+handling of channel->state, but the changes below do not seem to
+make things "worse".  ;-)
+
+Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 ---
- arch/arm/boot/dts/owl-s500-roseapplepi.dts | 7 -------
- 1 file changed, 7 deletions(-)
+ drivers/hv/channel.c      | 6 +-----
+ drivers/hv/channel_mgmt.c | 1 -
+ include/linux/hyperv.h    | 6 ------
+ 3 files changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/owl-s500-roseapplepi.dts b/arch/arm/boot/dts/owl-s500-roseapplepi.dts
-index a2087e617cb2..800edf5d2d12 100644
---- a/arch/arm/boot/dts/owl-s500-roseapplepi.dts
-+++ b/arch/arm/boot/dts/owl-s500-roseapplepi.dts
-@@ -25,12 +25,6 @@ memory@0 {
- 		device_type = "memory";
- 		reg = <0x0 0x80000000>; /* 2GB */
- 	};
--
--	uart2_clk: uart2-clk {
--		compatible = "fixed-clock";
--		clock-frequency = <921600>;
--		#clock-cells = <0>;
--	};
- };
+diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+index 8848d1548b3f2..3ebda7707e46a 100644
+--- a/drivers/hv/channel.c
++++ b/drivers/hv/channel.c
+@@ -129,12 +129,8 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
+ 	send_pages = newchannel->ringbuffer_send_offset;
+ 	recv_pages = newchannel->ringbuffer_pagecount - send_pages;
  
- &twd_timer {
-@@ -43,5 +37,4 @@ &timer {
+-	spin_lock_irqsave(&newchannel->lock, flags);
+-	if (newchannel->state != CHANNEL_OPEN_STATE) {
+-		spin_unlock_irqrestore(&newchannel->lock, flags);
++	if (newchannel->state != CHANNEL_OPEN_STATE)
+ 		return -EINVAL;
+-	}
+-	spin_unlock_irqrestore(&newchannel->lock, flags);
  
- &uart2 {
- 	status = "okay";
--	clocks = <&uart2_clk>;
- };
+ 	newchannel->state = CHANNEL_OPENING_STATE;
+ 	newchannel->onchannel_callback = onchannelcallback;
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 92f8bb2077a94..591106cf58fc0 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -317,7 +317,6 @@ static struct vmbus_channel *alloc_channel(void)
+ 		return NULL;
+ 
+ 	spin_lock_init(&channel->sched_lock);
+-	spin_lock_init(&channel->lock);
+ 	init_completion(&channel->rescind_event);
+ 
+ 	INIT_LIST_HEAD(&channel->sc_list);
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 690394b79d727..38100e80360ac 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -840,12 +840,6 @@ struct vmbus_channel {
+ 	 */
+ 	void (*chn_rescind_callback)(struct vmbus_channel *channel);
+ 
+-	/*
+-	 * The spinlock to protect the structure. It is being used to protect
+-	 * test-and-set access to various attributes of the structure as well
+-	 * as all sc_list operations.
+-	 */
+-	spinlock_t lock;
+ 	/*
+ 	 * All Sub-channels of a primary channel are linked here.
+ 	 */
 -- 
-2.27.0
+2.25.1
 
