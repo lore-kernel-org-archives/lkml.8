@@ -4,64 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7854EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC5B2098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4DE20739
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 00:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592354706;
-	bh=5e0a5iVK0TowUVssPommYkc0TiKB/g2Al8oPNa9mwdY=;
+	s=default; t=1592354727;
+	bh=xrW8XCYpgjdjK1CnaBJs07hA4u1EAqNRZXUlpFUONDU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=irslAzFG4zn9M2b14tOuh0z1h/BmUwm1KIZm+mr1wmGe9s47xtld3sqD+eUlogerr
-	 3lrSoBkywHD4FoNjufuabpDyjDMRTT+lalONNdVJcKbQSS9y6XejtYkn64qOTqEdvK
-	 RxA8s7E3cg7Xn3Da1db/LKJwtc6FxcswRI6vFCGs=
+	b=c07upG1Psl2RLl8k91habT1m/p9HBdUNKWRFu5+dRcctLKDyLYRvp6tCWDUrY8Chi
+	 GPUlE0fla0AHOO0ju8NE/Nh97qEC11Ksg/wAVN9fWs4CClw2L2zvYBU+mG1V5a96lo
+	 aLgfIRyQBVmEgThb5e1YZDAADsR0nf6q7/r97HD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgFQApD (ORCPT
+        id S1726677AbgFQApZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 20:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39682 "EHLO mail.kernel.org"
+        Tue, 16 Jun 2020 20:45:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgFQApD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 20:45:03 -0400
-Subject: Re: [GIT PULL] afs: Fixes for bugs found by xfstests
+        id S1726044AbgFQApY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 20:45:24 -0400
+Subject: Re: [GIT PULL] MFD fixes for v5.8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592354702;
-        bh=5e0a5iVK0TowUVssPommYkc0TiKB/g2Al8oPNa9mwdY=;
+        s=default; t=1592354723;
+        bh=xrW8XCYpgjdjK1CnaBJs07hA4u1EAqNRZXUlpFUONDU=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xmD6N+dN46UNILbjwMP2cHybDYG10PBuE8BXl69PdQU9/4tRZf/8DHgLvBqIhLynh
-         6udFqP56Zm80iivQhz7UWd+QI+bJ8MQKJUcHibFZztlT7pEgn4fvHudl135suydsMn
-         F5mD95K9IByHUZEQO4JDQP2yOV9AYp4uMooZ/154=
+        b=DlKx04eEtz3TiEFb5WKELXcyzeW3YWdUQJlPeeRIOyDBfkfnYdAMKQ+6dRGJMyPyj
+         PLHqg1Ml39vzy60WBWfM+VW0uYfgTMtVcx9/Wew/Pq4R9Lezk8bexMi2KNd4mMBjDq
+         dNRWs33leFSv80IgJ8+wFeK61i+oCmSknr0pjdpo=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <930958.1592344306@warthog.procyon.org.uk>
-References: <930958.1592344306@warthog.procyon.org.uk>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <930958.1592344306@warthog.procyon.org.uk>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
- tags/afs-fixes-20200616
-X-PR-Tracked-Commit-Id: b6489a49f7b71964e37978d6f89bbdbdb263f6f5
+In-Reply-To: <20200616083946.GN2608702@dell>
+References: <20200616083946.GN2608702@dell>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200616083946.GN2608702@dell>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-fixes-5.8
+X-PR-Tracked-Commit-Id: bf6b694a6a908a6fd8f23eada669d1e90b2772af
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 26c20ffcb5c86eb6a052e0d528396de5600c9710
-Message-Id: <159235470279.15875.12694874433794392475.pr-tracker-bot@kernel.org>
-Date:   Wed, 17 Jun 2020 00:45:02 +0000
-To:     David Howells <dhowells@redhat.com>
-Cc:     torvalds@linux-foundation.org, dhowells@redhat.com,
-        marc.dionne@auristor.com, linux-afs@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 651220e2aee3ccfd986a0436b8d6f5b3b5574d1f
+Message-Id: <159235472368.15875.6611145891047111158.pr-tracker-bot@kernel.org>
+Date:   Wed, 17 Jun 2020 00:45:23 +0000
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 16 Jun 2020 22:51:46 +0100:
+The pull request you sent on Tue, 16 Jun 2020 09:39:46 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-fixes-20200616
+> git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-fixes-5.8
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/26c20ffcb5c86eb6a052e0d528396de5600c9710
+https://git.kernel.org/torvalds/c/651220e2aee3ccfd986a0436b8d6f5b3b5574d1f
 
 Thank you!
 
