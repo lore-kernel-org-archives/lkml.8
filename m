@@ -2,110 +2,95 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B567EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE5AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9504E21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:15:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592403354;
-	bh=8jxJm8T7VE0q+JS8DN5KHn2vD54Gr/1qRjnB1YliKMM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j0R+8ouwWgzg7s/ikUTwmDybLguTGjoBVYII1lvo8jyndEoqWdWEIaMltSUrX+0Eg
-	 FyFZDL75qg3aG6MzjNOs7q7fWgxMg1HzmqWh8p4zbDgn0+bYc2L7uT9Xi0e3BEOK34
-	 hIQuFThEfcJoSau4uNAckDkguYG+lOGkgDHYqg6o=
+	by mail.kernel.org (Postfix) with ESMTP id 37B782166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 14:16:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+zpoAkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgFQOPx (ORCPT
+        id S1727041AbgFQOQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 10:15:53 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:36778 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbgFQOPx (ORCPT
+        Wed, 17 Jun 2020 10:16:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbgFQOQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 10:15:53 -0400
-Received: by mail-ej1-f68.google.com with SMTP id dr13so2507874ejc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 07:15:51 -0700 (PDT)
+        Wed, 17 Jun 2020 10:16:06 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D01ACC06174E;
+        Wed, 17 Jun 2020 07:16:06 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id b5so1340217pgm.8;
+        Wed, 17 Jun 2020 07:16:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mfndk5N0w8Iv4fVwaHeA1worwlJaTizl87QwfFhj0ek=;
+        b=W+zpoAkn12uMALVb1E6Pe5rLdj8li7pG8D1bIj/vCaVZH9BMnvYpC1AiaR2zznPvXd
+         FLfgYeUYF8Aj71hl73NKf+/JmsCihBrmXS0ttUmsXT5HliYpx2Q5rvNQoEhPbEwUX+bY
+         iw13oBc2qXHZ07xu4ZHEJ/JqbLEUSflrkP85dRxuCBpvLminahKCZiuaxDIEjVHocE6W
+         /s4Whno4jFDfITOpMNCeHb9XZgOwdPJCJ83N0wWOp9UIEA1EcKgB47qeKdHloBIIqqP2
+         HkIX3PADBG0QiSDWqjj0++pI0P+R8TJ+KAfd/tnRGmG9UwC5WQejTsuFLmAUifstV6m1
+         VueA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EdNnFmNidXG+iw545o8LEdhsC19KXQ8OYf5/ou+pAjg=;
-        b=FW2kiw6oTiSJ4JSOiONZ4PqgjYYGtmOFKRfUmwZA5bj8pjBAbl1Q+ruhZzPCwT9G9F
-         icJDgJEUXu2w/iRw1bsnpj/VAjlveY/yrHEEsq5/ssRgn1Vs3j8jjkX1r7Dl+W3nd59f
-         QRD/20ktsUFjAUzYd1N9zx1xaBFKYitG+AJbBuViACaD67+V5dXQj+eK4oTYaJ2gQWHC
-         edULMlcK2ldsba3yPdSp3N6ItpMVRtUEip2AKSzSpCYf7bBhWe6y/CLHDsuKiYV+A+RR
-         0o2ztyfkCGkFKqxkg1VHkbhgVkDuQT/PiHvk6r/exECN+0ui+7Ez6UOAZ07ZmH/8l07o
-         NL9Q==
-X-Gm-Message-State: AOAM532Iu2PoI46clFt7+T3c0PuuUqbVsJKG5TjPy0bOnV5RGGx+hJw7
-        XrvH90UcCCMizcP6QqYWM2w=
-X-Google-Smtp-Source: ABdhPJzubahcLWtjqgPKN2JPsi4MMLpFdvi5Kw7GssTmd1JXZ4jnm/85WzhBm30soQfepQKCuRUKiQ==
-X-Received: by 2002:a17:906:9254:: with SMTP id c20mr8079327ejx.540.1592403351074;
-        Wed, 17 Jun 2020 07:15:51 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.126])
-        by smtp.googlemail.com with ESMTPSA id i21sm12222210edr.68.2020.06.17.07.15.49
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mfndk5N0w8Iv4fVwaHeA1worwlJaTizl87QwfFhj0ek=;
+        b=Lmn/u2wnxTgASocKPJCC+AvWBknh5BD8FqjzOHLnGr9exLb7ETcx9aAVAI9lTjGm+T
+         iI1SIyBWurdlMBaGLfU+IELtqpXnBhZmnnOfEKLGmuPwnrXLtLuXOnEPKojjc9uJ83Mb
+         u7XYvxt0JBymCWTrFveXcRE794LTTdfg8FGnV9AJWjRPQ9/GPPLCmg/z7woOG0x3wEjs
+         XQJopzDOdYFu/7v1PlBgujVbjc/yNqcoluPGpqJUHX7JG6G5o/bINVD21bSzdf1LoVcL
+         g100s9O7EUxrxby5rEoLQCCDSa6TZVZcWNID/fb+G8iZLd6AA1CO68WRBuhEszCxJqI4
+         wQsQ==
+X-Gm-Message-State: AOAM532dPsPFxOXNCvEwwkoDv8uE9QvP9vEbgYgpJ6i32zjTpOFg/t9o
+        yJtVgvrFRQU5rL+21j7bNafB3oHP
+X-Google-Smtp-Source: ABdhPJxdNTEcHTeTa9pNALJHsqozRHP/heu3JtTMi8PJwsHC0nnezgVC6GLd756z9Wrb4RDcji+Uwg==
+X-Received: by 2002:a65:6106:: with SMTP id z6mr6487022pgu.368.1592403366462;
+        Wed, 17 Jun 2020 07:16:06 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z8sm410207pjr.41.2020.06.17.07.16.05
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Jun 2020 07:15:50 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 16:15:47 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-Subject: Re: [PATCH v3] drm/panfrost: Reduce the amount of logs on deferred
- probe
-Message-ID: <20200617141547.GA30516@kozik-lap>
-References: <20200527200544.7849-1-krzk@kernel.org>
- <20200527204334.GA15485@kevin>
+        Wed, 17 Jun 2020 07:16:05 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 07:16:05 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 000/158] 5.6.19-rc2 review
+Message-ID: <20200617141605.GB93431@roeck-us.net>
+References: <20200616172611.492085670@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527204334.GA15485@kevin>
+In-Reply-To: <20200616172611.492085670@linuxfoundation.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 04:43:34PM -0400, Alyssa Rosenzweig wrote:
-> Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+On Tue, Jun 16, 2020 at 07:26:59PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.6.19 release.
+> There are 158 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> On Wed, May 27, 2020 at 10:05:44PM +0200, Krzysztof Kozlowski wrote:
-> > There is no point to print deferred probe (and its failures to get
-> > resources) as an error.  Also there is no need to print regulator errors
-> > twice.
-> > 
-> > In case of multiple probe tries this would pollute the dmesg.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > Reviewed-by: Steven Price <steven.price@arm.com>
-> > 
-> > ---
-> > 
-> > Changes since v2:
-> > 1. Rebase
-> > 2. Add Steven's review
-> > 
-> > Changes since v1:
-> > 1. Remove second error message from calling panfrost_regulator_init()
-> > ---
-> >  drivers/gpu/drm/panfrost/panfrost_device.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
+> Responses should be made by Thu, 18 Jun 2020 17:25:39 +0000.
+> Anything received after that time might be too late.
+> 
 
-Hi Rob, Tomeu and Steven,
+Build results:
+	total: 155 pass: 155 fail: 0
+Qemu test results:
+	total: 431 pass: 431 fail: 0
 
-You're listed as maintainers for panfrost. Is anyone going to pick this
-up?
-
-Maybe I sent it to wrong mailing list or forgot about anything?
-
-Best regards,
-Krzysztof
-
+Guenter
