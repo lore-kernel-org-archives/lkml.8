@@ -2,208 +2,310 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C99C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0282BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBD262098B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC4F2098B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 01:41:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OKXaPg8a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIgvMYLo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgFQBlH (ORCPT
+        id S1726992AbgFQBlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 21:41:07 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19574 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbgFQBjl (ORCPT
+        Tue, 16 Jun 2020 21:41:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgFQBkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 21:39:41 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ee973f90001>; Tue, 16 Jun 2020 18:38:01 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 16 Jun 2020 18:39:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 16 Jun 2020 18:39:40 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 17 Jun
- 2020 01:39:39 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 17 Jun 2020 01:39:39 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.171.186]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ee9745a0000>; Tue, 16 Jun 2020 18:39:38 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v2 10/18] dt-bindings: tegra: Update VI and CSI bindings with port info
-Date:   Tue, 16 Jun 2020 18:41:26 -0700
-Message-ID: <1592358094-23459-11-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 16 Jun 2020 21:40:45 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC210C061573;
+        Tue, 16 Jun 2020 18:40:43 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c185so601084qke.7;
+        Tue, 16 Jun 2020 18:40:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=iWwCvXGLu1d/G++bm7Oxn/c4JGmCfQ82ajY1qfafTpE=;
+        b=HIgvMYLotp2h5l+AVet4rhc5L93WzEhO+AOYx5JGqwBg+NTBJL2yCwhpsqqPX2xeIV
+         SEU3TQJ0/txS7XZIvCLkliGTluk0Uf9rDIxorpCz/0K45cQfhBuBRiej69bQGz6pMAXU
+         OwDImDm792HuORCnRGS0kEq/isnW5VVTInw5FmylN+Ktp8xstSzo1ZbkGffqQg/xmOQD
+         rnFthKu55yM2WGGzRf3eXRPhe/EWwUep6x4aBZN3enj1jNQ+3z/lDvsISBGQ3aj8zcoO
+         M3z/xA+HYEX6wtUYhxX3DXHrGj7PmrQleDVp0i9sTG3/H3id753GZy3poMwwY57Rxz1z
+         on/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iWwCvXGLu1d/G++bm7Oxn/c4JGmCfQ82ajY1qfafTpE=;
+        b=lsGoOX6pCRzVVLjEZNvD+2N9x/mneENrzJcMWmE1kDIkxWrbX/mk33w4f4c8xjVSVX
+         kmyYrzEIwgvXdP47q5vrz4yJIpb4O7thoq/52okaxCy99wx9miwJmV37BFkqbsGQ3hp7
+         ipHk3NC6poXqmOW8bRTNHdhkZ7IcyWeGs6iq1tmH2l3NCT6L5RDsI8QgtRcQ2EoSk3rN
+         G5lF6gfzGGRNdmSzdmxHwVEyBWQYOsiHNGoN/cwG/hrkGpP1NmoBvJKbudTgB1XGfJu7
+         bJqLHpaqEhnaNiRb4REe3K+z1YXYzMordRbXxR5fAdwpu+2Ql9oxFNMRTc91dmJt/GO/
+         3qTQ==
+X-Gm-Message-State: AOAM532TeWfHeASSgmuckkT5Uke6Pfmii/Vz6RvuURg2aE5VHPWwv4Zm
+        Voi7uFdTOniKrCW4v1yJx0o=
+X-Google-Smtp-Source: ABdhPJwE3D3cZ9qs43mDkPVXfw5Jp+J/fhH36c9wvJ3LklRXK0DNFu/9EuqwqrvQbUSn0+uZ2ek82Q==
+X-Received: by 2002:a37:9cc7:: with SMTP id f190mr23211573qke.236.1592358042991;
+        Tue, 16 Jun 2020 18:40:42 -0700 (PDT)
+Received: from localhost.localdomain (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id a14sm1917014qkn.16.2020.06.16.18.40.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 18:40:42 -0700 (PDT)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     jic23@kernel.org
+Cc:     kamel.bouhara@bootlin.com, gwendal@chromium.org,
+        alexandre.belloni@bootlin.com, david@lechnology.com,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v3 4/4] docs: counter: Document character device interface
+Date:   Tue, 16 Jun 2020 21:40:02 -0400
+Message-Id: <061c85baa1c2e1bf1510b6235a82b44ba2a89931.1592341702.git.vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1592341702.git.vilhelm.gray@gmail.com>
+References: <cover.1592341702.git.vilhelm.gray@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592357881; bh=yGbs5SDi4Dd0+0xT6nDOtBMbjmUT+S0MvKYM2ZVqVhs=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=OKXaPg8adLk/991hSEryvnuKB/ne6JxrIM8At9YhEYriNsqBOAUJLebYrZEAQWVcb
-         eesjBi5UetzsFovSsB5aqbf+uMklTkg+Zhf3YH40aX9qGhYLZVoRrrfVendZYGp2dX
-         lHzh/p32RnFpL8mnxeH5K73PW6le1eXPSGi1mnNZ11JfbT08kftc40H9FjTcC9OKdN
-         ht6A5DgyY/DLCGAwYDE5mPWB1kAnCRMxOlR50ixBiZtmKM/dWlt19AUq+yJczW5U61
-         TOBJLivEmAvib5yvDf4DoYppvU9YdVlYeNBnIiexBZ6hYhBMpttQ6/bPTMTf3oNX9Q
-         VmOUwRpRg6DHw==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update VI and CSI bindings to add port and endpoint nodes as per
-media video-interfaces DT binding document.
+This patch adds high-level documentation about the Counter subsystem
+character device interface.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 ---
- .../display/tegra/nvidia,tegra20-host1x.txt        | 92 +++++++++++++++++++++-
- 1 file changed, 90 insertions(+), 2 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-counter  |  31 +++++
+ Documentation/driver-api/generic-counter.rst | 132 ++++++++++++++-----
+ 2 files changed, 127 insertions(+), 36 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-index 4731921..ac63ae4a 100644
---- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-+++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-@@ -51,8 +51,16 @@ of the following host1x client modules:
-       - vi
-   - Tegra210:
-     - power-domains: Must include venc powergate node as vi is in VE partition.
--  - Tegra210 has CSI part of VI sharing same host interface and register space.
--    So, VI device node should have CSI child node.
-+
-+  ports (optional node)
-+  vi can have optional ports node and max 6 ports are supported. Each port
-+  should have single 'endpoint' child node. All port nodes are grouped under
-+  ports node. Please refer to the bindings defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+  csi (required node)
-+  Tegra210 has CSI part of VI sharing same host interface and register space.
-+  So, VI device node should have CSI child node.
+diff --git a/Documentation/ABI/testing/sysfs-bus-counter b/Documentation/ABI/testing/sysfs-bus-counter
+index 566bd99fe0a5..8533a8732544 100644
+--- a/Documentation/ABI/testing/sysfs-bus-counter
++++ b/Documentation/ABI/testing/sysfs-bus-counter
+@@ -193,6 +193,37 @@ Description:
+ 		both edges:
+ 			Any state transition.
  
-     - csi: mipi csi interface to vi
++What:		/sys/bus/counter/devices/counterX/chrdev_format
++KernelVersion:	5.9
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Data format of the respective character device node of the
++		Counter. Reading this attribute returns the current data format
++		of the respective character device node; writing to this
++		attribute sets the current data format of the respective
++		character device node. This attribute interfaces via the
++		following format:
++
++		Components/extensions are specified by a character identifier
++		and an index offset; whitespace serves as delimiters. The
++		following character identifiers are supported:
++
++		C: Count
++		S: Signal
++		E: Extension
++		A: Synapse Action
++		F: Count Function
++
++		Count/Signal extensions may be specified by first specifying the
++		respective owning component then the desired extension
++		immediately following without delimiting whitespace; Synapse
++		Action and Count Function are specified in a similar manner.
++
++		For example, "C4 C2E6 C0F S7E1 C3A4 S5" would specify the
++		following data format: Count 4, Count 2's Extension 6, Count 0's
++		Count Function, Signal 7's Extension 1, Count 3's Synapse Action
++		4, Signal 5.
++
+ What:		/sys/bus/counter/devices/counterX/name
+ KernelVersion:	5.2
+ Contact:	linux-iio@vger.kernel.org
+diff --git a/Documentation/driver-api/generic-counter.rst b/Documentation/driver-api/generic-counter.rst
+index 8aaa6cd37fd4..d46ce65d1488 100644
+--- a/Documentation/driver-api/generic-counter.rst
++++ b/Documentation/driver-api/generic-counter.rst
+@@ -223,19 +223,6 @@ whether an input line is differential or single-ended) and instead focus
+ on the core idea of what the data and process represent (e.g. position
+ as interpreted from quadrature encoding data).
  
-@@ -65,6 +73,46 @@ of the following host1x client modules:
-       - power-domains: Must include sor powergate node as csicil is in
-         SOR partition.
+-Userspace Interface
+-===================
+-
+-Several sysfs attributes are generated by the Generic Counter interface,
+-and reside under the /sys/bus/counter/devices/counterX directory, where
+-counterX refers to the respective counter device. Please see
+-Documentation/ABI/testing/sysfs-bus-counter for detailed
+-information on each Generic Counter interface sysfs attribute.
+-
+-Through these sysfs attributes, programs and scripts may interact with
+-the Generic Counter paradigm Counts, Signals, and Synapses of respective
+-counter devices.
+-
+ Driver API
+ ==========
  
-+      channel (optional nodes)
-+      Maximum 6 channels are supported with each csi brick as either x4 or x2
-+      based on hw connectivity to sensor.
-+
-+      Required properties:
-+      - reg: csi port number. Valid port numbers are 0 through 5.
-+      - nvidia,mipi-calibrate: Should contain a phandle and a specifier
-+        specifying which pads are used by this CSI port and need to be
-+	calibrated. See also ../display/tegra/nvidia,tegra114-mipi.txt.
-+
-+      Each channel node must contain 2 port nodes which can be grouped
-+      under 'ports' node and each port should have a single child 'endpoint'
-+      node.
-+
-+        ports node
-+        Please refer to the bindings defined in
-+        Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+        ports node must contain below 2 port nodes.
-+        port@0 with single child 'endpoint' node always a sink.
-+        port@1 with single child 'endpoint' node always a source.
-+
-+        port@0 (required node)
-+        Required properties:
-+        - reg: 0
-+
-+	  endpoint (required node)
-+	  Required properties:
-+	  - data-lanes: an array of data lane from 1 to 4. Valid array
-+	    lengths are 1/2/4.
-+	  - remote-endpoint: phandle to sensor 'endpoint' node.
-+
-+        port@1 (required node)
-+        Required properties:
-+        - reg: 1
-+
-+	  endpoint (required node)
-+	  Required properties:
-+	  - remote-endpoint: phandle to vi port 'endpoint' node.
-+
- - epp: encoder pre-processor
+@@ -378,13 +365,13 @@ driver is exemplified by the following::
+                 +----------------------------+          |
+                 | Processes data from device |   -------------------
+                 |----------------------------|  / driver callbacks /
+-                | Type: unsigned long        |  -------------------
++                | Type: u64                  |  -------------------
+                 | Value: 42                  |          |
+                 +----------------------------+          |
+                         |                               |
+-                 ----------------                       |
+-                / unsigned long /                       |
+-                ----------------                        |
++                 ----------                             |
++                / u64     /                             |
++                ----------                              |
+                         |                               |
+                         |                               V
+                         |               +----------------------+
+@@ -399,25 +386,32 @@ driver is exemplified by the following::
+                         |               / driver callbacks /
+                         |               -------------------
+                         |                       |
+-                +-------+                       |
++                +-------+---------------+       |
++                |                       |       |
++                |               +-------|-------+
++                |               |       |
++                V               |       V
++        +--------------------+  |  +---------------------+
++        | Counter sysfs      |<-+->| Counter chrdev      |
++        +--------------------+     +---------------------+
++        | Translates to the  |     | Translates to the   |
++        | standard Counter   |     | standard Counter    |
++        | sysfs output       |     | character device    |
++        |--------------------|     |---------------------+
++        | Type: const char * |     | Type: u64           |
++        | Value: "42"        |     | Value: 42           |
++        +--------------------+     +---------------------+
+                 |                               |
+-                |               +---------------+
+-                |               |
+-                V               |
+-        +--------------------+  |
+-        | Counter sysfs      |<-+
+-        +--------------------+
+-        | Translates to the  |
+-        | standard Counter   |
+-        | sysfs output       |
+-        |--------------------|
+-        | Type: const char * |
+-        | Value: "42"        |
+-        +--------------------+
+-                |
+-         ---------------
+-        / const char * /
+-        ---------------
++         ---------------                 ----------
++        / const char * /                / u64     /
++        ---------------                 ----------
++                |                               |
++                |                               V
++                |                       +-----------+
++                |                       | read      |
++                |                       +-----------+
++                |                       \ Count: 42 /
++                |                        -----------
+                 |
+                 V
+         +--------------------------------------------------+
+@@ -426,7 +420,7 @@ driver is exemplified by the following::
+         \ Count: "42"                                      /
+          --------------------------------------------------
  
-   Required properties:
-@@ -340,6 +388,18 @@ Example:
+-There are three primary components involved:
++There are four primary components involved:
  
- 			ranges = <0x0 0x0 0x54080000 0x2000>;
- 
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
+ Counter device driver
+ ---------------------
+@@ -446,3 +440,69 @@ and vice versa.
+ Please refer to the `Documentation/ABI/testing/sysfs-bus-counter` file
+ for a detailed breakdown of the available Generic Counter interface
+ sysfs attributes.
 +
-+				port@0 {
-+					reg = <0>;
-+					imx219_vi_in0: endpoint {
-+						remote-endpoint = <&imx219_csi_out0>;
-+					};
-+				};
-+			};
++Counter chrdev
++--------------
++Translates counter data to the standard Counter character device; data
++is transferred via standard character device read/write calls.
 +
- 			csi@838 {
- 				compatible = "nvidia,tegra210-csi";
- 				reg = <0x838 0x1300>;
-@@ -362,6 +422,34 @@ Example:
- 					 <&tegra_car TEGRA210_CLK_CSI_TPG>;
- 				clock-names = "csi", "cilab", "cilcd", "cile", "csi_tpg";
- 				power-domains = <&pd_sor>;
++Sysfs Interface
++===============
 +
-+				#address-cells = <1>;
-+				#size-cells = <0>;
++Several sysfs attributes are generated by the Generic Counter interface,
++and reside under the `/sys/bus/counter/devices/counterX` directory,
++where `X` is to the respective counter device id. Please see
++Documentation/ABI/testing/sysfs-bus-counter for detailed information on
++each Generic Counter interface sysfs attribute.
 +
-+				channel@0 {
-+					reg = <0>;
-+					nvidia,mipi-calibrate = <&mipi 0x001>;
++Through these sysfs attributes, programs and scripts may interact with
++the Generic Counter paradigm Counts, Signals, and Synapses of respective
++counter devices.
 +
-+					ports {
-+						#address-cells = <1>;
-+						#size-cells = <0>;
++Counter Character Device
++========================
 +
-+						port@0 {
-+							reg = <0>;
-+							imx219_csi_in0: endpoint {
-+								data-lanes = <1 2>;
-+								remote-endpoint = <&imx219_out0>;
-+							};
-+						};
++Counter character device nodes are created under the `/dev` directory as
++`counterX`, where `X` is the respective counter device id. Defines for
++the standard Counter data types are exposed via the userspace
++`include/uapi/linux/counter-types.h` file.
 +
-+						port@1 {
-+							reg = <1>;
-+							imx219_csi_out0: endpoint {
-+								remote-endpoint = <&imx219_vi_in0>;
-+							};
-+						};
-+					};
-+				};
- 			};
- 		};
- 
++A `/sys/bus/counter/devices/counterX/chrdev_format` sysfs attribute is
++available to expose the character device data format.
++
++Users may write to this sysfs attribute to select the components they
++want to interface -- the layout can be determined as well from the
++order. For example::
++
++# echo "C0 C3 C2" > /sys/bus/counter/devices/counter0/chrdev_format
++
++This would select Counts 0, 3, and 2 (in that order) to be available
++in the `/dev/counter0` node as a contiguous memory region.
++
++Users can select extensions in a similar fashion::
++
++# echo "C4E2 S1E0" > /sys/bus/counter/devices/counter0/chrdev_format
++
++This would select extension 2 from Count 4, and extension 0 from
++Signal 1.
++
++Users may read from this `chrdev_format` sysfs attribute in order to see
++the currently configured format of the character device.
++
++Users may perform read/write operations on the `/dev/counterX` node
++directly; the layout of the data is what they user has configured via
++the chrdev_format sysfs attribute. For example::
++
++# echo "C0 C1 S0 S1" > /sys/bus/counter/devices/counter0/chrdev_format
++
++Yields the following `/dev/counter0` memory layout::
++
++        +-----------------+------------------+----------+----------+
++        | Byte 0 - Byte 7 | Byte 8 - Byte 15 | Byte 16  | Byte 17  |
++        +-----------------+------------------+----------+----------+
++        | Count 0         | Count 1          | Signal 0 | Signal 2 |
++        +-----------------+------------------+----------+----------+
++
++The number of bytes allotted for each component or extension is
++determined by its respective data type: u8 will have 1 byte allotted,
++u64 will have 8 bytes allotted, etc.
 -- 
-2.7.4
+2.26.2
 
