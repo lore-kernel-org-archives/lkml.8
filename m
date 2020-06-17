@@ -2,321 +2,265 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE56DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF49EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4FFA208B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C517F208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 17:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YtESYsZQ"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LXB6zjEp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgFQR1V (ORCPT
+        id S1726913AbgFQR23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 13:27:21 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:57141 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbgFQR1U (ORCPT
+        Wed, 17 Jun 2020 13:28:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgFQR22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 13:27:20 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200617172716epoutp01347fe8446f68ffdfff773ea3ee8f65cf~ZZNtFfjfA1947919479epoutp01U
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:27:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200617172716epoutp01347fe8446f68ffdfff773ea3ee8f65cf~ZZNtFfjfA1947919479epoutp01U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592414836;
-        bh=63VBCGU/0ntQ7nedglOpC7zYZy8fqZsAEdxHsErn/AY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YtESYsZQx9eLZsDBLy/va2jnyvIj0AE+VPn5N2RK4XLB8VHQ+CoCLOdzTbjN/jSfq
-         cEmPH4Yoei+sLscXDTOmupdH93PNfYvAVd7LpbalO7CFRm2S4nwx8ljItNBau0cT3c
-         dOUTsGcBNl1Qyxp9OQhysG6f1A/bkFCe5juO1ezo=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20200617172714epcas5p1fe972604ea8b24f8f56d96196e0b0eab~ZZNrgz2Ll1054310543epcas5p1B;
-        Wed, 17 Jun 2020 17:27:14 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CF.66.09475.2725AEE5; Thu, 18 Jun 2020 02:27:14 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200617172713epcas5p352f2907a12bd4ee3c97be1c7d8e1569e~ZZNqw0bGY2692326923epcas5p3e;
-        Wed, 17 Jun 2020 17:27:13 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200617172713epsmtrp21f71c5731452333edc77419e8f5a90c5~ZZNqv-Dj80603706037epsmtrp2W;
-        Wed, 17 Jun 2020 17:27:13 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff70000002503-3a-5eea52723055
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        54.7E.08303.1725AEE5; Thu, 18 Jun 2020 02:27:13 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.110.206.5]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200617172711epsmtip1f74a209597ea26fe133e1bc32c360cfa~ZZNotmn7c1160511605epsmtip1l;
-        Wed, 17 Jun 2020 17:27:11 +0000 (GMT)
-From:   Kanchan Joshi <joshi.k@samsung.com>
-To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bcrl@kvack.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-aio@kvack.org, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org, selvakuma.s1@samsung.com,
-        nj.shetty@samsung.com, javier.gonz@samsung.com,
-        Kanchan Joshi <joshi.k@samsung.com>
-Subject: [PATCH 3/3] io_uring: add support for zone-append
-Date:   Wed, 17 Jun 2020 22:53:39 +0530
-Message-Id: <1592414619-5646-4-git-send-email-joshi.k@samsung.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOIsWRmVeSWpSXmKPExsWy7bCmlm5R0Ks4gzNPpSxW3+1ns+j6t4XF
-        4l3rORaLx3c+s1sc/f+WzWLhxmVMFlOmNTFa7L2lbbFn70kWi8u75rBZbPs9n9niypRFzBav
-        f5xkszj/9zirA5/H5bOlHps+TWL36NuyitHj8yY5j01P3jIFsEZx2aSk5mSWpRbp2yVwZRzZ
-        PpG9YK5pxdQ5F1kbGNdpdTFyckgImEgsXPmfuYuRi0NIYDejxJy/D6CcT4wSt3ceZoJwPjNK
-        XJj7hr2LkQOs5VizOkR8F6PEru+9CEU3jk9kBCliE9CUuDC5FMQUEbCR2LlEBWQbs0ADk8T/
-        7zogYWEBK4nOZTogYRYBVYnbN3czg9i8Ak4Se1fOZYY4Tk7i5rlOMJtTwFli9uZLrCCbJAT+
-        sku0Pe1lgShykbg+cRE7hC0s8er4FihbSuLzu71sEHaxxK87R5khmjsYJa43zIRqtpe4uOcv
-        E8hBzEAnr9+lD3Enn0Tv7ydMEO/ySnS0CUFUK0rcm/SUFcIWl3g4YwmU7SFx9e1VdkgoTGOU
-        WP/oHvsERtlZCFMXMDKuYpRMLSjOTU8tNi0wzkst1ytOzC0uzUvXS87P3cQIThta3jsYHz34
-        oHeIkYmD8RCjBAezkgiv8+8XcUK8KYmVValF+fFFpTmpxYcYpTlYlMR5lX6ciRMSSE8sSc1O
-        TS1ILYLJMnFwSjUwOU78+4ljLs8SNpXaHWbT9ZpO7rhn0G22Yf9ag/SiGbcOsZgte6Cz6jrz
-        EsWjl1486Lrr1JfpEif9W2CNQaR4NEsL84Wy1parS6vD13Y7Te/zss6P21XpVWXoXnv4vsLT
-        97UzZhne1i/zfGQj0F/pxLc/55z67rfPFvLfn8mxdk7eFX+1yq9ze+ryzJ/df3bwistzkQNL
-        tnZvK+A/ddvF1P+V3aeSWVd0377NSrrKEy7NG8lx5631lMkP/r3/y372y7p71WLbKloeVLte
-        bvXNyxQUUPOYOe1BTQtr7af/nQbyqp2/6lbPTsg5sud58qoLP1m9Ez9d2X+xypXVy2PjiUmT
-        rvnd2c5Yt3HqAoGkAiWW4oxEQy3mouJEAI/zUdCKAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGLMWRmVeSWpSXmKPExsWy7bCSnG5h0Ks4g3fTVSxW3+1ns+j6t4XF
-        4l3rORaLx3c+s1sc/f+WzWLhxmVMFlOmNTFa7L2lbbFn70kWi8u75rBZbPs9n9niypRFzBav
-        f5xkszj/9zirA5/H5bOlHps+TWL36NuyitHj8yY5j01P3jIFsEZx2aSk5mSWpRbp2yVwZRzZ
-        PpG9YK5pxdQ5F1kbGNdpdTFycEgImEgca1bvYuTiEBLYwSgxY1IvWxcjJ1BcXKL52g92CFtY
-        YuW/5+wQRR8ZJVatO8oC0swmoClxYXIpSI2IgINE1/HHTCA1zAJdTBInbu5iAqkRFrCS6Fym
-        A1LDIqAqcfvmbmYQm1fASWLvyrnMEPPlJG6e6wSzOQWcJWZvvsQKYgsB1fxZNIt1AiPfAkaG
-        VYySqQXFuem5xYYFRnmp5XrFibnFpXnpesn5uZsYwUGrpbWDcc+qD3qHGJk4GA8xSnAwK4nw
-        Ov9+ESfEm5JYWZValB9fVJqTWnyIUZqDRUmc9+ushXFCAumJJanZqakFqUUwWSYOTqkGporN
-        oqv+JNvrXprQpXQy3jKhMvbwF5VgB44/C1c2LUxxi8uuieosvxM7bV78r/zeOR56R1ecqAx+
-        EpzXKuF7PKP9mvlVi04th99S09uLncVXuilP+bb83zb1/10+q1Ki/lU+ujNZNNL//4+kB+YL
-        dwVOaxZ2qXSZnsPI/L97+75A3g/Li9W6p7PaLZ4kbNouljlRp39NjWvAf9/2/Z+fZYQIpLHt
-        3Jt97WrnJclvkypYTFrrnz6Iv2fuvzrP/NWUdbMyV+34dKyyIXnH/n+ioUxWxXej3P+sL+RY
-        aNmqrVMgs4rjU7NHmfABw4zTdxdI7Ld4ne/nYrf6UnHSKaNZa25tXZYtwz454uj1mxuMlViK
-        MxINtZiLihMB8rpxuckCAAA=
-X-CMS-MailID: 20200617172713epcas5p352f2907a12bd4ee3c97be1c7d8e1569e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200617172713epcas5p352f2907a12bd4ee3c97be1c7d8e1569e
-References: <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
-        <CGME20200617172713epcas5p352f2907a12bd4ee3c97be1c7d8e1569e@epcas5p3.samsung.com>
+        Wed, 17 Jun 2020 13:28:28 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B763C061755
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:28:28 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id d128so2892718wmc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 10:28:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CZymfCvTZe2unxui/On+2nz51hFSacskdir9aJUt334=;
+        b=LXB6zjEpECVPFq3pzrvE6u45GCA8crHlrWBnYhY+wOze5PIOETecFxeVdAg/Lo9Igt
+         Cf+UfzAtGN0nmdN4LS49chP94ri8xnYFHFTjPXjSwDcikYB3ZmnxEUezY1w+FXB5wCNb
+         gKNsOBAaNxOOrWmYq2PBiM+EJh9G7xayZNPPc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CZymfCvTZe2unxui/On+2nz51hFSacskdir9aJUt334=;
+        b=iM8+dw0LYMtDXmuXN+jlWyzTcfqVxX5P6hZG4yhIu0fO55bI5HbMxJ7nxJALVI1lur
+         qBhd0NFrua/itrrolPcq4ux7RDe/4Ng2Shb54LI9EVdDwi5JqBkuAjTLny05ixEmjT0H
+         rKq1t+VsV7OtbpiME0ZWJO4bC/Unlvf5PKwlz678MmUsEYXu9nrnpueKrxcPie3G3AGt
+         buPRSCOroc4QIajNQGxZp/M23gsfQnuODWzBtb0Im7HaZB/DYTrhO5iBalHYddmQV+6+
+         +FNcg6DORRqZFGco8ShnA6XsFMyqAgPOXWScHLJqNvXLhQCwc8co6vqWZByAEuP+f26v
+         L9lQ==
+X-Gm-Message-State: AOAM530xVPVgrPcXe47xZ/S3X+0PlpmxO1PaAtat5tTj1Fwnr28jSdwJ
+        9BTgMaSKrHBL9hV4muysMrOWNkFj0/C7TbVUzAISPA==
+X-Google-Smtp-Source: ABdhPJyI1oGlLhAEtWSCa4AUdXeJmUELYyv/wpCZoDYmqZQ1gL4ZlEwwKnYlPNTrZJ27JEJnJJge9+4OAB7OJK2n1oE=
+X-Received: by 2002:a05:600c:2042:: with SMTP id p2mr10027851wmg.85.1592414906580;
+ Wed, 17 Jun 2020 10:28:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200616205533.3513-10-james.quinlan@broadcom.com> <20200616220533.GA1984551@bjorn-Precision-5520>
+In-Reply-To: <20200616220533.GA1984551@bjorn-Precision-5520>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Wed, 17 Jun 2020 13:28:12 -0400
+Message-ID: <CA+-6iNx1j5uK=nL-H32qthxEwZe+KOxtqCG4TPJxD+WdzMQFrA@mail.gmail.com>
+Subject: Re: [PATCH v5 09/12] PCI: brcmstb: Set internal memory viewport sizes
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Selvakumar S <selvakuma.s1@samsung.com>
+Hello Bjorn,
 
-Introduce three new opcodes for zone-append -
+On Tue, Jun 16, 2020 at 6:05 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Tue, Jun 16, 2020 at 04:55:16PM -0400, Jim Quinlan wrote:
+> > BrcmSTB PCIe controllers are intimately connected to the memory
+> > controller(s) on the SOC.  There is a "viewport" for each memory controller
+> > that allows inbound accesses to CPU memory.  Each viewport's size must be
+> > set to a power of two, and that size must be equal to or larger than the
+> > amount of memory each controller supports.
+>
+> This describes some requirements, but doesn't actually say what this
+> patch *does*.
+>
+> I *think* it reads the viewport sizes from the "brcm,scb-sizes" DT
+> property instead of computing something from "dma-ranges".  Looks like
+> it also adds support for SCB1 and SCB2.
+>
+> Those seem interesting, but don't really come through in the subject
+> or even the commit log.
+>
+> If I understand correctly, this is all for DMA ("inbound accesses to
+> CPU memory").  I think it would be worth mentioning "DMA", since
+> that's the common term for this.
 
-   IORING_OP_ZONE_APPEND     : non-vectord, similiar to IORING_OP_WRITE
-   IORING_OP_ZONE_APPENDV    : vectored, similar to IORING_OP_WRITEV
-   IORING_OP_ZONE_APPEND_FIXED : append using fixed-buffers
 
-Repurpose cqe->flags to return zone-relative offset.
+I have changed the commit message to the text below.  Please let me
+know if it requires more work
+Thanks, Jim
 
-Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>
-Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
-Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
-Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
----
- fs/io_uring.c                 | 72 +++++++++++++++++++++++++++++++++++++++++--
- include/uapi/linux/io_uring.h |  8 ++++-
- 2 files changed, 77 insertions(+), 3 deletions(-)
+PCI: brcmstb: Set internal memory DMA viewport sizes
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 155f3d8..c14c873 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -649,6 +649,10 @@ struct io_kiocb {
- 	unsigned long		fsize;
- 	u64			user_data;
- 	u32			result;
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	/* zone-relative offset for append, in bytes */
-+	u32			append_offset;
-+#endif
- 	u32			sequence;
- 
- 	struct list_head	link_list;
-@@ -875,6 +879,26 @@ static const struct io_op_def io_op_defs[] = {
- 		.hash_reg_file		= 1,
- 		.unbound_nonreg_file	= 1,
- 	},
-+	[IORING_OP_ZONE_APPEND] = {
-+		.needs_mm               = 1,
-+		.needs_file             = 1,
-+		.unbound_nonreg_file    = 1,
-+		.pollout		= 1,
-+	},
-+	[IORING_OP_ZONE_APPENDV] = {
-+	       .async_ctx              = 1,
-+	       .needs_mm               = 1,
-+	       .needs_file             = 1,
-+	       .hash_reg_file          = 1,
-+	       .unbound_nonreg_file    = 1,
-+	       .pollout			= 1,
-+	},
-+	[IORING_OP_ZONE_APPEND_FIXED] = {
-+	       .needs_file             = 1,
-+	       .hash_reg_file          = 1,
-+	       .unbound_nonreg_file    = 1,
-+	       .pollout			= 1,
-+	},
- };
- 
- static void io_wq_submit_work(struct io_wq_work **workptr);
-@@ -1285,7 +1309,16 @@ static void __io_cqring_fill_event(struct io_kiocb *req, long res, long cflags)
- 	if (likely(cqe)) {
- 		WRITE_ONCE(cqe->user_data, req->user_data);
- 		WRITE_ONCE(cqe->res, res);
-+#ifdef CONFIG_BLK_DEV_ZONED
-+		if (req->opcode == IORING_OP_ZONE_APPEND ||
-+				req->opcode == IORING_OP_ZONE_APPENDV ||
-+				req->opcode == IORING_OP_ZONE_APPEND_FIXED)
-+			WRITE_ONCE(cqe->res2, req->append_offset);
-+		else
-+			WRITE_ONCE(cqe->flags, cflags);
-+#else
- 		WRITE_ONCE(cqe->flags, cflags);
-+#endif
- 	} else if (ctx->cq_overflow_flushed) {
- 		WRITE_ONCE(ctx->rings->cq_overflow,
- 				atomic_inc_return(&ctx->cached_cq_overflow));
-@@ -1961,6 +1994,9 @@ static void io_complete_rw_common(struct kiocb *kiocb, long res)
- static void io_complete_rw(struct kiocb *kiocb, long res, long res2)
- {
- 	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw.kiocb);
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	req->append_offset = (u32)res2;
-+#endif
- 
- 	io_complete_rw_common(kiocb, res);
- 	io_put_req(req);
-@@ -1976,6 +2012,9 @@ static void io_complete_rw_iopoll(struct kiocb *kiocb, long res, long res2)
- 	if (res != req->result)
- 		req_set_fail_links(req);
- 	req->result = res;
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	req->append_offset = (u32)res2;
-+#endif
- 	if (res != -EAGAIN)
- 		WRITE_ONCE(req->iopoll_completed, 1);
- }
-@@ -2408,7 +2447,8 @@ static ssize_t io_import_iovec(int rw, struct io_kiocb *req,
- 	u8 opcode;
- 
- 	opcode = req->opcode;
--	if (opcode == IORING_OP_READ_FIXED || opcode == IORING_OP_WRITE_FIXED) {
-+	if (opcode == IORING_OP_READ_FIXED || opcode == IORING_OP_WRITE_FIXED ||
-+			opcode == IORING_OP_ZONE_APPEND_FIXED) {
- 		*iovec = NULL;
- 		return io_import_fixed(req, rw, iter);
- 	}
-@@ -2417,7 +2457,8 @@ static ssize_t io_import_iovec(int rw, struct io_kiocb *req,
- 	if (req->buf_index && !(req->flags & REQ_F_BUFFER_SELECT))
- 		return -EINVAL;
- 
--	if (opcode == IORING_OP_READ || opcode == IORING_OP_WRITE) {
-+	if (opcode == IORING_OP_READ || opcode == IORING_OP_WRITE ||
-+			opcode == IORING_OP_ZONE_APPEND) {
- 		if (req->flags & REQ_F_BUFFER_SELECT) {
- 			buf = io_rw_buffer_select(req, &sqe_len, needs_lock);
- 			if (IS_ERR(buf)) {
-@@ -2704,6 +2745,9 @@ static int io_write(struct io_kiocb *req, bool force_nonblock)
- 		req->rw.kiocb.ki_flags &= ~IOCB_NOWAIT;
- 
- 	req->result = 0;
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	req->append_offset = 0;
-+#endif
- 	io_size = ret;
- 	if (req->flags & REQ_F_LINK_HEAD)
- 		req->result = io_size;
-@@ -2738,6 +2782,13 @@ static int io_write(struct io_kiocb *req, bool force_nonblock)
- 			__sb_writers_release(file_inode(req->file)->i_sb,
- 						SB_FREEZE_WRITE);
- 		}
-+#ifdef CONFIG_BLK_DEV_ZONED
-+		if (req->opcode == IORING_OP_ZONE_APPEND ||
-+				req->opcode == IORING_OP_ZONE_APPENDV ||
-+				req->opcode == IORING_OP_ZONE_APPEND_FIXED)
-+			kiocb->ki_flags |= IOCB_ZONE_APPEND;
-+#endif
-+
- 		kiocb->ki_flags |= IOCB_WRITE;
- 
- 		if (!force_nonblock)
-@@ -4906,6 +4957,12 @@ static int io_req_defer_prep(struct io_kiocb *req,
- 	case IORING_OP_WRITEV:
- 	case IORING_OP_WRITE_FIXED:
- 	case IORING_OP_WRITE:
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	fallthrough;
-+	case IORING_OP_ZONE_APPEND:
-+	case IORING_OP_ZONE_APPENDV:
-+	case IORING_OP_ZONE_APPEND_FIXED:
-+#endif
- 		ret = io_write_prep(req, sqe, true);
- 		break;
- 	case IORING_OP_POLL_ADD:
-@@ -5038,6 +5095,12 @@ static void io_cleanup_req(struct io_kiocb *req)
- 	case IORING_OP_WRITEV:
- 	case IORING_OP_WRITE_FIXED:
- 	case IORING_OP_WRITE:
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	fallthrough;
-+	case IORING_OP_ZONE_APPEND:
-+	case IORING_OP_ZONE_APPENDV:
-+	case IORING_OP_ZONE_APPEND_FIXED:
-+#endif
- 		if (io->rw.iov != io->rw.fast_iov)
- 			kfree(io->rw.iov);
- 		break;
-@@ -5086,6 +5149,11 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 		}
- 		ret = io_read(req, force_nonblock);
- 		break;
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	case IORING_OP_ZONE_APPEND:
-+	case IORING_OP_ZONE_APPENDV:
-+	case IORING_OP_ZONE_APPEND_FIXED:
-+#endif
- 	case IORING_OP_WRITEV:
- 	case IORING_OP_WRITE_FIXED:
- 	case IORING_OP_WRITE:
-diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-index 92c2269..6c8e932 100644
---- a/include/uapi/linux/io_uring.h
-+++ b/include/uapi/linux/io_uring.h
-@@ -130,6 +130,9 @@ enum {
- 	IORING_OP_PROVIDE_BUFFERS,
- 	IORING_OP_REMOVE_BUFFERS,
- 	IORING_OP_TEE,
-+	IORING_OP_ZONE_APPEND,
-+	IORING_OP_ZONE_APPENDV,
-+	IORING_OP_ZONE_APPEND_FIXED,
- 
- 	/* this goes last, obviously */
- 	IORING_OP_LAST,
-@@ -157,7 +160,10 @@ enum {
- struct io_uring_cqe {
- 	__u64	user_data;	/* sqe->data submission passed back */
- 	__s32	res;		/* result code for this event */
--	__u32	flags;
-+	union {
-+		__u32	res2; /* res2 like aio, currently used for zone-append */
-+		__u32	flags;
-+	};
- };
- 
- /*
--- 
-2.7.4
+BrcmSTB PCIe controllers are intimately connected to the memory
+controller(s) on the SOC.  There is a "viewport" for each memory controller
+that allows inbound DMA acceses to CPU memory.  Each viewport's size must
+be set to a power of two, and that size must be equal to or larger than the
+amount of memory each controller supports.  Unfortunately the viewport
+sizes cannot be ascertained from the "dma-ranges" property so they have
+their own property, "brcm,scb-sizes".
 
+There may be one to three memory controllers; they are indicated by the
+term SCBi.  Each controller has a base region and an optional extension
+region.  In physical memory, the base and extension regions are not
+adjacent, but in PCIe-space they are.  Further, the 1-3 viewports are also
+adjacent in PCIe-space.
+
+The SCB settings work in conjunction with the "dma-ranges' offsets to
+enable non-identity mappings between system memory and PCIe space.
+
+
+>
+>
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 68 ++++++++++++++++++++-------
+> >  1 file changed, 50 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > index 9189406fd35c..39f77709c6a2 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -57,6 +57,8 @@
+> >  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK     0x300000
+> >  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128              0x0
+> >  #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK          0xf8000000
+> > +#define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK          0x07c00000
+> > +#define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK          0x0000001f
+> >
+> >  #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO             0x400c
+> >  #define PCIE_MEM_WIN0_LO(win)        \
+> > @@ -154,6 +156,7 @@
+> >  #define SSC_STATUS_OFFSET            0x1
+> >  #define SSC_STATUS_SSC_MASK          0x400
+> >  #define SSC_STATUS_PLL_LOCK_MASK     0x800
+> > +#define PCIE_BRCM_MAX_MEMC           3
+> >
+> >  #define IDX_ADDR(pcie)                       (pcie->reg_offsets[EXT_CFG_INDEX])
+> >  #define DATA_ADDR(pcie)                      (pcie->reg_offsets[EXT_CFG_DATA])
+> > @@ -260,6 +263,8 @@ struct brcm_pcie {
+> >       const int               *reg_field_info;
+> >       enum pcie_type          type;
+> >       struct reset_control    *rescal;
+> > +     int                     num_memc;
+> > +     u64                     memc_size[PCIE_BRCM_MAX_MEMC];
+> >  };
+> >
+> >  /*
+> > @@ -715,22 +720,44 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+> >                                                       u64 *rc_bar2_offset)
+> >  {
+> >       struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+> > -     struct device *dev = pcie->dev;
+> >       struct resource_entry *entry;
+> > +     struct device *dev = pcie->dev;
+> > +     u64 lowest_pcie_addr = ~(u64)0;
+> > +     int ret, i = 0;
+> > +     u64 size = 0;
+> >
+> > -     entry = resource_list_first_type(&bridge->dma_ranges, IORESOURCE_MEM);
+> > -     if (!entry)
+> > -             return -ENODEV;
+> > +     resource_list_for_each_entry(entry, &bridge->dma_ranges) {
+> > +             u64 pcie_beg = entry->res->start - entry->offset;
+> >
+> > +             size += entry->res->end - entry->res->start + 1;
+> > +             if (pcie_beg < lowest_pcie_addr)
+> > +                     lowest_pcie_addr = pcie_beg;
+> > +     }
+> >
+> > -     /*
+> > -      * The controller expects the inbound window offset to be calculated as
+> > -      * the difference between PCIe's address space and CPU's. The offset
+> > -      * provided by the firmware is calculated the opposite way, so we
+> > -      * negate it.
+> > -      */
+> > -     *rc_bar2_offset = -entry->offset;
+> > -     *rc_bar2_size = 1ULL << fls64(entry->res->end - entry->res->start);
+> > +     if (lowest_pcie_addr == ~(u64)0) {
+> > +             dev_err(dev, "DT node has no dma-ranges\n");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     ret = of_property_read_variable_u64_array(pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
+> > +                                               PCIE_BRCM_MAX_MEMC);
+> > +
+> > +     if (ret <= 0) {
+> > +             /* Make an educated guess */
+> > +             pcie->num_memc = 1;
+> > +             pcie->memc_size[0] = 1 << fls64(size - 1);
+> > +     } else {
+> > +             pcie->num_memc = ret;
+> > +     }
+> > +
+> > +     /* Each memc is viewed through a "port" that is a power of 2 */
+> > +     for (i = 0, size = 0; i < pcie->num_memc; i++)
+> > +             size += pcie->memc_size[i];
+> > +
+> > +     /* System memory starts at this address in PCIe-space */
+> > +     *rc_bar2_offset = lowest_pcie_addr;
+> > +     /* The sum of all memc views must also be a power of 2 */
+> > +     *rc_bar2_size = 1ULL << fls64(size - 1);
+> >
+> >       /*
+> >        * We validate the inbound memory view even though we should trust
+> > @@ -782,12 +809,11 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> >       void __iomem *base = pcie->base;
+> >       struct device *dev = pcie->dev;
+> >       struct resource_entry *entry;
+> > -     unsigned int scb_size_val;
+> >       bool ssc_good = false;
+> >       struct resource *res;
+> >       int num_out_wins = 0;
+> >       u16 nlw, cls, lnksta;
+> > -     int i, ret;
+> > +     int i, ret, memc;
+> >       u32 tmp, aspm_support;
+> >
+> >       /* Reset the bridge */
+> > @@ -824,11 +850,17 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> >       writel(upper_32_bits(rc_bar2_offset),
+> >              base + PCIE_MISC_RC_BAR2_CONFIG_HI);
+> >
+> > -     scb_size_val = rc_bar2_size ?
+> > -                    ilog2(rc_bar2_size) - 15 : 0xf; /* 0xf is 1GB */
+> >       tmp = readl(base + PCIE_MISC_MISC_CTRL);
+> > -     u32p_replace_bits(&tmp, scb_size_val,
+> > -                       PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
+> > +     for (memc = 0; memc < pcie->num_memc; memc++) {
+> > +             u32 scb_size_val = ilog2(pcie->memc_size[memc]) - 15;
+> > +
+> > +             if (memc == 0)
+> > +                     u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
+> > +             else if (memc == 1)
+> > +                     u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK);
+> > +             else if (memc == 2)
+> > +                     u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK);
+> > +     }
+> >       writel(tmp, base + PCIE_MISC_MISC_CTRL);
+> >
+> >       /*
+> > --
+> > 2.17.1
+> >
