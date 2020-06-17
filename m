@@ -2,123 +2,79 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18481C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAAE22082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:40:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itbtfbO5"
+	by mail.kernel.org (Postfix) with ESMTP id 1CD482082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 03:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgFQDke (ORCPT
+        id S1726796AbgFQDlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Jun 2020 23:40:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbgFQDkc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Jun 2020 23:40:32 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A0BC061573;
-        Tue, 16 Jun 2020 20:40:31 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id m7so306997plt.5;
-        Tue, 16 Jun 2020 20:40:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=bc0WXoZrOchMdti95LNxJS1iuh37xyfaq6BHQ8s27lc=;
-        b=itbtfbO5VjL1l/KwHSwnQRyNlWsgcTtCDSUKVOpUjrrt+qdN3Bz0Mdl1Br8zvORH4O
-         Ea/bz2K2Pb2yaxSFgMNXs5crvh1OdxVO7/FI0BsuapJBPHNAqq45SByYcqNgfT27jV83
-         NHvdRNyhvRpOlYj15gNn+nwsTilQiKpMvApYeowb7/1yNQOdIFdHtLpMJRzuuVgSvZnC
-         mIOlTtPGSbuwnkjcvtdZPDrzjJBSBCgyq+5uCSM1uyYpP6eYbDnYpwu/czRdfyQcVxPZ
-         dAZpICRUSaV+3GexzYtEvAEKGF9uE2UaI3dlqSZQYOacMTxO0MURJcJy3Wy6k5MGgRPa
-         aJkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=bc0WXoZrOchMdti95LNxJS1iuh37xyfaq6BHQ8s27lc=;
-        b=refDNNCIBk5dVJtMZ/1xkc9rqAVNzgi/YdlFRoESSmuDOv9WKj8j3HSqzMhPlxl70M
-         pJavlbKgsmuvLQWqJWevZo2OzxijppajLCoXTczdvRUCNjiS+Vl3egjMVhe7ddZmMC6O
-         JQThQV4Y42wnWzCd2w/QKW7bRtIXgu5xWTMxJqwE1xzZSYbNh8ic9LxdLrBYW29j9IeS
-         LLN2+1rInVp1VTTrARhoDCCPGB2hPgLzdxMSWKMyMUvIhN5jZWPr10W8I7Fi1iguCk/q
-         KILID9kjZDEHJ7468u0/rdbPi/yaIdzA3Y3Bz/qcHaxextuWmGGlxF2v543MsrGi8hMQ
-         aU6Q==
-X-Gm-Message-State: AOAM531AaCZ14GPZjU7GYzXAKzayViBc+JXXVVJ2dim9M6eoXMKBz7gQ
-        b2XWqNzkFreBy0d7yLWN4sA=
-X-Google-Smtp-Source: ABdhPJzGWqrdxcl0TXDWvUGHWt27TQFaJAUXEemslZUu7Xnilyn95lCOGqBIY3fKRngeLlmwKPHkxg==
-X-Received: by 2002:a17:90a:d784:: with SMTP id z4mr6023649pju.30.1592365230574;
-        Tue, 16 Jun 2020 20:40:30 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u61sm3994790pjb.7.2020.06.16.20.40.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Jun 2020 20:40:29 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 20:40:28 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Jacky Hu <hengqing.hu@gmail.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tony.luck@intel.com, x86@kernel.org,
-        yazen.ghannam@amd.com, bp@alien8.de, clemens@ladisch.de
-Subject: Re: [PATCH] hwmon: (k10temp) Add AMD family 17h model 60h probe
-Message-ID: <20200617034028.GA1614@roeck-us.net>
-References: <20200616180940.GN13515@zn.tnic>
- <20200617013255.391975-1-hengqing.hu@gmail.com>
+        Tue, 16 Jun 2020 23:41:25 -0400
+Received: from mga01.intel.com ([192.55.52.88]:52603 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726497AbgFQDlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Jun 2020 23:41:25 -0400
+IronPort-SDR: dn648OMM6fiiGGXoX67YKFvqmLIsxO9YidWKl2N1+4pLfC5Kodvb19wA/6duW9kfOxm5L7mv31
+ 7v0aRtT2YhtQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 20:41:25 -0700
+IronPort-SDR: yD9c5qPCcw0nP5vDwu24s9gyXkO/DttkWnkRWj5wM2HuyxcvjgAB/UB7ij1AxJLzjfzqTRK9/w
+ jcHjjDhLRfQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,521,1583222400"; 
+   d="scan'208";a="476681552"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Jun 2020 20:41:24 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: VMX: Remove vcpu_vmx's defunct copy of host_pkru
+Date:   Tue, 16 Jun 2020 20:41:23 -0700
+Message-Id: <20200617034123.25647-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200617013255.391975-1-hengqing.hu@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 09:32:55AM +0800, Jacky Hu wrote:
-> With this patch applied, output from 4800H (idle) looks as follows:
-> 
-> k10temp-pci-00c3
-> Adapter: PCI adapter
-> Vcore:         1.55 V
-> Vsoc:          1.55 V
-> Tctl:         +49.6°C
-> Tdie:         +49.6°C
-> Icore:         0.00 A
-> Isoc:          0.00 A
-> 
-> Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
-> ---
->  drivers/hwmon/k10temp.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-> index 8f12995ec133..287e9cf2aab9 100644
-> --- a/drivers/hwmon/k10temp.c
-> +++ b/drivers/hwmon/k10temp.c
-> @@ -583,6 +583,7 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  			k10temp_get_ccd_support(pdev, data, 4);
->  			break;
->  		case 0x31:	/* Zen2 Threadripper */
-> +		case 0x60:	/* Zen2 APU */
+Remove vcpu_vmx.host_pkru, which got left behind when PKRU support was
+moved to common x86 code.
 
-Unfortunately it is not that simple. Output above and the little data I have
-available suggests that current and voltage measurements are different on the
-APU. That means that show_current must remain false.
-This will require a separate case statement which doesn't set any flags.
+No functional change intended.
 
-Guenter
+Fixes: 37486135d3a7b ("KVM: x86: Fix pkru save/restore when guest CR4.PKE=0, move it to x86.c")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/vmx/vmx.h | 2 --
+ 1 file changed, 2 deletions(-)
 
->  		case 0x71:	/* Zen2 */
->  			data->show_current = !is_threadripper() && !is_epyc();
->  			data->cfactor[0] = CFACTOR_ICORE;
-> -- 
-> 2.27.0
-> 
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 8a83b5edc820..639798e4a6ca 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -288,8 +288,6 @@ struct vcpu_vmx {
+ 
+ 	u64 current_tsc_ratio;
+ 
+-	u32 host_pkru;
+-
+ 	unsigned long host_debugctlmsr;
+ 
+ 	/*
+-- 
+2.26.0
+
