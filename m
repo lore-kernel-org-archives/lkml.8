@@ -2,240 +2,88 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3E1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E88E6208D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:27:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bur.io header.i=@bur.io header.b="TD2isv/M";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HPPstBxk"
+	by mail.kernel.org (Postfix) with ESMTP id 22269208D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 16:28:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592411307;
+	bh=5Ub+KICIdK4W45sSWxWJs8h5B1Ics3JByQW+e6T6Xwc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WcrNvVCS+HvfFDgK6VBz0Q8y+8Mm7zBRhjBEAfFx8HubCJpGXtAgMDdBWzuJt7GyR
+	 1/2nfA5wvm2Pz5ID5roBuJttbTZ68Yhiuc8xoXqwcM8scrn7rf/LZ7dCmdQGsja/tI
+	 WIlZSg++UEUUr1RX7Snx4gWimE4K4lCS/E1kpwC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgFQQ16 (ORCPT
+        id S1726974AbgFQQ20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 12:27:58 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:51167 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726931AbgFQQ1y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 12:27:54 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 260DA5800D3;
-        Wed, 17 Jun 2020 12:27:52 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 17 Jun 2020 12:27:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=from
-        :to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=M17MIDnAFlsLEa3IzG4rx4o/T0
-        vnNtyT7dQsd2r58YY=; b=TD2isv/MlPxNLng35btIN1XX0cz2YSS2PPYC+EtkVN
-        Y3me3ycuwQ5r7Qg9XKQlXuKfSnv++0/RNVeZ5+oBf3MUkmPp0hPoJ2TMZxt0f+NF
-        3WQ0sIlwLIMUt/rCd12wtEu4uLet99C+Eq3VBT5dokyRdCrQqCtyaaD2KYipfjKM
-        a9NmDtp+7dvhb2xbP2Jft+7KsTv14ciRGOI311OIG07VHzxZ3kUrezN6HDFRNod+
-        8VwwTiF+Su30B0ORaPCsoLv/QTU1vCYdRrwS5oTQ5acpT03kRtwZHTWGQFrS06qA
-        wYChN5+3g4Clf5cAH5Y2VXQKBZ8V6Oe8/HKsmbgWmvVA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=M17MIDnAFlsLEa3Iz
-        G4rx4o/T0vnNtyT7dQsd2r58YY=; b=HPPstBxkZFeI7QT7S7eSp4N7e39Eg9d7N
-        0nI+wrwTSpAtY51JVpy9WDlCWbubtLm6VP3R92PAq9iXHuu7XeWDtc9MHAQuFKfy
-        st40FSMaPQdftJopNbvYS3QCUhiRWIiSnMIHzrJ4zP5qCBWxFSmFCDypvVxDwY7A
-        Pnh0twXb5DHNbmcS3fL7Bpo4xj7+O5M/KZrLSule5Bnyb3+jmjSWSutIkf3OvwzJ
-        Ya+VCMZM2rji20+pnRv+0FlhOl/qR2aFOkYyXAqekf4myJVpudZue+qTJw2V5O7H
-        xiThXaVr6nr1TqzwgzzSRvT0zKZ+biJjyuCONk4wlYKFBNjjj7Y1A==
-X-ME-Sender: <xms:h0TqXtoOxmzA2-HpfjvdF98v3KeV4lKbyKdRt2-jtZYBTs6FKjvE1g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudejvddguddtudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepuehorhhishcu
-    uehurhhkohhvuceosghorhhishessghurhdrihhoqeenucggtffrrghtthgvrhhnpeduie
-    dtleeuieejfeelffevleeifefgjeejieegkeduudetfeekffeftefhvdejveenucfkphep
-    udeifedruddugedrudefvddrfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegsohhrihhssegsuhhrrdhioh
-X-ME-Proxy: <xmx:h0TqXvpKmkZqmuU91Si500HviJEwJkElX9Z-2SOPRqdPo62e65PMLg>
-    <xmx:h0TqXqPg5pAmady-9XjYpi0stnWzYYkxWhMcTAlI9JsletMKcLmjag>
-    <xmx:h0TqXo6DR9UB5Ns8CJMBzM7Web7qckyGR6LtiRpHCfodckGHeIbgtA>
-    <xmx:h0TqXqkFiO0mjLIKzYZ7XpJkfjBjsusSqpNG02Zg_AkAB2gN-e9RtWrR9nQ>
-Received: from localhost (unknown [163.114.132.3])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CBA2F3280059;
-        Wed, 17 Jun 2020 12:27:50 -0400 (EDT)
-From:   Boris Burkov <boris@bur.io>
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Boris Burkov <boris@bur.io>
-Subject: [PATCH btrfs/for-next] btrfs: fix fatal extent_buffer readahead vs releasepage race
-Date:   Wed, 17 Jun 2020 09:27:46 -0700
-Message-Id: <20200617162746.3780660-1-boris@bur.io>
-X-Mailer: git-send-email 2.24.1
+        Wed, 17 Jun 2020 12:28:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726864AbgFQQ2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 12:28:24 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2899C208D5;
+        Wed, 17 Jun 2020 16:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592411304;
+        bh=5Ub+KICIdK4W45sSWxWJs8h5B1Ics3JByQW+e6T6Xwc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1Cn6OdUEu9xi5CMzccO9nVGArdk6UglGXBE5LmNNzw538M3NsVeIMt8U+LGFFjqqT
+         V6X43/FPfsmNTvi5evQLU/4xsdH4WhXqeg+Q59yw/it9FMLFChQEZjED3B1eaoel0B
+         qArbmGYZMEoSZelInpo1q7ZqXvLjeaEGPe1RjKGk=
+Date:   Wed, 17 Jun 2020 12:28:23 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Ido Schimmel <idosch@idosch.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Ido Schimmel <idosch@mellanox.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.7 264/274] vxlan: Avoid infinite loop when
+ suppressing NS messages with invalid options
+Message-ID: <20200617162823.GR1931@sasha-vm>
+References: <20200608230607.3361041-1-sashal@kernel.org>
+ <20200608230607.3361041-264-sashal@kernel.org>
+ <20200609065548.GA2113611@splinter>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200609065548.GA2113611@splinter>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Under somewhat convoluted conditions, it is possible to attempt to
-release an extent_buffer that is under io, which triggers a BUG_ON in
-btrfs_release_extent_buffer_pages.
+On Tue, Jun 09, 2020 at 09:55:48AM +0300, Ido Schimmel wrote:
+>On Mon, Jun 08, 2020 at 07:05:57PM -0400, Sasha Levin wrote:
+>> From: Ido Schimmel <idosch@mellanox.com>
+>>
+>> [ Upstream commit 8066e6b449e050675df48e7c4b16c29f00507ff0 ]
+>
+>Hi,
+>
+>In the same patch set I also included a similar fix for the bridge
+>module:
+>https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=53fc685243bd6fb90d90305cea54598b78d3cbfc
+>
+>But I don't see it in the patch sets you sent.
+>
+>Don't see it here as well:
+>https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-5.7
+>https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/?h=linux-5.7.y
+>
+>Did it get lost or it's just pending somewhere else?
 
-This relies on a few different factors. First, extent_buffer reads done
-as readahead for searching use WAIT_NONE, so they free the local extent
-buffer reference while the io is outstanding. However, they should still
-be protected by TREE_REF. However, if the system is doing signficant
-reclaim, and simultaneously heavily accessing the extent_buffers, it is
-possible for releasepage to race with two concurrent readahead attempts
-in a way that leaves TREE_REF unset when the readahead extent buffer is
-released.
+AUTOSEL ignores net/ patches that are maintained by David Miller.
 
-Essentially, if two tasks race to allocate a new extent_buffer, but the
-winner who attempts the first io is rebuffed by a page being locked
-(likely by the reclaim itself) then the loser will still go ahead with
-issuing the readahead. The loser's call to find_extent_buffer must also
-race with the reclaim task reading the extent_buffer's refcount as 1 in
-a way that allows the reclaim to re-clear the TREE_REF checked by
-find_extent_buffer.
+I can pick it up manually.
 
-The following represents an example execution demonstrating the race:
-
-            CPU0                                                         CPU1                                           CPU2
-reada_for_search                                            reada_for_search
-  readahead_tree_block                                        readahead_tree_block
-    find_create_tree_block                                      find_create_tree_block
-      alloc_extent_buffer                                         alloc_extent_buffer
-                                                                  find_extent_buffer // not found
-                                                                  allocates eb
-                                                                  lock pages
-                                                                  associate pages to eb
-                                                                  insert eb into radix tree
-                                                                  set TREE_REF, refs == 2
-                                                                  unlock pages
-                                                              read_extent_buffer_pages // WAIT_NONE
-                                                                not uptodate (brand new eb)
-                                                                                                            lock_page
-                                                                if !trylock_page
-                                                                  goto unlock_exit // not an error
-                                                              free_extent_buffer
-                                                                release_extent_buffer
-                                                                  atomic_dec_and_test refs to 1
-        find_extent_buffer // found
-                                                                                                            try_release_extent_buffer
-                                                                                                              take refs_lock
-                                                                                                              reads refs == 1; no io
-          atomic_inc_not_zero refs to 2
-          mark_buffer_accessed
-            check_buffer_tree_ref
-              // not STALE, won't take refs_lock
-              refs == 2; TREE_REF set // no action
-    read_extent_buffer_pages // WAIT_NONE
-                                                                                                              clear TREE_REF
-                                                                                                              release_extent_buffer
-                                                                                                                atomic_dec_and_test refs to 1
-                                                                                                                unlock_page
-      still not uptodate (CPU1 read failed on trylock_page)
-      locks pages
-      set io_pages > 0
-      submit io
-      return
-    release_extent_buffer
-      dec refs to 0
-      delete from radix tree
-      btrfs_release_extent_buffer_pages
-        BUG_ON(io_pages > 0)!!!
-
-We observe this at a very low rate in production and were also able to
-reproduce it in a test environment by introducing some spurious delays
-and by introducing probabilistic trylock_page failures.
-
-To fix it, we apply check_tree_ref at a point where it could not
-possibly be unset by a competing task: after io_pages has been
-incremented. There is no race in write_one_eb, that we know of, but for
-consistency, apply it there too. All the codepaths that clear TREE_REF
-check for io, so they would not be able to clear it after this point.
-
-Signed-off-by: Boris Burkov <boris@bur.io>
----
- fs/btrfs/extent_io.c | 45 ++++++++++++++++++++++++++++----------------
- 1 file changed, 29 insertions(+), 16 deletions(-)
-
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index c59e07360083..f6758ebbb6a2 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -3927,6 +3927,11 @@ static noinline_for_stack int write_one_eb(struct extent_buffer *eb,
- 	clear_bit(EXTENT_BUFFER_WRITE_ERR, &eb->bflags);
- 	num_pages = num_extent_pages(eb);
- 	atomic_set(&eb->io_pages, num_pages);
-+	/*
-+	 * It is possible for releasepage to clear the TREE_REF bit before we
-+	 * set io_pages. See check_buffer_tree_ref for a more detailed comment.
-+	 */
-+	check_buffer_tree_ref(eb);
- 
- 	/* set btree blocks beyond nritems with 0 to avoid stale content. */
- 	nritems = btrfs_header_nritems(eb);
-@@ -5086,25 +5091,28 @@ struct extent_buffer *alloc_dummy_extent_buffer(struct btrfs_fs_info *fs_info,
- static void check_buffer_tree_ref(struct extent_buffer *eb)
- {
- 	int refs;
--	/* the ref bit is tricky.  We have to make sure it is set
--	 * if we have the buffer dirty.   Otherwise the
--	 * code to free a buffer can end up dropping a dirty
--	 * page
-+	/*
-+	 * The TREE_REF bit is first set when the extent_buffer is added
-+	 * to the radix tree. It is also reset, if unset, when a new reference
-+	 * is created by find_extent_buffer.
- 	 *
--	 * Once the ref bit is set, it won't go away while the
--	 * buffer is dirty or in writeback, and it also won't
--	 * go away while we have the reference count on the
--	 * eb bumped.
-+	 * It is only cleared in two cases: freeing the last non-tree
-+	 * reference to the extent_buffer when its STALE bit is set or
-+	 * calling releasepage when the tree reference is the only reference.
- 	 *
--	 * We can't just set the ref bit without bumping the
--	 * ref on the eb because free_extent_buffer might
--	 * see the ref bit and try to clear it.  If this happens
--	 * free_extent_buffer might end up dropping our original
--	 * ref by mistake and freeing the page before we are able
--	 * to add one more ref.
-+	 * In both cases, care is taken to ensure that the extent_buffer's
-+	 * pages are not under io. However, releasepage can be concurrently
-+	 * called with creating new references, which is prone to race
-+	 * conditions between the calls to check_tree_ref in those codepaths
-+	 * and clearing TREE_REF in try_release_extent_buffer.
- 	 *
--	 * So bump the ref count first, then set the bit.  If someone
--	 * beat us to it, drop the ref we added.
-+	 * The actual lifetime of the extent_buffer in the radix tree is
-+	 * adequately protected by the refcount, but the TREE_REF bit and
-+	 * its corresponding reference are not. To protect against this
-+	 * class of races, we call check_buffer_tree_ref from the codepaths
-+	 * which trigger io after they set eb->io_pages. Note that once io is
-+	 * initiated, TREE_REF can no longer be cleared, so that is the
-+	 * moment at which any such race is best fixed.
- 	 */
- 	refs = atomic_read(&eb->refs);
- 	if (refs >= 2 && test_bit(EXTENT_BUFFER_TREE_REF, &eb->bflags))
-@@ -5555,6 +5563,11 @@ int read_extent_buffer_pages(struct extent_buffer *eb, int wait, int mirror_num)
- 	clear_bit(EXTENT_BUFFER_READ_ERR, &eb->bflags);
- 	eb->read_mirror = 0;
- 	atomic_set(&eb->io_pages, num_reads);
-+	/*
-+	 * It is possible for releasepage to clear the TREE_REF bit before we
-+	 * set io_pages. See check_buffer_tree_ref for a more detailed comment.
-+	 */
-+	check_buffer_tree_ref(eb);
- 	for (i = 0; i < num_pages; i++) {
- 		page = eb->pages[i];
- 
 -- 
-2.24.1
-
+Thanks,
+Sasha
