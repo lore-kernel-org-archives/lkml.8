@@ -2,98 +2,176 @@ Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB482C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95745C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CACD21532
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D201212CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 18:26:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WSLMCKM9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ysrv7po1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgFQSY6 (ORCPT
+        id S1727769AbgFQS0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 14:24:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39248 "EHLO
+        Wed, 17 Jun 2020 14:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbgFQSYO (ORCPT
+        with ESMTP id S1726926AbgFQS0j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 14:24:14 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2ED4C061755
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:24:14 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id v24so1319957plo.6
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 11:24:14 -0700 (PDT)
+        Wed, 17 Jun 2020 14:26:39 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F112C06174E;
+        Wed, 17 Jun 2020 11:26:39 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id u15so809886vkk.6;
+        Wed, 17 Jun 2020 11:26:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Xvbq06xb8rcHDasNPx3O6hTHbslpfoh+riHjhZc++Ks=;
-        b=WSLMCKM9ohtqSjMVQAbj8K1EAqWViQgK5qGsYkx3lqhl4SsxwYlRNFiMWoOk2e/+22
-         zbFaMYhRiSmM6eMiCRg8pVMnNvBNXK4RWHAEyeSxi1yul8/hoKqqDvYCbK4MJMaUDIp8
-         dPW7u7MTXphGIS/lQQK1TTO+1xUR9WezeUktbJn90euKvKx8q2ojaylC5nuI1hd4V9Vh
-         wtgE1cx4svZZDf92ll3QVr+I4cvK9FEfJ17p/5L/qNhvs9lrf33cvYerJdTG+R9G5cGw
-         v9PZqBGUocA8ZmLvw+z3PCKOn4YYh3CH80/GsBlNE3wl4MqQ/Wk7DLhl0/f5pMepE3sL
-         y2YQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=zbw5pHB4aa6KZyY8LuNglIK8PBRnGceAc1YUqLNwsOI=;
+        b=Ysrv7po1s/74ZcgNjAO+mAgOY+MJeSc0i8E8BJeFQQryHAKjQePpY1ihTijBzs+YYi
+         XERuPGeHf/lmyG9hMF5gkLdZ8HT020QOeTdXQGK6kCS50srJiFocd5izGjRbnEvsYEUZ
+         KiQgoX4aHZTamjG2GdM77rWVR0vSviMXUpZXxtvHO6JUSkI4IHp4d1+EH8nd11sGnvRF
+         W2tOLLkQ6S71dhwLs4Sy6XDET3wNjJ2dCM32zRGbWEvqphEWIO9rmGKrxTxIV+A68NY+
+         brwgjwmC3tNrbEOuD3wniYBVIhSCUoerqBEVgHJWb7Vo5Ej+nwaBNRPAJzziinZm+Fyn
+         f+5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Xvbq06xb8rcHDasNPx3O6hTHbslpfoh+riHjhZc++Ks=;
-        b=WKBTKJKsKZbqr5dX4vnLr7/XZ+A1Fct+H3GhzQy0FIZb7NwIVk57NRLmrCtkxud7HP
-         hyNFgFUpx29LNw8JwqMbJggT2UwEJd8hjOEgJGBeARAj93yfLH04quY5nlfB9VE/G8wA
-         YZsrqjIDmVgYg1csaxbuk22brkVSUs3d566bVBNAYTFgq8jRzeTwt95EE7zrxKRXu5yk
-         QTCZfWvrcR/Fxl6yjtMXhepeOHhdC+X79JzEYu05EEhk11fWdBg8pYmFch0l/uXDYO2N
-         KPevswV3kCB0FZzGgji2qLzAop+0fmoffYIWePkQHkE2bRl8+Dbnx1rkWBUsGsJLgEtH
-         fQug==
-X-Gm-Message-State: AOAM532cmpotXuH03o+p7eA2Vf9trxhtLCw/ooqLyS/bwQzfa7fYh/3l
-        RMV049qu4WjOKD3dlxrJNEnScA==
-X-Google-Smtp-Source: ABdhPJx+VO5TVkCBs3OrjZcmKB/+bOvx9qgai2d0KOQdclTJeyiQZlq7//E9CmjSCqRbW8mzyMdeUA==
-X-Received: by 2002:a17:90a:df0c:: with SMTP id gp12mr363670pjb.148.1592418252950;
-        Wed, 17 Jun 2020 11:24:12 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id h8sm516409pfo.67.2020.06.17.11.24.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 11:24:12 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jlcjK-009iJG-KI; Wed, 17 Jun 2020 15:24:10 -0300
-Date:   Wed, 17 Jun 2020 15:24:10 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Divya Indi <divya.indi@oracle.com>
-Cc:     Leon Romanovsky <leon@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
-        Gerd Rausch <gerd.rausch@oracle.com>,
-        =?utf-8?B?SMOla29u?= Bugge <haakon.bugge@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
-        Doug Ledford <dledford@redhat.com>
-Subject: Re: [PATCH v3] IB/sa: Resolving use-after-free in ib_nl_send_msg
-Message-ID: <20200617182410.GK6578@ziepe.ca>
-References: <1591627576-920-1-git-send-email-divya.indi@oracle.com>
- <1591627576-920-2-git-send-email-divya.indi@oracle.com>
- <20200609070026.GJ164174@unreal>
- <ee7139ff-465e-6c43-1b55-eab502044e0f@oracle.com>
- <20200614064156.GB2132762@unreal>
- <09bbe749-7eb2-7caa-71a9-3ead4e51e5ed@oracle.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=zbw5pHB4aa6KZyY8LuNglIK8PBRnGceAc1YUqLNwsOI=;
+        b=RFq4GlRR+MgNWHmLHwt2m7m8uKMInZ1fQHn2YJorqHDNeaR7KOht8SKmyirz+LZpjh
+         A9jidV2KCIOYxzvbucDHU3WztQBhZeyKqymVB1AhEqY8eYP2Fz1KkjVmDJgTR4mTmBLa
+         WK7oZwUgqBzJ4dEDvPxxxlL1ILiB8MXfsmq0+ESwZGrQsjsqBTOREnLrwCUrx21+4OPV
+         X8GBZ2todFcZXOspPreKfkMx7YX7O0ysIyACcUZSis1RmIBkEmavhtBnY/oWhB7z6w+E
+         +fhHfTdS1H0KwW11/2AOZmOATU1cQwsqLGfoacFl9zXKwzgvBHcil0aoglcQBoPZPfIS
+         sqPA==
+X-Gm-Message-State: AOAM530p4F4LNg6M58gOM1Gny007NuPjQXOCc7I4ZnfCt3YUZZ2TrSRz
+        Dhrn2CqgSWj4QimJ19fMZUAaxtud29GU0BlXe+k=
+X-Google-Smtp-Source: ABdhPJyYSJRIVuArMT/e6ZjcZOy5AgqF7XGfKrhc3eYg6qu20j5dyYj/KdjVzQtDpOza54IFvOFMDUSaVo42My+DaKc=
+X-Received: by 2002:a1f:de43:: with SMTP id v64mr645681vkg.13.1592418398476;
+ Wed, 17 Jun 2020 11:26:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <09bbe749-7eb2-7caa-71a9-3ead4e51e5ed@oracle.com>
+References: <20200617162746.3780660-1-boris@bur.io> <CAL3q7H47P6E9zn3Zk9C2LX8-1g2QNiCGgbcRMDQDk+JBCoOhzg@mail.gmail.com>
+ <ADB20899-1E88-4546-BEB5-4F2165386184@fb.com> <CAL3q7H5q1ocLa6HjSfiXgVJ67kyfqNBDhcwMqeRVDfbiyr5-tg@mail.gmail.com>
+ <1fdc19e9-8517-efb3-78c7-6f4d0152d87f@toxicpanda.com>
+In-Reply-To: <1fdc19e9-8517-efb3-78c7-6f4d0152d87f@toxicpanda.com>
+Reply-To: fdmanana@gmail.com
+From:   Filipe Manana <fdmanana@gmail.com>
+Date:   Wed, 17 Jun 2020 19:26:27 +0100
+Message-ID: <CAL3q7H4GqjcesWir69PULr4a9rSi2cVQ366y5bAEU23wS6xJkA@mail.gmail.com>
+Subject: Re: [PATCH btrfs/for-next] btrfs: fix fatal extent_buffer readahead
+ vs releasepage race
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Chris Mason <clm@fb.com>, Boris Burkov <boris@bur.io>,
+        David Sterba <dsterba@suse.com>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-team@fb.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 10:56:53AM -0700, Divya Indi wrote:
-> The other option might be to use GFP_NOWAIT conditionally ie
-> (only use GFP_NOWAIT when GFP_ATOMIC is not specified in gfp_mask else
-> use GFP_ATOMIC). Eventual goal being to not have a blocking memory allocation.
+On Wed, Jun 17, 2020 at 7:19 PM Josef Bacik <josef@toxicpanda.com> wrote:
+>
+> On 6/17/20 2:11 PM, Filipe Manana wrote:
+> > On Wed, Jun 17, 2020 at 6:43 PM Chris Mason <clm@fb.com> wrote:
+> >>
+> >> On 17 Jun 2020, at 13:20, Filipe Manana wrote:
+> >>
+> >>> On Wed, Jun 17, 2020 at 5:32 PM Boris Burkov <boris@bur.io> wrote:
+> >>>
+> >>>> ---
+> >>>>   fs/btrfs/extent_io.c | 45
+> >>>> ++++++++++++++++++++++++++++----------------
+> >>>>   1 file changed, 29 insertions(+), 16 deletions(-)
+> >>>>
+> >>>> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> >>>> index c59e07360083..f6758ebbb6a2 100644
+> >>>> --- a/fs/btrfs/extent_io.c
+> >>>> +++ b/fs/btrfs/extent_io.c
+> >>>> @@ -3927,6 +3927,11 @@ static noinline_for_stack int
+> >>>> write_one_eb(struct extent_buffer *eb,
+> >>>>          clear_bit(EXTENT_BUFFER_WRITE_ERR, &eb->bflags);
+> >>>>          num_pages =3D num_extent_pages(eb);
+> >>>>          atomic_set(&eb->io_pages, num_pages);
+> >>>> +       /*
+> >>>> +        * It is possible for releasepage to clear the TREE_REF bit
+> >>>> before we
+> >>>> +        * set io_pages. See check_buffer_tree_ref for a more
+> >>>> detailed comment.
+> >>>> +        */
+> >>>> +       check_buffer_tree_ref(eb);
+> >>>
+> >>> This is a whole different case from the one described in the
+> >>> changelog, as this is in the write path.
+> >>> Why do we need this one?
+> >>
+> >> This was Josef=E2=80=99s idea, but I really like the symmetry.  You se=
+t
+> >> io_pages, you do the tree_ref dance.  Everyone fiddling with the write
+> >> back bit right now correctly clears writeback after doing the atomic_d=
+ec
+> >> on io_pages, but the race is tiny and prone to getting exposed again b=
+y
+> >> shifting code around.  Tree ref checks around io_pages are the most
+> >> reliable way to prevent this bug from coming back again later.
+> >
+> > Ok, but that still doesn't answer my question.
+> > Is there an actual race/problem this hunk solves?
+> >
+> > Before calling write_one_eb() we increment the ref on the eb and we
+> > also call lock_extent_buffer_for_io(),
+> > which clears the dirty bit and sets the writeback bit on the eb while
+> > holding its ref_locks spin_lock.
+> >
+> > Even if we get to try_release_extent_buffer, it calls
+> > extent_buffer_under_io(eb) while holding the ref_locks spin_lock,
+> > so at any time it should return true, as either the dirty or the
+> > writeback bit is set.
+> >
+> > Is this purely a safety guard that is being introduced?
+> >
+> > Can we at least describe in the changelog why we are adding this hunk
+> > in the write path?
+> > All it mentions is a race between reading and releasing pages, there's
+> > nothing mentioned about races with writeback.
+> >
+>
+> I think maybe we make that bit a separate patch, and leave the panic fix =
+on it's
+> own.  I suggested this because I have lofty ideas of killing the refs_loc=
+k, and
+> this would at least keep us consistent in our usage TREE_REF to save us f=
+rom
+> freeing stuff that may be currently under IO.
+>
+> I'm super not happy with our reference handling coupled with releasepage,=
+ but
+> these are the kind of hoops we're going to have to jump through until we =
+have
+> some better infrastructure in place to handle metadata.  Thanks,
 
-This is probably safest for now, unless you can audit all callers and
-see if they can switch to GFP_NOWAIT as well
+Ok, so it's just a safety guard then.
+Yes, either a separate patch or at the very least mention why we are
+adding that in the change log.
 
-Jason
+Thanks.
+
+>
+> Josef
+
+
+
+--=20
+Filipe David Manana,
+
+=E2=80=9CWhether you think you can, or you think you can't =E2=80=94 you're=
+ right.=E2=80=9D
