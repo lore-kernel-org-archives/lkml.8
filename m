@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DBDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12A6C2192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72BFD2192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444268;
-	bh=+7JjEbbw/Q7Ns50um1o9ufnJK1C1lSY3L4ffS4BdC4w=;
+	s=default; t=1592444271;
+	bh=sz2VY7bKf1cEfS5TP7IGpkiCBgblk54msJDFCj5Xo9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dvaEpIeIFsG60Im/mNbpdpLh+ZEC4EL50ZP6OKxksuhpBRpDHUSzQlX2Xyf7pSd5x
-	 Jc55INFR64nVRSlh5ZNxF+JfEd4cWo2N8YaIPi+UlMd9ulW52hXmroK/sWWlYmd+dz
-	 bDIhZoDRePeCuwmJ8mFE9QxKg3FeptRL3Uh6zU3Y=
+	b=R+C9uWhSfKCITJPqfjH9gorkShObV5UCdszkjpPEyuWh3hb/vGPoHcrIKlMpZ7rJo
+	 mJH7MNCvRlNPeKwoxdwtyKbKVt+2ubVWOhVejsWxtTVR/+VibzQ7Ap8PjAIFliE1HQ
+	 mO1iGCzmiu18VICiO6tLOZUbPDEC0+L9n73m6hZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730566AbgFRBhq (ORCPT
+        id S1732600AbgFRBan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:37:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40988 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:30:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732608AbgFRBap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:30:45 -0400
+        id S1731836AbgFRB1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85E462224B;
-        Thu, 18 Jun 2020 01:30:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBC5520776;
+        Thu, 18 Jun 2020 01:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443845;
-        bh=+7JjEbbw/Q7Ns50um1o9ufnJK1C1lSY3L4ffS4BdC4w=;
+        s=default; t=1592443638;
+        bh=sz2VY7bKf1cEfS5TP7IGpkiCBgblk54msJDFCj5Xo9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v+b/m+EIfLhFgb+KRjTkKpXXTLrKqJ1dt4JFs7WAAVaoB2NtHz7h2aL8L34lt8yHZ
-         OQgt/u3kY4Tx6pAHc56pGaqYXKQEhzo6agtLR4n1tUR8NHsVX60ulyVRfC8lRcma1+
-         0UvSEdm1glGwB2AISmSIv0Rk0XzfjpEYto3R8eDw=
+        b=SmA/EACX4W8r2tOg2ILQu/HMkki0f8WN9kEk6cdNd2tRgha6JbiYhfjPO/2Jmj9oi
+         uE4wi6omXr5SrxI+bzH7UUN80cpd1cLKtVahruUrZAqAlah9VfbLdlk2e2W268X1CE
+         5kYDIKdBBJ6D7mqL7pSGdBpGDr5o4M4d2ywTMuPQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 30/60] drivers: base: Fix NULL pointer exception in __platform_driver_probe() if a driver developer is foolish
-Date:   Wed, 17 Jun 2020 21:29:34 -0400
-Message-Id: <20200618013004.610532-30-sashal@kernel.org>
+Cc:     Geoff Levand <geoff@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 061/108] powerpc/ps3: Fix kexec shutdown hang
+Date:   Wed, 17 Jun 2020 21:25:13 -0400
+Message-Id: <20200618012600.608744-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
-References: <20200618013004.610532-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,82 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+From: Geoff Levand <geoff@infradead.org>
 
-[ Upstream commit 388bcc6ecc609fca1b4920de7dc3806c98ec535e ]
+[ Upstream commit 126554465d93b10662742128918a5fc338cda4aa ]
 
-If platform bus driver registration is failed then, accessing
-platform bus spin lock (&drv->driver.bus->p->klist_drivers.k_lock)
-in __platform_driver_probe() without verifying the return value
-__platform_driver_register() can lead to NULL pointer exception.
+The ps3_mm_region_destroy() and ps3_mm_vas_destroy() routines
+are called very late in the shutdown via kexec's mmu_cleanup_all
+routine.  By the time mmu_cleanup_all runs it is too late to use
+udbg_printf, and calling it will cause PS3 systems to hang.
 
-So check the return value before attempting the spin lock.
+Remove all debugging statements from ps3_mm_region_destroy() and
+ps3_mm_vas_destroy() and replace any error reporting with calls
+to lv1_panic.
 
-One such example is below:
+With this change builds with 'DEBUG' defined will not cause kexec
+reboots to hang, and builds with 'DEBUG' defined or not will end
+in lv1_panic if an error is encountered.
 
-For a custom usecase, I have intentionally failed the platform bus
-registration and I expected all the platform device/driver
-registrations to fail gracefully. But I came across this panic
-issue.
-
-[    1.331067] BUG: kernel NULL pointer dereference, address: 00000000000000c8
-[    1.331118] #PF: supervisor write access in kernel mode
-[    1.331163] #PF: error_code(0x0002) - not-present page
-[    1.331208] PGD 0 P4D 0
-[    1.331233] Oops: 0002 [#1] PREEMPT SMP
-[    1.331268] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-00049-g670d35fb0144 #165
-[    1.331341] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[    1.331406] RIP: 0010:_raw_spin_lock+0x15/0x30
-[    1.331588] RSP: 0000:ffffc9000001be70 EFLAGS: 00010246
-[    1.331632] RAX: 0000000000000000 RBX: 00000000000000c8 RCX: 0000000000000001
-[    1.331696] RDX: 0000000000000001 RSI: 0000000000000092 RDI: 0000000000000000
-[    1.331754] RBP: 00000000ffffffed R08: 0000000000000501 R09: 0000000000000001
-[    1.331817] R10: ffff88817abcc520 R11: 0000000000000670 R12: 00000000ffffffed
-[    1.331881] R13: ffffffff82dbc268 R14: ffffffff832f070a R15: 0000000000000000
-[    1.331945] FS:  0000000000000000(0000) GS:ffff88817bd80000(0000) knlGS:0000000000000000
-[    1.332008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.332062] CR2: 00000000000000c8 CR3: 000000000681e001 CR4: 00000000003606e0
-[    1.332126] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    1.332189] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    1.332252] Call Trace:
-[    1.332281]  __platform_driver_probe+0x92/0xee
-[    1.332323]  ? rtc_dev_init+0x2b/0x2b
-[    1.332358]  cmos_init+0x37/0x67
-[    1.332396]  do_one_initcall+0x7d/0x168
-[    1.332428]  kernel_init_freeable+0x16c/0x1c9
-[    1.332473]  ? rest_init+0xc0/0xc0
-[    1.332508]  kernel_init+0x5/0x100
-[    1.332543]  ret_from_fork+0x1f/0x30
-[    1.332579] CR2: 00000000000000c8
-[    1.332616] ---[ end trace 3bd87f12e9010b87 ]---
-[    1.333549] note: swapper/0[1] exited with preempt_count 1
-[    1.333592] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-[    1.333736] Kernel Offset: disabled
-
-Note, this can only be triggered if a driver errors out from this call,
-which should never happen.  If it does, the driver needs to be fixed.
-
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Link: https://lore.kernel.org/r/20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/7325c4af2b4c989c19d6a26b90b1fec9c0615ddf.1589049250.git.geoff@infradead.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/platforms/ps3/mm.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 065fcc4be263..f89cb143f1cd 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -638,6 +638,8 @@ int __init_or_module __platform_driver_probe(struct platform_driver *drv,
- 	/* temporary section violation during probe() */
- 	drv->probe = probe;
- 	retval = code = __platform_driver_register(drv, module);
-+	if (retval)
-+		return retval;
+diff --git a/arch/powerpc/platforms/ps3/mm.c b/arch/powerpc/platforms/ps3/mm.c
+index b0f34663b1ae..19bae78b1f25 100644
+--- a/arch/powerpc/platforms/ps3/mm.c
++++ b/arch/powerpc/platforms/ps3/mm.c
+@@ -212,13 +212,14 @@ void ps3_mm_vas_destroy(void)
+ {
+ 	int result;
  
- 	/*
- 	 * Fixup that section violation, being paranoid about code scanning
+-	DBG("%s:%d: map.vas_id    = %llu\n", __func__, __LINE__, map.vas_id);
+-
+ 	if (map.vas_id) {
+ 		result = lv1_select_virtual_address_space(0);
+-		BUG_ON(result);
+-		result = lv1_destruct_virtual_address_space(map.vas_id);
+-		BUG_ON(result);
++		result += lv1_destruct_virtual_address_space(map.vas_id);
++
++		if (result) {
++			lv1_panic(0);
++		}
++
+ 		map.vas_id = 0;
+ 	}
+ }
+@@ -316,19 +317,20 @@ static void ps3_mm_region_destroy(struct mem_region *r)
+ 	int result;
+ 
+ 	if (!r->destroy) {
+-		pr_info("%s:%d: Not destroying high region: %llxh %llxh\n",
+-			__func__, __LINE__, r->base, r->size);
+ 		return;
+ 	}
+ 
+-	DBG("%s:%d: r->base = %llxh\n", __func__, __LINE__, r->base);
+-
+ 	if (r->base) {
+ 		result = lv1_release_memory(r->base);
+-		BUG_ON(result);
++
++		if (result) {
++			lv1_panic(0);
++		}
++
+ 		r->size = r->base = r->offset = 0;
+ 		map.total = map.rm.size;
+ 	}
++
+ 	ps3_mm_set_repository_highmem(NULL);
+ }
+ 
 -- 
 2.25.1
 
