@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CACF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DED322211
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEAFA2220B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445880;
-	bh=G3npwubaEKnd3PGv+uBeBKcI2zNcuNgQoVB37CCG5rs=;
+	s=default; t=1592445886;
+	bh=f3IrhpYIO11PWkZc3xRDXXaFzg5TqWFtpqCE+5k93P0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FLjJcONhIy5F52OBNVb47Ai3R8ohmABa3Ko34ztBKWqUTouGY5IAKLxQsWsMpIbC/
-	 5TBIWMZtffHCGsW2w9c74A79oKEF6ECs545Dtzk52mJKCaIjzUmpXivzOnWWz+KGnN
-	 hNt6KUBI9wh8WIE2qAgLyvCpKWuY1XsxpPnpFSbA=
+	b=y9+7Sg0jdhC7P2FgfE6Vwr6a9C9OiK2Ad+1kr9P9faXhDIZiHcgyiVOblSO26uHfZ
+	 zG9nOQmwNqyn6nG1BCyjuNFXnchzxuDz4HNbXg8eou42L+eNx7SKhIvz195RlJTMw3
+	 BLaWnmYAYSoyhOyxBT4pDpXL4JALx1ePQtql+Ppc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbgFRBW6 (ORCPT
+        id S1730245AbgFRCEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:22:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51540 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:04:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730177AbgFRBTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:19:37 -0400
+        id S1730882AbgFRBW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:22:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96FBB21D94;
-        Thu, 18 Jun 2020 01:19:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 649C120CC7;
+        Thu, 18 Jun 2020 01:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443177;
-        bh=G3npwubaEKnd3PGv+uBeBKcI2zNcuNgQoVB37CCG5rs=;
+        s=default; t=1592443377;
+        bh=f3IrhpYIO11PWkZc3xRDXXaFzg5TqWFtpqCE+5k93P0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LzaDCZf97BD3F1wqsaW+QVBC2Gb9cpLwPAkRTZ8fn/i+vPVc+sxDYBupDFx3e6gJF
-         oWI/vSesp4XTQtk99L9g1isS2IYwEdNnM90ryWHiQMuqwxbJDQuqICDDCo2r4yL7WY
-         GUILYE+K0MC/O34JQkHSMGwAioUn/rfWH520jAQ8=
+        b=XEeELnDE+GjaJdVAHGAz+LKvR7h+GnwmYzm1KYJbPWvOFUpUSmNQv/myAg8gIgV9e
+         qAl8vg6G7T/gF4PDRk10qAtCsgwT8e+LRvEP1ZoUOvtTseL08nDBQcAAvR0yyGigyx
+         mADR3+TjZp17VhlsnHSrHlDa0VBCeXwuxEUHrLcI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 140/266] clk: ti: composite: fix memory leak
-Date:   Wed, 17 Jun 2020 21:14:25 -0400
-Message-Id: <20200618011631.604574-140-sashal@kernel.org>
+Cc:     Aharon Landau <aharonl@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 029/172] RDMA/mlx5: Add init2init as a modify command
+Date:   Wed, 17 Jun 2020 21:19:55 -0400
+Message-Id: <20200618012218.607130-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
-References: <20200618011631.604574-1-sashal@kernel.org>
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,36 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Aharon Landau <aharonl@mellanox.com>
 
-[ Upstream commit c7c1cbbc9217ebb5601b88d138d4a5358548de9d ]
+[ Upstream commit 819f7427bafd494ef7ca4942ec6322db20722d7b ]
 
-The parent_names is never released for a component clock definition,
-causing some memory leak. Fix by releasing it once it is no longer
-needed.
+Missing INIT2INIT entry in the list of modify commands caused DEVX
+applications to be unable to modify_qp for this transition state. Add the
+MLX5_CMD_OP_INIT2INIT_QP opcode to the list of allowed DEVX opcodes.
 
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Link: https://lkml.kernel.org/r/20200429131341.4697-2-t-kristo@ti.com
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: e662e14d801b ("IB/mlx5: Add DEVX support for modify and query commands")
+Link: https://lore.kernel.org/r/20200513095550.211345-1-leon@kernel.org
+Signed-off-by: Aharon Landau <aharonl@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/composite.c | 1 +
+ drivers/infiniband/hw/mlx5/devx.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/ti/composite.c b/drivers/clk/ti/composite.c
-index 6a89936ba03a..eaa43575cfa5 100644
---- a/drivers/clk/ti/composite.c
-+++ b/drivers/clk/ti/composite.c
-@@ -196,6 +196,7 @@ static void __init _register_composite(void *user,
- 		if (!cclk->comp_clks[i])
- 			continue;
- 		list_del(&cclk->comp_clks[i]->link);
-+		kfree(cclk->comp_clks[i]->parent_names);
- 		kfree(cclk->comp_clks[i]);
- 	}
- 
+diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
+index 02f36ab72ad4..4c90a007e09d 100644
+--- a/drivers/infiniband/hw/mlx5/devx.c
++++ b/drivers/infiniband/hw/mlx5/devx.c
+@@ -328,6 +328,7 @@ static bool devx_is_obj_modify_cmd(const void *in)
+ 	case MLX5_CMD_OP_SET_L2_TABLE_ENTRY:
+ 	case MLX5_CMD_OP_RST2INIT_QP:
+ 	case MLX5_CMD_OP_INIT2RTR_QP:
++	case MLX5_CMD_OP_INIT2INIT_QP:
+ 	case MLX5_CMD_OP_RTR2RTS_QP:
+ 	case MLX5_CMD_OP_RTS2RTS_QP:
+ 	case MLX5_CMD_OP_SQERR2RTS_QP:
 -- 
 2.25.1
 
