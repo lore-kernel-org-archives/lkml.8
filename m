@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 091F621974
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BAA20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443323;
-	bh=wM5/3fhrr5hm7+nYevMQXH53D3Fdmtgqhuy6Kc3sOwA=;
+	s=default; t=1592443326;
+	bh=Hwb8RdOICnfAWn54O9C5w3TGy5ajzSZfqY6SLChfTmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2DjVLflVledanQfNIbwd7KXtcvZMFNZCVsJ/lOQ0MiFdQezwM8OH0q7vWGs1PPDzt
-	 HekHFgQsh0tu6kdeyOhZGO3m6mvPaH1dPOg7Yh7ei09a4AJm976kDm9p0lfyisC7K+
-	 e8gF+bFZ3BZfMdTj9s5TQgHato0wnT2HwtUde8NA=
+	b=Skm1BX231iOIZzuO57EwRDw7NFhENpzAPkcz7kxXlHvLovPvEI0TdtQroKZnmAHVi
+	 xtyMwhIYwsxtItpnWbdDj+RBvpBDmtToLYilNAA5k3zI/InhUys920dLYmMb0gOLeV
+	 KelW/4ObDS0ttPxAKuwIsDJlXGwV3BEuRPM/6Nqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730638AbgFRBWB (ORCPT
+        id S1729513AbgFRBWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:22:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:22:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729472AbgFRBSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:18:34 -0400
+        id S1726997AbgFRBSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:18:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B47E21D79;
-        Thu, 18 Jun 2020 01:18:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04DF4221F3;
+        Thu, 18 Jun 2020 01:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443114;
-        bh=wM5/3fhrr5hm7+nYevMQXH53D3Fdmtgqhuy6Kc3sOwA=;
+        s=default; t=1592443116;
+        bh=Hwb8RdOICnfAWn54O9C5w3TGy5ajzSZfqY6SLChfTmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ibpGB3pVbZx/49Lygs9q/VY0XWrzskyx3k8/3OoRkC8ipHz//P9U/0QQFD+qPb/Yq
-         sGK7rTBs27EgCq32zUAuE4bSsFnjowuarkeGvMiOH4n33ISJqadWuv1OWUExGomZQ+
-         9CtvnwqYc2xTLgv0Di+9BJsK0ZdJOmqaSQnLqD5w=
+        b=YceVCmldxSxcQLCIB+G2P5JF5bofy7Vqxk/wNfSZOE7uro3YrwrSEinXM/DSfUyUI
+         Ff1a2UZx+1o2WtzBGabrUDtlSmChOLwTvlhEoXYpk/KvNCpdhPs4gIWIWLjpYOro9g
+         gWYhOFENVD5DYt3KXWDYE4GiZKY7r9pwZnFxaEfI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Vincent=20Stehl=C3=A9?= <vincent.stehle@laposte.net>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Maxime Ripard <mripard@kernel.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 090/266] ARM: dts: sun8i-h2-plus-bananapi-m2-zero: Fix led polarity
-Date:   Wed, 17 Jun 2020 21:13:35 -0400
-Message-Id: <20200618011631.604574-90-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 092/266] gpio: dwapb: Append MODULE_ALIAS for platform driver
+Date:   Wed, 17 Jun 2020 21:13:37 -0400
+Message-Id: <20200618011631.604574-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,38 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Stehlé <vincent.stehle@laposte.net>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 34b6826df7462c541752cf8b1de2691b26d78ae0 ]
+[ Upstream commit c58220cba2e03618659fa7d5dfae31f5ad4ae9d0 ]
 
-The PWR-LED on the bananapi m2 zero board is on when gpio PL10 is low.
-This has been verified on a board and in the schematics [1].
+The commit 3d2613c4289f
+  ("GPIO: gpio-dwapb: Enable platform driver binding to MFD driver")
+introduced a use of the platform driver but missed to add the following line
+to it:
+  MODULE_ALIAS("platform:gpio-dwapb");
 
-[1]: http://wiki.banana-pi.org/Banana_Pi_BPI-M2_ZERO#Documents
+Add this to get driver loaded automatically if platform device is registered.
 
-Fixes: 8b8061fcbfae ("ARM: dts: sun8i: h2+: add support for Banana Pi M2 Zero board")
-Signed-off-by: Vincent Stehlé <vincent.stehle@laposte.net>
-Cc: Icenowy Zheng <icenowy@aosc.io>
-Cc: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Fixes: 3d2613c4289f ("GPIO: gpio-dwapb: Enable platform driver binding to MFD driver")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+Link: https://lore.kernel.org/r/20200415141534.31240-2-andriy.shevchenko@linux.intel.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-dwapb.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-index d277d043031b..4c6704e4c57e 100644
---- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-+++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-@@ -31,7 +31,7 @@ leds {
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 02cf4c43a4c4..ed6061b5cca1 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -49,7 +49,9 @@
+ #define GPIO_EXT_PORTC		0x58
+ #define GPIO_EXT_PORTD		0x5c
  
- 		pwr_led {
- 			label = "bananapi-m2-zero:red:pwr";
--			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
-+			gpios = <&r_pio 0 10 GPIO_ACTIVE_LOW>; /* PL10 */
- 			default-state = "on";
- 		};
- 	};
++#define DWAPB_DRIVER_NAME	"gpio-dwapb"
+ #define DWAPB_MAX_PORTS		4
++
+ #define GPIO_EXT_PORT_STRIDE	0x04 /* register stride 32 bits */
+ #define GPIO_SWPORT_DR_STRIDE	0x0c /* register stride 3*32 bits */
+ #define GPIO_SWPORT_DDR_STRIDE	0x0c /* register stride 3*32 bits */
+@@ -398,7 +400,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 		return;
+ 
+ 	err = irq_alloc_domain_generic_chips(gpio->domain, ngpio, 2,
+-					     "gpio-dwapb", handle_level_irq,
++					     DWAPB_DRIVER_NAME, handle_level_irq,
+ 					     IRQ_NOREQUEST, 0,
+ 					     IRQ_GC_INIT_NESTED_LOCK);
+ 	if (err) {
+@@ -455,7 +457,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 		 */
+ 		err = devm_request_irq(gpio->dev, pp->irq[0],
+ 				       dwapb_irq_handler_mfd,
+-				       IRQF_SHARED, "gpio-dwapb-mfd", gpio);
++				       IRQF_SHARED, DWAPB_DRIVER_NAME, gpio);
+ 		if (err) {
+ 			dev_err(gpio->dev, "error requesting IRQ\n");
+ 			irq_domain_remove(gpio->domain);
+@@ -843,7 +845,7 @@ static SIMPLE_DEV_PM_OPS(dwapb_gpio_pm_ops, dwapb_gpio_suspend,
+ 
+ static struct platform_driver dwapb_gpio_driver = {
+ 	.driver		= {
+-		.name	= "gpio-dwapb",
++		.name	= DWAPB_DRIVER_NAME,
+ 		.pm	= &dwapb_gpio_pm_ops,
+ 		.of_match_table = of_match_ptr(dwapb_of_match),
+ 		.acpi_match_table = ACPI_PTR(dwapb_acpi_match),
+@@ -857,3 +859,4 @@ module_platform_driver(dwapb_gpio_driver);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Jamie Iles");
+ MODULE_DESCRIPTION("Synopsys DesignWare APB GPIO driver");
++MODULE_ALIAS("platform:" DWAPB_DRIVER_NAME);
 -- 
 2.25.1
 
