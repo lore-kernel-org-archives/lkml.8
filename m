@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83067C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043E0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6449F2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E14702073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730634AbgFRNvZ (ORCPT
+        id S1730624AbgFRNvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49182 "EHLO
+        Thu, 18 Jun 2020 09:51:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730565AbgFRNvG (ORCPT
+        with ESMTP id S1730566AbgFRNvG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Jun 2020 09:51:06 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DA79C0613F0;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 726F5C0613ED;
         Thu, 18 Jun 2020 06:51:06 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jluwZ-0002kT-Ek; Thu, 18 Jun 2020 15:51:03 +0200
+        id 1jluwR-0002iZ-Up; Thu, 18 Jun 2020 15:50:56 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 87E2E1C06FE;
-        Thu, 18 Jun 2020 15:50:57 +0200 (CEST)
-Date:   Thu, 18 Jun 2020 13:50:57 -0000
-From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3C11D1C0087;
+        Thu, 18 Jun 2020 15:50:55 +0200 (CEST)
+Date:   Thu, 18 Jun 2020 13:50:54 -0000
+From:   "tip-bot2 for Chang S. Bae" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fsgsbase] x86/speculation/swapgs: Check FSGSBASE in
- enabling SWAPGS mitigation
-Cc:     Tony Luck <tony.luck@intel.com>,
+Subject: [tip: x86/fsgsbase] selftests/x86/fsgsbase: Test ptracer-induced GS
+ base write with FSGSBASE
+Cc:     Andy Lutomirski <luto@kernel.org>,
         "Chang S. Bae" <chang.seok.bae@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200528201402.1708239-9-sashal@kernel.org>
-References: <20200528201402.1708239-9-sashal@kernel.org>
+In-Reply-To: <20200528201402.1708239-17-sashal@kernel.org>
+References: <20200528201402.1708239-17-sashal@kernel.org>
 MIME-Version: 1.0
-Message-ID: <159248825731.16989.10228192989851794615.tip-bot2@tip-bot2>
+Message-ID: <159248825497.16989.5412219618320805456.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,57 +63,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/fsgsbase branch of tip:
 
-Commit-ID:     978e1342c3c4d7b20808fd5875d9ac0d57db22ee
-Gitweb:        https://git.kernel.org/tip/978e1342c3c4d7b20808fd5875d9ac0d57db22ee
-Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Thu, 28 May 2020 16:13:54 -04:00
+Commit-ID:     5e7ec8578fa3dada50c50f5b234fa8d154b76349
+Gitweb:        https://git.kernel.org/tip/5e7ec8578fa3dada50c50f5b234fa8d154b76349
+Author:        Chang S. Bae <chang.seok.bae@intel.com>
+AuthorDate:    Thu, 28 May 2020 16:14:02 -04:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 18 Jun 2020 15:47:02 +02:00
+CommitterDate: Thu, 18 Jun 2020 15:47:07 +02:00
 
-x86/speculation/swapgs: Check FSGSBASE in enabling SWAPGS mitigation
+selftests/x86/fsgsbase: Test ptracer-induced GS base write with FSGSBASE
 
-Before enabling FSGSBASE the kernel could safely assume that the content
-of GS base was a user address. Thus any speculative access as the result
-of a mispredicted branch controlling the execution of SWAPGS would be to
-a user address. So systems with speculation-proof SMAP did not need to
-add additional LFENCE instructions to mitigate.
+This validates that GS selector and base are independently preserved in
+ptrace commands.
 
-With FSGSBASE enabled a hostile user can set GS base to a kernel address.
-So they can make the kernel speculatively access data they wish to leak
-via a side channel. This means that SMAP provides no protection.
-
-Add FSGSBASE as an additional condition to enable the fence-based SWAPGS
-mitigation.
-
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200528201402.1708239-9-sashal@kernel.org
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20200528201402.1708239-17-sashal@kernel.org
 
 
 ---
- arch/x86/kernel/cpu/bugs.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ tools/testing/selftests/x86/fsgsbase.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 0b71970..5ea5fbd 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -543,14 +543,12 @@ static void __init spectre_v1_select_mitigation(void)
- 		 * If FSGSBASE is enabled, the user can put a kernel address in
- 		 * GS, in which case SMAP provides no protection.
- 		 *
--		 * [ NOTE: Don't check for X86_FEATURE_FSGSBASE until the
--		 *	   FSGSBASE enablement patches have been merged. ]
--		 *
- 		 * If FSGSBASE is disabled, the user can only put a user space
- 		 * address in GS.  That makes an attack harder, but still
- 		 * possible if there's no SMAP protection.
- 		 */
--		if (!smap_works_speculatively()) {
-+		if (boot_cpu_has(X86_FEATURE_FSGSBASE) ||
-+		    !smap_works_speculatively()) {
- 			/*
- 			 * Mitigation can be provided from SWAPGS itself or
- 			 * PTI as the CR3 write in the Meltdown mitigation
+diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
+index 950a48b..9a43498 100644
+--- a/tools/testing/selftests/x86/fsgsbase.c
++++ b/tools/testing/selftests/x86/fsgsbase.c
+@@ -465,7 +465,7 @@ static void test_ptrace_write_gsbase(void)
+ 	wait(&status);
+ 
+ 	if (WSTOPSIG(status) == SIGTRAP) {
+-		unsigned long gs;
++		unsigned long gs, base;
+ 		unsigned long gs_offset = USER_REGS_OFFSET(gs);
+ 		unsigned long base_offset = USER_REGS_OFFSET(gs_base);
+ 
+@@ -481,6 +481,7 @@ static void test_ptrace_write_gsbase(void)
+ 			err(1, "PTRACE_POKEUSER");
+ 
+ 		gs = ptrace(PTRACE_PEEKUSER, child, gs_offset, NULL);
++		base = ptrace(PTRACE_PEEKUSER, child, base_offset, NULL);
+ 
+ 		/*
+ 		 * In a non-FSGSBASE system, the nonzero selector will load
+@@ -501,8 +502,14 @@ static void test_ptrace_write_gsbase(void)
+ 			 */
+ 			if (gs == 0)
+ 				printf("\tNote: this is expected behavior on older kernels.\n");
++		} else if (have_fsgsbase && (base != 0xFF)) {
++			nerrs++;
++			printf("[FAIL]\tGSBASE changed to %lx\n", base);
+ 		} else {
+-			printf("[OK]\tGS remained 0x%hx\n", *shared_scratch);
++			printf("[OK]\tGS remained 0x%hx", *shared_scratch);
++			if (have_fsgsbase)
++				printf(" and GSBASE changed to 0xFF");
++			printf("\n");
+ 		}
+ 	}
+ 
