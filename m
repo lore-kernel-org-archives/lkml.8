@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD31C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 813ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41C45221E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D1F221ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444336;
-	bh=DNU3oItBRD+t8hHUsLAxFM9xsQJ+HUY8qPQ4nN96+A0=;
+	s=default; t=1592444339;
+	bh=QmlTBGpRoe2gKzIy3R3HVQPXVAI2+PAtfsBNLXntKbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xHdIIdhBikc2Pfbc+83XenNlmh5Mr6lZ1XstEyz7R90sHRsw8r5hYx6VdLSUR0IPL
-	 7hKpFyiclZHlY0TVZ3uhub4E32vIFzHj0BOeJncMTU0wAoS5j8rhFAEZrXnsZGR6Ep
-	 SGr/k3vQT8aC4QLkuKFFvfCAWR+fhVz6wDJlelkw=
+	b=2QvyEnc1WvyuXUWUA/YQDMjY7punqYGPI0HNJS/zno+Mq/10aXnJ1wFc40njOP/eG
+	 9oes6AE7M1qr5Wahlmd/AVA/XGf1smYKx3/FgB6Wc+KQBmTWcFAEfJQRiyrW1hOGJ8
+	 LdFGzBrYO5DCMYcLdzCT8qTVpQ5heeSUCSflMsGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732518AbgFRBaY (ORCPT
+        id S1733067AbgFRBi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:30:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35004 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:38:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731775AbgFRB1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:05 -0400
+        id S1732516AbgFRBaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:30:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59BEC221F1;
-        Thu, 18 Jun 2020 01:27:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53ADB20FC3;
+        Thu, 18 Jun 2020 01:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443625;
-        bh=DNU3oItBRD+t8hHUsLAxFM9xsQJ+HUY8qPQ4nN96+A0=;
+        s=default; t=1592443824;
+        bh=QmlTBGpRoe2gKzIy3R3HVQPXVAI2+PAtfsBNLXntKbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vMTLdNNo5yewFxluxxNdwteL3CsHyT+4SJPeEnY/3cVDk9eYQtcs5YPzoA00KGYC8
-         CiAhrLYd2gqfxU/dSbyGDu+MS5pD9VIMgOHOuKPEc/ooYTvDRlaU6WTGEq4AQ5vyjz
-         FLQIHQaGSNBr5wCyjWs2xn5Sgr7ono5vnXjwLi3c=
+        b=xdxXSYAzFc+Vjq3EVAEoQ4oTfiOOT0InYUTx+SRasxv852NhQGFqNyqGl9TwxW1EI
+         vinnMjckwNZIWkCmY753UMG+vMtgmNt4fOInEjOb11R8YrWAtmvweocl4Yo1GDx/hi
+         JfWpNsK1o+QYKYPAgmeMHZ89uqJHL19b4HSkO95s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 050/108] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
-Date:   Wed, 17 Jun 2020 21:25:02 -0400
-Message-Id: <20200618012600.608744-50-sashal@kernel.org>
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "J . Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 15/60] nfsd: Fix svc_xprt refcnt leak when setup callback client failed
+Date:   Wed, 17 Jun 2020 21:29:19 -0400
+Message-Id: <20200618013004.610532-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
-References: <20200618012600.608744-1-sashal@kernel.org>
+In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
+References: <20200618013004.610532-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,53 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 66ff14e59e8a30690755b08bc3042359703fb07a ]
+[ Upstream commit a4abc6b12eb1f7a533c2e7484cfa555454ff0977 ]
 
-7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
-Linux to enable ASPM, but for some undocumented reason, it didn't enable
-ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
+nfsd4_process_cb_update() invokes svc_xprt_get(), which increases the
+refcount of the "c->cn_xprt".
 
-Remove this exclusion so we can enable ASPM on these links.
+The reference counting issue happens in one exception handling path of
+nfsd4_process_cb_update(). When setup callback client failed, the
+function forgets to decrease the refcnt increased by svc_xprt_get(),
+causing a refcnt leak.
 
-The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
-PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
-Intel SoC to enter deeper Package C-states, which is a significant power
-savings.
+Fix this issue by calling svc_xprt_put() when setup callback client
+failed.
 
-[bhelgaas: commit log]
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
-Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aspm.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ fs/nfsd/nfs4callback.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 400031622b76..04d5c62588b7 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -584,16 +584,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 
- 	/* Setup initial capable state. Will be updated later */
- 	link->aspm_capable = link->aspm_support;
--	/*
--	 * If the downstream component has pci bridge function, don't
--	 * do ASPM for now.
--	 */
--	list_for_each_entry(child, &linkbus->devices, bus_list) {
--		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
--			link->aspm_disable = ASPM_STATE_ALL;
--			break;
--		}
--	}
- 
- 	/* Get and check endpoint acceptable latencies */
- 	list_for_each_entry(child, &linkbus->devices, bus_list) {
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index 4fa3f0ba9ab3..0a0b41071ed7 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1096,6 +1096,8 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
+ 	err = setup_callback_client(clp, &conn, ses);
+ 	if (err) {
+ 		nfsd4_mark_cb_down(clp, err);
++		if (c)
++			svc_xprt_put(c->cn_xprt);
+ 		return;
+ 	}
+ }
 -- 
 2.25.1
 
