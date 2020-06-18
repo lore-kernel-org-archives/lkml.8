@@ -2,166 +2,155 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C638AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCC0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6B2620720
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447977;
-	bh=ogNUmHb4ecHAb3xp0gFwbZJRDxgJbUk5Zy0HwUo3QbM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W6c5H++CVZtX7faXKelCDn2c9IopPsJDSLeqTJqSYFczvKG3Gkeefzdey1v3LE02Z
-	 Ur6jzcmeC5XDq6+6EYOmUa6EujqJy+mIX14H7Ujo8+0Gdr95shTtuOXW+UMYTicdYv
-	 IdAw3j5pTtRxaesV98aS0SeFwuYnoGhNXtRPLF9k=
+	by mail.kernel.org (Postfix) with ESMTP id 233B920720
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387727AbgFRCjf (ORCPT
+        id S1731212AbgFRCjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41966 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729032AbgFRBNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:02 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E4E5214DB;
-        Thu, 18 Jun 2020 01:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442782;
-        bh=ogNUmHb4ecHAb3xp0gFwbZJRDxgJbUk5Zy0HwUo3QbM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iomfH5F2e1MPXSIL4LniY2fzXvlFgV9CjbLYokI+7d0Zle+cUGZMnlbRSgZLYctW5
-         gUnNj+Nl1CHvljDckwDNQdZ/1jvYj9C2bTb8UcPmShXG87SGa6TMicPyCUIFXxROYD
-         7G9juesyDK2VyOvhvdphGbM6yOod/jUQQa6CTdT8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.7 227/388] iommu/arm-smmu-v3: Don't reserve implementation defined register space
-Date:   Wed, 17 Jun 2020 21:05:24 -0400
-Message-Id: <20200618010805.600873-227-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+        Wed, 17 Jun 2020 22:39:40 -0400
+Received: from mail.wingtech.com ([180.166.216.14]:54487 "EHLO
+        mail.wingtech.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726945AbgFRCjg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 22:39:36 -0400
+Received: from mx.wingtech.com ([192.168.2.43])
+        by mail.wingtech.com  with SMTP id 05I2dTn2019918-05I2dTn3019918
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:39:29 +0800
+Received: from 192.168.51.143 (HELO ZHAOWUYUN); Thu, 18 Jun 2020 10:39:26 +0800
+From:   "Zac" <zhaowuyun@wingtech.com>
+To:     "'Chao Yu'" <yuchao0@huawei.com>, <jaegeuk@kernel.org>
+Cc:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+References: <1592384659-20203-1-git-send-email-zhaowuyun@wingtech.com> <86069ba3-cba3-7bc9-c90b-e931abd0dde5@huawei.com>
+In-Reply-To: <86069ba3-cba3-7bc9-c90b-e931abd0dde5@huawei.com>
+Subject: =?gb2312?B?u9i4tDogW1BBVENIXSBmMmZzOiBmaXggYSByYWNlIGNvbmRpdGlvbg==?=
+        =?gb2312?B?IGJldHdlZW4gZjJmc193cml0ZV9lbmRfaW8gYW5kIGYyZnNfZGVsXw==?=
+        =?gb2312?B?ZnN5bmNfbm9kZV9lbnRyeQ==?=
+Date:   Thu, 18 Jun 2020 10:39:28 +0800
+Message-ID: <000001d64519$b05a1180$110e3480$@wingtech.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="gb2312"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJusS8b7G89rONhvQTSKQ9/POQtRgGSiybFp6A8L1A=
+Content-Language: zh-cn
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-[ Upstream commit 52f3fab0067d6fa9e99c1b7f63265dd48ca76046 ]
+> On 2020/6/17 17:04, zhaowuyun@wingtech.com wrote:
+> > From: Wuyun Zhao <zhaowuyun@wingtech.com>
+> >
+> > Under some condition, the __write_node_page will submit a page which is
+> not
+> > f2fs_in_warm_node_list and will not call f2fs_add_fsync_node_entry.
+> > f2fs_gc continue to run to invoke f2fs_iget -> do_read_inode to read the
+> same node page
+> > and set code node, which make f2fs_in_warm_node_list become true,
+> > that will cause f2fs_bug_on in f2fs_del_fsync_node_entry when
+> f2fs_write_end_io called.
+> Could you please add below race condition description into commit
+> message?
+> 
+> - f2fs_write_end_io
+> 					- f2fs_iget
+> 					 - do_read_inode
+> 					  - set_cold_node
+> 					  recover cold node flag
+>  - f2fs_in_warm_node_list
+>   - is_cold_node
+>   if node is cold, assume we have added
+>   node to fsync_node_list during writepages()
+>  - f2fs_del_fsync_node_entry
+>   - f2fs_bug_on() due to node page
+>   is not in fsync_node_list
 
-Some SMMUv3 implementation embed the Perf Monitor Group Registers (PMCG)
-inside the first 64kB region of the SMMU. Since PMCG are managed by a
-separate driver, this layout causes resource reservation conflicts
-during boot.
+Ok, will add the commit message.
 
-To avoid this conflict, don't reserve the MMIO regions that are
-implementation defined. Although devm_ioremap_resource() still works on
-full pages under the hood, this way we benefit from resource conflict
-checks.
+> BTW, I'm curious about why we can lose cold flag for non-dir inode?
+> any clue to reproduce this bug (I mean losing cold flag)?
 
-Fixes: 7d839b4b9e00 ("perf/smmuv3: Add arm64 smmuv3 pmu driver")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Link: https://lore.kernel.org/r/20200513110255.597203-1-jean-philippe@linaro.org
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/iommu/arm-smmu-v3.c | 35 +++++++++++++++++++++++++++++++----
- 1 file changed, 31 insertions(+), 4 deletions(-)
+it's a f2fs image with 25600MB
+flash this image to device
+the device will resize it according to the userdata partition size which is
+about 94GB
+the device mount the f2fs partition
+then hit this f2fs_bug_on
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 82508730feb7..af21d24a09e8 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -171,6 +171,8 @@
- #define ARM_SMMU_PRIQ_IRQ_CFG1		0xd8
- #define ARM_SMMU_PRIQ_IRQ_CFG2		0xdc
- 
-+#define ARM_SMMU_REG_SZ			0xe00
-+
- /* Common MSI config fields */
- #define MSI_CFG0_ADDR_MASK		GENMASK_ULL(51, 2)
- #define MSI_CFG2_SH			GENMASK(5, 4)
-@@ -628,6 +630,7 @@ struct arm_smmu_strtab_cfg {
- struct arm_smmu_device {
- 	struct device			*dev;
- 	void __iomem			*base;
-+	void __iomem			*page1;
- 
- #define ARM_SMMU_FEAT_2_LVL_STRTAB	(1 << 0)
- #define ARM_SMMU_FEAT_2_LVL_CDTAB	(1 << 1)
-@@ -733,9 +736,8 @@ static struct arm_smmu_option_prop arm_smmu_options[] = {
- static inline void __iomem *arm_smmu_page1_fixup(unsigned long offset,
- 						 struct arm_smmu_device *smmu)
- {
--	if ((offset > SZ_64K) &&
--	    (smmu->options & ARM_SMMU_OPT_PAGE0_REGS_ONLY))
--		offset -= SZ_64K;
-+	if (offset > SZ_64K)
-+		return smmu->page1 + offset - SZ_64K;
- 
- 	return smmu->base + offset;
- }
-@@ -4021,6 +4023,18 @@ err_reset_pci_ops: __maybe_unused;
- 	return err;
- }
- 
-+static void __iomem *arm_smmu_ioremap(struct device *dev, resource_size_t start,
-+				      resource_size_t size)
-+{
-+	struct resource res = {
-+		.flags = IORESOURCE_MEM,
-+		.start = start,
-+		.end = start + size - 1,
-+	};
-+
-+	return devm_ioremap_resource(dev, &res);
-+}
-+
- static int arm_smmu_device_probe(struct platform_device *pdev)
- {
- 	int irq, ret;
-@@ -4056,10 +4070,23 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
- 	}
- 	ioaddr = res->start;
- 
--	smmu->base = devm_ioremap_resource(dev, res);
-+	/*
-+	 * Don't map the IMPLEMENTATION DEFINED regions, since they may contain
-+	 * the PMCG registers which are reserved by the PMU driver.
-+	 */
-+	smmu->base = arm_smmu_ioremap(dev, ioaddr, ARM_SMMU_REG_SZ);
- 	if (IS_ERR(smmu->base))
- 		return PTR_ERR(smmu->base);
- 
-+	if (arm_smmu_resource_size(smmu) > SZ_64K) {
-+		smmu->page1 = arm_smmu_ioremap(dev, ioaddr + SZ_64K,
-+					       ARM_SMMU_REG_SZ);
-+		if (IS_ERR(smmu->page1))
-+			return PTR_ERR(smmu->page1);
-+	} else {
-+		smmu->page1 = smmu->base;
-+	}
-+
- 	/* Interrupt lines */
- 
- 	irq = platform_get_irq_byname_optional(pdev, "combined");
--- 
-2.25.1
+seems that the cold flag is not been set when mkfs
+
+I think the issue is that
+
+1. the node page in the storage is without cold bit
+2. f2fs_disable_checkpoint -> f2fs_gc -> f2fs_get_node_page, this page won't
+be set cold flag
+3. f2fs_move_node_page -> __write_node_page to write this page
+4. f2fs_gc -> f2fs_iget -> do_read_inode to read this page and set cold flag
+
+> >
+> > [   34.966133] Call trace:
+> > [   34.969902]  f2fs_del_fsync_node_entry+0x100/0x108
+> > [   34.976071]  f2fs_write_end_io+0x1e0/0x288
+> > [   34.981539]  bio_endio+0x248/0x270
+> > [   34.986289]  blk_update_request+0x2b0/0x4d8
+> > [   34.991841]  scsi_end_request+0x40/0x440
+> > [   34.997126]  scsi_io_completion+0xa4/0x748
+> > [   35.002593]  scsi_finish_command+0xdc/0x110
+> > [   35.008143]  scsi_softirq_done+0x118/0x150
+> > [   35.013610]  blk_done_softirq+0x8c/0xe8
+> > [   35.018811]  __do_softirq+0x2e8/0x578
+> > [   35.023828]  irq_exit+0xfc/0x120
+> > [   35.028398]  handle_IPI+0x1d8/0x330
+> > [   35.033233]  gic_handle_irq+0x110/0x1d4
+> > [   35.038433]  el1_irq+0xb4/0x130
+> > [   35.042917]  kmem_cache_alloc+0x3f0/0x418
+> > [   35.048288]  radix_tree_node_alloc+0x50/0xf8
+> > [   35.053933]  __radix_tree_create+0xf8/0x188
+> > [   35.059484]  __radix_tree_insert+0x3c/0x128
+> > [   35.065035]  add_gc_inode+0x90/0x118
+> > [   35.069967]  f2fs_gc+0x1b80/0x2d70
+> > [   35.074718]  f2fs_disable_checkpoint+0x94/0x1d0
+> > [   35.080621]  f2fs_fill_super+0x10c4/0x1b88
+> > [   35.086088]  mount_bdev+0x194/0x1e0
+> > [   35.090923]  f2fs_mount+0x40/0x50
+> > [   35.095589]  mount_fs+0xb4/0x190
+> > [   35.100159]  vfs_kern_mount+0x80/0x1d8
+> > [   35.105260]  do_mount+0x478/0xf18
+> > [   35.109926]  ksys_mount+0x90/0xd0
+> > [   35.114592]  __arm64_sys_mount+0x24/0x38
+> >
+> > Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
+> 
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> 
+> Thanks,
+> 
+> > ---
+> >  fs/f2fs/inode.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+> > index be6ac33..0df5c8c 100644
+> > --- a/fs/f2fs/inode.c
+> > +++ b/fs/f2fs/inode.c
+> > @@ -402,6 +402,7 @@ static int do_read_inode(struct inode *inode)
+> >
+> >  	/* try to recover cold bit for non-dir inode */
+> >  	if (!S_ISDIR(inode->i_mode) && !is_cold_node(node_page)) {
+> > +		f2fs_wait_on_page_writeback(node_page, NODE, true, true);
+> >  		set_cold_node(node_page, false);
+> >  		set_page_dirty(node_page);
+> >  	}
+> >
 
