@@ -2,95 +2,116 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8576CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5328AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61A55204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:03:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592478189;
-	bh=T0ml4vNIA9iwQ8rd38WFt5IPvevTyZHHBCYeXpr3C/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u4wpKBp+Z9dEtXCfj2RV6ey7laWitty4I0UUrTk/ePMug9fFvu8a979fvIJveUQkt
-	 SK7zNBuedLViJNvMkHOizeG24SFez0HgZOa9JXWKzYGpICSRqw3JeG8J/nwQjAMlVT
-	 GHAFRAL4JIk1pLqnHKaJndvielWJUq5jxA0ZvTHc=
+	by mail.kernel.org (Postfix) with ESMTP id 3A796204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729459AbgFRLDH (ORCPT
+        id S1729469AbgFRLDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 07:03:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727825AbgFRLDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 07:03:01 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32B95204EA;
-        Thu, 18 Jun 2020 11:03:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592478180;
-        bh=T0ml4vNIA9iwQ8rd38WFt5IPvevTyZHHBCYeXpr3C/s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K3s6a0OywmvoIatRfxXcvbLw40QFmm4mXNkB2Gf9QFuNQ/3FXjEvQcMC6NmKGN63Z
-         YhgFhpYtR3IXV5Q9/GyiiCxJlcyEXAK2azNTZcB4Dqj4Jd6DhvaMC4sIJUJDVtTb7D
-         cNJ1wolF6ibWH0wyN98IZk+zZU5WSPcxvQrrqH/c=
-Date:   Thu, 18 Jun 2020 12:02:58 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Wei Li <liwei391@huawei.com>, alsa-devel@alsa-project.org
-Subject: Re: [PATCH AUTOSEL 5.7 130/388] ASoC: Fix wrong dependency of da7210
- and wm8983
-Message-ID: <20200618110258.GD5789@sirena.org.uk>
-References: <20200618010805.600873-1-sashal@kernel.org>
- <20200618010805.600873-130-sashal@kernel.org>
+        Thu, 18 Jun 2020 07:03:36 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6283 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729389AbgFRLDd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 07:03:33 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D835E7694E38895BBA77;
+        Thu, 18 Jun 2020 19:03:29 +0800 (CST)
+Received: from use12-sp2.huawei.com (10.67.189.174) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 18 Jun 2020 19:03:23 +0800
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+To:     <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <arnd@arndb.de>, <borntraeger@de.ibm.com>,
+        <catalin.marinas@arm.com>, <christian@brauner.io>,
+        <cyphar@cyphar.com>, <dhowells@redhat.com>,
+        <ebiederm@xmission.com>, <fenghua.yu@intel.com>,
+        <geert@linux-m68k.org>, <gor@linux.ibm.com>,
+        <heiko.carstens@de.ibm.com>, <ink@jurassic.park.msu.ru>,
+        <jolsa@redhat.com>, <linux@armlinux.org.uk>, <lkp@intel.com>,
+        <mark.rutland@arm.com>, <mattst88@gmail.com>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <monstr@monstr.eu>, <namhyung@kernel.org>,
+        <nixiaoming@huawei.com>, <peterz@infradead.org>, <rth@twiddle.net>,
+        <sargun@sargun.me>, <sfr@canb.auug.org.au>, <tony.luck@intel.com>,
+        <will@kernel.org>, <akpm@linux-foundation.org>
+CC:     <alex.huangjianhui@huawei.com>, <zhongjubin@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        <clang-built-linux@googlegroups.com>, <kbuild-all@lists.01.org>,
+        <linux-mm@kvack.org>
+Subject: [PATCH] s390: fix build error for sys_call_table_emu
+Date:   Thu, 18 Jun 2020 19:03:20 +0800
+Message-ID: <20200618110320.104013-1-nixiaoming@huawei.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+KJYzRxRHjYqLGl5"
-Content-Disposition: inline
-In-Reply-To: <20200618010805.600873-130-sashal@kernel.org>
-X-Cookie: Androphobia:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.189.174]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Build error on s390:
+	arch/s390/kernel/entry.o: in function `sys_call_table_emu':
+	>> (.rodata+0x1288): undefined reference to `__s390_'
 
---+KJYzRxRHjYqLGl5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In commit ("All arch: remove system call sys_sysctl")
+ 148  common	fdatasync		sys_fdatasync			sys_fdatasync
+-149  common	_sysctl			sys_sysctl			compat_sys_sysctl
++149  common	_sysctl			sys_ni_syscall
+ 150  common	mlock			sys_mlock			sys_mlock
 
-On Wed, Jun 17, 2020 at 09:03:47PM -0400, Sasha Levin wrote:
-> From: Wei Li <liwei391@huawei.com>
->=20
-> [ Upstream commit c1c050ee74d67aeb879fd38e3a07139d7fdb79f4 ]
->=20
-> As these two drivers support I2C and SPI, we should add the SND_SOC_I2C_A=
-ND_SPI
-> dependency instead.
+After the patch is integrated, there is a format error in the generated
+arch/s390/include/generated/asm/syscall_table.h:
+	SYSCALL(sys_fdatasync, sys_fdatasync)
+	SYSCALL(sys_ni_syscall,) /* cause build error */
+	SYSCALL(sys_mlock,sys_mlock)
 
-This is purely about build testing, are you sure this is stable
-material?
+There are holes in the system call number in
+ arch/s390/kernel/syscalls/syscall.tbl. When generating syscall_table.h,
+these hole numbers will be automatically filled with "NI_SYSCALL".
+Therefore, delete the number 149 to fix the current compilation failure.
+ Similarly, modify tools/perf/arch/s390/entry/syscalls/syscall.tbl.
 
---+KJYzRxRHjYqLGl5
-Content-Type: application/pgp-signature; name="signature.asc"
+Fixes: ("All arch: remove system call sys_sysctl")
+Fixes: https://lore.kernel.org/linuxppc-dev/20200616030734.87257-1-nixiaoming@huawei.com/
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+---
+ arch/s390/kernel/syscalls/syscall.tbl           | 1 -
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl | 1 -
+ 2 files changed, 2 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+index f17aaf6fe5de..bcaf93994e3c 100644
+--- a/arch/s390/kernel/syscalls/syscall.tbl
++++ b/arch/s390/kernel/syscalls/syscall.tbl
+@@ -138,7 +138,6 @@
+ 146  common	writev			sys_writev			compat_sys_writev
+ 147  common	getsid			sys_getsid			sys_getsid
+ 148  common	fdatasync		sys_fdatasync			sys_fdatasync
+-149  common	_sysctl			sys_ni_syscall
+ 150  common	mlock			sys_mlock			sys_mlock
+ 151  common	munlock			sys_munlock			sys_munlock
+ 152  common	mlockall		sys_mlockall			sys_mlockall
+diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+index 0193f9b98753..eb77d0d01d8f 100644
+--- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+@@ -138,7 +138,6 @@
+ 146  common	writev			sys_writev			compat_sys_writev
+ 147  common	getsid			sys_getsid			sys_getsid
+ 148  common	fdatasync		sys_fdatasync			sys_fdatasync
+-149  common	_sysctl			sys_ni_syscall
+ 150  common	mlock			sys_mlock			compat_sys_mlock
+ 151  common	munlock			sys_munlock			compat_sys_munlock
+ 152  common	mlockall		sys_mlockall			sys_mlockall
+-- 
+2.27.0
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7rSeEACgkQJNaLcl1U
-h9BhCAf/ciV+cf+M61TGXRdOnfuoSVBILoCzTRjUDUZjTFenxNYOL6pn5Xv+aFeK
-RbGbTG45EDMNN9LQhtUYX3r4PAPtTux43olQHdd4D5WfW+qdOh+mewub/+Gw85X8
-82H4kZgiFEWz6w9GU7oEBv6A8aRJnh0ULOk0mNign0wzgtFozUiqpx9GQFZtk2FN
-DttJK3pNdsRcJbPLEWO//vc7NVq+1UeUbIIs7s4j/cH3NGC7NnDTVupWQ9dv6uik
-VTun8Mz+TTz+UQOGK4DmubFUqV1WhCnQ2Nd5CCEVmTvVRDiUm3GYGXxbwMsen3Ks
-Zy1VQsifFNRJrQ+PKFj3h9tf/SBcJQ==
-=mxzp
------END PGP SIGNATURE-----
-
---+KJYzRxRHjYqLGl5--
