@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA241C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C44AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACECE221F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3059C22246
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445781;
-	bh=kZs7yTu0LGA3GelZtkTTklM55dg2istBIFGH5972M80=;
+	s=default; t=1592445784;
+	bh=SYjxq2NnQ6NVLLeeOjwRvqZ6WebUD/LLJocRXJ3vrPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o9bHitrztmhs3UbJ4E2FXkkJJl3qaKGF8g+9aRN2EII+KUxlNP8vH+TV/BuuJAW3A
-	 gYjo7fC+J5UQXYJf1ccZ7eWYQR2HdSwanhwEqmPgrrtXmNRjlu99TI2IsLsBqcpC5T
-	 ygxyZu8QTNI1dif4XhIhXKTeo7+eWccAKl6RSk3Q=
+	b=VAyKBYnA6YRrzbgJhl06/QQoZRlj1zz0xWjKMS+85mvCzCsiY8jiwLZx4yFHIYKbh
+	 hWZuqtw8xbMSQ2q+7Egr2cNFpBoZvkYvFRAlfNW7e5czO94ucXBZUeSzJ3G7Vs1j0n
+	 el+cfAPVzBXk0FhzL90OgxrqtKWHAVhDOIpK8gWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732847AbgFRCDA (ORCPT
+        id S1730148AbgFRBXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:03:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57584 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:23:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727092AbgFRBXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:23:43 -0400
+        id S1727092AbgFRBUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5B3D20B1F;
-        Thu, 18 Jun 2020 01:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0A6A21941;
+        Thu, 18 Jun 2020 01:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443422;
-        bh=kZs7yTu0LGA3GelZtkTTklM55dg2istBIFGH5972M80=;
+        s=default; t=1592443212;
+        bh=SYjxq2NnQ6NVLLeeOjwRvqZ6WebUD/LLJocRXJ3vrPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tZNU7Ihi7XOrBEmQ64vVmm363PYdHKPiGFbEo1z5pfXlgPlvXIbukmlPhdbpa766X
-         /L7zwMd4kqpgmOA8HLCzGusmN7oqrRun4MZyFkrb8SivsODxh4FVjc+o7RhmCHhADJ
-         0GNMaEB3WZ85wPxZPWMG04xCPOAmFUCG7dR5yFhQ=
+        b=oUo9LUyxzZNj4TGVpTSBpR7vGMWkVHMS4n3yo8TBNW2cpXvS5nu3f4+ox0oe0DjKD
+         A5UoFeCPfBgp21i5utR1TDfMHIxfsapkM4Lg+WI9vfivaXxnRZzzxnVSFRWQQW2OCh
+         4x32oGswRexQqlWRbWvn5Cg3rvftx5xel5BkHUKM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.19 063/172] staging: gasket: Fix mapping refcnt leak when register/store fails
-Date:   Wed, 17 Jun 2020 21:20:29 -0400
-Message-Id: <20200618012218.607130-63-sashal@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 169/266] arm64: tegra: Fix ethernet phy-mode for Jetson Xavier
+Date:   Wed, 17 Jun 2020 21:14:54 -0400
+Message-Id: <20200618011631.604574-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,46 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-[ Upstream commit e3436ce60cf5f5eaedda2b8c622f69feb97595e2 ]
+[ Upstream commit bba25915b172c72f6fa635f091624d799e3c9cae ]
 
-gasket_sysfs_register_store() invokes get_mapping(), which returns a
-reference of the specified gasket_sysfs_mapping object to "mapping" with
-increased refcnt.
+The 'phy-mode' property is currently defined as 'rgmii' for Jetson
+Xavier. This indicates that the RGMII RX and TX delays are set by the
+MAC and the internal delays set by the PHY are not used.
 
-When gasket_sysfs_register_store() returns, local variable "mapping"
-becomes invalid, so the refcount should be decreased to keep refcount
-balanced.
+If the Marvell PHY driver is enabled, such that it is used and not the
+generic PHY, ethernet failures are seen (DHCP is failing to obtain an
+IP address) and this is caused because the Marvell PHY driver is
+disabling the internal RX and TX delays. For Jetson Xavier the internal
+PHY RX and TX delay should be used and so fix this by setting the
+'phy-mode' to 'rgmii-id' and not 'rgmii'.
 
-The reference counting issue happens in one exception handling path of
-gasket_sysfs_register_store(). When gasket_dev is NULL, the function
-forgets to decrease the refcnt increased by get_mapping(), causing a
-refcnt leak.
-
-Fix this issue by calling put_mapping() when gasket_dev is NULL.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Link: https://lore.kernel.org/r/1587618941-13718-1-git-send-email-xiyuyang19@fudan.edu.cn
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: f89b58ce71a9 ("arm64: tegra: Add ethernet controller on Tegra194")
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/gasket/gasket_sysfs.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/gasket/gasket_sysfs.c b/drivers/staging/gasket/gasket_sysfs.c
-index 9c982f1c0881..5986c67bc7ec 100644
---- a/drivers/staging/gasket/gasket_sysfs.c
-+++ b/drivers/staging/gasket/gasket_sysfs.c
-@@ -377,6 +377,7 @@ ssize_t gasket_sysfs_register_store(struct device *device,
- 	gasket_dev = mapping->gasket_dev;
- 	if (!gasket_dev) {
- 		dev_err(device, "Device driver may have been removed\n");
-+		put_mapping(mapping);
- 		return 0;
- 	}
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+index 02909a48dfcd..7899759a12f8 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+@@ -32,7 +32,7 @@ ethernet@2490000 {
  
+ 			phy-reset-gpios = <&gpio TEGRA194_MAIN_GPIO(G, 5) GPIO_ACTIVE_LOW>;
+ 			phy-handle = <&phy>;
+-			phy-mode = "rgmii";
++			phy-mode = "rgmii-id";
+ 
+ 			mdio {
+ 				#address-cells = <1>;
 -- 
 2.25.1
 
