@@ -3,360 +3,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DECC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A810217A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70745206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:40:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="IHzgLwAX";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="LZ7ah9CK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wHpyRT6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgFRHkC (ORCPT
+        id S1728115AbgFRHkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 03:40:02 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:24295 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728072AbgFRHkB (ORCPT
+        Thu, 18 Jun 2020 03:40:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728127AbgFRHkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 03:40:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1592466001; x=1624002001;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=9hT9kvzRTHWAb+DadF1d3pEtWKpc97dbPwSU/judq+E=;
-  b=IHzgLwAXJHSrP5wanyRV1gxvfDoFqHBdct6rAb0Bif5xqRBHJ9JPehua
-   8UFJ8Pi9KskiBHDwRTKk3qKkbnzJbl8QDqDE1OEAgZ/3+scw7NTquEhic
-   48NsGvieX1BuzcV9vdvrUcWFAmkjdzeCc00mDCXHnXlBOyQJC8MMx1pA3
-   bRq9j7Z6U8ZbMgKulGPFM2lLEoy0PiTlHkR1ZsHmylUM56nxshuVWOvvB
-   4ad2P9oQfJWzP0hSMQpAwvy0vpuoXuLkuq/Hb//l2tB7ezMz39zIc71AQ
-   D8U+wiNaCNBTmyGTxOUWUHx+O6jv6Q8bEOHeYwFK+yYLnObopZVbCjRuf
-   A==;
-IronPort-SDR: bcPhnksmsCi51yECEl7BMEM4q6VRW3SDDa62ADnJxkkZjNpIotPK6WsSC78iPjox2yqVcHddwd
- CHB/XJ2LDbpGyCYxdvbVskQobPSm4rlxwxcmBAz321VHTpL51GtCYAVHmvadx+kDCIwwBjC2GS
- 7iqrHGD0UYO2+9ZTKoJAjybO7URLWCyu6Hkp05kkoD4fftmWH+bV+Z1QtDJfOVEoLlrSrH9d5x
- qhlYww+INXV/cv3wmOYl+VAK0pBqCM+olKGYVT+p8NGLfCViDm2/nZNFrWOVGWNd3WTiam4xAP
- nFE=
-X-IronPort-AV: E=Sophos;i="5.73,525,1583164800"; 
-   d="scan'208";a="144618477"
-Received: from mail-mw2nam10lp2107.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.107])
-  by ob1.hgst.iphmx.com with ESMTP; 18 Jun 2020 15:40:00 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HfjCGnu1ehry2bVvRT5OS3uiiQHwG5KQkQj92pPGUOJltBn3Su3axpql5zGyI0+j4go1oxj3hvSFoVnwGewmT827fo638pze482SAQX413+eurFX6s6a40/1lNBPOL/tBq1I6XW9xE2qKziAfAi0Bm9+63I39+s9Irk2vmKDYYvdAFNdr63PVHItH0EWV0yi+rOjTDgOnPxDgEglS2WmAC3+A6OavT+5RfEiQSlW/+jBC6IJN8XiIQi4LXTfPz2ZNYecrp7EDUbUwkO6i9jX7RMA8JT0jm8lcceAXzblHSzZj0UT9e6CZ7exNqUWI1Ai84MyvCaAUAnQPEVoa55YjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qh3N+20nitalPhxv2W5Nr3gOnvCJOZUOpb//TMnNzaA=;
- b=drrBiePIhagcE1ZR76V2G6G97+pbD6IWMQrzgsjVxQ6HP/5tUN+oUyn7mHIuygrgbadVsdid69BHKfNbP4v1Y3W1/Ku7jmlWf12vbhlaJkUMsezf8LMX9vGLpPRq6CjYNMfUzMcYnyFJ7LeAhGJB0wuOrO8GDmphigEy+8iFxXqf+Ax9krslUvdQWATTc7boheyc7kSTK3qzLUBxBngae0k7dAAFJlCk2tf1dmeZB3UbVc5yQhCC+I8cjXGMPxAG1r6oaUAYZ//p96f6GIua2rtYDU4RwbS0NptW9ly6jUQn0l8tEbJNsUrA1uRTiuR2R+9FLi+Zvp+1EL19IrZcBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Thu, 18 Jun 2020 03:40:02 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B689C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 00:40:02 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l10so4907366wrr.10
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 00:40:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qh3N+20nitalPhxv2W5Nr3gOnvCJOZUOpb//TMnNzaA=;
- b=LZ7ah9CKKl9eo9bxatpBmqtXuIuYL4N29mgHRHdrSxUPhpcaGVKEDs6gFRoseK1bGw5l4DLKBjskIRxDs194NILsai10lq8Yb8lbVbvWmxUJ2aOLIPwUffU0uU9iDGWULz+QPiVwYYR42pIC114zKLD2BW1ZNiLa118twRk1ydY=
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
- by CY4PR0401MB3586.namprd04.prod.outlook.com (2603:10b6:910:8e::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21; Thu, 18 Jun
- 2020 07:39:58 +0000
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::c593:f271:eebe:ac7]) by CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::c593:f271:eebe:ac7%9]) with mapi id 15.20.3088.028; Thu, 18 Jun 2020
- 07:39:58 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Kanchan Joshi <joshi.k@samsung.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "bcrl@kvack.org" <bcrl@kvack.org>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
-        "nj.shetty@samsung.com" <nj.shetty@samsung.com>,
-        "javier.gonz@samsung.com" <javier.gonz@samsung.com>
-Subject: Re: [PATCH 3/3] io_uring: add support for zone-append
-Thread-Topic: [PATCH 3/3] io_uring: add support for zone-append
-Thread-Index: AQHWRMyUe8chR0VkUU2K4ON9AWdJKQ==
-Date:   Thu, 18 Jun 2020 07:39:58 +0000
-Message-ID: <CY4PR04MB37510E916B6F243D189B4EB0E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
-References: <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
- <CGME20200617172713epcas5p352f2907a12bd4ee3c97be1c7d8e1569e@epcas5p3.samsung.com>
- <1592414619-5646-4-git-send-email-joshi.k@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: samsung.com; dkim=none (message not signed)
- header.d=none;samsung.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [199.255.47.7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f65a2c01-f6e3-4afb-792a-08d8135acd68
-x-ms-traffictypediagnostic: CY4PR0401MB3586:
-x-microsoft-antispam-prvs: <CY4PR0401MB3586A3C1048FA8395FD758A3E79B0@CY4PR0401MB3586.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1122;
-x-forefront-prvs: 0438F90F17
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0wuH81qlgwpD5YgjZiZWLwhsss0xCH5ERI8i2aIdPSNeyOGLn2BeDqD+AvmJGJkZo8Hv0NcaXk8kxLlcOou77iBcbiO+OxFprux3mCiRIF5cwV+BH0jirvMjCrwkBEIUsDRgERwVwn3R87yoNiZtMzAiazGRci7mkMA1//lbu/ByLEIpj0Re6ltygNoRWRDN0ukl7I+pvIOzFgdRuwXHHf+MoFSJRD3ceAI26Ysk25e1XW8jbHIUKLxwabtmMtIhFmRhNbSfLWNxzpbkPzX0FRFxoikHiyFXgMdElpm+u96M4+/Yk8xdOAbACr9AiGAfekNF9rEQSP7OVsh7R1f8OQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(346002)(39860400002)(136003)(376002)(64756008)(66476007)(91956017)(76116006)(5660300002)(66946007)(66446008)(4326008)(71200400001)(55016002)(6506007)(53546011)(66556008)(9686003)(7696005)(33656002)(2906002)(83380400001)(86362001)(186003)(26005)(52536014)(8676002)(7416002)(316002)(54906003)(110136005)(8936002)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: iGNsRGefjuUGsYjbajN6xNNAU7bAFArakeW20ZdGpAylwOhPAeiYZW/305HlOl5GEja21vCfvFeYF30Yc+lBqmnIIOztB7WPOmMoPhH6cAN/CYpM7GlDxVNrfmGtBTaLRLXFt5lefAHW7CF5QalUw377igOB9h+LXAM4oBPBLN3iJU/yN87NoOWw17Qa95apkRbEi+Um2rtvwljelZsNYnLaMVYPIlg9Tj4bTFM1IUbLIn4z+mrEbh5uAHyAiv5ttxug3zGHSAmd3wOMED4XEPxRBim3ec47EW4vul5gydQPbA1WHYY7asVPr+lDOEcG0P6suCkqapMMSQJQdcFn1kDV+ueTRpeHyxBfd9Cy7muggNQi5JDHY+YhmzyxotjbjrhiDnkNDaR+qTxLeJsa7FTmvJl/hGcht/umx+CfWuxPGY7ecTr1nXoQc1jSE+Mc9jvJYZTRpl9eH/XL8HLAe0a1TjHV/gNmfEY2dfTdUIM=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=s/8DkSI65X40wSJ2wJgW7rhkfE2WrLXMAQ1mczpC6zc=;
+        b=wHpyRT6g48UW/2VXK4Vlqpp8IdBVoxvfm7hbnHoGqXqCjcWMt6OjnjC0rOX3gwVWts
+         CLtUGBGE6vad+ibfxaicPD/sIMOJD68RzNyGnf+1r0JdWkXwXI9ont46uDWDYJAwEceO
+         wlqNwz4FlUo1BipYuyqxlumxcHgPp/x2UVL9Rei+ttRe410xPlxd42rDurT/o7l/PtWi
+         78hcrsBrTwGr8bON5Uu9RG8gAJXxac8Nasy8ACpAXSOobGFMWW+EqW42O3T0ctfYgGuK
+         bOsPXyue9KhNA9HLKghAG1/VXSbLRz0MOxZPd0AllO8Veeup7EVzoYbJ9pJAC4q+mbN5
+         ubaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=s/8DkSI65X40wSJ2wJgW7rhkfE2WrLXMAQ1mczpC6zc=;
+        b=KLW5N4/2axx7cIK1Yzjm47QH8QTCYxNypNq9saDm8acGo91RbuXmSjh2FVe7Q1jTA+
+         gdwSWgim9m9FJJy2RnUd40pZeVA89SBRJ83bwpcNNuDurINDOnEynja+eo+hnMQ0P1Le
+         gC8x4kLRRejs01wEk0xDo5T7+vESNVbAvh1Ag5pFRQLYyGBpBR/Ox9IXmVoxqPlbKmrQ
+         m7xhG2vFcn/43A1MoMlHVjz7kjzd7ja/eh1ZGkiuwS35yRwhYd2WN7JUQbX3Avv9Up9Q
+         YmeAZELwU09QKCi0WGCMbNrJAlLAgkhQ6Juaku4dPGr5IH2xksWI1OLYvsuOP6gY8vdq
+         j4OQ==
+X-Gm-Message-State: AOAM532eQi+RKG+u4IZPPnxZ+T7mbjVTKVlD/FPNCFzrQymBFY3bRUka
+        /BvSI2RhUePBIsXK1BVqBMbLvQ==
+X-Google-Smtp-Source: ABdhPJxwjDquDAcT4g/jpcs1pS9o3jDdghMMVIQd0ngpDgfkG3HO7xafJGF9xrjnE6lQmQDojILE2g==
+X-Received: by 2002:adf:f083:: with SMTP id n3mr446448wro.297.1592466001358;
+        Thu, 18 Jun 2020 00:40:01 -0700 (PDT)
+Received: from dell ([95.149.164.118])
+        by smtp.gmail.com with ESMTPSA id w13sm2368365wrr.67.2020.06.18.00.40.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 00:40:00 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 08:39:59 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Robert Jones <rjones@gateworks.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: mfd: gateworks-gsc: add 16bit
+ pre-scaled voltage mode
+Message-ID: <20200618073959.GX2608702@dell>
+References: <1591714640-10332-1-git-send-email-tharvey@gateworks.com>
+ <1591714640-10332-2-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f65a2c01-f6e3-4afb-792a-08d8135acd68
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 07:39:58.5536
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Xu+c02sjtkU4uNRAUzrDGz4amiK/SWUQT2WqRy/iT0My/ThA9LxU38rnOa5spqA44VLf5sQLeqP1Tx5wHrrocA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR0401MB3586
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1591714640-10332-2-git-send-email-tharvey@gateworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/18 2:27, Kanchan Joshi wrote:=0A=
-> From: Selvakumar S <selvakuma.s1@samsung.com>=0A=
-> =0A=
-> Introduce three new opcodes for zone-append -=0A=
-> =0A=
->    IORING_OP_ZONE_APPEND     : non-vectord, similiar to IORING_OP_WRITE=
-=0A=
->    IORING_OP_ZONE_APPENDV    : vectored, similar to IORING_OP_WRITEV=0A=
->    IORING_OP_ZONE_APPEND_FIXED : append using fixed-buffers=0A=
-> =0A=
-> Repurpose cqe->flags to return zone-relative offset.=0A=
-> =0A=
-> Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>=0A=
-> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>=0A=
-> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>=0A=
-> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>=0A=
-> ---=0A=
->  fs/io_uring.c                 | 72 +++++++++++++++++++++++++++++++++++++=
-++++--=0A=
->  include/uapi/linux/io_uring.h |  8 ++++-=0A=
->  2 files changed, 77 insertions(+), 3 deletions(-)=0A=
-> =0A=
-> diff --git a/fs/io_uring.c b/fs/io_uring.c=0A=
-> index 155f3d8..c14c873 100644=0A=
-> --- a/fs/io_uring.c=0A=
-> +++ b/fs/io_uring.c=0A=
-> @@ -649,6 +649,10 @@ struct io_kiocb {=0A=
->  	unsigned long		fsize;=0A=
->  	u64			user_data;=0A=
->  	u32			result;=0A=
-> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
-> +	/* zone-relative offset for append, in bytes */=0A=
-> +	u32			append_offset;=0A=
-=0A=
-this can overflow. u64 is needed.=0A=
-=0A=
-> +#endif=0A=
->  	u32			sequence;=0A=
->  =0A=
->  	struct list_head	link_list;=0A=
-> @@ -875,6 +879,26 @@ static const struct io_op_def io_op_defs[] =3D {=0A=
->  		.hash_reg_file		=3D 1,=0A=
->  		.unbound_nonreg_file	=3D 1,=0A=
->  	},=0A=
-> +	[IORING_OP_ZONE_APPEND] =3D {=0A=
-> +		.needs_mm               =3D 1,=0A=
-> +		.needs_file             =3D 1,=0A=
-> +		.unbound_nonreg_file    =3D 1,=0A=
-> +		.pollout		=3D 1,=0A=
-> +	},=0A=
-> +	[IORING_OP_ZONE_APPENDV] =3D {=0A=
-> +	       .async_ctx              =3D 1,=0A=
-> +	       .needs_mm               =3D 1,=0A=
-> +	       .needs_file             =3D 1,=0A=
-> +	       .hash_reg_file          =3D 1,=0A=
-> +	       .unbound_nonreg_file    =3D 1,=0A=
-> +	       .pollout			=3D 1,=0A=
-> +	},=0A=
-> +	[IORING_OP_ZONE_APPEND_FIXED] =3D {=0A=
-> +	       .needs_file             =3D 1,=0A=
-> +	       .hash_reg_file          =3D 1,=0A=
-> +	       .unbound_nonreg_file    =3D 1,=0A=
-> +	       .pollout			=3D 1,=0A=
-> +	},=0A=
->  };=0A=
->  =0A=
->  static void io_wq_submit_work(struct io_wq_work **workptr);=0A=
-> @@ -1285,7 +1309,16 @@ static void __io_cqring_fill_event(struct io_kiocb=
- *req, long res, long cflags)=0A=
->  	if (likely(cqe)) {=0A=
->  		WRITE_ONCE(cqe->user_data, req->user_data);=0A=
->  		WRITE_ONCE(cqe->res, res);=0A=
-> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
-> +		if (req->opcode =3D=3D IORING_OP_ZONE_APPEND ||=0A=
-> +				req->opcode =3D=3D IORING_OP_ZONE_APPENDV ||=0A=
-> +				req->opcode =3D=3D IORING_OP_ZONE_APPEND_FIXED)=0A=
-> +			WRITE_ONCE(cqe->res2, req->append_offset);=0A=
-> +		else=0A=
-> +			WRITE_ONCE(cqe->flags, cflags);=0A=
-> +#else=0A=
->  		WRITE_ONCE(cqe->flags, cflags);=0A=
-> +#endif=0A=
->  	} else if (ctx->cq_overflow_flushed) {=0A=
->  		WRITE_ONCE(ctx->rings->cq_overflow,=0A=
->  				atomic_inc_return(&ctx->cached_cq_overflow));=0A=
-> @@ -1961,6 +1994,9 @@ static void io_complete_rw_common(struct kiocb *kio=
-cb, long res)=0A=
->  static void io_complete_rw(struct kiocb *kiocb, long res, long res2)=0A=
->  {=0A=
->  	struct io_kiocb *req =3D container_of(kiocb, struct io_kiocb, rw.kiocb)=
-;=0A=
-> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
-> +	req->append_offset =3D (u32)res2;=0A=
-> +#endif=0A=
->  =0A=
->  	io_complete_rw_common(kiocb, res);=0A=
->  	io_put_req(req);=0A=
-> @@ -1976,6 +2012,9 @@ static void io_complete_rw_iopoll(struct kiocb *kio=
-cb, long res, long res2)=0A=
->  	if (res !=3D req->result)=0A=
->  		req_set_fail_links(req);=0A=
->  	req->result =3D res;=0A=
-> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
-> +	req->append_offset =3D (u32)res2;=0A=
-> +#endif=0A=
->  	if (res !=3D -EAGAIN)=0A=
->  		WRITE_ONCE(req->iopoll_completed, 1);=0A=
->  }=0A=
-> @@ -2408,7 +2447,8 @@ static ssize_t io_import_iovec(int rw, struct io_ki=
-ocb *req,=0A=
->  	u8 opcode;=0A=
->  =0A=
->  	opcode =3D req->opcode;=0A=
-> -	if (opcode =3D=3D IORING_OP_READ_FIXED || opcode =3D=3D IORING_OP_WRITE=
-_FIXED) {=0A=
-> +	if (opcode =3D=3D IORING_OP_READ_FIXED || opcode =3D=3D IORING_OP_WRITE=
-_FIXED ||=0A=
-> +			opcode =3D=3D IORING_OP_ZONE_APPEND_FIXED) {=0A=
->  		*iovec =3D NULL;=0A=
->  		return io_import_fixed(req, rw, iter);=0A=
->  	}=0A=
-> @@ -2417,7 +2457,8 @@ static ssize_t io_import_iovec(int rw, struct io_ki=
-ocb *req,=0A=
->  	if (req->buf_index && !(req->flags & REQ_F_BUFFER_SELECT))=0A=
->  		return -EINVAL;=0A=
->  =0A=
-> -	if (opcode =3D=3D IORING_OP_READ || opcode =3D=3D IORING_OP_WRITE) {=0A=
-> +	if (opcode =3D=3D IORING_OP_READ || opcode =3D=3D IORING_OP_WRITE ||=0A=
-> +			opcode =3D=3D IORING_OP_ZONE_APPEND) {=0A=
->  		if (req->flags & REQ_F_BUFFER_SELECT) {=0A=
->  			buf =3D io_rw_buffer_select(req, &sqe_len, needs_lock);=0A=
->  			if (IS_ERR(buf)) {=0A=
-> @@ -2704,6 +2745,9 @@ static int io_write(struct io_kiocb *req, bool forc=
-e_nonblock)=0A=
->  		req->rw.kiocb.ki_flags &=3D ~IOCB_NOWAIT;=0A=
->  =0A=
->  	req->result =3D 0;=0A=
-> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
-> +	req->append_offset =3D 0;=0A=
-> +#endif=0A=
->  	io_size =3D ret;=0A=
->  	if (req->flags & REQ_F_LINK_HEAD)=0A=
->  		req->result =3D io_size;=0A=
-> @@ -2738,6 +2782,13 @@ static int io_write(struct io_kiocb *req, bool for=
-ce_nonblock)=0A=
->  			__sb_writers_release(file_inode(req->file)->i_sb,=0A=
->  						SB_FREEZE_WRITE);=0A=
->  		}=0A=
-> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
-> +		if (req->opcode =3D=3D IORING_OP_ZONE_APPEND ||=0A=
-> +				req->opcode =3D=3D IORING_OP_ZONE_APPENDV ||=0A=
-> +				req->opcode =3D=3D IORING_OP_ZONE_APPEND_FIXED)=0A=
-> +			kiocb->ki_flags |=3D IOCB_ZONE_APPEND;=0A=
-> +#endif=0A=
-> +=0A=
->  		kiocb->ki_flags |=3D IOCB_WRITE;=0A=
->  =0A=
->  		if (!force_nonblock)=0A=
-> @@ -4906,6 +4957,12 @@ static int io_req_defer_prep(struct io_kiocb *req,=
-=0A=
->  	case IORING_OP_WRITEV:=0A=
->  	case IORING_OP_WRITE_FIXED:=0A=
->  	case IORING_OP_WRITE:=0A=
-> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
-> +	fallthrough;=0A=
-> +	case IORING_OP_ZONE_APPEND:=0A=
-> +	case IORING_OP_ZONE_APPENDV:=0A=
-> +	case IORING_OP_ZONE_APPEND_FIXED:=0A=
-> +#endif=0A=
->  		ret =3D io_write_prep(req, sqe, true);=0A=
->  		break;=0A=
->  	case IORING_OP_POLL_ADD:=0A=
-> @@ -5038,6 +5095,12 @@ static void io_cleanup_req(struct io_kiocb *req)=
-=0A=
->  	case IORING_OP_WRITEV:=0A=
->  	case IORING_OP_WRITE_FIXED:=0A=
->  	case IORING_OP_WRITE:=0A=
-> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
-> +	fallthrough;=0A=
-> +	case IORING_OP_ZONE_APPEND:=0A=
-> +	case IORING_OP_ZONE_APPENDV:=0A=
-> +	case IORING_OP_ZONE_APPEND_FIXED:=0A=
-> +#endif=0A=
->  		if (io->rw.iov !=3D io->rw.fast_iov)=0A=
->  			kfree(io->rw.iov);=0A=
->  		break;=0A=
-> @@ -5086,6 +5149,11 @@ static int io_issue_sqe(struct io_kiocb *req, cons=
-t struct io_uring_sqe *sqe,=0A=
->  		}=0A=
->  		ret =3D io_read(req, force_nonblock);=0A=
->  		break;=0A=
-> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
-> +	case IORING_OP_ZONE_APPEND:=0A=
-> +	case IORING_OP_ZONE_APPENDV:=0A=
-> +	case IORING_OP_ZONE_APPEND_FIXED:=0A=
-> +#endif=0A=
->  	case IORING_OP_WRITEV:=0A=
->  	case IORING_OP_WRITE_FIXED:=0A=
->  	case IORING_OP_WRITE:=0A=
-> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.=
-h=0A=
-> index 92c2269..6c8e932 100644=0A=
-> --- a/include/uapi/linux/io_uring.h=0A=
-> +++ b/include/uapi/linux/io_uring.h=0A=
-> @@ -130,6 +130,9 @@ enum {=0A=
->  	IORING_OP_PROVIDE_BUFFERS,=0A=
->  	IORING_OP_REMOVE_BUFFERS,=0A=
->  	IORING_OP_TEE,=0A=
-> +	IORING_OP_ZONE_APPEND,=0A=
-> +	IORING_OP_ZONE_APPENDV,=0A=
-> +	IORING_OP_ZONE_APPEND_FIXED,=0A=
->  =0A=
->  	/* this goes last, obviously */=0A=
->  	IORING_OP_LAST,=0A=
-> @@ -157,7 +160,10 @@ enum {=0A=
->  struct io_uring_cqe {=0A=
->  	__u64	user_data;	/* sqe->data submission passed back */=0A=
->  	__s32	res;		/* result code for this event */=0A=
-> -	__u32	flags;=0A=
-> +	union {=0A=
-> +		__u32	res2; /* res2 like aio, currently used for zone-append */=0A=
-> +		__u32	flags;=0A=
-> +	};=0A=
->  };=0A=
->  =0A=
->  /*=0A=
-> =0A=
-=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+On Tue, 09 Jun 2020, Tim Harvey wrote:
+
+> add a 16-bit pre-scaled voltage mode to adc and clarify that existing
+> pre-scaled mode is 24bit.
+> 
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+
+Fixed the grammar in the subject and commit message.
+
+Patch applied, thanks.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> index 487a844..ceec33f 100644
+> --- a/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> @@ -79,11 +79,12 @@ properties:
+>              description: |
+>                conversion mode:
+>                  0 - temperature, in C*10
+> -                1 - pre-scaled voltage value
+> +                1 - pre-scaled 24-bit voltage value
+>                  2 - scaled voltage based on an optional resistor divider
+>                      and optional offset
+> +                3 - pre-scaled 16-bit voltage value
+>              $ref: /schemas/types.yaml#/definitions/uint32
+> -            enum: [0, 1, 2]
+> +            enum: [0, 1, 2, 3]
+>  
+>            gw,voltage-divider-ohms:
+>              description: Values of resistors for divider on raw ADC input
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
