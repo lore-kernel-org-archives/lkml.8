@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60139C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6026A20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FCE21974
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443463;
-	bh=+nMDf1VhqDzS4D9z3QCYu5iR4JILmVW8vlqkU9jRIf0=;
+	s=default; t=1592443467;
+	bh=PN7vZoxSs59VEpACrp8hT5rx0yazfNPxZPl7VMzESdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dxtvvFCj2TsibU4Z6nwnzvV/Uj9uF+zEWTUcNMhpyZXGmGB3su+23x/v1UBmbQyez
-	 iHxqAEKldhZqOO0DrG0UhoJchpi25UA3q2TFOcTEH1XUirCAgwJ8raGqVzj2kFUat2
-	 6N6MUyo0oLc42Pml4+T3jwzaRk2gm2CNuCNn5too=
+	b=ze3MEgu4qO1dtlcbyO+dV4FX6n6CBbFk001+x1nJmKq7U/kVT90ysszAqgboeJDfi
+	 O3BY1CRjR0v0+hYI4qzWxLakcwLHJcBgblClbsM+xVcRfo6uYdM+Yw1ZJZhHncCdvm
+	 0M0A1l6X/GkVFByZkxWtGEz88RNtMhTQtyeTDVAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730687AbgFRBYV (ORCPT
+        id S1731183AbgFRBYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:24:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53224 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:24:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730396AbgFRBUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:54 -0400
+        id S1730418AbgFRBU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CE2C21974;
-        Thu, 18 Jun 2020 01:20:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4B6020776;
+        Thu, 18 Jun 2020 01:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443254;
-        bh=+nMDf1VhqDzS4D9z3QCYu5iR4JILmVW8vlqkU9jRIf0=;
+        s=default; t=1592443256;
+        bh=PN7vZoxSs59VEpACrp8hT5rx0yazfNPxZPl7VMzESdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WNpljOz7eq9KinLyWNSz3T2Vzg55hDycjhexTDJzNSpPHi/vGa/sXl0lNBmEuyDV2
-         1Z6fvaM9aK77KQatiYTjSl/7qgqiUxshEN94hZecM3bUpqpNvuj5YATBcEVk83ZIOp
-         rU6m9jfCSkXtpJcH1LJ+/x5FC/fvVWb18DzHrcdQ=
+        b=WQ42ibHk8eyBsCSxF0JRyUTk7mDn99la3vi+p0BcBHV5Vo3vUGNt10wVVA7Fd32B1
+         f6lz/Ikfp2MjnyuU9c2895AIbAcKZ+299HTy6cEifkgysxNOtLkfns9h7RFUuX0kAD
+         jPFdsEoHr2B4fxpAMXAz5JK2Uk0Ce6on8cHWFUKk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 202/266] NFSv4.1 fix rpc_call_done assignment for BIND_CONN_TO_SESSION
-Date:   Wed, 17 Jun 2020 21:15:27 -0400
-Message-Id: <20200618011631.604574-202-sashal@kernel.org>
+Cc:     Kevin Buettner <kevinb@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 204/266] PCI: Avoid FLR for AMD Starship USB 3.0
+Date:   Wed, 17 Jun 2020 21:15:29 -0400
+Message-Id: <20200618011631.604574-204-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,31 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+From: Kevin Buettner <kevinb@redhat.com>
 
-[ Upstream commit 1c709b766e73e54d64b1dde1b7cfbcf25bcb15b9 ]
+[ Upstream commit 5727043c73fdfe04597971b5f3f4850d879c1f4f ]
 
-Fixes: 02a95dee8cf0 ("NFS add callback_ops to nfs4_proc_bind_conn_to_session_callback")
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+The AMD Starship USB 3.0 host controller advertises Function Level Reset
+support, but it apparently doesn't work.  Add a quirk to prevent use of FLR
+on this device.
+
+Without this quirk, when attempting to assign (pass through) an AMD
+Starship USB 3.0 host controller to a guest OS, the system becomes
+increasingly unresponsive over the course of several minutes, eventually
+requiring a hard reset.  Shortly after attempting to start the guest, I see
+these messages:
+
+  vfio-pci 0000:05:00.3: not ready 1023ms after FLR; waiting
+  vfio-pci 0000:05:00.3: not ready 2047ms after FLR; waiting
+  vfio-pci 0000:05:00.3: not ready 4095ms after FLR; waiting
+  vfio-pci 0000:05:00.3: not ready 8191ms after FLR; waiting
+
+And then eventually:
+
+  vfio-pci 0000:05:00.3: not ready 65535ms after FLR; giving up
+  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 0.000 msecs
+  perf: interrupt took too long (642744 > 2500), lowering kernel.perf_event_max_sample_rate to 1000
+  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 82.270 msecs
+  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 680.608 msecs
+  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 100.952 msecs
+  ...
+  watchdog: BUG: soft lockup - CPU#3 stuck for 22s! [qemu-system-x86:7487]
+
+Tested on a Micro-Star International Co., Ltd. MS-7C59/Creator TRX40
+motherboard with an AMD Ryzen Threadripper 3970X.
+
+Link: https://lore.kernel.org/r/20200524003529.598434ff@f31-4.lan
+Signed-off-by: Kevin Buettner <kevinb@redhat.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index e257653f25ab..33c17c69aeaa 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -7870,7 +7870,7 @@ nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 3f89ba7fe7fb..de999f636a5f 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5134,6 +5134,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
+  * FLR may cause the following to devices to hang:
+  *
+  * AMD Starship/Matisse HD Audio Controller 0x1487
++ * AMD Starship USB 3.0 Host Controller 0x148c
+  * AMD Matisse USB 3.0 Host Controller 0x149c
+  * Intel 82579LM Gigabit Ethernet Controller 0x1502
+  * Intel 82579V Gigabit Ethernet Controller 0x1503
+@@ -5144,6 +5145,7 @@ static void quirk_no_flr(struct pci_dev *dev)
+ 	dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
  }
- 
- static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
--	.rpc_call_done =  &nfs4_bind_one_conn_to_session_done,
-+	.rpc_call_done =  nfs4_bind_one_conn_to_session_done,
- };
- 
- /*
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x148c, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
 -- 
 2.25.1
 
