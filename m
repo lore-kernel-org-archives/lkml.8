@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B8FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE30BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73DA420853
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFAE820853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446358;
-	bh=FgPG6cCgUeE3avIJ+Y2VCR4P+1TbrZ2c2zsyKos1QuI=;
+	s=default; t=1592446364;
+	bh=kdkzSxgfFIfHUHViOxjBrNTMU3GKF3qfRz+hQ5K0UQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vvjeGKN+K5zLJT/PqNVuX7wQ1OayTITRqidujjLXu+1DC5KmdEgxzIGR8zOVzefvL
-	 mO/63/b+mylBS77IZuv4GoRFEEHQ8ODgMrlxAvKlPCG07tA1E0e9jJ7P96X6bktsXC
-	 lJEoRTsTyrEDwbRy3mRqvvV/1/G2WUDG646TnDH4=
+	b=LVRYRdJRqH8TfLbzKiOkflyheRFA1KArton4A9UrYBBK7hfu0fQgYRGxEjMSB4ctQ
+	 YLqYV8uZOHaWhnspVwLVYQRwtmgagCEHtmPNWkmkis8YiP9ZCqHeLf53rmu33QHmGQ
+	 vCu4l09Jwd0hXfdWIsy4CTqBTw90uZUta82s/qNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733122AbgFRCMg (ORCPT
+        id S1730106AbgFRBVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:12:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53754 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:21:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729842AbgFRBVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:19 -0400
+        id S1729842AbgFRBR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F3BC20776;
-        Thu, 18 Jun 2020 01:21:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3618C221F2;
+        Thu, 18 Jun 2020 01:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443279;
-        bh=FgPG6cCgUeE3avIJ+Y2VCR4P+1TbrZ2c2zsyKos1QuI=;
+        s=default; t=1592443075;
+        bh=kdkzSxgfFIfHUHViOxjBrNTMU3GKF3qfRz+hQ5K0UQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iwWtcj8xuw0FvPLBU+lMr11n85fLxTw1c/hjlPOF1YjLkColr6cEtQGshqzF6qNFF
-         EsMH8OFcI18dPgVTdrmLU4J13ZRVSjiKnNCyD7Zl95VYJ7/Qeskw6QjLf0tCGQdUK9
-         u7oQ+fD2XWWRdwFCbVbE2GGt7IDV6tNLvZynx1ss=
+        b=i35k76F0Nx51VzFRgHxfbLtdipqlSXUcKxhA5uKxeIG6IiXLMvvBhbwTL+dmHf2uZ
+         IEgiUwlahhN+d2pt1WWvOKeJDq4QzhaTVJVoJwxDQC7KzRrX+IFVocFH/8wDqG6h8+
+         XspPrFDv0qX6+wsa40h9O6kt/sHuYbFxIA+rZAfQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 223/266] pinctrl: freescale: imx: Fix an error handling path in 'imx_pinctrl_probe()'
-Date:   Wed, 17 Jun 2020 21:15:48 -0400
-Message-Id: <20200618011631.604574-223-sashal@kernel.org>
+Cc:     Kajol Jain <kjain@linux.ibm.com>,
+        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 062/266] powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple hv-24x7 events run
+Date:   Wed, 17 Jun 2020 21:13:07 -0400
+Message-Id: <20200618011631.604574-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -61,73 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Kajol Jain <kjain@linux.ibm.com>
 
-[ Upstream commit 11d8da5cabf7c6c3263ba2cd9c00260395867048 ]
+[ Upstream commit b4ac18eead28611ff470d0f47a35c4e0ac080d9c ]
 
-'pinctrl_unregister()' should not be called to undo
-'devm_pinctrl_register_and_init()', it is already handled by the framework.
+Commit 2b206ee6b0df ("powerpc/perf/hv-24x7: Display change in counter
+values")' added to print _change_ in the counter value rather then raw
+value for 24x7 counters. Incase of transactions, the event count
+is set to 0 at the beginning of the transaction. It also sets
+the event's prev_count to the raw value at the time of initialization.
+Because of setting event count to 0, we are seeing some weird behaviour,
+whenever we run multiple 24x7 events at a time.
 
-This simplifies the error handling paths of the probe function.
-The 'imx_free_resources()' can be removed as well.
+For example:
 
-Fixes: a51c158bf0f7 ("pinctrl: imx: use radix trees for groups and functions")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Link: https://lore.kernel.org/r/20200530204955.588962-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
+			   hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
+	  		   -C 0 -I 1000 sleep 100
+
+     1.000121704                120 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     1.000121704                  5 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     2.000357733                  8 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     2.000357733                 10 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     4.000641884                 56 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     4.000641884 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     5.000791887 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+
+Getting these large values in case we do -I.
+
+As we are setting event_count to 0, for interval case, overall event_count is not
+coming in incremental order. As we may can get new delta lesser then previous count.
+Because of which when we print intervals, we are getting negative value which create
+these large values.
+
+This patch removes part where we set event_count to 0 in function
+'h_24x7_event_read'. There won't be much impact as we do set event->hw.prev_count
+to the raw value at the time of initialization to print change value.
+
+With this patch
+In power9 platform
+
+command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
+		           hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
+			   -C 0 -I 1000 sleep 100
+
+     1.000117685                 93 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     1.000117685                  1 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     2.000349331                 98 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     2.000349331                  2 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     3.000495900                131 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     3.000495900                  4 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     4.000645920                204 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     4.000645920                 61 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     4.284169997                 22 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+
+Suggested-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Tested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200525104308.9814-2-kjain@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ arch/powerpc/perf/hv-24x7.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index 9f42036c5fbb..1f81569c7ae3 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -774,16 +774,6 @@ static int imx_pinctrl_probe_dt(struct platform_device *pdev,
- 	return 0;
- }
+diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
+index 573e0b309c0c..48e8f4b17b91 100644
+--- a/arch/powerpc/perf/hv-24x7.c
++++ b/arch/powerpc/perf/hv-24x7.c
+@@ -1400,16 +1400,6 @@ static void h_24x7_event_read(struct perf_event *event)
+ 			h24x7hw = &get_cpu_var(hv_24x7_hw);
+ 			h24x7hw->events[i] = event;
+ 			put_cpu_var(h24x7hw);
+-			/*
+-			 * Clear the event count so we can compute the _change_
+-			 * in the 24x7 raw counter value at the end of the txn.
+-			 *
+-			 * Note that we could alternatively read the 24x7 value
+-			 * now and save its value in event->hw.prev_count. But
+-			 * that would require issuing a hcall, which would then
+-			 * defeat the purpose of using the txn interface.
+-			 */
+-			local64_set(&event->count, 0);
+ 		}
  
--/*
-- * imx_free_resources() - free memory used by this driver
-- * @info: info driver instance
-- */
--static void imx_free_resources(struct imx_pinctrl *ipctl)
--{
--	if (ipctl->pctl)
--		pinctrl_unregister(ipctl->pctl);
--}
--
- int imx_pinctrl_probe(struct platform_device *pdev,
- 		      const struct imx_pinctrl_soc_info *info)
- {
-@@ -874,23 +864,18 @@ int imx_pinctrl_probe(struct platform_device *pdev,
- 					     &ipctl->pctl);
- 	if (ret) {
- 		dev_err(&pdev->dev, "could not register IMX pinctrl driver\n");
--		goto free;
-+		return ret;
- 	}
- 
- 	ret = imx_pinctrl_probe_dt(pdev, ipctl);
- 	if (ret) {
- 		dev_err(&pdev->dev, "fail to probe dt properties\n");
--		goto free;
-+		return ret;
- 	}
- 
- 	dev_info(&pdev->dev, "initialized IMX pinctrl driver\n");
- 
- 	return pinctrl_enable(ipctl->pctl);
--
--free:
--	imx_free_resources(ipctl);
--
--	return ret;
- }
- 
- static int __maybe_unused imx_pinctrl_suspend(struct device *dev)
+ 		put_cpu_var(hv_24x7_reqb);
 -- 
 2.25.1
 
