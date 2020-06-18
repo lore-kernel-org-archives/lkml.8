@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B49FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 525E220776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCF892083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443534;
-	bh=1CjNh4IAkmtHBplhmUA60VGWBjx2+lXxBppXNT/XFZg=;
+	s=default; t=1592443540;
+	bh=kwoPzJGEHttzAXCLgnqZEoNNVbl8s/rq9w0r8tikI1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ohpgGp88Xdo7kg1P1iKj+/MOnKnA4JNmQhbwfOtdDMeSCR0s2QveHj5mMWIkrBJUb
-	 urY2od7y2ZgwoGYAes+DUj+nl7fhNIS8RCO1tR/h+SXH8mqVxeu9TytutIRF3UVRrg
-	 FmEwgpCqODYvR95ruK/HLqasfBYokxWu0w6osJ+s=
+	b=gbu5Slfh4bT1l02h7nnmejMAtfOF9Y5Fds8lyvYW3MD88i2RF1VBXzmxhKu+V8n3b
+	 WYDawnJ44OuSRnw8lesvQNSPlGeeweQli6AGmmR/DM5xWTgKg/lqgXqQwgGw/5X0pl
+	 wtYccyp5uFuGWWTi/gULsdOBZuMkP+XxgEqpD34Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731440AbgFRBZc (ORCPT
+        id S1731480AbgFRBZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:25:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55382 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:25:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729683AbgFRBWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:24 -0400
+        id S1730784AbgFRBWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:22:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1745420776;
-        Thu, 18 Jun 2020 01:22:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2B2420B1F;
+        Thu, 18 Jun 2020 01:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443343;
-        bh=1CjNh4IAkmtHBplhmUA60VGWBjx2+lXxBppXNT/XFZg=;
+        s=default; t=1592443356;
+        bh=kwoPzJGEHttzAXCLgnqZEoNNVbl8s/rq9w0r8tikI1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PTRFHtjssE0Ue5JtLQPeRBdkUCdZwKUWzGRO1OpZqzvCSd3KGPQwJIGOgUzXxJ4gh
-         lioXele3XY4idzvEH1bFBiEHDID8oJUI2TP3wJbRjyLRsGDkTSxlWyqE5M4PJkm9lu
-         tysEj5qTrZmdC4pc0rUUv3jwzdO9Xyc8zK7p8IQg=
+        b=eEYeA7F+qSMDaVTxWz7DbowI6wsqIx23H8RLhr3cUipMRILBe9T0DMnnNf0QA78uu
+         Jp/FZT6r8bOhbouwS4X780THDkwDf2Ymm5rSIcYVri5YuCF1AHOpnRaHBCNIE3TVyw
+         hUZIpD5QrH+9lmPNsrpYykRIOvhYWOCDIaL1CXzg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 004/172] RDMA/uverbs: Make the event_queue fds return POLLERR when disassociated
-Date:   Wed, 17 Jun 2020 21:19:30 -0400
-Message-Id: <20200618012218.607130-4-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 014/172] ALSA: hda/realtek - Introduce polarity for micmute LED GPIO
+Date:   Wed, 17 Jun 2020 21:19:40 -0400
+Message-Id: <20200618012218.607130-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -59,38 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit eb356e6dc15a30af604f052cd0e170450193c254 ]
+[ Upstream commit dbd13179780555ecd3c992dea1222ca31920e892 ]
 
-If is_closed is set, and the event list is empty, then read() will return
--EIO without blocking. After setting is_closed in
-ib_uverbs_free_event_queue(), we do trigger a wake_up on the poll_wait,
-but the fops->poll() function does not check it, so poll will continue to
-sleep on an empty list.
+Currently mute LED and micmute LED share the same GPIO polarity.
 
-Fixes: 14e23bd6d221 ("RDMA/core: Fix locking in ib_uverbs_event_read")
-Link: https://lore.kernel.org/r/0-v1-ace813388969+48859-uverbs_poll_fix%25jgg@mellanox.com
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+So split the polarity for mute and micmute, in case they have different
+polarities.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200430083255.5093-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/uverbs_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/pci/hda/patch_realtek.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
-index 5404717998b0..fc4b46258c75 100644
---- a/drivers/infiniband/core/uverbs_main.c
-+++ b/drivers/infiniband/core/uverbs_main.c
-@@ -360,6 +360,8 @@ static __poll_t ib_uverbs_event_poll(struct ib_uverbs_event_queue *ev_queue,
- 	spin_lock_irq(&ev_queue->lock);
- 	if (!list_empty(&ev_queue->event_list))
- 		pollflags = EPOLLIN | EPOLLRDNORM;
-+	else if (ev_queue->is_closed)
-+		pollflags = EPOLLERR;
- 	spin_unlock_irq(&ev_queue->lock);
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index b06f7d52faad..9ab82ead1825 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -94,6 +94,7 @@ struct alc_spec {
  
- 	return pollflags;
+ 	/* mute LED for HP laptops, see alc269_fixup_mic_mute_hook() */
+ 	int mute_led_polarity;
++	int micmute_led_polarity;
+ 	hda_nid_t mute_led_nid;
+ 	hda_nid_t cap_mute_led_nid;
+ 
+@@ -3862,11 +3863,9 @@ static void alc269_fixup_hp_mute_led_mic3(struct hda_codec *codec,
+ 
+ /* update LED status via GPIO */
+ static void alc_update_gpio_led(struct hda_codec *codec, unsigned int mask,
+-				bool enabled)
++				int polarity, bool enabled)
+ {
+-	struct alc_spec *spec = codec->spec;
+-
+-	if (spec->mute_led_polarity)
++	if (polarity)
+ 		enabled = !enabled;
+ 	alc_update_gpio_data(codec, mask, !enabled); /* muted -> LED on */
+ }
+@@ -3877,7 +3876,8 @@ static void alc_fixup_gpio_mute_hook(void *private_data, int enabled)
+ 	struct hda_codec *codec = private_data;
+ 	struct alc_spec *spec = codec->spec;
+ 
+-	alc_update_gpio_led(codec, spec->gpio_mute_led_mask, enabled);
++	alc_update_gpio_led(codec, spec->gpio_mute_led_mask,
++			    spec->mute_led_polarity, enabled);
+ }
+ 
+ /* turn on/off mic-mute LED via GPIO per capture hook */
+@@ -3886,6 +3886,7 @@ static void alc_gpio_micmute_update(struct hda_codec *codec)
+ 	struct alc_spec *spec = codec->spec;
+ 
+ 	alc_update_gpio_led(codec, spec->gpio_mic_led_mask,
++			    spec->micmute_led_polarity,
+ 			    spec->gen.micmute_led.led_value);
+ }
+ 
+@@ -5476,7 +5477,8 @@ static void alc280_hp_gpio4_automute_hook(struct hda_codec *codec,
+ 
+ 	snd_hda_gen_hp_automute(codec, jack);
+ 	/* mute_led_polarity is set to 0, so we pass inverted value here */
+-	alc_update_gpio_led(codec, 0x10, !spec->gen.hp_jack_present);
++	alc_update_gpio_led(codec, 0x10, spec->mute_led_polarity,
++			    !spec->gen.hp_jack_present);
+ }
+ 
+ /* Manage GPIOs for HP EliteBook Folio 9480m.
 -- 
 2.25.1
 
