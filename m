@@ -5,24 +5,24 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A26C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D12C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C87602075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 671212075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:02:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
 	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Ry020ELX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbgFRPCR (ORCPT
+        id S1731049AbgFRPCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:02:17 -0400
-Received: from mout.web.de ([212.227.15.3]:45879 "EHLO mout.web.de"
+        Thu, 18 Jun 2020 11:02:24 -0400
+Received: from mout.web.de ([212.227.15.4]:58979 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725982AbgFRPCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:02:15 -0400
+        id S1726853AbgFRPCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 11:02:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
         s=dbaedf251592; t=1592492514;
         bh=ePFt1NaB0yTJgDkxR/IDTmQFz/CnzVh+Xg5R1uhijFk=;
@@ -31,8 +31,8 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
          hzmVB+mezZsI/AUkwejccr+qDX2OGqczcfmXuwGswAkiwo8FXrjmFDe6FNTNPE3d5N
          NZfyLIExvxiY9yfxwWrhZhzw9QR4gFevEWGn3kI8=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.102.18]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MRTzc-1jJRrm159k-00Shjs; Thu, 18
+Received: from [192.168.1.2] ([2.244.102.18]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LqXBp-1jGjy70oFd-00e2d3; Thu, 18
  Jun 2020 17:01:54 +0200
 Subject: Re: [PATCH v2] coccinelle: misc: add array_size_dup script to detect
  missed overflow checks
@@ -92,7 +92,7 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <4e6083cc-01ed-caa2-a9fb-5f4645eb9503@web.de>
+Message-ID: <1200eae3-a6b0-cd6a-02b1-4f3034bb0fb5@web.de>
 Date:   Thu, 18 Jun 2020 17:01:51 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
@@ -101,29 +101,29 @@ In-Reply-To: <759d33d2-25a2-f55f-7e3a-7481ab5dd0fc@linux.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:aBDZHC7VEx01XkVBBm3L5iIq34E7ZsaBjxJIxkiWWrjfVOKjsr8
- foJuBbS7HdYh73C+ikhqmBuJB2JPVBNDIEZQ8BHJpvnzpce19v7278vXMWeCILXCJS1NnjW
- kwqAeLwP8FOLgZDrZUmM7J1U1+CU1B1kyHXbDjupYtJjQgAdDabKAnouxNnYm6uVJLhmgeF
- hroADb/UO5YANUTULaQtQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:s2YGaIzy7ok=:kmQAP2rJhabn7sGaDZMdgs
- 1hyTd5/t0KH4qA6fv5Xi2DuAgyPjezEtNUE8NZYcrU+OjVOEd1rZzARuWfD6uhtzPhtF2QWnO
- +H5O2CgZZEKTQotu6Sa0tlVJYr9iAVH6fhP1Ju3o6Lbjb8BBAv1eb+OQ4Xjl/RF5k4Ekc0mvB
- cBv8PfG88gHv5WA/KqfCb4lLsFGEGDWrKjbKgN6KpZMTMSkPXWNXxLOoB8canyD+nwml1PIAv
- GFls+YlXGFxjyRI/cA7PtU/9Yt0UrF5ddiQDBzalEqsEimHnCGpczKPGFPHTcl89AzCjD3JHg
- R/bjzu6RPpjzUuE5yFbaBYPVUbekjUHQtQoWSVnYXa5WlfBnndbK/shLVrsl/qds2l/F5j3V2
- B/3mYCsz3YkqcCh4hXTwixaq428ukJlb9rzpnMqzgLF8bSbeSdB3iTPmAEv7t6a77dDbQZjei
- lmQijNd8BxWywqkDcNHmOEUY1whZNKFYHsCSFEr3BgKUzxJ8ngBMzyyu+sPBUCCOU4vFko89p
- cHFMQlmzY+CIUjcfJlCrBG1QPIOjx/h8nWWeC2lhcmijg12DnjWMV5oQ233xYANdNFoXd/BGX
- 86m297YHPO0RZYfiOds9qJxpv1BCmFAfLqZtlTiO7x6rGlYUcVpLAzVnpRc5jt/wefHCznQKI
- CvCpkmn3LrFaI7ldQ9dsd2wF5rFMsrnOfbhDsEg/prtz24MljLkRrbtCjCMp772Eocl5q/xYr
- ZHU49sEjOYSiS1buE1NHkQ+/45RPM1YghBtWDQmiRPpKHXpmalFZMiAUMtxpDIVNjRAFol8iE
- GFbc+Wkf04p1jhmW+Kb4w5kcluVvnWUOXzvjVs/t6lipMaYECdBRfUj947pz1SFetUiMtjDis
- KKfOaKIDFXuBgd7a7hjLRh03yTEepaofdq8qGXKByxyNkU39mDOogO+j+q6Nt/guGtpf4XMhA
- E51puXyxxmVIwLlJOUuOyGa2FjMCXO/6avGS1utVfG1oZmbF2Ct5QiKrCnGFmSDIQ+FHdwnjD
- s2JKBkN7rw1Ay+sNEAGoypZTf2/5xHCENDG08/M+WPtD32TOnpDt84w2sb4DfrIhqx+ynsFAg
- /mhbW1iPuhEeIigDbKoOjeEjEKmO+zHp9c4Uj5/PrigamoE7VcWiPwJFeI4fe/1M5E2RwagN0
- 2AImFpX5E9GqWTiedJJWI3z24GCiN7oPmwXuGB94lAQ6C9Q8qEnWOdBap/v7yomM5S26VpCNX
- rKoXA19x/72tEPkrD
+X-Provags-ID: V03:K1:H+ViFxfeXZ9S5ROcxv3lmRd6vTIG5czXtm7Nk3LuVS9Av9fnQAn
+ ie0VNDofdjwemS9Ytv/VgAi0DUPFXJS7E6i2OmGP5u00VmbvaM3AW2JK4Bm1+vFaWBj9sJs
+ pbPj37PP/ntyTCjkfntjthJY7sA/ohZRetDDayA8yybH1S91kye4hiLT6lfxZvnAmO3RjoD
+ BYkKCG5iZt1IoWNXoyzQw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yPmHyyo2o5k=:3iurbzCizuaehlwwjWdgRF
+ X0VJqWFAsV26wJVDNRDzPEveSZrKBK3l3ypOFF3OouI4vLrTo1DajcsgAjxB0fOHErKFYz3Ml
+ Atu3zm6wIcCuKSHFzXtQBHU2Gx6rD4a3HQ8z+tvI5ZkK4FMup1QNz2iTv4qUvFc7ZBZCOAd6N
+ 9Pycf6zl/txAOMLUuOwhnZwN88RjQhxE+ZmhR2Yun4IuC2vZUUlRE3inzwnLnE9EzXvLhOciZ
+ FFHYa7bU9PHMhubNXN5NQQzGpH/Y96vUYpkhytm11Oh26ACKAbWqWpTc1EUMCOvGLSVypdnsd
+ 2he8BZ5VUbNdoHB3pLQxmT7j6iqA6aaP0489pzZZr3NhPOKBzE+6vT7BveyM3XV/n6j5/QTxD
+ DPQsIj8myI9HI/vfG2wkmDjdVVeEeUZ8rLMmUHpk8vzWiTKD/7eusqKD4MNdi8fNZdGUEphNC
+ ZfMT8VFtPrpiDG95e3qmN4bH9ZIE1o+Iq6fioT+DoI6t6IUEi19/qlCAs+BYbOzJcvGi0li3V
+ Idtu2BwGgGmMPYivqedPBtE42ku6NsJnxXLYurV1F5CzNIpIsjeCPjBq+B9kl307FzdWMd4G2
+ QC9EfStvnRzrcZ5XHkhbJrlC2PzROOh9Pk+QEsEtmZa4kZxjcq/wMbtmwOQCoBihdcYwKmOrO
+ rFGgvzHUT6eIBJwofYg3nkRaOLk0Bpuy9xVK5nnrEo7kfdr5MQl2kq899qPbi0Y5ZbD1NafQQ
+ Iw1tsff9BBrt60373g+ADwfFq0V9eURqZxCRYXC2QKhF0/CgZJib0XC9nf1AHMhh8VSdm0deO
+ 9YmwZAvNGKLF/GKzuJwvy5fxm/bNSIgJQnXMbJ8HPYhtt7U4jkO6s/zqJnZpf9hWdu1BTxfGz
+ tcYPWTtK8OeRfQtp05Nrj4cgTX45jsOSl690/H4mJjGlhBDHcQWuM4HRZRztqM9YpgnFIDW74
+ SFX3XOIC5VFqNEXmlVPAwAng4qNBfZKZAT2aE42ZCktHG59v8yzZpP+v/wiHmTpsQA68Kq0u5
+ 9JXSzphZ9qP/3P4Z5MFdOI8SYW4+A5io/6aj7giVdL743d/I5A1QBen2cr7Cx9wjoIzTJMsTU
+ it7WcFlZj9PpYEvpI/LqjzZzliEG8JKXjNzFcRxzvQoPi+KDFAtCwx7kJBAywzCcxynuotxNU
+ y9E5ef0PHEacEwVbuGOkM/UcsSqEikoHOx/cJgjXPDT1Gt6fft8V4Tpu6GiJOUyHGxGnJhUho
+ WM6PuunLt9IOdSdFK
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
