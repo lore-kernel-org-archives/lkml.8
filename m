@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2D91221EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ACFA21D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442577;
-	bh=VbvwX07h7tv/JNZrZ3PGvYl0YFbuhr9qHoWR3e3SoN8=;
+	s=default; t=1592442580;
+	bh=VPy5v/RwQZSLoBoZ5LZIPpSb3rjfOo7G621Ach7vWmg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JFOzJ8CmZnvTbqH0NnCzds/cXkaPKp9Jv5SkUL+tucxEH2F2muyDmciwgomBFYwmk
-	 /UMi+oAYrjsgtkBoRe1QZrGZNwp/9P7cuie/V4fsnifUkaeT2DfBJuScXOCIcBAMjs
-	 JbqLH62FUs4/b9o7QmdgCgVSKM1cjRHOnaWOksXk=
+	b=WncCj0HiQWUfuipl9iF82veTJ3KJlJzmOlKxjCQqTNSxgvZJ9l4neLh+isIHiHSiY
+	 QPk+ba3gT4dsPcm93Jl4pq0cvDeHsiATSahWiwESjQihzQS0frscJgeMmeP/Tbf4Mn
+	 NWAXUYV6BYqD22ap9DsIIyf6/iuv3uEIOq+4ktVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgFRBJg (ORCPT
+        id S1728243AbgFRBJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:09:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35964 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:09:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728196AbgFRBJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:09:32 -0400
+        id S1728232AbgFRBJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33C9321D92;
-        Thu, 18 Jun 2020 01:09:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9E2721D91;
+        Thu, 18 Jun 2020 01:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442572;
-        bh=VbvwX07h7tv/JNZrZ3PGvYl0YFbuhr9qHoWR3e3SoN8=;
+        s=default; t=1592442575;
+        bh=VPy5v/RwQZSLoBoZ5LZIPpSb3rjfOo7G621Ach7vWmg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2TnSmiB0gpUmHOt/bhDReDt9ZokH6KAzMGk8cbl+Bgf4iheIObCqeQG8uRvO/mJ45
-         fBRFFhmZAXotYk++yHQw25yjtVvp4yR0wP0lKFXBYui3KvtMscdh4Y2bC2ZO6cTOP7
-         dT5tqr81y+I1r3PPtV7ZddjJKoIPzTdCERz7mY28=
+        b=2clCOj/bJQS9k8jw0gyvJcamHnd9sQQkGiVoNbzYf6Ce7ra1hm1063NN5nSKs8BFT
+         MFSn3i0oCu15payeKtAa8ItPqz/YvKaPWKs+BezzHXBz27Cyd4u1ZcY5Hm+94Dq+lc
+         vA5lziAjve6WPLQvlmF4rZKEDpLwzHD/XiR+BejI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 065/388] powerpc/book3s64/radix/tlb: Determine hugepage flush correctly
-Date:   Wed, 17 Jun 2020 21:02:42 -0400
-Message-Id: <20200618010805.600873-65-sashal@kernel.org>
+Cc:     Omer Shpigelman <oshpigelman@habana.ai>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 068/388] habanalabs: don't allow hard reset with open processes
+Date:   Wed, 17 Jun 2020 21:02:45 -0400
+Message-Id: <20200618010805.600873-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,55 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+From: Omer Shpigelman <oshpigelman@habana.ai>
 
-[ Upstream commit 8f53f9c0f68ab2168f637494b9e24034899c1310 ]
+[ Upstream commit 36fafe87edd636292a4ed6a3af9608f2c7d0d0fb ]
 
-With a 64K page size flush with start and end:
+When the MMU is heavily used by the engines, unmapping might take a lot of
+time due to a full MMU cache invalidation done as part of the unmap flow.
+Hence we might not be able to kill all open processes before going to hard
+reset the device, as it involves unmapping of all user memory.
+In case of a failure in killing all open processes, we should stop the
+hard reset flow as it might lead to a kernel crash - one thread (killing
+of a process) is updating MMU structures that other thread (hard reset) is
+freeing.
+Stopping a hard reset flow leaves the device as nonoperational and the
+user can then initiate a hard reset via sysfs to reinitialize the device.
 
-  (start, end) = (721f680d0000, 721f680e0000)
-
-results in:
-
-  (hstart, hend) = (721f68200000, 721f68000000)
-
-ie. hstart is above hend, which indicates no huge page flush is
-needed.
-
-However the current logic incorrectly sets hflush = true in this case,
-because hstart != hend.
-
-That causes us to call __tlbie_va_range() passing hstart/hend, to do a
-huge page flush even though we don't need to. __tlbie_va_range() will
-skip the actual tlbie operation for start > end. But it will still end
-up calling fixup_tlbie_va_range() and doing the TLB fixups in there,
-which is harmless but unnecessary work.
-
-Reported-by: Bharata B Rao <bharata@linux.ibm.com>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
-[mpe: Drop else case, hflush is already false, flesh out change log]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200513030616.152288-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/book3s64/radix_tlb.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/misc/habanalabs/device.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
-index 758ade2c2b6e..b5cc9b23cf02 100644
---- a/arch/powerpc/mm/book3s64/radix_tlb.c
-+++ b/arch/powerpc/mm/book3s64/radix_tlb.c
-@@ -884,9 +884,7 @@ static inline void __radix__flush_tlb_range(struct mm_struct *mm,
- 		if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
- 			hstart = (start + PMD_SIZE - 1) & PMD_MASK;
- 			hend = end & PMD_MASK;
--			if (hstart == hend)
--				hflush = false;
--			else
-+			if (hstart < hend)
- 				hflush = true;
- 		}
+diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
+index aef4de36b7aa..6d9c298e02c7 100644
+--- a/drivers/misc/habanalabs/device.c
++++ b/drivers/misc/habanalabs/device.c
+@@ -718,7 +718,7 @@ int hl_device_resume(struct hl_device *hdev)
+ 	return rc;
+ }
+ 
+-static void device_kill_open_processes(struct hl_device *hdev)
++static int device_kill_open_processes(struct hl_device *hdev)
+ {
+ 	u16 pending_total, pending_cnt;
+ 	struct hl_fpriv	*hpriv;
+@@ -771,9 +771,7 @@ static void device_kill_open_processes(struct hl_device *hdev)
+ 		ssleep(1);
+ 	}
+ 
+-	if (!list_empty(&hdev->fpriv_list))
+-		dev_crit(hdev->dev,
+-			"Going to hard reset with open user contexts\n");
++	return list_empty(&hdev->fpriv_list) ? 0 : -EBUSY;
+ }
+ 
+ static void device_hard_reset_pending(struct work_struct *work)
+@@ -894,7 +892,12 @@ int hl_device_reset(struct hl_device *hdev, bool hard_reset,
+ 		 * process can't really exit until all its CSs are done, which
+ 		 * is what we do in cs rollback
+ 		 */
+-		device_kill_open_processes(hdev);
++		rc = device_kill_open_processes(hdev);
++		if (rc) {
++			dev_crit(hdev->dev,
++				"Failed to kill all open processes, stopping hard reset\n");
++			goto out_err;
++		}
+ 
+ 		/* Flush the Event queue workers to make sure no other thread is
+ 		 * reading or writing to registers during the reset
+@@ -1375,7 +1378,9 @@ void hl_device_fini(struct hl_device *hdev)
+ 	 * can't really exit until all its CSs are done, which is what we
+ 	 * do in cs rollback
+ 	 */
+-	device_kill_open_processes(hdev);
++	rc = device_kill_open_processes(hdev);
++	if (rc)
++		dev_crit(hdev->dev, "Failed to kill all open processes\n");
+ 
+ 	hl_cb_pool_fini(hdev);
  
 -- 
 2.25.1
