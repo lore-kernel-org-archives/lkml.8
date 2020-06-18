@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C9CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68D6C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC80121D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3E0221ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443155;
-	bh=WDQHmXC96rpYPjUTKUtm1BoCjSJ3P3r3dBXWh66rDzo=;
+	s=default; t=1592443162;
+	bh=RNPq6SF4ZWwRpZosC3065GmzXtKZyf+9MuZsESPrs74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2nRuHafV9vt6sB9K/UaSLv7qui5THJFQg3Oct/xGLy4yZ8/6QXHOZdjllpDjSgQFz
-	 vDsolobDFg+6ypJOD4lXuBZAAfYSnNouLhJL3gKqmwOB5dv6knjNCP2UM+aVAYYK7i
-	 G24nozKzshGN4Zlc4sDdSkNzrOTS0noCw+Stkgoo=
+	b=E5lzu5+gTHjCi/7D8g7kNwDjdQ0jaHIOeOdj1+NcYAfC1gQHtikHObuWTbCF7ksxB
+	 33B4fp5j1OG3dhq1NbAwcAy/RYv4Yhy9SqkSbkNYiZsuKS1pLTgZLnbXMXlXpOjaf7
+	 HK+wzBkg2JdPIDAAKn98MbrR84acMCOXlNO41Vzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730080AbgFRBTI (ORCPT
+        id S1730115AbgFRBTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:19:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46568 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:19:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729157AbgFRBQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:16:07 -0400
+        id S1728536AbgFRBQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:16:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B45F72088E;
-        Thu, 18 Jun 2020 01:16:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B61B221D79;
+        Thu, 18 Jun 2020 01:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442966;
-        bh=WDQHmXC96rpYPjUTKUtm1BoCjSJ3P3r3dBXWh66rDzo=;
+        s=default; t=1592442980;
+        bh=RNPq6SF4ZWwRpZosC3065GmzXtKZyf+9MuZsESPrs74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PU81N6T0LuJK33UTkmdzDdU0E6rC75SfzmFf1T+1m9QVTkR0R7LrnPq7TklGkaQw/
-         lBpC7iy4NqxBjE+mDcBoTScPVpamZsh/PAG50StGQb5tzsISU7X7gWmZV6DPR+ptGf
-         IO/Y5HxQOxC1HhIUJDMIIrQAUwSslPPLJoFc1chs=
+        b=BwvtPiCqJGuWzQ8ASi0VS4gbnyLklRgGx71JGVSWxNqGzGCBBL1JfP8rbs5M36LIr
+         cDp3+uE9Eid+xEhSJ4MC5ZaAsFIXSEReuF9weNDPjfZemNWJxTHxJ2E6Y1jJEvK7Jh
+         zHA6H/f3CpGtSUhoi8lm0Xwx/Kjc7LpCLUu+GzII=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+Cc:     Li RongQing <lirongqing@baidu.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.7 371/388] libbpf: Handle GCC noreturn-turned-volatile quirk
-Date:   Wed, 17 Jun 2020 21:07:48 -0400
-Message-Id: <20200618010805.600873-371-sashal@kernel.org>
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 382/388] xdp: Fix xsk_generic_xmit errno
+Date:   Wed, 17 Jun 2020 21:07:59 -0400
+Message-Id: <20200618010805.600873-382-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,106 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 32022fd97ed34f6812802bf1288db27c313576f4 ]
+[ Upstream commit aa2cad0600ed2ca6a0ab39948d4db1666b6c962b ]
 
-Handle a GCC quirk of emitting extra volatile modifier in DWARF (and
-subsequently preserved in BTF by pahole) for function pointers marked as
-__attribute__((noreturn)). This was the way to mark such functions before GCC
-2.5 added noreturn attribute. Drop such func_proto modifiers, similarly to how
-it's done for array (also to handle GCC quirk/bug).
+Propagate sock_alloc_send_skb error code, not set it to
+EAGAIN unconditionally, when fail to allocate skb, which
+might cause that user space unnecessary loops.
 
-Such volatile attribute is emitted by GCC only, so existing selftests can't
-express such test. Simple repro is like this (compiled with GCC + BTF
-generated by pahole):
-
-  struct my_struct {
-      void __attribute__((noreturn)) (*fn)(int);
-  };
-  struct my_struct a;
-
-Without this fix, output will be:
-
-struct my_struct {
-    voidvolatile  (*fn)(int);
-};
-
-With the fix:
-
-struct my_struct {
-    void (*fn)(int);
-};
-
-Fixes: 351131b51c7a ("libbpf: add btf_dump API for BTF-to-C conversion")
-Reported-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Fixes: 35fcde7f8deb ("xsk: support for Tx")
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Tested-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Link: https://lore.kernel.org/bpf/20200610052335.2862559-1-andriin@fb.com
+Acked-by: Björn Töpel <bjorn.topel@intel.com>
+Link: https://lore.kernel.org/bpf/1591852266-24017-1-git-send-email-lirongqing@baidu.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/btf_dump.c | 33 ++++++++++++++++++++++++---------
- 1 file changed, 24 insertions(+), 9 deletions(-)
+ net/xdp/xsk.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
-index 0c28ee82834b..653dbbe2e366 100644
---- a/tools/lib/bpf/btf_dump.c
-+++ b/tools/lib/bpf/btf_dump.c
-@@ -1137,6 +1137,20 @@ static void btf_dump_emit_mods(struct btf_dump *d, struct id_stack *decl_stack)
- 	}
- }
+diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+index c350108aa38d..a4676107fad0 100644
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -397,10 +397,8 @@ static int xsk_generic_xmit(struct sock *sk)
  
-+static void btf_dump_drop_mods(struct btf_dump *d, struct id_stack *decl_stack)
-+{
-+	const struct btf_type *t;
-+	__u32 id;
-+
-+	while (decl_stack->cnt) {
-+		id = decl_stack->ids[decl_stack->cnt - 1];
-+		t = btf__type_by_id(d->btf, id);
-+		if (!btf_is_mod(t))
-+			return;
-+		decl_stack->cnt--;
-+	}
-+}
-+
- static void btf_dump_emit_name(const struct btf_dump *d,
- 			       const char *name, bool last_was_ptr)
- {
-@@ -1235,14 +1249,7 @@ static void btf_dump_emit_type_chain(struct btf_dump *d,
- 			 * a const/volatile modifier for array, so we are
- 			 * going to silently skip them here.
- 			 */
--			while (decls->cnt) {
--				next_id = decls->ids[decls->cnt - 1];
--				next_t = btf__type_by_id(d->btf, next_id);
--				if (btf_is_mod(next_t))
--					decls->cnt--;
--				else
--					break;
--			}
-+			btf_dump_drop_mods(d, decls);
+ 		len = desc.len;
+ 		skb = sock_alloc_send_skb(sk, len, 1, &err);
+-		if (unlikely(!skb)) {
+-			err = -EAGAIN;
++		if (unlikely(!skb))
+ 			goto out;
+-		}
  
- 			if (decls->cnt == 0) {
- 				btf_dump_emit_name(d, fname, last_was_ptr);
-@@ -1270,7 +1277,15 @@ static void btf_dump_emit_type_chain(struct btf_dump *d,
- 			__u16 vlen = btf_vlen(t);
- 			int i;
- 
--			btf_dump_emit_mods(d, decls);
-+			/*
-+			 * GCC emits extra volatile qualifier for
-+			 * __attribute__((noreturn)) function pointers. Clang
-+			 * doesn't do it. It's a GCC quirk for backwards
-+			 * compatibility with code written for GCC <2.5. So,
-+			 * similarly to extra qualifiers for array, just drop
-+			 * them, instead of handling them.
-+			 */
-+			btf_dump_drop_mods(d, decls);
- 			if (decls->cnt) {
- 				btf_dump_printf(d, " (");
- 				btf_dump_emit_type_chain(d, decls, fname, lvl);
+ 		skb_put(skb, len);
+ 		addr = desc.addr;
 -- 
 2.25.1
 
