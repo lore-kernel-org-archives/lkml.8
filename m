@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AFEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54488C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED7BC20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23ED020B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443335;
-	bh=NyDDe6IQv3TijH7jTfeyPHKXA8AYHM53FDI8iSDwKmU=;
+	s=default; t=1592443339;
+	bh=Xwqp5VeiNd1IsDMeWotZ1nD25aou2uHxHhgfdlOCxX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZqvuuYttsrCGNGn8Tah/OTjuqI+HWMNzlbpXk4mPQqQmA7qVPpspAhTlwFt3IZ7K
-	 yLdsD+ikQfgiJbpJGDdta3nHcpIhJEua5ezSCHZvlJj2dfwhSkftTYt/oK7Dwyiqxj
-	 liTWw4tpADcrOs84uBJempYT7Cx3Sg5XGmaHXxCA=
+	b=PXhk19ew+9B593TSAZAtJDIUwoNrVGjd0UyudTOyLtz9a7Oa/DqLu1kTq2wUuioI8
+	 VqvrW/jteRUJXaingQhjrag5yrj0GzqkdoaqKs3dhD9w0rZpvRPrNVmpr4d5kgNM8o
+	 elrXyu8pR0aJf96BoSn3gPHUVMsAxBt6LuDKZeDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730686AbgFRBWN (ORCPT
+        id S1730713AbgFRBWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50292 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:22:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730007AbgFRBSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:18:45 -0400
+        id S1730020AbgFRBSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:18:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC145206F1;
-        Thu, 18 Jun 2020 01:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D061B21D90;
+        Thu, 18 Jun 2020 01:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443124;
-        bh=NyDDe6IQv3TijH7jTfeyPHKXA8AYHM53FDI8iSDwKmU=;
+        s=default; t=1592443129;
+        bh=Xwqp5VeiNd1IsDMeWotZ1nD25aou2uHxHhgfdlOCxX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QYtRgH8lQv2ACJsQYdDxn523O5XzaeWGDyiVtKF+YqVmVo7BhTdXfcrzAs+aLZro9
-         s6d2ca5x1oi/l9H4RZPChesvZLbPhCgAj5GEtGGf8yhbUDsH6LTE2A1Iget1iB1rmR
-         rBf7lMYSg5trcIQizsbQiUuxuGfzPF1jbLL7q0KU=
+        b=eItFGNVlcsJB1ZSKxRnTteOHwGu2lLIVvQDRlHRy97OZdwzNRKf74+5ztj1wvgXKR
+         FdtE+2BBdEGPR5o4jnXzVHqfuANZEwG+B87nvLfoXprkGZEsThrJfbf1K3xxFQijnP
+         s5S5O6GbQ/FRfcHrYzfbhy1cFD15CDi2cGbq3mZk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 098/266] firmware: qcom_scm: fix bogous abuse of dma-direct internals
-Date:   Wed, 17 Jun 2020 21:13:43 -0400
-Message-Id: <20200618011631.604574-98-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 102/266] ALSA: usb-audio: Fix racy list management in output queue
+Date:   Wed, 17 Jun 2020 21:13:47 -0400
+Message-Id: <20200618011631.604574-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,70 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 459b1f86f1cba7de813fbc335df476c111feec22 ]
+[ Upstream commit 5b6cc38f3f3f37109ce72b60bda215a5f6892c0b ]
 
-As far as the device is concerned the dma address is the physical
-address.  There is no need to convert it to a physical address,
-especially not using dma-direct internals that are not available
-to drivers and which will interact badly with IOMMUs.  Last but not
-least the commit introducing it claimed to just fix a type issue,
-but actually changed behavior.
+The linked list entry from FIFO is peeked at
+queue_pending_output_urbs() but the actual element pop-out is
+performed outside the spinlock, and it's potentially racy.
 
-Fixes: 6e37ccf78a532 ("firmware: qcom_scm: Use proper types for dma mappings")
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/r/20200414123136.441454-1-hch@lst.de
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Do delete the link at the right place inside the spinlock.
+
+Fixes: 8fdff6a319e7 ("ALSA: snd-usb: implement new endpoint streaming model")
+Link: https://lore.kernel.org/r/20200424074016.14301-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/qcom_scm.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ sound/usb/endpoint.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 4802ab170fe5..b9fdc20b4eb9 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -9,7 +9,6 @@
- #include <linux/init.h>
- #include <linux/cpumask.h>
- #include <linux/export.h>
--#include <linux/dma-direct.h>
- #include <linux/dma-mapping.h>
- #include <linux/module.h>
- #include <linux/types.h>
-@@ -441,8 +440,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	struct qcom_scm_mem_map_info *mem_to_map;
- 	phys_addr_t mem_to_map_phys;
- 	phys_addr_t dest_phys;
--	phys_addr_t ptr_phys;
--	dma_addr_t ptr_dma;
-+	dma_addr_t ptr_phys;
- 	size_t mem_to_map_sz;
- 	size_t dest_sz;
- 	size_t src_sz;
-@@ -459,10 +457,9 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
- 			ALIGN(dest_sz, SZ_64);
+diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
+index d8dc7cb56d43..50104f658ed4 100644
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -346,17 +346,17 @@ static void queue_pending_output_urbs(struct snd_usb_endpoint *ep)
+ 			ep->next_packet_read_pos %= MAX_URBS;
  
--	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_dma, GFP_KERNEL);
-+	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
- 	if (!ptr)
- 		return -ENOMEM;
--	ptr_phys = dma_to_phys(__scm->dev, ptr_dma);
+ 			/* take URB out of FIFO */
+-			if (!list_empty(&ep->ready_playback_urbs))
++			if (!list_empty(&ep->ready_playback_urbs)) {
+ 				ctx = list_first_entry(&ep->ready_playback_urbs,
+ 					       struct snd_urb_ctx, ready_list);
++				list_del_init(&ctx->ready_list);
++			}
+ 		}
+ 		spin_unlock_irqrestore(&ep->lock, flags);
  
- 	/* Fill source vmid detail */
- 	src = ptr;
-@@ -490,7 +487,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 		if (ctx == NULL)
+ 			return;
  
- 	ret = __qcom_scm_assign_mem(__scm->dev, mem_to_map_phys, mem_to_map_sz,
- 				    ptr_phys, src_sz, dest_phys, dest_sz);
--	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_dma);
-+	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_phys);
- 	if (ret) {
- 		dev_err(__scm->dev,
- 			"Assign memory protection call failed %d\n", ret);
+-		list_del_init(&ctx->ready_list);
+-
+ 		/* copy over the length information */
+ 		for (i = 0; i < packet->packets; i++)
+ 			ctx->packet_size[i] = packet->packet_size[i];
 -- 
 2.25.1
 
