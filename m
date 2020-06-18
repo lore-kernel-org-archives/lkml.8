@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AF0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31455C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87526214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10877206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447570;
-	bh=pa5xwxs/YMVeg48Xp1oAklH4xCcH4s/8Z/abaSwieRU=;
+	s=default; t=1592447577;
+	bh=bPJxDlYin/x/TYjAO2oCgJPPgkg5EaIRk3POZXq9oe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1NvacW6k1lRoI9LRZIJ8fBHD4PqSbeSxu+LAL1efDvs2pcfRXW8icksNtzOqZn20Y
-	 UXXY6/zyp8bsZCt65WUECGDyhs3q2O1fZy50NrScfKdYyQPt1RuD8wDky55QE7QxUs
-	 jRab57oM59YRm0CS9D3exg/g9IpI91jNzkkQs720=
+	b=CN4M/UdyWU7XfuQ/lGie6dru8ddvuNVowlkp8ICuDA/3fBGpYyEZ6I7mf2H6w7KIJ
+	 m7wEfO/DQQ4IhJv4npkHT+XllWE8pGBlDbn+Dx+dUovNio7TpK4rK4j6YT0ALK6si0
+	 7/1mQm0sMV6WM1oCIaAUAgOSTUZkit4SonObigAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387681AbgFRCcs (ORCPT
+        id S1728067AbgFRBPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:32:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45096 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:15:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729439AbgFRBPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:07 -0400
+        id S1728544AbgFRBNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31AB92193E;
-        Thu, 18 Jun 2020 01:15:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB978221EB;
+        Thu, 18 Jun 2020 01:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442907;
-        bh=pa5xwxs/YMVeg48Xp1oAklH4xCcH4s/8Z/abaSwieRU=;
+        s=default; t=1592442811;
+        bh=bPJxDlYin/x/TYjAO2oCgJPPgkg5EaIRk3POZXq9oe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZeB0sSOxuTdEuw/vxZcykWXgQK5g1r40nstHIQ5wAmp7vNY67FtyxSl7/KXvAwfkE
-         VW76I0KgXCg6GtCs4I1TBun2VnAwKy1zE0IK9KOYZHF3gYqlLmlMOMgugMxIzZJNs2
-         4RKqzqBmmAIYz/q1hhtrFXMhOUvBtN9nqLJA2Yio=
+        b=HUTWNExj70JYYV3bek4haVoP5usqDsNCAzxrJGjV3OfGc7u/53CWKeZ1wb/uNCRre
+         QO8iAhyFBAkdZix3ugHwFcWDp+1WLMutoF91NontalzuPZ98CfHvIboOOZgXccpaps
+         ubwn3nXukz9e40qQjS4CWytpv68s1reagyC4G5Co=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 326/388] pinctrl: freescale: imx: Use 'devm_of_iomap()' to avoid a resource leak in case of error in 'imx_pinctrl_probe()'
-Date:   Wed, 17 Jun 2020 21:07:03 -0400
-Message-Id: <20200618010805.600873-326-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.7 250/388] powerpc/64s/pgtable: fix an undefined behaviour
+Date:   Wed, 17 Jun 2020 21:05:47 -0400
+Message-Id: <20200618010805.600873-250-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,47 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit ba403242615c2c99e27af7984b1650771a2cc2c9 ]
+[ Upstream commit c2e929b18cea6cbf71364f22d742d9aad7f4677a ]
 
-Use 'devm_of_iomap()' instead 'of_iomap()' to avoid a resource leak in
-case of error.
+Booting a power9 server with hash MMU could trigger an undefined
+behaviour because pud_offset(p4d, 0) will do,
 
-Update the error handling code accordingly.
+0 >> (PAGE_SHIFT:16 + PTE_INDEX_SIZE:8 + H_PMD_INDEX_SIZE:10)
 
-Fixes: 26d8cde5260b ("pinctrl: freescale: imx: add shared input select reg support")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200602200626.677981-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fix it by converting pud_index() and friends to static inline
+functions.
+
+UBSAN: shift-out-of-bounds in arch/powerpc/mm/ptdump/ptdump.c:282:15
+shift exponent 34 is too large for 32-bit type 'int'
+CPU: 6 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4-next-20200303+ #13
+Call Trace:
+dump_stack+0xf4/0x164 (unreliable)
+ubsan_epilogue+0x18/0x78
+__ubsan_handle_shift_out_of_bounds+0x160/0x21c
+walk_pagetables+0x2cc/0x700
+walk_pud at arch/powerpc/mm/ptdump/ptdump.c:282
+(inlined by) walk_pagetables at arch/powerpc/mm/ptdump/ptdump.c:311
+ptdump_check_wx+0x8c/0xf0
+mark_rodata_ro+0x48/0x80
+kernel_init+0x74/0x194
+ret_from_kernel_thread+0x5c/0x74
+
+Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Link: https://lore.kernel.org/r/20200306044852.3236-1-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/powerpc/include/asm/book3s/64/pgtable.h | 23 ++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index 1f81569c7ae3..cb7e0f08d2cf 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -824,12 +824,13 @@ int imx_pinctrl_probe(struct platform_device *pdev,
- 				return -EINVAL;
- 			}
+diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+index 368b136517e0..2838b98bc6df 100644
+--- a/arch/powerpc/include/asm/book3s/64/pgtable.h
++++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+@@ -998,10 +998,25 @@ extern struct page *pgd_page(pgd_t pgd);
+ #define pud_page_vaddr(pud)	__va(pud_val(pud) & ~PUD_MASKED_BITS)
+ #define pgd_page_vaddr(pgd)	__va(pgd_val(pgd) & ~PGD_MASKED_BITS)
  
--			ipctl->input_sel_base = of_iomap(np, 0);
-+			ipctl->input_sel_base = devm_of_iomap(&pdev->dev, np,
-+							      0, NULL);
- 			of_node_put(np);
--			if (!ipctl->input_sel_base) {
-+			if (IS_ERR(ipctl->input_sel_base)) {
- 				dev_err(&pdev->dev,
- 					"iomuxc input select base address not found\n");
--				return -ENOMEM;
-+				return PTR_ERR(ipctl->input_sel_base);
- 			}
- 		}
- 	}
+-#define pgd_index(address) (((address) >> (PGDIR_SHIFT)) & (PTRS_PER_PGD - 1))
+-#define pud_index(address) (((address) >> (PUD_SHIFT)) & (PTRS_PER_PUD - 1))
+-#define pmd_index(address) (((address) >> (PMD_SHIFT)) & (PTRS_PER_PMD - 1))
+-#define pte_index(address) (((address) >> (PAGE_SHIFT)) & (PTRS_PER_PTE - 1))
++static inline unsigned long pgd_index(unsigned long address)
++{
++	return (address >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1);
++}
++
++static inline unsigned long pud_index(unsigned long address)
++{
++	return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
++}
++
++static inline unsigned long pmd_index(unsigned long address)
++{
++	return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
++}
++
++static inline unsigned long pte_index(unsigned long address)
++{
++	return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
++}
+ 
+ /*
+  * Find an entry in a page-table-directory.  We combine the address region
 -- 
 2.25.1
 
