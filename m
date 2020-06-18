@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D54EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA9D4207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 532BC207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443926;
-	bh=kQxud7MSwkmirSk8sl1Z6U/M4EKYnQvsC+GuLnHvsI0=;
+	s=default; t=1592443931;
+	bh=+WmCIF3VxlS2I8+aCIjGy0D50UA5BFOXev6Mxel4t0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rvYXUkS5Y/5nU55G2avCqZ12eZ+xHRoiS3zWxDg1AFS001Cr0QEapDkmVciecikFh
-	 Yztpo5rzO8zcMGv01/6E21a/0mgiaTGlU4WjoJLTVr4nPDrldJqoF/2YTtkjwrSYXY
-	 TohxiJRwOAKHnqO0TTIzGArHTbjpdBnlBDDyHb2w=
+	b=OdNbCYssjSVXBCtGFlaQ1xNxZBwxG7yuCCgKMNYgmbjivYU7EZKWkrT8fbWoU1TTN
+	 qTZvdpbEtoT54B7guT6wD3rHdxYzuz8jLDZHLM9oq2/U80/j/FHc4Gk2/NLoraOtf2
+	 JErC8WxyTJTGFci9scYtgJrohRm3gTp8Xbilm3ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731812AbgFRBcE (ORCPT
+        id S1732857AbgFRBcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:32:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38996 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:32:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732314AbgFRB3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:33 -0400
+        id S1732321AbgFRB3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:29:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B076A2222D;
-        Thu, 18 Jun 2020 01:29:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA75922249;
+        Thu, 18 Jun 2020 01:29:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443772;
-        bh=kQxud7MSwkmirSk8sl1Z6U/M4EKYnQvsC+GuLnHvsI0=;
+        s=default; t=1592443773;
+        bh=+WmCIF3VxlS2I8+aCIjGy0D50UA5BFOXev6Mxel4t0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MpWeXuVuME3j52Ebco8AqvAKewtJZCVLdF+H3gds1IgrMQlC7h3vJyKPubm4eVZnw
-         bYodssLzSZT2BHk8zPMMUAWrqvAycsTajeTsB/6mrldBAhIueIY/RRF6WrEoOHEyNG
-         YBZfq8Iq4u3udH5pbKQMR/Mp0wP8H9RruH1w/amQ=
+        b=aRdIgVsk2v0prW3uSzgDuE9WvS4qUOUpeF92d6v7hanpNCHacqdW/xdKqVUxe2Ffb
+         dGBb8M3kdZsZ17caBJUHRLn3LxamEmApcSoSq0DK3JnCf3VVbwSUSuTXhcNbBS4iPr
+         2HGsGFdSfXVuxkTFgTnLMYGO3EzHoA2syQoolWUI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 56/80] PCI/PTM: Inherit Switch Downstream Port PTM settings from Upstream Port
-Date:   Wed, 17 Jun 2020 21:27:55 -0400
-Message-Id: <20200618012819.609778-56-sashal@kernel.org>
+Cc:     Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 57/80] IB/cma: Fix ports memory leak in cma_configfs
+Date:   Wed, 17 Jun 2020 21:27:56 -0400
+Message-Id: <20200618012819.609778-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
 References: <20200618012819.609778-1-sashal@kernel.org>
@@ -59,75 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Maor Gottlieb <maorg@mellanox.com>
 
-[ Upstream commit 7b38fd9760f51cc83d80eed2cfbde8b5ead9e93a ]
+[ Upstream commit 63a3345c2d42a9b29e1ce2d3a4043689b3995cea ]
 
-Except for Endpoints, we enable PTM at enumeration-time.  Previously we did
-not account for the fact that Switch Downstream Ports are not permitted to
-have a PTM capability; their PTM behavior is controlled by the Upstream
-Port (PCIe r5.0, sec 7.9.16).  Since Downstream Ports don't have a PTM
-capability, we did not mark them as "ptm_enabled", which meant that
-pci_enable_ptm() on an Endpoint failed because there was no PTM path to it.
+The allocated ports structure in never freed. The free function should be
+called by release_cma_ports_group, but the group is never released since
+we don't remove its default group.
 
-Mark Downstream Ports as "ptm_enabled" if their Upstream Port has PTM
-enabled.
+Remove default groups when device group is deleted.
 
-Fixes: eec097d43100 ("PCI: Add pci_enable_ptm() for drivers to enable PTM on endpoints")
-Reported-by: Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 045959db65c6 ("IB/cma: Add configfs for rdma_cm")
+Link: https://lore.kernel.org/r/20200521072650.567908-1-leon@kernel.org
+Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/ptm.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ drivers/infiniband/core/cma_configfs.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-index 3008bba360f3..ec6f6213960b 100644
---- a/drivers/pci/pcie/ptm.c
-+++ b/drivers/pci/pcie/ptm.c
-@@ -47,10 +47,6 @@ void pci_ptm_init(struct pci_dev *dev)
- 	if (!pci_is_pcie(dev))
- 		return;
+diff --git a/drivers/infiniband/core/cma_configfs.c b/drivers/infiniband/core/cma_configfs.c
+index 41573df1d9fc..692fc42255c9 100644
+--- a/drivers/infiniband/core/cma_configfs.c
++++ b/drivers/infiniband/core/cma_configfs.c
+@@ -277,8 +277,21 @@ static struct config_group *make_cma_dev(struct config_group *group,
+ 	return ERR_PTR(err);
+ }
  
--	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
--	if (!pos)
--		return;
--
- 	/*
- 	 * Enable PTM only on interior devices (root ports, switch ports,
- 	 * etc.) on the assumption that it causes no link traffic until an
-@@ -60,6 +56,23 @@ void pci_ptm_init(struct pci_dev *dev)
- 	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
- 		return;
- 
-+	/*
-+	 * Switch Downstream Ports are not permitted to have a PTM
-+	 * capability; their PTM behavior is controlled by the Upstream
-+	 * Port (PCIe r5.0, sec 7.9.16).
-+	 */
-+	ups = pci_upstream_bridge(dev);
-+	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM &&
-+	    ups && ups->ptm_enabled) {
-+		dev->ptm_granularity = ups->ptm_granularity;
-+		dev->ptm_enabled = 1;
-+		return;
-+	}
++static void drop_cma_dev(struct config_group *cgroup, struct config_item *item)
++{
++	struct config_group *group =
++		container_of(item, struct config_group, cg_item);
++	struct cma_dev_group *cma_dev_group =
++		container_of(group, struct cma_dev_group, device_group);
 +
-+	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
-+	if (!pos)
-+		return;
++	configfs_remove_default_groups(&cma_dev_group->ports_group);
++	configfs_remove_default_groups(&cma_dev_group->device_group);
++	config_item_put(item);
++}
 +
- 	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
- 	local_clock = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
+ static struct configfs_group_operations cma_subsys_group_ops = {
+ 	.make_group	= make_cma_dev,
++	.drop_item	= drop_cma_dev,
+ };
  
-@@ -69,7 +82,6 @@ void pci_ptm_init(struct pci_dev *dev)
- 	 * the spec recommendation (PCIe r3.1, sec 7.32.3), select the
- 	 * furthest upstream Time Source as the PTM Root.
- 	 */
--	ups = pci_upstream_bridge(dev);
- 	if (ups && ups->ptm_enabled) {
- 		ctrl = PCI_PTM_CTRL_ENABLE;
- 		if (ups->ptm_granularity == 0)
+ static struct config_item_type cma_subsys_type = {
 -- 
 2.25.1
 
