@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FECC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD25C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E139B214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 706432192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447330;
-	bh=S683/qufa5CQUuVgcuYcQAqplJwbPg8tguzW1wjfo7U=;
+	s=default; t=1592447333;
+	bh=qgq4d/Tb4LxpgEzazG5SGHErDPeALQop0gAuqh4jUw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PFXjZRZBW7uILE3EwUPKyKA+/N2+0BHyyTlHZcz4/v6JemeiB0j3zB0aR6cXAPKw5
-	 vldtXfPTM6J4SnJYRujszyj/Fel9nqb9JHn3VOdSDir0MH/NeqwKfb4gBuCscWgWnG
-	 Mqf0Z4ibanAKeGQzIEA2Dc7x5E9o00uUnViNmrg0=
+	b=LujNPw285hZu4hDlc2khlQvgz0e8v8BKjtlpRrPYHit6wZZIs6rnmNZZhhaAFgx0M
+	 PMn6mVnnObBL+QUdft7JZME9NiaELSfavAWEnryfnhO6Pi3Aa/sITRJ1wZnGYnaSiJ
+	 2WptwQdLMIwTqyy+xPeOAbuP1UurV6HQplZHgLZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387644AbgFRC2t (ORCPT
+        id S2387650AbgFRC2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:28:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46914 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:28:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbgFRBQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:16:17 -0400
+        id S1729564AbgFRBQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:16:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C78F21D7D;
-        Thu, 18 Jun 2020 01:16:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8322721D7E;
+        Thu, 18 Jun 2020 01:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442976;
-        bh=S683/qufa5CQUuVgcuYcQAqplJwbPg8tguzW1wjfo7U=;
+        s=default; t=1592442975;
+        bh=qgq4d/Tb4LxpgEzazG5SGHErDPeALQop0gAuqh4jUw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hqfP47B930cHLrM5S4uLhZcNq69Ufxr++C02bunepshebtmCmvIknugnQ2FBrl2lh
-         rDtgLCyOxATaF49qcH2DvzhSDvVpTXb9R1hNxqtJpqykalNhZKwcOrWJ3mfUFM2gDx
-         V5GV22LkfDFp7KnA0JJR/0gatcQm8deu51GZqjIs=
+        b=iKeEmc4Qx0EUOed81J6Oj6RSQZgGnntUw326yAT/OKZJN18UVgdJ+g6obV/wKWnyp
+         xgsCvszjTsFY+bT9OoyJpiGF45viFPvc9IHefDfs2OtMZcqkC07Uz9r/fm00ca4+AM
+         xRwNUDkVoTpdH7vP9yIitCleZLitPXDzBDp3+r18=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+Cc:     Daniel Wagner <dwagner@suse.de>,
+        Himanshu Madhani <hmadhani2024@gmail.com>,
+        Hannes Reinecke <hare@suse.de>,
+        James Smart <james.smart@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 379/388] nvme-pci: use simple suspend when a HMB is enabled
-Date:   Wed, 17 Jun 2020 21:07:56 -0400
-Message-Id: <20200618010805.600873-379-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 378/388] nvme-fc: don't call nvme_cleanup_cmd() for AENs
+Date:   Wed, 17 Jun 2020 21:07:55 -0400
+Message-Id: <20200618010805.600873-378-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,44 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Daniel Wagner <dwagner@suse.de>
 
-[ Upstream commit b97120b15ebd3de51325084136d3b9c3cce656d6 ]
+[ Upstream commit c9c12e51b82b2bd0c59ac4e27ee5427f382a503f ]
 
-While the NVMe specification allows the device to access the host memory
-buffer in host DRAM from all power states, hosts will fail access to
-DRAM during S3 and similar power states.
+Asynchronous event notifications do not have an associated request.
+When fcp_io() fails we unconditionally call nvme_cleanup_cmd() which
+leads to a crash.
 
-Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
+Fixes: 16686f3a6c3c ("nvme: move common call to nvme_cleanup_cmd to core layer")
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: Himanshu Madhani <hmadhani2024@gmail.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: James Smart <james.smart@broadcom.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/nvme/host/fc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index cc46e250fcac..340bb9c8995e 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2933,9 +2933,15 @@ static int nvme_suspend(struct device *dev)
- 	 * the PCI bus layer to put it into D3 in order to take the PCIe link
- 	 * down, so as to allow the platform to achieve its minimum low-power
- 	 * state (which may not be possible if the link is up).
-+	 *
-+	 * If a host memory buffer is enabled, shut down the device as the NVMe
-+	 * specification allows the device to access the host memory buffer in
-+	 * host DRAM from all power states, but hosts will fail access to DRAM
-+	 * during S3.
- 	 */
- 	if (pm_suspend_via_firmware() || !ctrl->npss ||
- 	    !pcie_aspm_enabled(pdev) ||
-+	    ndev->nr_host_mem_descs ||
- 	    (ndev->ctrl.quirks & NVME_QUIRK_SIMPLE_SUSPEND))
- 		return nvme_disable_prepare_reset(ndev, true);
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index 7dfc4a2ecf1e..287a3e8ea317 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -2300,10 +2300,11 @@ nvme_fc_start_fcp_op(struct nvme_fc_ctrl *ctrl, struct nvme_fc_queue *queue,
+ 		opstate = atomic_xchg(&op->state, FCPOP_STATE_COMPLETE);
+ 		__nvme_fc_fcpop_chk_teardowns(ctrl, op, opstate);
  
+-		if (!(op->flags & FCOP_FLAGS_AEN))
++		if (!(op->flags & FCOP_FLAGS_AEN)) {
+ 			nvme_fc_unmap_data(ctrl, op->rq, op);
++			nvme_cleanup_cmd(op->rq);
++		}
+ 
+-		nvme_cleanup_cmd(op->rq);
+ 		nvme_fc_ctrl_put(ctrl);
+ 
+ 		if (ctrl->rport->remoteport.port_state == FC_OBJSTATE_ONLINE &&
 -- 
 2.25.1
 
