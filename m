@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E880C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA69DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73C832222C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC5D2222C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443883;
-	bh=bIk6w6VvDx5GaB2S3OeclfhGrx+NuGFb52D0NAChQF0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xfNP7FmCC73PaP4Gz+FIxupS6v+wMPNIstG2hZkqiMHTGaOHNt/NLOUdjyDVuVmOI
-	 S4hrXO9YVxQLfc+eMdLfT0pRpxHVE9V3CaTvImcYKhK2nwIumPaqnlMuKri/15iFD9
-	 s5vJedObjT5NhCSAKnxnvf0l41MFKrMOS70uSCRI=
+	s=default; t=1592443884;
+	bh=sMSxNnOzziIw0t8UcdbljMWt/JhQm723fWWYaZC/qdc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jfPHXHRZRb9m6XvuuyVt4Lmnbmh1nCgfX9es1TIqCnYBU6hmTu6uM+JuchI8aMo4i
+	 EPBr1rASMjsOMUkIulidrhd5z/hPvAKzCtSdZXy+Z4lU42ru785+wZgyyrriA5cH8t
+	 AaKhtr1bJM0x6L4xwOr5Vxc6MA+6W+x6EdhM1dCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732756AbgFRBbV (ORCPT
+        id S1732769AbgFRBbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:31:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36812 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:31:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732052AbgFRB2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:28:16 -0400
+        id S1732078AbgFRB2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:28:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE9A02220D;
-        Thu, 18 Jun 2020 01:28:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DBEF22202;
+        Thu, 18 Jun 2020 01:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443695;
-        bh=bIk6w6VvDx5GaB2S3OeclfhGrx+NuGFb52D0NAChQF0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Hiau6h5cr6tgXFDNe8O+jlmn2ECBDwGlYIh59T1cIirtT9wJxvSbdw/qqzFTDawX
-         a4KBzmLd3hWeUM91IUUNGa94gHznCp8LsD8ACuB15Z5EeirrDXtt5BzSsCAUf/7450
-         sZwpu97/BTfii4VN8x4Aobpk5zSOq793I0095eUc=
+        s=default; t=1592443701;
+        bh=sMSxNnOzziIw0t8UcdbljMWt/JhQm723fWWYaZC/qdc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mc0bSY2ElJtAhEcbjKd9AjhQpjNVGPO3m1K6V3BY/KX4W6NK2VYbKMEcVGZFRGggi
+         RBy7wj3YiEWez2ZVPybnNn5of1Fk7rNp1Lf0Imzik3OX15sJjJZSRP9shGeQizm793
+         BVITMngu1W1a+y7fJq+Y90Jooq2DKXJ5tWyO6guE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     tannerlove <tannerlove@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 106/108] selftests/net: in rxtimestamp getopt_long needs terminating null entry
-Date:   Wed, 17 Jun 2020 21:25:58 -0400
-Message-Id: <20200618012600.608744-106-sashal@kernel.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 01/80] power: supply: bq24257_charger: Replace depends on REGMAP_I2C with select
+Date:   Wed, 17 Jun 2020 21:27:00 -0400
+Message-Id: <20200618012819.609778-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
-References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,34 +57,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: tannerlove <tannerlove@google.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit 865a6cbb2288f8af7f9dc3b153c61b7014fdcf1e ]
+[ Upstream commit 87c3d579c8ed0eaea6b1567d529a8daa85a2bc6c ]
 
-getopt_long requires the last element to be filled with zeros.
-Otherwise, passing an unrecognized option can cause a segfault.
+regmap is a library function that gets selected by drivers that need
+it. No driver modules should depend on it. Depending on REGMAP_I2C makes
+this driver only build if another driver already selected REGMAP_I2C,
+as the symbol can't be selected through the menu kernel configuration.
 
-Fixes: 16e781224198 ("selftests/net: Add a test to validate behavior of rx timestamps")
-Signed-off-by: Tanner Love <tannerlove@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2219a935963e ("power_supply: Add TI BQ24257 charger driver")
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/networking/timestamping/rxtimestamp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/power/supply/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/networking/timestamping/rxtimestamp.c b/tools/testing/selftests/networking/timestamping/rxtimestamp.c
-index dd4162fc0419..7a573fb4c1c4 100644
---- a/tools/testing/selftests/networking/timestamping/rxtimestamp.c
-+++ b/tools/testing/selftests/networking/timestamping/rxtimestamp.c
-@@ -114,6 +114,7 @@ static struct option long_options[] = {
- 	{ "tcp", no_argument, 0, 't' },
- 	{ "udp", no_argument, 0, 'u' },
- 	{ "ip", no_argument, 0, 'i' },
-+	{ NULL, 0, NULL, 0 },
- };
- 
- static int next_port = 19999;
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index 76806a0be820..0de9a958b29a 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -424,7 +424,7 @@ config CHARGER_BQ24257
+ 	tristate "TI BQ24250/24251/24257 battery charger driver"
+ 	depends on I2C
+ 	depends on GPIOLIB || COMPILE_TEST
+-	depends on REGMAP_I2C
++	select REGMAP_I2C
+ 	help
+ 	  Say Y to enable support for the TI BQ24250, BQ24251, and BQ24257 battery
+ 	  chargers.
 -- 
 2.25.1
 
