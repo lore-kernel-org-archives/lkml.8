@@ -2,148 +2,138 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C47C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D28A2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:20:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JP6cdM6f"
+	by mail.kernel.org (Postfix) with ESMTP id A1D7D207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgFRIUI (ORCPT
+        id S1728597AbgFRIUP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:20:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728249AbgFRIUD (ORCPT
+        Thu, 18 Jun 2020 04:20:15 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:50189 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728406AbgFRIUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:20:03 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C329BC0613ED
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:20:00 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t13so2620753wrs.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:20:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=4KcujSsS1jyjnsxMXRZfCGa39cS76YnVtoeGFVxCFgc=;
-        b=JP6cdM6fRlsxkBS/oB90AVgYIES7VE8ArtqzXGZ8RnERg8aj8ytd++B2GEjbx3XJdh
-         5fEtk7p/TKEXMSNfLVJ5haAGojW2NatyNxLjq36RasROlWCd+J0EsfKG/rZhX4F0cI+D
-         o1sXVokcbprB6k95jboAGE/WYgr86lK24y7US+dgADQbL9YjPqJZzXgSy+Uf9eNOivmX
-         GW8LmoFy1DiTHCgWKG1s3KlKKGKKLHRyHSJrvRMz4tLjVycxiexpvkzkFzfIwlod3Vm+
-         8hV2AuaYNUhl1dsJMCHSPChuCldzgGma/AiWvTUgKnmcEP3YIaaC1df5xJt5QtCAFZAU
-         rOxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=4KcujSsS1jyjnsxMXRZfCGa39cS76YnVtoeGFVxCFgc=;
-        b=lPAcL8czH6eMkcekXwvXoGEcmRQ+bvAPn2qBq4RbzncDFHFFgIddJZ+HNVoYPbj6Db
-         wj/8OCnoIKBQofpR1quv5mU6/vl3HviNJbblcUq/Q0Lm385rkdO0G8CkLnYj3dgwHRXP
-         W2ijEy1nk32nKhMaYOk+99oSkJHWwefbsA+y4Zy35XtKY6xQa/tWTRSVkWcEIDRvw3fb
-         3gDKLHm//r9gpYHez48cWrwHxNTUeD9GilTIFm4z5xxpOk+pBu1pBWpa+ZTJJDTalGkR
-         sqInx0jSB+Tl2eon1Ca5c6AGvl/nTArnXv9nzrTAI0iASzRQnhmsWNMF3q/Q2+ffn4YZ
-         u8Mg==
-X-Gm-Message-State: AOAM5314Ri5CqEP4FDmZ/ZuvzNYHgug+duzjQcckLtBwyN5B647nmKe6
-        2v/rsdHPkPTSZ4uc5TmcBEFOTg==
-X-Google-Smtp-Source: ABdhPJzHjbMVQLF+FVct8ot/7YOMYRsMDLX1hN75mvGjfOq63MOC8UTFzu2niGdYKHrjduUo6iHLhw==
-X-Received: by 2002:adf:82d0:: with SMTP id 74mr3124134wrc.138.1592468399531;
-        Thu, 18 Jun 2020 01:19:59 -0700 (PDT)
-Received: from dell ([95.149.164.118])
-        by smtp.gmail.com with ESMTPSA id l17sm749882wmh.14.2020.06.18.01.19.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 01:19:58 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 09:19:57 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] mfd: Add support for Khadas Microcontroller
-Message-ID: <20200618081957.GD2608702@dell>
-References: <20200608091739.2368-1-narmstrong@baylibre.com>
+        Thu, 18 Jun 2020 04:20:04 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-60-xqW0qJM9OuOmp_SMWmfb5w-1; Thu, 18 Jun 2020 09:20:00 +0100
+X-MC-Unique: xqW0qJM9OuOmp_SMWmfb5w-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 18 Jun 2020 09:19:59 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 18 Jun 2020 09:19:59 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Kees Cook' <keescook@chromium.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sargun Dhillon" <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christoph Hellwig <hch@lst.de>,
+        "Tycho Andersen" <tycho@tycho.ws>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Andy Lutomirski" <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: RE: [PATCH v4 03/11] fs: Add fd_install_received() wrapper for
+ __fd_install_received()
+Thread-Topic: [PATCH v4 03/11] fs: Add fd_install_received() wrapper for
+ __fd_install_received()
+Thread-Index: AQHWQ44F2CX108LjrkCobo2loVeUYajc8NxQgAA6eACAANyJYA==
+Date:   Thu, 18 Jun 2020 08:19:59 +0000
+Message-ID: <bed4dbb349cf4dbda78652f9c2bf1090@AcuMS.aculab.com>
+References: <20200616032524.460144-1-keescook@chromium.org>
+ <20200616032524.460144-4-keescook@chromium.org>
+ <6de12195ec3244b99e6026b4b46e5be2@AcuMS.aculab.com>
+ <202006171141.4DA1174979@keescook>
+In-Reply-To: <202006171141.4DA1174979@keescook>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200608091739.2368-1-narmstrong@baylibre.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 08 Jun 2020, Neil Armstrong wrote:
+From: Kees Cook
+> Sent: 17 June 2020 20:58
+> On Wed, Jun 17, 2020 at 03:35:20PM +0000, David Laight wrote:
+> > From: Kees Cook
+> > > Sent: 16 June 2020 04:25
+> > >
+> > > For both pidfd and seccomp, the __user pointer is not used. Update
+> > > __fd_install_received() to make writing to ufd optional. (ufd
+> > > itself cannot checked for NULL because this changes the SCM_RIGHTS
+> > > interface behavior.) In these cases, the new fd needs to be returned
+> > > on success.  Update the existing callers to handle it. Add new wrapper
+> > > fd_install_received() for pidfd and seccomp that does not use the ufd
+> > > argument.
+> > ...>
+> > >  static inline int fd_install_received_user(struct file *file, int __user *ufd,
+> > >  					   unsigned int o_flags)
+> > >  {
+> > > -	return __fd_install_received(file, ufd, o_flags);
+> > > +	return __fd_install_received(file, true, ufd, o_flags);
+> > > +}
+> >
+> > Can you get rid of the 'return user' parameter by adding
+> > 	if (!ufd) return -EFAULT;
+> > to the above wrapper, then checking for NULL in the function?
+> >
+> > Or does that do the wrong horrid things in the fail path?
+> 
+> Oh, hm. No, that shouldn't break the failure path, since everything gets
+> unwound in __fd_install_received if the ufd write fails.
+> 
+> Effectively this (I'll chop it up into the correct patches):
 
-> The new Khadas VIM2, VIM3 and Edge boards embeds an on-board microcontroller
-> connected via I2C.
-> 
-> This Microcontroller is present on the Khadas VIM1, VIM2, VIM3 and Edge
-> boards.
-> 
-> It has multiple boot control features like password check, power-on
-> options, power-off control and system FAN control on recent boards.
-> 
-> Thie serie adds :
-> - the bindings
-> - the MFD driver
-> - the Thermal Cooling cell driver
-> - updates MAINTAINERS
-> - add support into the Khadas VIM3/VIM3L DT
-> 
-> Changes since v2 at [3]:
-> - Removed NVMEM driver for separate submission
-> - fixed MFD driver, header and Kconfig
-> - fixed Thermal Kconfig
-> - fixed MAINTAINERS files and path
-> 
-> Changes since RFC v1 at [2]:
-> - moved hwmon driver to thermal-only
-> - moved the SM1 thermal nodes in a separate serie
-> - added the bindings review tag from rob
-> 
-> [1] http://lore.kernel.org/r/20200512093916.19676-1-narmstrong@baylibre.com
-> [2] http://lore.kernel.org/r/20200421080102.22796-1-narmstrong@baylibre.com
-> [3] http://lore.kernel.org/r/20200512132613.31507-1-narmstrong@baylibre.com
-> 
-> Neil Armstrong (5):
->   dt-bindings: mfd: add Khadas Microcontroller bindings
->   mfd: add support for the Khadas System control Microcontroller
->   thermal: add support for the MCU controlled FAN on Khadas boards
->   MAINTAINERS: add myself as maintainer for Khadas MCU drivers
->   arm64: dts: meson-khadas-vim3: add Khadas MCU nodes
+Yep, that's what i was thinking...
 
-I'm a bit concerned by the missing patches from my inbox.
+Personally I'm not sure that it matters whether the file is left
+attached to a process fd when the copy_to_user() fails.
+The kernel data structures are consistent either way.
+So sane code relies on catching SIGSEGV, fixing thigs up,
+and carrying on.
+(IIRC the original /bin/sh code called sbrk() in its SIGSEGV
+handler instead of doing the limit check in malloc()!)
 
-Looks like you omitted to send me patch 3 and 5.
+The important error path is 'failing to get an fd number'.
+In that case the caller needs to keep the 'file *' or close it.
 
-Hopefully the Thermal patch doesn't depend on the MFD one!
+I've not looked at the code, but I wonder if you need to pass
+the 'file *' by reference so that you can consume it (write NULL)
+and return an error.
 
->  .../devicetree/bindings/mfd/khadas,mcu.yaml   |  44 +++++
->  MAINTAINERS                                   |   9 +
->  .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |  23 +++
->  drivers/mfd/Kconfig                           |  21 +++
->  drivers/mfd/Makefile                          |   1 +
->  drivers/mfd/khadas-mcu.c                      | 142 ++++++++++++++
->  drivers/thermal/Kconfig                       |  11 ++
->  drivers/thermal/Makefile                      |   1 +
->  drivers/thermal/khadas_mcu_fan.c              | 174 ++++++++++++++++++
->  include/linux/mfd/khadas-mcu.h                |  91 +++++++++
->  10 files changed, 517 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
->  create mode 100644 drivers/mfd/khadas-mcu.c
->  create mode 100644 drivers/thermal/khadas_mcu_fan.c
->  create mode 100644 include/linux/mfd/khadas-mcu.h
-> 
+	David
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
