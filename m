@@ -2,229 +2,303 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9DCC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF784C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE558217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:24:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VwqXe+SC"
+	by mail.kernel.org (Postfix) with ESMTP id B97282186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732133AbgFRRYU (ORCPT
+        id S1732143AbgFRRYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:24:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732098AbgFRRYT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 13:24:19 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0885C0613ED
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:24:19 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id s1so8269563ljo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IYlmzlXm+VrJo7JYODsM8cd9UWnB3bZArKAUI6t3sVA=;
-        b=VwqXe+SC9JBUUohRt1aVE6bPQXlMwSRhAaTu+S1Nde6pinRGw/JacoeMqkVAyD0Tm9
-         TVYeNmo71/8OpIBMvakVOTRQ4qdt7N2gWHl0KoBND9b2yGBmLhGD9FHUXmMmGj7k6Chk
-         EFs44/ZeAbBAcrTdN3aT8D2KnyrTPPfhfClu/0sofjIVcmRQS81JNj13Xca9teYGGKKi
-         YkjuuIbBrIBIAhlln8dD6OXGjyPAs6J8c5Ghh9XfRl6Q19hGHUNKRtIjJ84FHV4kXucZ
-         IIob5LqKzd2fyEMF5BjzUJjc3R+oQE1aN9N3sqafgghbekZ01vHrvykL8xbIXG1NPZQs
-         Q8Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IYlmzlXm+VrJo7JYODsM8cd9UWnB3bZArKAUI6t3sVA=;
-        b=ltW4gSJEHkv1FW86BH5jENhML1YPI1T2rxNB5CaCRDsdzBm1zNnuZehPf2ZyMVdg7k
-         cA/855IlkhlrfUTPW9ZwoWmrM262HMJRQLLxisFzYMARpue53m4vNTM+G7kvhoK8V0fG
-         PswJlRqgESDm4meUVimzTh69TFMcpXPqKt4SIyRi2EVujkVOlz0c1Jh+jFx1q5w4JUkK
-         ET9xjdBTfDpcKTs3IEqx0uPQI82IVBaIyH0mGec67TCDbdenItXnSnUn4fY8PvIMNShH
-         mRQEGaVsYV1zcTngLe8TEPPf36MwMH4k8NPtmbezLIm+itzPrpYjhl/WO7VW4aPUvrIh
-         MDtg==
-X-Gm-Message-State: AOAM531tZpJXu3qm5EIym3fZrc9n4pPOtfYx//sHEn8be0GiXHrPqb6l
-        vPrYIEZnWzzhhe8r8exV0PFmuedJ+GaIcIohgU03FQ==
-X-Google-Smtp-Source: ABdhPJyCAdMN0uphyaz9XQHN+YjMSKmZ98XA0/imPSKpbF7ImtJk9dhI7N6nTJB9E4MY2U8MoJdqhVK4c1KFSjUwvcA=
-X-Received: by 2002:a2e:8e8d:: with SMTP id z13mr2640858ljk.461.1592501057300;
- Thu, 18 Jun 2020 10:24:17 -0700 (PDT)
+        Thu, 18 Jun 2020 13:24:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:55728 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732098AbgFRRYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 13:24:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F334031B;
+        Thu, 18 Jun 2020 10:24:37 -0700 (PDT)
+Received: from e119603-lin.cambridge.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 725D23F6CF;
+        Thu, 18 Jun 2020 10:24:36 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 18:24:30 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        lukasz.luba@arm.com, james.quinlan@broadcom.com,
+        Jonathan.Cameron@Huawei.com, dave.martin@arm.com,
+        cristian.marussi@arm.com
+Subject: Re: [PATCH v8 9/9] firmware: arm_scmi: Add Base notifications support
+Message-ID: <20200618172430.GA9998@e119603-lin.cambridge.arm.com>
+References: <20200520081118.54897-1-cristian.marussi@arm.com>
+ <20200520081118.54897-10-cristian.marussi@arm.com>
+ <20200608170239.GA13622@bogus>
 MIME-Version: 1.0
-References: <20200616011742.138975-4-rajatja@google.com> <20200616073249.GB30385@infradead.org>
- <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
- <20200617073100.GA14424@infradead.org> <CACK8Z6FecYkAYQh4sm4RbAQ1iwb9gexqgY9ExD9BH2p-5Usj=g@mail.gmail.com>
- <CAHp75Vc6eA33cyAQH-m+yixTuHqiobg6fo7nzbbb-J6vN6qFcA@mail.gmail.com>
- <20200618083646.GA1066967@kroah.com> <CAHp75Vf71f2s6yipHJ4Ys1oe1v7L4PiqBCEbo0uBcG7Wpcs5dQ@mail.gmail.com>
- <CACK8Z6F2Ssj=EqhR2DZ114ETgQ-3PhzVi2rm2xxenCNOVH=60g@mail.gmail.com>
- <20200618160212.GB3076467@kroah.com> <20200618162322.GI34820@otc-nc-03>
-In-Reply-To: <20200618162322.GI34820@otc-nc-03>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 18 Jun 2020 10:23:38 -0700
-Message-ID: <CACK8Z6EnqmJtSqPPz2ARk0jwFLR_yCTS0vSLQ0v4C9QF-6BQ1w@mail.gmail.com>
-Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608170239.GA13622@bogus>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Greg and Andy for your continued inputs, and thanks Ashok for chiming in.
-
-On Thu, Jun 18, 2020 at 9:23 AM Raj, Ashok <ashok.raj@intel.com> wrote:
->
-> Hi Greg,
->
->
-> On Thu, Jun 18, 2020 at 06:02:12PM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, Jun 18, 2020 at 08:03:49AM -0700, Rajat Jain wrote:
-> > > Hello,
-> > >
-> > > On Thu, Jun 18, 2020 at 2:14 AM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > >
-> > > > On Thu, Jun 18, 2020 at 11:36 AM Greg Kroah-Hartman
-> > > > <gregkh@linuxfoundation.org> wrote:
-> > > > >
-> > > > > On Thu, Jun 18, 2020 at 11:12:56AM +0300, Andy Shevchenko wrote:
-> > > > > > On Wed, Jun 17, 2020 at 10:56 PM Rajat Jain <rajatja@google.com> wrote:
-> > > > > > > On Wed, Jun 17, 2020 at 12:31 AM Christoph Hellwig <hch@infradead.org> wrote:
-> > > > > >
-> > > > > > ...
-> > > > > >
-> > > > > > > (and likely call it "external" instead of "untrusted".
-> > > > > >
-> > > > > > Which is not okay. 'External' to what? 'untrusted' has been carefully
-> > > > > > chosen by the meaning of it.
-> > > > > > What external does mean for M.2. WWAN card in my laptop? It's in ACPI
-> > > > > > tables, but I can replace it.
-> > > > >
-> > > > > Then your ACPI tables should show this, there is an attribute for it,
-> > > > > right?
-> > > >
-> > > > There is a _PLD() method, but it's for the USB devices (or optional
-> > > > for others, I don't remember by heart). So, most of the ACPI tables,
-> > > > alas, don't show this.
-> > > >
-> > > > > > This is only one example. Or if firmware of some device is altered,
-> > > > > > and it's internal (whatever it means) is it trusted or not?
-> > > > >
-> > > > > That is what people are using policy for today, if you object to this,
-> > > > > please bring it up to those developers :)
-> > > >
-> > > > > > So, please leave it as is (I mean name).
-> > > > >
-> > > > > firmware today exports this attribute, why do you not want userspace to
-> > > > > also know it?
-> > >
-> > > To clarify, the attribute exposed by the firmware today is
-> > > "ExternalFacingPort" and "external-facing" respectively:
-> > >
-> > > 617654aae50e ("PCI / ACPI: Identify untrusted PCI devices")
-> > > 9cb30a71ac45d("PCI: OF: Support "external-facing" property")
-> > >
-> > > The kernel flag was named "untrusted" though, hence the assumption
-> > > that "external=untrusted" is currently baked into the kernel today.
-> > > IMHO, using "external" would fix that (The assumption can thus be
-> > > contained in the IOMMU drivers) and at the same time allow more use of
-> > > this attribute.
-> > >
-> > > > >
-> > > > > Trust is different, yes, don't get the two mixed up please.  That should
-> > > > > be a different sysfs attribute for obvious reasons.
-> > > >
-> > > > Yes, as a bottom line that's what I meant as well.
-> > >
-> > > So what is the consensus here? I don't have a strong opinion - but it
-> > > seemed to me Greg is saying "external" and Andy is saying "untrusted"?
+On Mon, Jun 08, 2020 at 06:02:39PM +0100, Sudeep Holla wrote:
+> On Wed, May 20, 2020 at 09:11:18AM +0100, Cristian Marussi wrote:
+> > Make SCMI Base protocol register with the notification core.
 > >
-> > Those two things are totally separate things when it comes to a device.
->
-> Agree that these are two separate attributes, and better not mixed.
-
-+1.
-
->
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> > ---
+> > V6 --> V7
+> > - fixed report.timestamp type
+> > - fix max_payld_sz initialization
+> > - fix report layout and initialization
+> > - expose SCMI_EVENT_ in linux/scmi_protocol.h
+> > V5 --> V6
+> > - added handle argument to fill_custom_report()
+> > V4 --> V5
+> > - fixed unsual return construct
+> > V3 --> V4
+> > - scmi_event field renamed
+> > V2 --> V3
+> > - added handle awareness
+> > V1 --> V2
+> > - simplified .set_notify_enabled() implementation moving the ALL_SRCIDs
+> >   logic out of protocol. ALL_SRCIDs logic is now in charge of the
+> >   notification core, together with proper reference counting of enables
+> > - switched to devres protocol-registration
+> > ---
+> >  drivers/firmware/arm_scmi/base.c | 118 +++++++++++++++++++++++++++++--
+> >  include/linux/scmi_protocol.h    |   9 +++
+> >  2 files changed, 123 insertions(+), 4 deletions(-)
 > >
-> > One (external) describes the location of the device in the system.
+> > diff --git a/drivers/firmware/arm_scmi/base.c b/drivers/firmware/arm_scmi/base.c
+> > index ce7d9203e41b..dcb098d8d823 100644
+> > --- a/drivers/firmware/arm_scmi/base.c
+> > +++ b/drivers/firmware/arm_scmi/base.c
+> > @@ -5,7 +5,13 @@
+> >   * Copyright (C) 2018 ARM Ltd.
+> >   */
 > >
-> > The other (untrusted) describes what you want the kernel to do with this
-> > device (trust or not trust it).
+> > +#include <linux/scmi_protocol.h>
+> > +
+> >  #include "common.h"
+> > +#include "notify.h"
+> > +
+> > +#define SCMI_BASE_NUM_SOURCES		1
+> > +#define SCMI_BASE_MAX_CMD_ERR_COUNT	1024
 > >
-> > One you can change (from trust to untrusted or back), the other you can
-> > not, it is a fixed read-only property that describes the hardware device
-> > as defined by the firmware.
+> 
+> I am not sure of this, see below.
+> 
+Ok
 
-Correct. I believe what is being described by the firmware is a fixed
-read-only property describing the location of the device ("external")
-- not what to do with it ("untrusted").
-
->
-> The genesis is due to lack of a mechanism to establish if the device
-> is trusted or not was the due lack of some specs and implementation around
-> Component Measurement And Authentication (CMA). Treating external as
-> untrusted was the best first effort. i.e trust internal
-> devices and don't trust external devices for enabling ATS.
->
-> But that said external is just describing topology, and if Linux wants to
-> use that in the policy that's different. Some day external device may also
-> use CMA to estabilish trust. FWIW even internal devices aren't trust
-> worthy, except maybe RCIEP's.
-
-Correct. Since the firmware is actually describing the unchangeable
-topology (and not the policy), the takeaway I am taking from this
-discussion is that the flag should be called "external".
-
-Like I said, I don't have any hard opinions on this. So if you feel
-that my conclusion is wrong and consensus was the other way around
-("untrusted"), let me know and I'll be happy to change this.
-
-Thanks,
-
-Rajat
-
->
+> >  enum scmi_base_protocol_cmd {
+> >  	BASE_DISCOVER_VENDOR = 0x3,
+> > @@ -19,16 +25,25 @@ enum scmi_base_protocol_cmd {
+> >  	BASE_RESET_AGENT_CONFIGURATION = 0xb,
+> >  };
 > >
-> > Depending on the policy you wish to define, you can use the location of
-> > the device to determine if you want to trust the device or not.
+> > -enum scmi_base_protocol_notify {
+> > -	BASE_ERROR_EVENT = 0x0,
+> > -};
+> > -
+> >  struct scmi_msg_resp_base_attributes {
+> >  	u8 num_protocols;
+> >  	u8 num_agents;
+> >  	__le16 reserved;
+> >  };
 > >
->
-> Cheers,
-> Ashok
+> > +struct scmi_msg_base_error_notify {
+> > +	__le32 event_control;
+> > +#define BASE_TP_NOTIFY_ALL	BIT(0)
+> > +};
+> > +
+> > +struct scmi_base_error_notify_payld {
+> > +	__le32 agent_id;
+> > +	__le32 error_status;
+> > +#define IS_FATAL_ERROR(x)	((x) & BIT(31))
+> > +#define ERROR_CMD_COUNT(x)	FIELD_GET(GENMASK(9, 0), (x))
+> > +	__le64 msg_reports[SCMI_BASE_MAX_CMD_ERR_COUNT];
+> 
+> This entire payload needs to fit in shmem and having huge shmem just
+> for this sounds not so good to me. If this can be large, it needs to
+> be iterated multiple times to get the full log.
+> 
+
+I think it's a good point, if a platform implementation would generate
+such jumbo payloads for this events no matter what the actual trasport
+message size was, we're definitely going to receive corrupted packets.
+
+Spec says about BASE_ERROR_EVENT:
+
+Bits[9:0]	Command count, number of commands in the
+		command list. A value of zero is possible if the
+		error cannot be attributed.
+
+I'll ask Souvik if it's not the case to amend the spec to highlight this
+possibility. (being errors notifications I suppose platform could simply
+chunk the big packet in multiple pieces to fit into the current transport)
+
+Anyway reviewing this implementation this payld struct here is defined as
+to be big enough to contain the maximum allowed size by the current spec,
+it is not that I am expecting to strictly receive packets sized exacly as
+that; it's the same appproach I use thorughout the notifications: I reserve
+an area big enough to hold any possible packet (.max_payld_sz) and then I
+just check that I received a packets that fits (sizeof(*p) < payld_sz), in
+case I received a variable length payload event packet as this, or check,
+for other fixed-size payload events, that the received packet is of the
+exact specified length.
+
+It's just that I'm trying to pre-allocate spare areas that can fit any
+possible packet length (if variable) for any possible transport.
+
+> > +};
+> > +
+> >  /**
+> >   * scmi_base_attributes_get() - gets the implementation details
+> >   *	that are associated with the base protocol.
+> > @@ -222,6 +237,95 @@ static int scmi_base_discover_agent_get(const struct scmi_handle *handle,
+> >  	return ret;
+> >  }
+> >
+> > +static int scmi_base_error_notify(const struct scmi_handle *handle, bool enable)
+> > +{
+> > +	int ret;
+> > +	u32 evt_cntl = enable ? BASE_TP_NOTIFY_ALL : 0;
+> > +	struct scmi_xfer *t;
+> > +	struct scmi_msg_base_error_notify *cfg;
+> > +
+> > +	ret = scmi_xfer_get_init(handle, BASE_NOTIFY_ERRORS,
+> > +				 SCMI_PROTOCOL_BASE, sizeof(*cfg), 0, &t);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	cfg = t->tx.buf;
+> > +	cfg->event_control = cpu_to_le32(evt_cntl);
+> > +
+> > +	ret = scmi_do_xfer(handle, t);
+> > +
+> > +	scmi_xfer_put(handle, t);
+> > +	return ret;
+> > +}
+> > +
+> > +static bool scmi_base_set_notify_enabled(const struct scmi_handle *handle,
+> > +					 u8 evt_id, u32 src_id, bool enable)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = scmi_base_error_notify(handle, enable);
+> > +	if (ret)
+> > +		pr_warn("SCMI Notifications - Proto:%X - FAIL_ENABLED - evt[%X] ret:%d\n",
+> > +			SCMI_PROTOCOL_BASE, evt_id, ret);
+> > +
+> 
+> I would make all these debug as they are not fatal. The users can decide
+> if they are fatal and log it appropriately.
+> 
+
+Ok.
+
+> > +	return !ret;
+> > +}
+> > +
+> > +static void *scmi_base_fill_custom_report(const struct scmi_handle *handle,
+> > +					  u8 evt_id, u64 timestamp,
+> > +					  const void *payld, size_t payld_sz,
+> > +					  void *report, u32 *src_id)
+> > +{
+> > +	void *rep = NULL;
+> > +
+> > +	switch (evt_id) {
+> > +	case SCMI_EVENT_BASE_ERROR_EVENT:
+> 
+> Drop switch for now, just check for evt_id to be SCMI_EVENT_BASE_ERROR_EVENT.
+> 
+
+Ok
+> > +	{
+> > +		int i;
+> > +		const struct scmi_base_error_notify_payld *p = payld;
+> > +		struct scmi_base_error_report *r = report;
+> > +
+> > +		/*
+> > +		 * BaseError notification payload is variable in size but
+> > +		 * up to a maximum length determined by the struct ponted by p.
+> > +		 * Instead payld_sz is the effective length of this notification
+> > +		 * payload so cannot be greater of the maximum allowed size as
+> > +		 * pointed by p.
+> > +		 */
+> > +		if (sizeof(*p) < payld_sz)
+> > +			break;
+> > +
+> > +		r->timestamp = timestamp;
+> > +		r->agent_id = le32_to_cpu(p->agent_id);
+> > +		r->fatal = IS_FATAL_ERROR(le32_to_cpu(p->error_status));
+> > +		r->cmd_count = ERROR_CMD_COUNT(le32_to_cpu(p->error_status));
+> > +		for (i = 0; i < r->cmd_count; i++)
+> > +			r->reports[i] = le64_to_cpu(p->msg_reports[i]);
+> > +		*src_id = 0;
+> > +		rep = r;
+> > +		break;
+> > +	}
+> > +	default:
+> > +		break;
+> > +	}
+> > +
+> > +	return rep;
+> > +}
+> > +
+> > +static const struct scmi_event base_events[] = {
+> > +	{
+> > +		.id = SCMI_EVENT_BASE_ERROR_EVENT,
+> > +		.max_payld_sz = sizeof(struct scmi_base_error_notify_payld),
+> > +		.max_report_sz = sizeof(struct scmi_base_error_report) +
+> > +				  SCMI_BASE_MAX_CMD_ERR_COUNT * sizeof(u64),
+> > +	},
+> > +};
+> > +
+> > +static const struct scmi_protocol_event_ops base_event_ops = {
+> > +	.set_notify_enabled = scmi_base_set_notify_enabled,
+> > +	.fill_custom_report = scmi_base_fill_custom_report,
+> > +};
+> > +
+> >  int scmi_base_protocol_init(struct scmi_handle *h)
+> >  {
+> >  	int id, ret;
+> > @@ -256,6 +360,12 @@ int scmi_base_protocol_init(struct scmi_handle *h)
+> >  	dev_dbg(dev, "Found %d protocol(s) %d agent(s)\n", rev->num_protocols,
+> >  		rev->num_agents);
+> >
+> > +	scmi_register_protocol_events(handle,
+> > +				      SCMI_PROTOCOL_BASE, (4 * PAGE_SIZE),
+> 
+> The size 4 * PAGE_SZ is not clear. For me this can't be more that
+> max_msg_size.
+
+This is the size required by this protocol for the per-protocol kfifo queue
+allocation: it is anyway wrong as my aim was to default to 4k (or 16k for this
+possibly jumbo sized packet), but this way is needlessly bound to the configured
+PAGE_SIZE.
+
+I'll introduce a define for a base 4k proto queue size and use that.
+
+> 
+> The comments in this patch applies to last 5 patches(all protocols basically)
+> 
+
+Ok I'll do.
+
+
+Thanks
+
+Cristian
+
+> --
+> Regards,
+> Sudeep
