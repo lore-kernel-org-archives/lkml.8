@@ -2,167 +2,361 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E98C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F750206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A810217A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:40:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="uodTxTJF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="IHzgLwAX";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="LZ7ah9CK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgFRHjk (ORCPT
+        id S1728124AbgFRHkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 03:39:40 -0400
-Received: from mga03.intel.com ([134.134.136.65]:36025 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727877AbgFRHjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 03:39:40 -0400
-IronPort-SDR: tbJyrsBoJ6zNq1MIF6GSafk0WrkujB8cpxDse7DEw8IXwalltcGTkSUnjJsLcc13wHO1PoBsh3
- 7iU33Ph7+1xw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9655"; a="142421400"
-X-IronPort-AV: E=Sophos;i="5.73,525,1583222400"; 
-   d="scan'208";a="142421400"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 00:39:38 -0700
-IronPort-SDR: EEk656pFV1uNDBCGprNQhPevw6EfpvA1RDD63LTK2PuJZ3ETOlVEEMnL/EiVDG6szj7HENFzjC
- aEcjIo2Osqsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,525,1583222400"; 
-   d="scan'208";a="450548456"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga005.jf.intel.com with ESMTP; 18 Jun 2020 00:39:35 -0700
-Received: from fmsmsx163.amr.corp.intel.com (10.18.125.72) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 18 Jun 2020 00:39:33 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx163.amr.corp.intel.com (10.18.125.72) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 18 Jun 2020 00:39:32 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.106)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 18 Jun 2020 00:39:32 -0700
+        Thu, 18 Jun 2020 03:40:02 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:24295 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728072AbgFRHkB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 03:40:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592466001; x=1624002001;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=9hT9kvzRTHWAb+DadF1d3pEtWKpc97dbPwSU/judq+E=;
+  b=IHzgLwAXJHSrP5wanyRV1gxvfDoFqHBdct6rAb0Bif5xqRBHJ9JPehua
+   8UFJ8Pi9KskiBHDwRTKk3qKkbnzJbl8QDqDE1OEAgZ/3+scw7NTquEhic
+   48NsGvieX1BuzcV9vdvrUcWFAmkjdzeCc00mDCXHnXlBOyQJC8MMx1pA3
+   bRq9j7Z6U8ZbMgKulGPFM2lLEoy0PiTlHkR1ZsHmylUM56nxshuVWOvvB
+   4ad2P9oQfJWzP0hSMQpAwvy0vpuoXuLkuq/Hb//l2tB7ezMz39zIc71AQ
+   D8U+wiNaCNBTmyGTxOUWUHx+O6jv6Q8bEOHeYwFK+yYLnObopZVbCjRuf
+   A==;
+IronPort-SDR: bcPhnksmsCi51yECEl7BMEM4q6VRW3SDDa62ADnJxkkZjNpIotPK6WsSC78iPjox2yqVcHddwd
+ CHB/XJ2LDbpGyCYxdvbVskQobPSm4rlxwxcmBAz321VHTpL51GtCYAVHmvadx+kDCIwwBjC2GS
+ 7iqrHGD0UYO2+9ZTKoJAjybO7URLWCyu6Hkp05kkoD4fftmWH+bV+Z1QtDJfOVEoLlrSrH9d5x
+ qhlYww+INXV/cv3wmOYl+VAK0pBqCM+olKGYVT+p8NGLfCViDm2/nZNFrWOVGWNd3WTiam4xAP
+ nFE=
+X-IronPort-AV: E=Sophos;i="5.73,525,1583164800"; 
+   d="scan'208";a="144618477"
+Received: from mail-mw2nam10lp2107.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.107])
+  by ob1.hgst.iphmx.com with ESMTP; 18 Jun 2020 15:40:00 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iqkfKiaY6bjTNNYV+b3+V1j5cgBs6vKx59UMn9gzhP1GNDxaKCHoYhJDeQM0+jcoa2iPQGJZK5GgbzNClLQu7LWh/sC2aQ+ngIPS1F6CK25STh9Ba8WQSPEn4AS4oI2CUL/WzMAxSOlk2TwtAHzLXE7pu7Exp14+fNAGMzh6GF8mlXm9DbMFOIGJLLhwbrepMG7RB7kdrHyofZlgnK1da1FliHlOsVK74M2N1rGsOQigyp5ljIunu04rkkH8U/zgoj/Aq/m8xLBk1JtOlvdSiPQ0mmPk/fg66tPlZSnmcpDp1O7mss7cgP8vmo/bMDkayy3dSFTrOKTHf22vP8SWAg==
+ b=HfjCGnu1ehry2bVvRT5OS3uiiQHwG5KQkQj92pPGUOJltBn3Su3axpql5zGyI0+j4go1oxj3hvSFoVnwGewmT827fo638pze482SAQX413+eurFX6s6a40/1lNBPOL/tBq1I6XW9xE2qKziAfAi0Bm9+63I39+s9Irk2vmKDYYvdAFNdr63PVHItH0EWV0yi+rOjTDgOnPxDgEglS2WmAC3+A6OavT+5RfEiQSlW/+jBC6IJN8XiIQi4LXTfPz2ZNYecrp7EDUbUwkO6i9jX7RMA8JT0jm8lcceAXzblHSzZj0UT9e6CZ7exNqUWI1Ai84MyvCaAUAnQPEVoa55YjQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CT1byb2YKQ9IAmkpmfvOtcfqURbx7mTT+yWHYJOfcJs=;
- b=hRkjmcswNMs1LLbodeXAuA3NwhJ1bclcmXLHBMS+MMSPlvffS06LQluVXjK7xM0WkMI7snDiL1UxLrSGeFPX8aDer8KoOy5CwgNm7q7pDwMWsDnuDJycTS34p0RtjyiYIfsv+YmCMTeaJF5SGxAJCcuHLTR8tU9oHzGndN9Mq+wCEWU9pmTRPEWIDrjr4TVxYr3XqOlJWadtLOMDRgUiKOP+GgnwzozOXsG2/CDr4KoPJPwwjECBtPvfXVBH6VWiYh8jLu7sASYjNpCCsTvuPbbHiNDlHNSBwpP/kOSehAGEpK8d9RqmTK2vvkKF3mghld2hyenQWP29jO1Ia3vL7g==
+ bh=qh3N+20nitalPhxv2W5Nr3gOnvCJOZUOpb//TMnNzaA=;
+ b=drrBiePIhagcE1ZR76V2G6G97+pbD6IWMQrzgsjVxQ6HP/5tUN+oUyn7mHIuygrgbadVsdid69BHKfNbP4v1Y3W1/Ku7jmlWf12vbhlaJkUMsezf8LMX9vGLpPRq6CjYNMfUzMcYnyFJ7LeAhGJB0wuOrO8GDmphigEy+8iFxXqf+Ax9krslUvdQWATTc7boheyc7kSTK3qzLUBxBngae0k7dAAFJlCk2tf1dmeZB3UbVc5yQhCC+I8cjXGMPxAG1r6oaUAYZ//p96f6GIua2rtYDU4RwbS0NptW9ly6jUQn0l8tEbJNsUrA1uRTiuR2R+9FLi+Zvp+1EL19IrZcBw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CT1byb2YKQ9IAmkpmfvOtcfqURbx7mTT+yWHYJOfcJs=;
- b=uodTxTJFpsfGouxWn0YvMvqNhi+HyPWHzlY6Rmt1pYjqVSmLqPSDh0iS81QSjJ1MyeS+HbQGigXaLPZbuo6E+rCeVS3ti080V2p3u/pPT8DkEXaiyarr0NyMJ4eU2NFvNKHNiEeBfkInpWscZ8tDEwGk6ch5WrUwmzUycoDWMO8=
-Received: from CY4PR1101MB2326.namprd11.prod.outlook.com
- (2603:10b6:903:b3::23) by CY4PR11MB1287.namprd11.prod.outlook.com
- (2603:10b6:903:2d::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Thu, 18 Jun
- 2020 07:39:31 +0000
-Received: from CY4PR1101MB2326.namprd11.prod.outlook.com
- ([fe80::20ad:67f:8bea:34a0]) by CY4PR1101MB2326.namprd11.prod.outlook.com
- ([fe80::20ad:67f:8bea:34a0%8]) with mapi id 15.20.3109.021; Thu, 18 Jun 2020
- 07:39:31 +0000
-From:   "Reshetova, Elena" <elena.reshetova@intel.com>
-To:     Kees Cook <keescook@chromium.org>
-CC:     Xiaoming Ni <nixiaoming@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Windsor <dwindsor@gmail.com>,
-        Hans Liljestrand <ishkamiel@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "paulmck@kernel.org" <paulmck@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "shakeelb@google.com" <shakeelb@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        "alex.huangjianhui@huawei.com" <alex.huangjianhui@huawei.com>,
-        "dylix.dailei@huawei.com" <dylix.dailei@huawei.com>,
-        "chenzefeng2@huawei.com" <chenzefeng2@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 0/3] Convert nsproxy, groups, and creds to refcount_t
-Thread-Topic: [PATCH 0/3] Convert nsproxy, groups, and creds to refcount_t
-Thread-Index: AQHWQOg7pvDM2vjI7kmUTaz/F8Qw8ajY8l4AgAAdh4CAABsdYIAA0yOAgAQFDHA=
-Date:   Thu, 18 Jun 2020 07:39:31 +0000
-Message-ID: <CY4PR1101MB23267DC8D2B1232744A5D6DCE79B0@CY4PR1101MB2326.namprd11.prod.outlook.com>
-References: <20200612183450.4189588-1-keescook@chromium.org>
- <7be4d56b-0406-099b-e505-02e074c5173e@huawei.com>
- <202006142054.C00B3E9C9@keescook>
- <CY4PR1101MB23261B27ACF9D7FBC3969318E79C0@CY4PR1101MB2326.namprd11.prod.outlook.com>
- <202006151108.5B25D5A31@keescook>
-In-Reply-To: <202006151108.5B25D5A31@keescook>
+ bh=qh3N+20nitalPhxv2W5Nr3gOnvCJOZUOpb//TMnNzaA=;
+ b=LZ7ah9CKKl9eo9bxatpBmqtXuIuYL4N29mgHRHdrSxUPhpcaGVKEDs6gFRoseK1bGw5l4DLKBjskIRxDs194NILsai10lq8Yb8lbVbvWmxUJ2aOLIPwUffU0uU9iDGWULz+QPiVwYYR42pIC114zKLD2BW1ZNiLa118twRk1ydY=
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
+ by CY4PR0401MB3586.namprd04.prod.outlook.com (2603:10b6:910:8e::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21; Thu, 18 Jun
+ 2020 07:39:58 +0000
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::c593:f271:eebe:ac7]) by CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::c593:f271:eebe:ac7%9]) with mapi id 15.20.3088.028; Thu, 18 Jun 2020
+ 07:39:58 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Kanchan Joshi <joshi.k@samsung.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>
+CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
+        "nj.shetty@samsung.com" <nj.shetty@samsung.com>,
+        "javier.gonz@samsung.com" <javier.gonz@samsung.com>
+Subject: Re: [PATCH 3/3] io_uring: add support for zone-append
+Thread-Topic: [PATCH 3/3] io_uring: add support for zone-append
+Thread-Index: AQHWRMyUe8chR0VkUU2K4ON9AWdJKQ==
+Date:   Thu, 18 Jun 2020 07:39:58 +0000
+Message-ID: <CY4PR04MB37510E916B6F243D189B4EB0E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+References: <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200617172713epcas5p352f2907a12bd4ee3c97be1c7d8e1569e@epcas5p3.samsung.com>
+ <1592414619-5646-4-git-send-email-joshi.k@samsung.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: chromium.org; dkim=none (message not signed)
- header.d=none;chromium.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.151.173]
+authentication-results: samsung.com; dkim=none (message not signed)
+ header.d=none;samsung.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [199.255.47.7]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e7ba76e3-73b0-4448-49fe-08d8135abcfb
-x-ms-traffictypediagnostic: CY4PR11MB1287:
-x-microsoft-antispam-prvs: <CY4PR11MB1287C08FA26347D44ACB010AE79B0@CY4PR11MB1287.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f65a2c01-f6e3-4afb-792a-08d8135acd68
+x-ms-traffictypediagnostic: CY4PR0401MB3586:
+x-microsoft-antispam-prvs: <CY4PR0401MB3586A3C1048FA8395FD758A3E79B0@CY4PR0401MB3586.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1122;
 x-forefront-prvs: 0438F90F17
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PpaBKFQp3vQhrSgS4gGHiGt331T7XYFv1obXfa++Og9orGn/OxyCuIZcGhz0Oj8KLKnIZn5wFOQhRfpVVlwWwQG69Eqbt1PsKQIyR2k8bnvhi0pdnf4XsXW4clOcLGtQQwo9MKF2bIevp75IR6Cd6qkcTTyBu62qzvV1sK/IJrYF5GQvb8qniaFiZQ6XVbb6IeeURaWBA7A+nzjIzoMpwAB1ec4MYZd1cygyfxI1CyAlpZs/5QPYjHGnvxB8PsqG0RX4aO9l0Cyn7EulzgYQVVjapYaHxSCMzEIj8ouO/N3fvEZASotQD2qM3bCJuQbBGqF+cwZZq3LQ797fz34oUsOcWU27L+ctqChQRFS7cQ92r1qMcLDjMrx8wiw6iRM6TFDCneApgIljF0ODJqYdKw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR1101MB2326.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(39860400002)(376002)(396003)(366004)(26005)(186003)(6916009)(8676002)(316002)(6506007)(33656002)(2906002)(54906003)(478600001)(5660300002)(52536014)(71200400001)(7696005)(83380400001)(966005)(66446008)(4326008)(66946007)(76116006)(66476007)(66556008)(64756008)(55016002)(8936002)(7416002)(9686003)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: SE8IJBFLwrrNbq+JLNrjz9g4MThnioxpjPudB7CM3oacqAHloysJOu4CfR6qypEWyfKrfBULeTB1RUiFsKdbDFbN5AupJP8sVnmJXJd3dY25YuJhTpRj8gCMPWsymQK4tYMvuFjDtLbV8UeUORY8vdXmZiaDSzDaqzZUqjrvUK7jH4ISQ1GIyUElfWsF1/j3Hjgb84X33Y/5huAlRi2cucs9e2NfLdvbJ5s2fBakYb/E2lqpo9cXj5LMQxm4XjeEJgybMSbG9dCygkcB2Dt8Vu0NKqDZZy9UaevYjHfSCGC25B9Rjd1VbtX+zUUsMvuuwlU8ucpS+SaQAHbHnfFq7FF7qcHcs6akZdUkyuZzG2j+GDmBG83z0SYlYxpTHgiYumbI/s1123l9IPef1LNB+nrvvMorbCE0ggQwcTQYowPzhE720EItE4Cvr6R0ppJZsIx73ILScidZOwpPyuzgtxpYtZfb3s4cozRmU0hA4PQ+KlqdJ4xkyOenuJS5GTVC
+x-microsoft-antispam-message-info: 0wuH81qlgwpD5YgjZiZWLwhsss0xCH5ERI8i2aIdPSNeyOGLn2BeDqD+AvmJGJkZo8Hv0NcaXk8kxLlcOou77iBcbiO+OxFprux3mCiRIF5cwV+BH0jirvMjCrwkBEIUsDRgERwVwn3R87yoNiZtMzAiazGRci7mkMA1//lbu/ByLEIpj0Re6ltygNoRWRDN0ukl7I+pvIOzFgdRuwXHHf+MoFSJRD3ceAI26Ysk25e1XW8jbHIUKLxwabtmMtIhFmRhNbSfLWNxzpbkPzX0FRFxoikHiyFXgMdElpm+u96M4+/Yk8xdOAbACr9AiGAfekNF9rEQSP7OVsh7R1f8OQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(346002)(39860400002)(136003)(376002)(64756008)(66476007)(91956017)(76116006)(5660300002)(66946007)(66446008)(4326008)(71200400001)(55016002)(6506007)(53546011)(66556008)(9686003)(7696005)(33656002)(2906002)(83380400001)(86362001)(186003)(26005)(52536014)(8676002)(7416002)(316002)(54906003)(110136005)(8936002)(478600001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: iGNsRGefjuUGsYjbajN6xNNAU7bAFArakeW20ZdGpAylwOhPAeiYZW/305HlOl5GEja21vCfvFeYF30Yc+lBqmnIIOztB7WPOmMoPhH6cAN/CYpM7GlDxVNrfmGtBTaLRLXFt5lefAHW7CF5QalUw377igOB9h+LXAM4oBPBLN3iJU/yN87NoOWw17Qa95apkRbEi+Um2rtvwljelZsNYnLaMVYPIlg9Tj4bTFM1IUbLIn4z+mrEbh5uAHyAiv5ttxug3zGHSAmd3wOMED4XEPxRBim3ec47EW4vul5gydQPbA1WHYY7asVPr+lDOEcG0P6suCkqapMMSQJQdcFn1kDV+ueTRpeHyxBfd9Cy7muggNQi5JDHY+YhmzyxotjbjrhiDnkNDaR+qTxLeJsa7FTmvJl/hGcht/umx+CfWuxPGY7ecTr1nXoQc1jSE+Mc9jvJYZTRpl9eH/XL8HLAe0a1TjHV/gNmfEY2dfTdUIM=
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7ba76e3-73b0-4448-49fe-08d8135abcfb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 07:39:31.1034
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f65a2c01-f6e3-4afb-792a-08d8135acd68
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 07:39:58.5536
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /u5j23VXjsL6uce9Rh+2Arn7OWMXjyjuf2aodCNKL0oq9rC/0eRYbTIAaRGOUazylCtFgpWm6evxzb+EcJGFuQxWY4iDjiDimaNOnzndHOE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1287
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-userprincipalname: Xu+c02sjtkU4uNRAUzrDGz4amiK/SWUQT2WqRy/iT0My/ThA9LxU38rnOa5spqA44VLf5sQLeqP1Tx5wHrrocA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR0401MB3586
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > I have these ones also here in case anyone is interested:
-> > https://github.com/ereshetova/linux-stable/commits/refcount_t_fs
-> > https://github.com/ereshetova/linux-stable/commits/refcount_t_block
-> >
-> > They haven't been rebased for a while, but if there is an interest,
-> > I can certainly do it.
->=20
-> That would be great; yes!
-
-Here are leftover pieces now rebased on top of next/stable:
-
-https://github.com/ereshetova/linux-stable/commits/refcount_t_fs
-https://github.com/ereshetova/linux-stable/commits/refcount_t_block
-
-Haven't tested them beyond allyesconfig compile through...
-
-There are also mm pieces (ignore bdi_writeback_congested.refcnt as it is al=
-ready done)
- that were sent originally here:
-https://lore.kernel.org/lkml/1487671124-11188-1-git-send-email-elena.reshet=
-ova@intel.com/
-But especially mm_struct pieces would need a new look and proper=20
-checks.=20
-Again, happy to do them also on a separate branch, if there is an interest =
-to merge
-them (I expect mm_struct to be much more sensitive structure for such chang=
-es).
-
-Best Regards,
-Elena
+On 2020/06/18 2:27, Kanchan Joshi wrote:=0A=
+> From: Selvakumar S <selvakuma.s1@samsung.com>=0A=
+> =0A=
+> Introduce three new opcodes for zone-append -=0A=
+> =0A=
+>    IORING_OP_ZONE_APPEND     : non-vectord, similiar to IORING_OP_WRITE=
+=0A=
+>    IORING_OP_ZONE_APPENDV    : vectored, similar to IORING_OP_WRITEV=0A=
+>    IORING_OP_ZONE_APPEND_FIXED : append using fixed-buffers=0A=
+> =0A=
+> Repurpose cqe->flags to return zone-relative offset.=0A=
+> =0A=
+> Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>=0A=
+> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>=0A=
+> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>=0A=
+> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>=0A=
+> ---=0A=
+>  fs/io_uring.c                 | 72 +++++++++++++++++++++++++++++++++++++=
+++++--=0A=
+>  include/uapi/linux/io_uring.h |  8 ++++-=0A=
+>  2 files changed, 77 insertions(+), 3 deletions(-)=0A=
+> =0A=
+> diff --git a/fs/io_uring.c b/fs/io_uring.c=0A=
+> index 155f3d8..c14c873 100644=0A=
+> --- a/fs/io_uring.c=0A=
+> +++ b/fs/io_uring.c=0A=
+> @@ -649,6 +649,10 @@ struct io_kiocb {=0A=
+>  	unsigned long		fsize;=0A=
+>  	u64			user_data;=0A=
+>  	u32			result;=0A=
+> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
+> +	/* zone-relative offset for append, in bytes */=0A=
+> +	u32			append_offset;=0A=
+=0A=
+this can overflow. u64 is needed.=0A=
+=0A=
+> +#endif=0A=
+>  	u32			sequence;=0A=
+>  =0A=
+>  	struct list_head	link_list;=0A=
+> @@ -875,6 +879,26 @@ static const struct io_op_def io_op_defs[] =3D {=0A=
+>  		.hash_reg_file		=3D 1,=0A=
+>  		.unbound_nonreg_file	=3D 1,=0A=
+>  	},=0A=
+> +	[IORING_OP_ZONE_APPEND] =3D {=0A=
+> +		.needs_mm               =3D 1,=0A=
+> +		.needs_file             =3D 1,=0A=
+> +		.unbound_nonreg_file    =3D 1,=0A=
+> +		.pollout		=3D 1,=0A=
+> +	},=0A=
+> +	[IORING_OP_ZONE_APPENDV] =3D {=0A=
+> +	       .async_ctx              =3D 1,=0A=
+> +	       .needs_mm               =3D 1,=0A=
+> +	       .needs_file             =3D 1,=0A=
+> +	       .hash_reg_file          =3D 1,=0A=
+> +	       .unbound_nonreg_file    =3D 1,=0A=
+> +	       .pollout			=3D 1,=0A=
+> +	},=0A=
+> +	[IORING_OP_ZONE_APPEND_FIXED] =3D {=0A=
+> +	       .needs_file             =3D 1,=0A=
+> +	       .hash_reg_file          =3D 1,=0A=
+> +	       .unbound_nonreg_file    =3D 1,=0A=
+> +	       .pollout			=3D 1,=0A=
+> +	},=0A=
+>  };=0A=
+>  =0A=
+>  static void io_wq_submit_work(struct io_wq_work **workptr);=0A=
+> @@ -1285,7 +1309,16 @@ static void __io_cqring_fill_event(struct io_kiocb=
+ *req, long res, long cflags)=0A=
+>  	if (likely(cqe)) {=0A=
+>  		WRITE_ONCE(cqe->user_data, req->user_data);=0A=
+>  		WRITE_ONCE(cqe->res, res);=0A=
+> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
+> +		if (req->opcode =3D=3D IORING_OP_ZONE_APPEND ||=0A=
+> +				req->opcode =3D=3D IORING_OP_ZONE_APPENDV ||=0A=
+> +				req->opcode =3D=3D IORING_OP_ZONE_APPEND_FIXED)=0A=
+> +			WRITE_ONCE(cqe->res2, req->append_offset);=0A=
+> +		else=0A=
+> +			WRITE_ONCE(cqe->flags, cflags);=0A=
+> +#else=0A=
+>  		WRITE_ONCE(cqe->flags, cflags);=0A=
+> +#endif=0A=
+>  	} else if (ctx->cq_overflow_flushed) {=0A=
+>  		WRITE_ONCE(ctx->rings->cq_overflow,=0A=
+>  				atomic_inc_return(&ctx->cached_cq_overflow));=0A=
+> @@ -1961,6 +1994,9 @@ static void io_complete_rw_common(struct kiocb *kio=
+cb, long res)=0A=
+>  static void io_complete_rw(struct kiocb *kiocb, long res, long res2)=0A=
+>  {=0A=
+>  	struct io_kiocb *req =3D container_of(kiocb, struct io_kiocb, rw.kiocb)=
+;=0A=
+> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
+> +	req->append_offset =3D (u32)res2;=0A=
+> +#endif=0A=
+>  =0A=
+>  	io_complete_rw_common(kiocb, res);=0A=
+>  	io_put_req(req);=0A=
+> @@ -1976,6 +2012,9 @@ static void io_complete_rw_iopoll(struct kiocb *kio=
+cb, long res, long res2)=0A=
+>  	if (res !=3D req->result)=0A=
+>  		req_set_fail_links(req);=0A=
+>  	req->result =3D res;=0A=
+> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
+> +	req->append_offset =3D (u32)res2;=0A=
+> +#endif=0A=
+>  	if (res !=3D -EAGAIN)=0A=
+>  		WRITE_ONCE(req->iopoll_completed, 1);=0A=
+>  }=0A=
+> @@ -2408,7 +2447,8 @@ static ssize_t io_import_iovec(int rw, struct io_ki=
+ocb *req,=0A=
+>  	u8 opcode;=0A=
+>  =0A=
+>  	opcode =3D req->opcode;=0A=
+> -	if (opcode =3D=3D IORING_OP_READ_FIXED || opcode =3D=3D IORING_OP_WRITE=
+_FIXED) {=0A=
+> +	if (opcode =3D=3D IORING_OP_READ_FIXED || opcode =3D=3D IORING_OP_WRITE=
+_FIXED ||=0A=
+> +			opcode =3D=3D IORING_OP_ZONE_APPEND_FIXED) {=0A=
+>  		*iovec =3D NULL;=0A=
+>  		return io_import_fixed(req, rw, iter);=0A=
+>  	}=0A=
+> @@ -2417,7 +2457,8 @@ static ssize_t io_import_iovec(int rw, struct io_ki=
+ocb *req,=0A=
+>  	if (req->buf_index && !(req->flags & REQ_F_BUFFER_SELECT))=0A=
+>  		return -EINVAL;=0A=
+>  =0A=
+> -	if (opcode =3D=3D IORING_OP_READ || opcode =3D=3D IORING_OP_WRITE) {=0A=
+> +	if (opcode =3D=3D IORING_OP_READ || opcode =3D=3D IORING_OP_WRITE ||=0A=
+> +			opcode =3D=3D IORING_OP_ZONE_APPEND) {=0A=
+>  		if (req->flags & REQ_F_BUFFER_SELECT) {=0A=
+>  			buf =3D io_rw_buffer_select(req, &sqe_len, needs_lock);=0A=
+>  			if (IS_ERR(buf)) {=0A=
+> @@ -2704,6 +2745,9 @@ static int io_write(struct io_kiocb *req, bool forc=
+e_nonblock)=0A=
+>  		req->rw.kiocb.ki_flags &=3D ~IOCB_NOWAIT;=0A=
+>  =0A=
+>  	req->result =3D 0;=0A=
+> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
+> +	req->append_offset =3D 0;=0A=
+> +#endif=0A=
+>  	io_size =3D ret;=0A=
+>  	if (req->flags & REQ_F_LINK_HEAD)=0A=
+>  		req->result =3D io_size;=0A=
+> @@ -2738,6 +2782,13 @@ static int io_write(struct io_kiocb *req, bool for=
+ce_nonblock)=0A=
+>  			__sb_writers_release(file_inode(req->file)->i_sb,=0A=
+>  						SB_FREEZE_WRITE);=0A=
+>  		}=0A=
+> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
+> +		if (req->opcode =3D=3D IORING_OP_ZONE_APPEND ||=0A=
+> +				req->opcode =3D=3D IORING_OP_ZONE_APPENDV ||=0A=
+> +				req->opcode =3D=3D IORING_OP_ZONE_APPEND_FIXED)=0A=
+> +			kiocb->ki_flags |=3D IOCB_ZONE_APPEND;=0A=
+> +#endif=0A=
+> +=0A=
+>  		kiocb->ki_flags |=3D IOCB_WRITE;=0A=
+>  =0A=
+>  		if (!force_nonblock)=0A=
+> @@ -4906,6 +4957,12 @@ static int io_req_defer_prep(struct io_kiocb *req,=
+=0A=
+>  	case IORING_OP_WRITEV:=0A=
+>  	case IORING_OP_WRITE_FIXED:=0A=
+>  	case IORING_OP_WRITE:=0A=
+> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
+> +	fallthrough;=0A=
+> +	case IORING_OP_ZONE_APPEND:=0A=
+> +	case IORING_OP_ZONE_APPENDV:=0A=
+> +	case IORING_OP_ZONE_APPEND_FIXED:=0A=
+> +#endif=0A=
+>  		ret =3D io_write_prep(req, sqe, true);=0A=
+>  		break;=0A=
+>  	case IORING_OP_POLL_ADD:=0A=
+> @@ -5038,6 +5095,12 @@ static void io_cleanup_req(struct io_kiocb *req)=
+=0A=
+>  	case IORING_OP_WRITEV:=0A=
+>  	case IORING_OP_WRITE_FIXED:=0A=
+>  	case IORING_OP_WRITE:=0A=
+> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
+> +	fallthrough;=0A=
+> +	case IORING_OP_ZONE_APPEND:=0A=
+> +	case IORING_OP_ZONE_APPENDV:=0A=
+> +	case IORING_OP_ZONE_APPEND_FIXED:=0A=
+> +#endif=0A=
+>  		if (io->rw.iov !=3D io->rw.fast_iov)=0A=
+>  			kfree(io->rw.iov);=0A=
+>  		break;=0A=
+> @@ -5086,6 +5149,11 @@ static int io_issue_sqe(struct io_kiocb *req, cons=
+t struct io_uring_sqe *sqe,=0A=
+>  		}=0A=
+>  		ret =3D io_read(req, force_nonblock);=0A=
+>  		break;=0A=
+> +#ifdef CONFIG_BLK_DEV_ZONED=0A=
+> +	case IORING_OP_ZONE_APPEND:=0A=
+> +	case IORING_OP_ZONE_APPENDV:=0A=
+> +	case IORING_OP_ZONE_APPEND_FIXED:=0A=
+> +#endif=0A=
+>  	case IORING_OP_WRITEV:=0A=
+>  	case IORING_OP_WRITE_FIXED:=0A=
+>  	case IORING_OP_WRITE:=0A=
+> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.=
+h=0A=
+> index 92c2269..6c8e932 100644=0A=
+> --- a/include/uapi/linux/io_uring.h=0A=
+> +++ b/include/uapi/linux/io_uring.h=0A=
+> @@ -130,6 +130,9 @@ enum {=0A=
+>  	IORING_OP_PROVIDE_BUFFERS,=0A=
+>  	IORING_OP_REMOVE_BUFFERS,=0A=
+>  	IORING_OP_TEE,=0A=
+> +	IORING_OP_ZONE_APPEND,=0A=
+> +	IORING_OP_ZONE_APPENDV,=0A=
+> +	IORING_OP_ZONE_APPEND_FIXED,=0A=
+>  =0A=
+>  	/* this goes last, obviously */=0A=
+>  	IORING_OP_LAST,=0A=
+> @@ -157,7 +160,10 @@ enum {=0A=
+>  struct io_uring_cqe {=0A=
+>  	__u64	user_data;	/* sqe->data submission passed back */=0A=
+>  	__s32	res;		/* result code for this event */=0A=
+> -	__u32	flags;=0A=
+> +	union {=0A=
+> +		__u32	res2; /* res2 like aio, currently used for zone-append */=0A=
+> +		__u32	flags;=0A=
+> +	};=0A=
+>  };=0A=
+>  =0A=
+>  /*=0A=
+> =0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
