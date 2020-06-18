@@ -2,159 +2,95 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C859C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A71020888
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:02:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592488977;
-	bh=Zi1nm8yHfREwF4pP+1YaTpENFiQVaBW3aml0Ie6+ioc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aIvxSH6FiYiLQHyoKyz+H1TMqxKV0djSlV8XZuYhjpaHEAw3dqw7pC/62AzXnxPkh
-	 ZLaOSoqIo9gdKSy8PUQF+MxyAKMpExMwKq1z2Qo4VJBPfh9/ExTIVGvEQrifkuTFF8
-	 RPrZBuYQpKUoA52ZPMJB44NdMJ1UKaRlLA5fp8yw=
+	by mail.kernel.org (Postfix) with ESMTP id 73AD120773
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:03:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbgFROCz (ORCPT
+        id S1730431AbgFROD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:02:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgFROCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:02:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82C5920773;
-        Thu, 18 Jun 2020 14:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592488972;
-        bh=Zi1nm8yHfREwF4pP+1YaTpENFiQVaBW3aml0Ie6+ioc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AsekxYtZ+W3shsJuZkhmOP8ftSzIZWj3LdaIR+n5JPw6tmfCXYtPBkJ/L4wq7rkta
-         OqOCFXwnqjKTC7lMgkrVyAMoQWa1P1kEI++WrlwahA/AcYRIVSI6UVTiGHRgq5mMP+
-         Kq4HWK8AvQRD7fT5XAdYkXybufco8nXjhaURPVy0=
-Date:   Thu, 18 Jun 2020 16:02:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Felipe Balbi <balbi@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, Jim Lin <jilin@nvidia.com>,
-        Siqi Lin <siqilin@google.com>,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>
-Subject: Re: [PATCH v3] usb: replace hardcode maximum usb string length by
- definition
-Message-ID: <20200618140244.GA2576793@kroah.com>
-References: <1592201855-8218-1-git-send-email-macpaul.lin@mediatek.com>
- <1592471618-29428-1-git-send-email-macpaul.lin@mediatek.com>
+        Thu, 18 Jun 2020 10:03:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41074 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730294AbgFRODz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 10:03:55 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 10so2829147pfx.8;
+        Thu, 18 Jun 2020 07:03:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=1WN3ZnREZD5mqi8HO9H+H34Iu3eMNBHfeSJB4E/zR+M=;
+        b=dQAvWbzQ0azWoU0hn8ksocV8vqrPCfJh0DuOlWUvM2DyoCXeFrVBtE5k8aGHvnHfZO
+         2ZC08y+8tW3OEZNNdFKPv26RknJCbyUjz3D1AEd1m+ugrwHI7/C48CHFKt/wgr7ZNG+f
+         rMOApomfJV1UfrcBoXpFYyW06vbyHkMTjXzSPyyRFWxldcn1oVY8xWeTuxRnYu2UTi8A
+         wR9Ri1wD3GmiRq30z1PHlzrKL3u7Hb6EEk9JJcOnc9kb/oP6aQRLlSLUZ7/UgPfGbCqu
+         OYDUvlLbSzNsSyDWlKNmVgh3Igclrl8cA2+jvCmcs4OM7h/QVy9dkNOwF/+nL4kT5iqo
+         eqFg==
+X-Gm-Message-State: AOAM532sURYNj2uxBbhZc5Oa4rA1NJElXa3piQd/+vlzdwuaZPO8wj+q
+        kVrrfunjxMQKmUlpGVXqfB4vexTF
+X-Google-Smtp-Source: ABdhPJzbhwbwQOEUu3YJw6YezVA/RUpvZiw+gzIegGMyl/FadwacdffeWBUE8cH6Ocg4N6Sg/YgkoQ==
+X-Received: by 2002:a63:5406:: with SMTP id i6mr3323164pgb.155.1592489034924;
+        Thu, 18 Jun 2020 07:03:54 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id h9sm2537716pjs.50.2020.06.18.07.03.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 07:03:54 -0700 (PDT)
+Subject: Re: [PATCH v3] IB/srpt: Remove WARN_ON from srpt_cm_req_recv
+To:     Jing Xiangfeng <jingxiangfeng@huawei.com>, dledford@redhat.com,
+        jgg@ziepe.ca
+Cc:     linux-rdma@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20200617140803.181333-1-jingxiangfeng@huawei.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <3d0354bc-e859-740a-f2d8-362604377f86@acm.org>
+Date:   Thu, 18 Jun 2020 07:03:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592471618-29428-1-git-send-email-macpaul.lin@mediatek.com>
+In-Reply-To: <20200617140803.181333-1-jingxiangfeng@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 05:13:38PM +0800, Macpaul Lin wrote:
-> Replace hardcode maximum usb string length (126 bytes) by definition
-> "MAX_USB_STRING_LEN".
-> 
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-> Acked-by: Alan Stern <stern@rowland.harvard.edu>
-> ---
-> Changes for v2:
->   - Add definition "MAX_USB_STRING_LEN" in ch9.h instead of in usb.h.
->     Thanks for Alan's suggestion.
-> Changes for v3:
->   - Rebase to 5.8-rc1 and resolve conflict.
-> 
->  drivers/usb/gadget/composite.c |    4 ++--
->  drivers/usb/gadget/configfs.c  |    2 +-
->  drivers/usb/gadget/usbstring.c |    4 ++--
->  include/uapi/linux/usb/ch9.h   |    3 +++
->  4 files changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-> index cb4950c..d0de016 100644
-> --- a/drivers/usb/gadget/composite.c
-> +++ b/drivers/usb/gadget/composite.c
-> @@ -1041,7 +1041,7 @@ static void collect_langs(struct usb_gadget_strings **sp, __le16 *buf)
->  	while (*sp) {
->  		s = *sp;
->  		language = cpu_to_le16(s->language);
-> -		for (tmp = buf; *tmp && tmp < &buf[126]; tmp++) {
-> +		for (tmp = buf; *tmp && tmp < &buf[MAX_USB_STRING_LEN]; tmp++) {
->  			if (*tmp == language)
->  				goto repeat;
->  		}
-> @@ -1116,7 +1116,7 @@ static int get_string(struct usb_composite_dev *cdev,
->  			collect_langs(sp, s->wData);
->  		}
->  
-> -		for (len = 0; len <= 126 && s->wData[len]; len++)
-> +		for (len = 0; len <= MAX_USB_STRING_LEN && s->wData[len]; len++)
->  			continue;
->  		if (!len)
->  			return -EINVAL;
-> diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
-> index 32b637e..70dd4ba 100644
-> --- a/drivers/usb/gadget/configfs.c
-> +++ b/drivers/usb/gadget/configfs.c
-> @@ -115,7 +115,7 @@ static int usb_string_copy(const char *s, char **s_copy)
->  	char *str;
->  	char *copy = *s_copy;
->  	ret = strlen(s);
-> -	if (ret > 126)
-> +	if (ret > MAX_USB_STRING_LEN)
->  		return -EOVERFLOW;
->  
->  	str = kstrdup(s, GFP_KERNEL);
-> diff --git a/drivers/usb/gadget/usbstring.c b/drivers/usb/gadget/usbstring.c
-> index 7c24d1c..8a8d647 100644
-> --- a/drivers/usb/gadget/usbstring.c
-> +++ b/drivers/usb/gadget/usbstring.c
-> @@ -55,9 +55,9 @@
->  		return -EINVAL;
->  
->  	/* string descriptors have length, tag, then UTF16-LE text */
-> -	len = min ((size_t) 126, strlen (s->s));
-> +	len = min((size_t)MAX_USB_STRING_LEN, strlen(s->s));
->  	len = utf8s_to_utf16s(s->s, len, UTF16_LITTLE_ENDIAN,
-> -			(wchar_t *) &buf[2], 126);
-> +			(wchar_t *) &buf[2], MAX_USB_STRING_LEN);
->  	if (len < 0)
->  		return -EINVAL;
->  	buf [0] = (len + 1) * 2;
-> diff --git a/include/uapi/linux/usb/ch9.h b/include/uapi/linux/usb/ch9.h
-> index 2b623f3..cc02d05 100644
-> --- a/include/uapi/linux/usb/ch9.h
-> +++ b/include/uapi/linux/usb/ch9.h
-> @@ -364,6 +364,9 @@ struct usb_config_descriptor {
->  
->  /*-------------------------------------------------------------------------*/
->  
-> +/* USB String descriptors can contain at most 126 characters. */
-> +#define MAX_USB_STRING_LEN	126
+On 2020-06-17 07:08, Jing Xiangfeng wrote:
+> The callers pass the pointer '&req' or 'private_data' to
+> srpt_cm_req_recv(), and 'private_data' is initialized in srp_send_req().
+> 'sdev' is allocated and stored in srpt_add_one(). It's easy to show that
+> sdev and req are always valid. So we remove unnecessary WARN_ON.
 
-Nit, as this is part of the userspace api, we should make this
-"USB_MAX_STRING_LEN" as we should be using "USB_" for all exports here.
-
-That seems to be the case already except for one really odd set of
-"TEST_" defines, which I'll go fix up after this...
-
-I will just hand-edit this patch to make that change so you don't have
-to respin it again...
-
-thanks,
-
-greg k-h
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
