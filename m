@@ -2,99 +2,103 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973C0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E13DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72BD52075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10992075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1PnIVNDx"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pUugeWrM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbgFRPWC (ORCPT
+        id S1731337AbgFRPWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:22:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbgFRPWA (ORCPT
+        Thu, 18 Jun 2020 11:22:24 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52588 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727045AbgFRPWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:22:00 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86643C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:22:00 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id s23so2925923pfh.7
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:22:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZNoqRPw3UvDcF+Rzsimtu2GK82CnXwvp0FPvlYQpdcw=;
-        b=1PnIVNDxQSN5j5vrmKWmjKk5kmBqH85AaE3s5U5t0oCc6NdMfCY9HGEUX9pFwul3y+
-         +BHcqOAc2kIIMm4anvzwmyeKM6Vyn+9+nHejZ54qkAmtG+4kQzhmfdmIvRrakDqzHjM4
-         LOv1PCOCm7exPrzOFJ2VkvZKN8pRb2/+DRlrtGqBPz1zx+pMMWDipwptcrMwa5jR1tm7
-         6KgM3GDBgxH0Zm94UZMMXxprukIDJc3e2SakoOLLYAgfOaGliP4OhTxFP7/Nc3iYGUyB
-         ivlANUrW0TnpA51kn+i5bycaWBWO3zsJ8mX5IR1vkRWtCXPkiKT7ubnP8F74Le0GVxoL
-         6z/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZNoqRPw3UvDcF+Rzsimtu2GK82CnXwvp0FPvlYQpdcw=;
-        b=il8ll3Q2HNI3IFP2qyGU2vixLutjwIaZDzaG/OaTVHnePr9ogZNN5cAECXhkWwgFjk
-         3yGAUlyVXXZ7V3C3qofcRWDQAw2umrwFefKtxhWc81dqdmHEnhPscln+vMMGxsIEqW05
-         ERSnh0v/f0gz8WS8gcp49pyIDyLvCr4rIQGwYDz/QkbG7bVWuvKLkQR/aCIXJTdqdQem
-         V/qLb1OXAWPtCWh1f7T8zXT5F7iJQBoJdGR90W9ec7GD/pMKFmWdT73MxwLC7DW+Yxvj
-         xaep/KBcFx1AO3AD5Elt8DqoGOPeSO7NhheoRw5NvU4w2K8gLZe7CNY0I9n+J96w0Sd3
-         45rQ==
-X-Gm-Message-State: AOAM530D2h8B4GMpMX+SXrnHrYKxkUM/wRegnqILrhTQ+7FYU+NxSRTV
-        EIVntxgykkben+D58k95bPaAuOGz9yBjVA==
-X-Google-Smtp-Source: ABdhPJyXAYrQu6pQf6eHrkAHJLt3OfJKnWtPAwjcAHT2zgBxOhwj8nOo0MizTV8gOf5RY7dWoL/23g==
-X-Received: by 2002:a63:7d4e:: with SMTP id m14mr3829316pgn.391.1592493719358;
-        Thu, 18 Jun 2020 08:21:59 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id j123sm3283831pfd.160.2020.06.18.08.21.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 08:21:58 -0700 (PDT)
-Subject: Re: [PATCH v3] libata: Use per port sync for detach
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     John Garry <john.garry@huawei.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200603074819.21639-1-kai.heng.feng@canonical.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <88430982-e948-be34-b47b-2411b31eb187@kernel.dk>
-Date:   Thu, 18 Jun 2020 09:21:57 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 18 Jun 2020 11:22:23 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05IFLs3C065365;
+        Thu, 18 Jun 2020 15:22:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=7siOWtMnW9wq0JjrCezGCY1u1cWhmZsBCe02fyT6lLA=;
+ b=pUugeWrMkLx5n843KOXWlWw4YwnoT88FeIheD9HTLJ0SYwBT5t3g9KSnnNNmJeXm3pMQ
+ 3URa9d7YvodGrTgY6f4yY72K9nOCvluxJ9g+idGfh4nGOLMDY+bEjHF2axfwTM8qGEGj
+ +4CHA8Q9gBzk61lHyu8GP7VSPiCw62gAcYobgWwQ3SDEGAEfrXNpVG/n6kFgrJoTKjv2
+ azazMyn1nDT0irU99tbgRvHwu/rI8whCvjVb9M9XehblcBTAACZUV6uG8fOn6dI/NMm4
+ Yoo11SPWTXVmtJureZa9U5WQZDy97WzytgR/9yJgC1leZSWh0cpgoa/a7Y1bHEgn8dM7 +w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 31q6601uks-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 18 Jun 2020 15:22:14 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05IFJELR191509;
+        Thu, 18 Jun 2020 15:22:13 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 31q66pxekr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jun 2020 15:22:13 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05IFMBYE010808;
+        Thu, 18 Jun 2020 15:22:12 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 18 Jun 2020 08:22:11 -0700
+Date:   Thu, 18 Jun 2020 18:22:04 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Garrit Franke <garritfranke@gmail.com>
+Cc:     Liviu Dudau <liviu.dudau@arm.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        David Airlie <airlied@linux.ie>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm/arm: fix unintentional integer overflow on left shift
+Message-ID: <20200618152204.GU4151@kadam>
+References: <20200618100400.11464-1-colin.king@canonical.com>
+ <20200618121405.GJ159988@e110455-lin.cambridge.arm.com>
+ <5d08fbec-75d8-d9a9-af61-e6ab98e77c80@canonical.com>
+ <20200618142106.GK159988@e110455-lin.cambridge.arm.com>
+ <CAD16O86ebsDkwbnuw2G04YZWfukqxJ=_Tex5OT07icEpfPdQNw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200603074819.21639-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD16O86ebsDkwbnuw2G04YZWfukqxJ=_Tex5OT07icEpfPdQNw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9655 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
+ mlxscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006180116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9655 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
+ spamscore=0 clxscore=1011 mlxlogscore=999 suspectscore=0 impostorscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006180117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/20 1:48 AM, Kai-Heng Feng wrote:
-> Commit 130f4caf145c ("libata: Ensure ata_port probe has completed before
-> detach") may cause system freeze during suspend.
-> 
-> Using async_synchronize_full() in PM callbacks is wrong, since async
-> callbacks that are already scheduled may wait for not-yet-scheduled
-> callbacks, causes a circular dependency.
-> 
-> Instead of using big hammer like async_synchronize_full(), use async
-> cookie to make sure port probe are synced, without affecting other
-> scheduled PM callbacks.
+On Thu, Jun 18, 2020 at 04:36:51PM +0200, Garrit Franke wrote:
+> Hi all, newbie here.
+> Can the BIT macro be safely used on other parts of the kernel as well?
+> Just using git grep "1 <<" returns a ton of results where bit shifting
+> is used the old fashioned way.
 
-Queued up for 5.8, thanks.
+Yeah.  There is a checkpatch warning for it and everything.  :)
 
--- 
-Jens Axboe
+But I like the way you think.  Start with patches to staging though.
+People don't necessarily like doing cleanups on ancient code.
+
+regards,
+dan carpenter
 
