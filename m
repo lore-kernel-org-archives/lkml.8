@@ -2,221 +2,104 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F02AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9090CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F45322201
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444615;
-	bh=C9PltJ0BL4mmWGqn8MVO3dYZBJj3BTnxvjGF5jAr3g8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fnd+MX0V4kjfIdpgGuh1xOsdo6OM5L9qCSYjr/OT4l1qjZmc6g9bz4cHUHu4wlcLZ
-	 3ySa1lRAY9pX+p3pbZKcD3p4803YC2+/rgUt+wtPKrZlPtKh2QvnGpNmPFnhYDJkoO
-	 FhioC3CBQUR1PmpmjScc9kKSd4lrIEPc3sQlRewo=
+	by mail.kernel.org (Postfix) with ESMTP id 6F6C522201
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:43:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uMmVVjHN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733001AbgFRBne (ORCPT
+        id S1733025AbgFRBnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:43:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732217AbgFRB3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:02 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2D1622228;
-        Thu, 18 Jun 2020 01:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443741;
-        bh=C9PltJ0BL4mmWGqn8MVO3dYZBJj3BTnxvjGF5jAr3g8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BsuUuPknsZ7vxRobvqJXWOh5C1Fh06k20dcD6lL5LrPzx2XN1/SSagtPkXIPS6DSp
-         9BM+tjTeyxuBenc/7qQWm2AEUzuFaAalpnxN/n3pGditIhGQ6EvK9pW8Wq2h981n6L
-         bOOvT0mVaJBGlhBM0d1A6my3FTVe4KITCMc+k0Mo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Tsoy <alexander@tsoy.me>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.9 31/80] ALSA: usb-audio: Improve frames size computation
-Date:   Wed, 17 Jun 2020 21:27:30 -0400
-Message-Id: <20200618012819.609778-31-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
-References: <20200618012819.609778-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Wed, 17 Jun 2020 21:43:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730793AbgFRBng (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:43:36 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409AAC06174E;
+        Wed, 17 Jun 2020 18:43:36 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id v19so780275qtq.10;
+        Wed, 17 Jun 2020 18:43:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=uLeNQByXmfCLbkfFUJI38G+xX0LS1+m6Dp/pbkK2cqE=;
+        b=uMmVVjHNrJUxxR3TZEt/J4FtQ0DWcqd00+UbmOgvkHtJI6tgEtBZygEio9Xllu0K60
+         jtINJGFfcO2Ao8vr0tN4delYcKWzT/AipR4TuhTwb3I6WGaUgW3qxvXi77tI56WENIk3
+         QVZUe9sjmxLD5/ZFwB+8QsH7zLEyj1jCN0NXZa37+8PSdIrvy32thJ/Thox91q21A5mj
+         8wx2+jjr+iJrBzv+zi7q3IHLfgMa61tEavfz61cJTvyNGL7thAuILTOC91IpDZzFnLF7
+         5EhS7kiKMm94RgYPCu0ZUkowU2/VOBwr6GyyxE5ipKoLu6CAhidii+fEG8Zz9Q5Y2TDr
+         03vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=uLeNQByXmfCLbkfFUJI38G+xX0LS1+m6Dp/pbkK2cqE=;
+        b=Sex3fKjB/9SPdOf1MiuDPcwCoFvlahcISDL1LFYH3jLdjPgzDdjUYkDNMYcopbyqrX
+         CEh8O4qzVTDCP79kr1Seh31yhnU/5FujCuCeg8fnJRodab9EwnEuGQUXZg6ApA45X9By
+         FfK2h7Oc0Np3QEr3ibGAYh+I09v7xqTqPqM9HoeHoFSfbIc55NKjcqnNSkwOB+X05AE8
+         jp3z//tfv9GtOvv4EOfsDVmFHxneOTUXfs2KOMV5vArwNxh18yNlh6kOL/H0tou3mRD8
+         xiVehYebEzjp0YY21NxvPMW0y3HNF/1SctMHUBXsqukOq5PTRtz4XM4cKQgybZmIq2Sf
+         H5Lw==
+X-Gm-Message-State: AOAM532Pj9AeMSePl42c/X4JaA+jZybt2DXk46pW4GVob6QlXHmFnLNW
+        w/KU9tlZEv+qhq7imXza0Mk=
+X-Google-Smtp-Source: ABdhPJwufN5cF/crq/Tsi2c1S3zDUcgqiIxLkYsEVW/I9TCIRC58jXHvD5dk2+YV6E0Pzlw306vSCQ==
+X-Received: by 2002:ac8:4281:: with SMTP id o1mr2102273qtl.322.1592444614758;
+        Wed, 17 Jun 2020 18:43:34 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:9c3:b47c:c995:4853])
+        by smtp.googlemail.com with ESMTPSA id x54sm1821885qta.42.2020.06.17.18.43.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 18:43:34 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev@vger.kernel.org (open list:TC subsystem),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] [net/sched] Fix null pointer deref skb in tc_ctl_action
+Date:   Wed, 17 Jun 2020 21:43:28 -0400
+Message-Id: <20200618014328.28668-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Tsoy <alexander@tsoy.me>
+Add null check for skb
 
-[ Upstream commit f0bd62b64016508938df9babe47f65c2c727d25c ]
-
-For computation of the the next frame size current value of fs/fps and
-accumulated fractional parts of fs/fps are used, where values are stored
-in Q16.16 format. This is quite natural for computing frame size for
-asynchronous endpoints driven by explicit feedback, since in this case
-fs/fps is a value provided by the feedback endpoint and it's already in
-the Q format. If an error is accumulated over time, the device can
-adjust fs/fps value to prevent buffer overruns/underruns.
-
-But for synchronous endpoints the accuracy provided by these computations
-is not enough. Due to accumulated error the driver periodically produces
-frames with incorrect size (+/- 1 audio sample).
-
-This patch fixes this issue by implementing a different algorithm for
-frame size computation. It is based on accumulating of the remainders
-from division fs/fps and it doesn't accumulate errors over time. This
-new method is enabled for synchronous and adaptive playback endpoints.
-
-Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
-Link: https://lore.kernel.org/r/20200424022449.14972-1-alexander@tsoy.me
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
 ---
- sound/usb/card.h     |  4 ++++
- sound/usb/endpoint.c | 43 ++++++++++++++++++++++++++++++++++++++-----
- sound/usb/endpoint.h |  1 +
- sound/usb/pcm.c      |  2 ++
- 4 files changed, 45 insertions(+), 5 deletions(-)
+ net/sched/act_api.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/sound/usb/card.h b/sound/usb/card.h
-index 111b0f009afa..c4599cf0ddc9 100644
---- a/sound/usb/card.h
-+++ b/sound/usb/card.h
-@@ -80,6 +80,10 @@ struct snd_usb_endpoint {
- 	dma_addr_t sync_dma;		/* DMA address of syncbuf */
- 
- 	unsigned int pipe;		/* the data i/o pipe */
-+	unsigned int framesize[2];	/* small/large frame sizes in samples */
-+	unsigned int sample_rem;	/* remainder from division fs/fps */
-+	unsigned int sample_accum;	/* sample accumulator */
-+	unsigned int fps;		/* frames per second */
- 	unsigned int freqn;		/* nominal sampling rate in fs/fps in Q16.16 format */
- 	unsigned int freqm;		/* momentary sampling rate in fs/fps in Q16.16 format */
- 	int	   freqshift;		/* how much to shift the feedback value to get Q16.16 */
-diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
-index 30aa5f2df6da..b5207e71ed72 100644
---- a/sound/usb/endpoint.c
-+++ b/sound/usb/endpoint.c
-@@ -137,12 +137,12 @@ int snd_usb_endpoint_implicit_feedback_sink(struct snd_usb_endpoint *ep)
- 
- /*
-  * For streaming based on information derived from sync endpoints,
-- * prepare_outbound_urb_sizes() will call next_packet_size() to
-+ * prepare_outbound_urb_sizes() will call slave_next_packet_size() to
-  * determine the number of samples to be sent in the next packet.
-  *
-- * For implicit feedback, next_packet_size() is unused.
-+ * For implicit feedback, slave_next_packet_size() is unused.
-  */
--int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep)
-+int snd_usb_endpoint_slave_next_packet_size(struct snd_usb_endpoint *ep)
+diff --git a/net/sched/act_api.c b/net/sched/act_api.c
+index 8ac7eb0a8309..fd584821d75a 100644
+--- a/net/sched/act_api.c
++++ b/net/sched/act_api.c
+@@ -1473,9 +1473,12 @@ static const struct nla_policy tcaa_policy[TCA_ROOT_MAX + 1] = {
+ static int tc_ctl_action(struct sk_buff *skb, struct nlmsghdr *n,
+ 			 struct netlink_ext_ack *extack)
  {
- 	unsigned long flags;
- 	int ret;
-@@ -159,6 +159,29 @@ int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep)
- 	return ret;
- }
- 
-+/*
-+ * For adaptive and synchronous endpoints, prepare_outbound_urb_sizes()
-+ * will call next_packet_size() to determine the number of samples to be
-+ * sent in the next packet.
-+ */
-+int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep)
-+{
-+	int ret;
++	if (!skb)
++		return 0;
 +
-+	if (ep->fill_max)
-+		return ep->maxframesize;
-+
-+	ep->sample_accum += ep->sample_rem;
-+	if (ep->sample_accum >= ep->fps) {
-+		ep->sample_accum -= ep->fps;
-+		ret = ep->framesize[1];
-+	} else {
-+		ret = ep->framesize[0];
-+	}
-+
-+	return ret;
-+}
-+
- static void retire_outbound_urb(struct snd_usb_endpoint *ep,
- 				struct snd_urb_ctx *urb_ctx)
- {
-@@ -203,6 +226,8 @@ static void prepare_silent_urb(struct snd_usb_endpoint *ep,
+ 	struct net *net = sock_net(skb->sk);
+ 	struct nlattr *tca[TCA_ROOT_MAX + 1];
+-	u32 portid = skb ? NETLINK_CB(skb).portid : 0;
++	u32 portid = NETLINK_CB(skb).portid;
+ 	int ret = 0, ovr = 0;
  
- 		if (ctx->packet_size[i])
- 			counts = ctx->packet_size[i];
-+		else if (ep->sync_master)
-+			counts = snd_usb_endpoint_slave_next_packet_size(ep);
- 		else
- 			counts = snd_usb_endpoint_next_packet_size(ep);
- 
-@@ -875,10 +900,17 @@ int snd_usb_endpoint_set_params(struct snd_usb_endpoint *ep,
- 	ep->maxpacksize = fmt->maxpacksize;
- 	ep->fill_max = !!(fmt->attributes & UAC_EP_CS_ATTR_FILL_MAX);
- 
--	if (snd_usb_get_speed(ep->chip->dev) == USB_SPEED_FULL)
-+	if (snd_usb_get_speed(ep->chip->dev) == USB_SPEED_FULL) {
- 		ep->freqn = get_usb_full_speed_rate(rate);
--	else
-+		ep->fps = 1000;
-+	} else {
- 		ep->freqn = get_usb_high_speed_rate(rate);
-+		ep->fps = 8000;
-+	}
-+
-+	ep->sample_rem = rate % ep->fps;
-+	ep->framesize[0] = rate / ep->fps;
-+	ep->framesize[1] = (rate + (ep->fps - 1)) / ep->fps;
- 
- 	/* calculate the frequency in 16.16 format */
- 	ep->freqm = ep->freqn;
-@@ -937,6 +969,7 @@ int snd_usb_endpoint_start(struct snd_usb_endpoint *ep)
- 	ep->active_mask = 0;
- 	ep->unlink_mask = 0;
- 	ep->phase = 0;
-+	ep->sample_accum = 0;
- 
- 	snd_usb_endpoint_start_quirk(ep);
- 
-diff --git a/sound/usb/endpoint.h b/sound/usb/endpoint.h
-index 584f295d7c77..4aad49cbeb5f 100644
---- a/sound/usb/endpoint.h
-+++ b/sound/usb/endpoint.h
-@@ -27,6 +27,7 @@ void snd_usb_endpoint_release(struct snd_usb_endpoint *ep);
- void snd_usb_endpoint_free(struct snd_usb_endpoint *ep);
- 
- int snd_usb_endpoint_implicit_feedback_sink(struct snd_usb_endpoint *ep);
-+int snd_usb_endpoint_slave_next_packet_size(struct snd_usb_endpoint *ep);
- int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep);
- 
- void snd_usb_handle_sync_urb(struct snd_usb_endpoint *ep,
-diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
-index 9bc995f9b4e1..615213aeda33 100644
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -1483,6 +1483,8 @@ static void prepare_playback_urb(struct snd_usb_substream *subs,
- 	for (i = 0; i < ctx->packets; i++) {
- 		if (ctx->packet_size[i])
- 			counts = ctx->packet_size[i];
-+		else if (ep->sync_master)
-+			counts = snd_usb_endpoint_slave_next_packet_size(ep);
- 		else
- 			counts = snd_usb_endpoint_next_packet_size(ep);
- 
+ 	if ((n->nlmsg_type != RTM_GETACTION) &&
 -- 
-2.25.1
+2.17.1
 
