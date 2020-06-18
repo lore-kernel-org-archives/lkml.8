@@ -6,152 +6,146 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A17C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDD9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 068A221548
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5507C21548
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:32:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgFRHcK (ORCPT
+        id S1728159AbgFRHci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 03:32:10 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41656 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728096AbgFRHcK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 03:32:10 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k15so3780769otp.8;
-        Thu, 18 Jun 2020 00:32:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KEd1sSUwdgNZZk5MhGirM5YmWviEJTOtC4NnWjH7dvs=;
-        b=JgZzxUhwYl2Oo1Y5a2+Y8lVtmKr9ba0dl2S8Zr8HxiIv19FlMPOI/N2pMb/eaC0oSf
-         4tjY8OFZld1MeXJWrYXQMp4yqSVfzZe+anLZPoZuhuEbcpD+C8mZ5qO81nCXFAWDg0qZ
-         1s/bQRuMNuJ4Dhp1CqM+P9W1E1b3IvZ07wxESuve4RkOmcqK1OxnffOkQa0gNYKzZVyJ
-         qMDtDgsktFDJeFdYwsod29Eo3gskFSLBOZahCRREVDgaKLCwV5Kb2PdH3wiurEvckN53
-         w4+FvBhLiwcvAkbKdrkQUpDyjOh25LOe+g1VKMk9S89/v06ORulhpd0/IrAAKJtejhvX
-         +d1w==
-X-Gm-Message-State: AOAM530dKxiQ2n7T9rraLR9cfskMnXTu0TYjhq65MePO0KXNXFZsiIDK
-        jG4y5Z9RxUBzf0BTLNtbdWpDIpnUZKj9EULsmXU0eU6c
-X-Google-Smtp-Source: ABdhPJzv7NazxpQziK4ICo68wZfq8CFtvcli0G2OvLQydZwJFlaOxvB3Z1eIrjApn1tJkAreg7GGVY1NGQagEfYp5l0=
-X-Received: by 2002:a05:6830:141a:: with SMTP id v26mr2368151otp.250.1592465527028;
- Thu, 18 Jun 2020 00:32:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200515053500.215929-1-saravanak@google.com> <20200515053500.215929-5-saravanak@google.com>
- <CAMuHMdUnbDvn6GdK51MN-+5iRp6zYRf-yzKY+OwcQOGrYqOZPA@mail.gmail.com> <CAGETcx9JKbNQWQwNah7pO5ppVSAe86R-OmMujZPYNkuTCLwKnQ@mail.gmail.com>
-In-Reply-To: <CAGETcx9JKbNQWQwNah7pO5ppVSAe86R-OmMujZPYNkuTCLwKnQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 18 Jun 2020 09:31:55 +0200
-Message-ID: <CAMuHMdU2gF=aTeVxRvtzAMLGY=GyBDfBwrYZxoRkL1tV7dL56g@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding all
- top level devices
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ji Luo <ji.luo@nxp.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 18 Jun 2020 03:32:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55694 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726282AbgFRHch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 03:32:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 908C6AC5E;
+        Thu, 18 Jun 2020 07:32:33 +0000 (UTC)
+Date:   Thu, 18 Jun 2020 09:32:33 +0200
+Message-ID: <s5hwo44ygku.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     tiwai@suse.com, Jaroslav Kysela <perex@perex.cz>,
+        Wenwen Wang <wenwen@cs.uga.edu>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WC?= =?UTF-8?B?YXc=?= 
+        <mirq-linux@rere.qmqm.pl>, Hui Wang <hui.wang@canonical.com>,
+        Kailang Yang <kailang@realtek.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Tomas Espeleta <tomas.espeleta@gmail.com>,
+        Thomas Hebb <tommyhebb@gmail.com>,
+        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] ALSA: hda/realtek: Add COEF controlled micmute LED support
+In-Reply-To: <DB5A1DD9-4D61-466F-A7DE-4219534DFA4D@canonical.com>
+References: <20200617102906.16156-1-kai.heng.feng@canonical.com>
+        <s5hd05xzz3d.wl-tiwai@suse.de>
+        <934401DE-7A4E-4B2C-8B06-E2AA203A9336@canonical.com>
+        <s5h366tzo6x.wl-tiwai@suse.de>
+        <DB5A1DD9-4D61-466F-A7DE-4219534DFA4D@canonical.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Saravana,
+On Thu, 18 Jun 2020 07:15:21 +0200,
+Kai-Heng Feng wrote:
+> 
+> 
+> 
+> > On Jun 17, 2020, at 23:50, Takashi Iwai <tiwai@suse.de> wrote:
+> > 
+> > On Wed, 17 Jun 2020 17:24:30 +0200,
+> > Kai-Heng Feng wrote:
+> >> 
+> >> 
+> >> 
+> >>> On Jun 17, 2020, at 19:55, Takashi Iwai <tiwai@suse.de> wrote:
+> >>> 
+> >>> On Wed, 17 Jun 2020 12:29:01 +0200,
+> >>> Kai-Heng Feng wrote:
+> >>>> 
+> >>>> Currently, HDA codec LED class can only be used by GPIO controlled LED.
+> >>>> However, there are some new systems that control LED via COEF instead of
+> >>>> GPIO.
+> >>>> 
+> >>>> In order to support those systems, create a new helper that can be
+> >>>> facilitated by both COEF controlled and GPIO controlled LED.
+> >>>> 
+> >>>> In addition to that, add LED_CORE_SUSPENDRESUME flag since some systems
+> >>>> don't restore the LED properly after suspend.
+> >>>> 
+> >>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >>> 
+> >>> Thanks for the quick follow up, the issues I pointed were fixed.
+> >>> 
+> >>> But, now looking at the code change again, I'm no longer sure whether
+> >>> it's the right move.
+> >>> 
+> >>> Basically, the led cdev should serve only for turning on/off the LED
+> >>> as given.  But your patch changes it to call the generic mixer
+> >>> updater, which is rather the one who would call the led cdev state
+> >>> update itself.  That is, it's other way round.
+> >>> 
+> >>> IMO, what we need is to make all places calling
+> >>> snd_hda_gen_add_micmute_led() to create led cdev, and change those
+> >>> calls with snd_hda_gen_fixup_micmute_led().
+> >> 
+> >> Ok, so it's the same as patch v1.
+> >> How should we handle vendors other than HP?
+> >> Only create led cdev if the ID matches to HP?
+> > 
+> > It's fine to create a LED classdev for other vendors, too.  But the
+> > problem is that it wasn't consistent.  With the LED classdev, we
+> > should use only cdev, instead of mixing up different ways.
+> 
+> Ok, now I get what you meant...
+> 
+> > 
+> > I wrote a few patches to convert those mic-mute LED stuff to classdev,
+> > including some cleanups.  The patches are found in
+> > topic/hda-micmute-led branch of sound git tree.  Could you check it?
+> > 
+> > Note that it's totally untested.  Also it doesn't contain yet
+> > LED_CORE_SUSPENDRESUME, which should be done in another patch in
+> > anyway.
+> 
+> Other than LED_CORE_SUSPENDRESUME, it works great!
+> 
+> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-On Wed, Jun 17, 2020 at 8:36 PM Saravana Kannan <saravanak@google.com> wrote:
-> On Wed, Jun 17, 2020 at 5:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Fri, May 15, 2020 at 7:38 AM Saravana Kannan <saravanak@google.com> wrote:
-> > > The fw_devlink_pause() and fw_devlink_resume() APIs allow batching the
-> > > parsing of the device tree nodes when a lot of devices are added. This
-> > > will significantly cut down parsing time (as much a 1 second on some
-> > > systems). So, use them when adding devices for all the top level device
-> > > tree nodes in a system.
-> > >
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >
-> > This is now commit 93d2e4322aa74c1a ("of: platform: Batch fwnode parsing
-> > when adding all top level devices") in v5.8-rc1, and I have bisected a
-> > regression to it: on r8a7740/armadillo and sh73a0/kzm9g, the system can
-> > no longer be woken up from s2ram by a GPIO key. Reverting the commit
-> > fixes the issue.
-> >
-> > On these systems, the GPIO/PFC block has its interrupt lines connected
-> > to intermediate interrupt controllers (Renesas INTC), which are in turn
-> > connected to the main interrupt controller (ARM GIC).  The INTC block is
-> > part of a power and clock domain.  Hence if a GPIO is enabled as a
-> > wake-up source, the INTC is part of the wake-up path, and thus must be
-> > kept enabled when entering s2ram.
-> >
-> > While this commit has no impact on probe order for me (unlike in Marek's
-> > case), it does have an impact on suspend order:
-> >   - Before this commit:
-> >       1. The keyboard (gpio-keys) is suspended, and calls
-> >          enable_irq_wake() to inform the upstream interrupt controller
-> >          (INTC) that it is part of the wake-up path,
-> >       2. INTC is suspended, and calls device_set_wakeup_path() to inform
-> >          the device core that it must be kept enabled,
-> >       3. The system is woken by pressing a wake-up key.
-> >
-> >   - After this commit:
-> >       1. INTC is suspended, and is not aware it is part of the wake-up
-> >          path, so it is disabled by the device core,
-> >       2. gpio-keys is suspended, and calls enable_irq_wake() in vain,
-> >       3. Pressing a wake-up key has no effect, as INTC is disabled, and
-> >          the interrupt does not come through.
-> >
-> > It looks like no device links are involved, as both gpio-keys and INTC have
-> > no links.
-> > Do you have a clue?
-> >
-> > Thanks!
->
-> That patch of mine defers probe on all devices added by the
-> of_platform_default_populate() call, and then once the call returns,
-> it immediately triggers a deferred probe.
->
-> So all these devices are being probed in parallel in the deferred
-> probe workqueue while the main "initcall thread" continues down to
-> further initcalls. It looks like some of the drivers in subsequent
-> initcalls are assuming that devices in the earlier initcalls always
-> probe and can't be deferred?
->
-> There are two options.
-> 1. Fix these drivers.
-> 2. Add a "flush deferred workqueue" in fw_devlink_resume()
->
-> I'd rather we fix the drivers so that they handle deferred probes
-> correctly. Thoughts?
+Good to hear!
 
-While the affected drivers should handle deferred probe fine, none of
-the affected drivers is subject to deferred probing: they all probe
-successfully on first try (I had added debug prints to
-platform_drv_probe() to be sure).
-The affected drivers are still probed in the same order (INTC is one of
-the earliest drivers probed, gpio-keys is the last). However, during
-system suspend, gpio-keys is suspended before INTC, which is wrong, as
-gpio-keys uses an interrupt provided by INTC.
+> >>> It'll be a bit more changes and likely not fitting with 5.8, but the
+> >>> whole result will be more consistent.
+> >> 
+> >> A bit off topic, but do you think it's reasonable to also create led cdev for mute LED, in addition to micmute LED?
+> >> I just found that the LEDs are still on during system suspend, and led cdev has the ability to turn off the LEDs on system suspend.
+> > 
+> > Yes, it makes sense, too.  But the playback mute handling is a bit
+> > more complicated than the mic-mute LED because it's implemented with a
+> > vmaster hook.  I'll take a look later.
+> 
+> Thanks. I'll be happy to test it.
 
-Perhaps the "in parallel" is the real culprit, and there is a race
-condition somewhere?
+OK, I worked on this further and converted the whole mute LED handling
+with LED classdev.
 
-Gr{oetje,eeting}s,
+The topic/hda-micmute-led branch was updated again.  Could you give it
+a try?  If that's OK, I'll add your tested-by tag and submit the
+patches to ML later.
 
-                        Geert
+The old patchset is saved in topic/hda-micmute-led-old branch just for
+a reference.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+thanks,
+
+Takashi
