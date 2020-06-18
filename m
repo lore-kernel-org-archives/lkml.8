@@ -2,209 +2,85 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87117217A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:44:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gKtk9wZ/"
+	by mail.kernel.org (Postfix) with ESMTP id 696D3217A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592466479;
+	bh=uN0TGa/T7pPRO9EFXsTyPP8pb9QfsOxNueiaH6cBEEI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GuKZqGpFg88gni/7Iii/VVgGhdFNnXYUhdFrM4XV/yApG+Mk5l0hoagbWVIwbcCFe
+	 UlnIZ1wxr0dbtOlvp73KirjzD55J2+aj4I/66fzxH7r3ANuP7e7nEYAbqprW8wSZY4
+	 3H2+bq0G43iRMd022nY+V4F6J+rDnkY4BaX9wl9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbgFRHof (ORCPT
+        id S1728146AbgFRHr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 03:44:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbgFRHoe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 03:44:34 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4344EC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 00:44:34 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id b15so2623993ybg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 00:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I1V6PUODlcGEDi8aIH/E2hPEHAyYyK6vPY8h7Z/71Ro=;
-        b=gKtk9wZ/yS93Zt8oUcPIWUy6/SabjtFppGw/CFS0q/mSNzvWzCL+9yZUOwxjjka7Ir
-         hI7FmfntK0K0RgZWWC3xcq+IzWmkUnJiJ7jJWopv5BR9K1sMNICClnqx6codNnJM7Teg
-         tSPJ6aeFGeTLhraho8t3aWh75hdCvffjMHCp/bN4lTBLYF0O+QhiTDLfczDUn3Hx57yE
-         /Ip99COz1PmX4UUmUdb7hR+O1BoIpARhCCZ6z8tgNlcEYDWyB/oRgHwdOIOielQWan1e
-         wR39234G6y7QH2BgBNkZTslUEmLECYLmrMp6oGKY8U+SfUNVqE67T2QntFAW+ctyTubf
-         mxAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I1V6PUODlcGEDi8aIH/E2hPEHAyYyK6vPY8h7Z/71Ro=;
-        b=Sd1bvt2WF0kUTumHulwkmC7B4+aKEyT0tvn5P4V8f6Rg4Y6LB2E9EZhwNkhkYC1HxG
-         qz9sBM/vNzD5PBvGkWd6Kz7N2VGJvdBRrlfIoMCEH2hgpWi0PJVe5ppM/v0jzp2+aAzd
-         hxhwzFy41C7ZmomwnotOLwWyTDBSvO1tiL250SPA++P2P19sEfEwMCkEgENIvRPtbHUC
-         ISJNHMjmERmdT+X6dUWwRy0tMMPKe9mMeV77DQ9l5vLn3Jch66W5zojyrnHfTom5vZNQ
-         0EpkbVdqgj2/LpguUIXoqZIhbKkdQHNC/0PC99ZhUJh9GSecd+l6hTrSJuMDw81yG4w/
-         CDWw==
-X-Gm-Message-State: AOAM531l5OFWklnlh0PzalfMMSQpqKK/XN8YpT/003WlTYzgT0B+Ejn8
-        U2s1/iKk7YnAI1nTNa5T1RLTjb45hO7OM1cA5AJFwQ==
-X-Google-Smtp-Source: ABdhPJwDldk7wG6VclMUJbOGUeamqryW+XBYhBQREiA+8YAwYz9CJHWjHwk40PxP4WY5byYSGC4r97AXO94NLzjrJZs=
-X-Received: by 2002:a25:be81:: with SMTP id i1mr4411162ybk.243.1592466273392;
- Thu, 18 Jun 2020 00:44:33 -0700 (PDT)
+        Thu, 18 Jun 2020 03:47:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726282AbgFRHr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 03:47:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD2042166E;
+        Thu, 18 Jun 2020 07:47:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592466477;
+        bh=uN0TGa/T7pPRO9EFXsTyPP8pb9QfsOxNueiaH6cBEEI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tLXMoTqzkPPPNMphukDIi+S1xDuWNkqoJpP6PiqTa5/VBfFNnbGTRRdlUFkIZyKrc
+         yAggmB0Rf6lkOcF3bzxf4MAld23WB8IsJ7FyWb2H7Qjgk1mmrKf4YqNB+U4WhUSl76
+         8qEzGi9pYaojDeglSgKCaAVB73qv9Y0sTGGJ7BKM=
+Date:   Thu, 18 Jun 2020 09:47:50 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Rodolfo C. Villordo" <rodolfovillordo@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Richard Yeh <rcy@google.com>,
+        Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>
+Subject: Re: [PATCH] staging: gasket: replace symbolic permissions
+Message-ID: <20200618074750.GA186463@kroah.com>
+References: <20200601005240.6315-1-rodolfovillordo@gmail.com>
 MIME-Version: 1.0
-References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
- <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
- <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org> <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
- <6b67cd00-a302-55a1-1e56-d1f1e7a06cef@forissier.org>
-In-Reply-To: <6b67cd00-a302-55a1-1e56-d1f1e7a06cef@forissier.org>
-From:   Maxim Uvarov <maxim.uvarov@linaro.org>
-Date:   Thu, 18 Jun 2020 10:44:22 +0300
-Message-ID: <CAD8XO3YBmivv21Cb-AuUBkrFDyWZR5h6aq8gyec15B0exZ7=Bw@mail.gmail.com>
-Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
-To:     Jerome Forissier <jerome@forissier.org>
-Cc:     Sumit Garg <sumit.garg@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Arnd Bergmann <arnd@linaro.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200601005240.6315-1-rodolfovillordo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There was a comment about a new mailing list address in Documentation.
-Which one I should specify now?
+On Mon, Jun 01, 2020 at 12:52:40AM +0000, Rodolfo C. Villordo wrote:
+> WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider using octal permissions '0444'.
+> +               .attr = __ATTR(_name, S_IRUGO, _show_function, NULL),          \
+> warning detected by checkpatch.pl
+> 
+> Signed-off-by: Rodolfo C. Villordo <rodolfovillordo@gmail.com>
+> ---
+>  drivers/staging/gasket/gasket_sysfs.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/gasket/gasket_sysfs.h b/drivers/staging/gasket/gasket_sysfs.h
+> index ab5aa351d555..d5e167dfbe76 100644
+> --- a/drivers/staging/gasket/gasket_sysfs.h
+> +++ b/drivers/staging/gasket/gasket_sysfs.h
+> @@ -71,7 +71,7 @@ struct gasket_sysfs_attribute {
+>  
+>  #define GASKET_SYSFS_RO(_name, _show_function, _attr_type)                     \
+>  	{                                                                      \
+> -		.attr = __ATTR(_name, S_IRUGO, _show_function, NULL),          \
+> +		.attr = __ATTR(_name, 0444, _show_function, NULL),          \
 
-On Thu, 18 Jun 2020 at 09:57, Jerome Forissier <jerome@forissier.org> wrote:
->
-> On 6/18/20 6:59 AM, Sumit Garg wrote:
-> > Hi Jerome,
-> >
-> > On Wed, 17 Jun 2020 at 20:46, Jerome Forissier <jerome@forissier.org> wrote:
-> >>
-> >>
-> >>
-> >> On 6/17/20 3:58 PM, Sumit Garg wrote:
-> >>> Hi Maxim,
-> >>>
-> >>> On Thu, 4 Jun 2020 at 23:28, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
-> >>>>
-> >>>> With the evolving use-cases for TEE bus, now it's required to support
-> >>>> multi-stage enumeration process. But using a simple index doesn't
-> >>>> suffice this requirement and instead leads to duplicate sysfs entries.
-> >>>> So instead switch to use more informative device UUID for sysfs entry
-> >>>> like:
-> >>>> /sys/bus/tee/devices/optee-ta-<uuid>
-> >>>>
-> >>>> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-> >>>> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
-> >>>> ---
-> >>>>  Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
-> >>>>  MAINTAINERS                                       | 1 +
-> >>>>  drivers/tee/optee/device.c                        | 9 ++++++---
-> >>>>  3 files changed, 15 insertions(+), 3 deletions(-)
-> >>>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
-> >>>>
-> >>>> diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
-> >>>> new file mode 100644
-> >>>> index 000000000000..0ae04ae5374a
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
-> >>>> @@ -0,0 +1,8 @@
-> >>>> +What:          /sys/bus/tee/devices/optee-ta-<uuid>/
-> >>>> +Date:           May 2020
-> >>>> +KernelVersion   5.7
-> >>>> +Contact:        tee-dev@lists.linaro.org
-> >>>> +Description:
-> >>>> +               OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
-> >>>> +               matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
-> >>>> +               are free to create needed API under optee-ta-<uuid> directory.
-> >>>> diff --git a/MAINTAINERS b/MAINTAINERS
-> >>>> index ecc0749810b0..6717afef2de3 100644
-> >>>> --- a/MAINTAINERS
-> >>>> +++ b/MAINTAINERS
-> >>>> @@ -12516,6 +12516,7 @@ OP-TEE DRIVER
-> >>>>  M:     Jens Wiklander <jens.wiklander@linaro.org>
-> >>>>  L:     tee-dev@lists.linaro.org
-> >>>>  S:     Maintained
-> >>>> +F:     Documentation/ABI/testing/sysfs-bus-optee-devices
-> >>>>  F:     drivers/tee/optee/
-> >>>>
-> >>>>  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
-> >>>> diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
-> >>>> index e3a148521ec1..23d264c8146e 100644
-> >>>> --- a/drivers/tee/optee/device.c
-> >>>> +++ b/drivers/tee/optee/device.c
-> >>>> @@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
-> >>>>         return 0;
-> >>>>  }
-> >>>>
-> >>>> -static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
-> >>>> +static int optee_register_device(const uuid_t *device_uuid)
-> >>>>  {
-> >>>>         struct tee_client_device *optee_device = NULL;
-> >>>>         int rc;
-> >>>> @@ -75,7 +75,10 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
-> >>>>                 return -ENOMEM;
-> >>>>
-> >>>>         optee_device->dev.bus = &tee_bus_type;
-> >>>> -       dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
-> >>>> +       if (dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid)) {
-> >>>
-> >>> You should be using format specifier as: "%pUb" instead of "%pUl" as
-> >>> UUID representation for TAs is in big endian format. See below:
-> >>
-> >> Where does device_uuid come from? If it comes directly from OP-TEE, then
-> >> it should be a pointer to the following struct:
-> >>
-> >> typedef struct
-> >> {
-> >>         uint32_t timeLow;
-> >>         uint16_t timeMid;
-> >>         uint16_t timeHiAndVersion;
-> >>         uint8_t clockSeqAndNode[8];
-> >> } TEE_UUID;
-> >>
-> >> (GlobalPlatform TEE Internal Core API spec v1.2.1 section 3.2.4)
-> >>
-> >> - The spec does not mandate any particular endianness and simply warns
-> >> about possible issues if secure and non-secure worlds differ in endianness.
-> >> - OP-TEE uses %pUl assuming that host order is little endian (that is
-> >> true for the Arm platforms that run OP-TEE currently). By the same logic
-> >> %pUl should be fine in the kernel.
-> >> - On the other hand, the UUID in a Trusted App header is always encoded
-> >> big endian by the Python script that signs and optionally encrypts the
-> >> TA. This should not have any visible impact on UUIDs exchanged between
-> >> the secure and non-secure world though.
-> >>
-> >> So I am wondering why you had to use %pUb. There must be some
-> >> inconsistency somewhere :-/
-> >
-> > Yes there is. Linux stores UUID in big endian format (16 byte octets)
-> > and OP-TEE stores UUID in little endian format (in form of struct you
-> > referenced above).
-> >
-> > And format conversion APIs [1] in OP-TEE OS are used while passing
-> > UUID among Linux and OP-TEE.
-> >
-> > So we need to use %pUb in case of Linux and %pUl in case of OP-TEE.
-> >
-> > [1] https://github.com/OP-TEE/optee_os/blob/master/core/tee/uuid.c
->
->
-> Got it now. The TA enumeration function in OP-TEE performs  the
-> conversion here:
-> https://github.com/OP-TEE/optee_os/blob/3.9.0/core/pta/device.c#L34
->
-> Thanks for clarifying.
->
-> --
-> Jerome
+What about using __ATTR_RO() instead?
+
+thanks,
+
+greg k-h
