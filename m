@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E95DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23075C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE25021927
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F29072193E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448262;
-	bh=t6Xx/7RdyXz/lgFb8xtFVtATLHaRwVHELJd5weVgOqQ=;
+	s=default; t=1592448268;
+	bh=TS51LkKgjmjEv2BFagb1w17wjUJM5ZYvOrdt2wSaGh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lkUYy8Cni5iCDI/c0xLm7WCnkCWgycRy8okSYAsYCf44pXALsZjU+T9F3+2oL3/Da
-	 qrq4DID3B89HKMvPFiHc9J3p8NjwalN3sESgpBFYdt4s1+JHRXEhIAf21gr3PQ2xhd
-	 B8joRflLdRSpm8/dVuW7PB1ZQWiowpo1/CdZjue8=
+	b=pph8DIeR/5GvdXeiqRhxpwiT6pI2Rdq/rC3h6Q7rf+K97Acoh/peBOyAoAuNMv/iK
+	 3h9apBrYZCsf7Pzu/P/AJ21tPBVv3uileouX0kOHa4/xrKfQ8kRHqLmpbWWM1ZwjnL
+	 RLkG8KBZg1H4PSKqeyy9G9mrYBlq8FI9nZB5PLPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387904AbgFRCoW (ORCPT
+        id S2387907AbgFRCo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:44:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39016 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:44:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727876AbgFRBLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:15 -0400
+        id S1727801AbgFRBLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C689221E6;
-        Thu, 18 Jun 2020 01:11:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5C7021D7E;
+        Thu, 18 Jun 2020 01:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442674;
-        bh=t6Xx/7RdyXz/lgFb8xtFVtATLHaRwVHELJd5weVgOqQ=;
+        s=default; t=1592442673;
+        bh=TS51LkKgjmjEv2BFagb1w17wjUJM5ZYvOrdt2wSaGh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aKr21wKqU66G7sdVn4U51y2BwjJ0ZCBBr7+asdFWbm4NiSM+sW1hM1FjEUEHNw9UA
-         ydmloANk0xhcxG8TRNk+QUdBYd11q0opkLsDCHE2NavzmgcJQ9AN8Pb5HhPP9LB2Bd
-         t/isU7+s9VVYO2D+pwQeDUONQYhKtEb7hr4T2pC0=
+        b=js1/BdXIk8LUvZoxamm2vcStRezJWvpl+Njz8RXH5F9thpbYiDwNoBSBgxxK28w9a
+         G+tU0JwlPN0yyizXIolEj14+MerDYQ72tpp6J/f11ro/f3z3NJbIZQDcUvuszz+4c/
+         soc0M2g01t2OUwdicHuhWoT/gONe3M6W072rp6rc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         Benjamin Block <bblock@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 143/388] s390/qdio: put thinint indicator after early error
-Date:   Wed, 17 Jun 2020 21:04:00 -0400
-Message-Id: <20200618010805.600873-143-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 142/388] s390/qdio: tear down thinint indicator after early error
+Date:   Wed, 17 Jun 2020 21:03:59 -0400
+Message-Id: <20200618010805.600873-142-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -62,15 +62,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 75e82bec6b2622c6f455b7a543fb5476a5d0eed7 ]
+[ Upstream commit 68a381746f20e5435206173e22d0a011ef78790e ]
 
-qdio_establish() calls qdio_setup_thinint() via qdio_setup_irq().
-If the subsequent qdio_establish_thinint() fails, we miss to put the
-DSCI again. Thus the DSCI isn't available for re-use. Given enough of
-such errors, we could end up with having only the shared DSCI available.
-
-Merge qdio_setup_thinint() into qdio_establish_thinint(), and deal with
-such an error internally.
+qdio_establish() calls qdio_establish_thinint(), but later has an error
+exit path that doesn't roll this call back. Fix it.
 
 Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
 Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
@@ -78,65 +73,21 @@ Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/qdio.h         |  1 -
- drivers/s390/cio/qdio_setup.c   |  1 -
- drivers/s390/cio/qdio_thinint.c | 14 ++++++++------
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/s390/cio/qdio_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/s390/cio/qdio.h b/drivers/s390/cio/qdio.h
-index 3cf223bc1d5f..a2afd7bc100b 100644
---- a/drivers/s390/cio/qdio.h
-+++ b/drivers/s390/cio/qdio.h
-@@ -364,7 +364,6 @@ static inline int multicast_outbound(struct qdio_q *q)
- extern u64 last_ai_time;
- 
- /* prototypes for thin interrupt */
--void qdio_setup_thinint(struct qdio_irq *irq_ptr);
- int qdio_establish_thinint(struct qdio_irq *irq_ptr);
- void qdio_shutdown_thinint(struct qdio_irq *irq_ptr);
- void tiqdio_add_device(struct qdio_irq *irq_ptr);
-diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
-index d12f094db056..8edfa0982221 100644
---- a/drivers/s390/cio/qdio_setup.c
-+++ b/drivers/s390/cio/qdio_setup.c
-@@ -480,7 +480,6 @@ int qdio_setup_irq(struct qdio_irq *irq_ptr, struct qdio_initialize *init_data)
- 	}
- 
- 	setup_qib(irq_ptr, init_data);
--	qdio_setup_thinint(irq_ptr);
- 	set_impl_params(irq_ptr, init_data->qib_param_field_format,
- 			init_data->qib_param_field,
- 			init_data->input_slib_elements,
-diff --git a/drivers/s390/cio/qdio_thinint.c b/drivers/s390/cio/qdio_thinint.c
-index ae50373617cd..0faa0ad21732 100644
---- a/drivers/s390/cio/qdio_thinint.c
-+++ b/drivers/s390/cio/qdio_thinint.c
-@@ -227,17 +227,19 @@ int __init tiqdio_register_thinints(void)
- 
- int qdio_establish_thinint(struct qdio_irq *irq_ptr)
- {
-+	int rc;
-+
- 	if (!is_thinint_irq(irq_ptr))
- 		return 0;
--	return set_subchannel_ind(irq_ptr, 0);
--}
- 
--void qdio_setup_thinint(struct qdio_irq *irq_ptr)
--{
--	if (!is_thinint_irq(irq_ptr))
--		return;
- 	irq_ptr->dsci = get_indicator();
- 	DBF_HEX(&irq_ptr->dsci, sizeof(void *));
-+
-+	rc = set_subchannel_ind(irq_ptr, 0);
-+	if (rc)
-+		put_indicator(irq_ptr->dsci);
-+
-+	return rc;
- }
- 
- void qdio_shutdown_thinint(struct qdio_irq *irq_ptr)
+diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
+index da5a11138020..80cc811bd2e0 100644
+--- a/drivers/s390/cio/qdio_main.c
++++ b/drivers/s390/cio/qdio_main.c
+@@ -1363,6 +1363,7 @@ int qdio_establish(struct ccw_device *cdev,
+ 	if (rc) {
+ 		DBF_ERROR("%4x est IO ERR", irq_ptr->schid.sch_no);
+ 		DBF_ERROR("rc:%4x", rc);
++		qdio_shutdown_thinint(irq_ptr);
+ 		qdio_shutdown_irq(irq_ptr);
+ 		mutex_unlock(&irq_ptr->setup_mutex);
+ 		return rc;
 -- 
 2.25.1
 
