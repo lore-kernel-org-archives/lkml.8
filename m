@@ -2,123 +2,106 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55C4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADD6F214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:37:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592469420;
-	bh=ceL/T8t0nvr/U3tOjodwMKknS/aAxNJ8RojCHrLF1ok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d7WrWlQ6aDVwodWLrx2egcCWwFieX8kp2paxNwOXnJ0mt1jb7E+jTPUNmv0g0mZHD
-	 xPQC1Sr8LiBwHc6wOhWSIWIdYq5u3mfcVQnxxfoYjLla7HMpgL1jYLHRGSQWFaCcTF
-	 hrfXDg2Tv8n7nSceVsaU1W4Wdz4Y5A66yMXIH8QA=
+	by mail.kernel.org (Postfix) with ESMTP id E2000214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbgFRIg7 (ORCPT
+        id S1728726AbgFRIhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:36:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54142 "EHLO mail.kernel.org"
+        Thu, 18 Jun 2020 04:37:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36080 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgFRIgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:36:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBE5F214DB;
-        Thu, 18 Jun 2020 08:36:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592469413;
-        bh=ceL/T8t0nvr/U3tOjodwMKknS/aAxNJ8RojCHrLF1ok=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fhmVqgBm4oYl3kaigyXF+fjYbAtWBnSCDQ01zfS0JLYK3gukCSKFX5/7FuhT1Rddg
-         G+/nRvmR+h/ih67DEse6ah3ZJOIHmQNa/IrfpIzNqOgVLauwcJ4gL8gLuByIeLnTZe
-         XbWo06NX2QYRQYvzI3OU8jnZRnrWl3CjgdK+X07A=
-Date:   Thu, 18 Jun 2020 10:36:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Oliver O'Halloran <oohall@gmail.com>
-Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
-Message-ID: <20200618083646.GA1066967@kroah.com>
-References: <20200616011742.138975-1-rajatja@google.com>
- <20200616011742.138975-4-rajatja@google.com>
- <20200616073249.GB30385@infradead.org>
- <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
- <20200617073100.GA14424@infradead.org>
- <CACK8Z6FecYkAYQh4sm4RbAQ1iwb9gexqgY9ExD9BH2p-5Usj=g@mail.gmail.com>
- <CAHp75Vc6eA33cyAQH-m+yixTuHqiobg6fo7nzbbb-J6vN6qFcA@mail.gmail.com>
+        id S1728465AbgFRIhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:37:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4BFCDAD35;
+        Thu, 18 Jun 2020 08:37:07 +0000 (UTC)
+Subject: Re: [PATCH 7/9] mm, slub: introduce kmem_cache_debug_flags()
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, vinmenon@codeaurora.org,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Roman Gushchin <guro@fb.com>, Jann Horn <jannh@google.com>,
+        Vijayanand Jitta <vjitta@codeaurora.org>
+References: <20200610163135.17364-1-vbabka@suse.cz>
+ <20200610163135.17364-8-vbabka@suse.cz>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <949b90ed-e0f0-07d7-4d21-e30ec0958a7c@suse.cz>
+Date:   Thu, 18 Jun 2020 10:37:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vc6eA33cyAQH-m+yixTuHqiobg6fo7nzbbb-J6vN6qFcA@mail.gmail.com>
+In-Reply-To: <20200610163135.17364-8-vbabka@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 11:12:56AM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 17, 2020 at 10:56 PM Rajat Jain <rajatja@google.com> wrote:
-> > On Wed, Jun 17, 2020 at 12:31 AM Christoph Hellwig <hch@infradead.org> wrote:
+On 6/10/20 6:31 PM, Vlastimil Babka wrote:
+> There are few places that call kmem_cache_debug(s) (which tests if any of debug
+> flags are enabled for a cache) immediatelly followed by a test for a specific
+> flag. The compiler can probably eliminate the extra check, but we can make the
+> code nicer by introducing kmem_cache_debug_flags() that works like
+> kmem_cache_debug() (including the static key check) but tests for specifig
+> flag(s). The next patches will add more users.
 > 
-> ...
-> 
-> > (and likely call it "external" instead of "untrusted".
-> 
-> Which is not okay. 'External' to what? 'untrusted' has been carefully
-> chosen by the meaning of it.
-> What external does mean for M.2. WWAN card in my laptop? It's in ACPI
-> tables, but I can replace it.
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
-Then your ACPI tables should show this, there is an attribute for it,
-right?
+Please add this fixup per reviews.
+----8<----
+From 25793252a31a36f8d1d4ccf0f27ed3e43fba54d8 Mon Sep 17 00:00:00 2001
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Thu, 18 Jun 2020 10:34:53 +0200
+Subject: [PATCH] mm, slub: introduce kmem_cache_debug_flags()-fix
 
-> This is only one example. Or if firmware of some device is altered,
-> and it's internal (whatever it means) is it trusted or not?
+Change return from int to bool, per Kees.
+Add VM_WARN_ON_ONCE() for invalid flags, per Roman.
 
-That is what people are using policy for today, if you object to this,
-please bring it up to those developers :)
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ mm/slub.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-> So, please leave it as is (I mean name).
+diff --git a/mm/slub.c b/mm/slub.c
+index c8e8b4ae2451..59d19c64069e 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -127,16 +127,17 @@ DEFINE_STATIC_KEY_FALSE(slub_debug_enabled);
+  * cache. Use only for flags parsed by setup_slub_debug() as it also enables
+  * the static key.
+  */
+-static inline int kmem_cache_debug_flags(struct kmem_cache *s, slab_flags_t flags)
++static inline bool kmem_cache_debug_flags(struct kmem_cache *s, slab_flags_t flags)
+ {
++	VM_WARN_ON_ONCE(!(flags & SLAB_DEBUG_FLAGS));
+ #ifdef CONFIG_SLUB_DEBUG
+ 	if (static_branch_unlikely(&slub_debug_enabled))
+ 		return s->flags & flags;
+ #endif
+-	return 0;
++	return false;
+ }
+ 
+-static inline int kmem_cache_debug(struct kmem_cache *s)
++static inline bool kmem_cache_debug(struct kmem_cache *s)
+ {
+ 	return kmem_cache_debug_flags(s, SLAB_DEBUG_FLAGS);
+ }
+-- 
+2.27.0
 
-firmware today exports this attribute, why do you not want userspace to
-also know it?
-
-Trust is different, yes, don't get the two mixed up please.  That should
-be a different sysfs attribute for obvious reasons.
-
-thanks,
-
-greg k-h
