@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DFAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0296BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6689B20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D829D214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442650;
-	bh=lkznMDgVCVzO+9pK0+jc6BtPiuzmW9VHh4jQRwGuIFo=;
+	s=default; t=1592442651;
+	bh=OeDBeLcNk9Jymm8syCr+lEMv51GWrupM4856RcZCB9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aJCsrD6bIyuGwG5Ny08HLT4z5PMUndd38w5D2ZgFJPE8cDZZ3Jca6uTszsxfAyoJO
-	 DkdEhF6Z5cQdClvFAW0rqu2XEpnoHPAK0hAO+YuVuYImBmYbVcOM8s5Cbg5fx27Mag
-	 vxi5Fd5j3fO1JGyxR7T+SWbnDAz25shazXV5+0ms=
+	b=r+RcUtoZivrcUC1ehRS5GH/hTk9jnYBoIAS2pjgXB35SgDgRF8iYCrt7aL9X7U3Ac
+	 lkeJYpRszH7d6KyKvagNVBUF2qwSIThiIHeWym6Ijw4DqL0wiDdL89C5xFaUDOPi02
+	 /pQPnxihNJ9O6+Zsrff0F07PN8zWTEQ9CMHaBxZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728617AbgFRBKs (ORCPT
+        id S1728630AbgFRBKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:10:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38222 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728594AbgFRBKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:46 -0400
+        id S1728609AbgFRBKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C08121924;
-        Thu, 18 Jun 2020 01:10:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CC9B214DB;
+        Thu, 18 Jun 2020 01:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442645;
-        bh=lkznMDgVCVzO+9pK0+jc6BtPiuzmW9VHh4jQRwGuIFo=;
+        s=default; t=1592442647;
+        bh=OeDBeLcNk9Jymm8syCr+lEMv51GWrupM4856RcZCB9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qIWA67wOiIK4GEnugih9Atnx39f7szZMIX0ewQ9MgNVjgm94MMxvlaYbrDP0FVJV5
-         S3suy1Exj3dZ80HLKJ7ABq0p7hueJVxAIMjwy+eFDwohyJJW0SPsiue+MwK1+D4XUQ
-         lZpYjZc6WRIr1or8y+qve0x2NHI+RvhXJvG+eFo0=
+        b=aaOyxYij5SBkvwxxO48xe1hEWbTIRzWGXh19QZHw3DHJFwbfdinfyrikGgLfj7RjU
+         1cohyafayB7LkdmOUysJjbasSSgOU2r1guwt0fVEF6vlvMrlkLh9wD16tHt0j85sgZ
+         sKw0OZNu6LRTeIPDV/l4ov0SXvgNi/E/cCmd2wGQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 119/388] arm64: dts: mt8173: fix unit name warnings
-Date:   Wed, 17 Jun 2020 21:03:36 -0400
-Message-Id: <20200618010805.600873-119-sashal@kernel.org>
+Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 121/388] arm64: dts: qcom: msm8916: remove unit name for thermal trip points
+Date:   Wed, 17 Jun 2020 21:03:38 -0400
+Message-Id: <20200618010805.600873-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,128 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: Amit Kucheria <amit.kucheria@linaro.org>
 
-[ Upstream commit 72b29215aced394d01ca25e432963b619daa0098 ]
+[ Upstream commit fe2aff0c574d206f34f1864d5a0b093694c27142 ]
 
-Fixing several unit name warnings:
+The thermal trip points have unit name but no reg property, so we can
+remove them. It also fixes the following warnings from 'make dtbs_check'
+after adding the thermal yaml bindings.
 
-Warning (unit_address_vs_reg): /oscillator@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /oscillator@1: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /oscillator@2: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@1: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/cpu_crit@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@1: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /reserved-memory/vpu_dma_mem_region: node has a reg or ranges property, but no unit name
-Warning (simple_bus_reg): /soc/pinctrl@10005000: simple-bus unit address format error, expected "1000b000"
-Warning (simple_bus_reg): /soc/interrupt-controller@10220000: simple-bus unit address format error, expected "10221000"
+arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
+gpu-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
+camera-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
+modem-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Link: https://lore.kernel.org/r/20200210063523.133333-4-hsinyi@chromium.org
-[mb: drop fixes for '_' in property name]
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
+gpu-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
+camera-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
+modem-thermal:trips: 'trip-point@0' does not match any of the regexes:
+'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Link: https://lore.kernel.org/r/2d3d045c18a2fb85b28cf304aa11ae6e6538d75e.1585562459.git.amit.kucheria@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index d819e44d94a8..6ad1053afd27 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -242,21 +242,21 @@ psci {
- 		cpu_on	      = <0x84000003>;
- 	};
- 
--	clk26m: oscillator@0 {
-+	clk26m: oscillator0 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <26000000>;
- 		clock-output-names = "clk26m";
- 	};
- 
--	clk32k: oscillator@1 {
-+	clk32k: oscillator1 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <32000>;
- 		clock-output-names = "clk32k";
- 	};
- 
--	cpum_ck: oscillator@2 {
-+	cpum_ck: oscillator2 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <0>;
-@@ -272,19 +272,19 @@ cpu_thermal: cpu_thermal {
- 			sustainable-power = <1500>; /* milliwatts */
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index a88a15f2352b..5548d7b5096c 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -261,7 +261,7 @@ cpu2_3-thermal {
+ 			thermal-sensors = <&tsens 4>;
  
  			trips {
--				threshold: trip-point@0 {
-+				threshold: trip-point0 {
- 					temperature = <68000>;
+-				cpu2_3_alert0: trip-point@0 {
++				cpu2_3_alert0: trip-point0 {
+ 					temperature = <75000>;
  					hysteresis = <2000>;
  					type = "passive";
- 				};
+@@ -291,7 +291,7 @@ gpu-thermal {
+ 			thermal-sensors = <&tsens 2>;
  
--				target: trip-point@1 {
-+				target: trip-point1 {
+ 			trips {
+-				gpu_alert0: trip-point@0 {
++				gpu_alert0: trip-point0 {
+ 					temperature = <75000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+@@ -311,7 +311,7 @@ camera-thermal {
+ 			thermal-sensors = <&tsens 1>;
+ 
+ 			trips {
+-				cam_alert0: trip-point@0 {
++				cam_alert0: trip-point0 {
+ 					temperature = <75000>;
+ 					hysteresis = <2000>;
+ 					type = "hot";
+@@ -326,7 +326,7 @@ modem-thermal {
+ 			thermal-sensors = <&tsens 0>;
+ 
+ 			trips {
+-				modem_alert0: trip-point@0 {
++				modem_alert0: trip-point0 {
  					temperature = <85000>;
  					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit: cpu_crit@0 {
-+				cpu_crit: cpu_crit0 {
- 					temperature = <115000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -292,13 +292,13 @@ cpu_crit: cpu_crit@0 {
- 			};
- 
- 			cooling-maps {
--				map@0 {
-+				map0 {
- 					trip = <&target>;
- 					cooling-device = <&cpu0 0 0>,
- 							 <&cpu1 0 0>;
- 					contribution = <3072>;
- 				};
--				map@1 {
-+				map1 {
- 					trip = <&target>;
- 					cooling-device = <&cpu2 0 0>,
- 							 <&cpu3 0 0>;
-@@ -312,7 +312,7 @@ reserved-memory {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
--		vpu_dma_reserved: vpu_dma_mem_region {
-+		vpu_dma_reserved: vpu_dma_mem_region@b7000000 {
- 			compatible = "shared-dma-pool";
- 			reg = <0 0xb7000000 0 0x500000>;
- 			alignment = <0x1000>;
-@@ -365,7 +365,7 @@ syscfg_pctl_a: syscfg_pctl_a@10005000 {
- 			reg = <0 0x10005000 0 0x1000>;
- 		};
- 
--		pio: pinctrl@10005000 {
-+		pio: pinctrl@1000b000 {
- 			compatible = "mediatek,mt8173-pinctrl";
- 			reg = <0 0x1000b000 0 0x1000>;
- 			mediatek,pctl-regmap = <&syscfg_pctl_a>;
-@@ -572,7 +572,7 @@ mipi_tx1: mipi-dphy@10216000 {
- 			status = "disabled";
- 		};
- 
--		gic: interrupt-controller@10220000 {
-+		gic: interrupt-controller@10221000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
- 			interrupt-parent = <&gic>;
+ 					type = "hot";
 -- 
 2.25.1
 
