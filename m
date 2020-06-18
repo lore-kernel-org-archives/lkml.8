@@ -2,52 +2,54 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9123CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA282C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 710C121974
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CDB121974
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444872;
-	bh=9NemLycXmThsbq6xQcVcZBi0l9mfc0C48gQ48bdlE8g=;
+	s=default; t=1592444875;
+	bh=tNCa20it20TAFV8/6bFK9+ti07nFHI+lr1VPJCykpbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H11YQF/CbWDk+6lsotUxzEFwODbfMRPnckshKTYPpMQS4W65W6Ayb7D2Q3euvv4Ys
-	 8ezU6M5y83fS2Jr9ZKyPlPW2P+v10IwMT5krGjE05jAXtomR6MwA7LpFfhmvnxKnjg
-	 Yk6ZY2RkLaR0Rb+ANPmPKXpH26M9JblRgRyLvcfE=
+	b=kv40p1u8iPjo6p9w5duwMk74dTO4TX/vO0K0Z7h1fKbzRzTY9ADoZ3kafrzRnKqGq
+	 EpoQL3Iqrc0XL8zKCJGilUHuF/6D+fg1Wkl9ghzQMVIn4uQ7czqKGwRL1b5I5QcIBj
+	 GVAoo7uK5zzT0nrE+/7618fBdqUqy/W20DRQpkMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732025AbgFRB2G (ORCPT
+        id S1730393AbgFRB2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:28:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59492 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:28:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731279AbgFRBYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:24:46 -0400
+        id S1730343AbgFRBYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:24:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ED4821D80;
-        Thu, 18 Jun 2020 01:24:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE68C214DB;
+        Thu, 18 Jun 2020 01:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443486;
-        bh=9NemLycXmThsbq6xQcVcZBi0l9mfc0C48gQ48bdlE8g=;
+        s=default; t=1592443484;
+        bh=tNCa20it20TAFV8/6bFK9+ti07nFHI+lr1VPJCykpbs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eeB8wZd4Sn97EtiaZVTh3Tb2fLGTr8iPmzJ3L2vTkbjFo2wOxT1FcsrJYc+JICVZr
-         9G9V1jZGojOOnmTWaAvs8XLaNDFrZu/Jv4NNkvaiOtk8nn8vN/k/XWnobponv5L7gx
-         9ztxwXzpq/uBOSVzNsmEp05rzEzeFsTlA45eVy7Q=
+        b=RV2Oo/Tx9hF3afX9OYzTY4KWF/DWoLpNbsb9lLtGJW/b29PE0RQSEVWCm5LvtnHhu
+         wCNFvC9Qw+cGFJ3Q/vs0oi1e8ChiOEkb6CaAAyg9f79qAVnBQar9PIHPqaGcel7MDv
+         fGPpMKUjv8bCi8WgeUouARkEFR1E8E/G2pLTKjos=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        kbuild test robot <lkp@intel.com>,
         Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 114/172] usb: gadget: lpc32xx_udc: don't dereference ep pointer before null check
-Date:   Wed, 17 Jun 2020 21:21:20 -0400
-Message-Id: <20200618012218.607130-114-sashal@kernel.org>
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 113/172] USB: gadget: udc: s3c2410_udc: Remove pointless NULL check in s3c2410_udc_nuke
+Date:   Wed, 17 Jun 2020 21:21:19 -0400
+Message-Id: <20200618012218.607130-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -60,68 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit eafa80041645cd7604c4357b1a0cd4a3c81f2227 ]
+[ Upstream commit 7a0fbcf7c308920bc6116b3a5fb21c8cc5fec128 ]
 
-Currently pointer ep is being dereferenced before it is null checked
-leading to a null pointer dereference issue.  Fix this by only assigning
-pointer udc once ep is known to be not null.  Also remove a debug
-message that requires a valid udc which may not be possible at that
-point.
+Clang warns:
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: 24a28e428351 ("USB: gadget driver for LPC32xx")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+drivers/usb/gadget/udc/s3c2410_udc.c:255:11: warning: comparison of
+address of 'ep->queue' equal to a null pointer is always false
+[-Wtautological-pointer-compare]
+        if (&ep->queue == NULL)
+             ~~~~^~~~~    ~~~~
+1 warning generated.
+
+It is not wrong, queue is not a pointer so if ep is not NULL, the
+address of queue cannot be NULL. No other driver does a check like this
+and this check has been around since the driver was first introduced,
+presumably with no issues so it does not seem like this check should be
+something else. Just remove it.
+
+Commit afe956c577b2d ("kbuild: Enable -Wtautological-compare") exposed
+this but it is not the root cause of the warning.
+
+Fixes: 3fc154b6b8134 ("USB Gadget driver for Samsung s3c2410 ARM SoC")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1004
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/lpc32xx_udc.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/usb/gadget/udc/s3c2410_udc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
-index 21921db068f6..cf56819f16e4 100644
---- a/drivers/usb/gadget/udc/lpc32xx_udc.c
-+++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
-@@ -1602,17 +1602,17 @@ static int lpc32xx_ep_enable(struct usb_ep *_ep,
- 			     const struct usb_endpoint_descriptor *desc)
+diff --git a/drivers/usb/gadget/udc/s3c2410_udc.c b/drivers/usb/gadget/udc/s3c2410_udc.c
+index 8bf5ad7a59ad..6cc63e317aba 100644
+--- a/drivers/usb/gadget/udc/s3c2410_udc.c
++++ b/drivers/usb/gadget/udc/s3c2410_udc.c
+@@ -264,10 +264,6 @@ static void s3c2410_udc_done(struct s3c2410_ep *ep,
+ static void s3c2410_udc_nuke(struct s3c2410_udc *udc,
+ 		struct s3c2410_ep *ep, int status)
  {
- 	struct lpc32xx_ep *ep = container_of(_ep, struct lpc32xx_ep, ep);
--	struct lpc32xx_udc *udc = ep->udc;
-+	struct lpc32xx_udc *udc;
- 	u16 maxpacket;
- 	u32 tmp;
- 	unsigned long flags;
- 
- 	/* Verify EP data */
- 	if ((!_ep) || (!ep) || (!desc) ||
--	    (desc->bDescriptorType != USB_DT_ENDPOINT)) {
--		dev_dbg(udc->dev, "bad ep or descriptor\n");
-+	    (desc->bDescriptorType != USB_DT_ENDPOINT))
- 		return -EINVAL;
--	}
-+
-+	udc = ep->udc;
- 	maxpacket = usb_endpoint_maxp(desc);
- 	if ((maxpacket == 0) || (maxpacket > ep->maxpacket)) {
- 		dev_dbg(udc->dev, "bad ep descriptor's packet size\n");
-@@ -1860,7 +1860,7 @@ static int lpc32xx_ep_dequeue(struct usb_ep *_ep, struct usb_request *_req)
- static int lpc32xx_ep_set_halt(struct usb_ep *_ep, int value)
- {
- 	struct lpc32xx_ep *ep = container_of(_ep, struct lpc32xx_ep, ep);
--	struct lpc32xx_udc *udc = ep->udc;
-+	struct lpc32xx_udc *udc;
- 	unsigned long flags;
- 
- 	if ((!ep) || (ep->hwep_num <= 1))
-@@ -1870,6 +1870,7 @@ static int lpc32xx_ep_set_halt(struct usb_ep *_ep, int value)
- 	if (ep->is_in)
- 		return -EAGAIN;
- 
-+	udc = ep->udc;
- 	spin_lock_irqsave(&udc->lock, flags);
- 
- 	if (value == 1) {
+-	/* Sanity check */
+-	if (&ep->queue == NULL)
+-		return;
+-
+ 	while (!list_empty(&ep->queue)) {
+ 		struct s3c2410_request *req;
+ 		req = list_entry(ep->queue.next, struct s3c2410_request,
 -- 
 2.25.1
 
