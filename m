@@ -2,96 +2,144 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6009C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B7AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8991620885
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:06:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kyiK1wNG"
+	by mail.kernel.org (Postfix) with ESMTP id 8FB122193E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:06:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592446015;
+	bh=RiDtdkqldGEv6LhvQoPOjNzyucZ0WuaO6MrRGi5SRDg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kVytRIXvhSaXd7TexYTLK9AJFYRWmXkEHye/D9skfNO7krS+75JfPpm16XGciOuWX
+	 PoGDd7TdfeBJF2/GwNSQyDiZE0BswuE8sSYcQiNtNAEISqEPDEygP9tyGNucGAoUCc
+	 NRXhykCLMcEyPhTWWdUm6juFr9mTBNHMgaC+/cSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733046AbgFRCGm (ORCPT
+        id S1731778AbgFRCGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:06:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730747AbgFRBW3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:29 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22188C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 18:22:28 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id n23so5211063ljh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 18:22:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FaWvn+LzUrHwIuJUNTAyXF6UGUzwalmGorSr6oFx2Pg=;
-        b=kyiK1wNG4Lc1N0Lxuahc3vmiBcgTlXg4PJWgxJSP5mw4VmYChXwPMuSZstk/LEiGCy
-         Wqeg2Aokh4FaOjKTEVe9x30C9v7tMTr7LNZz2iCJI5Nh8Liv2/uxRsMncj7yAYUznsNT
-         rauLfl+HFjPm5dxjEnqpV8cTxuJNK0oXK6Ar/JfTFMYx+uIlN6NNeqXukmkZ99Xas6TN
-         mVDPyUvRHnviXRzZG+J/umdq7z4z4bNmn8E26TAo1DA9+9eQ8oc6GjZc6BiXb1T65MqJ
-         BPzITKaqERM550cWLj1oAJSPULjZtit035usTjlJd5F5Ugq4+q6E1JMaNhj/KaSrIGie
-         +xig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FaWvn+LzUrHwIuJUNTAyXF6UGUzwalmGorSr6oFx2Pg=;
-        b=B5WFI/qenH9buOcwZ3OO+Y3sEOUhBATe7I7ctZFVRHgBGO3hCG5oQ7eumlFMMKN4Of
-         JW1kGFC3CQj/jwEI9/wUvWChG7ry1W7MRgFkIavuVxXvZO25k593QL4JuDz8UAETtBbh
-         KP18FibJzVWen+xOe29UEZiIxL+6Aaz7yzpdKK9QCGAEmqMkC2J3e0AduoFUJ1EmoT3S
-         9kzz6ksWk2sfg8eW1f8niEPYDSs2Tcn/TSFaSxfQT5BbLSeDs/tefv+aly81uTABnP/Q
-         P9s4mgx9gkyC0h0N4wHkVbVvnzzK0Lqfj3g1r1FJR8w48Jvqp9EQQtOIr6GfBXHqA7qq
-         dz/w==
-X-Gm-Message-State: AOAM531f9k0IGvSovRZJzyHV7KCKBmIPMgnJH9dzijtgPpGemgW5aBX+
-        bXI0rsMVE3NMxtgp4FztssPFrS07SK3zOLRxJN/MPw==
-X-Google-Smtp-Source: ABdhPJwfnBt/yiNef2EujnYSVQGXdREHugwntNCW5jy9ouvVu3ePlXzbuRHAY1CGfVcxCsQcNgeKwMv/f+M6q59Bx00=
-X-Received: by 2002:a2e:9e86:: with SMTP id f6mr875898ljk.95.1592443346675;
- Wed, 17 Jun 2020 18:22:26 -0700 (PDT)
+        Wed, 17 Jun 2020 22:06:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730269AbgFRBW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:22:28 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B536720663;
+        Thu, 18 Jun 2020 01:22:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592443347;
+        bh=RiDtdkqldGEv6LhvQoPOjNzyucZ0WuaO6MrRGi5SRDg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=t+BpT40+rO5X0M346TJVtyh3N9bT1+VRSQSex6UxJ8Mvmqphs4P8AIYZV3X//Ea3g
+         QJx3CbIlqo7su2rywDzjJNjP/40fEFYaoK51XiKOX+QwCPRNxV/3GKeWa5WIiNlAej
+         aWdwC6dqHAVPPhV3p5VNxnsUgKUiBJJhjFTTB8Dw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 007/172] iio: light: isl29125: fix iio_triggered_buffer_{predisable,postenable} positions
+Date:   Wed, 17 Jun 2020 21:19:33 -0400
+Message-Id: <20200618012218.607130-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200617220226.88948-1-luc.vanoostenryck@gmail.com>
-In-Reply-To: <20200617220226.88948-1-luc.vanoostenryck@gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 18 Jun 2020 03:22:15 +0200
-Message-ID: <CANiq72nNQ+11ch7sRjLLc33s_OkftuOqgGkCDggq88tbJtdPNQ@mail.gmail.com>
-Subject: Re: [PATCH] sparse: use identifiers to define address spaces
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luc,
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-On Thu, Jun 18, 2020 at 12:02 AM Luc Van Oostenryck
-<luc.vanoostenryck@gmail.com> wrote:
->
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 21aed0981edf..e368384445b6 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -5,20 +5,20 @@
->  #ifndef __ASSEMBLY__
->
->  #ifdef __CHECKER__
-> -# define __user                __attribute__((noderef, address_space(1)))
->  # define __kernel      __attribute__((address_space(0)))
-> +# define __user                __attribute__((noderef, address_space(__user)))
+[ Upstream commit 9b7a12c3e090cf3fba6f66f1f23abbc6e0e86021 ]
 
-I guess `__kernel` moves to the first place since it uses the first
-address space?
+The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+the poll functions.
 
-Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+For the predisable hook, the disable code should occur before detaching
+the poll func, and for the postenable hook, the poll func should be
+attached before the enable code.
 
-Cheers,
-Miguel
+This change reworks the predisable/postenable hooks so that the pollfunc is
+attached/detached in the correct position.
+It also balances the calls a bit, by grouping the preenable and the
+iio_triggered_buffer_postenable() into a single
+isl29125_buffer_postenable() function.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iio/light/isl29125.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/iio/light/isl29125.c b/drivers/iio/light/isl29125.c
+index ed38edcd5efe..2175cb9c2908 100644
+--- a/drivers/iio/light/isl29125.c
++++ b/drivers/iio/light/isl29125.c
+@@ -216,13 +216,24 @@ static const struct iio_info isl29125_info = {
+ 	.attrs = &isl29125_attribute_group,
+ };
+ 
+-static int isl29125_buffer_preenable(struct iio_dev *indio_dev)
++static int isl29125_buffer_postenable(struct iio_dev *indio_dev)
+ {
+ 	struct isl29125_data *data = iio_priv(indio_dev);
++	int err;
++
++	err = iio_triggered_buffer_postenable(indio_dev);
++	if (err)
++		return err;
+ 
+ 	data->conf1 |= ISL29125_MODE_RGB;
+-	return i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
++	err = i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
+ 		data->conf1);
++	if (err) {
++		iio_triggered_buffer_predisable(indio_dev);
++		return err;
++	}
++
++	return 0;
+ }
+ 
+ static int isl29125_buffer_predisable(struct iio_dev *indio_dev)
+@@ -230,19 +241,18 @@ static int isl29125_buffer_predisable(struct iio_dev *indio_dev)
+ 	struct isl29125_data *data = iio_priv(indio_dev);
+ 	int ret;
+ 
+-	ret = iio_triggered_buffer_predisable(indio_dev);
+-	if (ret < 0)
+-		return ret;
+-
+ 	data->conf1 &= ~ISL29125_MODE_MASK;
+ 	data->conf1 |= ISL29125_MODE_PD;
+-	return i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
++	ret = i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
+ 		data->conf1);
++
++	iio_triggered_buffer_predisable(indio_dev);
++
++	return ret;
+ }
+ 
+ static const struct iio_buffer_setup_ops isl29125_buffer_setup_ops = {
+-	.preenable = isl29125_buffer_preenable,
+-	.postenable = &iio_triggered_buffer_postenable,
++	.postenable = isl29125_buffer_postenable,
+ 	.predisable = isl29125_buffer_predisable,
+ };
+ 
+-- 
+2.25.1
+
