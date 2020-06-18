@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AD4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74E8421D94
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A3F21D94
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445008;
-	bh=kQxud7MSwkmirSk8sl1Z6U/M4EKYnQvsC+GuLnHvsI0=;
+	s=default; t=1592445013;
+	bh=yrsb5sDyQK0/tXeTGDfxt669NSiTccbeU4EEGkjL5ew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jNvFN+M96yW+CjTnQthibx3WdrI36iyB9fV9+rYy2okI+jmmLHpHUP2iRi59PgJ4A
-	 75/7qzca5fGiAJNXL4mOfuz+e3WRHijban19tyz1YlpavNlIEd4yIJVq01upWBMvQl
-	 9xOCA9Rv2phJa4ENcJz16g1lirJD1gRn1NOQPVak=
+	b=RiSnVmlV60hlhlZHRJIIhMXYOiPG8caj6I2gO2Uk3KHcVsFT+98TKlHiIeDG2gzF2
+	 MqKgWkKdHsaKuAqD6s5jaVXnUtCn6iPbFrBogFw6wvFDXDn/aHi5TQldT3lIFCsHVq
+	 BAkpO4cZz/44TBxPJ/DNcWqi/ItrnfWXMCW+q0e4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733099AbgFRBuH (ORCPT
+        id S1731180AbgFRB11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:50:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35658 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:27:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731255AbgFRB1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:30 -0400
+        id S1731107AbgFRBX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:23:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3233C21D7F;
-        Thu, 18 Jun 2020 01:27:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C6A220776;
+        Thu, 18 Jun 2020 01:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443649;
-        bh=kQxud7MSwkmirSk8sl1Z6U/M4EKYnQvsC+GuLnHvsI0=;
+        s=default; t=1592443437;
+        bh=yrsb5sDyQK0/tXeTGDfxt669NSiTccbeU4EEGkjL5ew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fh/1bsQASezuocS2xTKMXq2INjT3crYvwIGnooAKL6OlObmjH+F3kRTMJ6gqYDacP
-         jG3OnNhZR4G6PZmfCjXp74sN+cNxr1/MSK9wrxmNHlatzivGiUswIypYC9kW6x/cmk
-         UOj4Ay8nrIIklkTpiIzhAsMu7DOAA+qdDIOqlSgM=
+        b=BAu+w4Y69gXuWqXjp+lJZIkyYgptS/YW/62c8ltI7qAzt5KXERWG25M2FnbFrPEqd
+         JTY5tsdHySd3bXJcUu1vIEamWQNNRevtB1A9uCmp/KhcFUNx1oIo04U98935jxU9be
+         LNNVSpKCQzL+t4w5hDvJ37Sq6dh2LWlvjk1EMnHQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 070/108] PCI/PTM: Inherit Switch Downstream Port PTM settings from Upstream Port
-Date:   Wed, 17 Jun 2020 21:25:22 -0400
-Message-Id: <20200618012600.608744-70-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 075/172] i2c: pxa: fix i2c_pxa_scream_blue_murder() debug output
+Date:   Wed, 17 Jun 2020 21:20:41 -0400
+Message-Id: <20200618012218.607130-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
-References: <20200618012600.608744-1-sashal@kernel.org>
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,75 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 7b38fd9760f51cc83d80eed2cfbde8b5ead9e93a ]
+[ Upstream commit 88b73ee7ca4c90baf136ed5a8377fc5a9b73ac08 ]
 
-Except for Endpoints, we enable PTM at enumeration-time.  Previously we did
-not account for the fact that Switch Downstream Ports are not permitted to
-have a PTM capability; their PTM behavior is controlled by the Upstream
-Port (PCIe r5.0, sec 7.9.16).  Since Downstream Ports don't have a PTM
-capability, we did not mark them as "ptm_enabled", which meant that
-pci_enable_ptm() on an Endpoint failed because there was no PTM path to it.
+The IRQ log output is supposed to appear on a single line.  However,
+commit 3a2dc1677b60 ("i2c: pxa: Update debug function to dump more info
+on error") resulted in it being printed one-entry-per-line, which is
+excessively long.
 
-Mark Downstream Ports as "ptm_enabled" if their Upstream Port has PTM
-enabled.
+Fixing this is not a trivial matter; using pr_cont() doesn't work as
+the previous dev_dbg() may not have been compiled in, or may be
+dynamic.
 
-Fixes: eec097d43100 ("PCI: Add pci_enable_ptm() for drivers to enable PTM on endpoints")
-Reported-by: Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Since the rest of this function output is at error level, and is also
+debug output, promote this to error level as well to avoid this
+problem.
+
+Reduce the number of always zero prefix digits to save screen real-
+estate.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/ptm.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ drivers/i2c/busses/i2c-pxa.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-index 3008bba360f3..ec6f6213960b 100644
---- a/drivers/pci/pcie/ptm.c
-+++ b/drivers/pci/pcie/ptm.c
-@@ -47,10 +47,6 @@ void pci_ptm_init(struct pci_dev *dev)
- 	if (!pci_is_pcie(dev))
- 		return;
- 
--	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
--	if (!pos)
--		return;
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index 7248ba6763e4..c10ae4778d35 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -315,11 +315,10 @@ static void i2c_pxa_scream_blue_murder(struct pxa_i2c *i2c, const char *why)
+ 	dev_err(dev, "IBMR: %08x IDBR: %08x ICR: %08x ISR: %08x\n",
+ 		readl(_IBMR(i2c)), readl(_IDBR(i2c)), readl(_ICR(i2c)),
+ 		readl(_ISR(i2c)));
+-	dev_dbg(dev, "log: ");
++	dev_err(dev, "log:");
+ 	for (i = 0; i < i2c->irqlogidx; i++)
+-		pr_debug("[%08x:%08x] ", i2c->isrlog[i], i2c->icrlog[i]);
 -
- 	/*
- 	 * Enable PTM only on interior devices (root ports, switch ports,
- 	 * etc.) on the assumption that it causes no link traffic until an
-@@ -60,6 +56,23 @@ void pci_ptm_init(struct pci_dev *dev)
- 	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
- 		return;
+-	pr_debug("\n");
++		pr_cont(" [%03x:%05x]", i2c->isrlog[i], i2c->icrlog[i]);
++	pr_cont("\n");
+ }
  
-+	/*
-+	 * Switch Downstream Ports are not permitted to have a PTM
-+	 * capability; their PTM behavior is controlled by the Upstream
-+	 * Port (PCIe r5.0, sec 7.9.16).
-+	 */
-+	ups = pci_upstream_bridge(dev);
-+	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM &&
-+	    ups && ups->ptm_enabled) {
-+		dev->ptm_granularity = ups->ptm_granularity;
-+		dev->ptm_enabled = 1;
-+		return;
-+	}
-+
-+	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
-+	if (!pos)
-+		return;
-+
- 	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
- 	local_clock = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
- 
-@@ -69,7 +82,6 @@ void pci_ptm_init(struct pci_dev *dev)
- 	 * the spec recommendation (PCIe r3.1, sec 7.32.3), select the
- 	 * furthest upstream Time Source as the PTM Root.
- 	 */
--	ups = pci_upstream_bridge(dev);
- 	if (ups && ups->ptm_enabled) {
- 		ctrl = PCI_PTM_CTRL_ENABLE;
- 		if (ups->ptm_granularity == 0)
+ #else /* ifdef DEBUG */
 -- 
 2.25.1
 
