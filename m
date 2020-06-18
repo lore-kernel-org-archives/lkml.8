@@ -2,99 +2,109 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5356C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC1D20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592497204;
-	bh=nPsQ7+qjmqqymJn1qoRGblRQAK7+ncFCJVFN463Z6l4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=q38I6aRnQ+bfguaLLTWDcjO0RhiemYOQqQ9wsGuGQTcWk2DP7h29jlX99vbFoj4Fl
-	 Qsn5LNN/U3Vb0HkyffyVWG/MExCAJtTYeLcsgv3L/I3u+05ZNhu7/tziglqCWYrSN7
-	 rbYcEWVXOprg2fj/9lVPynoIajE+Ocn5iXkBdBew=
+	by mail.kernel.org (Postfix) with ESMTP id 9DB08208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:22:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BhqrUg2y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731945AbgFRQUC (ORCPT
+        id S1729249AbgFRQV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:20:02 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:34974 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731272AbgFRQUB (ORCPT
+        Thu, 18 Jun 2020 12:21:59 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11892 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbgFRQV6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:20:01 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 05IGHqZA027327;
-        Fri, 19 Jun 2020 01:17:52 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 05IGHqZA027327
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1592497073;
-        bh=IF3xULoeXnGB+k9UcqNfKU1f01wqRcEAsOsoDhwit7M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=u7H0Rjqeox7aSFatubRj542v2dGdwC8zsdX52NoFG26Ekm7qILBuiBylr78ybJOy1
-         5FlpCumLB2EybelhJq+6cTwMIjMkewqxpe0/GtHeU/oIxOAbM/mOPJGuFgEOD7LJIh
-         PmAUKBQVsVe7Kq5/9nZlrNQvmaDz4Zv/M+HyJcTkJC0MEr7NTPCgwSecK+GLz4WN2T
-         nKBYWhKKuHqfVTjfRdb52SWlM4rFV15H00sB2UBnN/xVHZ8oEvTQvy4R+Ft7j0V4t+
-         BAiasmo5xbJUrFoBTa/0/d4Z14vudQwjsXnwGoI+qQDusVKwzFoAJf2MdBmbz2+qDg
-         v/L+hXxg+3rHg==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Ben Segall <bsegall@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] sched: fix thread_union::task visibility
-Date:   Fri, 19 Jun 2020 01:17:49 +0900
-Message-Id: <20200618161750.178659-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Thu, 18 Jun 2020 12:21:58 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eeb94410000>; Thu, 18 Jun 2020 09:20:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 18 Jun 2020 09:21:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 18 Jun 2020 09:21:57 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jun
+ 2020 16:21:57 +0000
+Subject: Re: [PATCH -next] lib: fix test_hmm.c reference after free
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>
+CC:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
+References: <c845c158-9c65-9665-0d0b-00342846dd07@infradead.org>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <fae8934b-7300-27ff-e18e-6db413b9ea53@nvidia.com>
+Date:   Thu, 18 Jun 2020 09:21:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <c845c158-9c65-9665-0d0b-00342846dd07@infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592497217; bh=0hMi0xIwkUC9/TCs8lWLufXqXDXyWYEohg3QmmYj+og=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=BhqrUg2yERdAPawT5Qw+t1rBqdhQpLqbOV17quzsC/9rjv6aMSq/08gIKFAIfnzC8
+         fLNVgJUxCYmt4ODHApjKeW8X41saLfBstZnr4Mrt4ew6jwqzwgaN+FrEX5vZU0f+uv
+         ytpvt9Al4dInIlHv1IrCulb0wIIf8W43P5VnQDmijbE5NBUfUi4pX+jx4V//Jqzs7y
+         LGrHBOEfbwED/NLPnPRG4aBFm8CdNTDEp6VJ+/7FV+k7wYEj4a4KG+Ct+5I0nejD8N
+         xl3wDHJIDbbszYz4XG3tQ+uYRCN98O8xMG3f23aTRMb/uWKphvTYTYNCuv7EHEikVx
+         A+Ogz+qbUsoNA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_ARCH_TASK_STRUCT_ON_STACK=y (i.e. ARCH=ia64), task_struct
-and the thread stack are shared.
 
-The ifdef condition of CONFIG_ARCH_TASK_STRUCT_ON_STACK is opposite.
+On 6/17/20 10:31 PM, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+>=20
+> Coccinelle scripts report the following errors:
+>=20
+> lib/test_hmm.c:523:20-26: ERROR: reference preceded by free on line 521
+> lib/test_hmm.c:524:21-27: ERROR: reference preceded by free on line 521
+> lib/test_hmm.c:523:28-35: ERROR: devmem is NULL but dereferenced.
+> lib/test_hmm.c:524:29-36: ERROR: devmem is NULL but dereferenced.
+>=20
+> Fix these by using the local variable 'res' instead of devmem.
+>=20
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> Cc: linux-mm@kvack.org
+> Cc: Ralph Campbell <rcampbell@nvidia.com>
+> ---
+>   lib/test_hmm.c |    3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> --- linux-next-20200617.orig/lib/test_hmm.c
+> +++ linux-next-20200617/lib/test_hmm.c
+> @@ -520,8 +520,7 @@ static bool dmirror_allocate_chunk(struc
+>   err_free:
+>   	kfree(devmem);
+>   err_release:
+> -	release_mem_region(devmem->pagemap.res.start,
+> -			   resource_size(&devmem->pagemap.res));
+> +	release_mem_region(res->start, resource_size(res));
+>   err:
+>   	mutex_unlock(&mdevice->devmem_lock);
+>   	return false;
+>=20
 
-Now that the init thread stack is constructed by the linker script,
-this is not a practical problem, but let's fix the code just in case.
-
-Fixes: 0500871f21b2 ("Construct init thread stack in the linker script rather than by union")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- include/linux/sched.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index b62e6aaf28f0..6d6c4d38c063 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1674,7 +1674,7 @@ extern void ia64_set_curr_task(int cpu, struct task_struct *p);
- void yield(void);
- 
- union thread_union {
--#ifndef CONFIG_ARCH_TASK_STRUCT_ON_STACK
-+#ifdef CONFIG_ARCH_TASK_STRUCT_ON_STACK
- 	struct task_struct task;
- #endif
- #ifndef CONFIG_THREAD_INFO_IN_TASK
--- 
-2.25.1
-
+Thanks for fixing this!
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
