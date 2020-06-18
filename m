@@ -2,86 +2,116 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23383C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C77E21D7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E4021D7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592473438;
-	bh=Wy9ApHk7lhW5ubr5Fi337sJMoRNgbw7hh2p3KGOQabI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l8vDgG4t4tt1PKyFu5lWNPtl7QGjQOMzF1K+uKXwNKeCq3QvsYJo+ApCJUuzxnUIl
-	 OWDyPNXg37zOQRzUPIVrqPr8DruMFx1Iq7oZykIx9q4dwMKKleb1GnFl65bUJKxU0q
-	 DT1fAALjmEp23iT7CeQiFbDnz0x8ZRqhztUECsc4=
+	s=default; t=1592473451;
+	bh=hjSY+0gQqkNkM+yEdu3IotPRnnGkBkGW0tkkJThgNIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MwetwfBlHc3neFLOUS8nbI1OM4i8tgp7Y2i94I6zbjURhCib4uJjIE+6/2z7QkMHf
+	 luOJeK7+le+9zWEGHHS2oKFnD3kUk0HipR3St2/LIKIKz1jnXsCUMHkNHIGqOvAlh6
+	 BgtCLqvsZ7/Uy4F8KDYBMN4leRi2B2fMj+p37RuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbgFRJnx (ORCPT
+        id S1729381AbgFRJoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 05:43:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43782 "EHLO mail.kernel.org"
+        Thu, 18 Jun 2020 05:44:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729266AbgFRJnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 05:43:22 -0400
+        id S1729348AbgFRJoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 05:44:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FAC621548;
-        Thu, 18 Jun 2020 09:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D65321D7B;
+        Thu, 18 Jun 2020 09:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592473402;
-        bh=Wy9ApHk7lhW5ubr5Fi337sJMoRNgbw7hh2p3KGOQabI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gyjR7KH+cdc7/MGMLakGNRVrBmXHVIhGogIxqzMsMTzwXMIUfSurmVkfeKXV+EUiC
-         9eZDl1Pcpcv+7VM9s+ywT00spmVFHnwezYUxXQdKVr48UE5B8TZvvkJUU4ZzaPGjQt
-         yb62QSdDWwGoQ5uZz7soAzDjnInyb3okzu6JZkdE=
+        s=default; t=1592473447;
+        bh=hjSY+0gQqkNkM+yEdu3IotPRnnGkBkGW0tkkJThgNIQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=af3MuqZbyEhdwAFtHor3U+pR/hP4Q6doDD1q+pGf2NhkrpYFFljWjj6ax2Fq4figR
+         h1oU1DCnDJP/at4OODCpn6XdkgMnnkdpqEZwM8M/eoRtxbK8Qj/dHAHqdl8dawAhG5
+         RRu428V03DeEZyM0qH9ZsiFige7NVHUf4a6OKCUc=
+Date:   Thu, 18 Jun 2020 11:43:59 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4/8] USB: serial: qcserial: fix up wording in a comment
-Date:   Thu, 18 Jun 2020 11:42:56 +0200
-Message-Id: <20200618094300.1887727-5-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200618094300.1887727-1-gregkh@linuxfoundation.org>
-References: <20200618094300.1887727-1-gregkh@linuxfoundation.org>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Jiri Kosina <trivial@kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 07/17] drivers: usb: Fix trivial spelling
+Message-ID: <20200618094359.GA1888087@kroah.com>
+References: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200609124610.3445662-8-kieran.bingham+renesas@ideasonboard.com>
+ <20200618082147.GA1050104@kroah.com>
+ <0d1fb492-7503-895c-82d3-b7f4611ef1f2@ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0d1fb492-7503-895c-82d3-b7f4611ef1f2@ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Better describe what is happening with a list of devices that are being
-ignored by the driver.
+On Thu, Jun 18, 2020 at 09:52:28AM +0100, Kieran Bingham wrote:
+> Hi Greg,
+> 
+> On 18/06/2020 09:21, Greg Kroah-Hartman wrote:
+> > On Tue, Jun 09, 2020 at 01:46:00PM +0100, Kieran Bingham wrote:
+> >> The word 'descriptor' is misspelled throughout the tree.
+> >>
+> >> Fix it up accordingly:
+> >>     decriptors -> descriptors
+> >>
+> >> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> >> ---
+> >>  drivers/usb/core/of.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
+> >> index 651708d8c908..617e92569b2c 100644
+> >> --- a/drivers/usb/core/of.c
+> >> +++ b/drivers/usb/core/of.c
+> >> @@ -45,7 +45,7 @@ EXPORT_SYMBOL_GPL(usb_of_get_device_node);
+> >>   *
+> >>   * Determine whether a USB device has a so called combined node which is
+> >>   * shared with its sole interface. This is the case if and only if the device
+> >> - * has a node and its decriptors report the following:
+> >> + * has a node and its descriptors report the following:
+> >>   *
+> >>   *	1) bDeviceClass is 0 or 9, and
+> >>   *	2) bNumConfigurations is 1, and
+> >> -- 
+> >> 2.25.1
+> >>
+> > 
+> > Already fixed in Linus's tree :(
+> 
+> Don't be sad - that makes me happy ;-) This was just a global fixup
+> while I added the correction to scripts/spelling.txt...
+> 
+> But wait, are you sure? I've just rebased this series on top of
+> 1b5044021070 ("Merge tag 'dma-mapping-5.8-3' of
+> git://git.infradead.org/users/hch/dma-mapping"), and this still applies
+> for me ... Am I failing to pick up the latest branch from Linus?
+> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/
+> looks like I'm on the latest, so I don't think so).
+> 
+> I see a bot-notification from you saying it's been added to your
+> usb-testing tree, so I'll assume this is all fine. No need to worry
+> though It's only a trivial and can get picked up by the trivial bot I
+> think if I resend when the dust settles.
 
-Cc: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/usb/serial/qcserial.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Ah, I might have tried to apply this twice, sorry for the noise, all is
+good...
 
-diff --git a/drivers/usb/serial/qcserial.c b/drivers/usb/serial/qcserial.c
-index d147feae83e6..5dfbbaef38bb 100644
---- a/drivers/usb/serial/qcserial.c
-+++ b/drivers/usb/serial/qcserial.c
-@@ -365,9 +365,8 @@ static int qcprobe(struct usb_serial *serial, const struct usb_device_id *id)
- 		 * a specific function, while the subclass indicate a
- 		 * specific firmware source
- 		 *
--		 * This is a blacklist of functions known to be
--		 * non-serial.  The rest are assumed to be serial and
--		 * will be handled by this driver
-+		 * This is a list of functions known to be non-serial.  The rest
-+		 * are assumed to be serial and will be handled by this driver
- 		 */
- 		switch (intf->desc.bInterfaceProtocol) {
- 			/* QMI combined (qmi_wwan) */
--- 
-2.27.0
-
+greg k-h
