@@ -2,133 +2,121 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1008C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE13C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B30D0206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447925;
-	bh=Y3voCUNEE+8e7P/ucqa7SNePS020clMv3FTzPzYTypI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lf3wpBccoDctCGeaEQ7hQL70sFMz1jTG5ALqtc/IDx8ns2Y8uCMevBLwu0YXSSWLG
-	 pMfAAVkKOxLNy0uxLdMVrLSXsgS15+ETYny2VTVOdnwHsjFqE9pbe5XcKsoG/D+S3v
-	 NQJnyBS9gkrLpnaayl5DQsAsENq5LJlQE5jVa8P4=
+	by mail.kernel.org (Postfix) with ESMTP id CBD52206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tVzXDIaw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387795AbgFRCin (ORCPT
+        id S2387508AbgFRCit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:38:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727938AbgFRBNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:21 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D574321D7B;
-        Thu, 18 Jun 2020 01:13:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442800;
-        bh=Y3voCUNEE+8e7P/ucqa7SNePS020clMv3FTzPzYTypI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UTylEEICqeSyMzbyHwrmwG/ahxbmzT7/QO9ZmRu7QUjT00SUZT/qFGuUYeYF89+ee
-         tRbsTF55qMoFK0e7oX2HHu0GX8VN64sZEtQpw9yisNzZcQlQ5Fg/eLPGs+Sa7Z1xtv
-         5DuR6cstsYsFuUpk8powuQyyy00PximX5/MPW+JE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lang Cheng <chenglang@huawei.com>,
-        Weihang Li <liweihang@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 241/388] RDMA/hns: Fix cmdq parameter of querying pf timer resource
-Date:   Wed, 17 Jun 2020 21:05:38 -0400
-Message-Id: <20200618010805.600873-241-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+        Wed, 17 Jun 2020 22:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729108AbgFRCim (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 22:38:42 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC653C06174E;
+        Wed, 17 Jun 2020 19:38:41 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id x93so3648245ede.9;
+        Wed, 17 Jun 2020 19:38:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fn1oTj1MrOMqfg06EDKwAoYxj2Z3VWdebP8hXUOa11U=;
+        b=tVzXDIaw2NKS50gVeUXfTpB8tddn0VcobFGhMm9eW4rWh53jLNluzEtW2Ye4XHjQCS
+         kauGt+ouda2dca8jgapjjNZ2xaQ3fyM6h95VX/sKcOPrEq3Ahr7UHqjxX+3SUugDzKIN
+         jvSCgNBduyixkI8ID3xdsETMLX87i30zgGTWVZmwCsNRSLZdrX0/6g17gipF/fFokvWe
+         aUGi3WOtioAdevo+TTeg6PJvGKk7uRgzRn6eFQrieovVKFwBpHzcaZrJlWnaXgSyz/5A
+         pUkPBdTWrI+9tv+3azvnVTTJe+Q5JOh0KI2M6RiK12ZW1un3uFGu/nwB6zBMXBAUq2JE
+         sNug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fn1oTj1MrOMqfg06EDKwAoYxj2Z3VWdebP8hXUOa11U=;
+        b=dpRXRG5/SAT/RSebSuYOp39dS4haP7YwYEh1LFszrDLmYdm3cY5TzoBJCkBrFWK0i2
+         SfGqxblnFIrDj7fuqTb+Qu2hRETNIq8iATscepea9WI++3dixn5FD55+UVLjxhx/BXef
+         3VEBGisLYQcz/kc9pw5Nsd4wNvE20IbcBG0VwesDMgoWcvzPo3HEeBRfsUk/xRX99Maa
+         nIa4tnNNO7YnOtdlKG2AhZvjt4CXrql4ARDN7Gb1tM+7y4vcMAAPFOHr2TwYc8fwXidC
+         qmS1db38M6nLLkSBqo0XNH4Locrx3sLhu23Zw0gRVFqZKqMqhJ7PMzODBK+HK91Wl0S3
+         uMyw==
+X-Gm-Message-State: AOAM532MdzdKowTnB8snc7obAZBQNnQ0lPWNKsjjyLJLhnvbUYrt1GEN
+        aF4EaPuujN5Fb8+vxBBqqOfVpGYmoPl9yzpjfxK0I+fZRRE=
+X-Google-Smtp-Source: ABdhPJwHVmIzvsNJeU6cQ52qJLQTS+rkoE2LIe9n+nnNDPP/fDkExgJg3wMLxUOIqWX8Y9YnQTQ0DkMuOdCUjA5NOUI=
+X-Received: by 2002:aa7:da14:: with SMTP id r20mr2030808eds.7.1592447920293;
+ Wed, 17 Jun 2020 19:38:40 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200617205310.2183722-1-eric@anholt.net>
+In-Reply-To: <20200617205310.2183722-1-eric@anholt.net>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 17 Jun 2020 19:39:08 -0700
+Message-ID: <CAF6AEGu1jV+SWg8apDdq5QghGUvr1wKV38R8XwTL97VXfVUmdQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm/msm: Fix address space size after refactor.
+To:     Eric Anholt <eric@anholt.net>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Sean Paul <sean@poorly.run>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lang Cheng <chenglang@huawei.com>
+On Wed, Jun 17, 2020 at 1:53 PM Eric Anholt <eric@anholt.net> wrote:
+>
+> Previously the address space went from 16M to ~0u, but with the
+> refactor one of the 'f's was dropped, limiting us to 256MB.
+> Additionally, the new interface takes a start and size, not start and
+> end, so we can't just copy and paste.
+>
+> Fixes regressions in dEQP-VK.memory.allocation.random.*
+>
+> Fixes: ccac7ce373c1 ("drm/msm: Refactor address space initialization")
+> Signed-off-by: Eric Anholt <eric@anholt.net>
 
-[ Upstream commit 441c88d5b3ff80108ff536c6cf80591187015403 ]
 
-The firmware has reduced the number of descriptions of command
-HNS_ROCE_OPC_QUERY_PF_TIMER_RES to 1. The driver needs to adapt, otherwise
-the hardware will report error 4(CMD_NEXT_ERR).
+rebased on https://patchwork.freedesktop.org/series/78281/ (which
+fixed half of the problem) and pushed this and 2/2 to msm-next so it
+should show up in linux-next shortly..
 
-Fixes: 0e40dc2f70cd ("RDMA/hns: Add timer allocation support for hip08")
-Link: https://lore.kernel.org/r/1588931159-56875-3-git-send-email-liweihang@huawei.com
-Signed-off-by: Lang Cheng <chenglang@huawei.com>
-Signed-off-by: Weihang Li <liweihang@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 32 ++++++++--------------
- 1 file changed, 12 insertions(+), 20 deletions(-)
+planning to wait a short time more to see if we find any other issues
+and then send a -fixes PR
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 96ff610bbdc4..f9fa80ae5560 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -1349,34 +1349,26 @@ static int hns_roce_query_pf_resource(struct hns_roce_dev *hr_dev)
- static int hns_roce_query_pf_timer_resource(struct hns_roce_dev *hr_dev)
- {
- 	struct hns_roce_pf_timer_res_a *req_a;
--	struct hns_roce_cmq_desc desc[2];
--	int ret, i;
-+	struct hns_roce_cmq_desc desc;
-+	int ret;
- 
--	for (i = 0; i < 2; i++) {
--		hns_roce_cmq_setup_basic_desc(&desc[i],
--					      HNS_ROCE_OPC_QUERY_PF_TIMER_RES,
--					      true);
-+	hns_roce_cmq_setup_basic_desc(&desc, HNS_ROCE_OPC_QUERY_PF_TIMER_RES,
-+				      true);
- 
--		if (i == 0)
--			desc[i].flag |= cpu_to_le16(HNS_ROCE_CMD_FLAG_NEXT);
--		else
--			desc[i].flag &= ~cpu_to_le16(HNS_ROCE_CMD_FLAG_NEXT);
--	}
--
--	ret = hns_roce_cmq_send(hr_dev, desc, 2);
-+	ret = hns_roce_cmq_send(hr_dev, &desc, 1);
- 	if (ret)
- 		return ret;
- 
--	req_a = (struct hns_roce_pf_timer_res_a *)desc[0].data;
-+	req_a = (struct hns_roce_pf_timer_res_a *)desc.data;
- 
- 	hr_dev->caps.qpc_timer_bt_num =
--				roce_get_field(req_a->qpc_timer_bt_idx_num,
--					PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_M,
--					PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_S);
-+		roce_get_field(req_a->qpc_timer_bt_idx_num,
-+			       PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_M,
-+			       PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_S);
- 	hr_dev->caps.cqc_timer_bt_num =
--				roce_get_field(req_a->cqc_timer_bt_idx_num,
--					PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_M,
--					PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_S);
-+		roce_get_field(req_a->cqc_timer_bt_idx_num,
-+			       PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_M,
-+			       PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_S);
- 
- 	return 0;
- }
--- 
-2.25.1
+BR,
+-R
 
+
+> ---
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> index 89673c7ed473..5db06b590943 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> @@ -194,7 +194,7 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
+>         struct msm_gem_address_space *aspace;
+>
+>         aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
+> -               0xfffffff);
+> +               0xffffffff - SZ_16M);
+>
+>         if (IS_ERR(aspace) && !IS_ERR(mmu))
+>                 mmu->funcs->destroy(mmu);
+> --
+> 2.26.2
+>
