@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9124C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 893EA21D7F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E5021D79
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442511;
-	bh=NEZN25+YMUKahemIRd/ZYG04Rz9EGS/NjNQvn0xz5WU=;
+	s=default; t=1592442517;
+	bh=t32yjB2TpLN1r28meG1mSbZ0wZv5Q6aRzPklQgdrAlU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PEMB/dafqnk9qCYYUGbdSGy251nCckYZaN5mad5nknpW5QBxwUZUIzg9f/aL01oTM
-	 DAj/yCfJUL3oGDx8OwyU5uIKZGVxkcBgm1jwhYPYCYeWxQbX55vznbOELSQwlaS8H3
-	 vPZgamN0JPOjBxpx125z7F2hNs90L58PmB7l6Cck=
+	b=fYkBQjMvPmH21R5QmRI3S//CV4OTUigJM4BFvwK8WNDXagu+iaWojDt2pppOl0QjG
+	 tLZ+TQLJvQsmn64Q4Y4q2eqyh+GcdwO6I9yATjIzOt6Nd9emPazG03BAxvTugQya+S
+	 KEkGSJSMfmfhHN4FFUswPhAoq2vh+Cv2hc4G9T9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgFRBI3 (ORCPT
+        id S1727841AbgFRBIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:08:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34024 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:08:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727787AbgFRBIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:08:25 -0400
+        id S1727802AbgFRBI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:08:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAB6421D79;
-        Thu, 18 Jun 2020 01:08:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1907921D93;
+        Thu, 18 Jun 2020 01:08:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442504;
-        bh=NEZN25+YMUKahemIRd/ZYG04Rz9EGS/NjNQvn0xz5WU=;
+        s=default; t=1592442508;
+        bh=t32yjB2TpLN1r28meG1mSbZ0wZv5Q6aRzPklQgdrAlU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FS0VMKRXy83qeOfuBGwWnYJD/B8horEy3KSU+7G0okmKU7Gef6GsSLVuUF/AJJZdw
-         eUzJfLLNkP8ahNlZ4fwK5074TwgEtscwArtbNcjAmvBY3dus7Nt2iW2N/4ecz/rt72
-         qlAhUGGZh5KESSTu1Ah7jEQ46bT1HGwPxF5HaXxE=
+        b=noBLxAHalCAsWLlnazDfMIKOwfetSXD+wHVe4T5p03cE9sB52wp6zXP9tU3g1AIsL
+         piWIeLxehNovkjXE1koeT+8G17ya+193I3pzwNhXoOPcP6gNqdmtQltW97qz0NNj9h
+         EJRHMQ5IPpaXA2VPcaeZm9u7fQFLKXfIo86qLtUs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 014/388] backlight: lp855x: Ensure regulators are disabled on probe failure
-Date:   Wed, 17 Jun 2020 21:01:51 -0400
-Message-Id: <20200618010805.600873-14-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 017/388] ARM: integrator: Add some Kconfig selections
+Date:   Wed, 17 Jun 2020 21:01:54 -0400
+Message-Id: <20200618010805.600873-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,121 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit d8207c155a7c6015eb7f43739baa7dfb1fa638af ]
+[ Upstream commit d2854bbe5f5c4b4bec8061caf4f2e603d8819446 ]
 
-If probing the LP885x backlight fails after the regulators have been
-enabled, then the following warning is seen when releasing the
-regulators ...
+The CMA and DMA_CMA Kconfig options need to be selected
+by the Integrator in order to produce boot console on some
+Integrator systems.
 
- WARNING: CPU: 1 PID: 289 at drivers/regulator/core.c:2051 _regulator_put.part.28+0x158/0x160
- Modules linked in: tegra_xudc lp855x_bl(+) host1x pwm_tegra ip_tables x_tables ipv6 nf_defrag_ipv6
- CPU: 1 PID: 289 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200224 #1
- Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
+The REGULATOR and REGULATOR_FIXED_VOLTAGE need to be
+selected in order to boot the system from an external
+MMC card when using MMCI/PL181 from the device tree
+probe path.
 
- ...
+Select these things directly from the Kconfig so we are
+sure to be able to bring the systems up with console
+from any device tree.
 
- Call trace:
-  _regulator_put.part.28+0x158/0x160
-  regulator_put+0x34/0x50
-  devm_regulator_release+0x10/0x18
-  release_nodes+0x12c/0x230
-  devres_release_all+0x34/0x50
-  really_probe+0x1c0/0x370
-  driver_probe_device+0x58/0x100
-  device_driver_attach+0x6c/0x78
-  __driver_attach+0xb0/0xf0
-  bus_for_each_dev+0x68/0xc8
-  driver_attach+0x20/0x28
-  bus_add_driver+0x160/0x1f0
-  driver_register+0x60/0x110
-  i2c_register_driver+0x40/0x80
-  lp855x_driver_init+0x20/0x1000 [lp855x_bl]
-  do_one_initcall+0x58/0x1a0
-  do_init_module+0x54/0x1d0
-  load_module+0x1d80/0x21c8
-  __do_sys_finit_module+0xe8/0x100
-  __arm64_sys_finit_module+0x18/0x20
-  el0_svc_common.constprop.3+0xb0/0x168
-  do_el0_svc+0x20/0x98
-  el0_sync_handler+0xf4/0x1b0
-  el0_sync+0x140/0x180
-
-Fix this by ensuring that the regulators are disabled, if enabled, on
-probe failure.
-
-Finally, ensure that the vddio regulator is disabled in the driver
-remove handler.
-
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lp855x_bl.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ arch/arm/mach-integrator/Kconfig | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
-index f68920131a4a..e94932c69f54 100644
---- a/drivers/video/backlight/lp855x_bl.c
-+++ b/drivers/video/backlight/lp855x_bl.c
-@@ -456,7 +456,7 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- 		ret = regulator_enable(lp->enable);
- 		if (ret < 0) {
- 			dev_err(lp->dev, "failed to enable vddio: %d\n", ret);
--			return ret;
-+			goto disable_supply;
- 		}
+diff --git a/arch/arm/mach-integrator/Kconfig b/arch/arm/mach-integrator/Kconfig
+index 982eabc36163..2406cab73835 100644
+--- a/arch/arm/mach-integrator/Kconfig
++++ b/arch/arm/mach-integrator/Kconfig
+@@ -4,6 +4,8 @@ menuconfig ARCH_INTEGRATOR
+ 	depends on ARCH_MULTI_V4T || ARCH_MULTI_V5 || ARCH_MULTI_V6
+ 	select ARM_AMBA
+ 	select COMMON_CLK_VERSATILE
++	select CMA
++	select DMA_CMA
+ 	select HAVE_TCM
+ 	select ICST
+ 	select MFD_SYSCON
+@@ -35,14 +37,13 @@ config INTEGRATOR_IMPD1
+ 	select ARM_VIC
+ 	select GPIO_PL061
+ 	select GPIOLIB
++	select REGULATOR
++	select REGULATOR_FIXED_VOLTAGE
+ 	help
+ 	  The IM-PD1 is an add-on logic module for the Integrator which
+ 	  allows ARM(R) Ltd PrimeCells to be developed and evaluated.
+ 	  The IM-PD1 can be found on the Integrator/PP2 platform.
  
- 		/*
-@@ -471,24 +471,34 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- 	ret = lp855x_configure(lp);
- 	if (ret) {
- 		dev_err(lp->dev, "device config err: %d", ret);
--		return ret;
-+		goto disable_vddio;
- 	}
- 
- 	ret = lp855x_backlight_register(lp);
- 	if (ret) {
- 		dev_err(lp->dev,
- 			"failed to register backlight. err: %d\n", ret);
--		return ret;
-+		goto disable_vddio;
- 	}
- 
- 	ret = sysfs_create_group(&lp->dev->kobj, &lp855x_attr_group);
- 	if (ret) {
- 		dev_err(lp->dev, "failed to register sysfs. err: %d\n", ret);
--		return ret;
-+		goto disable_vddio;
- 	}
- 
- 	backlight_update_status(lp->bl);
-+
- 	return 0;
-+
-+disable_vddio:
-+	if (lp->enable)
-+		regulator_disable(lp->enable);
-+disable_supply:
-+	if (lp->supply)
-+		regulator_disable(lp->supply);
-+
-+	return ret;
- }
- 
- static int lp855x_remove(struct i2c_client *cl)
-@@ -497,6 +507,8 @@ static int lp855x_remove(struct i2c_client *cl)
- 
- 	lp->bl->props.brightness = 0;
- 	backlight_update_status(lp->bl);
-+	if (lp->enable)
-+		regulator_disable(lp->enable);
- 	if (lp->supply)
- 		regulator_disable(lp->supply);
- 	sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called impd1.
+-
+ config INTEGRATOR_CM7TDMI
+ 	bool "Integrator/CM7TDMI core module"
+ 	depends on ARCH_INTEGRATOR_AP
 -- 
 2.25.1
 
