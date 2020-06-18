@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EF7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C879C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEF1121927
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D12221E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443425;
-	bh=iplyPM27PcNRmVU8iO4tDZsu6oYuCl3PiRkC1vxjPIc=;
+	s=default; t=1592443429;
+	bh=azOx5wGgp8PmC1vyzYxpuAcVGoiSAGI6uIrmQHZAIWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HglzSE2xFDeXynsAB4474FrP+B+DepPidpYXCeQp4o6dVsKlOv4Mrn8/Ia8KmU//b
-	 26q5yIZuxxNNIYRdArMGL2F8G3qjOIn0RzeK4xr4Tr7ecmPsapctAumxnif4WNQsb+
-	 BoKMIOQ7fBhB4F4ae0CnJEyAr2ldsuKIe323GaME=
+	b=PZdf7VhTOOQ80aFPkUnfCOIImcfj9C/EbZWmGK4gVOUMP4PYo0KyqwNsd6xOQepVT
+	 Wnj60dB9WDBCXkw42qq1m0HBzErc2hJ3uqA3ved+n8KCD0DbEcGremAdFNvOd47C5k
+	 0zMz1wditNaMZASov0PwPpZ3518GI4JFG5sWiiz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731050AbgFRBXo (ORCPT
+        id S1727915AbgFRBXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:23:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52426 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:23:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729532AbgFRBUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:18 -0400
+        id S1730306AbgFRBUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8B42206F1;
-        Thu, 18 Jun 2020 01:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C92920B1F;
+        Thu, 18 Jun 2020 01:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443217;
-        bh=iplyPM27PcNRmVU8iO4tDZsu6oYuCl3PiRkC1vxjPIc=;
+        s=default; t=1592443229;
+        bh=azOx5wGgp8PmC1vyzYxpuAcVGoiSAGI6uIrmQHZAIWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UIkRj8qPUV0l7ume2DeHkVsweRoIQy1KeEN+f+xRKlfaBgqjaXcX685Da7hvpK4zE
-         GQ1cYgZvQ4LM7bRxCPiNw7vjTQ6T4wZuOCS/MIzLqbhtMuF5pLLvbpN/XkV6/MokBQ
-         AV7O6/nf/lI70MK1IwiGSCaQnDTzUdmy3YEkqS8g=
+        b=SbbCiZLe/stBHVmR+MDCD6Ab/Yy4mOYagiIreyMcGeXfqOTCR4G9roaprhh8Qag12
+         dte33j3N6ufIRWrkQKOhBizCSp5ceJK2H5gpuUm22MFwTHX4MAkKLir35suan8F2z2
+         kXoegcYevx2zFlg6E8D5dCiQhlLO/AoQYb/kP7Pc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 173/266] PCI/PTM: Inherit Switch Downstream Port PTM settings from Upstream Port
-Date:   Wed, 17 Jun 2020 21:14:58 -0400
-Message-Id: <20200618011631.604574-173-sashal@kernel.org>
+Cc:     Pawel Laszczak <pawell@cadence.com>,
+        Jayshri Pawar <jpawar@cadence.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 182/266] usb: gadget: Fix issue with config_ep_by_speed function
+Date:   Wed, 17 Jun 2020 21:15:07 -0400
+Message-Id: <20200618011631.604574-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,75 +60,224 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Pawel Laszczak <pawell@cadence.com>
 
-[ Upstream commit 7b38fd9760f51cc83d80eed2cfbde8b5ead9e93a ]
+[ Upstream commit 5d363120aa548ba52d58907a295eee25f8207ed2 ]
 
-Except for Endpoints, we enable PTM at enumeration-time.  Previously we did
-not account for the fact that Switch Downstream Ports are not permitted to
-have a PTM capability; their PTM behavior is controlled by the Upstream
-Port (PCIe r5.0, sec 7.9.16).  Since Downstream Ports don't have a PTM
-capability, we did not mark them as "ptm_enabled", which meant that
-pci_enable_ptm() on an Endpoint failed because there was no PTM path to it.
+This patch adds new config_ep_by_speed_and_alt function which
+extends the config_ep_by_speed about alt parameter.
+This additional parameter allows to find proper usb_ss_ep_comp_descriptor.
 
-Mark Downstream Ports as "ptm_enabled" if their Upstream Port has PTM
-enabled.
+Problem has appeared during testing f_tcm (BOT/UAS) driver function.
 
-Fixes: eec097d43100 ("PCI: Add pci_enable_ptm() for drivers to enable PTM on endpoints")
-Reported-by: Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+f_tcm function for SS use array of headers for both  BOT/UAS alternate
+setting:
+
+static struct usb_descriptor_header *uasp_ss_function_desc[] = {
+        (struct usb_descriptor_header *) &bot_intf_desc,
+        (struct usb_descriptor_header *) &uasp_ss_bi_desc,
+        (struct usb_descriptor_header *) &bot_bi_ep_comp_desc,
+        (struct usb_descriptor_header *) &uasp_ss_bo_desc,
+        (struct usb_descriptor_header *) &bot_bo_ep_comp_desc,
+
+        (struct usb_descriptor_header *) &uasp_intf_desc,
+        (struct usb_descriptor_header *) &uasp_ss_bi_desc,
+        (struct usb_descriptor_header *) &uasp_bi_ep_comp_desc,
+        (struct usb_descriptor_header *) &uasp_bi_pipe_desc,
+        (struct usb_descriptor_header *) &uasp_ss_bo_desc,
+        (struct usb_descriptor_header *) &uasp_bo_ep_comp_desc,
+        (struct usb_descriptor_header *) &uasp_bo_pipe_desc,
+        (struct usb_descriptor_header *) &uasp_ss_status_desc,
+        (struct usb_descriptor_header *) &uasp_status_in_ep_comp_desc,
+        (struct usb_descriptor_header *) &uasp_status_pipe_desc,
+        (struct usb_descriptor_header *) &uasp_ss_cmd_desc,
+        (struct usb_descriptor_header *) &uasp_cmd_comp_desc,
+        (struct usb_descriptor_header *) &uasp_cmd_pipe_desc,
+        NULL,
+};
+
+The first 5 descriptors are associated with BOT alternate setting,
+and others are associated with UAS.
+
+During handling UAS alternate setting f_tcm driver invokes
+config_ep_by_speed and this function sets incorrect companion endpoint
+descriptor in usb_ep object.
+
+Instead setting ep->comp_desc to uasp_bi_ep_comp_desc function in this
+case set ep->comp_desc to uasp_ss_bi_desc.
+
+This is due to the fact that it searches endpoint based on endpoint
+address:
+
+        for_each_ep_desc(speed_desc, d_spd) {
+                chosen_desc = (struct usb_endpoint_descriptor *)*d_spd;
+                if (chosen_desc->bEndpoitAddress == _ep->address)
+                        goto ep_found;
+        }
+
+And in result it uses the descriptor from BOT alternate setting
+instead UAS.
+
+Finally, it causes that controller driver during enabling endpoints
+detect that just enabled endpoint for bot.
+
+Signed-off-by: Jayshri Pawar <jpawar@cadence.com>
+Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/ptm.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ drivers/usb/gadget/composite.c | 78 ++++++++++++++++++++++++++--------
+ include/linux/usb/composite.h  |  3 ++
+ 2 files changed, 64 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-index 9361f3aa26ab..357a454cafa0 100644
---- a/drivers/pci/pcie/ptm.c
-+++ b/drivers/pci/pcie/ptm.c
-@@ -39,10 +39,6 @@ void pci_ptm_init(struct pci_dev *dev)
- 	if (!pci_is_pcie(dev))
- 		return;
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index d98ca1566e95..f75ff1a75dc4 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -96,40 +96,43 @@ function_descriptors(struct usb_function *f,
+ }
  
--	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
--	if (!pos)
--		return;
--
- 	/*
- 	 * Enable PTM only on interior devices (root ports, switch ports,
- 	 * etc.) on the assumption that it causes no link traffic until an
-@@ -52,6 +48,23 @@ void pci_ptm_init(struct pci_dev *dev)
- 	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
- 		return;
+ /**
+- * next_ep_desc() - advance to the next EP descriptor
++ * next_desc() - advance to the next desc_type descriptor
+  * @t: currect pointer within descriptor array
++ * @desc_type: descriptor type
+  *
+- * Return: next EP descriptor or NULL
++ * Return: next desc_type descriptor or NULL
+  *
+- * Iterate over @t until either EP descriptor found or
++ * Iterate over @t until either desc_type descriptor found or
+  * NULL (that indicates end of list) encountered
+  */
+ static struct usb_descriptor_header**
+-next_ep_desc(struct usb_descriptor_header **t)
++next_desc(struct usb_descriptor_header **t, u8 desc_type)
+ {
+ 	for (; *t; t++) {
+-		if ((*t)->bDescriptorType == USB_DT_ENDPOINT)
++		if ((*t)->bDescriptorType == desc_type)
+ 			return t;
+ 	}
+ 	return NULL;
+ }
  
-+	/*
-+	 * Switch Downstream Ports are not permitted to have a PTM
-+	 * capability; their PTM behavior is controlled by the Upstream
-+	 * Port (PCIe r5.0, sec 7.9.16).
-+	 */
-+	ups = pci_upstream_bridge(dev);
-+	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM &&
-+	    ups && ups->ptm_enabled) {
-+		dev->ptm_granularity = ups->ptm_granularity;
-+		dev->ptm_enabled = 1;
-+		return;
+ /*
+- * for_each_ep_desc()- iterate over endpoint descriptors in the
+- *		descriptors list
+- * @start:	pointer within descriptor array.
+- * @ep_desc:	endpoint descriptor to use as the loop cursor
++ * for_each_desc() - iterate over desc_type descriptors in the
++ * descriptors list
++ * @start: pointer within descriptor array.
++ * @iter_desc: desc_type descriptor to use as the loop cursor
++ * @desc_type: wanted descriptr type
+  */
+-#define for_each_ep_desc(start, ep_desc) \
+-	for (ep_desc = next_ep_desc(start); \
+-	      ep_desc; ep_desc = next_ep_desc(ep_desc+1))
++#define for_each_desc(start, iter_desc, desc_type) \
++	for (iter_desc = next_desc(start, desc_type); \
++	     iter_desc; iter_desc = next_desc(iter_desc + 1, desc_type))
+ 
+ /**
+- * config_ep_by_speed() - configures the given endpoint
++ * config_ep_by_speed_and_alt() - configures the given endpoint
+  * according to gadget speed.
+  * @g: pointer to the gadget
+  * @f: usb function
+  * @_ep: the endpoint to configure
++ * @alt: alternate setting number
+  *
+  * Return: error code, 0 on success
+  *
+@@ -142,11 +145,13 @@ next_ep_desc(struct usb_descriptor_header **t)
+  * Note: the supplied function should hold all the descriptors
+  * for supported speeds
+  */
+-int config_ep_by_speed(struct usb_gadget *g,
+-			struct usb_function *f,
+-			struct usb_ep *_ep)
++int config_ep_by_speed_and_alt(struct usb_gadget *g,
++				struct usb_function *f,
++				struct usb_ep *_ep,
++				u8 alt)
+ {
+ 	struct usb_endpoint_descriptor *chosen_desc = NULL;
++	struct usb_interface_descriptor *int_desc = NULL;
+ 	struct usb_descriptor_header **speed_desc = NULL;
+ 
+ 	struct usb_ss_ep_comp_descriptor *comp_desc = NULL;
+@@ -182,8 +187,21 @@ int config_ep_by_speed(struct usb_gadget *g,
+ 	default:
+ 		speed_desc = f->fs_descriptors;
+ 	}
++
++	/* find correct alternate setting descriptor */
++	for_each_desc(speed_desc, d_spd, USB_DT_INTERFACE) {
++		int_desc = (struct usb_interface_descriptor *)*d_spd;
++
++		if (int_desc->bAlternateSetting == alt) {
++			speed_desc = d_spd;
++			goto intf_found;
++		}
 +	}
++	return -EIO;
 +
-+	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
-+	if (!pos)
-+		return;
++intf_found:
+ 	/* find descriptors */
+-	for_each_ep_desc(speed_desc, d_spd) {
++	for_each_desc(speed_desc, d_spd, USB_DT_ENDPOINT) {
+ 		chosen_desc = (struct usb_endpoint_descriptor *)*d_spd;
+ 		if (chosen_desc->bEndpointAddress == _ep->address)
+ 			goto ep_found;
+@@ -237,6 +255,32 @@ int config_ep_by_speed(struct usb_gadget *g,
+ 	}
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(config_ep_by_speed_and_alt);
 +
- 	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
- 	local_clock = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
++/**
++ * config_ep_by_speed() - configures the given endpoint
++ * according to gadget speed.
++ * @g: pointer to the gadget
++ * @f: usb function
++ * @_ep: the endpoint to configure
++ *
++ * Return: error code, 0 on success
++ *
++ * This function chooses the right descriptors for a given
++ * endpoint according to gadget speed and saves it in the
++ * endpoint desc field. If the endpoint already has a descriptor
++ * assigned to it - overwrites it with currently corresponding
++ * descriptor. The endpoint maxpacket field is updated according
++ * to the chosen descriptor.
++ * Note: the supplied function should hold all the descriptors
++ * for supported speeds
++ */
++int config_ep_by_speed(struct usb_gadget *g,
++			struct usb_function *f,
++			struct usb_ep *_ep)
++{
++	return config_ep_by_speed_and_alt(g, f, _ep, 0);
++}
+ EXPORT_SYMBOL_GPL(config_ep_by_speed);
  
-@@ -61,7 +74,6 @@ void pci_ptm_init(struct pci_dev *dev)
- 	 * the spec recommendation (PCIe r3.1, sec 7.32.3), select the
- 	 * furthest upstream Time Source as the PTM Root.
- 	 */
--	ups = pci_upstream_bridge(dev);
- 	if (ups && ups->ptm_enabled) {
- 		ctrl = PCI_PTM_CTRL_ENABLE;
- 		if (ups->ptm_granularity == 0)
+ /**
+diff --git a/include/linux/usb/composite.h b/include/linux/usb/composite.h
+index 8675e145ea8b..2040696d75b6 100644
+--- a/include/linux/usb/composite.h
++++ b/include/linux/usb/composite.h
+@@ -249,6 +249,9 @@ int usb_function_activate(struct usb_function *);
+ 
+ int usb_interface_id(struct usb_configuration *, struct usb_function *);
+ 
++int config_ep_by_speed_and_alt(struct usb_gadget *g, struct usb_function *f,
++				struct usb_ep *_ep, u8 alt);
++
+ int config_ep_by_speed(struct usb_gadget *g, struct usb_function *f,
+ 			struct usb_ep *_ep);
+ 
 -- 
 2.25.1
 
