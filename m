@@ -2,130 +2,96 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D77CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7F72082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:44:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A2FxWZ/g"
+	by mail.kernel.org (Postfix) with ESMTP id 1910D2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730322AbgFRNoY (ORCPT
+        id S1730342AbgFRNou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:44:24 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51642 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730306AbgFRNoS (ORCPT
+        Thu, 18 Jun 2020 09:44:50 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:50924 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730272AbgFRNor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:44:18 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05IDiDs2103690;
-        Thu, 18 Jun 2020 08:44:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592487853;
-        bh=jrhWybePBkLjKFFokXcERsTDgrYSw3CTsM7TNQNBCNM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=A2FxWZ/gV0Nix5vu1sBykSBIFsjc68WFsGdSy75rH/s33GaTqRlKsVrAj334UxncZ
-         goMEGiZAWPGI+NxwoSvucy8SuRftdeAnXF+oOdrNsSrzo1y7bZijjD3ktdC7KZ1+Zj
-         ZbPvM8p4IewZDcaTm9CH0ll3BOFEJpiLhkd6slRU=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05IDiDuf015024
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 18 Jun 2020 08:44:13 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 18
- Jun 2020 08:44:12 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 18 Jun 2020 08:44:12 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05IDiCem029547;
-        Thu, 18 Jun 2020 08:44:12 -0500
-Subject: Re: [PATCH net-next v7 1/6] dt-bindings: net: Add tx and rx internal
- delays
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200617182019.6790-1-dmurphy@ti.com>
- <20200617182019.6790-2-dmurphy@ti.com> <20200618020101.GJ249144@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <71943ef1-3e64-47a9-2027-ad801795bdf5@ti.com>
-Date:   Thu, 18 Jun 2020 08:44:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 18 Jun 2020 09:44:47 -0400
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 05IDiSd2001781;
+        Thu, 18 Jun 2020 16:44:29 +0300
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
+        id E9771639BF; Thu, 18 Jun 2020 16:44:28 +0300 (IDT)
+From:   amirmizi6@gmail.com
+To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org,
+        "benoit.houyere@st.com--to=mark.rutland"@arm.com,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
+        Amir Mizinski <amirmizi6@gmail.com>
+Subject: [PATCH v11 4/8] tpm: tpm_tis: Rewrite "tpm_tis_req_canceled()"
+Date:   Thu, 18 Jun 2020 16:43:39 +0300
+Message-Id: <20200618134344.243537-5-amirmizi6@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200618134344.243537-1-amirmizi6@gmail.com>
+References: <20200618134344.243537-1-amirmizi6@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200618020101.GJ249144@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
+From: Amir Mizinski <amirmizi6@gmail.com>
 
-On 6/17/20 9:01 PM, Andrew Lunn wrote:
-> On Wed, Jun 17, 2020 at 01:20:14PM -0500, Dan Murphy wrote:
->> tx-internal-delays and rx-internal-delays are a common setting for RGMII
->> capable devices.
->>
->> These properties are used when the phy-mode or phy-controller is set to
->> rgmii-id, rgmii-rxid or rgmii-txid.  These modes indicate to the
->> controller that the PHY will add the internal delay for the connection.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../devicetree/bindings/net/ethernet-phy.yaml         | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
->> index 9b1f1147ca36..b2887476fe6a 100644
->> --- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
->> +++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
->> @@ -162,6 +162,17 @@ properties:
->>       description:
->>         Specifies a reference to a node representing a SFP cage.
->>   
->> +
->> +  rx-internal-delay-ps:
->> +    description: |
->> +      RGMII Receive PHY Clock Delay defined in pico seconds.  This is used for
->> +      PHY's that have configurable RX internal delays.
->> +
->> +  tx-internal-delay-ps:
->> +    description: |
->> +      RGMII Transmit PHY Clock Delay defined in pico seconds.  This is used for
->> +      PHY's that have configurable TX internal delays.
->> +
-> So in a later patch you have:
->
-> default: 2000
->
-> That seems to apply that these values only apply when the phy mode
-> indicates a delay is needed. It would be good to document that here,
-> when each of these properties will be used. Also, that they default to
-> 2000 when not present.
+Using this function while reading/writing data resulted in an aborted
+operation.
+After investigating the issue according to the TCG TPM Profile (PTP)
+Specifications, I found that "request to cancel" should occur only if
+TPM_STS.commandReady bit is lit.
+Note that i couldn't find a case where the present condition
+(in the linux kernel) is valid, so I'm removing the case for
+"TPM_VID_WINBOND" since we have no need for it.
 
-The default of 2000ps is for the DP83869 only.  The DP83822 fixed delay 
-is 3500ps.
+Also, the default comparison is wrong. Only cmdReady bit needs to be
+compared instead of the full lower status register byte.
 
-So indicating that the default here is 2000ps for all devices is not 
-correct.
+Fixes: 1f866057291f (tpm: Fix cancellation of TPM commands (polling mode))
+Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+---
+ drivers/char/tpm/tpm_tis_core.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-But I can add a note that if these properties are present then the delay 
-is added by the PHY.
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index 14ffee4..2636ec7 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -699,13 +699,11 @@ static bool tpm_tis_req_canceled(struct tpm_chip *chip, u8 status)
+ 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+ 
+ 	switch (priv->manufacturer_id) {
+-	case TPM_VID_WINBOND:
+-		return ((status == TPM_STS_VALID) ||
+-			(status == (TPM_STS_VALID | TPM_STS_COMMAND_READY)));
+ 	case TPM_VID_STM:
+ 		return (status == (TPM_STS_VALID | TPM_STS_COMMAND_READY));
+ 	default:
+-		return (status == TPM_STS_COMMAND_READY);
++		return ((status & TPM_STS_COMMAND_READY) ==
++			TPM_STS_COMMAND_READY);
+ 	}
+ }
+ 
+-- 
+2.7.4
 
-Dan
-
-
->       Andrew
