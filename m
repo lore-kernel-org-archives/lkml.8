@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40571C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD55C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1760F20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8261821D90
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442630;
-	bh=/Nc+hSAuWuRAEuQ7FuotPfq5gihrarSON0Sq73x3r+w=;
+	s=default; t=1592442631;
+	bh=DTCgtkWUhkeyQkENmpKt7QMNjpcD8gw5ONKHWXYAk/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zISUSvPIBv2LIclDZq4XUk8n/dq7S/0ONuo+NHIP6J08O/eiLktLIYLP6K+Po4WnG
-	 taWMQimlPRo2Ct3wM1BPceG3FdBOpN/QEZ0KD/gN9xN1l2J6pjnUbJigieJcrak350
-	 JVsWnVaCk9HERCU8DQFhn3se6dSf00mNOmda1lhQ=
+	b=bFiUSztrvJbcCclZ1KZHxZrdQ3TAQJUs1fsaVKesv98VGnmLAORpZrNFBnjMozM+n
+	 D4OYR5gY9hEah6yOHLZUqXt7BjtpzhKv30QA21oi3s6X8VqiNx3zDKBAWBw+TBw+ok
+	 /seOgKdjdpud8DlXTuX7xSZ0LCRz5urtRXvY/6uY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgFRBK2 (ORCPT
+        id S1728524AbgFRBKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:10:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37548 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:10:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728486AbgFRBKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:24 -0400
+        id S1728511AbgFRBK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78A7221924;
-        Thu, 18 Jun 2020 01:10:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A3E121D7B;
+        Thu, 18 Jun 2020 01:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442624;
-        bh=/Nc+hSAuWuRAEuQ7FuotPfq5gihrarSON0Sq73x3r+w=;
+        s=default; t=1592442628;
+        bh=DTCgtkWUhkeyQkENmpKt7QMNjpcD8gw5ONKHWXYAk/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=my/YNyd3PdKE0DQZq7YAS2rvy6WducYQrp/HW4x1G83FApVrgoJIQ6yKWyy4AaTIT
-         gfk/LJKZTNEbvPI2djUcgdBE2iyEZdSCcPNZBrayw7Pndt8HMLkm4XOdqpyX5cb1Nq
-         wBJi6woj1CS+IsDRtTtIC1bRhyW/UP1dM2vu5ieg=
+        b=T0/H4FCjgHIlXLAXgxztUHlZqGzHXLMG0v7UXN5QMQ5GgWrpEvyCO/siUzlsl6oed
+         C9Oi8gMcvsOCfdtyxeIsh/1ruErEMOMJO0nZ1IYGzykkv7a+8FtWP2zoVYAOtP1V/j
+         4RCbn9CmpFlNnWD8xMU4xhfi9jR6hDL8KuS2Z9T0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Pavel Machek (CIP)" <pavel@denx.de>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 103/388] ASoC: meson: add missing free_irq() in error path
-Date:   Wed, 17 Jun 2020 21:03:20 -0400
-Message-Id: <20200618010805.600873-103-sashal@kernel.org>
+Cc:     Simon Arlott <simon@octiron.net>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 106/388] scsi: sr: Fix sr_probe() missing deallocate of device minor
+Date:   Wed, 17 Jun 2020 21:03:23 -0400
+Message-Id: <20200618010805.600873-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -62,51 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Pavel Machek (CIP)" <pavel@denx.de>
+From: Simon Arlott <simon@octiron.net>
 
-[ Upstream commit 3b8a299a58b2afce464ae11324b59dcf0f1d10a7 ]
+[ Upstream commit 6555781b3fdec5e94e6914511496144241df7dee ]
 
-free_irq() is missing in case of error, fix that.
+If the cdrom fails to be registered then the device minor should be
+deallocated.
 
-Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-
-Link: https://lore.kernel.org/r/20200606153103.GA17905@amd
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/072dac4b-8402-4de8-36bd-47e7588969cd@0882a8b5-c6c3-11e9-b005-00805fc181fe
+Signed-off-by: Simon Arlott <simon@octiron.net>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/axg-fifo.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/scsi/sr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
-index 2e9b56b29d31..b2e867113226 100644
---- a/sound/soc/meson/axg-fifo.c
-+++ b/sound/soc/meson/axg-fifo.c
-@@ -249,7 +249,7 @@ int axg_fifo_pcm_open(struct snd_soc_component *component,
- 	/* Enable pclk to access registers and clock the fifo ip */
- 	ret = clk_prepare_enable(fifo->pclk);
- 	if (ret)
--		return ret;
-+		goto free_irq;
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index 8d062d4f3ce0..1e13c6a0f0ca 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -797,7 +797,7 @@ static int sr_probe(struct device *dev)
+ 	cd->cdi.disk = disk;
  
- 	/* Setup status2 so it reports the memory pointer */
- 	regmap_update_bits(fifo->map, FIFO_CTRL1,
-@@ -269,8 +269,14 @@ int axg_fifo_pcm_open(struct snd_soc_component *component,
- 	/* Take memory arbitror out of reset */
- 	ret = reset_control_deassert(fifo->arb);
- 	if (ret)
--		clk_disable_unprepare(fifo->pclk);
-+		goto free_clk;
-+
-+	return 0;
+ 	if (register_cdrom(&cd->cdi))
+-		goto fail_put;
++		goto fail_minor;
  
-+free_clk:
-+	clk_disable_unprepare(fifo->pclk);
-+free_irq:
-+	free_irq(fifo->irq, ss);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(axg_fifo_pcm_open);
+ 	/*
+ 	 * Initialize block layer runtime PM stuffs before the
+@@ -815,6 +815,10 @@ static int sr_probe(struct device *dev)
+ 
+ 	return 0;
+ 
++fail_minor:
++	spin_lock(&sr_index_lock);
++	clear_bit(minor, sr_index_bits);
++	spin_unlock(&sr_index_lock);
+ fail_put:
+ 	put_disk(disk);
+ 	mutex_destroy(&cd->lock);
 -- 
 2.25.1
 
