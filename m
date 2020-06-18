@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 025DBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CAAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D66802220A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED352220A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445149;
-	bh=4CYoG9UkzpuTwSe2ndczDb764Zidmp9DJZYtd7I96DY=;
+	s=default; t=1592445155;
+	bh=k5fJn4/BHCsHWqjor/jslrTNiMZt/S9sgjvZvWRPe4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vwfdWAlcAtBJcP8XnaZXjUP0BRgZ0sgtSGJGrYDDOSnZa227MbQTxvB2VAUAkLA5h
-	 9ra0+z1Y0TNlhsYH69ZRkxzl5eY4WfyWH4Lg1i45a3GrKpyOUVDPKV3bJjqzC7b3a/
-	 GUVOFisEwxMeLSFLanhdL+A0PFhGzwsCjTJfUFkc=
+	b=kH2d3GFOU99ua6sFolvm0RKNL7yDnT6QlansUvA21PZXAoEt0LYW8x+LBOBlgikJI
+	 GwneUI9vtuzO4Qf+XpwO+/Vgi2Z7XxF6iL/6/cOsHJr1MfFFvnCh/dKrWURD4ZWzNb
+	 5zXuX7R7VYWuw4K9zRMw1LDXCkogh/I+Awbs+GRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732950AbgFRBw2 (ORCPT
+        id S1731932AbgFRBwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:52:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34386 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731714AbgFRB0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:26:43 -0400
+        id S1731704AbgFRB0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:26:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B15021D7A;
-        Thu, 18 Jun 2020 01:26:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41AB521D7A;
+        Thu, 18 Jun 2020 01:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443603;
-        bh=4CYoG9UkzpuTwSe2ndczDb764Zidmp9DJZYtd7I96DY=;
+        s=default; t=1592443597;
+        bh=k5fJn4/BHCsHWqjor/jslrTNiMZt/S9sgjvZvWRPe4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yN8dFidoAXY8VJcqqHusVn/jPw/1LD3UiMe5amTGFkNoavQhisHJrMWKYDFw52e+W
-         Uuw7kecKf5l+hafc/xEkjFNGe5ydRozk/S+khEWFI7/TDqz1ujItGmFAHTSggBMos6
-         m0n6d9cbQt7A6slXah+LdUXgK8ozNr7HvyYKAieU=
+        b=MV96FjcgYShAjX09qxluE8oX8ydeT6rnjDbeJsvQd4cEoWmIR2E0jMyHjVR6oTdkL
+         qdNLqMUgSf2PdV5j8D0oN6y6OK/cGxq9C5NXcyhDzeuGITBCFKRCT9qs3E3BCbZ7Uj
+         +MkdHGti+l8XmWM8omMCUAj3KY2lVdvgmn0PSpbI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Alexander Fomichev <fomichev.ru@gmail.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 032/108] NTB: Fix the default port and peer numbers for legacy drivers
-Date:   Wed, 17 Jun 2020 21:24:44 -0400
-Message-Id: <20200618012600.608744-32-sashal@kernel.org>
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 029/108] powerpc/crashkernel: Take "mem=" option into account
+Date:   Wed, 17 Jun 2020 21:24:41 -0400
+Message-Id: <20200618012600.608744-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -61,67 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Pingfan Liu <kernelfans@gmail.com>
 
-[ Upstream commit fc8b086d9dbd57458d136c4fa70ee26f832c3a2e ]
+[ Upstream commit be5470e0c285a68dc3afdea965032f5ddc8269d7 ]
 
-When the commit adding ntb_default_port_number() and
-ntb_default_peer_port_number()  entered the kernel there was no
-users of it so it was impossible to tell what the API needed.
+'mem=" option is an easy way to put high pressure on memory during
+some test. Hence after applying the memory limit, instead of total
+mem, the actual usable memory should be considered when reserving mem
+for crashkernel. Otherwise the boot up may experience OOM issue.
 
-When a user finally landed a year later (ntb_pingpong) there were
-more NTB topologies were created and no consideration was considered
-to how other drivers had changed.
+E.g. it would reserve 4G prior to the change and 512M afterward, if
+passing
+crashkernel="2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G",
+and mem=5G on a 256G machine.
 
-Now that there is a user it can be fixed to provide a sensible default
-for the legacy drivers that do not implement ntb_{peer_}port_number().
-Seeing ntb_pingpong doesn't check error codes returning EINVAL was also
-not sensible.
+This issue is powerpc specific because it puts higher priority on
+fadump and kdump reservation than on "mem=". Referring the following
+code:
+    if (fadump_reserve_mem() == 0)
+            reserve_crashkernel();
+    ...
+    /* Ensure that total memory size is page-aligned. */
+    limit = ALIGN(memory_limit ?: memblock_phys_mem_size(), PAGE_SIZE);
+    memblock_enforce_memory_limit(limit);
 
-Patches for ntb_pingpong and ntb_perf follow (which are broken
-otherwise) to support hardware that doesn't have port numbers. This is
-important not only to not break support with existing drivers but for
-the cross link topology which, due to its perfect symmetry, cannot
-assign unique port numbers to each side.
+While on other arches, the effect of "mem=" takes a higher priority
+and pass through memblock_phys_mem_size() before calling
+reserve_crashkernel().
 
-Fixes: 1e5301196a88 ("NTB: Add indexed ports NTB API")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Allen Hubbe <allenbh@gmail.com>
-Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1585749644-4148-1-git-send-email-kernelfans@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/ntb.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/machine_kexec.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ntb/ntb.c b/drivers/ntb/ntb.c
-index 03b80d89b980..b75ec229b39a 100644
---- a/drivers/ntb/ntb.c
-+++ b/drivers/ntb/ntb.c
-@@ -216,10 +216,8 @@ int ntb_default_port_number(struct ntb_dev *ntb)
- 	case NTB_TOPO_B2B_DSD:
- 		return NTB_PORT_SEC_DSD;
- 	default:
--		break;
-+		return 0;
- 	}
--
--	return -EINVAL;
- }
- EXPORT_SYMBOL(ntb_default_port_number);
+diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
+index 9dafd7af39b8..cb4d6cd949fc 100644
+--- a/arch/powerpc/kernel/machine_kexec.c
++++ b/arch/powerpc/kernel/machine_kexec.c
+@@ -113,11 +113,12 @@ void machine_kexec(struct kimage *image)
  
-@@ -242,10 +240,8 @@ int ntb_default_peer_port_number(struct ntb_dev *ntb, int pidx)
- 	case NTB_TOPO_B2B_DSD:
- 		return NTB_PORT_PRI_USD;
- 	default:
--		break;
-+		return 0;
- 	}
--
--	return -EINVAL;
- }
- EXPORT_SYMBOL(ntb_default_peer_port_number);
+ void __init reserve_crashkernel(void)
+ {
+-	unsigned long long crash_size, crash_base;
++	unsigned long long crash_size, crash_base, total_mem_sz;
+ 	int ret;
  
++	total_mem_sz = memory_limit ? memory_limit : memblock_phys_mem_size();
+ 	/* use common parsing */
+-	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
++	ret = parse_crashkernel(boot_command_line, total_mem_sz,
+ 			&crash_size, &crash_base);
+ 	if (ret == 0 && crash_size > 0) {
+ 		crashk_res.start = crash_base;
+@@ -176,6 +177,7 @@ void __init reserve_crashkernel(void)
+ 	/* Crash kernel trumps memory limit */
+ 	if (memory_limit && memory_limit <= crashk_res.end) {
+ 		memory_limit = crashk_res.end + 1;
++		total_mem_sz = memory_limit;
+ 		printk("Adjusted memory limit for crashkernel, now 0x%llx\n",
+ 		       memory_limit);
+ 	}
+@@ -184,7 +186,7 @@ void __init reserve_crashkernel(void)
+ 			"for crashkernel (System RAM: %ldMB)\n",
+ 			(unsigned long)(crash_size >> 20),
+ 			(unsigned long)(crashk_res.start >> 20),
+-			(unsigned long)(memblock_phys_mem_size() >> 20));
++			(unsigned long)(total_mem_sz >> 20));
+ 
+ 	if (!memblock_is_region_memory(crashk_res.start, crash_size) ||
+ 	    memblock_reserve(crashk_res.start, crash_size)) {
 -- 
 2.25.1
 
