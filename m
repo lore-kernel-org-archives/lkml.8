@@ -2,142 +2,195 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD5EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6270C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 563342075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F0C92075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:28:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="GRYaaP6q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qeo4vyXO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731433AbgFRP1j (ORCPT
+        id S1731483AbgFRP2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:27:39 -0400
-Received: from mail-eopbgr750132.outbound.protection.outlook.com ([40.107.75.132]:50693
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727841AbgFRP1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:27:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TN4n1NyJrq6NEjYq/nIgsEldfUdrMKS1EwY55TDmM1IbojifBLJOPRhYRHXxNiq0tPSEMtAOy3jU6TAK7K2CcV0Fnf6Lbc2YRArmPgY6VOfdr1ND35MRFlEqa5sAavlb5UDsG4etO9U7YekgX4l3FSiATFlDlNKlVexK4j7PtcLt5iID9m/pI8OCT3bkDtqd7Wcw5v/7Wk42E4DrIa6glylDcOuOGz33quCR6u94NRfffCz5y6uRONgP6nj2NpvgxyyW6kWEkzqLzsTno/zTsXuGyp8Zx+J6lONXs6755lVOT66nyVdIfZPtvo8VgwkWq6rtypLB5mFZl1EQ6OHjPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5JpjQ90muHhUcSUgR6QH2KR+ipNNKGTNnnLx6YOBrlM=;
- b=FYsdHWhYHlmKw1/S6AAAjchf6aPNO6qvBkjnw7S7JkwSA2KeXQ1mT7ClKGxaKxCTWS3HDs2dzsrsQ9iDnloZa9Zt9j/kgR9BILhRk06wIYhc7Hi8ZtUyNE0d2SgLwKs5qhOKbExARzIp/XvkEYriqteMyKiGFo8e4DqXQ05gLy48uCL8dJpc2NkQWcsCLGN6aYaKuL2emRYrE1nGoi7c+cP8qgq4nkFrvAUpWqGKAOWSn5yClJQDFJmpI7eGr38iCopnxoYzPrvVUYAgWKtK2ryQS5o50HqiglcySfTw/zbKtgoAqBYgTKYzIr+rOR8dWtPgjuHf5eSnTmC+irkNWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5JpjQ90muHhUcSUgR6QH2KR+ipNNKGTNnnLx6YOBrlM=;
- b=GRYaaP6qrcM+MEu967YAqvCQpmcAyFggsIfqbhDqrabGgzkqBpyEZQHenwKMcRo7b3w4/eVo3kv0qD4RZW9h4sN6QOv/seK9ODZ3k88EWwmLkZFok5Z0MDxQjZxYtJdDUOjYlTB3zutEhGkmLZqUF9skZL8mUBiJesD3aw4hgMk=
-Received: from DM5PR2101MB1047.namprd21.prod.outlook.com (2603:10b6:4:9e::16)
- by DM6PR21MB1290.namprd21.prod.outlook.com (2603:10b6:5:170::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.12; Thu, 18 Jun
- 2020 15:27:35 +0000
-Received: from DM5PR2101MB1047.namprd21.prod.outlook.com
- ([fe80::9583:a05a:e040:2923]) by DM5PR2101MB1047.namprd21.prod.outlook.com
- ([fe80::9583:a05a:e040:2923%7]) with mapi id 15.20.3131.008; Thu, 18 Jun 2020
- 15:27:35 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 3/8] Drivers: hv: vmbus: Replace cpumask_test_cpu(,
- cpu_online_mask) with cpu_online()
-Thread-Topic: [PATCH 3/8] Drivers: hv: vmbus: Replace cpumask_test_cpu(,
- cpu_online_mask) with cpu_online()
-Thread-Index: AQHWRMcNdm6S4LLDAky0Cm/qQY9X5ajegDVg
-Date:   Thu, 18 Jun 2020 15:27:35 +0000
-Message-ID: <DM5PR2101MB1047B24506389A4D25420323D79B0@DM5PR2101MB1047.namprd21.prod.outlook.com>
-References: <20200617164642.37393-1-parri.andrea@gmail.com>
- <20200617164642.37393-4-parri.andrea@gmail.com>
-In-Reply-To: <20200617164642.37393-4-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-18T15:27:34Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2bd3b2c3-312b-4ad3-902b-a874c112d29b;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d7b03e43-6572-4e15-c41f-08d8139c20a8
-x-ms-traffictypediagnostic: DM6PR21MB1290:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR21MB1290F36CB8B773BB00BEF065D79B0@DM6PR21MB1290.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:248;
-x-forefront-prvs: 0438F90F17
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Bz2deRow1TR5jYSBvj74scxgM5UOyVK+orK3h/Ii90IOTHq3NifBeCQ3QItm9EJWu83xpCWX97iS3Ne+8QimkG2CMOPXmK24h6XSNyKBlTueg2b//v3KLFVBP70Z4ufbib5SXxte9PD8q0kuyF+o7aChQZtsRVOANsk23dXyS9hF+ZpDHE647r2xccdyknJD7FDKFsLj3CuhVQsiX4jCixM4fPeP68jg5KaFBJ8YNn+gknM2mz2bfROzRdQTKuOu38L0P5v4GvcFk7v2ySaWk2E5KB6Hpao37JAGXQC1dVZcEL1x1B/Sqx1PkKFqtIP4jKlDrzhME1A6nnPjsT2ycg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR2101MB1047.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(396003)(136003)(366004)(2906002)(52536014)(5660300002)(33656002)(8936002)(4744005)(66556008)(54906003)(64756008)(66946007)(83380400001)(66446008)(66476007)(55016002)(76116006)(86362001)(110136005)(9686003)(6506007)(82960400001)(82950400001)(71200400001)(478600001)(186003)(4326008)(8990500004)(8676002)(316002)(7696005)(10290500003)(26005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: nm6q+YZCHobW0DJKYz0rDU/JehXPt7oPvsf2r3RPdnl+uKcaD/MSaWoGYw7HH1WpwVtCDPmBYQPF1a4RaVC80d0HuZVd88FFbziTVoY6QyW4+UpCPmFSuDyUjBdqrmojpCYUC6G6Zg9Ut++a/Nb21spWBL0L4Pd4veFVqlC6S1SerJP4moFMxpXn7JBPcIec0ZxEY348HfyXHk9QhxBkh8Dw2aFvUahV2UJ6JJngayxlW3Nc1IB1uDeo/fQYOtNxnV1yLigyPg+G44fYHYi2LN83n+jX7JZgSOgNGMURX0DGeZCj3sRd4MxowZZ4jZUXqG4PvwvRxyMVTIAeNqlozIvNTm6xJUvkMZVY3VQy3PWMMUoGDybgmSMyEc6arkjpYoCeKExQLl/cDS4jX54ciiBWA+Z2EPlAEPzY26yyqIoy9cD4W9yjU+pVj35ejK2OZWo3Xss/P83j9bJ0J38Xivot4aB6bPrV6vCPocOdYZAP/U4Sb1YaRz+CkTNzDA2j
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 18 Jun 2020 11:28:30 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55980 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731383AbgFRP20 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 11:28:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592494104;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6t+LMexuwO8rApPO3GfOJDLY+tnZX1xQZaII2oSVytY=;
+        b=Qeo4vyXOHXrnQj6QoOVqMAA11ngZFG5vOjkmigyH0pD/2QLQ/7jdxBqsB53ntMNwlBNi9Z
+        8vNYpSUE/I7XJDujO39fMADAy6oJYbzK5eDntu6+goE7YNWgHkQXaJUlmBLQQN3fFFO9jm
+        UnW+B6cwvBME5Tl6xv7zGv6zXT9Mncc=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-77-l0aI5pM6NMqsxIDKvC3KNQ-1; Thu, 18 Jun 2020 11:28:23 -0400
+X-MC-Unique: l0aI5pM6NMqsxIDKvC3KNQ-1
+Received: by mail-ej1-f70.google.com with SMTP id f27so2712640ejt.17
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:28:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6t+LMexuwO8rApPO3GfOJDLY+tnZX1xQZaII2oSVytY=;
+        b=X8YfTa/U5Drgfe2MdeadPMmfhH1W7W5cUVJetBPDKtpeD3VQ6ssUaPpu86swAJdfVq
+         gVDFSNg5xNQdAsXCAubs4juGWRIB3AJlnK8wJCBhMnVRbgmSyyHxgcrQCuMwLIzSnvUh
+         pQfjaxkY+Km2ji/C012EhObdckRTLRb0why2iB/rP+3jzDwPscQvQApwoN+hsznaFzFv
+         asoJrwPG0vi2tFCboQmWyTE2QjExa7xKMShP9nl9MfGG4GFo8vUQZFERvczXG3dbz2Kb
+         3BE0yiTT1rGDURSeiLlULV92s2Prnivb3CO2HMr53tZch7ak0RXF9+VrJGJWCf0BMpT5
+         SL7g==
+X-Gm-Message-State: AOAM533yk862VS0N8c73VZFgYg/cqA19+cjMoC8Zth7Q045seZb0Nlkn
+        3wgCsKvLW3EaPrpmpq4gS5o840uxbalHRpqfGLee7FClqk+svNBcJWnM3O/20IDe9tQEuZwsmhr
+        V3colpFJmaAvCf3mRqTP3SU5r
+X-Received: by 2002:a17:906:1a06:: with SMTP id i6mr4736827ejf.9.1592494101478;
+        Thu, 18 Jun 2020 08:28:21 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwOb/3dDEWNCo2JSy7yikbnO/oC0SvF4eCfj1Oz2sGSq/unVGc4FvN1k8A+v0oOlJzmgl1RWw==
+X-Received: by 2002:a17:906:1a06:: with SMTP id i6mr4736804ejf.9.1592494101214;
+        Thu, 18 Jun 2020 08:28:21 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id la5sm2522044ejb.94.2020.06.18.08.28.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 08:28:20 -0700 (PDT)
+Subject: Re: [PATCH v3] HID: i2c-hid: Enable touchpad wakeup from
+ Suspend-to-Idle
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com
+Cc:     You-Sheng Yang <vicamo.yang@canonical.com>,
+        Daniel Playfair Cal <daniel.playfair.cal@gmail.com>,
+        HungNien Chen <hn.chen@weidahitech.com>,
+        Pavel Balan <admin@kryma.net>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200618145515.5055-1-kai.heng.feng@canonical.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <c280d8b5-05bf-e560-51df-c57edeffe8a3@redhat.com>
+Date:   Thu, 18 Jun 2020 17:28:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR2101MB1047.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d7b03e43-6572-4e15-c41f-08d8139c20a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 15:27:35.5224
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SOAfOfzySkwQp/Im/AvJi7n3eFGsx3aD5R9UDU6CXn5hFDZWlI+Milr0qB0WmAkp82i3Sy+pjIeozrT52DSD9KqarOvC4LaTv2p6/M551c0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1290
+In-Reply-To: <20200618145515.5055-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Wednesday, Ju=
-ne 17, 2020 9:47 AM
->=20
-> A slight improvement in readability, and this does also remove one
-> memory access when NR_CPUS =3D=3D 1!  ;-)
->=20
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> ---
->  drivers/hv/vmbus_drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index c3205f40d1415..452c14c656e2a 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -1702,7 +1702,7 @@ static ssize_t target_cpu_store(struct vmbus_channe=
-l *channel,
->  	/* No CPUs should come up or down during this. */
->  	cpus_read_lock();
->=20
-> -	if (!cpumask_test_cpu(target_cpu, cpu_online_mask)) {
-> +	if (!cpu_online(target_cpu)) {
->  		cpus_read_unlock();
->  		return -EINVAL;
->  	}
-> --
-> 2.25.1
+Hi,
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+On 6/18/20 4:55 PM, Kai-Heng Feng wrote:
+> Many laptops can be woken up from Suspend-to-Idle by touchpad. This is
+> also the default behavior on other OSes.
+> 
+> So let's enable the wakeup support if the system defaults to
+> Suspend-to-Idle.
+
+I have been debugging a spurious wakeup issue on an Asus T101HA,
+where the system would not stay suspended when the lid was closed.
+
+The issue turns out to be that the touchpad is generating touch
+events when the lid/display gets close to the touchpad. In this case
+wakeup is already enabled by default because it is an USB device.
+
+So I do not believe that this is a good idea, most current devices
+with a HID multi-touch touchpad use i2c-hid and also use S2idle,
+so this will basically enable wakeup by touchpad on almost all
+current devices.
+
+There will likely be other devices with the same issue as the T101HA,
+but currently we are not seeing this issue because by default i2c-hid
+devices do not have wakeup enabled. This change will thus likely cause
+new spurious wakeup issues on more devices. So this seems like a
+bad idea.
+
+Also your commit message mentions touchpads, but the change
+will also enable wakeup on most touchscreens out there, meaning
+that just picking up a device in tablet mode and accidentally
+touching the screen will wake it up.
+
+Also hid multi-touch devices have 3 modes, see the diagrams
+in Microsoft hw design guides for win8/10 touch devices:
+1. Reporting events with low latency (high power mode)
+2. Reporting events with high latency (lower power mode)
+3. Not reporting events (lowest power mode)
+
+I actually still need to write some patches for hid-multitouch.c
+to set the mode to 2 or 3 on suspend depending on the device_may_wakeup
+setting of the parent. Once that patch is written, it should
+put most i2c-hid mt devices in mode 3, hopefully also helping
+with Linux' relative high power consumption when a device is
+suspended. With your change instead my to-be-written patch
+would put the device in mode 2, which would still be an
+improvement but less so.
+
+Regards,
+
+Hans
+
+
+
+
+
+
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> v3:
+>   - Use device_init_wakeup().
+>   - Wording change.
+> 
+> v2:
+>   - Fix compile error when ACPI is not enabled.
+>   drivers/hid/i2c-hid/i2c-hid-core.c | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+> index 294c84e136d7..dae1d072daf6 100644
+> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
+> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+> @@ -931,6 +931,12 @@ static void i2c_hid_acpi_fix_up_power(struct device *dev)
+>   		acpi_device_fix_up_power(adev);
+>   }
+>   
+> +static void i2c_hid_acpi_enable_wakeup(struct device *dev)
+> +{
+> +	if (acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
+> +		device_init_wakeup(dev, true);
+> +}
+> +
+>   static const struct acpi_device_id i2c_hid_acpi_match[] = {
+>   	{"ACPI0C50", 0 },
+>   	{"PNP0C50", 0 },
+> @@ -945,6 +951,8 @@ static inline int i2c_hid_acpi_pdata(struct i2c_client *client,
+>   }
+>   
+>   static inline void i2c_hid_acpi_fix_up_power(struct device *dev) {}
+> +
+> +static inline void i2c_hid_acpi_enable_wakeup(struct device *dev) {}
+>   #endif
+>   
+>   #ifdef CONFIG_OF
+> @@ -1072,6 +1080,8 @@ static int i2c_hid_probe(struct i2c_client *client,
+>   
+>   	i2c_hid_acpi_fix_up_power(&client->dev);
+>   
+> +	i2c_hid_acpi_enable_wakeup(&client->dev);
+> +
+>   	device_enable_async_suspend(&client->dev);
+>   
+>   	/* Make sure there is something at this address */
+> 
 
