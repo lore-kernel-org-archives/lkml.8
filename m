@@ -2,311 +2,159 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAADEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 003ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 905BD214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98AB20899
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f8jhBaLW"
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="zrEq0qH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgFRJGP (ORCPT
+        id S1729009AbgFRJLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 05:06:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59519 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728931AbgFRJGG (ORCPT
+        Thu, 18 Jun 2020 05:11:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728937AbgFRJLS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 05:06:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592471164;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=8+6yu/x63A8JNPDDG24GnqbRutaJYdNpzGAAuIIzQpc=;
-        b=f8jhBaLWJZQuvcMRiSTdciitXDJpJe4DxUfqRbfytJ9xEHxIlV54QdbT0Pqj7taUQOm5PN
-        RBrAICv58t/D5/8WxYy2OoXDNQhvjCMcNzCVYaWm87qIJQ0af7PpjJfO3q5P6kjvcrt5Ru
-        JuUay7HqjQvUNnQ3gs4bnBTPoHxh2oY=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-382-bMhn6w_6NAK576kjGAv0kw-1; Thu, 18 Jun 2020 05:06:01 -0400
-X-MC-Unique: bMhn6w_6NAK576kjGAv0kw-1
-Received: by mail-ej1-f69.google.com with SMTP id i17so2296428ejb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 02:06:01 -0700 (PDT)
+        Thu, 18 Jun 2020 05:11:18 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BCA1C0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 02:11:16 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x6so5200938wrm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 02:11:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nJ/ameCVngCfbGYTO+5aI2tlO0POD3IpltXZZNLuxEs=;
+        b=zrEq0qH5SUEXfv9B8Ir5FQX8mZb9/7ShVjC1BqOnxa+nJeZZepPmEXK0JUq9Iyo/er
+         x2eV2pn2BWHZZYzdw8xWsFUWKUmeJ2LD0KtYxtFNlFFMMUrP3JuBoJQh5pCG0LPjeBXb
+         Bj/SSgbof0QLi7qLSpLHKlV1nbJkdJLFawhgO8tsKLBmz4bafqZR0T+4ppsS7C9a9SUW
+         Uqs9ZRYksz+MN2tnjrFdL7Q3hlp6toE2WynUOVWvB1951khtuJOXjysmpuQxmkjTaK9w
+         WKMnxGdseFfMzIDugIemYPP8DSqA3Reo0AAoyttSjL52Sb7wQ5cxg8jIDYGFDymW76Ol
+         /7LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=8+6yu/x63A8JNPDDG24GnqbRutaJYdNpzGAAuIIzQpc=;
-        b=dfFxVble0EztImHHODkx6F+aq2O+HtloSLvX/95Pvp+LV7CuQwEt0opgxNFr/7wH8A
-         smdjwo+kyg2BkC9ZU/LXYGGk4hFr32CyuJs+fZSCqLilDavW08k1CShoVDe6R1sHFS8p
-         CL41AuFIqlByjGYxkbrJaRGM+wXzKDPY0cUPoU4JFHrdIX29WNhWatpylyGTv5VgYJN+
-         dMI4xS+IqZ9fDqo463cFH5u0yvnpbTvQFXewGt45ASNltYeZ5XXboCBV6+kg5+ugbdGk
-         Nt3jAsCmqC6J9lPr66g/12ytMCGfiXUIK2MM7NfImDoFboFBb2IQw2E+rq9CpYhwIFh/
-         zMaQ==
-X-Gm-Message-State: AOAM530k/k//1L0RiOzn0AZTuolSmVlfuITRnRb6I+a3Cue6Nf4vbKJg
-        H0sNDGq6Ruetx0EwiIY/mcp9uK2eefdLcIj+l49hYGdiBfEQE3i5kdlLWgAD6UxGzr8xn1d9BJj
-        nsgx3Agn9zpsegRfELBFXP+Sw
-X-Received: by 2002:a50:e14e:: with SMTP id i14mr2926299edl.279.1592471158865;
-        Thu, 18 Jun 2020 02:05:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz2wUOr8xyEWG9/PeDteraN07me4t//OcPVrYa6R1sI8XQ69VG5AHblLgBb8E5pIcRlchzffw==
-X-Received: by 2002:a50:e14e:: with SMTP id i14mr2926264edl.279.1592471158493;
-        Thu, 18 Jun 2020 02:05:58 -0700 (PDT)
-Received: from localhost (home.natalenko.name. [151.237.229.131])
-        by smtp.gmail.com with ESMTPSA id bt11sm1639299edb.48.2020.06.18.02.05.57
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nJ/ameCVngCfbGYTO+5aI2tlO0POD3IpltXZZNLuxEs=;
+        b=Oh9ML9MLXBoUFCqg/592g7YCea0zDF3jlZyP2HTB/gFS6g0Lqm4EIT/gP/X7Y52yTw
+         B0dpD5Eq/X0R+SpJr1JIdyEuoQAAY7YBrS7kz6BEGQWymxqc8E3/3PGZZyAwUgthl9xl
+         4MaksyJLL0Qs1TQAxw6+J2JrcTAl2zFVNORl4n3Q42yZSRXrBdyuiob2YG7SVd8NblBH
+         XqhQnghfjr1dGFmoWfOWMBR6hWX8YukyJ5tsE+fvboMWu3Wm5RdORnc85WHqavWHA+Ga
+         DjIezZUZiCq2rRZGYvJz7ozeLqUQj6EyLdZLDMv/IyPqiUHf4VAl1ocRrwrRFSU6FRuI
+         RT4w==
+X-Gm-Message-State: AOAM530GjoUxdnU6rQS7JoekHM7NQuvuS1D7+OvnI0LXCD3Vwmg/1Z1q
+        2HjaudTGIPW+gynTfQKgTSwtDA==
+X-Google-Smtp-Source: ABdhPJxtEFr+KfP6DTCsP0An0esK+61P9lyK23C48ndc7t0VhLzMWIdc+iJ9BZ0TktVPWIm3QuGzWg==
+X-Received: by 2002:a05:6000:114e:: with SMTP id d14mr3499793wrx.110.1592471475570;
+        Thu, 18 Jun 2020 02:11:15 -0700 (PDT)
+Received: from localhost ([194.62.217.57])
+        by smtp.gmail.com with ESMTPSA id q4sm2773031wma.47.2020.06.18.02.11.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 02:05:57 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 11:05:56 +0200
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
-Cc:     Felix Fietkau <nbd@nbd.name>, Ryder Lee <ryder.lee@mediatek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: mt7612 suspend/resume issue
-Message-ID: <20200618090556.pepjdbnba2gqzcbe@butterfly.localdomain>
+        Thu, 18 Jun 2020 02:11:14 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 11:11:13 +0200
+From:   "javier.gonz@samsung.com" <javier@javigon.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
+        "nj.shetty@samsung.com" <nj.shetty@samsung.com>
+Subject: Re: [PATCH 3/3] io_uring: add support for zone-append
+Message-ID: <20200618091113.eu2xdp6zmdooy5d2@mpHalley.local>
+References: <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200617172713epcas5p352f2907a12bd4ee3c97be1c7d8e1569e@epcas5p3.samsung.com>
+ <1592414619-5646-4-git-send-email-joshi.k@samsung.com>
+ <CY4PR04MB37510E916B6F243D189B4EB0E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200618083529.ciifu4chr4vrv2j5@mpHalley.local>
+ <CY4PR04MB3751D5D6AFB0DA7B8A2DFF61E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CY4PR04MB3751D5D6AFB0DA7B8A2DFF61E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Lorenzo et al.
+On 18.06.2020 08:47, Damien Le Moal wrote:
+>On 2020/06/18 17:35, javier.gonz@samsung.com wrote:
+>> On 18.06.2020 07:39, Damien Le Moal wrote:
+>>> On 2020/06/18 2:27, Kanchan Joshi wrote:
+>>>> From: Selvakumar S <selvakuma.s1@samsung.com>
+>>>>
+>>>> Introduce three new opcodes for zone-append -
+>>>>
+>>>>    IORING_OP_ZONE_APPEND     : non-vectord, similiar to IORING_OP_WRITE
+>>>>    IORING_OP_ZONE_APPENDV    : vectored, similar to IORING_OP_WRITEV
+>>>>    IORING_OP_ZONE_APPEND_FIXED : append using fixed-buffers
+>>>>
+>>>> Repurpose cqe->flags to return zone-relative offset.
+>>>>
+>>>> Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>
+>>>> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+>>>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+>>>> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
+>>>> ---
+>>>>  fs/io_uring.c                 | 72 +++++++++++++++++++++++++++++++++++++++++--
+>>>>  include/uapi/linux/io_uring.h |  8 ++++-
+>>>>  2 files changed, 77 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>>>> index 155f3d8..c14c873 100644
+>>>> --- a/fs/io_uring.c
+>>>> +++ b/fs/io_uring.c
+>>>> @@ -649,6 +649,10 @@ struct io_kiocb {
+>>>>  	unsigned long		fsize;
+>>>>  	u64			user_data;
+>>>>  	u32			result;
+>>>> +#ifdef CONFIG_BLK_DEV_ZONED
+>>>> +	/* zone-relative offset for append, in bytes */
+>>>> +	u32			append_offset;
+>>>
+>>> this can overflow. u64 is needed.
+>>
+>> We chose to do it this way to start with because struct io_uring_cqe
+>> only has space for u32 when we reuse the flags.
+>>
+>> We can of course create a new cqe structure, but that will come with
+>> larger changes to io_uring for supporting append.
+>>
+>> Do you believe this is a better approach?
+>
+>The problem is that zone size are 32 bits in the kernel, as a number of sectors.
+>So any device that has a zone size smaller or equal to 2^31 512B sectors can be
+>accepted. Using a zone relative offset in bytes for returning zone append result
+>is OK-ish, but to match the kernel supported range of possible zone size, you
+>need 31+9 bits... 32 does not cut it.
 
-I'm using MT7612 mini-PCIE cards as both AP in a home server and as a clien=
-t in
-a laptop. The AP works perfectly (after some fixing from your side; thanks =
-for
-that!), and so does the client modulo it has issues during system resume.
+Agree. Our initial assumption was that u32 would cover current zone size
+requirements, but if this is a no-go, we will take the longer path.
 
-So, the card is installed in my aging Dell Vostro 3360. The system always
-suspends fine, but on resume this can happen occasionally:
+>
+>Since you need a 64-bit sized result, I would also prefer that you drop the zone
+>relative offset as a result and return the absolute offset instead. That makes
+>life easier for the applications since the zone append requests also must use
+>absolute offsets for zone start. An absolute offset as a result becomes
+>consistent with that and all other read/write system calls that all use absolute
+>offsets (seek() is the only one that I know of that can use a relative offset,
+>but that is not an IO system call).
 
-=3D=3D=3D
-=C4=8Den 15 20:21:07 spock kernel: mt76x2e 0000:01:00.0: MCU message 2 (seq=
- 11) timed out
-=C4=8Den 15 20:21:07 spock kernel: mt76x2e 0000:01:00.0: MCU message 30 (se=
-q 12) timed out
-=C4=8Den 15 20:21:07 spock kernel: mt76x2e 0000:01:00.0: MCU message 30 (se=
-q 13) timed out
-=C4=8Den 15 20:21:07 spock kernel: mt76x2e 0000:01:00.0: Firmware Version: =
-0.0.00
-=C4=8Den 15 20:21:07 spock kernel: mt76x2e 0000:01:00.0: Build: 1
-=C4=8Den 15 20:21:07 spock kernel: mt76x2e 0000:01:00.0: Build Time: 201507=
-311614____
-=C4=8Den 15 20:21:07 spock kernel: mt76x2e 0000:01:00.0: Firmware running!
-=C4=8Den 15 20:21:07 spock kernel: ieee80211 phy0: Hardware restart was req=
-uested
-=C4=8Den 15 20:21:08 spock kernel: mt76x2e 0000:01:00.0: MCU message 2 (seq=
- 1) timed out
-=C4=8Den 15 20:21:09 spock kernel: mt76x2e 0000:01:00.0: MCU message 30 (se=
-q 2) timed out
-=C4=8Den 15 20:21:10 spock kernel: mt76x2e 0000:01:00.0: MCU message 30 (se=
-q 3) timed out
-=C4=8Den 15 20:21:10 spock kernel: mt76x2e 0000:01:00.0: Firmware Version: =
-0.0.00
-=C4=8Den 15 20:21:10 spock kernel: mt76x2e 0000:01:00.0: Build: 1
-=C4=8Den 15 20:21:10 spock kernel: mt76x2e 0000:01:00.0: Build Time: 201507=
-311614____
-=C4=8Den 15 20:21:10 spock kernel: mt76x2e 0000:01:00.0: Firmware running!
-=C4=8Den 15 20:21:10 spock kernel: ieee80211 phy0: Hardware restart was req=
-uested
-=C4=8Den 15 20:21:11 spock kernel: mt76x2e 0000:01:00.0: MCU message 31 (se=
-q 5) timed out
-=C4=8Den 15 20:21:12 spock kernel: mt76x2e 0000:01:00.0: MCU message 31 (se=
-q 6) timed out
-=C4=8Den 15 20:21:13 spock kernel: mt76x2e 0000:01:00.0: MCU message 31 (se=
-q 7) timed out
-=C4=8Den 15 20:21:14 spock kernel: mt76x2e 0000:01:00.0: MCU message 31 (se=
-q 8) timed out
-=C4=8Den 15 20:21:15 spock kernel: mt76x2e 0000:01:00.0: MCU message 31 (se=
-q 9) timed out
-=C4=8Den 15 20:21:16 spock kernel: mt76x2e 0000:01:00.0: MCU message 31 (se=
-q 10) timed out
-=C4=8Den 15 20:21:17 spock kernel: mt76x2e 0000:01:00.0: MCU message 31 (se=
-q 11) timed out
-=C4=8Den 15 20:21:17 spock kernel: mt76x2e 0000:01:00.0: Firmware Version: =
-0.0.00
-=C4=8Den 15 20:21:17 spock kernel: mt76x2e 0000:01:00.0: Build: 1
-=C4=8Den 15 20:21:17 spock kernel: mt76x2e 0000:01:00.0: Build Time: 201507=
-311614____
-=C4=8Den 15 20:21:17 spock kernel: mt76x2e 0000:01:00.0: Firmware running!
-=C4=8Den 15 20:21:17 spock kernel: ieee80211 phy0: Hardware restart was req=
-uested
-=C4=8Den 15 20:21:18 spock kernel: ------------[ cut here ]------------
-=C4=8Den 15 20:21:18 spock kernel: WARNING: CPU: 3 PID: 11956 at net/mac802=
-11/util.c:2270 ieee80211_reconfig+0x234/0x1700 [mac80211]
-=C4=8Den 15 20:21:18 spock kernel: Modules linked in: pl2303 md4 nls_utf8 c=
-ifs dns_resolver fscache libdes cmac ccm bridge stp llc nft_ct nf_conntrack=
- nf_defrag_ipv6 nf_defrag_ipv4 nf_tables tun nfnetlink msr nls_iso8859_1 nl=
-s_cp437 vfat fat snd_hda_codec_hdmi mt76x2e snd_hda_codec_cirrus snd_hda_co=
-dec_generic mt76x2_common mt76x02_lib mt76 snd_hda_intel intel_rapl_msr snd=
-_intel_dspcfg mei_hdcp dell_wmi iTCO_wdt mac80211 iTCO_vendor_support intel=
-_rapl_common sparse_keymap wmi_bmof snd_hda_codec x86_pkg_temp_thermal rtsx=
-_usb_ms intel_powerclamp dell_laptop coretemp ledtrig_audio dell_smbios mem=
-stick kvm_intel kvm snd_hda_core dell_wmi_descriptor dcdbas snd_hwdep dell_=
-smm_hwmon cfg80211 snd_pcm irqbypass mousedev intel_cstate psmouse joydev i=
-ntel_uncore intel_rapl_perf input_leds snd_timer i2c_i801 snd mei_me alx rf=
-kill mei libarc4 lpc_ich mdio soundcore battery wmi evdev mac_hid dell_smo8=
-800 ac tcp_bbr crypto_user ip_tables x_tables xfs dm_thin_pool dm_persisten=
-t_data dm_bio_prison dm_bufio libcrc32c
-=C4=8Den 15 20:21:18 spock kernel:  crc32c_generic dm_crypt hid_logitech_hi=
-dpp hid_logitech_dj hid_generic usbhid hid rtsx_usb_sdmmc mmc_core rtsx_usb=
- dm_mod crct10dif_pclmul crc32_pclmul crc32c_intel raid10 ghash_clmulni_int=
-el serio_raw atkbd libps2 md_mod aesni_intel crypto_simd cryptd glue_helper=
- xhci_pci xhci_hcd ehci_pci ehci_hcd i8042 serio i915 intel_gtt i2c_algo_bi=
-t drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops cec rc_core =
-drm agpgart
-=C4=8Den 15 20:21:18 spock kernel: CPU: 3 PID: 11956 Comm: kworker/3:1 Not =
-tainted 5.7.0-pf2 #1
-=C4=8Den 15 20:21:18 spock kernel: Hardware name: Dell Inc.          Vostro=
- 3360/0F5DWF, BIOS A18 09/25/2013
-=C4=8Den 15 20:21:18 spock kernel: Workqueue: events_freezable ieee80211_re=
-start_work [mac80211]
-=C4=8Den 15 20:21:18 spock kernel: RIP: 0010:ieee80211_reconfig+0x234/0x170=
-0 [mac80211]
-=C4=8Den 15 20:21:18 spock kernel: Code: 83 b8 0b 00 00 83 e0 fd 83 f8 04 7=
-4 e6 48 8b 83 90 04 00 00 a8 01 74 db 48 89 de 48 89 ef e8 03 dc fb ff 41 8=
-9 c7 85 c0 74 c9 <0f> 0b 48 8b 5b 08 4c 8b 24 24 48 3b 1c 24 75 12 e9 51 fe=
- ff ff 48
-=C4=8Den 15 20:21:18 spock kernel: RSP: 0018:ffffb803c23ffdf0 EFLAGS: 00010=
-286
-=C4=8Den 15 20:21:18 spock kernel: RAX: 00000000fffffff0 RBX: ffff9595a7564=
-900 RCX: 0000000000000008
-=C4=8Den 15 20:21:18 spock kernel: RDX: 0000000000000000 RSI: 0000000000000=
-100 RDI: 0000000000000100
-=C4=8Den 15 20:21:18 spock kernel: RBP: ffff9595a7ec07e0 R08: 0000000000000=
-000 R09: 0000000000000001
-=C4=8Den 15 20:21:18 spock kernel: R10: 0000000000000001 R11: 0000000000000=
-000 R12: ffff9595a7ec18d0
-=C4=8Den 15 20:21:18 spock kernel: R13: 00000000ffffffff R14: 0000000000000=
-000 R15: 00000000fffffff0
-=C4=8Den 15 20:21:18 spock kernel: FS:  0000000000000000(0000) GS:ffff9595a=
-f2c0000(0000) knlGS:0000000000000000
-=C4=8Den 15 20:21:18 spock kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000=
-080050033
-=C4=8Den 15 20:21:18 spock kernel: CR2: 000055e56d7de000 CR3: 000000042200a=
-001 CR4: 00000000001706e0
-=C4=8Den 15 20:21:18 spock kernel: Call Trace:
-=C4=8Den 15 20:21:18 spock kernel:  ieee80211_restart_work+0xb7/0xe0 [mac80=
-211]
-=C4=8Den 15 20:21:18 spock kernel:  process_one_work+0x1d4/0x3c0
-=C4=8Den 15 20:21:18 spock kernel:  worker_thread+0x228/0x470
-=C4=8Den 15 20:21:18 spock kernel:  ? process_one_work+0x3c0/0x3c0
-=C4=8Den 15 20:21:18 spock kernel:  kthread+0x19c/0x1c0
-=C4=8Den 15 20:21:18 spock kernel:  ? __kthread_init_worker+0x30/0x30
-=C4=8Den 15 20:21:18 spock kernel:  ret_from_fork+0x35/0x40
-=C4=8Den 15 20:21:18 spock kernel: ---[ end trace d8e4d40f48014382 ]---
-=C4=8Den 15 20:21:18 spock kernel: ------------[ cut here ]------------
-=C4=8Den 15 20:21:18 spock kernel: wlp1s0:  Failed check-sdata-in-driver ch=
-eck, flags: 0x0
-=C4=8Den 15 20:21:18 spock kernel: WARNING: CPU: 3 PID: 11956 at net/mac802=
-11/driver-ops.h:17 drv_remove_interface+0x11f/0x130 [mac80211]
-=C4=8Den 15 20:21:18 spock kernel: Modules linked in: pl2303 md4 nls_utf8 c=
-ifs dns_resolver fscache libdes cmac ccm bridge stp llc nft_ct nf_conntrack=
- nf_defrag_ipv6 nf_defrag_ipv4 nf_tables tun nfnetlink msr nls_iso8859_1 nl=
-s_cp437 vfat fat snd_hda_codec_hdmi mt76x2e snd_hda_codec_cirrus snd_hda_co=
-dec_generic mt76x2_common mt76x02_lib mt76 snd_hda_intel intel_rapl_msr snd=
-_intel_dspcfg mei_hdcp dell_wmi iTCO_wdt mac80211 iTCO_vendor_support intel=
-_rapl_common sparse_keymap wmi_bmof snd_hda_codec x86_pkg_temp_thermal rtsx=
-_usb_ms intel_powerclamp dell_laptop coretemp ledtrig_audio dell_smbios mem=
-stick kvm_intel kvm snd_hda_core dell_wmi_descriptor dcdbas snd_hwdep dell_=
-smm_hwmon cfg80211 snd_pcm irqbypass mousedev intel_cstate psmouse joydev i=
-ntel_uncore intel_rapl_perf input_leds snd_timer i2c_i801 snd mei_me alx rf=
-kill mei libarc4 lpc_ich mdio soundcore battery wmi evdev mac_hid dell_smo8=
-800 ac tcp_bbr crypto_user ip_tables x_tables xfs dm_thin_pool dm_persisten=
-t_data dm_bio_prison dm_bufio libcrc32c
-=C4=8Den 15 20:21:18 spock kernel:  crc32c_generic dm_crypt hid_logitech_hi=
-dpp hid_logitech_dj hid_generic usbhid hid rtsx_usb_sdmmc mmc_core rtsx_usb=
- dm_mod crct10dif_pclmul crc32_pclmul crc32c_intel raid10 ghash_clmulni_int=
-el serio_raw atkbd libps2 md_mod aesni_intel crypto_simd cryptd glue_helper=
- xhci_pci xhci_hcd ehci_pci ehci_hcd i8042 serio i915 intel_gtt i2c_algo_bi=
-t drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops cec rc_core =
-drm agpgart
-=C4=8Den 15 20:21:18 spock kernel: CPU: 3 PID: 11956 Comm: kworker/3:1 Tain=
-ted: G        W         5.7.0-pf2 #1
-=C4=8Den 15 20:21:18 spock kernel: Hardware name: Dell Inc.          Vostro=
- 3360/0F5DWF, BIOS A18 09/25/2013
-=C4=8Den 15 20:21:18 spock kernel: Workqueue: events_freezable ieee80211_re=
-start_work [mac80211]
-=C4=8Den 15 20:21:18 spock kernel: RIP: 0010:drv_remove_interface+0x11f/0x1=
-30 [mac80211]
-=C4=8Den 15 20:21:18 spock kernel: Code: a0 27 d2 da e9 4b ff ff ff 48 8b 8=
-6 78 04 00 00 48 8d b6 98 04 00 00 48 c7 c7 e8 1f f7 c0 48 85 c0 48 0f 45 f=
-0 e8 59 fe db da <0f> 0b 5b 5d 41 5c c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f=
- 44 00 00
-=C4=8Den 15 20:21:18 spock kernel: RSP: 0018:ffffb803c23ffc80 EFLAGS: 00010=
-282
-=C4=8Den 15 20:21:18 spock kernel: RAX: 0000000000000000 RBX: ffff9595a7564=
-900 RCX: 0000000000000000
-=C4=8Den 15 20:21:18 spock kernel: RDX: 0000000000000001 RSI: 0000000000000=
-082 RDI: 00000000ffffffff
-=C4=8Den 15 20:21:18 spock kernel: RBP: ffff9595a7ec1930 R08: 0000000000000=
-4b6 R09: 0000000000000001
-=C4=8Den 15 20:21:18 spock kernel: R10: 0000000000000001 R11: 0000000000006=
-f08 R12: ffff9595a7ec1000
-=C4=8Den 15 20:21:18 spock kernel: R13: ffff9595a75654b8 R14: ffff9595a7ec0=
-ca0 R15: ffff9595a7ec07e0
-=C4=8Den 15 20:21:18 spock kernel: FS:  0000000000000000(0000) GS:ffff9595a=
-f2c0000(0000) knlGS:0000000000000000
-=C4=8Den 15 20:21:18 spock kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000=
-080050033
-=C4=8Den 15 20:21:18 spock kernel: CR2: 000055e56d7de000 CR3: 000000042200a=
-001 CR4: 00000000001706e0
-=C4=8Den 15 20:21:18 spock kernel: Call Trace:
-=C4=8Den 15 20:21:18 spock kernel:  ieee80211_do_stop+0x5af/0x8c0 [mac80211]
-=C4=8Den 15 20:21:18 spock kernel:  ieee80211_stop+0x16/0x20 [mac80211]
-=C4=8Den 15 20:21:18 spock kernel:  __dev_close_many+0xaa/0x120
-=C4=8Den 15 20:21:18 spock kernel:  dev_close_many+0xa1/0x2b0
-=C4=8Den 15 20:21:18 spock kernel:  dev_close+0x6d/0x90
-=C4=8Den 15 20:21:18 spock kernel:  cfg80211_shutdown_all_interfaces+0x71/0=
-xd0 [cfg80211]
-=C4=8Den 15 20:21:18 spock kernel:  ieee80211_reconfig+0xa2/0x1700 [mac8021=
-1]
-=C4=8Den 15 20:21:18 spock kernel:  ieee80211_restart_work+0xb7/0xe0 [mac80=
-211]
-=C4=8Den 15 20:21:18 spock kernel:  process_one_work+0x1d4/0x3c0
-=C4=8Den 15 20:21:18 spock kernel:  worker_thread+0x228/0x470
-=C4=8Den 15 20:21:18 spock kernel:  ? process_one_work+0x3c0/0x3c0
-=C4=8Den 15 20:21:18 spock kernel:  kthread+0x19c/0x1c0
-=C4=8Den 15 20:21:18 spock kernel:  ? __kthread_init_worker+0x30/0x30
-=C4=8Den 15 20:21:18 spock kernel:  ret_from_fork+0x35/0x40
-=C4=8Den 15 20:21:18 spock kernel: ---[ end trace d8e4d40f48014383 ]---
-=3D=3D=3D
+Agree. Using relative offsets was a product of reusing the existing u32.
+If we move to u64, there is no need to do an extra transformation.
 
-The Wi-Fi becomes unusable from this point. If I `modprobe -r` the "mt76x2e=
-" module
-after this splat, the system hangs completely.
-
-If the system resumes fine, the resume itself takes quite some time (more t=
-han
-10 seconds).
-
-I've found a workaround for this, though. It seems the system behaves fine =
-if I
-do `modprobe -r mt76x2e` before it goes to sleep, and then `modprobe mt76x2=
-e`
-after resume. Also, the resume time improves greatly.
-
-I cannot say if it is some regression or not. I've installed the card
-just recently, and used it with v5.7 kernel series only.
-
-Do you have any idea what could go wrong and how to approach the issue?
-
-Thanks.
-
---=20
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Principal Software Maintenance Engineer
+Thanks Damien!
+Javier
 
