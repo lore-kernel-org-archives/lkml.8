@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E424DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1A0E20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3C420885
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447052;
-	bh=dmuvR/xPFusMGiKvEEAwv0PxlMX7akh3AkyTfLZHxdg=;
+	s=default; t=1592447058;
+	bh=EOEpLFrpL07cKV3jYLatlv8jhS7AwfBNhQfXh5nU21g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=alNyoKmFCXAQWWJz6nbwublju1vgqbPHtRktbdJziBPZA+BXUuS2yF9AMlgM4qJ58
-	 vN1ovxznmMdm1Dj1FjW872dsLTll2moS9b/k1j+1IEkLzSEQXWaFqrUliU6JeSgAZw
-	 IBBPi+rLG3o+nDQNhMGFS8pzolZ8/F4r/MKoeA3g=
+	b=Ks2/WbKYsE9fWq6Y0BQiJVDZnXInU97M4utwqgn3aWmroXuqiTcOiRrXnzBgCvbub
+	 x0WG8fgDMXp2tMyv62HntFI2ESG/TCKsKTX+o+I1g4qAdcCBSLEMCerZyVfMIFIWXA
+	 eNhTVfF/dE8mRE28El+iimwxv04xyTaBXDwWYCnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgFRBRp (ORCPT
+        id S1729071AbgFRCYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:17:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44762 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:24:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729402AbgFRBO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:14:56 -0400
+        id S1729170AbgFRBRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E624B21D7E;
-        Thu, 18 Jun 2020 01:14:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A958D21D79;
+        Thu, 18 Jun 2020 01:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442895;
-        bh=dmuvR/xPFusMGiKvEEAwv0PxlMX7akh3AkyTfLZHxdg=;
+        s=default; t=1592443065;
+        bh=EOEpLFrpL07cKV3jYLatlv8jhS7AwfBNhQfXh5nU21g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kkYvzKy1EEX2MwFS6IbrL0L/+dmDe4PLTCZ3bjoAH96bpMoX/t0/wLruDvJWahMg+
-         fH42410mvcA89CUbK4TyAi9SMVl/UChEMMSH5KUzs35YiXlWA6N4/E0XPi5CSJa2On
-         nZfy/nX+bR7Bn0v0GYglNQH0m8xM9yNzyDvbxlm4=
+        b=mJ8HMW+dToga0Q6yT60DxDHpEtb4py4pyxgpASQTYS7hPg3Q8HPyW67MsWKoG6XDR
+         CJ/z5DvE26JeakskW1GCIOwptl7Y896PMWo7Tn7NcKEBxqPh+CShQkU6JNJSrvXhbH
+         ORpUhL5sK98jAgBMeeYDJedmMmQkDEMa6JiwFMhY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 317/388] pwm: imx27: Fix rounding behavior
-Date:   Wed, 17 Jun 2020 21:06:54 -0400
-Message-Id: <20200618010805.600873-317-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
+Subject: [PATCH AUTOSEL 5.4 055/266] mfd: wm8994: Fix driver operation if loaded as modules
+Date:   Wed, 17 Jun 2020 21:13:00 -0400
+Message-Id: <20200618011631.604574-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,84 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit aef1a3799b5cb3ba4841f6034497b179646ccc70 ]
+[ Upstream commit d4f9b5428b53dd67f49ee8deed8d4366ed6b1933 ]
 
-To not trigger the warnings provided by CONFIG_PWM_DEBUG
+WM8994 chip has built-in regulators, which might be used for chip
+operation. They are controlled by a separate wm8994-regulator driver,
+which should be loaded before this driver calls regulator_get(), because
+that driver also provides consumer-supply mapping for the them. If that
+driver is not yet loaded, regulator core substitute them with dummy
+regulator, what breaks chip operation, because the built-in regulators are
+never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
+"pre" dependency to "wm8994_regulator" module.
 
- - use up-rounding in .get_state()
- - don't divide by the result of a division
- - don't use the rounded counter value for the period length to calculate
-   the counter value for the duty cycle
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-imx27.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/mfd/wm8994-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index a6e40d4c485f..732a6f3701e8 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -150,13 +150,12 @@ static void pwm_imx27_get_state(struct pwm_chip *chip,
- 
- 	prescaler = MX3_PWMCR_PRESCALER_GET(val);
- 	pwm_clk = clk_get_rate(imx->clk_per);
--	pwm_clk = DIV_ROUND_CLOSEST_ULL(pwm_clk, prescaler);
- 	val = readl(imx->mmio_base + MX3_PWMPR);
- 	period = val >= MX3_PWMPR_MAX ? MX3_PWMPR_MAX : val;
- 
- 	/* PWMOUT (Hz) = PWMCLK / (PWMPR + 2) */
--	tmp = NSEC_PER_SEC * (u64)(period + 2);
--	state->period = DIV_ROUND_CLOSEST_ULL(tmp, pwm_clk);
-+	tmp = NSEC_PER_SEC * (u64)(period + 2) * prescaler;
-+	state->period = DIV_ROUND_UP_ULL(tmp, pwm_clk);
- 
- 	/*
- 	 * PWMSAR can be read only if PWM is enabled. If the PWM is disabled,
-@@ -167,8 +166,8 @@ static void pwm_imx27_get_state(struct pwm_chip *chip,
- 	else
- 		val = imx->duty_cycle;
- 
--	tmp = NSEC_PER_SEC * (u64)(val);
--	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, pwm_clk);
-+	tmp = NSEC_PER_SEC * (u64)(val) * prescaler;
-+	state->duty_cycle = DIV_ROUND_UP_ULL(tmp, pwm_clk);
- 
- 	pwm_imx27_clk_disable_unprepare(imx);
- }
-@@ -220,22 +219,23 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
- 	struct pwm_state cstate;
- 	unsigned long long c;
-+	unsigned long long clkrate;
- 	int ret;
- 	u32 cr;
- 
- 	pwm_get_state(pwm, &cstate);
- 
--	c = clk_get_rate(imx->clk_per);
--	c *= state->period;
-+	clkrate = clk_get_rate(imx->clk_per);
-+	c = clkrate * state->period;
- 
--	do_div(c, 1000000000);
-+	do_div(c, NSEC_PER_SEC);
- 	period_cycles = c;
- 
- 	prescale = period_cycles / 0x10000 + 1;
- 
- 	period_cycles /= prescale;
--	c = (unsigned long long)period_cycles * state->duty_cycle;
--	do_div(c, state->period);
-+	c = clkrate * state->duty_cycle;
-+	do_div(c, NSEC_PER_SEC * prescale);
- 	duty_cycles = c;
- 
- 	/*
+diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
+index 1e9fe7d92597..737dede4a95c 100644
+--- a/drivers/mfd/wm8994-core.c
++++ b/drivers/mfd/wm8994-core.c
+@@ -690,3 +690,4 @@ module_i2c_driver(wm8994_i2c_driver);
+ MODULE_DESCRIPTION("Core support for the WM8994 audio CODEC");
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
++MODULE_SOFTDEP("pre: wm8994_regulator");
 -- 
 2.25.1
 
