@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A21C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB51620853
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7444E20853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446234;
-	bh=SdAsGTEh4YSIpjca/gOG4Zr9i9WbiV3UVuk6iPsESWs=;
+	s=default; t=1592446237;
+	bh=yemiLgmgfEeMx6Uvl3WkBZlw3nU1SWZLvo1NEGlESFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DvhQpBsNazm1Mu5lrjNUpNZoxql7In4Wj3plHYYNaft5mHsFQqAMrxIBBuKBcg3Q+
-	 Q8Gvorm8ZBJElZqDSTrKTby9e4ou3mE9ejPT4RIfxYHtMea1BnBNTNj1MOBffHw+I2
-	 YFSzl9nZEEfIxYiDmXlxxnQC5n7kTPXg7XgvLtKE=
+	b=mWsHW2aXy3u3TUBYir0tAfLdNasq2uWAIpqodN8tDn+zMDM1n7LRv30aKx2NtI0ja
+	 65i4Z8YaNCMv3NKYdU5Dn90zfuUEouWKkgTT8hE6nR1+1PzgeRjZlJQzaqN+AkWLnf
+	 RtZWxNWbaw0wpzwV7ya91Dqj/TPSlKnHWXtSvHcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730759AbgFRCK3 (ORCPT
+        id S1730855AbgFRCKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:10:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54530 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:10:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729122AbgFRBVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:50 -0400
+        id S1729836AbgFRBVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:21:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D59720CC7;
-        Thu, 18 Jun 2020 01:21:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2A1C21D79;
+        Thu, 18 Jun 2020 01:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443310;
-        bh=SdAsGTEh4YSIpjca/gOG4Zr9i9WbiV3UVuk6iPsESWs=;
+        s=default; t=1592443307;
+        bh=yemiLgmgfEeMx6Uvl3WkBZlw3nU1SWZLvo1NEGlESFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cj63tcwu/18YKnkdUqeePr6mxOmeBtIiMD951C5KtU3CAdlDdQAeBQSSBeDpCMSa6
-         8FWXZAmW21VZeOz7s4hZ7ZafBgq6L0WSgwyp9vj4tUgMfxl86ZBewZreUBjeP9KxMq
-         KjV138HL7I7SZqXji0bud1wnwLdAAwQiLvK3j3xc=
+        b=bLCcImdPRq4cU4hbfBjyEA0l3PL1oDBcS473Oo+STxXpRmwK0Bj7eVzGsF6vc2SLd
+         CHdNlCoicmHZp3cOKLUcXpdirLvLOfQG1e1fypWiEmwxcNhjbQlqe1Qd3niGJIdewO
+         lcujVIWNvzfJaXOAY3SnLlI0krUDY5SZrlBmTeIc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     tannerlove <tannerlove@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 247/266] selftests/net: in timestamping, strncpy needs to preserve null byte
-Date:   Wed, 17 Jun 2020 21:16:12 -0400
-Message-Id: <20200618011631.604574-247-sashal@kernel.org>
+Cc:     Max Staudt <max@enpas.org>, kernel test robot <lkp@intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 245/266] i2c: icy: Fix build with CONFIG_AMIGA_PCMCIA=n
+Date:   Wed, 17 Jun 2020 21:16:10 -0400
+Message-Id: <20200618011631.604574-245-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,63 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: tannerlove <tannerlove@google.com>
+From: Max Staudt <max@enpas.org>
 
-[ Upstream commit 8027bc0307ce59759b90679fa5d8b22949586d20 ]
+[ Upstream commit cdb555397f438592bab00599037c347b700cf397 ]
 
-If user passed an interface option longer than 15 characters, then
-device.ifr_name and hwtstamp.ifr_name became non-null-terminated
-strings. The compiler warned about this:
+This has been found by the Kernel Test Robot:
+http://lkml.iu.edu/hypermail/linux/kernel/2006.0/06862.html
 
-timestamping.c:353:2: warning: ‘strncpy’ specified bound 16 equals \
-destination size [-Wstringop-truncation]
-  353 |  strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
+With CONFIG_AMIGA_PCMCIA=n, io_mm.h does not pull in amigahw.h and
+ZTWO_VADDR is undefined. Add forgotten include to i2c-icy.c
 
-Fixes: cb9eff097831 ("net: new user space API for time stamping of incoming and outgoing packets")
-Signed-off-by: Tanner Love <tannerlove@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 4768e90ecaec ("i2c: Add i2c-icy for I2C on m68k/Amiga")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Max Staudt <max@enpas.org>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/networking/timestamping/timestamping.c   | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-icy.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/networking/timestamping/timestamping.c b/tools/testing/selftests/networking/timestamping/timestamping.c
-index aca3491174a1..f4bb4fef0f39 100644
---- a/tools/testing/selftests/networking/timestamping/timestamping.c
-+++ b/tools/testing/selftests/networking/timestamping/timestamping.c
-@@ -313,10 +313,16 @@ int main(int argc, char **argv)
- 	int val;
- 	socklen_t len;
- 	struct timeval next;
-+	size_t if_len;
+diff --git a/drivers/i2c/busses/i2c-icy.c b/drivers/i2c/busses/i2c-icy.c
+index 8382eb64b424..d6c17506dba4 100644
+--- a/drivers/i2c/busses/i2c-icy.c
++++ b/drivers/i2c/busses/i2c-icy.c
+@@ -43,6 +43,7 @@
+ #include <linux/i2c.h>
+ #include <linux/i2c-algo-pcf.h>
  
- 	if (argc < 2)
- 		usage(0);
- 	interface = argv[1];
-+	if_len = strlen(interface);
-+	if (if_len >= IFNAMSIZ) {
-+		printf("interface name exceeds IFNAMSIZ\n");
-+		exit(1);
-+	}
++#include <asm/amigahw.h>
+ #include <asm/amigaints.h>
+ #include <linux/zorro.h>
  
- 	for (i = 2; i < argc; i++) {
- 		if (!strcasecmp(argv[i], "SO_TIMESTAMP"))
-@@ -350,12 +356,12 @@ int main(int argc, char **argv)
- 		bail("socket");
- 
- 	memset(&device, 0, sizeof(device));
--	strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
-+	memcpy(device.ifr_name, interface, if_len + 1);
- 	if (ioctl(sock, SIOCGIFADDR, &device) < 0)
- 		bail("getting interface IP address");
- 
- 	memset(&hwtstamp, 0, sizeof(hwtstamp));
--	strncpy(hwtstamp.ifr_name, interface, sizeof(hwtstamp.ifr_name));
-+	memcpy(hwtstamp.ifr_name, interface, if_len + 1);
- 	hwtstamp.ifr_data = (void *)&hwconfig;
- 	memset(&hwconfig, 0, sizeof(hwconfig));
- 	hwconfig.tx_type =
 -- 
 2.25.1
 
