@@ -2,119 +2,61 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F8DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5D1C221EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442911;
-	bh=C6pOC5KpqXsyu8075XFWZfvFx0K9kr4hVggmywYM0pI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1DA8ynmfb0xGuINzvJLsiaOs636Y0iWD7odtvPREh1yOmCP5f6oP6+8XZoU9lmvsm
-	 WMqz0QMfuLZCk9RJbDoakZDN9tk58HIc48kCtauXpo/zfxB8wmYGu3SkCnDKwHYdAq
-	 Pb21tcfy6IsHzeyO7uF8PMZKQuHAVgOaYd8KlCLM=
+	by mail.kernel.org (Postfix) with ESMTP id 111F020578
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgFRBPF (ORCPT
+        id S1727829AbgFRBPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:15:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42852 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:15:12 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45354 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727082AbgFRBNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:34 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E4D9221F1;
-        Thu, 18 Jun 2020 01:13:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442814;
-        bh=C6pOC5KpqXsyu8075XFWZfvFx0K9kr4hVggmywYM0pI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GSCAGaG9Wk7v4Tjv0V5/NByKi0uj12xb9JXMbvVNu4as+B6ZsQRtqCdnSIS/NSofH
-         cFFRXJkUJ/tsjx4hDeMlCDQ5Z8DudrLbU2oVIMq9QL6mGgZh0KpTjnW2/LFxok9RLV
-         6hIXQZgNCr3cD4WUA18M4R2ergtz4aEQLIPp5sok=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hannes Reinecke <hare@suse.de>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.7 252/388] dm zoned: return NULL if dmz_get_zone_for_reclaim() fails to find a zone
-Date:   Wed, 17 Jun 2020 21:05:49 -0400
-Message-Id: <20200618010805.600873-252-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+        id S1729153AbgFRBNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:36 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jlj7O-0012r4-Tx; Thu, 18 Jun 2020 03:13:26 +0200
+Date:   Thu, 18 Jun 2020 03:13:26 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     davem@davemloft.net, kuba@kernel.org, robh+dt@kernel.org,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH v4 1/3] net: phy: mscc: move shared probe code into a
+ helper
+Message-ID: <20200618011326.GA249144@lunn.ch>
+References: <20200617213326.1532365-1-heiko@sntech.de>
+ <20200617213326.1532365-2-heiko@sntech.de>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617213326.1532365-2-heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hannes Reinecke <hare@suse.de>
+On Wed, Jun 17, 2020 at 11:33:24PM +0200, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> 
+> The different probe functions share a lot of code, so move the
+> common parts into a helper to reduce duplication.
+> 
+> This moves the devm_phy_package_join below the general allocation
+> but as all components just allocate things, this should be ok.
+> 
+> Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-[ Upstream commit 489dc0f06a5837f87482c0ce61d830d24e17082e ]
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-The only case where dmz_get_zone_for_reclaim() cannot return a zone is
-if the respective lists are empty. So we should just return a simple
-NULL value here as we really don't have an error code which would make
-sense.
-
-Signed-off-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/md/dm-zoned-metadata.c | 4 ++--
- drivers/md/dm-zoned-reclaim.c  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/md/dm-zoned-metadata.c b/drivers/md/dm-zoned-metadata.c
-index 369de15c4e80..61b7d7b7e5a6 100644
---- a/drivers/md/dm-zoned-metadata.c
-+++ b/drivers/md/dm-zoned-metadata.c
-@@ -1554,7 +1554,7 @@ static struct dm_zone *dmz_get_rnd_zone_for_reclaim(struct dmz_metadata *zmd)
- 			return dzone;
- 	}
- 
--	return ERR_PTR(-EBUSY);
-+	return NULL;
- }
- 
- /*
-@@ -1574,7 +1574,7 @@ static struct dm_zone *dmz_get_seq_zone_for_reclaim(struct dmz_metadata *zmd)
- 			return zone;
- 	}
- 
--	return ERR_PTR(-EBUSY);
-+	return NULL;
- }
- 
- /*
-diff --git a/drivers/md/dm-zoned-reclaim.c b/drivers/md/dm-zoned-reclaim.c
-index e7ace908a9b7..d50817320e8e 100644
---- a/drivers/md/dm-zoned-reclaim.c
-+++ b/drivers/md/dm-zoned-reclaim.c
-@@ -349,8 +349,8 @@ static int dmz_do_reclaim(struct dmz_reclaim *zrc)
- 
- 	/* Get a data zone */
- 	dzone = dmz_get_zone_for_reclaim(zmd);
--	if (IS_ERR(dzone))
--		return PTR_ERR(dzone);
-+	if (!dzone)
-+		return -EBUSY;
- 
- 	start = jiffies;
- 
--- 
-2.25.1
-
+    Andrew
