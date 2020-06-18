@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05500C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0595CC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB51C21D90
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF9621D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442552;
-	bh=4FcXTmBI3ToMgwgwOnHW8RJF6LSROopdCHbwF1pRfEQ=;
+	s=default; t=1592442559;
+	bh=X4xB1K/pK6AIDnqxWt4QrweV8512VBFuawqM9U17/ag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lizpCymtDfuL0BQElSPNGwDk/RrQ2le6LagY0HTHzArub3anZCXeHZzVSXYur1Y4W
-	 3wuSTp2kzEhN/B8jDO3lbGjemsl16ZkRsHh4dqeRCKBLAoqY11D3BhjGnaSTlwhzZq
-	 bCYdqzbSNZrk/ITrqUGh15cBRYyR9Zac6YN3mH08=
+	b=YV1dDxIOmpCf3CCTpxYAnCPSN+ASYZnfPVuZ/P+EdY6Bck0moJ4hTcoooliAJfVhY
+	 7wtkkrNkjOi3hWBp5iEKOnP0/99ID3MwidZjj938tEjA2UrdBOTsRurAMkuwSr4TNk
+	 55rwJE1lbBghdzbx3POVwO9XPk0O4wsmT/dobprY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgFRBJL (ORCPT
+        id S1726919AbgFRBJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:09:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34994 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:09:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727985AbgFRBI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:08:58 -0400
+        id S1728061AbgFRBJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC73621D79;
-        Thu, 18 Jun 2020 01:08:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A04A82193E;
+        Thu, 18 Jun 2020 01:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442537;
-        bh=4FcXTmBI3ToMgwgwOnHW8RJF6LSROopdCHbwF1pRfEQ=;
+        s=default; t=1592442551;
+        bh=X4xB1K/pK6AIDnqxWt4QrweV8512VBFuawqM9U17/ag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wpArZbs4Iuruxr4nHwFHHDWjUiGs3tMAqyFh991mmAiIxEyiuiKtqcKJwE5G2Rt87
-         qofSxZiGjWm+qv6SHd0hm1i8dF7q08qL1Ley0tv/LCMALd0P3fZ2up9oEa3zl8W1nY
-         +SD0zEQbJ9COsJ23PA7x5C+TVTgZScf9Tl2zdRwA=
+        b=hSrJdBsCQbsSoesdi//jRKg3+ZAwXI1eZ6ZxdyecIgVGiAxrhALNh3Q1++pbr3oy3
+         0e3ASt7LC/2S4cFnkP0njzk4zP9Y3w/FZ1aPx0LMVDhpcxwU2qZucdE7V+FAf/tnWX
+         MwzCrdLItYjles4ftwqWztO+ewQjTOOco+DI+3a8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 039/388] clk: samsung: Mark top ISP and CAM clocks on Exynos542x as critical
-Date:   Wed, 17 Jun 2020 21:02:16 -0400
-Message-Id: <20200618010805.600873-39-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 049/388] arm64: dts: armada-3720-turris-mox: fix SFP binding
+Date:   Wed, 17 Jun 2020 21:02:26 -0400
+Message-Id: <20200618010805.600873-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,90 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Marek Behún <marek.behun@nic.cz>
 
-[ Upstream commit e47bd937e602bb4379546095d1bd0b9871fa60c2 ]
+[ Upstream commit c2671acbbbd822ef077cc168991e0a7dbe2172c9 ]
 
-The TOP 'aclk*_isp', 'aclk550_cam', 'gscl_wa' and 'gscl_wb' clocks must
-be kept enabled all the time to allow proper access to power management
-control for the ISP and CAM power domains. The last two clocks, although
-related to GScaler device and GSCL power domain, provides also the
-I_WRAP_CLK signal to MIPI CSIS0/1 devices, which are a part of CAM power
-domain and are needed for proper power on/off sequence.
+The sfp compatible should be 'sff,sfp', not 'sff,sfp+'. We used patched
+kernel where the latter was working.
 
-Currently there are no drivers for the devices, which are part of CAM and
-ISP power domains yet. This patch only fixes the race between disabling
-the unused power domains and disabling unused clocks, which randomly
-resulted in the following error during boot:
-
-Power domain CAM disable failed
-Power domain ISP disable failed
-
-Fixes: 318fa46cc60d ("clk/samsung: exynos542x: mark some clocks as critical")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Fixes: 7109d817db2e ("arm64: dts: marvell: add DTS for Turris Mox")
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5420.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index c9e5a1fb6653..edb2363c735a 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -540,7 +540,7 @@ static const struct samsung_div_clock exynos5800_div_clks[] __initconst = {
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+index 47fee66c70cb..0e0491ca2930 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+@@ -95,7 +95,7 @@ sdhci1_pwrseq: sdhci1-pwrseq {
+ 	};
  
- static const struct samsung_gate_clock exynos5800_gate_clks[] __initconst = {
- 	GATE(CLK_ACLK550_CAM, "aclk550_cam", "mout_user_aclk550_cam",
--				GATE_BUS_TOP, 24, 0, 0),
-+				GATE_BUS_TOP, 24, CLK_IS_CRITICAL, 0),
- 	GATE(CLK_ACLK432_SCALER, "aclk432_scaler", "mout_user_aclk432_scaler",
- 				GATE_BUS_TOP, 27, CLK_IS_CRITICAL, 0),
- };
-@@ -943,25 +943,25 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 	GATE(0, "aclk300_jpeg", "mout_user_aclk300_jpeg",
- 			GATE_BUS_TOP, 4, CLK_IGNORE_UNUSED, 0),
- 	GATE(0, "aclk333_432_isp0", "mout_user_aclk333_432_isp0",
--			GATE_BUS_TOP, 5, 0, 0),
-+			GATE_BUS_TOP, 5, CLK_IS_CRITICAL, 0),
- 	GATE(0, "aclk300_gscl", "mout_user_aclk300_gscl",
- 			GATE_BUS_TOP, 6, CLK_IS_CRITICAL, 0),
- 	GATE(0, "aclk333_432_gscl", "mout_user_aclk333_432_gscl",
- 			GATE_BUS_TOP, 7, CLK_IGNORE_UNUSED, 0),
- 	GATE(0, "aclk333_432_isp", "mout_user_aclk333_432_isp",
--			GATE_BUS_TOP, 8, 0, 0),
-+			GATE_BUS_TOP, 8, CLK_IS_CRITICAL, 0),
- 	GATE(CLK_PCLK66_GPIO, "pclk66_gpio", "mout_user_pclk66_gpio",
- 			GATE_BUS_TOP, 9, CLK_IGNORE_UNUSED, 0),
- 	GATE(0, "aclk66_psgen", "mout_user_aclk66_psgen",
- 			GATE_BUS_TOP, 10, CLK_IGNORE_UNUSED, 0),
- 	GATE(0, "aclk266_isp", "mout_user_aclk266_isp",
--			GATE_BUS_TOP, 13, 0, 0),
-+			GATE_BUS_TOP, 13, CLK_IS_CRITICAL, 0),
- 	GATE(0, "aclk166", "mout_user_aclk166",
- 			GATE_BUS_TOP, 14, CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_ACLK333, "aclk333", "mout_user_aclk333",
- 			GATE_BUS_TOP, 15, CLK_IS_CRITICAL, 0),
- 	GATE(0, "aclk400_isp", "mout_user_aclk400_isp",
--			GATE_BUS_TOP, 16, 0, 0),
-+			GATE_BUS_TOP, 16, CLK_IS_CRITICAL, 0),
- 	GATE(0, "aclk400_mscl", "mout_user_aclk400_mscl",
- 			GATE_BUS_TOP, 17, CLK_IS_CRITICAL, 0),
- 	GATE(0, "aclk200_disp1", "mout_user_aclk200_disp1",
-@@ -1161,8 +1161,10 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 			GATE_IP_GSCL1, 3, 0, 0),
- 	GATE(CLK_SMMU_FIMCL1, "smmu_fimcl1", "dout_gscl_blk_333",
- 			GATE_IP_GSCL1, 4, 0, 0),
--	GATE(CLK_GSCL_WA, "gscl_wa", "sclk_gscl_wa", GATE_IP_GSCL1, 12, 0, 0),
--	GATE(CLK_GSCL_WB, "gscl_wb", "sclk_gscl_wb", GATE_IP_GSCL1, 13, 0, 0),
-+	GATE(CLK_GSCL_WA, "gscl_wa", "sclk_gscl_wa", GATE_IP_GSCL1, 12,
-+			CLK_IS_CRITICAL, 0),
-+	GATE(CLK_GSCL_WB, "gscl_wb", "sclk_gscl_wb", GATE_IP_GSCL1, 13,
-+			CLK_IS_CRITICAL, 0),
- 	GATE(CLK_SMMU_FIMCL3, "smmu_fimcl3,", "dout_gscl_blk_333",
- 			GATE_IP_GSCL1, 16, 0, 0),
- 	GATE(CLK_FIMC_LITE3, "fimc_lite3", "aclk333_432_gscl",
+ 	sfp: sfp {
+-		compatible = "sff,sfp+";
++		compatible = "sff,sfp";
+ 		i2c-bus = <&i2c0>;
+ 		los-gpio = <&moxtet_sfp 0 GPIO_ACTIVE_HIGH>;
+ 		tx-fault-gpio = <&moxtet_sfp 1 GPIO_ACTIVE_HIGH>;
 -- 
 2.25.1
 
