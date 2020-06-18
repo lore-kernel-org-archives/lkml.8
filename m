@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 600E2C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB03C433E1
 	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3246B20CC7
+	by mail.kernel.org (Postfix) with ESMTP id C23DB20FC3
 	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1592443863;
-	bh=y5oquYFeZtLTUvSXquvFRq/a7fyT/BkbOOrLKXjakLQ=;
+	bh=nIZ09niTSfAdjmbqrW8PmZHTVww0HvQkZi94lAx0dzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h0WOrCxDHT6QLgyCBqAyCenK+hImU+T0OpIHrQfD8G45xsNGrulqa9FcCJzhy3ybt
-	 mTSN4H9HfjqDAMydPlprbnRnOf5syYZYiYuuAd1jzzAcLbWY27p+VzZjknMTljFv6c
-	 jS89qfVkfyorZ4oxk9afLdkp5e8aUvi1zoPY6vNY=
+	b=13h+GuXhkbdaYaqAL+EZfsh4Ldm0mnTvWodO0p6sQKWpC7ezNl7p1SigeBHjf1TjK
+	 KqdrNNrObeeR7sMSHcJX0NW2xf9+kRwuKpCFpxMwHhkm+Ys7pTS95KpJvUIorS13ef
+	 dgZvUUoxM+3B61bo2zpR8cUrkt+nz0+kUf6k3eBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732686AbgFRBbC (ORCPT
+        id S1732695AbgFRBbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:31:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36096 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:31:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731938AbgFRB1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:46 -0400
+        id S1731944AbgFRB1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5765B221F9;
-        Thu, 18 Jun 2020 01:27:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AABED221ED;
+        Thu, 18 Jun 2020 01:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443666;
-        bh=y5oquYFeZtLTUvSXquvFRq/a7fyT/BkbOOrLKXjakLQ=;
+        s=default; t=1592443667;
+        bh=nIZ09niTSfAdjmbqrW8PmZHTVww0HvQkZi94lAx0dzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wbWxB7JlgUI58XpWZpFSSlBUwMHIMEtrTOOoB8hZj2I92hiezRF6FkOSsPY3bH0d1
-         N4COC28OIvJFE+0o7uoh8KAu38FzuVKEst7/kDDenvwRc8x8Jf7A0HWYCWVgT4WirZ
-         +LpjXhOjDZoVF3UdJHz6qhoa4CbXJkfde23FUdh0=
+        b=N4k1KOPxbo4o6de8FCkUDbbyFyWHWAADP6H9v0XuQpnlCWT8x+t0tBO/m2j9q0myx
+         xBRAIpqzILgi4Vjs7TourIcRAz18o+vZY+CaYqw1vjywW4GArEpBoWH15Lc8JTl/t0
+         qikqESwyGBNb4qnlRQUjruzrv4w87OkDM16ZWjjc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 083/108] NFSv4.1 fix rpc_call_done assignment for BIND_CONN_TO_SESSION
-Date:   Wed, 17 Jun 2020 21:25:35 -0400
-Message-Id: <20200618012600.608744-83-sashal@kernel.org>
+Cc:     huhai <huhai@tj.kylinos.cn>, Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 084/108] powerpc/4xx: Don't unmap NULL mbase
+Date:   Wed, 17 Jun 2020 21:25:36 -0400
+Message-Id: <20200618012600.608744-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -60,31 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+From: huhai <huhai@tj.kylinos.cn>
 
-[ Upstream commit 1c709b766e73e54d64b1dde1b7cfbcf25bcb15b9 ]
+[ Upstream commit bcec081ecc940fc38730b29c743bbee661164161 ]
 
-Fixes: 02a95dee8cf0 ("NFS add callback_ops to nfs4_proc_bind_conn_to_session_callback")
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: huhai <huhai@tj.kylinos.cn>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200521072648.1254699-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/4xx/pci.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 4d45786738ab..a19bbcfab7c5 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -7309,7 +7309,7 @@ nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
+diff --git a/arch/powerpc/platforms/4xx/pci.c b/arch/powerpc/platforms/4xx/pci.c
+index 73e6b36bcd51..256943af58aa 100644
+--- a/arch/powerpc/platforms/4xx/pci.c
++++ b/arch/powerpc/platforms/4xx/pci.c
+@@ -1242,7 +1242,7 @@ static void __init ppc460sx_pciex_check_link(struct ppc4xx_pciex_port *port)
+ 	if (mbase == NULL) {
+ 		printk(KERN_ERR "%pOF: Can't map internal config space !",
+ 			port->node);
+-		goto done;
++		return;
+ 	}
+ 
+ 	while (attempt && (0 == (in_le32(mbase + PECFG_460SX_DLLSTA)
+@@ -1252,9 +1252,7 @@ static void __init ppc460sx_pciex_check_link(struct ppc4xx_pciex_port *port)
+ 	}
+ 	if (attempt)
+ 		port->link = 1;
+-done:
+ 	iounmap(mbase);
+-
  }
  
- static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
--	.rpc_call_done =  &nfs4_bind_one_conn_to_session_done,
-+	.rpc_call_done =  nfs4_bind_one_conn_to_session_done,
- };
- 
- /*
+ static struct ppc4xx_pciex_hwops ppc460sx_pcie_hwops __initdata = {
 -- 
 2.25.1
 
