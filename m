@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1C0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADF1214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB87214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447156;
-	bh=zRbm1lnqMArBghoo9suJ3vtFP9yEYt9sfyr/KfaivmA=;
+	s=default; t=1592447159;
+	bh=3cZhsds1xAGMTrCeTPwU+J8P0xv9FZcUGrImlkxCbp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EGTeVWuuNOwqAnczNs/wESUm41p2V9YSgk9VZHMkiXVrDqwbQJ9i+cs6JHq4XxOGH
-	 ZC41KZ6hGvePk1TUZU90kt6J8ov0A7Z1MUGXxTb8pVX6QK47QRZ9ra1Pjw1ZIQgqb8
-	 Ojq9p19PJ6rBEoBoT5fIKOndVA+/M/XUhX+rBfkA=
+	b=c8ta5jX2dSbfJZfxvOqjbHFCIrkaErfT5yhXyVT7mx9r/n7ozCgmMDVrDrZoNGm3J
+	 ebPezQPOTbBIebRthozy7YWk1mRrTAXQZTcrSRWloqghSM+1aQcuf8DUVv/zt7jE8O
+	 hQ9GiQXxVxwtzP7QsuTkPBqZNUMem5wmsm8c0P4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbgFRCZy (ORCPT
+        id S1728931AbgFRBRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:25:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48394 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729772AbgFRBRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:16 -0400
+        id S1728294AbgFRBOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC60E221FB;
-        Thu, 18 Jun 2020 01:17:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C682221EB;
+        Thu, 18 Jun 2020 01:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443036;
-        bh=zRbm1lnqMArBghoo9suJ3vtFP9yEYt9sfyr/KfaivmA=;
+        s=default; t=1592442887;
+        bh=3cZhsds1xAGMTrCeTPwU+J8P0xv9FZcUGrImlkxCbp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IM/3U264CDCnhvIzML9GVzR5Xw5Xos3cL6NJblq3AEXLb1q+jZw7kJzIE36Gcw9dx
-         wmer8/E8t5NGrfae6tCjAmIuV86GEYjRaxTopSQzxZdx3xI9SyKptFJDTIhmeMFfeY
-         pxwIXWuvciwm0lVszHyfue/I96UQvumJ8a9YUhYw=
+        b=2Pw2TaYMepsbLO05ZlObXJ0jUIlT2u6PIXpoNXmhtaE+h0rVQ4T16dwtABoid8HxT
+         Jyn1BqF8cSS+GqwwBgHINpwgrojB09MEJiagkLFWGKyZ+ERIj3WLbt6NmIXRWchxzh
+         LfiojwoiF4FF7bW+8s3B3k6qn8FWjQuWELb7aqhg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 033/266] misc: fastrpc: Fix an incomplete memory release in fastrpc_rpmsg_probe()
-Date:   Wed, 17 Jun 2020 21:12:38 -0400
-Message-Id: <20200618011631.604574-33-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 310/388] mailbox: imx: Fix return in imx_mu_scu_xlate()
+Date:   Wed, 17 Jun 2020 21:06:47 -0400
+Message-Id: <20200618010805.600873-310-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
-References: <20200618011631.604574-1-sashal@kernel.org>
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,40 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 0978de9fc7335c73934ab8fac189fb4cb3f23191 ]
+[ Upstream commit 1b3a347b7d56aa637157da1b7df225071af1421f ]
 
-fastrpc_channel_ctx is not freed if misc_register() fails, this would
-lead to a memory leak. Fix this leak by adding kfree in misc_register()
-error path.
+This called from mbox_request_channel().  The caller is  expecting error
+pointers and not NULL so this "return NULL;" will lead to an Oops.
 
-Fixes: 278d56f970ae ("misc: fastrpc: Reference count channel context")
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200511162722.2552-1-srinivas.kandagatla@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 0a67003b1985 ("mailbox: imx: add SCU MU support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/fastrpc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/mailbox/imx-mailbox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 842f2210dc7e..ee3291f7e615 100644
---- a/drivers/misc/fastrpc.c
-+++ b/drivers/misc/fastrpc.c
-@@ -1434,8 +1434,10 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
- 					    domains[domain_id]);
- 	data->miscdev.fops = &fastrpc_fops;
- 	err = misc_register(&data->miscdev);
--	if (err)
-+	if (err) {
-+		kfree(data);
- 		return err;
-+	}
+diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+index 7906624a731c..9d6f0217077b 100644
+--- a/drivers/mailbox/imx-mailbox.c
++++ b/drivers/mailbox/imx-mailbox.c
+@@ -374,7 +374,7 @@ static struct mbox_chan *imx_mu_scu_xlate(struct mbox_controller *mbox,
+ 		break;
+ 	default:
+ 		dev_err(mbox->dev, "Invalid chan type: %d\n", type);
+-		return NULL;
++		return ERR_PTR(-EINVAL);
+ 	}
  
- 	kref_init(&data->refcount);
- 
+ 	if (chan >= mbox->num_chans) {
 -- 
 2.25.1
 
