@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74985C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5534C221EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995322193E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442898;
-	bh=J2w+gquTMvhqzqlR0tLvqdneEX5xmKscX23mghhpHwU=;
+	s=default; t=1592442901;
+	bh=3FCVTIUBK2FrT/pFejJuUW8MW0xWwlLn2woVgszM86s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NDtW9pwUbOwDKFftfZFtvrtx+QegYBQOFo4d2JsQy1mrBGhfaUqy35wNwgXRdKXOW
-	 yN+NyNE1SRg6d+f47t9alnVC19fdn0821AWFu75b+rDD/KZylxihQSSpR04noorTc1
-	 bCu7bdE19ivuMBL8InAveTmjoioUhBYqwtEvRv1Q=
+	b=hMdLVYOsBZpgPx9EWi5WybsFhj0AKk2XWNH9zyrxrbLuSIqRp7/RJBkcUI0OvVC+Z
+	 YvVoE39R/UHoH+1PBGmu1M33P2M3TWjf8+oTkJygjqHSzcVe8nnrXI/QLFOUErmoD2
+	 MjIK5K5YNStjUci9qF529ibkjxiPq66iyTosIzR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbgFRBO5 (ORCPT
+        id S1728108AbgFRBO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:14:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42744 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:14:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728892AbgFRBN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:29 -0400
+        id S1729134AbgFRBNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32BBB21924;
-        Thu, 18 Jun 2020 01:13:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A80121974;
+        Thu, 18 Jun 2020 01:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442809;
-        bh=J2w+gquTMvhqzqlR0tLvqdneEX5xmKscX23mghhpHwU=;
+        s=default; t=1592442810;
+        bh=3FCVTIUBK2FrT/pFejJuUW8MW0xWwlLn2woVgszM86s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oJJvqkPe1ud1HW6xC4HoaXI0TJ95S8rxMD9tE9jzwJ/uiR6KCkVdFKqKGecF4VrPY
-         4IYPXTRqHeZe+c+tDtFnCXU2/kaCAZIggUcscMNBzAgBtB2/ElTt5FtumZ75P1mTim
-         q/Ea9arF3g8bRtW/tdcT6ncU7MMpTGHbZGH0D9Pw=
+        b=GItDV1A18buH7DxTDQVPKPpFe26FGjQlqE5zh6cl0jeDMGzv2WQjZviOclyJzuDwS
+         ZwIva4l75sxWWNo/+h9+IN+vMPn76871NDY9moTNu6RVFm2tMZNow3l/GrZflhrcaH
+         TP7Feb1gOIXjxbafTXIA04xSdm/DVf+UcaQWiadM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 248/388] arm64: tegra: Fix flag for 64-bit resources in 'ranges' property
-Date:   Wed, 17 Jun 2020 21:05:45 -0400
-Message-Id: <20200618010805.600873-248-sashal@kernel.org>
+Cc:     Chen Zhou <chenzhou10@huawei.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.7 249/388] powerpc/powernv: add NULL check after kzalloc
+Date:   Wed, 17 Jun 2020 21:05:46 -0400
+Message-Id: <20200618010805.600873-249-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,79 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vidya Sagar <vidyas@nvidia.com>
+From: Chen Zhou <chenzhou10@huawei.com>
 
-[ Upstream commit 3482a7afb261e2de9269a7f9ad0f4a3a82a83a53 ]
+[ Upstream commit ceffa63acce7165c442395b7d64a11ab8b5c5dca ]
 
-Fix flag in PCIe controllers device-tree nodes 'ranges' property to correctly
-represent 64-bit resources.
+Fixes coccicheck warning:
 
-Fixes: 2602c32f15e7 ("arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT")
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+./arch/powerpc/platforms/powernv/opal.c:813:1-5:
+	alloc with no test, possible model on line 814
+
+Add NULL check after kzalloc.
+
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200509020838.121660-1-chenzhou10@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/powerpc/platforms/powernv/opal.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index f4ede86e32b4..3c928360f4ed 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1387,7 +1387,7 @@ pcie@14100000 {
+diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
+index 2b3dfd0b6cdd..d95954ad4c0a 100644
+--- a/arch/powerpc/platforms/powernv/opal.c
++++ b/arch/powerpc/platforms/powernv/opal.c
+@@ -811,6 +811,10 @@ static int opal_add_one_export(struct kobject *parent, const char *export_name,
+ 		goto out;
  
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x30100000 0x0  0x30100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
- 			  0x82000000 0x0  0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
- 	};
- 
-@@ -1432,7 +1432,7 @@ pcie@14120000 {
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x32100000 0x0  0x32100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
- 			  0x82000000 0x0  0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
- 	};
- 
-@@ -1477,7 +1477,7 @@ pcie@14140000 {
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x34100000 0x0  0x34100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
-+			  0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
- 			  0x82000000 0x0  0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
- 	};
- 
-@@ -1522,7 +1522,7 @@ pcie@14160000 {
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
- 			  0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
- 
-@@ -1567,7 +1567,7 @@ pcie@14180000 {
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
- 			  0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
- 
-@@ -1616,7 +1616,7 @@ pcie@141a0000 {
- 
- 		bus-range = <0x0 0xff>;
- 		ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
--			  0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
-+			  0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
- 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
- 
+ 	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
++	if (!attr) {
++		rc = -ENOMEM;
++		goto out;
++	}
+ 	name = kstrdup(export_name, GFP_KERNEL);
+ 	if (!name) {
+ 		rc = -ENOMEM;
 -- 
 2.25.1
 
