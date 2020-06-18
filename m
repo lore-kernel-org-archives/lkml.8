@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3063EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2EAC21D7F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31151221FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443645;
-	bh=wScORoqPjb/mww96WHzaFvxef/YuoV7yz9L9Y915LtU=;
+	s=default; t=1592443650;
+	bh=4ywg7c0rNAEOpMZA9GvBOulJBUAdreL/gLXUUPsQwYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FljE7MtWL8aFL4VpUDhjKNkNd7WeWz/cnDmOPohkzHFEIEKnjQ5jgCifSU5YJyyKH
-	 +OuRz0hj8gzfBU34qXMPD8tIcrUQmc1XW3iPPmDxryVn7lgJlNSYLH0Jexg1OkYQp3
-	 PATUwqMAn+R1UoNfZqrDSafiT/HwK99kesx28i8g=
+	b=LWKrlOUiFlrzDri36Lpovpr/3L+IGVIPKz24HaAKqlGd/C/ZUrl7qufu9GHTvzgnl
+	 y+U63ybrub59rkpjgB5cF37Xzs+8fG2cm+Nf4zWXnCSOtQSEVwYE9ErtaHesW0Wjjz
+	 J+RDeObTcnoVPrJaAfjpOOGiqcEAKFEoCHRQh4+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731856AbgFRB1Y (ORCPT
+        id S1731871AbgFRB13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:27:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58040 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:27:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731094AbgFRBX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:23:56 -0400
+        id S1731111AbgFRBYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:24:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 562A720B1F;
-        Thu, 18 Jun 2020 01:23:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33D7920776;
+        Thu, 18 Jun 2020 01:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443436;
-        bh=wScORoqPjb/mww96WHzaFvxef/YuoV7yz9L9Y915LtU=;
+        s=default; t=1592443439;
+        bh=4ywg7c0rNAEOpMZA9GvBOulJBUAdreL/gLXUUPsQwYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dl0+iz5sB1IT0E7QOPfmaPOXRgClYTSPBKZbpNd46blenf96IomW3gQ5BclTBwco6
-         v2mCOxDx5+wMaKwbix8hA8Tm24tnwvyzUOUmxe80A0co5yfk3V2mIu5Y75zmITOVhY
-         /cSvIJA9H99B8X8sORINM/pqNzg26mIbBmhNWtQE=
+        b=Sdgo3i1VK9yPSm5w3QxxXPmN6WHxg1v5sWEAHcquYHye+E4QlkIFAYx0wCWl9IlWK
+         6yTLN/7+sE0JGnBtx9oeOtACwF/qdAX4lW5PjpJ4gxC3tYv2FaBzxmxt4B+lajQE23
+         3AX0Ru/VcculdTADM/xOuxBUlZu5w/C8acTxFRa4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 074/172] PCI: v3-semi: Fix a memory leak in v3_pci_probe() error handling paths
-Date:   Wed, 17 Jun 2020 21:20:40 -0400
-Message-Id: <20200618012218.607130-74-sashal@kernel.org>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 077/172] drivers: base: Fix NULL pointer exception in __platform_driver_probe() if a driver developer is foolish
+Date:   Wed, 17 Jun 2020 21:20:43 -0400
+Message-Id: <20200618012218.607130-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -60,39 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-[ Upstream commit bca718988b9008d0d5f504e2d318178fc84958c1 ]
+[ Upstream commit 388bcc6ecc609fca1b4920de7dc3806c98ec535e ]
 
-If we fails somewhere in 'v3_pci_probe()', we need to free 'host'.
+If platform bus driver registration is failed then, accessing
+platform bus spin lock (&drv->driver.bus->p->klist_drivers.k_lock)
+in __platform_driver_probe() without verifying the return value
+__platform_driver_register() can lead to NULL pointer exception.
 
-Use the managed version of 'pci_alloc_host_bridge()' to do that easily.
-The use of managed resources is already widely used in this driver.
+So check the return value before attempting the spin lock.
 
-Link: https://lore.kernel.org/r/20200418081637.1585-1-christophe.jaillet@wanadoo.fr
-Fixes: 68a15eb7bd0c ("PCI: v3-semi: Add V3 Semiconductor PCI host driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-[lorenzo.pieralisi@arm.com: commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+One such example is below:
+
+For a custom usecase, I have intentionally failed the platform bus
+registration and I expected all the platform device/driver
+registrations to fail gracefully. But I came across this panic
+issue.
+
+[    1.331067] BUG: kernel NULL pointer dereference, address: 00000000000000c8
+[    1.331118] #PF: supervisor write access in kernel mode
+[    1.331163] #PF: error_code(0x0002) - not-present page
+[    1.331208] PGD 0 P4D 0
+[    1.331233] Oops: 0002 [#1] PREEMPT SMP
+[    1.331268] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-00049-g670d35fb0144 #165
+[    1.331341] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[    1.331406] RIP: 0010:_raw_spin_lock+0x15/0x30
+[    1.331588] RSP: 0000:ffffc9000001be70 EFLAGS: 00010246
+[    1.331632] RAX: 0000000000000000 RBX: 00000000000000c8 RCX: 0000000000000001
+[    1.331696] RDX: 0000000000000001 RSI: 0000000000000092 RDI: 0000000000000000
+[    1.331754] RBP: 00000000ffffffed R08: 0000000000000501 R09: 0000000000000001
+[    1.331817] R10: ffff88817abcc520 R11: 0000000000000670 R12: 00000000ffffffed
+[    1.331881] R13: ffffffff82dbc268 R14: ffffffff832f070a R15: 0000000000000000
+[    1.331945] FS:  0000000000000000(0000) GS:ffff88817bd80000(0000) knlGS:0000000000000000
+[    1.332008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.332062] CR2: 00000000000000c8 CR3: 000000000681e001 CR4: 00000000003606e0
+[    1.332126] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    1.332189] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    1.332252] Call Trace:
+[    1.332281]  __platform_driver_probe+0x92/0xee
+[    1.332323]  ? rtc_dev_init+0x2b/0x2b
+[    1.332358]  cmos_init+0x37/0x67
+[    1.332396]  do_one_initcall+0x7d/0x168
+[    1.332428]  kernel_init_freeable+0x16c/0x1c9
+[    1.332473]  ? rest_init+0xc0/0xc0
+[    1.332508]  kernel_init+0x5/0x100
+[    1.332543]  ret_from_fork+0x1f/0x30
+[    1.332579] CR2: 00000000000000c8
+[    1.332616] ---[ end trace 3bd87f12e9010b87 ]---
+[    1.333549] note: swapper/0[1] exited with preempt_count 1
+[    1.333592] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+[    1.333736] Kernel Offset: disabled
+
+Note, this can only be triggered if a driver errors out from this call,
+which should never happen.  If it does, the driver needs to be fixed.
+
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Link: https://lore.kernel.org/r/20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-v3-semi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/base/platform.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
-index d219404bad92..9a86bb7448ac 100644
---- a/drivers/pci/controller/pci-v3-semi.c
-+++ b/drivers/pci/controller/pci-v3-semi.c
-@@ -743,7 +743,7 @@ static int v3_pci_probe(struct platform_device *pdev)
- 	int ret;
- 	LIST_HEAD(res);
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index d1f901b58f75..349c2754eed7 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -700,6 +700,8 @@ int __init_or_module __platform_driver_probe(struct platform_driver *drv,
+ 	/* temporary section violation during probe() */
+ 	drv->probe = probe;
+ 	retval = code = __platform_driver_register(drv, module);
++	if (retval)
++		return retval;
  
--	host = pci_alloc_host_bridge(sizeof(*v3));
-+	host = devm_pci_alloc_host_bridge(dev, sizeof(*v3));
- 	if (!host)
- 		return -ENOMEM;
- 
+ 	/*
+ 	 * Fixup that section violation, being paranoid about code scanning
 -- 
 2.25.1
 
