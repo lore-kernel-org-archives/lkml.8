@@ -2,341 +2,193 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B95C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFC9C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C865C21548
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD0A321548
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:03:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TCQLCkPp"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HThBoK4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgFRJ7B (ORCPT
+        id S1728400AbgFRKDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 05:59:01 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:48346 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727121AbgFRJ66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 05:58:58 -0400
+        Thu, 18 Jun 2020 06:03:37 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:10684 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728361AbgFRKDf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 06:03:35 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592474336; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1592474613; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=rNkhuxG99K8tVZNE3kdPTirsJ1GISBhhATer2cIRmW8=; b=TCQLCkPpBB1lF9C76iXW3ck+XqYSkQ46hdyOfzf+1GxkpHl063Dw24YmZm7dK8EoiEPFyDPA
- moDBef4UVuYsNc9RL1LXZl1FVnOSRu66kMbbsWGRfYhHgEVoNWg+zThpMZXWIcRpmXa+V/YT
- z2XPMBHENER2Hgs7zI9SWwZgw7s=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ Subject: Sender; bh=CwMAQGp5QqqMs436TWKlp4Y2VmDjG4KEwhlH53uGM7c=; b=HThBoK4CfeKpg4erGiA46YYgGPFU1bUyYXID0nR/i24fJyXFzOFAVGrm35BfDSZ6Y4Ytpef2
+ kulkUEsSRCmaJ84mo5xTBGxNRU5W33g51w3ntasL8ZawaWeVKzQmYp8R9xuibOGmaa8VqdRz
+ sVGY5Legzu/fY9XIiIp3W3SK+0U=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
- 5eeb3ae0356bcc26ab78b08a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 18 Jun 2020 09:58:56
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5eeb3be1fe1db4db89a0965a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 18 Jun 2020 10:03:13
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4EC0FC43395; Thu, 18 Jun 2020 09:58:55 +0000 (UTC)
-Received: from [192.168.1.102] (unknown [183.83.143.239])
+        id B9254C433C8; Thu, 18 Jun 2020 10:03:12 +0000 (UTC)
+Received: from [192.168.43.129] (unknown [106.222.1.75])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: charante)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AC27AC433C8;
-        Thu, 18 Jun 2020 09:58:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AC27AC433C8
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D519C433C9;
+        Thu, 18 Jun 2020 10:03:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4D519C433C9
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
-Subject: Re: [PATCH] dmabuf: use spinlock to access dmabuf->name
-To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>
-Cc:     Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
-        "vinmenon@codeaurora.org" <vinmenon@codeaurora.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <316a5cf9-ca71-6506-bf8b-e79ded9055b2@codeaurora.org>
- <14063C7AD467DE4B82DEDB5C278E8663010F365EF5@fmsmsx107.amr.corp.intel.com>
- <14063C7AD467DE4B82DEDB5C278E8663010F365F7D@fmsmsx107.amr.corp.intel.com>
- <5b960c9a-ef9d-b43d-716d-113efc793fe5@codeaurora.org>
- <14063C7AD467DE4B82DEDB5C278E866301154B8339@FMSMSX108.amr.corp.intel.com>
-From:   Charan Teja Kalla <charante@codeaurora.org>
-Message-ID: <3ce92582-479e-caf2-1bf1-ffd99970403a@codeaurora.org>
-Date:   Thu, 18 Jun 2020 15:28:49 +0530
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2 4/4] irqchip: qcom-pdc: Introduce irq_set_wake call
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
+ <1590253873-11556-5-git-send-email-mkshah@codeaurora.org>
+ <159057454795.88029.5963412495484312088@swboyd.mtv.corp.google.com>
+ <e565f798-e62b-7b03-6cd5-6daf9b516262@codeaurora.org>
+ <159086679215.69627.4444511187342075544@swboyd.mtv.corp.google.com>
+ <c93695d4-a03e-7f62-747a-90d892c48694@codeaurora.org>
+ <159230866475.62212.10807813558467898966@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <4e318931-cff0-0d8b-d0a0-9d139533c551@codeaurora.org>
+Date:   Thu, 18 Jun 2020 15:33:03 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <14063C7AD467DE4B82DEDB5C278E866301154B8339@FMSMSX108.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <159230866475.62212.10807813558467898966@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+
+On 6/16/2020 5:27 PM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-06-01 04:38:25)
+>> On 5/31/2020 12:56 AM, Stephen Boyd wrote:
+>>> Quoting Maulik Shah (2020-05-29 02:20:32)
+>>>> On 5/27/2020 3:45 PM, Stephen Boyd wrote:
+>>>>> Quoting Maulik Shah (2020-05-23 10:11:13)
+>>>>>> @@ -118,6 +120,7 @@ static void qcom_pdc_gic_unmask(struct irq_data *d)
+>>>>>>            if (d->hwirq == GPIO_NO_WAKE_IRQ)
+>>>>>>                    return;
+>>>>>>     
+>>>>>> +       pdc_enable_intr(d, true);
+>>>>>>            irq_chip_unmask_parent(d);
+>>>>>>     }
+>>>>>>     
+>>>>> I find these two hunks deeply confusing. I'm not sure what the
+>>>>> maintainers think though. I hope it would be simpler to always enable
+>>>>> the hwirqs in the pdc when an irq is requested and only disable it in
+>>>>> the pdc when the system goes to suspend and the pdc pin isn't for an irq
+>>>>> that's marked for wakeup. Does that break somehow?
+>>>> PDC monitors interrupts during CPUidle as well, in cases where deepest
+>>>> low power mode happened from cpuidle where GIC is not active.
+>>>> If we keep PDC IRQ always enabled/unmasked during idle and then
+>>>> disable/mask when entering to suspend, it will break cpuidle.
+>>> How does it break cpuidle? The irqs that would be enabled/unmasked in
+>>> pdc would only be the irqs that the kernel has setup irq handlers for
+>>> (from request_irq() and friends).  We want those irqs to keep working
+>>> during cpuidle and wake the CPU from the deepest idle states.
+>>>> I hope it would be simpler to always enable
+>>>> the hwirqs in the pdc when an irq is requested and only disable it in
+>>>> the pdc when the system goes to suspend and the pdc pin isn't for an irq
+>>>> that's marked for wakeup
+>>>> How does it break cpuidle?
+>> Consider a scenario..
+>> 1. All PDC irqs enabled/unmasked in HW when request_irq() happened/alloc happens
+>> 2. Client driver disable's irq. (lazy disable is there, so in HW its still unmasked) but disabled in SW.
+>> 3. Device enters deep CPUidle low power modes where only PDC monitors IRQ.
+>> 4. This IRQ can still wakeup from CPUidle since it was monitored by PDC.
+>> 5. From handler, it comes to know that IRQ is disabled in SW, so it really invokes irq_mask callback now to disable in HW.
+>> 6. This mask callback doesn't operate on PDC (since in PDC, IRQs gets masked only during suspend, all other times its enabled)
+>> 7. step 3 to 6 repeats, if this IRQ keeps on coming and waking up from deep cpuidle states.
+> Ok so in summary, irq is left unmasked in pdc during deep cpu idle and
+> it keeps waking up the CPU because it isn't masked at the PDC after the
+> first time it interrupts? Is this a power problem?
+yes it can be a power problem.
+>   Because from a
+> correctness standpoint we don't really care. It woke up the CPU because
+> it happened, and the GIC can decide to ignore it or not by masking it at
+> the GIC. I thought that the PDC wouldn't wake up the CPU if we masked
+> the irq at the GIC level. Is that not true?
+
+once PDC detects IRQ, it directly doesn't wake up CPU. it replays IRQ to 
+GIC.
+
+since at GIC its masked, GIC doesn't forward to cpu to immediatly wake 
+it up.
+
+however after PDC detecting IRQ, it exits low power mode and 
+watchdog/timer can wakeup upon expiry.
 
 
-On 6/17/2020 11:13 PM, Ruhl, Michael J wrote:
->> -----Original Message-----
->> From: charante=codeaurora.org@mg.codeaurora.org
->> <charante=codeaurora.org@mg.codeaurora.org> On Behalf Of Charan Teja
->> Kalla
->> Sent: Wednesday, June 17, 2020 2:29 AM
->> To: Ruhl, Michael J <michael.j.ruhl@intel.com>; Sumit Semwal
->> <sumit.semwal@linaro.org>; open list:DMA BUFFER SHARING FRAMEWORK
->> <linux-media@vger.kernel.org>; DRI mailing list <dri-
->> devel@lists.freedesktop.org>
->> Cc: Linaro MM SIG <linaro-mm-sig@lists.linaro.org>;
->> vinmenon@codeaurora.org; LKML <linux-kernel@vger.kernel.org>;
->> stable@vger.kernel.org
->> Subject: Re: [PATCH] dmabuf: use spinlock to access dmabuf->name
->>
->> Thanks Michael for the comments..
->>
->> On 6/16/2020 7:29 PM, Ruhl, Michael J wrote:
->>>> -----Original Message-----
->>>> From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
->>>> Ruhl, Michael J
->>>> Sent: Tuesday, June 16, 2020 9:51 AM
->>>> To: Charan Teja Kalla <charante@codeaurora.org>; Sumit Semwal
->>>> <sumit.semwal@linaro.org>; open list:DMA BUFFER SHARING
->> FRAMEWORK
->>>> <linux-media@vger.kernel.org>; DRI mailing list <dri-
->>>> devel@lists.freedesktop.org>
->>>> Cc: Linaro MM SIG <linaro-mm-sig@lists.linaro.org>;
->>>> vinmenon@codeaurora.org; LKML <linux-kernel@vger.kernel.org>;
->>>> stable@vger.kernel.org
->>>> Subject: RE: [PATCH] dmabuf: use spinlock to access dmabuf->name
+>
+>>>>> My understanding of the hardware is that the GPIO controller has lines
+>>>>> directly connected to various SPI lines on the GIC and PDC has a way to
+>>>>> monitor those direct connections and wakeup the CPUs when they trigger
+>>>>> the detection logic in the PDC. The enable/disable bit in PDC gates that
+>>>>> logic for each wire between the GPIO controller and the GIC.
+>>>>>
+>>>>> So isn't it simpler to leave the PDC monitoring pins that we care about
+>>>>> all the time and only stop monitoring when we enter and leave suspend?
+>>>> it can affect idle path as explained above.
 >>>>
->>>>> -----Original Message-----
->>>>> From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
->>>>> Charan Teja Kalla
->>>>> Sent: Thursday, June 11, 2020 9:40 AM
->>>>> To: Sumit Semwal <sumit.semwal@linaro.org>; open list:DMA BUFFER
->>>>> SHARING FRAMEWORK <linux-media@vger.kernel.org>; DRI mailing list
->> <dri-
->>>>> devel@lists.freedesktop.org>
->>>>> Cc: Linaro MM SIG <linaro-mm-sig@lists.linaro.org>;
->>>>> vinmenon@codeaurora.org; LKML <linux-kernel@vger.kernel.org>;
->>>>> stable@vger.kernel.org
->>>>> Subject: [PATCH] dmabuf: use spinlock to access dmabuf->name
->>>>>
->>>>> There exists a sleep-while-atomic bug while accessing the dmabuf->name
->>>>> under mutex in the dmabuffs_dname(). This is caused from the SELinux
->>>>> permissions checks on a process where it tries to validate the inherited
->>>>> files from fork() by traversing them through iterate_fd() (which
->>>>> traverse files under spin_lock) and call
->>>>> match_file(security/selinux/hooks.c) where the permission checks
->> happen.
->>>>> This audit information is logged using dump_common_audit_data()
->> where it
->>>>> calls d_path() to get the file path name. If the file check happen on
->>>>> the dmabuf's fd, then it ends up in ->dmabuffs_dname() and use mutex
->> to
->>>>> access dmabuf->name. The flow will be like below:
->>>>> flush_unauthorized_files()
->>>>>  iterate_fd()
->>>>>    spin_lock() --> Start of the atomic section.
->>>>>      match_file()
->>>>>        file_has_perm()
->>>>>          avc_has_perm()
->>>>>            avc_audit()
->>>>>              slow_avc_audit()
->>>>> 	        common_lsm_audit()
->>>>> 		  dump_common_audit_data()
->>>>> 		    audit_log_d_path()
->>>>> 		      d_path()
->>>>>                        dmabuffs_dname()
->>>>>                          mutex_lock()--> Sleep while atomic.
->>>>>
->>>>> Call trace captured (on 4.19 kernels) is below:
->>>>> ___might_sleep+0x204/0x208
->>>>> __might_sleep+0x50/0x88
->>>>> __mutex_lock_common+0x5c/0x1068
->>>>> __mutex_lock_common+0x5c/0x1068
->>>>> mutex_lock_nested+0x40/0x50
->>>>> dmabuffs_dname+0xa0/0x170
->>>>> d_path+0x84/0x290
->>>>> audit_log_d_path+0x74/0x130
->>>>> common_lsm_audit+0x334/0x6e8
->>>>> slow_avc_audit+0xb8/0xf8
->>>>> avc_has_perm+0x154/0x218
->>>>> file_has_perm+0x70/0x180
->>>>> match_file+0x60/0x78
->>>>> iterate_fd+0x128/0x168
->>>>> selinux_bprm_committing_creds+0x178/0x248
->>>>> security_bprm_committing_creds+0x30/0x48
->>>>> install_exec_creds+0x1c/0x68
->>>>> load_elf_binary+0x3a4/0x14e0
->>>>> search_binary_handler+0xb0/0x1e0
->>>>>
->>>>> So, use spinlock to access dmabuf->name to avoid sleep-while-atomic.
->>>>>
->>>>> Cc: <stable@vger.kernel.org> [5.3+]
->>>>> Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
->>>>> ---
->>>>> drivers/dma-buf/dma-buf.c | 13 +++++++------
->>>>> include/linux/dma-buf.h   |  1 +
->>>>> 2 files changed, 8 insertions(+), 6 deletions(-)
->>>>>
->>>>> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
->>>>> index 01ce125..2e0456c 100644
->>>>> --- a/drivers/dma-buf/dma-buf.c
->>>>> +++ b/drivers/dma-buf/dma-buf.c
->>>>> @@ -45,10 +45,10 @@ static char *dmabuffs_dname(struct dentry
->> *dentry,
->>>>> char *buffer, int buflen)
->>>>> 	size_t ret = 0;
->>>>>
->>>>> 	dmabuf = dentry->d_fsdata;
->>>>> -	dma_resv_lock(dmabuf->resv, NULL);
->>>>> +	spin_lock(&dmabuf->name_lock);
->>>>> 	if (dmabuf->name)
->>>>> 		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
->>>>> -	dma_resv_unlock(dmabuf->resv);
->>>>> +	spin_unlock(&dmabuf->name_lock);
->>>>
->>>> I am not really clear on why you need this lock.
->>>>
->>>> If name == NULL you have no issues.
->>>> If name is real, you have no issues.
+>>>>> And shouldn't the driver set something sane in qcom_pdc_init() to
+>>>>> disable all the pdc pins so that we don't rely on boot state to
+>>>>> configure pins for wakeup?
+>>>> We don't rely on boot state, by default all interrupt will be disabled.
+>>> Does 'default' mean the hardware register reset state?
+>> correct.
+>>> I'm worried that
+>>> we will kexec and then various pdc pins will be enabled because the
+>>> previous kernel had them enabled but then the new kernel doesn't care
+>>> about those pins and we'll never be able to suspend or go idle. I don't
+>>> know what happens in the GIC case but I think gic_dist_config() and
+>>> things set a sane state at kernel boot.
+>> Right however when switching kernel, i suppose client drivers will do a
+>> free_irq(), then this will
 >>
->> Yeah, ideal cases...
->>
+>> clear the PDC interrupt in HW by invoking mask_irq() from within free_irq().
+> We can't rely on drivers to do that.
+>
+>>>> This is same to GIC driver having GICD_ISENABLER register, where all
+>>>> bits (one bit per interrupt) set to 0 (masked irqs) during boot up.
 >>>>
->>>> If name is freed you will copy garbage, but the only way
->>>> for that to happen is that _set_name or _release have to be called
->>>> at just the right time.
+>>>> Similarly PDC also have all bits set to 0 in PDC's IRQ_ENABLE_BANK.
 >>>>
->>>> And the above would probably only be an issue if the set_name
->>>> was called, so you will get NULL or a real name.
+>>> What code sets the IRQ_ENABLE_BANK to all zero when this driver probes?
+>> Enable bank will be zero as part of HW reset status when booting up
+>> first time.
 >>
->> And there exists a use-after-free to avoid which requires the lock. Say
->> that memcpy() in dmabuffs_dname is in progress and in parallel _set_name
->> will free the same buffer that memcpy is operating on.
-> 
-> Hmm...  I can see that.
-> 
-> However, note that in dma_buf_set_name, you cannot use the spinlock
-> to protect the dma_buf->attachements list.
-> 
-> I think you need to do this:
-> 
-> 	dma_resv_lock(dmabuf->resv, NULL);
->  	if (!list_empty(&dmabuf->attachments)) {
->  		ret = -EBUSY;
->  		kfree(name);
->               }
-> 	dma_resv_unlock(dmabuf->resv, NULL);
-> 	if (ret)
-> 		return ret;
-> 
-> 	spinlock(nam_lock)
-> 	namestuff;
-> 	spinunlock
+> It's not a concern about the hardware reset state of these registers at
+> boot. I'm worried that the bootloaders or previous OS will configure pdc
+> pins to wake us up. It's better to just force it to something sane, i.e.
+> everything disabled in the PDC, at driver probe time so that nothing can
+> be wrong.
 
-Hmm..Yes, I should use the dma_resv_lock() to access the ->attachments
-list. Will correct this in V2.
+okay, i will include a patch to disable all IRQs in PDC hw during init 
+time in next revision.
 
-> 
-> 	return 0;
-> 
-> Mike
-> 
->>>> Is there a reason for the lock here?
->>>>
->>>> Mike
->>>
->>> Maybe dmabuf->name = NULL after the kfree(dmabuf->name) in:
->>>
->>> dma_buf_release()
->>>
->>> Would be sufficient?
->>
->> I don't think that we will access the 'dmabuf'(thus dmabuf->name) once
->> it is in the dma_buf_release(). So, setting the NULL in the _release()
->> is not required at all.
->>
->>>
->>> M
->>>>> 	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
->>>>> 			     dentry->d_name.name, ret > 0 ? name : "");
->>>>> @@ -335,7 +335,7 @@ static long dma_buf_set_name(struct dma_buf
->>>>> *dmabuf, const char __user *buf)
->>>>> 	if (IS_ERR(name))
->>>>> 		return PTR_ERR(name);
->>>>>
->>>>> -	dma_resv_lock(dmabuf->resv, NULL);
->>>>> +	spin_lock(&dmabuf->name_lock);
->>>>> 	if (!list_empty(&dmabuf->attachments)) {
->>>>> 		ret = -EBUSY;
->>>>> 		kfree(name);
->>>>> @@ -345,7 +345,7 @@ static long dma_buf_set_name(struct dma_buf
->>>>> *dmabuf, const char __user *buf)
->>>>> 	dmabuf->name = name;
->>>>>
->>>>> out_unlock:
->>>>> -	dma_resv_unlock(dmabuf->resv);
->>>>> +	spin_unlock(&dmabuf->name_lock);
->>>>> 	return ret;
->>>>> }
->>>>>
->>>>> @@ -405,10 +405,10 @@ static void dma_buf_show_fdinfo(struct
->> seq_file
->>>>> *m, struct file *file)
->>>>> 	/* Don't count the temporary reference taken inside procfs seq_show
->>>>> */
->>>>> 	seq_printf(m, "count:\t%ld\n", file_count(dmabuf->file) - 1);
->>>>> 	seq_printf(m, "exp_name:\t%s\n", dmabuf->exp_name);
->>>>> -	dma_resv_lock(dmabuf->resv, NULL);
->>>>> +	spin_lock(&dmabuf->name_lock);
->>>>> 	if (dmabuf->name)
->>>>> 		seq_printf(m, "name:\t%s\n", dmabuf->name);
->>>>> -	dma_resv_unlock(dmabuf->resv);
->>>>> +	spin_unlock(&dmabuf->name_lock);
->>>>> }
->>>>>
->>>>> static const struct file_operations dma_buf_fops = {
->>>>> @@ -546,6 +546,7 @@ struct dma_buf *dma_buf_export(const struct
->>>>> dma_buf_export_info *exp_info)
->>>>> 	dmabuf->size = exp_info->size;
->>>>> 	dmabuf->exp_name = exp_info->exp_name;
->>>>> 	dmabuf->owner = exp_info->owner;
->>>>> +	spin_lock_init(&dmabuf->name_lock);
->>>>> 	init_waitqueue_head(&dmabuf->poll);
->>>>> 	dmabuf->cb_excl.poll = dmabuf->cb_shared.poll = &dmabuf->poll;
->>>>> 	dmabuf->cb_excl.active = dmabuf->cb_shared.active = 0;
->>>>> diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
->>>>> index ab0c156..93108fd 100644
->>>>> --- a/include/linux/dma-buf.h
->>>>> +++ b/include/linux/dma-buf.h
->>>>> @@ -311,6 +311,7 @@ struct dma_buf {
->>>>> 	void *vmap_ptr;
->>>>> 	const char *exp_name;
->>>>> 	const char *name;
->>>>> +	spinlock_t name_lock;
->>>>> 	struct module *owner;
->>>>> 	struct list_head list_node;
->>>>> 	void *priv;
->>>>> --
->>>>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
->>>>> Forum, a Linux Foundation Collaborative Project
->>>>> _______________________________________________
->>>>> dri-devel mailing list
->>>>> dri-devel@lists.freedesktop.org
->>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->>>> _______________________________________________
->>>> dri-devel mailing list
->>>> dri-devel@lists.freedesktop.org
->>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->>
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
->> Forum, a Linux Foundation Collaborative Project
+Thanks,
+Maulik
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation Collaborative Project
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
