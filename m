@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54488C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EF3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23ED020B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D6420CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443339;
-	bh=Xwqp5VeiNd1IsDMeWotZ1nD25aou2uHxHhgfdlOCxX8=;
+	s=default; t=1592443342;
+	bh=0wMSeq300+HLTPZeJnOyyYrhuUw76Ec0Zg0wYdFtlMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PXhk19ew+9B593TSAZAtJDIUwoNrVGjd0UyudTOyLtz9a7Oa/DqLu1kTq2wUuioI8
-	 VqvrW/jteRUJXaingQhjrag5yrj0GzqkdoaqKs3dhD9w0rZpvRPrNVmpr4d5kgNM8o
-	 elrXyu8pR0aJf96BoSn3gPHUVMsAxBt6LuDKZeDw=
+	b=M4nJUtwz0mkoOSZ3RKTdY/Uz9RVSmX5f6+CyIIhqI+o6jzd0v6zxvH4IvYuiNsDes
+	 AHnsLKPCuAlJQIrwKUDA7xbYurEZOsWrvYQbvSLABDj77hDkd2UelxPQKtubopGMIs
+	 xipBy9xr/VnnIvAfdasGX8jD3IHe4V+RWiQPJink=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730713AbgFRBWS (ORCPT
+        id S1727090AbgFRBWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:22:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50340 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:22:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730020AbgFRBSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:18:49 -0400
+        id S1729671AbgFRBSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:18:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D061B21D90;
-        Thu, 18 Jun 2020 01:18:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C397B206F1;
+        Thu, 18 Jun 2020 01:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443129;
-        bh=Xwqp5VeiNd1IsDMeWotZ1nD25aou2uHxHhgfdlOCxX8=;
+        s=default; t=1592443133;
+        bh=0wMSeq300+HLTPZeJnOyyYrhuUw76Ec0Zg0wYdFtlMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eItFGNVlcsJB1ZSKxRnTteOHwGu2lLIVvQDRlHRy97OZdwzNRKf74+5ztj1wvgXKR
-         FdtE+2BBdEGPR5o4jnXzVHqfuANZEwG+B87nvLfoXprkGZEsThrJfbf1K3xxFQijnP
-         s5S5O6GbQ/FRfcHrYzfbhy1cFD15CDi2cGbq3mZk=
+        b=FfDBc0Eav4RS8hJKM/qwe6DetxA0Rwukwuicw3TUfIidSNyWnQdvXPzpujEEa2j4d
+         pWQXgDCeiY8N4n9ChWQ7M08P84KIXo5IeQrxgiS4Zvr0lSneOi23Peae5IbSkZFFCs
+         fUFBFpJ7V326klQHxQX+Uvk26xbb+SoZBUYbPeXc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 102/266] ALSA: usb-audio: Fix racy list management in output queue
-Date:   Wed, 17 Jun 2020 21:13:47 -0400
-Message-Id: <20200618011631.604574-102-sashal@kernel.org>
+Cc:     Raghavendra Rao Ananta <rananta@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 105/266] tty: hvc: Fix data abort due to race in hvc_open
+Date:   Wed, 17 Jun 2020 21:13:50 -0400
+Message-Id: <20200618011631.604574-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -58,49 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Raghavendra Rao Ananta <rananta@codeaurora.org>
 
-[ Upstream commit 5b6cc38f3f3f37109ce72b60bda215a5f6892c0b ]
+[ Upstream commit e2bd1dcbe1aa34ff5570b3427c530e4332ecf0fe ]
 
-The linked list entry from FIFO is peeked at
-queue_pending_output_urbs() but the actual element pop-out is
-performed outside the spinlock, and it's potentially racy.
+Potentially, hvc_open() can be called in parallel when two tasks calls
+open() on /dev/hvcX. In such a scenario, if the hp->ops->notifier_add()
+callback in the function fails, where it sets the tty->driver_data to
+NULL, the parallel hvc_open() can see this NULL and cause a memory abort.
+Hence, serialize hvc_open and check if tty->private_data is NULL before
+proceeding ahead.
 
-Do delete the link at the right place inside the spinlock.
+The issue can be easily reproduced by launching two tasks simultaneously
+that does nothing but open() and close() on /dev/hvcX.
+For example:
+$ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
 
-Fixes: 8fdff6a319e7 ("ALSA: snd-usb: implement new endpoint streaming model")
-Link: https://lore.kernel.org/r/20200424074016.14301-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
+Link: https://lore.kernel.org/r/20200428032601.22127-1-rananta@codeaurora.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/endpoint.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
-index d8dc7cb56d43..50104f658ed4 100644
---- a/sound/usb/endpoint.c
-+++ b/sound/usb/endpoint.c
-@@ -346,17 +346,17 @@ static void queue_pending_output_urbs(struct snd_usb_endpoint *ep)
- 			ep->next_packet_read_pos %= MAX_URBS;
+diff --git a/drivers/tty/hvc/hvc_console.c b/drivers/tty/hvc/hvc_console.c
+index cdcc64ea2554..f8e43a6faea9 100644
+--- a/drivers/tty/hvc/hvc_console.c
++++ b/drivers/tty/hvc/hvc_console.c
+@@ -75,6 +75,8 @@ static LIST_HEAD(hvc_structs);
+  */
+ static DEFINE_MUTEX(hvc_structs_mutex);
  
- 			/* take URB out of FIFO */
--			if (!list_empty(&ep->ready_playback_urbs))
-+			if (!list_empty(&ep->ready_playback_urbs)) {
- 				ctx = list_first_entry(&ep->ready_playback_urbs,
- 					       struct snd_urb_ctx, ready_list);
-+				list_del_init(&ctx->ready_list);
-+			}
- 		}
- 		spin_unlock_irqrestore(&ep->lock, flags);
++/* Mutex to serialize hvc_open */
++static DEFINE_MUTEX(hvc_open_mutex);
+ /*
+  * This value is used to assign a tty->index value to a hvc_struct based
+  * upon order of exposure via hvc_probe(), when we can not match it to
+@@ -346,16 +348,24 @@ static int hvc_install(struct tty_driver *driver, struct tty_struct *tty)
+  */
+ static int hvc_open(struct tty_struct *tty, struct file * filp)
+ {
+-	struct hvc_struct *hp = tty->driver_data;
++	struct hvc_struct *hp;
+ 	unsigned long flags;
+ 	int rc = 0;
  
- 		if (ctx == NULL)
- 			return;
++	mutex_lock(&hvc_open_mutex);
++
++	hp = tty->driver_data;
++	if (!hp) {
++		rc = -EIO;
++		goto out;
++	}
++
+ 	spin_lock_irqsave(&hp->port.lock, flags);
+ 	/* Check and then increment for fast path open. */
+ 	if (hp->port.count++ > 0) {
+ 		spin_unlock_irqrestore(&hp->port.lock, flags);
+ 		hvc_kick();
+-		return 0;
++		goto out;
+ 	} /* else count == 0 */
+ 	spin_unlock_irqrestore(&hp->port.lock, flags);
  
--		list_del_init(&ctx->ready_list);
--
- 		/* copy over the length information */
- 		for (i = 0; i < packet->packets; i++)
- 			ctx->packet_size[i] = packet->packet_size[i];
+@@ -383,6 +393,8 @@ static int hvc_open(struct tty_struct *tty, struct file * filp)
+ 	/* Force wakeup of the polling thread */
+ 	hvc_kick();
+ 
++out:
++	mutex_unlock(&hvc_open_mutex);
+ 	return rc;
+ }
+ 
 -- 
 2.25.1
 
