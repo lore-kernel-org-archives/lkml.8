@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFAFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82BDD22253
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1451E2223F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445594;
-	bh=tTYjXOD8oHPGv57EVtZqi6gCt2pfErDoIHKj/yUv3Ng=;
+	s=default; t=1592445599;
+	bh=Zq2A+XY4Y/8DJh883A3HGw2i5z55/MzdBhKTq+Y5bCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fh0R3Av0PEqVMT/0+FOrwHnDFh8dfjEHTS9YflUAHZR5OUz5/C1n7mpQ0C/0g1/1+
-	 8ENSOikXBLDS/hOt8j7cBbYK9Y8vyU/LpPcxZOHEVu5iwbC0QIk/XOOhf7KlLg9kPa
-	 zRBVWlN5NZRQG0zeHquotmsAHBTWu8ltlKOMTwVo=
+	b=aJupc1gKzezahZ813UvojgVd+7gCXidDtx46Ma87GIINiZW+pTsge7s5Q59/J058K
+	 dt4njWHvPRSJiS92l4OzEIYVPUN1kgAtZ+5v2jWYthJ/0lC/ViP/uB9hcPUHSR4G2T
+	 6ZkHvJUX6x9VO9xYQdivoImSlsZuVSSURamAvQnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731230AbgFRBYc (ORCPT
+        id S2387438AbgFRB75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:24:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:59:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729046AbgFRBVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:15 -0400
+        id S1731225AbgFRBYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:24:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CC8E20CC7;
-        Thu, 18 Jun 2020 01:21:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07A4020776;
+        Thu, 18 Jun 2020 01:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443275;
-        bh=tTYjXOD8oHPGv57EVtZqi6gCt2pfErDoIHKj/yUv3Ng=;
+        s=default; t=1592443470;
+        bh=Zq2A+XY4Y/8DJh883A3HGw2i5z55/MzdBhKTq+Y5bCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U0IC52wJIbYONqY0i5oKZ2CkEqB7Qy47/T9mkGxM16hK//8Y5xnTzKUEtuIdNUMTF
-         cZwyWSh1Fep/w5Pao/Z2z1FaTN4sDcZnhgsuSQb+WQ9dRuGSdZ78603tUwqi7BsjMU
-         hgZ9hUwKBTqxFKnlm9PSKcYq0ovFG8wZaFt6gUBU=
+        b=2hD1Q1n9EAArgLrsUpdjdAvPvdvzKma8toyLIt20ERxsEjNIH7M5bzNV7cGmolTp2
+         8rDiW4JQ2fgo70KxQcIZ2BujSkf8wEPpciDVQkNneZwzlqj2Fz26vv4bmm4h54ViqS
+         yxnnrNshqSxwoemunYDfhbO0O4+bearOGkz9S6M0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Lee Duncan <lduncan@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 220/266] scsi: iscsi: Fix reference count leak in iscsi_boot_create_kobj
-Date:   Wed, 17 Jun 2020 21:15:45 -0400
-Message-Id: <20200618011631.604574-220-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 102/172] clk: samsung: exynos5433: Add IGNORE_UNUSED flag to sclk_i2s1
+Date:   Wed, 17 Jun 2020 21:21:08 -0400
+Message-Id: <20200618012218.607130-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
-References: <20200618011631.604574-1-sashal@kernel.org>
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,36 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 0267ffce562c8bbf9b57ebe0e38445ad04972890 ]
+[ Upstream commit 25bdae0f1c6609ceaf55fe6700654f0be2253d8e ]
 
-kobject_init_and_add() takes reference even when it fails. If this
-function returns an error, kobject_put() must be called to properly
-clean up the memory associated with the object.
+Mark the SCLK clock for Exynos5433 I2S1 device with IGNORE_UNUSED flag to
+match its behaviour with SCLK clock for AUD_I2S (I2S0) device until
+a proper fix for Exynos I2S driver is ready.
 
-Link: https://lore.kernel.org/r/20200528201353.14849-1-wu000273@umn.edu
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This fixes the following synchronous abort issue revealed by the probe
+order change caused by the commit 93d2e4322aa7 ("of: platform: Batch
+fwnode parsing when adding all top level devices")
+
+Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 0 PID: 50 Comm: kworker/0:1 Not tainted 5.7.0-rc5+ #701
+Hardware name: Samsung TM2E board (DT)
+Workqueue: events deferred_probe_work_func
+pstate: 60000005 (nZCv daif -PAN -UAO)
+pc : samsung_i2s_probe+0x768/0x8f0
+lr : samsung_i2s_probe+0x688/0x8f0
+...
+Call trace:
+ samsung_i2s_probe+0x768/0x8f0
+ platform_drv_probe+0x50/0xa8
+ really_probe+0x108/0x370
+ driver_probe_device+0x54/0xb8
+ __device_attach_driver+0x90/0xc0
+ bus_for_each_drv+0x70/0xc8
+ __device_attach+0xdc/0x140
+ device_initial_probe+0x10/0x18
+ bus_probe_device+0x94/0xa0
+ deferred_probe_work_func+0x70/0xa8
+ process_one_work+0x2a8/0x718
+ worker_thread+0x48/0x470
+ kthread+0x134/0x160
+ ret_from_fork+0x10/0x1c
+Code: 17ffffaf d503201f f94086c0 91003000 (88dffc00)
+---[ end trace ccf721c9400ddbd6 ]---
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/iscsi_boot_sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/samsung/clk-exynos5433.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/iscsi_boot_sysfs.c b/drivers/scsi/iscsi_boot_sysfs.c
-index e4857b728033..a64abe38db2d 100644
---- a/drivers/scsi/iscsi_boot_sysfs.c
-+++ b/drivers/scsi/iscsi_boot_sysfs.c
-@@ -352,7 +352,7 @@ iscsi_boot_create_kobj(struct iscsi_boot_kset *boot_kset,
- 	boot_kobj->kobj.kset = boot_kset->kset;
- 	if (kobject_init_and_add(&boot_kobj->kobj, &iscsi_boot_ktype,
- 				 NULL, name, index)) {
--		kfree(boot_kobj);
-+		kobject_put(&boot_kobj->kobj);
- 		return NULL;
- 	}
- 	boot_kobj->data = data;
+diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+index 302596dc79a2..0f2a9d767eef 100644
+--- a/drivers/clk/samsung/clk-exynos5433.c
++++ b/drivers/clk/samsung/clk-exynos5433.c
+@@ -1680,7 +1680,8 @@ static const struct samsung_gate_clock peric_gate_clks[] __initconst = {
+ 	GATE(CLK_SCLK_PCM1, "sclk_pcm1", "sclk_pcm1_peric",
+ 			ENABLE_SCLK_PERIC, 7, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_I2S1, "sclk_i2s1", "sclk_i2s1_peric",
+-			ENABLE_SCLK_PERIC, 6, CLK_SET_RATE_PARENT, 0),
++			ENABLE_SCLK_PERIC, 6,
++			CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
+ 	GATE(CLK_SCLK_SPI2, "sclk_spi2", "sclk_spi2_peric", ENABLE_SCLK_PERIC,
+ 			5, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_SPI1, "sclk_spi1", "sclk_spi1_peric", ENABLE_SCLK_PERIC,
 -- 
 2.25.1
 
