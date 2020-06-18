@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E68D6C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B8EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD3E0221ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F4221D79
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443162;
-	bh=RNPq6SF4ZWwRpZosC3065GmzXtKZyf+9MuZsESPrs74=;
+	s=default; t=1592443168;
+	bh=oPsEYan8BzCNcN2rrolhf41sx7V3EaoYnpGBm9uEYJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E5lzu5+gTHjCi/7D8g7kNwDjdQ0jaHIOeOdj1+NcYAfC1gQHtikHObuWTbCF7ksxB
-	 33B4fp5j1OG3dhq1NbAwcAy/RYv4Yhy9SqkSbkNYiZsuKS1pLTgZLnbXMXlXpOjaf7
-	 HK+wzBkg2JdPIDAAKn98MbrR84acMCOXlNO41Vzc=
+	b=zT2jlxFKu79e9mwV1uU4qSb7BjCD7O2XFQYb3ioDcOdLmoK4rU4gqz0XgfmUIxlW9
+	 r2PJppqmU6Ia90RcOyN6oirgTM7GX+2ftVb4ivsOlO15pmLOzHkkc3JFiXz8fUUn9b
+	 inCyzSY+ftkdgO/abkQko4mPS27Gby/F+uM01Iuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730115AbgFRBTV (ORCPT
+        id S1729153AbgFRBTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:19:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46972 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:19:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728536AbgFRBQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:16:20 -0400
+        id S1729582AbgFRBQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:16:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B61B221D79;
-        Thu, 18 Jun 2020 01:16:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6DA121D90;
+        Thu, 18 Jun 2020 01:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442980;
-        bh=RNPq6SF4ZWwRpZosC3065GmzXtKZyf+9MuZsESPrs74=;
+        s=default; t=1592442988;
+        bh=oPsEYan8BzCNcN2rrolhf41sx7V3EaoYnpGBm9uEYJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BwvtPiCqJGuWzQ8ASi0VS4gbnyLklRgGx71JGVSWxNqGzGCBBL1JfP8rbs5M36LIr
-         cDp3+uE9Eid+xEhSJ4MC5ZaAsFIXSEReuF9weNDPjfZemNWJxTHxJ2E6Y1jJEvK7Jh
-         zHA6H/f3CpGtSUhoi8lm0Xwx/Kjc7LpCLUu+GzII=
+        b=lOQbH3tBuZG1yhlspRf2NDKrSrUHw8O95SORBxX+H+0AMyrZIj7gvvmXYVaur27Af
+         Qr2L/nIFnx3oQdpNH+/rEgTeOO9Z/xAMocZtB84UjD3RDPzi/5Im8uoV/xNsjVfK4/
+         I6Dod/OahhMPsP7UQTkbp8vVQ8pcidyuU9TSYuzA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Li RongQing <lirongqing@baidu.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
         bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 382/388] xdp: Fix xsk_generic_xmit errno
-Date:   Wed, 17 Jun 2020 21:07:59 -0400
-Message-Id: <20200618010805.600873-382-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 388/388] bpf: Undo internal BPF_PROBE_MEM in BPF insns dump
+Date:   Wed, 17 Jun 2020 21:08:05 -0400
+Message-Id: <20200618010805.600873-388-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,40 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit aa2cad0600ed2ca6a0ab39948d4db1666b6c962b ]
+[ Upstream commit 29fcb05bbf1a7008900bb9bee347bdbfc7171036 ]
 
-Propagate sock_alloc_send_skb error code, not set it to
-EAGAIN unconditionally, when fail to allocate skb, which
-might cause that user space unnecessary loops.
+BPF_PROBE_MEM is kernel-internal implmementation details. When dumping BPF
+instructions to user-space, it needs to be replaced back with BPF_MEM mode.
 
-Fixes: 35fcde7f8deb ("xsk: support for Tx")
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Link: https://lore.kernel.org/bpf/1591852266-24017-1-git-send-email-lirongqing@baidu.com
+Fixes: 2a02759ef5f8 ("bpf: Add support for BTF pointers to interpreter")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200613002115.1632142-1-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xsk.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ kernel/bpf/syscall.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index c350108aa38d..a4676107fad0 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -397,10 +397,8 @@ static int xsk_generic_xmit(struct sock *sk)
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 4e6dee19a668..5d1d24f56d53 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2923,6 +2923,7 @@ static struct bpf_insn *bpf_insn_prepare_dump(const struct bpf_prog *prog)
+ 	struct bpf_insn *insns;
+ 	u32 off, type;
+ 	u64 imm;
++	u8 code;
+ 	int i;
  
- 		len = desc.len;
- 		skb = sock_alloc_send_skb(sk, len, 1, &err);
--		if (unlikely(!skb)) {
--			err = -EAGAIN;
-+		if (unlikely(!skb))
- 			goto out;
--		}
+ 	insns = kmemdup(prog->insnsi, bpf_prog_insn_size(prog),
+@@ -2931,21 +2932,27 @@ static struct bpf_insn *bpf_insn_prepare_dump(const struct bpf_prog *prog)
+ 		return insns;
  
- 		skb_put(skb, len);
- 		addr = desc.addr;
+ 	for (i = 0; i < prog->len; i++) {
+-		if (insns[i].code == (BPF_JMP | BPF_TAIL_CALL)) {
++		code = insns[i].code;
++
++		if (code == (BPF_JMP | BPF_TAIL_CALL)) {
+ 			insns[i].code = BPF_JMP | BPF_CALL;
+ 			insns[i].imm = BPF_FUNC_tail_call;
+ 			/* fall-through */
+ 		}
+-		if (insns[i].code == (BPF_JMP | BPF_CALL) ||
+-		    insns[i].code == (BPF_JMP | BPF_CALL_ARGS)) {
+-			if (insns[i].code == (BPF_JMP | BPF_CALL_ARGS))
++		if (code == (BPF_JMP | BPF_CALL) ||
++		    code == (BPF_JMP | BPF_CALL_ARGS)) {
++			if (code == (BPF_JMP | BPF_CALL_ARGS))
+ 				insns[i].code = BPF_JMP | BPF_CALL;
+ 			if (!bpf_dump_raw_ok())
+ 				insns[i].imm = 0;
+ 			continue;
+ 		}
++		if (BPF_CLASS(code) == BPF_LDX && BPF_MODE(code) == BPF_PROBE_MEM) {
++			insns[i].code = BPF_LDX | BPF_SIZE(code) | BPF_MEM;
++			continue;
++		}
+ 
+-		if (insns[i].code != (BPF_LD | BPF_IMM | BPF_DW))
++		if (code != (BPF_LD | BPF_IMM | BPF_DW))
+ 			continue;
+ 
+ 		imm = ((u64)insns[i + 1].imm << 32) | (u32)insns[i].imm;
 -- 
 2.25.1
 
