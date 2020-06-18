@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F81C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 399B120885
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F1420885
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445344;
-	bh=Tjwcs5C6InVQWlOBJvSo72TYRFM9EWlfIcd4qF8y+Gk=;
+	s=default; t=1592445346;
+	bh=V2vg7eN6p7rfgpqhFbM5P7WBzxfDE41m63zy0/15p8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bqdXJps5TP2AlDq6DWkI1y6KbzV0Pp4f0k2sFgNppnQCObMjgzqzCRQTfS/f5hvk/
-	 lm3Fj5knnCyMPa/dypxYwi0jzIQ8FDHdwxJ/Upj5py/S5XqmwnYZbdvZcCF5uHYUHx
-	 E2umYh/T7tlhCblY19OWqJ/PHttC4ovE3hNXP5oo=
+	b=seTgL25jLcnm4S3uBHxloZyB/fX2dTw2FoXCK63FBrwv2jXu8XW314I9MAmGzu+Kf
+	 AIA3oFddELmBc/hL8i2PqOf7h8ucd8/3TcMTKcjWokVIgw4kTkGhtcOnZlmQn9MKb7
+	 Ot+5j3qbZV5apIt3uxcyFce+f9jcyE4DK7h55nuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbgFRBzm (ORCPT
+        id S1731628AbgFRBzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:55:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60998 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:55:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731482AbgFRBZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:41 -0400
+        id S1730784AbgFRBZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C2B020897;
-        Thu, 18 Jun 2020 01:25:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0939C20776;
+        Thu, 18 Jun 2020 01:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443541;
-        bh=Tjwcs5C6InVQWlOBJvSo72TYRFM9EWlfIcd4qF8y+Gk=;
+        s=default; t=1592443539;
+        bh=V2vg7eN6p7rfgpqhFbM5P7WBzxfDE41m63zy0/15p8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xpnFIAbTWoL4k7AaTL4dtEfdvu15Ahh4nNjamf6KFOzanZjlfg0HZFczC/u6zMXT8
-         iYPSGKRyniGFqf67SbXf+qDpkBQvQHukcehEMeVrf5tNHy6/VAtmwVOMB++k4XISAb
-         XYbaf03/+mLhm8L2tdDqlJ5SSX4dA5j2+gvU4VBU=
+        b=IQZyZdsrLbIJx4ty/etx2Ru/glHCOH0KWOFSifwqdqqt8OpFeL5Yk/Cfj31cVwECS
+         RtHgXGbSe4CXQIqhfHY4vYzBmVkMpP58OQYVj0Qcl/dvcofhxRh+WRarm170RAoq3y
+         28b9oCTknSkY3/+3PqrglYlpdh2zDhvYaUl7tNT8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Logan Gunthorpe <logang@deltatee.com>,
@@ -46,9 +46,9 @@ Cc:     Logan Gunthorpe <logang@deltatee.com>,
         Alexander Fomichev <fomichev.ru@gmail.com>,
         Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
         linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 158/172] NTB: perf: Fix support for hardware that doesn't have port numbers
-Date:   Wed, 17 Jun 2020 21:22:04 -0400
-Message-Id: <20200618012218.607130-158-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 157/172] NTB: perf: Don't require one more memory window than number of peers
+Date:   Wed, 17 Jun 2020 21:22:03 -0400
+Message-Id: <20200618012218.607130-157-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -63,16 +63,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit b54369a248c2e033bfcf5d6917e08cf9d73d54a6 ]
+[ Upstream commit a9c4211ac918ade1522aced6b5acfbe824722f7d ]
 
-Legacy drivers do not have port numbers (but is reliably only two ports)
-and was broken by the recent commit that added mult-port support to
-ntb_perf. This is especially important to support the cross link
-topology which is perfectly symmetric and cannot assign unique port
-numbers easily.
-
-Hardware that returns zero for both the local port and the peer should
-just always use gidx=0 for the only peer.
+ntb_perf should not require more than one memory window per peer. This
+was probably an off-by-one error.
 
 Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
@@ -81,30 +75,22 @@ Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
 Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_perf.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/ntb/test/ntb_perf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-index 28d288ff3bae..62a9a1d44f9f 100644
+index 2ee41b988c5d..28d288ff3bae 100644
 --- a/drivers/ntb/test/ntb_perf.c
 +++ b/drivers/ntb/test/ntb_perf.c
-@@ -1418,6 +1418,16 @@ static int perf_init_peers(struct perf_ctx *perf)
- 	if (perf->gidx == -1)
- 		perf->gidx = pidx;
+@@ -656,7 +656,7 @@ static int perf_init_service(struct perf_ctx *perf)
+ {
+ 	u64 mask;
  
-+	/*
-+	 * Hardware with only two ports may not have unique port
-+	 * numbers. In this case, the gidxs should all be zero.
-+	 */
-+	if (perf->pcnt == 1 &&  ntb_port_number(perf->ntb) == 0 &&
-+	    ntb_peer_port_number(perf->ntb, 0) == 0) {
-+		perf->gidx = 0;
-+		perf->peers[0].gidx = 0;
-+	}
-+
- 	for (pidx = 0; pidx < perf->pcnt; pidx++) {
- 		ret = perf_setup_peer_mw(&perf->peers[pidx]);
- 		if (ret)
+-	if (ntb_peer_mw_count(perf->ntb) < perf->pcnt + 1) {
++	if (ntb_peer_mw_count(perf->ntb) < perf->pcnt) {
+ 		dev_err(&perf->ntb->dev, "Not enough memory windows\n");
+ 		return -EINVAL;
+ 	}
 -- 
 2.25.1
 
