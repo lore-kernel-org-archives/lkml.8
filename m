@@ -2,51 +2,54 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6195C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8EDC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8298821D92
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E99A21974
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442569;
-	bh=XQZnQPb68FUNq+IfUPGgfzbfOipfqxw7R9zQj8TZNcA=;
+	s=default; t=1592442573;
+	bh=St+32PWtOnP3r5Q0VnSaOgp8ULPNXgJlQD252LrToqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vks/bBpsrc6tcRY2Onvl6MzU38cRRrBrtEfsosiLs+BstwV9HuZfIPq2Ia3rDyXT2
-	 +IoCkSshCyyr3q1NlePqvGiZdBvCPXrQdMt03wnOBoQiqvUXoYC1yht73P8og67X61
-	 F899kvAK8rvZnQRlh9o5umNLoQ+u7Sd3LvJAXtuA=
+	b=tF4p7QNYd5BXp7PN6CoGqfrKyaEYmaK0yvTfeb1CaeucqHaBIn+9mrEIZ65ngXOaH
+	 PF2MdazGgXXN+/VwYa63o+QWgmTkH4W1onNGpJn6UreE1R3KEyOpA69L3F4g3FASWK
+	 CkXC31ZjBLEwx56RaGq9u/RJNxPi2UXpd6GaQtFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgFRBJ1 (ORCPT
+        id S1728197AbgFRBJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:09:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35760 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:09:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728159AbgFRBJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:09:26 -0400
+        id S1728159AbgFRBJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ACAC21D80;
-        Thu, 18 Jun 2020 01:09:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6420921974;
+        Thu, 18 Jun 2020 01:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442565;
-        bh=XQZnQPb68FUNq+IfUPGgfzbfOipfqxw7R9zQj8TZNcA=;
+        s=default; t=1592442568;
+        bh=St+32PWtOnP3r5Q0VnSaOgp8ULPNXgJlQD252LrToqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P4eDBB8yqcWqlgayAeliCEun4T1FPLXuTD6HrnNQLgmki9uHxDYAxDp/hdRba6g5F
-         9F7wLw2D1Caxox/eMiwVdG/3pC3femqW1LQOS3BqqXGpFk1vTn49h2h8HIhZdkyFNJ
-         Tuc9cC1el/Qhmyp38QphEXjUccsXkF76SpoOBLpQ=
+        b=GcFLz1YCVOETdI6GpDA1WtWU019HKLCtJk/zPXIfNAg1DKT2ED4NeB9mgk3bjdKWI
+         aUOPH3130eWhfLVofzT5++0F+5jFCCgN9dU+6hMtbkfv4f7WXlrW6WuZb9oD0MPsQl
+         fPPn/ISq1VH85FUhW8dAzVxjn5kiUVjEiOH2rCCc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 060/388] vfio/pci: fix memory leaks in alloc_perm_bits()
-Date:   Wed, 17 Jun 2020 21:02:37 -0400
-Message-Id: <20200618010805.600873-60-sashal@kernel.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 062/388] coresight: tmc: Fix TMC mode read in tmc_read_prepare_etb()
+Date:   Wed, 17 Jun 2020 21:02:39 -0400
+Message-Id: <20200618010805.600873-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,72 +62,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-[ Upstream commit 3e63b94b6274324ff2e7d8615df31586de827c4e ]
+[ Upstream commit 347adb0d6385c3220dc01ab61807a5b1892901cc ]
 
-vfio_pci_disable() calls vfio_config_free() but forgets to call
-free_perm_bits() resulting in memory leaks,
+On some QCOM platforms like SC7180, SDM845 and SM8150,
+reading TMC mode register without proper coresight power
+management can lead to async exceptions like the one in
+the call trace below in tmc_read_prepare_etb(). This can
+happen if the user tries to read the TMC etf data via
+device node without setting up source and the sink first.
+Fix this by having a check for coresight sysfs mode
+before reading TMC mode management register.
 
-unreferenced object 0xc000000c4db2dee0 (size 16):
-  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
-  hex dump (first 16 bytes):
-    00 00 ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
-  backtrace:
-    [<00000000a6a4552d>] alloc_perm_bits+0x58/0xe0 [vfio_pci]
-    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
-    init_pci_cap_msi_perm at drivers/vfio/pci/vfio_pci_config.c:1125
-    (inlined by) vfio_msi_cap_len at drivers/vfio/pci/vfio_pci_config.c:1180
-    (inlined by) vfio_cap_len at drivers/vfio/pci/vfio_pci_config.c:1241
-    (inlined by) vfio_cap_init at drivers/vfio/pci/vfio_pci_config.c:1468
-    (inlined by) vfio_config_init at drivers/vfio/pci/vfio_pci_config.c:1707
-    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
-    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
-    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
-    [<000000006577923d>] sys_ioctl+0x28/0x40
-    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
-    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
-unreferenced object 0xc000000c4db2e330 (size 16):
-  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
-  hex dump (first 16 bytes):
-    00 ff ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
-  backtrace:
-    [<000000004c71914f>] alloc_perm_bits+0x44/0xe0 [vfio_pci]
-    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
-    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
-    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
-    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
-    [<000000006577923d>] sys_ioctl+0x28/0x40
-    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
-    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
+ Kernel panic - not syncing: Asynchronous SError Interrupt
+ CPU: 7 PID: 2605 Comm: hexdump Tainted: G S                5.4.30 #122
+ Call trace:
+  dump_backtrace+0x0/0x188
+  show_stack+0x20/0x2c
+  dump_stack+0xdc/0x144
+  panic+0x168/0x36c
+  panic+0x0/0x36c
+  arm64_serror_panic+0x78/0x84
+  do_serror+0x130/0x138
+  el1_error+0x84/0xf8
+  tmc_read_prepare_etb+0x88/0xb8
+  tmc_open+0x40/0xd8
+  misc_open+0x120/0x158
+  chrdev_open+0xb8/0x1a4
+  do_dentry_open+0x268/0x3a0
+  vfs_open+0x34/0x40
+  path_openat+0x39c/0xdf4
+  do_filp_open+0x90/0x10c
+  do_sys_open+0x150/0x3e8
+  __arm64_compat_sys_openat+0x28/0x34
+  el0_svc_common+0xa8/0x160
+  el0_svc_compat_handler+0x2c/0x38
+  el0_svc_compat+0x8/0x10
 
-Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
-Signed-off-by: Qian Cai <cai@lca.pw>
-[aw: rolled in follow-up patch]
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Fixes: 4525412a5046 ("coresight: tmc: making prepare/unprepare functions generic")
+Reported-by: Stephen Boyd <swboyd@chromium.org>
+Suggested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20200518180242.7916-14-mathieu.poirier@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci_config.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index 90c0b80f8acf..43b95f9cdaf7 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1728,8 +1728,11 @@ void vfio_config_free(struct vfio_pci_device *vdev)
- 	vdev->vconfig = NULL;
- 	kfree(vdev->pci_config_map);
- 	vdev->pci_config_map = NULL;
--	kfree(vdev->msi_perm);
--	vdev->msi_perm = NULL;
-+	if (vdev->msi_perm) {
-+		free_perm_bits(vdev->msi_perm);
-+		kfree(vdev->msi_perm);
-+		vdev->msi_perm = NULL;
-+	}
- }
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index d0cc3985b72a..36cce2bfb744 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -596,13 +596,6 @@ int tmc_read_prepare_etb(struct tmc_drvdata *drvdata)
+ 		goto out;
+ 	}
  
- /*
+-	/* There is no point in reading a TMC in HW FIFO mode */
+-	mode = readl_relaxed(drvdata->base + TMC_MODE);
+-	if (mode != TMC_MODE_CIRCULAR_BUFFER) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+ 	/* Don't interfere if operated from Perf */
+ 	if (drvdata->mode == CS_MODE_PERF) {
+ 		ret = -EINVAL;
+@@ -616,8 +609,15 @@ int tmc_read_prepare_etb(struct tmc_drvdata *drvdata)
+ 	}
+ 
+ 	/* Disable the TMC if need be */
+-	if (drvdata->mode == CS_MODE_SYSFS)
++	if (drvdata->mode == CS_MODE_SYSFS) {
++		/* There is no point in reading a TMC in HW FIFO mode */
++		mode = readl_relaxed(drvdata->base + TMC_MODE);
++		if (mode != TMC_MODE_CIRCULAR_BUFFER) {
++			ret = -EINVAL;
++			goto out;
++		}
+ 		__tmc_etb_disable_hw(drvdata);
++	}
+ 
+ 	drvdata->reading = true;
+ out:
 -- 
 2.25.1
 
