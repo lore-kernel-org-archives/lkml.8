@@ -2,92 +2,161 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98307C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9046121556
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:01:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WHR7pvxY"
+	by mail.kernel.org (Postfix) with ESMTP id 810A921556
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgFRABn (ORCPT
+        id S1727073AbgFRACF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 20:01:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgFRABm (ORCPT
+        Wed, 17 Jun 2020 20:02:05 -0400
+Received: from [211.29.132.249] ([211.29.132.249]:53902 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1726848AbgFRACF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 20:01:42 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B70D0C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:01:42 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id t9so2160638ybk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:01:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m7UPz9IB0wuR+ULFqjoeOn81m+kFdV9mf/EYc+fuqGI=;
-        b=WHR7pvxYT/fclLn788v5XuVsyL1vB6rW1eD7ALXv19rL+XV6ejoQgIYAg1oSVDAmfB
-         Jjri8MNNMAw3CHDnX8Dzet/q7pZhC2vVE+AszMyOe1nEqNfjfqR08U9DGr051iERPBur
-         sDes9x877Ax5T5f5+CtTenbkmhI9UoN2LLcVK5OJzqgs2KtIOX9J6Hpmcxyp0/esnfN9
-         mDYDVIidYIt/rE5F7vNl58cHbPqtTaShAYq+tCwdVfjIN9pFCsDkKnhE0OneFCkGbR+D
-         gkMlf0D/pf8EfDvl45r4xM9u/k0w4wa/guPU0aXvDh+tSfeTQiJ5AXR8wPxKXfXHn4nW
-         /ohg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m7UPz9IB0wuR+ULFqjoeOn81m+kFdV9mf/EYc+fuqGI=;
-        b=ZvYNxuhXVyY7Tw2cTT6nx5WKd7nu5R7+FwWV1EB8Ou9GIiU9o7s1idx/eyeJ66ecir
-         wALd/mLCPDyv5+Lc87e4onZvczPTZ96+YIOWeO367SBrBs3eBWlUeT1p5ftWDG4UJEJ7
-         5ykgP/lalhr1BnUt3N/Taf8UInH89q59IawSFsKJp8HUuPRkB4AuUdxwcFXNkJZO0H5H
-         eJ1VxlQe4TEZGPt9MIiHUPNfYffAoiU1+tRXrwbdB9dPRfeRmhPMDOxexhCEGdYaw0gK
-         SLYluOEQFSBEjFLgLv6OKmgWY4+6GGLWwGiiwgKG5RfxuyBZ/jOqzbIXX5ZTbs8aDFVG
-         iWcg==
-X-Gm-Message-State: AOAM5331IUEdq+gAY93GUlWTwsB2ytb/763OXi5P8yMI6w3xRksfSvK5
-        mv2BEn+2Ov/JFj/D5iwPVhMzbq5ljueWdTrV5kfRlgy/
-X-Google-Smtp-Source: ABdhPJxx2Psv8jjW1S0mhJDxqQoTkh7WJXb/f7KtAQbV8jWCveufSRp7uVjuXyd6/Tn3clPASVryOBL/Qi6oVXFmiIc=
-X-Received: by 2002:a5b:cc9:: with SMTP id e9mr2244637ybr.287.1592438501718;
- Wed, 17 Jun 2020 17:01:41 -0700 (PDT)
+        Wed, 17 Jun 2020 20:02:05 -0400
+Received: from dread.disaster.area (unknown [49.180.124.177])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 0C11B3A771A;
+        Thu, 18 Jun 2020 10:01:20 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jlhzS-0001Jw-NY; Thu, 18 Jun 2020 10:01:10 +1000
+Date:   Thu, 18 Jun 2020 10:01:10 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 1/2] sched: Add PF_MEMALLOC_NOLOCKDEP flag
+Message-ID: <20200618000110.GF2005@dread.disaster.area>
+References: <20200617175310.20912-1-longman@redhat.com>
+ <20200617175310.20912-2-longman@redhat.com>
 MIME-Version: 1.0
-References: <20200617203732.2076611-1-atish.patra@wdc.com>
-In-Reply-To: <20200617203732.2076611-1-atish.patra@wdc.com>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Wed, 17 Jun 2020 17:01:28 -0700
-Message-ID: <CANN689EXQsH3C92fe=QHVEZasWmBiMXPoOB=bRLhK2CP-hdKqQ@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: Acquire mmap lock before invoking walk_page_range
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Zong Li <zong.li@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617175310.20912-2-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
+        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
+        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=7-415B0cAAAA:8 a=20KFwNOVAAAA:8
+        a=g7D7g9E5PYaH7GLVyzwA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 1:38 PM Atish Patra <atish.patra@wdc.com> wrote:
-> As per walk_page_range documentation, mmap lock should be acquired by the
-> caller before invoking walk_page_range. mmap_assert_locked gets triggered
-> without that. The details can be found here.
->
-> http://lists.infradead.org/pipermail/linux-riscv/2020-June/010335.html
->
-> Fixes: 395a21ff859c(riscv: add ARCH_HAS_SET_DIRECT_MAP support)
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+On Wed, Jun 17, 2020 at 01:53:09PM -0400, Waiman Long wrote:
+> There are cases where calling kmalloc() can lead to false positive
+> lockdep splat. One notable example that can happen in the freezing of
+> the xfs filesystem is as follows:
+> 
+>  Possible unsafe locking scenario:
+> 
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(sb_internal);
+>                                lock(fs_reclaim);
+>                                lock(sb_internal);
+>   lock(fs_reclaim);
+> 
+>  *** DEADLOCK ***
+> 
+> This is a false positive as all the dirty pages are flushed out before
+> the filesystem can be frozen. However, there is no easy way to modify
+> lockdep to handle this situation properly.
+> 
+> One possible workaround is to disable lockdep by setting __GFP_NOLOCKDEP
+> in the appropriate kmalloc() calls.  However, it will be cumbersome to
+> locate all the right kmalloc() calls to insert __GFP_NOLOCKDEP and it
+> is easy to miss some especially when the code is updated in the future.
+> 
+> Another alternative is to have a per-process global state that indicates
+> the equivalent of __GFP_NOLOCKDEP without the need to set the gfp_t flag
+> individually. To allow the latter case, a new PF_MEMALLOC_NOLOCKDEP
+> per-process flag is now added. After adding this new bit, there are
+> still 2 free bits left.
+> 
+> Suggested-by: Dave Chinner <david@fromorbit.com>
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  include/linux/sched.h    |  7 +++++++
+>  include/linux/sched/mm.h | 15 ++++++++++-----
+>  2 files changed, 17 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index b62e6aaf28f0..44247cbc9073 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1508,6 +1508,7 @@ extern struct pid *cad_pid;
+>  #define PF_MEMALLOC_NOIO	0x00080000	/* All allocation requests will inherit GFP_NOIO */
+>  #define PF_LOCAL_THROTTLE	0x00100000	/* Throttle writes only against the bdi I write to,
+>  						 * I am cleaning dirty pages from some other bdi. */
+> +#define __PF_MEMALLOC_NOLOCKDEP	0x00100000	/* All allocation requests will inherit __GFP_NOLOCKDEP */
 
-Thanks for the fix.
+Why is this considered a safe thing to do? Any context that sets
+__PF_MEMALLOC_NOLOCKDEP will now behave differently in memory
+reclaim as it will think that PF_LOCAL_THROTTLE is set when lockdep
+is enabled.
 
-Reviewed-by: Michel Lespinasse <walken@google.com>
+>  #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
+>  #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
+>  #define PF_SWAPWRITE		0x00800000	/* Allowed to write to swap */
+> @@ -1519,6 +1520,12 @@ extern struct pid *cad_pid;
+>  #define PF_FREEZER_SKIP		0x40000000	/* Freezer should not count it as freezable */
+>  #define PF_SUSPEND_TASK		0x80000000      /* This thread called freeze_processes() and should not be frozen */
+>  
+> +#ifdef CONFIG_LOCKDEP
+> +#define PF_MEMALLOC_NOLOCKDEP	__PF_MEMALLOC_NOLOCKDEP
+> +#else
+> +#define PF_MEMALLOC_NOLOCKDEP	0
+> +#endif
+> +
+>  /*
+>   * Only the _current_ task can read/write to tsk->flags, but other
+>   * tasks can access tsk->flags in readonly mode for example
+> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> index 480a4d1b7dd8..4a076a148568 100644
+> --- a/include/linux/sched/mm.h
+> +++ b/include/linux/sched/mm.h
+> @@ -177,22 +177,27 @@ static inline bool in_vfork(struct task_struct *tsk)
+>   * Applies per-task gfp context to the given allocation flags.
+>   * PF_MEMALLOC_NOIO implies GFP_NOIO
+>   * PF_MEMALLOC_NOFS implies GFP_NOFS
+> + * PF_MEMALLOC_NOLOCKDEP implies __GFP_NOLOCKDEP
+>   * PF_MEMALLOC_NOCMA implies no allocation from CMA region.
+>   */
+>  static inline gfp_t current_gfp_context(gfp_t flags)
+>  {
+> -	if (unlikely(current->flags &
+> -		     (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS | PF_MEMALLOC_NOCMA))) {
+> +	unsigned int pflags = current->flags;
+> +
+> +	if (unlikely(pflags & (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS |
+> +			       PF_MEMALLOC_NOCMA | PF_MEMALLOC_NOLOCKDEP))) {
+
+That needs a PF_MEMALLOC_MASK.
+
+And, really, if we are playing "re-use existing bits" games because
+we've run out of process flags, all these memalloc flags should be
+moved to a new field in the task, say current->memalloc_flags. You
+could also move PF_SWAPWRITE, PF_LOCAL_THROTTLE, and PF_KSWAPD into
+that field as well as they are all memory allocation context process
+flags...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
