@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A786C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BCCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 001012083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AED3208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448715;
-	bh=cuJrbmG3TmaVXuupUw8nPnl9fKIu2qpNoPb6EAre7wY=;
+	s=default; t=1592448719;
+	bh=URqU8zLKGIUTvKeRvr6CXtgyoVs4U2bOE2L+VODufmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Otng/gxL+BycfYFasIa8ulRmmUNl5bYFhklLw1mSjZcHEI8NQIi5v8LQiHTiFDhii
-	 boChhqZ2DnGShdlu63Hst/pfeo29vAsM167I2csyO+uvqANXavtb3HUI2i1uiVd4t5
-	 /MpWR7CCOUWZdnP9f1Y40+/ssr97jSMC/E38zg4I=
+	b=hqOfA8sCtUH+TZ4Q+srizC3X53ZnOoifbT8CDX37dn16LSEZOXed5QO5UYIESsKc7
+	 buPGUxY4fT7mqFzthkGIqm+NHOdNPECM9nz0UhRRVj27/g3aVolgdCjx8motQM71Fm
+	 /IsjLARup9y0wvW5Vo1f2uzApeYy8GkTWIrdMtOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387875AbgFRCvx (ORCPT
+        id S1727921AbgFRBIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34818 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:08:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727931AbgFRBIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:08:50 -0400
+        id S1727843AbgFRBIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:08:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DD9B2193E;
-        Thu, 18 Jun 2020 01:08:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9077D21BE5;
+        Thu, 18 Jun 2020 01:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442530;
-        bh=cuJrbmG3TmaVXuupUw8nPnl9fKIu2qpNoPb6EAre7wY=;
+        s=default; t=1592442516;
+        bh=URqU8zLKGIUTvKeRvr6CXtgyoVs4U2bOE2L+VODufmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kqzskD90jYAIk7ndPRK5zUtMnByL2NytNBP0qQeiCgATasuD2X2OUCdYq/k/ausgg
-         BXGQsFUpR5T8gFlIK4lFzUbNZ630vJ0FcWjmI4QS5kkdB918t0S+dyCHBTzEQtwJPE
-         g998y8EQFN+PaHKvhmGi4+XkkC3LG6epNYUkXQ0A=
+        b=xrcW5FKLzI00tmKTU9c93je3rnfIvK9kV/G5MOc/n/fNpmXODD2PAayrg8PRf/RuD
+         jOZzkzZkRaPiKQTiDtJsFRPrLacFkOfb98VaiylzqI7/mezd6w33GrVVpzb6nVhskn
+         9tdJV6iTgCZTubZHjRhnrcpsTTsaKJ35dTqUvGMw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 033/388] rtc: mc13xxx: fix a double-unlock issue
-Date:   Wed, 17 Jun 2020 21:02:10 -0400
-Message-Id: <20200618010805.600873-33-sashal@kernel.org>
+Cc:     Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Wagner <dwagner@suse.de>,
+        Hannes Reinecke <hare@suse.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 022/388] scsi: core: free sgtables in case command setup fails
+Date:   Wed, 17 Jun 2020 21:01:59 -0400
+Message-Id: <20200618010805.600873-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,42 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-[ Upstream commit 8816cd726a4fee197af2d851cbe25991ae19ea14 ]
+[ Upstream commit 20a66f2bf280277ab5bb22e27445153b4eb0ac88 ]
 
-In function mc13xxx_rtc_probe, the mc13xxx_unlock() is called
-before rtc_register_device(). But in the error path of
-rtc_register_device(), the mc13xxx_unlock() is called again,
-which causes a double-unlock problem. Thus add a call of the
-function “mc13xxx_lock” in an if branch for the completion
-of the exception handling.
+In case scsi_setup_fs_cmnd() fails we're not freeing the sgtables allocated
+by scsi_init_io(), thus we leak the allocated memory.
 
-Fixes: e4ae7023e182a ("rtc: mc13xxx: set range")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200503182235.1652-1-wu000273@umn.edu
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Free the sgtables allocated by scsi_init_io() in case scsi_setup_fs_cmnd()
+fails.
+
+Technically scsi_setup_scsi_cmnd() does not suffer from this problem as it
+can only fail if scsi_init_io() fails, so it does not have sgtables
+allocated. But to maintain symmetry and as a measure of defensive
+programming, free the sgtables on scsi_setup_scsi_cmnd() failure as well.
+scsi_mq_free_sgtables() has safeguards against double-freeing of memory so
+this is safe to do.
+
+While we're at it, rename scsi_mq_free_sgtables() to scsi_free_sgtables().
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205595
+Link: https://lore.kernel.org/r/20200428104605.8143-2-johannes.thumshirn@wdc.com
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-mc13xxx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/scsi_lib.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/rtc/rtc-mc13xxx.c b/drivers/rtc/rtc-mc13xxx.c
-index afce2c0b4bd6..d6802e6191cb 100644
---- a/drivers/rtc/rtc-mc13xxx.c
-+++ b/drivers/rtc/rtc-mc13xxx.c
-@@ -308,8 +308,10 @@ static int __init mc13xxx_rtc_probe(struct platform_device *pdev)
- 	mc13xxx_unlock(mc13xxx);
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 06c260f6cdae..3ecdae18597d 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -548,7 +548,7 @@ static void scsi_uninit_cmd(struct scsi_cmnd *cmd)
+ 	}
+ }
  
- 	ret = rtc_register_device(priv->rtc);
--	if (ret)
-+	if (ret) {
-+		mc13xxx_lock(mc13xxx);
- 		goto err_irq_request;
-+	}
+-static void scsi_mq_free_sgtables(struct scsi_cmnd *cmd)
++static void scsi_free_sgtables(struct scsi_cmnd *cmd)
+ {
+ 	if (cmd->sdb.table.nents)
+ 		sg_free_table_chained(&cmd->sdb.table,
+@@ -560,7 +560,7 @@ static void scsi_mq_free_sgtables(struct scsi_cmnd *cmd)
  
- 	return 0;
+ static void scsi_mq_uninit_cmd(struct scsi_cmnd *cmd)
+ {
+-	scsi_mq_free_sgtables(cmd);
++	scsi_free_sgtables(cmd);
+ 	scsi_uninit_cmd(cmd);
+ }
  
+@@ -1059,7 +1059,7 @@ blk_status_t scsi_init_io(struct scsi_cmnd *cmd)
+ 
+ 	return BLK_STS_OK;
+ out_free_sgtables:
+-	scsi_mq_free_sgtables(cmd);
++	scsi_free_sgtables(cmd);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(scsi_init_io);
+@@ -1190,6 +1190,7 @@ static blk_status_t scsi_setup_cmnd(struct scsi_device *sdev,
+ 		struct request *req)
+ {
+ 	struct scsi_cmnd *cmd = blk_mq_rq_to_pdu(req);
++	blk_status_t ret;
+ 
+ 	if (!blk_rq_bytes(req))
+ 		cmd->sc_data_direction = DMA_NONE;
+@@ -1199,9 +1200,14 @@ static blk_status_t scsi_setup_cmnd(struct scsi_device *sdev,
+ 		cmd->sc_data_direction = DMA_FROM_DEVICE;
+ 
+ 	if (blk_rq_is_scsi(req))
+-		return scsi_setup_scsi_cmnd(sdev, req);
++		ret = scsi_setup_scsi_cmnd(sdev, req);
+ 	else
+-		return scsi_setup_fs_cmnd(sdev, req);
++		ret = scsi_setup_fs_cmnd(sdev, req);
++
++	if (ret != BLK_STS_OK)
++		scsi_free_sgtables(cmd);
++
++	return ret;
+ }
+ 
+ static blk_status_t
 -- 
 2.25.1
 
