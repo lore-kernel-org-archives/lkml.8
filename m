@@ -2,120 +2,123 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D43EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9381C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0E3220890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:04:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592507046;
-	bh=FcKGLNRNqI63/khvEfTqTTG7E7jDUOi4glDel5vUcmk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=hNONcReFHWnzCAe1SeNCH4BsItiBF/ULLnnM3ZVE53eNf9hI94wR/ENMwgs4IouER
-	 ZsmlXXsAj7JU08QQFuPdVe6RkXgRrfjBPAsqg8aaoaKvzDT6QxTEiwcYrs59VQHa7G
-	 i/83NrJCcvMtV78A54AV66MEpRe+BdJXVeOaOKTQ=
+	by mail.kernel.org (Postfix) with ESMTP id A9BA0207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="CPLvpV/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgFRTEE (ORCPT
+        id S1729828AbgFRTF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 15:04:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726882AbgFRTD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 15:03:59 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F0B7207DD;
-        Thu, 18 Jun 2020 19:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592507039;
-        bh=FcKGLNRNqI63/khvEfTqTTG7E7jDUOi4glDel5vUcmk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=P4Z9iGwPuioH4OpAG4O0cRH6EmTmmFsbompSyHYUNcVMFj4kIXBJZ4NxzU5HDUTbA
-         tz+yfLch74E8uSVbm5UjQqxFX5apaeZzAQs6RVZ5M1PYrWVZPhCfKQ5XalneP6oJ13
-         yDxiCjOkY7eQ3gnqN5itSjKTn3IAbkzRhbCJEMrU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 149FD35229B4; Thu, 18 Jun 2020 12:03:59 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 12:03:59 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
- ptrs
-Message-ID: <20200618190359.GU2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200525214800.93072-1-urezki@gmail.com>
- <20200525214800.93072-10-urezki@gmail.com>
- <20200617234609.GA10087@paulmck-ThinkPad-P72>
- <20200618005214.GN8681@bombadil.infradead.org>
- <20200618031823.GQ2723@paulmck-ThinkPad-P72>
- <20200618173520.GC14613@pc636>
- <20200618175719.GT2723@paulmck-ThinkPad-P72>
- <20200618183448.GA15136@pc636>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618183448.GA15136@pc636>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 18 Jun 2020 15:05:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbgFRTF0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 15:05:26 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C8BCC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 12:05:26 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id p3so641733pgh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 12:05:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=2jZnrCVzaH4szDYMWZ5PiS2L9jLICMdrrO0jRmkMbuE=;
+        b=CPLvpV/nHRMd5eOVVx6yEomCe+h6phWOx0hUrK287aTOQ4NCN3OuHjSjXTrnLtM1NG
+         ZNmj43L/btSpuRkxVLrwcoPJhDT6DlNgKeNk9KzCaF6J8RxoVr052N6HzJApH93Au9G6
+         kM2W0IJaMoGiybJmg9zBc2MVTZMk/YrsXst2M+6YtfMkIzY89Oq7+P5+59EaG1KuaezP
+         anBG+aWlsnVOKOQfSt8Xym0FK/8nRmc35zBw2ZbTjgx/BLa/4nu1JqY1keD0s0pq6a35
+         VoXy6lhMMcVxgoy+7VA48BxXKNfGoXBeHN9r4N70xYJvDgQjEmknbn+Jkue9/MX/Wzxn
+         TZ0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2jZnrCVzaH4szDYMWZ5PiS2L9jLICMdrrO0jRmkMbuE=;
+        b=kynlP8BA/Rp/tjZgW/iw/sXKSlNZ8vgRj//h09RRyUtBhtBe6TG0zmTSupVdsMrt7E
+         FwabxoChMYBg+dzyQ2wx65rMJpK8h7zWYPNddpnKOPLIUr8aSItN3bKRnd7kNPUPLF8e
+         8C9IwxOdxd/phFxeJOoS/I1pbWa4HIQ8NaJQnnclmgRnIhiLy1hSCCIjRx4HhI7vd7aE
+         xaT8VpCEoTo3ukjjECg7DubSoYqZ/sHLSte10qkkaHLJQnpD3U0vybAJjTDtp3wukIi5
+         oZ05BF3x7sDZ6R1kiLN94mIUPABFc9NJFzRT6MN36IHm9Yl+GZlfBoqfkRJHQ9+7ET3+
+         te7w==
+X-Gm-Message-State: AOAM531FXzYzMXmjieiMi6br6xkPbTKMWVW1l9MeiS9V5eWx1fcRwpQ3
+        svsBymESJRCzsIdoPIK7K8AGMg==
+X-Google-Smtp-Source: ABdhPJwrclI9E2eLwBymsK6MH6jXJMLAE2NmoLJRGgjCNjQ30pznuwQEWjA09xpUKNVz0v/CXw7nSA==
+X-Received: by 2002:a63:f00d:: with SMTP id k13mr28265pgh.263.1592507125612;
+        Thu, 18 Jun 2020 12:05:25 -0700 (PDT)
+Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
+        by smtp.gmail.com with ESMTPSA id f14sm3178937pjq.36.2020.06.18.12.05.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 12:05:24 -0700 (PDT)
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        hverkuil@xs4all.nl
+Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Subject: [PATCH v3 0/2] media: Add colors' order and other info over test image
+Date:   Fri, 19 Jun 2020 00:35:04 +0530
+Message-Id: <20200618190506.11892-1-kgupta@es.iitr.ac.in>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 08:34:48PM +0200, Uladzislau Rezki wrote:
-> > > > 
-> > > > I suspect that he would like to keep the tracing.
-> > > > 
-> > > > It might be worth trying the branches, given that they would be constant
-> > > > and indexed by "i".  The compiler might well remove the indirection.
-> > > > 
-> > > > The compiler guys brag about doing so, which of course might or might
-> > > > not have any correlation to a given compiler actually doing so.  :-/
-> > > > 
-> > > > Having a vfree_bulk() might well be useful, but I would feel more
-> > > > confidence in that if there were other callers of kfree_bulk().
-> > > >
-> > > Hmm... I think replacing that with vfree_bulk() is a good idea though.
-> > 
-> > In other words, get rid of kfree_bulk() in favor of vfree_bulk()?
-> > 
-> kfree_bulk() does not understand vmalloc memory. vfree_bulk() should
-> be implemented to release vmalloc's pointers. On i high level it will
-> be used the same way as kfree_bulk() but for vmalloc ptrs. only.
+This patchset aims to add a method to display the correct order of
+colors for a test image generated. It does so by adding a function
+which returns a string of correct order of the colors for a test
+pattern. It then adds a control in vimc which displays the string 
+over test image. It also displays some other information like saturation,
+hue, contrast and brightness over test image generated by vimc.
 
-Ah, I thought that you guys were proposing something that did bulk
-free of both kmalloc and vmalloc memory.
+Changes since v3:
+	In 1st patch:
+	-Improved formatting of returned string.
 
-							Thanx, Paul
+	In 2nd patch:
+	 - Add CID prefix in control name and change it to a more
+	   generic name.
+	 - Rename bool variable to a generic name.
+	 - Disable text rendering instead of stopping stream if no
+	   font found.
+	 - Display more info like VIVID in VIMC.
 
-> > > > But again, either way, future work as far as this series is concerned.
-> > > > 
-> > > What do you mean: is concerned?
-> > 
-> > Apologies for the strange English.  How about this?
-> > 
-> > "This series is OK as is.  Any comments above did not prevent me from
-> > taking these patches, but instead discuss possible future work."
-> > 
-> That is perfectly clear to me :)
-> 
-> > > We are planning to implement kfree_rcu() to be integrated directly into
-> > > SLAB: SLAB, SLUB, SLOB. So, there are plenty of future work :)
-> >
-> > And I am glad that this is still the goal.  ;-)
-> >
-> :)
-> 
-> --
-> Vlad Rezki
+Changes since v2:
+	In 1st patch:
+	- Create a 'define' to prevent repetition of the common color
+          sequence string.
+        - Use 'fallthrough' on case statement to prevent repetition of
+          code.
+
+Changes since v1:
+        - Divided the patch into two patches.
+        - Returned NULL for patterns whose color order cannot be
+          defined. (Reported-by: kernel test robot <lkp@intel.com>)
+        - Made separate switch cases for separate test patterns
+         (Reported-by: kernel test robot <lkp@intel.com>)
+        - Renamed variables from camelcase to use '_'
+        - prefixed 'media' to the patches.
+
+Kaaira Gupta (2):
+  media: tpg: Add function to return colors' order of test image
+  media: vimc: Add a control to display info on test image
+
+ drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 32 ++++++++++++-
+ drivers/media/test-drivers/vimc/Kconfig       |  2 +
+ drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+ drivers/media/test-drivers/vimc/vimc-sensor.c | 47 ++++++++++++++++++-
+ include/media/tpg/v4l2-tpg.h                  |  1 +
+ 5 files changed, 80 insertions(+), 3 deletions(-)
+
+-- 
+2.17.1
+
