@@ -2,135 +2,139 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AFDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F80A20890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A645A20890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:03:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="UCkLZZdc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZTh/FsJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbgFRUCt (ORCPT
+        id S1730805AbgFRUDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:02:49 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:16855 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730714AbgFRUCq (ORCPT
+        Thu, 18 Jun 2020 16:03:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729580AbgFRUDl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:02:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1592510567; x=1624046567;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gJuYaqcKR+OMZ7sPr5EK6CTqXx7WnxJVT3V/UoaoUYA=;
-  b=UCkLZZdcDTo5oXLXKzeJk1GOYlrTgqkchBcrKP2JClc9xOKkMO2iNMf8
-   Bb83lyoW5P6uu62ozDd1lkyjymmCtJ+jpYXAfjGgEqIVfooEZA2ZYSC3m
-   ciSJEejkjxeBCOHbj9AcgCiZH0mWPVpy+3DCuRDiRy2xRkHdAlMiAcGTO
-   OQiOaLHaexSB5+viK3fLsFtfD39Bre0Wjb5+vk/ccSXAOOPksvRL2pIVP
-   +N0ACGQiUfSAOtzx8mcXeJM4vGYfLCzmerj4cfSyJS9kR9TiUZc8/akYq
-   lPRlDYU+Rk1Qu1gYR7KZM9/Wj5jpp+FF6qMZ4qPE22rci27fs/Vuiq5+K
-   g==;
-IronPort-SDR: ILU2r48T7kblUQvxAN0an4u6NfzqwC+9koRWMrqmuxM250Ep55LnMiJ/m4KP7NJD0MkFFSMBZz
- NwRhkrDGJDVBXjQAkX2Sunc5K0fdhCS3D3w4TOofS1u8MDeW10NehjxlKaEkP4GMXyrUMBJIQw
- gVddJ7i+aFKhRXHTydyYlEPTycCiHWymC15ZFYTBdDDQEWn19lkr7QhiQBDt3lKwOKPnxQdV0h
- BofBirRpeAG2WFwfgOFiUMiNvpTUfy+9Ms6faCeyTo5MyCCMyhi0QD76Q6a0tb76RTn7SJXRrK
- NWg=
-X-IronPort-AV: E=Sophos;i="5.75,252,1589212800"; 
-   d="scan'208";a="140608375"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 19 Jun 2020 04:02:46 +0800
-IronPort-SDR: LKJNZlmvBCiB+DykRE8Uz/BbBy4U6ukRmQmjmu3TW6w+xpzoU7sIVM/ybDolXLLGG7bJvqREa0
- GELjuqVgCy8PJi0mmEK7dELAE0UKgnMmk=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 12:51:25 -0700
-IronPort-SDR: 4x42ejM9hx1A2RKaVuLbvcjCLRTdokmVOWyuf781LTlTNCDoj7DmNk3s2yEx6lMKSh8/mr630K
- RoEuSZq6Pohw==
-WDCIronportException: Internal
-Received: from usa001298.ad.shared (HELO localhost.hgst.com) ([10.86.58.149])
-  by uls-op-cesaip02.wdc.com with ESMTP; 18 Jun 2020 13:02:44 -0700
-From:   Niklas Cassel <niklas.cassel@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc:     Niklas Cassel <niklas.cassel@wdc.com>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] nvmet: remove workarounds for gcc bug wrt unnamed fields in initializers
-Date:   Thu, 18 Jun 2020 22:02:34 +0200
-Message-Id: <20200618200235.1104587-3-niklas.cassel@wdc.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200618200235.1104587-1-niklas.cassel@wdc.com>
-References: <20200618200235.1104587-1-niklas.cassel@wdc.com>
+        Thu, 18 Jun 2020 16:03:41 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 655DEC06174E;
+        Thu, 18 Jun 2020 13:03:41 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id n23so8790551ljh.7;
+        Thu, 18 Jun 2020 13:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xY2HlaoZmjAUGYdihKpKBP2AgWF7hu3wdXSeYzOnmxw=;
+        b=aZTh/FsJiZ5SD2HR+wSHizlouOjCpprPqkaO6K7VCoUivCKDqeLnncjaUB1vZTOpgP
+         F2/DxicoJsbd3MQGD1l5dhb7Fxy4M6+G96bwagnKmLF8RhNq1Q7gPwmHNY38jxHchvM0
+         wMyDeLHWCmwQPTr8CN9pj99lDo1BU2EWpNvJua5F1KqY4XrFA6NY4fI4g8piLTmAekBN
+         +yMl6Nq2XiofgZ7cXsRtt6HEQ9szs9yvpBWI0G3l0Sh75qOA/Il1volU1dQOsKxnznyc
+         z6ye/WJBA8e+VpAVb0rcbuGPprWnxz42B2owD8QlMMnVnzD6khNCHCusmgaVGyFKq+qt
+         LGKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xY2HlaoZmjAUGYdihKpKBP2AgWF7hu3wdXSeYzOnmxw=;
+        b=WED+xD0n5Q9F0+mwU0rrtIvMDsqeO14G+S4WZcPAukJqZnqoERHQhhaJA9zCPU+nbj
+         mXrjQJKJ5cjRzodzeAV0qANcUSLMmW0/MPZizOkjeTKYf24WBw2sNIzclsNryP8bMh9H
+         CWiXlIuvsQDv9dCTNJnLoqs8P/Xgezbpo3+gQQ3KzcVDezT95CAMRkrl15w5PEoKhv/b
+         clTkWnTXLwAiW69005G4tkfxOs7UN9j1Tt+0G4oQSo0WeFR9i7Pk4/r5Z/aqe5Pm0L4V
+         F0wws03dJAIgGNFGmF8xMkuDIVQSK1JA6yEvmABFmzAdiCQsw5uu8xkxZiQ2tK3+syDR
+         v/3A==
+X-Gm-Message-State: AOAM531cKW76FoF+FC/pP8sqTjp1zGqs0U3mOAXxsL4gxIPe4cUU7RTL
+        REOTGZ/llhv4IwStUYIBwLQ=
+X-Google-Smtp-Source: ABdhPJwvDka/mu2unJaC+48s8sys0a9/bvBa/N3yCvh4tyOHu1/jfxDrJbZyZcwjoCv4Fg8Uh45pXw==
+X-Received: by 2002:a2e:954c:: with SMTP id t12mr20653ljh.287.1592510619839;
+        Thu, 18 Jun 2020 13:03:39 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id s62sm472931lja.100.2020.06.18.13.03.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 13:03:36 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Thu, 18 Jun 2020 22:03:33 +0200
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
+ ptrs
+Message-ID: <20200618200333.GA16976@pc636>
+References: <20200525214800.93072-1-urezki@gmail.com>
+ <20200525214800.93072-10-urezki@gmail.com>
+ <20200617234609.GA10087@paulmck-ThinkPad-P72>
+ <20200618005214.GN8681@bombadil.infradead.org>
+ <20200618173049.GB14613@pc636>
+ <20200618173527.GR8681@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618173527.GR8681@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Workarounds for gcc issues with initializers and anon unions was first
-introduced in commit e44ac588cd61 ("drivers/block/nvme-core.c: fix build
-with gcc-4.4.4").
+On Thu, Jun 18, 2020 at 10:35:27AM -0700, Matthew Wilcox wrote:
+> On Thu, Jun 18, 2020 at 07:30:49PM +0200, Uladzislau Rezki wrote:
+> > > I'd suggest:
+> > > 
+> > >  			rcu_lock_acquire(&rcu_callback_map);
+> > > 			trace_rcu_invoke_kfree_bulk_callback(rcu_state.name,
+> > > 				bkvhead[i]->nr_records, bkvhead[i]->records);
+> > >  			if (i == 0) {
+> > >  				kfree_bulk(bkvhead[i]->nr_records,
+> > >  					bkvhead[i]->records);
+> > >  			} else {
+> > >  				for (j = 0; j < bkvhead[i]->nr_records; j++) {
+> > >  					vfree(bkvhead[i]->records[j]);
+> > >  				}
+> > >  			}
+> > >  			rcu_lock_release(&rcu_callback_map);
+> > >
+> > There are two different trace functions, one for "bulk" tracing
+> > messages, and another one is per one call of kfree(), though we use 
+> > to indicate vfree() call.
+> > 
+> > Probably we can rename it to: trace_rcu_invoke_kvfree_callback();
+> > 
+> > What do you think?
+> 
+> Works for me!
+> 
+OK. I will send out the patch that will rename that trace function
+that makes clear that the pointer that is freed can belong to SLAB
+or vmalloc.
 
-The gcc bug in question has been fixed since gcc 4.6.0:
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=10676
+> > > But I'd also suggest a vfree_bulk be added.  There are a few things
+> > > which would be better done in bulk as part of the vfree process
+> > > (we batch them up already, but i'm sure we could do better).
+> > 
+> > I was thinking to implement of vfree_bulk() API, but i guess it can
+> > be done as future work.
+> > 
+> > Does that sound good?
+> 
+> Yes, definitely a future piece of work.
+>
+You have already been doing it.
 
-The minimum gcc version for building the kernel has been 4.6.0 since
-commit cafa0010cd51 ("Raise the minimum required gcc version to 4.6"),
-and has since been updated to gcc 4.8.0 in
-commit 5429ef62bcf3 ("compiler/gcc: Raise minimum GCC version for
-kernel builds to 4.8").
+Thank you, Matthew :)
 
-For that reason, it should now be safe to remove these workarounds
-and make the code look like it did before
-commit e44ac588cd61 ("drivers/block/nvme-core.c: fix build with gcc-4.4.4")
-was introduced.
-
-Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
----
- drivers/nvme/target/rdma.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/nvme/target/rdma.c b/drivers/nvme/target/rdma.c
-index 6731e0349480..238bc55de561 100644
---- a/drivers/nvme/target/rdma.c
-+++ b/drivers/nvme/target/rdma.c
-@@ -1535,19 +1535,20 @@ static int nvmet_rdma_cm_accept(struct rdma_cm_id *cm_id,
- 		struct nvmet_rdma_queue *queue,
- 		struct rdma_conn_param *p)
- {
--	struct rdma_conn_param  param = { };
--	struct nvme_rdma_cm_rep priv = { };
-+	struct nvme_rdma_cm_rep priv = {
-+		.recfmt = cpu_to_le16(NVME_RDMA_CM_FMT_1_0),
-+		.crqsize = cpu_to_le16(queue->recv_queue_size),
-+	};
-+	struct rdma_conn_param  param = {
-+		.rnr_retry_count = 7,
-+		.flow_control = 1,
-+		.initiator_depth = min_t(u8, p->initiator_depth,
-+			queue->dev->device->attrs.max_qp_init_rd_atom),
-+		.private_data = &priv,
-+		.private_data_len = sizeof(priv),
-+	};
- 	int ret = -ENOMEM;
- 
--	param.rnr_retry_count = 7;
--	param.flow_control = 1;
--	param.initiator_depth = min_t(u8, p->initiator_depth,
--		queue->dev->device->attrs.max_qp_init_rd_atom);
--	param.private_data = &priv;
--	param.private_data_len = sizeof(priv);
--	priv.recfmt = cpu_to_le16(NVME_RDMA_CM_FMT_1_0);
--	priv.crqsize = cpu_to_le16(queue->recv_queue_size);
--
- 	ret = rdma_accept(cm_id, &param);
- 	if (ret)
- 		pr_err("rdma_accept failed (error code = %d)\n", ret);
--- 
-2.26.2
-
+--
+Vlad Rezki
