@@ -2,107 +2,213 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05F662192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2CC921534
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:06:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592442361;
+	bh=fCKvWeZHV681pg3LNgZSQbejrSkS+9SbuvF+zjEAulA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kalti8U6f6syUKTaIl1FuVdZtt4rENjrFE2YBk6wcOf1TiboMRsL8jpeqvMSKRfK8
+	 Qi63ZT1T+/74yoMnD9RHNcRhitiGQYXZrg95JB8ORRY3Ps1QihFje8bpjxlLmajX+Z
+	 3XB+lIoIt5nqzI4SDcey9spUnNc+T8pUjcGyakaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgFRBFH (ORCPT
+        id S1727093AbgFRBGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:05:07 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6277 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726893AbgFRBFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:05:06 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 92C832C2A3F5508B2D0E;
-        Thu, 18 Jun 2020 09:05:04 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.203.42) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 18 Jun 2020 09:04:54 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>
-CC:     <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
-        <netdev@vger.kernel.org>, <linyunsheng@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        Barry Song <song.bao.hua@hisilicon.com>
-Subject: [PATCH 5/5] net: hns3: streaming dma buffer sync between cpu and device
-Date:   Thu, 18 Jun 2020 13:02:11 +1200
-Message-ID: <20200618010211.75840-6-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
-In-Reply-To: <20200618010211.75840-1-song.bao.hua@hisilicon.com>
-References: <20200618010211.75840-1-song.bao.hua@hisilicon.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.203.42]
-X-CFilter-Loop: Reflected
+        Wed, 17 Jun 2020 21:06:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726854AbgFRBF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:05:59 -0400
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3420E21527;
+        Thu, 18 Jun 2020 01:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592442359;
+        bh=fCKvWeZHV681pg3LNgZSQbejrSkS+9SbuvF+zjEAulA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=APtuJ/AWPatfvPNmx/3CBgL56NJJjWfNJ/A2S0+7BCrQAJlgCh+5AqEY6R+xiNsmt
+         UuYz3NQh6Pe+hPCTYLrrfHZEtqE0UOMNjbAi8mn1cfQe5u0ORKsA5H7Qxi7+x8BbiH
+         SUte9/ml3rR00eV8OpZ/OHU/MrjPssnDeaSd9BME=
+Date:   Wed, 17 Jun 2020 18:05:58 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Kent Overstreet <kent.overstreet@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] fs: generic_file_buffered_read() now uses
+ find_get_pages_contig
+Message-Id: <20200617180558.9722e7337cbe3b88c4767126@linux-foundation.org>
+In-Reply-To: <20200610013642.4171512-2-kent.overstreet@gmail.com>
+References: <20200610001036.3904844-1-kent.overstreet@gmail.com>
+        <20200610013642.4171512-2-kent.overstreet@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now they are empty functions for our SoC since hardware can keep
-cache coherent, but it is still good to align with streaming DMA APIs
-as device drivers should not make an assumption of SoC.
+On Tue,  9 Jun 2020 21:36:42 -0400 Kent Overstreet <kent.overstreet@gmail.com> wrote:
 
-Reviewed-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
----
- .../net/ethernet/hisilicon/hns3/hns3_enet.c    | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+> Convert generic_file_buffered_read() to get pages to read from in
+> batches, and then copy data to userspace from many pages at once - in
+> particular, we now don't touch any cachelines that might be contended
+> while we're in the loop to copy data to userspace.
+> 
+> This is is a performance improvement on workloads that do buffered reads
+> with large blocksizes, and a very large performance improvement if that
+> file is also being accessed concurrently by different threads.
+> 
+> On smaller reads (512 bytes), there's a very small performance
+> improvement (1%, within the margin of error).
+> 
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 1330820152fa..b319a766889f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2473,6 +2473,11 @@ static void hns3_reuse_buffer(struct hns3_enet_ring *ring, int i)
- 	ring->desc[i].addr = cpu_to_le64(ring->desc_cb[i].dma +
- 					 ring->desc_cb[i].page_offset);
- 	ring->desc[i].rx.bd_base_info = 0;
-+
-+	dma_sync_single_for_device(ring_to_dev(ring),
-+			ring->desc_cb[i].dma + ring->desc_cb[i].page_offset,
-+			hns3_buf_size(ring),
-+			DMA_FROM_DEVICE);
- }
- 
- static void hns3_nic_reclaim_desc(struct hns3_enet_ring *ring, int head,
-@@ -2918,6 +2923,11 @@ static int hns3_add_frag(struct hns3_enet_ring *ring)
- 			skb = ring->tail_skb;
- 		}
- 
-+		dma_sync_single_for_cpu(ring_to_dev(ring),
-+				desc_cb->dma + desc_cb->page_offset,
-+				hns3_buf_size(ring),
-+				DMA_FROM_DEVICE);
-+
- 		hns3_nic_reuse_page(skb, ring->frag_num++, ring, 0, desc_cb);
- 		trace_hns3_rx_desc(ring);
- 		ring_ptr_move_fw(ring, next_to_clean);
-@@ -3069,9 +3079,15 @@ static int hns3_handle_rx_bd(struct hns3_enet_ring *ring)
- 	if (unlikely(!(bd_base_info & BIT(HNS3_RXD_VLD_B))))
- 		return -ENXIO;
- 
--	if (!skb)
-+	if (!skb) {
- 		ring->va = desc_cb->buf + desc_cb->page_offset;
- 
-+		dma_sync_single_for_cpu(ring_to_dev(ring),
-+				desc_cb->dma + desc_cb->page_offset,
-+				hns3_buf_size(ring),
-+				DMA_FROM_DEVICE);
-+	}
-+
- 	/* Prefetch first cache line of first page
- 	 * Idea is to cache few bytes of the header of the packet. Our L1 Cache
- 	 * line size is 64B so need to prefetch twice to make it 128B. But in
--- 
-2.23.0
+checkpatch goes fairly crazy over this one, mostly legitimate.
 
+> @@ -2255,6 +2194,79 @@ generic_file_buffered_read_no_cached_page(struct kiocb *iocb,
+>  	return generic_file_buffered_read_readpage(filp, mapping, page);
+>  }
+>  
+> +static int generic_file_buffered_read_get_pages(struct kiocb *iocb,
+> +						struct iov_iter *iter,
+> +						struct page **pages,
+> +						unsigned nr)
+> +{
+> +	struct file *filp = iocb->ki_filp;
+> +	struct address_space *mapping = filp->f_mapping;
+> +	struct file_ra_state *ra = &filp->f_ra;
+> +	pgoff_t index = iocb->ki_pos >> PAGE_SHIFT;
+> +	pgoff_t last_index = (iocb->ki_pos + iter->count + PAGE_SIZE-1) >> PAGE_SHIFT;
+> +	int i, j, ret, err = 0;
+> +
+> +	nr = min_t(unsigned long, last_index - index, nr);
+> +find_page:
+> +	if (fatal_signal_pending(current))
+> +		return -EINTR;
+> +
+> +	ret = find_get_pages_contig(mapping, index, nr, pages);
+> +	if (ret)
+> +		goto got_pages;
+> +
+> +	if (iocb->ki_flags & IOCB_NOWAIT)
+> +		return -EAGAIN;
+> +
+> +	page_cache_sync_readahead(mapping, ra, filp, index, last_index - index);
+> +
+> +	ret = find_get_pages_contig(mapping, index, nr, pages);
+> +	if (ret)
+> +		goto got_pages;
+> +
+> +	pages[0] = generic_file_buffered_read_no_cached_page(iocb, iter);
+> +	err = PTR_ERR_OR_ZERO(pages[0]);
+> +	ret = !IS_ERR_OR_NULL(pages[0]);
+
+what?
+
+> +got_pages:
+> +	for (i = 0; i < ret; i++) {
+
+Comparing i with ret here just hurts my brain.  Two lines ago ret was a
+boolean, now it's a scalar.
+
+> +		struct page *page = pages[i];
+> +		pgoff_t pg_index = index +i;
+> +		loff_t pg_pos = max(iocb->ki_pos,
+> +				    (loff_t) pg_index << PAGE_SHIFT);
+
+hm.  I guess we can't use max_t here because we need to cast the
+pgoff_t before the << to avoid overflows on 32-bit.  Perhaps this could
+be cleaned up by using additional suitably typed and named locals.
+
+> +		loff_t pg_count = iocb->ki_pos + iter->count - pg_pos;
+> +
+> +		if (PageReadahead(page))
+> +			page_cache_async_readahead(mapping, ra, filp, page,
+> +					pg_index, last_index - pg_index);
+> +
+> +		if (!PageUptodate(page)) {
+> +			if (iocb->ki_flags & IOCB_NOWAIT) {
+> +				for (j = i; j < ret; j++)
+> +					put_page(pages[j]);
+> +				ret = i;
+> +				err = -EAGAIN;
+> +				break;
+> +			}
+> +
+> +			page = generic_file_buffered_read_pagenotuptodate(filp,
+> +						iter, page, pg_pos, pg_count);
+> +			if (IS_ERR_OR_NULL(page)) {
+> +				for (j = i + 1; j < ret; j++)
+> +					put_page(pages[j]);
+> +				ret = i;
+> +				err = PTR_ERR_OR_ZERO(page);
+> +				break;
+> +			}
+> +		}
+> +	}
+> +
+> +	if (likely(ret))
+> +		return ret;
+> +	if (err)
+> +		return err;
+> +	goto find_page;
+> +}
+> +
+>  /**
+>   * generic_file_buffered_read - generic file read routine
+>   * @iocb:	the iocb to read
+> @@ -2275,86 +2287,108 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
+>  		struct iov_iter *iter, ssize_t written)
+>  {
+>  	struct file *filp = iocb->ki_filp;
+> +	struct file_ra_state *ra = &filp->f_ra;
+>  	struct address_space *mapping = filp->f_mapping;
+>  	struct inode *inode = mapping->host;
+> -	struct file_ra_state *ra = &filp->f_ra;
+>  	size_t orig_count = iov_iter_count(iter);
+> -	pgoff_t last_index;
+> -	int error = 0;
+> +	struct page *page_array[8], **pages;
+> +	unsigned nr_pages = ARRAY_SIZE(page_array);
+> +	unsigned read_nr_pages = ((iocb->ki_pos + iter->count + PAGE_SIZE-1) >> PAGE_SHIFT) -
+> +		(iocb->ki_pos >> PAGE_SHIFT);
+> +	int i, pg_nr, error = 0;
+> +	bool writably_mapped;
+> +	loff_t isize, end_offset;
+>  
+>  	if (unlikely(iocb->ki_pos >= inode->i_sb->s_maxbytes))
+>  		return 0;
+>  	iov_iter_truncate(iter, inode->i_sb->s_maxbytes);
+>  
+> -	last_index = (iocb->ki_pos + iter->count + PAGE_SIZE-1) >> PAGE_SHIFT;
+> -
+> -	for (;;) {
+> -		pgoff_t index = iocb->ki_pos >> PAGE_SHIFT;
+> -		struct page *page;
+> +	if (read_nr_pages > nr_pages &&
+> +	    (pages = kmalloc_array(read_nr_pages, sizeof(void *), GFP_KERNEL)))
+
+I agree with checkpatch!
+
+> +		nr_pages = read_nr_pages;
+> +	else
+> +		pages = page_array;
+>  
+> +	do {
+>  		cond_resched();
+>
+> ...
+>
+
+Please, can we make all this code nice to read?
 
