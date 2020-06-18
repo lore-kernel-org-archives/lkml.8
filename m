@@ -2,156 +2,147 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3400C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D92C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDAF8208D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9947D208D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:48:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OcNB5enP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JV9ewt8k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731308AbgFRVpT (ORCPT
+        id S1731380AbgFRVsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 17:45:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725982AbgFRVpT (ORCPT
+        Thu, 18 Jun 2020 17:48:20 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49455 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727109AbgFRVsT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 17:45:19 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD08C0613EE
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 14:45:19 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ga6so3165383pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 14:45:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7m9IQb77WMRokOHCzjIG9BXkj3DN9XbzWU3McEPzT8M=;
-        b=OcNB5enPK8vW1r84gntMK0xfEmL/Jimh5afRSEsvDbZzXnL3YX6s65onPZf514fpdl
-         daeUA9Ca6KGAn/1VBWBh6Y0kHs7R74fSQA1Q8WfojvcSvXYlYTocfEVj7W408/sfRkFn
-         cjO+fs0Dwn6W7fzwjCeJYRqLcxUaVT8lTBlC4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7m9IQb77WMRokOHCzjIG9BXkj3DN9XbzWU3McEPzT8M=;
-        b=EsT3QtIM9Ijl8d/Kz7b1B83DWHLf04NLnVmubGFBly5WUVZOWinbPu/rYRSX4Ii8h/
-         pchDlfyiQeTiA1o/VPLm44nHAyQ24pqNgyY/bt1326PaT4rVVZjRDQ5is14HJd29OdMt
-         m0fz0YZApX/XxklfK0ihnfdUXJ3CzTOXA3WrGl3MLJdCEGG7mZrvm9XMqV2HiHcOLigq
-         At0ruH+oR5fc/aRaL3pOlMQhYHaKF0FQCigQJZW6283c2FC8JpF6zgIbiCdAWGHmm1dN
-         312QiNCELbyIGUR8IDENczKuA3MOBPuK+qWpxnBBYTBVk0YmwADuwrhvLEoEWZ2/YPb5
-         +QPw==
-X-Gm-Message-State: AOAM533MfcsXVLYgloU0CVI7xsSrv2BDLOo89f/6jXkfiGrkm7z+8KrA
-        axfAX9q2Oc9/sbgSDtwoZ0++YkF62W8=
-X-Google-Smtp-Source: ABdhPJz3nUvKGWRVCVOaK7H+h3HvFaJft3BtzeMV++r6/ZAd6Tosgp7bHy1wjftoAyOoxC5OGj8+NQ==
-X-Received: by 2002:a17:90a:fcc:: with SMTP id 70mr365314pjz.106.1592516718466;
-        Thu, 18 Jun 2020 14:45:18 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id q1sm3970287pfk.132.2020.06.18.14.45.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 14:45:17 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 14:45:16 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH] driver core:Export the symbol device_is_bound
-Message-ID: <20200618214516.GG4525@google.com>
-References: <1591123192-565-1-git-send-email-sanm@codeaurora.org>
- <20200618081443.GA1043700@kroah.com>
- <20200618154555.GD4525@google.com>
- <20200618155820.GA3076467@kroah.com>
- <20200618165151.GE4525@google.com>
- <CAL_Jsq+5NCvvpKd-69QvgqK6wzbc53=MTt-TcVop23hjT6Rs_g@mail.gmail.com>
+        Thu, 18 Jun 2020 17:48:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592516898;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Dc9heaTCynzHYHV4WlgGjIqZinjw20a4OkBWJ6TlbCw=;
+        b=JV9ewt8km1BgAxx8lVQ03VI6iAH6eQEDPAPGTQM6hemG6Xh26HkUaBSRIKszPs/JFDTsTW
+        Zvt1/lUheCKtwj+NNBeu/Ly3paPzseuD128yHjVyPewRh43TB1LATj2kRZpZejX7F8GHJ0
+        MIHOCTIRiZ5GGQTAHWikfMRKGUlDEvE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-504-S-WrlH3MNkODHHSRJHshhQ-1; Thu, 18 Jun 2020 17:48:14 -0400
+X-MC-Unique: S-WrlH3MNkODHHSRJHshhQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3CA1A464;
+        Thu, 18 Jun 2020 21:48:12 +0000 (UTC)
+Received: from w520.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 09F4A121A2E;
+        Thu, 18 Jun 2020 21:48:05 +0000 (UTC)
+Date:   Thu, 18 Jun 2020 15:48:05 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v2 1/3] docs: IOMMU user API
+Message-ID: <20200618154805.049219db@w520.home>
+In-Reply-To: <MWHPR11MB164595B754BE441255902DCA8C9A0@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <1591848735-12447-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1591848735-12447-2-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200611094741.6d118fa8@w520.home>
+        <20200611125205.1e0280d3@jacob-builder>
+        <20200611144047.79613c32@x1.home>
+        <20200611172727.78dbb822@jacob-builder>
+        <20200616082212.0c1611dd@jacob-builder>
+        <DM5PR11MB1435DD578488DA08A1E699ACC39A0@DM5PR11MB1435.namprd11.prod.outlook.com>
+        <MWHPR11MB164595B754BE441255902DCA8C9A0@MWHPR11MB1645.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+5NCvvpKd-69QvgqK6wzbc53=MTt-TcVop23hjT6Rs_g@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 11:33:49AM -0600, Rob Herring wrote:
-> On Thu, Jun 18, 2020 at 10:51 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> >
-> > On Thu, Jun 18, 2020 at 05:58:20PM +0200, Greg Kroah-Hartman wrote:
-> > > On Thu, Jun 18, 2020 at 08:45:55AM -0700, Matthias Kaehlcke wrote:
-> > > > Hi Greg,
-> > > >
-> > > > On Thu, Jun 18, 2020 at 10:14:43AM +0200, Greg Kroah-Hartman wrote:
-> > > > > On Wed, Jun 03, 2020 at 12:09:52AM +0530, Sandeep Maheswaram wrote:
-> > > > > > Export the symbol device_is_bound so that it can be used by the modules.
+On Wed, 17 Jun 2020 08:28:24 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
+
+> > From: Liu, Yi L <yi.l.liu@intel.com>
+> > Sent: Wednesday, June 17, 2020 2:20 PM
+> >   
+> > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > Sent: Tuesday, June 16, 2020 11:22 PM
+> > >
+> > > On Thu, 11 Jun 2020 17:27:27 -0700
+> > > Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+> > >  
 > > > > >
-> > > > > What modules need this?
+> > > > > But then I thought it even better if VFIO leaves the entire
+> > > > > copy_from_user() to the layer consuming it.
+> > > > >  
+> > > > OK. Sounds good, that was what Kevin suggested also. I just wasn't
+> > > > sure how much VFIO wants to inspect, I thought VFIO layer wanted to do
+> > > > a sanity check.
 > > > >
-> > > > drivers/usb/dwc3/dwc3-qcom.c (and probably other dwc3 'wrappers').
+> > > > Anyway, I will move copy_from_user to iommu uapi layer.  
 > > >
-> > > Why wasn't that said here?  No context is not good :(
-> >
-> > Agreed, this patch should probably have been part of a series to establish
-> > the context.
-> >
-> > > > Short summary: QCOM dwc3 support is split in two drivers, the core dwc3
-> > > > driver and the QCOM specific parts. dwc3-qcom is probed first (through
-> > > > a DT entry or ACPI), dwc3_qcom_probe() then calls of_platform_populate()
-> > > > to probe the core part. After a successful return from _populate() the
-> > > > driver assumes that the core device is fully initialized. However the
-> > > > latter is not correct, the driver core doesn't propagate errors from
-> > > > probe() to platform_populate(). The dwc3-qcom driver would use
-> > > > device_is_bound() to make sure the core device was probed successfully.
+> > > Just one more point brought up by Yi when we discuss this offline.
 > > >
-> > > why does the dwc3-qcom driver care?
-> >
-> > Currently the dwc3-qcom driver uses the core device to determine if the
-> > controller is used in peripheral mode and it runtime resumes the XHCI
-> > device when it sees a wakeup interrupt.
-> >
-> > The WIP patch to add interconnect support relies on the core driver
-> > to determine the max speed of the controller.
-> >
-> > > And why is the driver split in a way that requires such "broken"
-> > > structures?  Why can't that be fixed instead?
-> >
-> > It seems determining the mode could be easily changed by getting it through
-> > the pdev, as in st_dwc3_probe(). Not sure about the other two parts,
-> > determining the maximum speed can involve evaluating hardware registers,
-> > which currently are 'owned' by the core driver.
-> >
-> > Manu or Sandeep who know the hardware and the driver better than me might
-> > have ideas on how to improve things.
+> > > If we move copy_from_user to iommu uapi layer, then there will be  
+> > multiple  
+> > > copy_from_user calls for the same data when a VFIO container has  
+> > multiple domains,  
+> > > devices. For bind, it might be OK. But might be additional overhead for TLB  
+> > flush  
+> > > request from the guest.  
+> > 
+> > I think it is the same with bind and TLB flush path. will be multiple
+> > copy_from_user.  
 > 
-> We never should have had this split either in the DT binding nor
-> driver(s) as if the SoC wrapper crap and licensed IP block are
-> independent things. The thing to do here is either make the DWC3 code
-> a library which drivers call (e.g. SDHCI) or add hooks into the DWC3
-> driver for platform specifics (e.g. Designware PCI). Neither is a
-> simple solution though.
+> multiple copies is possibly fine. In reality we allow only one group per
+> nesting container (as described in patch [03/15]), and usually there
+> is just one SVA-capable device per group.
+> 
+> > 
+> > BTW. for moving data copy to iommy layer, there is another point which
+> > need to consider. VFIO needs to do unbind in bind path if bind failed,
+> > so it will assemble unbind_data and pass to iommu layer. If iommu layer
+> > do the copy_from_user, I think it will be failed. any idea?
 
-Sounds reasonable, but as you say it's likely not a short term
-solution. If someone ever picked it up maybe they could create a
-new driver (with plenty of copied code from the current driver)
-and start with supporting a single platform (with multi-platform
-support in the driver architecture). Other drivers could then be
-migrated one by one by folks who have the hardware to test.
-Duplicate code is definitely not desirable, but it's probably
-more feasible than migrating all the drivers in one big bang.
+If a call into a UAPI fails, there should be nothing to undo.  Creating
+a partial setup for a failed call that needs to be undone by the caller
+is not good practice.
 
-I guess for now we are stuck with the race in the dwc3-qcom
-driver ...
+> This might be mitigated if we go back to use the same bind_data for both
+> bind/unbind. Then you can reuse the user object for unwinding.
+> 
+> However there is another case where VFIO may need to assemble the
+> bind_data itself. When a VM is killed, VFIO needs to walk allocated PASIDs
+> and unbind them one-by-one. In such case copy_from_user doesn't work
+> since the data is created by kernel. Alex, do you have a suggestion how this
+> usage can be supported? e.g. asking IOMMU driver to provide two sets of
+> APIs to handle user/kernel generated requests?
+
+Yes, it seems like vfio would need to make use of a driver API to do
+this, we shouldn't be faking a user buffer in the kernel in order to
+call through to a UAPI.  Thanks,
+
+Alex
+
