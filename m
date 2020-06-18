@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25246C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7419DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F05CE20853
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C4820853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446370;
-	bh=qwWVZZSogKHOKdD+/TNkv9MdERr/wR1hK4lokgNE7TI=;
+	s=default; t=1592446376;
+	bh=Jn566st4WXENMqlUQMlT38EichEb2vGs1vnaLTneYyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=osalX6MmS3BCdeLQHkWUDS+9QFpU+Vh0QAPb51B++DUhwMPHO0z4Dkw41hh7E+NOn
-	 ElewG1eVvEAUUIpKv9EuWFkYXbKLWOBbaeb22zi3rDy7gX2uRZNSVYPfKtKBIdIj2K
-	 CZeQrxv/Phe+9Lky6HT1ZYALiG0I9t6Nsy6j4su0=
+	b=ipxZUX3mykSkoZEeVUb4eoK6n2Mu4m2uYC1sXginHoVgwP9WbryKhnWbqXF/vBf6H
+	 Q9aiNVvSHkXb7boPLIxafoxYffC+jtTbA6VQHbgP4xgYt2oUAHH7MP9gKVf90VQKOS
+	 CWpHOy5oL39Fmy/fNYuWS4mvHMf7N8KOKoJPozsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730830AbgFRCMr (ORCPT
+        id S1727797AbgFRBVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:12:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53712 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:21:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730480AbgFRBVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:18 -0400
+        id S1729848AbgFRBR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2269221927;
-        Thu, 18 Jun 2020 01:21:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E58621D82;
+        Thu, 18 Jun 2020 01:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443277;
-        bh=qwWVZZSogKHOKdD+/TNkv9MdERr/wR1hK4lokgNE7TI=;
+        s=default; t=1592443076;
+        bh=Jn566st4WXENMqlUQMlT38EichEb2vGs1vnaLTneYyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b4mhvRo4OpDX4bK++T7GlA7UQLJ6FSdPwFcCbrKc8eKAz1+l0kENUVWAN59sFxba4
-         jO0BQ9RMfLTQxxDRio/JgyO9ruZfRP/5hfbwuPnBPLodwEO2pT3du6/t3BUZdlq1mq
-         5BAZSiNYjyomQ2BaGPtq1EZl8k3QYsBF+K64VkDE=
+        b=vcS9mFbrEy7WDqYA8kbhjAbTwAafGGnBxnmQA/cb9xy9WTrVJWWotWWbzjN9GzWSB
+         4v5w5v0b8D4S58/HmYP4xSIKaqosohtLTyBG8Ua38yv6vWBQ8aiQXGLv+Ud0ZmFINV
+         LIOdE3OVFjmdoSIgA7Z/Gqx0b1qIY3AOjhMmD1h4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 222/266] pinctrl: imxl: Fix an error handling path in 'imx1_pinctrl_core_probe()'
-Date:   Wed, 17 Jun 2020 21:15:47 -0400
-Message-Id: <20200618011631.604574-222-sashal@kernel.org>
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "J . Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 063/266] nfsd: Fix svc_xprt refcnt leak when setup callback client failed
+Date:   Wed, 17 Jun 2020 21:13:08 -0400
+Message-Id: <20200618011631.604574-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,36 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 9eb728321286c4b31e964d2377fca2368526d408 ]
+[ Upstream commit a4abc6b12eb1f7a533c2e7484cfa555454ff0977 ]
 
-When 'pinctrl_register()' has been turned into 'devm_pinctrl_register()',
-an error handling path has not been updated.
+nfsd4_process_cb_update() invokes svc_xprt_get(), which increases the
+refcount of the "c->cn_xprt".
 
-Axe a now unneeded 'pinctrl_unregister()'.
+The reference counting issue happens in one exception handling path of
+nfsd4_process_cb_update(). When setup callback client failed, the
+function forgets to decrease the refcnt increased by svc_xprt_get(),
+causing a refcnt leak.
 
-Fixes: e55e025d1687 ("pinctrl: imxl: Use devm_pinctrl_register() for pinctrl registration")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/20200530201952.585798-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fix this issue by calling svc_xprt_put() when setup callback client
+failed.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx1-core.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/nfsd/nfs4callback.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-index 7e29e3fecdb2..5bb183c0ce31 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-@@ -638,7 +638,6 @@ int imx1_pinctrl_core_probe(struct platform_device *pdev,
- 
- 	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
- 	if (ret) {
--		pinctrl_unregister(ipctl->pctl);
- 		dev_err(&pdev->dev, "Failed to populate subdevices\n");
- 		return ret;
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index afca3287184b..efe55d101b0e 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1230,6 +1230,8 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
+ 	err = setup_callback_client(clp, &conn, ses);
+ 	if (err) {
+ 		nfsd4_mark_cb_down(clp, err);
++		if (c)
++			svc_xprt_put(c->cn_xprt);
+ 		return;
  	}
+ }
 -- 
 2.25.1
 
