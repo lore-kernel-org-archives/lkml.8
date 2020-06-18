@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F225D2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE1BD2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448605;
-	bh=GPCQ9o9OX610tutUcHN29RME33dv4QpzreXiArdMxI4=;
+	s=default; t=1592448609;
+	bh=6gruKfqidV8dlcCkOj9tUa6RXFVX8x50lVwibQBN1mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=em/4yibcBfXvcybeI25NjS+YSxH5hA41Iatc+3gjlBQsUlnaPsnwjk8RVvJMMcRyZ
-	 0lhfj2DxGNRtjB47pb7DVvXciL/1bZ65dDXhLJl3rllj3JKHsfOVCEWilUXdZGCKa1
-	 PVgtb/ZhmLSHQC1X+f4DYS0AJSgMMRnDKZyNqLtA=
+	b=FksVb/IG8KOjkVsZRIPFv79FjOI4wPv9DytNduHkXGq6JeJ+wGVBQ2LMRSowAYQdV
+	 +7wNYMymT2SKruBQWwUyCAyzmxDvRgTOkoCodBHOmyIAomrqvVco+AlxoE+qABzsyo
+	 9eeN3GNSoyjIu3X9NbpS7fjW4WX7j33kYP0T1opE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbgFRCuD (ORCPT
+        id S1728141AbgFRBJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:50:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35752 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:09:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728146AbgFRBJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:09:25 -0400
+        id S1728102AbgFRBJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C086F21974;
-        Thu, 18 Jun 2020 01:09:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADE122193E;
+        Thu, 18 Jun 2020 01:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442564;
-        bh=GPCQ9o9OX610tutUcHN29RME33dv4QpzreXiArdMxI4=;
+        s=default; t=1592442556;
+        bh=6gruKfqidV8dlcCkOj9tUa6RXFVX8x50lVwibQBN1mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Enf5E4lBLeV3zH8HIXGanKZ3trM/usw74hTVpi8lgdNI/a0CGKDsdMF7s39Z16qW9
-         ousyKx3kbChuBSkDhskUdDzH9HYycIsRihsef7snhotmZztj3fPY6Gqv7SpZehdy0E
-         B6O3/FD5axWECG4vAzYb12iyYwu7UDeKI6oji5nM=
+        b=ksQ0AyCPqlmHiHObWLQsZZXtpdSuGhFQxYf8f/R0naOk4Mbm4mviGUv4K425KoFYE
+         njGtxg8A+bWByqHhU5VlVd76iWpXRBxF2TKABek2wBoVxBF96cwHWdtMymzxsyto9q
+         5WY2MsGxqWP0N1X45rrKxxz0H24ZR2XkNL+8tN7U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 059/388] arm64: dts: fvp/juno: Fix node address fields
-Date:   Wed, 17 Jun 2020 21:02:36 -0400
-Message-Id: <20200618010805.600873-59-sashal@kernel.org>
+Cc:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 053/388] pinctrl: ocelot: Fix GPIO interrupt decoding on Jaguar2
+Date:   Wed, 17 Jun 2020 21:02:30 -0400
+Message-Id: <20200618010805.600873-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,170 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Lars Povlsen <lars.povlsen@microchip.com>
 
-[ Upstream commit bb5cce12ac717c7462217cd493ed701d12d6dbce ]
+[ Upstream commit 0b47afc65453a70bc521e251138418056f65793f ]
 
-The Arm Ltd. boards were using an outdated address convention in the DT
-node names, by separating the high from the low 32-bits of an address by
-a comma.
+This fixes a problem with using the GPIO as an interrupt on Jaguar2
+(and similar), as the register layout of the platforms with 64 GPIO's
+are pairwise, such that the original offset must be multiplied with
+the platform stride.
 
-Remove the comma from the node name suffix to be DT spec compliant.
-
-Link: https://lore.kernel.org/r/20200513103016.130417-3-andre.przywara@arm.com
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: da801ab56ad8 pinctrl: ocelot: add MSCC Jaguar2 support.
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+Link: https://lore.kernel.org/r/20200513125532.24585-4-lars.povlsen@microchip.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/vexpress-v2m-rs1.dtsi              | 10 +++++-----
- arch/arm64/boot/dts/arm/foundation-v8.dtsi           |  4 ++--
- arch/arm64/boot/dts/arm/juno-motherboard.dtsi        |  6 +++---
- arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi |  2 +-
- arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi     |  6 +++---
- 5 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/pinctrl/pinctrl-ocelot.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-index 5c183483ec3b..8010cdcdb37a 100644
---- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-+++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-@@ -31,7 +31,7 @@ motherboard {
- 			#interrupt-cells = <1>;
- 			ranges;
+diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
+index ed8eac6c1494..4b99922d6c7e 100644
+--- a/drivers/pinctrl/pinctrl-ocelot.c
++++ b/drivers/pinctrl/pinctrl-ocelot.c
+@@ -714,11 +714,12 @@ static void ocelot_irq_handler(struct irq_desc *desc)
+ 	struct irq_chip *parent_chip = irq_desc_get_chip(desc);
+ 	struct gpio_chip *chip = irq_desc_get_handler_data(desc);
+ 	struct ocelot_pinctrl *info = gpiochip_get_data(chip);
++	unsigned int id_reg = OCELOT_GPIO_INTR_IDENT * info->stride;
+ 	unsigned int reg = 0, irq, i;
+ 	unsigned long irqs;
  
--			nor_flash: flash@0,00000000 {
-+			nor_flash: flash@0 {
- 				compatible = "arm,vexpress-flash", "cfi-flash";
- 				reg = <0 0x00000000 0x04000000>,
- 				      <4 0x00000000 0x04000000>;
-@@ -41,13 +41,13 @@ partitions {
- 				};
- 			};
+ 	for (i = 0; i < info->stride; i++) {
+-		regmap_read(info->map, OCELOT_GPIO_INTR_IDENT + 4 * i, &reg);
++		regmap_read(info->map, id_reg + 4 * i, &reg);
+ 		if (!reg)
+ 			continue;
  
--			psram@1,00000000 {
-+			psram@100000000 {
- 				compatible = "arm,vexpress-psram", "mtd-ram";
- 				reg = <1 0x00000000 0x02000000>;
- 				bank-width = <4>;
- 			};
- 
--			ethernet@2,02000000 {
-+			ethernet@202000000 {
- 				compatible = "smsc,lan9118", "smsc,lan9115";
- 				reg = <2 0x02000000 0x10000>;
- 				interrupts = <15>;
-@@ -59,14 +59,14 @@ ethernet@2,02000000 {
- 				vddvario-supply = <&v2m_fixed_3v3>;
- 			};
- 
--			usb@2,03000000 {
-+			usb@203000000 {
- 				compatible = "nxp,usb-isp1761";
- 				reg = <2 0x03000000 0x20000>;
- 				interrupts = <16>;
- 				port1-otg;
- 			};
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-index 60ec37d6c9d3..e2da63f78298 100644
---- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-+++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-@@ -151,7 +151,7 @@ bus@8000000 {
- 				<0 0 41 &gic 0 GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
- 				<0 0 42 &gic 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
- 
--		ethernet@2,02000000 {
-+		ethernet@202000000 {
- 			compatible = "smsc,lan91c111";
- 			reg = <2 0x02000000 0x10000>;
- 			interrupts = <15>;
-@@ -178,7 +178,7 @@ v2m_refclk32khz: refclk32khz {
- 			clock-output-names = "v2m:refclk32khz";
- 		};
- 
--		iofpga@3,00000000 {
-+		iofpga@300000000 {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-index e3983ded3c3c..d5cefddde08c 100644
---- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
-@@ -103,7 +103,7 @@ nmi-button {
- 				};
- 			};
- 
--			flash@0,00000000 {
-+			flash@0 {
- 				/* 2 * 32MiB NOR Flash memory mounted on CS0 */
- 				compatible = "arm,vexpress-flash", "cfi-flash";
- 				reg = <0 0x00000000 0x04000000>;
-@@ -120,7 +120,7 @@ partitions {
- 				};
- 			};
- 
--			ethernet@2,00000000 {
-+			ethernet@200000000 {
- 				compatible = "smsc,lan9118", "smsc,lan9115";
- 				reg = <2 0x00000000 0x10000>;
- 				interrupts = <3>;
-@@ -133,7 +133,7 @@ ethernet@2,00000000 {
- 				vddvario-supply = <&mb_fixed_3v3>;
- 			};
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-index 60703b5763c6..350cbf17e8b4 100644
---- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-+++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-@@ -9,7 +9,7 @@ bus@8000000 {
- 		motherboard {
- 			arm,v2m-memory-map = "rs2";
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				virtio-p9@140000 {
- 					compatible = "virtio,mmio";
- 					reg = <0x140000 0x200>;
-diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-index e333c8d2d0e4..d1bfa62ca073 100644
---- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-@@ -17,14 +17,14 @@ motherboard {
- 			#interrupt-cells = <1>;
- 			ranges;
- 
--			flash@0,00000000 {
-+			flash@0 {
- 				compatible = "arm,vexpress-flash", "cfi-flash";
- 				reg = <0 0x00000000 0x04000000>,
- 				      <4 0x00000000 0x04000000>;
- 				bank-width = <4>;
- 			};
- 
--			ethernet@2,02000000 {
-+			ethernet@202000000 {
- 				compatible = "smsc,lan91c111";
- 				reg = <2 0x02000000 0x10000>;
- 				interrupts = <15>;
-@@ -51,7 +51,7 @@ v2m_refclk32khz: refclk32khz {
- 				clock-output-names = "v2m:refclk32khz";
- 			};
- 
--			iofpga@3,00000000 {
-+			iofpga@300000000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
 -- 
 2.25.1
 
