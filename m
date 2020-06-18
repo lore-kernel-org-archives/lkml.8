@@ -2,240 +2,215 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E567C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B26BC207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 025D7207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:29:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ljl0z/8F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mg8xt2oO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbgFRU2J (ORCPT
+        id S1729170AbgFRU3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54124 "EHLO
+        Thu, 18 Jun 2020 16:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728850AbgFRU2H (ORCPT
+        with ESMTP id S1726193AbgFRU3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:28:07 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7617FC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:28:07 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a127so3311002pfa.12
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:28:07 -0700 (PDT)
+        Thu, 18 Jun 2020 16:29:13 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D414EC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:29:13 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id u8so3057645pje.4
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:29:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PaDljQV4s0tsDjPd4KRhxqE94dP0XcNjhHGBsncvb84=;
-        b=ljl0z/8F2OVrnZUPdzWXGnwnJYsUO5294WxIFZQvJlpyY0GKeKofK9oNAEXcgtMRGA
-         Nkf+/zDMpmfMiEIWBzkJTZoGlDymxzpGxxQYzXAY4DSSud1ZlzwVGzg9uqRG8g806HMt
-         4peYsIrDXi+XxUlErKoZtMpWXpRKrnDELE1mTYTLs71gnsI/Ypv3NLmf9cVKXUc5xqvf
-         ZdECCeJNJs1ui/uOMge6bPexYw6wQly3rceKwKGmcIBzGB3Th8z1POylkBoduS8U2qn/
-         B8d6MsdUXhc/x0LqmVUINBT8hChYQkfL/wgcNfvzypNIGZPtkvLL/OOzTRJ+cmfT+Gse
-         diuw==
+        bh=ApmvY4NUh4oE4rGYTLrhVzjNJ6MG1aD54ijaoWc+qQQ=;
+        b=Mg8xt2oOvSVJzdadsLPdjjKqP24SfmArTOufNfznQyUZcY1XPsLBbTgvCVJWSX23t1
+         zlpTrHNr+laRY2ihyOiL5y0qWnyU7iOidLPFb/3RVtE/52HkV3ziLN6ooNxyhjYYMp2o
+         ZYgnU5Uwv+1P8BufZc/VcW8TQCVa4h83/NtTx/fWssW0TjsgWTMlBq5/y7r9eRSjrACh
+         MKajyjltSPlhfBv9mvwMLTAzBiGi1tA1bqWc5jNwv8QjQJHVZj9wOOXPVL5TN+rTEoJa
+         LurVgqBnek49Ec5FNrnxuD74mbVSwh3av+KXedrr52YLkEdMb2Fe01DerkWmloglOOAc
+         NH0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PaDljQV4s0tsDjPd4KRhxqE94dP0XcNjhHGBsncvb84=;
-        b=e3r6VZqdI42tGQwr2peQDB64zFkJ+LbBHvrWxlMybe2YEFwC0IiRGvISIxQmUjn1Bz
-         e7wTEzYeHZ2hHqBF+GGcLeiNnU2NTqAqSxHycqitVUFVFTdih2BKPHCrJ8wF6WZ861SQ
-         2kwrnYkjT+Q5naUGwA5Di5VwoRp//SP8RIJpR9QjIQK50zHSzLotISlP6v/PJgj2ESbN
-         1+sGTuEt/3k9KZL833wdkALFErIHCfL7+SQCANKiJlosXzQ3cZZPaAQhwRS+MZW+UDDE
-         9UhOpTOG26ZvL2x8R6xk+wjJdVsS5x4M/ImSvVFrjzBdNDdpFPdrHHZzrArIL9pByHtb
-         JD0A==
-X-Gm-Message-State: AOAM532kDmePcJ4e/8rq488uwNWPLOTIw38Z0hEcbfpAoeAD3bcD9npS
-        w2qoDGjNqJ3b8/ZWGVjBpXVLfR9SCuVol6aZkARdbQ==
-X-Google-Smtp-Source: ABdhPJyciZVCGHv5u4C8M75wPUGUizqVIkwf99p0oMyeVXwQcr3tTyYvoRLJDywFWzCaKer6yfA4tXu6GuaLkqIuvds=
-X-Received: by 2002:a63:4c08:: with SMTP id z8mr254875pga.201.1592512086573;
- Thu, 18 Jun 2020 13:28:06 -0700 (PDT)
+        bh=ApmvY4NUh4oE4rGYTLrhVzjNJ6MG1aD54ijaoWc+qQQ=;
+        b=Et3P8PuCuYStnDByaHRQSaCS2xjv9Xhrw94+wtGuQ2x8zQGsBzZFo6Op5TUBCsBNAd
+         g2RWr59jBiC6ctIoEVe3/oNqrqQtw2TOgs4P+2aN59Akb3rh+qlhRpqZJ+YYX5efvjy0
+         CdeaLLym+ay1QLgeDiXYWlSum3xT4Kz4fRphipOFK/b8PeGxRTGYATxZyq30PRNERoM6
+         qAZAItMhTVQv5kGMmnp8aO+xEKKRBRdcIZN7YrSoq/8IVFt0Cha0UGSbE80+M9HdDQ3V
+         /FdzZdrCgVFGfzfH4xsDdLQol2yGVcZcDHkjz0HNctSsrMLsN3jMUKSrn6+qrj6Lh4CG
+         UxBg==
+X-Gm-Message-State: AOAM530VgDZ4pnxJ9YopFh9Yr86GZJE9lCIV3nBNqISPMIp67WtLpyDA
+        TZNYevCyicAJ++4o6ug9j25fl0RE0w7fnA0aWZnAGg==
+X-Google-Smtp-Source: ABdhPJxn8QzmdoT0TNDCjswW3rDFhlLfydkfXBmvsim9YT+1fYy25hVUP+vlnFIOHcfQ9eYJZXNAFT0x7ZPJ/54NoE4=
+X-Received: by 2002:a17:90a:e2c4:: with SMTP id fr4mr127063pjb.32.1592512153032;
+ Thu, 18 Jun 2020 13:29:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200611215501.213058-1-vitor@massaru.org> <202006121403.CF8D57C@keescook>
- <CABVgOSnofuJQ_fiCL-8KdKezg3Hnqk3A+X509c4YP_toKeBVBg@mail.gmail.com>
- <202006141005.BA19A9D3@keescook> <CABVgOSkPYBL8Qy9Fsr0owNhh2=tXZmdwCsWhnq+PshJLr06YKA@mail.gmail.com>
- <alpine.LRH.2.21.2006160956170.16027@localhost> <CABVgOS=-AHNABkAVV7p=pq67hwoVcXXJSEPvxNbp90Eh_RaxBg@mail.gmail.com>
-In-Reply-To: <CABVgOS=-AHNABkAVV7p=pq67hwoVcXXJSEPvxNbp90Eh_RaxBg@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 18 Jun 2020 13:27:55 -0700
-Message-ID: <CAFd5g44kZe7h+qKHmx029Qj15FdqxsFRFD3TEx_iEhPEt0jJmA@mail.gmail.com>
-Subject: Re: common KUnit Kconfig and file naming (was: Re: [PATCH] lib:
- kunit_test_overflow: add KUnit test of check_*_overflow functions)
-To:     David Gow <davidgow@google.com>
-Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Vitor Massaru Iha <vitor@massaru.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+References: <20200616223633.73971-1-nhuck@google.com> <CAKwvOdkibnsr+z8-pXG1RjOEcrGQ6HQ0=PM-B9p-i85_BKS0cQ@mail.gmail.com>
+In-Reply-To: <CAKwvOdkibnsr+z8-pXG1RjOEcrGQ6HQ0=PM-B9p-i85_BKS0cQ@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 18 Jun 2020 13:29:01 -0700
+Message-ID: <CAKwvOd=rTPS6xgfV7kLsuA-_=ghqE9HWu=6HyTFOMd_-THWaCg@mail.gmail.com>
+Subject: Re: [PATCH] Fix unwind_frame for clang-built kernels
+To:     Nathan Huckleberry <nhuck@google.com>,
+        =?UTF-8?B?TWlsZXMgQ2hlbiAo6Zmz5rCR5qi6KQ==?= 
+        <miles.chen@mediatek.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kristof Beyls <Kristof.Beyls@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 9:21 PM David Gow <davidgow@google.com> wrote:
+On Thu, Jun 18, 2020 at 1:22 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
 >
-> On Tue, Jun 16, 2020 at 5:40 PM Alan Maguire <alan.maguire@oracle.com> wrote:
+> On Tue, Jun 16, 2020 at 3:36 PM 'Nathan Huckleberry' via Clang Built
+> Linux <clang-built-linux@googlegroups.com> wrote:
 > >
-> > On Tue, 16 Jun 2020, David Gow wrote:
+> > Since clang does not push pc and sp in function prologues, the current
+> > implementation of unwind_frame does not work. By using the previous
+> > frame's lr/fp instead of saved pc/sp we get valid unwinds on clang-built
+> > kernels.
 > >
-> > > CONFIG_PM_QOS_KUNIT_TESTOn Mon, Jun 15, 2020 at 1:48 AM Kees Cook
-> > > <keescook@chromium.org> wrote:
-> > > >
-> > > > On Sat, Jun 13, 2020 at 02:51:17PM +0800, David Gow wrote:
-> > > > > Yeah, _KUNIT_TEST was what we've sort-of implicitly decided on for
-> > > > > config names, but the documentation does need to happen.
-> > > >
-> > > > That works for me. It still feels redundant, but all I really want is a
-> > > > standard name. :)
-> > > >
-> > > > > We haven't put as much thought into standardising the filenames much, though.
-> > > >
-> > > > I actually find this to be much more important because it is more
-> > > > end-user-facing (i.e. in module naming, in build logs, in scripts, on
-> > > > filesystem, etc -- CONFIG is basically only present during kernel build).
-> > > > Trying to do any sorting or greping really needs a way to find all the
-> > > > kunit pieces.
-> > > >
-> > >
-> > > Certainly this is more of an issue now we support building KUnit tests
-> > > as modules, rather than having them always be built-in.
-> > >
-> > > Having some halfway consistent config-name <-> filename <-> test suite
-> > > name could be useful down the line, too. Unfortunately, not
-> > > necessarily a 1:1 mapping, e.g.:
-> > > - CONFIG_KUNIT_TEST compiles both kunit-test.c and string-stream-test.c
-> > > - kunit-test.c has several test suites within it:
-> > > kunit-try-catch-test, kunit-resource-test & kunit-log-test.
-> > > - CONFIG_EXT4_KUNIT_TESTS currently only builds ext4-inode-test.c, but
-> > > as the plural name suggests, might build others later.
-> > > - CONFIG_SECURITY_APPARMOR_KUNIT_TEST doesn't actually have its own
-> > > source file: the test is built into policy_unpack.c
-> > > - &cetera
-> > >
-> > > Indeed, this made me quickly look up the names of suites, and there
-> > > are a few inconsistencies there:
-> > > - most have "-test" as a suffix
-> > > - some have "_test" as a suffix
-> > > - some have no suffix
-> > >
-> > > (I'm inclined to say that these don't need a suffix at all.)
-> > >
+> > The bounds check on next frame pointer must be changed as well since
+> > there are 8 less bytes between frames.
 > >
-> > A good convention for module names - which I _think_ is along the lines
-> > of what Kees is suggesting - might be something like
+> > This fixes /proc/<pid>/stack.
 > >
-> > <subsystem>[_<optional_test-area>]_kunit.ko
-> >
-> > So for example
-> >
-> > kunit_test -> test_kunit.ko
-> > string_stream_test.ko -> test_string_stream_kunit.ko
-> > kunit_example_test -> example_kunit.ko
-> > ext4_inode_test.ko -> ext4_inode_kunit.ko
-> >
-> > For the kunit selftests, "selftest_" might be a better name
-> > than "test_", as the latter might encourage people to reintroduce
-> > a redundant "test" into their module name.
-> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/912
+> > Signed-off-by: Nathan Huckleberry <nhuck@google.com>
 >
-> I quite like the idea of having the deeper "subsystem:suite:test"
-> hierarchy here. "selftest" possibly would be a bit confusing against
-> kselftest for the KUnit tests -- personally I'd probably go with
-> "kunit", even if that introduces a redundant-looking kunit into the
-> module name.
-
-Ditto. My first reaction was that it would create too much nesting and
-subsystems are a poorly defined notion in the Linux kernel; however,
-after thinking about it some, I think we are already doing what you
-are proposing with namespacing in identifier names. It makes sense to
-reflect that in test organization and reporting.
-
-> So, this could look something like:
-> - Kconfig name: CONFIG_<subsystem>_<suite>_KUNIT_TEST, or very
-> possibly CONFIG_<subsystem>_KUNIT_TEST(S?) -- we already have
-> something like that for the ext4 tests.
-
-I think the biggest question there is whether we go with the every
-suite gets its own config approach or all suites in a subsystem are
-turned on by a single config. I don't think there are enough examples
-to determine what the community would prefer, and I can see advantages
-and disadvantages to both.
-
-> - Source filename: <suite>_kunit.c within a subsystem directory. (We
-> probably don't need to enforce suites being in separate files, but
-> whatever file does contain the tests should at least end "kunit.c")
-
-I am cool with changing *-test.c to *-kunit.c. The *-test.c was a hold
-over from when everything was prefixed TEST_* instead of KUNIT_* (back
-in the early days of the RFC). I never liked naming everything KUNIT_*
-or -kunit- whatever; it felt kind of egotistical to me (there was also
-always a part of me that hoped I would come up with a better name than
-KUnit, but that ship sailed a long time ago). However, purely
-logically speaking, I think naming all KUnit tests *-kunit.c makes
-more sense than anything else.
-
-One question: the AppArmor KUnit tests are #included into another .c
-file when the tests are selected. Should tests #included in this
-manner be -kunit.h or should all tests be -kunit.c?
-
-> - Module filename: <subsystem>_<suite>_kunit.ko, or
-> <subsystem>_kunit.ko if all suites are built into the same module (or
-> there's just one suite for the whole subsystem)
-> - Suite name: Either <subsystem>_<suite> or have a separate subsystem
-> field in kunit_suite. If there's only one suite for the subsystem, set
-> suite==subsystem
-
-No strong feelings here.
-
-> - Test names: Personally, I'd kind-of like to not prefix these at all,
-> as they're already part of the suite. If we do want to, though, prefix
-> them with <subsystem> and <suite>.
-
-Eh, I did that to remain consistent with the kernel naming
-conventions, but I think those have diverged too. If maintainers are
-cool with it, I agree that the prefixes are redundant on tests and
-generally way too long.
-
-> > > Within test suites, we're also largely prefixing all of the tests with
-> > > a suite name (even if it's not actually the specified suite name). For
-> > > example, CONFIG_PM_QOS_KUNIT_TEST builds
-> > > drivers/base/power/qos-test.c which contains a suite called
-> > > "qos-kunit-test", with tests prefixed "freq_qos_test_". Some of this
-> > > clearly comes down to wanting to namespace things a bit more
-> > > ("qos-test" as a name could refer to a few things, I imagine), but
-> > > specifying how to do so consistently could help.
-> > >
-> >
-> > Could we add some definitions to help standardize this?
-> > For example, adding a "subsystem" field to "struct kunit_suite"?
-> >
-> > So for the ext4 tests the "subsystem" would be "ext4" and the
-> > name "inode" would specify the test area within that subsystem.
-> > For the KUnit selftests, the subsystem would be "test"/"selftest".
-> > Logging could utilize the subsystem definition to allow test
-> > writers to use less redundant test names too.  For example
-> > the suite name logged could be constructed from the
-> > subsystem + area values associated with the kunit_suite,
-> > and individual test names could be shown as the
-> > suite area + test_name.
+> Thanks for the patch, Nathan!  When I looked into this, I found the
+> latest ARM AAPCS [0] specifically says (with `it` referring to `a
+> platform`: "It may permit the frame pointer register to be used as a
+> general-purpose callee-saved register, but provide a platform-specific
+> mechanism for external agents to reliably locate the chain of frame
+> records."   While it's good that's acknowledged in the documentation,
+> the current wording is relaxed in order to not force current
+> implementations to converge.  This has the unfortunate side effect of
+> making finding the frame pointer toolchain dependendent, hence this
+> patch and your previous commit 6dc5fd93b2f1 ("ARM: 8900/1:
+> UNWINDER_FRAME_POINTER implementation for Clang").  Being more
+> specific in the documentation would force at least one implementation
+> to change, and I think that would also imply an ABI break.  So I can
+> see it both ways, though I still would prefer that the language pin
+> this down, even if we had to change LLVM.  Just providing additional
+> context for folks on the thread.
 >
-> As above, I quite like this. If we were really brave, we could
-> actually nest the results into subsystem:area/suite:test using the TAP
-> subtests stuff. Generating the longer suite name may be easier on
-> people manually reading large test logs, though, as they wouldn't have
-> to scroll quite as far to determine what subsystem they're in. (Again,
-> something that could be solved with tooling, and probably less of a
-> problem for people accessing results through debugfs.)
+> This should also have a reported by tag from Miles, in v2.
+>
+> Reported-by: Miles Chen <Miles.Chen@mediatek.com>
+>
+> Miles mentioned to me that he tested it, but maybe Miles can confirm
+> that publicly on-list via an explicit Tested-by: tag?
+>
+> This would be useful for us to have in stable; otherwise we'll have to
+> carry out of tree in Android and CrOS, which I'd rather not do.  Via
+> Documentation/process/stable-kernel-rules.rst, if you add this tag to
+> V2, that will greatly simplify submitting this to stable:
+> Cc: stable@vger.kernel.org
+>
+> Miles also showed me the behavior of this patch for different kernel
 
-SGTM
+s/this patch/this function before this patch is applied/
+
+> versions, which varies anywhere from empty or single entry traces to
+> panics, so this is pretty important that this works for Clang builds.
+>
+> [0] https://static.docs.arm.com/ihi0042/i/aapcs32.pdf
+>
+> > ---
+> >  arch/arm/kernel/stacktrace.c | 24 ++++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >
+> > diff --git a/arch/arm/kernel/stacktrace.c b/arch/arm/kernel/stacktrace.c
+> > index cc726afea023..76ea4178a55c 100644
+> > --- a/arch/arm/kernel/stacktrace.c
+> > +++ b/arch/arm/kernel/stacktrace.c
+> > @@ -22,6 +22,19 @@
+> >   * A simple function epilogue looks like this:
+> >   *     ldm     sp, {fp, sp, pc}
+> >   *
+> > + * When compiled with clang, pc and sp are not pushed. A simple function
+> > + * prologue looks like this when built with clang:
+> > + *
+> > + *     stmdb   {..., fp, lr}
+> > + *     add     fp, sp, #x
+> > + *     sub     sp, sp, #y
+> > + *
+> > + * A simple function epilogue looks like this when built with clang:
+> > + *
+> > + *     sub     sp, fp, #x
+> > + *     ldm     {..., fp, pc}
+> > + *
+> > + *
+> >   * Note that with framepointer enabled, even the leaf functions have the same
+> >   * prologue and epilogue, therefore we can ignore the LR value in this case.
+> >   */
+> > @@ -34,6 +47,16 @@ int notrace unwind_frame(struct stackframe *frame)
+> >         low = frame->sp;
+> >         high = ALIGN(low, THREAD_SIZE);
+> >
+> > +#ifdef CONFIG_CC_IS_CLANG
+> > +       /* check current frame pointer is within bounds */
+> > +       if (fp < low + 4 || fp > high - 4)
+>
+> The patch LGTM; maybe Russell or Catalin could triple check this
+> bounds check?  Assuming there's no issue, you can include on a v2 my
+> reviewed by:
+>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+>
+> I'd probably wait the remainder of a week before sending a v2 to
+> collect additional feedback.  Thank you again.
+>
+> > +               return -EINVAL;
+> > +
+> > +       frame->sp = frame->fp;
+> > +       frame->fp = *(unsigned long *)(fp);
+> > +       frame->pc = frame->lr;
+> > +       frame->lr = *(unsigned long *)(fp + 4);
+> > +#else
+> >         /* check current frame pointer is within bounds */
+> >         if (fp < low + 12 || fp > high - 4)
+> >                 return -EINVAL;
+> > @@ -42,6 +65,7 @@ int notrace unwind_frame(struct stackframe *frame)
+> >         frame->fp = *(unsigned long *)(fp - 12);
+> >         frame->sp = *(unsigned long *)(fp - 8);
+> >         frame->pc = *(unsigned long *)(fp - 4);
+> > +#endif
+> >
+> >         return 0;
+> >  }
+> > --
+> > 2.27.0.290.gba653c62da-goog
+> >
+> > --
+>
+> --
+> Thanks,
+> ~Nick Desaulniers
+
+
+
+-- 
+Thanks,
+~Nick Desaulniers
