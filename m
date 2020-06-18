@@ -2,136 +2,121 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEF2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCB382070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:39:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="K0ZOAG6G"
+	by mail.kernel.org (Postfix) with ESMTP id 05B272070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:41:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592484099;
+	bh=iZBH7jkFydeVHaxRXDFbXNc28uxDlMTL2DjSf2j7Vas=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y01u4IhTOkCgFpBer++XmwQy83amwTmhGff0gOdN+of4o8QF/TC84kZoUeA5PGIYM
+	 QxqhEyv7grCguNS+4tWW5ujYmIlcn6UxV7f82Oh9/+PDKW9Ldg1cVNv6C36mO6gX0w
+	 UFPKvVW2IuAMPkjLWyFjT2Z3rpaD3/M0dUuHL54I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbgFRMjY (ORCPT
+        id S1729753AbgFRMlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:39:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728997AbgFRMjS (ORCPT
+        Thu, 18 Jun 2020 08:41:37 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:40645 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727091AbgFRMlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 08:39:18 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9392EC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 05:39:17 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id b4so5261013qkn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 05:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=72mYtR8brLn0NtD1nMNXJ5LkwsKwBqKm9sI8cal1E90=;
-        b=K0ZOAG6GPspKsFM7RuoT1Zxla/nSwmJil3wicypom/nE8jjCpK25dmHoz1r1NnXadc
-         ww5oAw4uDtuC0r5OyCQKa7v6tue9ZyNUOKyFMkfrCDrEWcgvBPPmvopYsQYDI5AgV8Gv
-         AtgDwfC2zGMOR1pOrxPMfHWMFT7z+VjmYyImE54pHzbcrk5YncmWcOFjkVSbGFPeE+wW
-         J5QfJWa55NA5KWZb3jklwT0BXjvcVEfIHaG1N2RZgfLA0MGe6Faz6CVqNbqomhSnM10D
-         9iYNa53DJtVno8jZynfCQw0FxObMJ0l0mxqquCkzFHCssr3s2M+VbMkq/fVboKjCGbRO
-         gHhA==
+        Thu, 18 Jun 2020 08:41:36 -0400
+Received: by mail-ej1-f65.google.com with SMTP id q19so6243055eja.7;
+        Thu, 18 Jun 2020 05:41:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=72mYtR8brLn0NtD1nMNXJ5LkwsKwBqKm9sI8cal1E90=;
-        b=V1GYMYlb74PA2MKPVneluwNi4mp0oHvtfAeV/jpvrC3SG+MB6WsvyMCxUxpfLxcxDn
-         lgZj2DWBAk3YjmSh/PghxK0FXZEVVN8t4klM2Xg6gCSIc2q6Aqj90WkyZxBWqhwZ9wgo
-         mtCJ4EjsCtnZKaCjPht8x7pvAinZ2oTOcmbzYFWl+tTqQPwfCWeAFAwcqHjW946dVpDB
-         R5Szc3OrfJlVFHk574O5OEEyqK7xQl5E3sSEfI/CWiZv/bW6qVvyVo1CrgHiAa+9+0+A
-         DhqW2O7lB3m65uktFzmKNwdBKnPX+mDC1mM47juOffKJtoIeXYAiWLoutvwuoqVXwl/P
-         wGQg==
-X-Gm-Message-State: AOAM5308oeur4sufPQU0sYUenXPyepWevCDKrgdh5fKYa5dMTo/qU51N
-        izO6IzbT7iKm9Z4JSg7SkF0Wqw==
-X-Google-Smtp-Source: ABdhPJysbQyaTGuA2V7J4PdGuIk1FXVCoiQx2IebAeWXZ00/o4KUBNVIzISUhVKWFuY7ZPiZkyl5pg==
-X-Received: by 2002:a05:620a:1310:: with SMTP id o16mr3413267qkj.68.1592483956719;
-        Thu, 18 Jun 2020 05:39:16 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id 124sm2870143qkm.115.2020.06.18.05.39.14
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GwWWgp6poedvgja7RNEoGmK1y3wNcNo/q/dYBmBGoA8=;
+        b=o8iKAGvPelZ799l0MgRR7gBeWope4OBEX/NDyfdtQx5l0XVPqxEXTLkzyAN8zAqTka
+         pCTFcf4Mq3hXNkb73wjBquHHGOlZ0TV4DtXn7IsriCM5ZU2uu5gnd5ys4MEfFtVYASqe
+         aovR3jFsdDdD5WpKqeR7mT+EoiB1BCO7Gm6c7Xu1Txjj6mXz4j5TMGt+yhHzYdOShA4W
+         ZKjJBG6kCVog1crDs4rjS/+VuE7MVtYo9JyKTIikWISY5ySFs+N0d1ojPvHmzSjbQSKN
+         RYHKamwenkP+F3qVryByBY1PJHDyCH0oFqkjWQbINQrlF/R+eeiPujCrBGsRDnglaOcs
+         6oYw==
+X-Gm-Message-State: AOAM533EKMj4LcuBj/8vMS6Z0z+u1pZd4xAn5TE1HUrnLeHZqgUxJiMH
+        lyrhO7HzZyvFURM84sH880Y=
+X-Google-Smtp-Source: ABdhPJxMkauDVQefVPuJ2qpFGMV+90HykPa5BpTmZw4DM3T8iphGnLowIDqJy/XvxbHN8BtR+7Sktg==
+X-Received: by 2002:a17:907:20e5:: with SMTP id rh5mr3971654ejb.80.1592484092440;
+        Thu, 18 Jun 2020 05:41:32 -0700 (PDT)
+Received: from localhost (ip-37-188-189-34.eurotel.cz. [37.188.189.34])
+        by smtp.gmail.com with ESMTPSA id dn15sm2375487ejc.26.2020.06.18.05.41.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 05:39:16 -0700 (PDT)
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     kunit-dev@googlegroups.com
-Cc:     skhan@linuxfoundation.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH v2] kunit: fix KconfigParseError handling CC_VERSION_TEXT
-Date:   Thu, 18 Jun 2020 09:39:12 -0300
-Message-Id: <20200618123912.64762-1-vitor@massaru.org>
-X-Mailer: git-send-email 2.26.2
+        Thu, 18 Jun 2020 05:41:31 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 14:41:29 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Yafang Shao <laoar.shao@gmail.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+Message-ID: <20200618124129.GC15447@dhcp22.suse.cz>
+References: <20200521163450.GV6462@dhcp22.suse.cz>
+ <CA+G9fYsdsgRmwLtSKJSzB1eWcUQ1z-_aaU+BNcQpker34XT6_w@mail.gmail.com>
+ <20200617135758.GA548179@chrisdown.name>
+ <20200617141155.GQ9499@dhcp22.suse.cz>
+ <CA+G9fYu+FB1PE0AMmE-9MrHpayE9kChwTyc3zfM6V83uQ0zcQA@mail.gmail.com>
+ <20200617160624.GS9499@dhcp22.suse.cz>
+ <CA+G9fYtCXrVGVtRTwxiqgfFNDDf_H4aNH=VpWLhsV4n_mCTLGg@mail.gmail.com>
+ <20200617210935.GA578452@chrisdown.name>
+ <CALOAHbBp7Ytd-Hta9NH-_HJtVTAsR5Pw2RYrVScp7PPezCEv2w@mail.gmail.com>
+ <20200618123743.GA694719@chrisdown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618123743.GA694719@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 8b59cd81dc5 ("kbuild: ensure full rebuild when the compiler
-is updated") added the environment variable CC_VERSION_TEXT,
-parse_from_string() doesn't expect a string in value field and this
-causes the failure below:
-	
-[iha@bbking linux]$ tools/testing/kunit/kunit.py run --timeout=60
-[00:20:12] Configuring KUnit Kernel ...
-Generating .config ...
-Traceback (most recent call last):
-  File "tools/testing/kunit/kunit.py", line 347, in <module>
-    main(sys.argv[1:])
-  File "tools/testing/kunit/kunit.py", line 257, in main
-    result = run_tests(linux, request)
-  File "tools/testing/kunit/kunit.py", line 134, in run_tests
-    config_result = config_tests(linux, config_request)
-  File "tools/testing/kunit/kunit.py", line 64, in config_tests
-    success = linux.build_reconfig(request.build_dir, request.make_options)
-  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py", line 161, in build_reconfig
-    return self.build_config(build_dir, make_options)
-  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py", line 145, in build_config
-    return self.validate_config(build_dir)
-  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py", line 124, in validate_config
-    validated_kconfig.read_from_file(kconfig_path)
-  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_config.py", line 89, in read_from_file
-    self.parse_from_string(f.read())
-  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_config.py", line 85, in parse_from_string
-    raise KconfigParseError('Failed to parse: ' + line)
-kunit_config.KconfigParseError: Failed to parse: CONFIG_CC_VERSION_TEXT="gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)"
+On Thu 18-06-20 13:37:43, Chris Down wrote:
+> Yafang Shao writes:
+> > On Thu, Jun 18, 2020 at 5:09 AM Chris Down <chris@chrisdown.name> wrote:
+> > > 
+> > > Naresh Kamboju writes:
+> > > >After this patch applied the reported issue got fixed.
+> > > 
+> > > Great! Thank you Naresh and Michal for helping to get to the bottom of this :-)
+> > > 
+> > > I'll send out a new version tomorrow with the fixes applied and both of you
+> > > credited in the changelog for the detection and fix.
+> > 
+> > As we have already found that the usage around memory.{emin, elow} has
+> > many limitations, I think memory.{emin, elow} should be used for
+> > memcg-tree internally only, that means they can only be used to
+> > calculate the protection of a memcg in a specified memcg-tree but
+> > should not be exposed to other MM parts.
+> 
+> I agree that the current semantics are mentally taxing and we should
+> generally avoid exposing the implementation details outside of memcg where
+> possible. Do you have a suggested rework? :-)
 
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
----
-v2: 
- - maintains CC_VERSION_TEXT in the .config file to ensure full rebuild
-   when the compiler is updated.
----
- tools/testing/kunit/kunit_config.py | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/tools/testing/kunit/kunit_config.py b/tools/testing/kunit/kunit_config.py
-index e75063d603b5..c407c7c6a2b0 100644
---- a/tools/testing/kunit/kunit_config.py
-+++ b/tools/testing/kunit/kunit_config.py
-@@ -81,6 +81,12 @@ class Kconfig(object):
- 
- 			if line[0] == '#':
- 				continue
-+
-+			if 'CONFIG_CC_VERSION_TEXT' in line:
-+				name, value = line.split('=')
-+				entry = KconfigEntry(name, value)
-+				self.add_entry(entry)
-+				continue
- 			else:
- 				raise KconfigParseError('Failed to parse: ' + line)
- 
-
-base-commit: 7bf200b3a4ac10b1b0376c70b8c66ed39eae7cdd
+I would really prefer to do that work on top of the fixes we (used to)
+have in mmotm (with the fixup).
 -- 
-2.26.2
-
+Michal Hocko
+SUSE Labs
