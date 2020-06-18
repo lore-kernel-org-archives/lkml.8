@@ -2,141 +2,126 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5692C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFA920706
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0EA820734
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:41:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbgFRRlF (ORCPT
+        id S1732316AbgFRRlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:41:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57880 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726899AbgFRRlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 13:41:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6A05FAC51;
-        Thu, 18 Jun 2020 17:40:59 +0000 (UTC)
-Date:   Thu, 18 Jun 2020 19:40:59 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Jim Cromie <jim.cromie@gmail.com>
-Cc:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
-        akpm@linuxfoundation.org, gregkh@linuxfoundation.org,
-        linux@rasmusvillemoes.dk, Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        Orson Zhai <orson.zhai@unisoc.com>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 20/21] dyndbg: add user-flag, negating-flags, and
- filtering on flags
-Message-ID: <20200618174058.GE3617@alley>
-References: <20200617162536.611386-1-jim.cromie@gmail.com>
- <20200617162536.611386-23-jim.cromie@gmail.com>
- <20200618161912.GD3617@alley>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618161912.GD3617@alley>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 18 Jun 2020 13:41:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47088 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729612AbgFRRlq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 13:41:46 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05IH2B43004775;
+        Thu, 18 Jun 2020 13:41:45 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31r560g2n7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 13:41:44 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05IHAnhV036160;
+        Thu, 18 Jun 2020 13:41:43 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31r560g2m3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 13:41:43 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05IHdpFs029860;
+        Thu, 18 Jun 2020 17:41:41 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 31quax9fk6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 17:41:40 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05IHfbrE59703556
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jun 2020 17:41:37 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 33C3CA405B;
+        Thu, 18 Jun 2020 17:41:37 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 23E07A4054;
+        Thu, 18 Jun 2020 17:41:36 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.230.246])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Jun 2020 17:41:36 +0000 (GMT)
+Message-ID: <1592502095.4615.42.camel@linux.ibm.com>
+Subject: Re: [PATCH 2/2] integrity: Add errno field in audit message
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        bauerman@linux.ibm.com, nayna@linux.ibm.com, sgrubb@redhat.com,
+        paul@paul-moore.com
+Cc:     rgb@redhat.com, linux-integrity@vger.kernel.org,
+        linux-audit@redhat.com, linux-kernel@vger.kernel.org
+Date:   Thu, 18 Jun 2020 13:41:35 -0400
+In-Reply-To: <20200617204436.2226-2-nramas@linux.microsoft.com>
+References: <20200617204436.2226-1-nramas@linux.microsoft.com>
+         <20200617204436.2226-2-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-18_14:2020-06-18,2020-06-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ adultscore=0 malwarescore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 impostorscore=0 mlxscore=0 suspectscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006180125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2020-06-18 18:19:12, Petr Mladek wrote:
-> On Wed 2020-06-17 10:25:35, Jim Cromie wrote:
-> > 1. Add a user-flag [u] which works like the [pfmlt] flags, but has no
-> > effect on callsite behavior; it allows incremental marking of
-> > arbitrary sets of callsites.
-> > 
-> > 2. Add [PFMLTU] flags, which negate their counterparts; P===!p etc.
-> > And in ddebug_read_flags():
-> >    current code does:	[pfmltu_] -> flags
-> >    copy it to:		[PFMLTU_] -> mask
-> > 
-> > also disallow both of a pair: ie no 'pP', no true & false.
-> > 
-> > 3. Add filtering ops into ddebug_change(), right after all the
-> > callsite-property selections are complete.  These filter on the
-> > callsite's current flagstate before applying modflags.
-> > 
-> > Why ?
-> > 
-> > The u-flag & filter flags
-> > 
-> > The 'u' flag lets the user assemble an arbitary set of callsites.
-> > Then using filter flags, user can activate the 'u' callsite set.
-> > 
-> >   #> echo 'file foo.c +u; file bar.c +u' > control   # and repeat
-> >   #> echo 'u+p' > control
-> > 
-> > Of course, you can continue to just activate your set without ever
-> > marking it 1st, but you could trivially add the markup as you go, then
-> > be able to use it as a constraint later, to undo or modify your set.
-> > 
-> >   #> echo 'file foo.c +up' >control
-> >   .. monitor, debug, finish ..
-> >   #> echo 'u-p' >control
-> > 
-> >   # then later resume
-> >   #> echo 'u+p' >control
-> > 
-> >   # disable some cluttering messages, and remove from u-set
-> >   #> echo 'file noisy.c function:jabber_* u-pu' >control
-> > 
-> >   # for doc, recollection
-> >   grep =pu control > my-favorite-callsites
-> > 
-> > Note:
-> > 
-> > Your flagstate after boot is generally not all =_. -DDEBUG will arm
-> > compiled callsites by default, $builtinmod.dyndbg=+p bootargs can
-> > enable them early, and $module.dyndbg=+p bootargs will arm them when
-> > the module is loaded.  But you could manage them with u-flags:
-> > 
-> >   #> echo '-t' >control		# clear t-flag to use it as 2ndary markup
-> >   #> echo 'p+ut' >control	# mark the boot-enabled set of callsites
-> >   #> echo '-p' >control		# clean your dmesg -w stream
-> > 
-> >   ... monitor, debug ..
-> >   #> echo 'module of_interest $qterms +pu' >control	# build your set of useful debugs
-> >   #> echo 'module of_interest $qterms UT+pu' >control	# same, but dont alter ut marked set
+On Wed, 2020-06-17 at 13:44 -0700, Lakshmi Ramasubramanian wrote:
+> Error code is not included in the audit messages logged by
+> the integrity subsystem. Add "errno" field in the audit messages
+> logged by the integrity subsystem and set the value to the error code
+> passed to integrity_audit_msg() in the "result" parameter.
 > 
-> Does anyone requested this feature, please?
+> Sample audit messages:
 > 
-> For me, it is really hard to imagine people using these complex and hacky
-> steps.
+> [    6.284329] audit: type=1804 audit(1591756723.627:2): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=kernel op=add_boot_aggregate cause=alloc_entry comm="swapper/0" name="boot_aggregate" res=0 errno=-12
+> 
+> [    8.085456] audit: type=1802 audit(1592005947.297:9): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=policy_update cause=completed comm="systemd" res=1 errno=0
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> Suggested-by: Steve Grubb <sgrubb@redhat.com>
+> ---
+>  security/integrity/integrity_audit.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/security/integrity/integrity_audit.c b/security/integrity/integrity_audit.c
+> index 5109173839cc..a265024f82f3 100644
+> --- a/security/integrity/integrity_audit.c
+> +++ b/security/integrity/integrity_audit.c
+> @@ -53,6 +53,6 @@ void integrity_audit_msg(int audit_msgno, struct inode *inode,
+>  		audit_log_untrustedstring(ab, inode->i_sb->s_id);
+>  		audit_log_format(ab, " ino=%lu", inode->i_ino);
+>  	}
+> -	audit_log_format(ab, " res=%d", !result);
+> +	audit_log_format(ab, " res=%d errno=%d", !result, result);
+>  	audit_log_end(ab);
+>  }
 
-I think that all this is motivated by adding support for module
-specific groups.
+For the reasons that I mentioned previously, unless others are willing
+to add their Reviewed-by tag not for the audit aspect in particular,
+but IMA itself, I'm not comfortable making this change all at once.
 
-What about storing the group as yet another information for each
-message? I mean the same way as we store module name, file, line,
-function name.
+Previously I suggested making the existing integrity_audit_msg() a
+wrapper for a new function with errno.  Steve said, "We normally do
+not like to have fields that swing in and out ...", but said setting
+errno to 0 is fine.  The original integrity_audit_msg() function would
+call the new function with errno set to 0.
 
-Then we could add API to define group for a given message:
-
-   pr_debug_group(group_id, fmt, ...);
-
-the interface for the control file might be via new keyword "group".
-You could then do something like:
-
-   echo module=drm group=0x3 +p >control
-
-But more importantly you should add functions that might be called
-when the drm.debug parameter is changes. I have already mentioned
-it is another reply:
-
-    dd_enable_module_group(module_name, group_id);
-    dd_disable_module_group(module_name, group_id);
-
-
-It will _not_ need any new flag or flag filtering.
-
-Best Regards,
-Petr
+Mimi
