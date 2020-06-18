@@ -2,167 +2,140 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED739C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AC8C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C34D121534
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBa3G0l+"
+	by mail.kernel.org (Postfix) with ESMTP id B440121D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592448101;
+	bh=nZiTh/x0+BJwJJK5EHwTZcOVVxfwS36S2zGYTDgC4ZU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ci2Urn1siCpPa1mmzFa+9Cu4pxLB6VO3rg8KvliBcOuHh4WIarRaP7/cdw0TD+acR
+	 DIw2fjhkMNMc+YUUzbUHgsGX/w/IsMvxZeQvfJ8/m/8aEMj+dOrmCXKbswnGIh/btc
+	 /fd55j0NZuJDrYsYHj/KKQLGhPhmkAriYnvYhveU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730834AbgFRClg (ORCPT
+        id S1728188AbgFRBMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbgFRBMZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:25 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C5DAC061755;
-        Wed, 17 Jun 2020 18:12:25 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 23so1981113pfw.10;
-        Wed, 17 Jun 2020 18:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2mYYmw9nQduGr7ImYE2MP1C2QsjcPBen23TKEtxnDoY=;
-        b=kBa3G0l+ZNUXGCRjrjIh/s9kaSyUojbgB+Eyc39Uf/7c8gLLYv3g5WFrTplfAXZSGj
-         Ueg4+uAgarXniOlUAp+AC46WRJSoLNnrj1PIkVBcEeRYdR58TvKwFV9LkxqmFkUFtSDm
-         qoWSMDCY/5hMkvJl4c8s3bA93TIZqTfsYGepQ1SDqvko2De6KbRJrNRvgSriNUqyirPm
-         Z/XMPQ//Av9revEdsHJtzzlpIq+i7Nw9bzZwxc69FNnY2gRXr65vmVykrJpJbB0q8Ywi
-         vHaBxvZveDmajKMqGsWHZvRA4rcJec9Z6iAOKoTulcl+M5MN/np6JJecMEzr/NnS0HGz
-         MH9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2mYYmw9nQduGr7ImYE2MP1C2QsjcPBen23TKEtxnDoY=;
-        b=NbR8KWAtJQZhnSs47MjpcS97DqHzOQDcxVzl6ZmXYrj425VxIR0bz/KEx8S0ULGUN4
-         86zAJJHPJ4y0Qts7S9M0yLGtUv/kBXIkoBLz10buz5rnx/+Z173f/lVyNc6nU8fFn8PS
-         rhRNwCH5DgyM1lb3E2zwevMPnos1MloMlJS92qWBOOZn7qbUoJitOFNvnRAJYrqxd69f
-         F5w8Bj6zoXDYm2ns/qAZVQ2cbNKVKpcCFJYvxIPnJXCG/i0OOx+iLlyHIdkVBvfxiobK
-         DnDhptJwtsSQcFsUMesdVix78rmpiJneVRI8+v74doNQNBnPRql5s2aBAarYm9k9R81r
-         pGMw==
-X-Gm-Message-State: AOAM533scHdM1ODVLdBJ1+CeiqOmn6+qSDj75j/OrKde3G98n1E+eoFP
-        akIW+x7sQPLVIzD8KFbx7l11CBHtpLU=
-X-Google-Smtp-Source: ABdhPJz/mOUor7XwvAv9bccD3inxzqmkUVqwhIN47oG3dQuKAkR+QC0pz02eMw/i7U68pqz8EN7zXw==
-X-Received: by 2002:a63:3409:: with SMTP id b9mr1394174pga.106.1592442744653;
-        Wed, 17 Jun 2020 18:12:24 -0700 (PDT)
-Received: from dc803.localdomain (FL1-125-199-162-203.hyg.mesh.ad.jp. [125.199.162.203])
-        by smtp.gmail.com with ESMTPSA id q10sm1022781pfk.86.2020.06.17.18.12.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 18:12:24 -0700 (PDT)
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-To:     kohada.t2@gmail.com
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2 v3] exfat: write multiple sectors at once
-Date:   Thu, 18 Jun 2020 10:12:03 +0900
-Message-Id: <20200618011205.1406-1-kohada.t2@gmail.com>
+        Wed, 17 Jun 2020 21:12:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728745AbgFRBLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:38 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CA2E21974;
+        Thu, 18 Jun 2020 01:11:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592442698;
+        bh=nZiTh/x0+BJwJJK5EHwTZcOVVxfwS36S2zGYTDgC4ZU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pkBgkTForBTTz7VuKwDRtFnFgF0uth22pPe8HWvv/eR2EzEDHNtctM1s6peFUozzm
+         clqDAKZtJ5n6L9YsFkPmFdNHX38nE29A5PpwkvyXCBmzR80W3vy5xhDbUQIci1OCLc
+         eQ3gC0GlSm2sLmtGXDorDHNbco7jNGy41ajTCpu0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 161/388] clk: meson: meson8b: Don't rely on u-boot to init all GP_PLL registers
+Date:   Wed, 17 Jun 2020 21:04:18 -0400
+Message-Id: <20200618010805.600873-161-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Write multiple sectors at once when updating dir-entries.
-Add exfat_update_bhs() for that. It wait for write completion once
-instead of sector by sector.
-It's only effective if sync enabled.
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+[ Upstream commit a29ae8600d50ece1856b062a39ed296b8b952259 ]
+
+Not all u-boot versions initialize the HHI_GP_PLL_CNTL[2-5] registers.
+In that case all HHI_GPLL_PLL_CNTL[1-5] registers are 0x0 and when
+booting Linux the PLL fails to lock.
+The initialization sequence from u-boot is:
+- put the PLL into reset
+- write 0x59C88000 to HHI_GP_PLL_CNTL2
+- write 0xCA463823 to HHI_GP_PLL_CNTL3
+- write 0x0286A027 to HHI_GP_PLL_CNTL4
+- write 0x00003000 to HHI_GP_PLL_CNTL5
+- set M, N, OD and the enable bit
+- take the PLL out of reset
+- check if it has locked
+- disable the PLL
+
+In Linux we already initialize M, N, OD, the enable and the reset bits.
+Also the HHI_GP_PLL_CNTL[2-5] registers with these magic values (the
+exact meaning is unknown) so the PLL can lock when the vendor u-boot did
+not initialize these registers yet.
+
+Fixes: b882964b376f21 ("clk: meson: meson8b: add support for the GP_PLL clock on Meson8m2")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20200501215717.735393-1-martin.blumenstingl@googlemail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes in v2:
- - Split into 'write multiple sectors at once'
-   and 'add error check when updating dir-entries'
-Changes in v3
- - Rebase to latest exfat-dev
+ drivers/clk/meson/meson8b.c | 9 +++++++++
+ drivers/clk/meson/meson8b.h | 4 ++++
+ 2 files changed, 13 insertions(+)
 
- fs/exfat/dir.c      | 12 ++++++------
- fs/exfat/exfat_fs.h |  1 +
- fs/exfat/misc.c     | 19 +++++++++++++++++++
- 3 files changed, 26 insertions(+), 6 deletions(-)
-
-diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
-index 02acbb6ddf02..a3364df6339c 100644
---- a/fs/exfat/dir.c
-+++ b/fs/exfat/dir.c
-@@ -606,13 +606,13 @@ void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
+diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+index 5f375799ce46..11f6b868cf2b 100644
+--- a/drivers/clk/meson/meson8b.c
++++ b/drivers/clk/meson/meson8b.c
+@@ -1918,6 +1918,13 @@ static struct clk_regmap meson8b_mali = {
+ 	},
+ };
  
- void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
- {
--	int i;
-+	int i, err = 0;
- 
--	for (i = 0; i < es->num_bh; i++) {
--		if (es->modified)
--			exfat_update_bh(es->bh[i], sync);
--		brelse(es->bh[i]);
--	}
-+	if (es->modified)
-+		err = exfat_update_bhs(es->bh, es->num_bh, sync);
++static const struct reg_sequence meson8m2_gp_pll_init_regs[] = {
++	{ .reg = HHI_GP_PLL_CNTL2,	.def = 0x59c88000 },
++	{ .reg = HHI_GP_PLL_CNTL3,	.def = 0xca463823 },
++	{ .reg = HHI_GP_PLL_CNTL4,	.def = 0x0286a027 },
++	{ .reg = HHI_GP_PLL_CNTL5,	.def = 0x00003000 },
++};
 +
-+	for (i = 0; i < es->num_bh; i++)
-+		err ? bforget(es->bh[i]):brelse(es->bh[i]);
- 	kfree(es);
- }
- 
-diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
-index 84664024e51e..cbb00ee97183 100644
---- a/fs/exfat/exfat_fs.h
-+++ b/fs/exfat/exfat_fs.h
-@@ -512,6 +512,7 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
- u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type);
- u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type);
- void exfat_update_bh(struct buffer_head *bh, int sync);
-+int exfat_update_bhs(struct buffer_head **bhs, int nr_bhs, int sync);
- void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
- 		unsigned int size, unsigned char flags);
- void exfat_chain_dup(struct exfat_chain *dup, struct exfat_chain *ec);
-diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
-index 8a3dde59052b..564718747fb2 100644
---- a/fs/exfat/misc.c
-+++ b/fs/exfat/misc.c
-@@ -172,6 +172,25 @@ void exfat_update_bh(struct buffer_head *bh, int sync)
- 		sync_dirty_buffer(bh);
- }
- 
-+int exfat_update_bhs(struct buffer_head **bhs, int nr_bhs, int sync)
-+{
-+	int i, err = 0;
-+
-+	for (i = 0; i < nr_bhs; i++) {
-+		set_buffer_uptodate(bhs[i]);
-+		mark_buffer_dirty(bhs[i]);
-+		if (sync)
-+			write_dirty_buffer(bhs[i], 0);
-+	}
-+
-+	for (i = 0; i < nr_bhs && sync; i++) {
-+		wait_on_buffer(bhs[i]);
-+		if (!buffer_uptodate(bhs[i]))
-+			err = -EIO;
-+	}
-+	return err;
-+}
-+
- void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
- 		unsigned int size, unsigned char flags)
- {
+ static const struct pll_params_table meson8m2_gp_pll_params_table[] = {
+ 	PLL_PARAMS(182, 3),
+ 	{ /* sentinel */ },
+@@ -1951,6 +1958,8 @@ static struct clk_regmap meson8m2_gp_pll_dco = {
+ 			.width   = 1,
+ 		},
+ 		.table = meson8m2_gp_pll_params_table,
++		.init_regs = meson8m2_gp_pll_init_regs,
++		.init_count = ARRAY_SIZE(meson8m2_gp_pll_init_regs),
+ 	},
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "gp_pll_dco",
+diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
+index c889fbeec30f..c91fb07fcb65 100644
+--- a/drivers/clk/meson/meson8b.h
++++ b/drivers/clk/meson/meson8b.h
+@@ -20,6 +20,10 @@
+  * [0] http://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
+  */
+ #define HHI_GP_PLL_CNTL			0x40  /* 0x10 offset in data sheet */
++#define HHI_GP_PLL_CNTL2		0x44  /* 0x11 offset in data sheet */
++#define HHI_GP_PLL_CNTL3		0x48  /* 0x12 offset in data sheet */
++#define HHI_GP_PLL_CNTL4		0x4C  /* 0x13 offset in data sheet */
++#define HHI_GP_PLL_CNTL5		0x50  /* 0x14 offset in data sheet */
+ #define HHI_VIID_CLK_DIV		0x128 /* 0x4a offset in data sheet */
+ #define HHI_VIID_CLK_CNTL		0x12c /* 0x4b offset in data sheet */
+ #define HHI_GCLK_MPEG0			0x140 /* 0x50 offset in data sheet */
 -- 
 2.25.1
 
