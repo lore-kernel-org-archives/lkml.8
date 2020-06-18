@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8481C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEE7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DCB2214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A334321974
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443299;
-	bh=GjNpput/gcM8jX7KUPi8n1vW83BRAOzjo5dxH0l7Gb0=;
+	s=default; t=1592443306;
+	bh=yB7wWyi9+IYrPrdKr8DWQdWd+iR//4lrmBwaUYqQMNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VH0ZTWvVS09D1MLXTS0FZn+1PaMLQYvbF4O/RfKnVz9fbsze+4A8xj3R0jkb6oYTE
-	 2dJoMnMuYNbc8yBojhJZLAoiAbnyblORUdpWed0zZN0LkyI6T+zmGOLsRU8fv9ytAm
-	 hz3MjKDhgYY2OsAuLn6ciD/Ow3ODe1TtqYD5m3pM=
+	b=foTbihJHSWWPxQWNUnq2SvLFyfJLVcrXq+HoEoeqjkmEsISb36BUlATLNPbO+LgVW
+	 f1UVawJk39CJxcbl72lBq81p1MLyjU5/yRAN9qOM51+ni1LIF+iFwJuXsZMmo3Osu0
+	 3JpxSsuxve9J8B4chaqz6Bqb0Bb3rqwd8joThcG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbgFRBVi (ORCPT
+        id S1730584AbgFRBVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49692 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729901AbgFRBST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:18:19 -0400
+        id S1729900AbgFRBSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:18:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2384B206F1;
-        Thu, 18 Jun 2020 01:18:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FBE621D80;
+        Thu, 18 Jun 2020 01:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443098;
-        bh=GjNpput/gcM8jX7KUPi8n1vW83BRAOzjo5dxH0l7Gb0=;
+        s=default; t=1592443096;
+        bh=yB7wWyi9+IYrPrdKr8DWQdWd+iR//4lrmBwaUYqQMNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hhcikRJ2+6C9hEM4B+3IuLVa85jcyZKnZSvwN98Nj7JDQ5tsHC2Layzo4n/WcF3ce
-         cOIaokg/NTEChvf45T3JUgTYDymGdG6Tku9YdsDkOghJ+d3jd/kLBIchFX2jhDR3rX
-         W08KgGKUFNXAINDdrg1b2lMaomNhJt66MiW+6frs=
+        b=yTMHOvG1agfF3XBQM0RYU5fjW/BOo/t7SUuDW47YQ3mKtZmuEA+t508XJkXsVT0yZ
+         mdEhB+tUr+NtU1DGusJiS4zDPe2I/b8BRR1f2o6fAevcBAnx+kWwRv0G8zntNdBlps
+         +tENtbM8Fscwp3rXrf3CKg+UGwcfTJd/EJ1OXH5Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 078/266] f2fs: handle readonly filesystem in f2fs_ioc_shutdown()
-Date:   Wed, 17 Jun 2020 21:13:23 -0400
-Message-Id: <20200618011631.604574-78-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 076/266] net: dsa: lantiq_gswip: fix and improve the unsupported interface error
+Date:   Wed, 17 Jun 2020 21:13:21 -0400
+Message-Id: <20200618011631.604574-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,42 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 8626441f05dc45a2f4693ee6863d02456ce39e60 ]
+[ Upstream commit 4d3da2d8d91f66988a829a18a0ce59945e8ae4fb ]
 
-If mountpoint is readonly, we should allow shutdowning filesystem
-successfully, this fixes issue found by generic/599 testcase of
-xfstest.
+While trying to use the lantiq_gswip driver on one of my boards I made
+a mistake when specifying the phy-mode (because the out-of-tree driver
+wants phy-mode "gmii" or "mii" for the internal PHYs). In this case the
+following error is printed multiple times:
+  Unsupported interface: 3
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+While it gives at least a hint at what may be wrong it is not very user
+friendly. Print the human readable phy-mode and also which port is
+configured incorrectly (this hardware supports ports 0..6) to improve
+the cases where someone made a mistake.
+
+Fixes: 14fceff4771e51 ("net: dsa: Add Lantiq / Intel DSA driver for vrx200")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/file.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/dsa/lantiq_gswip.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index c3a9da79ac99..5d94abe467a4 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -2056,8 +2056,15 @@ static int f2fs_ioc_shutdown(struct file *filp, unsigned long arg)
+diff --git a/drivers/net/dsa/lantiq_gswip.c b/drivers/net/dsa/lantiq_gswip.c
+index a69c9b9878b7..636966e93517 100644
+--- a/drivers/net/dsa/lantiq_gswip.c
++++ b/drivers/net/dsa/lantiq_gswip.c
+@@ -1451,7 +1451,8 @@ static void gswip_phylink_validate(struct dsa_switch *ds, int port,
  
- 	if (in != F2FS_GOING_DOWN_FULLSYNC) {
- 		ret = mnt_want_write_file(filp);
--		if (ret)
-+		if (ret) {
-+			if (ret == -EROFS) {
-+				ret = 0;
-+				f2fs_stop_checkpoint(sbi, false);
-+				set_sbi_flag(sbi, SBI_IS_SHUTDOWN);
-+				trace_f2fs_shutdown(sbi, in, ret);
-+			}
- 			return ret;
-+		}
- 	}
+ unsupported:
+ 	bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
+-	dev_err(ds->dev, "Unsupported interface: %d\n", state->interface);
++	dev_err(ds->dev, "Unsupported interface '%s' for port %d\n",
++		phy_modes(state->interface), port);
+ 	return;
+ }
  
- 	switch (in) {
 -- 
 2.25.1
 
