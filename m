@@ -2,134 +2,153 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BEAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5731AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2217207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:10:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="koJMedVI"
+	by mail.kernel.org (Postfix) with ESMTP id 3FFD7208D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:12:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbgFRUKC (ORCPT
+        id S1730939AbgFRUMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:10:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726517AbgFRUKB (ORCPT
+        Thu, 18 Jun 2020 16:12:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36760 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728027AbgFRUML (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:10:01 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37125C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:10:01 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id k13so4280376vsm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:10:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FSwUDJQJDD2aFeE7AG8B7gwG/F8HVyWOYHj+N8WDvHg=;
-        b=koJMedVIB9/8FYoo3ICOMGrEkn7oiQpS3inzL5oZp6a4TYfZL5WhLQ8L8SZyqrFEv2
-         C3h4FeUJMoRd4JAHQg4d1XaqgoFcDrm+Tg4iDinifrhpHEjDK6Rvwk5cFrynYYQGvLAH
-         j6uk3LzHMuSgjFsiG7c2h95oQfFiTEd2dihgQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FSwUDJQJDD2aFeE7AG8B7gwG/F8HVyWOYHj+N8WDvHg=;
-        b=so4kpj63fTdh4cvV5shWbYDrqDd+66RunIAl3VE8KfabDZZlAuVJhV74s2kgBfX9nz
-         xTXqJ73u1EM50otHD94h7yy55OOozsy7Jarb2XJfJrCCTs1bIm2sM+3GaSbVtPopIAwu
-         yaU7oRjYpm+YfaOa1WRXDM+tWHllZBl8Q3rc6e3B7UQix9wVXcJYApTw4jsBE69uo1aY
-         FSq1r7myFA9wcFmiGLnot2diwfm9R3gdlNUwI7hb+PzZJByWQEjdCD+xAyTJHLehxZpG
-         C9zRlqKFF9klPqFQkWk+eVcMb4TfghOlERzE2J6BkiebihQjM1bR/m4nB/sEXUNm2kP9
-         LBmA==
-X-Gm-Message-State: AOAM532oD++yMwEpXjZRCFcVC++dSBvsJXV7rlsm7F83paw3AzpqyRtl
-        rYX+RQ3VyrA33WaJalckC2Z0Kgm0HrU=
-X-Google-Smtp-Source: ABdhPJydSvHzb1+a2Bg5W2ni638FEf4HRrCO03I9C/BnZ3BQwX55WQgRvJL+dtS+VgJJSm9IAvO/nQ==
-X-Received: by 2002:a67:e90e:: with SMTP id c14mr5274276vso.185.1592511000265;
-        Thu, 18 Jun 2020 13:10:00 -0700 (PDT)
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
-        by smtp.gmail.com with ESMTPSA id x6sm433539vsx.25.2020.06.18.13.09.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 13:09:59 -0700 (PDT)
-Received: by mail-vs1-f49.google.com with SMTP id o2so4318126vsr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:09:59 -0700 (PDT)
-X-Received: by 2002:a67:8881:: with SMTP id k123mr5031158vsd.198.1592510998962;
- Thu, 18 Jun 2020 13:09:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200618150626.237027-1-dianders@chromium.org>
- <20200618080459.v4.5.Ib1e6855405fc9c99916ab7c7dee84d73a8bf3d68@changeid> <159250352382.62212.8085892973272354046@swboyd.mtv.corp.google.com>
-In-Reply-To: <159250352382.62212.8085892973272354046@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 18 Jun 2020 13:09:47 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Xh3+cROZC8dCn99MLkngsyBcxq+Gv1CERayZXExwdygA@mail.gmail.com>
-Message-ID: <CAD=FV=Xh3+cROZC8dCn99MLkngsyBcxq+Gv1CERayZXExwdygA@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] spi: spi-geni-qcom: Don't keep a local state variable
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 18 Jun 2020 16:12:11 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05IK3Rfs190980;
+        Thu, 18 Jun 2020 16:11:57 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31repa0rby-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 16:11:56 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05IKArYY020767;
+        Thu, 18 Jun 2020 16:11:56 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31repa0rbp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 16:11:56 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05IK9t3q005729;
+        Thu, 18 Jun 2020 20:11:55 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma03wdc.us.ibm.com with ESMTP id 31q8kkwv2e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 20:11:55 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05IKBsJ412845462
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jun 2020 20:11:54 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7BC20AE06B;
+        Thu, 18 Jun 2020 20:11:54 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D8A50AE064;
+        Thu, 18 Jun 2020 20:11:53 +0000 (GMT)
+Received: from DESKTOP-AV6EVPG.localdomain (unknown [9.160.61.88])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Jun 2020 20:11:53 +0000 (GMT)
+From:   Maurizio Drocco <maurizio.drocco@ibm.com>
+To:     roberto.sassu@huawei.com
+Cc:     Silviu.Vlasceanu@huawei.com, dmitry.kasatkin@gmail.com,
+        jejb@linux.ibm.com, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, maurizio.drocco@ibm.com,
+        serge@hallyn.com, zohar@linux.ibm.com, mdrocco@linux.vnet.ibm.com
+Subject: [PATCH] extend IMA boot_aggregate with kernel measurements
+Date:   Thu, 18 Jun 2020 16:11:25 -0400
+Message-Id: <20200618201126.2081-1-maurizio.drocco@ibm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <b744c1b79ba14a17a786f5de04c1f3c4@huawei.com>
+References: <b744c1b79ba14a17a786f5de04c1f3c4@huawei.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-18_15:2020-06-18,2020-06-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1
+ priorityscore=1501 spamscore=0 phishscore=0 adultscore=0 clxscore=1011
+ mlxscore=0 cotscore=-2147483648 mlxlogscore=999 malwarescore=0
+ lowpriorityscore=0 impostorscore=0 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006180152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+IMA is not considering TPM registers 8-9 when calculating the boot
+aggregate. When registers 8-9 are used to store measurements of the
+kernel and its command line (e.g., grub2 bootloader with tpm module
+enabled), IMA should include them in the boot aggregate.
 
-On Thu, Jun 18, 2020 at 11:05 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Douglas Anderson (2020-06-18 08:06:26)
-> > @@ -126,20 +120,23 @@ static void handle_fifo_timeout(struct spi_master *spi,
-> >         struct geni_se *se = &mas->se;
-> >
-> >         spin_lock_irq(&mas->lock);
-> > -       reinit_completion(&mas->xfer_done);
-> > -       mas->cur_mcmd = CMD_CANCEL;
-> > -       geni_se_cancel_m_cmd(se);
-> > +       reinit_completion(&mas->cancel_done);
-> >         writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
-> > +       mas->cur_xfer = NULL;
->
-> BTW, is this necessary? It's subtlely placed here without a comment why.
+Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
+---
+ security/integrity/ima/ima.h        |  2 +-
+ security/integrity/ima/ima_crypto.c | 20 ++++++++++++++++++--
+ 2 files changed, 19 insertions(+), 3 deletions(-)
 
-I believe so.  Now that we don't have the "cur_mcmd" we rely on
-cur_xfer being NULL to tell the difference between a "done" for chip
-select vs. a "done" for transfer.
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index df93ac258e01..9d94080bdad8 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -30,7 +30,7 @@
+ 
+ enum ima_show_type { IMA_SHOW_BINARY, IMA_SHOW_BINARY_NO_FIELD_LEN,
+ 		     IMA_SHOW_BINARY_OLD_STRING_FMT, IMA_SHOW_ASCII };
+-enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
++enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8, TPM_PCR10 = 10 };
+ 
+ /* digest size for IMA, fits SHA1 or MD5 */
+ #define IMA_DIGEST_SIZE		SHA1_DIGEST_SIZE
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index 220b14920c37..299b23dad8d9 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -809,7 +809,7 @@ static void ima_pcrread(u32 idx, struct tpm_digest *d)
+ static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
+ 				       struct crypto_shash *tfm)
+ {
+-	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} };
++	struct tpm_digest d = { .alg_id = alg_id, .digest = {0} }, d0 = d;
+ 	int rc;
+ 	u32 i;
+ 	SHASH_DESC_ON_STACK(shash, tfm);
+@@ -823,13 +823,29 @@ static int ima_calc_boot_aggregate_tfm(char *digest, u16 alg_id,
+ 	if (rc != 0)
+ 		return rc;
+ 
+-	/* cumulative sha1 over tpm registers 0-7 */
++	/* cumulative digest over tpm registers 0-7 */
+ 	for (i = TPM_PCR0; i < TPM_PCR8; i++) {
+ 		ima_pcrread(i, &d);
+ 		/* now accumulate with current aggregate */
+ 		rc = crypto_shash_update(shash, d.digest,
+ 					 crypto_shash_digestsize(tfm));
+ 	}
++	/*
++	 * extend cumulative digest over tpm registers 8-9, which contain
++	 * measurement for the kernel command line (reg. 8) and image (reg. 9)
++	 * in a typical PCR allocation. Registers 8-9 are only included in
++	 * non-SHA1 boot_aggregate digests to avoid ambiguity.
++	 */
++	if (alg_id != TPM_ALG_SHA1) {
++		for (i = TPM_PCR8; i < TPM_PCR10; i++) {
++			ima_pcrread(i, &d);
++			/* if not zero, accumulate with current aggregate */
++			if (memcmp(d.digest, d0.digest,
++				crypto_shash_digestsize(tfm)) != 0)
++				rc = crypto_shash_update(shash, d.digest,
++						crypto_shash_digestsize(tfm));
++		}
++	}
+ 	if (!rc)
+ 		crypto_shash_final(shash, digest);
+ 	return rc;
+-- 
+2.17.1
 
-* When we start a transfer we set "cur_xfer" to a non-NULL pointer.
-When the transfer finishes we set it to NULL again.
-
-* When we start a chip select transfer we _don't_ explicitly set it to
-NULL because it should already be NULL.
-
-* When we are aborting a transfer we need to NULL so we can handle the
-chip select that will come next.
-
-I suppose it's possible that we could get by without without NULLing
-it because I believe when the "abort" IRQ finally fires then it will
-include a "DONE" and that would presumably NULL it out.  ...but I
-guess if both the cancel and abort timed out and no IRQ ever fired
-then nothing would have NULLed it and the next chip select would be
-confused.
-
-Prior to getting rid of "cur_mcmd" this all wasn't needed because
-"cur_xfer" was only ever looked at if "cur_mcmd" was set to
-"CMD_XFER".
-
-
-One part of my change that is technically not related to the removal
-of "cur_mcmd" is the part where I do "mas->tx_rem_bytes =
-mas->rx_rem_bytes = 0;".  I can split that as a separate change if you
-want but it seemed fine to just clean up this extra bit of state here.
-
--Doug
