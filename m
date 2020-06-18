@@ -2,116 +2,148 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C92C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C47C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F81F2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592468342;
-	bh=JxwQFpjvKeAB4INFoYQbuc1w34IX9n5JGMVd/v76/Z0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gwP/f8v1fXSFF20EDEZN55fFOtjVGioU5TKCxPf0veK+Gkur0OqBlJpzPKTY7Ll+G
-	 +LEDB/GtCduE2srWiuSePQghUKn+3yOGDtY1+DG5856g0NwUQnstDTCLYFk0w/gj8D
-	 cc1O2Qb/MFU1Xl+lmB4CdTxd2VtP7HXAp+R+vIAU=
+	by mail.kernel.org (Postfix) with ESMTP id 4D28A2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:20:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JP6cdM6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbgFRITA (ORCPT
+        id S1728583AbgFRIUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:19:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728426AbgFRIS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:18:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24FCE208C7;
-        Thu, 18 Jun 2020 08:18:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592468337;
-        bh=JxwQFpjvKeAB4INFoYQbuc1w34IX9n5JGMVd/v76/Z0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YnosXv6U7X9MzW/oq+YVV7eFgTlowI2xeJ1XkF+AP9TjdBhcNVzq3s85rPSyVmNmC
-         m1ZmZ/w3H3lX6eQkbANLTaDoK0g/g1YitnjP36P98w+8MAx2EzTyVUj4TVi9ZbywRB
-         lcwUqVQ7RuC52V+gTLNj37ZXJ50/QHX14kIk9Zyg=
-Date:   Thu, 18 Jun 2020 10:18:50 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Vladimir Stankovic <vladimir.stankovic@displaylink.com>
-Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        mausb-host-devel@displaylink.com
-Subject: Re: [External] Re: [PATCH v6 3/8] usb: mausb_host: HCD initialization
-Message-ID: <20200618081850.GB1043700@kroah.com>
-References: <20200425091954.1610-1-vladimir.stankovic@displaylink.com>
- <20200515123502.12099-1-vladimir.stankovic@displaylink.com>
- <20200515123502.12099-4-vladimir.stankovic@displaylink.com>
- <20200515130754.GD1937631@kroah.com>
- <bc1d3b5a-758a-2c7d-4b6b-952c674f14f9@displaylink.com>
+        Thu, 18 Jun 2020 04:20:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728249AbgFRIUD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:20:03 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C329BC0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:20:00 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id t13so2620753wrs.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:20:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=4KcujSsS1jyjnsxMXRZfCGa39cS76YnVtoeGFVxCFgc=;
+        b=JP6cdM6fRlsxkBS/oB90AVgYIES7VE8ArtqzXGZ8RnERg8aj8ytd++B2GEjbx3XJdh
+         5fEtk7p/TKEXMSNfLVJ5haAGojW2NatyNxLjq36RasROlWCd+J0EsfKG/rZhX4F0cI+D
+         o1sXVokcbprB6k95jboAGE/WYgr86lK24y7US+dgADQbL9YjPqJZzXgSy+Uf9eNOivmX
+         GW8LmoFy1DiTHCgWKG1s3KlKKGKKLHRyHSJrvRMz4tLjVycxiexpvkzkFzfIwlod3Vm+
+         8hV2AuaYNUhl1dsJMCHSPChuCldzgGma/AiWvTUgKnmcEP3YIaaC1df5xJt5QtCAFZAU
+         rOxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=4KcujSsS1jyjnsxMXRZfCGa39cS76YnVtoeGFVxCFgc=;
+        b=lPAcL8czH6eMkcekXwvXoGEcmRQ+bvAPn2qBq4RbzncDFHFFgIddJZ+HNVoYPbj6Db
+         wj/8OCnoIKBQofpR1quv5mU6/vl3HviNJbblcUq/Q0Lm385rkdO0G8CkLnYj3dgwHRXP
+         W2ijEy1nk32nKhMaYOk+99oSkJHWwefbsA+y4Zy35XtKY6xQa/tWTRSVkWcEIDRvw3fb
+         3gDKLHm//r9gpYHez48cWrwHxNTUeD9GilTIFm4z5xxpOk+pBu1pBWpa+ZTJJDTalGkR
+         sqInx0jSB+Tl2eon1Ca5c6AGvl/nTArnXv9nzrTAI0iASzRQnhmsWNMF3q/Q2+ffn4YZ
+         u8Mg==
+X-Gm-Message-State: AOAM5314Ri5CqEP4FDmZ/ZuvzNYHgug+duzjQcckLtBwyN5B647nmKe6
+        2v/rsdHPkPTSZ4uc5TmcBEFOTg==
+X-Google-Smtp-Source: ABdhPJzHjbMVQLF+FVct8ot/7YOMYRsMDLX1hN75mvGjfOq63MOC8UTFzu2niGdYKHrjduUo6iHLhw==
+X-Received: by 2002:adf:82d0:: with SMTP id 74mr3124134wrc.138.1592468399531;
+        Thu, 18 Jun 2020 01:19:59 -0700 (PDT)
+Received: from dell ([95.149.164.118])
+        by smtp.gmail.com with ESMTPSA id l17sm749882wmh.14.2020.06.18.01.19.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 01:19:58 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 09:19:57 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/5] mfd: Add support for Khadas Microcontroller
+Message-ID: <20200618081957.GD2608702@dell>
+References: <20200608091739.2368-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <bc1d3b5a-758a-2c7d-4b6b-952c674f14f9@displaylink.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200608091739.2368-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 08:18:34PM +0200, Vladimir Stankovic wrote:
-> On 15.5.20. 15:07, Greg KH wrote:
-> > On Fri, May 15, 2020 at 02:34:57PM +0200, Vladimir Stankovic wrote:
-> >> --- /dev/null
-> >> +++ b/drivers/usb/host/mausb/hcd.c
-> >> @@ -0,0 +1,120 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Copyright (c) 2019 - 2020 DisplayLink (UK) Ltd.
-> >> + */
-> >> +#include "hcd.h"
-> >> +
-> >> +#include "utils.h"
-> >> +
-> >> +static int mausb_bus_match(struct device *dev, struct device_driver *drv);
-> >> +
-> >> +static const struct file_operations mausb_fops;
-> >> +
-> >> +static unsigned int major;
-> >> +static unsigned int minor = 1;
-> >> +static dev_t devt;
-> >> +static struct device *device;
-> >> +
-> >> +struct mausb_hcd	*mhcd;
-> >> +static struct class	*mausb_class;
-> >> +static struct bus_type	mausb_bus_type = {
-> >> +	.name	= DEVICE_NAME,
-> >> +	.match	= mausb_bus_match,
-> >> +};
-> > 
-> > A static bus type???  For a single driver?
-> > 
-> >> +
-> >> +static struct device_driver mausb_driver = {
-> >> +	.name	= DEVICE_NAME,
-> >> +	.bus	= &mausb_bus_type,
-> >> +	.owner	= THIS_MODULE,
-> >> +};
-> > 
-> > Wait, what???  A static "raw" struct device_driver?  Why???
-> This was our initial driver setup that was "inherited" from some
-> in-tree drivers. We are currently revising driver setup. In general,
-> device driver will not work properly w/o bus being setup and the
-> only way to avoid explicit bus and simplify driver setup is to use
-> platform driver; however, we are not aware of any explicit dependency
-> on the platform, so not sure whether it's acceptable to switch to
-> platform device driver setup.
+On Mon, 08 Jun 2020, Neil Armstrong wrote:
 
-platform devices/drivers are to be used ONLY if your really have a
-platform device (i.e. something connected to the system only through
-device-tree or hard-coded memory locations.)  Do not use this for
-virtual devices or anything else that is on a "real" bus.
+> The new Khadas VIM2, VIM3 and Edge boards embeds an on-board microcontroller
+> connected via I2C.
+> 
+> This Microcontroller is present on the Khadas VIM1, VIM2, VIM3 and Edge
+> boards.
+> 
+> It has multiple boot control features like password check, power-on
+> options, power-off control and system FAN control on recent boards.
+> 
+> Thie serie adds :
+> - the bindings
+> - the MFD driver
+> - the Thermal Cooling cell driver
+> - updates MAINTAINERS
+> - add support into the Khadas VIM3/VIM3L DT
+> 
+> Changes since v2 at [3]:
+> - Removed NVMEM driver for separate submission
+> - fixed MFD driver, header and Kconfig
+> - fixed Thermal Kconfig
+> - fixed MAINTAINERS files and path
+> 
+> Changes since RFC v1 at [2]:
+> - moved hwmon driver to thermal-only
+> - moved the SM1 thermal nodes in a separate serie
+> - added the bindings review tag from rob
+> 
+> [1] http://lore.kernel.org/r/20200512093916.19676-1-narmstrong@baylibre.com
+> [2] http://lore.kernel.org/r/20200421080102.22796-1-narmstrong@baylibre.com
+> [3] http://lore.kernel.org/r/20200512132613.31507-1-narmstrong@baylibre.com
+> 
+> Neil Armstrong (5):
+>   dt-bindings: mfd: add Khadas Microcontroller bindings
+>   mfd: add support for the Khadas System control Microcontroller
+>   thermal: add support for the MCU controlled FAN on Khadas boards
+>   MAINTAINERS: add myself as maintainer for Khadas MCU drivers
+>   arm64: dts: meson-khadas-vim3: add Khadas MCU nodes
 
-thanks,
+I'm a bit concerned by the missing patches from my inbox.
 
-greg k-h
+Looks like you omitted to send me patch 3 and 5.
+
+Hopefully the Thermal patch doesn't depend on the MFD one!
+
+>  .../devicetree/bindings/mfd/khadas,mcu.yaml   |  44 +++++
+>  MAINTAINERS                                   |   9 +
+>  .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |  23 +++
+>  drivers/mfd/Kconfig                           |  21 +++
+>  drivers/mfd/Makefile                          |   1 +
+>  drivers/mfd/khadas-mcu.c                      | 142 ++++++++++++++
+>  drivers/thermal/Kconfig                       |  11 ++
+>  drivers/thermal/Makefile                      |   1 +
+>  drivers/thermal/khadas_mcu_fan.c              | 174 ++++++++++++++++++
+>  include/linux/mfd/khadas-mcu.h                |  91 +++++++++
+>  10 files changed, 517 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
+>  create mode 100644 drivers/mfd/khadas-mcu.c
+>  create mode 100644 drivers/thermal/khadas_mcu_fan.c
+>  create mode 100644 include/linux/mfd/khadas-mcu.h
+> 
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
