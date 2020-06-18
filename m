@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE5AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1451E2223F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6989B2223F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445599;
-	bh=Zq2A+XY4Y/8DJh883A3HGw2i5z55/MzdBhKTq+Y5bCk=;
+	s=default; t=1592445602;
+	bh=mIJ1TUXp7dszAtRrMyJYmXKkKV2repG8ZIcsS6zctIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aJupc1gKzezahZ813UvojgVd+7gCXidDtx46Ma87GIINiZW+pTsge7s5Q59/J058K
-	 dt4njWHvPRSJiS92l4OzEIYVPUN1kgAtZ+5v2jWYthJ/0lC/ViP/uB9hcPUHSR4G2T
-	 6ZkHvJUX6x9VO9xYQdivoImSlsZuVSSURamAvQnA=
+	b=bBRkCen5NXnPzlLvTPdQV21waBzd+KA1BIOVuG3qdTPXg1zhGDJlVgi/H40CzVmr8
+	 Hgw7FHVIkyZ3ClKgwSdrFsJg09HACXiXHRSYv8H3lw/M7xj2zmESd+8pyRcsqAglzb
+	 HWLOzZJ3T0GrhDEjMsSrD1B2GNW9uivxS5ELMink=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387438AbgFRB75 (ORCPT
+        id S1731221AbgFRBYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:59:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59080 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:24:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731225AbgFRBYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:24:31 -0400
+        id S1729726AbgFRBVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:21:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07A4020776;
-        Thu, 18 Jun 2020 01:24:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94DF621D79;
+        Thu, 18 Jun 2020 01:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443470;
-        bh=Zq2A+XY4Y/8DJh883A3HGw2i5z55/MzdBhKTq+Y5bCk=;
+        s=default; t=1592443269;
+        bh=mIJ1TUXp7dszAtRrMyJYmXKkKV2repG8ZIcsS6zctIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2hD1Q1n9EAArgLrsUpdjdAvPvdvzKma8toyLIt20ERxsEjNIH7M5bzNV7cGmolTp2
-         8rDiW4JQ2fgo70KxQcIZ2BujSkf8wEPpciDVQkNneZwzlqj2Fz26vv4bmm4h54ViqS
-         yxnnrNshqSxwoemunYDfhbO0O4+bearOGkz9S6M0=
+        b=uPR9mbNwFyTmtfOJJlhCfO/texBAKbGnoJqJxPDQc+274JU/iJmxluVvUPvP3Fosb
+         kac4bE1BuM/LL+FDJ+4VatzcriMrGtzai80ggg+OXmpwm/3P3IBRM1noN7FnxhMPOH
+         iDdgtEgqlLvRP6Exd88vNKSXpzKAyHA6/WeV/e1s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 102/172] clk: samsung: exynos5433: Add IGNORE_UNUSED flag to sclk_i2s1
-Date:   Wed, 17 Jun 2020 21:21:08 -0400
-Message-Id: <20200618012218.607130-102-sashal@kernel.org>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 215/266] drm/nouveau/disp/gm200-: fix NV_PDISP_SOR_HDMI2_CTRL(n) selection
+Date:   Wed, 17 Jun 2020 21:15:40 -0400
+Message-Id: <20200618011631.604574-215-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,66 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit 25bdae0f1c6609ceaf55fe6700654f0be2253d8e ]
+[ Upstream commit a1ef8bad506e4ffa0c57ac5f8cb99ab5cbc3b1fc ]
 
-Mark the SCLK clock for Exynos5433 I2S1 device with IGNORE_UNUSED flag to
-match its behaviour with SCLK clock for AUD_I2S (I2S0) device until
-a proper fix for Exynos I2S driver is ready.
+This is a SOR register, and not indexed by the bound head.
 
-This fixes the following synchronous abort issue revealed by the probe
-order change caused by the commit 93d2e4322aa7 ("of: platform: Batch
-fwnode parsing when adding all top level devices")
+Fixes display not coming up on high-bandwidth HDMI displays under a
+number of configurations.
 
-Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 0 PID: 50 Comm: kworker/0:1 Not tainted 5.7.0-rc5+ #701
-Hardware name: Samsung TM2E board (DT)
-Workqueue: events deferred_probe_work_func
-pstate: 60000005 (nZCv daif -PAN -UAO)
-pc : samsung_i2s_probe+0x768/0x8f0
-lr : samsung_i2s_probe+0x688/0x8f0
-...
-Call trace:
- samsung_i2s_probe+0x768/0x8f0
- platform_drv_probe+0x50/0xa8
- really_probe+0x108/0x370
- driver_probe_device+0x54/0xb8
- __device_attach_driver+0x90/0xc0
- bus_for_each_drv+0x70/0xc8
- __device_attach+0xdc/0x140
- device_initial_probe+0x10/0x18
- bus_probe_device+0x94/0xa0
- deferred_probe_work_func+0x70/0xa8
- process_one_work+0x2a8/0x718
- worker_thread+0x48/0x470
- kthread+0x134/0x160
- ret_from_fork+0x10/0x1c
-Code: 17ffffaf d503201f f94086c0 91003000 (88dffc00)
----[ end trace ccf721c9400ddbd6 ]---
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5433.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-index 302596dc79a2..0f2a9d767eef 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -1680,7 +1680,8 @@ static const struct samsung_gate_clock peric_gate_clks[] __initconst = {
- 	GATE(CLK_SCLK_PCM1, "sclk_pcm1", "sclk_pcm1_peric",
- 			ENABLE_SCLK_PERIC, 7, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_I2S1, "sclk_i2s1", "sclk_i2s1_peric",
--			ENABLE_SCLK_PERIC, 6, CLK_SET_RATE_PARENT, 0),
-+			ENABLE_SCLK_PERIC, 6,
-+			CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_SCLK_SPI2, "sclk_spi2", "sclk_spi2_peric", ENABLE_SCLK_PERIC,
- 			5, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_SPI1, "sclk_spi1", "sclk_spi1_peric", ENABLE_SCLK_PERIC,
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c
+index 9b16a08eb4d9..bf6d41fb0c9f 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c
+@@ -27,10 +27,10 @@ void
+ gm200_hdmi_scdc(struct nvkm_ior *ior, int head, u8 scdc)
+ {
+ 	struct nvkm_device *device = ior->disp->engine.subdev.device;
+-	const u32 hoff = head * 0x800;
++	const u32 soff = nv50_ior_base(ior);
+ 	const u32 ctrl = scdc & 0x3;
+ 
+-	nvkm_mask(device, 0x61c5bc + hoff, 0x00000003, ctrl);
++	nvkm_mask(device, 0x61c5bc + soff, 0x00000003, ctrl);
+ 
+ 	ior->tmds.high_speed = !!(scdc & 0x2);
+ }
 -- 
 2.25.1
 
