@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6812DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14A682083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483822083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448506;
-	bh=I2F6fN+42izECEedNu+3CiXDqLSxar4fLW5EChKmkQ0=;
+	s=default; t=1592448509;
+	bh=2k53BUB6tR7j3zcSfFJF3SuY35bWiRwDUV7sos9HbBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ky9yYUV19DZMep1IxVpQ8Mjn9h477JMdkyR4eg5upj/JDdUOoDfWJvvq3K5oCSomP
-	 gljKt4kXInXjYDbEUcv6Djx22C5UI1M0N24EeKGZ1EO7LHOLnatUVR+MC7ZrRGw4S+
-	 XodO+EAbWvPhQRQgXxSIQH0xO8A5b8OJ2V/6B5dY=
+	b=M8Z9ZabK3Xjl3Sh7Apmx8oicZFs8sHys4PDa7TO4tlGNdF1vUs4yEungMklO9VJNz
+	 jPENZw1JRumQJtfbCdyUqVjxbJer749pVp2VpjmazlNbdcpqVvG5MFhBR8InVAxzUr
+	 mTiPw0hSvidIgQxh8Z39CMvZHroJAW2JVqXpStRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgFRCsY (ORCPT
+        id S1728335AbgFRBJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:48:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36852 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:09:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728361AbgFRBKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:00 -0400
+        id S1728291AbgFRBJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0DCD21D7F;
-        Thu, 18 Jun 2020 01:09:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A569921D7E;
+        Thu, 18 Jun 2020 01:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442600;
-        bh=I2F6fN+42izECEedNu+3CiXDqLSxar4fLW5EChKmkQ0=;
+        s=default; t=1592442588;
+        bh=2k53BUB6tR7j3zcSfFJF3SuY35bWiRwDUV7sos9HbBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cDopKRbu4QptvK3qQQqv6KFEzeyZCs6mtuKI/EXMHtgcpNPRa16nNYPvRLGFBJfu5
-         TwYRPAsM5X7BLOx0BKj0osozIw85m7Ex6LPv+FumsMsiUw5IGHcooNdOjI/Nhvo0Bs
-         LDvvhyIKMF5/6Lvsr5hVB4NauviGSNK2n/R66E+Y=
+        b=cL6t3U3cVIKa8IuCv3jKbz0Wn2IvU5oG2aMt7fSPM/JVIYJhRVDsIv4vQEgOP9zN8
+         QlnWh0zm76+1BV/+xYOE3A+Nx7uO4NkM+kydccMvTH8TJ8cwnOG40ArRJJ3FX54WXl
+         w9iFQIJiNkc9jYFH4fWo66qpUx6Uvq7E7UnnypCc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 087/388] pwm: img: Call pm_runtime_put() in pm_runtime_get_sync() failed case
-Date:   Wed, 17 Jun 2020 21:03:04 -0400
-Message-Id: <20200618010805.600873-87-sashal@kernel.org>
+Cc:     Alain Volmat <avolmat@me.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 078/388] clk: clk-flexgen: fix clock-critical handling
+Date:   Wed, 17 Jun 2020 21:02:55 -0400
+Message-Id: <20200618010805.600873-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,49 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Alain Volmat <avolmat@me.com>
 
-[ Upstream commit ca162ce98110b98e7d97b7157328d34dcfdd40a9 ]
+[ Upstream commit a403bbab1a73d798728d76931cab3ff0399b9560 ]
 
-Even in failed case of pm_runtime_get_sync(), the usage_count is
-incremented. In order to keep the usage_count with correct value call
-appropriate pm_runtime_put().
+Fixes an issue leading to having all clocks following a critical
+clocks marked as well as criticals.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Fixes: fa6415affe20 ("clk: st: clk-flexgen: Detect critical clocks")
+Signed-off-by: Alain Volmat <avolmat@me.com>
+Link: https://lkml.kernel.org/r/20200322140740.3970-1-avolmat@me.com
+Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-img.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/clk/st/clk-flexgen.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
-index c9e57bd109fb..599a0f66a384 100644
---- a/drivers/pwm/pwm-img.c
-+++ b/drivers/pwm/pwm-img.c
-@@ -129,8 +129,10 @@ static int img_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	duty = DIV_ROUND_UP(timebase * duty_ns, period_ns);
+diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
+index 4413b6e04a8e..55873d4b7603 100644
+--- a/drivers/clk/st/clk-flexgen.c
++++ b/drivers/clk/st/clk-flexgen.c
+@@ -375,6 +375,7 @@ static void __init st_of_flexgen_setup(struct device_node *np)
+ 			break;
+ 		}
  
- 	ret = pm_runtime_get_sync(chip->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(chip->dev);
- 		return ret;
-+	}
++		flex_flags &= ~CLK_IS_CRITICAL;
+ 		of_clk_detect_critical(np, i, &flex_flags);
  
- 	val = img_pwm_readl(pwm_chip, PWM_CTRL_CFG);
- 	val &= ~(PWM_CTRL_CFG_DIV_MASK << PWM_CTRL_CFG_DIV_SHIFT(pwm->hwpwm));
-@@ -331,8 +333,10 @@ static int img_pwm_remove(struct platform_device *pdev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(&pdev->dev);
- 		return ret;
-+	}
- 
- 	for (i = 0; i < pwm_chip->chip.npwm; i++) {
- 		val = img_pwm_readl(pwm_chip, PWM_CTRL_CFG);
+ 		/*
 -- 
 2.25.1
 
