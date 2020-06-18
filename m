@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C06C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2686DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 500AE20899
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E82A3208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448656;
-	bh=sEhelHlSYwzp798DVVNLwasxQDBLxiPB58/bU1SM2PY=;
+	s=default; t=1592448663;
+	bh=HjZbO2xM+J3oqYT1ZvEG5eDHq1VcnhggEWuYcUMGW1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H4jRhIB7d6DWYohND/XzevDMp1AXkRh9N57PbrPEDTPqcAR9PfwzMJBSUaem7ypR2
-	 BUA+BlWELEnQgAtZUHZiXJRoFgqsh50+tmteYsE/MjplLHZlYSX8WxM7xjUbjUhWAT
-	 ygMFwZQKAL9gnX4dOnZQ47eMXboim59DIq5ZA+2g=
+	b=QxcSKnVPc7dseMvhrqYf0GK5jPx5CBg1jcyPNNcktB7SxFoBVQt+JkripB4po0g40
+	 c13oa/9NgNbfrXyPa+bj3IRKVcdCj5r0baJsT3GQE0jsnAq1AhKSAKY2G0N0rT1ENx
+	 AfsbBvYm6YgOa7UMRCQK/yAvRxvIOmL0uqW7UyF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgFRCuz (ORCPT
+        id S1728562AbgFRCvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:50:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35310 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:51:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728057AbgFRBJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:09:10 -0400
+        id S1727955AbgFRBJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E5D721D7D;
-        Thu, 18 Jun 2020 01:09:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 090212193E;
+        Thu, 18 Jun 2020 01:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442550;
-        bh=sEhelHlSYwzp798DVVNLwasxQDBLxiPB58/bU1SM2PY=;
+        s=default; t=1592442547;
+        bh=HjZbO2xM+J3oqYT1ZvEG5eDHq1VcnhggEWuYcUMGW1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w8zQqtXBfnOdON2n0aU89fy1OBl7ZH7/1MOxWnIaHO2CR5KuX48OrEutTCYfiPwQL
-         hElaTmPLo55v20UOZfQl6KuSnSl5jDFl8JmEZk1I7UJxzuk/iVxm3QagyOrA/g31XI
-         Cw1zFsJwuQCgBivz0CquKRwF8p2FLOR9N7PchxkA=
+        b=1Gh4M1eUXCiDXt9ac+23D7FDvvOZfml6Py3i7X8gwHOEf7H5gcG/n1MCOnvI2dD0h
+         ZoIOb4g2CYyo+yNGnjAoqcdGFffEDFGJXO/jVbz2qHGiwJZ1pKjb203tBLvF+1x5ZV
+         Nr7AkWhOA4REDKHWuBhkNx9vmz5GYOAcGqYsEP9c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 048/388] arm64: dts: armada-3720-turris-mox: forbid SDR104 on SDIO for FCC purposes
-Date:   Wed, 17 Jun 2020 21:02:25 -0400
-Message-Id: <20200618010805.600873-48-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 046/388] misc: fastrpc: fix potential fastrpc_invoke_ctx leak
+Date:   Wed, 17 Jun 2020 21:02:23 -0400
+Message-Id: <20200618010805.600873-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,36 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Behún <marek.behun@nic.cz>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 7a2c36b039d2343cc29fec6102da839477b8dc60 ]
+[ Upstream commit 74003385cf716f1b88cc7753ca282f5493f204a2 ]
 
-Use sdhci-caps-mask to forbid SDR104 mode on the SDIO capable SDHCI
-controller. Without this the device cannot pass electromagnetic
-interference certifications.
+fastrpc_invoke_ctx can have refcount of 2 in error path where
+rpmsg_send() fails to send invoke message. decrement the refcount
+properly in the error path to fix this leak.
 
-Fixes: 7109d817db2e ("arm64: dts: marvell: add DTS for Turris Mox")
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+This also fixes below static checker warning:
+
+drivers/misc/fastrpc.c:990 fastrpc_internal_invoke()
+warn: 'ctx->refcount.refcount.ref.counter' not decremented on lines: 990.
+
+Fixes: c68cfb718c8f ("misc: fastrpc: Add support for context")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200512110930.2550-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/misc/fastrpc.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-index bb42d1e6a4e9..47fee66c70cb 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-@@ -179,6 +179,8 @@ &sdhci1 {
- 	marvell,pad-type = "sd";
- 	vqmmc-supply = <&vsdio_reg>;
- 	mmc-pwrseq = <&sdhci1_pwrseq>;
-+	/* forbid SDR104 for FCC purposes */
-+	sdhci-caps-mask = <0x2 0x0>;
- 	status = "okay";
- };
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 9065d3e71ff7..7939c55daceb 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -904,6 +904,7 @@ static int fastrpc_invoke_send(struct fastrpc_session_ctx *sctx,
+ 	struct fastrpc_channel_ctx *cctx;
+ 	struct fastrpc_user *fl = ctx->fl;
+ 	struct fastrpc_msg *msg = &ctx->msg;
++	int ret;
  
+ 	cctx = fl->cctx;
+ 	msg->pid = fl->tgid;
+@@ -919,7 +920,13 @@ static int fastrpc_invoke_send(struct fastrpc_session_ctx *sctx,
+ 	msg->size = roundup(ctx->msg_sz, PAGE_SIZE);
+ 	fastrpc_context_get(ctx);
+ 
+-	return rpmsg_send(cctx->rpdev->ept, (void *)msg, sizeof(*msg));
++	ret = rpmsg_send(cctx->rpdev->ept, (void *)msg, sizeof(*msg));
++
++	if (ret)
++		fastrpc_context_put(ctx);
++
++	return ret;
++
+ }
+ 
+ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
 -- 
 2.25.1
 
