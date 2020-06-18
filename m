@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC69C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2612421548
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C06921548
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:09:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="QbTK/jye"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="fAQvbqBH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgFRKJC (ORCPT
+        id S1728814AbgFRKJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 06:09:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43130 "EHLO
+        Thu, 18 Jun 2020 06:09:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728639AbgFRKIz (ORCPT
+        with ESMTP id S1728718AbgFRKJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 06:08:55 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB0DC0613ED
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 03:08:54 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id s88so2443972pjb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 03:08:54 -0700 (PDT)
+        Thu, 18 Jun 2020 06:09:02 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E06F2C0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 03:08:59 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id y18so2246829plr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 03:08:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=P9ZVEE5llXq13I1PufGR5qegeo37MSzNvw9PjU0Fjk8=;
-        b=QbTK/jyeJEquEVJY7l+T6/kG04+mjbA9G/JwcvZDLZ8k+okay/dSxqJ/GZK0me6aPC
-         T0/+LOR92quFHAlm1dVV68gOZr+8q/YvKBpK2wvxKO41bhYSGXU+4ZUQCTXjBFjTOyEq
-         R3MmYnYx6U71ysADED3OWBNbxPvBQAmA2Zurs=
+        bh=Tg/Hm1A2t+lsaJur4AOo5t83FkcPA6mYe4DsoUQP1Mg=;
+        b=fAQvbqBHcgo8Q8qpa2FuXBYTJR3XAC4kMacXW4eiiO19pCNQCy+KFvZvhq8qyR4ORb
+         rKAGyxGdy1ZsbfKWmv8u1I+NMqbCNXXbD3Z94kUcuhJ+nLSHE7myXyQ5q24+AoAvvZGJ
+         5NyL50/gO71s8/dk4lAl2Lx7VhwAjRlW0eH0Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=P9ZVEE5llXq13I1PufGR5qegeo37MSzNvw9PjU0Fjk8=;
-        b=tLBoK23vFWDXLa3pu05ca/zpI5o2BKrKQZ+hHrtqsTbijhOw7xaiPGM0MZPmgpY1Kl
-         j3erxjlDHLaG17CeIE819O/4vP15oeMiZ2cYdRsMv1yo2ZHLVBUgxRZyiIm6BExlFrso
-         4NkCKp1nJe6/sYKJanr8A5aepSYZscI6ok0QiHSRlpwO4cL60jxVH9j86MStSvu+j1tt
-         rvFIOYnAFz0996qtq1JgM85K/cnZkEWBfA1NgYw8VbeKT8fdVmN+UC9fPlXpOv7YwYiE
-         XOTeHucsd7JKJ7LHbdC2BwIowdBkm2MgdZBnQznYZyB/1mtYZKLJvm7Mw7r+g/LOW2+9
-         7xdw==
-X-Gm-Message-State: AOAM5337IVX+gG/6pQGjjj4q0DxJ0Uv5i83gVb7AMoRRrtIyz8+f2kMR
-        wE8TfIpqEnoCdlGnPuCtrchviw==
-X-Google-Smtp-Source: ABdhPJwZhtlcgjGat0WBZE26aDW8H3kZ66NuB49AdKJ182thmlVQ7g0Vc4xPRCKoybJ9oMJ6otar7w==
-X-Received: by 2002:a17:90a:f694:: with SMTP id cl20mr3587632pjb.141.1592474933565;
-        Thu, 18 Jun 2020 03:08:53 -0700 (PDT)
+        bh=Tg/Hm1A2t+lsaJur4AOo5t83FkcPA6mYe4DsoUQP1Mg=;
+        b=YsTxxi6nXzxuxEDm4Rqp+vyEf5lcw+MZ9aiIGRpQqmHF6tULAkz/E7wV2pn7Y80PxV
+         r7HgHY0isPS2bBABwpzE6a8lFFOPo84mdLFjbz1Jpm+VCtd6KndubZfnclJLw5SlYLRr
+         XXidS1DXTptpdbq0lPOvVk9YlB89uTvhYdFo+5ImvTL4QbfnHxcuwxDEVvP+Y3P52hxK
+         xhIlEw8G6CEd64NPfuvkBdUOWJ0Q8Zixuo2e8P2shG88HjKf7Szc3YhQ9NBLn5CRn20o
+         p/va5rs5KtGjkBgC1nRS7OXs1OBy9D5tV6VlRGdwEle4Tp2Utj+uqwxw5pHNWzbSjYsI
+         JVjQ==
+X-Gm-Message-State: AOAM530z+JqKn//rGKkEuZxq6q8VL69G9F69QAeTz6uUxbjAzEXaj6QP
+        NCrr8XK357Cx4tXMvkWLnx8d4g==
+X-Google-Smtp-Source: ABdhPJyCE56MacJy+rzWLhSlQ5DQWsr/6CsvbeyHuLNduw/AkcYxXxf6DUZG3PzMtdzHx0vZ9GTF+g==
+X-Received: by 2002:a17:90a:224a:: with SMTP id c68mr3243563pje.21.1592474938662;
+        Thu, 18 Jun 2020 03:08:58 -0700 (PDT)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:b0c7:f192:869b:df87])
-        by smtp.gmail.com with ESMTPSA id o16sm2190793pgg.57.2020.06.18.03.08.49
+        by smtp.gmail.com with ESMTPSA id o16sm2190793pgg.57.2020.06.18.03.08.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 03:08:52 -0700 (PDT)
+        Thu, 18 Jun 2020 03:08:58 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
 Cc:     Tom Cubie <tom@radxa.com>, linux-arm-kernel@lists.infradead.org,
@@ -63,9 +63,9 @@ Cc:     Tom Cubie <tom@radxa.com>, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         linux-amarula <linux-amarula@amarulasolutions.com>,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 1/4] ARM: dts: rockchip: radxa-dalang: Update sdmmc properties
-Date:   Thu, 18 Jun 2020 15:38:29 +0530
-Message-Id: <20200618100832.94202-2-jagan@amarulasolutions.com>
+Subject: [PATCH 2/4] dt-bindings: arm: rockchip: Add Rock Pi N8 binding
+Date:   Thu, 18 Jun 2020 15:38:30 +0530
+Message-Id: <20200618100832.94202-3-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618100832.94202-1-jagan@amarulasolutions.com>
 References: <20200618100832.94202-1-jagan@amarulasolutions.com>
@@ -76,53 +76,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Radxa dalang carrier boards are used to mount vmarc SoM's
-of rk3399pro and rk3288 to make complete SBC.
+Rock Pi N8 is a Rockchip RK3288 based SBC, which has
+- VMARC RK3288 SOM (as per SMARC standard) from Vamrs.
+- Compatible carrier board from Radxa.
 
-Among these combinations, card detection gpio, max-frequency
-properties are used with rk3399pro SoM but not required for
-rk3288 SoM based on the hardware schematics.
+VMARC RK3288 SOM need to mount on top of dalang carrier
+board for making Rock PI N8 SBC.
 
-So, let's move these sdmmc specific properties on associate
-vmarc dtsi to make common use of dalang carrier device tree file.
+Add dt-bindings for it.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi  | 2 --
- arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi | 5 +++++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi b/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
-index df3712aedf8a..3e54f38f0ab6 100644
---- a/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
-+++ b/arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
-@@ -52,10 +52,8 @@ &sdmmc {
- 	bus-width = <4>;
- 	cap-mmc-highspeed;
- 	cap-sd-highspeed;
--	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
- 	disable-wp;
- 	vqmmc-supply = <&vccio_sd>;
--	max-frequency = <150000000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-index 0a516334f15f..6fd17e8a815f 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-@@ -317,6 +317,11 @@ &sdhci {
- 	status = "okay";
- };
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index d4a4045092df..db2e35796795 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -435,6 +435,12 @@ properties:
+           - const: radxa,rockpi4
+           - const: rockchip,rk3399
  
-+&sdmmc {
-+	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
-+	max-frequency = <150000000>;
-+};
++      - description: Radxa ROCK Pi N8
++        items:
++          - const: radxa,rockpi-n8
++          - const: vamrs,rk3288-vmarc-som
++          - const: rockchip,rk3288
 +
- &tsadc {
- 	status = "okay";
- 	rockchip,hw-tshut-mode = <1>;
+       - description: Radxa ROCK Pi N10
+         items:
+           - const: radxa,rockpi-n10
 -- 
 2.25.1
 
