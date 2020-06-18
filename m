@@ -2,107 +2,226 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC170C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF36C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACFD2207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592519245;
-	bh=5LLHU83TJW662FBlQnZuvNz1/ymFXqtKCTV6ySPTQLE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=1mvu+nWLZnvsCpt8wdfwbX7QI07NMdiWvQ1XPrlvYsR5iDEF3c88ICw/ftx/nUCBB
-	 aw11SaZ9Kbt8EV2xT64Ze41z1wH+R7SwylEDW0jbvJuboWP11DYyJKm0xgYBBRx3q6
-	 zpT+iDA5jwpEZVNQ6rNqXueeoOzQU1iKuQMgDC1c=
+	by mail.kernel.org (Postfix) with ESMTP id 312B8207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:27:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="thus5MDZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732287AbgFRW1X (ORCPT
+        id S1732328AbgFRW1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728597AbgFRW1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 18:27:22 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 18 Jun 2020 18:27:44 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:54775 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731989AbgFRW1m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 18:27:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592519261; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=LIV3jcRBO9Csy34crSM+HXDj2TAqlp6GANFwTxcwRas=; b=thus5MDZLX9fPg5tapb8sbLHXVjuK2HuTHPDvooL+tpPRdx+gyVz6axrDP6urw6wVjsRsg1W
+ /WI19W6TP5nT48d0P0faHO0lodrbiom0ccN5iElb24oC+zFFEZvzDmbMBp9eFT8Gr/CDHJmy
+ QNqHHVQMCyomjCHwa0vG+v1DoUE=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5eebea4ff3deea03f3bcab08 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 18 Jun 2020 22:27:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DBC3BC43391; Thu, 18 Jun 2020 22:27:26 +0000 (UTC)
+Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E2E620732;
-        Thu, 18 Jun 2020 22:27:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592519241;
-        bh=5LLHU83TJW662FBlQnZuvNz1/ymFXqtKCTV6ySPTQLE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=WlgqCujSPhVcnHCRV8QowhXtmrINgtijICinMfJNEQdcU1i3C6SPAjUK89r66cWlr
-         TWmbzpI9tIK47gRj2sKxklr7rnmAFob5aKm5j2GQIU0OJ2dGJ7aQE07x17v8A5DBZI
-         hM0WdWPZj4cFOrVBxtZRRUbeRa9FpW5bmeEedO0w=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 67DFC352264E; Thu, 18 Jun 2020 15:27:21 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 15:27:21 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: Re: [PATCH 5/7] rcu/trace: Use rsp's gp_seq in acceleration's
- rcu_grace_period tracepoint
-Message-ID: <20200618222721.GA2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200618202955.4024-1-joel@joelfernandes.org>
- <20200618202955.4024-5-joel@joelfernandes.org>
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 11E57C433AD;
+        Thu, 18 Jun 2020 22:27:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 11E57C433AD
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     robh+dt@kernel.org, swboyd@chromium.org, sam@ravnborg.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
+        robdclark@gmail.com, daniel@ffwll.ch, airlied@linux.ie,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        chandanu@codeaurora.org, varar@codeaurora.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>
+Subject: [PATCH v7 5/6] drm/msm/dpu: add display port support in DPU
+Date:   Thu, 18 Jun 2020 15:26:13 -0700
+Message-Id: <20200618222614.14061-6-tanmay@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200618222614.14061-1-tanmay@codeaurora.org>
+References: <20200618222614.14061-1-tanmay@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618202955.4024-5-joel@joelfernandes.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 04:29:53PM -0400, Joel Fernandes (Google) wrote:
-> During acceleration of CB, the rsp's gp_seq is rcu_seq_snap'd. This is
-> the value used for acceleration - it is the value of gp_seq at which it
-> is safe the execute all callbacks in the callback list.
-> 
-> The rdp's gp_seq is not very useful for this scenario. Make
-> rcu_grace_period report the rsp's gp_seq instead as it allows one to
-> reason about how the acceleration works.
+From: Jeykumar Sankaran <jsanka@codeaurora.org>
 
-Good catch, but please instead trace the gp_seq_req local variable.
+Add display port support in DPU by creating hooks
+for DP encoder enumeration and encoder mode
+initialization.
 
-							Thanx, Paul
+changes in v2:
+	- rebase on [2] (Sean Paul)
+	- remove unwanted error checks and
+	  switch cases (Jordan Crouse)
 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/rcu/tree.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 81df1b837dd9d..c3bae7a83d792 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -1437,9 +1437,9 @@ static bool rcu_accelerate_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
->  
->  	/* Trace depending on how much we were able to accelerate. */
->  	if (rcu_segcblist_restempty(&rdp->cblist, RCU_WAIT_TAIL))
-> -		trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("AccWaitCB"));
-> +		trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq, TPS("AccWaitCB"));
->  	else
-> -		trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("AccReadyCB"));
-> +		trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq, TPS("AccReadyCB"));
->  
->  	/* Count CBs for tracing. */
->  	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
-> -- 
-> 2.27.0.111.gc72c7da667-goog
-> 
+[1] https://lwn.net/Articles/768265/
+[2] https://lkml.org/lkml/2018/11/17/87
+
+changes in V3:
+-- Moved this change as part of the DP driver changes.
+-- Addressed compilation issues on the latest code base.
+
+Changes in v6:
+-- Fix checkpatch.pl warning
+
+Changes in v7: Remove depends-on tag from commit message. 
+
+Signed-off-by: Jeykumar Sankaran <jsanka@codeaurora.org>
+Signed-off-by: Chandan Uddaraju <chandanu@codeaurora.org>
+Signed-off-by: Vara Reddy <varar@codeaurora.org>
+Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c |  8 +--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     | 65 +++++++++++++++++----
+ 2 files changed, 58 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 4540d5953b62..e86051c97231 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -2007,7 +2007,7 @@ static int dpu_encoder_setup_display(struct dpu_encoder_virt *dpu_enc,
+ {
+ 	int ret = 0;
+ 	int i = 0;
+-	enum dpu_intf_type intf_type;
++	enum dpu_intf_type intf_type = INTF_NONE;
+ 	struct dpu_enc_phys_init_params phys_params;
+ 
+ 	if (!dpu_enc) {
+@@ -2029,9 +2029,9 @@ static int dpu_encoder_setup_display(struct dpu_encoder_virt *dpu_enc,
+ 	case DRM_MODE_ENCODER_DSI:
+ 		intf_type = INTF_DSI;
+ 		break;
+-	default:
+-		DPU_ERROR_ENC(dpu_enc, "unsupported display interface type\n");
+-		return -EINVAL;
++	case DRM_MODE_ENCODER_TMDS:
++		intf_type = INTF_DP;
++		break;
+ 	}
+ 
+ 	WARN_ON(disp_info->num_of_h_tiles < 1);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index ce19f1d39367..1295221d7341 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -492,6 +492,33 @@ static int _dpu_kms_initialize_dsi(struct drm_device *dev,
+ 	return rc;
+ }
+ 
++static int _dpu_kms_initialize_displayport(struct drm_device *dev,
++					    struct msm_drm_private *priv,
++					    struct dpu_kms *dpu_kms)
++{
++	struct drm_encoder *encoder = NULL;
++	int rc = 0;
++
++	if (!priv->dp)
++		return rc;
++
++	encoder = dpu_encoder_init(dev, DRM_MODE_ENCODER_TMDS);
++	if (IS_ERR(encoder)) {
++		DPU_ERROR("encoder init failed for dsi display\n");
++		return PTR_ERR(encoder);
++	}
++
++	rc = msm_dp_modeset_init(priv->dp, dev, encoder);
++	if (rc) {
++		DPU_ERROR("modeset_init failed for DP, rc = %d\n", rc);
++		drm_encoder_cleanup(encoder);
++		return rc;
++	}
++
++	priv->encoders[priv->num_encoders++] = encoder;
++	return rc;
++}
++
+ /**
+  * _dpu_kms_setup_displays - create encoders, bridges and connectors
+  *                           for underlying displays
+@@ -504,12 +531,21 @@ static int _dpu_kms_setup_displays(struct drm_device *dev,
+ 				    struct msm_drm_private *priv,
+ 				    struct dpu_kms *dpu_kms)
+ {
+-	/**
+-	 * Extend this function to initialize other
+-	 * types of displays
+-	 */
++	int rc = 0;
++
++	rc = _dpu_kms_initialize_dsi(dev, priv, dpu_kms);
++	if (rc) {
++		DPU_ERROR("initialize_dsi failed, rc = %d\n", rc);
++		return rc;
++	}
+ 
+-	return _dpu_kms_initialize_dsi(dev, priv, dpu_kms);
++	rc = _dpu_kms_initialize_displayport(dev, priv, dpu_kms);
++	if (rc) {
++		DPU_ERROR("initialize_DP failed, rc = %d\n", rc);
++		return rc;
++	}
++
++	return rc;
+ }
+ 
+ static void _dpu_kms_drm_obj_destroy(struct dpu_kms *dpu_kms)
+@@ -694,13 +730,20 @@ static void _dpu_kms_set_encoder_mode(struct msm_kms *kms,
+ 	info.capabilities = cmd_mode ? MSM_DISPLAY_CAP_CMD_MODE :
+ 			MSM_DISPLAY_CAP_VID_MODE;
+ 
+-	/* TODO: No support for DSI swap */
+-	for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
+-		if (priv->dsi[i]) {
+-			info.h_tile_instance[info.num_of_h_tiles] = i;
+-			info.num_of_h_tiles++;
++	switch (info.intf_type) {
++	case DRM_MODE_ENCODER_DSI:
++		/* TODO: No support for DSI swap */
++		for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
++			if (priv->dsi[i]) {
++				info.h_tile_instance[info.num_of_h_tiles] = i;
++				info.num_of_h_tiles++;
++			}
+ 		}
+-	}
++		break;
++	case DRM_MODE_ENCODER_TMDS:
++		info.num_of_h_tiles = 1;
++		break;
++	};
+ 
+ 	rc = dpu_encoder_setup(encoder->dev, encoder, &info);
+ 	if (rc)
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
