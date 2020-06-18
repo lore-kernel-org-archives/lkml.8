@@ -2,527 +2,124 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14386C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEBEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D46A0207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C68820890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:01:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PLb5yOPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgFRU7c (ORCPT
+        id S1728902AbgFRVBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:59:32 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:55348 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgFRU7b (ORCPT
+        Thu, 18 Jun 2020 17:01:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgFRVBz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:59:31 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id ED89E20052;
-        Thu, 18 Jun 2020 22:59:23 +0200 (CEST)
-Date:   Thu, 18 Jun 2020 22:59:22 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH] dt-bindings: display: Convert connectors to DT schema
-Message-ID: <20200618205922.GA89738@ravnborg.org>
-References: <20200618202447.872851-1-robh@kernel.org>
+        Thu, 18 Jun 2020 17:01:55 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A29BC06174E;
+        Thu, 18 Jun 2020 14:01:55 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id dr13so7903308ejc.3;
+        Thu, 18 Jun 2020 14:01:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/pSg+CjVVGDmkJgSAWGcUvsAuaB+HD/87Cz0ih1iEpU=;
+        b=PLb5yOPFdttKNB7R79USKjGUc6xJvIlhZqG+6dY5T4MJMkja97YVPqO+VSTT/MP9BC
+         VhKNgCL/UdQeqWQ44SWAUxDfJSr0Oxs6mPorLGZDnq4kdo2ExhUoMSBG3VN3AUlstCy7
+         mjhlDXSgDAZiv8qjLEcuOBxTeO2lZ4T+DUgGf3CmeTxaF87+K23NqjjR/JhyexUBycN7
+         C013wGARBTw1P0OoO36i1zedNrT8Jz5IGC1BJuzLM20q9H+Gp6tCPmKhxfLwQjGeh6gm
+         7Rh9cMIQZVKkbZHFnGg42SctEGeuL4SbcMi/gl+DX5ADL1/ocrDljJhq7BnwVmC/TXOI
+         6cuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/pSg+CjVVGDmkJgSAWGcUvsAuaB+HD/87Cz0ih1iEpU=;
+        b=ClPj4HiYlGMuWTBvsrLpx7zZfHbXBpJnZH9T2E80r8Ge31sKYMjeJHJ1POnPwmvXbR
+         fXJl2ZEGQ4t3XCxM2n8Po2osnkaz+lF/Ugiiq+sJhZ58cNvJ/wxvAeqNBxCRELxhr0ft
+         WcoomjedFgSMv2JshcAChcafEJL58uTKzPkS1Ahg0KplwEqP+kgPpF9bfo1cAB5NZqoe
+         fneLfTrIoVzw0ohzWP/eg5QC8KmBAdQUWG6k1icwhIZEn0ECTgd2fou33TJByqyX64Uv
+         Ku98f2t3Zv00NUMJJ9E1h2LCLA2znFPoR6drDpw89XjUzZC3EhcsxKKyzccFlgDjtuSB
+         p9IA==
+X-Gm-Message-State: AOAM533Qww6KVTkWFO5u1ZjFsqpUWu0/dUbfJIACZ2tQFk/fqtfUNN/v
+        cdth1Fy3o7EuFCtfogAdITsun5Y=
+X-Google-Smtp-Source: ABdhPJxFMaX1igYF/2oYZFm9JCYMhnUSwHbNoa+JbsF9ix71XlOeB9rMQ3F27PPCT+1Hr7sPKSN9ew==
+X-Received: by 2002:a17:906:4e59:: with SMTP id g25mr583619ejw.60.1592514113829;
+        Thu, 18 Jun 2020 14:01:53 -0700 (PDT)
+Received: from localhost.localdomain ([46.53.250.254])
+        by smtp.gmail.com with ESMTPSA id z15sm3133755eju.18.2020.06.18.14.01.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 14:01:53 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 00:01:51 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     'Matt Fleming' <matt@codeblueprint.co.uk>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Grimm, Jon" <Jon.Grimm@amd.com>,
+        "Kumar, Venkataramanan" <Venkataramanan.Kumar@amd.com>,
+        Jan Kara <jack@suse.cz>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] x86/asm/64: Align start of __clear_user() loop to
+ 16-bytes
+Message-ID: <20200618210151.GA2212102@localhost.localdomain>
+References: <20200618102002.30034-1-matt@codeblueprint.co.uk>
+ <39f8304b75094f87a54ace7732708d30@AcuMS.aculab.com>
+ <20200618131655.GA24607@localhost.localdomain>
+ <20b0166e11f44bf491062838090b93be@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200618202447.872851-1-robh@kernel.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=edQTgYMH c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=P1BnusSwAAAA:8 a=VwQbUJbxAAAA:8
-        a=gEfo2CItAAAA:8 a=K6W7OBzFcSRQWgpcscQA:9 a=cQd465TBHMvEZ2gW:21
-        a=MhWsmuvKXH79EfPr:21 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=D0XLA9XvdZm18NrgonBM:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=sptkURWiP4Gy88Gu7hUp:22
+In-Reply-To: <20b0166e11f44bf491062838090b93be@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob.
-
-On Thu, Jun 18, 2020 at 02:24:47PM -0600, Rob Herring wrote:
-> Convert the analog TV, DVI, HDMI, and VGA connector bindings to DT schema
-> format.
+On Thu, Jun 18, 2020 at 04:39:35PM +0000, David Laight wrote:
+> From: Alexey Dobriyan 
+> > Sent: 18 June 2020 14:17
+> ...
+> > > > diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
+> > > > index fff28c6f73a2..b0dfac3d3df7 100644
+> > > > --- a/arch/x86/lib/usercopy_64.c
+> > > > +++ b/arch/x86/lib/usercopy_64.c
+> > > > @@ -24,6 +24,7 @@ unsigned long __clear_user(void __user *addr, unsigned long size)
+> > > >  	asm volatile(
+> > > >  		"	testq  %[size8],%[size8]\n"
+> > > >  		"	jz     4f\n"
+> > > > +		"	.align 16\n"
+> > > >  		"0:	movq $0,(%[dst])\n"
+> > > >  		"	addq   $8,%[dst]\n"
+> > > >  		"	decl %%ecx ; jnz   0b\n"
+> > >
+> > > You can do better that that loop.
+> > > Change 'dst' to point to the end of the buffer, negate the count
+> > > and divide by 8 and you get:
+> > > 		"0:	movq $0,($[dst],%%ecx,8)\n"
+> > > 		"	add $1,%%ecx"
+> > > 		"	jnz 0b\n"
+> > > which might run at one iteration per clock especially on cpu that pair
+> > > the add and jnz into a single uop.
+> > > (You need to use add not inc.)
+> > 
+> > /dev/zero should probably use REP STOSB etc just like everything else.
 > 
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> I put myself as maintainer, but would be happy if someone else was like 
-> one of the Cc'ed people.
-I nominate Laurent for this....
+> Almost certainly it shouldn't, and neither should anything else.
+> Potentially it could use whatever memset() is patched to.
+> That MIGHT be 'rep stos' on some cpu variants, but in general
+> it is slow.
 
-See some comments in the following.
-Mostly related to required - I may have missed something.
-
-	Sam
-> 
->  .../display/connector/analog-tv-connector.txt | 31 --------
->  .../connector/analog-tv-connector.yaml        | 47 ++++++++++++
->  .../display/connector/dvi-connector.txt       | 36 ---------
->  .../display/connector/dvi-connector.yaml      | 75 +++++++++++++++++++
->  .../display/connector/hdmi-connector.txt      | 31 --------
->  .../display/connector/hdmi-connector.yaml     | 63 ++++++++++++++++
->  .../display/connector/vga-connector.txt       | 36 ---------
->  .../display/connector/vga-connector.yaml      | 42 +++++++++++
->  8 files changed, 227 insertions(+), 134 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
->  create mode 100644 Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/connector/dvi-connector.txt
->  create mode 100644 Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
->  create mode 100644 Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/connector/vga-connector.txt
->  create mode 100644 Documentation/devicetree/bindings/display/connector/vga-connector.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-> deleted file mode 100644
-> index 883bcb2604c7..000000000000
-> --- a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -Analog TV Connector
-> -===================
-> -
-> -Required properties:
-> -- compatible: "composite-video-connector" or "svideo-connector"
-> -
-> -Optional properties:
-> -- label: a symbolic name for the connector
-> -- sdtv-standards: limit the supported TV standards on a connector to the given
-> -                  ones. If not specified all TV standards are allowed.
-> -                  Possible TV standards are defined in
-> -                  include/dt-bindings/display/sdtv-standards.h.
-> -
-> -Required nodes:
-> -- Video port for TV input
-> -
-> -Example
-> --------
-> -#include <dt-bindings/display/sdtv-standards.h>
-> -
-> -tv: connector {
-> -	compatible = "composite-video-connector";
-> -	label = "tv";
-> -	sdtv-standards = <(SDTV_STD_PAL | SDTV_STD_NTSC)>;
-> -
-> -	port {
-> -		tv_connector_in: endpoint {
-> -			remote-endpoint = <&venc_out>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
-> new file mode 100644
-> index 000000000000..d9ac42cb7e04
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
-> @@ -0,0 +1,47 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/connector/analog-tv-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog TV Connector
-> +
-> +maintainers:
-> +  - Rob Herring <robh@kernel.org>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - composite-video-connector
-> +      - svideo-connector
-> +
-> +  label: true
-> +
-> +  sdtv-standards:
-> +    description: Limit the supported TV standards on a connector to the given
-> +      ones. If not specified all TV standards are allowed. Possible TV
-> +      standards are defined in include/dt-bindings/display/sdtv-standards.h.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  port:
-> +    description: Connection to controller providing analog TV signals
-required:
-  - compatible
-  - port
-
-??
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/display/sdtv-standards.h>
-> +
-> +    connector {
-> +      compatible = "composite-video-connector";
-> +      label = "tv";
-> +      sdtv-standards = <(SDTV_STD_PAL | SDTV_STD_NTSC)>;
-> +
-> +      port {
-> +        tv_connector_in: endpoint {
-> +          remote-endpoint = <&venc_out>;
-> +        };
-> +      };
-> +    };
-My personal preference is 4 space indent.
-Easier to read for me.
-But we discussed this before - would be good
-with a recommendation so we know what to expect.
-
-Oh, and example-schema uses 6 spaces :-(
-
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/display/connector/dvi-connector.txt b/Documentation/devicetree/bindings/display/connector/dvi-connector.txt
-> deleted file mode 100644
-> index 207e42e9eba0..000000000000
-> --- a/Documentation/devicetree/bindings/display/connector/dvi-connector.txt
-> +++ /dev/null
-> @@ -1,36 +0,0 @@
-> -DVI Connector
-> -==============
-> -
-> -Required properties:
-> -- compatible: "dvi-connector"
-> -
-> -Optional properties:
-> -- label: a symbolic name for the connector
-> -- ddc-i2c-bus: phandle to the i2c bus that is connected to DVI DDC
-> -- analog: the connector has DVI analog pins
-> -- digital: the connector has DVI digital pins
-> -- dual-link: the connector has pins for DVI dual-link
-> -- hpd-gpios: HPD GPIO number
-> -
-> -Required nodes:
-> -- Video port for DVI input
-> -
-> -Note: One (or both) of 'analog' or 'digital' must be set.
-> -
-> -Example
-> --------
-> -
-> -dvi0: connector@0 {
-> -	compatible = "dvi-connector";
-> -	label = "dvi";
-> -
-> -	digital;
-> -
-> -	ddc-i2c-bus = <&i2c3>;
-> -
-> -	port {
-> -		dvi_connector_in: endpoint {
-> -			remote-endpoint = <&tfp410_out>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml b/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
-> new file mode 100644
-> index 000000000000..aaf61bce64ca
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/connector/dvi-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: DVI Connector
-> +
-> +maintainers:
-> +  - Rob Herring <robh@kernel.org>
-> +
-> +properties:
-> +  compatible:
-> +    const: dvi-connector
-> +
-> +  type:
-> +    description: The HDMI connector type
-> +    enum:
-> +      - a   # Standard full size
-> +      - b   # Never deployed?
-> +      - c   # Mini
-> +      - d   # Micro
-> +      - e   # automotive
-type looks like something that was copied from another binding.
-It is not part of the .txt binding.
-
-> +
-> +  label: true
-> +
-> +  hpd-gpios:
-> +    description: A GPIO line connected to HPD
-> +    maxItems: 1
-> +
-> +  ddc-i2c-bus:
-> +    description: phandle link to the I2C controller used for DDC EDID probing
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  analog:
-> +    type: boolean
-> +    description: the connector has DVI analog pins
-> +
-> +  digital:
-> +    type: boolean
-> +    description: the connector has DVI digital pins
-> +
-> +  dual-link:
-> +    type: boolean
-> +    description: the connector has pins for DVI dual-link
-> +
-> +  port:
-> +    description: Connection to controller providing DVI signals
-> +
-> +anyOf:
-> +  - required:
-> +      - analog
-> +  - required:
-> +      - digital
-> +
-required:
-  - compatible
-??
-
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    connector {
-> +      compatible = "dvi-connector";
-> +      label = "dvi";
-> +
-> +      digital;
-> +
-> +      ddc-i2c-bus = <&i2c3>;
-> +
-> +      port {
-> +        dvi_connector_in: endpoint {
-> +          remote-endpoint = <&tfp410_out>;
-> +        };
-> +      };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-> deleted file mode 100644
-> index aeb07c4bd703..000000000000
-> --- a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -HDMI Connector
-> -==============
-> -
-> -Required properties:
-> -- compatible: "hdmi-connector"
-> -- type: the HDMI connector type: "a", "b", "c", "d" or "e"
-> -
-> -Optional properties:
-> -- label: a symbolic name for the connector
-> -- hpd-gpios: HPD GPIO number
-> -- ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
-> -- ddc-en-gpios: signal to enable DDC bus
-> -
-> -Required nodes:
-> -- Video port for HDMI input
-> -
-> -Example
-> --------
-> -
-> -hdmi0: connector@1 {
-> -	compatible = "hdmi-connector";
-> -	label = "hdmi";
-> -
-> -	type = "a";
-> -
-> -	port {
-> -		hdmi_connector_in: endpoint {
-> -			remote-endpoint = <&tpd12s015_out>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml b/Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml
-> new file mode 100644
-> index 000000000000..57f0193a12e7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml
-> @@ -0,0 +1,63 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/connector/hdmi-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HDMI Connector
-> +
-> +maintainers:
-> +  - Rob Herring <robh@kernel.org>
-> +
-> +properties:
-> +  compatible:
-> +    const: hdmi-connector
-> +
-> +  type:
-> +    description: The HDMI connector type
-> +    enum:
-> +      - a   # Standard full size
-> +      - b   # Never deployed?
-> +      - c   # Mini
-> +      - d   # Micro
-> +      - e   # automotive
-> +
-> +  label: true
-> +
-> +  hpd-gpios:
-> +    description: A GPIO line connected to HPD
-> +    maxItems: 1
-> +
-> +  ddc-i2c-bus:
-> +    description: phandle link to the I2C controller used for DDC EDID probing
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  ddc-en-gpios:
-> +    description: GPIO signal to enable DDC bus
-> +    maxItems: 1
-> +
-> +  port:
-> +    description: Connection to controller providing HDMI signals
-> +
-> +required:
-> +  - compatible
-> +  - type
-port node is also required per .txt binding
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    connector {
-> +      compatible = "hdmi-connector";
-> +      label = "hdmi";
-> +
-> +      type = "a";
-> +
-> +      port {
-> +        hdmi_connector_in: endpoint {
-> +          remote-endpoint = <&tpd12s015_out>;
-> +        };
-> +      };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/display/connector/vga-connector.txt b/Documentation/devicetree/bindings/display/connector/vga-connector.txt
-> deleted file mode 100644
-> index c727f298e7ad..000000000000
-> --- a/Documentation/devicetree/bindings/display/connector/vga-connector.txt
-> +++ /dev/null
-> @@ -1,36 +0,0 @@
-> -VGA Connector
-> -=============
-> -
-> -Required properties:
-> -
-> -- compatible: "vga-connector"
-> -
-> -Optional properties:
-> -
-> -- label: a symbolic name for the connector corresponding to a hardware label
-> -- ddc-i2c-bus: phandle to the I2C bus that is connected to VGA DDC
-> -
-> -Required nodes:
-> -
-> -The VGA connector internal connections are modeled using the OF graph bindings
-> -specified in Documentation/devicetree/bindings/graph.txt.
-> -
-> -The VGA connector has a single port that must be connected to a video source
-> -port.
-> -
-> -
-> -Example
-> --------
-> -
-> -vga0: connector@0 {
-> -	compatible = "vga-connector";
-> -	label = "vga";
-> -
-> -	ddc-i2c-bus = <&i2c3>;
-> -
-> -	port {
-> -		vga_connector_in: endpoint {
-> -			remote-endpoint = <&adv7123_out>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/connector/vga-connector.yaml b/Documentation/devicetree/bindings/display/connector/vga-connector.yaml
-> new file mode 100644
-> index 000000000000..cc1245f471bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/connector/vga-connector.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/connector/vga-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: VGA Connector
-> +
-> +maintainers:
-> +  - Rob Herring <robh@kernel.org>
-> +
-> +properties:
-> +  compatible:
-> +    const: vga-connector
-> +
-> +  label: true
-> +
-> +  ddc-i2c-bus:
-> +    description: phandle link to the I2C controller used for DDC EDID probing
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  port:
-> +    description: Connection to controller providing VGA signals
-> +
-required:
-  - compatible
-  - port
-
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    connector {
-> +      compatible = "vga-connector";
-> +      label = "vga";
-> +
-> +      ddc-i2c-bus = <&i2c3>;
-> +
-> +      port {
-> +        vga_connector_in: endpoint {
-> +          remote-endpoint = <&adv7123_out>;
-> +        };
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.25.1
+Yes, that's what I meant: alternatives choosing REP variant.
+memset loops are so 21-st century.
