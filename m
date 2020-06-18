@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0677CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F63FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF9EE21534
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EACBD21534
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447131;
-	bh=EytVya3RUKs/M3nMiP4+ZwjX7H34TqkxdAqrVyMkEP8=;
+	s=default; t=1592447135;
+	bh=mIJ1TUXp7dszAtRrMyJYmXKkKV2repG8ZIcsS6zctIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lewfcpbz92j1imm2IBQ/+Un8d71ts+B6500goo2HcMO9ocogQZRR4+SBD56Ndp8JK
-	 Pvira/cpfTmIfJ1Z6PCUJQ07ylnABLDsMO5wqiofK4PooGa4i1o7NUSyBXdr4Of8LJ
-	 JBygUGHCANGi55UfJ9GX/Xi30igT1vjB1RO7xAy4=
+	b=FmITCj/iboCbX5sEAmyiA8uP2G0x5+8zjB7RJEtD92xYH7XXdnvTPKE1mgUuGmSiE
+	 NvYQF/PyNO7uBuvNT29IGW4Mfkf4Rn67Ohf+MqeiEg0Zdk9IuG+6g5ztlAVc2JUqKg
+	 AkXed2pQy3aciQBFgByv3JUtTtuqZkxhGxUkg9w8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgFRCZ3 (ORCPT
+        id S1728942AbgFRBRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:25:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729793AbgFRBRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:17:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729384AbgFRBOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CC1321D80;
-        Thu, 18 Jun 2020 01:17:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EDD821D7B;
+        Thu, 18 Jun 2020 01:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443044;
-        bh=EytVya3RUKs/M3nMiP4+ZwjX7H34TqkxdAqrVyMkEP8=;
+        s=default; t=1592442891;
+        bh=mIJ1TUXp7dszAtRrMyJYmXKkKV2repG8ZIcsS6zctIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AnGDWT1VV5HwCvrDKcgva5QIC7RY8Wq86Pk+FDleMZWEz2RKA4d2LOXny9Aa7vxhQ
-         A3J2UITA9DAshjZQcn/CcseSQV6+kkKVfTtUSJqqn1O76omwUk2mZ0oNyme19Ur+aS
-         QcC6C1IjYoJYhIxWy4eBHLtxJwWU37HqwxfeUVpw=
+        b=DTWvIGZS2MrSC/X735ehRXNLIFjta010kH1iqXTcfcAa+a1r8PrJAHl67pd6KKcit
+         ei2LC2C/0TcGnR7ZroLmOJh5QlZVzTE72K3wbtFQ3CxbusFsxRXAz9Ro5dGjR28V7m
+         rT+MVcTWdQXzFd8QKrfgKRyVE55duCm4cU/+H1fY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 039/266] pinctrl: ocelot: Fix GPIO interrupt decoding on Jaguar2
-Date:   Wed, 17 Jun 2020 21:12:44 -0400
-Message-Id: <20200618011631.604574-39-sashal@kernel.org>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 314/388] drm/nouveau/disp/gm200-: fix NV_PDISP_SOR_HDMI2_CTRL(n) selection
+Date:   Wed, 17 Jun 2020 21:06:51 -0400
+Message-Id: <20200618010805.600873-314-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
-References: <20200618011631.604574-1-sashal@kernel.org>
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,43 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars Povlsen <lars.povlsen@microchip.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit 0b47afc65453a70bc521e251138418056f65793f ]
+[ Upstream commit a1ef8bad506e4ffa0c57ac5f8cb99ab5cbc3b1fc ]
 
-This fixes a problem with using the GPIO as an interrupt on Jaguar2
-(and similar), as the register layout of the platforms with 64 GPIO's
-are pairwise, such that the original offset must be multiplied with
-the platform stride.
+This is a SOR register, and not indexed by the bound head.
 
-Fixes: da801ab56ad8 pinctrl: ocelot: add MSCC Jaguar2 support.
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-Link: https://lore.kernel.org/r/20200513125532.24585-4-lars.povlsen@microchip.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes display not coming up on high-bandwidth HDMI displays under a
+number of configurations.
+
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-ocelot.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-index fb76fb2e9ea5..0a951a75c82b 100644
---- a/drivers/pinctrl/pinctrl-ocelot.c
-+++ b/drivers/pinctrl/pinctrl-ocelot.c
-@@ -711,11 +711,12 @@ static void ocelot_irq_handler(struct irq_desc *desc)
- 	struct irq_chip *parent_chip = irq_desc_get_chip(desc);
- 	struct gpio_chip *chip = irq_desc_get_handler_data(desc);
- 	struct ocelot_pinctrl *info = gpiochip_get_data(chip);
-+	unsigned int id_reg = OCELOT_GPIO_INTR_IDENT * info->stride;
- 	unsigned int reg = 0, irq, i;
- 	unsigned long irqs;
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c
+index 9b16a08eb4d9..bf6d41fb0c9f 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmigm200.c
+@@ -27,10 +27,10 @@ void
+ gm200_hdmi_scdc(struct nvkm_ior *ior, int head, u8 scdc)
+ {
+ 	struct nvkm_device *device = ior->disp->engine.subdev.device;
+-	const u32 hoff = head * 0x800;
++	const u32 soff = nv50_ior_base(ior);
+ 	const u32 ctrl = scdc & 0x3;
  
- 	for (i = 0; i < info->stride; i++) {
--		regmap_read(info->map, OCELOT_GPIO_INTR_IDENT + 4 * i, &reg);
-+		regmap_read(info->map, id_reg + 4 * i, &reg);
- 		if (!reg)
- 			continue;
+-	nvkm_mask(device, 0x61c5bc + hoff, 0x00000003, ctrl);
++	nvkm_mask(device, 0x61c5bc + soff, 0x00000003, ctrl);
  
+ 	ior->tmds.high_speed = !!(scdc & 0x2);
+ }
 -- 
 2.25.1
 
