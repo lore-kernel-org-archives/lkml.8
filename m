@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0F1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22174C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A12F12070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72DB2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446540;
-	bh=WXKltuTEfZK+rT3xRYH3i+43yKWBemEr1YneJ7vLqq4=;
+	s=default; t=1592446543;
+	bh=fdOGuCa3JQl7tLPU51z62udmLQ0Y1JPeU/lcXBm4I/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WBrhvR7GFayaankDFr8gYfO6aEjhkm0mbKZjkeLwrE5qwbEqjbATZTo/KQ/cV3Zp0
-	 yZytGvC/FHweoL7K2M3CHtXNMZk7EzOSG5jeOS1qedMSzbc63WRgN5mRglmYAE0sVh
-	 OEH5YbnoxzQPD7gPQZd8E52ANmb+crijyd3FZmSg=
+	b=jnrl1dA6cD7Kgcf4Yo//6cIpEy9s/V9cGtpI6VKx9TbaDWC9FtH9qE0JVi1YpFffq
+	 HtHvvdOlcBjwOo1gap978PG+ZlQQDhlARSeViIfKdggosUw7XIMayCStkIJqdhlyde
+	 /xW3AJJeH74Xrg0NMZT2kTMpBVUvsPxeXXT6lVXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730303AbgFRBUb (ORCPT
+        id S1730308AbgFRBU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:20:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48206 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:20:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729737AbgFRBRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:07 -0400
+        id S1729724AbgFRBRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7190221ED;
-        Thu, 18 Jun 2020 01:17:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F01821D94;
+        Thu, 18 Jun 2020 01:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443027;
-        bh=WXKltuTEfZK+rT3xRYH3i+43yKWBemEr1YneJ7vLqq4=;
+        s=default; t=1592443023;
+        bh=fdOGuCa3JQl7tLPU51z62udmLQ0Y1JPeU/lcXBm4I/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tCktjzxSnq53TfxS1EVnxAiiBz53sA2CGWwmBX82PHXXRPupDkxhN06q+IetsTZTn
-         xD1QbsLnicWGle3axumZNkM+si8HeqjIxNy6lA3CqUivWgEUB6z+0gxk5h5oHixuXi
-         tVf7/p7+GrIYECsWxg4/pWm5fMXaOUhfwwMUaYao=
+        b=NA5UFABagwZUKP2rqQF7XPZShqWpPLwVwYYpjN3SHcolrbCfM/aYVlSQqNondvUY8
+         FMo7c7Cdq5eiTQLicLNDt4fdhnusUNPcrRDhBhtKIy9gDUO8QbVOOULHv+OGv3Aw7R
+         dlmMPoDCOSorru3ZXM7vBe3lsezM4NwUDGahFJH8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 027/266] f2fs: report delalloc reserve as non-free in statfs for project quota
-Date:   Wed, 17 Jun 2020 21:12:32 -0400
-Message-Id: <20200618011631.604574-27-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>, erhard_f@mailbox.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 024/266] powerpc/kasan: Fix stack overflow by increasing THREAD_SHIFT
+Date:   Wed, 17 Jun 2020 21:12:29 -0400
+Message-Id: <20200618011631.604574-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,39 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit baaa7ebf25c78c5cb712fac16b7f549100beddd3 ]
+[ Upstream commit edbadaf0671072298e506074128b64e003c5812c ]
 
-This reserved space isn't committed yet but cannot be used for
-allocations. For userspace it has no difference from used space.
+When CONFIG_KASAN is selected, the stack usage is increased.
 
-See the same fix in ext4 commit f06925c73942 ("ext4: report delalloc
-reserve as non-free in statfs for project quota").
+In the same way as x86 and arm64 architectures, increase
+THREAD_SHIFT when CONFIG_KASAN is selected.
 
-Fixes: ddc34e328d06 ("f2fs: introduce f2fs_statfs_project")
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
+Reported-by: <erhard_f@mailbox.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=207129
+Link: https://lore.kernel.org/r/2c50f3b1c9bbaa4217c9a98f3044bd2a36c46a4f.1586361277.git.christophe.leroy@c-s.fr
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 5e1d4d9243a9..47bfa5f2b75d 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1219,7 +1219,8 @@ static int f2fs_statfs_project(struct super_block *sb,
- 		limit >>= sb->s_blocksize_bits;
- 
- 	if (limit && buf->f_blocks > limit) {
--		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
-+		curblock = (dquot->dq_dqb.dqb_curspace +
-+			    dquot->dq_dqb.dqb_rsvspace) >> sb->s_blocksize_bits;
- 		buf->f_blocks = limit;
- 		buf->f_bfree = buf->f_bavail =
- 			(buf->f_blocks > curblock) ?
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 3dc5aecdd853..135d770e8e57 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -747,6 +747,7 @@ config THREAD_SHIFT
+ 	range 13 15
+ 	default "15" if PPC_256K_PAGES
+ 	default "14" if PPC64
++	default "14" if KASAN
+ 	default "13"
+ 	help
+ 	  Used to define the stack size. The default is almost always what you
 -- 
 2.25.1
 
