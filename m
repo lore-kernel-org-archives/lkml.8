@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 05:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEDCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 05:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA86821655
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 05:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0972B21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 05:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FMBvRzv1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fj6w7VsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgFRF6M (ORCPT
+        id S1727829AbgFRF6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 01:58:12 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33013 "EHLO
+        Thu, 18 Jun 2020 01:58:17 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59272 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726990AbgFRF6L (ORCPT
+        by vger.kernel.org with ESMTP id S1727820AbgFRF6N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 01:58:11 -0400
+        Thu, 18 Jun 2020 01:58:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592459890;
+        s=mimecast20190719; t=1592459892;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=66Vpss/6YgMjhx6vRTetvURGgEhsE7DPQ/griSAiEc8=;
-        b=FMBvRzv1eo0TKIk8/WkazJXru6XuJPtYYigMVyO/oJPkE14at8I1a7N1tNaeJ+Q+XKouTd
-        iP3i+AbxvvkqibdZUMa4btP880fjX4PkXOFEHbI74Amd5kdRfX13exxW3YAYIo2c1oxpSJ
-        VZUjBlCOG5jqdyHdAuKB0SMEtZuYTCw=
+        bh=ANjSp1CGZSsGz6Jj2Dxzgjt9bQwE2jGuP+C3WvRPMLM=;
+        b=Fj6w7VsMc59MDUPU25ttlQmH2YlukYnEptnLpiPnZIcHO++fSqaTKB1YjaSZTdy0OEYo9o
+        dq23E+McKG8tRlKgugc1vzKyFKe8kyRIiOiyRHv7x9pFqithseUJqGKRcvv0JxEHDsDoOX
+        izRk+4O1dsTu2QcVst0bHufAXSLoehk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-310-W6CER-1KOi-h0D4f-wS0AQ-1; Thu, 18 Jun 2020 01:58:04 -0400
-X-MC-Unique: W6CER-1KOi-h0D4f-wS0AQ-1
+ us-mta-435-0C2VkjGMNAGvyv09pK32Kg-1; Thu, 18 Jun 2020 01:58:10 -0400
+X-MC-Unique: 0C2VkjGMNAGvyv09pK32Kg-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 664491902EA2;
-        Thu, 18 Jun 2020 05:58:02 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C712107ACCD;
+        Thu, 18 Jun 2020 05:58:08 +0000 (UTC)
 Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-219.pek2.redhat.com [10.72.13.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EC88D5C1D6;
-        Thu, 18 Jun 2020 05:57:53 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E96815C1D6;
+        Thu, 18 Jun 2020 05:58:02 +0000 (UTC)
 From:   Jason Wang <jasowang@redhat.com>
 To:     mst@redhat.com, jasowang@redhat.com,
         virtualization@lists.linux-foundation.org,
@@ -54,9 +54,9 @@ Cc:     rob.miller@broadcom.com, lingshan.zhu@intel.com,
         hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
         saugatm@xilinx.com, vmireyno@marvell.com,
         zhangweining@ruijie.com.cn, eli@mellanox.com
-Subject: [PATCH RFC 4/5] vhost-vdpa: support IOTLB batching hints
-Date:   Thu, 18 Jun 2020 13:56:25 +0800
-Message-Id: <20200618055626.25660-5-jasowang@redhat.com>
+Subject: [PATCH RFC 5/5] vdpasim: support batch updating
+Date:   Thu, 18 Jun 2020 13:56:26 +0800
+Message-Id: <20200618055626.25660-6-jasowang@redhat.com>
 In-Reply-To: <20200618055626.25660-1-jasowang@redhat.com>
 References: <20200618055626.25660-1-jasowang@redhat.com>
 MIME-Version: 1.0
@@ -67,144 +67,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patches extend the vhost IOTLB API to accept batch updating hints
-form userspace. When userspace wants update the device IOTLB in a
-batch, it may do:
-
-1) Write vhost_iotlb_msg with VHOST_IOTLB_BATCH_BEGIN flag
-2) Perform a batch of IOTLB updating via VHOST_IOTLB_UPDATE/INVALIDATE
-3) Write vhost_iotlb_msg with VHOST_IOTLB_BATCH_END flag
-
-Vhost-vdpa may decide to batch the IOMMU/IOTLB updating in step 3 when
-vDPA device support set_map() ops. This is useful for the vDPA device
-that want to know all the mappings to tweak their own DMA translation
-logic.
-
-For vDPA device that doesn't require set_map(), no behavior changes.
-
-This capability is advertised via VHOST_BACKEND_F_IOTLB_BATCH capability.
+The vDPA simulator support both set_map() and dma_map()/dma_unmap()
+operations. But vhost-vdpa can only use one of them. So this patch
+introduce a module parameter (batch_mapping) that let vpda_sim to
+support only one of those dma operations. The batched mapping via
+set_map() is enabled by default.
 
 Signed-off-by: Jason Wang <jasowang@redhat.com>
 ---
- drivers/vhost/vdpa.c             | 30 +++++++++++++++++++++++-------
- include/uapi/linux/vhost.h       |  2 ++
- include/uapi/linux/vhost_types.h |  7 +++++++
- 3 files changed, 32 insertions(+), 7 deletions(-)
+ drivers/vdpa/vdpa_sim/vdpa_sim.c | 40 +++++++++++++++++++++++++++++---
+ 1 file changed, 37 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-index 453057421f80..8f624bbafee7 100644
---- a/drivers/vhost/vdpa.c
-+++ b/drivers/vhost/vdpa.c
-@@ -56,7 +56,9 @@ enum {
+diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+index c7334cc65bb2..a7a0962ed8a8 100644
+--- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
++++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+@@ -33,6 +33,10 @@
+ #define DRV_DESC     "vDPA Device Simulator"
+ #define DRV_LICENSE  "GPL v2"
+ 
++static int batch_mapping = 1;
++module_param(batch_mapping, int, 0444);
++MODULE_PARM_DESC(batch_mapping, "Batched mapping 1 -Enable; 0 - Disable");
++
+ struct vdpasim_virtqueue {
+ 	struct vringh vring;
+ 	struct vringh_kiov iov;
+@@ -303,16 +307,22 @@ static const struct dma_map_ops vdpasim_dma_ops = {
  };
  
- enum {
--	VHOST_VDPA_BACKEND_FEATURES = (1ULL << VHOST_BACKEND_F_IOTLB_MSG_V2)
-+	VHOST_VDPA_BACKEND_FEATURES =
-+	(1ULL << VHOST_BACKEND_F_IOTLB_MSG_V2) |
-+	(1ULL << VHOST_BACKEND_F_IOTLB_BATCH),
- };
+ static const struct vdpa_config_ops vdpasim_net_config_ops;
++static const struct vdpa_config_ops vdpasim_net_batch_config_ops;
  
- /* Currently, only network backend w/o multiqueue is supported. */
-@@ -77,6 +79,7 @@ struct vhost_vdpa {
- 	int virtio_id;
- 	int minor;
- 	struct eventfd_ctx *config_ctx;
-+	int in_batch;
- };
- 
- static DEFINE_IDA(vhost_vdpa_ida);
-@@ -125,6 +128,7 @@ static void vhost_vdpa_reset(struct vhost_vdpa *v)
- 	const struct vdpa_config_ops *ops = vdpa->config;
- 
- 	ops->set_status(vdpa, 0);
-+	v->in_batch = 0;
- }
- 
- static long vhost_vdpa_get_device_id(struct vhost_vdpa *v, u8 __user *argp)
-@@ -540,9 +544,10 @@ static int vhost_vdpa_map(struct vhost_vdpa *v,
- 
- 	if (ops->dma_map)
- 		r = ops->dma_map(vdpa, iova, size, pa, perm);
--	else if (ops->set_map)
--		r = ops->set_map(vdpa, dev->iotlb);
--	else
-+	else if (ops->set_map) {
-+		if (!v->in_batch)
-+			r = ops->set_map(vdpa, dev->iotlb);
-+	} else
- 		r = iommu_map(v->domain, iova, pa, size,
- 			      perm_to_iommu_flags(perm));
- 
-@@ -559,9 +564,10 @@ static void vhost_vdpa_unmap(struct vhost_vdpa *v, u64 iova, u64 size)
- 
- 	if (ops->dma_map)
- 		ops->dma_unmap(vdpa, iova, size);
--	else if (ops->set_map)
--		ops->set_map(vdpa, dev->iotlb);
--	else
-+	else if (ops->set_map) {
-+		if (!v->in_batch)
-+			ops->set_map(vdpa, dev->iotlb);
-+	} else
- 		iommu_unmap(v->domain, iova, size);
- }
- 
-@@ -655,6 +661,8 @@ static int vhost_vdpa_process_iotlb_msg(struct vhost_dev *dev,
- 					struct vhost_iotlb_msg *msg)
+ static struct vdpasim *vdpasim_create(void)
  {
- 	struct vhost_vdpa *v = container_of(dev, struct vhost_vdpa, vdev);
-+	struct vdpa_device *vdpa = v->vdpa;
-+	const struct vdpa_config_ops *ops = vdpa->config;
- 	int r = 0;
++	const struct vdpa_config_ops *ops;
+ 	struct virtio_net_config *config;
+ 	struct vdpasim *vdpasim;
+ 	struct device *dev;
+ 	int ret = -ENOMEM;
  
- 	r = vhost_dev_check_owner(dev);
-@@ -668,6 +676,14 @@ static int vhost_vdpa_process_iotlb_msg(struct vhost_dev *dev,
- 	case VHOST_IOTLB_INVALIDATE:
- 		vhost_vdpa_unmap(v, msg->iova, msg->size);
- 		break;
-+	case VHOST_IOTLB_BATCH_BEGIN:
-+		v->in_batch = true;
-+		break;
-+	case VHOST_IOTLB_BATCH_END:
-+		if (v->in_batch && ops->set_map)
-+			ops->set_map(vdpa, dev->iotlb);
-+		v->in_batch = false;
-+		break;
- 	default:
- 		r = -EINVAL;
- 		break;
-diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
-index 0c2349612e77..565da96f55d5 100644
---- a/include/uapi/linux/vhost.h
-+++ b/include/uapi/linux/vhost.h
-@@ -91,6 +91,8 @@
+-	vdpasim = vdpa_alloc_device(struct vdpasim, vdpa, NULL,
+-				    &vdpasim_net_config_ops);
++	if (batch_mapping)
++		ops = &vdpasim_net_batch_config_ops;
++	else
++		ops = &vdpasim_net_config_ops;
++
++	vdpasim = vdpa_alloc_device(struct vdpasim, vdpa, NULL, ops);
+ 	if (!vdpasim)
+ 		goto err_alloc;
  
- /* Use message type V2 */
- #define VHOST_BACKEND_F_IOTLB_MSG_V2 0x1
-+/* IOTLB can accpet batching hints */
-+#define VHOST_BACKEND_F_IOTLB_BATCH  0x2
- 
- #define VHOST_SET_BACKEND_FEATURES _IOW(VHOST_VIRTIO, 0x25, __u64)
- #define VHOST_GET_BACKEND_FEATURES _IOR(VHOST_VIRTIO, 0x26, __u64)
-diff --git a/include/uapi/linux/vhost_types.h b/include/uapi/linux/vhost_types.h
-index 669457ce5c48..5c12faffdde9 100644
---- a/include/uapi/linux/vhost_types.h
-+++ b/include/uapi/linux/vhost_types.h
-@@ -60,6 +60,13 @@ struct vhost_iotlb_msg {
- #define VHOST_IOTLB_UPDATE         2
- #define VHOST_IOTLB_INVALIDATE     3
- #define VHOST_IOTLB_ACCESS_FAIL    4
-+/* VHOST_IOTLB_BATCH_BEGIN is a hint that userspace will update
-+ * several mappings afterwards. VHOST_IOTLB_BATCH_END is a hint that
-+ * userspace had finished the mapping updating. When those two flags
-+ * were set, kernel will ignore the rest fileds of the IOTLB message.
-+ */
-+#define VHOST_IOTLB_BATCH_BEGIN    5
-+#define VHOST_IOTLB_BATCH_END      6
- 	__u8 type;
+@@ -597,12 +607,36 @@ static const struct vdpa_config_ops vdpasim_net_config_ops = {
+ 	.get_config             = vdpasim_get_config,
+ 	.set_config             = vdpasim_set_config,
+ 	.get_generation         = vdpasim_get_generation,
+-	.set_map                = vdpasim_set_map,
+ 	.dma_map                = vdpasim_dma_map,
+ 	.dma_unmap              = vdpasim_dma_unmap,
+ 	.free                   = vdpasim_free,
  };
  
++static const struct vdpa_config_ops vdpasim_net_batch_config_ops = {
++	.set_vq_address         = vdpasim_set_vq_address,
++	.set_vq_num             = vdpasim_set_vq_num,
++	.kick_vq                = vdpasim_kick_vq,
++	.set_vq_cb              = vdpasim_set_vq_cb,
++	.set_vq_ready           = vdpasim_set_vq_ready,
++	.get_vq_ready           = vdpasim_get_vq_ready,
++	.set_vq_state           = vdpasim_set_vq_state,
++	.get_vq_state           = vdpasim_get_vq_state,
++	.get_vq_align           = vdpasim_get_vq_align,
++	.get_features           = vdpasim_get_features,
++	.set_features           = vdpasim_set_features,
++	.set_config_cb          = vdpasim_set_config_cb,
++	.get_vq_num_max         = vdpasim_get_vq_num_max,
++	.get_device_id          = vdpasim_get_device_id,
++	.get_vendor_id          = vdpasim_get_vendor_id,
++	.get_status             = vdpasim_get_status,
++	.set_status             = vdpasim_set_status,
++	.get_config             = vdpasim_get_config,
++	.set_config             = vdpasim_set_config,
++	.get_generation         = vdpasim_get_generation,
++	.set_map                = vdpasim_set_map,
++	.free                   = vdpasim_free,
++};
++
+ static int __init vdpasim_dev_init(void)
+ {
+ 	vdpasim_dev = vdpasim_create();
 -- 
 2.20.1
 
