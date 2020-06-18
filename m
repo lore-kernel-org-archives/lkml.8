@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A581C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9713C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B51B2088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B62208D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446617;
-	bh=4JyrHkTxJQCWKgw1uCe76MclNU1kd8vc5gEAb79+BY0=;
+	s=default; t=1592446628;
+	bh=SOYf8Gzg5jKgD8sQLjgiQ7suPGgKpILJ/YAcKiGSpk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eMJUGNICwVUhFrSoopvdTjjxx6vR+msl1zCRhZ1fJd5Ck08GbPt/2f/TKCpq9VEGW
-	 N6vvqNHkSxidffw5S7O5o8K/OK+0b9nVJCh8214yv2bKiIDcyUWR6LeRsVahXiwn2N
-	 IIkMhiFrXEuron5Jn43T2uX+YqE7hLK1Dgbqe++k=
+	b=MbjOS6Gvn7HVNCqshSRLq1E41xaWWUQh5dJI1lG8sH23fcgpg2uIsyLN7H/LTyYug
+	 Bq4R/N4B2qMkQjRJUcCW7u8VBq8ipemjomi295XzMbRnKJ+2Dw+qnQ2vF7bPx6G+WU
+	 MFG58/A4bzsU8oyMsv/qswNwc+uEKYMbiAxYremM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387574AbgFRCQw (ORCPT
+        id S1730399AbgFRCRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:16:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52272 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:17:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727086AbgFRBUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:12 -0400
+        id S1729454AbgFRBUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E661521D80;
-        Thu, 18 Jun 2020 01:20:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0754521941;
+        Thu, 18 Jun 2020 01:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443211;
-        bh=4JyrHkTxJQCWKgw1uCe76MclNU1kd8vc5gEAb79+BY0=;
+        s=default; t=1592443206;
+        bh=SOYf8Gzg5jKgD8sQLjgiQ7suPGgKpILJ/YAcKiGSpk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zm2tHrx54TCIQf8cA0/Mgcn7MpML0t88z86SvQF93WCCy+3CoPWBUQqXyxk6Qd0VZ
-         y2ShmBAOWCwwt5EqbsEkD1v6bLfuCk6a9VJIJXdeS5mZfLQN4a724CiM9iOjFT4BWj
-         9I/YlC2uryKHDdUMl1kO+L0uTgo1d/3LqPTMm4K8=
+        b=DDMkUNMezEbXaEXunHVWDoWMNkunKWhlMisAFWAewyISlB40gTqp6kOVy1kcGjcPy
+         zgRoMbFenN7cp7UZtO0KOKArWHeSjjZtmMRVdOvVdb/x8HfPYJIs8v/MFMSMaGPQnw
+         jyRwRoZPcQTZ2aqZeqN8mGl7RRDNP5EZ0OUq/fz0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 168/266] fuse: copy_file_range should truncate cache
-Date:   Wed, 17 Jun 2020 21:14:53 -0400
-Message-Id: <20200618011631.604574-168-sashal@kernel.org>
+Cc:     Lang Cheng <chenglang@huawei.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 164/266] RDMA/hns: Fix cmdq parameter of querying pf timer resource
+Date:   Wed, 17 Jun 2020 21:14:49 -0400
+Message-Id: <20200618011631.604574-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -58,64 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Lang Cheng <chenglang@huawei.com>
 
-[ Upstream commit 9b46418c40fe910e6537618f9932a8be78a3dd6c ]
+[ Upstream commit 441c88d5b3ff80108ff536c6cf80591187015403 ]
 
-After the copy operation completes the cache is not up-to-date.  Truncate
-all pages in the interval that has successfully been copied.
+The firmware has reduced the number of descriptions of command
+HNS_ROCE_OPC_QUERY_PF_TIMER_RES to 1. The driver needs to adapt, otherwise
+the hardware will report error 4(CMD_NEXT_ERR).
 
-Truncating completely copied dirty pages is okay, since the data has been
-overwritten anyway.  Truncating partially copied dirty pages is not okay;
-add a comment for now.
-
-Fixes: 88bc7d5097a1 ("fuse: add support for copy_file_range()")
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 0e40dc2f70cd ("RDMA/hns: Add timer allocation support for hip08")
+Link: https://lore.kernel.org/r/1588931159-56875-3-git-send-email-liweihang@huawei.com
+Signed-off-by: Lang Cheng <chenglang@huawei.com>
+Signed-off-by: Weihang Li <liweihang@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/file.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 32 ++++++++--------------
+ 1 file changed, 12 insertions(+), 20 deletions(-)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index e730e3d8ad99..66214707a945 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -3292,6 +3292,24 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
- 	if (err)
- 		goto out;
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 9a8053bd01e2..0502c90c83ed 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -1349,34 +1349,26 @@ static int hns_roce_query_pf_resource(struct hns_roce_dev *hr_dev)
+ static int hns_roce_query_pf_timer_resource(struct hns_roce_dev *hr_dev)
+ {
+ 	struct hns_roce_pf_timer_res_a *req_a;
+-	struct hns_roce_cmq_desc desc[2];
+-	int ret, i;
++	struct hns_roce_cmq_desc desc;
++	int ret;
  
-+	/*
-+	 * Write out dirty pages in the destination file before sending the COPY
-+	 * request to userspace.  After the request is completed, truncate off
-+	 * pages (including partial ones) from the cache that have been copied,
-+	 * since these contain stale data at that point.
-+	 *
-+	 * This should be mostly correct, but if the COPY writes to partial
-+	 * pages (at the start or end) and the parts not covered by the COPY are
-+	 * written through a memory map after calling fuse_writeback_range(),
-+	 * then these partial page modifications will be lost on truncation.
-+	 *
-+	 * It is unlikely that someone would rely on such mixed style
-+	 * modifications.  Yet this does give less guarantees than if the
-+	 * copying was performed with write(2).
-+	 *
-+	 * To fix this a i_mmap_sem style lock could be used to prevent new
-+	 * faults while the copy is ongoing.
-+	 */
- 	err = fuse_writeback_range(inode_out, pos_out, pos_out + len - 1);
- 	if (err)
- 		goto out;
-@@ -3315,6 +3333,10 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
- 	if (err)
- 		goto out;
+-	for (i = 0; i < 2; i++) {
+-		hns_roce_cmq_setup_basic_desc(&desc[i],
+-					      HNS_ROCE_OPC_QUERY_PF_TIMER_RES,
+-					      true);
++	hns_roce_cmq_setup_basic_desc(&desc, HNS_ROCE_OPC_QUERY_PF_TIMER_RES,
++				      true);
  
-+	truncate_inode_pages_range(inode_out->i_mapping,
-+				   ALIGN_DOWN(pos_out, PAGE_SIZE),
-+				   ALIGN(pos_out + outarg.size, PAGE_SIZE) - 1);
-+
- 	if (fc->writeback_cache) {
- 		fuse_write_update_size(inode_out, pos_out + outarg.size);
- 		file_update_time(file_out);
+-		if (i == 0)
+-			desc[i].flag |= cpu_to_le16(HNS_ROCE_CMD_FLAG_NEXT);
+-		else
+-			desc[i].flag &= ~cpu_to_le16(HNS_ROCE_CMD_FLAG_NEXT);
+-	}
+-
+-	ret = hns_roce_cmq_send(hr_dev, desc, 2);
++	ret = hns_roce_cmq_send(hr_dev, &desc, 1);
+ 	if (ret)
+ 		return ret;
+ 
+-	req_a = (struct hns_roce_pf_timer_res_a *)desc[0].data;
++	req_a = (struct hns_roce_pf_timer_res_a *)desc.data;
+ 
+ 	hr_dev->caps.qpc_timer_bt_num =
+-				roce_get_field(req_a->qpc_timer_bt_idx_num,
+-					PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_M,
+-					PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_S);
++		roce_get_field(req_a->qpc_timer_bt_idx_num,
++			       PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_M,
++			       PF_RES_DATA_1_PF_QPC_TIMER_BT_NUM_S);
+ 	hr_dev->caps.cqc_timer_bt_num =
+-				roce_get_field(req_a->cqc_timer_bt_idx_num,
+-					PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_M,
+-					PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_S);
++		roce_get_field(req_a->cqc_timer_bt_idx_num,
++			       PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_M,
++			       PF_RES_DATA_2_PF_CQC_TIMER_BT_NUM_S);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
