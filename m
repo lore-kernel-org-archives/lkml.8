@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 528FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A581C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD492088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B51B2088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446615;
-	bh=r9cAeOlq1yFQF0rprhLhPNc4ZUVGAgeDwB5qDxlMPy4=;
+	s=default; t=1592446617;
+	bh=4JyrHkTxJQCWKgw1uCe76MclNU1kd8vc5gEAb79+BY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNs2Z95Qwh9H2IqOmqo6gkHgT6FJ2sYTCyT6sw6pq7TDC5qoeDy0iQTrtwiBZKtOB
-	 NGNbu9HNz4Jeet+nvKkwJGcoEWmFt0BAVlly3bSFwc3bFJvmw6CLmtBOnciQLcNX3O
-	 4yglVsywLMsnINspZcmF8xJEd/toqWE3UV6fqk6Q=
+	b=eMJUGNICwVUhFrSoopvdTjjxx6vR+msl1zCRhZ1fJd5Ck08GbPt/2f/TKCpq9VEGW
+	 N6vvqNHkSxidffw5S7O5o8K/OK+0b9nVJCh8214yv2bKiIDcyUWR6LeRsVahXiwn2N
+	 IIkMhiFrXEuron5Jn43T2uX+YqE7hLK1Dgbqe++k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387580AbgFRCQx (ORCPT
+        id S2387574AbgFRCQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:16:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52208 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:16:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729561AbgFRBUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:09 -0400
+        id S1727086AbgFRBUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99D4D221F1;
-        Thu, 18 Jun 2020 01:20:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E661521D80;
+        Thu, 18 Jun 2020 01:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443209;
-        bh=r9cAeOlq1yFQF0rprhLhPNc4ZUVGAgeDwB5qDxlMPy4=;
+        s=default; t=1592443211;
+        bh=4JyrHkTxJQCWKgw1uCe76MclNU1kd8vc5gEAb79+BY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pLLkRcG5wpUfVaVu5Yu7aS/Whpld9ldDsI3/FTsrTlcWkNzeh6yprKEg5iGiHIsdf
-         W8+TopVJYLABVdWQrhesg1JCE60rUYwgT0j+EyJ6h15Yt4AytHX/el3fD+CbOr0LRw
-         7jsF/ui5U9GT1p4XqVi/xOaVBHanCjqaJNbWMwRM=
+        b=zm2tHrx54TCIQf8cA0/Mgcn7MpML0t88z86SvQF93WCCy+3CoPWBUQqXyxk6Qd0VZ
+         y2ShmBAOWCwwt5EqbsEkD1v6bLfuCk6a9VJIJXdeS5mZfLQN4a724CiM9iOjFT4BWj
+         9I/YlC2uryKHDdUMl1kO+L0uTgo1d/3LqPTMm4K8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 166/266] firmware: imx: scu: Fix possible memory leak in imx_scu_probe()
-Date:   Wed, 17 Jun 2020 21:14:51 -0400
-Message-Id: <20200618011631.604574-166-sashal@kernel.org>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 168/266] fuse: copy_file_range should truncate cache
+Date:   Wed, 17 Jun 2020 21:14:53 -0400
+Message-Id: <20200618011631.604574-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -61,35 +58,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-[ Upstream commit 89f12d6509bff004852c51cb713a439a86816b24 ]
+[ Upstream commit 9b46418c40fe910e6537618f9932a8be78a3dd6c ]
 
-'chan_name' is malloced in imx_scu_probe() and should be freed
-before leaving from the error handling cases, otherwise it will
-cause memory leak.
+After the copy operation completes the cache is not up-to-date.  Truncate
+all pages in the interval that has successfully been copied.
 
-Fixes: edbee095fafb ("firmware: imx: add SCU firmware driver support")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Truncating completely copied dirty pages is okay, since the data has been
+overwritten anyway.  Truncating partially copied dirty pages is not okay;
+add a comment for now.
+
+Fixes: 88bc7d5097a1 ("fuse: add support for copy_file_range()")
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/imx/imx-scu.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/fuse/file.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-index e48d971ffb61..a3b11bc71dcb 100644
---- a/drivers/firmware/imx/imx-scu.c
-+++ b/drivers/firmware/imx/imx-scu.c
-@@ -300,6 +300,7 @@ static int imx_scu_probe(struct platform_device *pdev)
- 			if (ret != -EPROBE_DEFER)
- 				dev_err(dev, "Failed to request mbox chan %s ret %d\n",
- 					chan_name, ret);
-+			kfree(chan_name);
- 			return ret;
- 		}
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index e730e3d8ad99..66214707a945 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -3292,6 +3292,24 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
+ 	if (err)
+ 		goto out;
  
++	/*
++	 * Write out dirty pages in the destination file before sending the COPY
++	 * request to userspace.  After the request is completed, truncate off
++	 * pages (including partial ones) from the cache that have been copied,
++	 * since these contain stale data at that point.
++	 *
++	 * This should be mostly correct, but if the COPY writes to partial
++	 * pages (at the start or end) and the parts not covered by the COPY are
++	 * written through a memory map after calling fuse_writeback_range(),
++	 * then these partial page modifications will be lost on truncation.
++	 *
++	 * It is unlikely that someone would rely on such mixed style
++	 * modifications.  Yet this does give less guarantees than if the
++	 * copying was performed with write(2).
++	 *
++	 * To fix this a i_mmap_sem style lock could be used to prevent new
++	 * faults while the copy is ongoing.
++	 */
+ 	err = fuse_writeback_range(inode_out, pos_out, pos_out + len - 1);
+ 	if (err)
+ 		goto out;
+@@ -3315,6 +3333,10 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
+ 	if (err)
+ 		goto out;
+ 
++	truncate_inode_pages_range(inode_out->i_mapping,
++				   ALIGN_DOWN(pos_out, PAGE_SIZE),
++				   ALIGN(pos_out + outarg.size, PAGE_SIZE) - 1);
++
+ 	if (fc->writeback_cache) {
+ 		fuse_write_update_size(inode_out, pos_out + outarg.size);
+ 		file_update_time(file_out);
 -- 
 2.25.1
 
