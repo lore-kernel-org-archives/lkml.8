@@ -2,160 +2,74 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D860C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AE5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75CBE20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:00:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vmqJCWbg"
+	by mail.kernel.org (Postfix) with ESMTP id A1AE7208D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgFRIAR (ORCPT
+        id S1728261AbgFRICW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:00:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51488 "EHLO
+        Thu, 18 Jun 2020 04:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728277AbgFRIAQ (ORCPT
+        with ESMTP id S1728127AbgFRICU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:00:16 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41647C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:00:14 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id y13so2910299lfe.9
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:00:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qptjWv5QaH7ssYbTbkU4Sp0zpzNaH0jRkKGIEYFhpI8=;
-        b=vmqJCWbgVxlm1ZqXwH/tMdG9YikGGCD1qScFR1RwK0tjtXxlQusjDZSZrDZMmlmgOV
-         fK4DQjB58+941HABE98dRmPBfBWz23WXDH8N+uvmstjx3eUnv8u0yobx9CENdWX2I0go
-         C2VUE+VNp2BNUZzJsH1lvnSUJW6ERL0+BxcZa7Rfu7ZiyLhLOfB+s5CIzDi8QAr2jfV1
-         RRNMYwvHL91rMzxpJgtHY1dpdEqnCnXcR8Edz5UMeYUy0cMj5RzEFX5OOJij3Al1tBZZ
-         gYhf+6wtf5VP/6B60/j0k7upSNWezHr0yefBWbXXR0hUeuj+L6jb4JPdzoczJpu5GYEY
-         JPhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qptjWv5QaH7ssYbTbkU4Sp0zpzNaH0jRkKGIEYFhpI8=;
-        b=PNIC1faXpwaB7VaphsKhlnDZEUmBISuSAwOEyeOlL5TjroVmsqeKjegH/pGepgMt8c
-         7AEtNGoFj9gKpy0qeiZsCRI2rjXv9tCxzclsdqWA5CH4/m9PQrQOwThjwy1UHWe08v1f
-         g2/CGKWSa5nuyxjPXYZkFPsQvHLeMhv5wf5Z/reihujcK4Wp6PuLzbOk2LEO2wT6zZSv
-         I9WsaNeeiwLNV3OlsMZxiNnvYshMxiLkqRDyasoB7cxBiMva20M+KpwBGEqLUHeFyUSM
-         nz4DnajWKV/WeJt9oCVS6cMtSx1SXhEjiQp21/zTXFxCgfRqza68Zz2mkDTSV2wA4tk4
-         5xcQ==
-X-Gm-Message-State: AOAM533XCWXCZjPFHfKXiK73o/AaZ9bb49s6WKrvJ273xJ7kKP2nZOIQ
-        Bd487z2jD0PBCtWMCbVd+OMXxQ==
-X-Google-Smtp-Source: ABdhPJy+ckAArcLwd+8dcpNkBx8F8ZwigIAiiXDYWxdSoPmZjxDhrmskcqwPdgvXXiBxDfhQgNz8JQ==
-X-Received: by 2002:a19:6c5:: with SMTP id 188mr1659649lfg.15.1592467212657;
-        Thu, 18 Jun 2020 01:00:12 -0700 (PDT)
-Received: from jade (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
-        by smtp.gmail.com with ESMTPSA id a18sm467941ljm.65.2020.06.18.01.00.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 01:00:12 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 10:00:09 +0200
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        peterhuewe@gmx.de, Jason Gunthorpe <jgg@ziepe.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
-        Sumit Garg <sumit.garg@linaro.org>
-Subject: Re: [PATCHv8 0/3] optee: register drivers on optee bus
-Message-ID: <20200618080009.GB97184@jade>
-References: <20200604175851.758-1-maxim.uvarov@linaro.org>
- <CAD8XO3YTz=xN2k5h8HsrYsLUgmC6dD57XbBj63e+3_xFF1H0rw@mail.gmail.com>
- <20200616082907.GA2305431@jade>
- <CAD8XO3bY7tsEF29AoXtREQ=tYyAL34s2uHke5LiRaKPBx8Xm2A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAD8XO3bY7tsEF29AoXtREQ=tYyAL34s2uHke5LiRaKPBx8Xm2A@mail.gmail.com>
+        Thu, 18 Jun 2020 04:02:20 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7048C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:02:19 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:b57b:2191:a081:571d])
+        by baptiste.telenet-ops.be with bizsmtp
+        id sY2H2200b1Jlgh201Y2Hec; Thu, 18 Jun 2020 10:02:18 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jlpV3-0001Xt-Hl; Thu, 18 Jun 2020 10:02:17 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jlpV3-0004Jp-GO; Thu, 18 Jun 2020 10:02:17 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] clocksource: sh_cmt: Use "kHz" for kilohertz
+Date:   Thu, 18 Jun 2020 10:02:12 +0200
+Message-Id: <20200618080212.16560-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 05:26:42PM +0300, Maxim Uvarov wrote:
-> On Tue, 16 Jun 2020 at 11:29, Jens Wiklander <jens.wiklander@linaro.org> wrote:
-> >
-> > Hi Maxim and Jarkko,
-> >
-> > On Mon, Jun 15, 2020 at 05:32:40PM +0300, Maxim Uvarov wrote:
-> > > ping.
-> > > Patchset was reviewed and all comments are codeverd. Optee-os patches
-> > > were merged. These kernel patches look like they are hanging
-> > > somewhere...
-> >
-> > I'm almost OK with this patchset, except that
-> > Documentation/ABI/testing/sysfs-bus-optee-devices needs to be updated
-> > for the new kernel version and TEE mailing list which we're changing right
-> > now.
-> >
-> 
-> What is the new mailing list address? I did git pull the latest
-> master and get_maintainer.pl still points to
-> tee-dev@lists.linaro.org.
+"K" stands for "kelvin".
 
-I'm sorry, I should have mentioned that. I just sent a pull request
-to update it so it will have changed by the time these patches gets
-merged. The new address is op-tee@lists.trustedfirmware.org
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/clocksource/sh_cmt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-Jens
+diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
+index 12ac75f7571f279e..760777458a9091cd 100644
+--- a/drivers/clocksource/sh_cmt.c
++++ b/drivers/clocksource/sh_cmt.c
+@@ -349,7 +349,7 @@ static int sh_cmt_enable(struct sh_cmt_channel *ch)
+ 
+ 	/*
+ 	 * According to the sh73a0 user's manual, as CMCNT can be operated
+-	 * only by the RCLK (Pseudo 32 KHz), there's one restriction on
++	 * only by the RCLK (Pseudo 32 kHz), there's one restriction on
+ 	 * modifying CMCNT register; two RCLK cycles are necessary before
+ 	 * this register is either read or any modification of the value
+ 	 * it holds is reflected in the LSI's actual operation.
+-- 
+2.17.1
 
-> 
-> Maxim.
-> 
-> > The last patch touches files I'm not maintainer of. That patch depends
-> > on the previous patches so it makes sense to keep them together.  If a
-> > TPM device driver maintainer would ack that patch I can take it via my
-> > tree. Or we can do it the other way around (with a v9 patchset),
-> > whichever is preferred.
-> >
-> > Cheers,
-> > Jens
-> >
-> > >
-> > > Thanks,
-> > > Maxim.
-> > >
-> > > On Thu, 4 Jun 2020 at 20:58, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
-> > > >
-> > > > v8: - fix v7 check.
-> > > > v7: - check return value of dev_set_name() (Jarkko Sakkinen)
-> > > > v6: - description, comments, patches reorder and destroy workqueue (Sumit Garg)
-> > > > v5: - removed pr_err and fix typos in description (Jarkko Sakkinen)
-> > > >     - added missed kfree in optee_open()
-> > > > v4: - sysfs entry is optee-ta-uuid (Jerome Forissier, Sumit Garg)
-> > > >     - added Documentation/ABI/testing/sysfs-bus-optee-devices (Greg Kroah-Hartman)
-> > > > v3: - support tee-suppicant restart (Jens Wiklander)
-> > > >     - description and comments (Jarkko Sakkinen)
-> > > >     - do not name optee drivers by index in sysfs (Sumit Garg)
-> > > > v2: - write TEE with capital letters.
-> > > >     - declare __optee_enumerate_device() as static.
-> > > >
-> > > > Maxim Uvarov (3):
-> > > >   optee: use uuid for sysfs driver entry
-> > > >   optee: enable support for multi-stage bus enumeration
-> > > >   tpm_ftpm_tee: register driver on TEE bus
-> > > >
-> > > >  .../ABI/testing/sysfs-bus-optee-devices       |  8 +++
-> > > >  MAINTAINERS                                   |  1 +
-> > > >  drivers/char/tpm/tpm_ftpm_tee.c               | 70 ++++++++++++++++---
-> > > >  drivers/tee/optee/core.c                      | 27 ++++++-
-> > > >  drivers/tee/optee/device.c                    | 38 +++++-----
-> > > >  drivers/tee/optee/optee_private.h             | 10 ++-
-> > > >  6 files changed, 119 insertions(+), 35 deletions(-)
-> > > >  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
-> > > >
-> > > > --
-> > > > 2.17.1
-> > > >
