@@ -2,89 +2,107 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A19F21BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:28:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PAI+gY1x"
+	by mail.kernel.org (Postfix) with ESMTP id 3A05F21974
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbgFRJ2Z (ORCPT
+        id S1729144AbgFRJ2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 05:28:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728819AbgFRJ2Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 05:28:24 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6063C06174E;
-        Thu, 18 Jun 2020 02:28:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=pPaJGkFgBfRy4kaAhXnVgmi64gvv/YLPA3TXaJg16Q8=; b=PAI+gY1xuHZWivpl4xx1ZghwO6
-        z9Bz22F1p9LF1ZKU1ty6/y+9lb4oldbxrXSHZe4JCOBG1c3sYaFwzzaw+HmpH/Z1TM6pE7AXtJyCg
-        267Q2QzF/zHB7/1E5MEEF1kZjEMEQttL2ZgY/rFHu45oh70kFej1uF6R7uhr6QFExRJ4ZVoEO+sn0
-        oJJou5XY6rNZixZZ1XMnzr2b96PbqpfcL2zm8exRkD6UAwNoZuPkmlZEe2b8oVZfkp660c9zR38sH
-        fqFoDbH+TLWWvAttW+6xqmufOhYytqWG92mwMI69Q3dD1pJHVdyMgS4jl747ZXfkyGKlD3Q3OyWte
-        +Yocc0ZQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlqqG-0004my-82; Thu, 18 Jun 2020 09:28:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A822D307A66;
-        Thu, 18 Jun 2020 11:28:14 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 96F692059AC5C; Thu, 18 Jun 2020 11:28:14 +0200 (CEST)
-Date:   Thu, 18 Jun 2020 11:28:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: fix a hyperv W^X violation and remove vmalloc_exec
-Message-ID: <20200618092814.GG576905@hirez.programming.kicks-ass.net>
-References: <20200618064307.32739-1-hch@lst.de>
+        Thu, 18 Jun 2020 05:28:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:46806 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728943AbgFRJ2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 05:28:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C7EC1045;
+        Thu, 18 Jun 2020 02:28:33 -0700 (PDT)
+Received: from [192.168.1.84] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 483DF3F6CF;
+        Thu, 18 Jun 2020 02:28:32 -0700 (PDT)
+Subject: Re: [PATCH v3] drm/panfrost: Reduce the amount of logs on deferred
+ probe
+To:     Rob Herring <robh@kernel.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+References: <20200527200544.7849-1-krzk@kernel.org>
+ <20200527204334.GA15485@kevin> <20200617141547.GA30516@kozik-lap>
+ <b41bfead-7b73-be78-c63f-79a0a7e23b2a@arm.com>
+ <CAL_JsqLrFFOVQVR0dWbru6bJvz7sXs8v6Op-hiNgdMwH3N=2Fw@mail.gmail.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <cd609ad6-9672-9fdd-e693-f15395cb6fd0@arm.com>
+Date:   Thu, 18 Jun 2020 10:28:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618064307.32739-1-hch@lst.de>
+In-Reply-To: <CAL_JsqLrFFOVQVR0dWbru6bJvz7sXs8v6Op-hiNgdMwH3N=2Fw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 08:43:04AM +0200, Christoph Hellwig wrote:
-> Hi all,
+On 17/06/2020 20:57, Rob Herring wrote:
+> On Wed, Jun 17, 2020 at 8:36 AM Steven Price <steven.price@arm.com> wrote:
+>>
+>> On 17/06/2020 15:15, Krzysztof Kozlowski wrote:
+>>> On Wed, May 27, 2020 at 04:43:34PM -0400, Alyssa Rosenzweig wrote:
+>>>> Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+>>>>
+>>>> On Wed, May 27, 2020 at 10:05:44PM +0200, Krzysztof Kozlowski wrote:
+>>>>> There is no point to print deferred probe (and its failures to get
+>>>>> resources) as an error.  Also there is no need to print regulator errors
+>>>>> twice.
+>>>>>
+>>>>> In case of multiple probe tries this would pollute the dmesg.
+>>>>>
+>>>>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>>>>> Reviewed-by: Steven Price <steven.price@arm.com>
+>>>>>
+>>>>> ---
+>>>>>
+>>>>> Changes since v2:
+>>>>> 1. Rebase
+>>>>> 2. Add Steven's review
+>>>>>
+>>>>> Changes since v1:
+>>>>> 1. Remove second error message from calling panfrost_regulator_init()
+>>>>> ---
+>>>>>    drivers/gpu/drm/panfrost/panfrost_device.c | 8 ++++----
+>>>>>    1 file changed, 4 insertions(+), 4 deletions(-)
+>>>>>
+>>>
+>>> Hi Rob, Tomeu and Steven,
+>>>
+>>> You're listed as maintainers for panfrost. Is anyone going to pick this
+>>> up?
+>>
+>> I'm only a reviewer so I've been leaving it for Rob or Tomeu, but I can
+>> pick it up if Rob/Tomeu are happy for me to do that.
+>>
+>>> Maybe I sent it to wrong mailing list or forgot about anything?
+>>
+>> No, there's actually a few Panfrost commits waiting, it was on my todo
+>> list to ask if Rob/Tomeu needed some help with merging patches.
 > 
-> Dexuan reported a W^X violation due to the fact that the hyper hypercall
-> page due switching it to be allocated using vmalloc_exec.  The problem
-> is that PAGE_KERNEL_EXEC as used by vmalloc_exec actually sets writable
-> permissions in the pte.  This series fixes the issue by switching to the
-> low-level __vmalloc_node_range interface that allows specifing more
-> detailed permissions instead.  It then also open codes the other two
-> callers and removes the somewhat confusing vmalloc_exec interface.
+> Please do, I haven't had the cycles for panfrost lately.
+> 
+> Rob
+> 
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Ok, this patch is pushed to drm-misc-next. I'll dig through my emails 
+for the other patches which are pending and take a look at them too.
 
-> Peter noted that the hyper hypercall page allocation also has another
-> long standing issue in that it shouldn't use the full vmalloc but just
-> the module space.  This issue is so far theoretical as the allocation is
-> done early in the boot process.  I plan to fix it with another bigger
-> series for 5.9.
-
-Thanks!
+Steve
