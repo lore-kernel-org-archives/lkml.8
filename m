@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E234FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5ACA21D7F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAAE3221F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443665;
-	bh=CCU6RsdEuc7ATExJHevX6rxXxURwrNZzuNfZq/Ayhhs=;
+	s=default; t=1592443670;
+	bh=MVhU5zkhG5b/Q2B4cYtTgvolFxl8/j1TSsTffv+AOJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W/K/lC9qZkJCbAdXdeNio9MEpk5GKdbREy2P1qSYve1JkYHJRV2uQN75pU3Q5KK7p
-	 Ukl7S8TXNFJBHXzA0FQeXdlm5WVG45tJTuHtTZ5wYe/D/gA0Fdmrv3RBZ248AJRnpx
-	 sEmgPqjGWi6PvpNwyVXYR1URrmL06lVWHuV+HZWY=
+	b=bljHPJSxj1QE4dLUXIxOYojWfzSuuu46bSUL6sb4C5oFHQMCdn4dPfdvPwdhcajGl
+	 L9FeXp0ySA/6HRAGBJ79vx+wWEKYw6io/CjM250emjKH2nhF5nGvQzRTwqwmL2Pwf/
+	 y9osk4b1M43KPoitVOZnzQo2OQzhYd0B4gKsfFKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731926AbgFRB1o (ORCPT
+        id S1731961AbgFRB1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:27:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58920 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:27:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731181AbgFRBYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:24:25 -0400
+        id S1731218AbgFRBY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:24:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C87AD20776;
-        Thu, 18 Jun 2020 01:24:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9D2A214DB;
+        Thu, 18 Jun 2020 01:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443464;
-        bh=CCU6RsdEuc7ATExJHevX6rxXxURwrNZzuNfZq/Ayhhs=;
+        s=default; t=1592443469;
+        bh=MVhU5zkhG5b/Q2B4cYtTgvolFxl8/j1TSsTffv+AOJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qx5+qQbAi4m7O8YuGChuUl7PJv56Jpnae5lrbMTaBpIoYq6nGtWGxmvH+LsueEqtn
-         G8lGIvGJ8PfU/itsPqFipYPbC8f/Ryu10H71fRBrX7DG7ltQaoyjYlbv9HCa94tg8e
-         OZ9FkDfFXJqVcGQ/frTg8i5p5GK0fe02MgJnW9nw=
+        b=FQtvTkJTjkDTaLmqpo9nVBgH3F30D5szk9YpMLQev0xdWbfSqBizp75//lkWeSaVT
+         SwHjHFKt6PMR3POZ+tKlO8VqzIUp7BPe2CP8dDToaX85epuGWXJJhSeFDKTzdJAN+e
+         W1vWrMPsJGaaBjcyg35QDrOGbwKt7oMuvp49rJUk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roy Spliet <nouveau@spliet.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 097/172] drm/msm/mdp5: Fix mdp5_init error path for failed mdp5_kms allocation
-Date:   Wed, 17 Jun 2020 21:21:03 -0400
-Message-Id: <20200618012218.607130-97-sashal@kernel.org>
+Cc:     Souptick Joarder <jrdr.linux@gmail.com>, Wu Hao <hao.wu@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fpga@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 101/172] fpga: dfl: afu: Corrected error handling levels
+Date:   Wed, 17 Jun 2020 21:21:07 -0400
+Message-Id: <20200618012218.607130-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -61,35 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roy Spliet <nouveau@spliet.org>
+From: Souptick Joarder <jrdr.linux@gmail.com>
 
-[ Upstream commit e4337877c5d578722c0716f131fb774522013cf5 ]
+[ Upstream commit c9d7e3da1f3c4cf5dddfc5d7ce4d76d013aba1cc ]
 
-When allocation for mdp5_kms fails, calling mdp5_destroy() leads to undefined
-behaviour, likely a nullptr exception or use-after-free troubles.
+Corrected error handling goto sequnece. Level put_pages should
+be called when pinned pages >= 0 && pinned != npages. Level
+free_pages should be called when pinned pages < 0.
 
-Signed-off-by: Roy Spliet <nouveau@spliet.org>
-Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Fixes: fa8dda1edef9 ("fpga: dfl: afu: add DFL_FPGA_PORT_DMA_MAP/UNMAP ioctls support")
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Acked-by: Wu Hao <hao.wu@intel.com>
+Reviewed-by: Xu Yilun <yilun.xu@intel.com>
+Link: https://lore.kernel.org/r/1589825991-3545-1-git-send-email-jrdr.linux@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/fpga/dfl-afu-dma-region.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-index bddd625ab91b..25691b7cece1 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-@@ -1021,7 +1021,8 @@ static int mdp5_init(struct platform_device *pdev, struct drm_device *dev)
+diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
+index c9a613dc9eb7..e056965ef97b 100644
+--- a/drivers/fpga/dfl-afu-dma-region.c
++++ b/drivers/fpga/dfl-afu-dma-region.c
+@@ -106,10 +106,10 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
+ 				     region->pages);
+ 	if (pinned < 0) {
+ 		ret = pinned;
+-		goto put_pages;
++		goto free_pages;
+ 	} else if (pinned != npages) {
+ 		ret = -EFAULT;
+-		goto free_pages;
++		goto put_pages;
+ 	}
  
- 	return 0;
- fail:
--	mdp5_destroy(pdev);
-+	if (mdp5_kms)
-+		mdp5_destroy(pdev);
- 	return ret;
- }
- 
+ 	dev_dbg(dev, "%d pages pinned\n", pinned);
 -- 
 2.25.1
 
