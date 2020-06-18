@@ -2,121 +2,101 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6678FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89907207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:11:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OjmPHWtU"
+	by mail.kernel.org (Postfix) with ESMTP id 4520C207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:11:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbgFRMLm (ORCPT
+        id S1729557AbgFRMLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:11:42 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:33271 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727922AbgFRMLl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 08:11:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592482301; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=tHo1gEvlOrfsPkpetrzn526WSM0Jy3iPUJee+0rqLQI=; b=OjmPHWtUUhtnDBU4gXiryobtC39pTL7CfxzvpsWmxR6H7v36eK3FaFNfRDxXy4F7PTFD9xky
- ixvkw5D3MhlNZPKene5Bg5hbAyLWSbv+HlWA49LqPLqY9j2aYruqsyiNzzuadcBiY0tZNvWV
- 4Zi9Gxy6U3lhCrHwFpwAlGKnolM=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5eeb59fb4c9690533aee28da (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 18 Jun 2020 12:11:39
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EB747C433CA; Thu, 18 Jun 2020 12:11:38 +0000 (UTC)
-Received: from [10.50.47.190] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 12B65C433C9;
-        Thu, 18 Jun 2020 12:11:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 12B65C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v6 0/6] DVFS for IO devices on sdm845 and sc7180
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Mark Brown <broonie@kernel.org>
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org, robdclark@gmail.com,
-        robdclark@chromium.org, viresh.kumar@linaro.org, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
- <20200617221546.GC4525@google.com>
- <4f3d4c91-2a01-8ef5-1ad0-73ed354f930a@codeaurora.org>
- <9bb7fbb6-6309-3f30-dd4f-2ee3d187c074@linaro.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <3ec9bc56-3e31-64fe-320a-2dc153a81f98@codeaurora.org>
-Date:   Thu, 18 Jun 2020 17:41:31 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 18 Jun 2020 08:11:52 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:53398 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729016AbgFRMLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 08:11:49 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jltOP-0007op-Hd; Thu, 18 Jun 2020 14:11:41 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, heiko@sntech.de,
+        christoph.muellner@theobroma-systems.com
+Subject: [PATCH v5 0/3] add clkout support to mscc phys
+Date:   Thu, 18 Jun 2020 14:11:36 +0200
+Message-Id: <20200618121139.1703762-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <9bb7fbb6-6309-3f30-dd4f-2ee3d187c074@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The main part of this series is adding handling of the clkout
+controls some of the mscc phys have and while at it Andrew
+asked for some of the duplicated probe functionality to be
+factored out into a common function.
 
-Hey Stan,
-  
-> On 6/18/20 7:47 AM, Rajendra Nayak wrote:
->> Hey Matthias, thanks for summarizing this.
->>
->> On 6/18/2020 3:45 AM, Matthias Kaehlcke wrote:
->>> What is the plan for landing these, it seems not all must/should
->>> go through the QCOM tree.
->>>
->>> My guesses:
->>>
->>> tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
->>> spi: spi-geni-qcom: Use OPP API to set clk/perf state
->>>     QCOM tree due to shared dependency on change in
->>> include/linux/qcom-geni-se.h
->>
->> That's correct, Bjorn/Andy, can these be pulled in now for 5.9?
->> They have acks from Greg for serial and Mark for the spi patch.
->>   
->>> drm/msm/dpu: Use OPP API to set clk/perf state
->>> drm/msm: dsi: Use OPP API to set clk/perf state
->>>     drm/msm tree
->>
->> Correct, the dsi patch is still not reviewed by Rob, so once that's done,
->> I am guessing Rob would pull both of these.
->>
->>>
->>> media: venus: core: Add support for opp tables/perf voting
->>>     venus tree
->>
->> correct, this is pending review/ack from Stan.
-> 
-> I tested the changes in the driver, and they looks fine. But when
-> applied the corresponding change in the DT node I see this message when
-> the streaming is stopping:
-> 
-> qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
-> 
-> I tested on v5.7 (linaro-integration). Should I be worried ?
+A working config on rockchip/rk3368-lion for example now looks like:
 
-Is this seen on sdm845 or sc7180, or both?
+&gmac {
+	status = "okay";
 
-thanks,
-Rajendra  -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+	mdio {
+		compatible = "snps,dwmac-mdio";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		phy0: phy@0 {
+			compatible = "ethernet-phy-id0007.0570";
+			reg = <0>;
+			assigned-clocks = <&phy0>, <&cru SCLK_MAC>;
+			assigned-clock-rates = <125000000>, <125000000>;
+			assigned-clock-parents = <0>, <&phy0>;
+			clock-output-names = "ext_gmac";
+			#clock-cells = <0>;
+			vsc8531,edge-slowdown = <7>;
+			vsc8531,led-0-mode = <1>;
+			vsc8531,led-1-mode = <2>;
+		};
+	};
+};
+
+
+changes in v5:
+- added Andrew's Rb for patch 1
+- modified clkout handling to be a clock-provider
+  to fit into the existing clock structures
+changes in v4:
+- fix missing variable initialization in one probe function
+changes in v3:
+- adapt to 5.8 merge-window results
+- introduce a more generic enet-phy-property instead of
+  using a vsc8531,* one - suggested by Andrew
+changes in v2:
+- new probe factoring patch as suggested by Andrew
+
+
+Heiko Stuebner (3):
+  net: phy: mscc: move shared probe code into a helper
+  dt-bindings: net: mscc-vsc8531: add optional clock properties
+  net: phy: mscc: handle the clkout control on some phy variants
+
+ .../bindings/net/mscc-phy-vsc8531.txt         |   2 +
+ drivers/net/phy/mscc/mscc.h                   |  13 +
+ drivers/net/phy/mscc/mscc_main.c              | 306 ++++++++++++++----
+ 3 files changed, 250 insertions(+), 71 deletions(-)
+
+-- 
+2.26.2
+
