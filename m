@@ -2,51 +2,51 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C16C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C308C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8A620EDD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE479221EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442854;
-	bh=uPVJfn4eW6yGGsUiXpVMaywucoc7azMIcy2PSIJ8+B0=;
+	s=default; t=1592442857;
+	bh=ODYygIm/zaKj9Zv+hM2tviPDfsWFKYFxA44LxJQKfnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ikcDdrp1wew1+gw1LWl/frMGyFiU4AHXXwcsHl3XFe6znngWM86NF+W9n0EWJ2mvv
-	 FaF2MQosQ2QixtzVzqgalbOv5nA71A58bNEpJ2gmGiBh/vEnHFTHAGNX1DCqIG8lHb
-	 N4tWJGrEzOaQgC4byEBGUi9sWOmiIqiOPUWUFWUs=
+	b=h+qBcmRneorM1UeJclw+wXUpw6AO/Ew6RgWAYFPSjSxi2e0HLPiB2/yHPkDT0RbM0
+	 N0p8a2d6jtI62fU6MwKFK8x3NhukiCTHL648gfj83uzD0Wn/0t8Du2wkScbNX+OAo/
+	 xF5bssc3pFXTmUhr6x6xUlbA5zVq7YqkvaMrZb1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgFRBON (ORCPT
+        id S1728255AbgFRBOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:14:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41912 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:14:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728394AbgFRBNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:01 -0400
+        id S1729027AbgFRBNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CCF52193E;
-        Thu, 18 Jun 2020 01:13:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D36C420CC7;
+        Thu, 18 Jun 2020 01:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442780;
-        bh=uPVJfn4eW6yGGsUiXpVMaywucoc7azMIcy2PSIJ8+B0=;
+        s=default; t=1592442779;
+        bh=ODYygIm/zaKj9Zv+hM2tviPDfsWFKYFxA44LxJQKfnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b6RH96YsjMrrsG6+i7crH//kF9VcNBMdE6UFbEVX18A0GqX0HclsDQs1LN3fnATOD
-         Bj9xsBgIJ9CZogBSfLTE52OdcPSR1k9a/bYQaD5rtAxeFUYvkjuts770FzZXQk6PhD
-         4LeY4WO796DDbYAh9W293wQ7Zipo4t+vBWQCo7fI=
+        b=IcylqQbSAckpBvAq5fqSvrfzkEwzIUJptlFurscJKpTuS9qg9ssjFqklezgzBpk6w
+         Iv46wcCQtWNy1wzacycvnzJaS2gzODu+vWbqxwy37QyZ3GNkZhDa+y1sRZsGYJmSwi
+         PKDX1WWSTiQCnWgFEAi54wunC+0/RPw1FhHXbgks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 226/388] powerpc/ps3: Fix kexec shutdown hang
-Date:   Wed, 17 Jun 2020 21:05:23 -0400
-Message-Id: <20200618010805.600873-226-sashal@kernel.org>
+Cc:     Sanket Parmar <sparmar@cadence.com>, Roger Quadros <rogerq@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 225/388] phy: cadence: sierra: Fix for USB3 U1/U2 state
+Date:   Wed, 17 Jun 2020 21:05:22 -0400
+Message-Id: <20200618010805.600873-225-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,81 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geoff Levand <geoff@infradead.org>
+From: Sanket Parmar <sparmar@cadence.com>
 
-[ Upstream commit 126554465d93b10662742128918a5fc338cda4aa ]
+[ Upstream commit 2bcf14ca1a2f3202954f812f380c7fa8127fbd7f ]
 
-The ps3_mm_region_destroy() and ps3_mm_vas_destroy() routines
-are called very late in the shutdown via kexec's mmu_cleanup_all
-routine.  By the time mmu_cleanup_all runs it is too late to use
-udbg_printf, and calling it will cause PS3 systems to hang.
+Updated values of USB3 related Sierra PHY registers.
+This change fixes USB3 device disconnect issue observed
+while enternig U1/U2 state.
 
-Remove all debugging statements from ps3_mm_region_destroy() and
-ps3_mm_vas_destroy() and replace any error reporting with calls
-to lv1_panic.
-
-With this change builds with 'DEBUG' defined will not cause kexec
-reboots to hang, and builds with 'DEBUG' defined or not will end
-in lv1_panic if an error is encountered.
-
-Signed-off-by: Geoff Levand <geoff@infradead.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/7325c4af2b4c989c19d6a26b90b1fec9c0615ddf.1589049250.git.geoff@infradead.org
+Signed-off-by: Sanket Parmar <sparmar@cadence.com>
+Link: https://lore.kernel.org/r/1589804053-14302-1-git-send-email-sparmar@cadence.com
+Reviewed-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/ps3/mm.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/phy/cadence/phy-cadence-sierra.c | 27 ++++++++++++------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
 
-diff --git a/arch/powerpc/platforms/ps3/mm.c b/arch/powerpc/platforms/ps3/mm.c
-index 423be34f0f5f..f42fe4e86ce5 100644
---- a/arch/powerpc/platforms/ps3/mm.c
-+++ b/arch/powerpc/platforms/ps3/mm.c
-@@ -200,13 +200,14 @@ void ps3_mm_vas_destroy(void)
- {
- 	int result;
- 
--	DBG("%s:%d: map.vas_id    = %llu\n", __func__, __LINE__, map.vas_id);
--
- 	if (map.vas_id) {
- 		result = lv1_select_virtual_address_space(0);
--		BUG_ON(result);
--		result = lv1_destruct_virtual_address_space(map.vas_id);
--		BUG_ON(result);
-+		result += lv1_destruct_virtual_address_space(map.vas_id);
-+
-+		if (result) {
-+			lv1_panic(0);
-+		}
-+
- 		map.vas_id = 0;
- 	}
- }
-@@ -304,19 +305,20 @@ static void ps3_mm_region_destroy(struct mem_region *r)
- 	int result;
- 
- 	if (!r->destroy) {
--		pr_info("%s:%d: Not destroying high region: %llxh %llxh\n",
--			__func__, __LINE__, r->base, r->size);
- 		return;
- 	}
- 
--	DBG("%s:%d: r->base = %llxh\n", __func__, __LINE__, r->base);
--
- 	if (r->base) {
- 		result = lv1_release_memory(r->base);
--		BUG_ON(result);
-+
-+		if (result) {
-+			lv1_panic(0);
-+		}
-+
- 		r->size = r->base = r->offset = 0;
- 		map.total = map.rm.size;
- 	}
-+
- 	ps3_mm_set_repository_highmem(NULL);
- }
- 
+diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
+index a5c08e5bd2bf..faed652b73f7 100644
+--- a/drivers/phy/cadence/phy-cadence-sierra.c
++++ b/drivers/phy/cadence/phy-cadence-sierra.c
+@@ -685,10 +685,10 @@ static struct cdns_reg_pairs cdns_usb_cmn_regs_ext_ssc[] = {
+ static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
+ 	{0xFE0A, SIERRA_DET_STANDEC_A_PREG},
+ 	{0x000F, SIERRA_DET_STANDEC_B_PREG},
+-	{0x00A5, SIERRA_DET_STANDEC_C_PREG},
++	{0x55A5, SIERRA_DET_STANDEC_C_PREG},
+ 	{0x69ad, SIERRA_DET_STANDEC_D_PREG},
+ 	{0x0241, SIERRA_DET_STANDEC_E_PREG},
+-	{0x0010, SIERRA_PSM_LANECAL_DLY_A1_RESETS_PREG},
++	{0x0110, SIERRA_PSM_LANECAL_DLY_A1_RESETS_PREG},
+ 	{0x0014, SIERRA_PSM_A0IN_TMR_PREG},
+ 	{0xCF00, SIERRA_PSM_DIAG_PREG},
+ 	{0x001F, SIERRA_PSC_TX_A0_PREG},
+@@ -696,7 +696,7 @@ static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
+ 	{0x0003, SIERRA_PSC_TX_A2_PREG},
+ 	{0x0003, SIERRA_PSC_TX_A3_PREG},
+ 	{0x0FFF, SIERRA_PSC_RX_A0_PREG},
+-	{0x0619, SIERRA_PSC_RX_A1_PREG},
++	{0x0003, SIERRA_PSC_RX_A1_PREG},
+ 	{0x0003, SIERRA_PSC_RX_A2_PREG},
+ 	{0x0001, SIERRA_PSC_RX_A3_PREG},
+ 	{0x0001, SIERRA_PLLCTRL_SUBRATE_PREG},
+@@ -705,19 +705,19 @@ static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
+ 	{0x00CA, SIERRA_CLKPATH_BIASTRIM_PREG},
+ 	{0x2512, SIERRA_DFE_BIASTRIM_PREG},
+ 	{0x0000, SIERRA_DRVCTRL_ATTEN_PREG},
+-	{0x873E, SIERRA_CLKPATHCTRL_TMR_PREG},
+-	{0x03CF, SIERRA_RX_CREQ_FLTR_A_MODE1_PREG},
+-	{0x01CE, SIERRA_RX_CREQ_FLTR_A_MODE0_PREG},
++	{0x823E, SIERRA_CLKPATHCTRL_TMR_PREG},
++	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE1_PREG},
++	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE0_PREG},
+ 	{0x7B3C, SIERRA_CREQ_CCLKDET_MODE01_PREG},
+-	{0x033F, SIERRA_RX_CTLE_MAINTENANCE_PREG},
++	{0x023C, SIERRA_RX_CTLE_MAINTENANCE_PREG},
+ 	{0x3232, SIERRA_CREQ_FSMCLK_SEL_PREG},
+ 	{0x0000, SIERRA_CREQ_EQ_CTRL_PREG},
+-	{0x8000, SIERRA_CREQ_SPARE_PREG},
++	{0x0000, SIERRA_CREQ_SPARE_PREG},
+ 	{0xCC44, SIERRA_CREQ_EQ_OPEN_EYE_THRESH_PREG},
+-	{0x8453, SIERRA_CTLELUT_CTRL_PREG},
+-	{0x4110, SIERRA_DFE_ECMP_RATESEL_PREG},
+-	{0x4110, SIERRA_DFE_SMP_RATESEL_PREG},
+-	{0x0002, SIERRA_DEQ_PHALIGN_CTRL},
++	{0x8452, SIERRA_CTLELUT_CTRL_PREG},
++	{0x4121, SIERRA_DFE_ECMP_RATESEL_PREG},
++	{0x4121, SIERRA_DFE_SMP_RATESEL_PREG},
++	{0x0003, SIERRA_DEQ_PHALIGN_CTRL},
+ 	{0x3200, SIERRA_DEQ_CONCUR_CTRL1_PREG},
+ 	{0x5064, SIERRA_DEQ_CONCUR_CTRL2_PREG},
+ 	{0x0030, SIERRA_DEQ_EPIPWR_CTRL2_PREG},
+@@ -725,7 +725,7 @@ static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
+ 	{0x5A5A, SIERRA_DEQ_ERRCMP_CTRL_PREG},
+ 	{0x02F5, SIERRA_DEQ_OFFSET_CTRL_PREG},
+ 	{0x02F5, SIERRA_DEQ_GAIN_CTRL_PREG},
+-	{0x9A8A, SIERRA_DEQ_VGATUNE_CTRL_PREG},
++	{0x9999, SIERRA_DEQ_VGATUNE_CTRL_PREG},
+ 	{0x0014, SIERRA_DEQ_GLUT0},
+ 	{0x0014, SIERRA_DEQ_GLUT1},
+ 	{0x0014, SIERRA_DEQ_GLUT2},
+@@ -772,6 +772,7 @@ static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
+ 	{0x000F, SIERRA_LFPSFILT_NS_PREG},
+ 	{0x0009, SIERRA_LFPSFILT_RD_PREG},
+ 	{0x0001, SIERRA_LFPSFILT_MP_PREG},
++	{0x6013, SIERRA_SIGDET_SUPPORT_PREG},
+ 	{0x8013, SIERRA_SDFILT_H2L_A_PREG},
+ 	{0x8009, SIERRA_SDFILT_L2H_PREG},
+ 	{0x0024, SIERRA_RXBUFFER_CTLECTRL_PREG},
 -- 
 2.25.1
 
