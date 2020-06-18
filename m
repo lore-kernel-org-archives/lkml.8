@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A678C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9E720732
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4E120732
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731702AbgFRUkR (ORCPT
+        id S1731912AbgFRUkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:40:17 -0400
+        Thu, 18 Jun 2020 16:40:21 -0400
 Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:48844 "EHLO
         EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731297AbgFRUjV (ORCPT
+        by vger.kernel.org with ESMTP id S1731307AbgFRUjV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Jun 2020 16:39:21 -0400
 Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
  EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
  15.0.1156.6; Thu, 18 Jun 2020 13:39:12 -0700
 Received: from sc9-mailhost2.vmware.com (unknown [10.129.221.29])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 4C099B2656;
-        Thu, 18 Jun 2020 16:39:15 -0400 (EDT)
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 11569B2656;
+        Thu, 18 Jun 2020 16:39:16 -0400 (EDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -34,9 +34,9 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Julien Thierry <jthierry@redhat.com>,
         Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH v5 21/51] objtool: mcount: Move nop_mcount()
-Date:   Thu, 18 Jun 2020 13:38:07 -0700
-Message-ID: <4188c8a328fe196579328fa76caa33daec4d0613.1592510545.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH v5 22/51] objtool: mcount: Move has_rel_mcount() and tot_relsize()
+Date:   Thu, 18 Jun 2020 13:38:08 -0700
+Message-ID: <2511660716aabd9843ab58abef20425507aa354f.1592510545.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1592510545.git.mhelsley@vmware.com>
 References: <cover.1592510545.git.mhelsley@vmware.com>
@@ -50,161 +50,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The nop_mcount() function overwrites mcount calls that should be
-ignored with no-ops. This operation varies by architecture and
-wordsize so we retain the function pointers used to implement
-the fundamental operation while nop_mcount() itself is responsible
-for walking the relocations, determining if they should be turned
-into no-ops, then calling the arch-specific code. Since none of
-these use the recordmcount ELF wrappers anymore we can move it out
-of the wrapper.
+The has_rel_mcount() and tot_relsize() helpers are no longer
+dependent on the ELF wrapper so we can move them.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/recordmcount.c | 47 +++++++++++++++++++++++++++++++++
- tools/objtool/recordmcount.h | 50 ------------------------------------
- 2 files changed, 47 insertions(+), 50 deletions(-)
+ tools/objtool/recordmcount.c | 26 ++++++++++++++++++++++++++
+ tools/objtool/recordmcount.h | 33 ---------------------------------
+ 2 files changed, 26 insertions(+), 33 deletions(-)
 
 diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-index c015091a8a8c..fae0b15d0632 100644
+index fae0b15d0632..918e47217379 100644
 --- a/tools/objtool/recordmcount.c
 +++ b/tools/objtool/recordmcount.c
-@@ -399,6 +399,53 @@ static int find_section_sym_index(unsigned const txtndx,
- 	return missing_sym;
+@@ -446,6 +446,32 @@ static int nop_mcount(struct section * const rels,
+ 	return 0;
  }
  
-+/*
-+ * Read the relocation table again, but this time its called on sections
-+ * that are not going to be traced. The mcount calls here will be converted
-+ * into nops.
-+ */
-+static int nop_mcount(struct section * const rels,
-+		      const char *const txtname)
++static char const *has_rel_mcount(const struct section * const rels)
 +{
-+	struct reloc *reloc;
-+	struct section *txts = find_section_by_index(lf, rels->sh.sh_info);
-+	struct symbol *mcountsym = NULL;
-+	int once = 0;
++	const struct section *txts;
++	if (rels->sh.sh_type != SHT_REL && rels->sh.sh_type != SHT_RELA)
++		return NULL;
++	txts = find_section_by_index(lf, rels->sh.sh_info);
++	if ((txts->sh.sh_type != SHT_PROGBITS) ||
++	    !(txts->sh.sh_flags & SHF_EXECINSTR))
++		return NULL;
++	return txts->name;
++}
 +
-+	list_for_each_entry(reloc, &rels->reloc_list, list) {
-+		int ret = -1;
++static unsigned tot_relsize(void)
++{
++	const struct section *sec;
++	unsigned totrelsz = 0;
++	char const *txtname;
 +
-+		if (!mcountsym)
-+			mcountsym = get_mcountsym(reloc);
-+
-+		if (mcountsym == reloc->sym && !is_fake_mcount(reloc)) {
-+			if (make_nop) {
-+				ret = make_nop(txts, reloc->offset);
-+				if (ret < 0)
-+					return -1;
-+			}
-+			if (warn_on_notrace_sect && !once) {
-+				printf("Section %s has mcount callers being ignored\n",
-+				       txtname);
-+				once = 1;
-+				/* just warn? */
-+				if (!make_nop)
-+					return 0;
-+			}
-+		}
-+
-+		/*
-+		 * If we successfully removed the mcount, mark the relocation
-+		 * as a nop (don't do anything with it).
-+		 */
-+		if (!ret) {
-+			reloc->type = rel_type_nop;
-+			rels->changed = true;
-+		}
++	list_for_each_entry(sec, &lf->sections, list) {
++		txtname = has_rel_mcount(sec);
++		if (txtname && is_mcounted_section_name(txtname))
++			totrelsz += sec->sh.sh_size;
 +	}
-+	return 0;
++	return totrelsz;
 +}
 +
  /* 32 bit and 64 bit are very similar */
  #include "recordmcount.h"
  #define RECORD_MCOUNT_64
 diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index 1f14c64ed484..25028c61da2b 100644
+index 25028c61da2b..2733f7fde51d 100644
 --- a/tools/objtool/recordmcount.h
 +++ b/tools/objtool/recordmcount.h
-@@ -20,7 +20,6 @@
+@@ -20,8 +20,6 @@
  #undef append_func
  #undef mcount_adjust
  #undef sift_rel_mcount
--#undef nop_mcount
- #undef has_rel_mcount
- #undef tot_relsize
+-#undef has_rel_mcount
+-#undef tot_relsize
  #undef do_func
-@@ -37,7 +36,6 @@
+ #undef Elf_Shdr
+ #undef Elf_Rel
+@@ -36,8 +34,6 @@
  #ifdef RECORD_MCOUNT_64
  # define append_func		append64
  # define sift_rel_mcount	sift64_rel_mcount
--# define nop_mcount		nop_mcount_64
- # define has_rel_mcount		has64_rel_mcount
- # define tot_relsize		tot64_relsize
+-# define has_rel_mcount		has64_rel_mcount
+-# define tot_relsize		tot64_relsize
  # define do_func		do64
-@@ -53,7 +51,6 @@
+ # define mcount_adjust		mcount_adjust_64
+ # define Elf_Rel		Elf64_Rel
+@@ -51,8 +47,6 @@
  #else
  # define append_func		append32
  # define sift_rel_mcount	sift32_rel_mcount
--# define nop_mcount		nop_mcount_32
- # define has_rel_mcount		has32_rel_mcount
- # define tot_relsize		tot32_relsize
+-# define has_rel_mcount		has32_rel_mcount
+-# define tot_relsize		tot32_relsize
  # define do_func		do32
-@@ -168,53 +165,6 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
+ # define mcount_adjust		mcount_adjust_32
+ # define Elf_Rel		Elf32_Rel
+@@ -165,33 +159,6 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
  	return mlocp;
  }
  
--/*
-- * Read the relocation table again, but this time its called on sections
-- * that are not going to be traced. The mcount calls here will be converted
-- * into nops.
-- */
--static int nop_mcount(struct section * const rels,
--		      const char *const txtname)
+-static char const *has_rel_mcount(const struct section * const rels)
 -{
--	struct reloc *reloc;
--	struct section *txts = find_section_by_index(lf, rels->sh.sh_info);
--	struct symbol *mcountsym = NULL;
--	int once = 0;
--
--	list_for_each_entry(reloc, &rels->reloc_list, list) {
--		int ret = -1;
--
--		if (!mcountsym)
--			mcountsym = get_mcountsym(reloc);
--
--		if (mcountsym == reloc->sym && !is_fake_mcount(reloc)) {
--			if (make_nop) {
--				ret = make_nop(txts, reloc->offset);
--				if (ret < 0)
--					return -1;
--			}
--			if (warn_on_notrace_sect && !once) {
--				printf("Section %s has mcount callers being ignored\n",
--				       txtname);
--				once = 1;
--				/* just warn? */
--				if (!make_nop)
--					return 0;
--			}
--		}
--
--		/*
--		 * If we successfully removed the mcount, mark the relocation
--		 * as a nop (don't do anything with it).
--		 */
--		if (!ret) {
--			reloc->type = rel_type_nop;
--			rels->changed = true;
--		}
--	}
--	return 0;
+-	const struct section *txts;
+-	if (rels->sh.sh_type != SHT_REL && rels->sh.sh_type != SHT_RELA)
+-		return NULL;
+-	txts = find_section_by_index(lf, rels->sh.sh_info);
+-	if ((txts->sh.sh_type != SHT_PROGBITS) ||
+-	    !(txts->sh.sh_flags & SHF_EXECINSTR))
+-		return NULL;
+-	return txts->name;
 -}
 -
- static char const *has_rel_mcount(const struct section * const rels)
+-
+-static unsigned tot_relsize(void)
+-{
+-	const struct section *sec;
+-	unsigned totrelsz = 0;
+-	char const *txtname;
+-
+-	list_for_each_entry(sec, &lf->sections, list) {
+-		txtname = has_rel_mcount(sec);
+-		if (txtname && is_mcounted_section_name(txtname))
+-			totrelsz += sec->sh.sh_size;
+-	}
+-	return totrelsz;
+-}
+-
+ /* Overall supervision for Elf32 ET_REL file. */
+ static int do_func(unsigned const reltype)
  {
- 	const struct section *txts;
 -- 
 2.20.1
 
