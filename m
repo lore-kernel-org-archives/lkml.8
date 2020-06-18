@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A53C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62646C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8E2208D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF3C20890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732252AbgFRR1g (ORCPT
+        id S1732139AbgFRR1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:27:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:55840 "EHLO foss.arm.com"
+        Thu, 18 Jun 2020 13:27:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:55874 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732213AbgFRR1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732211AbgFRR1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Jun 2020 13:27:21 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A015C13A1;
-        Thu, 18 Jun 2020 10:27:21 -0700 (PDT)
-Received: from e120937-lin.home (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D0893F6CF;
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4830C13FD;
         Thu, 18 Jun 2020 10:27:20 -0700 (PDT)
+Received: from e120937-lin.home (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23C4A3F6CF;
+        Thu, 18 Jun 2020 10:27:19 -0700 (PDT)
 From:   Cristian Marussi <cristian.marussi@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
         james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
         cristian.marussi@arm.com, dave.martin@arm.com
-Subject: [PATCH v9 7/9] firmware: arm_scmi: Add Sensor notifications support
-Date:   Thu, 18 Jun 2020 18:26:30 +0100
-Message-Id: <20200618172632.42842-8-cristian.marussi@arm.com>
+Subject: [PATCH v9 6/9] firmware: arm_scmi: Add Perf notifications support
+Date:   Thu, 18 Jun 2020 18:26:29 +0100
+Message-Id: <20200618172632.42842-7-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200618172632.42842-1-cristian.marussi@arm.com>
 References: <20200618172632.42842-1-cristian.marussi@arm.com>
@@ -41,18 +41,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make SCMI Sensor protocol register with the notification core.
+Make SCMI Perf protocol register with the notification core.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
 V8 --> V9
 - moved pr_info to pr_debug
-- removed switch()
+- inlined MAP_EVT_TO_ENABLE_CMD
 - use SCMI_PROTO_QUEUE_SZ
 V6 --> V7
 - fixed report.timestamp type
-- removed trip_point_notify from .sensor_ops
 - fixed max_payld_sz initialization
 - expose SCMI_EVENT_ in linux/scmi_protocol.h
 V5 --> V6
@@ -69,66 +68,122 @@ V1 --> V2
   notification core, together with proper reference counting of enables
 - switched to devres protocol-registration
 ---
- drivers/firmware/arm_scmi/sensors.c | 69 ++++++++++++++++++++++++++---
- include/linux/scmi_protocol.h       | 13 +++---
- 2 files changed, 72 insertions(+), 10 deletions(-)
+ drivers/firmware/arm_scmi/perf.c | 139 +++++++++++++++++++++++++++++--
+ include/linux/scmi_protocol.h    |  17 ++++
+ 2 files changed, 151 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
-index db1b1ab303da..f88b3d422f45 100644
---- a/drivers/firmware/arm_scmi/sensors.c
-+++ b/drivers/firmware/arm_scmi/sensors.c
-@@ -5,7 +5,12 @@
+diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
+index eadc171e254b..19ea773fed5d 100644
+--- a/drivers/firmware/arm_scmi/perf.c
++++ b/drivers/firmware/arm_scmi/perf.c
+@@ -5,15 +5,19 @@
   * Copyright (C) 2018 ARM Ltd.
   */
  
-+#define pr_fmt(fmt) "SCMI Notifications SENSOR - " fmt
++#define pr_fmt(fmt) "SCMI Notifications PERF - " fmt
 +
+ #include <linux/bits.h>
+ #include <linux/of.h>
+ #include <linux/io.h>
+ #include <linux/io-64-nonatomic-hi-lo.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_opp.h>
 +#include <linux/scmi_protocol.h>
-+
+ #include <linux/sort.h>
+ 
  #include "common.h"
 +#include "notify.h"
  
- enum scmi_sensor_protocol_cmd {
- 	SENSOR_DESCRIPTION_GET = 0x3,
-@@ -14,10 +19,6 @@ enum scmi_sensor_protocol_cmd {
- 	SENSOR_READING_GET = 0x6,
+ enum scmi_performance_protocol_cmd {
+ 	PERF_DOMAIN_ATTRIBUTES = 0x3,
+@@ -27,11 +31,6 @@ enum scmi_performance_protocol_cmd {
+ 	PERF_DESCRIBE_FASTCHANNEL = 0xb,
  };
  
--enum scmi_sensor_protocol_notify {
--	SENSOR_TRIP_POINT_EVENT = 0x0,
+-enum scmi_performance_protocol_notify {
+-	PERFORMANCE_LIMITS_CHANGED = 0x0,
+-	PERFORMANCE_LEVEL_CHANGED = 0x1,
 -};
 -
- struct scmi_msg_resp_sensor_attributes {
- 	__le16 num_sensors;
- 	u8 max_requests;
-@@ -71,6 +72,12 @@ struct scmi_msg_sensor_reading_get {
- #define SENSOR_READ_ASYNC	BIT(0)
+ struct scmi_opp {
+ 	u32 perf;
+ 	u32 power;
+@@ -86,6 +85,19 @@ struct scmi_perf_notify_level_or_limits {
+ 	__le32 notify_enable;
  };
  
-+struct scmi_sensor_trip_notify_payld {
++struct scmi_perf_limits_notify_payld {
 +	__le32 agent_id;
-+	__le32 sensor_id;
-+	__le32 trip_point_desc;
++	__le32 domain_id;
++	__le32 range_max;
++	__le32 range_min;
 +};
 +
- struct sensors_info {
- 	u32 version;
- 	int num_sensors;
-@@ -271,11 +278,57 @@ static int scmi_sensor_count_get(const struct scmi_handle *handle)
- static struct scmi_sensor_ops sensor_ops = {
- 	.count_get = scmi_sensor_count_get,
- 	.info_get = scmi_sensor_info_get,
--	.trip_point_notify = scmi_sensor_trip_point_notify,
- 	.trip_point_config = scmi_sensor_trip_point_config,
- 	.reading_get = scmi_sensor_reading_get,
++struct scmi_perf_level_notify_payld {
++	__le32 agent_id;
++	__le32 domain_id;
++	__le32 performance_level;
++};
++
+ struct scmi_msg_resp_perf_describe_levels {
+ 	__le16 num_returned;
+ 	__le16 num_remaining;
+@@ -158,6 +170,11 @@ struct scmi_perf_info {
+ 	struct perf_dom_info *dom_info;
  };
  
-+static bool scmi_sensor_set_notify_enabled(const struct scmi_handle *handle,
-+					   u8 evt_id, u32 src_id, bool enable)
++static enum scmi_performance_protocol_cmd evt_2_cmd[] = {
++	PERF_NOTIFY_LIMITS,
++	PERF_NOTIFY_LEVEL,
++};
++
+ static int scmi_perf_attributes_get(const struct scmi_handle *handle,
+ 				    struct scmi_perf_info *pi)
+ {
+@@ -488,6 +505,29 @@ static int scmi_perf_level_get(const struct scmi_handle *handle, u32 domain,
+ 	return scmi_perf_mb_level_get(handle, domain, level, poll);
+ }
+ 
++static int scmi_perf_level_limits_notify(const struct scmi_handle *handle,
++					 u32 domain, int message_id,
++					 bool enable)
 +{
 +	int ret;
++	struct scmi_xfer *t;
++	struct scmi_perf_notify_level_or_limits *notify;
 +
-+	ret = scmi_sensor_trip_point_notify(handle, src_id, enable);
++	ret = scmi_xfer_get_init(handle, message_id, SCMI_PROTOCOL_PERF,
++				 sizeof(*notify), 0, &t);
++	if (ret)
++		return ret;
++
++	notify = t->tx.buf;
++	notify->domain = cpu_to_le32(domain);
++	notify->notify_enable = enable ? cpu_to_le32(BIT(0)) : 0;
++
++	ret = scmi_do_xfer(handle, t);
++
++	scmi_xfer_put(handle, t);
++	return ret;
++}
++
+ static bool scmi_perf_fc_size_is_valid(u32 msg, u32 size)
+ {
+ 	if ((msg == PERF_LEVEL_GET || msg == PERF_LEVEL_SET) && size == 4)
+@@ -710,6 +750,89 @@ static struct scmi_perf_ops perf_ops = {
+ 	.est_power_get = scmi_dvfs_est_power_get,
+ };
+ 
++static bool scmi_perf_set_notify_enabled(const struct scmi_handle *handle,
++					 u8 evt_id, u32 src_id, bool enable)
++{
++	int ret, cmd_id;
++
++	if (unlikely(evt_id >= ARRAY_SIZE(evt_2_cmd)))
++		return false;
++
++	cmd_id = evt_2_cmd[evt_id];
++	ret = scmi_perf_level_limits_notify(handle, src_id, cmd_id, enable);
 +	if (ret)
 +		pr_debug("FAIL_ENABLED - evt[%X] dom[%d] - ret:%d\n",
 +			 evt_id, src_id, ret);
@@ -136,96 +191,118 @@ index db1b1ab303da..f88b3d422f45 100644
 +	return !ret;
 +}
 +
-+static void *scmi_sensor_fill_custom_report(const struct scmi_handle *handle,
-+					    u8 evt_id, u64 timestamp,
-+					    const void *payld, size_t payld_sz,
-+					    void *report, u32 *src_id)
++static void *scmi_perf_fill_custom_report(const struct scmi_handle *handle,
++					  u8 evt_id, u64 timestamp,
++					  const void *payld, size_t payld_sz,
++					  void *report, u32 *src_id)
 +{
-+	const struct scmi_sensor_trip_notify_payld *p = payld;
-+	struct scmi_sensor_trip_point_report *r = report;
++	void *rep = NULL;
 +
-+	if (evt_id != SCMI_EVENT_SENSOR_TRIP_POINT_EVENT ||
-+	     sizeof(*p) != payld_sz)
-+		return NULL;
++	switch (evt_id) {
++	case SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED:
++	{
++		const struct scmi_perf_limits_notify_payld *p = payld;
++		struct scmi_perf_limits_report *r = report;
 +
-+	r->timestamp = timestamp;
-+	r->agent_id = le32_to_cpu(p->agent_id);
-+	r->sensor_id = le32_to_cpu(p->sensor_id);
-+	r->trip_point_desc = le32_to_cpu(p->trip_point_desc);
-+	*src_id = r->sensor_id;
++		if (sizeof(*p) != payld_sz)
++			break;
 +
-+	return r;
++		r->timestamp = timestamp;
++		r->agent_id = le32_to_cpu(p->agent_id);
++		r->domain_id = le32_to_cpu(p->domain_id);
++		r->range_max = le32_to_cpu(p->range_max);
++		r->range_min = le32_to_cpu(p->range_min);
++		*src_id = r->domain_id;
++		rep = r;
++		break;
++	}
++	case SCMI_EVENT_PERFORMANCE_LEVEL_CHANGED:
++	{
++		const struct scmi_perf_level_notify_payld *p = payld;
++		struct scmi_perf_level_report *r = report;
++
++		if (sizeof(*p) != payld_sz)
++			break;
++
++		r->timestamp = timestamp;
++		r->agent_id = le32_to_cpu(p->agent_id);
++		r->domain_id = le32_to_cpu(p->domain_id);
++		r->performance_level = le32_to_cpu(p->performance_level);
++		*src_id = r->domain_id;
++		rep = r;
++		break;
++	}
++	default:
++		break;
++	}
++
++	return rep;
 +}
 +
-+static const struct scmi_event sensor_events[] = {
++static const struct scmi_event perf_events[] = {
 +	{
-+		.id = SCMI_EVENT_SENSOR_TRIP_POINT_EVENT,
-+		.max_payld_sz = sizeof(struct scmi_sensor_trip_notify_payld),
-+		.max_report_sz = sizeof(struct scmi_sensor_trip_point_report),
++		.id = SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED,
++		.max_payld_sz = sizeof(struct scmi_perf_limits_notify_payld),
++		.max_report_sz = sizeof(struct scmi_perf_limits_report),
++	},
++	{
++		.id = SCMI_EVENT_PERFORMANCE_LEVEL_CHANGED,
++		.max_payld_sz = sizeof(struct scmi_perf_level_notify_payld),
++		.max_report_sz = sizeof(struct scmi_perf_level_report),
 +	},
 +};
 +
-+static const struct scmi_event_ops sensor_event_ops = {
-+	.set_notify_enabled = scmi_sensor_set_notify_enabled,
-+	.fill_custom_report = scmi_sensor_fill_custom_report,
++static const struct scmi_event_ops perf_event_ops = {
++	.set_notify_enabled = scmi_perf_set_notify_enabled,
++	.fill_custom_report = scmi_perf_fill_custom_report,
 +};
 +
- static int scmi_sensors_protocol_init(struct scmi_handle *handle)
+ static int scmi_perf_protocol_init(struct scmi_handle *handle)
  {
- 	u32 version;
-@@ -299,6 +352,12 @@ static int scmi_sensors_protocol_init(struct scmi_handle *handle)
- 
- 	scmi_sensor_description_get(handle, sinfo);
+ 	int domain;
+@@ -742,6 +865,12 @@ static int scmi_perf_protocol_init(struct scmi_handle *handle)
+ 			scmi_perf_domain_init_fc(handle, domain, &dom->fc_info);
+ 	}
  
 +	scmi_register_protocol_events(handle,
-+				      SCMI_PROTOCOL_SENSOR, SCMI_PROTO_QUEUE_SZ,
-+				      &sensor_event_ops, sensor_events,
-+				      ARRAY_SIZE(sensor_events),
-+				      sinfo->num_sensors);
++				      SCMI_PROTOCOL_PERF, SCMI_PROTO_QUEUE_SZ,
++				      &perf_event_ops, perf_events,
++				      ARRAY_SIZE(perf_events),
++				      pinfo->num_domains);
 +
- 	sinfo->version = version;
- 	handle->sensor_ops = &sensor_ops;
- 	handle->sensor_priv = sinfo;
+ 	pinfo->version = version;
+ 	handle->perf_ops = &perf_ops;
+ 	handle->perf_priv = pinfo;
 diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 832b03ef37c7..7d1e8d24c880 100644
+index b2fe3bb9871d..832b03ef37c7 100644
 --- a/include/linux/scmi_protocol.h
 +++ b/include/linux/scmi_protocol.h
-@@ -174,18 +174,13 @@ enum scmi_sensor_class {
-  *
-  * @count_get: get the count of sensors provided by SCMI
-  * @info_get: get the information of the specified sensor
-- * @trip_point_notify: control notifications on cross-over events for
-- *	the trip-points
-  * @trip_point_config: selects and configures a trip-point of interest
-  * @reading_get: gets the current value of the sensor
-  */
- struct scmi_sensor_ops {
- 	int (*count_get)(const struct scmi_handle *handle);
--
- 	const struct scmi_sensor_info *(*info_get)
- 		(const struct scmi_handle *handle, u32 sensor_id);
--	int (*trip_point_notify)(const struct scmi_handle *handle,
--				 u32 sensor_id, bool enable);
- 	int (*trip_point_config)(const struct scmi_handle *handle,
- 				 u32 sensor_id, u8 trip_id, u64 trip_value);
- 	int (*reading_get)(const struct scmi_handle *handle, u32 sensor_id,
-@@ -378,6 +373,7 @@ enum scmi_notification_events {
+@@ -376,6 +376,8 @@ void scmi_protocol_unregister(int protocol_id);
+ /* SCMI Notification API - Custom Event Reports */
+ enum scmi_notification_events {
  	SCMI_EVENT_POWER_STATE_CHANGED = 0x0,
- 	SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED = 0x0,
- 	SCMI_EVENT_PERFORMANCE_LEVEL_CHANGED = 0x1,
-+	SCMI_EVENT_SENSOR_TRIP_POINT_EVENT = 0x0,
++	SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED = 0x0,
++	SCMI_EVENT_PERFORMANCE_LEVEL_CHANGED = 0x1,
  };
  
  struct scmi_power_state_changed_report {
-@@ -402,4 +398,11 @@ struct scmi_perf_level_report {
- 	u32 performance_level;
+@@ -385,4 +387,19 @@ struct scmi_power_state_changed_report {
+ 	u32 power_state;
  };
  
-+struct scmi_sensor_trip_point_report {
++struct scmi_perf_limits_report {
 +	u64 timestamp;
 +	u32 agent_id;
-+	u32 sensor_id;
-+	u32 trip_point_desc;
++	u32 domain_id;
++	u32 range_max;
++	u32 range_min;
++};
++
++struct scmi_perf_level_report {
++	u64 timestamp;
++	u32 agent_id;
++	u32 domain_id;
++	u32 performance_level;
 +};
 +
  #endif /* _LINUX_SCMI_PROTOCOL_H */
