@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A89C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E0F2088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E69222088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446779;
-	bh=ethD8dTy4YVainUb2vc8hanwnVhOe3rBhpsSWWKxogU=;
+	s=default; t=1592446787;
+	bh=JS+n9eHJSbbyBwQT+4ZlUCQqCKe0Fm6rnx22FfFJZq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iKhG6sAo4s4Z/MlFoM9iVWpe0MLL1TA1Ba/Dbsk3p/BW9NcY6i1A9JMj2gwggDROU
-	 7iGlLU1zzYMuzmSMGD0CjUPv3cAJPsioYMFlvtGG+xYBq5i4+Woh0rWraHxHcYkqXN
-	 gLP2iomeLWbo6+rUfJTtBIwct0j+xcHd+C0dFgEo=
+	b=d/oaWSljga3eR+Y/uFm/lpKxN/3uUan7Yn2u6TXAVr7OU4SN/xUgs5POcmF5cSaWr
+	 SKVskMEer/NUI4jweox8mV1+JPjItAccIbAU1EAEy+rGAb9huUKNqpgv1g7fzOnAd1
+	 WMKcoe3WJ0VpiFvXDTPLRzhyZeuEScw9/cehFkdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730111AbgFRCTh (ORCPT
+        id S1732961AbgFRCTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:19:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:19:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727994AbgFRBTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:19:16 -0400
+        id S1727799AbgFRBTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9806921D79;
-        Thu, 18 Jun 2020 01:19:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50E0221D7E;
+        Thu, 18 Jun 2020 01:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443156;
-        bh=ethD8dTy4YVainUb2vc8hanwnVhOe3rBhpsSWWKxogU=;
+        s=default; t=1592443150;
+        bh=JS+n9eHJSbbyBwQT+4ZlUCQqCKe0Fm6rnx22FfFJZq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DfXzJrETTV1wAKoc0YFN5+ZVJCv6OJqcibrvE8PEVDz60mrrqfulGvyOtqtMhNGcp
-         Huhkmr9GUjNKYc7RUBE1WOlMt7S5p5Ol5958/QOTlXmKdFiFLiSUCgWTyG5sgC7l2X
-         4pkRKfDRXu+qvxIl+E1Xl1SFjU/ZLCIOnV0jAzwk=
+        b=EUaN5itMJaj+MG5mIlP7aU/Vs7zm6dXmjB5LVNWVGd/hEKogk/k2VmH/xM3rwhcki
+         CqQBKlGwOmx6rethrCK3PLwjYvybJWsjY4sD95JYGchKFA6dAEidIRGdUaB6/1z50p
+         KBjs9XcLkdlZj0SUcZseN79bWJQKUHBjVOrFc2+s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Ajay Singh <ajay.kathat@microchip.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 123/266] drivers: base: Fix NULL pointer exception in __platform_driver_probe() if a driver developer is foolish
-Date:   Wed, 17 Jun 2020 21:14:08 -0400
-Message-Id: <20200618011631.604574-123-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.4 118/266] staging: wilc1000: Increase the size of wid_list array
+Date:   Wed, 17 Jun 2020 21:14:03 -0400
+Message-Id: <20200618011631.604574-118-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,82 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+From: Oscar Carter <oscar.carter@gmx.com>
 
-[ Upstream commit 388bcc6ecc609fca1b4920de7dc3806c98ec535e ]
+[ Upstream commit a4338ed2e1cf724563956ec5f91deeaabfedbe23 ]
 
-If platform bus driver registration is failed then, accessing
-platform bus spin lock (&drv->driver.bus->p->klist_drivers.k_lock)
-in __platform_driver_probe() without verifying the return value
-__platform_driver_register() can lead to NULL pointer exception.
+Increase by one the size of wid_list array as index variable can reach a
+value of 5. If this happens, an out-of-bounds access is performed.
 
-So check the return value before attempting the spin lock.
+Also, use a #define instead of a hard-coded literal for the new array
+size.
 
-One such example is below:
-
-For a custom usecase, I have intentionally failed the platform bus
-registration and I expected all the platform device/driver
-registrations to fail gracefully. But I came across this panic
-issue.
-
-[    1.331067] BUG: kernel NULL pointer dereference, address: 00000000000000c8
-[    1.331118] #PF: supervisor write access in kernel mode
-[    1.331163] #PF: error_code(0x0002) - not-present page
-[    1.331208] PGD 0 P4D 0
-[    1.331233] Oops: 0002 [#1] PREEMPT SMP
-[    1.331268] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-00049-g670d35fb0144 #165
-[    1.331341] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[    1.331406] RIP: 0010:_raw_spin_lock+0x15/0x30
-[    1.331588] RSP: 0000:ffffc9000001be70 EFLAGS: 00010246
-[    1.331632] RAX: 0000000000000000 RBX: 00000000000000c8 RCX: 0000000000000001
-[    1.331696] RDX: 0000000000000001 RSI: 0000000000000092 RDI: 0000000000000000
-[    1.331754] RBP: 00000000ffffffed R08: 0000000000000501 R09: 0000000000000001
-[    1.331817] R10: ffff88817abcc520 R11: 0000000000000670 R12: 00000000ffffffed
-[    1.331881] R13: ffffffff82dbc268 R14: ffffffff832f070a R15: 0000000000000000
-[    1.331945] FS:  0000000000000000(0000) GS:ffff88817bd80000(0000) knlGS:0000000000000000
-[    1.332008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.332062] CR2: 00000000000000c8 CR3: 000000000681e001 CR4: 00000000003606e0
-[    1.332126] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    1.332189] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    1.332252] Call Trace:
-[    1.332281]  __platform_driver_probe+0x92/0xee
-[    1.332323]  ? rtc_dev_init+0x2b/0x2b
-[    1.332358]  cmos_init+0x37/0x67
-[    1.332396]  do_one_initcall+0x7d/0x168
-[    1.332428]  kernel_init_freeable+0x16c/0x1c9
-[    1.332473]  ? rest_init+0xc0/0xc0
-[    1.332508]  kernel_init+0x5/0x100
-[    1.332543]  ret_from_fork+0x1f/0x30
-[    1.332579] CR2: 00000000000000c8
-[    1.332616] ---[ end trace 3bd87f12e9010b87 ]---
-[    1.333549] note: swapper/0[1] exited with preempt_count 1
-[    1.333592] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-[    1.333736] Kernel Offset: disabled
-
-Note, this can only be triggered if a driver errors out from this call,
-which should never happen.  If it does, the driver needs to be fixed.
-
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Link: https://lore.kernel.org/r/20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com
+Addresses-Coverity-ID: 1451981 ("Out-of-bounds access")
+Fixes: f5a3cb90b802d ("staging: wilc1000: add passive scan support")
+Acked-by: Ajay Singh <ajay.kathat@microchip.com>
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+Link: https://lore.kernel.org/r/20200504150911.4470-1-oscar.carter@gmx.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/wilc1000/wilc_hif.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 604a461848c9..0b67d41bab8f 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -802,6 +802,8 @@ int __init_or_module __platform_driver_probe(struct platform_driver *drv,
- 	/* temporary section violation during probe() */
- 	drv->probe = probe;
- 	retval = code = __platform_driver_register(drv, module);
-+	if (retval)
-+		return retval;
+diff --git a/drivers/staging/wilc1000/wilc_hif.c b/drivers/staging/wilc1000/wilc_hif.c
+index 77d0732f451b..221e3d93db14 100644
+--- a/drivers/staging/wilc1000/wilc_hif.c
++++ b/drivers/staging/wilc1000/wilc_hif.c
+@@ -12,6 +12,8 @@
+ #define WILC_FALSE_FRMWR_CHANNEL		100
+ #define WILC_MAX_RATES_SUPPORTED		12
  
- 	/*
- 	 * Fixup that section violation, being paranoid about code scanning
++#define WILC_SCAN_WID_LIST_SIZE		6
++
+ struct wilc_rcvd_mac_info {
+ 	u8 status;
+ };
+@@ -233,7 +235,7 @@ int wilc_scan(struct wilc_vif *vif, u8 scan_source, u8 scan_type,
+ 	      void *user_arg, struct cfg80211_scan_request *request)
+ {
+ 	int result = 0;
+-	struct wid wid_list[5];
++	struct wid wid_list[WILC_SCAN_WID_LIST_SIZE];
+ 	u32 index = 0;
+ 	u32 i, scan_timeout;
+ 	u8 *buffer;
 -- 
 2.25.1
 
