@@ -2,228 +2,170 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1820C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B489FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A309F2071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:09:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592521777;
-	bh=H6IO8yxoUcYmqjy//mv0HgVprmtMPdFrIekLt6GlDl0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=u7TRt3K4gTujKg7aMaJVQR+OQ1OCrkpDGQnzd0W+BqFMF11AaWsk8N0zsxRp81deZ
-	 TVmeRjCHZ9GOAJRorQ0Z0lRU2EW4V9HTzzVf8wUid51ErJs2lglOoNiPK9uwlwHIx+
-	 7ftENQmrO7QETXqkqXorIRBtKDMQvtsRqF2R1aIY=
+	by mail.kernel.org (Postfix) with ESMTP id 8C5F22078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:19:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QZsK6YRi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgFRXJg (ORCPT
+        id S1728573AbgFRXTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 19:09:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727776AbgFRXJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 19:09:35 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 18 Jun 2020 19:19:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58796 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726835AbgFRXTW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 19:19:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592522361;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qWRu5ynq63s6rvxwcBKG7uOd/H0E0TsjTr5wvg/oOPE=;
+        b=QZsK6YRihKX9lDYJ9YuxAAT3dbG/I9EdwuszP5k8L1t2HcnYBzl450SXYlSiAWsxOoCxUt
+        dytzzKYYBQ/ag/dURTe80+NV8xk5nxhNBj8GKvIiSLh6NyBbRcsyuppzNMRl5ViyIbBveT
+        Ek0IWssPTsbybgr7fcZ8O3AggUsrfeI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-460--WN60a8zPlubEq7twmzMJg-1; Thu, 18 Jun 2020 19:19:17 -0400
+X-MC-Unique: -WN60a8zPlubEq7twmzMJg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AFFB206F1;
-        Thu, 18 Jun 2020 23:09:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592521774;
-        bh=H6IO8yxoUcYmqjy//mv0HgVprmtMPdFrIekLt6GlDl0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=oXclqOsqiaFDbwxelChz35mjJPApOJ2t6/OJYOhfj6dU7zgftmHcmoDdH/grPVi8R
-         qiBRLHyfXup4jsmkOF9JETm2t/hdfECKSaZz5fI0ZuvHvBzdfS3g27cednpHK1kjMh
-         1LqZbZcH/yUlpFyewNUgD2uv831LZ7LXAVdeYAW0=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 85C83352264E; Thu, 18 Jun 2020 16:09:34 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 16:09:34 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, urezki@gmail.com,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 1/7] rcu/segcblist: Prevent useless GP start if no CBs to
- accelerate
-Message-ID: <20200618230934.GA31937@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200618202955.4024-1-joel@joelfernandes.org>
- <20200618221119.GX2723@paulmck-ThinkPad-P72>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2641108BD15;
+        Thu, 18 Jun 2020 23:19:15 +0000 (UTC)
+Received: from T590 (ovpn-12-44.pek2.redhat.com [10.72.12.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 697C389283;
+        Thu, 18 Jun 2020 23:19:05 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 07:19:01 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ming Lei <tom.leiming@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-block <linux-block@vger.kernel.org>
+Subject: Re: kprobe: __blkdev_put probe is missed
+Message-ID: <20200618231901.GA196099@T590>
+References: <CACVXFVO5saamQXs0naLamTKJfXZMW+p446weeqJK=9+V34UM0g@mail.gmail.com>
+ <20200618125438.GA191266@T590>
+ <20200618225602.3f2cca3f0ed48427fc0a483b@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200618221119.GX2723@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200618225602.3f2cca3f0ed48427fc0a483b@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 03:11:19PM -0700, Paul E. McKenney wrote:
-> On Thu, Jun 18, 2020 at 04:29:49PM -0400, Joel Fernandes (Google) wrote:
+On Thu, Jun 18, 2020 at 10:56:02PM +0900, Masami Hiramatsu wrote:
+> Hi Ming,
 > 
-> First, this looks like a very nice optimization, thank you!
+> On Thu, 18 Jun 2020 20:54:38 +0800
+> Ming Lei <ming.lei@redhat.com> wrote:
 > 
-> > rcu_segcblist_accelerate() returns true if a GP is to be
-> > started/requested and false if not. During tracing, I found that it is
-> > asking that GPs be requested
+> > On Wed, Jun 17, 2020 at 06:30:39PM +0800, Ming Lei wrote:
+> > > Hello Guys,
+> > > 
+> > > I found probe on __blkdev_put is missed, which can be observed
+> > > via bcc/perf reliably:
+> > > 
+> > > 1) start trace
+> > > - perf probe __blkdev_put
+> > > - perf trace -a  -e probe:__blkdev_put
 > 
-> s/GPs/unnecessary GPs/?  Plus "." at end of the sentence.
+> Could you dump the kprobe_event as below?
 > 
-> > The exact flow seems to be something like:
-> > 1. Callbacks are queued on CPU A - into the NEXT list.
-> > 2. softirq runs on CPU A, accelerate all CBs from NEXT->WAIT and request a GP X.
-> > 3. GP thread wakes up on another CPU, starts the GP X and requests QS from CPU A.
-> > 4. CPU A's softirq runs again presumably because of #3.
+> # cat /sys/kernel/tracing/kprobe_events
 > 
-> Yes, that is one reason RCU softirq might run again.
 > 
-> > 5. CPU A's softirq now does acceleration again, this time no CBs are
-> >    accelerated since last attempt, but it still requests GP X+1 which
-> >    could be useless.
+> > > 
+> > > or
+> > > 
+> > > /usr/share/bcc/tools/stackcount __blkdev_put
+> > > 
+> > > 2) run the following command:
+> > > blockdev --getbsz /dev/sda1
 > 
-> I can't think of a case where this request helps.  How about: "but
-> it still unnecessarily requests GP X+1"?
+> And dump the kprobe profile?
 > 
-> > The fix is, prevent the useless GP start if we detect no CBs are there
-> > to accelerate.
+> # cat /sys/kernel/tracing/kprobe_profile
+> 
+> > > 
+> > > 3) 'perf trace'  or stackcount just  dumps one trace event, and it
+> > > should have been two
+> > > __blkdev_put() traces, since one __blkdev_put() is called for
+> > > partition(/dev/sda1),
+> > > and another is for disk(/dev/sda). If trace_printk() is added in __blkdev_put(),
+> > > two events will be captured from ftrace.
+> > > 
 > > 
-> > With this, we have the following improvement in short runs of
-> > rcutorture (5 seconds each):
-> > +----+-------------------+-------------------+
-> > | #  | Number of GPs     | Number of Wakeups |
-> > +====+=========+=========+=========+=========+
-> > | 1  | With    | Without | With    | Without |
-> > +----+---------+---------+---------+---------+
-> > | 2  |      75 |      89 |     113 |     119 |
-> > +----+---------+---------+---------+---------+
-> > | 3  |      62 |      91 |     105 |     123 |
-> > +----+---------+---------+---------+---------+
-> > | 4  |      60 |      79 |      98 |     110 |
-> > +----+---------+---------+---------+---------+
-> > | 5  |      63 |      79 |      99 |     112 |
-> > +----+---------+---------+---------+---------+
-> > | 6  |      57 |      89 |      96 |     123 |
-> > +----+---------+---------+---------+---------+
-> > | 7  |      64 |      85 |      97 |     118 |
-> > +----+---------+---------+---------+---------+
-> > | 8  |      58 |      83 |      98 |     113 |
-> > +----+---------+---------+---------+---------+
-> > | 9  |      57 |      77 |      89 |     104 |
-> > +----+---------+---------+---------+---------+
-> > | 10 |      66 |      82 |      98 |     119 |
-> > +----+---------+---------+---------+---------+
-> > | 11 |      52 |      82 |      83 |     117 |
-> > +----+---------+---------+---------+---------+
+> > The issue can be shown by loading a kprobe module which registers on
+> > __blkdev_put(), just by replacing _do_fork with __blkdev_put on
+> > samples/kprobes/kprobe_example.c.
 > 
-> So the reductions in wakeups ranges from 5% to 40%, with almost a 20%
-> overall reduction in wakeups across all the runs.  That should be of
-> some use to someone.  ;-)
+> Could you tell me what kernel are you using?
 > 
-> I do run rcutorture quite a bit, but is there a more real-world
-> benchmark that could be tried?
+> I'm using 5.4 on ubuntu and can not reproduce it with kprobe_event.
 > 
-> > Cc: urezki@gmail.com
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> root@devnote2:/sys/kernel/tracing# uname -a
+> Linux devnote2 5.4.0-37-generic #41-Ubuntu SMP Wed Jun 3 18:57:02 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+> root@devnote2:/sys/kernel/tracing# echo p __blkdev_put > kprobe_events 
+> root@devnote2:/sys/kernel/tracing# echo 1 > events/kprobes/p___blkdev_put_0/enable 
+> root@devnote2:/sys/kernel/tracing# cat trace
+> # tracer: nop
+> #
+> # entries-in-buffer/entries-written: 0/0   #P:8
+> #
+> #                              _-----=> irqs-off
+> #                             / _----=> need-resched
+> #                            | / _---=> hardirq/softirq
+> #                            || / _--=> preempt-depth
+> #                            ||| /     delay
+> #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+> #              | |       |   ||||       |         |
+> root@devnote2:/sys/kernel/tracing# blockdev --getbsz /dev/nvme0n1
+> 4096
+> root@devnote2:/sys/kernel/tracing# cat trace
+> # tracer: nop
+> #
+> # entries-in-buffer/entries-written: 1/1   #P:8
+> #
+> #                              _-----=> irqs-off
+> #                             / _----=> need-resched
+> #                            | / _---=> hardirq/softirq
+> #                            || / _--=> preempt-depth
+> #                            ||| /     delay
+> #           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+> #              | |       |   ||||       |         |
+>            <...>-111740 [002] .... 301734.476991: p___blkdev_put_0: (__blkdev_put+0x0/0x1e0)
+> 
+> Hmm, maybe some issue in the latest kernel...?
 
-As discussed over IRC, I updated the patch as shown below.  Does that
-work for you?
+Hello Masami,
 
-							Thanx, Paul
+I am testing the latest upstream kernel, your trace actually reproduces
+this issue.
 
-------------------------------------------------------------------------
+After 'blockdev --getbsz /dev/nvme0n1' returns, __blkdev_put() should
+have been called two times(one for partition, and the other for disk),
+however kprobe trace just shows one time of calling this function.
 
-commit ec037e1f438074eb16fd68a63d699fc419c9ba0c
-Author: Joel Fernandes (Google) <joel@joelfernandes.org>
-Date:   Thu Jun 18 16:29:49 2020 -0400
+If trace_printk() is added at the entry of __blkdev_put() manually,
+you will see that __blkdev_put() is called two times in 'blockdev
+--getbsz /dev/nvme0n1'.
 
-    rcu/segcblist: Prevent useless GP start if no CBs to accelerate
-    
-    The rcu_segcblist_accelerate() function returns true iff it is necessary
-    to request another grace period.  A tracing session showed that this
-    function unnecessarily requests grace periods.
-    
-    For exmaple, consider the following sequence of events:
-    1. Callbacks are queued only on the NEXT segment of CPU A's callback list.
-    2. CPU A runs RCU_SOFTIRQ, accelerating these callbacks from NEXT to WAIT.
-    3. Thus rcu_segcblist_accelerate() returns true, requesting grace period N.
-    4. RCU's grace-period kthread wakes up on CPU B and starts grace period N.
-    4. CPU A notices the new grace period and invokes RCU_SOFTIRQ.
-    5. CPU A's RCU_SOFTIRQ again invokes rcu_segcblist_accelerate(), but
-       there are no new callbacks.  However, rcu_segcblist_accelerate()
-       nevertheless (uselessly) requests a new grace period N+1.
-    
-    This extra grace period results in additional lock contention and also
-    additional wakeups, all for no good reason.
-    
-    This commit therefore adds a check to rcu_segcblist_accelerate() that
-    prevents the return of true when there are no new callbacks.
-    
-    This change reduces the number of grace periods (GPs) and wakeups in each
-    of eleven five-second rcutorture runs as follows:
-    
-    +----+-------------------+-------------------+
-    | #  | Number of GPs     | Number of Wakeups |
-    +====+=========+=========+=========+=========+
-    | 1  | With    | Without | With    | Without |
-    +----+---------+---------+---------+---------+
-    | 2  |      75 |      89 |     113 |     119 |
-    +----+---------+---------+---------+---------+
-    | 3  |      62 |      91 |     105 |     123 |
-    +----+---------+---------+---------+---------+
-    | 4  |      60 |      79 |      98 |     110 |
-    +----+---------+---------+---------+---------+
-    | 5  |      63 |      79 |      99 |     112 |
-    +----+---------+---------+---------+---------+
-    | 6  |      57 |      89 |      96 |     123 |
-    +----+---------+---------+---------+---------+
-    | 7  |      64 |      85 |      97 |     118 |
-    +----+---------+---------+---------+---------+
-    | 8  |      58 |      83 |      98 |     113 |
-    +----+---------+---------+---------+---------+
-    | 9  |      57 |      77 |      89 |     104 |
-    +----+---------+---------+---------+---------+
-    | 10 |      66 |      82 |      98 |     119 |
-    +----+---------+---------+---------+---------+
-    | 11 |      52 |      82 |      83 |     117 |
-    +----+---------+---------+---------+---------+
-    
-    The reduction in the number of wakeups ranges from 5% to 40%.
-    
-    Cc: urezki@gmail.com
-    [ paulmck: Rework commit log and comment. ]
-    Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
-diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-index 9a0f661..2d2a6b6b9 100644
---- a/kernel/rcu/rcu_segcblist.c
-+++ b/kernel/rcu/rcu_segcblist.c
-@@ -475,8 +475,16 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
- 	 * Also advance to the oldest segment of callbacks whose
- 	 * ->gp_seq[] completion is at or after that passed in via "seq",
- 	 * skipping any empty segments.
-+	 *
-+	 * Note that segment "i" (and any lower-numbered segments
-+	 * containing older callbacks) will be unaffected, and their
-+	 * grace-period numbers remain unchanged.  For example, if i ==
-+	 * WAIT_TAIL, then neither WAIT_TAIL nor DONE_TAIL will be touched.
-+	 * Instead, the CBs in NEXT_TAIL will be merged with those in
-+	 * NEXT_READY_TAIL and the grace-period number of NEXT_READY_TAIL
-+	 * would be updated.  NEXT_TAIL would then be empty.
- 	 */
--	if (++i >= RCU_NEXT_TAIL)
-+	if (rcu_segcblist_restempty(rsclp, i) || ++i >= RCU_NEXT_TAIL)
- 		return false;
- 
- 	/*
+Thanks,
+Ming
+
