@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D93C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2405EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B15A320CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDA3A20776
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443367;
-	bh=AW3OXIUt1qQbvwoJuDyDdmSrp6U4uI0paxuvM5jybhY=;
+	s=default; t=1592443381;
+	bh=a5pDMc14w/TcwDYckXhJRYFVJx/0LAUFdG2XZNCys74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KWPbvceo98QWDS403uk6ElPrxwPwM5lQ+nNumfPPXZgetwva+ca0yTEzEKTk+2VM5
-	 2nq2CdxcCVJ3Ewq9CxScqri6IWmK74C/lo4hqhf/8Wgyfl8YVOjp3sJ2Eu05oqV73M
-	 6fHbil/9UEGKiprJSeRVzcaD3m9/Bkwt2JwMXYSk=
+	b=zdwD7PwVDvVO4H7VCP55kSgCsd8P6yDQcDkaVp8JCjXDGmuFqb9YylwbjL829zH0j
+	 x10jxYqigJm7YvO+Sn/hq/gvaQki3/qvZtbU5jebGInaZ7+IxmvbQkmAPnNEocCv1z
+	 GbAkxYwG8a9OfiOyoeP8AYYvewzYEWrkROcaRaFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730826AbgFRBWq (ORCPT
+        id S1730897AbgFRBW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:22:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51180 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:22:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730124AbgFRBT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:19:26 -0400
+        id S1730193AbgFRBTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BBE821D79;
-        Thu, 18 Jun 2020 01:19:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9A2F21D90;
+        Thu, 18 Jun 2020 01:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443165;
-        bh=AW3OXIUt1qQbvwoJuDyDdmSrp6U4uI0paxuvM5jybhY=;
+        s=default; t=1592443183;
+        bh=a5pDMc14w/TcwDYckXhJRYFVJx/0LAUFdG2XZNCys74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aWLJOzxNrJOkNTCGdOzYgiRymgtMiwoptONz1Wiha8jsFqtEC0z00tNhCMIfYPi/b
-         a1T25rFymSt21n7afP0JaDvQUzwcZZp0EN/4Lx4e220COWxuEE0HQ9XODKH+BtlNml
-         /2ISsHgOzCvrp6y1VK7fbC8m8dWAbWe9LPCOtelY=
+        b=udCU7FRBUE86UNDU8itVOn8UjcIUeckypLTlZDlgazT3qbN6y4TSo6Kaz00T736wx
+         pqzz0KjUTkduT1C9z2RhknLsaG/KhitpBzD+ZntEeOYIjPklwIJ/asj3Bj9N9uOow1
+         oA27nN30SNOau6nOODyXDnvSC2Zm20D5RQzt/cyI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Loic Poulain <loic.poulain@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 131/266] arm64: dts: msm8996: Fix CSI IRQ types
-Date:   Wed, 17 Jun 2020 21:14:16 -0400
-Message-Id: <20200618011631.604574-131-sashal@kernel.org>
+Cc:     Erwin Burema <e.burema@gmail.com>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 145/266] ALSA: usb-audio: Add duplex sound support for USB devices using implicit feedback
+Date:   Wed, 17 Jun 2020 21:14:30 -0400
+Message-Id: <20200618011631.604574-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,53 +58,294 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Erwin Burema <e.burema@gmail.com>
 
-[ Upstream commit 4a4a26317ec8aba575f6b85789a42639937bc1a4 ]
+[ Upstream commit 10ce77e4817fef99e1166be7e6685a80c63bf77f ]
 
-Each IRQ_TYPE_NONE interrupt causes a warning at boot.
-Fix that by defining an appropriate type.
+For USB sound devices using implicit feedback the endpoint used for
+this feedback should be able to be opened twice, once for required
+feedback and second time for audio data. This way these devices can be
+put in duplex audio mode. Since this only works if the settings of the
+endpoint don't change a check is included for this.
 
-Fixes: e0531312e78f ("arm64: dts: qcom: msm8996: Add CAMSS support")
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Link: https://lore.kernel.org/r/1587470425-13726-1-git-send-email-loic.poulain@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This fixes bug 207023 ("MOTU M2 regression on duplex audio") and
+should also fix bug 103751 ("M-Audio Fast Track Ultra usb audio device
+will not operate full-duplex")
+
+Fixes: c249177944b6 ("ALSA: usb-audio: add implicit fb quirk for MOTU M Series")
+Signed-off-by: Erwin Burema <e.burema@gmail.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207023
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=103751
+Link: https://lore.kernel.org/r/2410739.SCZni40SNb@alpha-wolf
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ sound/usb/card.h     |   1 +
+ sound/usb/endpoint.c | 195 ++++++++++++++++++++++++++++++++++++++++++-
+ sound/usb/pcm.c      |   5 ++
+ 3 files changed, 197 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index fbb8ce78f95b..d303df3887d9 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1681,16 +1681,16 @@ camss: camss@a00000 {
- 				"csi_clk_mux",
- 				"vfe0",
- 				"vfe1";
--			interrupts = <GIC_SPI 78 0>,
--				<GIC_SPI 79 0>,
--				<GIC_SPI 80 0>,
--				<GIC_SPI 296 0>,
--				<GIC_SPI 297 0>,
--				<GIC_SPI 298 0>,
--				<GIC_SPI 299 0>,
--				<GIC_SPI 309 0>,
--				<GIC_SPI 314 0>,
--				<GIC_SPI 315 0>;
-+			interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 79 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 80 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 296 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 297 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 298 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 299 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 309 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 314 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 315 IRQ_TYPE_EDGE_RISING>;
- 			interrupt-names = "csiphy0",
- 				"csiphy1",
- 				"csiphy2",
+diff --git a/sound/usb/card.h b/sound/usb/card.h
+index 820e564656ed..d6219fba9699 100644
+--- a/sound/usb/card.h
++++ b/sound/usb/card.h
+@@ -108,6 +108,7 @@ struct snd_usb_endpoint {
+ 	int iface, altsetting;
+ 	int skip_packets;		/* quirks for devices to ignore the first n packets
+ 					   in a stream */
++	bool is_implicit_feedback;      /* This endpoint is used as implicit feedback */
+ 
+ 	spinlock_t lock;
+ 	struct list_head list;
+diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
+index 50104f658ed4..9bea7d3f99f8 100644
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -522,6 +522,8 @@ struct snd_usb_endpoint *snd_usb_add_endpoint(struct snd_usb_audio *chip,
+ 
+ 	list_add_tail(&ep->list, &chip->ep_list);
+ 
++	ep->is_implicit_feedback = 0;
++
+ __exit_unlock:
+ 	mutex_unlock(&chip->mutex);
+ 
+@@ -621,6 +623,178 @@ static void release_urbs(struct snd_usb_endpoint *ep, int force)
+ 	ep->nurbs = 0;
+ }
+ 
++/*
++ * Check data endpoint for format differences
++ */
++static bool check_ep_params(struct snd_usb_endpoint *ep,
++			      snd_pcm_format_t pcm_format,
++			      unsigned int channels,
++			      unsigned int period_bytes,
++			      unsigned int frames_per_period,
++			      unsigned int periods_per_buffer,
++			      struct audioformat *fmt,
++			      struct snd_usb_endpoint *sync_ep)
++{
++	unsigned int maxsize, minsize, packs_per_ms, max_packs_per_urb;
++	unsigned int max_packs_per_period, urbs_per_period, urb_packs;
++	unsigned int max_urbs;
++	int frame_bits = snd_pcm_format_physical_width(pcm_format) * channels;
++	int tx_length_quirk = (ep->chip->tx_length_quirk &&
++			       usb_pipeout(ep->pipe));
++	bool ret = 1;
++
++	if (pcm_format == SNDRV_PCM_FORMAT_DSD_U16_LE && fmt->dsd_dop) {
++		/*
++		 * When operating in DSD DOP mode, the size of a sample frame
++		 * in hardware differs from the actual physical format width
++		 * because we need to make room for the DOP markers.
++		 */
++		frame_bits += channels << 3;
++	}
++
++	ret = ret && (ep->datainterval == fmt->datainterval);
++	ret = ret && (ep->stride == frame_bits >> 3);
++
++	switch (pcm_format) {
++	case SNDRV_PCM_FORMAT_U8:
++		ret = ret && (ep->silence_value == 0x80);
++		break;
++	case SNDRV_PCM_FORMAT_DSD_U8:
++	case SNDRV_PCM_FORMAT_DSD_U16_LE:
++	case SNDRV_PCM_FORMAT_DSD_U32_LE:
++	case SNDRV_PCM_FORMAT_DSD_U16_BE:
++	case SNDRV_PCM_FORMAT_DSD_U32_BE:
++		ret = ret && (ep->silence_value == 0x69);
++		break;
++	default:
++		ret = ret && (ep->silence_value == 0);
++	}
++
++	/* assume max. frequency is 50% higher than nominal */
++	ret = ret && (ep->freqmax == ep->freqn + (ep->freqn >> 1));
++	/* Round up freqmax to nearest integer in order to calculate maximum
++	 * packet size, which must represent a whole number of frames.
++	 * This is accomplished by adding 0x0.ffff before converting the
++	 * Q16.16 format into integer.
++	 * In order to accurately calculate the maximum packet size when
++	 * the data interval is more than 1 (i.e. ep->datainterval > 0),
++	 * multiply by the data interval prior to rounding. For instance,
++	 * a freqmax of 41 kHz will result in a max packet size of 6 (5.125)
++	 * frames with a data interval of 1, but 11 (10.25) frames with a
++	 * data interval of 2.
++	 * (ep->freqmax << ep->datainterval overflows at 8.192 MHz for the
++	 * maximum datainterval value of 3, at USB full speed, higher for
++	 * USB high speed, noting that ep->freqmax is in units of
++	 * frames per packet in Q16.16 format.)
++	 */
++	maxsize = (((ep->freqmax << ep->datainterval) + 0xffff) >> 16) *
++			 (frame_bits >> 3);
++	if (tx_length_quirk)
++		maxsize += sizeof(__le32); /* Space for length descriptor */
++	/* but wMaxPacketSize might reduce this */
++	if (ep->maxpacksize && ep->maxpacksize < maxsize) {
++		/* whatever fits into a max. size packet */
++		unsigned int data_maxsize = maxsize = ep->maxpacksize;
++
++		if (tx_length_quirk)
++			/* Need to remove the length descriptor to calc freq */
++			data_maxsize -= sizeof(__le32);
++		ret = ret && (ep->freqmax == (data_maxsize / (frame_bits >> 3))
++				<< (16 - ep->datainterval));
++	}
++
++	if (ep->fill_max)
++		ret = ret && (ep->curpacksize == ep->maxpacksize);
++	else
++		ret = ret && (ep->curpacksize == maxsize);
++
++	if (snd_usb_get_speed(ep->chip->dev) != USB_SPEED_FULL) {
++		packs_per_ms = 8 >> ep->datainterval;
++		max_packs_per_urb = MAX_PACKS_HS;
++	} else {
++		packs_per_ms = 1;
++		max_packs_per_urb = MAX_PACKS;
++	}
++	if (sync_ep && !snd_usb_endpoint_implicit_feedback_sink(ep))
++		max_packs_per_urb = min(max_packs_per_urb,
++					1U << sync_ep->syncinterval);
++	max_packs_per_urb = max(1u, max_packs_per_urb >> ep->datainterval);
++
++	/*
++	 * Capture endpoints need to use small URBs because there's no way
++	 * to tell in advance where the next period will end, and we don't
++	 * want the next URB to complete much after the period ends.
++	 *
++	 * Playback endpoints with implicit sync much use the same parameters
++	 * as their corresponding capture endpoint.
++	 */
++	if (usb_pipein(ep->pipe) ||
++			snd_usb_endpoint_implicit_feedback_sink(ep)) {
++
++		urb_packs = packs_per_ms;
++		/*
++		 * Wireless devices can poll at a max rate of once per 4ms.
++		 * For dataintervals less than 5, increase the packet count to
++		 * allow the host controller to use bursting to fill in the
++		 * gaps.
++		 */
++		if (snd_usb_get_speed(ep->chip->dev) == USB_SPEED_WIRELESS) {
++			int interval = ep->datainterval;
++
++			while (interval < 5) {
++				urb_packs <<= 1;
++				++interval;
++			}
++		}
++		/* make capture URBs <= 1 ms and smaller than a period */
++		urb_packs = min(max_packs_per_urb, urb_packs);
++		while (urb_packs > 1 && urb_packs * maxsize >= period_bytes)
++			urb_packs >>= 1;
++		ret = ret && (ep->nurbs == MAX_URBS);
++
++	/*
++	 * Playback endpoints without implicit sync are adjusted so that
++	 * a period fits as evenly as possible in the smallest number of
++	 * URBs.  The total number of URBs is adjusted to the size of the
++	 * ALSA buffer, subject to the MAX_URBS and MAX_QUEUE limits.
++	 */
++	} else {
++		/* determine how small a packet can be */
++		minsize = (ep->freqn >> (16 - ep->datainterval)) *
++				(frame_bits >> 3);
++		/* with sync from device, assume it can be 12% lower */
++		if (sync_ep)
++			minsize -= minsize >> 3;
++		minsize = max(minsize, 1u);
++
++		/* how many packets will contain an entire ALSA period? */
++		max_packs_per_period = DIV_ROUND_UP(period_bytes, minsize);
++
++		/* how many URBs will contain a period? */
++		urbs_per_period = DIV_ROUND_UP(max_packs_per_period,
++				max_packs_per_urb);
++		/* how many packets are needed in each URB? */
++		urb_packs = DIV_ROUND_UP(max_packs_per_period, urbs_per_period);
++
++		/* limit the number of frames in a single URB */
++		ret = ret && (ep->max_urb_frames ==
++			DIV_ROUND_UP(frames_per_period, urbs_per_period));
++
++		/* try to use enough URBs to contain an entire ALSA buffer */
++		max_urbs = min((unsigned) MAX_URBS,
++				MAX_QUEUE * packs_per_ms / urb_packs);
++		ret = ret && (ep->nurbs == min(max_urbs,
++				urbs_per_period * periods_per_buffer));
++	}
++
++	ret = ret && (ep->datainterval == fmt->datainterval);
++	ret = ret && (ep->maxpacksize == fmt->maxpacksize);
++	ret = ret &&
++		(ep->fill_max == !!(fmt->attributes & UAC_EP_CS_ATTR_FILL_MAX));
++
++	return ret;
++}
++
+ /*
+  * configure a data endpoint
+  */
+@@ -886,10 +1060,23 @@ int snd_usb_endpoint_set_params(struct snd_usb_endpoint *ep,
+ 	int err;
+ 
+ 	if (ep->use_count != 0) {
+-		usb_audio_warn(ep->chip,
+-			 "Unable to change format on ep #%x: already in use\n",
+-			 ep->ep_num);
+-		return -EBUSY;
++		bool check = ep->is_implicit_feedback &&
++			check_ep_params(ep, pcm_format,
++					     channels, period_bytes,
++					     period_frames, buffer_periods,
++					     fmt, sync_ep);
++
++		if (!check) {
++			usb_audio_warn(ep->chip,
++				"Unable to change format on ep #%x: already in use\n",
++				ep->ep_num);
++			return -EBUSY;
++		}
++
++		usb_audio_dbg(ep->chip,
++			      "Ep #%x already in use as implicit feedback but format not changed\n",
++			      ep->ep_num);
++		return 0;
+ 	}
+ 
+ 	/* release old buffers, if any */
+diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
+index e52d129085c0..6c391e5fad2a 100644
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -386,6 +386,8 @@ static int set_sync_ep_implicit_fb_quirk(struct snd_usb_substream *subs,
+ 	if (!subs->sync_endpoint)
+ 		return -EINVAL;
+ 
++	subs->sync_endpoint->is_implicit_feedback = 1;
++
+ 	subs->data_endpoint->sync_master = subs->sync_endpoint;
+ 
+ 	return 1;
+@@ -484,12 +486,15 @@ static int set_sync_endpoint(struct snd_usb_substream *subs,
+ 						   implicit_fb ?
+ 							SND_USB_ENDPOINT_TYPE_DATA :
+ 							SND_USB_ENDPOINT_TYPE_SYNC);
++
+ 	if (!subs->sync_endpoint) {
+ 		if (is_playback && attr == USB_ENDPOINT_SYNC_NONE)
+ 			return 0;
+ 		return -EINVAL;
+ 	}
+ 
++	subs->sync_endpoint->is_implicit_feedback = implicit_fb;
++
+ 	subs->data_endpoint->sync_master = subs->sync_endpoint;
+ 
+ 	return 0;
 -- 
 2.25.1
 
