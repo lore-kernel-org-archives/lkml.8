@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78C2A206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE547207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447417;
-	bh=U/qoEAVeB8iCO5EXhVzLLWw4mzWwgbNVgm8+Xu0dWoc=;
+	s=default; t=1592447429;
+	bh=wSXH/t1nm9cYgnXHIJs3ya+RyoRsiYYIX2/TKeLDJgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fIoLkAeNkPU5BHGqPxpDGbrc3bSzwGBgIZp+Uwx/syyenflUqvaQ6iXg7zH0aWgLK
-	 3186iGnhwSr6BnU6+QdVbTndsp8NoAQy+/OdeT2YThdSAIynOg950v5Rqd38aZRXMw
-	 aQvEdKzJD+/raB+EpUO/4gXNSMtWo8v9nTnHjiFI=
+	b=gHmVqeiEuGMez0NzhEuLCUTDOx5tz0TfxS/n2nNy0hOFV7NK+s3k5KT9N0534BjLe
+	 nCC5zF/zKXe3TsDvn+kcAqiNttD7kkk+zJXlJ8xU+FPaW4tc4YX0gQjXzOOsn4cnFi
+	 Y592rk/YpPDeLHNTh1/aAovSNk9tOULGUWQBBpcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733222AbgFRCaP (ORCPT
+        id S1728303AbgFRCa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:30:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46258 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:30:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729533AbgFRBP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:57 -0400
+        id S1727901AbgFRBPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19E6921D7D;
-        Thu, 18 Jun 2020 01:15:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02D9A221F6;
+        Thu, 18 Jun 2020 01:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442957;
-        bh=U/qoEAVeB8iCO5EXhVzLLWw4mzWwgbNVgm8+Xu0dWoc=;
+        s=default; t=1592442952;
+        bh=wSXH/t1nm9cYgnXHIJs3ya+RyoRsiYYIX2/TKeLDJgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C3GxPQlz0z7EWYH26lFPyVix+CeVrad+TPl+6MEyzLWJASTdAm/BxJUC8+4IWph0k
-         fGEMiifuyH5w/J5mysK8m61MO+H/OhdUMLlOZ6Uf2kNwnkzLjKZrFyKmKfzrCNhLut
-         AW6dGEPHNqIEH+uFWpGBC8FVMwXlo7J5/tOdPMys=
+        b=H2Xa4GOGm8aVol+iRzuH6pyoI0M/NEfcxp/WD66rp/WE4kzaFM5KrKSzPXC5IfLBp
+         gE4iMaG/rOxsCAo8yNxbOIX0X03YMpEmF54KLXeVaRUP4hS8qZkxl/Dfjv26Dn9bz9
+         2g3HZ7R9hjRGSMWaAY8XWJdQ9QFP5FrFMWxz+28w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@gmail.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 364/388] ASoC: SOF: nocodec: conditionally set dpcm_capture/dpcm_playback flags
-Date:   Wed, 17 Jun 2020 21:07:41 -0400
-Message-Id: <20200618010805.600873-364-sashal@kernel.org>
+Cc:     Zhihao Cheng <chengzhihao1@huawei.com>,
+        David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 361/388] afs: Fix memory leak in afs_put_sysnames()
+Date:   Wed, 17 Jun 2020 21:07:38 -0400
+Message-Id: <20200618010805.600873-361-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -63,48 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
 
-[ Upstream commit ba4e5abc6c4e173af7c941c03c067263b686665d ]
+[ Upstream commit 2ca068be09bf8e285036603823696140026dcbe7 ]
 
-With additional checks on dailinks, we see errors such as
+Fix afs_put_sysnames() to actually free the specified afs_sysnames
+object after its reference count has been decreased to zero and
+its contents have been released.
 
-[ 3.000418] sof-nocodec sof-nocodec: CPU DAI DMIC01 Pin for rtd
-NoCodec-6 does not support playback
-
-It's not clear why we set the dpcm_playback and dpcm_capture flags
-unconditionally, add a check on number of channels for each direction
-to avoid invalid configurations.
-
-Fixes: 8017b8fd37bf5e ('ASoC: SOF: Add Nocodec machine driver support')
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@gmail.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Link: https://lore.kernel.org/r/20200608194415.4663-5-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 6f8880d8e681557 ("afs: Implement @sys substitution handling")
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/nocodec.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/afs/proc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/sof/nocodec.c b/sound/soc/sof/nocodec.c
-index 2233146386cc..71cf5f9db79d 100644
---- a/sound/soc/sof/nocodec.c
-+++ b/sound/soc/sof/nocodec.c
-@@ -52,8 +52,10 @@ static int sof_nocodec_bes_setup(struct device *dev,
- 		links[i].platforms->name = dev_name(dev);
- 		links[i].codecs->dai_name = "snd-soc-dummy-dai";
- 		links[i].codecs->name = "snd-soc-dummy";
--		links[i].dpcm_playback = 1;
--		links[i].dpcm_capture = 1;
-+		if (ops->drv[i].playback.channels_min)
-+			links[i].dpcm_playback = 1;
-+		if (ops->drv[i].capture.channels_min)
-+			links[i].dpcm_capture = 1;
+diff --git a/fs/afs/proc.c b/fs/afs/proc.c
+index 468e1713bce1..6f34c84a0fd0 100644
+--- a/fs/afs/proc.c
++++ b/fs/afs/proc.c
+@@ -563,6 +563,7 @@ void afs_put_sysnames(struct afs_sysnames *sysnames)
+ 			if (sysnames->subs[i] != afs_init_sysname &&
+ 			    sysnames->subs[i] != sysnames->blank)
+ 				kfree(sysnames->subs[i]);
++		kfree(sysnames);
  	}
+ }
  
- 	card->dai_link = links;
 -- 
 2.25.1
 
