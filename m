@@ -2,184 +2,433 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7383FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F059C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DACC206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60809206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592520061;
-	bh=mSTGr0z1t50V+4PETgkloUEYdLRH7d9JFYjF022gv9c=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=cpFCasbPib47zopsJvt3tRJ4iAYOjdnrH3q75yqdaP3XuhtpVuf41H4w3m3suiWvG
-	 uzT4pMjHmhzTk7mTxqIgbi4GyVCcu/d6JQ7naAJXZi0AzIX/Sz+AomTv1GjrqXyJMj
-	 y+Qb+X+YQqD8Cfm3csHIeR3dTNipF8tqBA5EXhrE=
+	s=default; t=1592520260;
+	bh=R/nA5JvpMW2mU4bIIz42kX0yrp6ydD/Snp7mrwmaT8c=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=PVw8sO2JCkRuZ7RVWverkQVdksZa2V2geWr7qQ/XpXFVZ+QH9RThVnAxc3LrttjzE
+	 PafJ1ZIdj9oxx2tR3JM//6uPzGavhHPS71XL5wrBBO3faPCPllzKt1CIgJizaGrq8J
+	 Hf3ajOU/5vpKN9rExI98IFCG1UKkYhdIN6hTQDOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbgFRWlA (ORCPT
+        id S1730456AbgFRWoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:41:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726835AbgFRWk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 18:40:59 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BF7C206E2;
-        Thu, 18 Jun 2020 22:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592520058;
-        bh=mSTGr0z1t50V+4PETgkloUEYdLRH7d9JFYjF022gv9c=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=XK29KKgqdhmppO7VOvmr16E5m0h0Kc/cOA9G/gfzf0jRQVvvmoNhP664RVYenDmNC
-         2KuGOE9ZMZyPDSiUdl8sqF9R1BoYSes4VAxk9Ss92yVCI8DuDuWEhcl/injAPw/PyP
-         5fHWk9sK6Rum4ecg+o/x/XkvxbqUJTWOMzY67btQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 801DE352264E; Thu, 18 Jun 2020 15:40:58 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 15:40:58 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: Re: [PATCH 6/7] rcutorture: Add support to get the number of wakeups
- of main GP kthread
-Message-ID: <20200618224058.GD2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200618202955.4024-1-joel@joelfernandes.org>
- <20200618202955.4024-6-joel@joelfernandes.org>
+        Thu, 18 Jun 2020 18:44:18 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:38619 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728244AbgFRWoR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 18:44:17 -0400
+Received: by mail-il1-f195.google.com with SMTP id b5so7598690iln.5;
+        Thu, 18 Jun 2020 15:44:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rfITGv97c7cMb+WeohbiFTmlyExW7qDVisN2PWuDKZk=;
+        b=ULKQxxEpq2nRNL8BrwEvNUEVBcOND6DE4rytLj4gO8kFQMqjqrCjwm8zFpgghvwncj
+         gKnn4SZ9ZBeIzohVjOG+gEvvM013pCR1mXvmsN2s03xvIi0h7FhcwkH0Khej2BMFHZjS
+         2kKwJjhxQ/URAt2TizgKP9e1S/zdMB2mGgXJSNMOhYd+XNZj7WIssbIxVEwxXwP2xW5V
+         ov+r/4g+jgHTWG6njJ+4+rwP45pf7iPZJN7cYjxYKAEppuOC1+R1/BDGZkgv8ktNyl9s
+         F/pnUl7aRJLn9cFxTnypKSB1sAioldZlfx5GCLwDL3blFFMi5mSX79hOVdyIcL1pYzx9
+         Q9yw==
+X-Gm-Message-State: AOAM533qsxSEm0UOAxwjxYW5f01Bv3tGOHCp3RE6k6AFMu04bUNCVFjs
+        kP8rJwKQ7f9ZMEdbj8sBOEL7r0szcA==
+X-Google-Smtp-Source: ABdhPJzXW1Usk/qCclIYZ6LdMhqIbqVz2/F7Pljcz/cri28c7oKoRvdShQh0MP/2pgasCfzcmmEB4Q==
+X-Received: by 2002:a92:5e59:: with SMTP id s86mr819176ilb.104.1592520255062;
+        Thu, 18 Jun 2020 15:44:15 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.253])
+        by smtp.googlemail.com with ESMTPSA id z4sm2333784iot.24.2020.06.18.15.44.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 15:44:14 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+Subject: [PATCH] dt-bindings: backlight: Convert common backlight bindings to DT schema
+Date:   Thu, 18 Jun 2020 16:44:13 -0600
+Message-Id: <20200618224413.1115849-1-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618202955.4024-6-joel@joelfernandes.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 04:29:54PM -0400, Joel Fernandes (Google) wrote:
-> This is useful to check for any improvements or degradation related to
-> number of GP kthread wakeups during testing.
-> 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Convert the common GPIO, LED, and PWM backlight bindings to DT schema
+format.
 
-This was a good way to collect the data for your testing, but
-we can expect rcutorture to only do so much.  ;-)
+Given there's only 2 common properties and the descriptions are slightly
+different, I opted to not create a common backlight schema.
 
-							Thanx, Paul
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../leds/backlight/gpio-backlight.txt         | 16 ---
+ .../leds/backlight/gpio-backlight.yaml        | 41 ++++++++
+ .../bindings/leds/backlight/led-backlight.txt | 28 ------
+ .../leds/backlight/led-backlight.yaml         | 58 +++++++++++
+ .../bindings/leds/backlight/pwm-backlight.txt | 61 ------------
+ .../leds/backlight/pwm-backlight.yaml         | 98 +++++++++++++++++++
+ 6 files changed, 197 insertions(+), 105 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/gpio-backlight.yaml
+ delete mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+ delete mode 100644 Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
 
-> ---
->  kernel/rcu/Kconfig.debug |  1 +
->  kernel/rcu/rcu.h         |  2 ++
->  kernel/rcu/rcutorture.c  | 23 ++++++++++++++++++++++-
->  kernel/rcu/tree.c        |  7 +++++++
->  4 files changed, 32 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
-> index 3cf6132a4bb9f..3323e3378af5a 100644
-> --- a/kernel/rcu/Kconfig.debug
-> +++ b/kernel/rcu/Kconfig.debug
-> @@ -50,6 +50,7 @@ config RCU_TORTURE_TEST
->  	select TASKS_RCU
->  	select TASKS_RUDE_RCU
->  	select TASKS_TRACE_RCU
-> +	select SCHEDSTATS
->  	default n
->  	help
->  	  This option provides a kernel module that runs torture tests
-> diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-> index cf66a3ccd7573..7e867e81d9738 100644
-> --- a/kernel/rcu/rcu.h
-> +++ b/kernel/rcu/rcu.h
-> @@ -511,6 +511,7 @@ srcu_batches_completed(struct srcu_struct *sp) { return 0; }
->  static inline void rcu_force_quiescent_state(void) { }
->  static inline void show_rcu_gp_kthreads(void) { }
->  static inline int rcu_get_gp_kthreads_prio(void) { return 0; }
-> +static inline struct task_struct *rcu_get_main_gp_kthread(void) { return 0; }
->  static inline void rcu_fwd_progress_check(unsigned long j) { }
->  #else /* #ifdef CONFIG_TINY_RCU */
->  bool rcu_dynticks_zero_in_eqs(int cpu, int *vp);
-> @@ -519,6 +520,7 @@ unsigned long rcu_exp_batches_completed(void);
->  unsigned long srcu_batches_completed(struct srcu_struct *sp);
->  void show_rcu_gp_kthreads(void);
->  int rcu_get_gp_kthreads_prio(void);
-> +struct task_struct *rcu_get_main_gp_kthread(void);
->  void rcu_fwd_progress_check(unsigned long j);
->  void rcu_force_quiescent_state(void);
->  extern struct workqueue_struct *rcu_gp_wq;
-> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> index d0d265304d147..959a1f84d6904 100644
-> --- a/kernel/rcu/rcutorture.c
-> +++ b/kernel/rcu/rcutorture.c
-> @@ -23,6 +23,7 @@
->  #include <linux/rcupdate_wait.h>
->  #include <linux/interrupt.h>
->  #include <linux/sched/signal.h>
-> +#include <linux/sched/stat.h>
->  #include <uapi/linux/sched/types.h>
->  #include <linux/atomic.h>
->  #include <linux/bitops.h>
-> @@ -460,9 +461,29 @@ static void rcu_sync_torture_init(void)
->  	INIT_LIST_HEAD(&rcu_torture_removed);
->  }
->  
-> +unsigned long rcu_gp_nr_wakeups;
-> +
-> +static void rcu_flavor_init(void)
-> +{
-> +	rcu_sync_torture_init();
-> +
-> +	/* Make sure schedstat is enabled for GP thread wakeup count. */
-> +	force_schedstat_enabled();
-> +	rcu_gp_nr_wakeups = rcu_get_main_gp_kthread()->se.statistics.nr_wakeups;
-> +}
-> +
-> +static void rcu_flavor_cleanup(void)
-> +{
-> +	unsigned long now_nr = rcu_get_main_gp_kthread()->se.statistics.nr_wakeups;
-> +
-> +	pr_alert("End-test: Cleanup: Total GP-kthread wakeups: %lu\n",
-> +		now_nr - rcu_gp_nr_wakeups);
-> +}
-> +
->  static struct rcu_torture_ops rcu_ops = {
->  	.ttype		= RCU_FLAVOR,
-> -	.init		= rcu_sync_torture_init,
-> +	.init		= rcu_flavor_init,
-> +	.cleanup	= rcu_flavor_cleanup,
->  	.readlock	= rcu_torture_read_lock,
->  	.read_delay	= rcu_read_delay,
->  	.readunlock	= rcu_torture_read_unlock,
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index c3bae7a83d792..a3a175feb310a 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -175,6 +175,13 @@ int rcu_get_gp_kthreads_prio(void)
->  }
->  EXPORT_SYMBOL_GPL(rcu_get_gp_kthreads_prio);
->  
-> +/* Retrieve RCU's main GP kthread task_struct */
-> +struct task_struct *rcu_get_main_gp_kthread(void)
-> +{
-> +	return rcu_state.gp_kthread;
-> +}
-> +EXPORT_SYMBOL_GPL(rcu_get_main_gp_kthread);
-> +
->  /*
->   * Number of grace periods between delays, normalized by the duration of
->   * the delay.  The longer the delay, the more the grace periods between
-> -- 
-> 2.27.0.111.gc72c7da667-goog
-> 
+diff --git a/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt
+deleted file mode 100644
+index 321be6640533..000000000000
+--- a/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt
++++ /dev/null
+@@ -1,16 +0,0 @@
+-gpio-backlight bindings
+-
+-Required properties:
+-  - compatible: "gpio-backlight"
+-  - gpios: describes the gpio that is used for enabling/disabling the backlight.
+-    refer to bindings/gpio/gpio.txt for more details.
+-
+-Optional properties:
+-  - default-on: enable the backlight at boot.
+-
+-Example:
+-	backlight {
+-		compatible = "gpio-backlight";
+-		gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
+-		default-on;
+-	};
+diff --git a/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.yaml
+new file mode 100644
+index 000000000000..75cc569b9c55
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.yaml
+@@ -0,0 +1,41 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/backlight/gpio-backlight.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: gpio-backlight bindings
++
++maintainers:
++  - Lee Jones <lee.jones@linaro.org>
++  - Daniel Thompson <daniel.thompson@linaro.org>
++  - Jingoo Han <jingoohan1@gmail.com>
++
++properties:
++  compatible:
++    const: gpio-backlight
++
++  gpios:
++    description: The gpio that is used for enabling/disabling the backlight.
++    maxItems: 1
++
++  default-on:
++    description: enable the backlight at boot.
++    type: boolean
++
++required:
++  - compatible
++  - gpios
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    backlight {
++        compatible = "gpio-backlight";
++        gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
++        default-on;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+deleted file mode 100644
+index 4c7dfbe7f67a..000000000000
+--- a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-led-backlight bindings
+-
+-This binding is used to describe a basic backlight device made of LEDs.
+-It can also be used to describe a backlight device controlled by the output of
+-a LED driver.
+-
+-Required properties:
+-  - compatible: "led-backlight"
+-  - leds: a list of LEDs
+-
+-Optional properties:
+-  - brightness-levels: Array of distinct brightness levels. The levels must be
+-                       in the range accepted by the underlying LED devices.
+-                       This is used to translate a backlight brightness level
+-                       into a LED brightness level. If it is not provided, the
+-                       identity mapping is used.
+-
+-  - default-brightness-level: The default brightness level.
+-
+-Example:
+-
+-	backlight {
+-		compatible = "led-backlight";
+-
+-		leds = <&led1>, <&led2>;
+-		brightness-levels = <0 4 8 16 32 64 128 255>;
+-		default-brightness-level = <6>;
+-	};
+diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+new file mode 100644
+index 000000000000..ae50945d2798
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/backlight/led-backlight.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: led-backlight bindings
++
++maintainers:
++  - Lee Jones <lee.jones@linaro.org>
++  - Daniel Thompson <daniel.thompson@linaro.org>
++  - Jingoo Han <jingoohan1@gmail.com>
++
++description:
++  This binding is used to describe a basic backlight device made of LEDs. It
++  can also be used to describe a backlight device controlled by the output of
++  a LED driver.
++
++properties:
++  compatible:
++    const: led-backlight
++
++  leds:
++    description: A list of LED nodes
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++
++  brightness-levels:
++    description: Array of distinct brightness levels. The levels must be
++      in the range accepted by the underlying LED devices. This is used
++      to translate a backlight brightness level into a LED brightness level.
++      If it is not provided, the identity mapping is used.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++
++  default-brightness-level:
++    description: The default brightness level (index into the array defined
++      by the "brightness-levels" property).
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++dependencies:
++  default-brightness-level: [brightness-levels]
++
++required:
++  - compatible
++  - leds
++
++additionalProperties: false
++
++examples:
++  - |
++    backlight {
++        compatible = "led-backlight";
++
++        leds = <&led1>, <&led2>;
++        brightness-levels = <0 4 8 16 32 64 128 255>;
++        default-brightness-level = <6>;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+deleted file mode 100644
+index 64fa2fbd98c9..000000000000
+--- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
++++ /dev/null
+@@ -1,61 +0,0 @@
+-pwm-backlight bindings
+-
+-Required properties:
+-  - compatible: "pwm-backlight"
+-  - pwms: OF device-tree PWM specification (see PWM binding[0])
+-  - power-supply: regulator for supply voltage
+-
+-Optional properties:
+-  - pwm-names: a list of names for the PWM devices specified in the
+-               "pwms" property (see PWM binding[0])
+-  - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+-                  and disables the backlight (see GPIO binding[1])
+-  - post-pwm-on-delay-ms: Delay in ms between setting an initial (non-zero) PWM
+-                          and enabling the backlight using GPIO.
+-  - pwm-off-delay-ms: Delay in ms between disabling the backlight using GPIO
+-                      and setting PWM value to 0.
+-  - brightness-levels: Array of distinct brightness levels. Typically these
+-                       are in the range from 0 to 255, but any range starting at
+-                       0 will do. The actual brightness level (PWM duty cycle)
+-                       will be interpolated from these values. 0 means a 0% duty
+-                       cycle (darkest/off), while the last value in the array
+-                       represents a 100% duty cycle (brightest).
+-  - default-brightness-level: The default brightness level (index into the
+-                              array defined by the "brightness-levels" property).
+-  - num-interpolated-steps: Number of interpolated steps between each value
+-                            of brightness-levels table. This way a high
+-                            resolution pwm duty cycle can be used without
+-                            having to list out every possible value in the
+-                            brightness-level array.
+-
+-[0]: Documentation/devicetree/bindings/pwm/pwm.txt
+-[1]: Documentation/devicetree/bindings/gpio/gpio.txt
+-
+-Example:
+-
+-	backlight {
+-		compatible = "pwm-backlight";
+-		pwms = <&pwm 0 5000000>;
+-
+-		brightness-levels = <0 4 8 16 32 64 128 255>;
+-		default-brightness-level = <6>;
+-
+-		power-supply = <&vdd_bl_reg>;
+-		enable-gpios = <&gpio 58 0>;
+-		post-pwm-on-delay-ms = <10>;
+-		pwm-off-delay-ms = <10>;
+-	};
+-
+-Example using num-interpolation-steps:
+-
+-	backlight {
+-		compatible = "pwm-backlight";
+-		pwms = <&pwm 0 5000000>;
+-
+-		brightness-levels = <0 2048 4096 8192 16384 65535>;
+-		num-interpolated-steps = <2048>;
+-		default-brightness-level = <4096>;
+-
+-		power-supply = <&vdd_bl_reg>;
+-		enable-gpios = <&gpio 58 0>;
+-	};
+diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+new file mode 100644
+index 000000000000..7e1f109a38a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+@@ -0,0 +1,98 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/backlight/pwm-backlight.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: pwm-backlight bindings
++
++maintainers:
++  - Lee Jones <lee.jones@linaro.org>
++  - Daniel Thompson <daniel.thompson@linaro.org>
++  - Jingoo Han <jingoohan1@gmail.com>
++
++properties:
++  compatible:
++    const: pwm-backlight
++
++  pwms:
++    maxItems: 1
++
++  pwm-names: true
++
++  power-supply:
++    description: regulator for supply voltage
++
++  enable-gpios:
++    description: Contains a single GPIO specifier for the GPIO which enables
++      and disables the backlight
++    maxItems: 1
++
++  post-pwm-on-delay-ms:
++    description: Delay in ms between setting an initial (non-zero) PWM and
++      enabling the backlight using GPIO.
++
++  pwm-off-delay-ms:
++    description: Delay in ms between disabling the backlight using GPIO
++      and setting PWM value to 0.
++
++  brightness-levels:
++    description: Array of distinct brightness levels. Typically these are
++      in the range from 0 to 255, but any range starting at 0 will do. The
++      actual brightness level (PWM duty cycle) will be interpolated from
++      these values. 0 means a 0% duty cycle (darkest/off), while the last
++      value in the array represents a 100% duty cycle (brightest).
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++
++  default-brightness-level:
++    description: The default brightness level (index into the array defined
++      by the "brightness-levels" property).
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++  num-interpolated-steps:
++    description: Number of interpolated steps between each value of brightness-levels
++      table. This way a high resolution pwm duty cycle can be used without
++      having to list out every possible value in the brightness-level array.
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++dependencies:
++  default-brightness-level: [brightness-levels]
++  num-interpolated-steps: [brightness-levels]
++
++required:
++  - compatible
++  - pwms
++  - power-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    backlight {
++        compatible = "pwm-backlight";
++        pwms = <&pwm 0 5000000>;
++
++        brightness-levels = <0 4 8 16 32 64 128 255>;
++        default-brightness-level = <6>;
++
++        power-supply = <&vdd_bl_reg>;
++        enable-gpios = <&gpio 58 0>;
++        post-pwm-on-delay-ms = <10>;
++        pwm-off-delay-ms = <10>;
++    };
++
++  - |
++    // Example using num-interpolation-steps:
++    backlight {
++        compatible = "pwm-backlight";
++        pwms = <&pwm 0 5000000>;
++
++        brightness-levels = <0 2048 4096 8192 16384 65535>;
++        num-interpolated-steps = <2048>;
++        default-brightness-level = <4096>;
++
++        power-supply = <&vdd_bl_reg>;
++        enable-gpios = <&gpio 58 0>;
++    };
++
++...
+-- 
+2.25.1
+
