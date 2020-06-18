@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5705F2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC91214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbgFRIjI (ORCPT
+        id S1728919AbgFRIjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:39:08 -0400
-Received: from mx.socionext.com ([202.248.49.38]:19368 "EHLO mx.socionext.com"
+        Thu, 18 Jun 2020 04:39:23 -0400
+Received: from mx.socionext.com ([202.248.49.38]:19356 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728825AbgFRIi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:38:28 -0400
+        id S1728823AbgFRIi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:38:27 -0400
 Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 18 Jun 2020 17:38:27 +0900
+  by mx.socionext.com with ESMTP; 18 Jun 2020 17:38:26 +0900
 Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 75A22180B51;
-        Thu, 18 Jun 2020 17:38:27 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 18 Jun 2020 17:38:27 +0900
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 6B432180B51;
+        Thu, 18 Jun 2020 17:38:26 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 18 Jun 2020 17:38:26 +0900
 Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 1A10B1A12AD;
-        Thu, 18 Jun 2020 17:38:27 +0900 (JST)
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 9911D1A12AD;
+        Thu, 18 Jun 2020 17:38:25 +0900 (JST)
 From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -42,9 +42,9 @@ Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         Masami Hiramatsu <masami.hiramatsu@linaro.org>,
         Jassi Brar <jaswinder.singh@linaro.org>,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v5 5/6] PCI: uniphier: Add error message when failed to get phy
-Date:   Thu, 18 Jun 2020 17:38:12 +0900
-Message-Id: <1592469493-1549-6-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [PATCH v5 3/6] dt-bindings: PCI: uniphier: Add iATU register description
+Date:   Thu, 18 Jun 2020 17:38:10 +0900
+Message-Id: <1592469493-1549-4-git-send-email-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
 References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
@@ -53,34 +53,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even if phy driver doesn't probe, the error message can't be distinguished
-from other errors. This displays error message caused by the phy driver
-explicitly.
+In the dt-bindings, "atu" reg-names is required to get the register space
+for iATU in Synopsys DWC version 4.80 or later.
 
 Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/pci/uniphier-pcie.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-index c37a968..8356dd3 100644
---- a/drivers/pci/controller/dwc/pcie-uniphier.c
-+++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-@@ -470,8 +470,12 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
- 		return PTR_ERR(priv->rst);
- 
- 	priv->phy = devm_phy_optional_get(dev, "pcie-phy");
--	if (IS_ERR(priv->phy))
--		return PTR_ERR(priv->phy);
-+	if (IS_ERR(priv->phy)) {
-+		ret = PTR_ERR(priv->phy);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get phy (%d)\n", ret);
-+		return ret;
-+	}
- 
- 	platform_set_drvdata(pdev, priv);
- 
+diff --git a/Documentation/devicetree/bindings/pci/uniphier-pcie.txt b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+index 1fa2c59..c4b7381 100644
+--- a/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+@@ -16,6 +16,7 @@ Required properties:
+     "dbi"    - controller configuration registers
+     "link"   - SoC-specific glue layer registers
+     "config" - PCIe configuration space
++    "atu"    - iATU registers for DWC version 4.80 or later
+ - clocks: A phandle to the clock gate for PCIe glue layer including
+ 	the host controller.
+ - resets: A phandle to the reset line for PCIe glue layer including
 -- 
 2.7.4
 
