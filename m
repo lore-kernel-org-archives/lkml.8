@@ -2,161 +2,150 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98307C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 810A921556
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 187E921527
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:08:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ltif/x24"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgFRACF (ORCPT
+        id S1726920AbgFRAI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 20:02:05 -0400
-Received: from [211.29.132.249] ([211.29.132.249]:53902 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-FAIL-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1726848AbgFRACF (ORCPT
+        Wed, 17 Jun 2020 20:08:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbgFRAI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 20:02:05 -0400
-Received: from dread.disaster.area (unknown [49.180.124.177])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 0C11B3A771A;
-        Thu, 18 Jun 2020 10:01:20 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jlhzS-0001Jw-NY; Thu, 18 Jun 2020 10:01:10 +1000
-Date:   Thu, 18 Jun 2020 10:01:10 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 1/2] sched: Add PF_MEMALLOC_NOLOCKDEP flag
-Message-ID: <20200618000110.GF2005@dread.disaster.area>
-References: <20200617175310.20912-1-longman@redhat.com>
- <20200617175310.20912-2-longman@redhat.com>
+        Wed, 17 Jun 2020 20:08:57 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E6D9C06174E;
+        Wed, 17 Jun 2020 17:08:57 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49nMjc6DYcz9sRR;
+        Thu, 18 Jun 2020 10:08:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592438934;
+        bh=1uuGnZJh9DL8LYySnaRbYolRbTQoDPuj4QyDuhe+DxA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ltif/x24QiqFQhtCnA0NodWnY8k8zhSvU39bGkr0utN4TIKPpFMrVdP4MonA7attJ
+         abefy7eloSqahdMhbrciVRpsZvHpYIocesQuAk49VPheiZr2facjz0jLy09C01o11o
+         pt0GUW6CJelGIOhB/fX1G4Cq8maO/d4KhiojzT5YKISLad4mKSuCXxVmne1yTtrCQH
+         K4D9wQ43sG/2gjYgVKdLM1LyFNkBpgFbAnM9KmrSNH0RVv0EIba61W5WcsvLsVpU6v
+         1EwtNz4SR7rfwHACgoTsjism5RK9b4HLRiN7kUapVlQclwNe1rsLc9229c8nN9S86v
+         crrP7k5r9WZzQ==
+Date:   Thu, 18 Jun 2020 10:08:51 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org
+Subject: Re: linux-next: build failures after merge of the vfs tree
+Message-ID: <20200618100851.0f77ed52@canb.auug.org.au>
+In-Reply-To: <20200617073845.GA20077@gondor.apana.org.au>
+References: <20200616103330.2df51a58@canb.auug.org.au>
+        <20200616103440.35a80b4b@canb.auug.org.au>
+        <20200616010502.GA28834@gondor.apana.org.au>
+        <20200616033849.GL23230@ZenIV.linux.org.uk>
+        <20200616143807.GA1359@gondor.apana.org.au>
+        <20200617165715.577aa76d@canb.auug.org.au>
+        <20200617070316.GA30348@gondor.apana.org.au>
+        <20200617173102.2b91c32d@canb.auug.org.au>
+        <20200617073845.GA20077@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617175310.20912-2-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
-        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=7-415B0cAAAA:8 a=20KFwNOVAAAA:8
-        a=g7D7g9E5PYaH7GLVyzwA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: multipart/signed; boundary="Sig_/4elSaFtvS3bf8v7iB29dHx2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 01:53:09PM -0400, Waiman Long wrote:
-> There are cases where calling kmalloc() can lead to false positive
-> lockdep splat. One notable example that can happen in the freezing of
-> the xfs filesystem is as follows:
-> 
->  Possible unsafe locking scenario:
-> 
->        CPU0                    CPU1
->        ----                    ----
->   lock(sb_internal);
->                                lock(fs_reclaim);
->                                lock(sb_internal);
->   lock(fs_reclaim);
-> 
->  *** DEADLOCK ***
-> 
-> This is a false positive as all the dirty pages are flushed out before
-> the filesystem can be frozen. However, there is no easy way to modify
-> lockdep to handle this situation properly.
-> 
-> One possible workaround is to disable lockdep by setting __GFP_NOLOCKDEP
-> in the appropriate kmalloc() calls.  However, it will be cumbersome to
-> locate all the right kmalloc() calls to insert __GFP_NOLOCKDEP and it
-> is easy to miss some especially when the code is updated in the future.
-> 
-> Another alternative is to have a per-process global state that indicates
-> the equivalent of __GFP_NOLOCKDEP without the need to set the gfp_t flag
-> individually. To allow the latter case, a new PF_MEMALLOC_NOLOCKDEP
-> per-process flag is now added. After adding this new bit, there are
-> still 2 free bits left.
-> 
-> Suggested-by: Dave Chinner <david@fromorbit.com>
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  include/linux/sched.h    |  7 +++++++
->  include/linux/sched/mm.h | 15 ++++++++++-----
->  2 files changed, 17 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index b62e6aaf28f0..44247cbc9073 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1508,6 +1508,7 @@ extern struct pid *cad_pid;
->  #define PF_MEMALLOC_NOIO	0x00080000	/* All allocation requests will inherit GFP_NOIO */
->  #define PF_LOCAL_THROTTLE	0x00100000	/* Throttle writes only against the bdi I write to,
->  						 * I am cleaning dirty pages from some other bdi. */
-> +#define __PF_MEMALLOC_NOLOCKDEP	0x00100000	/* All allocation requests will inherit __GFP_NOLOCKDEP */
+--Sig_/4elSaFtvS3bf8v7iB29dHx2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Why is this considered a safe thing to do? Any context that sets
-__PF_MEMALLOC_NOLOCKDEP will now behave differently in memory
-reclaim as it will think that PF_LOCAL_THROTTLE is set when lockdep
-is enabled.
+Hi all,
 
->  #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
->  #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
->  #define PF_SWAPWRITE		0x00800000	/* Allowed to write to swap */
-> @@ -1519,6 +1520,12 @@ extern struct pid *cad_pid;
->  #define PF_FREEZER_SKIP		0x40000000	/* Freezer should not count it as freezable */
->  #define PF_SUSPEND_TASK		0x80000000      /* This thread called freeze_processes() and should not be frozen */
->  
-> +#ifdef CONFIG_LOCKDEP
-> +#define PF_MEMALLOC_NOLOCKDEP	__PF_MEMALLOC_NOLOCKDEP
-> +#else
-> +#define PF_MEMALLOC_NOLOCKDEP	0
-> +#endif
-> +
->  /*
->   * Only the _current_ task can read/write to tsk->flags, but other
->   * tasks can access tsk->flags in readonly mode for example
-> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-> index 480a4d1b7dd8..4a076a148568 100644
-> --- a/include/linux/sched/mm.h
-> +++ b/include/linux/sched/mm.h
-> @@ -177,22 +177,27 @@ static inline bool in_vfork(struct task_struct *tsk)
->   * Applies per-task gfp context to the given allocation flags.
->   * PF_MEMALLOC_NOIO implies GFP_NOIO
->   * PF_MEMALLOC_NOFS implies GFP_NOFS
-> + * PF_MEMALLOC_NOLOCKDEP implies __GFP_NOLOCKDEP
->   * PF_MEMALLOC_NOCMA implies no allocation from CMA region.
->   */
->  static inline gfp_t current_gfp_context(gfp_t flags)
->  {
-> -	if (unlikely(current->flags &
-> -		     (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS | PF_MEMALLOC_NOCMA))) {
-> +	unsigned int pflags = current->flags;
-> +
-> +	if (unlikely(pflags & (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS |
-> +			       PF_MEMALLOC_NOCMA | PF_MEMALLOC_NOLOCKDEP))) {
+On Wed, 17 Jun 2020 17:38:45 +1000 Herbert Xu <herbert@gondor.apana.org.au>=
+ wrote:
+>
+> On Wed, Jun 17, 2020 at 05:31:02PM +1000, Stephen Rothwell wrote:
+> > > >=20
+> > > > Presumably another include needed:
+> > > >=20
+> > > > arch/s390/lib/test_unwind.c:49:2: error: implicit declaration of fu=
+nction 'kmalloc' [-Werror=3Dimplicit-function-declaration]
+> > > > arch/s390/lib/test_unwind.c:99:2: error: implicit declaration of fu=
+nction 'kfree' [-Werror=3Dimplicit-function-declaration]   =20
+> >=20
+> > And more (these are coming from other's builds):
+> >=20
+> >   drivers/remoteproc/qcom_q6v5_mss.c:772:3: error: implicit declaration=
+ of function 'kfree' [-Werror,-Wimplicit-function-declaration]
+> >   drivers/remoteproc/qcom_q6v5_mss.c:808:2: error: implicit declaration=
+ of function 'kfree' [-Werror,-Wimplicit-function-declaration]
+> >   drivers/remoteproc/qcom_q6v5_mss.c:1195:2: error: implicit declaratio=
+n of function 'kfree' [-Werror,-Wimplicit-function-declaration]
+> >=20
+> > They may have other causes as they are full linux-next builds (not just
+> > after the merge of the vfs tree), but the timing is suspicious. =20
+>=20
+> OK, here's a patch for both of these together:
+>=20
+> diff --git a/arch/s390/lib/test_unwind.c b/arch/s390/lib/test_unwind.c
+> index 32b7a30b2485..eb382ceaa116 100644
+> --- a/arch/s390/lib/test_unwind.c
+> +++ b/arch/s390/lib/test_unwind.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/kallsyms.h>
+>  #include <linux/kthread.h>
+>  #include <linux/module.h>
+> +#include <linux/slab.h>
+>  #include <linux/string.h>
+>  #include <linux/kprobes.h>
+>  #include <linux/wait.h>
+> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom=
+_q6v5_mss.c
+> index feb70283b6a2..903b2bb97e12 100644
+> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/reset.h>
+>  #include <linux/soc/qcom/mdt_loader.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/slab.h>
+> =20
+>  #include "remoteproc_internal.h"
+>  #include "qcom_common.h"
 
-That needs a PF_MEMALLOC_MASK.
+I have applied those 2 by hand for today.
 
-And, really, if we are playing "re-use existing bits" games because
-we've run out of process flags, all these memalloc flags should be
-moved to a new field in the task, say current->memalloc_flags. You
-could also move PF_SWAPWRITE, PF_LOCAL_THROTTLE, and PF_KSWAPD into
-that field as well as they are all memory allocation context process
-flags...
-
+--=20
 Cheers,
+Stephen Rothwell
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--Sig_/4elSaFtvS3bf8v7iB29dHx2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7qsJMACgkQAVBC80lX
+0GzZogf/YlCcqyBNZhz6hGdAjes2O3a3PDAoIK01bHwa/VGSSz9i3tJoe/Axuvvp
+4Zq/E+/CMHAgnv1a9cD2aqUC2zfDZtAFrwjMlbsHFxNKm1K4eEWhfjXwL+lgFZuA
+7jZTN9ObipaBR/0YJdo47a1VraD3uOuw+L9/zcUedDeKZvOmspTxlf2cra1dNXvt
+jWrWzerZJnuCZsNP93AlMq1gEUf3sqRH4039JI/KW1Sh2BzZVBsisCfH4PtQvK+t
+PKE/qpg62DPWvnQ1nmswpDosICXXgzxe9/Y2POnQwI7Yhq6/UlvjFYFgxq8qSO6f
+Q+GjeEwe5eL+3QJkAEe8dXVmiGyvqQ==
+=TIUL
+-----END PGP SIGNATURE-----
+
+--Sig_/4elSaFtvS3bf8v7iB29dHx2--
