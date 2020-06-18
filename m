@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2178EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE489C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA63B221FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D23221ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444394;
-	bh=fFv7fo6a1L6c+RK8pKBEMyJdQYdRkqXdh2FoasDeI24=;
+	s=default; t=1592444396;
+	bh=aKjmy7E+bzZw3tUV8J+P3Mn4Gqs8+hbgdrY6IkG13cQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lgrvPEnilrrlrpHFn9xRi4RgLR34s6EqZTjW2mYsPhgxOjtJHD0HaSamhyR+b6qJB
-	 mE+apmPsS5cu1ExpALQlMwz9aREqv2En6c+Z1pAnfqJ4Wl7xDRAoNefHOpfOhvt5b9
-	 hnZBfKo3Jzpo8XiAxHzXGmALOJl3kuDzH08R/PJ4=
+	b=nWsbIR9H/6G1p+/q48zNoPiwCC2+lKozlgJ2FBgTxgdQury0f4kXTEpcVKYQQIrD6
+	 f8yYj9tMLjpNirD6k12ahY7DLcx/pWJgMcYysXP3SXCwMZkdI0vsBxt0h2coS2pmoL
+	 n21q6rNNjv21BimJSqIzaV4dXnXdMEFH1fmg8Wv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732784AbgFRBjv (ORCPT
+        id S1732690AbgFRBjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:39:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40114 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:39:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732479AbgFRBaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:30:13 -0400
+        id S1729463AbgFRBaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:30:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6668D22249;
-        Thu, 18 Jun 2020 01:30:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46DEF2224E;
+        Thu, 18 Jun 2020 01:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443813;
-        bh=fFv7fo6a1L6c+RK8pKBEMyJdQYdRkqXdh2FoasDeI24=;
+        s=default; t=1592443812;
+        bh=aKjmy7E+bzZw3tUV8J+P3Mn4Gqs8+hbgdrY6IkG13cQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aGrPDeoChFCa9pnkQ9NrKYH9SExqU+acExY07dhz9zCwUJ29DV4qT/zlmHGNzVDcz
-         F0nwq6szwzme6E6I6ltuTj6j9/YRjHjiNHM6wgHvlXqz11A+eOL71RYACgJGz+A01G
-         +pGVfxAVwUl5zPQ9Otj5l2vxv1urmOiEkhMfxpAI=
+        b=MvhNp5d0M0RFvryppUoH6mWCjk6xn9JyIUX0OY0zGcsq2iSjzqVjhG03pZag9qx1P
+         iaKa9m+zG9Gu2c4c/N2itR2IOCb7blrxGZvLxDlGZWkreLNXcHQ+BXHtnN7RQjkTfz
+         a/uQpaTGy84SoVlU9bKiNBxQE/6b/zFhjv+wpfm0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Hillf Danton <hdanton@sina.com>,
-        syzbot+bfdd4a2f07be52351350@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 06/60] Smack: slab-out-of-bounds in vsscanf
-Date:   Wed, 17 Jun 2020 21:29:10 -0400
-Message-Id: <20200618013004.610532-6-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.4 05/60] ALSA: isa/wavefront: prevent out of bounds write in ioctl
+Date:   Wed, 17 Jun 2020 21:29:09 -0400
+Message-Id: <20200618013004.610532-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
 References: <20200618013004.610532-1-sashal@kernel.org>
@@ -61,47 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Casey Schaufler <casey@schaufler-ca.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 84e99e58e8d1e26f04c097f4266e431a33987f36 ]
+[ Upstream commit 7f0d5053c5a9d23fe5c2d337495a9d79038d267b ]
 
-Add barrier to soob. Return -EOVERFLOW if the buffer
-is exceeded.
+The "header->number" comes from the ioctl and it needs to be clamped to
+prevent out of bounds writes.
 
-Suggested-by: Hillf Danton <hdanton@sina.com>
-Reported-by: syzbot+bfdd4a2f07be52351350@syzkaller.appspotmail.com
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200501094011.GA960082@mwanda
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smackfs.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ sound/isa/wavefront/wavefront_synth.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
-index 94bd9e41c9ec..d186d24ac649 100644
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -912,11 +912,21 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
- 	else
- 		rule += strlen(skp->smk_known) + 1;
- 
-+	if (rule > data + count) {
-+		rc = -EOVERFLOW;
-+		goto out;
-+	}
+diff --git a/sound/isa/wavefront/wavefront_synth.c b/sound/isa/wavefront/wavefront_synth.c
+index 718d5e3b7806..6c06d0645779 100644
+--- a/sound/isa/wavefront/wavefront_synth.c
++++ b/sound/isa/wavefront/wavefront_synth.c
+@@ -1174,7 +1174,10 @@ wavefront_send_alias (snd_wavefront_t *dev, wavefront_patch_info *header)
+ 				      "alias for %d\n",
+ 				      header->number,
+ 				      header->hdr.a.OriginalSample);
+-    
 +
- 	ret = sscanf(rule, "%d", &maplevel);
- 	if (ret != 1 || maplevel > SMACK_CIPSO_MAXLEVEL)
- 		goto out;
- 
- 	rule += SMK_DIGITLEN;
-+	if (rule > data + count) {
-+		rc = -EOVERFLOW;
-+		goto out;
-+	}
++	if (header->number >= WF_MAX_SAMPLE)
++		return -EINVAL;
 +
- 	ret = sscanf(rule, "%d", &catlen);
- 	if (ret != 1 || catlen > SMACK_CIPSO_MAXCATNUM)
- 		goto out;
+ 	munge_int32 (header->number, &alias_hdr[0], 2);
+ 	munge_int32 (header->hdr.a.OriginalSample, &alias_hdr[2], 2);
+ 	munge_int32 (*((unsigned int *)&header->hdr.a.sampleStartOffset),
+@@ -1205,6 +1208,9 @@ wavefront_send_multisample (snd_wavefront_t *dev, wavefront_patch_info *header)
+ 	int num_samples;
+ 	unsigned char *msample_hdr;
+ 
++	if (header->number >= WF_MAX_SAMPLE)
++		return -EINVAL;
++
+ 	msample_hdr = kmalloc(WF_MSAMPLE_BYTES, GFP_KERNEL);
+ 	if (! msample_hdr)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
