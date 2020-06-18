@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CD3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA756C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4745921D82
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90FE2221F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445037;
-	bh=IKPyz6tJZvLQGO9raFAy7/YNlQnRZ+ZjNkL39vKhCpk=;
+	s=default; t=1592445040;
+	bh=5i03AouEWOGV0POpF6whTdCHW3N74DdNXTfig95nBU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MdNdKIHe0o7VswjXQjtfAEaCuKUVSQk+W6Kdx9SONxNJfdY3X8Gf9OoUjLmDq4nx/
-	 Wb3NzP6UdHzhO3QXUYs0O97vmuyMwyNLGyAPgdIbH7KdSYOTM6VVqvFyzsQU30zM+S
-	 Uw78bSyhinYc1VVyKjhWO8wt892TF5RU0Y4Eqsg4=
+	b=WQxpJ69wu4IE86+P/batCeiD9Ot2551vWJ9Q+XC5ZcRzPARh2fu4hxrJpp+JU3mfW
+	 F1uLvDrn/c7WTko951Oajgct246cADdA/dvcw2ZtXhMrNIvz8ZlHcOynPomOW+oVh8
+	 HQCyzOfpIAURoYkQBjsykeW8zsfEGG0Yu4JPyy7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732856AbgFRBue (ORCPT
+        id S1733193AbgFRBuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:50:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35546 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:50:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731857AbgFRB1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:24 -0400
+        id S1731847AbgFRB1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03D2F20776;
-        Thu, 18 Jun 2020 01:27:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 126BD21D7F;
+        Thu, 18 Jun 2020 01:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443643;
-        bh=IKPyz6tJZvLQGO9raFAy7/YNlQnRZ+ZjNkL39vKhCpk=;
+        s=default; t=1592443641;
+        bh=5i03AouEWOGV0POpF6whTdCHW3N74DdNXTfig95nBU0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BKcpRE3W8j0sYYuJY7wvjLqUtO29Rza+V2F1rZQ7nWb+o4rYTnOP3Dw/x2LLW0aDO
-         MuEMGPE7X7thL8DEO/2+RjgzBygEUVJR7/Ni0kl2a2F/A7EHi3Vtjut0XVRiP+r0PK
-         6lQqc43oKRXREWMGKpmaT1LFJOFsD3I9zmFFsKLw=
+        b=NXE9AtqO8VeJ//rp/KlsHGMSWvX4dIoJbdxFKMJByU5OxWtEYL8reZ+m1f0YeFumr
+         Jy+YIJGu2pthsfsjJOiJP3hgcg2CrLpEVLLRhckgSJEybsY2At03ODOPK0LdYLy9o7
+         +AkMLIoXIEnXEHMioEnJ66i//1OV6jkqqXVeGNrI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        Peter Chen <peter.chen@nxp.com>,
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Tony Prisk <linux@prisktech.co.nz>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 065/108] USB: host: ehci-mxc: Add error handling in ehci_mxc_drv_probe()
-Date:   Wed, 17 Jun 2020 21:25:17 -0400
-Message-Id: <20200618012600.608744-65-sashal@kernel.org>
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Oliver Neukum <oneukum@suse.de>,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 063/108] usb/ohci-platform: Fix a warning when hibernating
+Date:   Wed, 17 Jun 2020 21:25:15 -0400
+Message-Id: <20200618012600.608744-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -61,37 +64,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Bin <tangbin@cmss.chinamobile.com>
+From: Qais Yousef <qais.yousef@arm.com>
 
-[ Upstream commit d49292025f79693d3348f8e2029a8b4703be0f0a ]
+[ Upstream commit 1cb3b0095c3d0bb96912bfbbce4fc006d41f367c ]
 
-The function ehci_mxc_drv_probe() does not perform sufficient error
-checking after executing platform_get_irq(), thus fix it.
+The following warning was observed when attempting to suspend to disk
+using a USB flash as a swap device.
 
-Fixes: 7e8d5cd93fac ("USB: Add EHCI support for MX27 and MX31 based boards")
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/20200513132647.5456-1-tangbin@cmss.chinamobile.com
+[  111.779649] ------------[ cut here ]------------
+[  111.788382] URB (____ptrval____) submitted while active
+[  111.796646] WARNING: CPU: 3 PID: 365 at drivers/usb/core/urb.c:363 usb_submit_urb+0x3d8/0x590
+[  111.805417] Modules linked in:
+[  111.808584] CPU: 3 PID: 365 Comm: kworker/3:2 Not tainted 5.6.0-rc6-00002-gdfd1731f9a3e-dirty #545
+[  111.817796] Hardware name: ARM Juno development board (r2) (DT)
+[  111.823896] Workqueue: usb_hub_wq hub_event
+[  111.828217] pstate: 60000005 (nZCv daif -PAN -UAO)
+[  111.833156] pc : usb_submit_urb+0x3d8/0x590
+[  111.837471] lr : usb_submit_urb+0x3d8/0x590
+[  111.841783] sp : ffff800018de38b0
+[  111.845205] x29: ffff800018de38b0 x28: 0000000000000003
+[  111.850682] x27: ffff000970530b20 x26: ffff8000133fd000
+[  111.856159] x25: ffff8000133fd000 x24: ffff800018de3b38
+[  111.861635] x23: 0000000000000004 x22: 0000000000000c00
+[  111.867112] x21: 0000000000000000 x20: 00000000fffffff0
+[  111.872589] x19: ffff0009704e7a00 x18: ffffffffffffffff
+[  111.878065] x17: 00000000a7c8f4bc x16: 000000002af33de8
+[  111.883542] x15: ffff8000133fda88 x14: 0720072007200720
+[  111.889019] x13: 0720072007200720 x12: 0720072007200720
+[  111.894496] x11: 0000000000000000 x10: 00000000a5286134
+[  111.899973] x9 : 0000000000000002 x8 : ffff000970c837a0
+[  111.905449] x7 : 0000000000000000 x6 : ffff800018de3570
+[  111.910926] x5 : 0000000000000001 x4 : 0000000000000003
+[  111.916401] x3 : 0000000000000000 x2 : ffff800013427118
+[  111.921879] x1 : 9d4e965b4b7d7c00 x0 : 0000000000000000
+[  111.927356] Call trace:
+[  111.929892]  usb_submit_urb+0x3d8/0x590
+[  111.933852]  hub_activate+0x108/0x7f0
+[  111.937633]  hub_resume+0xac/0x148
+[  111.941149]  usb_resume_interface.isra.10+0x60/0x138
+[  111.946265]  usb_resume_both+0xe4/0x140
+[  111.950225]  usb_runtime_resume+0x24/0x30
+[  111.954365]  __rpm_callback+0xdc/0x138
+[  111.958236]  rpm_callback+0x34/0x98
+[  111.961841]  rpm_resume+0x4a8/0x720
+[  111.965445]  rpm_resume+0x50c/0x720
+[  111.969049]  __pm_runtime_resume+0x4c/0xb8
+[  111.973276]  usb_autopm_get_interface+0x28/0x60
+[  111.977948]  hub_event+0x80/0x16d8
+[  111.981466]  process_one_work+0x2a4/0x748
+[  111.985604]  worker_thread+0x48/0x498
+[  111.989387]  kthread+0x13c/0x140
+[  111.992725]  ret_from_fork+0x10/0x18
+[  111.996415] irq event stamp: 354
+[  111.999756] hardirqs last  enabled at (353): [<ffff80001019ea1c>] console_unlock+0x504/0x5b8
+[  112.008441] hardirqs last disabled at (354): [<ffff8000100a95d0>] do_debug_exception+0x1a8/0x258
+[  112.017479] softirqs last  enabled at (350): [<ffff8000100818a4>] __do_softirq+0x4bc/0x568
+[  112.025984] softirqs last disabled at (343): [<ffff8000101145a4>] irq_exit+0x144/0x150
+[  112.034129] ---[ end trace dc96030b9cf6c8a3 ]---
+
+The problem was tracked down to a missing call to
+pm_runtime_set_active() on resume in ohci-platform.
+
+Link: https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+CC: Tony Prisk <linux@prisktech.co.nz>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Mathias Nyman <mathias.nyman@intel.com>
+CC: Oliver Neukum <oneukum@suse.de>
+CC: linux-arm-kernel@lists.infradead.org
+CC: linux-usb@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/20200518154931.6144-1-qais.yousef@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ehci-mxc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/host/ohci-platform.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
-index c7a9b31eeaef..637079a35003 100644
---- a/drivers/usb/host/ehci-mxc.c
-+++ b/drivers/usb/host/ehci-mxc.c
-@@ -63,6 +63,8 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
+diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+index 61fe2b985070..742cefa22c2b 100644
+--- a/drivers/usb/host/ohci-platform.c
++++ b/drivers/usb/host/ohci-platform.c
+@@ -355,6 +355,11 @@ static int ohci_platform_resume(struct device *dev)
  	}
  
- 	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
- 
- 	hcd = usb_create_hcd(&ehci_mxc_hc_driver, dev, dev_name(dev));
- 	if (!hcd)
+ 	ohci_resume(hcd, false);
++
++	pm_runtime_disable(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++
+ 	return 0;
+ }
+ #endif /* CONFIG_PM_SLEEP */
 -- 
 2.25.1
 
