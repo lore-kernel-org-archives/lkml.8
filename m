@@ -2,129 +2,186 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B93AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3F7B208D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238A4204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:25:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jytRn0Zk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UhuoNsgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732156AbgFRRZO (ORCPT
+        id S1732168AbgFRRZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:25:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54160 "EHLO
+        Thu, 18 Jun 2020 13:25:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732048AbgFRRZM (ORCPT
+        with ESMTP id S1732048AbgFRRZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 13:25:12 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D931C06174E;
-        Thu, 18 Jun 2020 10:25:12 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 9so8221016ljv.5;
-        Thu, 18 Jun 2020 10:25:12 -0700 (PDT)
+        Thu, 18 Jun 2020 13:25:16 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF5DC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:25:16 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id u17so3996092vsu.7
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:25:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qDul8Qh0CB358ogHpHF9Y6TUm3gZ3Awnu5uEsfMvzXo=;
-        b=jytRn0ZkcCvASYLtuAiqO9TmsCYp2QNKntI0YdNmcgXJwlmGLswJemHy2QXPvAcih4
-         pD8+g+itRn+Ctf2uJagLKgIMldVzgnPVDWJ+L3RzpwZJbpEaoEoMQlJdUpka7cimkl5K
-         22IRvWru1/LyN7cgSww3ZBFwkQ/c/3G8eDYLfA9Z0G0KEioP/FueqqBL4/If1LTa0yfg
-         sWZ98NCBnDO11r9wD1v6OfoLdojloPVlkYCHi3qfjsbuekNO7zGUhmx73/aOCl7rKUJj
-         WbAxErDCxHChAFUAwPxCPf1v9wmZS4rFAADUpxZurdyBg/vp+SEkPKmBN/QwsXYI97hZ
-         WLGA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xgctw9MRFmgKOHFIvDI6Qn+gJt1nqZ70EmKCoP+6B2U=;
+        b=UhuoNsgEpM6bl3gbq+ganUuoS0DODg218IK4kWqtQCvDD7vGvvsZr27pCvHpctOCYH
+         PeRPV0Jz4sT1rhvl0T1n+aE66bHtJXh9VaFZ8PhSIAKa9jm23xsbiepbIoATOgrf5e7J
+         11VUJzu5k4CDqPuOM4QknLOZ5Pn6VHASKMLIg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qDul8Qh0CB358ogHpHF9Y6TUm3gZ3Awnu5uEsfMvzXo=;
-        b=JRrivbpbnRPGgaI4/dzf7anFYrTW9je+qMwR3wvYGMvVTUm8y/r3VqKlfbjxya1ExE
-         IIwW+ZhnKQr+ot+Eeyo5pUhi3vO4UYj4ZveK06Fof/R8np2h5IEXTGA7xyp0FYnOnD3y
-         H6bIuWh8GVg5vBIxQvUfiZbrKOqQQUdtCnmmQcZWos68qpTT1xDXeMeCXUIit05oG8ft
-         XBYG+3JgchNjfyYNIRlSsSjAPbCcx13KtvBpwt81O+o6Tmoq2tsBVUXj/ggU5cxgUbe1
-         e+vqRUysMfs52gfDvJrssD4+pJxYQRTPha9+ZQsEVIFzH2PMi4O8xR9bZBsZ/fEbUR2+
-         g5CA==
-X-Gm-Message-State: AOAM5325C0+SGDA5bPrSqOfvCLkKz3eEstlrU1GYM4zfenvRaprBddEI
-        88mMMB851boljoI764WG8m4=
-X-Google-Smtp-Source: ABdhPJyEksYH81Qt/PCV8lSVyrUxAJi2V+HPAy2DPTvZAwNg9dIvImJ1AnOc8JkDn8zCVvJwpRi+ug==
-X-Received: by 2002:a05:651c:50d:: with SMTP id o13mr3061382ljp.181.1592501110117;
-        Thu, 18 Jun 2020 10:25:10 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id s20sm846671ljs.36.2020.06.18.10.25.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 10:25:06 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Thu, 18 Jun 2020 19:25:04 +0200
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
- ptrs
-Message-ID: <20200618172504.GA14613@pc636>
-References: <20200525214800.93072-1-urezki@gmail.com>
- <20200525214800.93072-10-urezki@gmail.com>
- <20200617234609.GA10087@paulmck-ThinkPad-P72>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xgctw9MRFmgKOHFIvDI6Qn+gJt1nqZ70EmKCoP+6B2U=;
+        b=sLsvoi1pSfx2aVRnh5GfvDd0t2uCr0qLaD7zcTZDRaJW5BEEcm8dIyiBoXTiqqbMiR
+         qArgTuGAlRloSRqR3HnCAV84aKijsvMLIcNag+XiGiccejR/H8IrkMHFWqoBonZkNhVP
+         kjrvx8O9ZCpPKO0Ar3ucNgrEoxjPlEf9hTl2ppKe7ehaKb8ITyP70mnbJ8kEy62q1Lwo
+         eCElKdl4NaEigfYggJyIwJeqK9pdxwxo4gS/SyybD2mCNa7RaUXzftY58AbAHeTXHoUz
+         xn/KyK4WJUi9j1TMxCsh1iGYyZwMGo0rLx7knwOvbzGBv2gsy7dcpUp4ulGDzrDwnbS1
+         xUWA==
+X-Gm-Message-State: AOAM530VFRVc/h8gbWxDXTpIq+sb5TGCVhbuzqAgMI2/q6VCgjkORIe2
+        1diANJgtLHy18TVSdKYtY4ESa1WzieM=
+X-Google-Smtp-Source: ABdhPJyOxRIbIoYEpN/fyJ6tWtwVAI6NluELQs0TGw8seJimB5IQ2GnqJHWE6z8n4B74MK3y3BA7LA==
+X-Received: by 2002:a67:e40a:: with SMTP id d10mr4347047vsf.217.1592501114952;
+        Thu, 18 Jun 2020 10:25:14 -0700 (PDT)
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
+        by smtp.gmail.com with ESMTPSA id h190sm392346vka.53.2020.06.18.10.25.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 10:25:13 -0700 (PDT)
+Received: by mail-vk1-f180.google.com with SMTP id m23so1629545vko.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:25:12 -0700 (PDT)
+X-Received: by 2002:a1f:19cd:: with SMTP id 196mr4424105vkz.0.1592501112451;
+ Thu, 18 Jun 2020 10:25:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617234609.GA10087@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200617145116.247432-1-dianders@chromium.org>
+ <20200617074930.v3.2.I3b5c3bfaf5fb2d28d63f1b5ee92980900e3f8251@changeid>
+ <254998b9-c45e-bd6b-bc9a-b5934c0fea8e@linaro.org> <CAD=FV=Vec5FVrDVkmUQTfa6bP+1d3yOtj_FsgVAFdHLLbZ8VDA@mail.gmail.com>
+ <db6cc914-0520-5286-f852-473fc63bd6c7@linaro.org> <CAD=FV=UZAtJY42jwSZy+Z+O3AdZqDxnjY1zzOswqQRDY91uPpA@mail.gmail.com>
+ <0b0b52db-da8c-e958-d72e-797e319bbe9c@linaro.org> <CAD=FV=UShR-a8kEvpNEx5gGkUr=DhX-=kzcBQ1SegQTQMoCyKw@mail.gmail.com>
+ <159249930746.62212.6196028697481604160@swboyd.mtv.corp.google.com>
+In-Reply-To: <159249930746.62212.6196028697481604160@swboyd.mtv.corp.google.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 18 Jun 2020 10:25:00 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Unm8RK9GDNyuRZjznT21ef=jqcqhMXUWDV6HPkhn3coQ@mail.gmail.com>
+Message-ID: <CAD=FV=Unm8RK9GDNyuRZjznT21ef=jqcqhMXUWDV6HPkhn3coQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: nvmem: Add properties needed for
+ blowing fuses
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, dhavalp@codeaurora.org,
+        mturney@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        sparate@codeaurora.org, mkurumel@codeaurora.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+        <devicetree@vger.kernel.org>, LKML" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +	// Handle two first channels.
-> > +	for (i = 0; i < FREE_N_CHANNELS; i++) {
-> > +		for (; bkvhead[i]; bkvhead[i] = bnext) {
-> > +			bnext = bkvhead[i]->next;
-> > +			debug_rcu_bhead_unqueue(bkvhead[i]);
-> > +
-> > +			rcu_lock_acquire(&rcu_callback_map);
-> > +			if (i == 0) { // kmalloc() / kfree().
-> > +				trace_rcu_invoke_kfree_bulk_callback(
-> > +					rcu_state.name, bkvhead[i]->nr_records,
-> > +					bkvhead[i]->records);
-> > +
-> > +				kfree_bulk(bkvhead[i]->nr_records,
-> > +					bkvhead[i]->records);
-> > +			} else { // vmalloc() / vfree().
-> > +				for (j = 0; j < bkvhead[i]->nr_records; j++) {
-> > +					trace_rcu_invoke_kfree_callback(
-> > +						rcu_state.name,
-> > +						bkvhead[i]->records[j], 0);
-> > +
-> > +					vfree(bkvhead[i]->records[j]);
-> > +				}
-> > +			}
-> > +			rcu_lock_release(&rcu_callback_map);
-> 
-> Not an emergency, but did you look into replacing this "if" statement
-> with an array of pointers to functions implementing the legs of the
-> "if" statement?  If nothing else, this would greatly reduced indentation.
-> 
+Hi,
+
+On Thu, Jun 18, 2020 at 9:55 AM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> I am taking this as is, but if you have not already done so, could you
-> please look into this for a follow-up patch?
-> 
-I do not think it makes sense, because it would require to check each
-pointer in the array, what can lead to many branching, i.e. "if-else"
-instructions.
+> Quoting Doug Anderson (2020-06-18 08:32:20)
+> > Hi,
+> >
+> > On Thu, Jun 18, 2020 at 7:01 AM Srinivas Kandagatla
+> > >
+> > > On the other note:
+> > >
+> > > clock-names are not mandatory according to
+> > > Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > >
+> > > For this particular case where clock-names = "sec" is totally used for
+> > > indexing and nothing else!
+> >
+> > So I guess in the one-clock case it's more optional and if you feel
+> > strongly I'll get rid of clk-names here.  ...but if we ever need
+> > another clock we probably will want to add it back and (I could be
+> > corrected) I believe it's convention to specify clk-names even with
+> > one clock.
+>
+> TL;DR: I suggest you call this "core" if you want to keep the
+> clock-name, or just drop it if there's only one clk and move on.
 
-Paul, thank you to take it in!
+Ah, true.  "core" sounds good.
 
---
-Vlad Rezki
+
+> It's not required to have clock-names with one clk, and indeed it's not
+> required to have clock-names at all. The multi clk scenario is a little
+> more difficult to handle because historically the clk_get() API has been
+> name based and not index based like platform resources. When there is
+> one clk the driver can pass NULL as the 'con_id' argument to clk_get()
+> and it will do the right thing. And when you have more than one clk you
+> can pass NULL still and get the first clk, that should be in the same
+> index, and then other clks by name.
+>
+> So far nobody has added clk_get_by_index() but I suppose if it was
+> important the API could be added. Working with only legacy clkdev
+> lookups would fail of course, but clock-names could be fully deprecated
+> and kernel images may be smaller because we're not storing piles of
+> strings and doing string comparisons. Given that it's been this way for
+> a long time and we have DT schema checking it doesn't seem very
+> important to mandate anything one way or the other though. I certainly
+> don't feel good when I see of_clk_*() APIs being used by platform
+> drivers, but sometimes it is required.
+>
+> To really put this into perspective, consider the fact that most drivers
+> have code that figures out what clk names to look for and then they pile
+> them into arrays and just turn them all on and off together. Providing
+> fine grained clk control here is a gigantic waste of time, and requiring
+> clock-names is just more hoops that driver authors feel they have to
+> jump through for $reasons. We have clk_bulk_get_all() for this, but that
+> doesn't solve the one rate changing clk among the sea of clk gates
+> problem. In general, driver authors don't care and we should probably be
+> providing a richer while simpler API to them that manages power state of
+> some handful of clks, regulators, and power domains for a device while
+> also letting them control various knobs like clk rate when necessary.
+>
+> BTW, on qcom platforms they usually name clks "core" and "iface" for the
+> core clk and the interface clk used to access the registers of a device.
+> Sometimes there are esoteric ones like "axi". In theory this cuts down
+> on the number of strings the kernel keeps around but I like that it
+> helps provide continuity across drivers and DTs for their SoCs. If you
+> ask the hardware engineer what the clk name is for the hardware block
+> they'll tell you the globally unique clk name like
+> "gcc_qupv3_uart9_core_clk", which is the worst name to use.
+
+OK, sounds about what I expected.  I suppose the path of least
+resistance would be to just drop clock-names.  I guess I'm just
+worried that down the road someone will want to specify the "iface"
+clock too.  If that ever happens, we're stuck with these options:
+
+1. Be the first ones to require adding clk_get_by_index().
+
+2. Use the frowned upon of_clk_get() API which allows getting by index.
+
+3. Get the first clock with clk_get(NULL) and the second clock with
+clk_get("iface") and figure out how to specify this happily in the
+yaml.
+
+If we just define clock-names now then we pretty much match the
+pattern of everyone else.
+
+
+Srinivas: reading all that if you still want me to drop clock-names
+then I will.  I'll use clk_get(NULL) to get the clock and if/when we
+ever need an "iface" clock (maybe we never will?) we can figure it out
+then.
+
+
+-Doug
