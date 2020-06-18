@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDD6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0441721D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A8B42192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444162;
-	bh=RbF7R6syy7S1waQY1MbRHQy3roS+yF1ctEbrIxMiiN4=;
+	s=default; t=1592444164;
+	bh=L7krQWvQ/BaFmjdN656B/vQz1kmE70ALqk8CeDzjA+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wyexHNPXScaHFX492N7+iCu1R+naP9NtA9pgd6pNpTWyujbZlFsEmZHC2I/xBPTMR
-	 JA/WhH3YOb8bDkpdQ+VOdA2F7ovWtrey6am/gV+9AMLb+2d0p90vYW95s5aVzbx+c7
-	 qsgyOhWj0jPqf1kLwXZxepGjVNhxx3dtTXQutMAM=
+	b=w9RjqMliUy+h/Ixco36shyt7slNzHexMC961sA1bg13KcN59qLGHml2sxZVqEJnhe
+	 7c6zD3xMxm8bWZIEWSWaEjawWnnVzQOBfTJ9xOzGtkqwmfWy/C/V/kyZ85S8b8lpUo
+	 0353Omyzr6hptEFaYTFIULEr7ov/HMyhjmdWT4hA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732743AbgFRBbO (ORCPT
+        id S1732414AbgFRBgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:36:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731997AbgFRB2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:28:02 -0400
+        id S1732738AbgFRBbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:31:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEE5922203;
-        Thu, 18 Jun 2020 01:28:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B99AD221EC;
+        Thu, 18 Jun 2020 01:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443681;
-        bh=RbF7R6syy7S1waQY1MbRHQy3roS+yF1ctEbrIxMiiN4=;
+        s=default; t=1592443873;
+        bh=L7krQWvQ/BaFmjdN656B/vQz1kmE70ALqk8CeDzjA+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k+uRsnF8++DSqHwkx1UTm1jGW2rB5Pc4d17Hlzin1MITDIprfMgtFsZVT4L4gxVfl
-         MXeyRSNMtmRN12pW15qp3xWOzx45YB1ApXMI4zn9sWlxCSKIDUZqhL/R3vnK/zOtTy
-         jFD0wOgDnvF0LrH+lnbaOhHFVab79IDdRz/5vc/Q=
+        b=ar2EHbiz2aD6WDI3frCG9Hw922ba21BPatR19T6SkFZO41UBOU55CLJRTlsCXRkm7
+         8SO+pT6yR2Mr1j6Cs0vEE5P7y9WweOqG5RroBaBoBFXO0ChOnfifjBU758ehC/RAdp
+         CUXnB9Sdf9GQUklqXBDcQIuGT6frcsihM9n8nOyg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Benc <jbenc@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 096/108] geneve: change from tx_error to tx_dropped on missing metadata
-Date:   Wed, 17 Jun 2020 21:25:48 -0400
-Message-Id: <20200618012600.608744-96-sashal@kernel.org>
+Cc:     Stafford Horne <shorne@gmail.com>, Sasha Levin <sashal@kernel.org>,
+        openrisc@lists.librecores.org
+Subject: [PATCH AUTOSEL 4.4 53/60] openrisc: Fix issue with argument clobbering for clone/fork
+Date:   Wed, 17 Jun 2020 21:29:57 -0400
+Message-Id: <20200618013004.610532-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
-References: <20200618012600.608744-1-sashal@kernel.org>
+In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
+References: <20200618013004.610532-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,62 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Benc <jbenc@redhat.com>
+From: Stafford Horne <shorne@gmail.com>
 
-[ Upstream commit 9d149045b3c0e44c049cdbce8a64e19415290017 ]
+[ Upstream commit 6bd140e14d9aaa734ec37985b8b20a96c0ece948 ]
 
-If the geneve interface is in collect_md (external) mode, it can't send any
-packets submitted directly to its net interface, as such packets won't have
-metadata attached. This is expected.
+Working on the OpenRISC glibc port I found that sometimes clone was
+working strange.  That the tls data argument sent in r7 was always
+wrong.  Further investigation revealed that the arguments were getting
+clobbered in the entry code.  This patch removes the code that writes to
+the argument registers.  This was likely due to some old code hanging
+around.
 
-However, the kernel itself sends some packets to the interface, most
-notably, IPv6 DAD, IPv6 multicast listener reports, etc. This is not wrong,
-as tunnel metadata can be specified in routing table (although technically,
-that has never worked for IPv6, but hopefully will be fixed eventually) and
-then the interface must correctly participate in IPv6 housekeeping.
+This patch fixes this up for clone and fork.  This fork clobber is
+harmless but also useless so remove.
 
-The problem is that any such attempt increases the tx_error counter. Just
-bringing up a geneve interface with IPv6 enabled is enough to see a number
-of tx_errors. That causes confusion among users, prompting them to find
-a network error where there is none.
-
-Change the counter used to tx_dropped. That better conveys the meaning
-(there's nothing wrong going on, just some packets are getting dropped) and
-hopefully will make admins panic less.
-
-Signed-off-by: Jiri Benc <jbenc@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/geneve.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/openrisc/kernel/entry.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
-index 6d3fa36b1616..3c9f8770f7e7 100644
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -915,9 +915,10 @@ static netdev_tx_t geneve_xmit(struct sk_buff *skb, struct net_device *dev)
- 	if (geneve->collect_md) {
- 		info = skb_tunnel_info(skb);
- 		if (unlikely(!info || !(info->mode & IP_TUNNEL_INFO_TX))) {
--			err = -EINVAL;
- 			netdev_dbg(dev, "no tunnel metadata\n");
--			goto tx_error;
-+			dev_kfree_skb(skb);
-+			dev->stats.tx_dropped++;
-+			return NETDEV_TX_OK;
- 		}
- 	} else {
- 		info = &geneve->info;
-@@ -934,7 +935,7 @@ static netdev_tx_t geneve_xmit(struct sk_buff *skb, struct net_device *dev)
+diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
+index c17e8451d997..3fbe420f49c4 100644
+--- a/arch/openrisc/kernel/entry.S
++++ b/arch/openrisc/kernel/entry.S
+@@ -1092,13 +1092,13 @@ ENTRY(__sys_clone)
+ 	l.movhi	r29,hi(sys_clone)
+ 	l.ori	r29,r29,lo(sys_clone)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r7,r1,0
++	 l.nop
  
- 	if (likely(!err))
- 		return NETDEV_TX_OK;
--tx_error:
-+
- 	dev_kfree_skb(skb);
+ ENTRY(__sys_fork)
+ 	l.movhi	r29,hi(sys_fork)
+ 	l.ori	r29,r29,lo(sys_fork)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r3,r1,0
++	 l.nop
  
- 	if (err == -ELOOP)
+ ENTRY(sys_rt_sigreturn)
+ 	l.j	_sys_rt_sigreturn
 -- 
 2.25.1
 
