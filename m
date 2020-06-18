@@ -2,126 +2,162 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88663C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6872F20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:21:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592504475;
-	bh=n37tItBWAGRC74p29xrPPnmeAZ/VdU4SlehHbZr5cPk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VZ86S2omXfXqJRCEgNKQQ8DbQ8twzx4hDCzSN0YF2tvotqvgeCq5v103Itt2VWIX5
-	 ApRt7Z0nTHsWNXDwr5HZBR1kmyke+pFY2GOHsQsQmycXKWAES0pwtiWNpK6gdcWCnY
-	 Y5pe6tInDC+7Acm7PvFb7Xs75ErxxYG9UBV8d9nY=
+	by mail.kernel.org (Postfix) with ESMTP id F28A820C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:23:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JeLKhCms"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbgFRSVO (ORCPT
+        id S1730278AbgFRSXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 14:21:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725953AbgFRSVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 14:21:13 -0400
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3843F208C7
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 18:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592504472;
-        bh=n37tItBWAGRC74p29xrPPnmeAZ/VdU4SlehHbZr5cPk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=t729B66iSN1iCOhLMQzk8aEppNyPTBQZCZOshnvCXfbESRiubSCc6cjGVM/+Ihv2J
-         +nNWmkg3f2/Bp6UOhaWzz8p0jt/VjSRKVSp576wUtIvwfnCcFrx6E+xExWUSPOZNc3
-         D+l3ndIDJwSj9Uan6dp6LezLyY+/o/fj99LFEuBE=
-Received: by mail-wm1-f43.google.com with SMTP id t194so6682948wmt.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 11:21:12 -0700 (PDT)
-X-Gm-Message-State: AOAM530A466tIncZQk6CoICCi16c+XRsLW+o81VX6jEUyG9Ul+zGi9tY
-        YDQFoKjW/TXt3tDVUUZr4A7XvbqEv0HQ6G28VqJ9cA==
-X-Google-Smtp-Source: ABdhPJzUlexIRiLW86cc5O7beowutfjvg3O0HgsHWz+8jlx2NN+oPnNZEbMqFhW6gS7xzckd4mpmuFA4P5Q0pTx0B6M=
-X-Received: by 2002:a05:600c:22da:: with SMTP id 26mr5304161wmg.176.1592504470731;
- Thu, 18 Jun 2020 11:21:10 -0700 (PDT)
+        Thu, 18 Jun 2020 14:23:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbgFRSXk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 14:23:40 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CAECC06174E;
+        Thu, 18 Jun 2020 11:23:38 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id w15so4035298lfe.11;
+        Thu, 18 Jun 2020 11:23:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OtZ+S0yqkpnvGyiBpEd57efqY8RnbTwuIeP3LIO4+t8=;
+        b=JeLKhCmsNWf+iu8vSE/iGVFYwqW4hCzZfzX0iNjqFxiezlwkzt9KzkdWB0XQeN+chQ
+         3LqWxHBswCD+kUSUVh2ImpHTCzgDK9jLEl7eN4KOanMP3vx/0uIiMSt6ey1Gy4Ac4Plh
+         r76s8iF/jiXHIKFCiNEK8K+5HBfmdcmAW3Dls5nA+y9vOWkgLPmv63MIkH6V/+MX3eZj
+         KybciiszOPkEPwLkqAgaeOSLYImnR4IOP+ZKECNZ+h0PZu73+MeRtNRmg9BYKl0ByOJ4
+         kZe6MeZDFYwB9skflValj9ymybfiN1LcmMjvhm9Ty0pKqL6qT+jWDTLSxxZZfmXDRr2j
+         wyMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OtZ+S0yqkpnvGyiBpEd57efqY8RnbTwuIeP3LIO4+t8=;
+        b=uJtkk/ybd+h6BcUl29Tgjkv1yvcu4HcIUTmd9IUKs4I/HyhDl0ajzmwBIk9Vm+2Prb
+         Nc2UT8ryoyl99xUdyz8d9eT8R+PtYbQhpS3ANRgqRNazCVGRn9eh4fVphhgIY8NoPUuM
+         FJlb0WS7cTOI7ep2whR+8CKmEwX9EMndFhJHOdbbM9Qu/WlDLydgJMqCAolMt0pXRjYA
+         NQuQJcz9z9ijRhZeK6bCIrRpagDluUemxPsJlncxURunDX0E/GTGmelK8Jas+Fq0He9c
+         xXdc9T3GqgpYmVaNoae2W8mDHrDZ5HQlcphme3qKPq3mZluoSFyFZ9fBJfuQPqQXCjHJ
+         TAbg==
+X-Gm-Message-State: AOAM532hMvoxuNmo53dUzfZTAEUXUYhLfmhLQzZWmFFWtb7i76REwl8c
+        sxx58kW/nbI0GeDHwHmUqUI=
+X-Google-Smtp-Source: ABdhPJwE8GlFDZ2vhKPL+bYHMUSg0Cv+ZXbjDv+hC3D0Zkyui+dYWdjJjnf4HhwVurZAsGWY9zoxWQ==
+X-Received: by 2002:ac2:5f07:: with SMTP id 7mr3112274lfq.132.1592504617032;
+        Thu, 18 Jun 2020 11:23:37 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id n4sm135298lfl.40.2020.06.18.11.23.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 11:23:35 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Thu, 18 Jun 2020 20:23:33 +0200
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
+ ptrs
+Message-ID: <20200618182333.GA15082@pc636>
+References: <20200525214800.93072-1-urezki@gmail.com>
+ <20200525214800.93072-10-urezki@gmail.com>
+ <20200617234609.GA10087@paulmck-ThinkPad-P72>
+ <20200618172504.GA14613@pc636>
+ <20200618173206.GS2723@paulmck-ThinkPad-P72>
+ <20200618175623.GA14865@pc636>
+ <20200618181541.GS8681@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <87y2onbdtb.fsf@nanos.tec.linutronix.de> <8E41B15F-D567-4C52-94E9-367015480345@amacapital.net>
- <20200616132705.GW2531@hirez.programming.kicks-ass.net> <20200617131742.GD8389@yuki.lan>
-In-Reply-To: <20200617131742.GD8389@yuki.lan>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 18 Jun 2020 11:20:59 -0700
-X-Gmail-Original-Message-ID: <CALCETrVX=wxRrv0qw-Enbyg5CEQsy5TigbNt7sSs=MDO6uAnMw@mail.gmail.com>
-Message-ID: <CALCETrVX=wxRrv0qw-Enbyg5CEQsy5TigbNt7sSs=MDO6uAnMw@mail.gmail.com>
-Subject: Re: [LTP] [x86/entry] 2bbc68f837: ltp.ptrace08.fail
-To:     Cyril Hrubis <chrubis@suse.cz>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, ltp@lists.linux.it
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618181541.GS8681@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 6:17 AM Cyril Hrubis <chrubis@suse.cz> wrote:
+On Thu, Jun 18, 2020 at 11:15:41AM -0700, Matthew Wilcox wrote:
+> On Thu, Jun 18, 2020 at 07:56:23PM +0200, Uladzislau Rezki wrote:
+> > If we mix pointers, then we can do free per pointer only. I mean in that
+> > case we will not be able to use kfree_bulk() interface for freeing SLAB
+> > memory and the code would converted to something like:
+> > 
+> > <snip>
+> > while (nr_objects_in_array > 0) {
+> >     if (is_vmalloc_addr(array[X]))
+> >        vfree(array[X]);
+> >     else
+> >        kfree(array[X]);
+> > }
+> > <snip>
+> 
+> [PATCH] Add vfree_bulk interface
+> 
+> This is a useful interface to have for the RCU kvfree code.  There is
+> scope for more performance gains later, but introducing the interface
+> now allows us to simplify the RCU code today.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> 
+> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> index 48bb681e6c2a..dc2bbb61af61 100644
+> --- a/include/linux/vmalloc.h
+> +++ b/include/linux/vmalloc.h
+> @@ -119,6 +119,7 @@ void *__vmalloc_node(unsigned long size, unsigned long align, gfp_t gfp_mask,
+>  
+>  extern void vfree(const void *addr);
+>  extern void vfree_atomic(const void *addr);
+> +extern void vfree_bulk(size_t count, void **addrs);
+>  
+>  extern void *vmap(struct page **pages, unsigned int count,
+>  			unsigned long flags, pgprot_t prot);
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index abe37f09ac42..6042f9b4394a 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -2366,6 +2366,22 @@ void vfree(const void *addr)
+>  }
+>  EXPORT_SYMBOL(vfree);
+>  
+> +void vfree_bulk(size_t count, void **addrs)
+> +{
+> +	unsigned int i;
+> +
+> +	BUG_ON(in_nmi());
+> +	might_sleep_if(!in_interrupt());
+> +
+> +	for (i = 0; i < count; i++) {
+> +		void *addr = addrs[i];
+> +		kmemleak_free(addr);
+> +		if (addr)
+> +			__vfree(addr);
+> +	}
+> +}
+> +EXPORT_SYMBOL(vfree_bulk);
+> +
 >
-> Hi!
-> > > >> FYI, we noticed the following commit (built with gcc-9):
-> > > >>
-> > > >> commit: 2bbc68f8373c0631ebf137f376fbea00e8086be7 ("x86/entry: Convert Debug exception to IDTENTRY_DB")
-> > > >> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> > > >
-> > > > Is the head of linux.git exposing the same problem or is this an
-> > > > intermittent failure, which only affects bisectability?
-> > >
-> > > It sure looks deterministic:
-> > >
-> > > ptrace08.c:62: BROK: Cannot find address of kernel symbol "do_debug"
-> >
-> > ROFL
->
-> It's nice to have a good laugh, however I would really appreciate if any
-> of you would help me to fix the test.
->
-> The test in question is a regression test for:
->
-> commit f67b15037a7a50c57f72e69a6d59941ad90a0f0f
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:   Mon Mar 26 15:39:07 2018 -1000
->
->     perf/hwbp: Simplify the perf-hwbp code, fix documentation
->
->     Annoyingly, modify_user_hw_breakpoint() unnecessarily complicates the
->     modification of a breakpoint - simplify it and remove the pointless
->     local variables.
->
-> And as far as I can tell it uses ptrace() with PTRACE_POKEUSER in order to
-> trigger it. But I'm kind of lost on how exactly we trigger the kernel
-> crash.
->
-> What is does is to write:
->
->         (void*)1 to u_debugreg[0]
->         (void*)1 to u_debugreg[7]
->         do_debug addr to u_debugreg[0]
->
-> Looking at the kernel code the write to register 7 enables the breakpoints and
-> what we attempt here is to change an invalid address to a valid one after we
-> enabled the breakpoint but that's as far I can go.
->
-> So does anyone has an idea how to trigger the bug without the do_debug function
-> address? Would any valid kernel function address suffice?
->
+Can we just do addrs[i] all over the loop?
 
-do_debug is a bit of a red herring here.  ptrace should not be able to
-put a breakpoint on a kernel address, period.  I would just pick a
-fixed address that's in the kernel text range or even just in the
-pre-KASLR text range and make sure it gets rejected.  Maybe try a few
-different addresses for good measure.
+Also, we can just call vfree() instead that has all checking we
+need: NMI, kmemleak, might_sleep.
 
---Andy
+Thanks!
+
+--
+Vlad Rezki
