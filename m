@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F101321974
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF522193E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448108;
-	bh=0eBh3Q0tasAH7NSrRJtTwSQ5nfxknCIIN9MpMfO0/s4=;
+	s=default; t=1592448116;
+	bh=ste0z3yUk+LG1qt3/ESUU8jN0ibjLxgrmCIBBS5yR60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B+2AixtgY2VJ9DQbr0GXtTYYMlTG+N9d2B/r495KdnazfGxIUWw8kE0ngceYxKwIR
-	 f7HEUHXSLW+sP+26vkCDEKFrYnhx3YYvo7bidX0+HYndM7dy4sbKUo0xBEpwKYtp8s
-	 KYpbHrTeLhylI3CXmJl0/5rINg7zefo/dS+PMCkQ=
+	b=Uc7JnuFrtMV+wu8DvMkjHDuNsvMuAEvfKA8a5xttet0M1X5F22QQ/I49igYmk97Dq
+	 5bL9uCuIeYs0acwQGA4x//eIgF8y3qRzCkuN+syLQIouH8ncRUHk9J0A6KRRNz4u6u
+	 BplGHF8Tr9fn6jBTGTmlsmnkhE0gce955LkmUm8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgFRBMS (ORCPT
+        id S2387854AbgFRClv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:12:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39610 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:41:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727980AbgFRBLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:37 -0400
+        id S1728171AbgFRBMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8CD52193E;
-        Thu, 18 Jun 2020 01:11:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB20221924;
+        Thu, 18 Jun 2020 01:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442696;
-        bh=0eBh3Q0tasAH7NSrRJtTwSQ5nfxknCIIN9MpMfO0/s4=;
+        s=default; t=1592442736;
+        bh=ste0z3yUk+LG1qt3/ESUU8jN0ibjLxgrmCIBBS5yR60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ttkk8bVjQQqyiBSXCxF+CrK8y1zH86ml/MT0ib/nNIoC+fyvgvGLUbbX4F9BgkO0g
-         5E/bDE+Vedv9rvbaP8nByj4pnZeHhS30JmeyGc+Cc3eZEQi2q2q9dxYDM18a1e9ndJ
-         55rn9hv+dXImzqMKzZIC9D5170Gz4smveLzMzods=
+        b=spS7tZXzjyxJUIWK829iDEK4uVxtqsMOPr3Yu0xq6ZJN7RLBmjl4HPnIObvYK8nup
+         CwjsBoGuqDocSl3+H3EnjbAJur/TC8hNm6Ot98SwFJH+/2bEVDEh4uoW81WM11sYd4
+         m/TuQvnWks/n7NQD6BwpPsygzoHbpVwTX8sKlr5Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 160/388] ASoC: SOF: Update correct LED status at the first time usage of update_mute_led()
-Date:   Wed, 17 Jun 2020 21:04:17 -0400
-Message-Id: <20200618010805.600873-160-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 191/388] um: do not evaluate compiler's library path when cleaning
+Date:   Wed, 17 Jun 2020 21:04:48 -0400
+Message-Id: <20200618010805.600873-191-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -62,71 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 49c22696348d6e7c8a2ecfd7e60fddfe188ded82 ]
+[ Upstream commit 7e49afc03212010d0ee27532a75cfeb0125bd868 ]
 
-At the first time update_mute_led() gets called, if channels are already
-muted, the temp value equals to led_value as 0, skipping the following
-LED setting.
+Since commit a83e4ca26af8 ("kbuild: remove cc-option switch from
+-Wframe-larger-than="), 'make ARCH=um clean' emits an error message
+as follows:
 
-So set led_value to -1 as an uninitialized state, to update the correct
-LED status at first time usage.
+  $ make ARCH=um clean
+  gcc: error: missing argument to '-Wframe-larger-than='
 
-Fixes: 5d43001ae436 ("ASoC: SOF: acpi led support for switch controls")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Acked-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200430091139.7003-1-kai.heng.feng@canonical.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+We do not care compiler flags when cleaning.
+
+Use the '=' operator for lazy expansion because we do not use
+LDFLAGS_pcap.o or LDFLAGS_vde.o when cleaning.
+
+While I was here, I removed the redundant -r option because it
+already exists in the recipe.
+
+Fixes: a83e4ca26af8 ("kbuild: remove cc-option switch from -Wframe-larger-than=")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com> [build]
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/control.c   | 4 ++--
- sound/soc/sof/sof-audio.h | 2 +-
- sound/soc/sof/topology.c  | 2 ++
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ arch/um/drivers/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/sof/control.c b/sound/soc/sof/control.c
-index dfc412e2d956..6d63768d42aa 100644
---- a/sound/soc/sof/control.c
-+++ b/sound/soc/sof/control.c
-@@ -19,8 +19,8 @@ static void update_mute_led(struct snd_sof_control *scontrol,
- 			    struct snd_kcontrol *kcontrol,
- 			    struct snd_ctl_elem_value *ucontrol)
- {
--	unsigned int temp = 0;
--	unsigned int mask;
-+	int temp = 0;
-+	int mask;
- 	int i;
+diff --git a/arch/um/drivers/Makefile b/arch/um/drivers/Makefile
+index a290821e355c..2a249f619467 100644
+--- a/arch/um/drivers/Makefile
++++ b/arch/um/drivers/Makefile
+@@ -18,9 +18,9 @@ ubd-objs := ubd_kern.o ubd_user.o
+ port-objs := port_kern.o port_user.o
+ harddog-objs := harddog_kern.o harddog_user.o
  
- 	mask = 1U << snd_ctl_get_ioffidx(kcontrol, &ucontrol->id);
-diff --git a/sound/soc/sof/sof-audio.h b/sound/soc/sof/sof-audio.h
-index bf65f31af858..875a5fc13297 100644
---- a/sound/soc/sof/sof-audio.h
-+++ b/sound/soc/sof/sof-audio.h
-@@ -56,7 +56,7 @@ struct snd_sof_pcm {
- struct snd_sof_led_control {
- 	unsigned int use_led;
- 	unsigned int direction;
--	unsigned int led_value;
-+	int led_value;
- };
+-LDFLAGS_pcap.o := -r $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libpcap.a)
++LDFLAGS_pcap.o = $(shell $(CC) $(KBUILD_CFLAGS) -print-file-name=libpcap.a)
  
- /* ALSA SOF Kcontrol device */
-diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
-index fe8ba3e05e08..ab2b69de1d4d 100644
---- a/sound/soc/sof/topology.c
-+++ b/sound/soc/sof/topology.c
-@@ -1203,6 +1203,8 @@ static int sof_control_load(struct snd_soc_component *scomp, int index,
- 		return ret;
- 	}
+-LDFLAGS_vde.o := -r $(shell $(CC) $(CFLAGS) -print-file-name=libvdeplug.a)
++LDFLAGS_vde.o = $(shell $(CC) $(CFLAGS) -print-file-name=libvdeplug.a)
  
-+	scontrol->led_ctl.led_value = -1;
-+
- 	dobj->private = scontrol;
- 	list_add(&scontrol->list, &sdev->kcontrol_list);
- 	return ret;
+ targets := pcap_kern.o pcap_user.o vde_kern.o vde_user.o
+ 
 -- 
 2.25.1
 
