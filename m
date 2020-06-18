@@ -2,132 +2,105 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA52C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD411C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53F432078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC0352100A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:00:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592521210;
+	bh=3DTLftlJt9ZxiQeVIqHIUgQIlWAIxhhOUrdqiwYWxaM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jwqopWxPLYN8ZW4tB2h26OlYCbHUVgCCFAHusyMaiQejvMH/xZoBncCNkGHQUqLA1
+	 GSw/854OiKzzjJzARKuDfX+TQjn9blfjkQ0HMBVUHpYxrye3c4dtBeotCLg1cWccp1
+	 mTeQpdrHezFmQgCcbodago0Vi5CfzmSrYwNy2i9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgFRW6g (ORCPT
+        id S1729926AbgFRXAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:58:36 -0400
-Received: from [211.29.132.246] ([211.29.132.246]:38120 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-FAIL-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1726282AbgFRW6f (ORCPT
+        Thu, 18 Jun 2020 19:00:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728242AbgFRXAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 18:58:35 -0400
-Received: from dread.disaster.area (unknown [49.180.124.177])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 92BA3822725;
-        Fri, 19 Jun 2020 08:58:13 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jm3U2-00015D-Mt; Fri, 19 Jun 2020 08:58:10 +1000
-Date:   Fri, 19 Jun 2020 08:58:10 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>
-Subject: Re: [PATCH v4] xfs: Fix false positive lockdep warning with
- sb_internal & fs_reclaim
-Message-ID: <20200618225810.GJ2005@dread.disaster.area>
-References: <20200618171941.9475-1-longman@redhat.com>
+        Thu, 18 Jun 2020 19:00:05 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61BDDC0613EE
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:00:05 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id i27so9243528ljb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:00:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mPOiXGmVSJpnt+xtTiccAHXdSsoJkhvb/Wx3zcpBM1U=;
+        b=PpDfYxcfStgK5uFhhyAFqUOqliV/bM94+itgR4KusvVnQbmktflqDFig8LU+VmfT8U
+         Wp9ysSIcGje8X8t9l5wJHf1wL+pR3P1TqV9pMqozOt4rhHL1M31E1MehT9W8Vtcn4aBE
+         eyTJqLmTx6caiIk7i8ez/5cGcDUmrpdauZssg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mPOiXGmVSJpnt+xtTiccAHXdSsoJkhvb/Wx3zcpBM1U=;
+        b=NEx6hDYPc6vQ2q6O1i22UNlDY2NcQjDLGR9b4VYRqBdUKKAgShcCWiIZvSqQavwjg2
+         zTbzz/x96JCACrc+qNCDC1fowuw7JTygER/3OhU94i7IjJ/g57GOTe+TWS4h5AGlS4RG
+         bg6CGt0MC4eo4sx3LPsCK4wuNuBDD6eL1hQv+b4AiS4IYclspjfR3lXikHnzTiGh4H3R
+         2cB+znQfzpbUdlyOiYQ+04c0mk+nRG33fP9S6yaefVw4XWPr6Z62sKEw3dwbkA62ucVE
+         cTKA4a41j867Jrx6qMzM8g1YGpm2c6uMsJzmUnYYbFgodwDfoaLlAM56/eA7KIvhjLHl
+         o9lQ==
+X-Gm-Message-State: AOAM531jaJc1M7BVzCtE7mJHwVkttSikLJYkb7uyBLhmbVUG/vjyINMo
+        zxEzQOhLIq8GQ1wcd3iLMTYAJ5NDt2o=
+X-Google-Smtp-Source: ABdhPJx9iKz/yMpTsyfWHYY4uq4IzOniIHtd9beUepIoxrTgGU09Z6KCQi+1v096PlDxIT3j6zaLRw==
+X-Received: by 2002:a2e:9557:: with SMTP id t23mr292661ljh.355.1592521203408;
+        Thu, 18 Jun 2020 16:00:03 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id k1sm1011001lja.27.2020.06.18.16.00.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 16:00:01 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id 9so9276125ljv.5
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:00:00 -0700 (PDT)
+X-Received: by 2002:a2e:8991:: with SMTP id c17mr275545lji.421.1592521200490;
+ Thu, 18 Jun 2020 16:00:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618171941.9475-1-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
-        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=7-415B0cAAAA:8
-        a=ZdpVamzyzpo1vji6fVUA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20200615221607.7764-1-peterx@redhat.com> <20200615221607.7764-8-peterx@redhat.com>
+ <CAJF2gTSVSXO=phc1eeb-ZmDMrSDjSSLd3tN6ng_8n-pCSZh5zw@mail.gmail.com>
+ <20200617154925.GC76766@xz-x1> <CAHk-=wi=58J7d5iyFyYyHrU+pzjWB55cit_LQCkSkavpH-trsg@mail.gmail.com>
+ <20200617195807.GH76766@xz-x1> <CAHk-=wj_V2Tps2QrMn20_W0OJF9xqNh52XSGA42s-ZJ8Y+GyKw@mail.gmail.com>
+ <20200618143801.GK76766@xz-x1> <CAHk-=whFEZbTJZaNwEkyevUV2aqRwbeVmtp6hhk1sK2mW4vaGA@mail.gmail.com>
+ <20200618212430.GO76766@xz-x1> <20200618222834.GP76766@xz-x1>
+In-Reply-To: <20200618222834.GP76766@xz-x1>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 18 Jun 2020 15:59:44 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wikLPYrSty_XWQU17zvFZ+seUGOzmcuqcTzgBuKeK_LSQ@mail.gmail.com>
+Message-ID: <CAHk-=wikLPYrSty_XWQU17zvFZ+seUGOzmcuqcTzgBuKeK_LSQ@mail.gmail.com>
+Subject: Re: [PATCH 07/25] mm/csky: Use mm_fault_accounting()
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Guo Ren <guoren@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-csky@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 01:19:41PM -0400, Waiman Long wrote:
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index 379cbff438bc..1b94b9bfa4d7 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -913,11 +913,33 @@ xfs_fs_freeze(
->  	struct super_block	*sb)
->  {
->  	struct xfs_mount	*mp = XFS_M(sb);
-> +	unsigned long		pflags;
-> +	int			ret;
->  
-> +	/*
-> +	 * A fs_reclaim pseudo lock is added to check for potential deadlock
-> +	 * condition with fs reclaim. The following lockdep splat was hit
-> +	 * occasionally. This is actually a false positive as the allocation
-> +	 * is being done only after the frozen filesystem is no longer dirty.
-> +	 * One way to avoid this splat is to add GFP_NOFS to the affected
-> +	 * allocation calls. This is what PF_MEMALLOC_NOFS is for.
-> +	 *
-> +	 *       CPU0                    CPU1
-> +	 *       ----                    ----
-> +	 *  lock(sb_internal);
-> +	 *                               lock(fs_reclaim);
-> +	 *                               lock(sb_internal);
-> +	 *  lock(fs_reclaim);
-> +	 *
-> +	 *  *** DEADLOCK ***
-> +	 */
+On Thu, Jun 18, 2020 at 3:28 PM Peter Xu <peterx@redhat.com> wrote:
+>
+> > >         if (regs)
+> > >                 perf_sw_event(event_type, 1, regs, address);
+>
+> Sadly, this line seems to fail the compilation:
 
-The lockdep splat is detailed in the commit message - it most
-definitely does not need to be repeated in full here because:
+Yeah, I should have known that. We require a constant event ID,
+because it uses the magical static keys.
 
-	a) it doesn't explain why the splat occurring is, and
-	b) we most definitely don't care about how the lockdep check
-	   that triggered it is implemented.
+So never mind. The perf_sw_event() calls can't be shared for two different ID's.
 
-IOWs, the comment here needs to explain how the freeze state held at
-this point requires that we avoid reclaim recursion back into the
-filesystem, regardless of how lockdep detects it or whether the
-lockdep splats are a false positive or not...
-
-e.g.
-
-/*
- * The superblock is now in the frozen state, which means we cannot
- * allow memory allocation to recurse into reclaim on this
- * filesystem as this may require running operations that the
- * current freeze state prevents. This should not occur if
- * everything is working correctly and sometimes lockdep may report
- * false positives in this path. However, to be safe and to avoid
- * unnecessary false positives in test/CI environments, put the
- * entire final freeze processing path under GFP_NOFS allocation
- * contexts to prevent reclaim recursion from occurring anywhere in
- * the path.
- */
-
-Cheers,
-
-Dave.
-
-> +	current_set_flags_nested(&pflags, PF_MEMALLOC_NOFS);
->  	xfs_stop_block_reaping(mp);
->  	xfs_save_resvblks(mp);
->  	xfs_quiesce_attr(mp);
-> -	return xfs_sync_sb(mp, true);
-> +	ret = xfs_sync_sb(mp, true);
-> +	current_restore_flags_nested(&pflags, PF_MEMALLOC_NOFS);
-> +	return ret;
->  }
->  
->  STATIC int
-> -- 
-> 2.18.1
-> 
-> 
-
--- 
-Dave Chinner
-david@fromorbit.com
+           Linus
