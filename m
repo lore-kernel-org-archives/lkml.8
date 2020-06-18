@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2935C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8505521D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F070420B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444121;
-	bh=sqWnOC4iuxz3jVIZiiWhLO+J25Ey9FgoqbsPuaGI4b4=;
+	s=default; t=1592444123;
+	bh=D8zLb6A3eAFY+oTRbtdMRb/vYU6Su0bEE3Y/89xD7JQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q30ISA19D9gPc6u/PLFb93esj1i7WAMU6IE8POTkbPjuu5VOhDtJy2+Gb4tfzccao
-	 KtsYIfTIfQMQVJzhFA+1/Jyx/ELHkUkON5mWnw1i9UIPsWQez6NVA4HGgqgoIKu52i
-	 1/eFVYjeFpQm4EEYylvEi68H8soPpwpW/CyazLuU=
+	b=ZQtDCskrnbdF2v+lYsFrJ6DUf94O7VASjpyJtOpWNbrT1PFdOxp0i17OtDabfYZH6
+	 UGaBAgd04cvLxRsHyZVsXnucJzT3Wwekq2HSGqcqPUQ3kIVHbCZJbjjNQzXeRFMXBi
+	 JMnwLirJ/yK5fKiRDIj4LRZu1jyNDp66+HFvX/TA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732824AbgFRBbs (ORCPT
+        id S1731744AbgFRBbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:31:48 -0400
+        Wed, 17 Jun 2020 21:31:45 -0400
 Received: from mail.kernel.org ([198.145.29.99]:38430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732267AbgFRB3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:16 -0400
+        id S1732256AbgFRB3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:29:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81FE122209;
-        Thu, 18 Jun 2020 01:29:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7FF222209;
+        Thu, 18 Jun 2020 01:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443756;
-        bh=sqWnOC4iuxz3jVIZiiWhLO+J25Ey9FgoqbsPuaGI4b4=;
+        s=default; t=1592443752;
+        bh=D8zLb6A3eAFY+oTRbtdMRb/vYU6Su0bEE3Y/89xD7JQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XU5Py8DlrCn18DDKj+ew6iZ0vleoA02+p0tLidr8ynnWQ5QnXJAfqj/CtlR7lAn/Z
-         kwOL5OToLre8tx9g4b0z0dkvKT/arXNCnighQGXg+k+8dyvlnl7mmaRmZksSRtkPd5
-         DDX2C4M0U3/GobJRKgXJa3Z5BBM0pkFO3dPjXj6U=
+        b=iWg9kaAi/Bbik3Sw79/2uVOu+mRfQi3BPmpwOkbqBk59AeWHAv55jAe2t+HeJSaMX
+         Co4ESE9M2ujmjT9kMYWlMrBSRirZ51CoHbs2k3oBgf9lDUOsn8Vsrz0hyV4OBFumD0
+         bj4rq6SZlpwcGbujRVxlerevRd7Wv03C3FBZZWXg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        clang-built-linux@googlegroups.com,
-        David Teigland <teigland@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.9 43/80] dlm: remove BUG() before panic()
-Date:   Wed, 17 Jun 2020 21:27:42 -0400
-Message-Id: <20200618012819.609778-43-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 40/80] power: supply: lp8788: Fix an error handling path in 'lp8788_charger_probe()'
+Date:   Wed, 17 Jun 2020 21:27:39 -0400
+Message-Id: <20200618012819.609778-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
 References: <20200618012819.609778-1-sashal@kernel.org>
@@ -61,48 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit fe204591cc9480347af7d2d6029b24a62e449486 ]
+[ Upstream commit 934ed3847a4ebc75b655659c4d2349ba4337941c ]
 
-Building a kernel with clang sometimes fails with an objtool error in dlm:
+In the probe function, in case of error, resources allocated in
+'lp8788_setup_adc_channel()' must be released.
 
-fs/dlm/lock.o: warning: objtool: revert_lock_pc()+0xbd: can't find jump dest instruction at .text+0xd7fc
+This can be achieved easily by using the devm_ variant of
+'iio_channel_get()'.
+This has the extra benefit to simplify the remove function and to axe the
+'lp8788_release_adc_channel()' function which is now useless.
 
-The problem is that BUG() never returns and the compiler knows
-that anything after it is unreachable, however the panic still
-emits some code that does not get fully eliminated.
-
-Having both BUG() and panic() is really pointless as the BUG()
-kills the current process and the subsequent panic() never hits.
-In most cases, we probably don't really want either and should
-replace the DLM_ASSERT() statements with WARN_ON(), as has
-been done for some of them.
-
-Remove the BUG() here so the user at least sees the panic message
-and we can reliably build randconfig kernels.
-
-Fixes: e7fd41792fc0 ("[DLM] The core of the DLM for GFS2/CLVM")
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: clang-built-linux@googlegroups.com
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: David Teigland <teigland@redhat.com>
+Fixes: 98a276649358 ("power_supply: Add new lp8788 charger driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dlm/dlm_internal.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/power/supply/lp8788-charger.c | 18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
-diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
-index 216b61604ef9..c211156aabe2 100644
---- a/fs/dlm/dlm_internal.h
-+++ b/fs/dlm/dlm_internal.h
-@@ -100,7 +100,6 @@ do { \
-                __LINE__, __FILE__, #x, jiffies); \
-     {do} \
-     printk("\n"); \
--    BUG(); \
-     panic("DLM:  Record message above and reboot.\n"); \
-   } \
+diff --git a/drivers/power/supply/lp8788-charger.c b/drivers/power/supply/lp8788-charger.c
+index cd614fe69d14..c3075ea011b6 100644
+--- a/drivers/power/supply/lp8788-charger.c
++++ b/drivers/power/supply/lp8788-charger.c
+@@ -603,27 +603,14 @@ static void lp8788_setup_adc_channel(struct device *dev,
+ 		return;
+ 
+ 	/* ADC channel for battery voltage */
+-	chan = iio_channel_get(dev, pdata->adc_vbatt);
++	chan = devm_iio_channel_get(dev, pdata->adc_vbatt);
+ 	pchg->chan[LP8788_VBATT] = IS_ERR(chan) ? NULL : chan;
+ 
+ 	/* ADC channel for battery temperature */
+-	chan = iio_channel_get(dev, pdata->adc_batt_temp);
++	chan = devm_iio_channel_get(dev, pdata->adc_batt_temp);
+ 	pchg->chan[LP8788_BATT_TEMP] = IS_ERR(chan) ? NULL : chan;
+ }
+ 
+-static void lp8788_release_adc_channel(struct lp8788_charger *pchg)
+-{
+-	int i;
+-
+-	for (i = 0; i < LP8788_NUM_CHG_ADC; i++) {
+-		if (!pchg->chan[i])
+-			continue;
+-
+-		iio_channel_release(pchg->chan[i]);
+-		pchg->chan[i] = NULL;
+-	}
+-}
+-
+ static ssize_t lp8788_show_charger_status(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
+@@ -744,7 +731,6 @@ static int lp8788_charger_remove(struct platform_device *pdev)
+ 	lp8788_irq_unregister(pdev, pchg);
+ 	sysfs_remove_group(&pdev->dev.kobj, &lp8788_attr_group);
+ 	lp8788_psy_unregister(pchg);
+-	lp8788_release_adc_channel(pchg);
+ 
+ 	return 0;
  }
 -- 
 2.25.1
