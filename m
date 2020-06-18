@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B24A20853
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA73020853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446340;
-	bh=5U5PiWIjiwW7vjikoQHtJKRjG+IOR2gWNoMdCr8MBEc=;
+	s=default; t=1592446347;
+	bh=0eZCzaA29B/tKnn9xm/dPG2PuxlOoiYtj/qC/nQTJgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gQoEeThoMbAbSxROCcjbgpAX+K/GKpFrxnup3JSwKBnf7u0S4s+5vTaVQHTP0tDGy
-	 DhuL2zcxPG1Ms0qTDD1FX40Haj/+7dfOtU6xx1S8d5amefz1n8mTEanwJlZbfErJ9J
-	 BDMc3uoLiuLuEVlWLcHrLhlakP+C4K8w79ifl5s4=
+	b=x/lWEf1q6Att9Le+axjTD92FBjGMLk9yrhvGzTxo5Se/MF1JlvDGZCMMTCsbyp9bj
+	 rpRO1y+eOpykhLJIqDdO2SBkDlF76uiBgjR72Smd4JMDkL3BQoQ63Hja2IdO2Nlcx8
+	 srE9uWIsIpmIUhzoGeJv8pU+X5W1fTwi6TAH8tYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733078AbgFRCMS (ORCPT
+        id S1730489AbgFRBVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:12:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53830 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:21:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730492AbgFRBVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:21 -0400
+        id S1729850AbgFRBR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0519D21927;
-        Thu, 18 Jun 2020 01:21:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1EA6221EB;
+        Thu, 18 Jun 2020 01:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443281;
-        bh=5U5PiWIjiwW7vjikoQHtJKRjG+IOR2gWNoMdCr8MBEc=;
+        s=default; t=1592443077;
+        bh=0eZCzaA29B/tKnn9xm/dPG2PuxlOoiYtj/qC/nQTJgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i7Kv31swhaPLvY0X2J+Do/qhWLXr0rLpFtikJH5zy+hJ3AHps0JOuglqdW3DyhY3L
-         1GXNFHAEDYKF3veahBNCFaeLzaa+eqjzfZ51H1O9A3lEH4KweRwIMOvJmE01rSFLkP
-         2bQN1Gx4w53boccfBC1V/0pqKC53sNrR8llD9zV8=
+        b=at/aSwuGKCSKYw4Jw64Pc1z4Gng0zDM4lMx/5y6U5qE/bGY/9YoUDmoFHx5s040fD
+         O8nd8jHGWLqR0okL5j57A40FCX+HSdn0M5+O4dlO319vTpyrMKVeqFqcp5Atx4lIao
+         UTQR2IQYOixTT8CnE0fNj5RM0HpJtKeTPkglSyac=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 225/266] nfsd: safer handling of corrupted c_type
-Date:   Wed, 17 Jun 2020 21:15:50 -0400
-Message-Id: <20200618011631.604574-225-sashal@kernel.org>
+Cc:     Jon Derrick <jonathan.derrick@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 064/266] PCI: vmd: Filter resource type bits from shadow register
+Date:   Wed, 17 Jun 2020 21:13:09 -0400
+Message-Id: <20200618011631.604574-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -58,34 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-[ Upstream commit c25bf185e57213b54ea0d632ac04907310993433 ]
+[ Upstream commit 3e5095eebe015d5a4d566aa5e03c8621add5f0a7 ]
 
-This can only happen if there's a bug somewhere, so let's make it a WARN
-not a printk.  Also, I think it's safest to ignore the corruption rather
-than trying to fix it by removing a cache entry.
+Versions of VMD with the Host Physical Address shadow register use this
+register to calculate the bus address offset needed to do guest
+passthrough of the domain. This register shadows the Host Physical
+Address registers including the resource type bits. After calculating
+the offset, the extra resource type bits lead to the VMD resources being
+over-provisioned at the front and under-provisioned at the back.
 
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Example:
+pci 10000:80:02.0: reg 0x10: [mem 0xf801fffc-0xf803fffb 64bit]
+
+Expected:
+pci 10000:80:02.0: reg 0x10: [mem 0xf8020000-0xf803ffff 64bit]
+
+If other devices are mapped in the over-provisioned front, it could lead
+to resource conflict issues with VMD or those devices.
+
+Link: https://lore.kernel.org/r/20200528030240.16024-3-jonathan.derrick@intel.com
+Fixes: a1a30170138c9 ("PCI: vmd: Fix shadow offsets to reflect spec changes")
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfscache.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pci/controller/vmd.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-index 0c10bfea039e..4a258065188e 100644
---- a/fs/nfsd/nfscache.c
-+++ b/fs/nfsd/nfscache.c
-@@ -469,8 +469,7 @@ nfsd_cache_lookup(struct svc_rqst *rqstp)
- 		rtn = RC_REPLY;
- 		break;
- 	default:
--		printk(KERN_WARNING "nfsd: bad repcache type %d\n", rp->c_type);
--		nfsd_reply_cache_free_locked(b, rp, nn);
-+		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index a35d3f3996d7..0310fe367e01 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -593,9 +593,11 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 			if (!membar2)
+ 				return -ENOMEM;
+ 			offset[0] = vmd->dev->resource[VMD_MEMBAR1].start -
+-					readq(membar2 + MB2_SHADOW_OFFSET);
++					(readq(membar2 + MB2_SHADOW_OFFSET) &
++					 PCI_BASE_ADDRESS_MEM_MASK);
+ 			offset[1] = vmd->dev->resource[VMD_MEMBAR2].start -
+-					readq(membar2 + MB2_SHADOW_OFFSET + 8);
++					(readq(membar2 + MB2_SHADOW_OFFSET + 8) &
++					 PCI_BASE_ADDRESS_MEM_MASK);
+ 			pci_iounmap(vmd->dev, membar2);
+ 		}
  	}
- 
- 	goto out;
 -- 
 2.25.1
 
