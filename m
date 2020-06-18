@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA106C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C38E621924
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F989214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442637;
-	bh=IYJNKOK5cBTrSDuxAQOv5bJd8WQAogwI6p6Osfy88qk=;
+	s=default; t=1592442638;
+	bh=QqpywQU4j7DlGriZrifQlD4J68J04/CqPP3jGYn/NXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I0LdZPnr15BApYWOijm4fKIi+6yHjm4v+B16/FUQraHQGBFEUk9xTj9hYxX8RiMKc
-	 0XsJ7Jj3xETO2r+hlci2tQh/UQ53dZv2V54Rad7XxiELEwGBXtwRkflMV5pAVf+LJr
-	 G9+IXc6dq2/5PFqmRq4i+yqWh9WyZgHwm/Ul0jng=
+	b=q2/3S7Ru+wGu+efJ2wvIL5OMCnBnv0I8ac42ya/XGQURklIwYvcG3oAKRMNXiVYB/
+	 cQn59EGXzGeAji5RNSLsSXnTytLRSYR5IQWsxpMKLwmsGVCz7HPhd3RBNdF9KK5DC2
+	 qiE2xnqxRsfloFQYWyqA8dm8OiazQP4A0O3pCX3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgFRBKg (ORCPT
+        id S1728557AbgFRBKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37622 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:10:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728521AbgFRBKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:30 -0400
+        id S1727010AbgFRBKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9272D2089D;
-        Thu, 18 Jun 2020 01:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9284E21924;
+        Thu, 18 Jun 2020 01:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442629;
-        bh=IYJNKOK5cBTrSDuxAQOv5bJd8WQAogwI6p6Osfy88qk=;
+        s=default; t=1592442633;
+        bh=QqpywQU4j7DlGriZrifQlD4J68J04/CqPP3jGYn/NXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QKKuKD5bI6pyGPFnYRfaVrAXpjoxsFVl31K+EykBKNhfhsIp1Dew9zV9pyfl+II+x
-         Jrdo5e7eAc8fOnYsYgJWvdRgb2sGXz/kj5q65YjRuC/zB7mt6kbjn0O4urSW1Nq1vt
-         Med7Sif/1pPAw+/yqZfdAIG6rkJxkSkngtrQOG1Y=
+        b=SGHJLnTG+VUdw58PsvAaI3Dafr5ITIjHVO+aFe0KzHS9cVlduWCcJm3NjyO2VhPJO
+         i8YahpdLBNS/3xbUIsQmFE1+h7IMHes8PxNew7esYv1Ljynee35QjccXZq48L9Qdxk
+         6KhTjS49LOJIu68+MpnRSH3N3K2CkXzGCW7G9Fjg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 107/388] scsi: ibmvscsi: Don't send host info in adapter info MAD after LPM
-Date:   Wed, 17 Jun 2020 21:03:24 -0400
-Message-Id: <20200618010805.600873-107-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 110/388] ibmvnic: Flush existing work items before device removal
+Date:   Wed, 17 Jun 2020 21:03:27 -0400
+Message-Id: <20200618010805.600873-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,44 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit 4919b33b63c8b69d8dcf2b867431d0e3b6dc6d28 ]
+[ Upstream commit 6954a9e4192b86d778fb52b525fd7b62d51b1147 ]
 
-The adapter info MAD is used to send the client info and receive the host
-info as a response. A persistent buffer is used and as such the client info
-is overwritten after the response. During the course of a normal adapter
-reset the client info is refreshed in the buffer in preparation for sending
-the adapter info MAD.
+Ensure that all scheduled work items have completed before continuing
+with device removal and after further event scheduling has been
+halted. This patch fixes a bug where a scheduled driver reset event
+is processed following device removal.
 
-However, in the special case of LPM where we reenable the CRQ instead of a
-full CRQ teardown and reset we fail to refresh the client info in the
-adapter info buffer. As a result, after Live Partition Migration (LPM) we
-erroneously report the host's info as our own.
-
-[mkp: typos]
-
-Link: https://lore.kernel.org/r/20200603203632.18426-1-tyreld@linux.ibm.com
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ibmvscsi/ibmvscsi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/ibm/ibmvnic.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
-index 59f0f1030c54..c5711c659b51 100644
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -415,6 +415,8 @@ static int ibmvscsi_reenable_crq_queue(struct crq_queue *queue,
- 	int rc = 0;
- 	struct vio_dev *vdev = to_vio_dev(hostdata->dev);
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 197dc5b2c090..1b4d04e4474b 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -5184,6 +5184,9 @@ static int ibmvnic_remove(struct vio_dev *dev)
+ 	adapter->state = VNIC_REMOVING;
+ 	spin_unlock_irqrestore(&adapter->state_lock, flags);
  
-+	set_adapter_info(hostdata);
++	flush_work(&adapter->ibmvnic_reset);
++	flush_delayed_work(&adapter->ibmvnic_delayed_reset);
 +
- 	/* Re-enable the CRQ */
- 	do {
- 		if (rc)
+ 	rtnl_lock();
+ 	unregister_netdevice(netdev);
+ 
 -- 
 2.25.1
 
