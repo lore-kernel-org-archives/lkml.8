@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27699C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22B19214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CE921924
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442775;
-	bh=X1bPP0Ppu2B0hfJAJdDyWA0vfwek8lqw5fNy9LkxEZU=;
+	s=default; t=1592442782;
+	bh=th9LzinmB/iJByqx4yAfdoibilCaqLb71XRYANjmnxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q9h2EjsvqaH3L0x5leg6E6z9b7NFkdadKrw9R+E+a/9aDw0LRbUtNtRJ2AqHPSjWT
-	 mgUi5gvLZ3ECYuZxlTrik3a8fbK1urv7lJx+iGLKwxVgFnMFaiRN8VHQt1Z4iDiUIe
-	 Wb0xk+kp+/2FdPQCYMLp6lDJ21gGlLUzjTwwdAQk=
+	b=AC00pumwIqByESjC0jXvZp8FSupyMVAKgFpNGC1Ava+ajswReQIYWPhybSPc+SknP
+	 m8WID4IwcESVrOwZ3/KLbz1Wj39bmsalRITo7D/jPCxI+KFIJOIUkpghrdTW+A+KOE
+	 Mm5admBtCGihkk3yLi/cQPbYDgvgEkE6QM7xybTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgFRBMw (ORCPT
+        id S1727844AbgFRBM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:12:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40214 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:12:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728818AbgFRBL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:58 -0400
+        id S1727842AbgFRBMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7903021D7B;
-        Thu, 18 Jun 2020 01:11:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8270E20EDD;
+        Thu, 18 Jun 2020 01:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442718;
-        bh=X1bPP0Ppu2B0hfJAJdDyWA0vfwek8lqw5fNy9LkxEZU=;
+        s=default; t=1592442723;
+        bh=th9LzinmB/iJByqx4yAfdoibilCaqLb71XRYANjmnxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=02jiHTrFQdNYdDuWMN0P1KqsVkyICVIRI2n/DJy8FuVJ/QWkYuPz9Him1dBwldLw7
-         0gZR8eEb3Oi7D8MHbtx8nuI7EfOp8VipK/3f/xBFdWOkS4CWYoBdDBK13LernILzpT
-         +4XrNeu+JGbAaTO8aPvMj0tzaVRltweQt0tUL9Qc=
+        b=oPy5/jkspVZpMf/fD/AEeYz5xPac0eJU9QAmuuSQgMp8pY4J9mG7XUtpKY/hCop1d
+         kW4no/YUVtDCMJwSZS4PrfQi63+uLwMtc4w5KieG2h1t86fm2coRtDonrJ2r8AFCTH
+         o5N5o1t252ApOa8xZa7LW/lD4a2KxnvBjwcNRAF8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 177/388] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
-Date:   Wed, 17 Jun 2020 21:04:34 -0400
-Message-Id: <20200618010805.600873-177-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 181/388] power: supply: smb347-charger: IRQSTAT_D is volatile
+Date:   Wed, 17 Jun 2020 21:04:38 -0400
+Message-Id: <20200618010805.600873-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,53 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 66ff14e59e8a30690755b08bc3042359703fb07a ]
+[ Upstream commit c32ea07a30630ace950e07ffe7a18bdcc25898e1 ]
 
-7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
-Linux to enable ASPM, but for some undocumented reason, it didn't enable
-ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
+Fix failure when USB cable is connected:
+smb347 2-006a: reading IRQSTAT_D failed
 
-Remove this exclusion so we can enable ASPM on these links.
+Fixes: 1502cfe19bac ("smb347-charger: Fix battery status reporting logic for charger faults")
 
-The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
-PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
-Intel SoC to enter deeper Package C-states, which is a significant power
-savings.
-
-[bhelgaas: commit log]
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
-Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Tested-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aspm.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ drivers/power/supply/smb347-charger.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 2378ed692534..b17e5ffd31b1 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -628,16 +628,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 
- 	/* Setup initial capable state. Will be updated later */
- 	link->aspm_capable = link->aspm_support;
--	/*
--	 * If the downstream component has pci bridge function, don't
--	 * do ASPM for now.
--	 */
--	list_for_each_entry(child, &linkbus->devices, bus_list) {
--		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
--			link->aspm_disable = ASPM_STATE_ALL;
--			break;
--		}
--	}
- 
- 	/* Get and check endpoint acceptable latencies */
- 	list_for_each_entry(child, &linkbus->devices, bus_list) {
+diff --git a/drivers/power/supply/smb347-charger.c b/drivers/power/supply/smb347-charger.c
+index c1d124b8be0c..d102921b3ab2 100644
+--- a/drivers/power/supply/smb347-charger.c
++++ b/drivers/power/supply/smb347-charger.c
+@@ -1138,6 +1138,7 @@ static bool smb347_volatile_reg(struct device *dev, unsigned int reg)
+ 	switch (reg) {
+ 	case IRQSTAT_A:
+ 	case IRQSTAT_C:
++	case IRQSTAT_D:
+ 	case IRQSTAT_E:
+ 	case IRQSTAT_F:
+ 	case STAT_A:
 -- 
 2.25.1
 
