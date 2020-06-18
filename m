@@ -2,73 +2,108 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91416208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592468911;
-	bh=rsbp6hJoUotVkub0Zjiq15CM0A4qZNm99xzB9sFqpWY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=twd6sZOIE96RWwJBZN+Me+prgX/aK4bkdnM+FP8eb2pyG1VbxGPGyavqH4B/8QXrt
-	 RgumDhj3CxoSBMXd582WutayJDyv94qbFxEyYSUR+fQbNy5e9X91p+aWNOdFu3F7WF
-	 R6ik6X+4/chQDekTNyYxA0xa3rBX4ra0g0ujhWe4=
+	by mail.kernel.org (Postfix) with ESMTP id CEE4D208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:29:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="Xs4ICteQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbgFRI23 (ORCPT
+        id S1728677AbgFRI33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:28:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728493AbgFRI20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:28:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8248208DB;
-        Thu, 18 Jun 2020 08:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592468906;
-        bh=rsbp6hJoUotVkub0Zjiq15CM0A4qZNm99xzB9sFqpWY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s2kasy+IMIHSzwroVcoSz0bT9MAI1wdYjsNKJOuHiiqAmBWHsEotEl4tXsMgOodkK
-         NhRkOOve2xQ/nCjpFBtQmvaEiQrT0cN3l2l3Ncq9psnZ+u39krBN6ZGIyQXtFc1nf3
-         fGCeW/FiKqZ7iY6pgOt+AlZPckCxdr8GU4Q9LbYA=
-Date:   Thu, 18 Jun 2020 10:28:18 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>
-Cc:     "balbi@kernel.org" <balbi@kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSNOiDlm57lpI06IFtQQVRD?=
- =?utf-8?Q?H_v2=5D_usb=3A_gadget?= =?utf-8?Q?=3A?= function: printer: fix
- use-after-free in __lock_acquire
-Message-ID: <20200618082818.GA1058534@kroah.com>
-References: <20200608071622.33081-1-qiang.zhang@windriver.com>
- <20200608073305.GA252221@kroah.com>
- <DM5PR11MB2058F82DF00D26338119BF0FFF820@DM5PR11MB2058.namprd11.prod.outlook.com>
- <20200609094848.GA533476@kroah.com>
- <DM5PR11MB20589EB35828F823826FF4B3FF830@DM5PR11MB2058.namprd11.prod.outlook.com>
+        Thu, 18 Jun 2020 04:29:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728525AbgFRI3Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:29:25 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59F56C0613EF
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:29:24 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id t194so4695573wmt.4
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:29:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Q/FhG+4cBdMoXf+y+JoOK5WqKhNWLzcZaVPlv+0EOe4=;
+        b=Xs4ICteQ1OPmSSoWv+jtCE98IOKG6iUHTGtRho8Me7cN06JumB9ydwmlKrqn1S4jKD
+         8WN8oRkVeQUavOMZCftsP3ZK6Agva1sK8Thz6guwGDcabS2RbXFZyXSq3T+KKIowWwK1
+         zgrSgAcoH9ajA7uT8mhB/YjSuv/NpGE6+ZQLr26YOxTlFvrYxiKP1B5ud8uitLl9jyXd
+         +9g26EsyvRxDPrkH0owAeaOcfWcane+aUms66fX5GOAH24rVouMx3jRvOFWz/wGxrLpa
+         j/W6Doa6aHOGhix8AB17eEj6QBJ9yxk6S5j8mAoPp3nbDznge7/5oOQ0AjOxptijVler
+         nCOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Q/FhG+4cBdMoXf+y+JoOK5WqKhNWLzcZaVPlv+0EOe4=;
+        b=Jhmqv5lbgNA4phlTOYD0zzqXcW/isJcGyZWamXdzJtMMb1SMaAAaOMCJ15jDeIp1qf
+         04ov0mU0dOeFTsxctbuDPKLhb53/WuzyBgH+xhJ2wylC45efKVeEm6Cb3AkByjWHcI2g
+         v2Dlm+ZW4WAVYyfcT8PFNBTc4IZWg+20T3OiRbtZ2SjRe6s6/55wWd2GcRNTKKaXRfrE
+         eCiZQOMS8IQs9ZOAYCBPaX4NGXXOZjC/abAIysrynNLnA2m6nLlLjFFAZQhiKqNLl6JO
+         woxTMIsIZbUB2/R9YJKRBqxKYq8hqyZQ0ENNkEZLhBj4zLNRswiFRi7AmVqi+ApYYt7A
+         tuAw==
+X-Gm-Message-State: AOAM532UDdhEtS4gtDqKv7XyBfZaAu+IrkI0QV8hZz0O9VDwvhirkzeO
+        IItGQs/aP4QQbcXam15Vq+FkrQ==
+X-Google-Smtp-Source: ABdhPJy6DprN2pld8KJjwF0/B20ZndrUjmASu/OhSh3Fi3eGeCKWfhPJoh31NyS9wZTAiEQ4W4TVGQ==
+X-Received: by 2002:a1c:6346:: with SMTP id x67mr2074199wmb.139.1592468963125;
+        Thu, 18 Jun 2020 01:29:23 -0700 (PDT)
+Received: from localhost ([194.62.217.57])
+        by smtp.gmail.com with ESMTPSA id c16sm2612482wrx.4.2020.06.18.01.29.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 01:29:22 -0700 (PDT)
+From:   "Javier =?utf-8?B?R29uesOhbGV6?=" <javier@javigon.com>
+X-Google-Original-From: Javier =?utf-8?B?R29uesOhbGV6?= <javier.gonz@samsung.com>
+Date:   Thu, 18 Jun 2020 10:29:21 +0200
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, bcrl@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aio@kvack.org, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org, selvakuma.s1@samsung.com,
+        nj.shetty@samsung.com
+Subject: Re: [PATCH 0/3] zone-append support in aio and io-uring
+Message-ID: <20200618082921.zyc37cod2uhabd4e@mpHalley.local>
+References: <CGME20200617172653epcas5p488de50090415eb802e62acc0e23d8812@epcas5p4.samsung.com>
+ <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
+ <20200618065634.GB24943@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DM5PR11MB20589EB35828F823826FF4B3FF830@DM5PR11MB2058.namprd11.prod.outlook.com>
+In-Reply-To: <20200618065634.GB24943@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 04:58:44AM +0000, Zhang, Qiang wrote:
-> cdev  object reference count and "struct printer_dev" object
-> reference count(kref), This two reference counts do not conflict.  in
-> file usb-skeleton.c also used a similar method， "struct usb_skel"
-> contains kref members.
+On 17.06.2020 23:56, Christoph Hellwig wrote:
+>On Wed, Jun 17, 2020 at 10:53:36PM +0530, Kanchan Joshi wrote:
+>> This patchset enables issuing zone-append using aio and io-uring direct-io interface.
+>>
+>> For aio, this introduces opcode IOCB_CMD_ZONE_APPEND. Application uses start LBA
+>> of the zone to issue append. On completion 'res2' field is used to return
+>> zone-relative offset.
+>>
+>> For io-uring, this introduces three opcodes: IORING_OP_ZONE_APPEND/APPENDV/APPENDV_FIXED.
+>> Since io_uring does not have aio-like res2, cqe->flags are repurposed to return zone-relative offset
+>
+>And what exactly are the semantics supposed to be?  Remember the
+>unix file abstractions does not know about zones at all.
+>
+>I really don't think squeezing low-level not quite block storage
+>protocol details into the Linux read/write path is a good idea.
+>
+>What could be a useful addition is a way for O_APPEND/RWF_APPEND writes
+>to report where they actually wrote, as that comes close to Zone Append
+>while still making sense at our usual abstraction level for file I/O.
 
-I do not understand what you are referring to here, sorry.
+Makes sense. We will look into this for a V2.
 
-greg k-h
+Thanks,
+Javier
