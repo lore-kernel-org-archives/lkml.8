@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B21C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AE2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DBE720CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE44A20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442615;
-	bh=BGdvKK5DrbYBFeR4C8aGl3gQsYyEsDpaxKr1dkc8478=;
+	s=default; t=1592442620;
+	bh=Jalkbzk064ChzNnKiFq6hlj29dMf2nKAQl+Hxl4t3QY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R9/0GaRU7hgeExCUYk1Y2mv9cIu9+73Nte2rZ5sYINpFxdiswVx82jMqDKsREVQRe
-	 /ts/HG3AXsQN0BjaPoLzCMhkHn3SzhF/jql8XA1M7UOP7mHE1SpFbRwTFFVCWDRSfR
-	 fUUB446XxmgWTmjBrv1psALCO8TtYjIh3fTEy/S0=
+	b=yqg7vmJ2Fs2w+2FyowvEBAy74Ujq1YInIJfzU/IQuYRX6FFpktHvwzPNI8L3WRUKU
+	 UJYiiBINrrX6ugDuOdBrMxm0Xv8b2vid+kJCwyu4VNKJwtTR391kU5bcNxyJeCpHEs
+	 KAQyIDiQQNvn1UKlFSu8ptQkqxDSh9tNNuLvmVos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgFRBKN (ORCPT
+        id S1728458AbgFRBKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:10:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37002 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:10:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728385AbgFRBKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:05 -0400
+        id S1728436AbgFRBKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D718E21D7B;
-        Thu, 18 Jun 2020 01:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBE7C21D92;
+        Thu, 18 Jun 2020 01:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442605;
-        bh=BGdvKK5DrbYBFeR4C8aGl3gQsYyEsDpaxKr1dkc8478=;
+        s=default; t=1592442614;
+        bh=Jalkbzk064ChzNnKiFq6hlj29dMf2nKAQl+Hxl4t3QY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gmiAm8sEQw9CzzdNSxIKtk1WXyp3TJProqX1txhxhLyy74xJFLlJ2iMgOluSH3WG9
-         d4Ok5VC2xZgG4Hfg+0RJKIpFYRZ3GSipsHcR9HKfmRDBg1sE83VrJYlNFMzmQ0XM5v
-         3eG4LUMz4NDH7IeOwLLyZvIKfyy+UngUgtL7Ov/I=
+        b=wVjbK6OX/KKIhzNOhtEhEL52Fa3DSHd/ggzX0nqyRM42Din3pmdyLBpLFaXS8Zvmp
+         VKE0kq0xCcsuo70A6PnkCgvtOcJFYcbh2ab6PI1g73IfKsuAX/kN7AACF6XglZjRUS
+         HVGdwV7uGXRY9Ut9ArvtOpKx05jj9D87rGYququw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 091/388] crypto: omap-sham - huge buffer access fixes
-Date:   Wed, 17 Jun 2020 21:03:08 -0400
-Message-Id: <20200618010805.600873-91-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Alexander Fomichev <fomichev.ru@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
+        linux-ntb@googlegroups.com
+Subject: [PATCH AUTOSEL 5.7 095/388] NTB: ntb_pingpong: Choose doorbells based on port number
+Date:   Wed, 17 Jun 2020 21:03:12 -0400
+Message-Id: <20200618010805.600873-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,52 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 6395166d7a19019d5e9574eb9ecdaf0028abb887 ]
+[ Upstream commit ca93c45755da98302c93abdd788fc09113baf9e0 ]
 
-The ctx internal buffer can only hold buflen amount of data, don't try
-to copy over more than that. Also, initialize the context sg pointer
-if we only have data in the context internal buffer, this can happen
-when closing a hash with certain data amounts.
+This commit fixes pingpong support for existing drivers that do not
+implement ntb_default_port_number() and ntb_default_peer_port_number().
+This is required for hardware (like the crosslink topology of
+switchtec) which cannot assign reasonable port numbers to each port due
+to its perfect symmetry.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Instead of picking the doorbell to use based on the the index of the
+peer, we use the peer's port number. This is a bit clearer and easier
+to understand.
+
+Fixes: c7aeb0afdcc2 ("NTB: ntb_pp: Add full multi-port NTB API support")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Allen Hubbe <allenbh@gmail.com>
+Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/omap-sham.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/ntb/test/ntb_pingpong.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/crypto/omap-sham.c b/drivers/crypto/omap-sham.c
-index e4072cd38585..0cbf9c932a0f 100644
---- a/drivers/crypto/omap-sham.c
-+++ b/drivers/crypto/omap-sham.c
-@@ -751,8 +751,15 @@ static int omap_sham_align_sgs(struct scatterlist *sg,
- 	int offset = rctx->offset;
- 	int bufcnt = rctx->bufcnt;
+diff --git a/drivers/ntb/test/ntb_pingpong.c b/drivers/ntb/test/ntb_pingpong.c
+index 04dd46647db3..2164e8492772 100644
+--- a/drivers/ntb/test/ntb_pingpong.c
++++ b/drivers/ntb/test/ntb_pingpong.c
+@@ -121,15 +121,14 @@ static int pp_find_next_peer(struct pp_ctx *pp)
+ 	link = ntb_link_is_up(pp->ntb, NULL, NULL);
  
--	if (!sg || !sg->length || !nbytes)
-+	if (!sg || !sg->length || !nbytes) {
-+		if (bufcnt) {
-+			sg_init_table(rctx->sgl, 1);
-+			sg_set_buf(rctx->sgl, rctx->dd->xmit_buf, bufcnt);
-+			rctx->sg = rctx->sgl;
-+		}
+ 	/* Find next available peer */
+-	if (link & pp->nmask) {
++	if (link & pp->nmask)
+ 		pidx = __ffs64(link & pp->nmask);
+-		out_db = BIT_ULL(pidx + 1);
+-	} else if (link & pp->pmask) {
++	else if (link & pp->pmask)
+ 		pidx = __ffs64(link & pp->pmask);
+-		out_db = BIT_ULL(pidx);
+-	} else {
++	else
+ 		return -ENODEV;
+-	}
 +
- 		return 0;
-+	}
++	out_db = BIT_ULL(ntb_peer_port_number(pp->ntb, pidx));
  
- 	new_len = nbytes;
+ 	spin_lock(&pp->lock);
+ 	pp->out_pidx = pidx;
+@@ -303,7 +302,7 @@ static void pp_init_flds(struct pp_ctx *pp)
+ 			break;
+ 	}
  
-@@ -896,7 +903,7 @@ static int omap_sham_prepare_request(struct ahash_request *req, bool update)
- 	if (hash_later < 0)
- 		hash_later = 0;
+-	pp->in_db = BIT_ULL(pidx);
++	pp->in_db = BIT_ULL(lport);
+ 	pp->pmask = GENMASK_ULL(pidx, 0) >> 1;
+ 	pp->nmask = GENMASK_ULL(pcnt - 1, pidx);
  
--	if (hash_later) {
-+	if (hash_later && hash_later <= rctx->buflen) {
- 		scatterwalk_map_and_copy(rctx->buffer,
- 					 req->src,
- 					 req->nbytes - hash_later,
+@@ -432,4 +431,3 @@ static void __exit pp_exit(void)
+ 	debugfs_remove_recursive(pp_dbgfs_topdir);
+ }
+ module_exit(pp_exit);
+-
 -- 
 2.25.1
 
