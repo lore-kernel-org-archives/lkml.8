@@ -4,59 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AD4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A81C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3C4206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2540E206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447754;
-	bh=kxqYAnNo0yfJL0M5VhwLgRuBA7I/XIp6kxVkT84dpAs=;
+	s=default; t=1592447759;
+	bh=t7NGAJ12hbuDGKjfGVnXYy6akIlQVo8y+YiQXAZQ/mM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y3V7NNy8BZ7BWwVynsC0dfr9gXShSWQfQcZ4FzptiNT6GCtymzHwyqeZRMPeZSrrc
-	 gN+duopERN7Bg+ymmKEWqfpoKMAcYFPMjIC7wdcbB07QZzfZGvMB2WcbeLyP3+Kmrc
-	 on6DG+jNSFIDaq2pqEuSkcPufKG8+EkdTMpzLmDQ=
+	b=hR0+W/sdZUyf+UZgWz72V8vdzC7FjzTwP6japdCmVe+xza8WCzTahmiOqG+WI8mHp
+	 LL10YUgJIlGtoypop4l1L3A3hM0y9qqDHJOR6SI3UvDsqSKEgRZG/MaT9Ap9yR26e6
+	 z+Z/C4AhK6T6DpfhqT4yChjCQdLX9JIpcMwrH8LA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbgFRBOF (ORCPT
+        id S1729068AbgFRCf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:14:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41804 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:35:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729013AbgFRBM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:56 -0400
+        id S1729281AbgFRBOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD6D520EDD;
-        Thu, 18 Jun 2020 01:12:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53F2A21974;
+        Thu, 18 Jun 2020 01:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442775;
-        bh=kxqYAnNo0yfJL0M5VhwLgRuBA7I/XIp6kxVkT84dpAs=;
+        s=default; t=1592442846;
+        bh=t7NGAJ12hbuDGKjfGVnXYy6akIlQVo8y+YiQXAZQ/mM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YiWnTlLwtNZhH/fHnK3OFgSviK/nUa/xs0ojD8qXfiwKSNlIgzZMOHstq1YStG/VS
-         4D4jPfxo4IVbUIRcrhE2sdipb/jm+CKRwQesH2U5X+YGLNM6XuxYI0d4DSeHzsL6CN
-         WVnzUl09YEWQeIudKBvW28BCC2yZUWkuNY1O3nBQ=
+        b=JIOoplGkYxgoY45D+3GswEPW5I49FykCjQs85GZd0fcTZZrTSrzNMebG+fU6cLFzG
+         FXY2G0SzT3Qv+oJOpGOaePV7koyoXNygr9EHBXP1mOwmxThCu+V4ccofOqLCbLeDe0
+         D6o3Z4/wcS+ycHAL49+XQfUrebf+hPIAjh5eXnpI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 222/388] PCI: aardvark: Improve link training
-Date:   Wed, 17 Jun 2020 21:05:19 -0400
-Message-Id: <20200618010805.600873-222-sashal@kernel.org>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.7 278/388] powerpc/8xx: Drop CONFIG_8xx_COPYBACK option
+Date:   Wed, 17 Jun 2020 21:06:15 -0400
+Message-Id: <20200618010805.600873-278-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,213 +59,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Behún <marek.behun@nic.cz>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-[ Upstream commit 43fc679ced18006b12d918d7a8a4af392b7fbfe7 ]
+[ Upstream commit d3efcd38c0b99162d889e36a30425345a18edb33 ]
 
-Currently the aardvark driver trains link in PCIe gen2 mode. This may
-cause some buggy gen1 cards (such as Compex WLE900VX) to be unstable or
-even not detected. Moreover when ASPM code tries to retrain link second
-time, these cards may stop responding and link goes down. If gen1 is
-used this does not happen.
+CONFIG_8xx_COPYBACK was there to help disabling copyback cache mode
+for debuging hardware. But nobody will design new boards with 8xx now.
 
-Unconditionally forcing gen1 is not a good solution since it may have
-performance impact on gen2 cards.
+All 8xx platforms select it, so make it the default and remove
+the option.
 
-To overcome this, read 'max-link-speed' property (as defined in PCI
-device tree bindings) and use this as max gen mode. Then iteratively try
-link training at this mode or lower until successful. After successful
-link training choose final controller gen based on Negotiated Link Speed
-from Link Status register, which should match card speed.
+Also remove the Mx_RESETVAL values which are pretty useless and hide
+the real value while reading code.
 
-Link: https://lore.kernel.org/r/20200430080625.26070-5-pali@kernel.org
-Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/bcc968cda075516eb76e2f25e09821f582c566b4.1589866984.git.christophe.leroy@csgroup.eu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 114 ++++++++++++++++++++------
- 1 file changed, 89 insertions(+), 25 deletions(-)
+ arch/powerpc/configs/adder875_defconfig      |  1 -
+ arch/powerpc/configs/ep88xc_defconfig        |  1 -
+ arch/powerpc/configs/mpc866_ads_defconfig    |  1 -
+ arch/powerpc/configs/mpc885_ads_defconfig    |  1 -
+ arch/powerpc/configs/tqm8xx_defconfig        |  1 -
+ arch/powerpc/include/asm/nohash/32/mmu-8xx.h |  2 --
+ arch/powerpc/kernel/head_8xx.S               | 15 +--------------
+ arch/powerpc/platforms/8xx/Kconfig           |  9 ---------
+ 8 files changed, 1 insertion(+), 30 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 74b90940a9d4..e202f954eb84 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -40,6 +40,7 @@
- #define PCIE_CORE_LINK_CTRL_STAT_REG				0xd0
- #define     PCIE_CORE_LINK_L0S_ENTRY				BIT(0)
- #define     PCIE_CORE_LINK_TRAINING				BIT(5)
-+#define     PCIE_CORE_LINK_SPEED_SHIFT				16
- #define     PCIE_CORE_LINK_WIDTH_SHIFT				20
- #define PCIE_CORE_ERR_CAPCTL_REG				0x118
- #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
-@@ -201,6 +202,7 @@ struct advk_pcie {
- 	struct mutex msi_used_lock;
- 	u16 msi_msg;
- 	int root_bus_nr;
-+	int link_gen;
- 	struct pci_bridge_emul bridge;
- };
+diff --git a/arch/powerpc/configs/adder875_defconfig b/arch/powerpc/configs/adder875_defconfig
+index f55e23cb176c..5326bc739279 100644
+--- a/arch/powerpc/configs/adder875_defconfig
++++ b/arch/powerpc/configs/adder875_defconfig
+@@ -10,7 +10,6 @@ CONFIG_EXPERT=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_PPC_ADDER875=y
+-CONFIG_8xx_COPYBACK=y
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_1000=y
+ # CONFIG_SECCOMP is not set
+diff --git a/arch/powerpc/configs/ep88xc_defconfig b/arch/powerpc/configs/ep88xc_defconfig
+index 0e2e5e81a359..f5c3e72da719 100644
+--- a/arch/powerpc/configs/ep88xc_defconfig
++++ b/arch/powerpc/configs/ep88xc_defconfig
+@@ -12,7 +12,6 @@ CONFIG_EXPERT=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_PPC_EP88XC=y
+-CONFIG_8xx_COPYBACK=y
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_100=y
+ # CONFIG_SECCOMP is not set
+diff --git a/arch/powerpc/configs/mpc866_ads_defconfig b/arch/powerpc/configs/mpc866_ads_defconfig
+index 5320735395e7..5c56d36cdfc5 100644
+--- a/arch/powerpc/configs/mpc866_ads_defconfig
++++ b/arch/powerpc/configs/mpc866_ads_defconfig
+@@ -12,7 +12,6 @@ CONFIG_EXPERT=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_MPC86XADS=y
+-CONFIG_8xx_COPYBACK=y
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_1000=y
+ CONFIG_MATH_EMULATION=y
+diff --git a/arch/powerpc/configs/mpc885_ads_defconfig b/arch/powerpc/configs/mpc885_ads_defconfig
+index 82a008c04eae..949ff9ccda5e 100644
+--- a/arch/powerpc/configs/mpc885_ads_defconfig
++++ b/arch/powerpc/configs/mpc885_ads_defconfig
+@@ -11,7 +11,6 @@ CONFIG_EXPERT=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+-CONFIG_8xx_COPYBACK=y
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_100=y
+ # CONFIG_SECCOMP is not set
+diff --git a/arch/powerpc/configs/tqm8xx_defconfig b/arch/powerpc/configs/tqm8xx_defconfig
+index eda8bfb2d0a3..77857d513022 100644
+--- a/arch/powerpc/configs/tqm8xx_defconfig
++++ b/arch/powerpc/configs/tqm8xx_defconfig
+@@ -15,7 +15,6 @@ CONFIG_MODULE_SRCVERSION_ALL=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_TQM8XX=y
+-CONFIG_8xx_COPYBACK=y
+ # CONFIG_8xx_CPU15 is not set
+ CONFIG_GEN_RTC=y
+ CONFIG_HZ_100=y
+diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+index 76af5b0cb16e..26b7cee34dfe 100644
+--- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+@@ -19,7 +19,6 @@
+ #define MI_RSV4I	0x08000000	/* Reserve 4 TLB entries */
+ #define MI_PPCS		0x02000000	/* Use MI_RPN prob/priv state */
+ #define MI_IDXMASK	0x00001f00	/* TLB index to be loaded */
+-#define MI_RESETVAL	0x00000000	/* Value of register at reset */
  
-@@ -225,20 +227,16 @@ static int advk_pcie_link_up(struct advk_pcie *pcie)
+ /* These are the Ks and Kp from the PowerPC books.  For proper operation,
+  * Ks = 0, Kp = 1.
+@@ -95,7 +94,6 @@
+ #define MD_TWAM		0x04000000	/* Use 4K page hardware assist */
+ #define MD_PPCS		0x02000000	/* Use MI_RPN prob/priv state */
+ #define MD_IDXMASK	0x00001f00	/* TLB index to be loaded */
+-#define MD_RESETVAL	0x04000000	/* Value of register at reset */
  
- static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
- {
--	struct device *dev = &pcie->pdev->dev;
- 	int retries;
+ #define SPRN_M_CASID	793	/* Address space ID (context) to match */
+ #define MC_ASIDMASK	0x0000000f	/* Bits used for ASID value */
+diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
+index 073a651787df..905205c79a25 100644
+--- a/arch/powerpc/kernel/head_8xx.S
++++ b/arch/powerpc/kernel/head_8xx.S
+@@ -779,10 +779,7 @@ start_here:
+ initial_mmu:
+ 	li	r8, 0
+ 	mtspr	SPRN_MI_CTR, r8		/* remove PINNED ITLB entries */
+-	lis	r10, MD_RESETVAL@h
+-#ifndef CONFIG_8xx_COPYBACK
+-	oris	r10, r10, MD_WTDEF@h
+-#endif
++	lis	r10, MD_TWAM@h
+ 	mtspr	SPRN_MD_CTR, r10	/* remove PINNED DTLB entries */
  
- 	/* check if the link is up or not */
- 	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
--		if (advk_pcie_link_up(pcie)) {
--			dev_info(dev, "link up\n");
-+		if (advk_pcie_link_up(pcie))
- 			return 0;
--		}
- 
- 		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
- 	}
- 
--	dev_err(dev, "link never came up\n");
- 	return -ETIMEDOUT;
- }
- 
-@@ -253,6 +251,85 @@ static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
- 	}
- }
- 
-+static int advk_pcie_train_at_gen(struct advk_pcie *pcie, int gen)
-+{
-+	int ret, neg_gen;
-+	u32 reg;
-+
-+	/* Setup link speed */
-+	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-+	reg &= ~PCIE_GEN_SEL_MSK;
-+	if (gen == 3)
-+		reg |= SPEED_GEN_3;
-+	else if (gen == 2)
-+		reg |= SPEED_GEN_2;
-+	else
-+		reg |= SPEED_GEN_1;
-+	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-+
-+	/*
-+	 * Enable link training. This is not needed in every call to this
-+	 * function, just once suffices, but it does not break anything either.
-+	 */
-+	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-+	reg |= LINK_TRAINING_EN;
-+	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-+
-+	/*
-+	 * Start link training immediately after enabling it.
-+	 * This solves problems for some buggy cards.
-+	 */
-+	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
-+	reg |= PCIE_CORE_LINK_TRAINING;
-+	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
-+
-+	ret = advk_pcie_wait_for_link(pcie);
-+	if (ret)
-+		return ret;
-+
-+	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
-+	neg_gen = (reg >> PCIE_CORE_LINK_SPEED_SHIFT) & 0xf;
-+
-+	return neg_gen;
-+}
-+
-+static void advk_pcie_train_link(struct advk_pcie *pcie)
-+{
-+	struct device *dev = &pcie->pdev->dev;
-+	int neg_gen = -1, gen;
-+
-+	/*
-+	 * Try link training at link gen specified by device tree property
-+	 * 'max-link-speed'. If this fails, iteratively train at lower gen.
-+	 */
-+	for (gen = pcie->link_gen; gen > 0; --gen) {
-+		neg_gen = advk_pcie_train_at_gen(pcie, gen);
-+		if (neg_gen > 0)
-+			break;
-+	}
-+
-+	if (neg_gen < 0)
-+		goto err;
-+
-+	/*
-+	 * After successful training if negotiated gen is lower than requested,
-+	 * train again on negotiated gen. This solves some stability issues for
-+	 * some buggy gen1 cards.
-+	 */
-+	if (neg_gen < gen) {
-+		gen = neg_gen;
-+		neg_gen = advk_pcie_train_at_gen(pcie, gen);
-+	}
-+
-+	if (neg_gen == gen) {
-+		dev_info(dev, "link up at gen %i\n", gen);
-+		return;
-+	}
-+
-+err:
-+	dev_err(dev, "link never came up\n");
-+}
-+
- static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- {
- 	u32 reg;
-@@ -288,12 +365,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 		PCIE_CORE_CTRL2_TD_ENABLE;
- 	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
- 
--	/* Set GEN2 */
--	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
--	reg &= ~PCIE_GEN_SEL_MSK;
--	reg |= SPEED_GEN_2;
--	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
--
- 	/* Set lane X1 */
- 	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
- 	reg &= ~LANE_CNT_MSK;
-@@ -341,20 +412,7 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 	 */
- 	msleep(PCI_PM_D3COLD_WAIT);
- 
--	/* Enable link training */
--	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
--	reg |= LINK_TRAINING_EN;
--	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
--
--	/*
--	 * Start link training immediately after enabling it.
--	 * This solves problems for some buggy cards.
+ 	tlbia			/* Invalidate all TLB entries */
+@@ -857,17 +854,7 @@ initial_mmu:
+ 	mtspr	SPRN_DC_CST, r8
+ 	lis	r8, IDC_ENABLE@h
+ 	mtspr	SPRN_IC_CST, r8
+-#ifdef CONFIG_8xx_COPYBACK
+-	mtspr	SPRN_DC_CST, r8
+-#else
+-	/* For a debug option, I left this here to easily enable
+-	 * the write through cache mode
 -	 */
--	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
--	reg |= PCIE_CORE_LINK_TRAINING;
--	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+-	lis	r8, DC_SFWT@h
+ 	mtspr	SPRN_DC_CST, r8
+-	lis	r8, IDC_ENABLE@h
+-	mtspr	SPRN_DC_CST, r8
+-#endif
+ 	/* Disable debug mode entry on breakpoints */
+ 	mfspr	r8, SPRN_DER
+ #ifdef CONFIG_PERF_EVENTS
+diff --git a/arch/powerpc/platforms/8xx/Kconfig b/arch/powerpc/platforms/8xx/Kconfig
+index e0fe670f06f6..b37de62d7e7f 100644
+--- a/arch/powerpc/platforms/8xx/Kconfig
++++ b/arch/powerpc/platforms/8xx/Kconfig
+@@ -98,15 +98,6 @@ menu "MPC8xx CPM Options"
+ # 8xx specific questions.
+ comment "Generic MPC8xx Options"
+ 
+-config 8xx_COPYBACK
+-	bool "Copy-Back Data Cache (else Writethrough)"
+-	help
+-	  Saying Y here will cause the cache on an MPC8xx processor to be used
+-	  in Copy-Back mode.  If you say N here, it is used in Writethrough
+-	  mode.
 -
--	advk_pcie_wait_for_link(pcie);
-+	advk_pcie_train_link(pcie);
- 
- 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
- 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
-@@ -988,6 +1046,12 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 	}
- 	pcie->root_bus_nr = bus->start;
- 
-+	ret = of_pci_get_max_link_speed(dev->of_node);
-+	if (ret <= 0 || ret > 3)
-+		pcie->link_gen = 3;
-+	else
-+		pcie->link_gen = ret;
-+
- 	advk_pcie_setup_hw(pcie);
- 
- 	advk_sw_pci_bridge_init(pcie);
+-	  If in doubt, say Y here.
+-
+ config 8xx_GPIO
+ 	bool "GPIO API Support"
+ 	select GPIOLIB
 -- 
 2.25.1
 
