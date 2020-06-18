@@ -2,51 +2,53 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C308C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A60AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE479221EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FE88221F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442857;
-	bh=ODYygIm/zaKj9Zv+hM2tviPDfsWFKYFxA44LxJQKfnw=;
+	s=default; t=1592442873;
+	bh=0V7dE6479ka7p+b1cgEb56ZJP10pjJxIG98AhJLSwms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h+qBcmRneorM1UeJclw+wXUpw6AO/Ew6RgWAYFPSjSxi2e0HLPiB2/yHPkDT0RbM0
-	 N0p8a2d6jtI62fU6MwKFK8x3NhukiCTHL648gfj83uzD0Wn/0t8Du2wkScbNX+OAo/
-	 xF5bssc3pFXTmUhr6x6xUlbA5zVq7YqkvaMrZb1Q=
+	b=l9oUee+b+iHHqe8VJv7L3Z9d5M79Tb4HxUhSwasoGr1rxF9bs2fk7qPICDHOjXrzD
+	 lNWqAOLqhy0fjyQAsCJJYE8PTYGekTSP9PIr59kU1PDW/CffamrrgAJg2z4T/48e7y
+	 ffBcwR0UhktQYjyZIbRMuRKec9RKoT3qQdWG/Vtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgFRBOQ (ORCPT
+        id S1729321AbgFRBOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:14:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41894 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:14:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbgFRBNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:00 -0400
+        id S1728437AbgFRBNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D36C420CC7;
-        Thu, 18 Jun 2020 01:12:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5930620CC7;
+        Thu, 18 Jun 2020 01:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442779;
-        bh=ODYygIm/zaKj9Zv+hM2tviPDfsWFKYFxA44LxJQKfnw=;
+        s=default; t=1592442790;
+        bh=0V7dE6479ka7p+b1cgEb56ZJP10pjJxIG98AhJLSwms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcylqQbSAckpBvAq5fqSvrfzkEwzIUJptlFurscJKpTuS9qg9ssjFqklezgzBpk6w
-         Iv46wcCQtWNy1wzacycvnzJaS2gzODu+vWbqxwy37QyZ3GNkZhDa+y1sRZsGYJmSwi
-         PKDX1WWSTiQCnWgFEAi54wunC+0/RPw1FhHXbgks=
+        b=Oyfh1tAP8QLJlTVR7PTOsNpLv3Wp5bu7nxdhaDkQ0lMeVL6cfmJcgUoe9myOHknmE
+         osySGuxvUwt88LNZ7tH2QcYai5Liv9VG9qz2KAvZSs4+mG7Je/xnvR6s++K1Qr3VoL
+         XhXEvnZB/jhOQHhUPP27TEij1v2Ot2RWbKfzYYqY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sanket Parmar <sparmar@cadence.com>, Roger Quadros <rogerq@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 225/388] phy: cadence: sierra: Fix for USB3 U1/U2 state
-Date:   Wed, 17 Jun 2020 21:05:22 -0400
-Message-Id: <20200618010805.600873-225-sashal@kernel.org>
+Cc:     Tang Bin <tangbin@cmss.chinamobile.com>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 233/388] USB: host: ehci-mxc: Add error handling in ehci_mxc_drv_probe()
+Date:   Wed, 17 Jun 2020 21:05:30 -0400
+Message-Id: <20200618010805.600873-233-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,95 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanket Parmar <sparmar@cadence.com>
+From: Tang Bin <tangbin@cmss.chinamobile.com>
 
-[ Upstream commit 2bcf14ca1a2f3202954f812f380c7fa8127fbd7f ]
+[ Upstream commit d49292025f79693d3348f8e2029a8b4703be0f0a ]
 
-Updated values of USB3 related Sierra PHY registers.
-This change fixes USB3 device disconnect issue observed
-while enternig U1/U2 state.
+The function ehci_mxc_drv_probe() does not perform sufficient error
+checking after executing platform_get_irq(), thus fix it.
 
-Signed-off-by: Sanket Parmar <sparmar@cadence.com>
-Link: https://lore.kernel.org/r/1589804053-14302-1-git-send-email-sparmar@cadence.com
-Reviewed-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Fixes: 7e8d5cd93fac ("USB: Add EHCI support for MX27 and MX31 based boards")
+Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20200513132647.5456-1-tangbin@cmss.chinamobile.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/cadence/phy-cadence-sierra.c | 27 ++++++++++++------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ drivers/usb/host/ehci-mxc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
-index a5c08e5bd2bf..faed652b73f7 100644
---- a/drivers/phy/cadence/phy-cadence-sierra.c
-+++ b/drivers/phy/cadence/phy-cadence-sierra.c
-@@ -685,10 +685,10 @@ static struct cdns_reg_pairs cdns_usb_cmn_regs_ext_ssc[] = {
- static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
- 	{0xFE0A, SIERRA_DET_STANDEC_A_PREG},
- 	{0x000F, SIERRA_DET_STANDEC_B_PREG},
--	{0x00A5, SIERRA_DET_STANDEC_C_PREG},
-+	{0x55A5, SIERRA_DET_STANDEC_C_PREG},
- 	{0x69ad, SIERRA_DET_STANDEC_D_PREG},
- 	{0x0241, SIERRA_DET_STANDEC_E_PREG},
--	{0x0010, SIERRA_PSM_LANECAL_DLY_A1_RESETS_PREG},
-+	{0x0110, SIERRA_PSM_LANECAL_DLY_A1_RESETS_PREG},
- 	{0x0014, SIERRA_PSM_A0IN_TMR_PREG},
- 	{0xCF00, SIERRA_PSM_DIAG_PREG},
- 	{0x001F, SIERRA_PSC_TX_A0_PREG},
-@@ -696,7 +696,7 @@ static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
- 	{0x0003, SIERRA_PSC_TX_A2_PREG},
- 	{0x0003, SIERRA_PSC_TX_A3_PREG},
- 	{0x0FFF, SIERRA_PSC_RX_A0_PREG},
--	{0x0619, SIERRA_PSC_RX_A1_PREG},
-+	{0x0003, SIERRA_PSC_RX_A1_PREG},
- 	{0x0003, SIERRA_PSC_RX_A2_PREG},
- 	{0x0001, SIERRA_PSC_RX_A3_PREG},
- 	{0x0001, SIERRA_PLLCTRL_SUBRATE_PREG},
-@@ -705,19 +705,19 @@ static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
- 	{0x00CA, SIERRA_CLKPATH_BIASTRIM_PREG},
- 	{0x2512, SIERRA_DFE_BIASTRIM_PREG},
- 	{0x0000, SIERRA_DRVCTRL_ATTEN_PREG},
--	{0x873E, SIERRA_CLKPATHCTRL_TMR_PREG},
--	{0x03CF, SIERRA_RX_CREQ_FLTR_A_MODE1_PREG},
--	{0x01CE, SIERRA_RX_CREQ_FLTR_A_MODE0_PREG},
-+	{0x823E, SIERRA_CLKPATHCTRL_TMR_PREG},
-+	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE1_PREG},
-+	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE0_PREG},
- 	{0x7B3C, SIERRA_CREQ_CCLKDET_MODE01_PREG},
--	{0x033F, SIERRA_RX_CTLE_MAINTENANCE_PREG},
-+	{0x023C, SIERRA_RX_CTLE_MAINTENANCE_PREG},
- 	{0x3232, SIERRA_CREQ_FSMCLK_SEL_PREG},
- 	{0x0000, SIERRA_CREQ_EQ_CTRL_PREG},
--	{0x8000, SIERRA_CREQ_SPARE_PREG},
-+	{0x0000, SIERRA_CREQ_SPARE_PREG},
- 	{0xCC44, SIERRA_CREQ_EQ_OPEN_EYE_THRESH_PREG},
--	{0x8453, SIERRA_CTLELUT_CTRL_PREG},
--	{0x4110, SIERRA_DFE_ECMP_RATESEL_PREG},
--	{0x4110, SIERRA_DFE_SMP_RATESEL_PREG},
--	{0x0002, SIERRA_DEQ_PHALIGN_CTRL},
-+	{0x8452, SIERRA_CTLELUT_CTRL_PREG},
-+	{0x4121, SIERRA_DFE_ECMP_RATESEL_PREG},
-+	{0x4121, SIERRA_DFE_SMP_RATESEL_PREG},
-+	{0x0003, SIERRA_DEQ_PHALIGN_CTRL},
- 	{0x3200, SIERRA_DEQ_CONCUR_CTRL1_PREG},
- 	{0x5064, SIERRA_DEQ_CONCUR_CTRL2_PREG},
- 	{0x0030, SIERRA_DEQ_EPIPWR_CTRL2_PREG},
-@@ -725,7 +725,7 @@ static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
- 	{0x5A5A, SIERRA_DEQ_ERRCMP_CTRL_PREG},
- 	{0x02F5, SIERRA_DEQ_OFFSET_CTRL_PREG},
- 	{0x02F5, SIERRA_DEQ_GAIN_CTRL_PREG},
--	{0x9A8A, SIERRA_DEQ_VGATUNE_CTRL_PREG},
-+	{0x9999, SIERRA_DEQ_VGATUNE_CTRL_PREG},
- 	{0x0014, SIERRA_DEQ_GLUT0},
- 	{0x0014, SIERRA_DEQ_GLUT1},
- 	{0x0014, SIERRA_DEQ_GLUT2},
-@@ -772,6 +772,7 @@ static struct cdns_reg_pairs cdns_usb_ln_regs_ext_ssc[] = {
- 	{0x000F, SIERRA_LFPSFILT_NS_PREG},
- 	{0x0009, SIERRA_LFPSFILT_RD_PREG},
- 	{0x0001, SIERRA_LFPSFILT_MP_PREG},
-+	{0x6013, SIERRA_SIGDET_SUPPORT_PREG},
- 	{0x8013, SIERRA_SDFILT_H2L_A_PREG},
- 	{0x8009, SIERRA_SDFILT_L2H_PREG},
- 	{0x0024, SIERRA_RXBUFFER_CTLECTRL_PREG},
+diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
+index c9f91e6c72b6..7f65c86047dd 100644
+--- a/drivers/usb/host/ehci-mxc.c
++++ b/drivers/usb/host/ehci-mxc.c
+@@ -50,6 +50,8 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
++		return irq;
+ 
+ 	hcd = usb_create_hcd(&ehci_mxc_hc_driver, dev, dev_name(dev));
+ 	if (!hcd)
 -- 
 2.25.1
 
