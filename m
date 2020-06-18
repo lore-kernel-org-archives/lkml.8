@@ -2,124 +2,124 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8187CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FBBD207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:46:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fYzn15gZ"
+	by mail.kernel.org (Postfix) with ESMTP id BAE99207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:48:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592509725;
+	bh=2WbucPymt+u2OYToSgRJLcWsjqsg4OQUL7wnpsVWJKM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nPUteJM8pUbjvMnuu7mVE0m4kPA7vOtZiHD3BfSwEbHnKA7ZU0+YH1dzzH1oXQ2/N
+	 /JhuvA9f9yI6Ya8Lg3jwIMvqkkVD5ldbZ1Ynbh3DwY6QqcPaxIczeGjMgi3dUyqrw/
+	 ablKbKyZiiOGD5S64bfmZyHL+6f9/ggLjtiAdptQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgFRTqm (ORCPT
+        id S1729311AbgFRTso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 15:46:42 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56242 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727978AbgFRTqk (ORCPT
+        Thu, 18 Jun 2020 15:48:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727860AbgFRTsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 15:46:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592509599;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vAJJkV1IQ09o/T5NpQxIqWNeq9rz8g5RYhknLPVSVoA=;
-        b=fYzn15gZgRg8nB8jQUpnTa2fUOiBfOX52xDdzx/9HEMX7y7O3UBlbXNTvtvDjOH0Q6RJei
-        SRK19wvJ91531whOPxyALb30RVnIKG7ip0VnjjmvrtksvUqk0zkzH9yKXhMwpK9dF9bV2P
-        GTqIZ98iB5PHd3wZHrwtPpBUBOJ+sIA=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-387-gU6d5uNEMHmJe5jQc5Iy0Q-1; Thu, 18 Jun 2020 15:46:37 -0400
-X-MC-Unique: gU6d5uNEMHmJe5jQc5Iy0Q-1
-Received: by mail-qv1-f69.google.com with SMTP id 59so4906722qvb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 12:46:37 -0700 (PDT)
+        Thu, 18 Jun 2020 15:48:42 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F154AC0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 12:48:41 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id o4so4203517lfi.7
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 12:48:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zAj23S3Mp6rRGO4SN+Gp5C3WPkcIYgiIEGIXxkjYIf0=;
+        b=O8vGhvfOfOq9wLj1E8rP/VwqEBx1zwNPyHW+trZ6ABPefealuQSSUilZwTmE1SLwx3
+         zEwIy5hJ4gIay72KjTq2B1QzBGNJ+P/4jwxTdP42XjdJJEBlYBl/eBUwneIpV2J18exN
+         a/r+v/+JeACo1IVMd6iMfbPGsYHL+wiwfVYwk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=vAJJkV1IQ09o/T5NpQxIqWNeq9rz8g5RYhknLPVSVoA=;
-        b=JeQ6rV/VizRTCSfGN0f/EbcNMQW6OwCdQhzbqzfj/YPBoDg6+q90ItwHAVKElCv2OK
-         MIJJHVQYMUeienbwHX0sL2EA8/18wte2ppsgwj+Ig9epc7y3TqGsxY/N2cxaP++RQgwf
-         nebt72nL+1Ke+A0Q4NBJcgkA2wu9/8fxx1W+zry12B1YDC5rT5pYO4Jn0XtuYoYv3Jr2
-         kBv3p0HfTpwHNIFgkcAU2K5JnN9C/xd/Nya5t9R48tZWcaTkVQ5M1BCsba0XapA7Wwzf
-         FrqpJ8wwuk0sXW0dBex1e/g2RISFPrV+M8RMYcGf1vnRGwgFkIPh65vFymGmRs8Z/9TD
-         +c4w==
-X-Gm-Message-State: AOAM5310bocaDHhBwKadjTtm2pvyNhXFbDAaW5f2QGS2Sm/ShG16u1m6
-        tJ77OnCIqxT8T5PmYefmxbFgqjM6pDoL7f/84367i3J1zOBSfVp+AN9JmuOd164xpfRseRs3yjh
-        eQOP+ASMossJSdqpY5vOa4j45
-X-Received: by 2002:a05:6214:10cb:: with SMTP id r11mr5368151qvs.203.1592509597359;
-        Thu, 18 Jun 2020 12:46:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJywrhpNMyyljoqo7iW7mbIgk7aOwkBo1Yv2CLk4QFD+fxF07OsuL8qL4aJVuxLYbOl5aNqUVw==
-X-Received: by 2002:a05:6214:10cb:: with SMTP id r11mr5368140qvs.203.1592509597113;
-        Thu, 18 Jun 2020 12:46:37 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id l188sm3605655qke.127.2020.06.18.12.46.35
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zAj23S3Mp6rRGO4SN+Gp5C3WPkcIYgiIEGIXxkjYIf0=;
+        b=gp8Yxu0FLIZqtu60URtxUy/HIvcIi39fkjtfAb5CuUOvJNdjHbqvnGhbVOhcW559WO
+         YfkrYdwsNLZRQuuaMWsL46P9/a43wMyzf4SsfS5uE2RLIwmqAo2sjpIFei0oSWpf/Zu1
+         tkjwtSJytcub5vUPzW/DSRRFm7uVd+RWbmWbxxNP8euyxJELlQ/0YNJlQ1MlAtHYGuhT
+         9fUbDNMbdFavxoIENncKUphLfqLKTC01OUNr6MsibES7bnd9GzupPQYrBmf30aTeAk/j
+         NgEsFtFZVhc3GwMsV/eJGQYje362ZmD7xi1HXXT0OhXGB5IVsQSDGODIjhwzGz5a+Wat
+         Etpw==
+X-Gm-Message-State: AOAM530GR0qZzhRt7t7YkkZb0g8fufkJ8XuAA3cba/esc9oPOdXGH4Ad
+        O4wii75LJ/tlFQiaR3e4zRO6uZ80S0Q=
+X-Google-Smtp-Source: ABdhPJxX1C79ywH8Cmtsr6C5Sv3ezUzAPj3UouKzhRHHc7F1pdgolQ35n8KRod/TcqSqTEmS3dXqqw==
+X-Received: by 2002:ac2:558f:: with SMTP id v15mr3193613lfg.187.1592509719879;
+        Thu, 18 Jun 2020 12:48:39 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id v28sm943505lfd.35.2020.06.18.12.48.38
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 12:46:36 -0700 (PDT)
-Subject: Re: [PATCH v2 0/6] add regmap & indirect access support
-To:     Xu Yilun <yilun.xu@intel.com>, broonie@kernel.org,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     hao.wu@intel.com, matthew.gerlach@linux.intel.com,
-        russell.h.weight@intel.com
-References: <1592493910-30473-1-git-send-email-yilun.xu@intel.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <1f684924-44a3-ca47-5f69-3401a6389e38@redhat.com>
-Date:   Thu, 18 Jun 2020 12:46:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 18 Jun 2020 12:48:38 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id i27so8702447ljb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 12:48:38 -0700 (PDT)
+X-Received: by 2002:a2e:8e78:: with SMTP id t24mr9039ljk.314.1592509718255;
+ Thu, 18 Jun 2020 12:48:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1592493910-30473-1-git-send-email-yilun.xu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200617073755.8068-1-hch@lst.de>
+In-Reply-To: <20200617073755.8068-1-hch@lst.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 18 Jun 2020 12:48:22 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjpnu=882iD9ck9Ywt6R1LYX_Hv-oS7dBMsWZwDRGZ5jA@mail.gmail.com>
+Message-ID: <CAHk-=wjpnu=882iD9ck9Ywt6R1LYX_Hv-oS7dBMsWZwDRGZ5jA@mail.gmail.com>
+Subject: Re: rename probe_kernel_* and probe_user_*
+To:     Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Tony Luck <tony.luck@intel.com>, Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set looks good to me.
+[ Explicitly added architecture lists and developers to the cc to make
+this more visible ]
 
-Reviewed-by : Tom Rix <trix@redhat.com>
+On Wed, Jun 17, 2020 at 12:38 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Andrew and I decided to drop the patches implementing your suggested
+> rename of the probe_kernel_* and probe_user_* helpers from -mm as there
+> were way to many conflicts.  After -rc1 might be a good time for this as
+> all the conflicts are resolved now.
 
-Tom
+So I've merged this renaming now, together with my changes to make
+'get_kernel_nofault()' look and act a lot more like 'get_user()'.
 
-On 6/18/20 8:25 AM, Xu Yilun wrote:
-> Updated the regmap & indirect access support for spi-altera.
->
-> Patch #1, #2, #3 is already applied.
-> Patch #4 is an 1:1 replacement of of readl/writel with regmap_read/write
-> Patch #5 introduced a new platform_device_id to support indirect access as
->          a sub device.
-> Patch #6 is a minor fix.
->
-> Main changes from v1: 
->  - Split the v1 Patch #4 to v2 Patch #4 & #5. 
->  - Add a new platform_device_id to support indirect access.
->  - Removed the v1 Patch #5. Now we use driver name string directly.
->  - Add Yilun's Signed-off-by for Patch #6
->
->
-> Matthew Gerlach (1):
->   spi: altera: fix size mismatch on 64 bit processors
->
-> Xu Yilun (5):
->   spi: altera: add 32bit data width transfer support.
->   spi: altera: add SPI core parameters support via platform data.
->   spi: altera: add platform data for slave information.
->   spi: altera: use regmap-mmio instead of direct mmio register access
->   spi: altera: support indirect access to the registers
->
->  drivers/spi/Kconfig        |   1 +
->  drivers/spi/spi-altera.c   | 177 +++++++++++++++++++++++++++++++++++++++------
->  include/linux/spi/altera.h |  29 ++++++++
->  3 files changed, 183 insertions(+), 24 deletions(-)
->  create mode 100644 include/linux/spi/altera.h
->
+It just felt wrong (and potentially dangerous) to me to have a
+'get_kernel_nofault()' naming that implied semantics that we're all
+familiar with from 'get_user()', but acting very differently.
 
+But part of the fixups I made for the type checking are for
+architectures where I didn't even compile-test the end result. I
+looked at every case individually, and the patch looks sane, but I
+could have screwed something up.
+
+Basically, 'get_kernel_nofault()' doesn't do the same automagic type
+munging from the pointer to the target that 'get_user()' does, but at
+least now it checks that the types are superficially compatible.
+There should be build failures if they aren't, but I hopefully fixed
+everything up properly for all architectures.
+
+This email is partly to ask people to double-check, but partly just as
+a heads-up so that _if_ I screwed something up, you'll have the
+background and it won't take you by surprise.
+
+               Linus
