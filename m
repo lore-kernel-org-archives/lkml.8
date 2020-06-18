@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A96FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 466422073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ACF82075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444775;
-	bh=aKjmy7E+bzZw3tUV8J+P3Mn4Gqs8+hbgdrY6IkG13cQ=;
+	s=default; t=1592444780;
+	bh=QgJqeKVZ+fjCXw8+dUiiojzmxkkV0/sy5VDLp1bn+Sg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h6/HjT3ORZE7M/rsw90c+QsdeRraXppGU91auvBxsQ4RvDUxhwX8F01yWCmWr1MHK
-	 gA1EW2+uePVLmP4z1mOpIUB1ge+IH0Je9YW/+LWQpSE3DQbtvKCYJ1jDiGhFrylbvH
-	 pXErp+jpiwDD3Ysc8W90Aw8tWyjjINcKxp2ZsC1I=
+	b=uNMCvj/Et8uVgdnlihUiQElNWU9Tg1TzGsvlzvpdUY1ePBFoYUxpoHclaeRhhRKUU
+	 1W6sdnA2Ib94NsCkHKQd2OIY7U3QPoYE7RIlVy5oBUulqfuSohie2Eh4waht28e+vT
+	 NgCO4DNCRtvDnGrapgfzTlrvUrmfAIEhNudqP2Ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732376AbgFRBqO (ORCPT
+        id S1732101AbgFRB2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:46:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731475AbgFRB2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:28:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731381AbgFRBZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82C842220C;
-        Thu, 18 Jun 2020 01:28:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFEEC21D80;
+        Thu, 18 Jun 2020 01:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443711;
-        bh=aKjmy7E+bzZw3tUV8J+P3Mn4Gqs8+hbgdrY6IkG13cQ=;
+        s=default; t=1592443514;
+        bh=QgJqeKVZ+fjCXw8+dUiiojzmxkkV0/sy5VDLp1bn+Sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rFKG4g/ssvhFVdF1z4hNWKhxKVn9X+fmbAsghVt1f5uVPThc1abekEx3ToP7NHltU
-         qP5jhtRq9QcADMhkFYcd0V+xanVEX3RpE5y43VyzVC2pV3jS1/fzKid6qorvdU1DOf
-         Xzc6CWbkTsAsYHjBuMgtaJd1hWmLnqm31zH4ju/A=
+        b=t21GHi9/J5gRnmGqOd7HQHQGAkBuL9m4SVGj31NA/Qg0C/46xlTb4P3u8T4k/PI+I
+         TWHv7OYskbfcbkFg9frzz2ZkUbJ5HG/2Y2M485KuS9HVWh9ytlCdyOamUYwaF7R+zP
+         4qb6fu7yBpOYbD98XCcRVtXlN6ov86nubsw1F/qk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.9 09/80] ALSA: isa/wavefront: prevent out of bounds write in ioctl
-Date:   Wed, 17 Jun 2020 21:27:08 -0400
-Message-Id: <20200618012819.609778-9-sashal@kernel.org>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-unionfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 138/172] ovl: verify permissions in ovl_path_open()
+Date:   Wed, 17 Jun 2020 21:21:44 -0400
+Message-Id: <20200618012218.607130-138-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
-References: <20200618012819.609778-1-sashal@kernel.org>
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,47 +58,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-[ Upstream commit 7f0d5053c5a9d23fe5c2d337495a9d79038d267b ]
+[ Upstream commit 56230d956739b9cb1cbde439d76227d77979a04d ]
 
-The "header->number" comes from the ioctl and it needs to be clamped to
-prevent out of bounds writes.
+Check permission before opening a real file.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200501094011.GA960082@mwanda
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+ovl_path_open() is used by readdir and copy-up routines.
+
+ovl_permission() theoretically already checked copy up permissions, but it
+doesn't hurt to re-do these checks during the actual copy-up.
+
+For directory reading ovl_permission() only checks access to topmost
+underlying layer.  Readdir on a merged directory accesses layers below the
+topmost one as well.  Permission wasn't checked for these layers.
+
+Note: modifying ovl_permission() to perform this check would be far more
+complex and hence more bug prone.  The result is less precise permissions
+returned in access(2).  If this turns out to be an issue, we can revisit
+this bug.
+
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/isa/wavefront/wavefront_synth.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/overlayfs/util.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/sound/isa/wavefront/wavefront_synth.c b/sound/isa/wavefront/wavefront_synth.c
-index 718d5e3b7806..6c06d0645779 100644
---- a/sound/isa/wavefront/wavefront_synth.c
-+++ b/sound/isa/wavefront/wavefront_synth.c
-@@ -1174,7 +1174,10 @@ wavefront_send_alias (snd_wavefront_t *dev, wavefront_patch_info *header)
- 				      "alias for %d\n",
- 				      header->number,
- 				      header->hdr.a.OriginalSample);
--    
-+
-+	if (header->number >= WF_MAX_SAMPLE)
-+		return -EINVAL;
-+
- 	munge_int32 (header->number, &alias_hdr[0], 2);
- 	munge_int32 (header->hdr.a.OriginalSample, &alias_hdr[2], 2);
- 	munge_int32 (*((unsigned int *)&header->hdr.a.sampleStartOffset),
-@@ -1205,6 +1208,9 @@ wavefront_send_multisample (snd_wavefront_t *dev, wavefront_patch_info *header)
- 	int num_samples;
- 	unsigned char *msample_hdr;
+diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
+index db8bdb29b320..afbc6a97da2a 100644
+--- a/fs/overlayfs/util.c
++++ b/fs/overlayfs/util.c
+@@ -479,7 +479,32 @@ bool ovl_is_whiteout(struct dentry *dentry)
  
-+	if (header->number >= WF_MAX_SAMPLE)
-+		return -EINVAL;
+ struct file *ovl_path_open(struct path *path, int flags)
+ {
+-	return dentry_open(path, flags | O_NOATIME, current_cred());
++	struct inode *inode = d_inode(path->dentry);
++	int err, acc_mode;
 +
- 	msample_hdr = kmalloc(WF_MSAMPLE_BYTES, GFP_KERNEL);
- 	if (! msample_hdr)
- 		return -ENOMEM;
++	if (flags & ~(O_ACCMODE | O_LARGEFILE))
++		BUG();
++
++	switch (flags & O_ACCMODE) {
++	case O_RDONLY:
++		acc_mode = MAY_READ;
++		break;
++	case O_WRONLY:
++		acc_mode = MAY_WRITE;
++		break;
++	default:
++		BUG();
++	}
++
++	err = inode_permission(inode, acc_mode | MAY_OPEN);
++	if (err)
++		return ERR_PTR(err);
++
++	/* O_NOATIME is an optimization, don't fail if not permitted */
++	if (inode_owner_or_capable(inode))
++		flags |= O_NOATIME;
++
++	return dentry_open(path, flags, current_cred());
+ }
+ 
+ /* Caller should hold ovl_inode->lock */
 -- 
 2.25.1
 
