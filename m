@@ -7,50 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D593BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEEA9214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2093420720
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447636;
-	bh=8A5vvyWCKAprClXHd8OFeNNiODXdXs8A9IWp2M4u3LI=;
+	s=default; t=1592447640;
+	bh=UE99R/8O57eB1sCguwm+EjnLTOZkZ01A8/nNZo5jfic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WkaI1DEZWtvy4/IICN3yBh0ycLSlfLN92s03w6yQULxqmEsJdesyPzE+9pCdtCfez
-	 yleqpJGMvAk5kuncM0VgK8FfXuP8W1lC0TISawmHDfaN1QwgR6SC54DP8F30Cly8LC
-	 F8Fjc81BDMm9Fyhv7K32F0/gJ2+4WtQTFT6HbY3U=
+	b=WdhnExKg+h+ZI8bQNSpnyRP9w9TE7neAHzCl2SZ0MtFY/aOTzqpI2EWZbHaintqh7
+	 PXOYT9D0+l/LCedgjsKjQfBaiG8aWTAiDnjfw6udFhUjghr2C1+7bfaYMD1b/qbLJQ
+	 T/mcOgrH0KGdXeDQXdsE5XV7IVCSnbdJYWXouVrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbgFRBOi (ORCPT
+        id S1730384AbgFRCd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:14:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42324 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:33:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729071AbgFRBNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:15 -0400
+        id S1729340AbgFRBOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EB7421D7B;
-        Thu, 18 Jun 2020 01:13:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3987A221F7;
+        Thu, 18 Jun 2020 01:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442794;
-        bh=8A5vvyWCKAprClXHd8OFeNNiODXdXs8A9IWp2M4u3LI=;
+        s=default; t=1592442877;
+        bh=UE99R/8O57eB1sCguwm+EjnLTOZkZ01A8/nNZo5jfic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jbpJCCmS4rvrCa/2J1emYAIG73Z1TBTQVyTXZJg5r6Zot0CiL1pWJkLzafhdyPzLh
-         kWyimX5+iwK67JcLmyJJ3VNLGlQOyFN+p3IMyQEaBoFWD7bvgicAkoFhp9KZ9jKE+e
-         gJnsi0YxJQTqY0nCRjBVD7EarvYoNQ5RKWv9aog0=
+        b=pIPM9xy+TdjUG/09Q2525EGLK7eCAwsTO9kt9f0Fr9CVubOZUmO+O9J1eqP8DvYNi
+         wtU0j+PkRh26gZYYxyWoP4YTEqPS0AUqFSsOcrQoPde6Rjvcy2wYazRMY0j/qxivSr
+         WNn3NmSjhw3ilING523OF8yu5BClsqawt+LUv4Dw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 236/388] coresight: etm4x: Fix use-after-free of per-cpu etm drvdata
-Date:   Wed, 17 Jun 2020 21:05:33 -0400
-Message-Id: <20200618010805.600873-236-sashal@kernel.org>
+Cc:     huhai <huhai@tj.kylinos.cn>, Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.7 302/388] powerpc/4xx: Don't unmap NULL mbase
+Date:   Wed, 17 Jun 2020 21:06:39 -0400
+Message-Id: <20200618010805.600873-302-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -63,135 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: huhai <huhai@tj.kylinos.cn>
 
-[ Upstream commit 3f4943d422c5febbb3c764670011a00eb2a86238 ]
+[ Upstream commit bcec081ecc940fc38730b29c743bbee661164161 ]
 
-etm probe could be deferred due to the dependency in the trace
-path chain and may be retried. We need to clear the per-cpu
-etmdrvdata entry for the etm in case of a failure to avoid
-use-after-free cases as reported below:
-
-KASAN use-after-free bug in etm4_cpu_pm_notify():
-
-[    8.574566] coresight etm0: CPU0: ETM v4.2 initialized
-[    8.581920] BUG: KASAN: use-after-free in etm4_cpu_pm_notify+0x580/0x2024
-[    8.581925] Read of size 8 at addr ffffff813304f8c8 by task swapper/3/0
-[    8.581927]
-[    8.581934] CPU: 3 PID: 0 Comm: swapper/3 Tainted: G S      W         5.4.28 #314
-[    8.587775] coresight etm1: CPU1: ETM v4.2 initialized
-[    8.594195] Call trace:
-[    8.594205]  dump_backtrace+0x0/0x188
-[    8.594209]  show_stack+0x20/0x2c
-[    8.594216]  dump_stack+0xdc/0x144
-[    8.594227]  print_address_description+0x3c/0x494
-[    8.594232]  __kasan_report+0x144/0x168
-[    8.601598] coresight etm2: CPU2: ETM v4.2 initialized
-[    8.602563]  kasan_report+0x10/0x18
-[    8.602568]  check_memory_region+0x1a4/0x1b4
-[    8.602572]  __kasan_check_read+0x18/0x24
-[    8.602577]  etm4_cpu_pm_notify+0x580/0x2024
-[    8.665945]  notifier_call_chain+0x5c/0x90
-[    8.670166]  __atomic_notifier_call_chain+0x90/0xf8
-[    8.675182]  cpu_pm_notify+0x40/0x6c
-[    8.678858]  cpu_pm_enter+0x38/0x80
-[    8.682451]  psci_enter_idle_state+0x34/0x70
-[    8.686844]  cpuidle_enter_state+0xb8/0x20c
-[    8.691143]  cpuidle_enter+0x38/0x4c
-[    8.694820]  call_cpuidle+0x3c/0x68
-[    8.698408]  do_idle+0x1a0/0x280
-[    8.701729]  cpu_startup_entry+0x24/0x28
-[    8.705768]  secondary_start_kernel+0x15c/0x170
-[    8.710423]
-[    8.711972] Allocated by task 242:
-[    8.715473]  __kasan_kmalloc+0xf0/0x1ac
-[    8.719426]  kasan_slab_alloc+0x14/0x1c
-[    8.723375]  __kmalloc_track_caller+0x23c/0x388
-[    8.728040]  devm_kmalloc+0x38/0x94
-[    8.731632]  etm4_probe+0x48/0x3c8
-[    8.735140]  amba_probe+0xbc/0x158
-[    8.738645]  really_probe+0x144/0x408
-[    8.742412]  driver_probe_device+0x70/0x140
-[    8.746716]  __device_attach_driver+0x9c/0x110
-[    8.751287]  bus_for_each_drv+0x90/0xd8
-[    8.755236]  __device_attach+0xb4/0x164
-[    8.759188]  device_initial_probe+0x20/0x2c
-[    8.763490]  bus_probe_device+0x34/0x94
-[    8.767436]  device_add+0x34c/0x3e0
-[    8.771029]  amba_device_try_add+0x68/0x440
-[    8.775332]  amba_deferred_retry_func+0x48/0xc8
-[    8.779997]  process_one_work+0x344/0x648
-[    8.784127]  worker_thread+0x2ac/0x47c
-[    8.787987]  kthread+0x128/0x138
-[    8.791313]  ret_from_fork+0x10/0x18
-[    8.794993]
-[    8.796532] Freed by task 242:
-[    8.799684]  __kasan_slab_free+0x15c/0x22c
-[    8.803897]  kasan_slab_free+0x10/0x1c
-[    8.807761]  kfree+0x25c/0x4bc
-[    8.810913]  release_nodes+0x240/0x2b0
-[    8.814767]  devres_release_all+0x3c/0x54
-[    8.818887]  really_probe+0x178/0x408
-[    8.822661]  driver_probe_device+0x70/0x140
-[    8.826963]  __device_attach_driver+0x9c/0x110
-[    8.831539]  bus_for_each_drv+0x90/0xd8
-[    8.835487]  __device_attach+0xb4/0x164
-[    8.839431]  device_initial_probe+0x20/0x2c
-[    8.843732]  bus_probe_device+0x34/0x94
-[    8.847678]  device_add+0x34c/0x3e0
-[    8.851274]  amba_device_try_add+0x68/0x440
-[    8.855576]  amba_deferred_retry_func+0x48/0xc8
-[    8.860240]  process_one_work+0x344/0x648
-[    8.864366]  worker_thread+0x2ac/0x47c
-[    8.868228]  kthread+0x128/0x138
-[    8.871557]  ret_from_fork+0x10/0x18
-[    8.875231]
-[    8.876782] The buggy address belongs to the object at ffffff813304f800
-[    8.876782]  which belongs to the cache kmalloc-1k of size 1024
-[    8.889632] The buggy address is located 200 bytes inside of
-[    8.889632]  1024-byte region [ffffff813304f800, ffffff813304fc00)
-[    8.901761] The buggy address belongs to the page:
-[    8.906695] page:ffffffff04ac1200 refcount:1 mapcount:0 mapping:ffffff8146c03800 index:0x0 compound_mapcount: 0
-[    8.917047] flags: 0x4000000000010200(slab|head)
-[    8.921799] raw: 4000000000010200 dead000000000100 dead000000000122 ffffff8146c03800
-[    8.929753] raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
-[    8.937703] page dumped because: kasan: bad access detected
-[    8.943433]
-[    8.944974] Memory state around the buggy address:
-[    8.949903]  ffffff813304f780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[    8.957320]  ffffff813304f800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[    8.964742] >ffffff813304f880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[    8.972157]                                               ^
-[    8.977886]  ffffff813304f900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[    8.985298]  ffffff813304f980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[    8.992713] ==================================================================
-
-Fixes: f188b5e76aae ("coresight: etm4x: Save/restore state across CPU low power states")
-Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20200518180242.7916-22-mathieu.poirier@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: huhai <huhai@tj.kylinos.cn>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200521072648.1254699-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-etm4x.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/platforms/4xx/pci.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index a90d757f7043..a6d6c7a3abcb 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -1527,6 +1527,7 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
- 	return 0;
+diff --git a/arch/powerpc/platforms/4xx/pci.c b/arch/powerpc/platforms/4xx/pci.c
+index e6e2adcc7b64..c13d64c3b019 100644
+--- a/arch/powerpc/platforms/4xx/pci.c
++++ b/arch/powerpc/platforms/4xx/pci.c
+@@ -1242,7 +1242,7 @@ static void __init ppc460sx_pciex_check_link(struct ppc4xx_pciex_port *port)
+ 	if (mbase == NULL) {
+ 		printk(KERN_ERR "%pOF: Can't map internal config space !",
+ 			port->node);
+-		goto done;
++		return;
+ 	}
  
- err_arch_supported:
-+	etmdrvdata[drvdata->cpu] = NULL;
- 	if (--etm4_count == 0) {
- 		etm4_cpu_pm_unregister();
+ 	while (attempt && (0 == (in_le32(mbase + PECFG_460SX_DLLSTA)
+@@ -1252,9 +1252,7 @@ static void __init ppc460sx_pciex_check_link(struct ppc4xx_pciex_port *port)
+ 	}
+ 	if (attempt)
+ 		port->link = 1;
+-done:
+ 	iounmap(mbase);
+-
+ }
  
+ static struct ppc4xx_pciex_hwops ppc460sx_pcie_hwops __initdata = {
 -- 
 2.25.1
 
