@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA35C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB793C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86D832080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E35207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446221;
-	bh=X4mFPAhXCqgWnpjyToeM07iL7ggBfJsvEFxQqtErWhE=;
+	s=default; t=1592446225;
+	bh=qNfRzoFZrOzjgbcMHH04QE5ij3D1rRRHm7GgniBf53A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q5cxRyQpeQWyr7e+4KLj8t4sQVM69WPxptgY4FOEq8MTyU/KSHxf8xdIt5k0PVVk5
-	 lpFHzp9rTZEACNVunby/6hacQ6NrgaRP5Xy6QqvHsO1Qc3/RyL9aseaAxfuJnCrL+X
-	 ixFdRT1He8Dlm91A9gNBN0m1dZJzyHVpzcHkoPRA=
+	b=k9EJpfma5rBOSgZDQGPZxr3jYPCCFlZKmx9EuFAecBf4R0Jo03RnRpFWZZYS+n3AL
+	 0BpKYfyRI4EGDg4GwPdRo88oEe3+b04vyoj9EI57IoX9ZGxdhLAcEkPkuQ6JPkjoVa
+	 /TZjbXJ8TQDuUuk/qD8UlT0rNfEx9EumhEJnnUmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730210AbgFRBVv (ORCPT
+        id S1730745AbgFRCKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:21:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49930 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:10:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729944AbgFRBSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:18:31 -0400
+        id S1729477AbgFRBVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:21:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C9A521D79;
-        Thu, 18 Jun 2020 01:18:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8583420776;
+        Thu, 18 Jun 2020 01:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443110;
-        bh=X4mFPAhXCqgWnpjyToeM07iL7ggBfJsvEFxQqtErWhE=;
+        s=default; t=1592443311;
+        bh=qNfRzoFZrOzjgbcMHH04QE5ij3D1rRRHm7GgniBf53A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gNLhIbzrXOrJ8m9dDiDFjcteiKwDMnPxxooVGX+fwnB6B+egpbjfUwEAb3uN65cMo
-         QxkZ0HpUkhttX3EDrBzhLafB5Pr7irSseWda5EcqeIPz4/N9MrNH0wcFnnzD7daAQS
-         +RFZrUGVP0FY/OJNs91BgYKpYiP4LZL/zRBJgoqM=
+        b=g1pMu1Ik0X9HGlUOBTXwR7yznUyPBHjXuyKFEptXrddBg8OWFB10meMFTjGFaMWQz
+         0csdnVo6h0abKrzoLf9tm61zWV199goxfSr4LyiotLv90xD/soimmfyfzjNW6yPtEM
+         sC7R6+JMJ/LF/UHKlS7Ce7mnpcnZSYeC42GRPj4M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 087/266] arm64: dts: mt8173: fix unit name warnings
-Date:   Wed, 17 Jun 2020 21:13:32 -0400
-Message-Id: <20200618011631.604574-87-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.4 248/266] f2fs: don't return vmalloc() memory from f2fs_kmalloc()
+Date:   Wed, 17 Jun 2020 21:16:13 -0400
+Message-Id: <20200618011631.604574-248-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -61,128 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 72b29215aced394d01ca25e432963b619daa0098 ]
+[ Upstream commit 0b6d4ca04a86b9dababbb76e58d33c437e127b77 ]
 
-Fixing several unit name warnings:
+kmalloc() returns kmalloc'ed memory, and kvmalloc() returns either
+kmalloc'ed or vmalloc'ed memory.  But the f2fs wrappers, f2fs_kmalloc()
+and f2fs_kvmalloc(), both return both kinds of memory.
 
-Warning (unit_address_vs_reg): /oscillator@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /oscillator@1: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /oscillator@2: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@1: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/cpu_crit@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@0: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@1: node has a unit name, but no reg property
-Warning (unit_address_vs_reg): /reserved-memory/vpu_dma_mem_region: node has a reg or ranges property, but no unit name
-Warning (simple_bus_reg): /soc/pinctrl@10005000: simple-bus unit address format error, expected "1000b000"
-Warning (simple_bus_reg): /soc/interrupt-controller@10220000: simple-bus unit address format error, expected "10221000"
+It's redundant to have two functions that do the same thing, and also
+breaking the standard naming convention is causing bugs since people
+assume it's safe to kfree() memory allocated by f2fs_kmalloc().  See
+e.g. the various allocations in fs/f2fs/compress.c.
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Link: https://lore.kernel.org/r/20200210063523.133333-4-hsinyi@chromium.org
-[mb: drop fixes for '_' in property name]
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Fix this by making f2fs_kmalloc() just use kmalloc().  And to avoid
+re-introducing the allocation failures that the vmalloc fallback was
+intended to fix, convert the largest allocations to use f2fs_kvmalloc().
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ fs/f2fs/checkpoint.c | 4 ++--
+ fs/f2fs/f2fs.h       | 8 +-------
+ fs/f2fs/node.c       | 8 ++++----
+ fs/f2fs/super.c      | 2 +-
+ 4 files changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 5891b7151432..dec5e4113ce4 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -238,21 +238,21 @@ psci {
- 		cpu_on	      = <0x84000003>;
- 	};
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index a28ffecc0f95..bbd07fe8a492 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -892,8 +892,8 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
+ 	int i;
+ 	int err;
  
--	clk26m: oscillator@0 {
-+	clk26m: oscillator0 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <26000000>;
- 		clock-output-names = "clk26m";
- 	};
+-	sbi->ckpt = f2fs_kzalloc(sbi, array_size(blk_size, cp_blks),
+-				 GFP_KERNEL);
++	sbi->ckpt = f2fs_kvzalloc(sbi, array_size(blk_size, cp_blks),
++				  GFP_KERNEL);
+ 	if (!sbi->ckpt)
+ 		return -ENOMEM;
+ 	/*
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 3edde3d6d089..3c7a4df5cdf0 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2789,18 +2789,12 @@ static inline bool f2fs_may_extent_tree(struct inode *inode)
+ static inline void *f2fs_kmalloc(struct f2fs_sb_info *sbi,
+ 					size_t size, gfp_t flags)
+ {
+-	void *ret;
+-
+ 	if (time_to_inject(sbi, FAULT_KMALLOC)) {
+ 		f2fs_show_injection_info(FAULT_KMALLOC);
+ 		return NULL;
+ 	}
  
--	clk32k: oscillator@1 {
-+	clk32k: oscillator1 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <32000>;
- 		clock-output-names = "clk32k";
- 	};
+-	ret = kmalloc(size, flags);
+-	if (ret)
+-		return ret;
+-
+-	return kvmalloc(size, flags);
++	return kmalloc(size, flags);
+ }
  
--	cpum_ck: oscillator@2 {
-+	cpum_ck: oscillator2 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <0>;
-@@ -268,19 +268,19 @@ cpu_thermal: cpu_thermal {
- 			sustainable-power = <1500>; /* milliwatts */
+ static inline void *f2fs_kzalloc(struct f2fs_sb_info *sbi,
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index f14401a77d60..90a20bd12961 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -2933,7 +2933,7 @@ static int __get_nat_bitmaps(struct f2fs_sb_info *sbi)
+ 		return 0;
  
- 			trips {
--				threshold: trip-point@0 {
-+				threshold: trip-point0 {
- 					temperature = <68000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
+ 	nm_i->nat_bits_blocks = F2FS_BLK_ALIGN((nat_bits_bytes << 1) + 8);
+-	nm_i->nat_bits = f2fs_kzalloc(sbi,
++	nm_i->nat_bits = f2fs_kvzalloc(sbi,
+ 			nm_i->nat_bits_blocks << F2FS_BLKSIZE_BITS, GFP_KERNEL);
+ 	if (!nm_i->nat_bits)
+ 		return -ENOMEM;
+@@ -3066,9 +3066,9 @@ static int init_free_nid_cache(struct f2fs_sb_info *sbi)
+ 	int i;
  
--				target: trip-point@1 {
-+				target: trip-point1 {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
+ 	nm_i->free_nid_bitmap =
+-		f2fs_kzalloc(sbi, array_size(sizeof(unsigned char *),
+-					     nm_i->nat_blocks),
+-			     GFP_KERNEL);
++		f2fs_kvzalloc(sbi, array_size(sizeof(unsigned char *),
++					      nm_i->nat_blocks),
++			      GFP_KERNEL);
+ 	if (!nm_i->free_nid_bitmap)
+ 		return -ENOMEM;
  
--				cpu_crit: cpu_crit@0 {
-+				cpu_crit: cpu_crit0 {
- 					temperature = <115000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -288,13 +288,13 @@ cpu_crit: cpu_crit@0 {
- 			};
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 47bfa5f2b75d..b530db25f2f2 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2889,7 +2889,7 @@ static int init_blkz_info(struct f2fs_sb_info *sbi, int devi)
+ 	if (nr_sectors & (bdev_zone_sectors(bdev) - 1))
+ 		FDEV(devi).nr_blkz++;
  
- 			cooling-maps {
--				map@0 {
-+				map0 {
- 					trip = <&target>;
- 					cooling-device = <&cpu0 0 0>,
- 							 <&cpu1 0 0>;
- 					contribution = <3072>;
- 				};
--				map@1 {
-+				map1 {
- 					trip = <&target>;
- 					cooling-device = <&cpu2 0 0>,
- 							 <&cpu3 0 0>;
-@@ -308,7 +308,7 @@ reserved-memory {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
--		vpu_dma_reserved: vpu_dma_mem_region {
-+		vpu_dma_reserved: vpu_dma_mem_region@b7000000 {
- 			compatible = "shared-dma-pool";
- 			reg = <0 0xb7000000 0 0x500000>;
- 			alignment = <0x1000>;
-@@ -360,7 +360,7 @@ syscfg_pctl_a: syscfg_pctl_a@10005000 {
- 			reg = <0 0x10005000 0 0x1000>;
- 		};
- 
--		pio: pinctrl@10005000 {
-+		pio: pinctrl@1000b000 {
- 			compatible = "mediatek,mt8173-pinctrl";
- 			reg = <0 0x1000b000 0 0x1000>;
- 			mediatek,pctl-regmap = <&syscfg_pctl_a>;
-@@ -567,7 +567,7 @@ mipi_tx1: mipi-dphy@10216000 {
- 			status = "disabled";
- 		};
- 
--		gic: interrupt-controller@10220000 {
-+		gic: interrupt-controller@10221000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
- 			interrupt-parent = <&gic>;
+-	FDEV(devi).blkz_seq = f2fs_kzalloc(sbi,
++	FDEV(devi).blkz_seq = f2fs_kvzalloc(sbi,
+ 					BITS_TO_LONGS(FDEV(devi).nr_blkz)
+ 					* sizeof(unsigned long),
+ 					GFP_KERNEL);
 -- 
 2.25.1
 
