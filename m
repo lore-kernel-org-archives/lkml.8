@@ -2,88 +2,223 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A45EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E187207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9231207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:05:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="etadw103"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbgFRUFJ (ORCPT
+        id S1730934AbgFRUFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:05:09 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:51554 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730108AbgFRUFI (ORCPT
+        Thu, 18 Jun 2020 16:05:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730918AbgFRUFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:05:08 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 18 Jun 2020 13:05:08 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 18 Jun 2020 13:05:07 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id CDCAE184A; Thu, 18 Jun 2020 13:05:07 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 13:05:07 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] video: ssd1307fb: Print PWM period using 64-bit
- format specifier
-Message-ID: <20200618200507.GA2905@codeaurora.org>
-References: <20200615141606.2814208-1-thierry.reding@gmail.com>
- <20200615141606.2814208-2-thierry.reding@gmail.com>
- <CAMuHMdWaKgNOz02eVXkFnGRpsjdNNGVtuCf0setigH31-9aXQg@mail.gmail.com>
+        Thu, 18 Jun 2020 16:05:16 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5464C0613EE
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:05:16 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id e18so3411247pgn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:05:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hH5UdqkrUsHHkWkTkrsTpUaZ/SG0CR6QLInGjMheMsQ=;
+        b=etadw103cqJRZdZ59vL7+FSIVCyWqJxsPUoshMP46pJkWYpyPh1Z8z2rOaozPM6T9H
+         5c7AmqMnocB+A8JJb/7BGlmzUHsa8VUg/Sy09a1I4Lr+wMi+eXoSUP1amVW/VFTdTB0Y
+         Az+830Tp9h9FTrH3X1IX6E56xQAUj6mYytnd0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hH5UdqkrUsHHkWkTkrsTpUaZ/SG0CR6QLInGjMheMsQ=;
+        b=cjFi1Y1ZxtZYAxKg5rM3ErGjCrXGjBl0XlHe1PpzPdQgJWNTnT9KdFuegHsiayR5yt
+         g8jFCkbTRU7+H040KDcgFDFozaYO2CfzwjRKVQ+hl0w2U72MG695tjbRAtaSEE1lrnaT
+         7rqfvfMYVBY3oLXKIYUTjPXyz9aablNMngsf1QJw5/gVlcJj6AWVM4KLwhRtUa5dSYLa
+         l7pZVzuPV/ObyHCM+94//mUJvuwSbN60dMsgEwkE3GqduYYcaUgMUCB3Rs5SlYVAd9+s
+         9vyRkVTs+bjHKqi43ZicDtZGSX+p8LD0Jm6fXBB22xvupJwmLRit6yDJ4IorKTF4gz6T
+         ToMw==
+X-Gm-Message-State: AOAM533Xaoklchrw+HMG+HvL8ic0mXFQprnHrQR+9i1DyC1pwe3t+pRf
+        UQV6p+kOeoRTBH7sBvGIBm2t0g==
+X-Google-Smtp-Source: ABdhPJyvN1SyXkPFRjQ3ru6p0iO6TqH4uR0HKiNTz7KbggpLMsPBApIzCK92OExHh+Nr7VZgXchX+A==
+X-Received: by 2002:a62:1c5:: with SMTP id 188mr4954296pfb.213.1592510716220;
+        Thu, 18 Jun 2020 13:05:16 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p14sm3201600pju.7.2020.06.18.13.05.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 13:05:15 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 13:05:14 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Christian Brauner <christian@brauner.io>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christoph Hellwig <hch@lst.de>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 02/11] fs: Move __scm_install_fd() to
+ __fd_install_received()
+Message-ID: <202006181302.84BFFF52CA@keescook>
+References: <20200616032524.460144-1-keescook@chromium.org>
+ <20200616032524.460144-3-keescook@chromium.org>
+ <20200618085614.fw3ynalpcipbplf3@wittgenstein>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdWaKgNOz02eVXkFnGRpsjdNNGVtuCf0setigH31-9aXQg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200618085614.fw3ynalpcipbplf3@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 09:18:34AM +0200, Geert Uytterhoeven wrote:
-> Hi Thierry,
+On Thu, Jun 18, 2020 at 10:56:14AM +0200, Christian Brauner wrote:
+> On Mon, Jun 15, 2020 at 08:25:15PM -0700, Kees Cook wrote:
+> > In preparation for users of the "install a received file" logic outside
+> > of net/ (pidfd and seccomp), relocate and rename __scm_install_fd() from
+> > net/core/scm.c to __fd_install_received() in fs/file.c, and provide a
+> > wrapper named fd_install_received_user(), as future patches will change
+> > the interface to __fd_install_received().
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  fs/file.c            | 47 ++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/file.h |  8 ++++++++
+> >  include/net/scm.h    |  1 -
+> >  net/compat.c         |  2 +-
+> >  net/core/scm.c       | 32 +-----------------------------
+> >  5 files changed, 57 insertions(+), 33 deletions(-)
+> > 
+> > diff --git a/fs/file.c b/fs/file.c
+> > index abb8b7081d7a..fcfddae0d252 100644
+> > --- a/fs/file.c
+> > +++ b/fs/file.c
+> > @@ -11,6 +11,7 @@
+> >  #include <linux/export.h>
+> >  #include <linux/fs.h>
+> >  #include <linux/mm.h>
+> > +#include <linux/net.h>
+> >  #include <linux/sched/signal.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/file.h>
+> > @@ -18,6 +19,8 @@
+> >  #include <linux/bitops.h>
+> >  #include <linux/spinlock.h>
+> >  #include <linux/rcupdate.h>
+> > +#include <net/cls_cgroup.h>
+> > +#include <net/netprio_cgroup.h>
+> >  
+> >  unsigned int sysctl_nr_open __read_mostly = 1024*1024;
+> >  unsigned int sysctl_nr_open_min = BITS_PER_LONG;
+> > @@ -931,6 +934,50 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
+> >  	return err;
+> >  }
+> >  
+> > +/**
+> > + * __fd_install_received() - Install received file into file descriptor table
+> > + *
+> > + * @fd: fd to install into (if negative, a new fd will be allocated)
+> > + * @file: struct file that was received from another process
+> > + * @ufd_required: true to use @ufd for writing fd number to userspace
+> > + * @ufd: __user pointer to write new fd number to
+> > + * @o_flags: the O_* flags to apply to the new fd entry
+> > + *
+> > + * Installs a received file into the file descriptor table, with appropriate
+> > + * checks and count updates. Optionally writes the fd number to userspace.
+> > + *
+> > + * Returns -ve on error.
+> > + */
+> > +int __fd_install_received(struct file *file, int __user *ufd, unsigned int o_flags)
+> > +{
+> > +	struct socket *sock;
+> > +	int new_fd;
+> > +	int error;
+> > +
+> > +	error = security_file_receive(file);
+> > +	if (error)
+> > +		return error;
+> > +
+> > +	new_fd = get_unused_fd_flags(o_flags);
+> > +	if (new_fd < 0)
+> > +		return new_fd;
+> > +
+> > +	error = put_user(new_fd, ufd);
+> > +	if (error) {
+> > +		put_unused_fd(new_fd);
+> > +		return error;
+> > +	}
+> > +
+> > +	/* Bump the usage count and install the file. */
+> > +	sock = sock_from_file(file, &error);
+> > +	if (sock) {
+> > +		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
+> > +		sock_update_classid(&sock->sk->sk_cgrp_data);
+> > +	}
+> > +	fd_install(new_fd, get_file(file));
+> > +	return 0;
+> > +}
+> > +
+> >  static int ksys_dup3(unsigned int oldfd, unsigned int newfd, int flags)
+> >  {
+> >  	int err = -EBADF;
+> > diff --git a/include/linux/file.h b/include/linux/file.h
+> > index 122f80084a3e..fe18a1a0d555 100644
+> > --- a/include/linux/file.h
+> > +++ b/include/linux/file.h
+> > @@ -91,6 +91,14 @@ extern void put_unused_fd(unsigned int fd);
+> >  
+> >  extern void fd_install(unsigned int fd, struct file *file);
+> >  
+> > +extern int __fd_install_received(struct file *file, int __user *ufd,
+> > +				 unsigned int o_flags);
+> > +static inline int fd_install_received_user(struct file *file, int __user *ufd,
+> > +					   unsigned int o_flags)
+> > +{
+> > +	return __fd_install_received(file, ufd, o_flags);
+> > +}
 > 
-> On Mon, Jun 15, 2020 at 4:17 PM Thierry Reding <thierry.reding@gmail.com> wrote:
-> > The PWM core will soon change the duty cycle and period of PWMs to 64
-> > bits to allow for a broader range of values. Use a 64-bit format
-> > specifier to avoid a warning when that change is made.
-> >
-> > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> Shouldn't this be the other way around such that
+> fd_install_received_user() is the workhorse that has a "ufd" argument
+> and fd_install_received() is the static inline function that doesn't?
 > 
-> > --- a/drivers/video/fbdev/ssd1307fb.c
-> > +++ b/drivers/video/fbdev/ssd1307fb.c
-> > @@ -312,7 +312,7 @@ static int ssd1307fb_init(struct ssd1307fb_par *par)
-> >                 /* Enable the PWM */
-> >                 pwm_enable(par->pwm);
-> >
-> > -               dev_dbg(&par->client->dev, "Using PWM%d with a %dns period.\n",
-> > +               dev_dbg(&par->client->dev, "Using PWM%d with a %lluns period.\n",
-> >                         par->pwm->pwm, pwm_get_period(par->pwm));
-> >         }
-> 
-> This change must be done together with changing the return type of
-> pwm_get_period(), else you will get a compiler warning, and will print a
-> bogus value.
+> extern int fd_install_received_user(struct file *file, int __user *ufd, unsigned int o_flags)
+> static inline int fd_install_received(struct file *file, unsigned int o_flags)
+> {
+> 	return fd_install_received_user(file, NULL, o_flags);
+> }
 
-Hi Geert,
+So, I think it's all worked out in v5[1], so the helper argument handling
+is better for the ufd case, as David pointed out earlier. (As in,
+I think you're reacting to the same general problem here.)
 
-Yes, this is already being done in the patch series [1] that forms the
-base for this specific patch.
+> (So I'm on vacation this week some my reviews are selective and spotty
+> but I promise to be back next week. :))
 
-[1] https://lore.kernel.org/lkml/64f9ba1c9d6c49a397f12846493707883cee430f.1591136989.git.gurus@codeaurora.org/
+No worries!
 
-Thank you.
+-Kees
 
-Guru Das.
+[1] https://lore.kernel.org/lkml/20200617220327.3731559-1-keescook@chromium.org/
+
+-- 
+Kees Cook
