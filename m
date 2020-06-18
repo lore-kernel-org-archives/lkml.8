@@ -2,232 +2,198 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A370C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8E82080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592498085;
-	bh=eVyEMYcH3w0tu/t9tmx43Zd823558bcJbUdQrBCBp4c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dqQr3MHiMP7PBSckvyZY2GzXJLidVISVH0kSNonAYlkTWLLHBnFrJ61mGy6+iQOWf
-	 yU4qCz/RVaAND9GTUehfL/9Vit+ztYdKScwtr4hJbku0QpBK1FExYN4ZFVxgtxFUco
-	 4fM8Jlozudw6Vj0/ibXwU71+Ee3OiF1VQG/mi9Z0=
+	by mail.kernel.org (Postfix) with ESMTP id D6B7C2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgFRQen (ORCPT
+        id S1731681AbgFRQff convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:34:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727114AbgFRQem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:34:42 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3A5F2080D;
-        Thu, 18 Jun 2020 16:34:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592498082;
-        bh=eVyEMYcH3w0tu/t9tmx43Zd823558bcJbUdQrBCBp4c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HvgtGquIIepvj2gQkKFmCpbCeAgAeeIo7rCFhFWj26c+6IajL8BvAWaMt/UCkLjBj
-         Vtdzg6b/vnsNPFtyukEyPsuxiiDQ5nOPcGjyj1C4NTiv/RWhz9FGbzBk2HXK3F60XQ
-         aftQCISswXvKXTI+OuS8zmbSzVxSrPM211c2bCl0=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jlxUu-004EIo-A4; Thu, 18 Jun 2020 17:34:40 +0100
+        Thu, 18 Jun 2020 12:35:35 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2342 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727882AbgFRQfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 12:35:33 -0400
+Received: from lhreml717-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 58DCFB5B45E8DECDE9C1;
+        Thu, 18 Jun 2020 17:35:31 +0100 (IST)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml717-chm.china.huawei.com (10.201.108.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Thu, 18 Jun 2020 17:35:31 +0100
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
+ Thu, 18 Jun 2020 17:35:31 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
+        "jroedel@suse.de" <jroedel@suse.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        yangyicong <yangyicong@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>
+Subject: RE: [PATCH v10 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe
+ controller errors
+Thread-Topic: [PATCH v10 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe
+ controller errors
+Thread-Index: AQHWRYc885IZEiLFhEi4UCzp76myaajedjqAgAAS+mA=
+Date:   Thu, 18 Jun 2020 16:35:31 +0000
+Message-ID: <761e579035d346bf8cce2dfc6857587c@huawei.com>
+References: <20200618154051.639-3-shiju.jose@huawei.com>
+ <20200618155627.GX2428291@smile.fi.intel.com>
+In-Reply-To: <20200618155627.GX2428291@smile.fi.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.90.32]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 18 Jun 2020 17:34:40 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     David Brazdil <dbrazdil@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, android-kvm@google.com,
-        kernel-team@android.com
-Subject: Re: [PATCH v3 03/15] arm64: kvm: Add build rules for separate nVHE
- object files
-In-Reply-To: <20200618122537.9625-4-dbrazdil@google.com>
-References: <20200618122537.9625-1-dbrazdil@google.com>
- <20200618122537.9625-4-dbrazdil@google.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <09976ea31931481f4e00d627dc5e06fe@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: dbrazdil@google.com, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, android-kvm@google.com, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+Hi Andy,
 
-On 2020-06-18 13:25, David Brazdil wrote:
-> Add new folder arch/arm64/kvm/hyp/nvhe and a Makefile for building code 
-> that
-> runs in EL2 under nVHE KVM.
-> 
-> Compile each source file into a `.hyp.tmp.o` object first, then prefix 
-> all
-> its symbols with "__kvm_nvhe_" using `objcopy` and produce a `.hyp.o`.
-> Suffixes were chosen so that it would be possible for VHE and nVHE to 
-> share
-> some source files, but compiled with different CFLAGS. nVHE build rules 
-> add
-> -D__KVM_NVHE_HYPERVISOR__.
-> 
-> The nVHE ELF symbol prefix is added to kallsyms.c as ignored. EL2-only 
-> symbols
-> will never appear in EL1 stack traces.
-> 
-> Signed-off-by: David Brazdil <dbrazdil@google.com>
-> ---
->  arch/arm64/kernel/image-vars.h   | 12 +++++++++++
->  arch/arm64/kvm/hyp/Makefile      |  2 +-
->  arch/arm64/kvm/hyp/nvhe/Makefile | 35 ++++++++++++++++++++++++++++++++
->  scripts/kallsyms.c               |  1 +
->  4 files changed, 49 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/kvm/hyp/nvhe/Makefile
-> 
-> diff --git a/arch/arm64/kernel/image-vars.h 
-> b/arch/arm64/kernel/image-vars.h
-> index be0a63ffed23..f32b406e90c0 100644
-> --- a/arch/arm64/kernel/image-vars.h
-> +++ b/arch/arm64/kernel/image-vars.h
-> @@ -51,4 +51,16 @@ __efistub__ctype		= _ctype;
-> 
->  #endif
-> 
-> +#ifdef CONFIG_KVM
-> +
-> +/*
-> + * KVM nVHE code has its own symbol namespace prefixed by __kvm_nvhe_, 
-> to
-> + * isolate it from the kernel proper. The following symbols are 
-> legally
-> + * accessed by it, therefore provide aliases to make them linkable.
-> + * Do not include symbols which may not be safely accessed under 
-> hypervisor
-> + * memory mappings.
-> + */
-> +
-> +#endif /* CONFIG_KVM */
-> +
->  #endif /* __ARM64_KERNEL_IMAGE_VARS_H */
-> diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
-> index 5d8357ddc234..5f4f217532e0 100644
-> --- a/arch/arm64/kvm/hyp/Makefile
-> +++ b/arch/arm64/kvm/hyp/Makefile
-> @@ -6,7 +6,7 @@
->  ccflags-y += -fno-stack-protector -DDISABLE_BRANCH_PROFILING \
->  		$(DISABLE_STACKLEAK_PLUGIN)
-> 
-> -obj-$(CONFIG_KVM) += hyp.o
-> +obj-$(CONFIG_KVM) += hyp.o nvhe/
->  obj-$(CONFIG_KVM_INDIRECT_VECTORS) += smccc_wa.o
-> 
->  hyp-y := vgic-v3-sr.o timer-sr.o aarch32.o vgic-v2-cpuif-proxy.o 
-> sysreg-sr.o \
-> diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile 
-> b/arch/arm64/kvm/hyp/nvhe/Makefile
-> new file mode 100644
-> index 000000000000..7d64235dba62
-> --- /dev/null
-> +++ b/arch/arm64/kvm/hyp/nvhe/Makefile
-> @@ -0,0 +1,35 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Makefile for Kernel-based Virtual Machine module, HYP/nVHE part
-> +#
-> +
-> +asflags-y := -D__KVM_NVHE_HYPERVISOR__
-> +ccflags-y := -D__KVM_NVHE_HYPERVISOR__ -fno-stack-protector \
-> +	     -DDISABLE_BRANCH_PROFILING $(DISABLE_STACKLEAK_PLUGIN)
-> +
-> +obj-y :=
-> +
-> +obj-y := $(patsubst %.o,%.hyp.o,$(obj-y))
-> +extra-y := $(patsubst %.hyp.o,%.hyp.tmp.o,$(obj-y))
-> +
-> +$(obj)/%.hyp.tmp.o: $(src)/%.c FORCE
-> +	$(call if_changed_rule,cc_o_c)
-> +$(obj)/%.hyp.tmp.o: $(src)/%.S FORCE
-> +	$(call if_changed_rule,as_o_S)
-> +$(obj)/%.hyp.o: $(obj)/%.hyp.tmp.o FORCE
-> +	$(call if_changed,hypcopy)
-> +
-> +quiet_cmd_hypcopy = HYPCOPY $@
-> +      cmd_hypcopy = $(OBJCOPY) --prefix-symbols=__kvm_nvhe_ $< $@
-> +
-> +# KVM nVHE code is run at a different exception code with a different 
-> map, so
-> +# compiler instrumentation that inserts callbacks or checks into the 
-> code may
-> +# cause crashes. Just disable it.
-> +GCOV_PROFILE	:= n
-> +KASAN_SANITIZE	:= n
-> +UBSAN_SANITIZE	:= n
-> +KCOV_INSTRUMENT	:= n
-> +
-> +# Skip objtool checking for this directory because nVHE code is 
-> compiled with
-> +# non-standard build rules.
-> +OBJECT_FILES_NON_STANDARD := y
-> diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-> index 6dc3078649fa..0096cd965332 100644
-> --- a/scripts/kallsyms.c
-> +++ b/scripts/kallsyms.c
-> @@ -109,6 +109,7 @@ static bool is_ignored_symbol(const char *name, 
-> char type)
->  		".LASANPC",		/* s390 kasan local symbols */
->  		"__crc_",		/* modversions */
->  		"__efistub_",		/* arm64 EFI stub namespace */
-> +		"__kvm_nvhe_",		/* arm64 non-VHE KVM namespace */
->  		NULL
->  	};
+>-----Original Message-----
+>From: Andy Shevchenko [mailto:andriy.shevchenko@linux.intel.com]
+>Sent: 18 June 2020 16:56
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+>kernel@vger.kernel.org; rjw@rjwysocki.net; helgaas@kernel.org;
+>bp@alien8.de; james.morse@arm.com; lenb@kernel.org;
+>tony.luck@intel.com; dan.carpenter@oracle.com;
+>zhangliguang@linux.alibaba.com; Wangkefeng (OS Kernel Lab)
+><wangkefeng.wang@huawei.com>; jroedel@suse.de; Linuxarm
+><linuxarm@huawei.com>; yangyicong <yangyicong@huawei.com>; Jonathan
+>Cameron <jonathan.cameron@huawei.com>; tanxiaofei
+><tanxiaofei@huawei.com>
+>Subject: Re: [PATCH v10 2/2] PCI: hip: Add handling of HiSilicon HIP PCIe
+>controller errors
+>
+>On Thu, Jun 18, 2020 at 04:40:51PM +0100, Shiju Jose wrote:
+>> From: Yicong Yang <yangyicong@hisilicon.com>
+>>
+>> The HiSilicon HIP PCIe controller is capable of handling errors on
+>> root port and perform port reset separately at each root port.
+>>
+>> Add error handling driver for HIP PCIe controller to log and report
+>> recoverable errors. Perform root port reset and restore link status
+>> after the recovery.
+>>
+>> Following are some of the PCIe controller's recoverable errors 1.
+>> completion transmission timeout error.
+>> 2. CRS retry counter over the threshold error.
+>> 3. ECC 2 bit errors
+>> 4. AXI bresponse/rresponse errors etc.
+>>
+>> The driver placed in the drivers/pci/controller/ because the HIP PCIe
+>> controller does not use DWC ip.
+>
+>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+>
+>Hmm... Did I give a tag?
+>
+>...
+>
+>> +static guid_t hisi_pcie_sec_guid =
+>> +		GUID_INIT(0xB2889FC9, 0xE7D7, 0x4F9D,
+>> +			0xA8, 0x67, 0xAF, 0x42, 0xE9, 0x8B, 0xE7, 0x72);
+>
+>Drop one TAB in each line and add two spaces before 0xA8 on the last.
 
-I guess that one of the first use of this __KVM_NVHE_HYPERVISOR__
-flag could be the has_vhe() predicate: if you're running the nVHE
-code, you are *guaranteed* not to use VHE at all.
+Sure.
 
-Something like:
+>
+>
+>...
+>
+>> +	idx = HISI_PCIE_LOCAL_VALID_ERR_MISC;
+>
+>> +	for_each_set_bit_from(idx, (const unsigned long *)&edata->val_bits,
+>
+>Can't you make val_bits unsigned long? Because this casting is incorrect.
+>Otherwise, make a local copy into unsigned long variable.
 
-diff --git a/arch/arm64/include/asm/virt.h 
-b/arch/arm64/include/asm/virt.h
-index 5051b388c654..b2cb8fce43dd 100644
---- a/arch/arm64/include/asm/virt.h
-+++ b/arch/arm64/include/asm/virt.h
-@@ -85,10 +85,8 @@ static inline bool is_kernel_in_hyp_mode(void)
+The data val_bits in the error record is 64 bits, thus used u64.
+Casting is added because of a compilation warning on _find_nex_bit_ function as it 
+expects the type of the address as const unsigned long*.
+Probably I will make local copy of val_bits into unsigned long variable.
 
-  static __always_inline bool has_vhe(void)
-  {
--	if (cpus_have_final_cap(ARM64_HAS_VIRT_HOST_EXTN))
--		return true;
--
--	return false;
-+	return (__is_defined(__KVM_NVHE_HYPERVISOR__) &&
-+		cpus_have_final_cap(ARM64_HAS_VIRT_HOST_EXTN));
-  }
-
-  #endif /* __ASSEMBLY__ */
+>
+>> +			      HISI_PCIE_LOCAL_VALID_ERR_MISC +
+>HISI_PCIE_ERR_MISC_REGS)
+>> +		dev_info(dev, "ERR_MISC_%d = 0x%x\n", idx -
+>HISI_PCIE_LOCAL_VALID_ERR_MISC,
+>> +			 edata->err_misc[idx]);
+>
+>...
+>
+>> +static int hisi_pcie_error_handler_probe(struct platform_device
+>> +*pdev) {
+>> +	struct hisi_pcie_error_private *priv;
+>> +	int ret;
+>> +
+>
+>> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>
+>(1)
+>
+>> +	if (!priv)
+>> +		return -ENOMEM;
+>> +
+>> +	priv->nb.notifier_call = hisi_pcie_notify_error;
+>> +	priv->dev = &pdev->dev;
+>> +	ret = ghes_register_event_notifier(&priv->nb);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev,
+>> +			"Failed to register hisi_pcie_notify_error
+>function\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, priv);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int hisi_pcie_error_handler_remove(struct platform_device
+>> +*pdev) {
+>> +	struct hisi_pcie_error_private *priv = platform_get_drvdata(pdev);
+>> +
+>> +	ghes_unregister_event_notifier(&priv->nb);
+>
+>> +	kfree(priv);
+>
+>See (1), as I told you, this is double free.
+>Have you tested this?
+>
+>> +	return 0;
+>> +}
+>
+>--
+>With Best Regards,
+>Andy Shevchenko
+>
 
 Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Shiju
