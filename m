@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4738C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 432A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1B72221F6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C21221F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444919;
-	bh=kfumCbCRBNBMv65SENjTVAsvXjAh+EuIfOHq0R3kI4w=;
+	s=default; t=1592444923;
+	bh=H09lIr58TSUWoVk6WcWtTsuF+1QdjEMVrxFDP/b/wOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pT/YlZG2zAjkPQyPrzkxWiLhaXf+EumSdsX+LUm9IYN6XdmK70zkd5DlEW4EZO8yp
-	 fRnFuD6fyVSImVyh2RJghiukGe7m0A4eGBt2vE/6vI2F+ikFkjKZmY9UJS8HDWPbfb
-	 laD+c6YY3zXqajYkpzzm+st+cMCDWb0WSE29JSRE=
+	b=FHit1WIuvA/rnK6C6wupDZI0QJEeKpGBr9pb4nGdu7KDHjB/h5fRFoamCBJvFAFpD
+	 EYC/Nq9Wk70eg4gLSBn7DraVGJePuBcmJViXjdWjAxtmF56ZLXcH48tanLPoH1Hvs6
+	 8f+3gkJJGcEzbE0LT1IYdvp7OE95cSewaCnQa0Vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733167AbgFRBsi (ORCPT
+        id S1733156AbgFRBsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:48:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36200 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:48:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731968AbgFRB1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:51 -0400
+        id S1731335AbgFRB1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25C49221FC;
-        Thu, 18 Jun 2020 01:27:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C778221F7;
+        Thu, 18 Jun 2020 01:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443671;
-        bh=kfumCbCRBNBMv65SENjTVAsvXjAh+EuIfOHq0R3kI4w=;
+        s=default; t=1592443673;
+        bh=H09lIr58TSUWoVk6WcWtTsuF+1QdjEMVrxFDP/b/wOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0UpKGRF12kHMsCiXnkwrHB+CAOW6i5cWTLBgi3Pwl2YJArO+RgVCOrtCD3WRYWmNk
-         1rYqUudeGKnjpD2IDHoywnhV49va/j9e816uDybK2HH8yPHNmXMHj7c2Wh3xK+HQ0S
-         dmMdfz30r/BViRdk/koOvW6uaZyV/aeVlVY5WHVE=
+        b=VZTHdVZejs4wfzvN35FTtdmCDswOSJHMKTiREfoNm21C2mRKumMXFH1lJ++/OE+Vj
+         9wEBBY6+BW2gDtJbjfqSiK77MYKH044E9BQpwLy2NMA10Si/01JXzhHxc7gqqO951+
+         ySFgNN12cPQ5N2gxF891AV9G0ZoSXWvrEtvEpV30=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Cornelia Huck <cohuck@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 087/108] vfio/mdev: Fix reference count leak in add_mdev_supported_type
-Date:   Wed, 17 Jun 2020 21:25:39 -0400
-Message-Id: <20200618012600.608744-87-sashal@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.14 089/108] gfs2: Allow lock_nolock mount to specify jid=X
+Date:   Wed, 17 Jun 2020 21:25:41 -0400
+Message-Id: <20200618012600.608744-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -60,38 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit aa8ba13cae3134b8ef1c1b6879f66372531da738 ]
+[ Upstream commit ea22eee4e6027d8927099de344f7fff43c507ef9 ]
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object. Thus,
-replace kfree() by kobject_put() to fix this issue. Previous
-commit "b8eb718348b8" fixed a similar problem.
+Before this patch, a simple typo accidentally added \n to the jid=
+string for lock_nolock mounts. This made it impossible to mount a
+gfs2 file system with a journal other than journal0. Thus:
 
-Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+mount -tgfs2 -o hostdata="jid=1" <device> <mount pt>
+
+Resulted in:
+mount: wrong fs type, bad option, bad superblock on <device>
+
+In most cases this is not a problem. However, for debugging and
+testing purposes we sometimes want to test the integrity of other
+journals. This patch removes the unnecessary \n and thus allows
+lock_nolock users to specify an alternate journal.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/mdev/mdev_sysfs.c | 2 +-
+ fs/gfs2/ops_fstype.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
-index 802df210929b..7e474e41c85e 100644
---- a/drivers/vfio/mdev/mdev_sysfs.c
-+++ b/drivers/vfio/mdev/mdev_sysfs.c
-@@ -113,7 +113,7 @@ struct mdev_type *add_mdev_supported_type(struct mdev_parent *parent,
- 				   "%s-%s", dev_driver_string(parent->dev),
- 				   group->name);
- 	if (ret) {
--		kfree(type);
-+		kobject_put(&type->kobj);
- 		return ERR_PTR(ret);
- 	}
+diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
+index 057be88eb1b4..7ed0359ebac6 100644
+--- a/fs/gfs2/ops_fstype.c
++++ b/fs/gfs2/ops_fstype.c
+@@ -922,7 +922,7 @@ static int init_per_node(struct gfs2_sbd *sdp, int undo)
+ }
+ 
+ static const match_table_t nolock_tokens = {
+-	{ Opt_jid, "jid=%d\n", },
++	{ Opt_jid, "jid=%d", },
+ 	{ Opt_err, NULL },
+ };
  
 -- 
 2.25.1
