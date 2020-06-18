@@ -2,210 +2,140 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D300C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F204821582
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:15:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592439324;
-	bh=LVRbfx6McmO1jwjifbKoEBkqjsNkCuJXna8m0BidZao=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Ars8vdsUG3LX1bJ27xRxsb4b6cXRZIsduwMz5RnqERAkxJhfKSFSSKr8nBURLuHS8
-	 266l8hPlWJO/RODHYE2+iS8s7DXsK0ku+ln8d8D0LojcJ6BwAb8/pL0RFFVEXlJIBr
-	 QfAZmX1ow8yvbZlY3BOPneHASTxehxVcmQ7zTHhs=
+	by mail.kernel.org (Postfix) with ESMTP id 95C9E20897
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:27:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oj+wKzcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbgFRAPW (ORCPT
+        id S1726954AbgFRA1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 20:15:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726848AbgFRAPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 20:15:21 -0400
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B9F520739;
-        Thu, 18 Jun 2020 00:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592439319;
-        bh=LVRbfx6McmO1jwjifbKoEBkqjsNkCuJXna8m0BidZao=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yNpIs/c7jHDsjCx7w0HytsPRi8J91hCTwaETaezANMahGrfjU1M1dXeo5XgmQdWfH
-         TFIHsmkhRPRqM8aLHlrNBpHaExi45mINWgvmDt+/XIacQ/eSHzhMRlPIoGAcSzx0j7
-         4KM5tSk9/ScAUfYh09lmXSou9jCFOFqDu6zebxRQ=
-Date:   Wed, 17 Jun 2020 17:15:18 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Charan Teja Kalla <charante@codeaurora.org>
-Cc:     mgorman@techsingularity.net, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>, vinmenon@codeaurora.org
-Subject: Re: [PATCH] mm, page_alloc: skip ->watermark_boost for atomic
- order-0 allocations-fix
-Message-Id: <20200617171518.96211e345de65c54b9343a3a@linux-foundation.org>
-In-Reply-To: <31556793-57b1-1c21-1a9d-22674d9bd938@codeaurora.org>
-References: <31556793-57b1-1c21-1a9d-22674d9bd938@codeaurora.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 17 Jun 2020 20:27:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726881AbgFRA1l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 20:27:41 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92AE1C06174E;
+        Wed, 17 Jun 2020 17:27:41 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id q19so5125939lji.2;
+        Wed, 17 Jun 2020 17:27:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rq/E/19LmZnfaik86wPXedWKtuvz2N6trRDZr1KcBB0=;
+        b=oj+wKzcMU4xmQ8YezB0HM2rn2rQs8YMekF0qTjRrXdc2C+dB168pSjp4kZr1ZRX3SL
+         r2IyE/SLg9KFXpE2zZF/B7d6WKCDhkwO+Tfx876cxyjnlvmpl109teVTh1lZ/KetbUaC
+         3uGtFilcmL61xITYKBbUVgjnJcMDI/iR20EJ4d25SMGLL45etoNCfgErKsFnJvNiCUKV
+         vAml4yrP544gUvZRj5BVsJ/ltAwA0UO8R4bPVl7dGH+sc/uI2NnxDWMDrQ9YO3FHUDum
+         nM9m3FAMf+NsisMkYEQ5je/BnDC9OThKPcNRSppTsYe+wC6SqQ86j/6qA/wlHr0zFDew
+         imvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rq/E/19LmZnfaik86wPXedWKtuvz2N6trRDZr1KcBB0=;
+        b=Wlnu+OluA7+GxW0O/qhHVw4KYU/TPRHl53VGzK6N5lW0uf9L8NEhATENK90WE1HBL0
+         wCjRDlX+QgoaqHm0PTWGmggJ/XzgfoldY4lBDLZa8MKsqJuTOhZOViAK3/kpaMS5pIzn
+         9W0lTNYlC5e4MLhvBklJ97gQBhBtRzgm/TRZyG3qa4XX5nkqzSb33a7c+tEbErTwgD2Q
+         EmjnIRaqCKL6F6zdq5QBJxDXY4CM53sXuv71m1PL8jATvKqTmwdPj8qovT6vZV312/lm
+         RJcFrnyZyiM2BWMcCTDuAMngFiQywZp3OmuA7ws9Ug6CF9+Ay2YaYAXaloolXqmzmo1Q
+         hGyw==
+X-Gm-Message-State: AOAM533KaQOan0og1YlAvzj9QviTFz52/yFZHw629bI24PabJ3KidosF
+        gpFqxCFbyRDweXx7uT7Tf5Awq9FR
+X-Google-Smtp-Source: ABdhPJxwYkNYDNJrwfnlX7YFsBxVWp2WpQw2Bc1wOmh074hF1cO3hSBmpCJDJzKW3LGFMvpMOS9w1g==
+X-Received: by 2002:a2e:b615:: with SMTP id r21mr867334ljn.1.1592440059598;
+        Wed, 17 Jun 2020 17:27:39 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id u26sm357818lfq.72.2020.06.17.17.27.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2020 17:27:38 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 13/18] gpu: host1x: mipi: Update
+ tegra_mipi_request() to be node based
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
+ <1592358094-23459-14-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <9a0a0a02-0d02-15ae-85de-e752ecdd0ae1@gmail.com>
+Date:   Thu, 18 Jun 2020 03:27:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <1592358094-23459-14-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jun 2020 17:39:47 +0530 Charan Teja Kalla <charante@codeaurora.org> wrote:
-
-> When boosting is enabled, it is observed that rate of atomic order-0
-> allocation failures are high due to the fact that free levels in the
-> system are checked with ->watermark_boost offset. This is not a problem
-> for sleepable allocations but for atomic allocations which looks like
-> regression.
+17.06.2020 04:41, Sowjanya Komatineni пишет:
+> Tegra CSI driver need a separate MIPI device for each channel as
+> calibration of corresponding MIPI pads for each channel should
+> happen independently.
 > 
-> This problem is seen frequently on system setup of Android kernel
-> running on Snapdragon hardware with 4GB RAM size. When no extfrag event
-> occurred in the system, ->watermark_boost factor is zero, thus the
-> watermark configurations in the system are:
->    _watermark = (
->           [WMARK_MIN] = 1272, --> ~5MB
->           [WMARK_LOW] = 9067, --> ~36MB
->           [WMARK_HIGH] = 9385), --> ~38MB
->    watermark_boost = 0
+> So, this patch updates tegra_mipi_request() API to add a device_node
+> pointer argument to allow creating mipi device for specific device
+> node rather than a device.
 > 
-> After launching some memory hungry applications in Android which can
-> cause extfrag events in the system to an extent that ->watermark_boost
-> can be set to max i.e. default boost factor makes it to 150% of high
-> watermark.
->    _watermark = (
->           [WMARK_MIN] = 1272, --> ~5MB
->           [WMARK_LOW] = 9067, --> ~36MB
->           [WMARK_HIGH] = 9385), --> ~38MB
->    watermark_boost = 14077, -->~57MB
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/gpu/drm/tegra/dsi.c | 2 +-
+>  drivers/gpu/host1x/mipi.c   | 7 +++++--
+>  include/linux/host1x.h      | 3 ++-
+>  3 files changed, 8 insertions(+), 4 deletions(-)
 > 
-> With default system configuration, for an atomic order-0 allocation to
-> succeed, having free memory of ~2MB will suffice. But boosting makes
-> the min_wmark to ~61MB thus for an atomic order-0 allocation to be
-> successful system should have minimum of ~23MB of free memory(from
-> calculations of zone_watermark_ok(), min = 3/4(min/2)). But failures are
-> observed despite system is having ~20MB of free memory. In the testing,
-> this is reproducible as early as first 300secs since boot and with
-> furtherlowram configurations(<2GB) it is observed as early as first
-> 150secs since boot.
-> 
-> These failures can be avoided by excluding the ->watermark_boost in
-> watermark caluculations for atomic order-0 allocations.
-> 
+> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+> index 38beab9..0443589 100644
+> --- a/drivers/gpu/drm/tegra/dsi.c
+> +++ b/drivers/gpu/drm/tegra/dsi.c
+> @@ -1618,7 +1618,7 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+>  	if (IS_ERR(dsi->regs))
+>  		return PTR_ERR(dsi->regs);
+>  
+> -	dsi->mipi = tegra_mipi_request(&pdev->dev);
+> +	dsi->mipi = tegra_mipi_request(&pdev->dev, NULL);
+>  	if (IS_ERR(dsi->mipi))
+>  		return PTR_ERR(dsi->mipi);
+>  
+> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+> index e00809d..93b354b 100644
+> --- a/drivers/gpu/host1x/mipi.c
+> +++ b/drivers/gpu/host1x/mipi.c
+> @@ -206,13 +206,16 @@ static int tegra_mipi_power_down(struct tegra_mipi *mipi)
+>  	return 0;
+>  }
+>  
+> -struct tegra_mipi_device *tegra_mipi_request(struct device *device)
+> +struct tegra_mipi_device *tegra_mipi_request(struct device *device,
+> +					     struct device_node *np)
+>  {
+> -	struct device_node *np = device->of_node;
+>  	struct tegra_mipi_device *dev;
+>  	struct of_phandle_args args;
+>  	int err;
+>  
+> +	if (!np)
+> +		np = device->of_node;
 
-Some description of the changes in this version would help.
-
-Below is the overall patch as it would land in mainline.  For
-reviewers, please.
-
-From: Charan Teja Reddy <charante@codeaurora.org>
-Subject: mm, page_alloc: skip ->waternark_boost for atomic order-0 allocations
-
-When boosting is enabled, it is observed that rate of atomic order-0
-allocation failures are high due to the fact that free levels in the
-system are checked with ->watermark_boost offset.  This is not a problem
-for sleepable allocations but for atomic allocations which looks like
-regression.
-
-This problem is seen frequently on system setup of Android kernel running
-on Snapdragon hardware with 4GB RAM size.  When no extfrag event occurred
-in the system, ->watermark_boost factor is zero, thus the watermark
-configurations in the system are:
-
-   _watermark = (
-          [WMARK_MIN] = 1272, --> ~5MB
-          [WMARK_LOW] = 9067, --> ~36MB
-          [WMARK_HIGH] = 9385), --> ~38MB
-   watermark_boost = 0
-
-After launching some memory hungry applications in Android which can cause
-extfrag events in the system to an extent that ->watermark_boost can be
-set to max i.e.  default boost factor makes it to 150% of high watermark.
-
-   _watermark = (
-          [WMARK_MIN] = 1272, --> ~5MB
-          [WMARK_LOW] = 9067, --> ~36MB
-          [WMARK_HIGH] = 9385), --> ~38MB
-   watermark_boost = 14077, -->~57MB
-
-With default system configuration, for an atomic order-0 allocation to
-succeed, having free memory of ~2MB will suffice.  But boosting makes the
-min_wmark to ~61MB thus for an atomic order-0 allocation to be successful
-system should have minimum of ~23MB of free memory(from calculations of
-zone_watermark_ok(), min = 3/4(min/2)).  But failures are observed despite
-system is having ~20MB of free memory.  In the testing, this is
-reproducible as early as first 300secs since boot and with furtherlowram
-configurations(<2GB) it is observed as early as first 150secs since boot.
-
-These failures can be avoided by excluding the ->watermark_boost in
-watermark caluculations for atomic order-0 allocations.
-
-[charante@codeaurora.org: fix suggested by Mel Gorman]
-  Link: http://lkml.kernel.org/r/31556793-57b1-1c21-1a9d-22674d9bd938@codeaurora.org
-[akpm@linux-foundation.org: fix comment grammar, reflow comment]
-Link: http://lkml.kernel.org/r/1589882284-21010-1-git-send-email-charante@codeaurora.org
-Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
-Cc: Vinayak Menon <vinmenon@codeaurora.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- mm/page_alloc.c |   24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
-
---- a/mm/page_alloc.c~mm-page_alloc-skip-waternark_boost-for-atomic-order-0-allocations
-+++ a/mm/page_alloc.c
-@@ -3580,7 +3580,7 @@ bool zone_watermark_ok(struct zone *z, u
- 
- static inline bool zone_watermark_fast(struct zone *z, unsigned int order,
- 				unsigned long mark, int highest_zoneidx,
--				unsigned int alloc_flags)
-+				unsigned int alloc_flags, gfp_t gfp_mask)
- {
- 	long free_pages = zone_page_state(z, NR_FREE_PAGES);
- 	long cma_pages = 0;
-@@ -3602,8 +3602,23 @@ static inline bool zone_watermark_fast(s
- 				mark + z->lowmem_reserve[highest_zoneidx])
- 		return true;
- 
--	return __zone_watermark_ok(z, order, mark, highest_zoneidx, alloc_flags,
--					free_pages);
-+	if (__zone_watermark_ok(z, order, mark, highest_zoneidx, alloc_flags,
-+					free_pages))
-+		return true;
-+	/*
-+	 * Ignore watermark boosting for GFP_ATOMIC order-0 allocations
-+	 * when checking the min watermark. The min watermark is the
-+	 * point where boosting is ignored so that kswapd is woken up
-+	 * when below the low watermark.
-+	 */
-+	if (unlikely(!order && (gfp_mask & __GFP_ATOMIC) && z->watermark_boost
-+		&& ((alloc_flags & ALLOC_WMARK_MASK) == WMARK_MIN))) {
-+		mark = z->_watermark[WMARK_MIN];
-+		return __zone_watermark_ok(z, order, mark, highest_zoneidx,
-+					alloc_flags, free_pages);
-+	}
-+
-+	return false;
- }
- 
- bool zone_watermark_ok_safe(struct zone *z, unsigned int order,
-@@ -3747,7 +3762,8 @@ retry:
- 
- 		mark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK);
- 		if (!zone_watermark_fast(zone, order, mark,
--				       ac->highest_zoneidx, alloc_flags)) {
-+				       ac->highest_zoneidx, alloc_flags,
-+				       gfp_mask)) {
- 			int ret;
- 
- #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
-_
-
+Will be nicer if DSI panel could pass the device's node directly,
+instead of this.
