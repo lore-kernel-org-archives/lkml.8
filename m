@@ -2,177 +2,157 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A81C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F72520773
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1E820773
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:38:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEAbYtXy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="icvfQlKx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730828AbgFROhJ (ORCPT
+        id S1730836AbgFROiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:37:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728218AbgFROhE (ORCPT
+        Thu, 18 Jun 2020 10:38:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51481 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730804AbgFROiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:37:04 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE3B1C06174E;
-        Thu, 18 Jun 2020 07:37:03 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id n70so4679751ota.5;
-        Thu, 18 Jun 2020 07:37:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7BX2MczfwnklIekhyvJJ0NhkC58hgUYRasxuG2CoUtI=;
-        b=nEAbYtXy/1I1In7K0fSkRnbxclDKPE5x+iwVmDxh5JN/AktyUce1FVefh+UH+8tA59
-         D0+mklaklftZsz0TvqqJ7MjWoRLIt8OV3+1Fu8JsFhjL2/T+yHgfNK0eWq09CIH8E8bT
-         EXht2WVfhgfZyC3FP+lG5cQMDLf0/wc75OfpBnmGWqqzcbiEpiPHxI5FZOh8bQIQgnMO
-         b4eJxbLoIPn3SempL/oXznqAsWSTsu9ZWU3SiAvatJSxuZ+SiInzCS4aWSCnLFHNpeOK
-         KzJAgIQ9O/0nDGYgiv3yxkiNtzUYdWRsHXl0hNIbdgik/8oeEiQJM4vpFDhBFFq2BiIm
-         CGag==
+        Thu, 18 Jun 2020 10:38:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592491087;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kR8hgd7C1aRuJxjGr8WKWNlO51iJPFeA6wAT6FeN9mY=;
+        b=icvfQlKxLy2tRreWqNpTUN7ZrgXzp9Z2d78tRoZ0VVRwkzyZylpj7U+jsN+MM8SxZ/ZMru
+        bnASD1mJVpAh9okK2vsXCnYqSvxA3fGCFtcdV/ZQn0IcxvR46im2KavTIz60069TEEiMLi
+        nGVCiTfiQ7Zk8ZtZ5HXtorgVTafa4MM=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-198-sIDRt17RMzWxaOfSqB8lDQ-1; Thu, 18 Jun 2020 10:38:04 -0400
+X-MC-Unique: sIDRt17RMzWxaOfSqB8lDQ-1
+Received: by mail-qt1-f199.google.com with SMTP id k23so4558382qtb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:38:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7BX2MczfwnklIekhyvJJ0NhkC58hgUYRasxuG2CoUtI=;
-        b=j87iLZ/KcGbDWY/XpuWHWTv6dMVhUv2JkTCkcR48mVDIPmtFZ9w6aOPl/9x0D7WZ1R
-         yEGeNGR6YZKAer7Tc1V/y461fKju78UUjARPXFZlcRthrZ/ZdpqCARsRBJQon2yVpuJT
-         jK3VUmZF75ULceWmVypy1id69rbJ3M0a9PFf/EhsQwwY6o1a2AFFdZk6261sYaVnhlXP
-         ysxr5PEPcGE8vqttL0LsDdS/3ut+HAcZYrIu3espfnhPV10UXYJZmdiA0/+DwJf1QBqh
-         LTy96AMdGvKpJqzl/9SQAUtPjJGEdA6zgJjKJdfE2sYz3AZLaVmy14rbiviwJPD1488c
-         cBLg==
-X-Gm-Message-State: AOAM531HNWM1PKqlDYh8QUtZ2FOBPGtMXBM4MiR0fizFvZpznj7VUiPf
-        Th3ivaMFma5Y2knWzNrmcHJiLiakKWDaYBpyuCMVMwJ68QRN5A==
-X-Google-Smtp-Source: ABdhPJwk6h8WIc7fO0xkSvAHrVqw51KS1v1wJFRZWH9JfYKzyXGeklPjICyAGIVoOBMnL4iwQ5OwV0yElfyM/8k0NS4=
-X-Received: by 2002:a05:6830:2054:: with SMTP id f20mr3572787otp.358.1592491022659;
- Thu, 18 Jun 2020 07:37:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kR8hgd7C1aRuJxjGr8WKWNlO51iJPFeA6wAT6FeN9mY=;
+        b=X7Xp8lU6VtzmE5E3Xt2NxIrDiNkUxcYrz26WY6BnzPyZFrHeCcsuQY35Nr2v4FhTk6
+         L62wxFBGIKww71PRPjli0VFdmVmDJdAsy04MLRRujdn1axAh4+jqTMRMo4Pk+2Hv6DP7
+         EjoegYO/ElyU67okri8IVUrY9hycdC1dk3AQzs+TZZcqYHlGhTv8RZquxzQpkWY4efTW
+         ne3rx/AwYwKMHMV+A5e//wsSIyw79us+oxHNqzwlSnLtGLwCoc/1EZ7xMTgkt+Wr9iJf
+         Rg7YpFFR5qxHIu2U+K2a3mxZLVWIPGI76LuuAF7KsdDRYLHDzSBJOnGbvGHG5p0jrcFF
+         Rnmg==
+X-Gm-Message-State: AOAM530gJAIkbynw5N9csz3iB90B6uqDG3QYTO5mDBvG4cICyjvvO1lS
+        eSYLilql3IUldIxZfebAk51nZUdpH8O8ZS5aBHO/lbSnF08UWue7ga/qAk3hC0NaNWkuJ9wiGfD
+        AX8kagxunYPbaQKjXjc8XnORN
+X-Received: by 2002:a37:510:: with SMTP id 16mr3799068qkf.158.1592491084286;
+        Thu, 18 Jun 2020 07:38:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzgIlVSOfyTkKlA6rdJwQo1PKbMN5rge+wF3Pm4MBxSEYVC1edOee7Ik8ZU/elsoO8j3z7Lbg==
+X-Received: by 2002:a37:510:: with SMTP id 16mr3799027qkf.158.1592491083984;
+        Thu, 18 Jun 2020 07:38:03 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id f30sm3143755qtb.9.2020.06.18.07.38.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 07:38:03 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 10:38:01 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Guo Ren <guoren@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-csky@vger.kernel.org
+Subject: Re: [PATCH 07/25] mm/csky: Use mm_fault_accounting()
+Message-ID: <20200618143801.GK76766@xz-x1>
+References: <20200615221607.7764-1-peterx@redhat.com>
+ <20200615221607.7764-8-peterx@redhat.com>
+ <CAJF2gTSVSXO=phc1eeb-ZmDMrSDjSSLd3tN6ng_8n-pCSZh5zw@mail.gmail.com>
+ <20200617154925.GC76766@xz-x1>
+ <CAHk-=wi=58J7d5iyFyYyHrU+pzjWB55cit_LQCkSkavpH-trsg@mail.gmail.com>
+ <20200617195807.GH76766@xz-x1>
+ <CAHk-=wj_V2Tps2QrMn20_W0OJF9xqNh52XSGA42s-ZJ8Y+GyKw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200618100400.11464-1-colin.king@canonical.com>
- <20200618121405.GJ159988@e110455-lin.cambridge.arm.com> <5d08fbec-75d8-d9a9-af61-e6ab98e77c80@canonical.com>
- <20200618142106.GK159988@e110455-lin.cambridge.arm.com>
-In-Reply-To: <20200618142106.GK159988@e110455-lin.cambridge.arm.com>
-From:   Garrit Franke <garritfranke@gmail.com>
-Date:   Thu, 18 Jun 2020 16:36:51 +0200
-Message-ID: <CAD16O86ebsDkwbnuw2G04YZWfukqxJ=_Tex5OT07icEpfPdQNw@mail.gmail.com>
-Subject: Re: [PATCH] drm/arm: fix unintentional integer overflow on left shift
-To:     Liviu Dudau <liviu.dudau@arm.com>
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        David Airlie <airlied@linux.ie>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj_V2Tps2QrMn20_W0OJF9xqNh52XSGA42s-ZJ8Y+GyKw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all, newbie here.
-Can the BIT macro be safely used on other parts of the kernel as well?
-Just using git grep "1 <<" returns a ton of results where bit shifting
-is used the old fashioned way.
+On Wed, Jun 17, 2020 at 01:15:31PM -0700, Linus Torvalds wrote:
+> On Wed, Jun 17, 2020 at 12:58 PM Peter Xu <peterx@redhat.com> wrote:
+> >
+> > But currently remote GUP will still do the page fault accounting on the remote
+> > task_struct, am I right?  E.g., when the get_user_pages_remote() is called with
+> > "tsk != current", it seems the faultin_page() will still do maj_flt/min_flt
+> > accounting for that remote task/thread?
+> 
+> Well, that would be a data race and fundamentally buggy.
+> 
+> It would be ok with something like ptrace (which only works when the
+> target is quiescent), but is completely wrong otherwise.
+> 
+> I guess it works fine in practice, and it's only statistics so even if
+> you were to have a data race it doesn't much matter, but it's
+> definitely conceptually very very wrong.
+> 
+> The fault stats should be about who does the fault (they are about the
+> _thread_) not about who the fault is done to (which is about the
+> _mm_).
+> 
+> Allocating the fault data to somebody else sounds frankly silly and
+> stupid to me, exactly because it's (a) racy and (b) not even
+> conceptually correct. The other thread literally _isn't_ doing a major
+> page fault, for crissake!
+> 
+> Now, there are some actual per-mm statistics too (the rss stuff etc),
+> and it's fundamentally harder exactly because of the shared data. See
+> the mm_counter stuff etc. Those are not about who does soemthing, they
+> are about the resulting MM state.
 
-Am Do., 18. Juni 2020 um 16:23 Uhr schrieb Liviu Dudau <liviu.dudau@arm.com=
->:
->
-> On Thu, Jun 18, 2020 at 01:50:34PM +0100, Colin Ian King wrote:
-> > On 18/06/2020 13:14, Liviu Dudau wrote:
-> > > On Thu, Jun 18, 2020 at 11:04:00AM +0100, Colin King wrote:
-> > >> From: Colin Ian King <colin.king@canonical.com>
-> > >
-> > > Hi Colin,
-> > >
-> > >>
-> > >> Shifting the integer value 1 is evaluated using 32-bit arithmetic
-> > >> and then used in an expression that expects a long value leads to
-> > >> a potential integer overflow.
-> > >
-> > > I'm afraid this explanation makes no sense to me. Do you care to expl=
-ain better what
-> > > you think the issue is? If the shift is done as 32-bit arithmetic and=
- then promoted
-> > > to long how does the overflow happen?
-> >
-> > The shift is performed using 32 bit signed math and then assigned to an
-> > unsigned 64 bit long. This if the shift is 31 bits then the signed int
-> > conversion of 0x80000000 to unsigned long becomes 0xffffffff80000000.
-> > If the shift is more than 32 bits then result overflows and becomes 0x0=
-.
->
-> You are right, I've missed the fact that it is signed math. Not very like=
-ly that
-> we are going to ever have 30 or more CRTCs in the driver, but Coverity ha=
-s no
-> way of knowing that.
->
-> Acked-by: Liviu Dudau <liviu.dudau@arm.com>
->
-> I will pull this into drm-misc-next today.
->
-> Best regards,
-> Liviu
->
-> >
-> > Colin
-> >
-> > >
-> > > Best regards,
-> > > Liviu
-> > >
-> > >> Fix this by using the BIT macro to
-> > >> perform the shift to avoid the overflow.
-> > >>
-> > >> Addresses-Coverity: ("Unintentional integer overflow")
-> > >> Fixes: ad49f8602fe8 ("drm/arm: Add support for Mali Display Processo=
-rs")
-> > >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > >> ---
-> > >>  drivers/gpu/drm/arm/malidp_planes.c | 2 +-
-> > >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >>
-> > >> diff --git a/drivers/gpu/drm/arm/malidp_planes.c b/drivers/gpu/drm/a=
-rm/malidp_planes.c
-> > >> index 37715cc6064e..ab45ac445045 100644
-> > >> --- a/drivers/gpu/drm/arm/malidp_planes.c
-> > >> +++ b/drivers/gpu/drm/arm/malidp_planes.c
-> > >> @@ -928,7 +928,7 @@ int malidp_de_planes_init(struct drm_device *drm=
-)
-> > >>    const struct malidp_hw_regmap *map =3D &malidp->dev->hw->map;
-> > >>    struct malidp_plane *plane =3D NULL;
-> > >>    enum drm_plane_type plane_type;
-> > >> -  unsigned long crtcs =3D 1 << drm->mode_config.num_crtc;
-> > >> +  unsigned long crtcs =3D BIT(drm->mode_config.num_crtc);
-> > >>    unsigned long flags =3D DRM_MODE_ROTATE_0 | DRM_MODE_ROTATE_90 | =
-DRM_MODE_ROTATE_180 |
-> > >>                          DRM_MODE_ROTATE_270 | DRM_MODE_REFLECT_X | =
-DRM_MODE_REFLECT_Y;
-> > >>    unsigned int blend_caps =3D BIT(DRM_MODE_BLEND_PIXEL_NONE) |
-> > >> --
-> > >> 2.27.0.rc0
-> > >>
-> > >
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
->
-> --
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> | I would like to |
-> | fix the world,  |
-> | but they're not |
-> | giving me the   |
->  \ source code!  /
->   ---------------
->     =C2=AF\_(=E3=83=84)_/=C2=AF
+I see.  How about I move another small step further to cover GUP (to be
+explicit, faultin_page() and fixup_user_fault())?
+
+GUP needs the per-task accounting, but not the perf events.  We can do that by
+slightly changing the new approach into:
+
+        bool major = (ret & VM_FAULT_MAJOR) || (flags & FAULT_FLAG_TRIED);
+
+        if (major)
+                current->maj_flt++;
+        else
+                current->min_flt++;
+
+        if (!regs)
+                return ret;
+
+        if (major)
+                perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1, regs, address);
+        else
+                perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs, address);
+
+With the change we will always account that onto current task.  Since there're
+GUP calls that are not even accounted at all, e.g., get_user_pages_remote()
+with tsk==NULL: for these calls, we also account these page faults onto current
+task.
+
+Another major benefit I can see (besides a completely cleaned up accounting) is
+that we can remove the task_struct pointer in the whole GUP code, because
+AFAICT that's only used for this pf accounting either in faultin_page() or
+fixup_user_fault(), which seems questionable itself now to not use current...
+
+Any opinions?
+
+Thanks,
+
+--
+Peter Xu
+
