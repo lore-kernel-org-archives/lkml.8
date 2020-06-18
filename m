@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C67C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1D5421D82
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F4221927
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443259;
-	bh=Z/WbnyE4ZXlpudncQs5OzvRsFKu8fkgoznjwuRiGmao=;
+	s=default; t=1592443265;
+	bh=2k53BUB6tR7j3zcSfFJF3SuY35bWiRwDUV7sos9HbBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zgfjXSNFjm6PVVjou80Vlwagd5TgoEHLiD9/9b40Whskfvjg8mE12ovKdkN7tjicw
-	 mHlxnPt0BhhxhRF6L3I/kL3lKu9zsbZId8bw+YGX0u/8NwEQlBwJ0DJssjKqsZtxyD
-	 aRPowIjZpx/pFee7aPnw35Px5ezOcu8TgGUnS/hc=
+	b=R551csLLA5h6oD71OzJECY5DPbxSoYueipqdn9NJstuFkFEM9N35bPD5Z6lLLANOt
+	 z/mm/DBnntVX5Kv7MIjj+SvsAQVqZpizi0DXhgK23g6BTX3otYcCyKHz14auauTiiy
+	 Iqk0vY/Xcq6nYw6EvOBidxD/DK/n8aUchMW+LERU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbgFRBU6 (ORCPT
+        id S1730439AbgFRBVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:20:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49032 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729818AbgFRBRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:47 -0400
+        id S1729046AbgFRBRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBAB8206F1;
-        Thu, 18 Jun 2020 01:17:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A17EF206F1;
+        Thu, 18 Jun 2020 01:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443066;
-        bh=Z/WbnyE4ZXlpudncQs5OzvRsFKu8fkgoznjwuRiGmao=;
+        s=default; t=1592443072;
+        bh=2k53BUB6tR7j3zcSfFJF3SuY35bWiRwDUV7sos9HbBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WIvLRAcx+GgjQClulg/2+c247y0zwuk4thSiOuO6HgJv2p9tVI6wMrZNIxdqSoXVx
-         ugqi7BMS0kSX5sOYgfxO0Llg7LcFnkSAi8c300SJLlJe8cySiipnqt6C+wdi3eIzQ9
-         bH/5ovRW4JcY8T+1M4HqibSxf/CvQgddhDi71F8k=
+        b=froT7pKA2zBiyw4qGfZwbPSM9uy5AUmj5xFR/h+u4pgzzDRPCiQjlvEy2CHD3ZDhw
+         8StzEj33iMNL+ALrtrVtMReWEQCjEkq+mETqD1zH+Y2LYd3jhHlCAPFEIdJVdw4wE/
+         yh+YqZkkOp8kW5jESIsxXYQeEXFI9ASjzwcYEEh8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 056/266] scsi: cxgb3i: Fix some leaks in init_act_open()
-Date:   Wed, 17 Jun 2020 21:13:01 -0400
-Message-Id: <20200618011631.604574-56-sashal@kernel.org>
+Cc:     Alain Volmat <avolmat@me.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 060/266] clk: clk-flexgen: fix clock-critical handling
+Date:   Wed, 17 Jun 2020 21:13:05 -0400
+Message-Id: <20200618011631.604574-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,71 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Alain Volmat <avolmat@me.com>
 
-[ Upstream commit b6170a49c59c27a10efed26c5a2969403e69aaba ]
+[ Upstream commit a403bbab1a73d798728d76931cab3ff0399b9560 ]
 
-There wasn't any clean up done if cxgb3_alloc_atid() failed and also the
-original code didn't release "csk->l2t".
+Fixes an issue leading to having all clocks following a critical
+clocks marked as well as criticals.
 
-Link: https://lore.kernel.org/r/20200521121221.GA247492@mwanda
-Fixes: 6f7efaabefeb ("[SCSI] cxgb3i: change cxgb3i to use libcxgbi")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: fa6415affe20 ("clk: st: clk-flexgen: Detect critical clocks")
+Signed-off-by: Alain Volmat <avolmat@me.com>
+Link: https://lkml.kernel.org/r/20200322140740.3970-1-avolmat@me.com
+Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/cxgbi/cxgb3i/cxgb3i.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/clk/st/clk-flexgen.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
-index 524cdbcd29aa..ec7d01f6e2d5 100644
---- a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
-+++ b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
-@@ -959,6 +959,7 @@ static int init_act_open(struct cxgbi_sock *csk)
- 	struct net_device *ndev = cdev->ports[csk->port_id];
- 	struct cxgbi_hba *chba = cdev->hbas[csk->port_id];
- 	struct sk_buff *skb = NULL;
-+	int ret;
+diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
+index 4413b6e04a8e..55873d4b7603 100644
+--- a/drivers/clk/st/clk-flexgen.c
++++ b/drivers/clk/st/clk-flexgen.c
+@@ -375,6 +375,7 @@ static void __init st_of_flexgen_setup(struct device_node *np)
+ 			break;
+ 		}
  
- 	log_debug(1 << CXGBI_DBG_TOE | 1 << CXGBI_DBG_SOCK,
- 		"csk 0x%p,%u,0x%lx.\n", csk, csk->state, csk->flags);
-@@ -979,16 +980,16 @@ static int init_act_open(struct cxgbi_sock *csk)
- 	csk->atid = cxgb3_alloc_atid(t3dev, &t3_client, csk);
- 	if (csk->atid < 0) {
- 		pr_err("NO atid available.\n");
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto put_sock;
- 	}
- 	cxgbi_sock_set_flag(csk, CTPF_HAS_ATID);
- 	cxgbi_sock_get(csk);
++		flex_flags &= ~CLK_IS_CRITICAL;
+ 		of_clk_detect_critical(np, i, &flex_flags);
  
- 	skb = alloc_wr(sizeof(struct cpl_act_open_req), 0, GFP_KERNEL);
- 	if (!skb) {
--		cxgb3_free_atid(t3dev, csk->atid);
--		cxgbi_sock_put(csk);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto free_atid;
- 	}
- 	skb->sk = (struct sock *)csk;
- 	set_arp_failure_handler(skb, act_open_arp_failure);
-@@ -1010,6 +1011,15 @@ static int init_act_open(struct cxgbi_sock *csk)
- 	cxgbi_sock_set_state(csk, CTP_ACTIVE_OPEN);
- 	send_act_open_req(csk, skb, csk->l2t);
- 	return 0;
-+
-+free_atid:
-+	cxgb3_free_atid(t3dev, csk->atid);
-+put_sock:
-+	cxgbi_sock_put(csk);
-+	l2t_release(t3dev, csk->l2t);
-+	csk->l2t = NULL;
-+
-+	return ret;
- }
- 
- cxgb3_cpl_handler_func cxgb3i_cpl_handlers[NUM_CPL_CMDS] = {
+ 		/*
 -- 
 2.25.1
 
