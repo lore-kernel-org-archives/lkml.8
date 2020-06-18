@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A5CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DC6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE602193E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DBE221D7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442766;
-	bh=9sRImwLUILDBVo3xfu7Unnjo4AuQtoYKJtYxBbp5riY=;
+	s=default; t=1592442771;
+	bh=qETL6FZDyJQkLmfpP6vp9sPwcPD3ihNUu0hjmYnP98c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mn5qwoLvTetcDHyfR+PHZCuojW6lTFp1vW4tktxGtJ3a4eGvpJ4vQJRGDa+dK68tA
-	 XEPFEPopb/SPhEtu3lgEXcnURrCxfHewNyi2EnFJ8PDd4/BA7kyeiqDTOUMLewBTZu
-	 RX1EagWOzVqIH281PukK2hJ/yHRsUEOYW4p+fS5k=
+	b=jGMWJk0nEUTOYaHkKe+ZXarVLrMSS8TwUOVH247vEPTQzm8+HSpLQRUhRghpSLOXw
+	 bkgh6PKDe0VmUiX39eWRnTpqdnWC1OMbLd0M0YmmTTb2CcB33TASBZ8N5YdgiN5KLG
+	 v/AQ8NbgYVA7IJqpMV+kifXfrhNHl3q24vZjjTFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbgFRBMp (ORCPT
+        id S1728383AbgFRBMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:12:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40080 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:12:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728810AbgFRBLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:55 -0400
+        id S1727828AbgFRBL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E292214DB;
-        Thu, 18 Jun 2020 01:11:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33C4C20B1F;
+        Thu, 18 Jun 2020 01:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442714;
-        bh=9sRImwLUILDBVo3xfu7Unnjo4AuQtoYKJtYxBbp5riY=;
+        s=default; t=1592442717;
+        bh=qETL6FZDyJQkLmfpP6vp9sPwcPD3ihNUu0hjmYnP98c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pmc5tDEBMbCkwU1m8qokdvD67dvYhGuTlyqB+rtVpeUQrc2m5lM/4Rl08rc209JgK
-         oTOgM40Nk69rfMBNvXWk3/8GIVlaWf2cPcvHYUUs6ZsROb7gDmNr+xbF8X5DWViibg
-         gANNNudfxZ9zkHskmSWVUdZPb1slstlcMsqwk44w=
+        b=YgHKPNJht2iXx/rUGTT+U0vLKCTL0EuK+P2GZAJebyBM/gYADmfjMe2e0PViYyffw
+         DHV1y+S4qabr2xcTRBY851w+ARmTEiJV4Pvw978nc/kMX9i9+b85OvC3tWzxLi9s1Q
+         v+8OyND+smOHnTwLkdmqtL+p2xXNU61dEnD6jXqQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 174/388] i2c: pxa: fix i2c_pxa_scream_blue_murder() debug output
-Date:   Wed, 17 Jun 2020 21:04:31 -0400
-Message-Id: <20200618010805.600873-174-sashal@kernel.org>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 176/388] PCI: rcar: Fix incorrect programming of OB windows
+Date:   Wed, 17 Jun 2020 21:04:33 -0400
+Message-Id: <20200618010805.600873-176-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,52 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Andrew Murray <andrew.murray@arm.com>
 
-[ Upstream commit 88b73ee7ca4c90baf136ed5a8377fc5a9b73ac08 ]
+[ Upstream commit 2b9f217433e31d125fb697ca7974d3de3ecc3e92 ]
 
-The IRQ log output is supposed to appear on a single line.  However,
-commit 3a2dc1677b60 ("i2c: pxa: Update debug function to dump more info
-on error") resulted in it being printed one-entry-per-line, which is
-excessively long.
+The outbound windows (PCIEPAUR(x), PCIEPALR(x)) describe a mapping between
+a CPU address (which is determined by the window number 'x') and a
+programmed PCI address - Thus allowing the controller to translate CPU
+accesses into PCI accesses.
 
-Fixing this is not a trivial matter; using pr_cont() doesn't work as
-the previous dev_dbg() may not have been compiled in, or may be
-dynamic.
+However the existing code incorrectly writes the CPU address - lets fix
+this by writing the PCI address instead.
 
-Since the rest of this function output is at error level, and is also
-debug output, promote this to error level as well to avoid this
-problem.
+For memory transactions, existing DT users describe a 1:1 identity mapping
+and thus this change should have no effect. However the same isn't true for
+I/O.
 
-Reduce the number of always zero prefix digits to save screen real-
-estate.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Link: https://lore.kernel.org/r/20191004132941.6660-1-andrew.murray@arm.com
+Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
+Tested-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pxa.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pcie-rcar.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index 30a6e07212a4..f537a37ac1d5 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -311,11 +311,10 @@ static void i2c_pxa_scream_blue_murder(struct pxa_i2c *i2c, const char *why)
- 	dev_err(dev, "IBMR: %08x IDBR: %08x ICR: %08x ISR: %08x\n",
- 		readl(_IBMR(i2c)), readl(_IDBR(i2c)), readl(_ICR(i2c)),
- 		readl(_ISR(i2c)));
--	dev_dbg(dev, "log: ");
-+	dev_err(dev, "log:");
- 	for (i = 0; i < i2c->irqlogidx; i++)
--		pr_debug("[%08x:%08x] ", i2c->isrlog[i], i2c->icrlog[i]);
--
--	pr_debug("\n");
-+		pr_cont(" [%03x:%05x]", i2c->isrlog[i], i2c->icrlog[i]);
-+	pr_cont("\n");
- }
+diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
+index 759c6542c5c8..1bae6a4abaae 100644
+--- a/drivers/pci/controller/pcie-rcar.c
++++ b/drivers/pci/controller/pcie-rcar.c
+@@ -333,11 +333,12 @@ static struct pci_ops rcar_pcie_ops = {
+ };
  
- #else /* ifdef DEBUG */
+ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
+-				   struct resource *res)
++				   struct resource_entry *window)
+ {
+ 	/* Setup PCIe address space mappings for each resource */
+ 	resource_size_t size;
+ 	resource_size_t res_start;
++	struct resource *res = window->res;
+ 	u32 mask;
+ 
+ 	rcar_pci_write_reg(pcie, 0x00000000, PCIEPTCTLR(win));
+@@ -351,9 +352,9 @@ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
+ 	rcar_pci_write_reg(pcie, mask << 7, PCIEPAMR(win));
+ 
+ 	if (res->flags & IORESOURCE_IO)
+-		res_start = pci_pio_to_address(res->start);
++		res_start = pci_pio_to_address(res->start) - window->offset;
+ 	else
+-		res_start = res->start;
++		res_start = res->start - window->offset;
+ 
+ 	rcar_pci_write_reg(pcie, upper_32_bits(res_start), PCIEPAUR(win));
+ 	rcar_pci_write_reg(pcie, lower_32_bits(res_start) & ~0x7F,
+@@ -382,7 +383,7 @@ static int rcar_pcie_setup(struct list_head *resource, struct rcar_pcie *pci)
+ 		switch (resource_type(res)) {
+ 		case IORESOURCE_IO:
+ 		case IORESOURCE_MEM:
+-			rcar_pcie_setup_window(i, pci, res);
++			rcar_pcie_setup_window(i, pci, win);
+ 			i++;
+ 			break;
+ 		case IORESOURCE_BUS:
 -- 
 2.25.1
 
