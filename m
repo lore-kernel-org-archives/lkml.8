@@ -2,121 +2,136 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D63C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEF2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A22D2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB382070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:39:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="K0ZOAG6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbgFRMil (ORCPT
+        id S1729888AbgFRMjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:38:41 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2326 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726909AbgFRMik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 08:38:40 -0400
-Received: from lhreml716-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 8BE30888CEFE3CD765AE;
-        Thu, 18 Jun 2020 13:38:38 +0100 (IST)
-Received: from fraeml704-chm.china.huawei.com (10.206.15.53) by
- lhreml716-chm.china.huawei.com (10.201.108.67) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Thu, 18 Jun 2020 13:38:38 +0100
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 18 Jun 2020 14:38:37 +0200
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
- Thu, 18 Jun 2020 14:38:37 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        Maurizio Drocco <maurizio.drocco@ibm.com>
-CC:     "dmitry.kasatkin@gmail.com" <dmitry.kasatkin@gmail.com>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "serge@hallyn.com" <serge@hallyn.com>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [PATCH] extend IMA boot_aggregate with kernel measurements
-Thread-Topic: [PATCH] extend IMA boot_aggregate with kernel measurements
-Thread-Index: AQHWQCo8nqt7HKCznkGnNWX+y9c+NajT/1SAgADtAgCAACbgMIAABL+AgAZlbjD///PFAIAC3lpA
-Date:   Thu, 18 Jun 2020 12:38:37 +0000
-Message-ID: <b744c1b79ba14a17a786f5de04c1f3c4@huawei.com>
-References: <1591921795.11061.12.camel@linux.ibm.com>
-         <20200612143812.1609-1-maurizio.drocco@ibm.com>
-         <380af929b2d2440a9dc35ba0b374247d@huawei.com>
-         <1591982059.7235.29.camel@linux.ibm.com>
-         <8c44ed75fb884cad9f33c86c2d4e8a27@huawei.com>
- <1592331068.11061.218.camel@linux.ibm.com>
-In-Reply-To: <1592331068.11061.218.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.220.96.108]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 18 Jun 2020 08:39:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728997AbgFRMjS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 08:39:18 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9392EC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 05:39:17 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id b4so5261013qkn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 05:39:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=72mYtR8brLn0NtD1nMNXJ5LkwsKwBqKm9sI8cal1E90=;
+        b=K0ZOAG6GPspKsFM7RuoT1Zxla/nSwmJil3wicypom/nE8jjCpK25dmHoz1r1NnXadc
+         ww5oAw4uDtuC0r5OyCQKa7v6tue9ZyNUOKyFMkfrCDrEWcgvBPPmvopYsQYDI5AgV8Gv
+         AtgDwfC2zGMOR1pOrxPMfHWMFT7z+VjmYyImE54pHzbcrk5YncmWcOFjkVSbGFPeE+wW
+         J5QfJWa55NA5KWZb3jklwT0BXjvcVEfIHaG1N2RZgfLA0MGe6Faz6CVqNbqomhSnM10D
+         9iYNa53DJtVno8jZynfCQw0FxObMJ0l0mxqquCkzFHCssr3s2M+VbMkq/fVboKjCGbRO
+         gHhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=72mYtR8brLn0NtD1nMNXJ5LkwsKwBqKm9sI8cal1E90=;
+        b=V1GYMYlb74PA2MKPVneluwNi4mp0oHvtfAeV/jpvrC3SG+MB6WsvyMCxUxpfLxcxDn
+         lgZj2DWBAk3YjmSh/PghxK0FXZEVVN8t4klM2Xg6gCSIc2q6Aqj90WkyZxBWqhwZ9wgo
+         mtCJ4EjsCtnZKaCjPht8x7pvAinZ2oTOcmbzYFWl+tTqQPwfCWeAFAwcqHjW946dVpDB
+         R5Szc3OrfJlVFHk574O5OEEyqK7xQl5E3sSEfI/CWiZv/bW6qVvyVo1CrgHiAa+9+0+A
+         DhqW2O7lB3m65uktFzmKNwdBKnPX+mDC1mM47juOffKJtoIeXYAiWLoutvwuoqVXwl/P
+         wGQg==
+X-Gm-Message-State: AOAM5308oeur4sufPQU0sYUenXPyepWevCDKrgdh5fKYa5dMTo/qU51N
+        izO6IzbT7iKm9Z4JSg7SkF0Wqw==
+X-Google-Smtp-Source: ABdhPJysbQyaTGuA2V7J4PdGuIk1FXVCoiQx2IebAeWXZ00/o4KUBNVIzISUhVKWFuY7ZPiZkyl5pg==
+X-Received: by 2002:a05:620a:1310:: with SMTP id o16mr3413267qkj.68.1592483956719;
+        Thu, 18 Jun 2020 05:39:16 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id 124sm2870143qkm.115.2020.06.18.05.39.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 05:39:16 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     kunit-dev@googlegroups.com
+Cc:     skhan@linuxfoundation.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH v2] kunit: fix KconfigParseError handling CC_VERSION_TEXT
+Date:   Thu, 18 Jun 2020 09:39:12 -0300
+Message-Id: <20200618123912.64762-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86em9oYXJAbGludXguaWJtLmNvbV0NCj4gU2VudDog
-VHVlc2RheSwgSnVuZSAxNiwgMjAyMCA4OjExIFBNDQo+IE9uIFR1ZSwgMjAyMC0wNi0xNiBhdCAx
-NzoyOSArMDAwMCwgUm9iZXJ0byBTYXNzdSB3cm90ZToNCj4gPiA+IEZyb206IEphbWVzIEJvdHRv
-bWxleSBbbWFpbHRvOmplamJAbGludXguaWJtLmNvbV0NCj4gPiA+IFNlbnQ6IEZyaWRheSwgSnVu
-ZSAxMiwgMjAyMCA3OjE0IFBNDQo+ID4gPiBPbiBGcmksIDIwMjAtMDYtMTIgYXQgMTU6MTEgKzAw
-MDAsIFJvYmVydG8gU2Fzc3Ugd3JvdGU6DQo+ID4gPiA+IHdpdGggcmVjZW50IHBhdGNoZXMsIGJv
-b3RfYWdncmVnYXRlIGNhbiBiZSBjYWxjdWxhdGVkIGZyb20gbm9uLVNIQTENCj4gPiA+ID4gUENS
-IGJhbmtzLiBJIHdvdWxkIHJlcGxhY2Ugd2l0aDoNCj4gPiA+ID4NCj4gPiA+ID4gRXh0ZW5kIGN1
-bXVsYXRpdmUgZGlnZXN0IG92ZXIgLi4uDQo+ID4gPiA+DQo+ID4gPiA+IEdpdmVuIHRoYXQgd2l0
-aCB0aGlzIHBhdGNoIGJvb3RfYWdncmVnYXRlIGlzIGNhbGN1bGF0ZWQgZGlmZmVyZW50bHksDQo+
-ID4gPiA+IHNob3VsZG4ndCB3ZSBjYWxsIGl0IGJvb3RfYWdncmVnYXRlX3YyIGFuZCBlbmFibGUg
-aXQgd2l0aCBhIG5ldw0KPiA+ID4gPiBvcHRpb24/DQo+ID4gPg0KPiA+ID4gU28gaGVyZSdzIHRo
-ZSBwcm9ibGVtOiBpZiB5b3VyIGN1cnJlbnQgZ3J1YiBkb2Vzbid0IGRvIGFueSBUUE0NCj4gPiA+
-IGV4dGVuc2lvbnMgKGFzIG1vc3QgZG9uJ3QpLCB0aGVuIHRoZSB0d28gYm9vdCBhZ2dyZWdhdGVz
-IGFyZSB0aGUgc2FtZQ0KPiA+ID4gYmVjYXVzZSBQQ1JzIDggYW5kIDkgYXJlIHplcm8gYW5kIHRo
-ZXJlJ3MgYSB0ZXN0IHRoYXQgZG9lc24ndCBhZGQgdGhlbQ0KPiA+ID4gdG8gdGhlIGFnZ3JlZ2F0
-ZSBpZiB0aGV5IGFyZSB6ZXJvLiAgRm9yIHRoZXNlIHBlb3BsZSBpdHMgYSBub3Agc28gd2UNCj4g
-PiA+IHNob3VsZG4ndCBmb3JjZSB0aGVtIHRvIGNob29zZSBhIGRpZmZlcmVudCB2ZXJzaW9uIG9m
-IHRoZSBzYW1lIHRoaW5nLg0KPiA+ID4NCj4gPiA+IElmLCBob3dldmVyLCB5b3UncmUgb24gYSBk
-aXN0cmlidXRpb24gd2hlcmUgZ3J1YiBpcyBhdXRvbWF0aWNhbGx5DQo+ID4gPiBtZWFzdXJpbmcg
-dGhlIGtlcm5lbCBhbmQgY29tbWFuZCBsaW5lIGludG8gUENScyA4IGFuZCA5IChJIHRoaW5rDQo+
-IEZlZG9yYQ0KPiA+ID4gMzIgZG9lcyB0aGlzKSwgeW91ciBib290IGFnZ3JlZ2F0ZSB3aWxsIGNo
-YW5nZS4gIEl0IHN0cmlrZXMgbWUgaW4gdGhhdA0KPiA+ID4gY2FzZSB3ZSBjYW4gY2FsbCB0aGlz
-IGEgYnVnIGZpeCwgc2luY2UgdGhlIGJvb3QgYWdncmVnYXRlIGlzbid0DQo+ID4gPiBwcm9wZXJs
-eSBiaW5kaW5nIHRvIHRoZSBwcmV2aW91cyBtZWFzdXJlbWVudHMgd2l0aG91dCBQQ1JzIDggYW5k
-IDkuDQo+IEluDQo+ID4gPiB0aGlzIGNhc2UsIGRvIHdlIHdhbnQgdG8gYWxsb3cgcGVvcGxlIHRv
-IHNlbGVjdCBhbiBvcHRpb24gd2hpY2ggZG9lc24ndA0KPiA+ID4gcHJvcGVybHkgYmluZCB0aGUg
-SU1BIGxvZyB0byB0aGUgYm9vdCBtZWFzdXJlbWVudHM/ICBUaGF0IHNvdW5kcyBsaWtlDQo+IGEN
-Cj4gPiA+IHNlY3VyaXR5IGhvbGUgdG8gbWUuDQo+ID4gPg0KPiA+ID4gSG93ZXZlciwgc2luY2Ug
-aXQgY2F1c2VzIGEgdXNlciB2aXNpYmxlIGRpZmZlcmVuY2UgaW4gdGhlIGdydWIgYWxyZWFkeQ0K
-PiA+ID4gbWVhc3VyZXMgY2FzZSwgZG8geW91IGhhdmUgYSBjdXJyZW50IHVzZSBjYXNlIHRoYXQg
-d291bGQgYmUgYWZmZWN0ZWQ/DQo+ID4gPiBBcyBpbiBhcmUgbG90cyBvZiBwZW9wbGUgYWxyZWFk
-eSBydW5uaW5nIGEgZGlzdHJvIHdpdGggdGhlIFRQTSBncnViDQo+ID4gPiB1cGRhdGVzIGFuZCBy
-ZWx5aW5nIG9uIHRoZSBvbGQgYm9vdCBhZ2dyZWdhdGU/DQo+ID4NCj4gPiBJIGRvbid0IGtub3cg
-aG93IG1hbnkgcGVvcGxlIHdvdWxkIGJlIGFmZmVjdGVkLiBIb3dldmVyLCBpZiBhbg0KPiA+IGF0
-dGVzdGF0aW9uIHRvb2wgcHJvY2Vzc2VzIGJvdGggbWVhc3VyZW1lbnQgbGlzdHMgZnJvbSB1bnBh
-dGNoZWQNCj4ga2VybmVscw0KPiA+IGFuZCBwYXRjaGVkIGtlcm5lbHMsIGtlZXBpbmcgdGhlIHNh
-bWUgbmFtZSB3b3VsZCBiZSBhIHByb2JsZW0gYXMgaXQNCj4gPiBjYW5ub3QgYmUgZGV0ZXJtaW5l
-ZCBmcm9tIHRoZSBtZWFzdXJlbWVudCBsaXN0IGhvdyBib290X2FnZ3JlZ2F0ZQ0KPiA+IHdhcyBj
-YWxjdWxhdGVkLg0KPiA+DQo+ID4gQW55d2F5LCBJIGFncmVlIHRoaXMgc2hvdWxkIGJlIGZpeGVk
-LiBBdCBsZWFzdCwgSSBzdWdnZXN0IHRvIGFkZCBhIEZpeGVzIHRhZywNCj4gPiB0byBlbnN1cmUg
-dGhhdCB0aGlzIHBhdGNoIGlzIGFwcGxpZWQgdG8gYWxsIHN0YWJsZSBrZXJuZWxzLg0KPiANCj4g
-VGhlIGJvb3QgYWdncmVnYXRlIG9uIGV4aXN0aW5nIHN5c3RlbXMgd291bGQgYmUgc2hhMS4gwqBE
-b2VzIGl0IG1ha2UNCj4gc2Vuc2UgdG8gbGltaXQgdGhpcyBjaGFuZ2UgdG8gbGFyZ2VyIGRpZ2Vz
-dHM/IMKgQW55b25lIGJhY2twb3J0aW5nDQo+IHN1cHBvcnQgZm9yIGxhcmdlciBkaWdlc3RzIHdv
-dWxkIGFsc28gbmVlZCB0byBiYWNrcG9ydCB0aGlzIGNoYW5nZSBhcw0KPiB3ZWxsLg0KDQpZZXMs
-IGl0IHdvdWxkIGJlIGEgc2FmZSBjaG9pY2UuDQoNClJvYmVydG8NCg0KSFVBV0VJIFRFQ0hOT0xP
-R0lFUyBEdWVzc2VsZG9yZiBHbWJILCBIUkIgNTYwNjMNCk1hbmFnaW5nIERpcmVjdG9yOiBMaSBQ
-ZW5nLCBMaSBKaWFuLCBTaGkgWWFubGkNCg==
+Commit 8b59cd81dc5 ("kbuild: ensure full rebuild when the compiler
+is updated") added the environment variable CC_VERSION_TEXT,
+parse_from_string() doesn't expect a string in value field and this
+causes the failure below:
+	
+[iha@bbking linux]$ tools/testing/kunit/kunit.py run --timeout=60
+[00:20:12] Configuring KUnit Kernel ...
+Generating .config ...
+Traceback (most recent call last):
+  File "tools/testing/kunit/kunit.py", line 347, in <module>
+    main(sys.argv[1:])
+  File "tools/testing/kunit/kunit.py", line 257, in main
+    result = run_tests(linux, request)
+  File "tools/testing/kunit/kunit.py", line 134, in run_tests
+    config_result = config_tests(linux, config_request)
+  File "tools/testing/kunit/kunit.py", line 64, in config_tests
+    success = linux.build_reconfig(request.build_dir, request.make_options)
+  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py", line 161, in build_reconfig
+    return self.build_config(build_dir, make_options)
+  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py", line 145, in build_config
+    return self.validate_config(build_dir)
+  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py", line 124, in validate_config
+    validated_kconfig.read_from_file(kconfig_path)
+  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_config.py", line 89, in read_from_file
+    self.parse_from_string(f.read())
+  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_config.py", line 85, in parse_from_string
+    raise KconfigParseError('Failed to parse: ' + line)
+kunit_config.KconfigParseError: Failed to parse: CONFIG_CC_VERSION_TEXT="gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)"
+
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+---
+v2: 
+ - maintains CC_VERSION_TEXT in the .config file to ensure full rebuild
+   when the compiler is updated.
+---
+ tools/testing/kunit/kunit_config.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/tools/testing/kunit/kunit_config.py b/tools/testing/kunit/kunit_config.py
+index e75063d603b5..c407c7c6a2b0 100644
+--- a/tools/testing/kunit/kunit_config.py
++++ b/tools/testing/kunit/kunit_config.py
+@@ -81,6 +81,12 @@ class Kconfig(object):
+ 
+ 			if line[0] == '#':
+ 				continue
++
++			if 'CONFIG_CC_VERSION_TEXT' in line:
++				name, value = line.split('=')
++				entry = KconfigEntry(name, value)
++				self.add_entry(entry)
++				continue
+ 			else:
+ 				raise KconfigParseError('Failed to parse: ' + line)
+ 
+
+base-commit: 7bf200b3a4ac10b1b0376c70b8c66ed39eae7cdd
+-- 
+2.26.2
+
