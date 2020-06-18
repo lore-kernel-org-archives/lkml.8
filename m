@@ -2,108 +2,139 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12361C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEE4D208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55B2208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:29:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="Xs4ICteQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HC7oJmce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbgFRI33 (ORCPT
+        id S1728688AbgFRI3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:29:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56028 "EHLO
+        Thu, 18 Jun 2020 04:29:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728525AbgFRI3Z (ORCPT
+        with ESMTP id S1728507AbgFRI3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:29:25 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59F56C0613EF
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:29:24 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id t194so4695573wmt.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:29:24 -0700 (PDT)
+        Thu, 18 Jun 2020 04:29:49 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3779C06174E;
+        Thu, 18 Jun 2020 01:29:48 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s10so2613540pgm.0;
+        Thu, 18 Jun 2020 01:29:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Q/FhG+4cBdMoXf+y+JoOK5WqKhNWLzcZaVPlv+0EOe4=;
-        b=Xs4ICteQ1OPmSSoWv+jtCE98IOKG6iUHTGtRho8Me7cN06JumB9ydwmlKrqn1S4jKD
-         8WN8oRkVeQUavOMZCftsP3ZK6Agva1sK8Thz6guwGDcabS2RbXFZyXSq3T+KKIowWwK1
-         zgrSgAcoH9ajA7uT8mhB/YjSuv/NpGE6+ZQLr26YOxTlFvrYxiKP1B5ud8uitLl9jyXd
-         +9g26EsyvRxDPrkH0owAeaOcfWcane+aUms66fX5GOAH24rVouMx3jRvOFWz/wGxrLpa
-         j/W6Doa6aHOGhix8AB17eEj6QBJ9yxk6S5j8mAoPp3nbDznge7/5oOQ0AjOxptijVler
-         nCOQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PNkYlKMTKD0nY2ft6SL6vkNJkTU4JHHeRX00KlE38Uo=;
+        b=HC7oJmceAMFXDvqAs302XPmSJcwa3sGH3SYfkaWHVROr67UEl1LHSP+1zz5ohCpKEU
+         DXSohxPyxYCx1febPMLyT7ZdedQLwMtJRuFXKQdn0W5kE8uyfz5E1yD5nP2qxRqqydYq
+         bN2HzPqScZO16D6AwcuY28AHCXqxkDTruXRiJk1BOOCk7QqyKJlwqdqrlAmxda6bf84D
+         tRQ890EH6o+jtBCH+mgM7S2AwHfxhKy53lsKi/HMYSyr3UXz68maQUKZJcLSUoj2MPpB
+         HqBn+VeT5OuFU6rVR0CNyJLaw0MLq8XJr2vDw/NkD48BENqI5SpzF5lwsjOnDXzYatfE
+         4qSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Q/FhG+4cBdMoXf+y+JoOK5WqKhNWLzcZaVPlv+0EOe4=;
-        b=Jhmqv5lbgNA4phlTOYD0zzqXcW/isJcGyZWamXdzJtMMb1SMaAAaOMCJ15jDeIp1qf
-         04ov0mU0dOeFTsxctbuDPKLhb53/WuzyBgH+xhJ2wylC45efKVeEm6Cb3AkByjWHcI2g
-         v2Dlm+ZW4WAVYyfcT8PFNBTc4IZWg+20T3OiRbtZ2SjRe6s6/55wWd2GcRNTKKaXRfrE
-         eCiZQOMS8IQs9ZOAYCBPaX4NGXXOZjC/abAIysrynNLnA2m6nLlLjFFAZQhiKqNLl6JO
-         woxTMIsIZbUB2/R9YJKRBqxKYq8hqyZQ0ENNkEZLhBj4zLNRswiFRi7AmVqi+ApYYt7A
-         tuAw==
-X-Gm-Message-State: AOAM532UDdhEtS4gtDqKv7XyBfZaAu+IrkI0QV8hZz0O9VDwvhirkzeO
-        IItGQs/aP4QQbcXam15Vq+FkrQ==
-X-Google-Smtp-Source: ABdhPJy6DprN2pld8KJjwF0/B20ZndrUjmASu/OhSh3Fi3eGeCKWfhPJoh31NyS9wZTAiEQ4W4TVGQ==
-X-Received: by 2002:a1c:6346:: with SMTP id x67mr2074199wmb.139.1592468963125;
-        Thu, 18 Jun 2020 01:29:23 -0700 (PDT)
-Received: from localhost ([194.62.217.57])
-        by smtp.gmail.com with ESMTPSA id c16sm2612482wrx.4.2020.06.18.01.29.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 01:29:22 -0700 (PDT)
-From:   "Javier =?utf-8?B?R29uesOhbGV6?=" <javier@javigon.com>
-X-Google-Original-From: Javier =?utf-8?B?R29uesOhbGV6?= <javier.gonz@samsung.com>
-Date:   Thu, 18 Jun 2020 10:29:21 +0200
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, bcrl@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-aio@kvack.org, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org, selvakuma.s1@samsung.com,
-        nj.shetty@samsung.com
-Subject: Re: [PATCH 0/3] zone-append support in aio and io-uring
-Message-ID: <20200618082921.zyc37cod2uhabd4e@mpHalley.local>
-References: <CGME20200617172653epcas5p488de50090415eb802e62acc0e23d8812@epcas5p4.samsung.com>
- <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
- <20200618065634.GB24943@infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PNkYlKMTKD0nY2ft6SL6vkNJkTU4JHHeRX00KlE38Uo=;
+        b=QxTfeMpn8Uu3LMWuBIpHEilF4IewNQx0eGqRHMWgN+zzhoBT7Qx3mW88oqle3faA4P
+         NnuJscIXrlPyur0oC1nXKsEf3AlTW9uGI1HwpLlaJun2lvBOovVa14G2mCNST7NC55fk
+         ZKCIGvotixY4laakC1uzUl5ych4BNB7g0QljPWasdwkZZRoFZmOEx7QTkDqOp3/W2kwz
+         1eiOeRXtIktpSLrIdQKY1oaNiXwL/jrXsGiGF0R/+oCUzHrx+dYpuZxE6ui4kVeNjSGK
+         i03nl6wm+Kc1wCH1Kzt51ak7mCirY8a3M8cYkeIFGNc0YtcmR9oCxpRzHccOp2A4cYgY
+         c8cw==
+X-Gm-Message-State: AOAM532EelPBBW6S0DHCWWv7PZJjty6SGOOBKL1EgeDINCSXb+GG2iSO
+        baI2J9txCAY5Bgq8cHUPEcF7qY72HtQUBxx2coU=
+X-Google-Smtp-Source: ABdhPJxo1rTNkcU25bfjIo8wr+8okh95vw5wNnt/QQ56aTnDHxWEAgUSUGoJhH7bRhnRRZLlmczzNLCm8ubnvibA9MQ=
+X-Received: by 2002:a62:3103:: with SMTP id x3mr2561582pfx.130.1592468988208;
+ Thu, 18 Jun 2020 01:29:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200618065634.GB24943@infradead.org>
+References: <20200617224813.23853-1-Sergey.Semin@baikalelectronics.ru> <20200617224813.23853-4-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200617224813.23853-4-Sergey.Semin@baikalelectronics.ru>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 18 Jun 2020 11:29:36 +0300
+Message-ID: <CAHp75VcoV+aC9H5TYAxQX2O9HLz==xnts9bcKKQBcdtvohpi6g@mail.gmail.com>
+Subject: Re: [PATCH v6 3/3] serial: 8250_dw: Fix common clocks usage race condition
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Tony Lindgren <tony@atomide.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-mips@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.06.2020 23:56, Christoph Hellwig wrote:
->On Wed, Jun 17, 2020 at 10:53:36PM +0530, Kanchan Joshi wrote:
->> This patchset enables issuing zone-append using aio and io-uring direct-io interface.
->>
->> For aio, this introduces opcode IOCB_CMD_ZONE_APPEND. Application uses start LBA
->> of the zone to issue append. On completion 'res2' field is used to return
->> zone-relative offset.
->>
->> For io-uring, this introduces three opcodes: IORING_OP_ZONE_APPEND/APPENDV/APPENDV_FIXED.
->> Since io_uring does not have aio-like res2, cqe->flags are repurposed to return zone-relative offset
+On Thu, Jun 18, 2020 at 1:50 AM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
 >
->And what exactly are the semantics supposed to be?  Remember the
->unix file abstractions does not know about zones at all.
+> The race condition may happen if the UART reference clock is shared with
+> some other device (on Baikal-T1 SoC it's another DW UART port). In this
+> case if that device changes the clock rate while serial console is using
+> it the DW 8250 UART port might not only end up with an invalid uartclk
+> value saved, but may also experience a distorted output data since
+> baud-clock could have been changed. In order to fix this lets at least
+> try to adjust the 8250 port setting like UART clock rate in case if the
+> reference clock rate change is discovered. The driver will call the new
+> method to update 8250 UART port clock rate settings. It's done by means of
+> the clock event notifier registered at the port startup and unregistered
+> in the shutdown callback method.
 >
->I really don't think squeezing low-level not quite block storage
->protocol details into the Linux read/write path is a good idea.
->
->What could be a useful addition is a way for O_APPEND/RWF_APPEND writes
->to report where they actually wrote, as that comes close to Zone Append
->while still making sense at our usual abstraction level for file I/O.
+> Note 1. In order to avoid deadlocks we had to execute the UART port update
+> method in a dedicated deferred work. This is due to (in my opinion
+> redundant) the clock update implemented in the dw8250_set_termios()
+> method.
+> Note 2. Before the ref clock is manually changed by the custom
+> set_termios() function we swap the port uartclk value with new rate
+> adjusted to be suitable for the requested baud. It is necessary in
+> order to effectively disable a functionality of the ref clock events
+> handler for the current UART port, since uartclk update will be done
+> a bit further in the generic serial8250_do_set_termios() function.
 
-Makes sense. We will look into this for a V2.
+So, regarding runtime PM...
 
-Thanks,
-Javier
+> +static void dw8250_clk_work_cb(struct work_struct *work)
+> +{
+> +       struct dw8250_data *d = work_to_dw8250_data(work);
+> +       struct uart_8250_port *up;
+> +       unsigned long rate;
+> +
+> +       rate = clk_get_rate(d->clk);
+> +       if (rate <= 0)
+> +               return;
+> +
+
+> +       up = serial8250_get_port(d->data.line);
+
+(Btw, this can be done directly in the definition block above.)
+
+> +       serial8250_update_uartclk(&up->port, rate);
+
+This I think should require a device to be powered on. What in your
+opinion is a better place to have it done?
+To me it looks like serial8250_update_uartclk() misses it.
+
+> +}
+
+--
+With Best Regards,
+Andy Shevchenko
