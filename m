@@ -2,78 +2,74 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F1FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCC121532
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCFF21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgFRHST convert rfc822-to-8bit (ORCPT
+        id S1728049AbgFRHTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 03:18:19 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:59775 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728008AbgFRHSS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 03:18:18 -0400
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 0CCC6200012;
-        Thu, 18 Jun 2020 07:18:13 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 18 Jun 2020 03:19:03 -0400
+Received: from mga05.intel.com ([192.55.52.43]:28607 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727010AbgFRHTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 03:19:02 -0400
+IronPort-SDR: EBKiGKD/+cdhWfV+oM4kqYP334Sh1SzSaXswuqAyztzGQ2/Gx/eAx3cyF54EsvQZkzqeH/ndry
+ VxAyv0UjHzuQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9655"; a="227172834"
+X-IronPort-AV: E=Sophos;i="5.73,525,1583222400"; 
+   d="scan'208";a="227172834"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 00:19:02 -0700
+IronPort-SDR: 840Kcw7kByyuzIETV9JRIw3EBbk7P7xpBdTh4/wrRbXhA9I+SGJHNS4VJN9Cj/KF2HJc4qgTd3
+ 1y4XDw0TNlvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,525,1583222400"; 
+   d="scan'208";a="263517438"
+Received: from jkalinox-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.49.234])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Jun 2020 00:18:59 -0700
+Date:   Thu, 18 Jun 2020 10:18:58 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Pengfei Xu <pengfei.xu@intel.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Heng Su <heng.su@intel.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai Svahn <kai.svahn@intel.com>
+Subject: Re: [Linux] [PATCH] Kernel selftests: tpm2: upgrade tpm2 tests from
+ python2 to python3
+Message-ID: <20200618071858.GD6560@linux.intel.com>
+References: <20200618030245.7153-1-pengfei.xu@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200617093258.52614fd8@kicinski-fedora-PC1C0HJN>
-References: <20200617133127.628454-1-antoine.tenart@bootlin.com> <20200617133127.628454-6-antoine.tenart@bootlin.com> <20200617093258.52614fd8@kicinski-fedora-PC1C0HJN>
-To:     Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH net-next v2 5/8] net: phy: mscc: 1588 block initialization
-Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, richardcochran@gmail.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
-        foss@0leil.net
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-Message-ID: <159246469278.467274.10534310212877661795@kwain>
-Date:   Thu, 18 Jun 2020 09:18:12 +0200
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618030245.7153-1-pengfei.xu@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jakub,
-
-Quoting Jakub Kicinski (2020-06-17 18:32:58)
-> On Wed, 17 Jun 2020 15:31:24 +0200 Antoine Tenart wrote:
-> > +/* Two PHYs share the same 1588 processor and it's to be entirely configured
-> > + * through the base PHY of this processor.
-> > + */
-> > +/* phydev->bus->mdio_lock should be locked when using this function */
-> > +static inline int phy_ts_base_write(struct phy_device *phydev, u32 regnum,
-> > +                                 u16 val)
+On Thu, Jun 18, 2020 at 11:02:45AM +0800, Pengfei Xu wrote:
+> Some Linux OS will never support python2 anymore, so upgrade tpm2 selftests
+> to python3.
 > 
-> Please don't use static inline outside of headers in networking code.
-> The compiler will know best what to inline and when.
+> Signed-off-by: Pengfei Xu <pengfei.xu@intel.com>
 
-I'll remove them.
+Linux is a kernel, not a full operating system. Perhaps you mean Linux
+distributions?
 
-Thanks,
-Antoine
+Please capitalize abbrevations correctly (TPM2, not tpm2). Please write
+'Python 2' instead of python2.
 
-> > +/* phydev->bus->mdio_lock should be locked when using this function */
-> > +static inline int phy_ts_base_read(struct phy_device *phydev, u32 regnum)
-> > +{
-> > +     struct vsc8531_private *priv = phydev->priv;
-> > +
-> > +     WARN_ON_ONCE(!mutex_is_locked(&phydev->mdio.bus->mdio_lock));
-> > +     return __mdiobus_read(phydev->mdio.bus, priv->ts_base_addr, regnum);
-> > +}
+With that said the commit message is inaccurate. The root reason for
+moving to Python 3 is that Python 2 is no longer supported by the Python
+upstream project. Nothing to do with Linux or Linux distributions for
+that matter.
 
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+/Jarkko
