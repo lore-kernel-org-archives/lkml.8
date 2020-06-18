@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A96FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B83C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACF82075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88B4A20897
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444780;
-	bh=QgJqeKVZ+fjCXw8+dUiiojzmxkkV0/sy5VDLp1bn+Sg=;
+	s=default; t=1592444786;
+	bh=D7QnYO+pvZnv4CSj2j8if+GlEBWTIfsf+981WJSK4Ig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uNMCvj/Et8uVgdnlihUiQElNWU9Tg1TzGsvlzvpdUY1ePBFoYUxpoHclaeRhhRKUU
-	 1W6sdnA2Ib94NsCkHKQd2OIY7U3QPoYE7RIlVy5oBUulqfuSohie2Eh4waht28e+vT
-	 NgCO4DNCRtvDnGrapgfzTlrvUrmfAIEhNudqP2Ls=
+	b=BBQTtFUnI0+6o0SuhcyzOWe5UjvpeOfvjfhl7jFVUuV7rYOvY7asTpsphpIMjFrWC
+	 Bi1VglvTjT5gVyAI4UZKyBx5aw3wDwQOwWzWJO2aD8ppyti7A9OrOLxw6OvOF8pJfc
+	 3Xwyqv9q8VEHZlwK76LRNqvvuso8UzWLM7ujwXkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732101AbgFRB2b (ORCPT
+        id S1732394AbgFRBqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:28:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60342 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:46:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731381AbgFRBZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:14 -0400
+        id S1730567AbgFRB2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:28:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFEEC21D80;
-        Thu, 18 Jun 2020 01:25:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3015C221F3;
+        Thu, 18 Jun 2020 01:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443514;
-        bh=QgJqeKVZ+fjCXw8+dUiiojzmxkkV0/sy5VDLp1bn+Sg=;
+        s=default; t=1592443709;
+        bh=D7QnYO+pvZnv4CSj2j8if+GlEBWTIfsf+981WJSK4Ig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t21GHi9/J5gRnmGqOd7HQHQGAkBuL9m4SVGj31NA/Qg0C/46xlTb4P3u8T4k/PI+I
-         TWHv7OYskbfcbkFg9frzz2ZkUbJ5HG/2Y2M485KuS9HVWh9ytlCdyOamUYwaF7R+zP
-         4qb6fu7yBpOYbD98XCcRVtXlN6ov86nubsw1F/qk=
+        b=WgiAGFarMsgoyPjQ+GTEGv9wKUH7xBqJ5lLjJOTA0X8oJoMwI6ggOzQwD8mdBIsot
+         Hl8J84weUgW2B/FzpA1Z9VwfzKnmJwVydDVIcyYj9hqoSecby6grnFvU4GNOGfHe2c
+         n4ZiFZCeav1AyoAXHh9JxP6tFfp0tHz+MjcqwFak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-unionfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 138/172] ovl: verify permissions in ovl_path_open()
-Date:   Wed, 17 Jun 2020 21:21:44 -0400
-Message-Id: <20200618012218.607130-138-sashal@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 07/80] backlight: lp855x: Ensure regulators are disabled on probe failure
+Date:   Wed, 17 Jun 2020 21:27:06 -0400
+Message-Id: <20200618012819.609778-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
+References: <20200618012819.609778-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,70 +61,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-[ Upstream commit 56230d956739b9cb1cbde439d76227d77979a04d ]
+[ Upstream commit d8207c155a7c6015eb7f43739baa7dfb1fa638af ]
 
-Check permission before opening a real file.
+If probing the LP885x backlight fails after the regulators have been
+enabled, then the following warning is seen when releasing the
+regulators ...
 
-ovl_path_open() is used by readdir and copy-up routines.
+ WARNING: CPU: 1 PID: 289 at drivers/regulator/core.c:2051 _regulator_put.part.28+0x158/0x160
+ Modules linked in: tegra_xudc lp855x_bl(+) host1x pwm_tegra ip_tables x_tables ipv6 nf_defrag_ipv6
+ CPU: 1 PID: 289 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200224 #1
+ Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
 
-ovl_permission() theoretically already checked copy up permissions, but it
-doesn't hurt to re-do these checks during the actual copy-up.
+ ...
 
-For directory reading ovl_permission() only checks access to topmost
-underlying layer.  Readdir on a merged directory accesses layers below the
-topmost one as well.  Permission wasn't checked for these layers.
+ Call trace:
+  _regulator_put.part.28+0x158/0x160
+  regulator_put+0x34/0x50
+  devm_regulator_release+0x10/0x18
+  release_nodes+0x12c/0x230
+  devres_release_all+0x34/0x50
+  really_probe+0x1c0/0x370
+  driver_probe_device+0x58/0x100
+  device_driver_attach+0x6c/0x78
+  __driver_attach+0xb0/0xf0
+  bus_for_each_dev+0x68/0xc8
+  driver_attach+0x20/0x28
+  bus_add_driver+0x160/0x1f0
+  driver_register+0x60/0x110
+  i2c_register_driver+0x40/0x80
+  lp855x_driver_init+0x20/0x1000 [lp855x_bl]
+  do_one_initcall+0x58/0x1a0
+  do_init_module+0x54/0x1d0
+  load_module+0x1d80/0x21c8
+  __do_sys_finit_module+0xe8/0x100
+  __arm64_sys_finit_module+0x18/0x20
+  el0_svc_common.constprop.3+0xb0/0x168
+  do_el0_svc+0x20/0x98
+  el0_sync_handler+0xf4/0x1b0
+  el0_sync+0x140/0x180
 
-Note: modifying ovl_permission() to perform this check would be far more
-complex and hence more bug prone.  The result is less precise permissions
-returned in access(2).  If this turns out to be an issue, we can revisit
-this bug.
+Fix this by ensuring that the regulators are disabled, if enabled, on
+probe failure.
 
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Finally, ensure that the vddio regulator is disabled in the driver
+remove handler.
+
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/overlayfs/util.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ drivers/video/backlight/lp855x_bl.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
-index db8bdb29b320..afbc6a97da2a 100644
---- a/fs/overlayfs/util.c
-+++ b/fs/overlayfs/util.c
-@@ -479,7 +479,32 @@ bool ovl_is_whiteout(struct dentry *dentry)
+diff --git a/drivers/video/backlight/lp855x_bl.c b/drivers/video/backlight/lp855x_bl.c
+index 939f057836e1..4cdc7a3f6dc5 100644
+--- a/drivers/video/backlight/lp855x_bl.c
++++ b/drivers/video/backlight/lp855x_bl.c
+@@ -460,7 +460,7 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ 		ret = regulator_enable(lp->enable);
+ 		if (ret < 0) {
+ 			dev_err(lp->dev, "failed to enable vddio: %d\n", ret);
+-			return ret;
++			goto disable_supply;
+ 		}
  
- struct file *ovl_path_open(struct path *path, int flags)
- {
--	return dentry_open(path, flags | O_NOATIME, current_cred());
-+	struct inode *inode = d_inode(path->dentry);
-+	int err, acc_mode;
+ 		/*
+@@ -475,24 +475,34 @@ static int lp855x_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ 	ret = lp855x_configure(lp);
+ 	if (ret) {
+ 		dev_err(lp->dev, "device config err: %d", ret);
+-		return ret;
++		goto disable_vddio;
+ 	}
+ 
+ 	ret = lp855x_backlight_register(lp);
+ 	if (ret) {
+ 		dev_err(lp->dev,
+ 			"failed to register backlight. err: %d\n", ret);
+-		return ret;
++		goto disable_vddio;
+ 	}
+ 
+ 	ret = sysfs_create_group(&lp->dev->kobj, &lp855x_attr_group);
+ 	if (ret) {
+ 		dev_err(lp->dev, "failed to register sysfs. err: %d\n", ret);
+-		return ret;
++		goto disable_vddio;
+ 	}
+ 
+ 	backlight_update_status(lp->bl);
 +
-+	if (flags & ~(O_ACCMODE | O_LARGEFILE))
-+		BUG();
+ 	return 0;
 +
-+	switch (flags & O_ACCMODE) {
-+	case O_RDONLY:
-+		acc_mode = MAY_READ;
-+		break;
-+	case O_WRONLY:
-+		acc_mode = MAY_WRITE;
-+		break;
-+	default:
-+		BUG();
-+	}
++disable_vddio:
++	if (lp->enable)
++		regulator_disable(lp->enable);
++disable_supply:
++	if (lp->supply)
++		regulator_disable(lp->supply);
 +
-+	err = inode_permission(inode, acc_mode | MAY_OPEN);
-+	if (err)
-+		return ERR_PTR(err);
-+
-+	/* O_NOATIME is an optimization, don't fail if not permitted */
-+	if (inode_owner_or_capable(inode))
-+		flags |= O_NOATIME;
-+
-+	return dentry_open(path, flags, current_cred());
++	return ret;
  }
  
- /* Caller should hold ovl_inode->lock */
+ static int lp855x_remove(struct i2c_client *cl)
+@@ -501,6 +511,8 @@ static int lp855x_remove(struct i2c_client *cl)
+ 
+ 	lp->bl->props.brightness = 0;
+ 	backlight_update_status(lp->bl);
++	if (lp->enable)
++		regulator_disable(lp->enable);
+ 	if (lp->supply)
+ 		regulator_disable(lp->supply);
+ 	sysfs_remove_group(&lp->dev->kobj, &lp855x_attr_group);
 -- 
 2.25.1
 
