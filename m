@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8906C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74985C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B19320EDD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5534C221EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442883;
-	bh=qtyltuemiJrZa14Mx2YGmVNcLZew22FaS3WdPlAAHf4=;
+	s=default; t=1592442898;
+	bh=J2w+gquTMvhqzqlR0tLvqdneEX5xmKscX23mghhpHwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d9JUidpkG/gKAc/N9jfbhUJM03Mkn03Ue0AiYXPH7kDf/iWbUAeD0VixALfdqARuo
-	 nv6qH6kmR3qqlKV0rvbM5y8mmwdpKLyGpK1vtCUJmXURvE9K2boxLUHEMeOg69Y2Cj
-	 liE0pY2FpDgUvuASZHrq5TLlrEmNfSYJobeV0L84=
+	b=NDtW9pwUbOwDKFftfZFtvrtx+QegYBQOFo4d2JsQy1mrBGhfaUqy35wNwgXRdKXOW
+	 yN+NyNE1SRg6d+f47t9alnVC19fdn0821AWFu75b+rDD/KZylxihQSSpR04noorTc1
+	 bCu7bdE19ivuMBL8InAveTmjoioUhBYqwtEvRv1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgFRBOl (ORCPT
+        id S1729410AbgFRBO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:14:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42366 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:14:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729074AbgFRBNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:15 -0400
+        id S1728892AbgFRBN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B05FD214DB;
-        Thu, 18 Jun 2020 01:13:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32BBB21924;
+        Thu, 18 Jun 2020 01:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442795;
-        bh=qtyltuemiJrZa14Mx2YGmVNcLZew22FaS3WdPlAAHf4=;
+        s=default; t=1592442809;
+        bh=J2w+gquTMvhqzqlR0tLvqdneEX5xmKscX23mghhpHwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dpfa9UxFDjK4GXxr4VAb/Eq8TWp9201JZ2KvhyaH5Ah2yvfbKKN/jGwJDvCgCf52c
-         WCwpQD/2kNzeRcKW0FWfimLH7tPzXurw3KTHO18wWsDxrDV8mZnvP5OU4pfk+8mjmZ
-         0iz9j5FEbM+QtKQnLVkaphlZRX3RiMPPs1iO/FUA=
+        b=oJJvqkPe1ud1HW6xC4HoaXI0TJ95S8rxMD9tE9jzwJ/uiR6KCkVdFKqKGecF4VrPY
+         4IYPXTRqHeZe+c+tDtFnCXU2/kaCAZIggUcscMNBzAgBtB2/ElTt5FtumZ75P1mTim
+         q/Ea9arF3g8bRtW/tdcT6ncU7MMpTGHbZGH0D9Pw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Souptick Joarder <jrdr.linux@gmail.com>, Wu Hao <hao.wu@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fpga@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 237/388] fpga: dfl: afu: Corrected error handling levels
-Date:   Wed, 17 Jun 2020 21:05:34 -0400
-Message-Id: <20200618010805.600873-237-sashal@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 248/388] arm64: tegra: Fix flag for 64-bit resources in 'ranges' property
+Date:   Wed, 17 Jun 2020 21:05:45 -0400
+Message-Id: <20200618010805.600873-248-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,42 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Souptick Joarder <jrdr.linux@gmail.com>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-[ Upstream commit c9d7e3da1f3c4cf5dddfc5d7ce4d76d013aba1cc ]
+[ Upstream commit 3482a7afb261e2de9269a7f9ad0f4a3a82a83a53 ]
 
-Corrected error handling goto sequnece. Level put_pages should
-be called when pinned pages >= 0 && pinned != npages. Level
-free_pages should be called when pinned pages < 0.
+Fix flag in PCIe controllers device-tree nodes 'ranges' property to correctly
+represent 64-bit resources.
 
-Fixes: fa8dda1edef9 ("fpga: dfl: afu: add DFL_FPGA_PORT_DMA_MAP/UNMAP ioctls support")
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-Acked-by: Wu Hao <hao.wu@intel.com>
-Reviewed-by: Xu Yilun <yilun.xu@intel.com>
-Link: https://lore.kernel.org/r/1589825991-3545-1-git-send-email-jrdr.linux@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 2602c32f15e7 ("arm64: tegra: Add P2U and PCIe controller nodes to Tegra194 DT")
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fpga/dfl-afu-dma-region.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
-index 62f924489db5..5942343a5d6e 100644
---- a/drivers/fpga/dfl-afu-dma-region.c
-+++ b/drivers/fpga/dfl-afu-dma-region.c
-@@ -61,10 +61,10 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
- 				     region->pages);
- 	if (pinned < 0) {
- 		ret = pinned;
--		goto put_pages;
-+		goto free_pages;
- 	} else if (pinned != npages) {
- 		ret = -EFAULT;
--		goto free_pages;
-+		goto put_pages;
- 	}
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index f4ede86e32b4..3c928360f4ed 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1387,7 +1387,7 @@ pcie@14100000 {
  
- 	dev_dbg(dev, "%d pages pinned\n", pinned);
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x30100000 0x0  0x30100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0xc3000000 0x12 0x00000000 0x12 0x00000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+ 			  0x82000000 0x0  0x40000000 0x12 0x30000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+ 	};
+ 
+@@ -1432,7 +1432,7 @@ pcie@14120000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x32100000 0x0  0x32100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0xc3000000 0x12 0x40000000 0x12 0x40000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+ 			  0x82000000 0x0  0x40000000 0x12 0x70000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+ 	};
+ 
+@@ -1477,7 +1477,7 @@ pcie@14140000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x34100000 0x0  0x34100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
++			  0xc3000000 0x12 0x80000000 0x12 0x80000000 0x0 0x30000000   /* prefetchable memory (768MB) */
+ 			  0x82000000 0x0  0x40000000 0x12 0xb0000000 0x0 0x10000000>; /* non-prefetchable memory (256MB) */
+ 	};
+ 
+@@ -1522,7 +1522,7 @@ pcie@14160000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
+@@ -1567,7 +1567,7 @@ pcie@14180000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
+@@ -1616,7 +1616,7 @@ pcie@141a0000 {
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
 -- 
 2.25.1
 
