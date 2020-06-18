@@ -4,62 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FF0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3265BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36EC921D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117DC20720
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447521;
-	bh=p3Hnb+vOJEjS2tVwNF7F5TKw8Ai9OL9Llz0cByj2LTM=;
+	s=default; t=1592447525;
+	bh=UV6/2/zCAHdwmU09mq1h/o43ERhJ/dSeZzEV/wzr3cw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KnLmo8HSkU4L0iFo7GCsDMj+RVGyUU5lC157yqWuK+3ofQnxo23RvZWknfXxaCWvA
-	 jt6voFKE9jR14RRiPpDld28ujGMM//SOFW8GJaYHXWuOuKWAOG1xCUPp9sOmzu+Tfx
-	 HWqxN+zTKmzsral/ALTUWGYZf1b4ZL/+zc1QFA9w=
+	b=wB2bnhHmT99qw4pBq0hdUPQI8CGTMSWmV01NkdpI/sJMaBmPt2DscvPUv78WZdUt1
+	 rZE45gLwoPE9nQMd2HrbDbdkZfD0M+LrT6ELBvi1ey2fqj3X5qk3z6JGvN2EUosw/T
+	 67cCa7r7Mj+U6FwJwPw1Rz2ftVZZNKz6SbSUyuBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730638AbgFRCb6 (ORCPT
+        id S2387583AbgFRCcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:31:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45372 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:32:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727980AbgFRBPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:23 -0400
+        id S1728929AbgFRBPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D15F521D7A;
-        Thu, 18 Jun 2020 01:15:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1136D21BE5;
+        Thu, 18 Jun 2020 01:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442923;
-        bh=p3Hnb+vOJEjS2tVwNF7F5TKw8Ai9OL9Llz0cByj2LTM=;
+        s=default; t=1592442921;
+        bh=UV6/2/zCAHdwmU09mq1h/o43ERhJ/dSeZzEV/wzr3cw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l8+hNw4RIO8S+73IOnP/ItskGdAykhtgvud34iGNPxyV3PziIUHztJlYxQ5v/1UzW
-         G6c+rAB0pQHNuq7+dBmhl7hkFSTj3qwkYcEQOcetaA7ck1OlfWNeZL2DYLKLibqIia
-         wRfIWfd1IDzawyZ/Lu6dGllimRPDV8a3EiCy6gkQ=
+        b=Cs1SkbEKnNOiU91WllzhrFU51BSOIOzwqj3kclTsgrLGBcU8vWRvWbZoatKhmEh5p
+         ZebD5Rlnj/ZyaeBYhDge2l6nVoh2Qx4vBRWenM1R0V9AfBJVe/aki/na5OG71MB7cj
+         3jMwosxOEnoSsWThZkFLCw+AaDQ0vnTiDsWnJXN0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ram Pai <linuxram@us.ibm.com>,
-        Sandipan Das <sandipan@linux.ibm.com>,
+Cc:     Arnd Bergmann <arnd@arndb.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "Desnes A. Nunes do Rosario" <desnesn@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Shuah Khan <shuah@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 338/388] selftests/vm/pkeys: fix alloc_random_pkey() to make it really random
-Date:   Wed, 17 Jun 2020 21:07:15 -0400
-Message-Id: <20200618010805.600873-338-sashal@kernel.org>
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.7 337/388] include/linux/bitops.h: avoid clang shift-count-overflow warnings
+Date:   Wed, 17 Jun 2020 21:07:14 -0400
+Message-Id: <20200618010805.600873-337-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -72,58 +66,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ram Pai <linuxram@us.ibm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 6e373263ce07eeaa6410843179535fbdf561fc31 ]
+[ Upstream commit bd93f003b7462ae39a43c531abca37fe7073b866 ]
 
-alloc_random_pkey() was allocating the same pkey every time.  Not all
-pkeys were geting tested.  This fixes it.
+Clang normally does not warn about certain issues in inline functions when
+it only happens in an eliminated code path. However if something else
+goes wrong, it does tend to complain about the definition of hweight_long()
+on 32-bit targets:
 
-Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
+  include/linux/bitops.h:75:41: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+          return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
+                                                 ^~~~~~~~~~~~
+  include/asm-generic/bitops/const_hweight.h:29:49: note: expanded from macro 'hweight64'
+   define hweight64(w) (__builtin_constant_p(w) ? __const_hweight64(w) : __arch_hweight64(w))
+                                                  ^~~~~~~~~~~~~~~~~~~~
+  include/asm-generic/bitops/const_hweight.h:21:76: note: expanded from macro '__const_hweight64'
+   define __const_hweight64(w) (__const_hweight32(w) + __const_hweight32((w) >> 32))
+                                                                             ^  ~~
+  include/asm-generic/bitops/const_hweight.h:20:49: note: expanded from macro '__const_hweight32'
+   define __const_hweight32(w) (__const_hweight16(w) + __const_hweight16((w) >> 16))
+                                                  ^
+  include/asm-generic/bitops/const_hweight.h:19:72: note: expanded from macro '__const_hweight16'
+   define __const_hweight16(w) (__const_hweight8(w)  + __const_hweight8((w)  >> 8 ))
+                                                                         ^
+  include/asm-generic/bitops/const_hweight.h:12:9: note: expanded from macro '__const_hweight8'
+            (!!((w) & (1ULL << 2))) +     \
+
+Adding an explicit cast to __u64 avoids that warning and makes it easier
+to read other output.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Dave Hansen <dave.hansen@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: "Desnes A. Nunes do Rosario" <desnesn@linux.vnet.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Michal Suchanek <msuchanek@suse.de>
-Cc: Shuah Khan <shuah@kernel.org>
-Link: http://lkml.kernel.org/r/0162f55816d4e783a0d6e49e554d0ab9a3c9a23b.1585646528.git.sandipan@linux.ibm.com
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Link: http://lkml.kernel.org/r/20200505135513.65265-1-arnd@arndb.de
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/x86/protection_keys.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/bitops.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/x86/protection_keys.c b/tools/testing/selftests/x86/protection_keys.c
-index 480995bceefa..47191af46617 100644
---- a/tools/testing/selftests/x86/protection_keys.c
-+++ b/tools/testing/selftests/x86/protection_keys.c
-@@ -24,6 +24,7 @@
- #define _GNU_SOURCE
- #include <errno.h>
- #include <linux/futex.h>
-+#include <time.h>
- #include <sys/time.h>
- #include <sys/syscall.h>
- #include <string.h>
-@@ -612,10 +613,10 @@ int alloc_random_pkey(void)
- 	int nr_alloced = 0;
- 	int random_index;
- 	memset(alloced_pkeys, 0, sizeof(alloced_pkeys));
-+	srand((unsigned int)time(NULL));
+diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+index 9acf654f0b19..99f2ac30b1d9 100644
+--- a/include/linux/bitops.h
++++ b/include/linux/bitops.h
+@@ -72,7 +72,7 @@ static inline int get_bitmask_order(unsigned int count)
  
- 	/* allocate every possible key and make a note of which ones we got */
- 	max_nr_pkey_allocs = NR_PKEYS;
--	max_nr_pkey_allocs = 1;
- 	for (i = 0; i < max_nr_pkey_allocs; i++) {
- 		int new_pkey = alloc_pkey();
- 		if (new_pkey < 0)
+ static __always_inline unsigned long hweight_long(unsigned long w)
+ {
+-	return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
++	return sizeof(w) == 4 ? hweight32(w) : hweight64((__u64)w);
+ }
+ 
+ /**
 -- 
 2.25.1
 
