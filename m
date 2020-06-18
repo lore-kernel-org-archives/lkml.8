@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EC6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3562C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61E952083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D4421927
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448547;
-	bh=vdJFMv8yHEs/2MvMI6fAtqmj1XRhq7UnKx2s5j72/GI=;
+	s=default; t=1592448549;
+	bh=Z/WbnyE4ZXlpudncQs5OzvRsFKu8fkgoznjwuRiGmao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qfS00fMI1gC5e5AQdwUBKe6hIWeJN5RWUclOlWglnbSlc1w5g7kZ3+EjGWCeeWiyB
-	 CAxmKgtAKrpRwJflTrNVNNze+3F2AqHFg6Jr8/1/A+0yDqbTig6/a+9MeDbNlQABbz
-	 zA9UhCszq+o0LEnP7nGhNKrykZqTeXOeZ+9LO1AQ=
+	b=uUC4N0cx5oKHFYW9fvVF4dfzpiIcYDFk3/eJtThVk1TTRvJ6Lu7ivQD4xdmIH+gUh
+	 9W60XNOyoWAXUcDvAtmYIsMxNublD3z1+2hmSRXcWLB9SmCtM47TZHbuOT6ibcaJF3
+	 BLVg+nTb8biPrwXV+gyyb4v9Hg4q4zHZc2BQ+ma4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgFRBJm (ORCPT
+        id S2387947AbgFRCtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:09:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36178 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:49:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728242AbgFRBJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:09:38 -0400
+        id S1728263AbgFRBJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CB44221F3;
-        Thu, 18 Jun 2020 01:09:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0175521D81;
+        Thu, 18 Jun 2020 01:09:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442577;
-        bh=vdJFMv8yHEs/2MvMI6fAtqmj1XRhq7UnKx2s5j72/GI=;
+        s=default; t=1592442582;
+        bh=Z/WbnyE4ZXlpudncQs5OzvRsFKu8fkgoznjwuRiGmao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LbbIBaTAV+bQqBD2bGuraCJ3gif1jTUSvx9qYDD1bnBzwn8fflr7aCvdhTEW7T9LO
-         tryOs9jcZeuIIfgb6gQs16owuBtQc/MjRB1rsSk3sr2XRw7qTPfqSvRUpkrPWMz5F/
-         nrmsfBBzLd8ics6/ENaZ4R0fZa3ilYUo0nk+doYY=
+        b=JpN6VQNsojOp6CB8w9rmfTF1tJH4oTiDOjGDeFPQ06AHdza97EAVpzNZWFI8xHzmG
+         /Bk9D/rr2+PHPAz+8Y9tAbVyi+42VzoUQZDDdFQYWDkHeIFHkd7N88fzDH4QeNujqJ
+         R8t7ZcivvRSHs/IqJDuKYtVbgNzpGAo5h0n3Asnk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 070/388] gpio: dwapb: Call acpi_gpiochip_free_interrupts() on GPIO chip de-registration
-Date:   Wed, 17 Jun 2020 21:02:47 -0400
-Message-Id: <20200618010805.600873-70-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 074/388] scsi: cxgb3i: Fix some leaks in init_act_open()
+Date:   Wed, 17 Jun 2020 21:02:51 -0400
+Message-Id: <20200618010805.600873-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,75 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 494a94e38dcf62543a32a4424d646ff80b4b28bd ]
+[ Upstream commit b6170a49c59c27a10efed26c5a2969403e69aaba ]
 
-Add missed acpi_gpiochip_free_interrupts() call when unregistering ports.
+There wasn't any clean up done if cxgb3_alloc_atid() failed and also the
+original code didn't release "csk->l2t".
 
-While at it, drop extra check to call acpi_gpiochip_request_interrupts().
-There is no need to have an additional check to call
-acpi_gpiochip_request_interrupts(). Even without any interrupts available
-the registered ACPI Event handlers can be useful for debugging purposes.
-
-Fixes: e6cb3486f5a1 ("gpio: dwapb: add gpio-signaled acpi event support")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Serge Semin <fancer.lancer@gmail.com>
-Acked-by: Serge Semin <fancer.lancer@gmail.com>
-Link: https://lore.kernel.org/r/20200519131233.59032-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20200521121221.GA247492@mwanda
+Fixes: 6f7efaabefeb ("[SCSI] cxgb3i: change cxgb3i to use libcxgbi")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-dwapb.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ drivers/scsi/cxgbi/cxgb3i/cxgb3i.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 92e127e74813..02cf4c43a4c4 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -533,26 +533,33 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 		dwapb_configure_irqs(gpio, port, pp);
+diff --git a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
+index 524cdbcd29aa..ec7d01f6e2d5 100644
+--- a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
++++ b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
+@@ -959,6 +959,7 @@ static int init_act_open(struct cxgbi_sock *csk)
+ 	struct net_device *ndev = cdev->ports[csk->port_id];
+ 	struct cxgbi_hba *chba = cdev->hbas[csk->port_id];
+ 	struct sk_buff *skb = NULL;
++	int ret;
  
- 	err = gpiochip_add_data(&port->gc, port);
--	if (err)
-+	if (err) {
- 		dev_err(gpio->dev, "failed to register gpiochip for port%d\n",
- 			port->idx);
--	else
--		port->is_registered = true;
-+		return err;
-+	}
+ 	log_debug(1 << CXGBI_DBG_TOE | 1 << CXGBI_DBG_SOCK,
+ 		"csk 0x%p,%u,0x%lx.\n", csk, csk->state, csk->flags);
+@@ -979,16 +980,16 @@ static int init_act_open(struct cxgbi_sock *csk)
+ 	csk->atid = cxgb3_alloc_atid(t3dev, &t3_client, csk);
+ 	if (csk->atid < 0) {
+ 		pr_err("NO atid available.\n");
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto put_sock;
+ 	}
+ 	cxgbi_sock_set_flag(csk, CTPF_HAS_ATID);
+ 	cxgbi_sock_get(csk);
  
- 	/* Add GPIO-signaled ACPI event support */
--	if (pp->has_irq)
--		acpi_gpiochip_request_interrupts(&port->gc);
-+	acpi_gpiochip_request_interrupts(&port->gc);
- 
--	return err;
-+	port->is_registered = true;
+ 	skb = alloc_wr(sizeof(struct cpl_act_open_req), 0, GFP_KERNEL);
+ 	if (!skb) {
+-		cxgb3_free_atid(t3dev, csk->atid);
+-		cxgbi_sock_put(csk);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto free_atid;
+ 	}
+ 	skb->sk = (struct sock *)csk;
+ 	set_arp_failure_handler(skb, act_open_arp_failure);
+@@ -1010,6 +1011,15 @@ static int init_act_open(struct cxgbi_sock *csk)
+ 	cxgbi_sock_set_state(csk, CTP_ACTIVE_OPEN);
+ 	send_act_open_req(csk, skb, csk->l2t);
+ 	return 0;
 +
-+	return 0;
++free_atid:
++	cxgb3_free_atid(t3dev, csk->atid);
++put_sock:
++	cxgbi_sock_put(csk);
++	l2t_release(t3dev, csk->l2t);
++	csk->l2t = NULL;
++
++	return ret;
  }
  
- static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
- {
- 	unsigned int m;
- 
--	for (m = 0; m < gpio->nr_ports; ++m)
--		if (gpio->ports[m].is_registered)
--			gpiochip_remove(&gpio->ports[m].gc);
-+	for (m = 0; m < gpio->nr_ports; ++m) {
-+		struct dwapb_gpio_port *port = &gpio->ports[m];
-+
-+		if (!port->is_registered)
-+			continue;
-+
-+		acpi_gpiochip_free_interrupts(&port->gc);
-+		gpiochip_remove(&port->gc);
-+	}
- }
- 
- static struct dwapb_platform_data *
+ cxgb3_cpl_handler_func cxgb3i_cpl_handlers[NUM_CPL_CMDS] = {
 -- 
 2.25.1
 
