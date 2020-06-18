@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FF6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1996920720
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4BC020720
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447960;
-	bh=braRisYA7BC03UNVu0t84Cw27DSx09Kk4dPa9Xogqag=;
+	s=default; t=1592447965;
+	bh=K65oyh5kbV+CJy45U4ctImhpPS1ivlTrRM/FOdW20Vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AhQXma5Hz873NYFJjz2pYMMIQTtEs6iLCyNE9ErtgyEbKBWXJZ32KetvlySu6Zf8F
-	 4BVbxiekHB6UvZ7yzjRKvPGgXglgutdZjNCoqMZunlX6w2+Ls7GBAzTKYCOsjwcSHS
-	 kej1nF/dZMvOycz+Q1s0XoVMrVlqwnl0iJZwmt8M=
+	b=TbKD0/wwF6rim395xOXa6lZ1fk4X5WlEqesYCqkaDcA/meVwwQMob/BWR0I21F43s
+	 KXvGuKvADHAkk+CSnu3LiDa3TtL3CxpIZ2NrbD2dxpcM5x8JadXnPMJsn/ODP520q/
+	 aVT5u8U1RDGWjQvVLhsWkZ8CKxiMSd7lfC7Ipigs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733255AbgFRCjO (ORCPT
+        id S2387804AbgFRCjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:39:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42134 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:39:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729051AbgFRBNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:09 -0400
+        id S1728529AbgFRBNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20B7920EDD;
-        Thu, 18 Jun 2020 01:13:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E4B121924;
+        Thu, 18 Jun 2020 01:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442788;
-        bh=braRisYA7BC03UNVu0t84Cw27DSx09Kk4dPa9Xogqag=;
+        s=default; t=1592442786;
+        bh=K65oyh5kbV+CJy45U4ctImhpPS1ivlTrRM/FOdW20Vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p55+PBupvS+nA6pphfFJNpojB7bOrgMSJg3LmCAne8hjOtMgWqbr4axUHnpNVZc49
-         +dBsI6G+C9QBLuETw1vWw5XqjUq1NJ2hs1QtGZIPoWNYaOA2K965e1cdW20HYU1g8b
-         kypSah9MPbfTGdxQfZ48QVl3phS+xwCz7SSHkPEU=
+        b=k3Ulc+D70i51IWlWHnhCTaOvvX12WvTLtPUPSGSWblLrkhmRy1N5Enx8Fm5zDhC8+
+         9Rt5AVfgyPfDBYZkfn5UifjW4hJHXBKdvqXh4AjcPMSxgycFHRJe5snzUmMyMKOUfH
+         GG1GOBCkE1uCyyf8TG6Fpj0LOvxLleVGzEj9qZic=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 232/388] ASoC: Intel: bytcr_rt5640: Add quirk for Toshiba Encore WT8-A tablet
-Date:   Wed, 17 Jun 2020 21:05:29 -0400
-Message-Id: <20200618010805.600873-232-sashal@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Rob Clark <robdclark@gmail.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 230/388] drm/msm: Fix undefined "rd_full" link error
+Date:   Wed, 17 Jun 2020 21:05:27 -0400
+Message-Id: <20200618010805.600873-230-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,50 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit 0e0e10fde0e9808d1991268f5dca69fb36c025f7 ]
+[ Upstream commit 20aebe83698feb107d5a66b6cfd1d54459ccdfcf ]
 
-The Toshiba Encore WT8-A tablet almost fully works with the default
-settings for non-CR Bay Trail devices. The only problem is that its
-jack-detect switch is not inverted (it is active high instead of
-the normal active low).
+rd_full should be defined outside the CONFIG_DEBUG_FS region, in order
+to be able to link the msm driver even when CONFIG_DEBUG_FS is disabled.
 
-Add a quirk for this model using the default settings +
-BYT_RT5640_JD_NOT_INV.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200518072416.5348-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: e515af8d4a6f ("drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP buffers")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/gpu/drm/msm/msm_rd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
-index 08f4ae964b02..fbfd53874b47 100644
---- a/sound/soc/intel/boards/bytcr_rt5640.c
-+++ b/sound/soc/intel/boards/bytcr_rt5640.c
-@@ -742,6 +742,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
- 					BYT_RT5640_SSP0_AIF1 |
- 					BYT_RT5640_MCLK_EN),
- 	},
-+	{	/* Toshiba Encore WT8-A */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "TOSHIBA WT8-A"),
-+		},
-+		.driver_data = (void *)(BYT_RT5640_DMIC1_MAP |
-+					BYT_RT5640_JD_SRC_JD2_IN4N |
-+					BYT_RT5640_OVCD_TH_2000UA |
-+					BYT_RT5640_OVCD_SF_0P75 |
-+					BYT_RT5640_JD_NOT_INV |
-+					BYT_RT5640_MCLK_EN),
-+	},
- 	{	/* Catch-all for generic Insyde tablets, must be last */
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
+diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
+index 732f65df5c4f..fea30e7aa9e8 100644
+--- a/drivers/gpu/drm/msm/msm_rd.c
++++ b/drivers/gpu/drm/msm/msm_rd.c
+@@ -29,8 +29,6 @@
+  * or shader programs (if not emitted inline in cmdstream).
+  */
+ 
+-#ifdef CONFIG_DEBUG_FS
+-
+ #include <linux/circ_buf.h>
+ #include <linux/debugfs.h>
+ #include <linux/kfifo.h>
+@@ -47,6 +45,8 @@ bool rd_full = false;
+ MODULE_PARM_DESC(rd_full, "If true, $debugfs/.../rd will snapshot all buffer contents");
+ module_param_named(rd_full, rd_full, bool, 0600);
+ 
++#ifdef CONFIG_DEBUG_FS
++
+ enum rd_sect_type {
+ 	RD_NONE,
+ 	RD_TEST,       /* ascii text */
 -- 
 2.25.1
 
