@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65996C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09013C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42F24221FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D987822200
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443729;
-	bh=KBn7nRvElasq0Hvf0QnoQctuAfWqz9p1uLyOgWmTmz0=;
+	s=default; t=1592443730;
+	bh=WJhUlbUTIN1K73n4tY0V57/KVBPeXnvmTmlAw1UHdiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I6ov5BBBCVxVkIkl7VCkiFcGRrbkupRRiYbgBuWPG7/q1S75YzXmULIqtGCF7GR8e
-	 CuIGH/ypCB8MxuJZfQ2gv64qd0WNwGC745jul+uxnrin/jE57eQMfBxM0b7q5AXbD7
-	 cOvIZvARBql/XeMKuXtbT0iF4o8BoRo2+EVs9aEg=
+	b=BETiGZ9foeB87o7RNdvB0HttKk5mIR+ASZwz+np8vB+p8bJQiRdANin6y23SBzsj8
+	 03N0ZTwLB298DdJF0GC/reafeNlnRIcmT5HU5HMYByuGZ4RdRxmFJ/iVyBWB+EnHuY
+	 UF8R8XBYlzi6WJ20O95wi+g42dUn1yKtx2r8Y21c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732164AbgFRB2r (ORCPT
+        id S1732173AbgFRB2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:28:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32780 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:28:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730578AbgFRBZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:42 -0400
+        id S1731497AbgFRBZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 967D12083B;
-        Thu, 18 Jun 2020 01:25:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DF8C2075E;
+        Thu, 18 Jun 2020 01:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443542;
-        bh=KBn7nRvElasq0Hvf0QnoQctuAfWqz9p1uLyOgWmTmz0=;
+        s=default; t=1592443546;
+        bh=WJhUlbUTIN1K73n4tY0V57/KVBPeXnvmTmlAw1UHdiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xf+tSSzLcZiY4VfkmRdeauQVzI6CQUdj5pPAAs/jDoVZQGYtEZZYo2pPUiebk/1PU
-         nCISBtyvaIQLkizyzBb5LKo4c7YhpidEJutPwRsV1Yl+Tc7BkeCyUeMCTtG/tIKoEn
-         GoZLIDrJYadowLwR5J/247+LhjkL5KFk2s7sANQA=
+        b=unVnacMYIz2Ds4VS9qeA7UNzayuBPR4EqRa808R3915kCAxkzbCiBgEF9whRz9W9c
+         MeK1bYjJkL4jR8WcR1E2UZKbClnP7USx1SE8yv3C33Wrfg5eHB4rMBRZRVQfNZw+Hu
+         cooPIHIxyypRk4ExECQ9xdl3MeK9ayOFwogUEI7U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Alexander Fomichev <fomichev.ru@gmail.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 159/172] NTB: perf: Fix race condition when run with ntb_test
-Date:   Wed, 17 Jun 2020 21:22:05 -0400
-Message-Id: <20200618012218.607130-159-sashal@kernel.org>
+Cc:     tannerlove <tannerlove@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 162/172] selftests/net: in timestamping, strncpy needs to preserve null byte
+Date:   Wed, 17 Jun 2020 21:22:08 -0400
+Message-Id: <20200618012218.607130-162-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,79 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: tannerlove <tannerlove@google.com>
 
-[ Upstream commit 34d8673a01b053b6231a995a4eec9341163d63be ]
+[ Upstream commit 8027bc0307ce59759b90679fa5d8b22949586d20 ]
 
-When running ntb_test, the script tries to run the ntb_perf test
-immediately after probing the modules. Since adding multi-port support,
-this fails seeing the new initialization procedure in ntb_perf
-can not complete instantly.
+If user passed an interface option longer than 15 characters, then
+device.ifr_name and hwtstamp.ifr_name became non-null-terminated
+strings. The compiler warned about this:
 
-To fix this we add a completion which is waited on when a test is
-started. In this way, run can be written any time after the module is
-loaded and it will wait for the initialization to complete instead of
-sending an error.
+timestamping.c:353:2: warning: ‘strncpy’ specified bound 16 equals \
+destination size [-Wstringop-truncation]
+  353 |  strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
 
-Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Allen Hubbe <allenbh@gmail.com>
-Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fixes: cb9eff097831 ("net: new user space API for time stamping of incoming and outgoing packets")
+Signed-off-by: Tanner Love <tannerlove@google.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_perf.c | 10 ++++++++--
+ .../selftests/networking/timestamping/timestamping.c   | 10 ++++++++--
  1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-index 62a9a1d44f9f..ad5d3919435c 100644
---- a/drivers/ntb/test/ntb_perf.c
-+++ b/drivers/ntb/test/ntb_perf.c
-@@ -158,6 +158,8 @@ struct perf_peer {
- 	/* NTB connection setup service */
- 	struct work_struct	service;
- 	unsigned long		sts;
-+
-+	struct completion init_comp;
- };
- #define to_peer_service(__work) \
- 	container_of(__work, struct perf_peer, service)
-@@ -549,6 +551,7 @@ static int perf_setup_outbuf(struct perf_peer *peer)
+diff --git a/tools/testing/selftests/networking/timestamping/timestamping.c b/tools/testing/selftests/networking/timestamping/timestamping.c
+index 5cdfd743447b..900ed4b47899 100644
+--- a/tools/testing/selftests/networking/timestamping/timestamping.c
++++ b/tools/testing/selftests/networking/timestamping/timestamping.c
+@@ -332,10 +332,16 @@ int main(int argc, char **argv)
+ 	int val;
+ 	socklen_t len;
+ 	struct timeval next;
++	size_t if_len;
  
- 	/* Initialization is finally done */
- 	set_bit(PERF_STS_DONE, &peer->sts);
-+	complete_all(&peer->init_comp);
+ 	if (argc < 2)
+ 		usage(0);
+ 	interface = argv[1];
++	if_len = strlen(interface);
++	if (if_len >= IFNAMSIZ) {
++		printf("interface name exceeds IFNAMSIZ\n");
++		exit(1);
++	}
  
- 	return 0;
- }
-@@ -640,6 +643,7 @@ static void perf_service_work(struct work_struct *work)
- 		perf_setup_outbuf(peer);
+ 	for (i = 2; i < argc; i++) {
+ 		if (!strcasecmp(argv[i], "SO_TIMESTAMP"))
+@@ -369,12 +375,12 @@ int main(int argc, char **argv)
+ 		bail("socket");
  
- 	if (test_and_clear_bit(PERF_CMD_CLEAR, &peer->sts)) {
-+		init_completion(&peer->init_comp);
- 		clear_bit(PERF_STS_DONE, &peer->sts);
- 		if (test_bit(0, &peer->perf->busy_flag) &&
- 		    peer == peer->perf->test_peer) {
-@@ -1047,8 +1051,9 @@ static int perf_submit_test(struct perf_peer *peer)
- 	struct perf_thread *pthr;
- 	int tidx, ret;
+ 	memset(&device, 0, sizeof(device));
+-	strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
++	memcpy(device.ifr_name, interface, if_len + 1);
+ 	if (ioctl(sock, SIOCGIFADDR, &device) < 0)
+ 		bail("getting interface IP address");
  
--	if (!test_bit(PERF_STS_DONE, &peer->sts))
--		return -ENOLINK;
-+	ret = wait_for_completion_interruptible(&peer->init_comp);
-+	if (ret < 0)
-+		return ret;
- 
- 	if (test_and_set_bit_lock(0, &perf->busy_flag))
- 		return -EBUSY;
-@@ -1414,6 +1419,7 @@ static int perf_init_peers(struct perf_ctx *perf)
- 			peer->gidx = pidx;
- 		}
- 		INIT_WORK(&peer->service, perf_service_work);
-+		init_completion(&peer->init_comp);
- 	}
- 	if (perf->gidx == -1)
- 		perf->gidx = pidx;
+ 	memset(&hwtstamp, 0, sizeof(hwtstamp));
+-	strncpy(hwtstamp.ifr_name, interface, sizeof(hwtstamp.ifr_name));
++	memcpy(hwtstamp.ifr_name, interface, if_len + 1);
+ 	hwtstamp.ifr_data = (void *)&hwconfig;
+ 	memset(&hwconfig, 0, sizeof(hwconfig));
+ 	hwconfig.tx_type =
 -- 
 2.25.1
 
