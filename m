@@ -2,141 +2,103 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07828C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2272D207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:33:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="JpEjWJey"
+	by mail.kernel.org (Postfix) with ESMTP id E66E4207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:33:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729416AbgFROdK (ORCPT
+        id S1730670AbgFROds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:33:10 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:54467 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728161AbgFROdI (ORCPT
+        Thu, 18 Jun 2020 10:33:48 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47014 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728161AbgFROdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:33:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1592490788; x=1624026788;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=e6ntQ+VP9KSu9eLc9ytqyhX70E87lTK30bl1wZkiMCM=;
-  b=JpEjWJeykTXKSCxM+mN3fbN7rmwmz/5U5veUHeGeCprRVPMP/3Lh4PRS
-   Hwg1ct2jI2/1QMXYXwPpL7HLyeKTf0GNkweytGgBZPgDJZGzgAH6t33fW
-   QV/El85PuA1pOr88L9CRhA8VsxSI8+zl/fPiLzRp8nzz2xEWarJOPVF+Z
-   Iy7ZrQ8Hh6MS7fz8UAaKnIY+h9gTFtfYG7v7LzlO6LJ7pcQcSNkqvbH6f
-   OhYupZp17FLQZHUynnRQEWeHPyYq6Xsu2OPyXbyxZjrNhsTjY1wmGozIo
-   HwG8uXSaNbSBYo3caIEWA3DFaBzN+T5p/Bvh+FTCs98WduD376wRr4nLq
-   A==;
-IronPort-SDR: jWuMIwMuc+5CsgmbaM5qu6sx1Fc55ZFdW3Dq+nX5ehxclturRNhoxCma7TjL1ONayDBJuDDbSv
- 93wHGi5+56uJvCyC+Mn+DiuZIoVZH5335bw7XjXbgCmrBGHG+rnxer9IH4mPOvU6bUBhVt2vFn
- 73/fzwXwQIHJcLPyWbE/2BGxeAI4IC++hoh1OsUD+B57Bb+qs8+u69pKpz3cNhL7Rn94q/MBdp
- iYFfNguHF7cGUwMTYFFhb7AocXufYgET6geyCAgOW+N0G7slZCjSzQu3UpCeEQHCVHivXl/Q8o
- inE=
-X-IronPort-AV: E=Sophos;i="5.73,526,1583164800"; 
-   d="scan'208";a="140581915"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 18 Jun 2020 22:32:51 +0800
-IronPort-SDR: mEsj++FRJrRdKT/5DFzVVY3sgK7fY0smky26OpA7ch5T6a2PK74ZtYMuEFnSte+OhXA6wz6YjE
- 5Imeak7MkITpaL9zTnxQgeIQUciV79QRA=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 07:22:02 -0700
-IronPort-SDR: TSnT4PLHaTYn/RtOitRfQahJ7TE0OkO8lFGG/Zw/4A7GDquWTbqMuvnBrZKTkEuqyWVffTpGxx
- bI1oxQ6h0uuQ==
-WDCIronportException: Internal
-Received: from cnf006060.ad.shared (HELO localhost.hgst.com) ([10.86.58.135])
-  by uls-op-cesaip02.wdc.com with ESMTP; 18 Jun 2020 07:32:48 -0700
-From:   Niklas Cassel <niklas.cassel@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc:     Niklas Cassel <niklas.cassel@wdc.com>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] nvmet: remove workarounds for gcc bug wrt unnamed fields in initializers
-Date:   Thu, 18 Jun 2020 16:32:41 +0200
-Message-Id: <20200618143241.1056800-2-niklas.cassel@wdc.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200618143241.1056800-1-niklas.cassel@wdc.com>
-References: <20200618143241.1056800-1-niklas.cassel@wdc.com>
+        Thu, 18 Jun 2020 10:33:47 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 01C172A4E1D;
+        Thu, 18 Jun 2020 15:33:44 +0100 (BST)
+Date:   Thu, 18 Jun 2020 16:33:41 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>,
+        Allison Randal <allison@lohutok.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        kernelci-results@groups.io, Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
+        Enrico Weigelt <info@metux.net>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        linux-next@vger.kernel.org
+Subject: Re: next/master bisection: baseline.login on
+ ox820-cloudengines-pogoplug-series-3
+Message-ID: <20200618163341.12f7c996@collabora.com>
+In-Reply-To: <0c00fe0b-c38b-3d69-8f93-3fe8c3675113@collabora.com>
+References: <5eeb5bf7.1c69fb81.4f6e3.8979@mx.google.com>
+        <13497644-ae34-d5e3-e76a-742cddf0f0a9@collabora.com>
+        <20200618152324.0b0007a9@xps13>
+        <20200618160925.6f77b1d1@xps13>
+        <0c00fe0b-c38b-3d69-8f93-3fe8c3675113@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Workarounds for gcc issues with initializers and anon unions was first
-introduced in commit e44ac588cd61 ("drivers/block/nvme-core.c: fix build
-with gcc-4.4.4").
+On Thu, 18 Jun 2020 15:23:45 +0100
+Guillaume Tucker <guillaume.tucker@collabora.com> wrote:
 
-The gcc bug in question has been fixed since gcc 4.6.0:
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=10676
+> On 18/06/2020 15:09, Miquel Raynal wrote:
+> > Hi Guillaume,
+> > 
+> > Miquel Raynal <miquel.raynal@bootlin.com> wrote on Thu, 18 Jun 2020
+> > 15:23:24 +0200:
+> >   
+> >> Hi Guillaume,
+> >>
+> >> Guillaume Tucker <guillaume.tucker@collabora.com> wrote on Thu, 18 Jun
+> >> 2020 13:28:05 +0100:
+> >>  
+> >>> Please see the bisection report below about a kernel panic.
+> >>>
+> >>> Reports aren't automatically sent to the public while we're
+> >>> trialing new bisection features on kernelci.org but this one
+> >>> looks valid.
+> >>>
+> >>> See the kernel Oops due to a NULL pointer followed by a panic:
+> >>>
+> >>>   https://storage.kernelci.org/next/master/next-20200618/arm/oxnas_v6_defconfig/gcc-8/lab-baylibre/baseline-ox820-cloudengines-pogoplug-series-3.html#L504  
+> >>
+> >> Thanks for the report, I will not be able to manage it before Monday,
+> >> but I'll try to take care of it early next week.  
+> > 
+> > Actually Boris saw the issue, I just updated nand/next, it should be
+> > part of tomorrow's linux-next. Could you please report if it fixes your
+> > boot?  
+> 
+> Sure, will check tomorrow.  Thanks for the update.
+> 
+> We may also consider adding the nand/next branch to kernelci.org
+> and catch issues earlier.  We can discuss that separately.
 
-The minimum gcc version for building the kernel has been 4.6.0 since
-commit cafa0010cd51 ("Raise the minimum required gcc version to 4.6"),
-and has since been updated to gcc 4.8.0 in
-commit 5429ef62bcf3 ("compiler/gcc: Raise minimum GCC version for
-kernel builds to 4.8").
-
-For that reason, it should now be safe to remove these workarounds
-and make the code look like it did before
-commit e44ac588cd61 ("drivers/block/nvme-core.c: fix build with gcc-4.4.4")
-was introduced.
-
-Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
----
-If, for some reason, we want to allow builds with gcc < 4.6.0
-even though the minimum gcc version is now 4.8.0,
-there is another less intrusive workaround where you add an extra pair of
-curly braces, see e.g. commit 6cc65be4f6f2 ("locking/qspinlock: Fix build
-for anonymous union in older GCC compilers").
-
- drivers/nvme/target/rdma.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/nvme/target/rdma.c b/drivers/nvme/target/rdma.c
-index 6731e0349480..85c6ff0b0e44 100644
---- a/drivers/nvme/target/rdma.c
-+++ b/drivers/nvme/target/rdma.c
-@@ -1535,19 +1535,20 @@ static int nvmet_rdma_cm_accept(struct rdma_cm_id *cm_id,
- 		struct nvmet_rdma_queue *queue,
- 		struct rdma_conn_param *p)
- {
--	struct rdma_conn_param  param = { };
--	struct nvme_rdma_cm_rep priv = { };
-+	struct rdma_conn_param  param = {
-+		.rnr_retry_count = 7,
-+		.flow_control = 1,
-+		.initiator_depth = min_t(u8, p->initiator_depth,
-+			queue->dev->device->attrs.max_qp_init_rd_atom),
-+		.private_data = &priv,
-+		.private_data_len = sizeof(priv),
-+	};
-+	struct nvme_rdma_cm_rep priv = {
-+		.recfmt = cpu_to_le16(NVME_RDMA_CM_FMT_1_0),
-+		.crqsize = cpu_to_le16(queue->recv_queue_size),
-+	};
- 	int ret = -ENOMEM;
- 
--	param.rnr_retry_count = 7;
--	param.flow_control = 1;
--	param.initiator_depth = min_t(u8, p->initiator_depth,
--		queue->dev->device->attrs.max_qp_init_rd_atom);
--	param.private_data = &priv;
--	param.private_data_len = sizeof(priv);
--	priv.recfmt = cpu_to_le16(NVME_RDMA_CM_FMT_1_0);
--	priv.crqsize = cpu_to_le16(queue->recv_queue_size);
--
- 	ret = rdma_accept(cm_id, &param);
- 	if (ret)
- 		pr_err("rdma_accept failed (error code = %d)\n", ret);
--- 
-2.26.2
-
+If you're testing linux-next that shouldn't help us much (nand/next is
+pulled in linux-next already), but maybe it's just about making the
+bisection easier for kernelci (less commits to inspect), in which case
+that's probably a good idea. You might also want to add mtd/next,
+spi-nor/next and cfi/next so the entire MTD subsystem gets tested.
