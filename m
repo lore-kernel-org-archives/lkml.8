@@ -2,96 +2,111 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F93C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A881120890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12DC20890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:00:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kDfdoao3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qHVOKZnn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730562AbgFRT7y (ORCPT
+        id S1730638AbgFRUAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 15:59:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49770 "EHLO
+        Thu, 18 Jun 2020 16:00:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728960AbgFRT7w (ORCPT
+        with ESMTP id S1728960AbgFRUAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 15:59:52 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D5AC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 12:59:51 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id u8so3024337pje.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 12:59:51 -0700 (PDT)
+        Thu, 18 Jun 2020 16:00:12 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC61EC06174E;
+        Thu, 18 Jun 2020 13:00:12 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 64so3280333pfv.11;
+        Thu, 18 Jun 2020 13:00:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U3QGsT97pDvvMvvKXcBgwyDJ7+zbhoAH55hk1yJyQBg=;
-        b=kDfdoao3jkV76yu/0HQcS3EdiHt3zKaFYqcTf17EemKjFtUc8coz/vWxbiHhGjx7UE
-         4qr1wV3n/HPnsU6f94HAma3Bav2YpG8RYXjlFrN4Cy6aAXixK/rHNLa8qacKRWJgVYvv
-         9B5xci1yRjZO38wdAorzOdAl92gM+bj9VtlO9KPmnq2L1UzWVlJae4ntR8G0lL4nX5Cj
-         FQouYMXp9h/bHz02yvkFfqyURyShCumixKXeqHUKEZrGZ5V8wH+JOMWyySrTbp6O9azN
-         4FUofGkpJg+/jin7yR9UTjFF4F0YZJKQrxqesr1LVb6DKtYu4CLewdIyQpTSNTi4ongi
-         u/Nw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=BBg1omQmY70sbVnTfrqZN99BMK4tyyYN7aijNl9ncAo=;
+        b=qHVOKZnnbDYvxGXWkUgUv/OJykwW4Rv0tiuG0AlmkHqfD36iP4x7BR2Py5GFqACRDm
+         5i3ifH5S1NN8V9CxJc4PaVmgovpghtY+nVQClp56dFJGJzQQ9riV5153DTb9uaaYCcXn
+         zKSIcsaAL9Q/Xd4Ml4cS0scZDEzGaEn7Pn9HA6i/TpI8l6UiOsikREy1z1OShIzot3XJ
+         tsbfdY9L9LKvv4B76PSu+Qs/yHrHoCwUVuKbjZOyCrVrhVWKboeQm1iRxPuxkDLis3b7
+         PHb0W+fdBBwNgmviD+SKTBLX4wRmnwqNSEdm8tM2U50nY/KyfFaUmFom+xEIr573l11V
+         Rs2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U3QGsT97pDvvMvvKXcBgwyDJ7+zbhoAH55hk1yJyQBg=;
-        b=oDTp2p98A9OFaJDJJUwAKSCSjy+z4V24+heEidyFh4biuZMJXPOK5g2wuWgY9NFUfd
-         E8M8s2PL0/1SzYKjuXHL26yGqJtdg50EBAe/F3eZsUruZhr/pkMjDuJas7wwSRlGJ5pr
-         09o3foPLL6rDKYmvQt4kV+1CduHc8MA4SQ4vyekKVtaadvRJmOZXGr8RXXbI6HJcH+td
-         BiM3qICmX3cnJQ1PF0V4yEpkaX1ocXMCFrLWKC40ctgBqi7DgTllLZ5sdBq0ou7EjiPM
-         9Dux/6QzO6dDSLb+hZQS2xiz7BztJ7nd01V8FcYUYEm+O8pBT0JOOCmxAJzXutYfAc4y
-         ilvg==
-X-Gm-Message-State: AOAM532ug3Uqyt6FoFkhhmgMuC1rLh7amh7/P9InT9W1NhTvWoqX3JY/
-        qol8h/NhGeRF2gFpxVwM8mAqgQ4TWuhw8GasEpz4tQ==
-X-Google-Smtp-Source: ABdhPJyVCjvMmGy+J9LEg5lcRDKDvsw8LvlLWpJqVH2+6OGAJF76y8MYaaNzBmYqJ0LtUvWFUmZP28zjVCgPZgcgvYc=
-X-Received: by 2002:a17:90a:3321:: with SMTP id m30mr29183pjb.20.1592510390785;
- Thu, 18 Jun 2020 12:59:50 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=BBg1omQmY70sbVnTfrqZN99BMK4tyyYN7aijNl9ncAo=;
+        b=YSqDrYwXDP46vvwrlxU7mA5j/v1AYLXUfwoUYbnMnlURx2ErXXtvm1QduzHIcSAdcZ
+         J4EUpqxlMSHvxA6quPP3JW9nFYHRIvoQDQ6caevvRS0/11yaGEVovBzoARfXL2TDx4kZ
+         3wZadcc60Vl472HZvzDbkXSdxs2FNBsCVdLzjLxYXt4M0Gl02oGaDCPWlB0FrCXNG9pL
+         qcmAIVvG6vZviXUkeKY9Do3dpKp5y++OWq41M6ufHg1UmBH5gkeOqKDyDIKuFhJsAOgA
+         vy2LpixOpvqM28peTm28uEcenNjtuzPKsz8Wv6z9zcYyZAEoqEJUUoaWggDZ9dZ0uzv2
+         3Jbw==
+X-Gm-Message-State: AOAM530hAs+uVixS/Gxlprd53ekdRgfFNxjSSxs9MfxMS+wzs7jW3GiE
+        UIRckiEGJq3QeWxBqiBUGL0=
+X-Google-Smtp-Source: ABdhPJyK2nA2OlbqWp0JXDCxkOcdEg9DLXJnM7Eeefe6ew+V+/Ftk/5LqOSfW2woQbAIHrltBEwUqQ==
+X-Received: by 2002:a63:4b51:: with SMTP id k17mr176046pgl.177.1592510412155;
+        Thu, 18 Jun 2020 13:00:12 -0700 (PDT)
+Received: from athina.mtv.corp.google.com ([2620:15c:211:0:c786:d9fd:ab91:6283])
+        by smtp.gmail.com with ESMTPSA id 1sm3625046pfx.210.2020.06.18.13.00.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 13:00:11 -0700 (PDT)
+From:   =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <zenczykowski@gmail.com>
+To:     =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Linux Network Development Mailing List <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: [PATCH] restore behaviour of CAP_SYS_ADMIN allowing the loading of net bpf program
+Date:   Thu, 18 Jun 2020 12:59:56 -0700
+Message-Id: <20200618195956.73967-1-zenczykowski@gmail.com>
+X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
+In-Reply-To: <CAHo-OoyU5OHQuqpTEo-uAQcwcLpzkXezFY6Re-Hv6jGM9aSFSA@mail.gmail.com>
+References: <CAHo-OoyU5OHQuqpTEo-uAQcwcLpzkXezFY6Re-Hv6jGM9aSFSA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200616064730.123871-1-davidgow@google.com>
-In-Reply-To: <20200616064730.123871-1-davidgow@google.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 18 Jun 2020 12:59:39 -0700
-Message-ID: <CAFd5g45M-Kzexz9_BRguh7AMP+pP1gijvdjYvTyS=cTk8ZpCdg@mail.gmail.com>
-Subject: Re: [PATCH] kunit: kunit_tool: Fix invalid result when build fails
-To:     David Gow <davidgow@google.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 11:47 PM David Gow <davidgow@google.com> wrote:
->
-> When separating out different phases of running tests[1]
-> (build/exec/parse/etc), the format of the KunitResult tuple changed
-> (adding an elapsed_time variable). This is not populated during a build
-> failure, causing kunit.py to crash.
->
-> This fixes [1] to probably populate the result variable, causing a
-> failing build to be reported properly.
->
-> [1]:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=45ba7a893ad89114e773b3dc32f6431354c465d6
->
-> Signed-off-by: David Gow <davidgow@google.com>
+From: Maciej Żenczykowski <maze@google.com>
 
-Oh wow! This is an old issue.
+This is a 5.8-rc1 regression.
 
-Nice work!
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: 2c78ee898d8f ("bpf: Implement CAP_BPF")
+Signed-off-by: Maciej Żenczykowski <maze@google.com>
+---
+ kernel/bpf/syscall.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Tested-by: Brendan Higgins <brendanhiggins@google.com>
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 8da159936bab..7d946435587d 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2121,7 +2121,7 @@ static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
+ 	    !bpf_capable())
+ 		return -EPERM;
+ 
+-	if (is_net_admin_prog_type(type) && !capable(CAP_NET_ADMIN))
++	if (is_net_admin_prog_type(type) && !capable(CAP_NET_ADMIN) && !capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 	if (is_perfmon_prog_type(type) && !perfmon_capable())
+ 		return -EPERM;
+-- 
+2.27.0.290.gba653c62da-goog
+
