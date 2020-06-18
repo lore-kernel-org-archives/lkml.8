@@ -2,126 +2,142 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDEF72080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:11:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592500298;
-	bh=kR2qUCl6H0tLGIz3fK767cSV2I1JT33iZx5kogPI7CU=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=ZkURzFyt6uqLr0FtMFsFj0qxjrnCglTi7HLW8UdOTDNwlRU6MT2/xTUWlSfyjdHri
-	 JtB0gGABF5r2XtjuiGCJbIScCk+i9kRE3ZP3/tgzDBpAjddpk77goRle1QydtA1bV2
-	 ON0lQRVEKq0VtvINpz+nRjs/O7iEoWalkQWcOkqU=
+	by mail.kernel.org (Postfix) with ESMTP id 9EE442080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:13:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbgFRRLf (ORCPT
+        id S1732059AbgFRRNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:11:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbgFRRLd (ORCPT
+        Thu, 18 Jun 2020 13:13:24 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14782 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727926AbgFRRNW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 13:11:33 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3004AC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:11:33 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id d4so5137972otk.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:11:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=m56O9oyGheb7iqPx3y65EPbbyQ1wr2kzzTnOcksS43k=;
-        b=cJp9zOQC0gC906ow0l6j8q9KiNEvGPpjzzHnBLW5f5UXJSp2JKMXzGknat9SRN+dkt
-         w2gA1CS6jHyZhHtYVhWLdjFU8pZgd1wfT0i734PuD7tNHBL1Xh5Il/+jJ4SBIx9e6K/p
-         VUyBzcvlvKaFRvjGYv2brWns5rtpJE9102tMo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=m56O9oyGheb7iqPx3y65EPbbyQ1wr2kzzTnOcksS43k=;
-        b=eVsNgDzRxH3bUQFUBy0VxWR2Zw9044RCWuS1hrsvlkOeh0xmVHBnJrujAmZpd6W4fj
-         3lhxAby5tPZBGk+WxxeTqhQexontpKcXDGkrY7GZkh6c1FMRKC6rZjW3buK5OFSTxtaP
-         QVF7jeYOXiHyR2FPH8Jykqn/lv/328dktAueLx8VeiLeB+jkjpKReHI0oQrNRDzVrd+8
-         +ewMiPb4/jBKij44TAjG6e+iDrGqDZb5lnqF9hTmIpDyqqQeBz7q5F6j786t2fqX9YAa
-         ilOe/oTzPcfMbR7BNH8LG+HNCwk/iS4v04TmsXeiqHUpfNtugYWZZqspCJR+yIOj7kcB
-         F88A==
-X-Gm-Message-State: AOAM533E2iQ31/FXNy4aynd4lWSFiSNpvq7TR//DGAsbLpX/HXX8gfd2
-        DVQ1PQcAjWp7EEqrr9wDp5PZYehTpj0=
-X-Google-Smtp-Source: ABdhPJzp6MAPICetIONmQzCwKHp9K0QLrfalAs/N4dm2NHnxKcTJhjWi82s/9X+lJB9oBcs3ACitMA==
-X-Received: by 2002:a9d:62c6:: with SMTP id z6mr4184725otk.70.1592500292528;
-        Thu, 18 Jun 2020 10:11:32 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id c13sm817170otm.78.2020.06.18.10.11.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 10:11:32 -0700 (PDT)
-Subject: Re: [PATCH] usbip: tools: add in man page how to load the client's
- module
-To:     Antonio Borneo <borneo.antonio@gmail.com>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <shuah@kernel.org>, linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200618000831.1048255-1-borneo.antonio@gmail.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <95bd8906-5864-e5ae-e0d7-eae093b2d8af@linuxfoundation.org>
-Date:   Thu, 18 Jun 2020 11:11:31 -0600
+        Thu, 18 Jun 2020 13:13:22 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05IH1nDw042243;
+        Thu, 18 Jun 2020 13:13:19 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ra8ymm65-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 13:13:19 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05IH2dFP045783;
+        Thu, 18 Jun 2020 13:13:18 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ra8ymm5e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 13:13:18 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05IH9n3E005528;
+        Thu, 18 Jun 2020 17:13:17 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma01fra.de.ibm.com with ESMTP id 31qyx1ggv7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 17:13:16 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05IHDDBd24182968
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jun 2020 17:13:13 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A9E90A4065;
+        Thu, 18 Jun 2020 17:13:13 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 40D8BA405F;
+        Thu, 18 Jun 2020 17:13:13 +0000 (GMT)
+Received: from oc4120165700.ibm.com (unknown [9.145.44.63])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Jun 2020 17:13:13 +0000 (GMT)
+Subject: Re: [PATCH v2] Revert "zram: convert remaining CLASS_ATTR() to
+ CLASS_ATTR_RO()"
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wade Mealing <wmealing@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+References: <20200617114946.GA2131650@kroah.com>
+From:   Steffen Maier <maier@linux.ibm.com>
+Message-ID: <dea7a650-e611-c976-39e7-45883c47199d@linux.ibm.com>
+Date:   Thu, 18 Jun 2020 19:13:12 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200618000831.1048255-1-borneo.antonio@gmail.com>
+In-Reply-To: <20200617114946.GA2131650@kroah.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-18_14:2020-06-18,2020-06-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999
+ malwarescore=0 mlxscore=0 phishscore=0 spamscore=0 clxscore=1015
+ impostorscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006180125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/20 6:08 PM, Antonio Borneo wrote:
-> While the man page usbipd.8 already informs the user on which
-> kernel module has to be used on server side, the man page usbip.8
-> does not provide any equivalent information on client side.
-> Also, it could be hard for a newby to identify the proper usbip
-> client kernel module, due to the name "vhci-hcd" that has no
-> immediate assonance with usbip.
+On 6/17/20 1:49 PM, Greg Kroah-Hartman wrote:
+> From: Wade Mealing <wmealing@redhat.com>
 > 
-> Add in usbip.8 the command to add the module vhci-hcd, similarly
-> as it's already present in usbipd.8 for usbip-host.
+> Turns out that the permissions for 0400 really are what we want here,
+> otherwise any user can read from this file.
 > 
-> Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
+> [fixed formatting, added changelog, and made attribute static - gregkh]
+> 
+> Reported-by: Wade Mealing <wmealing@redhat.com>
+> Cc: stable <stable@vger.kernel.org>
+> Fixes: f40609d1591f ("zram: convert remaining CLASS_ATTR() to CLASS_ATTR_RO()")
+> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1847832
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+Reviewed-by: Steffen Maier <maier@linux.ibm.com>
+
 > ---
->   tools/usb/usbip/doc/usbip.8 | 2 ++
->   1 file changed, 2 insertions(+)
+> v2: fix read/write confusion in the changelog, thanks to Steffen for the
+>      review.
+>      was more specific as to the changes I made to the original patch.
 > 
-> diff --git a/tools/usb/usbip/doc/usbip.8 b/tools/usb/usbip/doc/usbip.8
-> index a6097be25d28..81313f4913b4 100644
-> --- a/tools/usb/usbip/doc/usbip.8
-> +++ b/tools/usb/usbip/doc/usbip.8
-> @@ -85,6 +85,8 @@ List local USB devices.
->       client:# usbip list --remote=server
->           - List exportable usb devices on the server.
+>   drivers/block/zram/zram_drv.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+> index 6e2ad90b17a3..270dd810be54 100644
+> --- a/drivers/block/zram/zram_drv.c
+> +++ b/drivers/block/zram/zram_drv.c
+> @@ -2021,7 +2021,8 @@ static ssize_t hot_add_show(struct class *class,
+>   		return ret;
+>   	return scnprintf(buf, PAGE_SIZE, "%d\n", ret);
+>   }
+> -static CLASS_ATTR_RO(hot_add);
+> +static struct class_attribute class_attr_hot_add =
+> +	__ATTR(hot_add, 0400, hot_add_show, NULL);
 >   
-
-While you are making changes, please change the above to the
-following. This is more accurate.
-
-List devices exported by remote=server
-
-> +    client:# modprobe vhci-hcd
-> +
-
->       client:# usbip attach --remote=server --busid=1-2
->           - Connect the remote USB device.
->   
+>   static ssize_t hot_remove_store(struct class *class,
+>   			struct class_attribute *attr,
 > 
 
-thanks,
--- Shuah
+
+-- 
+Mit freundlichen Gruessen / Kind regards
+Steffen Maier
+
+Linux on IBM Z Development
+
+https://www.ibm.com/privacy/us/en/
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschaeftsfuehrung: Dirk Wittkopp
+Sitz der Gesellschaft: Boeblingen
+Registergericht: Amtsgericht Stuttgart, HRB 243294
