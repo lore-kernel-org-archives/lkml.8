@@ -2,102 +2,186 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C10BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 753ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9EA21852
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 467F02186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:09:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="hINmJ6f3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgFRIIj (ORCPT
+        id S1728255AbgFRIJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:08:39 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57218 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728348AbgFRIGE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:06:04 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05I84GQo094657;
-        Thu, 18 Jun 2020 04:05:26 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31r1qbcnx4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jun 2020 04:05:26 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05I84Tsu095683;
-        Thu, 18 Jun 2020 04:05:26 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31r1qbcnwa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jun 2020 04:05:25 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05I84kMX000783;
-        Thu, 18 Jun 2020 08:05:23 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma02fra.de.ibm.com with ESMTP id 31r0dvr499-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jun 2020 08:05:23 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05I85KSa50659410
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jun 2020 08:05:20 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F2316A405C;
-        Thu, 18 Jun 2020 08:05:19 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C8E3A405F;
-        Thu, 18 Jun 2020 08:05:19 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.12.179])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Jun 2020 08:05:19 +0000 (GMT)
-Subject: Re: [PATCH v2 02/12] ocxl: Change type of pasid to unsigned int
-To:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        amd-gfx <amd-gfx@lists.freedesktop.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-References: <1592008893-9388-1-git-send-email-fenghua.yu@intel.com>
- <1592008893-9388-3-git-send-email-fenghua.yu@intel.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Message-ID: <972dc2cb-9643-53af-b11d-ebb56d96053d@linux.ibm.com>
-Date:   Thu, 18 Jun 2020 10:05:19 +0200
+        Thu, 18 Jun 2020 04:09:06 -0400
+Received: from mail-co1nam11on2080.outbound.protection.outlook.com ([40.107.220.80]:32173
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728200AbgFRIHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:07:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Oe55UH0oa+tonyr0h/4WJGeC0w/Oim/YxbmK5VTJM21TBAu0KlLmVEfVpihaWgXc+bESjihkG5pQEqc0fCUxXcYNlJftBg71dZQPaCKAPiksQmZBD8mx7pJ94q7QmgLXHQ9alNy5+i8LrCrk446/uXx/3C+bkBhIIh3O1dz5vIN1Ker/hr9XdVnXKWq6w7ZCNEeDqMFrcoSvvX3yHtQRAgXTQKpjb21EUIjIUP2Kcds/I8hyBaL+jtbnkhBdvGuP1621QhaVrKpGTqujXy9+09Beiyp4kndoVUn3pyUsy8nPDST+ZLYNmimYUJu5pyxDdKORWeQ6k1vSGoY0gyTztA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RQ3yGgG+JZfV/FjXWqMiTY/6xKAGmuuMlC3eWE7amIM=;
+ b=dBPF52jDpkYDPdlA2IjwDLpc4jXw/70q0SGYZ7bLqklOMGQ6PGxcfdimIB/p43vQxcN41rZ2M0lCAWzB5Q0jl9F72i9hzebi9TpEPn1/nfUGOtvUduwqY3ycccFb1vT7VS6TNorCK2fYci3myk9XrvULJQo4joo7wPelqssoumEtjxDRkw0uaToG4gubV81a4coeUS8mNAfcltL+oihfxX6oKkyKCDFPwMaVZhiNgKMDMIwn1t8uAwACBBk0LFbFpVBnOyJy0RQ3Cw80snR9CqQLYtwOvdido1q9KRxo1wnrB1oI9iDgwwv85PS989FmPRlUa4Ek+rNjTST6l/5Cvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=oracle.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RQ3yGgG+JZfV/FjXWqMiTY/6xKAGmuuMlC3eWE7amIM=;
+ b=hINmJ6f3x+JGew6Ax2k9Xb5amH8xiAyxGCTJyyTFRo+KLBLN8r65CDAitaCAcdL1U8+igdRBLeC2CX9pk2rtY1eVpRZldSLhYVdumBn4wdPn6MId2M38PWNE4vOwxzBs5yrntGAtzLHihKJy1oE4DZHHc9+UP0830yp2MT7l9MY=
+Received: from SN1PR12CA0096.namprd12.prod.outlook.com (2603:10b6:802:21::31)
+ by BY5PR02MB6130.namprd02.prod.outlook.com (2603:10b6:a03:1fa::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Thu, 18 Jun
+ 2020 08:07:17 +0000
+Received: from SN1NAM02FT043.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:802:21:cafe::cf) by SN1PR12CA0096.outlook.office365.com
+ (2603:10b6:802:21::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend
+ Transport; Thu, 18 Jun 2020 08:07:17 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; oracle.com; dkim=none (message not signed)
+ header.d=none;oracle.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT043.mail.protection.outlook.com (10.152.72.184) with Microsoft SMTP
+ Server id 15.20.3088.18 via Frontend Transport; Thu, 18 Jun 2020 08:07:17
+ +0000
+Received: from [149.199.38.66] (port=59818 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jlpYp-0002oC-8U; Thu, 18 Jun 2020 01:06:11 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jlpZs-00061g-N4; Thu, 18 Jun 2020 01:07:16 -0700
+Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 05I87C1l004562;
+        Thu, 18 Jun 2020 01:07:12 -0700
+Received: from [172.30.17.109]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1jlpZn-0005yU-VA; Thu, 18 Jun 2020 01:07:12 -0700
+Subject: Re: [PATCH] soc: xilinx: Fix error code in zynqmp_pm_probe()
+To:     Michal Simek <michal.simek@xilinx.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Tejas Patel <tejas.patel@xilinx.com>
+Cc:     Rajan Vaja <rajan.vaja@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jolly Shah <jolly.shah@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20200605110020.GA978434@mwanda>
+ <951de328-3647-ea49-ecec-1f0f98ceb4b1@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Autocrypt: addr=michals@xilinx.com; keydata=
+ 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
+ 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
+Message-ID: <e827b05b-c2ed-ef93-80ae-7d8bd0f0ac0d@xilinx.com>
+Date:   Thu, 18 Jun 2020 10:07:09 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <1592008893-9388-3-git-send-email-fenghua.yu@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <951de328-3647-ea49-ecec-1f0f98ceb4b1@xilinx.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-18_04:2020-06-17,2020-06-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- cotscore=-2147483648 mlxscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
- phishscore=0 priorityscore=1501 clxscore=1011 mlxlogscore=999
- impostorscore=0 adultscore=0 suspectscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006180057
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(396003)(136003)(376002)(39860400002)(46966005)(70206006)(70586007)(54906003)(36756003)(110136005)(47076004)(2616005)(316002)(9786002)(44832011)(478600001)(6666004)(31696002)(4326008)(6636002)(336012)(186003)(5660300002)(8936002)(2906002)(356005)(26005)(82310400002)(81166007)(83380400001)(8676002)(426003)(82740400003)(31686004)(43740500002);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3d27f652-6fa9-412d-e4c7-08d8135e9df0
+X-MS-TrafficTypeDiagnostic: BY5PR02MB6130:
+X-Microsoft-Antispam-PRVS: <BY5PR02MB61307ADE210D8E1A4274D3B0C69B0@BY5PR02MB6130.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:901;
+X-Forefront-PRVS: 0438F90F17
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jeQNP9+hIqnpZE0w2N8kQxG94xomU3qe1+2GWJ8u2/oPxnVmUo9m+ja5+IogXuLFoEK9y5XEEKjUBxlMFgj3eclZLBP3Z/9Q+Ls5NjInaOq3bwWGltMMk/qa1gYAeyzPjQlpWnOrhQ/Ys6RyoLFsXMt00lYotkmkJy9QwkTPyOqIsA33Vqx+VOeDdDQQgvMspK0x1q+MmA84xAhSpDUHzivJzFiUlS/EP2/V2ZwXJMyq3aXPSsrHmok4cXL6+5JFJQagubTVdc6Cy/XsO55edPe3cDZa1AfGM084x2cf+JFoYZovvIrKrznXc+AsuR/i7EUvKO+62P1GZJRMJlV0ybXpFheij53Q4PdsgB+xNJwmz5/7lQDmSS34IwpG4sjY3Q3QY8JQX7tLYm5tCqCtH0ed4UFJosnOKS1YM3mJTD5eCDtVgB/lObqXjW5ww14O
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2020 08:07:17.0388
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d27f652-6fa9-412d-e4c7-08d8135e9df0
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -105,234 +189,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-Le 13/06/2020 à 02:41, Fenghua Yu a écrit :
-> PASID is defined as "int" although it's a 20-bit value and shouldn't be
-> negative int. To be consistent with type defined in iommu, define PASID
-> as "unsigned int".
-
-
-It looks like this patch was considered because of the use of 'pasid' in 
-variable or function names. The ocxl driver only makes sense on powerpc 
-and shouldn't compile on anything else, so it's probably useless in the 
-context of that series.
-The pasid here is defined by the opencapi specification 
-(https://opencapi.org), it is borrowed from the PCI world and you could 
-argue it could be an unsigned int. But then I think the patch doesn't go 
-far enough. But considering it's not used on x86, I think this patch can 
-be dropped.
-
-   Fred
-
-
-
-> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> ---
-> v2:
-> - Create this new patch to define PASID as "unsigned int" consistently in
->    ocxl (Thomas)
+On 05. 06. 20 13:07, Michal Simek wrote:
+> On 05. 06. 20 13:00, Dan Carpenter wrote:
+>> This should be returning PTR_ERR() but it returns IS_ERR() instead.
+>>
+>> Fixes: ffdbae28d9d1 ("drivers: soc: xilinx: Use mailbox IPI callback")
+>> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+>> ---
+>>  drivers/soc/xilinx/zynqmp_power.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/soc/xilinx/zynqmp_power.c b/drivers/soc/xilinx/zynqmp_power.c
+>> index 31ff49fcd078b..c556623dae024 100644
+>> --- a/drivers/soc/xilinx/zynqmp_power.c
+>> +++ b/drivers/soc/xilinx/zynqmp_power.c
+>> @@ -205,7 +205,7 @@ static int zynqmp_pm_probe(struct platform_device *pdev)
+>>  		rx_chan = mbox_request_channel_byname(client, "rx");
+>>  		if (IS_ERR(rx_chan)) {
+>>  			dev_err(&pdev->dev, "Failed to request rx channel\n");
+>> -			return IS_ERR(rx_chan);
+>> +			return PTR_ERR(rx_chan);
+>>  		}
+>>  	} else if (of_find_property(pdev->dev.of_node, "interrupts", NULL)) {
+>>  		irq = platform_get_irq(pdev, 0);
+>>
 > 
->   drivers/misc/ocxl/config.c        |  3 ++-
->   drivers/misc/ocxl/link.c          |  6 +++---
->   drivers/misc/ocxl/ocxl_internal.h |  6 +++---
->   drivers/misc/ocxl/pasid.c         |  2 +-
->   drivers/misc/ocxl/trace.h         | 20 ++++++++++----------
->   include/misc/ocxl.h               |  6 +++---
->   6 files changed, 22 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-> index c8e19bfb5ef9..22d034caed3d 100644
-> --- a/drivers/misc/ocxl/config.c
-> +++ b/drivers/misc/ocxl/config.c
-> @@ -806,7 +806,8 @@ int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec)
->   }
->   EXPORT_SYMBOL_GPL(ocxl_config_set_TL);
->   
-> -int ocxl_config_terminate_pasid(struct pci_dev *dev, int afu_control, int pasid)
-> +int ocxl_config_terminate_pasid(struct pci_dev *dev, int afu_control,
-> +				unsigned int pasid)
->   {
->   	u32 val;
->   	unsigned long timeout;
-> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
-> index 58d111afd9f6..931f6ae022db 100644
-> --- a/drivers/misc/ocxl/link.c
-> +++ b/drivers/misc/ocxl/link.c
-> @@ -492,7 +492,7 @@ static u64 calculate_cfg_state(bool kernel)
->   	return state;
->   }
->   
-> -int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
-> +int ocxl_link_add_pe(void *link_handle, unsigned int pasid, u32 pidr, u32 tidr,
->   		u64 amr, struct mm_struct *mm,
->   		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
->   		void *xsl_err_data)
-> @@ -572,7 +572,7 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
->   }
->   EXPORT_SYMBOL_GPL(ocxl_link_add_pe);
->   
-> -int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
-> +int ocxl_link_update_pe(void *link_handle, unsigned int pasid, __u16 tid)
->   {
->   	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   	struct spa *spa = link->spa;
-> @@ -608,7 +608,7 @@ int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
->   	return rc;
->   }
->   
-> -int ocxl_link_remove_pe(void *link_handle, int pasid)
-> +int ocxl_link_remove_pe(void *link_handle, unsigned int pasid)
->   {
->   	struct ocxl_link *link = (struct ocxl_link *) link_handle;
->   	struct spa *spa = link->spa;
-> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-> index 345bf843a38e..3ca982ba7472 100644
-> --- a/drivers/misc/ocxl/ocxl_internal.h
-> +++ b/drivers/misc/ocxl/ocxl_internal.h
-> @@ -41,7 +41,7 @@ struct ocxl_afu {
->   	struct ocxl_afu_config config;
->   	int pasid_base;
->   	int pasid_count; /* opened contexts */
-> -	int pasid_max; /* maximum number of contexts */
-> +	unsigned int pasid_max; /* maximum number of contexts */
->   	int actag_base;
->   	int actag_enabled;
->   	struct mutex contexts_lock;
-> @@ -69,7 +69,7 @@ struct ocxl_xsl_error {
->   
->   struct ocxl_context {
->   	struct ocxl_afu *afu;
-> -	int pasid;
-> +	unsigned int pasid;
->   	struct mutex status_mutex;
->   	enum ocxl_context_status status;
->   	struct address_space *mapping;
-> @@ -128,7 +128,7 @@ int ocxl_config_check_afu_index(struct pci_dev *dev,
->    * pasid: the PASID for the AFU context
->    * tid: the new thread id for the process element
->    */
-> -int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
-> +int ocxl_link_update_pe(void *link_handle, unsigned int pasid, __u16 tid);
->   
->   int ocxl_context_mmap(struct ocxl_context *ctx,
->   			struct vm_area_struct *vma);
-> diff --git a/drivers/misc/ocxl/pasid.c b/drivers/misc/ocxl/pasid.c
-> index d14cb56e6920..a151fc8f0bec 100644
-> --- a/drivers/misc/ocxl/pasid.c
-> +++ b/drivers/misc/ocxl/pasid.c
-> @@ -80,7 +80,7 @@ static void range_free(struct list_head *head, u32 start, u32 size,
->   
->   int ocxl_pasid_afu_alloc(struct ocxl_fn *fn, u32 size)
->   {
-> -	int max_pasid;
-> +	unsigned int max_pasid;
->   
->   	if (fn->config.max_pasid_log < 0)
->   		return -ENOSPC;
-> diff --git a/drivers/misc/ocxl/trace.h b/drivers/misc/ocxl/trace.h
-> index 17e21cb2addd..019e2fc63b1d 100644
-> --- a/drivers/misc/ocxl/trace.h
-> +++ b/drivers/misc/ocxl/trace.h
-> @@ -9,13 +9,13 @@
->   #include <linux/tracepoint.h>
->   
->   DECLARE_EVENT_CLASS(ocxl_context,
-> -	TP_PROTO(pid_t pid, void *spa, int pasid, u32 pidr, u32 tidr),
-> +	TP_PROTO(pid_t pid, void *spa, unsigned int pasid, u32 pidr, u32 tidr),
->   	TP_ARGS(pid, spa, pasid, pidr, tidr),
->   
->   	TP_STRUCT__entry(
->   		__field(pid_t, pid)
->   		__field(void*, spa)
-> -		__field(int, pasid)
-> +		__field(unsigned int, pasid)
->   		__field(u32, pidr)
->   		__field(u32, tidr)
->   	),
-> @@ -38,21 +38,21 @@ DECLARE_EVENT_CLASS(ocxl_context,
->   );
->   
->   DEFINE_EVENT(ocxl_context, ocxl_context_add,
-> -	TP_PROTO(pid_t pid, void *spa, int pasid, u32 pidr, u32 tidr),
-> +	TP_PROTO(pid_t pid, void *spa, unsigned int pasid, u32 pidr, u32 tidr),
->   	TP_ARGS(pid, spa, pasid, pidr, tidr)
->   );
->   
->   DEFINE_EVENT(ocxl_context, ocxl_context_remove,
-> -	TP_PROTO(pid_t pid, void *spa, int pasid, u32 pidr, u32 tidr),
-> +	TP_PROTO(pid_t pid, void *spa, unsigned int pasid, u32 pidr, u32 tidr),
->   	TP_ARGS(pid, spa, pasid, pidr, tidr)
->   );
->   
->   TRACE_EVENT(ocxl_terminate_pasid,
-> -	TP_PROTO(int pasid, int rc),
-> +	TP_PROTO(unsigned int pasid, int rc),
->   	TP_ARGS(pasid, rc),
->   
->   	TP_STRUCT__entry(
-> -		__field(int, pasid)
-> +		__field(unsigned int, pasid)
->   		__field(int, rc)
->   	),
->   
-> @@ -107,11 +107,11 @@ DEFINE_EVENT(ocxl_fault_handler, ocxl_fault_ack,
->   );
->   
->   TRACE_EVENT(ocxl_afu_irq_alloc,
-> -	TP_PROTO(int pasid, int irq_id, unsigned int virq, int hw_irq),
-> +	TP_PROTO(unsigned int pasid, int irq_id, unsigned int virq, int hw_irq),
->   	TP_ARGS(pasid, irq_id, virq, hw_irq),
->   
->   	TP_STRUCT__entry(
-> -		__field(int, pasid)
-> +		__field(unsigned int, pasid)
->   		__field(int, irq_id)
->   		__field(unsigned int, virq)
->   		__field(int, hw_irq)
-> @@ -133,11 +133,11 @@ TRACE_EVENT(ocxl_afu_irq_alloc,
->   );
->   
->   TRACE_EVENT(ocxl_afu_irq_free,
-> -	TP_PROTO(int pasid, int irq_id),
-> +	TP_PROTO(unsigned int pasid, int irq_id),
->   	TP_ARGS(pasid, irq_id),
->   
->   	TP_STRUCT__entry(
-> -		__field(int, pasid)
-> +		__field(unsigned int, pasid)
->   		__field(int, irq_id)
->   	),
->   
-> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index 06dd5839e438..5eca04c8da97 100644
-> --- a/include/misc/ocxl.h
-> +++ b/include/misc/ocxl.h
-> @@ -429,7 +429,7 @@ int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
->    * desired AFU. It can be found in the AFU configuration
->    */
->   int ocxl_config_terminate_pasid(struct pci_dev *dev,
-> -				int afu_control_offset, int pasid);
-> +				int afu_control_offset, unsigned int pasid);
->   
->   /*
->    * Read the configuration space of a function and fill in a
-> @@ -466,7 +466,7 @@ void ocxl_link_release(struct pci_dev *dev, void *link_handle);
->    * 'xsl_err_data' is an argument passed to the above callback, if
->    * defined
->    */
-> -int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
-> +int ocxl_link_add_pe(void *link_handle, unsigned int pasid, u32 pidr, u32 tidr,
->   		u64 amr, struct mm_struct *mm,
->   		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
->   		void *xsl_err_data);
-> @@ -474,7 +474,7 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
->   /*
->    * Remove a Process Element from the Shared Process Area for a link
->    */
-> -int ocxl_link_remove_pe(void *link_handle, int pasid);
-> +int ocxl_link_remove_pe(void *link_handle, unsigned int pasid);
->   
->   /*
->    * Allocate an AFU interrupt associated to the link.
-> 
+> Reviewed-by: Michal Simek <michal.simek@xilinx.com>
+
+Applied.
+M
