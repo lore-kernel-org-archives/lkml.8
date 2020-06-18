@@ -2,166 +2,204 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC54C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0176207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C857F208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:23:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aTn9yjeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730921AbgFRUTS (ORCPT
+        id S1728392AbgFRUW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:19:18 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:46743 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726517AbgFRUTR (ORCPT
+        Thu, 18 Jun 2020 16:22:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727971AbgFRUW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:19:17 -0400
-Received: by mail-vs1-f67.google.com with SMTP id k13so4296564vsm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:19:14 -0700 (PDT)
+        Thu, 18 Jun 2020 16:22:58 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65137C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:22:58 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id b7so3701694pju.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:22:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xnQxnEGFqJBRLt94YNylhgWnHetVl/qVFrV3Ml9hdCk=;
+        b=aTn9yjeKEwTKKCUcFeRW7sUrGP5djzWcTw5h3fP1Mg6Q8g4FLlgPY5CfyRIpnT9vFS
+         3rLp9irVfn3I11WLJfhn0BDFSL0uNtO4GNOlumgqVilbB/8bpMjCiBEu1++cNbLFuZxX
+         ao6NczHahM/Kd1mJZshskFBOcJTTpYHdy4+5WifflqL26LEbpFm66yif3CxvK1rlgPYn
+         bxMg3IWiJnXi7E5APpb+4LXlAOEuKB5aOtn5ThG6vs68KOy3qK/iSmd5AsoR/dWj6rhb
+         UxR8fkpyMry1ZCaMZNUKzQqTIxukD8UowwVWIjsoX1K8RcbvpdM/FN969eVJ1g2xJIcH
+         +18w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qSwSY8YJQIddJ59Vrp95WbPXR1QMxnWBM80612/bTbE=;
-        b=DE+ukfd4xUqVOnGkKq5Y7ilLdjL+IRKIYLiXZB04jtJfNf5fdNhmUyEu2rEEHfZ3FD
-         B4BriUOowRgRPQc32LdHKFVaEZl1qMNiYNKgszsUiqtGKanTORkKZC+yJTd4m0cexSro
-         2Sm1XWkvqg5QfF5Ckeiw98FXCRgQwrlKIagsDKobsVYablSJJBPiLFPfIKcvp2GXadJ4
-         0VnkIiMMWO9+3pQKu0bbPRvvaOyaWZqoKeMl0WlGldhPNC7ecDA5nLDk7u5meWCL2g1P
-         yas51LfWvp54/j597XdPot+BUzKYcPy7zdyoc7tWaxM46+ZV4rOX3Q0AoILUPyBdsTlX
-         QzWQ==
-X-Gm-Message-State: AOAM5304uk5dsslETChKa/cZStScOaudG+NfDa7zvJZmmlgUcqiu+Zjs
-        XYMGy+rhDWDNqClMNjPLEmKDgTMSh1GmR7n7PSQ=
-X-Google-Smtp-Source: ABdhPJxxiADmycRfXrdHbDVvri9Z01+pfe+180opoCNTMkKQRieFT1HVfW4arAxR78ynemYMFpQ3OldW4Yi7x3AX38U=
-X-Received: by 2002:a67:800f:: with SMTP id b15mr5034663vsd.220.1592511553876;
- Thu, 18 Jun 2020 13:19:13 -0700 (PDT)
+        bh=xnQxnEGFqJBRLt94YNylhgWnHetVl/qVFrV3Ml9hdCk=;
+        b=T7SsxN6AoGZDMHkkv5FsR+7jpEyxRlgeHswQJxiKOQRHXNqCM6+Z6QwQjxS6IuECX0
+         MQOwLq3jx1uXNdGpD6TDLGY5FqhbgRem/FwEvC/H3T6sEYv/5wdS/1eL6cYY4KQdNlUT
+         xzbMKPp0IcFHjNUXL1Lm0w6gjQL1h3dxyl11rP1IH8zKlUfH5NFm18jkq+e3VxffZuTZ
+         FRvs32Fgoo2zWQAxLzhrvMGHv+xzEvv0KpdHHwaZMTmBe0v6IIg36fhH/5TKihnELiT0
+         5C3Las2K5AgQuY9LhybrG8+Wu1HXFPdFSjoQ98dVvDDk9Xu5uwSg2qGGhNkJ1IOUkNHY
+         qTbw==
+X-Gm-Message-State: AOAM533aEVEJVlpMuRwgGuTWzVEcaDGVRO0WdinGGo+pxMOABMnmt0pK
+        G/dvGaxyJ240vlYV600nCFrBfVsOsQB/LsmdM1USsQ==
+X-Google-Smtp-Source: ABdhPJy/UXwIWIhlQcPJp1WubSNRKDgXh69omjFbSaH3IHqaE2QCr1yIVnet/GeuPk2izXLGvRcEW6tgQLCPhaqXQX8=
+X-Received: by 2002:a17:902:b698:: with SMTP id c24mr5053874pls.223.1592511777575;
+ Thu, 18 Jun 2020 13:22:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200618200106.GF27951@zn.tnic>
-In-Reply-To: <20200618200106.GF27951@zn.tnic>
-From:   Ilia Mirkin <imirkin@alum.mit.edu>
-Date:   Thu, 18 Jun 2020 16:19:02 -0400
-Message-ID: <CAKb7UviibvRfqJgtLkePEuXFa6mQfi4h=7eeW+YQxB-StVjjrA@mail.gmail.com>
-Subject: Re: [Nouveau] 2dd4d163cd9c ("drm/nouveau: remove open-coded version
- of remove_conflicting_pci_framebuffers()")
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Ben Skeggs <bskeggs@redhat.com>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
+References: <20200616223633.73971-1-nhuck@google.com>
+In-Reply-To: <20200616223633.73971-1-nhuck@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 18 Jun 2020 13:22:45 -0700
+Message-ID: <CAKwvOdkibnsr+z8-pXG1RjOEcrGQ6HQ0=PM-B9p-i85_BKS0cQ@mail.gmail.com>
+Subject: Re: [PATCH] Fix unwind_frame for clang-built kernels
+To:     Nathan Huckleberry <nhuck@google.com>,
+        =?UTF-8?B?TWlsZXMgQ2hlbiAo6Zmz5rCR5qi6KQ==?= 
+        <miles.chen@mediatek.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kristof Beyls <Kristof.Beyls@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+On Tue, Jun 16, 2020 at 3:36 PM 'Nathan Huckleberry' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+>
+> Since clang does not push pc and sp in function prologues, the current
+> implementation of unwind_frame does not work. By using the previous
+> frame's lr/fp instead of saved pc/sp we get valid unwinds on clang-built
+> kernels.
+>
+> The bounds check on next frame pointer must be changed as well since
+> there are 8 less bytes between frames.
+>
+> This fixes /proc/<pid>/stack.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/912
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
 
-There was a fixup to that patch that you'll also have to revert first
--- 7dbbdd37f2ae7dd4175ba3f86f4335c463b18403. I guess there's some
-subtle difference between the old open-coded logic and the helper,
-they were supposed to be identical.
+Thanks for the patch, Nathan!  When I looked into this, I found the
+latest ARM AAPCS [0] specifically says (with `it` referring to `a
+platform`: "It may permit the frame pointer register to be used as a
+general-purpose callee-saved register, but provide a platform-specific
+mechanism for external agents to reliably locate the chain of frame
+records."   While it's good that's acknowledged in the documentation,
+the current wording is relaxed in order to not force current
+implementations to converge.  This has the unfortunate side effect of
+making finding the frame pointer toolchain dependendent, hence this
+patch and your previous commit 6dc5fd93b2f1 ("ARM: 8900/1:
+UNWINDER_FRAME_POINTER implementation for Clang").  Being more
+specific in the documentation would force at least one implementation
+to change, and I think that would also imply an ABI break.  So I can
+see it both ways, though I still would prefer that the language pin
+this down, even if we had to change LLVM.  Just providing additional
+context for folks on the thread.
 
-Cheers,
+This should also have a reported by tag from Miles, in v2.
 
-  -ilia
+Reported-by: Miles Chen <Miles.Chen@mediatek.com>
 
-On Thu, Jun 18, 2020 at 4:09 PM Borislav Petkov <bp@alien8.de> wrote:
+Miles mentioned to me that he tested it, but maybe Miles can confirm
+that publicly on-list via an explicit Tested-by: tag?
+
+This would be useful for us to have in stable; otherwise we'll have to
+carry out of tree in Android and CrOS, which I'd rather not do.  Via
+Documentation/process/stable-kernel-rules.rst, if you add this tag to
+V2, that will greatly simplify submitting this to stable:
+Cc: stable@vger.kernel.org
+
+Miles also showed me the behavior of this patch for different kernel
+versions, which varies anywhere from empty or single entry traces to
+panics, so this is pretty important that this works for Clang builds.
+
+[0] https://static.docs.arm.com/ihi0042/i/aapcs32.pdf
+
+> ---
+>  arch/arm/kernel/stacktrace.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 >
-> Hi,
+> diff --git a/arch/arm/kernel/stacktrace.c b/arch/arm/kernel/stacktrace.c
+> index cc726afea023..76ea4178a55c 100644
+> --- a/arch/arm/kernel/stacktrace.c
+> +++ b/arch/arm/kernel/stacktrace.c
+> @@ -22,6 +22,19 @@
+>   * A simple function epilogue looks like this:
+>   *     ldm     sp, {fp, sp, pc}
+>   *
+> + * When compiled with clang, pc and sp are not pushed. A simple function
+> + * prologue looks like this when built with clang:
+> + *
+> + *     stmdb   {..., fp, lr}
+> + *     add     fp, sp, #x
+> + *     sub     sp, sp, #y
+> + *
+> + * A simple function epilogue looks like this when built with clang:
+> + *
+> + *     sub     sp, fp, #x
+> + *     ldm     {..., fp, pc}
+> + *
+> + *
+>   * Note that with framepointer enabled, even the leaf functions have the same
+>   * prologue and epilogue, therefore we can ignore the LR value in this case.
+>   */
+> @@ -34,6 +47,16 @@ int notrace unwind_frame(struct stackframe *frame)
+>         low = frame->sp;
+>         high = ALIGN(low, THREAD_SIZE);
 >
-> my test box won't boot 5.8-rc1 all the way but stops at
+> +#ifdef CONFIG_CC_IS_CLANG
+> +       /* check current frame pointer is within bounds */
+> +       if (fp < low + 4 || fp > high - 4)
+
+The patch LGTM; maybe Russell or Catalin could triple check this
+bounds check?  Assuming there's no issue, you can include on a v2 my
+reviewed by:
+
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+I'd probably wait the remainder of a week before sending a v2 to
+collect additional feedback.  Thank you again.
+
+> +               return -EINVAL;
+> +
+> +       frame->sp = frame->fp;
+> +       frame->fp = *(unsigned long *)(fp);
+> +       frame->pc = frame->lr;
+> +       frame->lr = *(unsigned long *)(fp + 4);
+> +#else
+>         /* check current frame pointer is within bounds */
+>         if (fp < low + 12 || fp > high - 4)
+>                 return -EINVAL;
+> @@ -42,6 +65,7 @@ int notrace unwind_frame(struct stackframe *frame)
+>         frame->fp = *(unsigned long *)(fp - 12);
+>         frame->sp = *(unsigned long *)(fp - 8);
+>         frame->pc = *(unsigned long *)(fp - 4);
+> +#endif
 >
-> ...
-> fb0: switching to nouveaufb from EFI VGA
-> <-- EOF
->
-> I've bisected it to the commit in $Subject, see below. Unfortunately, it
-> doesn't revert cleanly so I can't really do the final test of reverting
-> it ontop of 5.8-rc1 to confirm that this one is really causing it.
->
-> Any ideas?
->
-> GPU is:
->
-> [    5.678614] fb0: switching to nouveaufb from EFI VGA
-> [    5.685577] Console: switching to colour dummy device 80x25
-> [    5.691865] nouveau 0000:03:00.0: NVIDIA GT218 (0a8c00b1)
-> [    5.814409] nouveau 0000:03:00.0: bios: version 70.18.83.00.08
-> [    5.823559] nouveau 0000:03:00.0: fb: 512 MiB DDR3
-> [    6.096680] [TTM] Zone  kernel: Available graphics memory: 8158364 KiB
-> [    6.103327] [TTM] Zone   dma32: Available graphics memory: 2097152 KiB
-> [    6.109951] [TTM] Initializing pool allocator
-> [    6.114405] [TTM] Initializing DMA pool allocator
-> [    6.119256] nouveau 0000:03:00.0: DRM: VRAM: 512 MiB
-> [    6.124285] nouveau 0000:03:00.0: DRM: GART: 1048576 MiB
-> [    6.129677] nouveau 0000:03:00.0: DRM: TMDS table version 2.0
-> [    6.135534] nouveau 0000:03:00.0: DRM: DCB version 4.0
-> [    6.140755] nouveau 0000:03:00.0: DRM: DCB outp 00: 02000360 00000000
-> [    6.147273] nouveau 0000:03:00.0: DRM: DCB outp 01: 02000362 00020010
-> [    6.153782] nouveau 0000:03:00.0: DRM: DCB outp 02: 028003a6 0f220010
-> [    6.160292] nouveau 0000:03:00.0: DRM: DCB outp 03: 01011380 00000000
-> [    6.166810] nouveau 0000:03:00.0: DRM: DCB outp 04: 08011382 00020010
-> [    6.173306] nouveau 0000:03:00.0: DRM: DCB outp 05: 088113c6 0f220010
-> [    6.179829] nouveau 0000:03:00.0: DRM: DCB conn 00: 00101064
-> [    6.185553] nouveau 0000:03:00.0: DRM: DCB conn 01: 00202165
-> [    6.196145] nouveau 0000:03:00.0: DRM: MM: using COPY for buffer copies
-> [    6.233659] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-> [    6.311939] nouveau 0000:03:00.0: DRM: allocated 1920x1080 fb: 0x70000, bo (____ptrval____)
-> [    6.320736] fbcon: nouveaudrmfb (fb0) is primary device
-> [    6.392722] tsc: Refined TSC clocksource calibration: 3591.346 MHz
-> [    6.392788] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x33c46403b59, max_idle_ns: 440795293818 ns
-> [    6.392930] clocksource: Switched to clocksource tsc
-> [    6.509946] Console: switching to colour frame buffer device 240x67
-> [    6.546287] nouveau 0000:03:00.0: fb0: nouveaudrmfb frame buffer device
-> [    6.555021] [drm] Initialized nouveau 1.3.1 20120801 for 0000:03:00.0 on minor 0
->
-> Thx.
->
-> git bisect start
-> # good: [3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162] Linux 5.7
-> git bisect good 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
-> # bad: [b3a9e3b9622ae10064826dccb4f7a52bd88c7407] Linux 5.8-rc1
-> git bisect bad b3a9e3b9622ae10064826dccb4f7a52bd88c7407
-> # bad: [ee01c4d72adffb7d424535adf630f2955748fa8b] Merge branch 'akpm' (patches from Andrew)
-> git bisect bad ee01c4d72adffb7d424535adf630f2955748fa8b
-> # bad: [16d91548d1057691979de4686693f0ff92f46000] Merge tag 'xfs-5.8-merge-8' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
-> git bisect bad 16d91548d1057691979de4686693f0ff92f46000
-> # good: [cfa3b8068b09f25037146bfd5eed041b78878bee] Merge tag 'for-linus-hmm' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
-> git bisect good cfa3b8068b09f25037146bfd5eed041b78878bee
-> # good: [3fd911b69b3117e03181262fc19ae6c3ef6962ce] Merge tag 'drm-misc-next-2020-05-07' of git://anongit.freedesktop.org/drm/drm-misc into drm-next
-> git bisect good 3fd911b69b3117e03181262fc19ae6c3ef6962ce
-> # bad: [1966391fa576e1fb2701be8bcca197d8f72737b7] mm/migrate.c: attach_page_private already does the get_page
-> git bisect bad 1966391fa576e1fb2701be8bcca197d8f72737b7
-> # good: [43c8546bcd854806736d8a635a0d696504dd4c21] drm/amdgpu: Add a UAPI flag for user to call mem_sync
-> git bisect good 43c8546bcd854806736d8a635a0d696504dd4c21
-> # good: [6cf991611bc72c077f0cc64e23987341ad7ef41e] Merge tag 'drm-intel-next-2020-05-15' of git://anongit.freedesktop.org/drm/drm-intel into drm-next
-> git bisect good 6cf991611bc72c077f0cc64e23987341ad7ef41e
-> # bad: [dc455f4c888365595c0a13da445e092422d55b8d] drm/nouveau/dispnv50: fix runtime pm imbalance on error
-> git bisect bad dc455f4c888365595c0a13da445e092422d55b8d
-> # bad: [2dd4d163cd9c15432524aa9863155bc03a821361] drm/nouveau: remove open-coded version of remove_conflicting_pci_framebuffers()
-> git bisect bad 2dd4d163cd9c15432524aa9863155bc03a821361
-> # good: [c41219fda6e04255c44d37fd2c0d898c1c46abf1] Merge tag 'drm-intel-next-fixes-2020-05-20' of git://anongit.freedesktop.org/drm/drm-intel into drm-next
-> git bisect good c41219fda6e04255c44d37fd2c0d898c1c46abf1
-> # good: [fd44028ff145ffb2d03c877d74f479da04ac2c62] drm/nouveau/acr: ensure falcon providing acr functions is bootstrapped first
-> git bisect good fd44028ff145ffb2d03c877d74f479da04ac2c62
-> # good: [fa4f4c213f5f7807360c41f2501a3031a9940f3a] drm/nouveau/kms: Support NVIDIA format modifiers
-> git bisect good fa4f4c213f5f7807360c41f2501a3031a9940f3a
-> # good: [d2bcfce7f8a4ba8df28d3bebb81225bd7f9c046f] drm/nouveau/ibus: use nvkm_subdev_new_()
-> git bisect good d2bcfce7f8a4ba8df28d3bebb81225bd7f9c046f
-> # good: [fb172f5fe880cd0ddb4370b2fcc9ad4848c98bbb] drm/nouveau/gr/gk20a: move MODULE_FIRMWARE firmware definitions
-> git bisect good fb172f5fe880cd0ddb4370b2fcc9ad4848c98bbb
-> # first bad commit: [2dd4d163cd9c15432524aa9863155bc03a821361] drm/nouveau: remove open-coded version of remove_conflicting_pci_framebuffers()
->
+>         return 0;
+>  }
+> --
+> 2.27.0.290.gba653c62da-goog
 >
 > --
-> Regards/Gruss,
->     Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
-> _______________________________________________
-> Nouveau mailing list
-> Nouveau@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/nouveau
+
+-- 
+Thanks,
+~Nick Desaulniers
