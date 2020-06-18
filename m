@@ -4,54 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFDD3221ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D9022208
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444508;
-	bh=Flrymzj7xKoNR3ii4S2WrF0gCIeQgYf6yrjx/q00FdQ=;
+	s=default; t=1592444513;
+	bh=bhWI4KqoyEablLasAkA2NaIXdSSmV56ucblPw/5zqLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GzOPoMNaCueSmBVGz9fwttFKySoizpZT9rNcH39Mrz3UwUmQyV9vZCWMpGtHnFkRJ
-	 4MCfHNOA05p5LIKuJOf9hYSDDhTpLbJ4bMKoPbNzuIJE/D8Z50FrbMtHy4oqHVFlrS
-	 iHJmSfnQRhZNIk/lx2c8qS22lu0FzNqhMbljh1BU=
+	b=0oxef2PMup5gYIcY64PfjFq22XFYAZyWWMPk2T3PJMXhp9LSMYrvdLOuVbz3lIit4
+	 tO3JiZDC7jvyEFReyEAE2OhmqHQ63c6USnRQmliCfjRBPUdvmZw3x61gszO1Driq9q
+	 nYBZeotNker/Dnqy6L7AiKFyGS8nDVgBpbN+Tzwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732096AbgFRBlr (ORCPT
+        id S1730490AbgFRB3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39188 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:29:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732348AbgFRB3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:39 -0400
+        id S1731034AbgFRB00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:26:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03EC022244;
-        Thu, 18 Jun 2020 01:29:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0DBC2088E;
+        Thu, 18 Jun 2020 01:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443778;
-        bh=Flrymzj7xKoNR3ii4S2WrF0gCIeQgYf6yrjx/q00FdQ=;
+        s=default; t=1592443585;
+        bh=bhWI4KqoyEablLasAkA2NaIXdSSmV56ucblPw/5zqLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JBGGqDgPVDYoJDZXsqObK76ZMwJsUbBVlYmZd1KkX7JoMu+bWcnPG+av/6ysSJp//
-         sxi43YdDaaSMKCb0/DyD3ILu04ACI4PQMFqcmskqVB9zZ0fn67U/uf0IxHItPeCDvx
-         G7rBgl1HLQNXt7WbEGMr1fKDx4xoLqIwUli0vjtw=
+        b=wGGE25+6OIaRka4SMetWEpS6ji2W3Ht+7i+a+Ob9bOve5fdCuZngSeNLJa81J9C16
+         EMmcuVb1STdbl92fr27hUWuPoeeqlkKHhWhZq+JEY8/VWPuaHP6MY2uno9AovszUbm
+         Stq69PyN82d22REQG/q/vMGV2QZl94E0cTUcYWW8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 61/80] usb: gadget: lpc32xx_udc: don't dereference ep pointer before null check
-Date:   Wed, 17 Jun 2020 21:28:00 -0400
-Message-Id: <20200618012819.609778-61-sashal@kernel.org>
+Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 020/108] PCI: aardvark: Don't blindly enable ASPM L0s and don't write to read-only register
+Date:   Wed, 17 Jun 2020 21:24:32 -0400
+Message-Id: <20200618012600.608744-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
-References: <20200618012819.609778-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,68 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Pali Rohár <pali@kernel.org>
 
-[ Upstream commit eafa80041645cd7604c4357b1a0cd4a3c81f2227 ]
+[ Upstream commit 90c6cb4a355e7befcb557d217d1d8b8bd5875a05 ]
 
-Currently pointer ep is being dereferenced before it is null checked
-leading to a null pointer dereference issue.  Fix this by only assigning
-pointer udc once ep is known to be not null.  Also remove a debug
-message that requires a valid udc which may not be possible at that
-point.
+Trying to change Link Status register does not have any effect as this
+is a read-only register. Trying to overwrite bits for Negotiated Link
+Width does not make sense.
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: 24a28e428351 ("USB: gadget driver for LPC32xx")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+In future proper change of link width can be done via Lane Count Select
+bits in PCIe Control 0 register.
+
+Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
+Control register is wrong. There should be at least some detection if
+endpoint supports L0s as isn't mandatory.
+
+Moreover ASPM Control bits in Link Control register are controlled by
+pcie/aspm.c code which sets it according to system ASPM settings,
+immediately after aardvark driver probes. So setting these bits by
+aardvark driver has no long running effect.
+
+Remove code which touches ASPM L0s bits from this driver and let
+kernel's ASPM implementation to set ASPM state properly.
+
+Some users are reporting issues that this code is problematic for some
+Intel wifi cards and removing it fixes them, see e.g.:
+https://bugzilla.kernel.org/show_bug.cgi?id=196339
+
+If problems with Intel wifi cards occur even after this commit, then
+pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
+for affected problematic cards.
+
+Link: https://lore.kernel.org/r/20200430080625.26070-3-pali@kernel.org
+Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/lpc32xx_udc.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/pci/host/pci-aardvark.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
-index ac2aa04ca657..710793161795 100644
---- a/drivers/usb/gadget/udc/lpc32xx_udc.c
-+++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
-@@ -1615,17 +1615,17 @@ static int lpc32xx_ep_enable(struct usb_ep *_ep,
- 			     const struct usb_endpoint_descriptor *desc)
- {
- 	struct lpc32xx_ep *ep = container_of(_ep, struct lpc32xx_ep, ep);
--	struct lpc32xx_udc *udc = ep->udc;
-+	struct lpc32xx_udc *udc;
- 	u16 maxpacket;
- 	u32 tmp;
- 	unsigned long flags;
+diff --git a/drivers/pci/host/pci-aardvark.c b/drivers/pci/host/pci-aardvark.c
+index 5f3048e75bec..c1db09fbbe04 100644
+--- a/drivers/pci/host/pci-aardvark.c
++++ b/drivers/pci/host/pci-aardvark.c
+@@ -365,10 +365,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
  
- 	/* Verify EP data */
- 	if ((!_ep) || (!ep) || (!desc) ||
--	    (desc->bDescriptorType != USB_DT_ENDPOINT)) {
--		dev_dbg(udc->dev, "bad ep or descriptor\n");
-+	    (desc->bDescriptorType != USB_DT_ENDPOINT))
- 		return -EINVAL;
--	}
-+
-+	udc = ep->udc;
- 	maxpacket = usb_endpoint_maxp(desc);
- 	if ((maxpacket == 0) || (maxpacket > ep->maxpacket)) {
- 		dev_dbg(udc->dev, "bad ep descriptor's packet size\n");
-@@ -1873,7 +1873,7 @@ static int lpc32xx_ep_dequeue(struct usb_ep *_ep, struct usb_request *_req)
- static int lpc32xx_ep_set_halt(struct usb_ep *_ep, int value)
- {
- 	struct lpc32xx_ep *ep = container_of(_ep, struct lpc32xx_ep, ep);
--	struct lpc32xx_udc *udc = ep->udc;
-+	struct lpc32xx_udc *udc;
- 	unsigned long flags;
+ 	advk_pcie_wait_for_link(pcie);
  
- 	if ((!ep) || (ep->hwep_num <= 1))
-@@ -1883,6 +1883,7 @@ static int lpc32xx_ep_set_halt(struct usb_ep *_ep, int value)
- 	if (ep->is_in)
- 		return -EAGAIN;
- 
-+	udc = ep->udc;
- 	spin_lock_irqsave(&udc->lock, flags);
- 
- 	if (value == 1) {
+-	reg = PCIE_CORE_LINK_L0S_ENTRY |
+-		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
+-	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+-
+ 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+ 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
+ 		PCIE_CORE_CMD_IO_ACCESS_EN |
 -- 
 2.25.1
 
