@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3940BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA76AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A774206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8FCC206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447742;
-	bh=nkZF8hnJwomHUsLmId6zjEEiKZoa/7yMkeMVYrIPgKk=;
+	s=default; t=1592447747;
+	bh=Ofauh1tBppSKUpqFNfZSf4nuYCyIJ5cLtkEC6ulDfek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gVz1p0W5HEUsMx+OE7Nc9fdMRFVTbmPlwhcZwgkl8aiNziHNM8icg+LP2dhhZ+IAb
-	 TBgD8Ng4k9KCVN9UPbQuGWhBdB70s0L7Pq1zAZegkq5QBqxVpsCUPfBOSDIcIgs/VR
-	 pL7vGifMnG09zfZ1rP0WJ3VSbVINLzIpFjHQTibY=
+	b=udkdy0FMGg2qjGxoePNMCQiRjD4k2Tgdj5QAkADRQ/dF74m3DSGtIGmNv84akj8bR
+	 4Gisss+dUl7w1RQuABoZ5l7EdgOhfFOyceHkBhgkqBByANPmCGGEAUPQGg/MMt0VZp
+	 Mw222Tp8qFrQRbfQhtDHHAJJjF5SGRl4ESK6wgAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387749AbgFRCfl (ORCPT
+        id S1729291AbgFRBOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:35:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43802 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:14:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727914AbgFRBON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:14:13 -0400
+        id S1729018AbgFRBM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95E3721974;
-        Thu, 18 Jun 2020 01:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4590C221ED;
+        Thu, 18 Jun 2020 01:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442852;
-        bh=nkZF8hnJwomHUsLmId6zjEEiKZoa/7yMkeMVYrIPgKk=;
+        s=default; t=1592442777;
+        bh=Ofauh1tBppSKUpqFNfZSf4nuYCyIJ5cLtkEC6ulDfek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=moa3x/zzukwMvNfGe0DtBBb0XY4M5xuDO6P2saqUQsSzhxgJOXfGN18SkQAqSNYaK
-         dSIw6T8IOG3WAnOZSBZRSMjxf7/OiNdztLbKByeTNb2Ff61ufy6oxn3LDnBcEhR3qJ
-         shy3hqHAgOLgnHBgng3FdNJRD5hsTeMHVq2hOJxY=
+        b=Y5itvmspFirUGLJ7e4a4hbJeCNnbdXNJ81Lek596J2A8OXmbCLtcg2roRUb8aowDn
+         /gW1dwnCKHocalOTC6uxHXstGX56M9VCj9tWfJiiVpKUuLIHtQmHCVkbcygGUMJFYJ
+         v3SaIX/1KpgXnOoJUOGyCS11unp6HeMOVHg7gGm8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 283/388] scsi: ufs-qcom: Fix scheduling while atomic issue
-Date:   Wed, 17 Jun 2020 21:06:20 -0400
-Message-Id: <20200618010805.600873-283-sashal@kernel.org>
+Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 223/388] PCI: aardvark: Issue PERST via GPIO
+Date:   Wed, 17 Jun 2020 21:05:20 -0400
+Message-Id: <20200618010805.600873-223-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,52 +63,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Pali Rohár <pali@kernel.org>
 
-[ Upstream commit 3be60b564de49875e47974c37fabced893cd0931 ]
+[ Upstream commit 5169a9851daaa2782a7bd2bb83d5b1bd224b2879 ]
 
-ufs_qcom_dump_dbg_regs() uses usleep_range, a sleeping function, but can be
-called from atomic context in the following flow:
+Add support for issuing PERST via GPIO specified in 'reset-gpios'
+property (as described in PCI device tree bindings).
 
-ufshcd_intr -> ufshcd_sl_intr -> ufshcd_check_errors ->
-ufshcd_print_host_regs -> ufshcd_vops_dbg_register_dump ->
-ufs_qcom_dump_dbg_regs
+Some buggy cards (e.g. Compex WLE900VX or WLE1216) are not detected
+after reboot when PERST is not issued during driver initialization.
 
-This causes a boot crash on the Lenovo Miix 630 when the interrupt is
-handled on the idle thread.
+If bootloader already enabled link training then issuing PERST has no
+effect for some buggy cards (e.g. Compex WLE900VX) and these cards are
+not detected. We therefore clear the LINK_TRAINING_EN register before.
 
-Fix the issue by switching to udelay().
+It was observed that Compex WLE900VX card needs to be in PERST reset
+for at least 10ms if bootloader enabled link training.
 
-Link: https://lore.kernel.org/r/20200525204125.46171-1-jeffrey.l.hugo@gmail.com
-Fixes: 9c46b8676271 ("scsi: ufs-qcom: dump additional testbus registers")
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Tested on Turris MOX.
+
+Link: https://lore.kernel.org/r/20200430080625.26070-6-pali@kernel.org
+Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufs-qcom.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 43 ++++++++++++++++++++++++++-
+ 1 file changed, 42 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 19aa5c44e0da..f938867301a0 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -1658,11 +1658,11 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index e202f954eb84..2ecc79c03ade 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -9,6 +9,7 @@
+  */
  
- 	/* sleep a bit intermittently as we are dumping too much data */
- 	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
--	usleep_range(1000, 1100);
-+	udelay(1000);
- 	ufs_qcom_testbus_read(hba);
--	usleep_range(1000, 1100);
-+	udelay(1000);
- 	ufs_qcom_print_unipro_testbus(hba);
--	usleep_range(1000, 1100);
-+	udelay(1000);
+ #include <linux/delay.h>
++#include <linux/gpio.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+@@ -18,6 +19,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/msi.h>
+ #include <linux/of_address.h>
++#include <linux/of_gpio.h>
+ #include <linux/of_pci.h>
+ 
+ #include "../pci.h"
+@@ -204,6 +206,7 @@ struct advk_pcie {
+ 	int root_bus_nr;
+ 	int link_gen;
+ 	struct pci_bridge_emul bridge;
++	struct gpio_desc *reset_gpio;
+ };
+ 
+ static inline void advk_writel(struct advk_pcie *pcie, u32 val, u64 reg)
+@@ -330,10 +333,31 @@ static void advk_pcie_train_link(struct advk_pcie *pcie)
+ 	dev_err(dev, "link never came up\n");
  }
  
- /**
++static void advk_pcie_issue_perst(struct advk_pcie *pcie)
++{
++	u32 reg;
++
++	if (!pcie->reset_gpio)
++		return;
++
++	/* PERST does not work for some cards when link training is enabled */
++	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
++	reg &= ~LINK_TRAINING_EN;
++	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
++
++	/* 10ms delay is needed for some cards */
++	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
++	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
++	usleep_range(10000, 11000);
++	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
++}
++
+ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ {
+ 	u32 reg;
+ 
++	advk_pcie_issue_perst(pcie);
++
+ 	/* Set to Direct mode */
+ 	reg = advk_readl(pcie, CTRL_CONFIG_REG);
+ 	reg &= ~(CTRL_MODE_MASK << CTRL_MODE_SHIFT);
+@@ -406,7 +430,8 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 
+ 	/*
+ 	 * PERST# signal could have been asserted by pinctrl subsystem before
+-	 * probe() callback has been called, making the endpoint going into
++	 * probe() callback has been called or issued explicitly by reset gpio
++	 * function advk_pcie_issue_perst(), making the endpoint going into
+ 	 * fundamental reset. As required by PCI Express spec a delay for at
+ 	 * least 100ms after such a reset before link training is needed.
+ 	 */
+@@ -1046,6 +1071,22 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 	}
+ 	pcie->root_bus_nr = bus->start;
+ 
++	pcie->reset_gpio = devm_gpiod_get_from_of_node(dev, dev->of_node,
++						       "reset-gpios", 0,
++						       GPIOD_OUT_LOW,
++						       "pcie1-reset");
++	ret = PTR_ERR_OR_ZERO(pcie->reset_gpio);
++	if (ret) {
++		if (ret == -ENOENT) {
++			pcie->reset_gpio = NULL;
++		} else {
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "Failed to get reset-gpio: %i\n",
++					ret);
++			return ret;
++		}
++	}
++
+ 	ret = of_pci_get_max_link_speed(dev->of_node);
+ 	if (ret <= 0 || ret > 3)
+ 		pcie->link_gen = 3;
 -- 
 2.25.1
 
