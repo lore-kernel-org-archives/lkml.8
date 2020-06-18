@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0268DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED19AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD8DE206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC635206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447887;
-	bh=nQLIXHFy6ake7k+yX9m+vOFXRc9dhYoKUYv4HmF4pFI=;
+	s=default; t=1592447890;
+	bh=Bxm1IXhPhmJlEOsXKfUJfwDjGaZpX7kqDL/sa5kdcJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FX823crAIduKSqmV/dE3vWWRxsPJHBZAM95H1fdjRUaLeeXrV7vZXNvP5yAhCCBay
-	 tsBKOdYvKHVpDasHvLBxWU/zJYq3EG5sldxynjFYW1LbSKL4RCuSK+ErslpoRyYysg
-	 3lgBH3oxvoiK5npjFcBRudmMYHSBwtc/MFu5bejM=
+	b=1SeJ4RKxr3+9QnHMZbzpXtzJPFVs+50Y91ZMSGsyysRJfB01FPYz3kmOOnkfNlgZp
+	 C/fPUYz4dGs9Rc8mZQ0+HTd6I8NfsG0q322HxnnWY1xsA/5a1jGhxAr30K42f/qCFh
+	 yy8zkzydxhTTV0/q+Igbd/dkrWiGetlq396EjmSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387747AbgFRCiH (ORCPT
+        id S1729143AbgFRBNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:38:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42840 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:13:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728566AbgFRBNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:33 -0400
+        id S1728745AbgFRBMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19BC321924;
-        Thu, 18 Jun 2020 01:13:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC1B920B1F;
+        Thu, 18 Jun 2020 01:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442812;
-        bh=nQLIXHFy6ake7k+yX9m+vOFXRc9dhYoKUYv4HmF4pFI=;
+        s=default; t=1592442742;
+        bh=Bxm1IXhPhmJlEOsXKfUJfwDjGaZpX7kqDL/sa5kdcJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VdSm98HMvwqR4b8/karK2y4etu5+W/9Y+UpEraamly7CCPpozEWy4fChMAo7i/vZc
-         2gYq+Hjvsbsv9eirlGC7+mW0TsKM6lnXaZZZcMp2tQtkMmknFsxReoJHGrHYq2No9q
-         IUITXw7LgX7Z+VctuAHMLbeXZLOBlOhIKjL/cvRc=
+        b=QM6/A3ekay6DP8zupekGvHNh3WUzesZF9Q94UREzKi4kZLnNzyWwRL6iX7ZUlu87I
+         bTfDyNATio8is97xEY2AB/g5sUpw5xwmTMz0U8TcIbYTKG6BPJuytd2Na0sgZ/Xm9a
+         5hu5j6P5H86qKA0xlHM8gOf7O0C/uRPcBUl+nmsk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 251/388] powerpc/kasan: Fix error detection on memory allocation
-Date:   Wed, 17 Jun 2020 21:05:48 -0400
-Message-Id: <20200618010805.600873-251-sashal@kernel.org>
+Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 196/388] pinctrl: rockchip: fix memleak in rockchip_dt_node_to_map
+Date:   Wed, 17 Jun 2020 21:04:53 -0400
+Message-Id: <20200618010805.600873-196-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,47 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-[ Upstream commit d132443a73d7a131775df46f33000f67ed92de1e ]
+[ Upstream commit d7faa8ffb6be57bf8233a4b5a636d76b83c51ce7 ]
 
-In case (k_start & PAGE_MASK) doesn't equal (kstart), 'va' will never be
-NULL allthough 'block' is NULL
+In function rockchip_dt_node_to_map, a new_map variable is
+allocated by:
 
-Check the return of memblock_alloc() directly instead of
-the resulting address in the loop.
+new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
+		       GFP_KERNEL);
 
-Fixes: 509cd3f2b473 ("powerpc/32: Simplify KASAN init")
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/7cb8ca82042bfc45a5cfe726c921cd7e7eeb12a3.1589866984.git.christophe.leroy@csgroup.eu
+This uses devres and attaches new_map to the pinctrl driver.
+This cause a leak since new_map is not released when the probed
+driver is removed. Fix it by using kcalloc to allocate new_map
+and free it in `rockchip_dt_free_map`
+
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lore.kernel.org/r/20200506100903.15420-1-dafna.hirschfeld@collabora.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/kasan/kasan_init_32.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/pinctrl/pinctrl-rockchip.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index cbcad369fcb2..8b15fe09b967 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -76,15 +76,14 @@ static int __init kasan_init_region(void *start, size_t size)
- 		return ret;
- 
- 	block = memblock_alloc(k_end - k_start, PAGE_SIZE);
-+	if (!block)
-+		return -ENOMEM;
- 
- 	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
- 		pmd_t *pmd = pmd_ptr_k(k_cur);
- 		void *va = block + k_cur - k_start;
- 		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
- 
--		if (!va)
--			return -ENOMEM;
--
- 		__set_pte_at(&init_mm, k_cur, pte_offset_kernel(pmd, k_cur), pte, 0);
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index 098951346339..d7869b636889 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -508,8 +508,8 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
  	}
- 	flush_tlb_kernel_range(k_start, k_end);
+ 
+ 	map_num += grp->npins;
+-	new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
+-								GFP_KERNEL);
++
++	new_map = kcalloc(map_num, sizeof(*new_map), GFP_KERNEL);
+ 	if (!new_map)
+ 		return -ENOMEM;
+ 
+@@ -519,7 +519,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	/* create mux map */
+ 	parent = of_get_parent(np);
+ 	if (!parent) {
+-		devm_kfree(pctldev->dev, new_map);
++		kfree(new_map);
+ 		return -EINVAL;
+ 	}
+ 	new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
+@@ -546,6 +546,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
+ static void rockchip_dt_free_map(struct pinctrl_dev *pctldev,
+ 				    struct pinctrl_map *map, unsigned num_maps)
+ {
++	kfree(map);
+ }
+ 
+ static const struct pinctrl_ops rockchip_pctrl_ops = {
 -- 
 2.25.1
 
