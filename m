@@ -2,149 +2,169 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6F6C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11981C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37A1A208B3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:09:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lVrFJvl5"
+	by mail.kernel.org (Postfix) with ESMTP id CE9592080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592518282;
+	bh=Uzh3yY2YeniyETVFPI0fgkL5ivLFjwCm1C6v1H53ZII=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=TS9hhAfHu+XYDc2KCtpDf5/KGLItfbLBMgJYPkPfU0cApZrC3Neo2PWR6NwawxHiJ
+	 IbvOB9RR/7K4Q14JxMvlfhqtK7btV3AaqGrEhyqq1/FSope5yoLDodxoL1Ckukq2Ra
+	 OhSPWPWF88ity+Nnaz+Sox4Wuq4QK/qduRpc2SpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731699AbgFRWJc (ORCPT
+        id S1731108AbgFRWLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:09:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731675AbgFRWJb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 18:09:31 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FCB5C0613EF
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:09:29 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id r5so1927689vso.11
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:09:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rIJ2X6dOzoq0wY6kg8iKEYYmkTTN8+C1IDuvViUAAlw=;
-        b=lVrFJvl5mDjocLA105kchQDYwRR/Mq9nlcXy/owwADieAZYgAuGsjK3xpftm0NXclu
-         BDh1QPoJU1TPpXMWq0DmrgoRSIGzBPlrIy8he0In3LWP8m83XqE+r0HZadf/sXAFVj2e
-         IayO8IVxHmcZK2mLywOzCBqLmikiRhPA0Z8ME=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rIJ2X6dOzoq0wY6kg8iKEYYmkTTN8+C1IDuvViUAAlw=;
-        b=mNbhDWgB/LrL/Z8p3Ol8NCZTH7ktGhphkHxSyLGnpkbUilkw/yQyJhQ3JCaBUwWb5J
-         XPlGxogeDO4lMI56M0EQw9PwU9NXZ+uxNB2TnaF8VVrp6DFjgWT6AQ5UOpuXe9PAzjiQ
-         rhxsPGO9iEg+ryRUSiXE6pPn8lKalnz5dMZAQH84OEBsD67xnWkLcBkEQyDS+cJzAzKb
-         0mG5jT3z5PnZoqRcJyr7QFPmxYDU6zhXLCz3KXqMaQjDfjOMEqEREj8yyLbFkDVkO6Ce
-         mE2dvATPAUyBlais25sdSm/GW3pX4i4LbkQCEeDyfw1h0w/7u4tAH4QyX+8OI4hApHju
-         lvEg==
-X-Gm-Message-State: AOAM5314Pc599wv6f3+rt+4kFAvm0liGctc4+29Ok82aW2NXdbtZXC3b
-        34OQ/3fIxgVQDeFc5BhNMTg1NSCWHZ0=
-X-Google-Smtp-Source: ABdhPJypfXN8JATWp43sgdPidltYpOIjrL1QYkXkFt2SAlaKvXjksWMXu3WO1qlLEifhOyITgln5NA==
-X-Received: by 2002:a67:fb52:: with SMTP id e18mr5238585vsr.168.1592518167463;
-        Thu, 18 Jun 2020 15:09:27 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id j15sm472421vsd.19.2020.06.18.15.09.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 15:09:25 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id w20so2532485uaa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:09:25 -0700 (PDT)
-X-Received: by 2002:a9f:3b1c:: with SMTP id i28mr501831uah.22.1592518164952;
- Thu, 18 Jun 2020 15:09:24 -0700 (PDT)
+        Thu, 18 Jun 2020 18:11:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728450AbgFRWLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 18:11:20 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1DC620656;
+        Thu, 18 Jun 2020 22:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592518279;
+        bh=Uzh3yY2YeniyETVFPI0fgkL5ivLFjwCm1C6v1H53ZII=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=AWkcMHqCOBCFskfwY2eU/YcQM5YlEoppWycqDAHRjo99Lmx53RZlckGODm6ku6E51
+         xzFJ23g21NiKgB2Q55aOrxHXmlN8MFXHnxO/vmZ1pWhXIEOI/unmrebF7nWgAsYubf
+         ALss+mUpoGRChqy1aETcbJ3k/EfTHeznigEQTzfU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id BB0A6352264E; Thu, 18 Jun 2020 15:11:19 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 15:11:19 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, urezki@gmail.com,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 1/7] rcu/segcblist: Prevent useless GP start if no CBs to
+ accelerate
+Message-ID: <20200618221119.GX2723@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200618202955.4024-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-References: <20200609120455.20458-1-harigovi@codeaurora.org>
-In-Reply-To: <20200609120455.20458-1-harigovi@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 18 Jun 2020 15:09:13 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XHHAAWNkJGMJESf4C=hcbaswFamGVeyMJ9eRd6dWAy8Q@mail.gmail.com>
-Message-ID: <CAD=FV=XHHAAWNkJGMJESf4C=hcbaswFamGVeyMJ9eRd6dWAy8Q@mail.gmail.com>
-Subject: Re: [v3] drm/bridge: ti-sn65dsi86: ensure bridge suspend happens
- during PM sleep
-To:     Harigovindan P <harigovi@codeaurora.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>, nganji@codeaurora.org,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618202955.4024-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Jun 18, 2020 at 04:29:49PM -0400, Joel Fernandes (Google) wrote:
 
-On Tue, Jun 9, 2020 at 5:05 AM Harigovindan P <harigovi@codeaurora.org> wrote:
->
-> ti-sn65dsi86 bridge is enumerated as a runtime device. When
-> suspend is triggered, PM core adds a refcount on all the
-> devices and calls device suspend, since usage count is
-> already incremented, runtime suspend will not be called
-> and it kept the bridge regulators and gpios ON which resulted
-> in platform not entering into XO shutdown.
->
-> Add changes to force suspend on the runtime device during pm sleep.
->
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+First, this looks like a very nice optimization, thank you!
+
+> rcu_segcblist_accelerate() returns true if a GP is to be
+> started/requested and false if not. During tracing, I found that it is
+> asking that GPs be requested
+
+s/GPs/unnecessary GPs/?  Plus "." at end of the sentence.
+
+> The exact flow seems to be something like:
+> 1. Callbacks are queued on CPU A - into the NEXT list.
+> 2. softirq runs on CPU A, accelerate all CBs from NEXT->WAIT and request a GP X.
+> 3. GP thread wakes up on another CPU, starts the GP X and requests QS from CPU A.
+> 4. CPU A's softirq runs again presumably because of #3.
+
+Yes, that is one reason RCU softirq might run again.
+
+> 5. CPU A's softirq now does acceleration again, this time no CBs are
+>    accelerated since last attempt, but it still requests GP X+1 which
+>    could be useless.
+
+I can't think of a case where this request helps.  How about: "but
+it still unnecessarily requests GP X+1"?
+
+> The fix is, prevent the useless GP start if we detect no CBs are there
+> to accelerate.
+> 
+> With this, we have the following improvement in short runs of
+> rcutorture (5 seconds each):
+> +----+-------------------+-------------------+
+> | #  | Number of GPs     | Number of Wakeups |
+> +====+=========+=========+=========+=========+
+> | 1  | With    | Without | With    | Without |
+> +----+---------+---------+---------+---------+
+> | 2  |      75 |      89 |     113 |     119 |
+> +----+---------+---------+---------+---------+
+> | 3  |      62 |      91 |     105 |     123 |
+> +----+---------+---------+---------+---------+
+> | 4  |      60 |      79 |      98 |     110 |
+> +----+---------+---------+---------+---------+
+> | 5  |      63 |      79 |      99 |     112 |
+> +----+---------+---------+---------+---------+
+> | 6  |      57 |      89 |      96 |     123 |
+> +----+---------+---------+---------+---------+
+> | 7  |      64 |      85 |      97 |     118 |
+> +----+---------+---------+---------+---------+
+> | 8  |      58 |      83 |      98 |     113 |
+> +----+---------+---------+---------+---------+
+> | 9  |      57 |      77 |      89 |     104 |
+> +----+---------+---------+---------+---------+
+> | 10 |      66 |      82 |      98 |     119 |
+> +----+---------+---------+---------+---------+
+> | 11 |      52 |      82 |      83 |     117 |
+> +----+---------+---------+---------+---------+
+
+So the reductions in wakeups ranges from 5% to 40%, with almost a 20%
+overall reduction in wakeups across all the runs.  That should be of
+some use to someone.  ;-)
+
+I do run rcutorture quite a bit, but is there a more real-world
+benchmark that could be tried?
+
+> Cc: urezki@gmail.com
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > ---
->
-> Changes in v2:
->         - Include bridge name in the commit message and
->         remove dependent patchwork link from the commit
->         text as bridge is independent of OEM(Stephen Boyd)
->
-> Changes in v3:
->         - Updating changelog to explain the need for patch
->
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  kernel/rcu/rcu_segcblist.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
+> index 9a0f66133b4b3..4782cf17bf4f9 100644
+> --- a/kernel/rcu/rcu_segcblist.c
+> +++ b/kernel/rcu/rcu_segcblist.c
+> @@ -475,8 +475,15 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
+>  	 * Also advance to the oldest segment of callbacks whose
+>  	 * ->gp_seq[] completion is at or after that passed in via "seq",
+>  	 * skipping any empty segments.
+> +	 *
+> +	 * Note that "i" is the youngest segment of the list after which
+> +	 * any older segments than "i" would not be mutated or assigned
+> +	 * GPs. For example, if i == WAIT_TAIL, then neither WAIT_TAIL,
+> +	 * nor DONE_TAIL will be touched. Only CBs in NEXT_TAIL will be
+> +	 * merged with NEXT_READY_TAIL and the GP numbers of both of
+> +	 * them would be updated.
 
-I think this patch is good to go now (has both Stephen's and my
-reviews).  I noticed that Neil landed my other patches to this driver
-recently (thanks!) and wondered why he didn't land this one.  Then, I
-realized that you didn't send it to him or the other bridge
-maintainer.  :(  Have you tried running get_maintainer?
+In this case, only the GP number of NEXT_READY_TAIL would be updated,
+correct?  Or am I missing something subtle in the loop just past the
+end of this patch?
 
-$ ./scripts/get_maintainer.pl -f drivers/gpu/drm/bridge/ti-sn65dsi86.c
-Andrzej Hajda <a.hajda@samsung.com> (maintainer:DRM DRIVERS FOR BRIDGE CHIPS)
-Neil Armstrong <narmstrong@baylibre.com> (maintainer:DRM DRIVERS FOR
-BRIDGE CHIPS)
-Laurent Pinchart <Laurent.pinchart@ideasonboard.com> (reviewer:DRM
-DRIVERS FOR BRIDGE CHIPS)
-Jonas Karlman <jonas@kwiboo.se> (reviewer:DRM DRIVERS FOR BRIDGE CHIPS)
-Jernej Skrabec <jernej.skrabec@siol.net> (reviewer:DRM DRIVERS FOR BRIDGE CHIPS)
-David Airlie <airlied@linux.ie> (maintainer:DRM DRIVERS)
-Daniel Vetter <daniel@ffwll.ch> (maintainer:DRM DRIVERS)
-dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
-linux-kernel@vger.kernel.org (open list)
+							Thanx, Paul
 
-In any case, unless someone has extra feedback on this patch I think
-it's ready to land.
-
-Neil: If you're willing to land this patch too, can you let
-Harigovindan know if it needs to be re-sent with you in the "To:" list
-or if you can find it on the dri-devel list?
-
-Thanks!
-
--Doug
+>  	 */
+> -	if (++i >= RCU_NEXT_TAIL)
+> +	if (rcu_segcblist_restempty(rsclp, i) || ++i >= RCU_NEXT_TAIL)
+>  		return false;
+>  
+>  	/*
+> -- 
+> 2.27.0.111.gc72c7da667-goog
+> 
