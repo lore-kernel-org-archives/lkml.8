@@ -2,92 +2,125 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B833AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19A322192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444173;
-	bh=GihSLx6Fpufc/S8q8V2ThvmkL+yQN55aJ1H8Pq4HuUg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WPcu3iioPI0odO155Y2S2s4vErLHCj1r8otVFjymCez1hZ3/hGtGLtWLmRRl41jva
-	 v8UsZzib81pErTV/ebks9xAEVMjuOBvqb588V92eBLBwSxs2U1kRnByxPO9Brbnfzh
-	 RvOfCVNh6fuz5lqk0rp3yjjStosW+luHtXAoB2SQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9254F2192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MpMzciTs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732559AbgFRBgM (ORCPT
+        id S1732730AbgFRBgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 17 Jun 2020 21:36:15 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37631 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732455AbgFRBgM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:36:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731973AbgFRBbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:31:09 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592444171;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gejkrN5Zp7w7zKRAqkoNukEDEUYMInBLOaoxRpvDba8=;
+        b=MpMzciTs9U9XF5QcGAnYsCjPYSidVx61uSfrNm+txTlXcnJ9e2IPpaWOl0ywOcGcqFeNd8
+        vBwpd9gbcabtQTfQxGeJvFM2+RahFpfzh9bhRbPO7vaHyklAwN/u0Hb1b+aZtxhlsctKam
+        fA2sSZbxL88wavsHjUElqQdrQB2BVt4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-407-yic8CQtKNKWzf_I-QLQlpg-1; Wed, 17 Jun 2020 21:36:09 -0400
+X-MC-Unique: yic8CQtKNKWzf_I-QLQlpg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8F6C2224B;
-        Thu, 18 Jun 2020 01:31:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443868;
-        bh=GihSLx6Fpufc/S8q8V2ThvmkL+yQN55aJ1H8Pq4HuUg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IXMiRzjOKoUh7IiL0/ZNdmMDLyLy70phI1ZKYkd/eInCDdnnDIAjDoilmILG4/8bl
-         GwXG+VQTnp1sMXveT9GX9je55ZT60gs3Dfk20ODiF6eOlIIE6FADPsxq9bfrr9EQ9f
-         KdAmiz8jeGOc3GKQFTEeJON5BIe5leWvP4iN9gJE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 49/60] usb: gadget: fix potential double-free in m66592_probe.
-Date:   Wed, 17 Jun 2020 21:29:53 -0400
-Message-Id: <20200618013004.610532-49-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
-References: <20200618013004.610532-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B0A91800D42;
+        Thu, 18 Jun 2020 01:36:08 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-117-167.rdu2.redhat.com [10.10.117.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E7C51100164C;
+        Thu, 18 Jun 2020 01:35:59 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] xfs: Fix false positive lockdep warning with
+ sb_internal & fs_reclaim
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200617175310.20912-1-longman@redhat.com>
+ <20200617175310.20912-3-longman@redhat.com>
+ <20200618004505.GG2005@dread.disaster.area>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <45b32195-3ed8-0242-68a2-10a1b6d29fe6@redhat.com>
+Date:   Wed, 17 Jun 2020 21:35:59 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200618004505.GG2005@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On 6/17/20 8:45 PM, Dave Chinner wrote:
+> On Wed, Jun 17, 2020 at 01:53:10PM -0400, Waiman Long wrote:
+>>   fs/xfs/xfs_log.c   |  9 +++++++++
+>>   fs/xfs/xfs_trans.c | 31 +++++++++++++++++++++++++++----
+>>   2 files changed, 36 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+>> index 00fda2e8e738..33244680d0d4 100644
+>> --- a/fs/xfs/xfs_log.c
+>> +++ b/fs/xfs/xfs_log.c
+>> @@ -830,8 +830,17 @@ xlog_unmount_write(
+>>   	xfs_lsn_t		lsn;
+>>   	uint			flags = XLOG_UNMOUNT_TRANS;
+>>   	int			error;
+>> +	unsigned long		pflags;
+>>   
+>> +	/*
+>> +	 * xfs_log_reserve() allocates memory. This can lead to fs reclaim
+>> +	 * which may conflicts with the unmount process. To avoid that,
+>> +	 * disable fs reclaim for this allocation.
+>> +	 */
+>> +	current_set_flags_nested(&pflags, PF_MEMALLOC_NOFS);
+>>   	error = xfs_log_reserve(mp, 600, 1, &tic, XFS_LOG, 0);
+>> +	current_restore_flags_nested(&pflags, PF_MEMALLOC_NOFS);
+>> +
+>>   	if (error)
+>>   		goto out_err;
+> The more I look at this, the more I think Darrick is right and I
+> somewhat misinterpretted what he meant by "the top of the freeze
+> path".
+>
+> i.e. setting PF_MEMALLOC_NOFS here is out of place - only one caller
+> of xlog_unmount_write requires PF_MEMALLOC_NOFS
+> context. That context should be set in the caller that requires this
+> context, and in this case it is xfs_fs_freeze(). This is top of the
+> final freeze state processing (what I think Darrick meant), not the
+> top of the freeze syscall call chain (what I thought he meant).
+>
+> So if set PF_MEMALLOC_NOFS setting in xfs_fs_freeze(), it covers all
+> the allocations in this problematic path, and it should obliviates
+> the need for the first patch in the series altogether.
+>
+OK, I will try that and run my test. If it pass, I will post a new patch 
+with the suggested change.
 
-[ Upstream commit 44734a594196bf1d474212f38fe3a0d37a73278b ]
-
-m66592_free_request() is called under label "err_add_udc"
-and "clean_up", and m66592->ep0_req is not set to NULL after
-first free, leading to a double-free. Fix this issue by
-setting m66592->ep0_req to NULL after the first free.
-
-Fixes: 0f91349b89f3 ("usb: gadget: convert all users to the new udc infrastructure")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/gadget/udc/m66592-udc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/udc/m66592-udc.c b/drivers/usb/gadget/udc/m66592-udc.c
-index b1cfa96cc88f..db95eab8b432 100644
---- a/drivers/usb/gadget/udc/m66592-udc.c
-+++ b/drivers/usb/gadget/udc/m66592-udc.c
-@@ -1684,7 +1684,7 @@ static int m66592_probe(struct platform_device *pdev)
- 
- err_add_udc:
- 	m66592_free_request(&m66592->ep[0].ep, m66592->ep0_req);
--
-+	m66592->ep0_req = NULL;
- clean_up3:
- 	if (m66592->pdata->on_chip) {
- 		clk_disable(m66592->clk);
--- 
-2.25.1
+Thanks,
+Longman
 
