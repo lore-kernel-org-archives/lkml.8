@@ -2,112 +2,182 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A022CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 530C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81EC520B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:52:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XY55hUJ8"
+	by mail.kernel.org (Postfix) with ESMTP id 37A4520B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgFRIwh (ORCPT
+        id S1728908AbgFRIw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:52:37 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:46418 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728452AbgFRIwe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:52:34 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 85FB528D;
-        Thu, 18 Jun 2020 10:52:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1592470350;
-        bh=cQdDQYK5cYEmsz/Pb+jP6CxA60dH8BgafEV56iCSNs4=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XY55hUJ8tmgdmJpQrZNZ3WYlijnFZ4pBgLtJvo3tYovpZYH+fR8s69ZVNxlE2POyl
-         EGMoZU4VvyIsgXyP8Zb49khWHAaCDXdfafuUY974HYQHgVkBa7RNGt1KsMLWWEYSD0
-         M73zf8IsJc+56ZuQjksdu8z+795y3biTYjt0oRww=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH 07/17] drivers: usb: Fix trivial spelling
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Jiri Kosina <trivial@kernel.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
- <20200609124610.3445662-8-kieran.bingham+renesas@ideasonboard.com>
- <20200618082147.GA1050104@kroah.com>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <0d1fb492-7503-895c-82d3-b7f4611ef1f2@ideasonboard.com>
-Date:   Thu, 18 Jun 2020 09:52:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 18 Jun 2020 04:52:57 -0400
+Received: from mga09.intel.com ([134.134.136.24]:16102 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728579AbgFRIwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:52:55 -0400
+IronPort-SDR: GtzOut6XAZirugUmIviNgezaAXplIgd5C6ElyHjB+tjeDQWw/+Yqr8hugA1aQShPrH2aKK653I
+ /M4I9v9Ezu1g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9655"; a="143998507"
+X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
+   d="scan'208";a="143998507"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 01:52:54 -0700
+IronPort-SDR: zAmkgPd8fBt7cgCrcL9Agi7pNh4hRkKMvjiZWz9SP82C6EHaxF+rPAfl0H48SECFOI+frQFdHm
+ TDNkds63WJ7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
+   d="scan'208";a="277557414"
+Received: from lkp-server02.sh.intel.com (HELO 5ce11009e457) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 18 Jun 2020 01:52:53 -0700
+Received: from kbuild by 5ce11009e457 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jlqI0-0000AB-AI; Thu, 18 Jun 2020 08:52:52 +0000
+Date:   Thu, 18 Jun 2020 16:52:00 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 29d1b790334839a0f13908f8819d1371daf765c8
+Message-ID: <5eeb2b30.8OXLhlgS/3u1YNuR%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200618082147.GA1050104@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: 29d1b790334839a0f13908f8819d1371daf765c8  Merge branch 'WIP.fixes'
 
-On 18/06/2020 09:21, Greg Kroah-Hartman wrote:
-> On Tue, Jun 09, 2020 at 01:46:00PM +0100, Kieran Bingham wrote:
->> The word 'descriptor' is misspelled throughout the tree.
->>
->> Fix it up accordingly:
->>     decriptors -> descriptors
->>
->> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->> ---
->>  drivers/usb/core/of.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
->> index 651708d8c908..617e92569b2c 100644
->> --- a/drivers/usb/core/of.c
->> +++ b/drivers/usb/core/of.c
->> @@ -45,7 +45,7 @@ EXPORT_SYMBOL_GPL(usb_of_get_device_node);
->>   *
->>   * Determine whether a USB device has a so called combined node which is
->>   * shared with its sole interface. This is the case if and only if the device
->> - * has a node and its decriptors report the following:
->> + * has a node and its descriptors report the following:
->>   *
->>   *	1) bDeviceClass is 0 or 9, and
->>   *	2) bNumConfigurations is 1, and
->> -- 
->> 2.25.1
->>
-> 
-> Already fixed in Linus's tree :(
+elapsed time: 726m
 
-Don't be sad - that makes me happy ;-) This was just a global fixup
-while I added the correction to scripts/spelling.txt...
+configs tested: 112
+configs skipped: 3
 
-But wait, are you sure? I've just rebased this series on top of
-1b5044021070 ("Merge tag 'dma-mapping-5.8-3' of
-git://git.infradead.org/users/hch/dma-mapping"), and this still applies
-for me ... Am I failing to pick up the latest branch from Linus?
-(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/
-looks like I'm on the latest, so I don't think so).
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I see a bot-notification from you saying it's been added to your
-usb-testing tree, so I'll assume this is all fine. No need to worry
-though It's only a trivial and can get picked up by the trivial bot I
-think if I resend when the dust settles.
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arc                      axs103_smp_defconfig
+sh                   secureedge5410_defconfig
+powerpc                      pmac32_defconfig
+openrisc                    or1ksim_defconfig
+nds32                            alldefconfig
+mips                         tb0287_defconfig
+arm                       mainstone_defconfig
+arm                          collie_defconfig
+mips                        nlm_xlp_defconfig
+sh                          polaris_defconfig
+arm                         bcm2835_defconfig
+ia64                                defconfig
+parisc                generic-64bit_defconfig
+arm                       spear13xx_defconfig
+arc                          axs103_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a002-20200618
+i386                 randconfig-a006-20200618
+i386                 randconfig-a001-20200618
+i386                 randconfig-a004-20200618
+i386                 randconfig-a005-20200618
+i386                 randconfig-a003-20200618
+x86_64               randconfig-a001-20200618
+x86_64               randconfig-a003-20200618
+x86_64               randconfig-a006-20200618
+x86_64               randconfig-a002-20200618
+x86_64               randconfig-a005-20200618
+x86_64               randconfig-a004-20200618
+i386                 randconfig-a015-20200617
+i386                 randconfig-a011-20200617
+i386                 randconfig-a014-20200617
+i386                 randconfig-a016-20200617
+i386                 randconfig-a013-20200617
+i386                 randconfig-a012-20200617
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allyesconfig
+um                               allmodconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
 
-Thanks
-
-Kieran
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
