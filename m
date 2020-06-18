@@ -2,181 +2,97 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5368DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7BA20734
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A9720734
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:37:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="o3fL+jKY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbgFRLh3 (ORCPT
+        id S1729548AbgFRLhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 07:37:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48450 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727825AbgFRLh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 07:37:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4941FACA7;
-        Thu, 18 Jun 2020 11:37:22 +0000 (UTC)
-Subject: Re: [PATCH v2] drm/hisilicon: Add the shutdown for hibmc_pci_driver
-To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
-        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
-        alexander.deucher@amd.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
-        linux-kernel@vger.kernel.org
-References: <1586998974-24234-1-git-send-email-tiantao6@hisilicon.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <42a8f817-7319-fe03-1979-1a5a47bbe26e@suse.de>
-Date:   Thu, 18 Jun 2020 13:37:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 18 Jun 2020 07:37:43 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:28143 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729475AbgFRLhl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 07:37:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592480260; x=1624016260;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=ZJq5jod7o37KgX0rG4DZcl10Hx/gKEOzJOIZ43OXlcg=;
+  b=o3fL+jKY7BJOCPTDJNlbarnVhpKH1ApKB1+3SxMJP8guzNLKuRlmTZb3
+   t1F3cFFnoJTUQAtl6/objpat8Y7L/Cejaf9GnsCuZ8Tt/mCndzlkKlyKM
+   YYoEZ5sd6n8Jbzc4uksy9RRjiOAaNB/mwaO41gC7WdyGKSY0oOEVgCovQ
+   Y/zjT/QUxxSjIeh4s2LINM2AMA18r88cNFogMO+lV4W0E6jekYmNaUppx
+   4dmYdlSw4CobB7ef0LGHApX5SD8SAMTefp61INN9JTn8RXUMMBsv9anEi
+   MB1YJBLaB/DuMqRG1bpmTEuCxaTwbv91I+UQ4yOp33RSD7aHGazwuj/qA
+   A==;
+IronPort-SDR: tPdpgi3n4Ck3dXTCN+pqPqWOXoFIW95EElUe/F0GR3xUJ/p+hHug0sAHbFY1oR4ItG41OczY2q
+ +uQjDYozTcj9ZrELMZQQCs5dxn85VdeJ97z8cm7QxiFKmiX+Ju+1fL6HOKhLoLlc746Gc3hyyc
+ 6iUsO0JgFpkY+xQLpjDbvaT13YoyZGYhrALptLsRypbOdU5IGniZhdPsEABDRRqv/TiJ1IvlKA
+ 70+u6QxoYWM45qqEApRx43pWqace/YAStYVVecKRMqbCNF7ezyIZH8ZphvGf+7/eKUXZHMdZNq
+ +Ug=
+X-IronPort-AV: E=Sophos;i="5.73,526,1583218800"; 
+   d="scan'208";a="84121961"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Jun 2020 04:37:39 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 18 Jun 2020 04:37:33 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Thu, 18 Jun 2020 04:37:37 -0700
+References: <20200616082556.27877-1-lars.povlsen@microchip.com> <20200616082556.27877-4-lars.povlsen@microchip.com> <b44120d8-67fe-4ba3-bc76-80a5a0970dad@roeck-us.net>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v3 3/3] hwmon: sparx5: Add Sparx5 SoC temperature driver
+In-Reply-To: <b44120d8-67fe-4ba3-bc76-80a5a0970dad@roeck-us.net>
+Date:   Thu, 18 Jun 2020 13:37:36 +0200
+Message-ID: <87eeqcwqnz.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-In-Reply-To: <1586998974-24234-1-git-send-email-tiantao6@hisilicon.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="ol9vxYNx3H2xNuzBDuflgO99LMJGwzPCV"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---ol9vxYNx3H2xNuzBDuflgO99LMJGwzPCV
-Content-Type: multipart/mixed; boundary="VrEBWyRyJ78mNqtFctzS0kAzzRmLvBSfF";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
- airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
- alexander.deucher@amd.com, tglx@linutronix.de,
- dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
- linux-kernel@vger.kernel.org
-Message-ID: <42a8f817-7319-fe03-1979-1a5a47bbe26e@suse.de>
-Subject: Re: [PATCH v2] drm/hisilicon: Add the shutdown for hibmc_pci_driver
-References: <1586998974-24234-1-git-send-email-tiantao6@hisilicon.com>
-In-Reply-To: <1586998974-24234-1-git-send-email-tiantao6@hisilicon.com>
 
---VrEBWyRyJ78mNqtFctzS0kAzzRmLvBSfF
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Guenter Roeck writes:
 
-Hi
+> On 6/16/20 1:25 AM, Lars Povlsen wrote:
+>> This patch adds a temperature sensor driver to the Sparx5 SoC.
+>>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>> ---
+>>  drivers/hwmon/Kconfig       |  10 +++
+>>  drivers/hwmon/Makefile      |   1 +
+>>  drivers/hwmon/sparx5-temp.c | 136 ++++++++++++++++++++++++++++++++++++
+>
+> This will also require documentation in
+>         Documentation/hwmon/sparx5-temp.rst
+>
 
-Am 16.04.20 um 03:02 schrieb Tian Tao:
-> add the shutdown function to release the resource.
+Sorry, forgot to ack this. I will add the necessary information.
 
-Why is this necessary for hibmc? The other PCI drivers don't require a
-shutdown method.
+---Lars
 
->=20
-> v2:
-> Remove the unnecessary unmap function.
->=20
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/=
-gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> index a6fd0c2..0250a10 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-> @@ -337,7 +337,7 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
->  	dev->pdev =3D pdev;
->  	pci_set_drvdata(pdev, dev);
-> =20
-> -	ret =3D pci_enable_device(pdev);
-> +	ret =3D pcim_enable_device(pdev);
-
-This probably makes sense.
-
-Best regards
-Thomas
-
->  	if (ret) {
->  		DRM_ERROR("failed to enable pci device: %d\n", ret);
->  		goto err_free;
-> @@ -376,6 +376,11 @@ static void hibmc_pci_remove(struct pci_dev *pdev)=
-
->  	drm_dev_put(dev);
->  }
-> =20
-> +static void hibmc_pci_shutdown(struct pci_dev *pdev)
-> +{
-> +	hibmc_pci_remove(pdev);
-> +}
-> +
->  static struct pci_device_id hibmc_pci_table[] =3D {
->  	{ PCI_VDEVICE(HUAWEI, 0x1711) },
->  	{0,}
-> @@ -386,6 +391,7 @@ static struct pci_driver hibmc_pci_driver =3D {
->  	.id_table =3D	hibmc_pci_table,
->  	.probe =3D	hibmc_pci_probe,
->  	.remove =3D	hibmc_pci_remove,
-> +	.shutdown =3D	hibmc_pci_shutdown,
->  	.driver.pm =3D    &hibmc_pm_ops,
->  };
-> =20
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---VrEBWyRyJ78mNqtFctzS0kAzzRmLvBSfF--
-
---ol9vxYNx3H2xNuzBDuflgO99LMJGwzPCV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl7rUe0ACgkQaA3BHVML
-eiNgeAgAn2zAwsp4nbP1Bkjj2b0uFQjM3LoP3hmR1tf6+2RS/7Fh6O/6Wlt92iLj
-I7lvk8Xt5yUUU65GkdKSZOhenrlw/5H2dunSQORLOTE2DRusQpMNZAHUsWKQKR44
-8J/Gz3SfCsMFsxFsOSla26hWAL3dt80Ak9KdZnAXKZfZwu7HXGIuwHBXf8swbqT4
-rfeE2WXBcNdEsZBA6y1ZIh6nU4kYwjXhgF+3YYD0pBRdFH2WPYN8jzYZYaPxVhx2
-KvT34LUTk9HEoHJwkgOEPE0ChaPbOZjTLJbgqNsAROM8Waxd+IQTDTvafwvWKDBn
-9bNATELq+tTY61NMCk6UZ+ICf0+lDA==
-=p3bI
------END PGP SIGNATURE-----
-
---ol9vxYNx3H2xNuzBDuflgO99LMJGwzPCV--
+-- 
+Lars Povlsen,
+Microchip
