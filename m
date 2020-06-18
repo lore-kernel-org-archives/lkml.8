@@ -3,118 +3,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB3DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7070C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1E3207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA36208D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:23:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgFROWP (ORCPT
+        id S1730597AbgFROXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:22:15 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:29808 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728033AbgFROWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:22:14 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49nkf96Dz2z9v22D;
-        Thu, 18 Jun 2020 16:22:09 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id fKTzY7i6T9qx; Thu, 18 Jun 2020 16:22:09 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49nkf95BPcz9v22C;
-        Thu, 18 Jun 2020 16:22:09 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B04C78B84F;
-        Thu, 18 Jun 2020 16:22:11 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ibpuocsAlwuq; Thu, 18 Jun 2020 16:22:11 +0200 (CEST)
-Received: from [10.25.210.22] (po15451.idsi0.si.c-s.fr [10.25.210.22])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5B6938B849;
-        Thu, 18 Jun 2020 16:22:11 +0200 (CEST)
-Subject: Re: [PATCH 3/3] powerpc/8xx: Provide ptep_get() with 16k pages
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org
-References: <cover.1592225557.git.christophe.leroy@csgroup.eu>
- <341688399c1b102756046d19ea6ce39db1ae4742.1592225558.git.christophe.leroy@csgroup.eu>
- <20200615132244.GR2531@hirez.programming.kicks-ass.net>
- <87wo45db8d.fsf@mpe.ellerman.id.au>
- <20200617143826.GJ2531@hirez.programming.kicks-ass.net>
- <87pn9xchql.fsf@mpe.ellerman.id.au>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <baa6c8bc-1d2e-d714-8dee-5d97a643f5ee@csgroup.eu>
-Date:   Thu, 18 Jun 2020 16:21:16 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 18 Jun 2020 10:23:51 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46824 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbgFROXu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 10:23:50 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 048132A4DC9
+Subject: Re: next/master bisection: baseline.login on
+ ox820-cloudengines-pogoplug-series-3
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>,
+        Allison Randal <allison@lohutok.net>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        kernelci-results@groups.io, Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
+        Enrico Weigelt <info@metux.net>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        linux-next@vger.kernel.org
+References: <5eeb5bf7.1c69fb81.4f6e3.8979@mx.google.com>
+ <13497644-ae34-d5e3-e76a-742cddf0f0a9@collabora.com>
+ <20200618152324.0b0007a9@xps13> <20200618160925.6f77b1d1@xps13>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <0c00fe0b-c38b-3d69-8f93-3fe8c3675113@collabora.com>
+Date:   Thu, 18 Jun 2020 15:23:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <87pn9xchql.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200618160925.6f77b1d1@xps13>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 18/06/2020 à 02:58, Michael Ellerman a écrit :
-> Peter Zijlstra <peterz@infradead.org> writes:
->> On Thu, Jun 18, 2020 at 12:21:22AM +1000, Michael Ellerman wrote:
->>> Peter Zijlstra <peterz@infradead.org> writes:
->>>> On Mon, Jun 15, 2020 at 12:57:59PM +0000, Christophe Leroy wrote:
->>
->>>>> +#if defined(CONFIG_PPC_8xx) && defined(CONFIG_PPC_16K_PAGES)
->>>>> +#define __HAVE_ARCH_PTEP_GET
->>>>> +static inline pte_t ptep_get(pte_t *ptep)
->>>>> +{
->>>>> +	pte_t pte = {READ_ONCE(ptep->pte), 0, 0, 0};
->>>>> +
->>>>> +	return pte;
->>>>> +}
->>>>> +#endif
->>>>
->>>> Would it make sense to have a comment with this magic? The casual reader
->>>> might wonder WTH just happened when he stumbles on this :-)
->>>
->>> I tried writing a helpful comment but it's too late for my brain to form
->>> sensible sentences.
->>>
->>> Christophe can you send a follow-up with a comment explaining it? In
->>> particular the zero entries stand out, it's kind of subtle that those
->>> entries are only populated with the right value when we write to the
->>> page table.
->>
->> static inline pte_t ptep_get(pte_t *ptep)
->> {
->> 	unsigned long val = READ_ONCE(ptep->pte);
->> 	/* 16K pages have 4 identical value 4K entries */
->> 	pte_t pte = {val, val, val, val);
->> 	return pte;
->> }
->>
->> Maybe something like that?
+On 18/06/2020 15:09, Miquel Raynal wrote:
+> Hi Guillaume,
 > 
-> I think val wants to be pte_basic_t, but otherwise yeah I like that much
-> better.
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote on Thu, 18 Jun 2020
+> 15:23:24 +0200:
 > 
+>> Hi Guillaume,
+>>
+>> Guillaume Tucker <guillaume.tucker@collabora.com> wrote on Thu, 18 Jun
+>> 2020 13:28:05 +0100:
+>>
+>>> Please see the bisection report below about a kernel panic.
+>>>
+>>> Reports aren't automatically sent to the public while we're
+>>> trialing new bisection features on kernelci.org but this one
+>>> looks valid.
+>>>
+>>> See the kernel Oops due to a NULL pointer followed by a panic:
+>>>
+>>>   https://storage.kernelci.org/next/master/next-20200618/arm/oxnas_v6_defconfig/gcc-8/lab-baylibre/baseline-ox820-cloudengines-pogoplug-series-3.html#L504
+>>
+>> Thanks for the report, I will not be able to manage it before Monday,
+>> but I'll try to take care of it early next week.
+> 
+> Actually Boris saw the issue, I just updated nand/next, it should be
+> part of tomorrow's linux-next. Could you please report if it fixes your
+> boot?
 
-I sent a patch for that.
+Sure, will check tomorrow.  Thanks for the update.
 
-I'll also send one to fix mm/debug_vm_pgtable.c which also uses 
-READ_ONCE() to access page table entries.
+We may also consider adding the nand/next branch to kernelci.org
+and catch issues earlier.  We can discuss that separately.
 
-Christophe
+Guillaume
