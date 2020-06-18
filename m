@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56103C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EF4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D20020897
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC9A2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444792;
-	bh=5d3vNDNuQvODzfrN0SzSBAhnNYtyMFSiHtXdBNldzrM=;
+	s=default; t=1592444797;
+	bh=9rXp/Vi5APy1ROLPAcrd/44xBmY0VsepaJDct6XtGVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AXcYmzli1c1vOWNfLh5II8wFDD6biwaGq4nAF/7WHHvZeOkBaujhSwdHjCHWUsWfT
-	 J42VH7oK7ELCu2qt6nWfr5D37XTpmXxpgCfs3VgpC0LCkOHf8n1FWn9PojgDmti3/3
-	 vYVlvcSD1HbG0S9p4qImwZpUbjgzRzGiwBg94mVk=
+	b=EKnH/vJbFAFVgxus3An64aXTIRhTAI1zEZQEVnjopmjCcvbVvlwqqSuY3C6J+U4kv
+	 pWzrTGjRNSuwdorecQsijBgyVGFix+4BVTpuDP6jhfUdpuhUeUclHVjbWr9WBfrQu6
+	 fTsXaZBAOa5iExg5D/lJLDky+mA1s8dNbeu4H/Zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732523AbgFRBqa (ORCPT
+        id S1732667AbgFRBqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:46:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37232 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:46:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732095AbgFRB2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:28:30 -0400
+        id S1731356AbgFRB22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:28:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77DEC221FC;
-        Thu, 18 Jun 2020 01:28:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9318B22200;
+        Thu, 18 Jun 2020 01:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443710;
-        bh=5d3vNDNuQvODzfrN0SzSBAhnNYtyMFSiHtXdBNldzrM=;
+        s=default; t=1592443707;
+        bh=9rXp/Vi5APy1ROLPAcrd/44xBmY0VsepaJDct6XtGVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hHSPhEzRjzXQOHUyz7TiToRdSaOGobj8qTXgBZyJODCvGaUbpCqLTnF5PAKHxVuzB
-         gGdqhh7+q2X+sohXt4oaX+GLC/lFmMm4T+8qt1uCfLhCc5WVo1dDvadiorDWkKsO5K
-         STdC+3Wfddx0VXkLzYoyKGz3e1wWZCAgSphso5TA=
+        b=ERa16f4YXYNBn1/xLjhS8giXffpQcIhE+w0CM+G5tlSQSf/KtiyFLhYgpxVV2fULh
+         LOsp9uU1TL4RAiFwxhXSRv1hxjq2dxQqZreYTzgZhOtq7Z3THFurSTxmbx+gE/KbLb
+         kTjHsm+LcJJ3elntGWk2sX0UmCN5fCZoJsd2NKIY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 08/80] ARM: integrator: Add some Kconfig selections
-Date:   Wed, 17 Jun 2020 21:27:07 -0400
-Message-Id: <20200618012819.609778-8-sashal@kernel.org>
+Cc:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 06/80] clk: qcom: msm8916: Fix the address location of pll->config_reg
+Date:   Wed, 17 Jun 2020 21:27:05 -0400
+Message-Id: <20200618012819.609778-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
 References: <20200618012819.609778-1-sashal@kernel.org>
@@ -59,59 +64,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-[ Upstream commit d2854bbe5f5c4b4bec8061caf4f2e603d8819446 ]
+[ Upstream commit f47ab3c2f5338828a67e89d5f688d2cef9605245 ]
 
-The CMA and DMA_CMA Kconfig options need to be selected
-by the Integrator in order to produce boot console on some
-Integrator systems.
+During the process of debugging a processor derived from the msm8916 which
+we found the new processor was not starting one of its PLLs.
 
-The REGULATOR and REGULATOR_FIXED_VOLTAGE need to be
-selected in order to boot the system from an external
-MMC card when using MMCI/PL181 from the device tree
-probe path.
+After tracing the addresses and writes that downstream was doing and
+comparing to upstream it became obvious that we were writing to a different
+register location than downstream when trying to configure the PLL.
 
-Select these things directly from the Kconfig so we are
-sure to be able to bring the systems up with console
-from any device tree.
+This error is also present in upstream msm8916.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+As an example clk-pll.c::clk_pll_recalc_rate wants to write to
+pll->config_reg updating the bit-field POST_DIV_RATIO. That bit-field is
+defined in PLL_USER_CTL not in PLL_CONFIG_CTL. Taking the BIMC PLL as an
+example
+
+lm80-p0436-13_c_qc_snapdragon_410_processor_hrd.pdf
+
+0x01823010 GCC_BIMC_PLL_USER_CTL
+0x01823014 GCC_BIMC_PLL_CONFIG_CTL
+
+This pattern is repeated for gpll0, gpll1, gpll2 and bimc_pll.
+
+This error is likely not apparent since the bootloader will already have
+initialized these PLLs.
+
+This patch corrects the location of config_reg from PLL_CONFIG_CTL to
+PLL_USER_CTL for all relevant PLLs on msm8916.
+
+Fixes commit 3966fab8b6ab ("clk: qcom: Add MSM8916 Global Clock Controller support")
+
+Cc: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Link: https://lkml.kernel.org/r/20200329124116.4185447-1-bryan.odonoghue@linaro.org
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-integrator/Kconfig | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/clk/qcom/gcc-msm8916.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-integrator/Kconfig b/arch/arm/mach-integrator/Kconfig
-index cefe44f6889b..ba124f8704fa 100644
---- a/arch/arm/mach-integrator/Kconfig
-+++ b/arch/arm/mach-integrator/Kconfig
-@@ -3,6 +3,8 @@ menuconfig ARCH_INTEGRATOR
- 	depends on ARCH_MULTI_V4T || ARCH_MULTI_V5 || ARCH_MULTI_V6
- 	select ARM_AMBA
- 	select COMMON_CLK_VERSATILE
-+	select CMA
-+	select DMA_CMA
- 	select HAVE_TCM
- 	select ICST
- 	select MFD_SYSCON
-@@ -34,14 +36,13 @@ config INTEGRATOR_IMPD1
- 	select ARM_VIC
- 	select GPIO_PL061
- 	select GPIOLIB
-+	select REGULATOR
-+	select REGULATOR_FIXED_VOLTAGE
- 	help
- 	  The IM-PD1 is an add-on logic module for the Integrator which
- 	  allows ARM(R) Ltd PrimeCells to be developed and evaluated.
- 	  The IM-PD1 can be found on the Integrator/PP2 platform.
- 
--	  To compile this driver as a module, choose M here: the
--	  module will be called impd1.
--
- config INTEGRATOR_CM7TDMI
- 	bool "Integrator/CM7TDMI core module"
- 	depends on ARCH_INTEGRATOR_AP
+diff --git a/drivers/clk/qcom/gcc-msm8916.c b/drivers/clk/qcom/gcc-msm8916.c
+index 8dd71345b5d0..55430c8f1bc2 100644
+--- a/drivers/clk/qcom/gcc-msm8916.c
++++ b/drivers/clk/qcom/gcc-msm8916.c
+@@ -270,7 +270,7 @@ static struct clk_pll gpll0 = {
+ 	.l_reg = 0x21004,
+ 	.m_reg = 0x21008,
+ 	.n_reg = 0x2100c,
+-	.config_reg = 0x21014,
++	.config_reg = 0x21010,
+ 	.mode_reg = 0x21000,
+ 	.status_reg = 0x2101c,
+ 	.status_bit = 17,
+@@ -297,7 +297,7 @@ static struct clk_pll gpll1 = {
+ 	.l_reg = 0x20004,
+ 	.m_reg = 0x20008,
+ 	.n_reg = 0x2000c,
+-	.config_reg = 0x20014,
++	.config_reg = 0x20010,
+ 	.mode_reg = 0x20000,
+ 	.status_reg = 0x2001c,
+ 	.status_bit = 17,
+@@ -324,7 +324,7 @@ static struct clk_pll gpll2 = {
+ 	.l_reg = 0x4a004,
+ 	.m_reg = 0x4a008,
+ 	.n_reg = 0x4a00c,
+-	.config_reg = 0x4a014,
++	.config_reg = 0x4a010,
+ 	.mode_reg = 0x4a000,
+ 	.status_reg = 0x4a01c,
+ 	.status_bit = 17,
+@@ -351,7 +351,7 @@ static struct clk_pll bimc_pll = {
+ 	.l_reg = 0x23004,
+ 	.m_reg = 0x23008,
+ 	.n_reg = 0x2300c,
+-	.config_reg = 0x23014,
++	.config_reg = 0x23010,
+ 	.mode_reg = 0x23000,
+ 	.status_reg = 0x2301c,
+ 	.status_bit = 17,
 -- 
 2.25.1
 
