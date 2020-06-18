@@ -2,118 +2,157 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E286C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAD5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBB5D20FC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C975720FC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:44:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kRMCd9CW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j8ggOw7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgFRGnZ (ORCPT
+        id S1728045AbgFRGoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 02:43:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39674 "EHLO
+        Thu, 18 Jun 2020 02:44:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbgFRGnY (ORCPT
+        with ESMTP id S1727779AbgFRGoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 02:43:24 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46713C06174E;
-        Wed, 17 Jun 2020 23:43:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Sender:Reply-To:Content-ID:Content-Description;
-        bh=SUoVkFQUmyi1QuSIWVOIlXHCGmT/Vk+Hj9VKkJNBZPM=; b=kRMCd9CWE8Z4zk7v4dWebOFH/W
-        roNF9rNUIbgg2q64rQLRFQwHvmw82StRDKY3X/rI0d7KpoX2jE+ogKTFOdkdiz4twv24zu4VKsAZo
-        5499ut/O2vfwhMrn70kSJZBCATzWSEl5TTiokYnci392puTnJv+Jiv3Ui7HUNMrsj1IT1Wt4aRH0+
-        EVB7hcYKvOMBkMM+iC+/K22ox6rh/ch1XZsf6ckiBXfUS2fZNxJFF3zxGrUrlFLfDhq1IfZbGjkfd
-        KzwWdJepf4rXaibEpUpx1M8Se4rmg/Bhx5ZCBCPhq7zAGMMzHiQNyUeRvfdyBEA+m857HXYvTkjyD
-        RdhhbR6w==;
-Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jloGY-0007yl-M6; Thu, 18 Jun 2020 06:43:15 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH 1/3] x86/hyperv: allocate the hypercall page with only read and execute bits
-Date:   Thu, 18 Jun 2020 08:43:05 +0200
-Message-Id: <20200618064307.32739-2-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200618064307.32739-1-hch@lst.de>
-References: <20200618064307.32739-1-hch@lst.de>
+        Thu, 18 Jun 2020 02:44:06 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7CB3C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 23:44:05 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r7so4799644wro.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 23:44:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C5he0LX9AkSF3dLJiFJLP7+SSZu9EadmKeCoEaXRlto=;
+        b=j8ggOw7MNFWei7kz45vHodyTQzqUmaHKVX/Raj4Tnd5xdvxTGLhUu1oG5GfqZ3nviz
+         il75HFEtqNN180CM/2x/uK62oT3uf+a+G4e9JL0EFkyZLR7SbY4G/m/oDF4ulEJPtK5O
+         8NxY1VRptQZybaiBG1XKQTDKzXj3N2XAIrDstCgWa6pKu7g8n91eL2smuRuVGWPWULnN
+         4fHzESZPFKIq5hXZVWRo/zA11a+OZFKCCfU43NKr6zCY/rbh6DMSpxH8Ab9VUi1jWpIF
+         xMsb4GOJ9fUFchT1tmkCYsPH/4LZ87rS/5LhKMTZxKyk39I/w2VboyEl4IEHZ0Kjoxmm
+         mqlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C5he0LX9AkSF3dLJiFJLP7+SSZu9EadmKeCoEaXRlto=;
+        b=p+MZwkcqrTeqQ65fUtBTOch3rmkbUM3XKPAB6/mqrfIRQ2hwUJJ5geWWBWqa+VL7gn
+         776jK1F8yqbTy+N/rwyQG0uIz1AHnfp34N6ZWxC8BXTRnDfRG9HFyca37F6L5T+O6X5f
+         FLFaklu8xZPytGa9JUob7eET6SAeanmTpCGuNCDLvvkYpLF+ZxTBZMABJ8DPiXo/42hu
+         iRCDaR51vyX1h/Mdsrb6TXYr09/6v/5uJ5pzo9dhoOiZ3+P4MSOYzRNf6xHiE7W8jZvv
+         bO9l0+l2SGZRJbELWORFTOdvyy5vwB8fvZYoUQuyJVgmPqc3ZqzX76hGsqYpeyTnA8HJ
+         vyjw==
+X-Gm-Message-State: AOAM531ShXeWUT0dgVNemycnMo84r9G7oKlofjZkTaZ1ZxmrIjLQbuLI
+        PPNn63xqQJ5QdZd6xU4j0psHe6dA7HpvzTSa0zacokFw
+X-Google-Smtp-Source: ABdhPJxqxOCbKY2b3RyKbmPC9Y4yvEuh2t9F+Ipw012eO0XCOCOaKkMXZBLhuPa40MM9LxD5BB8yXANspaH1O4LM2ow=
+X-Received: by 2002:a5d:60c3:: with SMTP id x3mr2856502wrt.48.1592462644689;
+ Wed, 17 Jun 2020 23:44:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200617175447.2681047-1-andrey.lebedev@gmail.com>
+In-Reply-To: <20200617175447.2681047-1-andrey.lebedev@gmail.com>
+From:   Qiang Yu <yuq825@gmail.com>
+Date:   Thu, 18 Jun 2020 14:43:53 +0800
+Message-ID: <CAKGbVbuV8meZji9PqFUwt4CpFEy6efpX63hJBgMY7fzAnZS4Rg@mail.gmail.com>
+Subject: Re: [PATCH] drm/lima: Expose job_hang_limit module parameter
+To:     Andrey Lebedev <andrey.lebedev@gmail.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        lima@lists.freedesktop.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        andrey@lebedev.lt
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid a W^X violation cause by the fact that PAGE_KERNEL_EXEC includes the
-writable bit.
+On Thu, Jun 18, 2020 at 1:57 AM Andrey Lebedev <andrey.lebedev@gmail.com> wrote:
+>
+> From: Andrey Lebedev <andrey@lebedev.lt>
+>
+> Some pp or gp jobs can be successfully repeated even after they time outs.
+> Introduce lima module parameter to specify number of times a job can hang
+> before being dropped.
+>
+> Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
+> ---
+>
+> Hello,
+>
+> This patch allows to work around a freezing problem as discussed in
+> https://gitlab.freedesktop.org/lima/linux/-/issues/33
+>
+>  drivers/gpu/drm/lima/lima_drv.c   | 4 ++++
+>  drivers/gpu/drm/lima/lima_drv.h   | 1 +
+>  drivers/gpu/drm/lima/lima_sched.c | 5 +++--
+>  3 files changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/lima/lima_drv.c b/drivers/gpu/drm/lima/lima_drv.c
+> index a831565af813..2807eba26c55 100644
+> --- a/drivers/gpu/drm/lima/lima_drv.c
+> +++ b/drivers/gpu/drm/lima/lima_drv.c
+> @@ -19,6 +19,7 @@
+>  int lima_sched_timeout_ms;
+>  uint lima_heap_init_nr_pages = 8;
+>  uint lima_max_error_tasks;
+> +int lima_job_hang_limit;
 
-For this resurrect the removed PAGE_KERNEL_RX definitіon, but as
-PAGE_KERNEL_ROX to match arm64 and powerpc.
+Better be an "uint" to avoid negative check. With this fixed, patch is:
+Reviewed-by: Qiang Yu <yuq825@gmail.com>
 
-Fixes: 78bb17f76edc ("x86/hyperv: use vmalloc_exec for the hypercall page")
-Reported-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Tested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/hyperv/hv_init.c            | 4 +++-
- arch/x86/include/asm/pgtable_types.h | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Regards,
+Qiang
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index a54c6a401581dd..2bdc72e6890eca 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -375,7 +375,9 @@ void __init hyperv_init(void)
- 	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
- 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
- 
--	hv_hypercall_pg = vmalloc_exec(PAGE_SIZE);
-+	hv_hypercall_pg = __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START,
-+			VMALLOC_END, GFP_KERNEL, PAGE_KERNEL_ROX,
-+			VM_FLUSH_RESET_PERMS, NUMA_NO_NODE, __func__);
- 	if (hv_hypercall_pg == NULL) {
- 		wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
- 		goto remove_cpuhp_state;
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index 2da1f95b88d761..816b31c685505f 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -194,6 +194,7 @@ enum page_cache_mode {
- #define _PAGE_TABLE_NOENC	 (__PP|__RW|_USR|___A|   0|___D|   0|   0)
- #define _PAGE_TABLE		 (__PP|__RW|_USR|___A|   0|___D|   0|   0| _ENC)
- #define __PAGE_KERNEL_RO	 (__PP|   0|   0|___A|__NX|___D|   0|___G)
-+#define __PAGE_KERNEL_ROX	 (__PP|   0|   0|___A|   0|___D|   0|___G)
- #define __PAGE_KERNEL_NOCACHE	 (__PP|__RW|   0|___A|__NX|___D|   0|___G| __NC)
- #define __PAGE_KERNEL_VVAR	 (__PP|   0|_USR|___A|__NX|___D|   0|___G)
- #define __PAGE_KERNEL_LARGE	 (__PP|__RW|   0|___A|__NX|___D|_PSE|___G)
-@@ -219,6 +220,7 @@ enum page_cache_mode {
- #define PAGE_KERNEL_RO		__pgprot_mask(__PAGE_KERNEL_RO         | _ENC)
- #define PAGE_KERNEL_EXEC	__pgprot_mask(__PAGE_KERNEL_EXEC       | _ENC)
- #define PAGE_KERNEL_EXEC_NOENC	__pgprot_mask(__PAGE_KERNEL_EXEC       |    0)
-+#define PAGE_KERNEL_ROX		__pgprot_mask(__PAGE_KERNEL_ROX        | _ENC)
- #define PAGE_KERNEL_NOCACHE	__pgprot_mask(__PAGE_KERNEL_NOCACHE    | _ENC)
- #define PAGE_KERNEL_LARGE	__pgprot_mask(__PAGE_KERNEL_LARGE      | _ENC)
- #define PAGE_KERNEL_LARGE_EXEC	__pgprot_mask(__PAGE_KERNEL_LARGE_EXEC | _ENC)
--- 
-2.26.2
-
+>
+>  MODULE_PARM_DESC(sched_timeout_ms, "task run timeout in ms");
+>  module_param_named(sched_timeout_ms, lima_sched_timeout_ms, int, 0444);
+> @@ -29,6 +30,9 @@ module_param_named(heap_init_nr_pages, lima_heap_init_nr_pages, uint, 0444);
+>  MODULE_PARM_DESC(max_error_tasks, "max number of error tasks to save");
+>  module_param_named(max_error_tasks, lima_max_error_tasks, uint, 0644);
+>
+> +MODULE_PARM_DESC(job_hang_limit, "number of times to allow a job to hang before dropping it (default 0)");
+> +module_param_named(job_hang_limit, lima_job_hang_limit, int, 0444);
+> +
+>  static int lima_ioctl_get_param(struct drm_device *dev, void *data, struct drm_file *file)
+>  {
+>         struct drm_lima_get_param *args = data;
+> diff --git a/drivers/gpu/drm/lima/lima_drv.h b/drivers/gpu/drm/lima/lima_drv.h
+> index fdbd4077c768..39fd98e3b14d 100644
+> --- a/drivers/gpu/drm/lima/lima_drv.h
+> +++ b/drivers/gpu/drm/lima/lima_drv.h
+> @@ -11,6 +11,7 @@
+>  extern int lima_sched_timeout_ms;
+>  extern uint lima_heap_init_nr_pages;
+>  extern uint lima_max_error_tasks;
+> +extern int lima_job_hang_limit;
+>
+>  struct lima_vm;
+>  struct lima_bo;
+> diff --git a/drivers/gpu/drm/lima/lima_sched.c b/drivers/gpu/drm/lima/lima_sched.c
+> index e6cefda00279..1602985dfa04 100644
+> --- a/drivers/gpu/drm/lima/lima_sched.c
+> +++ b/drivers/gpu/drm/lima/lima_sched.c
+> @@ -503,8 +503,9 @@ int lima_sched_pipe_init(struct lima_sched_pipe *pipe, const char *name)
+>
+>         INIT_WORK(&pipe->recover_work, lima_sched_recover_work);
+>
+> -       return drm_sched_init(&pipe->base, &lima_sched_ops, 1, 0,
+> -                             msecs_to_jiffies(timeout), name);
+> +       return drm_sched_init(&pipe->base, &lima_sched_ops, 1,
+> +                             lima_job_hang_limit, msecs_to_jiffies(timeout),
+> +                             name);
+>  }
+>
+>  void lima_sched_pipe_fini(struct lima_sched_pipe *pipe)
+> --
+> 2.25.1
+>
