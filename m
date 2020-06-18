@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7DDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DFAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7C1C20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6689B20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442648;
-	bh=uPBiJ4AumncjvZcxAi3pEEIlqWJqyQ0HKHJnDQw2Iqo=;
+	s=default; t=1592442650;
+	bh=lkznMDgVCVzO+9pK0+jc6BtPiuzmW9VHh4jQRwGuIFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o10caugfnj5vM1EdtGItLRRFYjZYRos/00ghww30nqaSiDW6m5Za5JLiYxvRrP49f
-	 cI6pO4wXTifv8PZcayi0qv6JhgPfiRr4WFy/JvHDopFQNlF0jwaV4SmhcwsFWBSGy4
-	 3fFIDLjt/WyxfD+Wj8ZWar5f5h39GCuIyP3aNeZU=
+	b=aJCsrD6bIyuGwG5Ny08HLT4z5PMUndd38w5D2ZgFJPE8cDZZ3Jca6uTszsxfAyoJO
+	 DkdEhF6Z5cQdClvFAW0rqu2XEpnoHPAK0hAO+YuVuYImBmYbVcOM8s5Cbg5fx27Mag
+	 vxi5Fd5j3fO1JGyxR7T+SWbnDAz25shazXV5+0ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgFRBKq (ORCPT
+        id S1728617AbgFRBKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:10:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38094 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:10:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727779AbgFRBKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:41 -0400
+        id S1728594AbgFRBKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9105F214DB;
-        Thu, 18 Jun 2020 01:10:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C08121924;
+        Thu, 18 Jun 2020 01:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442641;
-        bh=uPBiJ4AumncjvZcxAi3pEEIlqWJqyQ0HKHJnDQw2Iqo=;
+        s=default; t=1592442645;
+        bh=lkznMDgVCVzO+9pK0+jc6BtPiuzmW9VHh4jQRwGuIFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b9QrIRuiiy/mnzf8KqGK0WAOVOcXAZ/jgmdK6OkUllNxfnDFRwcTr4YWeZzOVHuPA
-         4Uj41nQ1SexKcbirfdPwRpkLKeoIj+eTq+r+0Qe+jgPYkpn6Osqp0QhYuwPZAGWUhu
-         GhbU7Zb3mRWz2xmgC8/LLhWoXUa0ysOOx5YcMkRI=
+        b=qIWA67wOiIK4GEnugih9Atnx39f7szZMIX0ewQ9MgNVjgm94MMxvlaYbrDP0FVJV5
+         S3suy1Exj3dZ80HLKJ7ABq0p7hueJVxAIMjwy+eFDwohyJJW0SPsiue+MwK1+D4XUQ
+         lZpYjZc6WRIr1or8y+qve0x2NHI+RvhXJvG+eFo0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, greybus-dev@lists.linaro.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.7 116/388] staging: greybus: fix a missing-check bug in gb_lights_light_config()
-Date:   Wed, 17 Jun 2020 21:03:33 -0400
-Message-Id: <20200618010805.600873-116-sashal@kernel.org>
+Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 119/388] arm64: dts: mt8173: fix unit name warnings
+Date:   Wed, 17 Jun 2020 21:03:36 -0400
+Message-Id: <20200618010805.600873-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,36 +61,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-[ Upstream commit 9bb086e5ba9495ac150fbbcc5c8c2bccc06261dd ]
+[ Upstream commit 72b29215aced394d01ca25e432963b619daa0098 ]
 
-In gb_lights_light_config(), 'light->name' is allocated by kstrndup().
-It returns NULL when fails, add check for it.
+Fixing several unit name warnings:
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
-Link: https://lore.kernel.org/r/20200401030017.100274-1-chenzhou10@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Warning (unit_address_vs_reg): /oscillator@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /oscillator@1: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /oscillator@2: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@1: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/cpu_crit@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@1: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /reserved-memory/vpu_dma_mem_region: node has a reg or ranges property, but no unit name
+Warning (simple_bus_reg): /soc/pinctrl@10005000: simple-bus unit address format error, expected "1000b000"
+Warning (simple_bus_reg): /soc/interrupt-controller@10220000: simple-bus unit address format error, expected "10221000"
+
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Link: https://lore.kernel.org/r/20200210063523.133333-4-hsinyi@chromium.org
+[mb: drop fixes for '_' in property name]
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/greybus/light.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
-index d6ba25f21d80..d2672b65c3f4 100644
---- a/drivers/staging/greybus/light.c
-+++ b/drivers/staging/greybus/light.c
-@@ -1026,7 +1026,8 @@ static int gb_lights_light_config(struct gb_lights *glights, u8 id)
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index d819e44d94a8..6ad1053afd27 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -242,21 +242,21 @@ psci {
+ 		cpu_on	      = <0x84000003>;
+ 	};
  
- 	light->channels_count = conf.channel_count;
- 	light->name = kstrndup(conf.name, NAMES_MAX, GFP_KERNEL);
--
-+	if (!light->name)
-+		return -ENOMEM;
- 	light->channels = kcalloc(light->channels_count,
- 				  sizeof(struct gb_channel), GFP_KERNEL);
- 	if (!light->channels)
+-	clk26m: oscillator@0 {
++	clk26m: oscillator0 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <26000000>;
+ 		clock-output-names = "clk26m";
+ 	};
+ 
+-	clk32k: oscillator@1 {
++	clk32k: oscillator1 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <32000>;
+ 		clock-output-names = "clk32k";
+ 	};
+ 
+-	cpum_ck: oscillator@2 {
++	cpum_ck: oscillator2 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <0>;
+@@ -272,19 +272,19 @@ cpu_thermal: cpu_thermal {
+ 			sustainable-power = <1500>; /* milliwatts */
+ 
+ 			trips {
+-				threshold: trip-point@0 {
++				threshold: trip-point0 {
+ 					temperature = <68000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				target: trip-point@1 {
++				target: trip-point1 {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				cpu_crit: cpu_crit@0 {
++				cpu_crit: cpu_crit0 {
+ 					temperature = <115000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+@@ -292,13 +292,13 @@ cpu_crit: cpu_crit@0 {
+ 			};
+ 
+ 			cooling-maps {
+-				map@0 {
++				map0 {
+ 					trip = <&target>;
+ 					cooling-device = <&cpu0 0 0>,
+ 							 <&cpu1 0 0>;
+ 					contribution = <3072>;
+ 				};
+-				map@1 {
++				map1 {
+ 					trip = <&target>;
+ 					cooling-device = <&cpu2 0 0>,
+ 							 <&cpu3 0 0>;
+@@ -312,7 +312,7 @@ reserved-memory {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges;
+-		vpu_dma_reserved: vpu_dma_mem_region {
++		vpu_dma_reserved: vpu_dma_mem_region@b7000000 {
+ 			compatible = "shared-dma-pool";
+ 			reg = <0 0xb7000000 0 0x500000>;
+ 			alignment = <0x1000>;
+@@ -365,7 +365,7 @@ syscfg_pctl_a: syscfg_pctl_a@10005000 {
+ 			reg = <0 0x10005000 0 0x1000>;
+ 		};
+ 
+-		pio: pinctrl@10005000 {
++		pio: pinctrl@1000b000 {
+ 			compatible = "mediatek,mt8173-pinctrl";
+ 			reg = <0 0x1000b000 0 0x1000>;
+ 			mediatek,pctl-regmap = <&syscfg_pctl_a>;
+@@ -572,7 +572,7 @@ mipi_tx1: mipi-dphy@10216000 {
+ 			status = "disabled";
+ 		};
+ 
+-		gic: interrupt-controller@10220000 {
++		gic: interrupt-controller@10221000 {
+ 			compatible = "arm,gic-400";
+ 			#interrupt-cells = <3>;
+ 			interrupt-parent = <&gic>;
 -- 
 2.25.1
 
