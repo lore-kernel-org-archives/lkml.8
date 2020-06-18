@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA62CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1956CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD1D72192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95052192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445366;
-	bh=3jmixMD1aqvVxMgyqA6NUesXMHCJpUlIdFaZ9yIXDD4=;
+	s=default; t=1592445371;
+	bh=+Wgq2R3qq+N8LZi/lKkTxsvek9U1KqwL0evaoaUeitA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SVbcO+ofrIxp4R5UhI0ztef2QmwWu4JUIGkrWo8E5Ooek9DKj5yCBThiheG8BETFx
-	 zq7vmoEHV6/d0I8vs2Rll2ly2Y8hv6a7PD1TriGlL+46HIfjJ/lw3sFV0VYSY9oKzd
-	 v09SN/3dGPpfzRyOaG4RWnP/h0BBhwWWjq/0Pvo4=
+	b=f52UqQGHrcmynxUYhOQlGGg3MhSh3cBejuSCn9VBw0AbmqdZLLC5EwoBgueDOoXIJ
+	 e7piuwbWoEg5JndTF87Q8KB38RYvimdf6taJNrSSJE+bWEVoye4l7837kZDtVn6KEC
+	 JzmDq4m4vQZjxnTmIebooGakpfxU1qsVufadGE8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731452AbgFRBZe (ORCPT
+        id S1731609AbgFRB4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55510 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:56:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730743AbgFRBW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:29 -0400
+        id S1731444AbgFRBZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8AAD20776;
-        Thu, 18 Jun 2020 01:22:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EB672075E;
+        Thu, 18 Jun 2020 01:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443348;
-        bh=3jmixMD1aqvVxMgyqA6NUesXMHCJpUlIdFaZ9yIXDD4=;
+        s=default; t=1592443533;
+        bh=+Wgq2R3qq+N8LZi/lKkTxsvek9U1KqwL0evaoaUeitA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=boZqIAPoA0yDcrnkeP4+kIMPccYJax72fdyraO2NmBqKZ66OSt80B31gToqnsZ7C6
-         MkxD0RtsktIuOPZdvlMU0EBg3adMNDFuK5f+R9rgO+h295WAiuzEi/4sz3UG14+qmq
-         d+FuuubJLxIUMgFEo2rMOk6Y8Ctw9I/HTXlaQ5ho=
+        b=s9/spQ3p9wdlTE8H+Z+Fw0RRdsoVMbHlukoqae3xys9MpJlvRVqH87lplGAZVBZwR
+         dpw+jEufzrcPTODVMqG5nfk10CJ3wHvKCrJktKHTlTachxyJo8t5YGPM7CRZ20CTKm
+         URUIBV2eAY2/BZAphq/G7sRz3PBK5r907niJJqro=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Elder <elder@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suman Anna <s-anna@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-remoteproc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 008/172] remoteproc: Fix IDR initialisation in rproc_alloc()
-Date:   Wed, 17 Jun 2020 21:19:34 -0400
-Message-Id: <20200618012218.607130-8-sashal@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.19 152/172] gfs2: fix use-after-free on transaction ail lists
+Date:   Wed, 17 Jun 2020 21:21:58 -0400
+Message-Id: <20200618012218.607130-152-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -62,58 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Elder <elder@linaro.org>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 6442df49400b466431979e7634849a464a5f1861 ]
+[ Upstream commit 83d060ca8d90fa1e3feac227f995c013100862d3 ]
 
-If ida_simple_get() returns an error when called in rproc_alloc(),
-put_device() is called to clean things up.  By this time the rproc
-device type has been assigned, with rproc_type_release() as the
-release function.
+Before this patch, transactions could be merged into the system
+transaction by function gfs2_merge_trans(), but the transaction ail
+lists were never merged. Because the ail flushing mechanism can run
+separately, bd elements can be attached to the transaction's buffer
+list during the transaction (trans_add_meta, etc) but quickly moved
+to its ail lists. Later, in function gfs2_trans_end, the transaction
+can be freed (by gfs2_trans_end) while it still has bd elements
+queued to its ail lists, which can cause it to either lose track of
+the bd elements altogether (memory leak) or worse, reference the bd
+elements after the parent transaction has been freed.
 
-The first thing rproc_type_release() does is call:
-    idr_destroy(&rproc->notifyids);
+Although I've not seen any serious consequences, the problem becomes
+apparent with the previous patch's addition of:
 
-But at the time the ida_simple_get() call is made, the notifyids
-field in the remoteproc structure has not been initialized.
+	gfs2_assert_warn(sdp, list_empty(&tr->tr_ail1_list));
 
-I'm not actually sure this case causes an observable problem, but
-it's incorrect.  Fix this by initializing the notifyids field before
-calling ida_simple_get() in rproc_alloc().
+to function gfs2_trans_free().
 
-Fixes: b5ab5e24e960 ("remoteproc: maintain a generic child device for each rproc")
-Signed-off-by: Alex Elder <elder@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Suman Anna <s-anna@ti.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200415204858.2448-2-mathieu.poirier@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This patch adds logic into gfs2_merge_trans() to move the merged
+transaction's ail lists to the sdp transaction. This prevents the
+use-after-free. To do this properly, we need to hold the ail lock,
+so we pass sdp into the function instead of the transaction itself.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/remoteproc_core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/gfs2/log.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index d5ff272fde34..e48069db1703 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1598,6 +1598,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
- 	rproc->dev.type = &rproc_type;
- 	rproc->dev.class = &rproc_class;
- 	rproc->dev.driver_data = rproc;
-+	idr_init(&rproc->notifyids);
+diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+index d3f0612e3347..06752db213d2 100644
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -877,8 +877,10 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
+  * @new: New transaction to be merged
+  */
  
- 	/* Assign a unique device index and name */
- 	rproc->index = ida_simple_get(&rproc_dev_index, 0, 0, GFP_KERNEL);
-@@ -1622,8 +1623,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+-static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
++static void gfs2_merge_trans(struct gfs2_sbd *sdp, struct gfs2_trans *new)
+ {
++	struct gfs2_trans *old = sdp->sd_log_tr;
++
+ 	WARN_ON_ONCE(!test_bit(TR_ATTACHED, &old->tr_flags));
  
- 	mutex_init(&rproc->lock);
+ 	old->tr_num_buf_new	+= new->tr_num_buf_new;
+@@ -890,6 +892,11 @@ static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
  
--	idr_init(&rproc->notifyids);
--
- 	INIT_LIST_HEAD(&rproc->carveouts);
- 	INIT_LIST_HEAD(&rproc->mappings);
- 	INIT_LIST_HEAD(&rproc->traces);
+ 	list_splice_tail_init(&new->tr_databuf, &old->tr_databuf);
+ 	list_splice_tail_init(&new->tr_buf, &old->tr_buf);
++
++	spin_lock(&sdp->sd_ail_lock);
++	list_splice_tail_init(&new->tr_ail1_list, &old->tr_ail1_list);
++	list_splice_tail_init(&new->tr_ail2_list, &old->tr_ail2_list);
++	spin_unlock(&sdp->sd_ail_lock);
+ }
+ 
+ static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
+@@ -901,7 +908,7 @@ static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
+ 	gfs2_log_lock(sdp);
+ 
+ 	if (sdp->sd_log_tr) {
+-		gfs2_merge_trans(sdp->sd_log_tr, tr);
++		gfs2_merge_trans(sdp, tr);
+ 	} else if (tr->tr_num_buf_new || tr->tr_num_databuf_new) {
+ 		gfs2_assert_withdraw(sdp, test_bit(TR_ALLOCED, &tr->tr_flags));
+ 		sdp->sd_log_tr = tr;
 -- 
 2.25.1
 
