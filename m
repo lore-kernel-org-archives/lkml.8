@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA98C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1007C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE7BB20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905C520776
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448774;
-	bh=lmz8b9o30HBzXmdnXtTw1XQwTxgBU8r+b8UEb1BATFQ=;
+	s=default; t=1592448781;
+	bh=6YdPTTXXDwj2dgnMH6G/oFCnlD2ssGIfMkM8JLEItE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aNJeJDN52JksHE7yBsoOTWOUGcQHQ/KMRVdNOTrajSajDm7nSN8FvanCFdS3tuIJ0
-	 4KZLdpBEQGMIFk+QxsOgQ8f+nAITK8NVnNOZBCbXVWfyLkEwzUlqG5+faEbKEOwcnl
-	 wZSJyiEBoUZ3tUGqGCTRHB5aaTS1BYj43I79n3KI=
+	b=ZfdPHXU4l3EdAvTPHggXvj62dwyLhVnrofEEE4bhwjCzfgml4wHs/KzgmxoX8ctnW
+	 au1cOIxeKiwPvzA/83r0GqgWPILmPh0rYTDjmXh4MYJDSaeAsTOY4tjYYBgha0CS6E
+	 zq6Vww34ewFE1KF+sQefTZgeBassSFvVWS6VFRnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgFRCwt (ORCPT
+        id S2387946AbgFRCxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:52:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33930 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:53:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727775AbgFRBIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:08:22 -0400
+        id S1727109AbgFRBIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:08:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DD6F2193E;
-        Thu, 18 Jun 2020 01:08:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 508DE21D7D;
+        Thu, 18 Jun 2020 01:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442501;
-        bh=lmz8b9o30HBzXmdnXtTw1XQwTxgBU8r+b8UEb1BATFQ=;
+        s=default; t=1592442495;
+        bh=6YdPTTXXDwj2dgnMH6G/oFCnlD2ssGIfMkM8JLEItE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wsQjMEevk+xWXObSz7E5Ho+8PoIMprHa2DsAQ1yhhfvhxduwmhhshUglzOOqmvAjJ
-         yOFWi/qZ8yg7bJx4oPnFVp9PwHa3dNu6p1e+RomUp+7lNAPHP0miW8QZy3SlRUFVV4
-         PUd7zU6qzPlirR9gf8aQJyTuW+nYm1kNcyn6SRMk=
+        b=S/zn+cyQYgXYjyhSiQxFOuW10ZPodIop3MGQ9RNVRKVs7EN1UKKLNoIPi6c4svseY
+         IHpx1W5sVNcJOCe8RhnlQ8ZV+OGWjBkSirifWHOXB4wXKiG29xVOqNzq7f+qAD7UCI
+         py75FvXrLNBtaGm2OZ1ry+b809PnAhDUordlqimo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.7 012/388] staging: wfx: check ssidlen and prevent an array overflow
-Date:   Wed, 17 Jun 2020 21:01:49 -0400
-Message-Id: <20200618010805.600873-12-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 007/388] ASoC: SOF: imx8: Fix randbuild error
+Date:   Wed, 17 Jun 2020 21:01:44 -0400
+Message-Id: <20200618010805.600873-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,37 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 87f86cddda65cab8a7e3df8a00e16abeccaa0730 ]
+[ Upstream commit fe17e6cdc0fefca96ba9659be4b2b07487cbf0c5 ]
 
-We need to cap "ssidlen" to prevent a memcpy() overflow.
+when do randconfig like this:
+CONFIG_SND_SOC_SOF_IMX8_SUPPORT=y
+CONFIG_SND_SOC_SOF_IMX8=y
+CONFIG_SND_SOC_SOF_OF=y
+CONFIG_IMX_DSP=m
+CONFIG_IMX_SCU=y
 
-Fixes: 40115bbc40e2 ("staging: wfx: implement the rest of mac80211 API")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-Link: https://lore.kernel.org/r/20200424104235.GA416402@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+there is a link error:
+
+sound/soc/sof/imx/imx8.o: In function 'imx8_send_msg':
+imx8.c:(.text+0x380): undefined reference to 'imx_dsp_ring_doorbell'
+
+Select IMX_DSP in SND_SOC_SOF_IMX8_SUPPORT to fix this
+
+Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF dependency")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20200409071832.2039-2-daniel.baluta@oss.nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wfx/sta.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/sof/imx/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/wfx/sta.c b/drivers/staging/wfx/sta.c
-index 9d430346a58b..969d7a4a7fbd 100644
---- a/drivers/staging/wfx/sta.c
-+++ b/drivers/staging/wfx/sta.c
-@@ -520,7 +520,9 @@ static void wfx_do_join(struct wfx_vif *wvif)
- 		ssidie = ieee80211_bss_get_ie(bss, WLAN_EID_SSID);
- 	if (ssidie) {
- 		ssidlen = ssidie[1];
--		memcpy(ssid, &ssidie[2], ssidie[1]);
-+		if (ssidlen > IEEE80211_MAX_SSID_LEN)
-+			ssidlen = IEEE80211_MAX_SSID_LEN;
-+		memcpy(ssid, &ssidie[2], ssidlen);
- 	}
- 	rcu_read_unlock();
- 
+diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+index bae4f7bf5f75..812749064ca8 100644
+--- a/sound/soc/sof/imx/Kconfig
++++ b/sound/soc/sof/imx/Kconfig
+@@ -14,7 +14,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
+ config SND_SOC_SOF_IMX8_SUPPORT
+ 	bool "SOF support for i.MX8"
+ 	depends on IMX_SCU
+-	depends on IMX_DSP
++	select IMX_DSP
+ 	help
+ 	  This adds support for Sound Open Firmware for NXP i.MX8 platforms
+ 	  Say Y if you have such a device.
 -- 
 2.25.1
 
