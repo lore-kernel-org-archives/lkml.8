@@ -2,191 +2,121 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B46C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43922C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04BF82083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C9472080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:28:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qrN4yrec"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="odevfLHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731750AbgFRQ1W (ORCPT
+        id S1731817AbgFRQ2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:27:22 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:38298 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730775AbgFRQ1W (ORCPT
+        Thu, 18 Jun 2020 12:28:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45522 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728236AbgFRQ2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:27:22 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1F1BC28D;
-        Thu, 18 Jun 2020 18:27:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1592497639;
-        bh=mMkT5IF4U83anJenmEZuDoux/c2XXG/HbIuhg+Mdd38=;
-        h=Reply-To:Subject:To:References:From:Date:In-Reply-To:From;
-        b=qrN4yrecNVn156LwR0bj/VDG8uJFPaYnilGAenXJCO9nXLSZwxDvxXNlED7ouj1aL
-         4DF6PWKg3gwY3aYc9hG2dTN0T7nB/rF6D+jzLtFODBPCppuwMfpwryAsdlJtzVDaXE
-         JdV0/a50f+C9PTdfM+uuyhU+CRhwSoNbIy2L9s1M=
-Reply-To: kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v5 8/9] dt-bindings: adv748x: add information about serial
- audio interface (I2S/TDM)
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1585852001.git.alexander.riesen@cetitec.com>
- <337b689519806178458ab77385c8ac6f510cb0da.1585852001.git.alexander.riesen@cetitec.com>
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
- mQINBFYE/WYBEACs1PwjMD9rgCu1hlIiUA1AXR4rv2v+BCLUq//vrX5S5bjzxKAryRf0uHat
- V/zwz6hiDrZuHUACDB7X8OaQcwhLaVlq6byfoBr25+hbZG7G3+5EUl9cQ7dQEdvNj6V6y/SC
- rRanWfelwQThCHckbobWiQJfK9n7rYNcPMq9B8e9F020LFH7Kj6YmO95ewJGgLm+idg1Kb3C
- potzWkXc1xmPzcQ1fvQMOfMwdS+4SNw4rY9f07Xb2K99rjMwZVDgESKIzhsDB5GY465sCsiQ
- cSAZRxqE49RTBq2+EQsbrQpIc8XiffAB8qexh5/QPzCmR4kJgCGeHIXBtgRj+nIkCJPZvZtf
- Kr2EAbc6tgg6DkAEHJb+1okosV09+0+TXywYvtEop/WUOWQ+zo+Y/OBd+8Ptgt1pDRyOBzL8
- RXa8ZqRf0Mwg75D+dKntZeJHzPRJyrlfQokngAAs4PaFt6UfS+ypMAF37T6CeDArQC41V3ko
- lPn1yMsVD0p+6i3DPvA/GPIksDC4owjnzVX9kM8Zc5Cx+XoAN0w5Eqo4t6qEVbuettxx55gq
- 8K8FieAjgjMSxngo/HST8TpFeqI5nVeq0/lqtBRQKumuIqDg+Bkr4L1V/PSB6XgQcOdhtd36
- Oe9X9dXB8YSNt7VjOcO7BTmFn/Z8r92mSAfHXpb07YJWJosQOQARAQABtDBLaWVyYW4gQmlu
- Z2hhbSA8a2llcmFuLmJpbmdoYW1AaWRlYXNvbmJvYXJkLmNvbT6JAlcEEwEKAEECGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4ACGQEWIQSQLdeYP70o/eNy1HqhHkZyEKRh/QUCXWTtygUJ
- CyJXZAAKCRChHkZyEKRh/f8dEACTDsbLN2nioNZMwyLuQRUAFcXNolDX48xcUXsWS2QjxaPm
- VsJx8Uy8aYkS85mdPBh0C83OovQR/OVbr8AxhGvYqBs3nQvbWuTl/+4od7DfK2VZOoKBAu5S
- QK2FYuUcikDqYcFWJ8DQnubxfE8dvzojHEkXw0sA4igINHDDFX3HJGZtLio+WpEFQtCbfTAG
- YZslasz1YZRbwEdSsmO3/kqy5eMnczlm8a21A3fKUo3g8oAZEFM+f4DUNzqIltg31OAB/kZS
- enKZQ/SWC8PmLg/ZXBrReYakxXtkP6w3FwMlzOlhGxqhIRNiAJfXJBaRhuUWzPOpEDE9q5YJ
- BmqQL2WJm1VSNNVxbXJHpaWMH1sA2R00vmvRrPXGwyIO0IPYeUYQa3gsy6k+En/aMQJd27dp
- aScf9am9PFICPY5T4ppneeJLif2lyLojo0mcHOV+uyrds9XkLpp14GfTkeKPdPMrLLTsHRfH
- fA4I4OBpRrEPiGIZB/0im98MkGY/Mu6qxeZmYLCcgD6qz4idOvfgVOrNh+aA8HzIVR+RMW8H
- QGBN9f0E3kfwxuhl3omo6V7lDw8XOdmuWZNC9zPq1UfryVHANYbLGz9KJ4Aw6M+OgBC2JpkD
- hXMdHUkC+d20dwXrwHTlrJi1YNp6rBc+xald3wsUPOZ5z8moTHUX/uPA/qhGsbkCDQRWBP1m
- ARAAzijkb+Sau4hAncr1JjOY+KyFEdUNxRy+hqTJdJfaYihxyaj0Ee0P0zEi35CbE6lgU0Uz
- tih9fiUbSV3wfsWqg1Ut3/5rTKu7kLFp15kF7eqvV4uezXRD3Qu4yjv/rMmEJbbD4cTvGCYI
- d6MDC417f7vK3hCbCVIZSp3GXxyC1LU+UQr3fFcOyCwmP9vDUR9JV0BSqHHxRDdpUXE26Dk6
- mhf0V1YkspE5St814ETXpEus2urZE5yJIUROlWPIL+hm3NEWfAP06vsQUyLvr/GtbOT79vXl
- En1aulcYyu20dRRxhkQ6iILaURcxIAVJJKPi8dsoMnS8pB0QW12AHWuirPF0g6DiuUfPmrA5
- PKe56IGlpkjc8cO51lIxHkWTpCMWigRdPDexKX+Sb+W9QWK/0JjIc4t3KBaiG8O4yRX8ml2R
- +rxfAVKM6V769P/hWoRGdgUMgYHFpHGSgEt80OKK5HeUPy2cngDUXzwrqiM5Sz6Od0qw5pCk
- NlXqI0W/who0iSVM+8+RmyY0OEkxEcci7rRLsGnM15B5PjLJjh1f2ULYkv8s4SnDwMZ/kE04
- /UqCMK/KnX8pwXEMCjz0h6qWNpGwJ0/tYIgQJZh6bqkvBrDogAvuhf60Sogw+mH8b+PBlx1L
- oeTK396wc+4c3BfiC6pNtUS5GpsPMMjYMk7kVvEAEQEAAYkCPAQYAQoAJgIbDBYhBJAt15g/
- vSj943LUeqEeRnIQpGH9BQJdizzIBQkLSKZiAAoJEKEeRnIQpGH9eYgQAJpjaWNgqNOnMTmD
- MJggbwjIotypzIXfhHNCeTkG7+qCDlSaBPclcPGYrTwCt0YWPU2TgGgJrVhYT20ierN8LUvj
- 6qOPTd+Uk7NFzL65qkh80ZKNBFddx1AabQpSVQKbdcLb8OFs85kuSvFdgqZwgxA1vl4TFhNz
- PZ79NAmXLackAx3sOVFhk4WQaKRshCB7cSl+RIng5S/ThOBlwNlcKG7j7W2MC06BlTbdEkUp
- ECzuuRBv8wX4OQl+hbWbB/VKIx5HKlLu1eypen/5lNVzSqMMIYkkZcjV2SWQyUGxSwq0O/sx
- S0A8/atCHUXOboUsn54qdxrVDaK+6jIAuo8JiRWctP16KjzUM7MO0/+4zllM8EY57rXrj48j
- sbEYX0YQnzaj+jO6kJtoZsIaYR7rMMq9aUAjyiaEZpmP1qF/2sYenDx0Fg2BSlLvLvXM0vU8
- pQk3kgDu7kb/7PRYrZvBsr21EIQoIjXbZxDz/o7z95frkP71EaICttZ6k9q5oxxA5WC6sTXc
- MW8zs8avFNuA9VpXt0YupJd2ijtZy2mpZNG02fFVXhIn4G807G7+9mhuC4XG5rKlBBUXTvPU
- AfYnB4JBDLmLzBFavQfvonSfbitgXwCG3vS+9HEwAjU30Bar1PEOmIbiAoMzuKeRm2LVpmq4
- WZw01QYHU/GUV/zHJSFk
-Organization: Ideas on Board
-Message-ID: <24336687-59fa-9317-c491-8febbf6d2b86@ideasonboard.com>
-Date:   Thu, 18 Jun 2020 17:27:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 18 Jun 2020 12:28:53 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE44AC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 09:28:52 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q11so6735030wrp.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 09:28:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=5BtInqn0HK3LhGSOqpzcc+VvzjO2vK+SIfcb8Zyst/s=;
+        b=odevfLHS7udDSNGRylCeO2GK+VEz1OY9+pY2RckNxWlzBCRG2hlFpNf6+gr8PKu4Iv
+         tj1G1Vcxfz9LG+ygke6gIxql+cjGYpQ1mY6VdpdPlChpWDonM3PefuwcFBoJfWjZV/o+
+         CR6xRglkdlXJoE51Sz7C2YMHN+mc9IwFc7P9kBuZck3wBty1M5Su/3/dhyDCecbVI5aH
+         leQZVIOvdX1cwxW42QZRnwUFG7hLl7P7CljP2Km/bqlU2XWuvtEPLbskejDHm//uKQlz
+         2IYDidYF2v8ay1rj1c0D9+gwTeVaMxh7naQQ8/I3zIQApSSo49rOYomcAMVweMTcXx1j
+         U0VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=5BtInqn0HK3LhGSOqpzcc+VvzjO2vK+SIfcb8Zyst/s=;
+        b=V7BotHfsEiAwrxY+/TVRl6bHv+D/T6LRpvdq/IMlbq65t+7XpyEhBHu6Mp8fNWTZdw
+         8hxzjoQZyzAtKwfZhnYbGVuJboLAPhfFdCjECk3Uu+AfH3hLWrlVDYfAoQ0Ky1otHHIR
+         NkA9+trs3br4dw6QVhKPOIyFyTryXZrS5X3hIShl12qoj5MNubXH7yCUdQMjv2rSfhjp
+         0BTOEWN1+6KXZN9LV1u9SlKzZwcuCEWT/oGvXQYqG+R9QR3sQh1JU1/dSgJZ1OUspdF6
+         ZOB3veQJenhMt79o0qELQZNFru1KGiKvnhiNpmVLFfwSBMdIgmlCVdrR3ioMpi8y73oS
+         wcDA==
+X-Gm-Message-State: AOAM532TFxKXtmlAPL1Zx7ZxtJbV/6bL6PZ2k8zLEe3U1CwycBDWz2yr
+        R2ll9k7PJky8RcDw7M/cG60Czg==
+X-Google-Smtp-Source: ABdhPJz6qa2JKgQLkPKOqwNTFZMVh3JmnZ6aw7y5et5eRtOtT3vbCB5EdZXzl9SVv6nhMcSGytpKjQ==
+X-Received: by 2002:adf:ec42:: with SMTP id w2mr5505499wrn.269.1592497731532;
+        Thu, 18 Jun 2020 09:28:51 -0700 (PDT)
+Received: from dell ([95.149.164.118])
+        by smtp.gmail.com with ESMTPSA id z7sm3185948wmb.42.2020.06.18.09.28.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 09:28:50 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 17:28:49 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v4 1/2] thermal: add support for the MCU controlled FAN
+ on Khadas boards
+Message-ID: <20200618162849.GH954398@dell>
+References: <20200618133818.15857-1-narmstrong@baylibre.com>
+ <20200618133818.15857-2-narmstrong@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <337b689519806178458ab77385c8ac6f510cb0da.1585852001.git.alexander.riesen@cetitec.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200618133818.15857-2-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Thu, 18 Jun 2020, Neil Armstrong wrote:
 
-On 02/04/2020 19:35, Alex Riesen wrote:
-> As the driver has some support for the audio interface of the device,
-> the bindings file should mention it.
+> The new Khadas VIM2 and VIM3 boards controls the cooling fan via the
+> on-board microcontroller.
 > 
-> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
-
-> --
+> This implements the FAN control as thermal devices and as cell of the Khadas
+> MCU MFD driver.
 > 
-> v3: remove optionality off MCLK clock cell to ensure the description
->     matches the hardware no matter if the line is connected.
->     Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+
+Is this an Ack?
+
+If so, do you require a pull-request?
+
 > ---
->  .../devicetree/bindings/media/i2c/adv748x.txt    | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+> Hi Lee,
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> index 4f91686e54a6..50a753189b81 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> @@ -2,7 +2,9 @@
->  
->  The ADV7481 and ADV7482 are multi format video decoders with an integrated
->  HDMI receiver. They can output CSI-2 on two independent outputs TXA and TXB
-> -from three input sources HDMI, analog and TTL.
-> +from three input sources HDMI, analog and TTL. There is also support for an
-> +I2S-compatible interface connected to the audio processor of the HDMI decoder.
-> +The interface has TDM capability (8 slots, 32 bits, left or right justified).
->  
->  Required Properties:
->  
-> @@ -16,6 +18,8 @@ Required Properties:
->      slave device on the I2C bus. The main address is mandatory, others are
->      optional and remain at default values if not specified.
->  
-> +  - #clock-cells: must be <0>
-> +
->  Optional Properties:
->  
->    - interrupt-names: Should specify the interrupts as "intrq1", "intrq2" and/or
-> @@ -47,6 +51,7 @@ are numbered as follows.
->  	  TTL		sink		9
->  	  TXA		source		10
->  	  TXB		source		11
-> +	  I2S		source		12
->  
->  The digital output port nodes, when present, shall contain at least one
->  endpoint. Each of those endpoints shall contain the data-lanes property as
-> @@ -72,6 +77,7 @@ Example:
->  
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		#clock-cells = <0>;
->  
->  		interrupt-parent = <&gpio6>;
->  		interrupt-names = "intrq1", "intrq2";
-> @@ -113,4 +119,12 @@ Example:
->  				remote-endpoint = <&csi20_in>;
->  			};
->  		};
-> +
-> +		port@c {
-> +			reg = <12>;
-> +
-> +			adv7482_i2s: endpoint {
-> +				remote-endpoint = <&i2s_in>;
-> +			};
-> +		};
->  	};
+> Could you apply this patch via the MFD tree since it depends on
+> the linux/mfd/khadas-mcu.h header ?
 > 
+> This patch is unchanged from the v3 serie.
+> 
+> Thanks,
+> Neil
+> 
+>  drivers/thermal/Kconfig          |  11 ++
+>  drivers/thermal/Makefile         |   1 +
+>  drivers/thermal/khadas_mcu_fan.c | 174 +++++++++++++++++++++++++++++++
+>  3 files changed, 186 insertions(+)
+>  create mode 100644 drivers/thermal/khadas_mcu_fan.c
 
 -- 
-Regards
---
-Kieran
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
