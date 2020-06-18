@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A60AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8906C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE88221F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B19320EDD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442873;
-	bh=0V7dE6479ka7p+b1cgEb56ZJP10pjJxIG98AhJLSwms=;
+	s=default; t=1592442883;
+	bh=qtyltuemiJrZa14Mx2YGmVNcLZew22FaS3WdPlAAHf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l9oUee+b+iHHqe8VJv7L3Z9d5M79Tb4HxUhSwasoGr1rxF9bs2fk7qPICDHOjXrzD
-	 lNWqAOLqhy0fjyQAsCJJYE8PTYGekTSP9PIr59kU1PDW/CffamrrgAJg2z4T/48e7y
-	 ffBcwR0UhktQYjyZIbRMuRKec9RKoT3qQdWG/Vtg=
+	b=d9JUidpkG/gKAc/N9jfbhUJM03Mkn03Ue0AiYXPH7kDf/iWbUAeD0VixALfdqARuo
+	 nv6qH6kmR3qqlKV0rvbM5y8mmwdpKLyGpK1vtCUJmXURvE9K2boxLUHEMeOg69Y2Cj
+	 liE0pY2FpDgUvuASZHrq5TLlrEmNfSYJobeV0L84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbgFRBOc (ORCPT
+        id S1728266AbgFRBOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:14:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42164 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:14:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728437AbgFRBNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:10 -0400
+        id S1729074AbgFRBNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5930620CC7;
-        Thu, 18 Jun 2020 01:13:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B05FD214DB;
+        Thu, 18 Jun 2020 01:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442790;
-        bh=0V7dE6479ka7p+b1cgEb56ZJP10pjJxIG98AhJLSwms=;
+        s=default; t=1592442795;
+        bh=qtyltuemiJrZa14Mx2YGmVNcLZew22FaS3WdPlAAHf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oyfh1tAP8QLJlTVR7PTOsNpLv3Wp5bu7nxdhaDkQ0lMeVL6cfmJcgUoe9myOHknmE
-         osySGuxvUwt88LNZ7tH2QcYai5Liv9VG9qz2KAvZSs4+mG7Je/xnvR6s++K1Qr3VoL
-         XhXEvnZB/jhOQHhUPP27TEij1v2Ot2RWbKfzYYqY=
+        b=Dpfa9UxFDjK4GXxr4VAb/Eq8TWp9201JZ2KvhyaH5Ah2yvfbKKN/jGwJDvCgCf52c
+         WCwpQD/2kNzeRcKW0FWfimLH7tPzXurw3KTHO18wWsDxrDV8mZnvP5OU4pfk+8mjmZ
+         0iz9j5FEbM+QtKQnLVkaphlZRX3RiMPPs1iO/FUA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        Peter Chen <peter.chen@nxp.com>,
+Cc:     Souptick Joarder <jrdr.linux@gmail.com>, Wu Hao <hao.wu@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 233/388] USB: host: ehci-mxc: Add error handling in ehci_mxc_drv_probe()
-Date:   Wed, 17 Jun 2020 21:05:30 -0400
-Message-Id: <20200618010805.600873-233-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-fpga@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 237/388] fpga: dfl: afu: Corrected error handling levels
+Date:   Wed, 17 Jun 2020 21:05:34 -0400
+Message-Id: <20200618010805.600873-237-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,37 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Bin <tangbin@cmss.chinamobile.com>
+From: Souptick Joarder <jrdr.linux@gmail.com>
 
-[ Upstream commit d49292025f79693d3348f8e2029a8b4703be0f0a ]
+[ Upstream commit c9d7e3da1f3c4cf5dddfc5d7ce4d76d013aba1cc ]
 
-The function ehci_mxc_drv_probe() does not perform sufficient error
-checking after executing platform_get_irq(), thus fix it.
+Corrected error handling goto sequnece. Level put_pages should
+be called when pinned pages >= 0 && pinned != npages. Level
+free_pages should be called when pinned pages < 0.
 
-Fixes: 7e8d5cd93fac ("USB: Add EHCI support for MX27 and MX31 based boards")
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/20200513132647.5456-1-tangbin@cmss.chinamobile.com
+Fixes: fa8dda1edef9 ("fpga: dfl: afu: add DFL_FPGA_PORT_DMA_MAP/UNMAP ioctls support")
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Acked-by: Wu Hao <hao.wu@intel.com>
+Reviewed-by: Xu Yilun <yilun.xu@intel.com>
+Link: https://lore.kernel.org/r/1589825991-3545-1-git-send-email-jrdr.linux@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ehci-mxc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/fpga/dfl-afu-dma-region.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
-index c9f91e6c72b6..7f65c86047dd 100644
---- a/drivers/usb/host/ehci-mxc.c
-+++ b/drivers/usb/host/ehci-mxc.c
-@@ -50,6 +50,8 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
+diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
+index 62f924489db5..5942343a5d6e 100644
+--- a/drivers/fpga/dfl-afu-dma-region.c
++++ b/drivers/fpga/dfl-afu-dma-region.c
+@@ -61,10 +61,10 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
+ 				     region->pages);
+ 	if (pinned < 0) {
+ 		ret = pinned;
+-		goto put_pages;
++		goto free_pages;
+ 	} else if (pinned != npages) {
+ 		ret = -EFAULT;
+-		goto free_pages;
++		goto put_pages;
  	}
  
- 	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
- 
- 	hcd = usb_create_hcd(&ehci_mxc_hc_driver, dev, dev_name(dev));
- 	if (!hcd)
+ 	dev_dbg(dev, "%d pages pinned\n", pinned);
 -- 
 2.25.1
 
