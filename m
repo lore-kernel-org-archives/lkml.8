@@ -2,222 +2,164 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38349C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875A5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0002168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A8621974
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:49:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkTdIS7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgFRAs0 (ORCPT
+        id S1727052AbgFRAtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 20:48:26 -0400
-Received: from mga09.intel.com ([134.134.136.24]:44805 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbgFRAsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 20:48:25 -0400
-IronPort-SDR: G3gnmfjjcwpG+C1yZ2k1+3bzsBX85kbce7mvaSt0IvNfW+xf7NY4PVdiKpzS90z2f4R/6LJhEj
- v0u4sDormxKg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 17:48:23 -0700
-IronPort-SDR: 9hITMPyRDO6quo7Aov6bps1Ol/u/+yqUPQgzGOqlna9P49JkU57+a5ou2f38uC88BMudXC+hZJ
- 1wC+m3TMzVqA==
-X-IronPort-AV: E=Sophos;i="5.73,524,1583222400"; 
-   d="scan'208";a="261874129"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 17:48:23 -0700
-Subject: [PATCH v6 2/2] x86/copy_mc: Introduce copy_mc_generic()
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com
-Cc:     x86@kernel.org, stable@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        Wed, 17 Jun 2020 20:49:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgFRAtC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 20:49:02 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1C6C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:49:02 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x207so1978347pfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=o9bocZzzzDNWldBOb19aL0JrD3DAgfCWT0/GuyKYFAk=;
+        b=rkTdIS7MhTO2I2wBBSPfMICXPfkKNi2NtHsoGpbAbwz1dYXchXPlCSPnuLxbn/l0tp
+         BYjRl0UeKvJtYFYCA+ZDwNmDZRoH7Z4KEEOIUwSBbTTRkSH2b3NChumxwKzQizsj7NSR
+         t1RWZ7uJwksNI8hUSdkZuOKgbn/gMo7v3eVn3enDzpQfQgIEEfKJzPX24i11kGJMnlmu
+         LszBMUIeSDLOvLxv6lVb/09WsJDi746Yx1LgXtpCCCXGipSW+nDFqd9ldeFK+KTyG0nG
+         B9+5MTWwWP4hOq1u+gK+oeYLa6cbj9wA6Kfu8K1Wt7R7Auu9Rf8qQVuLgx2W8rXtYUP1
+         7GDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=o9bocZzzzDNWldBOb19aL0JrD3DAgfCWT0/GuyKYFAk=;
+        b=OCY8GnZnamgku1UK7jLK/jftIFSl35p0rJkkZ+UKZCL2vMe58lDTHRKrD5Y/hsIFr2
+         rBornlVwnw2SDxxhGDhh6wK3ZtpzcXV6X+9R7JSeOdO3qHnRs8g/LyTyXqKij0xLVIOY
+         xXU0dAE25mK54YBxV8myB2rfyc0JMAeeKJWK44IGAiufeXuaP7o2GLC9gaSVgylfSUvl
+         dmRbp2tpc4nCQXCi7rEVmerCXXK50bfx9TK5MKBHEsQxeUSUic15j+d6FFSwHM2IPi7e
+         5IorLWcaejxERI5lX9TDZLVgmPeqij5VzN8dKYbgpkTPotCfGCFPmi1Jc+hhQrDSu9DK
+         Ok2Q==
+X-Gm-Message-State: AOAM532bX+OMNBo9pN1OGa0t4J2NA7CkVWFd3qW1K1McyGQCpnGkyr/6
+        nLDFKbCkdDkKgEwT9gDPHBA=
+X-Google-Smtp-Source: ABdhPJxwAuxQgSKygXY6lXFu92hW+tAcD659N6a7lixSQcORY2EM5Sb4JB3dVmrS0rzcc1Fk5pdCEw==
+X-Received: by 2002:a63:144c:: with SMTP id 12mr938274pgu.189.1592441341992;
+        Wed, 17 Jun 2020 17:49:01 -0700 (PDT)
+Received: from gmail.com ([2601:600:817f:a132:df3e:521d:99d5:710d])
+        by smtp.gmail.com with ESMTPSA id a19sm918008pfd.165.2020.06.17.17.49.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 17:49:01 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 17:48:58 -0700
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Peter Oskolkov <posk@posk.io>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
-Date:   Wed, 17 Jun 2020 17:32:09 -0700
-Message-ID: <159244032939.1107636.15958715466456757179.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <159244031857.1107636.5054974045023236143.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <159244031857.1107636.5054974045023236143.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Darren Hart <dvhart@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Oskolkov <posk@google.com>, avagin@google.com,
+        "pjt@google.com" <pjt@google.com>, Ben Segall <bsegall@google.com>
+Subject: Re: [RFC PATCH 1/3 v2] futex: introduce FUTEX_SWAP operation
+Message-ID: <20200618004858.GA326453@gmail.com>
+References: <cf7c83d0b58aa4912b465392ce8e40a974f250bb.camel@posk.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
+In-Reply-To: <cf7c83d0b58aa4912b465392ce8e40a974f250bb.camel@posk.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The original copy_mc_fragile() implementation had negative performance
-implications since it did not use the fast-string instruction sequence
-to perform copies. For this reason copy_mc_to_kernel() fell back to
-plain memcpy() to preserve performance on platform that did not indicate
-the capability to recover from machine check exceptions. However, that
-capability detection was not architectural and now that some platforms
-can recover from fast-string consumption of memory errors the memcpy()
-fallback now causes these more capable platforms to fail.
+On Tue, Jun 16, 2020 at 10:22:26AM -0700, Peter Oskolkov wrote:
+> From 6fbe0261204692a7f488261ab3c4ac696b91db5c Mon Sep 17 00:00:00 2001
+> From: Peter Oskolkov <posk@google.com>
+> Date: Tue, 9 Jun 2020 16:03:14 -0700
+> Subject: [RFC PATCH 1/3 v2] futex: introduce FUTEX_SWAP operation
+> 
+> This is an RFC!
+> 
+> As Paul Turner presented at LPC in 2013 ...
+> - pdf: http://pdxplumbers.osuosl.org/2013/ocw//system/presentations/1653/original/LPC%20-%20User%20Threading.pdf
+> - video: https://www.youtube.com/watch?v=KXuZi9aeGTw
+> 
+> ... Google has developed an M:N userspace threading subsystem backed
+> by Google-private SwitchTo Linux Kernel API (page 17 in the pdf referenced
+> above). This subsystem provides latency-sensitive services at Google with
+> fine-grained user-space control/scheduling over what is running when,
+> and this subsystem is used widely internally (called schedulers or fibers).
+> 
+> This RFC patchset is the first step to open-source this work. As explained
+> in the linked pdf and video, SwitchTo API has three core operations: wait,
+> resume, and swap (=switch). So this patchset adds a FUTEX_SWAP operation
+> that, in addition to FUTEX_WAIT and FUTEX_WAKE, will provide a foundation
+> on top of which user-space threading libraries can be built.
+> 
+> Another common use case for FUTEX_SWAP is message passing a-la RPC
+> between tasks: task/thread T1 prepares a message,
+> wakes T2 to work on it, and waits for the results; when T2 is done, it
+> wakes T1 and waits for more work to arrive. Currently the simplest
+> way to implement this is
+> 
+> a. T1: futex-wake T2, futex-wait
+> b. T2: wakes, does what it has been woken to do
+> c. T2: futex-wake T1, futex-wait
+> 
+> With FUTEX_SWAP, steps a and c above can be reduced to one futex operation
+> that runs 5-10 times faster.
+> 
 
-Introduce copy_mc_generic() as the fast default implementation of
-copy_mc_to_kernel() and finalize the transition of copy_mc_fragile() to
-be a platform quirk to indicate 'fragility'. With this in place
-copy_mc_to_kernel() is fast and recovery-ready by default regardless of
-hardware capability.
+Hi Peter,
 
-Thanks to Vivek for identifying that copy_user_generic() is not suitable
-as the copy_mc_to_user() backend since the #MC handler explicitly checks
-ex_has_fault_handler().
+We have a good use-case in gVisor for this new futex command.
 
-Cc: x86@kernel.org
-Cc: <stable@vger.kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Reported-by: Erwin Tsaur <erwin.tsaur@intel.com>
-Tested-by: Erwin Tsaur <erwin.tsaur@intel.com>
-Fixes: 92b0729c34ca ("x86/mm, x86/mce: Add memcpy_mcsafe()")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- arch/x86/include/asm/uaccess.h |    3 +++
- arch/x86/lib/copy_mc.c         |   12 +++++-------
- arch/x86/lib/copy_mc_64.S      |   40 ++++++++++++++++++++++++++++++++++++++++
- tools/objtool/check.c          |    1 +
- 4 files changed, 49 insertions(+), 7 deletions(-)
+gVisor accesses a file system through a file proxy, called the Gofer.
+The gofer runs as a separate process, that is isolated from the sandbox
+(sentry). Gofer instances communicate with their respective sentry using
+the 9P-like protocol. We used sockets as communication channels, but
+recently we switched to the flipcall (1) library which improve
+performance by using shared memory for data (reducing memory copies) and
+using futexes for control signaling (which is much cheaper than
+sendto/recvfrom/sendmsg/recvmsg).
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 4b2082b61e3e..b038eda58958 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -464,6 +464,9 @@ copy_mc_to_user(void *to, const void *from, unsigned len);
- 
- unsigned long __must_check
- copy_mc_fragile(void *dst, const void *src, unsigned cnt);
-+
-+unsigned long __must_check
-+copy_mc_generic(void *dst, const void *src, unsigned cnt);
- #else
- static inline void enable_copy_mc_fragile(void)
- {
-diff --git a/arch/x86/lib/copy_mc.c b/arch/x86/lib/copy_mc.c
-index cdb8f5dc403d..9e6fac1ab72e 100644
---- a/arch/x86/lib/copy_mc.c
-+++ b/arch/x86/lib/copy_mc.c
-@@ -23,7 +23,7 @@ void enable_copy_mc_fragile(void)
-  *
-  * Call into the 'fragile' version on systems that have trouble
-  * actually do machine check recovery. Everyone else can just
-- * use memcpy().
-+ * use copy_mc_generic().
-  *
-  * Return 0 for success, or number of bytes not copied if there was an
-  * exception.
-@@ -33,8 +33,7 @@ copy_mc_to_kernel(void *dst, const void *src, unsigned cnt)
- {
- 	if (static_branch_unlikely(&copy_mc_fragile_key))
- 		return copy_mc_fragile(dst, src, cnt);
--	memcpy(dst, src, cnt);
--	return 0;
-+	return copy_mc_generic(dst, src, cnt);
- }
- EXPORT_SYMBOL_GPL(copy_mc_to_kernel);
- 
-@@ -56,11 +55,10 @@ copy_mc_to_user(void *to, const void *from, unsigned len)
- {
- 	unsigned long ret;
- 
--	if (!static_branch_unlikely(&copy_mc_fragile_key))
--		return copy_user_generic(to, from, len);
--
- 	__uaccess_begin();
--	ret = copy_mc_fragile(to, from, len);
-+	if (static_branch_unlikely(&copy_mc_fragile_key))
-+		ret = copy_mc_fragile(to, from, len);
-+	ret = copy_mc_generic(to, from, len);
- 	__uaccess_end();
- 	return ret;
- }
-diff --git a/arch/x86/lib/copy_mc_64.S b/arch/x86/lib/copy_mc_64.S
-index 35a67c50890b..a08e7a4d9e28 100644
---- a/arch/x86/lib/copy_mc_64.S
-+++ b/arch/x86/lib/copy_mc_64.S
-@@ -2,7 +2,9 @@
- /* Copyright(c) 2016-2020 Intel Corporation. All rights reserved. */
- 
- #include <linux/linkage.h>
-+#include <asm/alternative-asm.h>
- #include <asm/copy_mc_test.h>
-+#include <asm/cpufeatures.h>
- #include <asm/export.h>
- #include <asm/asm.h>
- 
-@@ -122,4 +124,42 @@ EXPORT_SYMBOL_GPL(copy_mc_fragile)
- 	_ASM_EXTABLE(.L_write_leading_bytes, .E_leading_bytes)
- 	_ASM_EXTABLE(.L_write_words, .E_write_words)
- 	_ASM_EXTABLE(.L_write_trailing_bytes, .E_trailing_bytes)
-+
-+/*
-+ * copy_mc_generic - memory copy with exception handling
-+ *
-+ * Fast string copy + fault / exception handling. If the CPU does
-+ * support machine check exception recovery, but does not support
-+ * recovering from fast-string exceptions then this CPU needs to be
-+ * added to the copy_mc_fragile_key set of quirks. Otherwise, absent any
-+ * machine check recovery support this version should be no slower than
-+ * standard memcpy.
-+ */
-+SYM_FUNC_START(copy_mc_generic)
-+	ALTERNATIVE "jmp copy_mc_fragile", "", X86_FEATURE_ERMS
-+	movq %rdi, %rax
-+	movq %rdx, %rcx
-+.L_copy:
-+	rep movsb
-+	/* Copy successful. Return zero */
-+	xorl %eax, %eax
-+	ret
-+SYM_FUNC_END(copy_mc_generic)
-+EXPORT_SYMBOL_GPL(copy_mc_generic)
-+
-+	.section .fixup, "ax"
-+.E_copy:
-+	/*
-+	 * On fault %rcx is updated such that the copy instruction could
-+	 * optionally be restarted at the fault position, i.e. it
-+	 * contains 'bytes remaining'. A non-zero return indicates error
-+	 * to copy_mc_generic() users, or indicate short transfers to
-+	 * user-copy routines.
-+	 */
-+	movq %rcx, %rax
-+	ret
-+
-+	.previous
-+
-+	_ASM_EXTABLE_FAULT(.L_copy, .E_copy)
- #endif
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index f07adee5df9e..54c7467fa2fe 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -547,6 +547,7 @@ static const char *uaccess_safe_builtin[] = {
- 	"__ubsan_handle_shift_out_of_bounds",
- 	/* misc */
- 	"csum_partial_copy_generic",
-+	"copy_mc_generic",
- 	"copy_mc_fragile",
- 	"copy_mc_fragile_handle_tail",
- 	"ftrace_likely_update", /* CONFIG_TRACE_BRANCH_PROFILING */
+I modified the flipcall library to use FUTEX_SWAP and I see a
+significant performance improvement.
 
+A low level benchmarks (2) shows that req/resp is more than five time
+faster with FUTEX_SWAP than with FUTEX_WAKE&FUTEX_WAIT. This is more or
+less the same test what you did.
+
+* FUTEX_WAKE & FUTEX_WAIT
+BenchmarkSendRecv-8     88396     13625 ns/op
+
+* FUTEX_SWAP
+BenchmarkSendRecv-8    479604      2524 ns/op
+
+And a more high-level test (3) which benchmarks the open syscall in
+gVisor shows about 40% improvements.
+
+* FUTEX_WAKE & FUTEX_WAIT
+BM_Open/1/real_time_mean        93996 ns
+
+* FUTEX_SWAP
+BM_Open/1/real_time_mean        53136 ns
+
+I believe there are many use-cases for FUTEX_SWAP in other projects.
+
+1. https://github.com/google/gvisor/tree/master/pkg/flipcall
+2. https://github.com/google/gvisor/blob/master/pkg/flipcall/flipcall_test.go#L361
+3. https://github.com/google/gvisor/blob/master/test/perf/linux/open_benchmark.cc
+
+Thanks,
+Andrei
