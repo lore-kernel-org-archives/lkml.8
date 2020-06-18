@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26111C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D400C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05E65221F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15935221F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445743;
-	bh=zIczYH2m9DpHKIBjWfQBpxSMZtZDT8eNkp3iLg0nbgk=;
+	s=default; t=1592445750;
+	bh=zsf3BNbMkMFZFRzExFDVzfc4J9xwxSZPT9wxEK4Rizs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iVTXjbwT3ZNEB4Z02LNeLYv9lBbewO7lvr9Wqqyh3AZO8t1fHXi84XDt/oRdqK89W
-	 50oPAMavwUo7/W9B44T09CLv/53Ly2I0P8OgnnowXT4daDcAkY3SjvCKX2Ue1l6qaT
-	 GwEnaQNYrTX5XG4u37RxwwuMOye8g+I1VEHTxqFU=
+	b=zLj+Tg+d1gLqAIOFK0RSmj0NEx9AXShQ8fmQgigT4QnIqk+Ts6ij9VFznMFv021sl
+	 d1pnZU0V+oqu9riiDXA0D+VsiGGvH8dhaQ7net0ptYrnLQqwBsTUEM/J3h3KqirLtJ
+	 UvXi30TuYoHXD8PzTmaL4+N++PuCxXcW4Bc7qogU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbgFRCCV (ORCPT
+        id S1731219AbgFRCC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:02:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57986 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:02:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728993AbgFRBXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:23:54 -0400
+        id S1731073AbgFRBXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:23:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDF02221EE;
-        Thu, 18 Jun 2020 01:23:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4158020CC7;
+        Thu, 18 Jun 2020 01:23:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443433;
-        bh=zIczYH2m9DpHKIBjWfQBpxSMZtZDT8eNkp3iLg0nbgk=;
+        s=default; t=1592443431;
+        bh=zsf3BNbMkMFZFRzExFDVzfc4J9xwxSZPT9wxEK4Rizs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ojx4stz5yRddgOjVEwzs7B+Kze/AT9S1yRTpXK68OA8QRi3e3VNwcCGM+LwDuIRSt
-         kAN2AB95WhKi1eYW5+Q87Pgh+6foRXBzDFKZAfdfNXCXpPndXzIoG1LaiMO45qX9m9
-         W3HC110yL7fLrs/SFrdHG2gvXVi2bgzuIUNvMoZc=
+        b=GWwGbPpiivuJ0S2zc1PTCMRVwmovI1/28HyHufR1rOvqSiAK7ho4AwH5dl+S+9Sqs
+         CSNmh2c2y1+dYU5LO/xLRO1HtpC/3OngMp8HwFmAbQiDApPFGGLvsjKxPXcJqy39u1
+         BvuCb+5uLqY7QneNWLo935iCsKS/u7ymo7Ftq9t4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 072/172] usb: dwc3: gadget: Properly handle failed kick_transfer
-Date:   Wed, 17 Jun 2020 21:20:38 -0400
-Message-Id: <20200618012218.607130-72-sashal@kernel.org>
+Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 070/172] thermal/drivers/ti-soc-thermal: Avoid dereferencing ERR_PTR
+Date:   Wed, 17 Jun 2020 21:20:36 -0400
+Message-Id: <20200618012218.607130-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -60,66 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-[ Upstream commit 8d99087c2db863c5fa3a4a1f3cb82b3a493705ca ]
+[ Upstream commit 7440f518dad9d861d76c64956641eeddd3586f75 ]
 
-If dwc3 fails to issue START_TRANSFER/UPDATE_TRANSFER command, then we
-should properly end an active transfer and give back all the started
-requests. However if it's for an isoc endpoint, the failure maybe due to
-bus-expiry status. In this case, don't give back the requests and wait
-for the next retry.
+On error the function ti_bandgap_get_sensor_data() returns the error
+code in ERR_PTR() but we only checked if the return value is NULL or
+not. And, so we can dereference an error code inside ERR_PTR.
+While at it, convert a check to IS_ERR_OR_NULL.
 
-Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200424161944.6044-1-sudipm.mukherjee@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 8e66954dfcd4..2f5f4ca5c0d0 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1217,6 +1217,8 @@ static void dwc3_prepare_trbs(struct dwc3_ep *dep)
+diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+index b4f981daeaf2..452e034aedc1 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
++++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+@@ -183,7 +183,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
+ 
+ 	data = ti_bandgap_get_sensor_data(bgp, id);
+ 
+-	if (!data || IS_ERR(data))
++	if (!IS_ERR_OR_NULL(data))
+ 		data = ti_thermal_build_data(bgp, id);
+ 
+ 	if (!data)
+@@ -210,7 +210,7 @@ int ti_thermal_remove_sensor(struct ti_bandgap *bgp, int id)
+ 
+ 	data = ti_bandgap_get_sensor_data(bgp, id);
+ 
+-	if (data && data->ti_thermal) {
++	if (!IS_ERR_OR_NULL(data) && data->ti_thermal) {
+ 		if (data->our_zone)
+ 			thermal_zone_device_unregister(data->ti_thermal);
  	}
- }
+@@ -276,7 +276,7 @@ int ti_thermal_unregister_cpu_cooling(struct ti_bandgap *bgp, int id)
  
-+static void dwc3_gadget_ep_cleanup_cancelled_requests(struct dwc3_ep *dep);
-+
- static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
- {
- 	struct dwc3_gadget_ep_cmd_params params;
-@@ -1253,14 +1255,20 @@ static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
+ 	data = ti_bandgap_get_sensor_data(bgp, id);
  
- 	ret = dwc3_send_gadget_ep_cmd(dep, cmd, &params);
- 	if (ret < 0) {
--		/*
--		 * FIXME we need to iterate over the list of requests
--		 * here and stop, unmap, free and del each of the linked
--		 * requests instead of what we do now.
--		 */
--		if (req->trb)
--			memset(req->trb, 0, sizeof(struct dwc3_trb));
--		dwc3_gadget_del_and_unmap_request(dep, req, ret);
-+		struct dwc3_request *tmp;
-+
-+		if (ret == -EAGAIN)
-+			return ret;
-+
-+		dwc3_stop_active_transfer(dep, true, true);
-+
-+		list_for_each_entry_safe(req, tmp, &dep->started_list, list)
-+			dwc3_gadget_move_cancelled_request(req);
-+
-+		/* If ep isn't started, then there's no end transfer pending */
-+		if (!(dep->flags & DWC3_EP_END_TRANSFER_PENDING))
-+			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
-+
- 		return ret;
- 	}
- 
+-	if (data) {
++	if (!IS_ERR_OR_NULL(data)) {
+ 		cpufreq_cooling_unregister(data->cool_dev);
+ 		if (data->policy)
+ 			cpufreq_cpu_put(data->policy);
 -- 
 2.25.1
 
