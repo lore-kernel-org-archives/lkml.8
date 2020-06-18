@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F412FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BBAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4B6F2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423C920776
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448383;
-	bh=46TuojKElerzRkhYBmwo7iQmQzxwGyzSkvS4b+QUmQE=;
+	s=default; t=1592448397;
+	bh=z3TApV2sXDsdLnRKDBfmzrWUPYKbt+3FMoXHkR5RR4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=boJj8auJqHo9/VjYXgA8HSPiLoRwyF1Z8f2n4Mema2WO3UluDGbO+4MlvDqsxlF0n
-	 odpnJ/TjYHHMfDS7tssU+I12q16pLpxRrlMCNJKZyOndJbSlU4Z9yJ+j4QOAxEluom
-	 0sUPuR/RzWLMu/z6jr2trkdpOE5r/GgUODC6jrf8=
+	b=LitYXHzVJRbJcBqYQoqbTPSWKOByNRkMnRTCmBYASGxuxrawCsHmbBY5BJ3GBvBZK
+	 7ieReW3Bpjal2EdOUZV+Z/nCs0p1du9+Jj9k2uudJUaQmm/UzZlUQ7RC522OLdSVdS
+	 tHlDP78yQ05+ikr1I2LiL8MOAGwBo6VCxLYsz6AQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387885AbgFRCqW (ORCPT
+        id S1730618AbgFRCqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:46:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38118 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:46:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728588AbgFRBKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:43 -0400
+        id S1728545AbgFRBKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDBB921927;
-        Thu, 18 Jun 2020 01:10:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34D12221EA;
+        Thu, 18 Jun 2020 01:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442642;
-        bh=46TuojKElerzRkhYBmwo7iQmQzxwGyzSkvS4b+QUmQE=;
+        s=default; t=1592442635;
+        bh=z3TApV2sXDsdLnRKDBfmzrWUPYKbt+3FMoXHkR5RR4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rMOxfVsMY3rffsNBeL5MvRpRU0dmFyb+oynOmagLLRItjz/5hHlRADlKQQDW2a5pC
-         8QdPDpntJ7COExl49YIVK0+/vT00LwqEpTvVYufoOVUoCslP7nWsjvQmx70p77Po7+
-         DThyFCPi5k+Nh46FnJLy8+b4+O9Ug+ruj0DsmSRQ=
+        b=Idx70aDqfovYNJvbt/7yv3i/ZjLTmL0ZWV4V5NF9bK34LGZk5mU2zlHF4+O3vuaoe
+         I01Zfc+zGXPCVZaXEDl8rbkYvobtEvN16eAWAjJD2iAQpNTkwEB3twTnZ+LryfI4eT
+         zrZHMUBDhrY8oH4IK52SAmwqzhRZyGvTWHzYiStM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aiman Najjar <aiman.najjar@hurranet.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.7 117/388] staging: rtl8712: fix multiline derefernce warnings
-Date:   Wed, 17 Jun 2020 21:03:34 -0400
-Message-Id: <20200618010805.600873-117-sashal@kernel.org>
+Cc:     John Johansen <john.johansen@canonical.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 112/388] apparmor: fix nnp subset test for unconfined
+Date:   Wed, 17 Jun 2020 21:03:29 -0400
+Message-Id: <20200618010805.600873-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,78 +59,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aiman Najjar <aiman.najjar@hurranet.com>
+From: John Johansen <john.johansen@canonical.com>
 
-[ Upstream commit 269da10b1477c31c660288633c8d613e421b131f ]
+[ Upstream commit 3ed4aaa94fc07db3cd0c91be95e3e1b9782a2710 ]
 
-This patch fixes remaining checkpatch warnings
-in rtl871x_xmit.c:
+The subset test is not taking into account the unconfined exception
+which will cause profile transitions in the stacked confinement
+case to fail when no_new_privs is applied.
 
-WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->PrivacyKeyIndex'
-636: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:636:
-+					      (u8)psecuritypriv->
-+					      PrivacyKeyIndex);
+This fixes a regression introduced in the fix for
+https://bugs.launchpad.net/bugs/1839037
 
-WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
-643: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:643:
-+						   (u8)psecuritypriv->
-+						   XGrpKeyid);
-
-WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
-652: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:652:
-+						   (u8)psecuritypriv->
-+						   XGrpKeyid);
-
-Signed-off-by: Aiman Najjar <aiman.najjar@hurranet.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/98805a72b92e9bbf933e05b827d27944663b7bc1.1585508171.git.aiman.najjar@hurranet.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+BugLink: https://bugs.launchpad.net/bugs/1844186
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8712/rtl871x_xmit.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ security/apparmor/domain.c        |  9 +++++----
+ security/apparmor/include/label.h |  1 +
+ security/apparmor/label.c         | 33 +++++++++++++++++++++++++++++++
+ 3 files changed, 39 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
-index f0b85338b567..57f4fd22b0ff 100644
---- a/drivers/staging/rtl8712/rtl871x_xmit.c
-+++ b/drivers/staging/rtl8712/rtl871x_xmit.c
-@@ -589,7 +589,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
- 	addr_t addr;
- 	u8 *pframe, *mem_start, *ptxdesc;
- 	struct sta_info		*psta;
--	struct security_priv	*psecuritypriv = &padapter->securitypriv;
-+	struct security_priv	*psecpriv = &padapter->securitypriv;
- 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
- 	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
- 	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
-@@ -632,15 +632,13 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
- 				case _WEP40_:
- 				case _WEP104_:
- 					WEP_IV(pattrib->iv, psta->txpn,
--					       (u8)psecuritypriv->
--					       PrivacyKeyIndex);
-+					       (u8)psecpriv->PrivacyKeyIndex);
- 					break;
- 				case _TKIP_:
- 					if (bmcst)
- 						TKIP_IV(pattrib->iv,
- 						    psta->txpn,
--						    (u8)psecuritypriv->
--						    XGrpKeyid);
-+						    (u8)psecpriv->XGrpKeyid);
- 					else
- 						TKIP_IV(pattrib->iv, psta->txpn,
- 							0);
-@@ -648,8 +646,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
- 				case _AES_:
- 					if (bmcst)
- 						AES_IV(pattrib->iv, psta->txpn,
--						    (u8)psecuritypriv->
--						    XGrpKeyid);
-+						    (u8)psecpriv->XGrpKeyid);
- 					else
- 						AES_IV(pattrib->iv, psta->txpn,
- 						       0);
+diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
+index a84ef030fbd7..4cfa58c07778 100644
+--- a/security/apparmor/domain.c
++++ b/security/apparmor/domain.c
+@@ -929,7 +929,8 @@ int apparmor_bprm_set_creds(struct linux_binprm *bprm)
+ 	 * aways results in a further reduction of permissions.
+ 	 */
+ 	if ((bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS) &&
+-	    !unconfined(label) && !aa_label_is_subset(new, ctx->nnp)) {
++	    !unconfined(label) &&
++	    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+ 		error = -EPERM;
+ 		info = "no new privs";
+ 		goto audit;
+@@ -1207,7 +1208,7 @@ int aa_change_hat(const char *hats[], int count, u64 token, int flags)
+ 		 * reduce restrictions.
+ 		 */
+ 		if (task_no_new_privs(current) && !unconfined(label) &&
+-		    !aa_label_is_subset(new, ctx->nnp)) {
++		    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+ 			/* not an apparmor denial per se, so don't log it */
+ 			AA_DEBUG("no_new_privs - change_hat denied");
+ 			error = -EPERM;
+@@ -1228,7 +1229,7 @@ int aa_change_hat(const char *hats[], int count, u64 token, int flags)
+ 		 * reduce restrictions.
+ 		 */
+ 		if (task_no_new_privs(current) && !unconfined(label) &&
+-		    !aa_label_is_subset(previous, ctx->nnp)) {
++		    !aa_label_is_unconfined_subset(previous, ctx->nnp)) {
+ 			/* not an apparmor denial per se, so don't log it */
+ 			AA_DEBUG("no_new_privs - change_hat denied");
+ 			error = -EPERM;
+@@ -1423,7 +1424,7 @@ int aa_change_profile(const char *fqname, int flags)
+ 		 * reduce restrictions.
+ 		 */
+ 		if (task_no_new_privs(current) && !unconfined(label) &&
+-		    !aa_label_is_subset(new, ctx->nnp)) {
++		    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+ 			/* not an apparmor denial per se, so don't log it */
+ 			AA_DEBUG("no_new_privs - change_hat denied");
+ 			error = -EPERM;
+diff --git a/security/apparmor/include/label.h b/security/apparmor/include/label.h
+index 47942c4ba7ca..255764ab06e2 100644
+--- a/security/apparmor/include/label.h
++++ b/security/apparmor/include/label.h
+@@ -281,6 +281,7 @@ bool aa_label_init(struct aa_label *label, int size, gfp_t gfp);
+ struct aa_label *aa_label_alloc(int size, struct aa_proxy *proxy, gfp_t gfp);
+ 
+ bool aa_label_is_subset(struct aa_label *set, struct aa_label *sub);
++bool aa_label_is_unconfined_subset(struct aa_label *set, struct aa_label *sub);
+ struct aa_profile *__aa_label_next_not_in_set(struct label_it *I,
+ 					     struct aa_label *set,
+ 					     struct aa_label *sub);
+diff --git a/security/apparmor/label.c b/security/apparmor/label.c
+index 6c3acae701ef..5f324d63ceaa 100644
+--- a/security/apparmor/label.c
++++ b/security/apparmor/label.c
+@@ -550,6 +550,39 @@ bool aa_label_is_subset(struct aa_label *set, struct aa_label *sub)
+ 	return __aa_label_next_not_in_set(&i, set, sub) == NULL;
+ }
+ 
++/**
++ * aa_label_is_unconfined_subset - test if @sub is a subset of @set
++ * @set: label to test against
++ * @sub: label to test if is subset of @set
++ *
++ * This checks for subset but taking into account unconfined. IF
++ * @sub contains an unconfined profile that does not have a matching
++ * unconfined in @set then this will not cause the test to fail.
++ * Conversely we don't care about an unconfined in @set that is not in
++ * @sub
++ *
++ * Returns: true if @sub is special_subset of @set
++ *     else false
++ */
++bool aa_label_is_unconfined_subset(struct aa_label *set, struct aa_label *sub)
++{
++	struct label_it i = { };
++	struct aa_profile *p;
++
++	AA_BUG(!set);
++	AA_BUG(!sub);
++
++	if (sub == set)
++		return true;
++
++	do {
++		p = __aa_label_next_not_in_set(&i, set, sub);
++		if (p && !profile_unconfined(p))
++			break;
++	} while (p);
++
++	return p == NULL;
++}
+ 
+ 
+ /**
 -- 
 2.25.1
 
