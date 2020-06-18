@@ -2,157 +2,176 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A81C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE357C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1E820773
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:38:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="icvfQlKx"
+	by mail.kernel.org (Postfix) with ESMTP id B182F20885
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:38:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbgFROiN (ORCPT
+        id S1730855AbgFROiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:38:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51481 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730804AbgFROiI (ORCPT
+        Thu, 18 Jun 2020 10:38:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730833AbgFROiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:38:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592491087;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kR8hgd7C1aRuJxjGr8WKWNlO51iJPFeA6wAT6FeN9mY=;
-        b=icvfQlKxLy2tRreWqNpTUN7ZrgXzp9Z2d78tRoZ0VVRwkzyZylpj7U+jsN+MM8SxZ/ZMru
-        bnASD1mJVpAh9okK2vsXCnYqSvxA3fGCFtcdV/ZQn0IcxvR46im2KavTIz60069TEEiMLi
-        nGVCiTfiQ7Zk8ZtZ5HXtorgVTafa4MM=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-198-sIDRt17RMzWxaOfSqB8lDQ-1; Thu, 18 Jun 2020 10:38:04 -0400
-X-MC-Unique: sIDRt17RMzWxaOfSqB8lDQ-1
-Received: by mail-qt1-f199.google.com with SMTP id k23so4558382qtb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:38:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kR8hgd7C1aRuJxjGr8WKWNlO51iJPFeA6wAT6FeN9mY=;
-        b=X7Xp8lU6VtzmE5E3Xt2NxIrDiNkUxcYrz26WY6BnzPyZFrHeCcsuQY35Nr2v4FhTk6
-         L62wxFBGIKww71PRPjli0VFdmVmDJdAsy04MLRRujdn1axAh4+jqTMRMo4Pk+2Hv6DP7
-         EjoegYO/ElyU67okri8IVUrY9hycdC1dk3AQzs+TZZcqYHlGhTv8RZquxzQpkWY4efTW
-         ne3rx/AwYwKMHMV+A5e//wsSIyw79us+oxHNqzwlSnLtGLwCoc/1EZ7xMTgkt+Wr9iJf
-         Rg7YpFFR5qxHIu2U+K2a3mxZLVWIPGI76LuuAF7KsdDRYLHDzSBJOnGbvGHG5p0jrcFF
-         Rnmg==
-X-Gm-Message-State: AOAM530gJAIkbynw5N9csz3iB90B6uqDG3QYTO5mDBvG4cICyjvvO1lS
-        eSYLilql3IUldIxZfebAk51nZUdpH8O8ZS5aBHO/lbSnF08UWue7ga/qAk3hC0NaNWkuJ9wiGfD
-        AX8kagxunYPbaQKjXjc8XnORN
-X-Received: by 2002:a37:510:: with SMTP id 16mr3799068qkf.158.1592491084286;
-        Thu, 18 Jun 2020 07:38:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzgIlVSOfyTkKlA6rdJwQo1PKbMN5rge+wF3Pm4MBxSEYVC1edOee7Ik8ZU/elsoO8j3z7Lbg==
-X-Received: by 2002:a37:510:: with SMTP id 16mr3799027qkf.158.1592491083984;
-        Thu, 18 Jun 2020 07:38:03 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id f30sm3143755qtb.9.2020.06.18.07.38.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 07:38:03 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 10:38:01 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Guo Ren <guoren@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        linux-csky@vger.kernel.org
-Subject: Re: [PATCH 07/25] mm/csky: Use mm_fault_accounting()
-Message-ID: <20200618143801.GK76766@xz-x1>
-References: <20200615221607.7764-1-peterx@redhat.com>
- <20200615221607.7764-8-peterx@redhat.com>
- <CAJF2gTSVSXO=phc1eeb-ZmDMrSDjSSLd3tN6ng_8n-pCSZh5zw@mail.gmail.com>
- <20200617154925.GC76766@xz-x1>
- <CAHk-=wi=58J7d5iyFyYyHrU+pzjWB55cit_LQCkSkavpH-trsg@mail.gmail.com>
- <20200617195807.GH76766@xz-x1>
- <CAHk-=wj_V2Tps2QrMn20_W0OJF9xqNh52XSGA42s-ZJ8Y+GyKw@mail.gmail.com>
+        Thu, 18 Jun 2020 10:38:12 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECDEFC06174E;
+        Thu, 18 Jun 2020 07:38:11 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jlvg5-0003us-4c; Thu, 18 Jun 2020 16:38:05 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C04421C0087;
+        Thu, 18 Jun 2020 16:38:04 +0200 (CEST)
+Date:   Thu, 18 Jun 2020 14:38:04 -0000
+From:   "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/stackprotector: Pre-initialize canary for secondary CPUs
+Cc:     Brian Gerst <brgerst@gmail.com>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200617225624.799335-1-brgerst@gmail.com>
+References: <20200617225624.799335-1-brgerst@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wj_V2Tps2QrMn20_W0OJF9xqNh52XSGA42s-ZJ8Y+GyKw@mail.gmail.com>
+Message-ID: <159249108452.16989.12600513315187203881.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 01:15:31PM -0700, Linus Torvalds wrote:
-> On Wed, Jun 17, 2020 at 12:58 PM Peter Xu <peterx@redhat.com> wrote:
-> >
-> > But currently remote GUP will still do the page fault accounting on the remote
-> > task_struct, am I right?  E.g., when the get_user_pages_remote() is called with
-> > "tsk != current", it seems the faultin_page() will still do maj_flt/min_flt
-> > accounting for that remote task/thread?
-> 
-> Well, that would be a data race and fundamentally buggy.
-> 
-> It would be ok with something like ptrace (which only works when the
-> target is quiescent), but is completely wrong otherwise.
-> 
-> I guess it works fine in practice, and it's only statistics so even if
-> you were to have a data race it doesn't much matter, but it's
-> definitely conceptually very very wrong.
-> 
-> The fault stats should be about who does the fault (they are about the
-> _thread_) not about who the fault is done to (which is about the
-> _mm_).
-> 
-> Allocating the fault data to somebody else sounds frankly silly and
-> stupid to me, exactly because it's (a) racy and (b) not even
-> conceptually correct. The other thread literally _isn't_ doing a major
-> page fault, for crissake!
-> 
-> Now, there are some actual per-mm statistics too (the rss stuff etc),
-> and it's fundamentally harder exactly because of the shared data. See
-> the mm_counter stuff etc. Those are not about who does soemthing, they
-> are about the resulting MM state.
+The following commit has been merged into the x86/cpu branch of tip:
 
-I see.  How about I move another small step further to cover GUP (to be
-explicit, faultin_page() and fixup_user_fault())?
+Commit-ID:     c9a1ff316bc9b1d1806a4366d0aef6e18833ba52
+Gitweb:        https://git.kernel.org/tip/c9a1ff316bc9b1d1806a4366d0aef6e18833ba52
+Author:        Brian Gerst <brgerst@gmail.com>
+AuthorDate:    Wed, 17 Jun 2020 18:56:24 -04:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 18 Jun 2020 13:09:17 +02:00
 
-GUP needs the per-task accounting, but not the perf events.  We can do that by
-slightly changing the new approach into:
+x86/stackprotector: Pre-initialize canary for secondary CPUs
 
-        bool major = (ret & VM_FAULT_MAJOR) || (flags & FAULT_FLAG_TRIED);
+The idle tasks created for each secondary CPU already have a random stack
+canary generated by fork().  Copy the canary to the percpu variable before
+starting the secondary CPU which removes the need to call
+boot_init_stack_canary().
 
-        if (major)
-                current->maj_flt++;
-        else
-                current->min_flt++;
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200617225624.799335-1-brgerst@gmail.com
+---
+ arch/x86/include/asm/stackprotector.h | 12 ++++++++++++
+ arch/x86/kernel/smpboot.c             | 14 ++------------
+ arch/x86/xen/smp_pv.c                 |  2 --
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
-        if (!regs)
-                return ret;
-
-        if (major)
-                perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1, regs, address);
-        else
-                perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs, address);
-
-With the change we will always account that onto current task.  Since there're
-GUP calls that are not even accounted at all, e.g., get_user_pages_remote()
-with tsk==NULL: for these calls, we also account these page faults onto current
-task.
-
-Another major benefit I can see (besides a completely cleaned up accounting) is
-that we can remove the task_struct pointer in the whole GUP code, because
-AFAICT that's only used for this pf accounting either in faultin_page() or
-fixup_user_fault(), which seems questionable itself now to not use current...
-
-Any opinions?
-
-Thanks,
-
---
-Peter Xu
-
+diff --git a/arch/x86/include/asm/stackprotector.h b/arch/x86/include/asm/stackprotector.h
+index 9804a79..7fb482f 100644
+--- a/arch/x86/include/asm/stackprotector.h
++++ b/arch/x86/include/asm/stackprotector.h
+@@ -90,6 +90,15 @@ static __always_inline void boot_init_stack_canary(void)
+ #endif
+ }
+ 
++static inline void cpu_init_stack_canary(int cpu, struct task_struct *idle)
++{
++#ifdef CONFIG_X86_64
++	per_cpu(fixed_percpu_data.stack_canary, cpu) = idle->stack_canary;
++#else
++	per_cpu(stack_canary.canary, cpu) = idle->stack_canary;
++#endif
++}
++
+ static inline void setup_stack_canary_segment(int cpu)
+ {
+ #ifdef CONFIG_X86_32
+@@ -119,6 +128,9 @@ static inline void load_stack_canary_segment(void)
+ static inline void setup_stack_canary_segment(int cpu)
+ { }
+ 
++static inline void cpu_init_stack_canary(int cpu, struct task_struct *idle)
++{ }
++
+ static inline void load_stack_canary_segment(void)
+ {
+ #ifdef CONFIG_X86_32
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index ffbd9a3..a11bd53 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -51,7 +51,6 @@
+ #include <linux/err.h>
+ #include <linux/nmi.h>
+ #include <linux/tboot.h>
+-#include <linux/stackprotector.h>
+ #include <linux/gfp.h>
+ #include <linux/cpuidle.h>
+ #include <linux/numa.h>
+@@ -80,6 +79,7 @@
+ #include <asm/cpu_device_id.h>
+ #include <asm/spec-ctrl.h>
+ #include <asm/hw_irq.h>
++#include <asm/stackprotector.h>
+ 
+ /* representing HT siblings of each logical CPU */
+ DEFINE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_sibling_map);
+@@ -259,21 +259,10 @@ static void notrace start_secondary(void *unused)
+ 	/* enable local interrupts */
+ 	local_irq_enable();
+ 
+-	/* to prevent fake stack check failure in clock setup */
+-	boot_init_stack_canary();
+-
+ 	x86_cpuinit.setup_percpu_clockev();
+ 
+ 	wmb();
+ 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+-
+-	/*
+-	 * Prevent tail call to cpu_startup_entry() because the stack protector
+-	 * guard has been changed a couple of function calls up, in
+-	 * boot_init_stack_canary() and must not be checked before tail calling
+-	 * another function.
+-	 */
+-	prevent_tail_call_optimization();
+ }
+ 
+ /**
+@@ -1011,6 +1000,7 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
+ 	alternatives_enable_smp();
+ 
+ 	per_cpu(current_task, cpu) = idle;
++	cpu_init_stack_canary(cpu, idle);
+ 
+ 	/* Initialize the interrupt stack(s) */
+ 	ret = irq_init_percpu_irqstack(cpu);
+diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+index 171aff1..9ea598d 100644
+--- a/arch/x86/xen/smp_pv.c
++++ b/arch/x86/xen/smp_pv.c
+@@ -92,9 +92,7 @@ static void cpu_bringup(void)
+ asmlinkage __visible void cpu_bringup_and_idle(void)
+ {
+ 	cpu_bringup();
+-	boot_init_stack_canary();
+ 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+-	prevent_tail_call_optimization();
+ }
+ 
+ void xen_smp_intr_free_pv(unsigned int cpu)
