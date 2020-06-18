@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA18CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB2F21974
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DBC02088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446082;
-	bh=Qst3gLNK9wrok6P6osrJ4g7xTY41Syzr7EHJ/Cl8yVI=;
+	s=default; t=1592446093;
+	bh=tvECZ2BnrTzp+1yK+4AAGwqVP4cziadaM0SPFe/jfbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K4mqrwWa6Tup/o+PD3nUxjZhmgKfyO8Ioe4fRVWHIFiAY08P2G8FsxOW/zlIc6f7X
-	 Csr5fJabC5HBCuNyfWKuaj7zDiPPIa2+yA6bfZvkIkoLHaJ9YhobHb3zCIVbaOlPsa
-	 Is1DiHoCe+nZbXarK76V95l7lIe+V6lwE/hXNrzM=
+	b=VW6MHXWWv5ppRniOTJhoCiyrHsuwvVykmBkv2jUH8vjk0mB6YTCIZabdU1Lf9qX4s
+	 vOaOJejJ+JcAfMpAa0rne9UnA2Lw6R4o1sHMoelC60wXGnOjMl2wdQJyvxjdj3Z8W+
+	 rZXe6mTq/3KgbsF4/JqkrDYDo8rdgrrh/M3MZu44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733095AbgFRCH6 (ORCPT
+        id S1732489AbgFRCIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:07:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55080 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:08:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730673AbgFRBWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:12 -0400
+        id S1730650AbgFRBWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:22:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE1E1221EF;
-        Thu, 18 Jun 2020 01:22:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91E7A20776;
+        Thu, 18 Jun 2020 01:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443332;
-        bh=Qst3gLNK9wrok6P6osrJ4g7xTY41Syzr7EHJ/Cl8yVI=;
+        s=default; t=1592443326;
+        bh=tvECZ2BnrTzp+1yK+4AAGwqVP4cziadaM0SPFe/jfbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WORZfR56P3nzA12RbV9lh0uCfD/mUf71Cu6RF11UzBPMv/Rg412p7AXnLT3YqNoUL
-         5pK617GemWL7yBW1IrFnFehPEtENn+N96AoteDBz0m5mWJp4bee58RvqaxoCixql/k
-         Zc8EJJAeSSuvpUtkcKZP72K8Lqi+EvScpTUSb1z0=
+        b=jKGHpHO5a7f+0VkCQsHwlxsjiwL/Civ+jLbjkf8/NTKaKq8aHblXFk07unBRVwTjU
+         JMGBGGn/DqUd3oIe7ppqTSCv302ZMzl1HhZyr8+Tie/J8D9twfXJylJJLuzhdKzLT4
+         uuYIf3hPa1ZniRrN052m0bzZicFoYx2CRVvhtE+4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Li RongQing <lirongqing@baidu.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 264/266] xdp: Fix xsk_generic_xmit errno
-Date:   Wed, 17 Jun 2020 21:16:29 -0400
-Message-Id: <20200618011631.604574-264-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 259/266] scsi: acornscsi: Fix an error handling path in acornscsi_probe()
+Date:   Wed, 17 Jun 2020 21:16:24 -0400
+Message-Id: <20200618011631.604574-259-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,40 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit aa2cad0600ed2ca6a0ab39948d4db1666b6c962b ]
+[ Upstream commit 42c76c9848e13dbe0538d7ae0147a269dfa859cb ]
 
-Propagate sock_alloc_send_skb error code, not set it to
-EAGAIN unconditionally, when fail to allocate skb, which
-might cause that user space unnecessary loops.
+'ret' is known to be 0 at this point.  Explicitly return -ENOMEM if one of
+the 'ecardm_iomap()' calls fail.
 
-Fixes: 35fcde7f8deb ("xsk: support for Tx")
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Link: https://lore.kernel.org/bpf/1591852266-24017-1-git-send-email-lirongqing@baidu.com
+Link: https://lore.kernel.org/r/20200530081622.577888-1-christophe.jaillet@wanadoo.fr
+Fixes: e95a1b656a98 ("[ARM] rpc: acornscsi: update to new style ecard driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xsk.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/scsi/arm/acornscsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index 7181a30666b4..f9eb5efb237c 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -362,10 +362,8 @@ static int xsk_generic_xmit(struct sock *sk)
+diff --git a/drivers/scsi/arm/acornscsi.c b/drivers/scsi/arm/acornscsi.c
+index d12dd89538df..deab66598910 100644
+--- a/drivers/scsi/arm/acornscsi.c
++++ b/drivers/scsi/arm/acornscsi.c
+@@ -2911,8 +2911,10 @@ static int acornscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
  
- 		len = desc.len;
- 		skb = sock_alloc_send_skb(sk, len, 1, &err);
--		if (unlikely(!skb)) {
--			err = -EAGAIN;
-+		if (unlikely(!skb))
- 			goto out;
--		}
+ 	ashost->base = ecardm_iomap(ec, ECARD_RES_MEMC, 0, 0);
+ 	ashost->fast = ecardm_iomap(ec, ECARD_RES_IOCFAST, 0, 0);
+-	if (!ashost->base || !ashost->fast)
++	if (!ashost->base || !ashost->fast) {
++		ret = -ENOMEM;
+ 		goto out_put;
++	}
  
- 		skb_put(skb, len);
- 		addr = desc.addr;
+ 	host->irq = ec->irq;
+ 	ashost->host = host;
 -- 
 2.25.1
 
