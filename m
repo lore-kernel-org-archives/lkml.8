@@ -2,100 +2,116 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E59C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF08C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B35A020888
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:35:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592523350;
-	bh=60wkdJzvFg/6tlglOjQPgWYN/SHTvdLdTZp6Zt/GAP8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uJ4A3Q/iSKFbW2i5qS0sUcarHf8hYcREs7+fZ2R8LSfXwmdo83dTP33q9376bBWmA
-	 F64s4YM2ZeTo+CyMKVVWl/i8js7GWIMGJcU1YXrQHqJnO2EFCOStI8LIrg+NAqwMy6
-	 tnaOxN3b3Wkr6IHdezeAYBS1TS55UJnmOPLlM/gs=
+	by mail.kernel.org (Postfix) with ESMTP id 96CC9206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:38:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZrdFXYvr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgFRXft (ORCPT
+        id S1727037AbgFRXiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 19:35:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbgFRXfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 19:35:48 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E6FE206FA;
-        Thu, 18 Jun 2020 23:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592523348;
-        bh=60wkdJzvFg/6tlglOjQPgWYN/SHTvdLdTZp6Zt/GAP8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=haHhbMDYFdA455rCqd1raN1WRkUs+1zRBXt59PTWKEoQy7Fcg8emVGkCvodK7ObKa
-         OWeXz7dVcHNGuUlAh8JBd9GwgfGJj60GFtGivnG/CjrPf7GADzS2OjXaBRcbZucZcW
-         Ym2ERz/z7Ja+vjSorGZrUaa4O/CBiVoTwAYXTlFc=
-Date:   Thu, 18 Jun 2020 16:35:45 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Barry Song <song.bao.hua@hisilicon.com>
-Cc:     <davem@davemloft.net>, <yisen.zhuang@huawei.com>,
-        <salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
-        <linyunsheng@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>
-Subject: Re: [PATCH 2/5] net: hns3: pointer type of buffer should be void
-Message-ID: <20200618163545.4544860d@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <20200618010211.75840-3-song.bao.hua@hisilicon.com>
-References: <20200618010211.75840-1-song.bao.hua@hisilicon.com>
-        <20200618010211.75840-3-song.bao.hua@hisilicon.com>
+        Thu, 18 Jun 2020 19:38:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgFRXh6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 19:37:58 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A1EC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:37:57 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id i4so3484002pjd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=WVpMi69RhX6AlKIc/TV+JAVrcTVQ8jcepQSU/Lx1Ia8=;
+        b=ZrdFXYvrd7w7AxZmBqDQ7XDvlgXtG7LCUhK/NlZgc+S8B4hTRH4lWnej597gWOw3Ch
+         2gQYIFD1JsrSpG4a3Pqw3ZzMvNsSYzDdxBOC+KVFzfSQZ4fdKV4qYEVrGiQGbYyEKnbw
+         r/cTQ/KI/nnu5A9DYBGElCFs5ENXAkHO/qfOg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=WVpMi69RhX6AlKIc/TV+JAVrcTVQ8jcepQSU/Lx1Ia8=;
+        b=ChI4Cv88W6mxQqMGNYZCkr5ijF3sD/61fIoO8rGDWbewLZFgMTl5FgcEeeVydJk1Zo
+         wZ/eglp6entq9152KpI+XWCbWse8ohqYd48L1K3oScfT5FZ7DK9ioA2W1Y7u76hLFRap
+         DXZBTpvnDl+avOr6uZ7p1NpuSG/2kM9rjXWdCzbf7qs/pGmVI2wPs7i5XeUufcX7cOcN
+         OQnBBe21BOTJpGZUJZpqcXcEdysNzWb9EdMRL6t7IG2rT0onO+bujGVtHtVmSg5Y5fzW
+         xcO15Plux3l0JuVBMcQKLYZNcZO2WqoPMvU67SvqYjcd/mizjSewqunSudHAoRvtkABA
+         mpZQ==
+X-Gm-Message-State: AOAM5300oSs+XvzlifyrmOh75vbdcp/1qMvL0s8NfKG6TPtjA7riEkhY
+        5bG6EWniXgGn8ODdtgeMVx6jNA==
+X-Google-Smtp-Source: ABdhPJxlzELG49LGZDZUYQPHCXKPiBbx6hWYaTzn3v+DaL2ie6JbODXE9Z16wsDVzwst62vFk6lIeQ==
+X-Received: by 2002:a17:90a:2843:: with SMTP id p3mr675332pjf.187.1592523476571;
+        Thu, 18 Jun 2020 16:37:56 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id m15sm3403754pgv.45.2020.06.18.16.37.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 16:37:55 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAD=FV=W1y4Z4T13i410zkb27mUxqn+rQE889=ckEEBhbPuci2w@mail.gmail.com>
+References: <20200618150626.237027-1-dianders@chromium.org> <20200618080459.v4.5.Ib1e6855405fc9c99916ab7c7dee84d73a8bf3d68@changeid> <159250352382.62212.8085892973272354046@swboyd.mtv.corp.google.com> <CAD=FV=Xh3+cROZC8dCn99MLkngsyBcxq+Gv1CERayZXExwdygA@mail.gmail.com> <159251712230.62212.10744179843753723398@swboyd.mtv.corp.google.com> <CAD=FV=W1y4Z4T13i410zkb27mUxqn+rQE889=ckEEBhbPuci2w@mail.gmail.com>
+Subject: Re: [PATCH v4 5/5] spi: spi-geni-qcom: Don't keep a local state variable
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Date:   Thu, 18 Jun 2020 16:37:55 -0700
+Message-ID: <159252347502.62212.15886549130634139267@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jun 2020 13:02:08 +1200 Barry Song wrote:
-> Move the type of buffer address from unsigned char to void
-> 
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
-> ---
->  drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 2 +-
->  drivers/net/ethernet/hisilicon/hns3/hns3_enet.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-> index 1817d7f2e5f6..61b5a849b162 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-> @@ -3070,7 +3070,7 @@ static int hns3_handle_rx_bd(struct hns3_enet_ring *ring)
->  		return -ENXIO;
->  
->  	if (!skb)
-> -		ring->va = (unsigned char *)desc_cb->buf + desc_cb->page_offset;
-> +		ring->va = desc_cb->buf + desc_cb->page_offset;
->  
->  	/* Prefetch first cache line of first page
->  	 * Idea is to cache few bytes of the header of the packet. Our L1 Cache
-> diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-> index 66cd4395f781..9f64077ee834 100644
-> --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-> +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-> @@ -407,7 +407,7 @@ struct hns3_enet_ring {
->  
->  	u32 pull_len; /* head length for current packet */
->  	u32 frag_num;
-> -	unsigned char *va; /* first buffer address for current packet */
-> +	void *va; /* first buffer address for current packet */
->  
->  	u32 flag;          /* ring attribute */
->  
+Quoting Doug Anderson (2020-06-18 15:00:10)
+> On Thu, Jun 18, 2020 at 2:52 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > -----8<----
+> > diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+> > index d8f03ffb8594..670f83793aa4 100644
+> > --- a/drivers/spi/spi-geni-qcom.c
+> > +++ b/drivers/spi/spi-geni-qcom.c
+> > @@ -121,6 +121,10 @@ static void handle_fifo_timeout(struct spi_master =
+*spi,
+> >         spin_lock_irq(&mas->lock);
+> >         reinit_completion(&mas->cancel_done);
+> >         writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
+> > +       /*
+> > +        * Make sure we don't finalize a spi transfer that timed out but
+> > +        * came in while cancelling.
+> > +        */
+> >         mas->cur_xfer =3D NULL;
+> >         mas->tx_rem_bytes =3D mas->rx_rem_bytes =3D 0;
+> >         geni_se_cancel_m_cmd(se);
+>=20
+> Sure.  It gets the point across, though
+> spi_finalize_current_transfer() is actually pretty harmless if you
+> call it while cancelling.  It just calls a completion.  I'd rather say
+> something like "If we're here because the SPI controller was calling
+> handle_err() then the transfer is done and we shouldn't hold onto it
+> anymore".
+>=20
 
-I think void pointer arithmetic is questionable in the eyes of the C
-standard. But I'm not sure about kernel C.
-
-Otherwise series looks good to me.
-
+Agreed it's mostly harmless. I thought the concern was that 'cur_xfer'
+may reference a freed piece of memory so it's best to remove ownership
+of the pointer from here so that the irq handler doesn't try to finalize
+a transfer that may no longer exist. "Shouldn't hold onto it anymore"
+doesn't tell us why it shouldn't be held onto, leaving it to the reader
+to figure out why, which isn't good.
