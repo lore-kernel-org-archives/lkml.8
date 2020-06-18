@@ -2,122 +2,152 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AF9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D293C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E79162073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B7E2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:17:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rchpbBYb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Geh+g+f9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729979AbgFRNQo (ORCPT
+        id S1730096AbgFRNRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:16:44 -0400
-Received: from mail-eopbgr70057.outbound.protection.outlook.com ([40.107.7.57]:6083
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728632AbgFRNQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:16:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g/1+f1MMQtUbdhw2g7J/Ba/QGpgleer0e/7x7ElX1xljT1brC+6pzbHqKyRB7/jacNOjOAitXYvN8vMnChYT6FtiYdW5KjWDpem6EI+SzLoPHjQZETdwVEjFF+pVRaJJnZGw9vesCbU/KqvDdJZ5dzh3mZAi+x9aqPZF8yVOd0Uesgq4btCeGKAOc1MDnUf2lhWU7x/7vMyxHRpn+Wx2GkUsKNpdVXxkt7zd29xAIVGX8zvSy0aFZZipuRukNe3wICX45mEgatLOdmnPnejvWtN4B1E+w2OUPSUWMGd/wsJHWKsqaTdu9E49LmcEkydrCuKNRB7Dg3plObBHkWqxhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aLIVCobv+W2l/D5MH6wzp50yQZ2+ZqMd6zZCmLl5Jlo=;
- b=bqRxfyTSiEnZQDhP9WbXoXIQAw8cHLZmezOxQO4deJ1pyeKoCEKdyKop/t/CI4cp4cIf3CDWj87kjP8v4r1n7LFUQu7YjWTpo+icydBtG3wU76qqkQvxUVBkACBhAFrx58ghBZxpnFKGYTIgiq/xUheWqD7Vuu7VumQURkkXygNWUolJuceKADKXGAkxa6XD+CN9dJgi48X2570kVfC1LfeXK6v1x/HOXLxrP2X2sgDIXirYMbWiFH3TauC9GveENUgqMhuhs1wMBe35cWc6iT+6kVm/PlDOhuwvwDPemTmr0SQwQcM8k0fmx8v4g18psr+Bt2gsDnU9Nk/QfgGjgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aLIVCobv+W2l/D5MH6wzp50yQZ2+ZqMd6zZCmLl5Jlo=;
- b=rchpbBYbYkcHz8j1rtcmPVssA00tr6moAJ5leFF6I2Ot5zpGIS65WAhaDzwPFVDNQ2iWohZZPsKqNBsXqgkoeyU7p1d/t75/foOKeuJ5Q2UzKejLc5xAIgrFY5PesYr+nMAqa5Jl5CtaCvutxvsG4ut7IvhByOUq5h3QLdOmRPI=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB4046.eurprd04.prod.outlook.com (2603:10a6:803:4d::29)
- by VI1PR04MB7040.eurprd04.prod.outlook.com (2603:10a6:800:121::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Thu, 18 Jun
- 2020 13:16:33 +0000
-Received: from VI1PR04MB4046.eurprd04.prod.outlook.com
- ([fe80::4cf0:3c9c:ed2:aacd]) by VI1PR04MB4046.eurprd04.prod.outlook.com
- ([fe80::4cf0:3c9c:ed2:aacd%4]) with mapi id 15.20.3109.021; Thu, 18 Jun 2020
- 13:16:33 +0000
-Subject: Re: [PATCH] crypto: caam/qi2: remove redundant assignment to ret
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Colin King <colin.king@canonical.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200611153934.928021-1-colin.king@canonical.com>
- <8e08adcb-ef91-124d-d093-921fc97da3af@nxp.com>
- <20200618110050.GA10995@gondor.apana.org.au>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <b351f9b5-940c-61d3-38f2-3654c6da55b0@nxp.com>
-Date:   Thu, 18 Jun 2020 16:16:29 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200618110050.GA10995@gondor.apana.org.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR10CA0102.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:e6::19) To VI1PR04MB4046.eurprd04.prod.outlook.com
- (2603:10a6:803:4d::29)
+        Thu, 18 Jun 2020 09:17:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730017AbgFRNQ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 09:16:59 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54FFCC06174E;
+        Thu, 18 Jun 2020 06:16:59 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id y6so4839954edi.3;
+        Thu, 18 Jun 2020 06:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=48gB+FKpHGZivOJlNsg9by7jPEV/1dGczJbcHmuBME4=;
+        b=Geh+g+f9ChaBf/gxuwgIH8IkAR58S9I0a0k9wYrv7U7Q1Q8vYUYy2X2pfXF1nQMBE5
+         EfwQzcGke/qewUUjtLfbGftBSVKWohwJDphitmQ4atJ5ZXd+pUYUbM3WsJk6QN6fHMoE
+         7eDl12g0YhfaKbBUAUm0AHqh4FicEnjWjMrD7hOCHSEz0SGZcShCw2beo7Us3l32TvPf
+         g63h75qi+spKdRLjUTkdQvc9NM6viCOvbFBYledJzJXspd2+4g09a7pZHRUHAjCW0v93
+         o996z5gN5fkSx+g+hYSv94xo+t44Y32Evta7w0WqD0zxGjfCEbn07wLZXgI/REOygrtE
+         JWfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=48gB+FKpHGZivOJlNsg9by7jPEV/1dGczJbcHmuBME4=;
+        b=e3CStdF3OnVzxkodE4oC0HHh/rmG7u6nqvRL/off3IYYbmKpzSLWs3bzHJqRBqDMNd
+         bQaEAeOrrtHdCgvWhe2gC/9RALyXU+vB3BpfaxSYxLukqLn7ZDXv3MR0IWNx952W4hwo
+         t9dZAVi1cJnmMY1g85y/yyNaoJema3bi3CJ2hW/jwrRPiuXVYj0VKgBnpRdcZHCQlzM5
+         Ud6oL7jORO6LB0nLPWv+XD/ENPzQ0vYi0Zqmwusiw2ONDv4UvGHjwf5OFmDbznvoqD/4
+         PigmX+gYXGwHbt6ao8V7WfPxwncZBqSnpmt/eNfT3VNhqTX+HVPlad+qX7rxC77mb//H
+         C7lA==
+X-Gm-Message-State: AOAM531BQxhRxXx73QRLmea3El0UYbjYbPyqplRaIQxWkA8yPkPwWaX+
+        ZW4/kooNmTx2WoqZY/UFaA==
+X-Google-Smtp-Source: ABdhPJyGznE7ezxmDoITq/swZTW/ORC7BGRM2zzOvwu6Eazh7ADEURRz35DVgPF4yv5a7xm0AV5Daw==
+X-Received: by 2002:a50:9b16:: with SMTP id o22mr3972554edi.130.1592486218015;
+        Thu, 18 Jun 2020 06:16:58 -0700 (PDT)
+Received: from localhost.localdomain ([46.53.250.254])
+        by smtp.gmail.com with ESMTPSA id n3sm2310261ejd.82.2020.06.18.06.16.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 06:16:57 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 16:16:55 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     'Matt Fleming' <matt@codeblueprint.co.uk>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Grimm, Jon" <Jon.Grimm@amd.com>,
+        "Kumar, Venkataramanan" <Venkataramanan.Kumar@amd.com>,
+        Jan Kara <jack@suse.cz>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] x86/asm/64: Align start of __clear_user() loop to
+ 16-bytes
+Message-ID: <20200618131655.GA24607@localhost.localdomain>
+References: <20200618102002.30034-1-matt@codeblueprint.co.uk>
+ <39f8304b75094f87a54ace7732708d30@AcuMS.aculab.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM0PR10CA0102.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:e6::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Thu, 18 Jun 2020 13:16:31 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 22df849f-a429-4a54-75fc-08d81389d206
-X-MS-TrafficTypeDiagnostic: VI1PR04MB7040:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB7040263ED365BF74AB21979A989B0@VI1PR04MB7040.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0438F90F17
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: y/jwljeUU5gpiI4hgSV0ERaw3ACayJvfYFl21jfl+ncxqu0yZ2fY2WwTb71hBfF7LXhRU5xdC9Oh0Z9bAK3+Yn6TtdUZeOz52jkp6YhFLjotVeI+mxAM5jjGyEBG3LhIIa8fKwWOY7n2Pr2/xZnEYg6ZIzxvVjT1lf6E6JjHUreK7JbJTTU6SMAGKW1+on4aM8iy6gIuOtGCdxOkTQpZdscgdjT+ndWTCRmvuw/O0uQYb1qPUvvH9DbRnfUjBLn7yZEoCXR5X0WzZJy7l6B12X0EIyu5K5XXRVqphTrcAkQBz71KAswWtqmbc8kcxsFRdv9T7+IqW3F/00DGpbnDMPJdhrpSAmMv2M0lJ9yNxahCC2RxVdOSSjFBeod/dV+V
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(366004)(346002)(136003)(66946007)(66476007)(66556008)(52116002)(26005)(186003)(16526019)(54906003)(316002)(16576012)(956004)(2616005)(86362001)(31686004)(53546011)(31696002)(8936002)(36756003)(4744005)(6486002)(8676002)(5660300002)(2906002)(4326008)(6916009)(478600001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: VafZBJHnCWXzvotJaKGxdRQilRTRVUdBpwYhkwr4QLnKDHbtAPvkgTYCPiqdZ4rVSTDLhi6Z8cpdHmfnu7iXQSp5EzbiVubgCmD/b9+gh+9KUYYO3ITWLwkxIimY7hctQYSuCB5o+q8SCMMszxO+jMr2OcpHT645+ThgqB5NVemQpKaUVHPKJVl2G6qqlVLjsoqoKDBOk2S7lTXa1bZhxcKBccq6kcX7Wkqq0NiL8kfxfIHnCBIuYU4YEtwvPNlCmicZSdNmeT48fpi2adHVKeGHtQC1UIEit02SenVlxaIJZvM3n1wCls0J1LcR5MuVM4Qa63qfPX3Ah1mPU7nAMTB/A18ZyxY0pvoqQWY99FU2HQSKx+cYP+s+t0o5A70wrpIPELfMEomwsghie9bhF5hQoq2tAKpP9uMdM1+MHojHLv9gc6d67vtKuwnnVIuI11SYFxWr+XYrb+vcdGOyU6MGTOCHYSrEMiZOxCBFZJub8FvA67CU+6zQAw2Y6cHB
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22df849f-a429-4a54-75fc-08d81389d206
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2020 13:16:33.1559
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KA34An8/6vT1n/5ZJ7/Sg/PLXc8ve7sVqJVUri+XCpvYWSt4yDav5f7f8KhmCwll7UzZjWeUskv6OFRwScd8ew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7040
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <39f8304b75094f87a54ace7732708d30@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/2020 2:00 PM, Herbert Xu wrote:
-> On Thu, Jun 18, 2020 at 01:54:55PM +0300, Horia Geantă wrote:
->>
->> The proper fix would be updating the ahash_finup_no_ctx() function
->> to return the specific error code:
->> 	return ret;
->> instead of returning -ENOMEM for all error cases.
->>
->> For example error code returned by dpaa2_caam_enqueue()
->> should be returned instead of -ENOMEM.
+On Thu, Jun 18, 2020 at 10:48:05AM +0000, David Laight wrote:
+> From: Matt Fleming
+> > Sent: 18 June 2020 11:20
+> > x86 CPUs can suffer severe performance drops if a tight loop, such as
+> > the ones in __clear_user(), straddles a 16-byte instruction fetch
+> > window, or worse, a 64-byte cacheline. This issues was discovered in the
+> > SUSE kernel with the following commit,
+> > 
+> >   1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
+> > 
+> > which increased the code object size from 10 bytes to 15 bytes and
+> > caused the 8-byte copy loop in __clear_user() to be split across a
+> > 64-byte cacheline.
+> > 
+> > Aligning the start of the loop to 16-bytes makes this fit neatly inside
+> > a single instruction fetch window again and restores the performance of
+> > __clear_user() which is used heavily when reading from /dev/zero.
+> > 
+> > Here are some numbers from running libmicro's read_z* and pread_z*
+> > microbenchmarks which read from /dev/zero:
+> > 
+> >   Zen 1 (Naples)
+> > 
+> >   libmicro-file
+> >                                         5.7.0-rc6              5.7.0-rc6              5.7.0-rc6
+> >                                                     revert-1153933703d9+               align16+
+> >   Time mean95-pread_z100k       9.9195 (   0.00%)      5.9856 (  39.66%)      5.9938 (  39.58%)
+> >   Time mean95-pread_z10k        1.1378 (   0.00%)      0.7450 (  34.52%)      0.7467 (  34.38%)
+> >   Time mean95-pread_z1k         0.2623 (   0.00%)      0.2251 (  14.18%)      0.2252 (  14.15%)
+> >   Time mean95-pread_zw100k      9.9974 (   0.00%)      6.0648 (  39.34%)      6.0756 (  39.23%)
+> >   Time mean95-read_z100k        9.8940 (   0.00%)      5.9885 (  39.47%)      5.9994 (  39.36%)
+> >   Time mean95-read_z10k         1.1394 (   0.00%)      0.7483 (  34.33%)      0.7482 (  34.33%)
+> > 
+> > Note that this doesn't affect Haswell or Broadwell microarchitectures
+> > which seem to avoid the alignment issue by executing the loop straight
+> > out of the Loop Stream Detector (verified using perf events).
 > 
-> You can do that as a follow-up.  The patch is correct as is.
+> Which cpu was affected?
+> At least one source (www.agner.org/optimize) implies that both ivy
+> bridge and sandy bridge have uop caches that mean (If I've read it
+> correctly) the loop shouldn't be affected by the alignment).
 > 
-Just that the follow-up implies adding all the code back.
+> > diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
+> > index fff28c6f73a2..b0dfac3d3df7 100644
+> > --- a/arch/x86/lib/usercopy_64.c
+> > +++ b/arch/x86/lib/usercopy_64.c
+> > @@ -24,6 +24,7 @@ unsigned long __clear_user(void __user *addr, unsigned long size)
+> >  	asm volatile(
+> >  		"	testq  %[size8],%[size8]\n"
+> >  		"	jz     4f\n"
+> > +		"	.align 16\n"
+> >  		"0:	movq $0,(%[dst])\n"
+> >  		"	addq   $8,%[dst]\n"
+> >  		"	decl %%ecx ; jnz   0b\n"
+> 
+> You can do better that that loop.
+> Change 'dst' to point to the end of the buffer, negate the count
+> and divide by 8 and you get:
+> 		"0:	movq $0,($[dst],%%ecx,8)\n"
+> 		"	add $1,%%ecx"
+> 		"	jnz 0b\n"
+> which might run at one iteration per clock especially on cpu that pair
+> the add and jnz into a single uop.
+> (You need to use add not inc.)
 
-Anyway, not a big deal...
-
-Thanks,
-Horia
+/dev/zero should probably use REP STOSB etc just like everything else.
