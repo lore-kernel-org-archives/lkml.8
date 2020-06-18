@@ -2,53 +2,55 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3877C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15B9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78EF5221EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23E521D90
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443119;
-	bh=aYNIDJaPvI3oFuql4BucengDDkiE1BDUDv5H7st9pNE=;
+	s=default; t=1592443135;
+	bh=hsh8OBWkdJYDP6rXNi6v/fdteZHhnTVpUh3LbNud6rw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WfwQg3h6FP0BWlp2mRvlPeVa6yWEh1r3+mWAx99QxGpVmVf8vazTdif8nhuq3sEu2
-	 cv9w+Y2GDLqLdjIwo9/068dLYP5oxcV5ovhSMvUhFGrOt1F2qjBFV+8EdNKmqeEaN+
-	 cESp5i4MW4LYroJ21+jmhJtydaVBSt9XeveXseyQ=
+	b=Vv0IVY5CkR0vVt5mMV1s8tQEFnlzd3ABIea8kflydJ5nFYk9V2JSkz/rx80NwqQm2
+	 dPX6Uivk90hh9jEObZU+5RYOz7V1NlmI+08VwWEnClt77uAXzooIJtSjt9MS3/UJe0
+	 uzqaEymbVfSBkMdMuYsBprlZCYfJIp/VInNbpmlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729979AbgFRBSh (ORCPT
+        id S1730039AbgFRBSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:18:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45954 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:18:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727872AbgFRBPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:41 -0400
+        id S1728431AbgFRBPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FBC021D80;
-        Thu, 18 Jun 2020 01:15:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B3FA21D79;
+        Thu, 18 Jun 2020 01:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442941;
-        bh=aYNIDJaPvI3oFuql4BucengDDkiE1BDUDv5H7st9pNE=;
+        s=default; t=1592442954;
+        bh=hsh8OBWkdJYDP6rXNi6v/fdteZHhnTVpUh3LbNud6rw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NwvAD6k/NdAbNbckAEc6ZU6wfGpyf2rMdfc+a+tjQvpJQKaRpKIXllKRwxBRW35OZ
-         CvQ0s+s1na7a2de+NLzzy28Ek/MFHoEpHnre35buH2Nxy2/u3Nrv/VUa1g5gtwYapK
-         WoFKwcU+iXPfFM2WCFkTBgeKdO+cdi3si1L92Yt8=
+        b=o7iQ1flQyJF5hbnCuCpopU7nMUFXrJA4W3FvD8nLrLKNMf3u3npudCymvZequaezp
+         ij9R2VinBeYHjzdMuXosamEaY+nN4clB0JqKnyvmV0Pz+Sk5k0DV+KQ9p5u3s1mdaT
+         ek+VwT1vRlA4QiRY7WROS8vZkXCHlA7bXR55F/+s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Alexander Fomichev <fomichev.ru@gmail.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 5.7 352/388] NTB: perf: Fix support for hardware that doesn't have port numbers
-Date:   Wed, 17 Jun 2020 21:07:29 -0400
-Message-Id: <20200618010805.600873-352-sashal@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.7 362/388] ASoC: soc-pcm: dpcm: fix playback/capture checks
+Date:   Wed, 17 Jun 2020 21:07:39 -0400
+Message-Id: <20200618010805.600873-362-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,50 +63,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit b54369a248c2e033bfcf5d6917e08cf9d73d54a6 ]
+[ Upstream commit b73287f0b0745961b14e5ebcce92cc8ed24d4d52 ]
 
-Legacy drivers do not have port numbers (but is reliably only two ports)
-and was broken by the recent commit that added mult-port support to
-ntb_perf. This is especially important to support the cross link
-topology which is perfectly symmetric and cannot assign unique port
-numbers easily.
+Recent changes in the ASoC core prevent multi-cpu BE dailinks from
+being used. DPCM does support multi-cpu DAIs for BE Dailinks, but not
+for FE.
 
-Hardware that returns zero for both the local port and the peer should
-just always use gidx=0 for the only peer.
+Handle the FE checks first, and make sure all DAIs support the same
+capabilities within the same dailink.
 
-Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Allen Hubbe <allenbh@gmail.com>
-Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fixes: 9b5db059366ae2 ("ASoC: soc-pcm: dpcm: Only allow playback/capture if supported")
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Daniel Baluta <daniel.baluta@gmail.com>
+BugLink: https://github.com/thesofproject/linux/issues/2031
+Link: https://lore.kernel.org/r/20200608194415.4663-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_perf.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ sound/soc/soc-pcm.c | 44 ++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 34 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-index 21c8a3bac1e0..0b1eae07b133 100644
---- a/drivers/ntb/test/ntb_perf.c
-+++ b/drivers/ntb/test/ntb_perf.c
-@@ -1460,6 +1460,16 @@ static int perf_init_peers(struct perf_ctx *perf)
- 	if (perf->gidx == -1)
- 		perf->gidx = pidx;
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 1f302de44052..39ce61c5b874 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -2908,20 +2908,44 @@ int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
+ 	struct snd_pcm *pcm;
+ 	char new_name[64];
+ 	int ret = 0, playback = 0, capture = 0;
++	int stream;
+ 	int i;
  
-+	/*
-+	 * Hardware with only two ports may not have unique port
-+	 * numbers. In this case, the gidxs should all be zero.
-+	 */
-+	if (perf->pcnt == 1 &&  ntb_port_number(perf->ntb) == 0 &&
-+	    ntb_peer_port_number(perf->ntb, 0) == 0) {
-+		perf->gidx = 0;
-+		perf->peers[0].gidx = 0;
++	if (rtd->dai_link->dynamic && rtd->num_cpus > 1) {
++		dev_err(rtd->dev,
++			"DPCM doesn't support Multi CPU for Front-Ends yet\n");
++		return -EINVAL;
 +	}
 +
- 	for (pidx = 0; pidx < perf->pcnt; pidx++) {
- 		ret = perf_setup_peer_mw(&perf->peers[pidx]);
- 		if (ret)
+ 	if (rtd->dai_link->dynamic || rtd->dai_link->no_pcm) {
+-		cpu_dai = asoc_rtd_to_cpu(rtd, 0);
+-		if (rtd->num_cpus > 1) {
+-			dev_err(rtd->dev,
+-				"DPCM doesn't support Multi CPU yet\n");
+-			return -EINVAL;
++		if (rtd->dai_link->dpcm_playback) {
++			stream = SNDRV_PCM_STREAM_PLAYBACK;
++
++			for_each_rtd_cpu_dais(rtd, i, cpu_dai)
++				if (!snd_soc_dai_stream_valid(cpu_dai,
++							      stream)) {
++					dev_err(rtd->card->dev,
++						"CPU DAI %s for rtd %s does not support playback\n",
++						cpu_dai->name,
++						rtd->dai_link->stream_name);
++					return -EINVAL;
++				}
++			playback = 1;
++		}
++		if (rtd->dai_link->dpcm_capture) {
++			stream = SNDRV_PCM_STREAM_CAPTURE;
++
++			for_each_rtd_cpu_dais(rtd, i, cpu_dai)
++				if (!snd_soc_dai_stream_valid(cpu_dai,
++							      stream)) {
++					dev_err(rtd->card->dev,
++						"CPU DAI %s for rtd %s does not support capture\n",
++						cpu_dai->name,
++						rtd->dai_link->stream_name);
++					return -EINVAL;
++				}
++			capture = 1;
+ 		}
+-
+-		playback = rtd->dai_link->dpcm_playback &&
+-			   snd_soc_dai_stream_valid(cpu_dai, SNDRV_PCM_STREAM_PLAYBACK);
+-		capture = rtd->dai_link->dpcm_capture &&
+-			  snd_soc_dai_stream_valid(cpu_dai, SNDRV_PCM_STREAM_CAPTURE);
+ 	} else {
+ 		/* Adapt stream for codec2codec links */
+ 		int cpu_capture = rtd->dai_link->params ?
 -- 
 2.25.1
 
