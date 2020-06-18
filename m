@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46908C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F72C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2082721974
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D607521D7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442490;
-	bh=3ixtTqSgLT06EGmTqWLRPWX9EpoK3ocTPIYY48k+Euc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=NCT/cGMesOIvVBkcEWQWy/oUZXcK2zY3bgjlzBiayJWkOBYlj0WXo9v838kFU29J4
-	 i9+4BAMkGzOxgDS08qRGtQV6E6w3D/FUsW/6Ra185ni9JLKiPjDzBXjCNmfwKWD7QE
-	 Nbemgqt+1DqvYTI+1PJWaWgRWitW/mC3lls7E5qc=
+	s=default; t=1592442497;
+	bh=qRlnQf7Xk6zFl0P86w1ugikUm53gsBx3fulqKArAxqQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TAibw7slqXu4CcK9Px8+SVcL5UUHRSIw00P2FWMiK/Xy7vr3KJsTdYYNBAbK8Lm6p
+	 Q6XKhQXiDduTZa3f6FNQ3pzVLtRtk758w2aVkPCqYUaGQLgPHKtpbN63OlIcQbE1mJ
+	 WuVVoYrBv0j19vtVxiDgwnJIA8v7LvwgRmaqbYd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgFRBIJ (ORCPT
+        id S1727104AbgFRBIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:08:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33610 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:08:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726879AbgFRBII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:08:08 -0400
+        id S1727021AbgFRBIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:08:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05FCD2193E;
-        Thu, 18 Jun 2020 01:08:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A20BB2193E;
+        Thu, 18 Jun 2020 01:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442487;
-        bh=3ixtTqSgLT06EGmTqWLRPWX9EpoK3ocTPIYY48k+Euc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QqIdWrNZKNKV+wqOJWLxGXAwpcmLF8Jz38jxeuIK1Th716Dys5IrnKlQV/E03VLhc
-         nrXMVjaUGg0sPXXx/KZQaw1Nl3xzy2yVNAEmhDwtoe0BBt6sHYCl9WKNl0TaDjSNTF
-         dUS6hLQJpm1/qmGueM7KQBgux1IygnMgrkM0Tj/k=
+        s=default; t=1592442491;
+        bh=qRlnQf7Xk6zFl0P86w1ugikUm53gsBx3fulqKArAxqQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iSriZMCBjGO9zQBeug8ur8PelRkcQF4JzdOgjKiGNzqHeBiRoiZAoi4As5c/Dzz/Q
+         zLeUgFgN4lkXsvvHWA/k38BdCl+M2Bwu6Y75y0H3wjpBkybKbC6qQa8/X4Pt2NnBNo
+         YVKxVHoxeAsheeTYn6Y/aYhSleG7dUHL1oMKUiEg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.7 001/388] staging: wfx: fix potential deadlock in wfx_tx_flush()
-Date:   Wed, 17 Jun 2020 21:01:38 -0400
-Message-Id: <20200618010805.600873-1-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 004/388] ASoC: tegra: tegra_wm8903: Support nvidia, headset property
+Date:   Wed, 17 Jun 2020 21:01:41 -0400
+Message-Id: <20200618010805.600873-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,50 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit a39e761aa4fefa2a8aaf549217329933b91da7c9 ]
+[ Upstream commit 3ef9d5073b552d56bd6daf2af1e89b7e8d4df183 ]
 
-wfx_tx_flush() wait there are no more frame in device buffer. However,
-this event may never happens since wfx_tx_flush() don't forbid to
-enqueue new frames.
+The microphone-jack state needs to be masked in a case of a 4-pin jack
+when microphone and ground pins are shorted. Presence of nvidia,headset
+tells that WM8903 CODEC driver should mask microphone's status if short
+circuit is detected, i.e headphones are inserted.
 
-Note that wfx_tx_flush() should only ensure that all frames currently in
-hardware queues are sent. So the current code is more restrictive that
-it should.
-
-Note that wfx_tx_flush() release the lock before to return while
-wfx_tx_lock_flush() keep the lock.
-
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-Link: https://lore.kernel.org/r/20200401110405.80282-31-Jerome.Pouiller@silabs.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/20200330204011.18465-3-digetx@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wfx/queue.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/tegra/tegra_wm8903.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/wfx/queue.c b/drivers/staging/wfx/queue.c
-index 39d9127ce4b9..8ae23681e29b 100644
---- a/drivers/staging/wfx/queue.c
-+++ b/drivers/staging/wfx/queue.c
-@@ -35,6 +35,7 @@ void wfx_tx_flush(struct wfx_dev *wdev)
- 	if (wdev->chip_frozen)
- 		return;
+diff --git a/sound/soc/tegra/tegra_wm8903.c b/sound/soc/tegra/tegra_wm8903.c
+index 9b5651502f12..3aca354f9e08 100644
+--- a/sound/soc/tegra/tegra_wm8903.c
++++ b/sound/soc/tegra/tegra_wm8903.c
+@@ -177,6 +177,7 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
+ 	struct snd_soc_component *component = codec_dai->component;
+ 	struct snd_soc_card *card = rtd->card;
+ 	struct tegra_wm8903 *machine = snd_soc_card_get_drvdata(card);
++	int shrt = 0;
  
-+	wfx_tx_lock(wdev);
- 	mutex_lock(&wdev->hif_cmd.lock);
- 	ret = wait_event_timeout(wdev->hif.tx_buffers_empty,
- 				 !wdev->hif.tx_buffers_used,
-@@ -47,6 +48,7 @@ void wfx_tx_flush(struct wfx_dev *wdev)
- 		wdev->chip_frozen = 1;
+ 	if (gpio_is_valid(machine->gpio_hp_det)) {
+ 		tegra_wm8903_hp_jack_gpio.gpio = machine->gpio_hp_det;
+@@ -189,12 +190,15 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
+ 					&tegra_wm8903_hp_jack_gpio);
  	}
- 	mutex_unlock(&wdev->hif_cmd.lock);
-+	wfx_tx_unlock(wdev);
- }
  
- void wfx_tx_lock_flush(struct wfx_dev *wdev)
++	if (of_property_read_bool(card->dev->of_node, "nvidia,headset"))
++		shrt = SND_JACK_MICROPHONE;
++
+ 	snd_soc_card_jack_new(rtd->card, "Mic Jack", SND_JACK_MICROPHONE,
+ 			      &tegra_wm8903_mic_jack,
+ 			      tegra_wm8903_mic_jack_pins,
+ 			      ARRAY_SIZE(tegra_wm8903_mic_jack_pins));
+ 	wm8903_mic_detect(component, &tegra_wm8903_mic_jack, SND_JACK_MICROPHONE,
+-				0);
++				shrt);
+ 
+ 	snd_soc_dapm_force_enable_pin(&card->dapm, "MICBIAS");
+ 
 -- 
 2.25.1
 
