@@ -2,182 +2,234 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8770C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A498CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA20208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:33:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m8WGi2kU"
+	by mail.kernel.org (Postfix) with ESMTP id 7E155208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592505203;
+	bh=Wa43T7w4Pf81pk4qHW8JXP2v08fY04xx7ru8epXTzJg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=McVJ4PhNCuOmcc5arxrTtWDwQ3vJm5jNDlmeqoD25ATZdHh4YbNN9zHoMTnvE9U0Z
+	 wwRpZZGauVSe0M14LKJyDZzs14x3n9+B3Api6fmthqE5Tum7ELBYZ+BFL8++dQaGTu
+	 dUI+eSkmSwaO1ci+Kz25nCywKv4jIa9V1bag9pDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbgFRSdN (ORCPT
+        id S1730163AbgFRSdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 14:33:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728230AbgFRSdL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 14:33:11 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53426C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 11:33:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=aVLm8R+Q91+8RmIp//VNNtXJYZuPXUFZIZifzMG6rG0=; b=m8WGi2kU1DEDwDunDM6TNESyDX
-        d+hJpplcx22KNNFGei81awuCCPTrAIQKLBuTAS8LOjo3z3aO5F6d/5k9TbA2DnSVZp5EtCrie7Fov
-        KmwLFtB7vadvukNaLzgoSGM6STPSbtKH2NfA86ZrgV8wmMqOkgp5Ts1FmKkBnW5UMq5HIuCrmip3A
-        jK5A4PbuXlY8pyXbvkVt5ogvG1WFtQL4lu69g1G2XlSIbMmS7rcFmrGzjXeommzDRigHDSheXfaJm
-        G78pTZ8AYQR7C5Fvp0AjeIXyhV0Qxo09yy7QDft+lGSMyNaHpela5TzfNuC3Vh9o5BljdLCtLrz1M
-        ozAtU5rA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlzLV-0005rw-Dl; Thu, 18 Jun 2020 18:33:05 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E007B303CE9;
-        Thu, 18 Jun 2020 20:33:02 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D093D2128846A; Thu, 18 Jun 2020 20:33:02 +0200 (CEST)
-Date:   Thu, 18 Jun 2020 20:33:02 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Tejun Heo <tj@kernel.org>, Andrii Nakryiko <andriin@fb.com>,
-        Francis Ricci <fjricci@fb.com>
-Subject: Re: WARNING with LBR + precise_ip=2 + bpf_get_stackid()
-Message-ID: <20200618183302.GN576905@hirez.programming.kicks-ass.net>
-References: <ED7B9430-6489-4260-B3C5-9CFA2E3AA87A@fb.com>
+        Thu, 18 Jun 2020 14:33:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47010 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729862AbgFRSdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 14:33:20 -0400
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBC1F20DD4;
+        Thu, 18 Jun 2020 18:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592505199;
+        bh=Wa43T7w4Pf81pk4qHW8JXP2v08fY04xx7ru8epXTzJg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ecX5Ld1C7sjO0SKydvTx6QgyY74RFFqkiWnwMkxD4jX71EmRFAZbRf1SerGyIli3R
+         RZl95VzhTjcClNC29YOwPoiGgk7m7vhs8a1gruUkjU0bfitz0O1/8qARf5cXGIDbju
+         zjjHj9YihPIoZu0HkGVQjpeneXBfdHEM4Q05d4L8=
+Received: by mail-ot1-f44.google.com with SMTP id v13so5345603otp.4;
+        Thu, 18 Jun 2020 11:33:19 -0700 (PDT)
+X-Gm-Message-State: AOAM532oj0Lz6d7z6RBJL/UzqyzCpdjBDjNcid6/gwdCeNKAPD6q5QkG
+        QIjrSJprmw2HlEW2TPUUP32f/F4UWI1LwwnhrA==
+X-Google-Smtp-Source: ABdhPJx+Rb+JwD1PIWMOTJ6UqjOwSRAy1TpYrAkSXPkBhtxEkdRG5n3IX0zx8pWKa9xRNHPUxS5L8u5iKcFIdAX3nNk=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr68860ots.192.1592505199060;
+ Thu, 18 Jun 2020 11:33:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ED7B9430-6489-4260-B3C5-9CFA2E3AA87A@fb.com>
+References: <20200617180209.5636-1-wcheng@codeaurora.org> <20200617180209.5636-3-wcheng@codeaurora.org>
+In-Reply-To: <20200617180209.5636-3-wcheng@codeaurora.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 18 Jun 2020 12:33:07 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+fhXWGJvYxUDygd6hKs3dc8GKxKCz_Q+_C1AjK0J0N+w@mail.gmail.com>
+Message-ID: <CAL_Jsq+fhXWGJvYxUDygd6hKs3dc8GKxKCz_Q+_C1AjK0J0N+w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] dt-bindings: usb: Add Qualcomm PMIC type C
+ controller dt-binding
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jack Pham <jackp@codeaurora.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+        Jun Li <lijun.kernel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 05:25:24PM +0000, Song Liu wrote:
+On Wed, Jun 17, 2020 at 12:02 PM Wesley Cheng <wcheng@codeaurora.org> wrote:
+>
+> Introduce the dt-binding for enabling USB type C orientation and role
+> detection using the PM8150B.  The driver will be responsible for receiving
+> the interrupt at a state change on the CC lines, reading the orientation/role,
+> and communicating this information to the remote clients, which can include
+> a role switch node and a type C switch.
+>
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> ---
+>  .../bindings/usb/qcom,pmic-typec.yaml         | 117 ++++++++++++++++++
+>  1 file changed, 117 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+> new file mode 100644
+> index 000000000000..085b4547d75a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+> @@ -0,0 +1,117 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/usb/qcom,pmic-typec.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm PMIC based USB type C Detection Driver
+> +
+> +maintainers:
+> +  - Wesley Cheng <wcheng@codeaurora.org>
+> +
+> +description: |
+> +  Qualcomm PMIC Type C Detect
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,pm8150b-usb-typec
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: Type C base address
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: CC change interrupt from PMIC
+> +
+> +  connector:
+> +    description: Connector type for remote endpoints
+> +    type: object
 
-> PID: 80430  TASK: ffff888d92c62a80  CPU: 24  COMMAND: "25_scheduler"
-> #0 [fffffe00004cfd88] machine_kexec at ffffffff8104a646
-> #1 [fffffe00004cfdd8] __crash_kexec at ffffffff8114a82f
-> #2 [fffffe00004cfea0] panic at ffffffff810ba99c
-> #3 [fffffe00004cff20] df_debug at ffffffff8104e21d
-> #4 [fffffe00004cff30] do_double_fault at ffffffff8101c9b4
-> #5 [fffffe00004cff50] double_fault at ffffffff81c00b3e
-> [exception RIP: vsnprintf+14]
-> RIP: ffffffff81a3ee6e  RSP: fffffe00004d0ff8  RFLAGS: 00010082
-> RAX: fffffe00004d1070  RBX: fffffe00004d1101  RCX: fffffe00004d1050
-> RDX: ffffffff822c42f5  RSI: 000000007fffffff  RDI: fffffe00004d111a
-> RBP: fffffe00004d10a0   R8: 0000000000000067   R9: ffffffff82209d05
-> R10: ffffffff822a5fd0  R11: ffffffff822a6358  R12: 0000000000000019
-> R13: 0000000000000001  R14: 0000000000000019  R15: ffffffff822b5fd6
-> ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
-> --- <DOUBLEFAULT exception stack> ---
-> #6 [fffffe00004d0ff8] vsnprintf at ffffffff81a3ee6e
-> bt: cannot transition from exception stack to current process stack:
-> exception stack pointer: fffffe00004cfd88
-> process stack pointer: fffffe00004d1048
-> current stack base: ffffc900241a0000
-> 
-> 0xfffffe00004d1040 kallsyms_token_index
-> 0xfffffe00004d1048 sprintf
-> 0xfffffe00004d1078 kallsyms_lookup
-> 0xfffffe00004d1098 kallsyms_names
-> 0xfffffe00004d10a8 __sprint_symbol
-> 0xfffffe00004d10d8 textbuf.47672
-> 0xfffffe00004d10e0 always_kmsg_dump
-> 0xfffffe00004d10f8 symbol_string
-> 0xfffffe00004d11c0 textbuf.47672
-> 0xfffffe00004d11e8 textbuf.47672
-> 0xfffffe00004d11f8 textbuf.47672
-> 0xfffffe00004d1200 always_kmsg_dump
-> 0xfffffe00004d1210 kallsyms_token_index
-> 0xfffffe00004d1218 vsnprintf
-> 0xfffffe00004d1220 textbuf.47672
-> 0xfffffe00004d1258 kallsyms_token_index
-> 0xfffffe00004d1270 vscnprintf
-> 0xfffffe00004d1280 vprintk_store
-> 0xfffffe00004d1290 wake_up_klogd
-> 0xfffffe00004d12b0 kallsyms_token_index
-> 0xfffffe00004d12c8 vprintk_emit
-> 0xfffffe00004d1300 entry_SYSCALL_64
-> 0xfffffe00004d1318 vprintk_deferred
-> 0xfffffe00004d1328 printk_deferred
-> 0xfffffe00004d1360 entry_SYSCALL_64
-> 0xfffffe00004d1380 __start_orc_unwind
-> 0xfffffe00004d1388 unwind_next_frame.cold.7
-> 0xfffffe00004d13c8 perf_callchain_kernel
-> 0xfffffe00004d1418 entry_SYSCALL_64
-> 0xfffffe00004d1450 get_perf_callchain
-> 0xfffffe00004d14b0 bpf_get_stack
+You are duplicating everything in usb-connector.yaml. You should have
+a $ref to it.
 
-This, this is where it gets buggerd. This is a BPF problem, not a perf
-problem.
+> +
+> +    properties:
+> +      compatible:
+> +        enum:
+> +          - usb-c-connector
+> +
+> +      power-role:
+> +       enum:
+> +         - dual
+> +         - source
+> +         - sink
+> +
+> +      data-role:
+> +        enum:
+> +          - dual
+> +          - host
+> +          - device
+> +
+> +      port:
+> +        description: Remote endpoint connections
+> +        type: object
+> +
+> +        properties:
+> +          endpoint@0:
+> +            description: Connection to USB type C mux node
 
-You'll note that if you ask perf for a PERF_SAMPLE_CALLCHAIN we'll do
-that early in setup_pebs_fixed_sample_data().
+This is wrong. The connector binding says port 0 is the connection the
+USB HS controller.
 
-> 0xfffffe00004d1730 bpf_overflow_handler
-> 0xfffffe00004d1788 __perf_event_overflow
-> 0xfffffe00004d17a0 x86_pmu
-> 0xfffffe00004d17b8 __intel_pmu_pebs_event
-> 0xfffffe00004d17e0 setup_pebs_fixed_sample_data
-> 0xfffffe00004d1890 entry_SYSCALL_64
-> 0xfffffe00004d1ab8 intel_pmu_drain_pebs_nhm
-> 0xfffffe00004d1ac0 setup_pebs_fixed_sample_data
-> 0xfffffe00004d1bb8 handle_pmi_common
-> 0xfffffe00004d1d00 insn_get_sib.part.5
-> 0xfffffe00004d1d10 insn_get_displacement.part.6
-> 0xfffffe00004d1d20 insn_get_immediate.part.7
-> 0xfffffe00004d1d38 __set_pte_vaddr
-> 0xfffffe00004d1d78 __native_set_fixmap
-> 0xfffffe00004d1d80 ghes_copy_tofrom_phys
-> 0xfffffe00004d1e08 intel_pmu_handle_irq
-> 0xfffffe00004d1e48 perf_event_nmi_handler
-> 0xfffffe00004d1e50 perf_event_nmi_handler_na.47078
-> 0xfffffe00004d1e58 nmi_reason_lock
-> 0xfffffe00004d1e60 nmi_handle
-> 0xfffffe00004d1e70 nmi_desc
-> 0xfffffe00004d1e90 nmi_reason_lock
-> 0xfffffe00004d1eb8 default_do_nmi
-> 0xfffffe00004d1ed8 do_nmi
-> 0xfffffe00004d1ef0 nmi
-> 0xfffffe00004d1f78 entry_SYSCALL_64
-> 0xfffffe00004d1fa0 entry_SYSCALL_64
-> 0xfffffe00004d1fd8 entry_SYSCALL_64
-> 
-> The kernel is running the normal NMI path and triggers the above mentioned warnings, 
-> which calls into string formatting path for the warning messages. 
+What's a type C mux node? Is there a binding for that? There's an
+ongoing discussion with the CrOS folks on how to describe Alt mode
+mux/switches.
 
-> However, NMIs run 
-> off of its dedicated exception stack which is 4k in size, which is too small for the 
-> full string formatting path to run,
+> +            type: object
+> +
+> +            properties:
+> +              remote-endpoint:
+> +                maxItems: 1
+> +                description: Node reference to the type C mux
+> +
+> +          endpoint@1:
+> +            description: Connection to role switch node
 
-Say what ?! Has printk() grown into such a freakish monster that it
-cannot run on 4k stacks anymore?
+Again, what's this?
 
-I suppose that KSYM_SYMBOL_LEN on-stack buffer in symbol_string()
-doesn't help.
-
-> We noticed that this only happens with precise_ip >= 2. This is caused by 
-> setup_pebs_fixed_sample_data() using pens->real_ip:
-> 
-> 	set_linear_ip(regs, pebs->real_ip);
-> 
-> For our use case, we do need precise_ip=2. So we would like suggestions to fix the
-> warning and/or to avoid double fault. 
-
-It all works as advertised. The BPF program is broken for calling
-bpf_get_stack() on a PEBS event.
+> +            type: object
+> +
+> +            properties:
+> +              remote-endpoint:
+> +                maxItems: 1
+> +                description: Node reference to the role switch node
+> +
+> +    required:
+> +      - compatible
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - connector
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    pm8150b {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        qcom,typec@1500 {
+> +            compatible = "qcom,pm8150b-usb-typec";
+> +            reg = <0x1500>;
+> +            interrupts =
+> +                <0x2 0x15 0x5 IRQ_TYPE_EDGE_RISING>;
+> +
+> +            connector {
+> +                compatible = "usb-c-connector";
+> +                power-role = "dual";
+> +                data-role = "dual";
+> +                port {
+> +                    #address-cells = <1>;
+> +                    #size-cells = <0>;
+> +                    usb3_data_ss: endpoint@0 {
+> +                        reg = <0>;
+> +                        remote-endpoint =
+> +                                <&qmp_ss_mux>;
+> +                    };
+> +
+> +                    usb3_role: endpoint@1 {
+> +
+> +                        reg = <1>;
+> +                        remote-endpoint =
+> +                                <&dwc3_drd_switch>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> +...
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
