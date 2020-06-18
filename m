@@ -2,263 +2,101 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FECC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B005B214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E139B214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:28:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592447330;
+	bh=S683/qufa5CQUuVgcuYcQAqplJwbPg8tguzW1wjfo7U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PFXjZRZBW7uILE3EwUPKyKA+/N2+0BHyyTlHZcz4/v6JemeiB0j3zB0aR6cXAPKw5
+	 vldtXfPTM6J4SnJYRujszyj/Fel9nqb9JHn3VOdSDir0MH/NeqwKfb4gBuCscWgWnG
+	 Mqf0Z4ibanAKeGQzIEA2Dc7x5E9o00uUnViNmrg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387623AbgFRC22 (ORCPT
+        id S2387644AbgFRC2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:28:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:38636 "EHLO foss.arm.com"
+        Wed, 17 Jun 2020 22:28:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729570AbgFRBQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:16:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16E6C1042;
-        Wed, 17 Jun 2020 18:16:23 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.80.176])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 295E23F6CF;
-        Wed, 17 Jun 2020 18:16:13 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V3 (RESEND) 1/3] mm/sparsemem: Enable vmem_altmap support in vmemmap_populate_basepages()
-Date:   Thu, 18 Jun 2020 06:45:28 +0530
-Message-Id: <1592442930-9380-2-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592442930-9380-1-git-send-email-anshuman.khandual@arm.com>
-References: <1592442930-9380-1-git-send-email-anshuman.khandual@arm.com>
+        id S1727772AbgFRBQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:16:17 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C78F21D7D;
+        Thu, 18 Jun 2020 01:16:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592442976;
+        bh=S683/qufa5CQUuVgcuYcQAqplJwbPg8tguzW1wjfo7U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hqfP47B930cHLrM5S4uLhZcNq69Ufxr++C02bunepshebtmCmvIknugnQ2FBrl2lh
+         rDtgLCyOxATaF49qcH2DvzhSDvVpTXb9R1hNxqtJpqykalNhZKwcOrWJ3mfUFM2gDx
+         V5GV22LkfDFp7KnA0JJR/0gatcQm8deu51GZqjIs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 379/388] nvme-pci: use simple suspend when a HMB is enabled
+Date:   Wed, 17 Jun 2020 21:07:56 -0400
+Message-Id: <20200618010805.600873-379-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vmemmap_populate_basepages() is used across platforms to allocate backing
-memory for vmemmap mapping. This is used as a standard default choice or
-as a fallback when intended huge pages allocation fails. This just creates
-entire vmemmap mapping with base pages (PAGE_SIZE).
+From: Christoph Hellwig <hch@lst.de>
 
-On arm64 platforms, vmemmap_populate_basepages() is called instead of the
-platform specific vmemmap_populate() when ARM64_SWAPPER_USES_SECTION_MAPS
-is not enabled as in case for ARM64_16K_PAGES and ARM64_64K_PAGES configs.
+[ Upstream commit b97120b15ebd3de51325084136d3b9c3cce656d6 ]
 
-At present vmemmap_populate_basepages() does not support allocating from
-driver defined struct vmem_altmap while trying to create vmemmap mapping
-for a device memory range. It prevents ARM64_16K_PAGES and ARM64_64K_PAGES
-configs on arm64 from supporting device memory with vmemap_altmap request.
+While the NVMe specification allows the device to access the host memory
+buffer in host DRAM from all power states, hosts will fail access to
+DRAM during S3 and similar power states.
 
-This enables vmem_altmap support in vmemmap_populate_basepages() unlocking
-device memory allocation for vmemap mapping on arm64 platforms with 16K or
-64K base page configs.
-
-Each architecture should evaluate and decide on subscribing device memory
-based base page allocation through vmemmap_populate_basepages(). Hence lets
-keep it disabled on all archs in order to preserve the existing semantics.
-A subsequent patch enables it on arm64.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-ia64@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
-Cc: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org
-Tested-by: Jia He <justin.he@arm.com>
-Acked-by: Will Deacon <will@kernel.org>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Fixes: d916b1be94b6 ("nvme-pci: use host managed power state for suspend")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Keith Busch <kbusch@kernel.org>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/mmu.c      |  2 +-
- arch/ia64/mm/discontig.c |  2 +-
- arch/riscv/mm/init.c     |  2 +-
- arch/x86/mm/init_64.c    |  6 +++---
- include/linux/mm.h       |  5 +++--
- mm/sparse-vmemmap.c      | 16 +++++++++++-----
- 6 files changed, 20 insertions(+), 13 deletions(-)
+ drivers/nvme/host/pci.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 990929c8837e..0adad8859393 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -1068,7 +1068,7 @@ static void free_empty_tables(unsigned long addr, unsigned long end,
- int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 		struct vmem_altmap *altmap)
- {
--	return vmemmap_populate_basepages(start, end, node);
-+	return vmemmap_populate_basepages(start, end, node, NULL);
- }
- #else	/* !ARM64_SWAPPER_USES_SECTION_MAPS */
- int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
-diff --git a/arch/ia64/mm/discontig.c b/arch/ia64/mm/discontig.c
-index dd8284bcbf16..4d23c81f96d8 100644
---- a/arch/ia64/mm/discontig.c
-+++ b/arch/ia64/mm/discontig.c
-@@ -656,7 +656,7 @@ void arch_refresh_nodedata(int update_node, pg_data_t *update_pgdat)
- int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 		struct vmem_altmap *altmap)
- {
--	return vmemmap_populate_basepages(start, end, node);
-+	return vmemmap_populate_basepages(start, end, node, NULL);
- }
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index cc46e250fcac..340bb9c8995e 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2933,9 +2933,15 @@ static int nvme_suspend(struct device *dev)
+ 	 * the PCI bus layer to put it into D3 in order to take the PCIe link
+ 	 * down, so as to allow the platform to achieve its minimum low-power
+ 	 * state (which may not be possible if the link is up).
++	 *
++	 * If a host memory buffer is enabled, shut down the device as the NVMe
++	 * specification allows the device to access the host memory buffer in
++	 * host DRAM from all power states, but hosts will fail access to DRAM
++	 * during S3.
+ 	 */
+ 	if (pm_suspend_via_firmware() || !ctrl->npss ||
+ 	    !pcie_aspm_enabled(pdev) ||
++	    ndev->nr_host_mem_descs ||
+ 	    (ndev->ctrl.quirks & NVME_QUIRK_SIMPLE_SUSPEND))
+ 		return nvme_disable_prepare_reset(ndev, true);
  
- void vmemmap_free(unsigned long start, unsigned long end,
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index f4adb3684f3d..8101170f54ac 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -530,6 +530,6 @@ void __init paging_init(void)
- int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 			       struct vmem_altmap *altmap)
- {
--	return vmemmap_populate_basepages(start, end, node);
-+	return vmemmap_populate_basepages(start, end, node, NULL);
- }
- #endif
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index dbae185511cd..19c0ed3271a3 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1493,7 +1493,7 @@ static int __meminit vmemmap_populate_hugepages(unsigned long start,
- 			vmemmap_verify((pte_t *)pmd, node, addr, next);
- 			continue;
- 		}
--		if (vmemmap_populate_basepages(addr, next, node))
-+		if (vmemmap_populate_basepages(addr, next, node, NULL))
- 			return -ENOMEM;
- 	}
- 	return 0;
-@@ -1505,7 +1505,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 	int err;
- 
- 	if (end - start < PAGES_PER_SECTION * sizeof(struct page))
--		err = vmemmap_populate_basepages(start, end, node);
-+		err = vmemmap_populate_basepages(start, end, node, NULL);
- 	else if (boot_cpu_has(X86_FEATURE_PSE))
- 		err = vmemmap_populate_hugepages(start, end, node, altmap);
- 	else if (altmap) {
-@@ -1513,7 +1513,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 				__func__);
- 		err = -ENOMEM;
- 	} else
--		err = vmemmap_populate_basepages(start, end, node);
-+		err = vmemmap_populate_basepages(start, end, node, NULL);
- 	if (!err)
- 		sync_global_pgds(start, end - 1);
- 	return err;
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index dc7b87310c10..e40ac543d248 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3011,14 +3011,15 @@ pgd_t *vmemmap_pgd_populate(unsigned long addr, int node);
- p4d_t *vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node);
- pud_t *vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node);
- pmd_t *vmemmap_pmd_populate(pud_t *pud, unsigned long addr, int node);
--pte_t *vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node);
-+pte_t *vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
-+			    struct vmem_altmap *altmap);
- void *vmemmap_alloc_block(unsigned long size, int node);
- struct vmem_altmap;
- void *vmemmap_alloc_block_buf(unsigned long size, int node);
- void *altmap_alloc_block_buf(unsigned long size, struct vmem_altmap *altmap);
- void vmemmap_verify(pte_t *, int, unsigned long, unsigned long);
- int vmemmap_populate_basepages(unsigned long start, unsigned long end,
--			       int node);
-+			       int node, struct vmem_altmap *altmap);
- int vmemmap_populate(unsigned long start, unsigned long end, int node,
- 		struct vmem_altmap *altmap);
- void vmemmap_populate_print_last(void);
-diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-index 0db7738d76e9..ceed10dec31e 100644
---- a/mm/sparse-vmemmap.c
-+++ b/mm/sparse-vmemmap.c
-@@ -139,12 +139,18 @@ void __meminit vmemmap_verify(pte_t *pte, int node,
- 			start, end - 1);
- }
- 
--pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node)
-+pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
-+				       struct vmem_altmap *altmap)
- {
- 	pte_t *pte = pte_offset_kernel(pmd, addr);
- 	if (pte_none(*pte)) {
- 		pte_t entry;
--		void *p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
-+		void *p;
-+
-+		if (altmap)
-+			p = altmap_alloc_block_buf(PAGE_SIZE, altmap);
-+		else
-+			p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
- 		if (!p)
- 			return NULL;
- 		entry = pfn_pte(__pa(p) >> PAGE_SHIFT, PAGE_KERNEL);
-@@ -212,8 +218,8 @@ pgd_t * __meminit vmemmap_pgd_populate(unsigned long addr, int node)
- 	return pgd;
- }
- 
--int __meminit vmemmap_populate_basepages(unsigned long start,
--					 unsigned long end, int node)
-+int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
-+					 int node, struct vmem_altmap *altmap)
- {
- 	unsigned long addr = start;
- 	pgd_t *pgd;
-@@ -235,7 +241,7 @@ int __meminit vmemmap_populate_basepages(unsigned long start,
- 		pmd = vmemmap_pmd_populate(pud, addr, node);
- 		if (!pmd)
- 			return -ENOMEM;
--		pte = vmemmap_pte_populate(pmd, addr, node);
-+		pte = vmemmap_pte_populate(pmd, addr, node, altmap);
- 		if (!pte)
- 			return -ENOMEM;
- 		vmemmap_verify(pte, node, addr, addr + PAGE_SIZE);
 -- 
-2.20.1
+2.25.1
 
