@@ -2,126 +2,129 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BE8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F11C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0EA820734
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56BE920706
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592502114;
+	bh=V3/8KDcL+ix6Np43ENGawP52NUg+DxdaW3kXs1ViTT0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=19eDXIATCMAftI9p5nSq7K5ZLbf1i/jtXx6q4sxo3z1UiB4IgFsmgOTAc99zZJ3AT
+	 MFgUsSDyzFXTs42F+UQ1VOmKuy1IL5VUT6WYji5RESSNQ4oaI/YXB6H7Ffqdvj8M1G
+	 /heoRxsigfl2Y16Yh4rRdk4le5y/yWml1y7M/HxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732316AbgFRRlu (ORCPT
+        id S1732276AbgFRRlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:41:50 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47088 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729612AbgFRRlq (ORCPT
+        Thu, 18 Jun 2020 13:41:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731544AbgFRRlq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Jun 2020 13:41:46 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05IH2B43004775;
-        Thu, 18 Jun 2020 13:41:45 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31r560g2n7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jun 2020 13:41:44 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05IHAnhV036160;
-        Thu, 18 Jun 2020 13:41:43 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31r560g2m3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jun 2020 13:41:43 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05IHdpFs029860;
-        Thu, 18 Jun 2020 17:41:41 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 31quax9fk6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jun 2020 17:41:40 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05IHfbrE59703556
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jun 2020 17:41:37 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 33C3CA405B;
-        Thu, 18 Jun 2020 17:41:37 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 23E07A4054;
-        Thu, 18 Jun 2020 17:41:36 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.230.246])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Jun 2020 17:41:36 +0000 (GMT)
-Message-ID: <1592502095.4615.42.camel@linux.ibm.com>
-Subject: Re: [PATCH 2/2] integrity: Add errno field in audit message
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        bauerman@linux.ibm.com, nayna@linux.ibm.com, sgrubb@redhat.com,
-        paul@paul-moore.com
-Cc:     rgb@redhat.com, linux-integrity@vger.kernel.org,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org
-Date:   Thu, 18 Jun 2020 13:41:35 -0400
-In-Reply-To: <20200617204436.2226-2-nramas@linux.microsoft.com>
-References: <20200617204436.2226-1-nramas@linux.microsoft.com>
-         <20200617204436.2226-2-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87D95C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:41:46 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id n5so5227056otj.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:41:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Lj1OUnCiEL7PTb7sWZrbfYeYh4fsbN5F5NZdzahAeVM=;
+        b=iS7A+R/PQVXP2W8n9q0y8fisfHp/ivhVnFUztyN4rIj6i5bAhxr1cZJ+/Tnxlsxv60
+         O02SAY/YLf/uzvA20YQjycidu3BQ5drQVc0SAv2+dCZ0td/W9IGVTG1jJdLbWr3AZuQt
+         o0uUHNLNnJ3sTZKmqXCuwQhzIZfvUcD3XL9gU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Lj1OUnCiEL7PTb7sWZrbfYeYh4fsbN5F5NZdzahAeVM=;
+        b=CAkNlumwqp912jLqNFrzyZsC9LUu3nUcGGIcZHTrmvU+IHNTbP0o+5rI+ACDkggO7t
+         BqL+eIrANDMMv+ygchulNZXb+KhneUr9zgOq5mwHGWpJllsd5WjpaxZbCFzazGKSn1o9
+         5kzioLTwuk6/rOQ8FDnnfwAD5Drg0b1H+NNZ7VwxgFQzB3CgnoS6fo+aG2GdEz3pz2lf
+         14l/MNMFMvfYfGcSuBcOnhskWPaKqdKqW+O7t1IGhvsnaQwQRFKsS1dhIf7qTyCjP6Hv
+         iqWbVxYCu/DxXOcTso0e16yoejTbrUlhD5hyslYDoI3TJiwnsEkIpONyJhPeW5zZT8tk
+         k93A==
+X-Gm-Message-State: AOAM533kbuRHJeT5yBO0d52bHxhIJNf2HhmTNF+a9WianNcWfDDn565U
+        dp04obZc8RuTF+UZKh+wC1NrcOJXCt0=
+X-Google-Smtp-Source: ABdhPJx6zbH9zK6AjJTN6l6B0AqjYjqOqKk0tGRiB1y9/wvjnCM0jZ5TyMFv576NhAvH9MJgpjDVbQ==
+X-Received: by 2002:a9d:6e03:: with SMTP id e3mr4281845otr.71.1592502103915;
+        Thu, 18 Jun 2020 10:41:43 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id f7sm832299otl.60.2020.06.18.10.41.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 10:41:43 -0700 (PDT)
+Subject: Re: [PATCH] usbip: tools: fix module name in man page
+To:     Antonio Borneo <borneo.antonio@gmail.com>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Shuah Khan <shuah@kernel.org>, matt mooney <mfm@muteddisk.com>,
+        linux-usb@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200618000818.1048203-1-borneo.antonio@gmail.com>
+ <7902323e-fd72-8301-9a11-e6b912b61890@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <038c9454-9598-8b86-e63b-3b04e88a8cd5@linuxfoundation.org>
+Date:   Thu, 18 Jun 2020 11:41:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <7902323e-fd72-8301-9a11-e6b912b61890@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-18_14:2020-06-18,2020-06-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- adultscore=0 malwarescore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- bulkscore=0 priorityscore=1501 impostorscore=0 mlxscore=0 suspectscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006180125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-17 at 13:44 -0700, Lakshmi Ramasubramanian wrote:
-> Error code is not included in the audit messages logged by
-> the integrity subsystem. Add "errno" field in the audit messages
-> logged by the integrity subsystem and set the value to the error code
-> passed to integrity_audit_msg() in the "result" parameter.
+On 6/18/20 10:56 AM, Shuah Khan wrote:
+> On 6/17/20 6:08 PM, Antonio Borneo wrote:
+>> Commit 64e62426f40d ("staging: usbip: edit Kconfig and rename
+>> CONFIG options") renamed the module usbip as usbip-host, but the
+>> example in the man page still reports the old module name.
+>>
+>> Fix the module name in usbipd.8
+>>
+>> Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
+>> Fixes: 64e62426f40d ("staging: usbip: edit Kconfig and rename CONFIG 
+>> options")
+>> ---
+>>   tools/usb/usbip/doc/usbipd.8 | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/usb/usbip/doc/usbipd.8 b/tools/usb/usbip/doc/usbipd.8
+>> index ac4635db3f03..fb62a756893b 100644
+>> --- a/tools/usb/usbip/doc/usbipd.8
+>> +++ b/tools/usb/usbip/doc/usbipd.8
+>> @@ -73,7 +73,7 @@ USB/IP client can connect and use exported devices.
+>>   .SH EXAMPLES
+>> -    server:# modprobe usbip
+>> +    server:# modprobe usbip-host
+>>       server:# usbipd -D
+>>           - Start usbip daemon.
+>>
+>> base-commit: b3a9e3b9622ae10064826dccb4f7a52bd88c7407
+>>
 > 
-> Sample audit messages:
+> Looks good. Thanks for fixing this.
 > 
-> [    6.284329] audit: type=1804 audit(1591756723.627:2): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=kernel op=add_boot_aggregate cause=alloc_entry comm="swapper/0" name="boot_aggregate" res=0 errno=-12
+> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 > 
-> [    8.085456] audit: type=1802 audit(1592005947.297:9): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=policy_update cause=completed comm="systemd" res=1 errno=0
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> Suggested-by: Steve Grubb <sgrubb@redhat.com>
-> ---
->  security/integrity/integrity_audit.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/security/integrity/integrity_audit.c b/security/integrity/integrity_audit.c
-> index 5109173839cc..a265024f82f3 100644
-> --- a/security/integrity/integrity_audit.c
-> +++ b/security/integrity/integrity_audit.c
-> @@ -53,6 +53,6 @@ void integrity_audit_msg(int audit_msgno, struct inode *inode,
->  		audit_log_untrustedstring(ab, inode->i_sb->s_id);
->  		audit_log_format(ab, " ino=%lu", inode->i_ino);
->  	}
-> -	audit_log_format(ab, " res=%d", !result);
-> +	audit_log_format(ab, " res=%d errno=%d", !result, result);
->  	audit_log_end(ab);
->  }
 
-For the reasons that I mentioned previously, unless others are willing
-to add their Reviewed-by tag not for the audit aspect in particular,
-but IMA itself, I'm not comfortable making this change all at once.
++ Adding Greg
 
-Previously I suggested making the existing integrity_audit_msg() a
-wrapper for a new function with errno.  Steve said, "We normally do
-not like to have fields that swing in and out ...", but said setting
-errno to 0 is fine.  The original integrity_audit_msg() function would
-call the new function with errno set to 0.
+Odd. Looks like get_maintainers gave a very old address
+for Greg Kroah-Hartman <gregkh@suse.de>.
 
-Mimi
+
+thanks,
+-- Shuah
