@@ -2,55 +2,57 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC27FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD31C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97BD7221E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A6F221E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444215;
-	bh=/QpeyPTgpv4TJQv1GenvxiHv2ovCnuOrJTrNBcBINyc=;
+	s=default; t=1592444218;
+	bh=AxfoCXI+vDRNSf4ooqzOasLRwm0OKnEHRoZ/9Wztl1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dP03ry+ZsZArgql9v46IlfOJLTfJsDwTS/ZkiNHQW7WB0rUCjX64MPKF9c21Qi7Zz
-	 5SQjSazWiFKhJDRAZ8bH1NlkBD5t4nNkwyWmEQYQebse4Oo3uo4VCy4kAv3VfPF4+/
-	 5ltPRiv/n6D9P4lqZdI9bFtyLsAcUBW78iyZJ51w=
+	b=szWNlIbmijYguxsURIEQuXPozF9FJBiDdmxGEPnCn5CzIaBULQDjjVZ4Z5Q08wfh1
+	 o+3tXFbtnegTfx1avn6ocu94TKVUozoJK7Ax/XP99tkXhZ+fGOry0L8q8KFz2q2bGk
+	 fNdxJoT6LEdjvpkOFZIXTvu765mKQ2zTCd4Zk+2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732849AbgFRBgw (ORCPT
+        id S1732650AbgFRBay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:36:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41256 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:30:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732651AbgFRBaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:30:55 -0400
+        id S1730228AbgFRB1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05B0720CC7;
-        Thu, 18 Jun 2020 01:30:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24DB6221F7;
+        Thu, 18 Jun 2020 01:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443854;
-        bh=/QpeyPTgpv4TJQv1GenvxiHv2ovCnuOrJTrNBcBINyc=;
+        s=default; t=1592443655;
+        bh=AxfoCXI+vDRNSf4ooqzOasLRwm0OKnEHRoZ/9Wztl1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A13x2wvzJL8xEE+zy6ibwF+haLLJeOCmnjpMCNZ75ukIFLHW1nC62JfjmEaixugWV
-         UpSso+NEMwyi6dxlDQuY+az7b9vu8YgNk/YuNpvdB5JpjxDFvFdGwGOW0gAqcxsrv2
-         Fe+z/Oprdcm15ng556tCWY/8gJpNZEeY+AABu6r4=
+        b=x0Rer1twvp78ey8zVRqD/Dbx4WrKtpO7zHyZoFG6t7pdzpERF8FiVM33xgfprvwQe
+         zJ+HahiwX0dRUiLL4T+2fd+fS+o0PQSlzsN2HYbSPtdvmNnOXfbnNir36F7xm0CjeK
+         mI+HOGYKq9Sz8N1UBk7/fyq03T56x8KWuZPlQUaI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 38/60] powerpc/pseries/ras: Fix FWNMI_VALID off by one
-Date:   Wed, 17 Jun 2020 21:29:42 -0400
-Message-Id: <20200618013004.610532-38-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        kbuild test robot <lkp@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 074/108] USB: gadget: udc: s3c2410_udc: Remove pointless NULL check in s3c2410_udc_nuke
+Date:   Wed, 17 Jun 2020 21:25:26 -0400
+Message-Id: <20200618012600.608744-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
-References: <20200618013004.610532-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,44 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit deb70f7a35a22dffa55b2c3aac71bc6fb0f486ce ]
+[ Upstream commit 7a0fbcf7c308920bc6116b3a5fb21c8cc5fec128 ]
 
-This was discovered developing qemu fwnmi sreset support. This
-off-by-one bug means the last 16 bytes of the rtas area can not
-be used for a 16 byte save area.
+Clang warns:
 
-It's not a serious bug, and QEMU implementation has to retain a
-workaround for old kernels, but it's good to tighten it.
+drivers/usb/gadget/udc/s3c2410_udc.c:255:11: warning: comparison of
+address of 'ep->queue' equal to a null pointer is always false
+[-Wtautological-pointer-compare]
+        if (&ep->queue == NULL)
+             ~~~~^~~~~    ~~~~
+1 warning generated.
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Acked-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200508043408.886394-7-npiggin@gmail.com
+It is not wrong, queue is not a pointer so if ep is not NULL, the
+address of queue cannot be NULL. No other driver does a check like this
+and this check has been around since the driver was first introduced,
+presumably with no issues so it does not seem like this check should be
+something else. Just remove it.
+
+Commit afe956c577b2d ("kbuild: Enable -Wtautological-compare") exposed
+this but it is not the root cause of the warning.
+
+Fixes: 3fc154b6b8134 ("USB Gadget driver for Samsung s3c2410 ARM SoC")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1004
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/ras.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/udc/s3c2410_udc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
-index 9795e52bab3d..9e817c1b7808 100644
---- a/arch/powerpc/platforms/pseries/ras.c
-+++ b/arch/powerpc/platforms/pseries/ras.c
-@@ -265,10 +265,11 @@ static irqreturn_t ras_error_interrupt(int irq, void *dev_id)
- /*
-  * Some versions of FWNMI place the buffer inside the 4kB page starting at
-  * 0x7000. Other versions place it inside the rtas buffer. We check both.
-+ * Minimum size of the buffer is 16 bytes.
-  */
- #define VALID_FWNMI_BUFFER(A) \
--	((((A) >= 0x7000) && ((A) < 0x7ff0)) || \
--	(((A) >= rtas.base) && ((A) < (rtas.base + rtas.size - 16))))
-+	((((A) >= 0x7000) && ((A) <= 0x8000 - 16)) || \
-+	(((A) >= rtas.base) && ((A) <= (rtas.base + rtas.size - 16))))
- 
- /*
-  * Get the error information for errors coming through the
+diff --git a/drivers/usb/gadget/udc/s3c2410_udc.c b/drivers/usb/gadget/udc/s3c2410_udc.c
+index 394abd5d65c0..cf12ca567e69 100644
+--- a/drivers/usb/gadget/udc/s3c2410_udc.c
++++ b/drivers/usb/gadget/udc/s3c2410_udc.c
+@@ -268,10 +268,6 @@ static void s3c2410_udc_done(struct s3c2410_ep *ep,
+ static void s3c2410_udc_nuke(struct s3c2410_udc *udc,
+ 		struct s3c2410_ep *ep, int status)
+ {
+-	/* Sanity check */
+-	if (&ep->queue == NULL)
+-		return;
+-
+ 	while (!list_empty(&ep->queue)) {
+ 		struct s3c2410_request *req;
+ 		req = list_entry(ep->queue.next, struct s3c2410_request,
 -- 
 2.25.1
 
