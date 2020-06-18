@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31455C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13170C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10877206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15D220720
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:33:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447577;
-	bh=bPJxDlYin/x/TYjAO2oCgJPPgkg5EaIRk3POZXq9oe4=;
+	s=default; t=1592447581;
+	bh=wrZIAq9fTJ3Dp9QQKIdlPNcKPKFcJ2C93L8OCBXtUY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CN4M/UdyWU7XfuQ/lGie6dru8ddvuNVowlkp8ICuDA/3fBGpYyEZ6I7mf2H6w7KIJ
-	 m7wEfO/DQQ4IhJv4npkHT+XllWE8pGBlDbn+Dx+dUovNio7TpK4rK4j6YT0ALK6si0
-	 7/1mQm0sMV6WM1oCIaAUAgOSTUZkit4SonObigAc=
+	b=DC/srh31zGi3U7/m9ELnCqGQl1taw8EJYDdlasyzFcVBc7XAdx0hGKwEVCf0kP+VW
+	 /pqHHi7CYSDEkjnr8M3Wy2bJVBtfyD1WEZ4YHsr3tza+RPN7/lcTEohRH/t6zEkA61
+	 2X+PksVZXFKnyrXeY8qhYxbCzJF6kE2+xhrOzWjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728067AbgFRBPD (ORCPT
+        id S2387695AbgFRCc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:15:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42810 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728544AbgFRBNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:32 -0400
+        id S1729422AbgFRBPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB978221EB;
-        Thu, 18 Jun 2020 01:13:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B63A0221EA;
+        Thu, 18 Jun 2020 01:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442811;
-        bh=bPJxDlYin/x/TYjAO2oCgJPPgkg5EaIRk3POZXq9oe4=;
+        s=default; t=1592442900;
+        bh=wrZIAq9fTJ3Dp9QQKIdlPNcKPKFcJ2C93L8OCBXtUY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HUTWNExj70JYYV3bek4haVoP5usqDsNCAzxrJGjV3OfGc7u/53CWKeZ1wb/uNCRre
-         QO8iAhyFBAkdZix3ugHwFcWDp+1WLMutoF91NontalzuPZ98CfHvIboOOZgXccpaps
-         ubwn3nXukz9e40qQjS4CWytpv68s1reagyC4G5Co=
+        b=QXAstZZ32zyB4Ric27htcX0hbTVvbr2STrlrhF3YHDYDG9IWcz/KtR7yAUZuYHXmj
+         nPeIMndQJKg1ayGKGcHrpEJXVglTRXW08cw06LKynvsHFBYXaei9/COEfxearpckm6
+         srRxvK2Qu2XqsGOs2HhKgdjxrrNV/6GR0acWAIRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 250/388] powerpc/64s/pgtable: fix an undefined behaviour
-Date:   Wed, 17 Jun 2020 21:05:47 -0400
-Message-Id: <20200618010805.600873-250-sashal@kernel.org>
+Cc:     Can Guo <cang@codeaurora.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 321/388] scsi: ufs: Don't update urgent bkops level when toggling auto bkops
+Date:   Wed, 17 Jun 2020 21:06:58 -0400
+Message-Id: <20200618010805.600873-321-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,77 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Can Guo <cang@codeaurora.org>
 
-[ Upstream commit c2e929b18cea6cbf71364f22d742d9aad7f4677a ]
+[ Upstream commit be32acff43800c87dc5c707f5d47cc607b76b653 ]
 
-Booting a power9 server with hash MMU could trigger an undefined
-behaviour because pud_offset(p4d, 0) will do,
+Urgent bkops level is used to compare against actual bkops status read from
+UFS device. Urgent bkops level is set during initialization and might be
+updated in exception event handler during runtime. But it should not be
+updated to the actual bkops status every time when auto bkops is toggled.
+Otherwise, if urgent bkops level is updated to 0, auto bkops shall always
+be kept enabled.
 
-0 >> (PAGE_SHIFT:16 + PTE_INDEX_SIZE:8 + H_PMD_INDEX_SIZE:10)
-
-Fix it by converting pud_index() and friends to static inline
-functions.
-
-UBSAN: shift-out-of-bounds in arch/powerpc/mm/ptdump/ptdump.c:282:15
-shift exponent 34 is too large for 32-bit type 'int'
-CPU: 6 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4-next-20200303+ #13
-Call Trace:
-dump_stack+0xf4/0x164 (unreliable)
-ubsan_epilogue+0x18/0x78
-__ubsan_handle_shift_out_of_bounds+0x160/0x21c
-walk_pagetables+0x2cc/0x700
-walk_pud at arch/powerpc/mm/ptdump/ptdump.c:282
-(inlined by) walk_pagetables at arch/powerpc/mm/ptdump/ptdump.c:311
-ptdump_check_wx+0x8c/0xf0
-mark_rodata_ro+0x48/0x80
-kernel_init+0x74/0x194
-ret_from_kernel_thread+0x5c/0x74
-
-Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Link: https://lore.kernel.org/r/20200306044852.3236-1-cai@lca.pw
+Link: https://lore.kernel.org/r/1590632686-17866-1-git-send-email-cang@codeaurora.org
+Fixes: 24366c2afbb0 ("scsi: ufs: Recheck bkops level if bkops is disabled")
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/book3s/64/pgtable.h | 23 ++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index 368b136517e0..2838b98bc6df 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -998,10 +998,25 @@ extern struct page *pgd_page(pgd_t pgd);
- #define pud_page_vaddr(pud)	__va(pud_val(pud) & ~PUD_MASKED_BITS)
- #define pgd_page_vaddr(pgd)	__va(pgd_val(pgd) & ~PGD_MASKED_BITS)
- 
--#define pgd_index(address) (((address) >> (PGDIR_SHIFT)) & (PTRS_PER_PGD - 1))
--#define pud_index(address) (((address) >> (PUD_SHIFT)) & (PTRS_PER_PUD - 1))
--#define pmd_index(address) (((address) >> (PMD_SHIFT)) & (PTRS_PER_PMD - 1))
--#define pte_index(address) (((address) >> (PAGE_SHIFT)) & (PTRS_PER_PTE - 1))
-+static inline unsigned long pgd_index(unsigned long address)
-+{
-+	return (address >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1);
-+}
-+
-+static inline unsigned long pud_index(unsigned long address)
-+{
-+	return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
-+}
-+
-+static inline unsigned long pmd_index(unsigned long address)
-+{
-+	return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
-+}
-+
-+static inline unsigned long pte_index(unsigned long address)
-+{
-+	return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
-+}
- 
- /*
-  * Find an entry in a page-table-directory.  We combine the address region
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 698e8d20b4ba..52740b60d786 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5098,7 +5098,6 @@ static int ufshcd_bkops_ctrl(struct ufs_hba *hba,
+ 		err = ufshcd_enable_auto_bkops(hba);
+ 	else
+ 		err = ufshcd_disable_auto_bkops(hba);
+-	hba->urgent_bkops_lvl = curr_status;
+ out:
+ 	return err;
+ }
 -- 
 2.25.1
 
