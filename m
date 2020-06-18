@@ -2,162 +2,178 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A853C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D39C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 722872224B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444085;
-	bh=bN2KIVJIjUAP1Q6GRQwg8pd++HsnTFuJoBLlUKk/NAw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=imNHaHFVRfJnMHPLtkayJCaaf5H8HfSuMJbi3JOBGzpoqmxIInH4M5+hzHJb7jFzd
-	 t/MZPzheX0UBJaZbC96jBY8lormNiIdDXgXT/3ClD4/ptR5YTxauxB5lLPTNuO/QmU
-	 AoE07kYZt2snRDEpLLTMAkiJaiJ+nfSZjX1R8WEk=
+	by mail.kernel.org (Postfix) with ESMTP id B0BBD2224B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N7fBjlHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732981AbgFRBdp (ORCPT
+        id S1732113AbgFRBe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:33:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732668AbgFRBa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:30:59 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 17 Jun 2020 21:34:56 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41431 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731409AbgFRBdK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:33:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592443988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TIDGi3sXPt+fhjCjxVVlP5Ysnp3g6oAAR1w/q4/ns0Q=;
+        b=N7fBjlHZewQDxMzVJo5Z8NXdInXVPEKzfFAaAJQN3NqwHQHIAL/fVZNM6v901q4dEoshr1
+        Jkhqfn+EzKynATQU8O6tprL/T/X10mfgL+MMquSl6JCC7m9hqOGLk/reoki0UFa2+yhpBl
+        I11rvnmcapDBeVhpJXkz6xFTR3CIXzs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-145-qpFtEkRSOOWEy4mHP7dN4A-1; Wed, 17 Jun 2020 21:33:06 -0400
+X-MC-Unique: qpFtEkRSOOWEy4mHP7dN4A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61AE82224B;
-        Thu, 18 Jun 2020 01:30:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443858;
-        bh=bN2KIVJIjUAP1Q6GRQwg8pd++HsnTFuJoBLlUKk/NAw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=st+onyCNMbePTsTxS7Vi3MgXndbPP/d7OejOg2vJw259kYY6ZiAzFCwYbtXUMVM9h
-         eeAd9jAwmv+1UrUlzheEEdMG/JvGvRvCuvHpg+9gqF/K3Z5aSXGluXRLhA9Fu6KPRn
-         M00ImbEZdh5zVujbx1bTUp2iJUwPY4f9BR5+epBM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Oliver Neukum <oneukum@suse.de>,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 41/60] usb/ohci-platform: Fix a warning when hibernating
-Date:   Wed, 17 Jun 2020 21:29:45 -0400
-Message-Id: <20200618013004.610532-41-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
-References: <20200618013004.610532-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 076568005AD;
+        Thu, 18 Jun 2020 01:33:05 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-117-167.rdu2.redhat.com [10.10.117.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B2E160F89;
+        Thu, 18 Jun 2020 01:32:58 +0000 (UTC)
+Subject: Re: [PATCH v2 1/2] sched: Add PF_MEMALLOC_NOLOCKDEP flag
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200617175310.20912-1-longman@redhat.com>
+ <20200617175310.20912-2-longman@redhat.com>
+ <20200618000110.GF2005@dread.disaster.area>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <7371c5dc-7ba7-6d86-75ca-43bedfa6b24f@redhat.com>
+Date:   Wed, 17 Jun 2020 21:32:58 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200618000110.GF2005@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+On 6/17/20 8:01 PM, Dave Chinner wrote:
+> On Wed, Jun 17, 2020 at 01:53:09PM -0400, Waiman Long wrote:
+>> There are cases where calling kmalloc() can lead to false positive
+>> lockdep splat. One notable example that can happen in the freezing of
+>> the xfs filesystem is as follows:
+>>
+>>   Possible unsafe locking scenario:
+>>
+>>         CPU0                    CPU1
+>>         ----                    ----
+>>    lock(sb_internal);
+>>                                 lock(fs_reclaim);
+>>                                 lock(sb_internal);
+>>    lock(fs_reclaim);
+>>
+>>   *** DEADLOCK ***
+>>
+>> This is a false positive as all the dirty pages are flushed out before
+>> the filesystem can be frozen. However, there is no easy way to modify
+>> lockdep to handle this situation properly.
+>>
+>> One possible workaround is to disable lockdep by setting __GFP_NOLOCKDEP
+>> in the appropriate kmalloc() calls.  However, it will be cumbersome to
+>> locate all the right kmalloc() calls to insert __GFP_NOLOCKDEP and it
+>> is easy to miss some especially when the code is updated in the future.
+>>
+>> Another alternative is to have a per-process global state that indicates
+>> the equivalent of __GFP_NOLOCKDEP without the need to set the gfp_t flag
+>> individually. To allow the latter case, a new PF_MEMALLOC_NOLOCKDEP
+>> per-process flag is now added. After adding this new bit, there are
+>> still 2 free bits left.
+>>
+>> Suggested-by: Dave Chinner <david@fromorbit.com>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>   include/linux/sched.h    |  7 +++++++
+>>   include/linux/sched/mm.h | 15 ++++++++++-----
+>>   2 files changed, 17 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/include/linux/sched.h b/include/linux/sched.h
+>> index b62e6aaf28f0..44247cbc9073 100644
+>> --- a/include/linux/sched.h
+>> +++ b/include/linux/sched.h
+>> @@ -1508,6 +1508,7 @@ extern struct pid *cad_pid;
+>>   #define PF_MEMALLOC_NOIO	0x00080000	/* All allocation requests will inherit GFP_NOIO */
+>>   #define PF_LOCAL_THROTTLE	0x00100000	/* Throttle writes only against the bdi I write to,
+>>   						 * I am cleaning dirty pages from some other bdi. */
+>> +#define __PF_MEMALLOC_NOLOCKDEP	0x00100000	/* All allocation requests will inherit __GFP_NOLOCKDEP */
+> Why is this considered a safe thing to do? Any context that sets
+> __PF_MEMALLOC_NOLOCKDEP will now behave differently in memory
+> reclaim as it will think that PF_LOCAL_THROTTLE is set when lockdep
+> is enabled.
 
-[ Upstream commit 1cb3b0095c3d0bb96912bfbbce4fc006d41f367c ]
+Oh, my mistake, it should be 0x01000000 which is not currently being 
+used. Thank for catching that. I will repost a new version. I have no 
+intention to reuse any existing bit. As said in the commit log, there 
+are actually 2 more free bits left.
 
-The following warning was observed when attempting to suspend to disk
-using a USB flash as a swap device.
 
-[  111.779649] ------------[ cut here ]------------
-[  111.788382] URB (____ptrval____) submitted while active
-[  111.796646] WARNING: CPU: 3 PID: 365 at drivers/usb/core/urb.c:363 usb_submit_urb+0x3d8/0x590
-[  111.805417] Modules linked in:
-[  111.808584] CPU: 3 PID: 365 Comm: kworker/3:2 Not tainted 5.6.0-rc6-00002-gdfd1731f9a3e-dirty #545
-[  111.817796] Hardware name: ARM Juno development board (r2) (DT)
-[  111.823896] Workqueue: usb_hub_wq hub_event
-[  111.828217] pstate: 60000005 (nZCv daif -PAN -UAO)
-[  111.833156] pc : usb_submit_urb+0x3d8/0x590
-[  111.837471] lr : usb_submit_urb+0x3d8/0x590
-[  111.841783] sp : ffff800018de38b0
-[  111.845205] x29: ffff800018de38b0 x28: 0000000000000003
-[  111.850682] x27: ffff000970530b20 x26: ffff8000133fd000
-[  111.856159] x25: ffff8000133fd000 x24: ffff800018de3b38
-[  111.861635] x23: 0000000000000004 x22: 0000000000000c00
-[  111.867112] x21: 0000000000000000 x20: 00000000fffffff0
-[  111.872589] x19: ffff0009704e7a00 x18: ffffffffffffffff
-[  111.878065] x17: 00000000a7c8f4bc x16: 000000002af33de8
-[  111.883542] x15: ffff8000133fda88 x14: 0720072007200720
-[  111.889019] x13: 0720072007200720 x12: 0720072007200720
-[  111.894496] x11: 0000000000000000 x10: 00000000a5286134
-[  111.899973] x9 : 0000000000000002 x8 : ffff000970c837a0
-[  111.905449] x7 : 0000000000000000 x6 : ffff800018de3570
-[  111.910926] x5 : 0000000000000001 x4 : 0000000000000003
-[  111.916401] x3 : 0000000000000000 x2 : ffff800013427118
-[  111.921879] x1 : 9d4e965b4b7d7c00 x0 : 0000000000000000
-[  111.927356] Call trace:
-[  111.929892]  usb_submit_urb+0x3d8/0x590
-[  111.933852]  hub_activate+0x108/0x7f0
-[  111.937633]  hub_resume+0xac/0x148
-[  111.941149]  usb_resume_interface.isra.10+0x60/0x138
-[  111.946265]  usb_resume_both+0xe4/0x140
-[  111.950225]  usb_runtime_resume+0x24/0x30
-[  111.954365]  __rpm_callback+0xdc/0x138
-[  111.958236]  rpm_callback+0x34/0x98
-[  111.961841]  rpm_resume+0x4a8/0x720
-[  111.965445]  rpm_resume+0x50c/0x720
-[  111.969049]  __pm_runtime_resume+0x4c/0xb8
-[  111.973276]  usb_autopm_get_interface+0x28/0x60
-[  111.977948]  hub_event+0x80/0x16d8
-[  111.981466]  process_one_work+0x2a4/0x748
-[  111.985604]  worker_thread+0x48/0x498
-[  111.989387]  kthread+0x13c/0x140
-[  111.992725]  ret_from_fork+0x10/0x18
-[  111.996415] irq event stamp: 354
-[  111.999756] hardirqs last  enabled at (353): [<ffff80001019ea1c>] console_unlock+0x504/0x5b8
-[  112.008441] hardirqs last disabled at (354): [<ffff8000100a95d0>] do_debug_exception+0x1a8/0x258
-[  112.017479] softirqs last  enabled at (350): [<ffff8000100818a4>] __do_softirq+0x4bc/0x568
-[  112.025984] softirqs last disabled at (343): [<ffff8000101145a4>] irq_exit+0x144/0x150
-[  112.034129] ---[ end trace dc96030b9cf6c8a3 ]---
+>
+>>   #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
+>>   #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
+>>   #define PF_SWAPWRITE		0x00800000	/* Allowed to write to swap */
+>> @@ -1519,6 +1520,12 @@ extern struct pid *cad_pid;
+>>   #define PF_FREEZER_SKIP		0x40000000	/* Freezer should not count it as freezable */
+>>   #define PF_SUSPEND_TASK		0x80000000      /* This thread called freeze_processes() and should not be frozen */
+>>   
+>> +#ifdef CONFIG_LOCKDEP
+>> +#define PF_MEMALLOC_NOLOCKDEP	__PF_MEMALLOC_NOLOCKDEP
+>> +#else
+>> +#define PF_MEMALLOC_NOLOCKDEP	0
+>> +#endif
+>> +
+>>   /*
+>>    * Only the _current_ task can read/write to tsk->flags, but other
+>>    * tasks can access tsk->flags in readonly mode for example
+>> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+>> index 480a4d1b7dd8..4a076a148568 100644
+>> --- a/include/linux/sched/mm.h
+>> +++ b/include/linux/sched/mm.h
+>> @@ -177,22 +177,27 @@ static inline bool in_vfork(struct task_struct *tsk)
+>>    * Applies per-task gfp context to the given allocation flags.
+>>    * PF_MEMALLOC_NOIO implies GFP_NOIO
+>>    * PF_MEMALLOC_NOFS implies GFP_NOFS
+>> + * PF_MEMALLOC_NOLOCKDEP implies __GFP_NOLOCKDEP
+>>    * PF_MEMALLOC_NOCMA implies no allocation from CMA region.
+>>    */
+>>   static inline gfp_t current_gfp_context(gfp_t flags)
+>>   {
+>> -	if (unlikely(current->flags &
+>> -		     (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS | PF_MEMALLOC_NOCMA))) {
+>> +	unsigned int pflags = current->flags;
+>> +
+>> +	if (unlikely(pflags & (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS |
+>> +			       PF_MEMALLOC_NOCMA | PF_MEMALLOC_NOLOCKDEP))) {
+> That needs a PF_MEMALLOC_MASK.
 
-The problem was tracked down to a missing call to
-pm_runtime_set_active() on resume in ohci-platform.
+Will add that in the next version.
 
-Link: https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: Tony Prisk <linux@prisktech.co.nz>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Mathias Nyman <mathias.nyman@intel.com>
-CC: Oliver Neukum <oneukum@suse.de>
-CC: linux-arm-kernel@lists.infradead.org
-CC: linux-usb@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/20200518154931.6144-1-qais.yousef@arm.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/host/ohci-platform.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-index c2669f185f65..0e5580e6f35c 100644
---- a/drivers/usb/host/ohci-platform.c
-+++ b/drivers/usb/host/ohci-platform.c
-@@ -339,6 +339,11 @@ static int ohci_platform_resume(struct device *dev)
- 	}
- 
- 	ohci_resume(hcd, false);
-+
-+	pm_runtime_disable(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+
- 	return 0;
- }
- #endif /* CONFIG_PM_SLEEP */
--- 
-2.25.1
+Thanks,
+Longman
 
