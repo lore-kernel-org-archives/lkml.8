@@ -7,53 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3265BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A361BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 117DC20720
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3E320720
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447525;
-	bh=UV6/2/zCAHdwmU09mq1h/o43ERhJ/dSeZzEV/wzr3cw=;
+	s=default; t=1592447530;
+	bh=sMj1a01Ly63MbfBjhXj41uQ3VY8ywzgCtKQT9UCyDRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wB2bnhHmT99qw4pBq0hdUPQI8CGTMSWmV01NkdpI/sJMaBmPt2DscvPUv78WZdUt1
-	 rZE45gLwoPE9nQMd2HrbDbdkZfD0M+LrT6ELBvi1ey2fqj3X5qk3z6JGvN2EUosw/T
-	 67cCa7r7Mj+U6FwJwPw1Rz2ftVZZNKz6SbSUyuBE=
+	b=HUw4YCs7PlNsy+CKxbraMCWr0MlrpzCsV0I2cfYljsENwbIuD5xPRYJbAObv+8CkM
+	 GQPU8axUkQdGcbUB2lFKnqhVMiicfbGTtsIRNXXXL+TpowEjqOz1yIfNtSas/yJwdG
+	 5HlPZRL0szL8DlNwdF1UIZJaOck+xA4zv6b/4VsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387583AbgFRCcC (ORCPT
+        id S2387654AbgFRCcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:32:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45332 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:32:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728929AbgFRBPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:22 -0400
+        id S1729451AbgFRBPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1136D21BE5;
-        Thu, 18 Jun 2020 01:15:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B7462193E;
+        Thu, 18 Jun 2020 01:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442921;
-        bh=UV6/2/zCAHdwmU09mq1h/o43ERhJ/dSeZzEV/wzr3cw=;
+        s=default; t=1592442914;
+        bh=sMj1a01Ly63MbfBjhXj41uQ3VY8ywzgCtKQT9UCyDRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cs1SkbEKnNOiU91WllzhrFU51BSOIOzwqj3kclTsgrLGBcU8vWRvWbZoatKhmEh5p
-         ZebD5Rlnj/ZyaeBYhDge2l6nVoh2Qx4vBRWenM1R0V9AfBJVe/aki/na5OG71MB7cj
-         3jMwosxOEnoSsWThZkFLCw+AaDQ0vnTiDsWnJXN0=
+        b=hJ+DSvam2KDSAydV05MN9hd3BkG8yGcXt+g4ZVmiTWOjbwIv0NtxyBw+umL8sUcy9
+         2twTmrsTVoT9sKX4I967WMQjuOUjKOPAnJR2IB1tcj659BEShQVPwn1eIR+A2my/ma
+         QlXN2XyZH9lo/rvWPIG1fk50PoKUiOB0otna2q4I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.7 337/388] include/linux/bitops.h: avoid clang shift-count-overflow warnings
-Date:   Wed, 17 Jun 2020 21:07:14 -0400
-Message-Id: <20200618010805.600873-337-sashal@kernel.org>
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 332/388] crypto: omap-sham - add proper load balancing support for multicore
+Date:   Wed, 17 Jun 2020 21:07:09 -0400
+Message-Id: <20200618010805.600873-332-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -66,63 +59,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit bd93f003b7462ae39a43c531abca37fe7073b866 ]
+[ Upstream commit 281c377872ff5d15d80df25fc4df02d2676c7cde ]
 
-Clang normally does not warn about certain issues in inline functions when
-it only happens in an eliminated code path. However if something else
-goes wrong, it does tend to complain about the definition of hweight_long()
-on 32-bit targets:
+The current implementation of the multiple accelerator core support for
+OMAP SHA does not work properly. It always picks up the first probed
+accelerator core if this is available, and rest of the book keeping also
+gets confused if there are two cores available. Add proper load
+balancing support for SHA, and also fix any bugs related to the
+multicore support while doing it.
 
-  include/linux/bitops.h:75:41: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-          return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
-                                                 ^~~~~~~~~~~~
-  include/asm-generic/bitops/const_hweight.h:29:49: note: expanded from macro 'hweight64'
-   define hweight64(w) (__builtin_constant_p(w) ? __const_hweight64(w) : __arch_hweight64(w))
-                                                  ^~~~~~~~~~~~~~~~~~~~
-  include/asm-generic/bitops/const_hweight.h:21:76: note: expanded from macro '__const_hweight64'
-   define __const_hweight64(w) (__const_hweight32(w) + __const_hweight32((w) >> 32))
-                                                                             ^  ~~
-  include/asm-generic/bitops/const_hweight.h:20:49: note: expanded from macro '__const_hweight32'
-   define __const_hweight32(w) (__const_hweight16(w) + __const_hweight16((w) >> 16))
-                                                  ^
-  include/asm-generic/bitops/const_hweight.h:19:72: note: expanded from macro '__const_hweight16'
-   define __const_hweight16(w) (__const_hweight8(w)  + __const_hweight8((w)  >> 8 ))
-                                                                         ^
-  include/asm-generic/bitops/const_hweight.h:12:9: note: expanded from macro '__const_hweight8'
-            (!!((w) & (1ULL << 2))) +     \
-
-Adding an explicit cast to __u64 avoids that warning and makes it easier
-to read other output.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Link: http://lkml.kernel.org/r/20200505135513.65265-1-arnd@arndb.de
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bitops.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/omap-sham.c | 64 ++++++++++++++++++--------------------
+ 1 file changed, 31 insertions(+), 33 deletions(-)
 
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index 9acf654f0b19..99f2ac30b1d9 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -72,7 +72,7 @@ static inline int get_bitmask_order(unsigned int count)
+diff --git a/drivers/crypto/omap-sham.c b/drivers/crypto/omap-sham.c
+index 0cbf9c932a0f..a82a3596dca3 100644
+--- a/drivers/crypto/omap-sham.c
++++ b/drivers/crypto/omap-sham.c
+@@ -169,8 +169,6 @@ struct omap_sham_hmac_ctx {
+ };
  
- static __always_inline unsigned long hweight_long(unsigned long w)
- {
--	return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
-+	return sizeof(w) == 4 ? hweight32(w) : hweight64((__u64)w);
+ struct omap_sham_ctx {
+-	struct omap_sham_dev	*dd;
+-
+ 	unsigned long		flags;
+ 
+ 	/* fallback stuff */
+@@ -933,27 +931,35 @@ static int omap_sham_update_dma_stop(struct omap_sham_dev *dd)
+ 	return 0;
  }
  
- /**
++struct omap_sham_dev *omap_sham_find_dev(struct omap_sham_reqctx *ctx)
++{
++	struct omap_sham_dev *dd;
++
++	if (ctx->dd)
++		return ctx->dd;
++
++	spin_lock_bh(&sham.lock);
++	dd = list_first_entry(&sham.dev_list, struct omap_sham_dev, list);
++	list_move_tail(&dd->list, &sham.dev_list);
++	ctx->dd = dd;
++	spin_unlock_bh(&sham.lock);
++
++	return dd;
++}
++
+ static int omap_sham_init(struct ahash_request *req)
+ {
+ 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
+ 	struct omap_sham_ctx *tctx = crypto_ahash_ctx(tfm);
+ 	struct omap_sham_reqctx *ctx = ahash_request_ctx(req);
+-	struct omap_sham_dev *dd = NULL, *tmp;
++	struct omap_sham_dev *dd;
+ 	int bs = 0;
+ 
+-	spin_lock_bh(&sham.lock);
+-	if (!tctx->dd) {
+-		list_for_each_entry(tmp, &sham.dev_list, list) {
+-			dd = tmp;
+-			break;
+-		}
+-		tctx->dd = dd;
+-	} else {
+-		dd = tctx->dd;
+-	}
+-	spin_unlock_bh(&sham.lock);
++	ctx->dd = NULL;
+ 
+-	ctx->dd = dd;
++	dd = omap_sham_find_dev(ctx);
++	if (!dd)
++		return -ENODEV;
+ 
+ 	ctx->flags = 0;
+ 
+@@ -1223,8 +1229,7 @@ static int omap_sham_handle_queue(struct omap_sham_dev *dd,
+ static int omap_sham_enqueue(struct ahash_request *req, unsigned int op)
+ {
+ 	struct omap_sham_reqctx *ctx = ahash_request_ctx(req);
+-	struct omap_sham_ctx *tctx = crypto_tfm_ctx(req->base.tfm);
+-	struct omap_sham_dev *dd = tctx->dd;
++	struct omap_sham_dev *dd = ctx->dd;
+ 
+ 	ctx->op = op;
+ 
+@@ -1234,7 +1239,7 @@ static int omap_sham_enqueue(struct ahash_request *req, unsigned int op)
+ static int omap_sham_update(struct ahash_request *req)
+ {
+ 	struct omap_sham_reqctx *ctx = ahash_request_ctx(req);
+-	struct omap_sham_dev *dd = ctx->dd;
++	struct omap_sham_dev *dd = omap_sham_find_dev(ctx);
+ 
+ 	if (!req->nbytes)
+ 		return 0;
+@@ -1338,21 +1343,8 @@ static int omap_sham_setkey(struct crypto_ahash *tfm, const u8 *key,
+ 	struct omap_sham_hmac_ctx *bctx = tctx->base;
+ 	int bs = crypto_shash_blocksize(bctx->shash);
+ 	int ds = crypto_shash_digestsize(bctx->shash);
+-	struct omap_sham_dev *dd = NULL, *tmp;
+ 	int err, i;
+ 
+-	spin_lock_bh(&sham.lock);
+-	if (!tctx->dd) {
+-		list_for_each_entry(tmp, &sham.dev_list, list) {
+-			dd = tmp;
+-			break;
+-		}
+-		tctx->dd = dd;
+-	} else {
+-		dd = tctx->dd;
+-	}
+-	spin_unlock_bh(&sham.lock);
+-
+ 	err = crypto_shash_setkey(tctx->fallback, key, keylen);
+ 	if (err)
+ 		return err;
+@@ -1370,7 +1362,7 @@ static int omap_sham_setkey(struct crypto_ahash *tfm, const u8 *key,
+ 
+ 	memset(bctx->ipad + keylen, 0, bs - keylen);
+ 
+-	if (!test_bit(FLAGS_AUTO_XOR, &dd->flags)) {
++	if (!test_bit(FLAGS_AUTO_XOR, &sham.flags)) {
+ 		memcpy(bctx->opad, bctx->ipad, bs);
+ 
+ 		for (i = 0; i < bs; i++) {
+@@ -2174,6 +2166,7 @@ static int omap_sham_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	dd->flags |= dd->pdata->flags;
++	sham.flags |= dd->pdata->flags;
+ 
+ 	pm_runtime_use_autosuspend(dev);
+ 	pm_runtime_set_autosuspend_delay(dev, DEFAULT_AUTOSUSPEND_DELAY);
+@@ -2201,6 +2194,9 @@ static int omap_sham_probe(struct platform_device *pdev)
+ 	spin_unlock(&sham.lock);
+ 
+ 	for (i = 0; i < dd->pdata->algs_info_size; i++) {
++		if (dd->pdata->algs_info[i].registered)
++			break;
++
+ 		for (j = 0; j < dd->pdata->algs_info[i].size; j++) {
+ 			struct ahash_alg *alg;
+ 
+@@ -2252,9 +2248,11 @@ static int omap_sham_remove(struct platform_device *pdev)
+ 	list_del(&dd->list);
+ 	spin_unlock(&sham.lock);
+ 	for (i = dd->pdata->algs_info_size - 1; i >= 0; i--)
+-		for (j = dd->pdata->algs_info[i].registered - 1; j >= 0; j--)
++		for (j = dd->pdata->algs_info[i].registered - 1; j >= 0; j--) {
+ 			crypto_unregister_ahash(
+ 					&dd->pdata->algs_info[i].algs_list[j]);
++			dd->pdata->algs_info[i].registered--;
++		}
+ 	tasklet_kill(&dd->done_task);
+ 	pm_runtime_disable(&pdev->dev);
+ 
 -- 
 2.25.1
 
