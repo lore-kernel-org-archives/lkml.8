@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F72FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E28C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE872220B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED90221F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445829;
-	bh=VkcaWixqyjfhWDL/yIdtd0ZiSNKdKgFdcGsVMEWCN3w=;
+	s=default; t=1592445834;
+	bh=0V7dE6479ka7p+b1cgEb56ZJP10pjJxIG98AhJLSwms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QqvErrUDvuORx8V+Coc8Zja9FPkwaAjp0FPO0j/vlbi13Bk3ChuxDGyglZ1R6vJW1
-	 K0dCsMtp++NpmDoooBPLUL5SWWzfmsIR4H55usRQBgJa2UN7D3aTzXNomCfryFg3+z
-	 NgtnLJe0RhIe6jG8Hf5HdLqZzGhxI/Sg/JasZz10=
+	b=Qh4MLNyZoKZG/+w0V2MceyS4SP5/LEvZ+IBHa9BZJlUbjD4FGWvWYK5LmolbG8UYB
+	 zKnhIqZHk8CQ4Lf465dKUkS6BdbZ8DkINMt3gj0xPgm7PAwtyB13ox1dGosa7ghHE3
+	 vB7RRd/90hrfW/vv5+xGzV7VnSmAhb8XEXX9DXTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387461AbgFRCDo (ORCPT
+        id S1730484AbgFRBXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:03:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56924 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:23:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730120AbgFRBXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:23:22 -0400
+        id S1729323AbgFRBT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EA92221EF;
-        Thu, 18 Jun 2020 01:23:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82BBF21D7E;
+        Thu, 18 Jun 2020 01:19:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443402;
-        bh=VkcaWixqyjfhWDL/yIdtd0ZiSNKdKgFdcGsVMEWCN3w=;
+        s=default; t=1592443199;
+        bh=0V7dE6479ka7p+b1cgEb56ZJP10pjJxIG98AhJLSwms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hIPs+fECPxnk1YVrE3nP6YwAoRI5u/Xx6B5cnDQIB9nKYHxq6tmLWb1AuwhqGU6Cw
-         SRCwb+GFVvR/RErFRKok4rhSTUoNWwRx8Ukg5E6MsgQ1uENdIQb3FLstt8iazOESPO
-         HilclS2hyC2HTIME75ULnI//IJouIymFzaspqVbU=
+        b=VYVtgKUdPAVB3MkKyOXfxwsx4i58eaqytLVDQc9zvZbngXFfW35B/3zkFTZiq3a7A
+         CUpLIl8mbCXu7hnbDdgYeBgTfAjlAS5LXUjF2anaAQ4K0TbflLLBSOr/Q2g3uYz1Sy
+         VwopO6x98Yqy5isiXDY50juIraG7pO0QryZyDC2o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Pavel Machek (CIP)" <pavel@denx.de>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 047/172] ASoC: meson: add missing free_irq() in error path
-Date:   Wed, 17 Jun 2020 21:20:13 -0400
-Message-Id: <20200618012218.607130-47-sashal@kernel.org>
+Cc:     Tang Bin <tangbin@cmss.chinamobile.com>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 158/266] USB: host: ehci-mxc: Add error handling in ehci_mxc_drv_probe()
+Date:   Wed, 17 Jun 2020 21:14:43 -0400
+Message-Id: <20200618011631.604574-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,51 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Pavel Machek (CIP)" <pavel@denx.de>
+From: Tang Bin <tangbin@cmss.chinamobile.com>
 
-[ Upstream commit 3b8a299a58b2afce464ae11324b59dcf0f1d10a7 ]
+[ Upstream commit d49292025f79693d3348f8e2029a8b4703be0f0a ]
 
-free_irq() is missing in case of error, fix that.
+The function ehci_mxc_drv_probe() does not perform sufficient error
+checking after executing platform_get_irq(), thus fix it.
 
-Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-
-Link: https://lore.kernel.org/r/20200606153103.GA17905@amd
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 7e8d5cd93fac ("USB: Add EHCI support for MX27 and MX31 based boards")
+Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20200513132647.5456-1-tangbin@cmss.chinamobile.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/meson/axg-fifo.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/usb/host/ehci-mxc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
-index 0e4f65e654c4..b229c182b7c3 100644
---- a/sound/soc/meson/axg-fifo.c
-+++ b/sound/soc/meson/axg-fifo.c
-@@ -209,7 +209,7 @@ static int axg_fifo_pcm_open(struct snd_pcm_substream *ss)
- 	/* Enable pclk to access registers and clock the fifo ip */
- 	ret = clk_prepare_enable(fifo->pclk);
- 	if (ret)
--		return ret;
-+		goto free_irq;
+diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
+index c9f91e6c72b6..7f65c86047dd 100644
+--- a/drivers/usb/host/ehci-mxc.c
++++ b/drivers/usb/host/ehci-mxc.c
+@@ -50,6 +50,8 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
+ 	}
  
- 	/* Setup status2 so it reports the memory pointer */
- 	regmap_update_bits(fifo->map, FIFO_CTRL1,
-@@ -229,8 +229,14 @@ static int axg_fifo_pcm_open(struct snd_pcm_substream *ss)
- 	/* Take memory arbitror out of reset */
- 	ret = reset_control_deassert(fifo->arb);
- 	if (ret)
--		clk_disable_unprepare(fifo->pclk);
-+		goto free_clk;
-+
-+	return 0;
+ 	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
++		return irq;
  
-+free_clk:
-+	clk_disable_unprepare(fifo->pclk);
-+free_irq:
-+	free_irq(fifo->irq, ss);
- 	return ret;
- }
- 
+ 	hcd = usb_create_hcd(&ehci_mxc_hc_driver, dev, dev_name(dev));
+ 	if (!hcd)
 -- 
 2.25.1
 
