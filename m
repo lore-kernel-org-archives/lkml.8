@@ -2,305 +2,135 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF66AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73BC6218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F4F2168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KszlupuX"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="SbXjA23Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgFRArf (ORCPT
+        id S1726978AbgFRAr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 20:47:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgFRAre (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 20:47:34 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 528F3C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:47:34 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id q19so5165640lji.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:47:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UKv1Zp4+yxdPRkyQkwK+sztZAa8HdfQ1Elip3FODnvg=;
-        b=KszlupuXXwQyoadmThaxgY8Bq4oZjmpBB6nwuyOeR5WNcjXx+GwWj0IFAJhSxFju4k
-         Z7+tstvQcm9K0Rh8g+rRsh3aVVfdjGYKmLqUliOuPJ+WRJ8uiD5ZiR4ZNQOo4ryHsmY5
-         iWQI+0t8cr+jLZRs6gcnLN581fD3eQR7pbi+51GLYvvqb0mcHm1vuEgmSfmjzg83UZ5Z
-         ltwj8+vxrifmesibdCwU6baexQPsO6I/cr6YXCs9wEl+SpS+8Wt+aKhtKgAqbyjEj4dC
-         12SBF3C6IC8kvgC4quRJl+NbxOgumkMu4SDgvs/+IckdGzZ4pGehjc26UZpPpFw9gZXs
-         DmFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UKv1Zp4+yxdPRkyQkwK+sztZAa8HdfQ1Elip3FODnvg=;
-        b=DSFZ58P8dA7iGigXwfy3q2jE0ZOspVnx3vdGbx4qzUAgML0mBg8scX1m9dUImTb2MM
-         YfeM/c8urFSCTTh8FGYPbxc58QbEjZ8z7mHXDZ4a9EH/UUEv9pca+GAlHqHMibMEounW
-         /pAwmPx9SplBsHVboLWgeDDdHuxtL+IRoV3FXdN/Ow8R0Pk88Ss50HWFt2vlvTSbQfJQ
-         Yb+KfJsmq5CwujdVFdMb+IY2hN82Y1ZlcUao23mOw8ghyyIw+QlfgGmKdsrCB1vwDRjr
-         tILpjMr5BUQ8RBM005J5ysx5YMgTGtXwNO8nBNkW7UOXTUc5QJPWE8ygMDEXo7lO5i3r
-         vtzg==
-X-Gm-Message-State: AOAM531+vslSEXCwOYCE7DVx4hk5NNODmlowUEg1h5YmVUSrRHiP3ypy
-        98oV3Oahh0M/jeEEU82WK3nUWDhPVcP6CEdGrSSadw==
-X-Google-Smtp-Source: ABdhPJwZszToiMUm3ryskTPtLSKel8Tu2EbFYBjVIH8KR7MqzEEAv5D/09s7kKHMfofjHNoQMPw0eQf6YP/CYQkSTiU=
-X-Received: by 2002:a2e:9ac4:: with SMTP id p4mr1005494ljj.446.1592441252467;
- Wed, 17 Jun 2020 17:47:32 -0700 (PDT)
+        Wed, 17 Jun 2020 20:47:59 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:35923 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726890AbgFRAr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 20:47:59 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49nNZg50TZz9sSc;
+        Thu, 18 Jun 2020 10:47:55 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1592441276;
+        bh=TG7uARSNXOCtzyhqf6WfzaFhVxvui+qt2GtCF7JxfbU=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=SbXjA23Qv4zCSPbZbYwvnNOG+10UWft7vXba1l9SRCrtwcmGfZqVAQUaL6AuE9TsE
+         Xl8kpUEXPhep2rbqO6NXznsrJ5pmyAvobpwjHEHVxQiLxssesbWWXAjq11rpOqkPJ/
+         Bu4Kua0elnAKRocSOzhOkFZs0N25INuOTibgKUf1RUgfOyxCB1ETRQ2to3KOuFgtyN
+         4Y4paRw+lgO4Ne7RBVvUmfBnBjSnl1zBRS+9dp0XvBE0Li3frprvJrcWlaIuJDQ576
+         8sy17H7cJwQpV3mCBEfaY//7xxH7MvhtZF4XaTVSxt+ZFFtYEvyouNv4FV5eu143yd
+         PEplI/YofUrmQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH v5 01/13] powerpc: Remove Xilinx PPC405/PPC440 support
+In-Reply-To: <CAKwvOdnkcjLGay0jdQ77kHTmKhE56F9jvzh01XWwEE8rjbhLAA@mail.gmail.com>
+References: <cover.1590079968.git.christophe.leroy@csgroup.eu> <8c593895e2cb57d232d85ce4d8c3a1aa7f0869cc.1590079968.git.christophe.leroy@csgroup.eu> <20200616002720.GA1307277@ubuntu-n2-xlarge-x86> <68503e5e-7456-b81c-e43d-27cb331a4b72@xilinx.com> <20200616181630.GA3403678@ubuntu-n2-xlarge-x86> <50fb2dd6-4e8f-a550-6eda-073beb86f2ff@xilinx.com> <87bllidmk4.fsf@mpe.ellerman.id.au> <878sgmdmcv.fsf@mpe.ellerman.id.au> <CAKwvOdnkcjLGay0jdQ77kHTmKhE56F9jvzh01XWwEE8rjbhLAA@mail.gmail.com>
+Date:   Thu, 18 Jun 2020 10:48:21 +1000
+Message-ID: <87tuz9ci7e.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-6-guro@fb.com>
-In-Reply-To: <20200608230654.828134-6-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 17 Jun 2020 17:47:21 -0700
-Message-ID: <CALvZod5K8gvZnWT-RPJU=VL4OUiDsu6z11Z1WSfYRWDLUOktZQ@mail.gmail.com>
-Subject: Re: [PATCH v6 05/19] mm: memcontrol: decouple reference counting from
- page accounting
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
+Nick Desaulniers <ndesaulniers@google.com> writes:
+> On Wed, Jun 17, 2020 at 3:20 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>> Michael Ellerman <mpe@ellerman.id.au> writes:
+>> > Michal Simek <michal.simek@xilinx.com> writes:
+>> <snip>
+>>
+>> >> Or if bamboo requires uImage to be built by default you can do it via
+>> >> Kconfig.
+>> >>
+>> >> diff --git a/arch/powerpc/platforms/44x/Kconfig
+>> >> b/arch/powerpc/platforms/44x/Kconfig
+>> >> index 39e93d23fb38..300864d7b8c9 100644
+>> >> --- a/arch/powerpc/platforms/44x/Kconfig
+>> >> +++ b/arch/powerpc/platforms/44x/Kconfig
+>> >> @@ -13,6 +13,7 @@ config BAMBOO
+>> >>         select PPC44x_SIMPLE
+>> >>         select 440EP
+>> >>         select FORCE_PCI
+>> >> +       select DEFAULT_UIMAGE
+>> >>         help
+>> >>           This option enables support for the IBM PPC440EP evaluation board.
+>> >
+>> > Who knows what the actual bamboo board used. But I'd be happy to take a
+>> > SOB'ed patch to do the above, because these days the qemu emulation is
+>> > much more likely to be used than the actual board.
+>>
+>> I just went to see why my CI boot of 44x didn't catch this, and it's
+>> because I don't use the uImage, I just boot the vmlinux directly:
+>>
+>>   $ qemu-system-ppc -M bamboo -m 128m -display none -kernel build~/vmlinux -append "console=ttyS0" -display none -nodefaults -serial mon:stdio
+>>   Linux version 5.8.0-rc1-00118-g69119673bd50 (michael@alpine1-p1) (gcc (Ubuntu 9.3.0-10ubuntu2) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #4 Wed Jun 17 20:19:22 AEST 2020
+>>   Using PowerPC 44x Platform machine description
+>>   ioremap() called early from find_legacy_serial_ports+0x690/0x770. Use early_ioremap() instead
+>>   printk: bootconsole [udbg0] enabled
+>>
+>>
+>> So that's probably the simplest solution?
 >
-> From: Johannes Weiner <hannes@cmpxchg.org>
->
-> The reference counting of a memcg is currently coupled directly to how
-> many 4k pages are charged to it. This doesn't work well with Roman's
-> new slab controller, which maintains pools of objects and doesn't want
-> to keep an extra balance sheet for the pages backing those objects.
->
-> This unusual refcounting design (reference counts usually track
-> pointers to an object) is only for historical reasons: memcg used to
-> not take any css references and simply stalled offlining until all
-> charges had been reparented and the page counters had dropped to
-> zero. When we got rid of the reparenting requirement, the simple
-> mechanical translation was to take a reference for every charge.
->
-> More historical context can be found in commit e8ea14cc6ead ("mm:
-> memcontrol: take a css reference for each charged page"),
-> commit 64f219938941 ("mm: memcontrol: remove obsolete kmemcg pinning
-> tricks") and commit b2052564e66d ("mm: memcontrol: continue cache
-> reclaim from offlined groups").
->
-> The new slab controller exposes the limitations in this scheme, so
-> let's switch it to a more idiomatic reference counting model based on
-> actual kernel pointers to the memcg:
->
-> - The per-cpu stock holds a reference to the memcg its caching
->
-> - User pages hold a reference for their page->mem_cgroup. Transparent
->   huge pages will no longer acquire tail references in advance, we'll
->   get them if needed during the split.
->
-> - Kernel pages hold a reference for their page->mem_cgroup
->
-> - Pages allocated in the root cgroup will acquire and release css
->   references for simplicity. css_get() and css_put() optimize that.
->
-> - The current memcg_charge_slab() already hacked around the per-charge
->   references; this change gets rid of that as well.
->
-> Roman:
-> 1) Rebased on top of the current mm tree: added css_get() in
->    mem_cgroup_charge(), dropped mem_cgroup_try_charge() part
-> 2) I've reformatted commit references in the commit log to make
->    checkpatch.pl happy.
->
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Acked-by: Roman Gushchin <guro@fb.com>
-> ---
->  mm/memcontrol.c | 37 +++++++++++++++++++++----------------
->  mm/slab.h       |  2 --
->  2 files changed, 21 insertions(+), 18 deletions(-)
->
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index d18bf93e0f19..80282b2e8b7f 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -2094,13 +2094,17 @@ static void drain_stock(struct memcg_stock_pcp *stock)
->  {
->         struct mem_cgroup *old = stock->cached;
->
-> +       if (!old)
-> +               return;
-> +
->         if (stock->nr_pages) {
->                 page_counter_uncharge(&old->memory, stock->nr_pages);
->                 if (do_memsw_account())
->                         page_counter_uncharge(&old->memsw, stock->nr_pages);
-> -               css_put_many(&old->css, stock->nr_pages);
->                 stock->nr_pages = 0;
->         }
-> +
-> +       css_put(&old->css);
->         stock->cached = NULL;
->  }
->
-> @@ -2136,6 +2140,7 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
->         stock = this_cpu_ptr(&memcg_stock);
->         if (stock->cached != memcg) { /* reset if necessary */
->                 drain_stock(stock);
-> +               css_get(&memcg->css);
->                 stock->cached = memcg;
->         }
->         stock->nr_pages += nr_pages;
-> @@ -2594,12 +2599,10 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
->         page_counter_charge(&memcg->memory, nr_pages);
->         if (do_memsw_account())
->                 page_counter_charge(&memcg->memsw, nr_pages);
-> -       css_get_many(&memcg->css, nr_pages);
->
->         return 0;
->
->  done_restock:
-> -       css_get_many(&memcg->css, batch);
->         if (batch > nr_pages)
->                 refill_stock(memcg, batch - nr_pages);
->
-> @@ -2657,8 +2660,6 @@ static void cancel_charge(struct mem_cgroup *memcg, unsigned int nr_pages)
->         page_counter_uncharge(&memcg->memory, nr_pages);
->         if (do_memsw_account())
->                 page_counter_uncharge(&memcg->memsw, nr_pages);
-> -
-> -       css_put_many(&memcg->css, nr_pages);
->  }
->  #endif
->
-> @@ -2964,6 +2965,7 @@ int __memcg_kmem_charge_page(struct page *page, gfp_t gfp, int order)
->                 if (!ret) {
->                         page->mem_cgroup = memcg;
->                         __SetPageKmemcg(page);
-> +                       return 0;
->                 }
->         }
->         css_put(&memcg->css);
-> @@ -2986,12 +2988,11 @@ void __memcg_kmem_uncharge_page(struct page *page, int order)
->         VM_BUG_ON_PAGE(mem_cgroup_is_root(memcg), page);
->         __memcg_kmem_uncharge(memcg, nr_pages);
->         page->mem_cgroup = NULL;
-> +       css_put(&memcg->css);
->
->         /* slab pages do not have PageKmemcg flag set */
->         if (PageKmemcg(page))
->                 __ClearPageKmemcg(page);
-> -
-> -       css_put_many(&memcg->css, nr_pages);
->  }
->  #endif /* CONFIG_MEMCG_KMEM */
->
-> @@ -3003,13 +3004,16 @@ void __memcg_kmem_uncharge_page(struct page *page, int order)
->   */
->  void mem_cgroup_split_huge_fixup(struct page *head)
->  {
-> +       struct mem_cgroup *memcg = head->mem_cgroup;
->         int i;
->
->         if (mem_cgroup_disabled())
+> If the uImage or zImage self decompresses, I would prefer to test that as well.
 
-if (mem_cgroup_disabled() || !memcg)?
+The uImage is decompressed by qemu AIUI.
 
->                 return;
+>> That means previously arch/powerpc/boot/zImage was just a hardlink to
+>> the uImage:
 >
-> -       for (i = 1; i < HPAGE_PMD_NR; i++)
-> -               head[i].mem_cgroup = head->mem_cgroup;
-> +       for (i = 1; i < HPAGE_PMD_NR; i++) {
-> +               css_get(&memcg->css);
-> +               head[i].mem_cgroup = memcg;
-> +       }
->  }
->  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->
-> @@ -5454,7 +5458,10 @@ static int mem_cgroup_move_account(struct page *page,
->          */
->         smp_mb();
->
-> -       page->mem_cgroup = to;  /* caller should have done css_get */
-> +       css_get(&to->css);
-> +       css_put(&from->css);
-> +
-> +       page->mem_cgroup = to;
->
->         __unlock_page_memcg(from);
->
-> @@ -6540,6 +6547,7 @@ int mem_cgroup_charge(struct page *page, struct mm_struct *mm, gfp_t gfp_mask)
->         if (ret)
->                 goto out_put;
->
-> +       css_get(&memcg->css);
->         commit_charge(page, memcg);
->
->         local_irq_disable();
-> @@ -6594,9 +6602,6 @@ static void uncharge_batch(const struct uncharge_gather *ug)
->         __this_cpu_add(ug->memcg->vmstats_percpu->nr_page_events, ug->nr_pages);
->         memcg_check_events(ug->memcg, ug->dummy_page);
->         local_irq_restore(flags);
-> -
-> -       if (!mem_cgroup_is_root(ug->memcg))
-> -               css_put_many(&ug->memcg->css, ug->nr_pages);
->  }
->
->  static void uncharge_page(struct page *page, struct uncharge_gather *ug)
-> @@ -6634,6 +6639,7 @@ static void uncharge_page(struct page *page, struct uncharge_gather *ug)
->
->         ug->dummy_page = page;
->         page->mem_cgroup = NULL;
-> +       css_put(&ug->memcg->css);
->  }
->
->  static void uncharge_list(struct list_head *page_list)
-> @@ -6739,8 +6745,8 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
->         page_counter_charge(&memcg->memory, nr_pages);
->         if (do_memsw_account())
->                 page_counter_charge(&memcg->memsw, nr_pages);
-> -       css_get_many(&memcg->css, nr_pages);
->
-> +       css_get(&memcg->css);
->         commit_charge(newpage, memcg);
->
->         local_irq_save(flags);
-> @@ -6977,8 +6983,7 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
->         mem_cgroup_charge_statistics(memcg, page, -nr_entries);
->         memcg_check_events(memcg, page);
->
-> -       if (!mem_cgroup_is_root(memcg))
-> -               css_put_many(&memcg->css, nr_entries);
-> +       css_put(&memcg->css);
->  }
->
->  /**
-> diff --git a/mm/slab.h b/mm/slab.h
-> index 633eedb6bad1..8a574d9361c1 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -373,9 +373,7 @@ static __always_inline int memcg_charge_slab(struct page *page,
->         lruvec = mem_cgroup_lruvec(memcg, page_pgdat(page));
->         mod_lruvec_state(lruvec, cache_vmstat_idx(s), nr_pages << PAGE_SHIFT);
->
-> -       /* transer try_charge() page references to kmem_cache */
->         percpu_ref_get_many(&s->memcg_params.refcnt, nr_pages);
-> -       css_put_many(&memcg->css, nr_pages);
->  out:
->         css_put(&memcg->css);
->         return ret;
-> --
-> 2.25.4
->
+> It sounds like we can just boot the zImage, or is that no longer
+> created with the uImage?
+
+The zImage won't boot on bamboo.
+
+Because of the vagaries of the arch/powerpc/boot/Makefile the zImage
+ends up pointing to treeImage.ebony, which is for a different board.
+
+The zImage link is made to the first item in $(image-y):
+
+$(obj)/zImage:		$(addprefix $(obj)/, $(image-y))
+	$(Q)rm -f $@; ln $< $@
+                         ^
+                         first preqrequisite
+
+Which for this defconfig happens to be:
+
+image-$(CONFIG_EBONY)			+= treeImage.ebony cuImage.ebony
+
+If you turned off CONFIG_EBONY then the zImage will be a link to
+treeImage.bamboo, but qemu can't boot that either.
+
+It's kind of nuts that the zImage points to some arbitrary image
+depending on what's configured and the order of things in the Makefile.
+But I'm not sure how we make it less nuts without risking breaking
+people's existing setups.
+
+cheers
