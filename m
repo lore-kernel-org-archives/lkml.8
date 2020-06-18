@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65996C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28E2C2220E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F24221FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443728;
-	bh=csJ8IE/XOc4BW2uiPxYot+bTQhRZhV07EeUQSgae858=;
+	s=default; t=1592443729;
+	bh=KBn7nRvElasq0Hvf0QnoQctuAfWqz9p1uLyOgWmTmz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AeoNO9zme2c7AqbAt8olVwMblL7u76CoLXIW3EmgKLpAxhodQdbLuLmxC6ovAmZXw
-	 34BIxyUmJqvCJYB7hHyhcNkt2GdQ4GoZTohKSAmHUPNqKN8xAHrBTOg+LjW4KRxvJx
-	 bQAS5OFvmrPP6CsaMyW9M+MHtWQbJPihtGZVkqNU=
+	b=I6ov5BBBCVxVkIkl7VCkiFcGRrbkupRRiYbgBuWPG7/q1S75YzXmULIqtGCF7GR8e
+	 CuIGH/ypCB8MxuJZfQ2gv64qd0WNwGC745jul+uxnrin/jE57eQMfBxM0b7q5AXbD7
+	 cOvIZvARBql/XeMKuXtbT0iF4o8BoRo2+EVs9aEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731551AbgFRB2r (ORCPT
+        id S1732164AbgFRB2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 17 Jun 2020 21:28:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60946 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:32780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731477AbgFRBZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:38 -0400
+        id S1730578AbgFRBZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A566C2075E;
-        Thu, 18 Jun 2020 01:25:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 967D12083B;
+        Thu, 18 Jun 2020 01:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443538;
-        bh=csJ8IE/XOc4BW2uiPxYot+bTQhRZhV07EeUQSgae858=;
+        s=default; t=1592443542;
+        bh=KBn7nRvElasq0Hvf0QnoQctuAfWqz9p1uLyOgWmTmz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=asKxOOlUz4k0MNjMzhafx8NgOTbRbexa9eXudcm/YEOKtcLjnpQWIj0x/eztRCJWO
-         yUzWzbgICnFAP8rPQrjZEePYI6Q2K3nYHiilrQv9+1mL/O52SImMFT15vjOZW6qKZI
-         yjFUNaox/WhZu9scXp3QdLGfkY2Gvs+KRofAZz0o=
+        b=Xf+tSSzLcZiY4VfkmRdeauQVzI6CQUdj5pPAAs/jDoVZQGYtEZZYo2pPUiebk/1PU
+         nCISBtyvaIQLkizyzBb5LKo4c7YhpidEJutPwRsV1Yl+Tc7BkeCyUeMCTtG/tIKoEn
+         GoZLIDrJYadowLwR5J/247+LhjkL5KFk2s7sANQA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Allen Hubbe <allenbh@gmail.com>,
         Alexander Fomichev <fomichev.ru@gmail.com>,
         Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
         linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 156/172] NTB: Revert the change to use the NTB device dev for DMA allocations
-Date:   Wed, 17 Jun 2020 21:22:02 -0400
-Message-Id: <20200618012218.607130-156-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 159/172] NTB: perf: Fix race condition when run with ntb_test
+Date:   Wed, 17 Jun 2020 21:22:05 -0400
+Message-Id: <20200618012218.607130-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -62,40 +63,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 40da7d9a93c8941737ef4a1208d32c13ce017fe1 ]
+[ Upstream commit 34d8673a01b053b6231a995a4eec9341163d63be ]
 
-Commit 417cf39cfea9 ("NTB: Set dma mask and dma coherent mask to NTB
-devices") started using the NTB device for DMA allocations which was
-turns out was wrong. If the IOMMU is enabled, such alloctanions will
-always fail with messages such as:
+When running ntb_test, the script tries to run the ntb_perf test
+immediately after probing the modules. Since adding multi-port support,
+this fails seeing the new initialization procedure in ntb_perf
+can not complete instantly.
 
-  DMAR: Allocating domain for 0000:02:00.1 failed
+To fix this we add a completion which is waited on when a test is
+started. In this way, run can be written any time after the module is
+loaded and it will wait for the initialization to complete instead of
+sending an error.
 
-This is because the IOMMU has not setup the device for such use.
-
-Change the tools back to using the PCI device for allocations seeing
-it doesn't make sense to add an IOMMU group for the non-physical NTB
-device. Also remove the code that sets the DMA mask as it no longer
-makes sense to do this.
-
-Fixes: 7f46c8b3a552 ("NTB: ntb_tool: Add full multi-port NTB API support")
+Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Allen Hubbe <allenbh@gmail.com>
 Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
 Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/ntb.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/ntb/test/ntb_perf.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/ntb/ntb.c b/drivers/ntb/ntb.c
-index c9a0912b175f..f8f75a504a58 100644
---- a/drivers/ntb/ntb.c
-+++ b/drivers/ntb/ntb.c
-@@ -311,4 +311,3 @@ static void __exit ntb_driver_exit(void)
- 	bus_unregister(&ntb_bus);
+diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
+index 62a9a1d44f9f..ad5d3919435c 100644
+--- a/drivers/ntb/test/ntb_perf.c
++++ b/drivers/ntb/test/ntb_perf.c
+@@ -158,6 +158,8 @@ struct perf_peer {
+ 	/* NTB connection setup service */
+ 	struct work_struct	service;
+ 	unsigned long		sts;
++
++	struct completion init_comp;
+ };
+ #define to_peer_service(__work) \
+ 	container_of(__work, struct perf_peer, service)
+@@ -549,6 +551,7 @@ static int perf_setup_outbuf(struct perf_peer *peer)
+ 
+ 	/* Initialization is finally done */
+ 	set_bit(PERF_STS_DONE, &peer->sts);
++	complete_all(&peer->init_comp);
+ 
+ 	return 0;
  }
- module_exit(ntb_driver_exit);
--
+@@ -640,6 +643,7 @@ static void perf_service_work(struct work_struct *work)
+ 		perf_setup_outbuf(peer);
+ 
+ 	if (test_and_clear_bit(PERF_CMD_CLEAR, &peer->sts)) {
++		init_completion(&peer->init_comp);
+ 		clear_bit(PERF_STS_DONE, &peer->sts);
+ 		if (test_bit(0, &peer->perf->busy_flag) &&
+ 		    peer == peer->perf->test_peer) {
+@@ -1047,8 +1051,9 @@ static int perf_submit_test(struct perf_peer *peer)
+ 	struct perf_thread *pthr;
+ 	int tidx, ret;
+ 
+-	if (!test_bit(PERF_STS_DONE, &peer->sts))
+-		return -ENOLINK;
++	ret = wait_for_completion_interruptible(&peer->init_comp);
++	if (ret < 0)
++		return ret;
+ 
+ 	if (test_and_set_bit_lock(0, &perf->busy_flag))
+ 		return -EBUSY;
+@@ -1414,6 +1419,7 @@ static int perf_init_peers(struct perf_ctx *perf)
+ 			peer->gidx = pidx;
+ 		}
+ 		INIT_WORK(&peer->service, perf_service_work);
++		init_completion(&peer->init_comp);
+ 	}
+ 	if (perf->gidx == -1)
+ 		perf->gidx = pidx;
 -- 
 2.25.1
 
