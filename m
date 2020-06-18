@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A502C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC988C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43B282224B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6742224B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444035;
-	bh=6HbBysbQbI04PyXHOLF2F38cZSJ9XcvJ66sJvhWba3A=;
+	s=default; t=1592444039;
+	bh=iZZmz+Ap5bLY4GuNSraezb984yLj0cyMICkNa8CYumg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BJpd0HbuTOSIiyg+8PZQH9SzieSuRB8oZ+NZHMo/Ow4PmVIPCOwZO5QhZL0JCT/yM
-	 c1neu2vFeBr0Ok+7qvRHV/kDZKJDo3rhN2mEEjk71O/pnYhsNJNBoGLC1fIq3pyWh+
-	 3LEgyaRZzF7yCcvZuq+O1I87mxoQOJlcC4iH8fEc=
+	b=ObgUn8MFfQ514gIWEmjjulaH83L0ShnymaONxP0jm8DYtkRfnPvqLPpMTRGaxs96i
+	 s6PDQDA6q0DeLtB2LKANkEcQZqMHgW/4sGNQvYyABJiZhzy/U3Q0tB6iiu/ALqeCp/
+	 CFSoin7FTENEfc+IqZZ4brVTuDkMHHGITGnzfMlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731944AbgFRBdx (ORCPT
+        id S1733019AbgFRBd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:33:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41622 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:33:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732715AbgFRBbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:31:08 -0400
+        id S1731360AbgFRBbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:31:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE5A222254;
-        Thu, 18 Jun 2020 01:31:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38353221EC;
+        Thu, 18 Jun 2020 01:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443867;
-        bh=6HbBysbQbI04PyXHOLF2F38cZSJ9XcvJ66sJvhWba3A=;
+        s=default; t=1592443871;
+        bh=iZZmz+Ap5bLY4GuNSraezb984yLj0cyMICkNa8CYumg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VZMvDUtJ166dZjJonBeb+ohaTJnFE4PqQBLThav8CIs4o12IWVuFTxuzEyLW2ALDC
-         M1igoftRiiLfnNAC6rMtBGT7zb7PWrI3OtqB2h6/kqo+Pip6eWYCHwQhDxnHuRiPRj
-         sCn5z9T1s34umcMpGubOqD3olafcCjbKVg/4uXLk=
+        b=1oT4yCjQBrGRNzN+4tQ3qbaZQHcohx+dtnAq/Q1vsVJOecE+SsojUuOYH8wYb19L7
+         ORAmUknl7XaONSMsaH6fUO5nxSvifZh5mFyQC3TEWo1dBpLihyX1XyyPjJ7EWvdj0Q
+         h/ojk5x9UfIip3Kp38G2tLqhY7DJthZxDb08re5U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 48/60] usb: gadget: lpc32xx_udc: don't dereference ep pointer before null check
-Date:   Wed, 17 Jun 2020 21:29:52 -0400
-Message-Id: <20200618013004.610532-48-sashal@kernel.org>
+Cc:     Fedor Tokarev <ftokarev@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 51/60] net: sunrpc: Fix off-by-one issues in 'rpc_ntop6'
+Date:   Wed, 17 Jun 2020 21:29:55 -0400
+Message-Id: <20200618013004.610532-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
 References: <20200618013004.610532-1-sashal@kernel.org>
@@ -60,68 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Fedor Tokarev <ftokarev@gmail.com>
 
-[ Upstream commit eafa80041645cd7604c4357b1a0cd4a3c81f2227 ]
+[ Upstream commit 118917d696dc59fd3e1741012c2f9db2294bed6f ]
 
-Currently pointer ep is being dereferenced before it is null checked
-leading to a null pointer dereference issue.  Fix this by only assigning
-pointer udc once ep is known to be not null.  Also remove a debug
-message that requires a valid udc which may not be possible at that
-point.
+Fix off-by-one issues in 'rpc_ntop6':
+ - 'snprintf' returns the number of characters which would have been
+   written if enough space had been available, excluding the terminating
+   null byte. Thus, a return value of 'sizeof(scopebuf)' means that the
+   last character was dropped.
+ - 'strcat' adds a terminating null byte to the string, thus if len ==
+   buflen, the null byte is written past the end of the buffer.
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: 24a28e428351 ("USB: gadget driver for LPC32xx")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Fedor Tokarev <ftokarev@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/lpc32xx_udc.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ net/sunrpc/addr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
-index ea43cb74a6f2..c9590949e4f0 100644
---- a/drivers/usb/gadget/udc/lpc32xx_udc.c
-+++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
-@@ -1662,17 +1662,17 @@ static int lpc32xx_ep_enable(struct usb_ep *_ep,
- 			     const struct usb_endpoint_descriptor *desc)
- {
- 	struct lpc32xx_ep *ep = container_of(_ep, struct lpc32xx_ep, ep);
--	struct lpc32xx_udc *udc = ep->udc;
-+	struct lpc32xx_udc *udc;
- 	u16 maxpacket;
- 	u32 tmp;
- 	unsigned long flags;
+diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+index 2e0a6f92e563..8391c2785550 100644
+--- a/net/sunrpc/addr.c
++++ b/net/sunrpc/addr.c
+@@ -81,11 +81,11 @@ static size_t rpc_ntop6(const struct sockaddr *sap,
  
- 	/* Verify EP data */
- 	if ((!_ep) || (!ep) || (!desc) ||
--	    (desc->bDescriptorType != USB_DT_ENDPOINT)) {
--		dev_dbg(udc->dev, "bad ep or descriptor\n");
-+	    (desc->bDescriptorType != USB_DT_ENDPOINT))
- 		return -EINVAL;
--	}
-+
-+	udc = ep->udc;
- 	maxpacket = usb_endpoint_maxp(desc);
- 	if ((maxpacket == 0) || (maxpacket > ep->maxpacket)) {
- 		dev_dbg(udc->dev, "bad ep descriptor's packet size\n");
-@@ -1920,7 +1920,7 @@ static int lpc32xx_ep_dequeue(struct usb_ep *_ep, struct usb_request *_req)
- static int lpc32xx_ep_set_halt(struct usb_ep *_ep, int value)
- {
- 	struct lpc32xx_ep *ep = container_of(_ep, struct lpc32xx_ep, ep);
--	struct lpc32xx_udc *udc = ep->udc;
-+	struct lpc32xx_udc *udc;
- 	unsigned long flags;
+ 	rc = snprintf(scopebuf, sizeof(scopebuf), "%c%u",
+ 			IPV6_SCOPE_DELIMITER, sin6->sin6_scope_id);
+-	if (unlikely((size_t)rc > sizeof(scopebuf)))
++	if (unlikely((size_t)rc >= sizeof(scopebuf)))
+ 		return 0;
  
- 	if ((!ep) || (ep->hwep_num <= 1))
-@@ -1930,6 +1930,7 @@ static int lpc32xx_ep_set_halt(struct usb_ep *_ep, int value)
- 	if (ep->is_in)
- 		return -EAGAIN;
+ 	len += rc;
+-	if (unlikely(len > buflen))
++	if (unlikely(len >= buflen))
+ 		return 0;
  
-+	udc = ep->udc;
- 	spin_lock_irqsave(&udc->lock, flags);
- 
- 	if (value == 1) {
+ 	strcat(buf, scopebuf);
 -- 
 2.25.1
 
