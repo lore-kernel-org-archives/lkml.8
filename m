@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D33EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F387C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB7D4208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF1F208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731675AbgFRUjy (ORCPT
+        id S1731724AbgFRUj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:39:54 -0400
+        Thu, 18 Jun 2020 16:39:56 -0400
 Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:48844 "EHLO
         EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731176AbgFRUjP (ORCPT
+        by vger.kernel.org with ESMTP id S1731200AbgFRUjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:39:15 -0400
+        Thu, 18 Jun 2020 16:39:16 -0400
 Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
  EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
  15.0.1156.6; Thu, 18 Jun 2020 13:39:09 -0700
 Received: from sc9-mailhost2.vmware.com (unknown [10.129.221.29])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 2A13FB2656;
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 04476B2656;
         Thu, 18 Jun 2020 16:39:12 -0400 (EDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
@@ -34,9 +34,9 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Julien Thierry <jthierry@redhat.com>,
         Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH v5 17/51] objtool: mcount: Stop using ehdr in find_section_sym_index
-Date:   Thu, 18 Jun 2020 13:38:03 -0700
-Message-ID: <0a0a522dcbe7038109bd97571c965a2afba0123c.1592510545.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH v5 18/51] objtool: mcount: Move find_section_sym_index()
+Date:   Thu, 18 Jun 2020 13:38:04 -0700
+Message-ID: <68b37fd2066c8c6709fcd4246162d856f84a5943.1592510545.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1592510545.git.mhelsley@vmware.com>
 References: <cover.1592510545.git.mhelsley@vmware.com>
@@ -50,65 +50,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can use the objtool GElf_Ehdr structure to access ehdr here.
-This makes the function completely independent of the old
-recordmcount ELF wrapper. The next step will be to promote it
-to the C file.
+This function is no longer dependent upon the old recordmcount
+ELF wrapper code -- it doesn't use the wrapper's Elf_* types nor
+does it call wrapped functions. Move it into the C file.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/recordmcount.h | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ tools/objtool/recordmcount.c | 42 ++++++++++++++++++++++++++++++++
+ tools/objtool/recordmcount.h | 47 +-----------------------------------
+ 2 files changed, 43 insertions(+), 46 deletions(-)
 
-diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index 941f96e4f74b..cf420f9f64b0 100644
---- a/tools/objtool/recordmcount.h
-+++ b/tools/objtool/recordmcount.h
-@@ -225,7 +225,7 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
- 			       Elf_Rel **const mrelpp,
- 			       const struct section * const rels,
- 			       unsigned const recsym_index,
--			       uint_t const recval,
-+			       unsigned long const recval,
- 			       unsigned const reltype)
- {
- 	uint_t *const mloc0 = mlocp;
-@@ -319,9 +319,8 @@ static int nop_mcount(struct section * const rels,
-  */
- static int find_section_sym_index(unsigned const txtndx,
- 				char const *const txtname,
--				uint_t *const recvalp,
--				unsigned int *sym_index,
--				Elf_Ehdr const *const ehdr)
+diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
+index 24b019b82795..2225479157e5 100644
+--- a/tools/objtool/recordmcount.c
++++ b/tools/objtool/recordmcount.c
+@@ -482,6 +482,48 @@ static int (*is_fake_mcount)(struct reloc const *reloc) = fn_is_fake_mcount;
+ 
+ static const unsigned int missing_sym = (unsigned int)-1;
+ 
++/*
++ * Find a symbol in the given section, to be used as the base for relocating
++ * the table of offsets of calls to mcount.  A local or global symbol suffices,
++ * but avoid a Weak symbol because it may be overridden; the change in value
++ * would invalidate the relocations of the offsets of the calls to mcount.
++ * Often the found symbol will be the unnamed local symbol generated by
++ * GNU 'as' for the start of each section.  For example:
++ *    Num:    Value  Size Type    Bind   Vis      Ndx Name
++ *      2: 00000000     0 SECTION LOCAL  DEFAULT    1
++ */
++static int find_section_sym_index(unsigned const txtndx,
++				char const *const txtname,
 +				unsigned long *const recvalp,
 +				unsigned int *sym_index)
- {
- 	struct symbol *sym;
- 	struct section *txts = find_section_by_index(lf, txtndx);
-@@ -336,7 +335,7 @@ static int find_section_sym_index(unsigned const txtndx,
- 		/* avoid symbols with weak binding */
- 		if ((sym->bind == STB_LOCAL) || (sym->bind == STB_GLOBAL)) {
- 			/* function symbols on ARM have quirks, avoid them */
--			if (w2(ehdr->e_machine) == EM_ARM
++{
++	struct symbol *sym;
++	struct section *txts = find_section_by_index(lf, txtndx);
++
++	if (!txts) {
++		fprintf(stderr, "Cannot find section %u: %s.\n",
++			txtndx, txtname);
++		return missing_sym;
++	}
++
++	list_for_each_entry(sym, &txts->symbol_list, list) {
++		/* avoid symbols with weak binding */
++		if ((sym->bind == STB_LOCAL) || (sym->bind == STB_GLOBAL)) {
++			/* function symbols on ARM have quirks, avoid them */
 +			if (lf->ehdr.e_machine == EM_ARM
- 			    && sym->type == STT_FUNC)
- 				continue;
++			    && sym->type == STT_FUNC)
++				continue;
++
++			*recvalp = sym->sym.st_value;
++			*sym_index = sym->idx;
++			return 0;
++		}
++	}
++	fprintf(stderr, "Cannot find symbol for section %u: %s.\n",
++		txtndx, txtname);
++	return missing_sym;
++}
++
+ /* 32 bit and 64 bit are very similar */
+ #include "recordmcount.h"
+ #define RECORD_MCOUNT_64
+diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
+index cf420f9f64b0..eed592954f37 100644
+--- a/tools/objtool/recordmcount.h
++++ b/tools/objtool/recordmcount.h
+@@ -21,7 +21,6 @@
+ #undef mcount_adjust
+ #undef sift_rel_mcount
+ #undef nop_mcount
+-#undef find_section_sym_index
+ #undef has_rel_mcount
+ #undef tot_relsize
+ #undef get_shnum
+@@ -44,7 +43,6 @@
+ # define append_func		append64
+ # define sift_rel_mcount	sift64_rel_mcount
+ # define nop_mcount		nop_mcount_64
+-# define find_section_sym_index	find64_section_sym_index
+ # define has_rel_mcount		has64_rel_mcount
+ # define tot_relsize		tot64_relsize
+ # define get_shnum		get_shnum64
+@@ -67,7 +65,6 @@
+ # define append_func		append32
+ # define sift_rel_mcount	sift32_rel_mcount
+ # define nop_mcount		nop_mcount_32
+-# define find_section_sym_index	find32_section_sym_index
+ # define has_rel_mcount		has32_rel_mcount
+ # define tot_relsize		tot32_relsize
+ # define get_shnum		get_shnum32
+@@ -307,48 +304,6 @@ static int nop_mcount(struct section * const rels,
+ 	return 0;
+ }
  
-@@ -424,12 +423,12 @@ static int do_func(Elf_Ehdr *const ehdr,
- 
- 		txtname = has_rel_mcount(sec);
- 		if (txtname && is_mcounted_section_name(txtname)) {
-+			unsigned long recval = 0;
- 			unsigned int recsym;
--			uint_t recval = 0;
- 
- 			symsec_sh_link = sec->sh.sh_link;
- 			result = find_section_sym_index(sec->sh.sh_info,
--						txtname, &recval, &recsym, ehdr);
-+						txtname, &recval, &recsym);
- 			if (result)
- 				goto out;
- 
+-/*
+- * Find a symbol in the given section, to be used as the base for relocating
+- * the table of offsets of calls to mcount.  A local or global symbol suffices,
+- * but avoid a Weak symbol because it may be overridden; the change in value
+- * would invalidate the relocations of the offsets of the calls to mcount.
+- * Often the found symbol will be the unnamed local symbol generated by
+- * GNU 'as' for the start of each section.  For example:
+- *    Num:    Value  Size Type    Bind   Vis      Ndx Name
+- *      2: 00000000     0 SECTION LOCAL  DEFAULT    1
+- */
+-static int find_section_sym_index(unsigned const txtndx,
+-				char const *const txtname,
+-				unsigned long *const recvalp,
+-				unsigned int *sym_index)
+-{
+-	struct symbol *sym;
+-	struct section *txts = find_section_by_index(lf, txtndx);
+-
+-	if (!txts) {
+-		fprintf(stderr, "Cannot find section %u: %s.\n",
+-			txtndx, txtname);
+-		return missing_sym;
+-	}
+-
+-	list_for_each_entry(sym, &txts->symbol_list, list) {
+-		/* avoid symbols with weak binding */
+-		if ((sym->bind == STB_LOCAL) || (sym->bind == STB_GLOBAL)) {
+-			/* function symbols on ARM have quirks, avoid them */
+-			if (lf->ehdr.e_machine == EM_ARM
+-			    && sym->type == STT_FUNC)
+-				continue;
+-
+-			*recvalp = sym->sym.st_value;
+-			*sym_index = sym->idx;
+-			return 0;
+-		}
+-	}
+-	fprintf(stderr, "Cannot find symbol for section %u: %s.\n",
+-		txtndx, txtname);
+-	return missing_sym;
+-}
+-
+ static char const *has_rel_mcount(const struct section * const rels)
+ {
+ 	const struct section *txts;
+@@ -435,7 +390,7 @@ static int do_func(Elf_Ehdr *const ehdr,
+ 			rel_entsize = sec->sh.sh_entsize;
+ 			mlocp = sift_rel_mcount(mlocp,
+ 				(void *)mlocp - (void *)mloc0, &mrelp,
+-				sec, recsym, recval, reltype);
++				sec, recsym, (uint_t)recval, reltype);
+ 		} else if (txtname && (warn_on_notrace_sect || make_nop)) {
+ 			/*
+ 			 * This section is ignored by ftrace, but still
 -- 
 2.20.1
 
