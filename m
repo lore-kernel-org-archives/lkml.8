@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66885C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 372AD2224B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9AAF22260
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444078;
-	bh=8W6kvC6JpX2I97mxdcnHI2EdMQdoHORQS6HfrtQPFY8=;
+	s=default; t=1592444080;
+	bh=6s3vHhKdzSxYdpC216KdxNU5PsU0b4bUCKceqRfZc2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lChLpD+BekIR1vju50SSthShlhf4o8ONtkX+t8OU7iskBQm5wgKF2U4Z44uiXfrxk
-	 KI5llSZdMh//W2+h40EoP+UpghK4gjYK+NHfM/aCgQRYd6tEa3F31quYxRXD4bXODv
-	 OPUVvqsa+b59eWSCLWahBlhJILoPQwnfB6YWrpTA=
+	b=AIexs7KyTY23JH1/TsijYvtXX+VTCetzpKZokq1i/1bzmM+KdUAht4Dy8d3nDAIGi
+	 fq4gzxqZgkbvdjx6gKtuQ7RYSStWJtBls6NLa4jtNT6ErsGRaxUqrbDFVWeNZdJAo6
+	 tJVi+HuseeKUm1IKjMe+kjPM/Us2zlgs6BerB24A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733002AbgFRBdv (ORCPT
+        id S1732994AbgFRBdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:33:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41528 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:33:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731944AbgFRBbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:31:04 -0400
+        id S1732687AbgFRBbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:31:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1DCB20773;
-        Thu, 18 Jun 2020 01:31:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7725D221EC;
+        Thu, 18 Jun 2020 01:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443863;
-        bh=8W6kvC6JpX2I97mxdcnHI2EdMQdoHORQS6HfrtQPFY8=;
+        s=default; t=1592443862;
+        bh=6s3vHhKdzSxYdpC216KdxNU5PsU0b4bUCKceqRfZc2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rG5eIcP5ReH3OEdgJXT7oPC0tZRHN9VdiSWYQKBallIDf1HH3WPS9+4C5C+12yD/p
-         lqxZNJsPPf3/x0L7QUFHd7ySOLZRiH58b/lvblCRwKS3CWjGN41aVny04TEPjvPgyo
-         qehna657rpWvqbY5juwYi3ptEzVYmfFgckR6GBEE=
+        b=NDUUBwmbF3hqlNuLw9eVP6DGOqg+QmX7qQVK76CGFNQ4gmup4GKCDyVyjZbbYDBXt
+         GyTnZ+d4/F/nq3CyNKRq0hfqHYI/RRM2MfGoZd1KO2VXSZBilQCv6smMsneIHLqy+J
+         vHm2xe4povK/aVSmyx4LmbizqwGdkXrHU9AWXqi8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 45/60] watchdog: da9062: No need to ping manually before setting timeout
-Date:   Wed, 17 Jun 2020 21:29:49 -0400
-Message-Id: <20200618013004.610532-45-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 44/60] clk: samsung: exynos5433: Add IGNORE_UNUSED flag to sclk_i2s1
+Date:   Wed, 17 Jun 2020 21:29:48 -0400
+Message-Id: <20200618013004.610532-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
 References: <20200618013004.610532-1-sashal@kernel.org>
@@ -61,47 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Riedmueller <s.riedmueller@phytec.de>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit a0948ddba65f4f6d3cfb5e2b84685485d0452966 ]
+[ Upstream commit 25bdae0f1c6609ceaf55fe6700654f0be2253d8e ]
 
-There is actually no need to ping the watchdog before disabling it
-during timeout change. Disabling the watchdog already takes care of
-resetting the counter.
+Mark the SCLK clock for Exynos5433 I2S1 device with IGNORE_UNUSED flag to
+match its behaviour with SCLK clock for AUD_I2S (I2S0) device until
+a proper fix for Exynos I2S driver is ready.
 
-This fixes an issue during boot when the userspace watchdog handler takes
-over and the watchdog is already running. Opening the watchdog in this case
-leads to the first ping and directly after that without the required
-heartbeat delay a second ping issued by the set_timeout call. Due to the
-missing delay this resulted in a reset.
+This fixes the following synchronous abort issue revealed by the probe
+order change caused by the commit 93d2e4322aa7 ("of: platform: Batch
+fwnode parsing when adding all top level devices")
 
-Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Link: https://lore.kernel.org/r/20200403130728.39260-3-s.riedmueller@phytec.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 0 PID: 50 Comm: kworker/0:1 Not tainted 5.7.0-rc5+ #701
+Hardware name: Samsung TM2E board (DT)
+Workqueue: events deferred_probe_work_func
+pstate: 60000005 (nZCv daif -PAN -UAO)
+pc : samsung_i2s_probe+0x768/0x8f0
+lr : samsung_i2s_probe+0x688/0x8f0
+...
+Call trace:
+ samsung_i2s_probe+0x768/0x8f0
+ platform_drv_probe+0x50/0xa8
+ really_probe+0x108/0x370
+ driver_probe_device+0x54/0xb8
+ __device_attach_driver+0x90/0xc0
+ bus_for_each_drv+0x70/0xc8
+ __device_attach+0xdc/0x140
+ device_initial_probe+0x10/0x18
+ bus_probe_device+0x94/0xa0
+ deferred_probe_work_func+0x70/0xa8
+ process_one_work+0x2a8/0x718
+ worker_thread+0x48/0x470
+ kthread+0x134/0x160
+ ret_from_fork+0x10/0x1c
+Code: 17ffffaf d503201f f94086c0 91003000 (88dffc00)
+---[ end trace ccf721c9400ddbd6 ]---
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/da9062_wdt.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/clk/samsung/clk-exynos5433.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index daeb645fcea8..519419136ce8 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -94,11 +94,6 @@ static int da9062_wdt_update_timeout_register(struct da9062_watchdog *wdt,
- 					      unsigned int regval)
- {
- 	struct da9062 *chip = wdt->hw;
--	int ret;
--
--	ret = da9062_reset_watchdog_timer(wdt);
--	if (ret)
--		return ret;
- 
- 	return regmap_update_bits(chip->regmap,
- 				  DA9062AA_CONTROL_D,
+diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+index 91c89ac193b9..77ae2d21c488 100644
+--- a/drivers/clk/samsung/clk-exynos5433.c
++++ b/drivers/clk/samsung/clk-exynos5433.c
+@@ -1708,7 +1708,8 @@ static struct samsung_gate_clock peric_gate_clks[] __initdata = {
+ 	GATE(CLK_SCLK_PCM1, "sclk_pcm1", "sclk_pcm1_peric",
+ 			ENABLE_SCLK_PERIC, 7, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_I2S1, "sclk_i2s1", "sclk_i2s1_peric",
+-			ENABLE_SCLK_PERIC, 6, CLK_SET_RATE_PARENT, 0),
++			ENABLE_SCLK_PERIC, 6,
++			CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
+ 	GATE(CLK_SCLK_SPI2, "sclk_spi2", "sclk_spi2_peric", ENABLE_SCLK_PERIC,
+ 			5, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_SPI1, "sclk_spi1", "sclk_spi1_peric", ENABLE_SCLK_PERIC,
 -- 
 2.25.1
 
