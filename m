@@ -2,101 +2,122 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A2FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5276DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB51120FC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 311C420890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:56:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592492208;
+	bh=kuNcnjm0Q8W+waGxPF0G1vY00e5uDW5TVrJqCcu89jk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nv+XKqXPPhzl+3eWrtaDKXrUdRTwaBr9PBD4aD9ih6iIsOfR3mg6MIH2MW+IQauLH
+	 pozpvx1Uts3/s5IFeht8ljPAHpFk5PeODKErvZ1CBZ3VrvaV192N48Lg+dTSxPkoer
+	 b1f/cb8uwIb8+wiVDtJKLa9/VuljDZonNVegKvh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731369AbgFRO4c (ORCPT
+        id S1731378AbgFRO4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:56:32 -0400
-Received: from mga06.intel.com ([134.134.136.31]:8231 "EHLO mga06.intel.com"
+        Thu, 18 Jun 2020 10:56:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731358AbgFRO4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:56:31 -0400
-IronPort-SDR: /GteYJRBRoJQ8ntY1U7Xgq0XOMv2CHznKoN7+sjgNUCVaY2Eeo5LdzXqWNJPXfzyVu7h6jCGZs
- xVGTIGCJxqCw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9655"; a="204091029"
-X-IronPort-AV: E=Sophos;i="5.75,251,1589266800"; 
-   d="scan'208";a="204091029"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 07:56:30 -0700
-IronPort-SDR: WRstlpxjt1sMiABU5OkC+WJgszXlBw0nMBk48hg8Q7MDBFZqPvdQEIFlqjkyo1iJjLy/U5lIEu
- 9HqF1/d3cd7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,251,1589266800"; 
-   d="scan'208";a="477268245"
-Received: from richard2-mobl.amr.corp.intel.com (HELO [10.254.109.110]) ([10.254.109.110])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Jun 2020 07:56:29 -0700
-Subject: Re: [PATCH AUTOSEL 5.7 055/388] ASoC: SOF: Do nothing when DSP PM
- callbacks are not set
-To:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org
-References: <20200618010805.600873-1-sashal@kernel.org>
- <20200618010805.600873-55-sashal@kernel.org>
- <20200618110126.GC5789@sirena.org.uk>
- <1d1041f9-521b-98f5-a6ef-12d43615bc13@nxp.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <c966e694-9ec8-3401-7d7c-fae5ca5fcce4@linux.intel.com>
-Date:   Thu, 18 Jun 2020 08:56:22 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1730949AbgFRO4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 10:56:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 968082075E;
+        Thu, 18 Jun 2020 14:56:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592492205;
+        bh=kuNcnjm0Q8W+waGxPF0G1vY00e5uDW5TVrJqCcu89jk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uF5HmNrH6C78eYvYO3anenwMtz+JM2R17ifCoXsbUJ7zgjVgVKuqk1hdls42f7kLb
+         /vs2q4SZEiKbfdPOb7DKVtz4odUZBWtA58q5dSzITtIpodtjfZQkS26R+alnnWaxDr
+         iU5E67DYFsWib8kFh1TfzErJwFC5hPUmC637lCZU=
+Date:   Thu, 18 Jun 2020 16:56:37 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Oliver O'Halloran <oohall@gmail.com>
+Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
+Message-ID: <20200618145637.GA3017232@kroah.com>
+References: <20200616011742.138975-1-rajatja@google.com>
+ <20200616011742.138975-4-rajatja@google.com>
+ <20200616073249.GB30385@infradead.org>
+ <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
+ <20200617073100.GA14424@infradead.org>
+ <CACK8Z6FecYkAYQh4sm4RbAQ1iwb9gexqgY9ExD9BH2p-5Usj=g@mail.gmail.com>
+ <CAHp75Vc6eA33cyAQH-m+yixTuHqiobg6fo7nzbbb-J6vN6qFcA@mail.gmail.com>
+ <20200618083646.GA1066967@kroah.com>
+ <CAHp75Vf71f2s6yipHJ4Ys1oe1v7L4PiqBCEbo0uBcG7Wpcs5dQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1d1041f9-521b-98f5-a6ef-12d43615bc13@nxp.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vf71f2s6yipHJ4Ys1oe1v7L4PiqBCEbo0uBcG7Wpcs5dQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 18, 2020 at 12:14:41PM +0300, Andy Shevchenko wrote:
+> On Thu, Jun 18, 2020 at 11:36 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Jun 18, 2020 at 11:12:56AM +0300, Andy Shevchenko wrote:
+> > > On Wed, Jun 17, 2020 at 10:56 PM Rajat Jain <rajatja@google.com> wrote:
+> > > > On Wed, Jun 17, 2020 at 12:31 AM Christoph Hellwig <hch@infradead.org> wrote:
+> > >
+> > > ...
+> > >
+> > > > (and likely call it "external" instead of "untrusted".
+> > >
+> > > Which is not okay. 'External' to what? 'untrusted' has been carefully
+> > > chosen by the meaning of it.
+> > > What external does mean for M.2. WWAN card in my laptop? It's in ACPI
+> > > tables, but I can replace it.
+> >
+> > Then your ACPI tables should show this, there is an attribute for it,
+> > right?
+> 
+> There is a _PLD() method, but it's for the USB devices (or optional
+> for others, I don't remember by heart). So, most of the ACPI tables,
+> alas, don't show this.
 
+There is something like this for PCI as well, otherwise they wouldn't be
+getting this info from "the ether" :)
 
-On 6/18/20 6:44 AM, Daniel Baluta wrote:
-> On 6/18/20 2:01 PM, Mark Brown wrote:
->> On Wed, Jun 17, 2020 at 09:02:32PM -0400, Sasha Levin wrote:
->>> From: Daniel Baluta <daniel.baluta@nxp.com>
->>>
->>> [ Upstream commit c26fde3b15ed41f5f452f1da727795f787833287 ]
->>>
->>> This provides a better separation between runtime and PM sleep
->>> callbacks.
->>>
->>> Only do nothing if given runtime flag is set and calback is not set.
->>>
->>> With the current implementation, if PM sleep callback is set but runtime
->>> callback is not set then at runtime resume we reload the firmware even
->>> if we do not support runtime resume callback.
->> This doesn't look like a bugfix, just an optimization?
-> 
-> Indeed can be seen as an optimization, but it does unexpected things 
-> which can cause trouble
-> 
-> and weird behavior for people not familiar with the matter.
-> 
-> For example, as explained in the commit message if you only provide
-> 
-> System PM handler but not runtime PM handler, then the DSP will be resetted
-> 
-> even if this is not the intention.
+thanks,
 
-I think it's a bug fix for Intel legacy platforms (Baytrail, Broadwell) 
-where runtime_pm isn't supported. However the additional fixes for 
-system suspend/resume were only provided for 5.8, so this patch in 
-isolation will not do much for those platforms. Put differently, even if 
-this patch is applied to 5.7 suspend/resume would still not work for 
-Baytrail/Broadwell.
-Daniel, your call if you need this for i.MX?
+greg k-h
