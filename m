@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAF9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57B422089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 419B62089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447613;
-	bh=13GwXvTMOXsEYR0IfY7cgtgAMSISLoKBnsBmY4n0ne8=;
+	s=default; t=1592447616;
+	bh=QbWMDPdFq9YTKotJLzU2MjSz4fLQonVWu7IKdblOeWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MT8bnUtfI76yEood19A7yPMu5me5rmhb52P2j5PiKKsdFi31d/OjsbKZe6QZmcovG
-	 MD6ZveQ3Wikns1bvm5g0zhuMtm9cbuqHkMZ0tlVrpzLauWyAI0tMQB/NlE4Y4mjzSh
-	 V1iWO3gI39J4ImkwnGPJROjg52hdpOpkA1Mipphk=
+	b=uDUNa5On4X2GJpcmpSVYWgG7xq/DP9CiWaqmAefxgK5u/fllg9xayHNg3+xK/0+Ye
+	 Js1QJpSSGoX5LVpSEZxjbqEBpdFOgewPg6kpOuoZBUJehP9wpnxgADSR6tZBDPn/tF
+	 /TyBeTOwdPZJiS1vGV/IN3OZpi3RCs8PMqGmNKas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbgFRBOq (ORCPT
+        id S2387481AbgFRCde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:14:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42392 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:33:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbgFRBNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:17 -0400
+        id S1729357AbgFRBOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07B9221D7E;
-        Thu, 18 Jun 2020 01:13:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1BA820EDD;
+        Thu, 18 Jun 2020 01:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442796;
-        bh=13GwXvTMOXsEYR0IfY7cgtgAMSISLoKBnsBmY4n0ne8=;
+        s=default; t=1592442884;
+        bh=QbWMDPdFq9YTKotJLzU2MjSz4fLQonVWu7IKdblOeWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sKWy91zrIqBODGqJloj7+6yLKiOsgbYb3vdeZnFZS04/m+7GmXDWTtLtEoewYDfEo
-         YDaZZc9hLeXt25IzXqnszTk+OCwS3G9FTGmBTlSIAMoirsi06uR7bgtA+nl8eTIbcl
-         RYfyf4EoGjzeJAwEGmzlXMY3SaVFQryljWviXFfQ=
+        b=yi6b4L+7ElNSrL2p8GQq2tO8XlVeaJsO2052x42sQkgeZ+Zvp9sA7sAH5n9nacEqf
+         Vl6kddOdDKulTdBIqhlOxiipI31Oz4+PEVWfZIOn/B48T0NuCX/KKh9wa708+uCy4x
+         sm44x6rQCWDtoMHAbyAlCg4RzXyIJHRl3kvbrRxc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 238/388] clk: samsung: exynos5433: Add IGNORE_UNUSED flag to sclk_i2s1
-Date:   Wed, 17 Jun 2020 21:05:35 -0400
-Message-Id: <20200618010805.600873-238-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Cornelia Huck <cohuck@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 308/388] vfio/mdev: Fix reference count leak in add_mdev_supported_type
+Date:   Wed, 17 Jun 2020 21:06:45 -0400
+Message-Id: <20200618010805.600873-308-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,66 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 25bdae0f1c6609ceaf55fe6700654f0be2253d8e ]
+[ Upstream commit aa8ba13cae3134b8ef1c1b6879f66372531da738 ]
 
-Mark the SCLK clock for Exynos5433 I2S1 device with IGNORE_UNUSED flag to
-match its behaviour with SCLK clock for AUD_I2S (I2S0) device until
-a proper fix for Exynos I2S driver is ready.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object. Thus,
+replace kfree() by kobject_put() to fix this issue. Previous
+commit "b8eb718348b8" fixed a similar problem.
 
-This fixes the following synchronous abort issue revealed by the probe
-order change caused by the commit 93d2e4322aa7 ("of: platform: Batch
-fwnode parsing when adding all top level devices")
-
-Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 0 PID: 50 Comm: kworker/0:1 Not tainted 5.7.0-rc5+ #701
-Hardware name: Samsung TM2E board (DT)
-Workqueue: events deferred_probe_work_func
-pstate: 60000005 (nZCv daif -PAN -UAO)
-pc : samsung_i2s_probe+0x768/0x8f0
-lr : samsung_i2s_probe+0x688/0x8f0
-...
-Call trace:
- samsung_i2s_probe+0x768/0x8f0
- platform_drv_probe+0x50/0xa8
- really_probe+0x108/0x370
- driver_probe_device+0x54/0xb8
- __device_attach_driver+0x90/0xc0
- bus_for_each_drv+0x70/0xc8
- __device_attach+0xdc/0x140
- device_initial_probe+0x10/0x18
- bus_probe_device+0x94/0xa0
- deferred_probe_work_func+0x70/0xa8
- process_one_work+0x2a8/0x718
- worker_thread+0x48/0x470
- kthread+0x134/0x160
- ret_from_fork+0x10/0x1c
-Code: 17ffffaf d503201f f94086c0 91003000 (88dffc00)
----[ end trace ccf721c9400ddbd6 ]---
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5433.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/vfio/mdev/mdev_sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-index 4b1aa9382ad2..6f29ecd0442e 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -1706,7 +1706,8 @@ static const struct samsung_gate_clock peric_gate_clks[] __initconst = {
- 	GATE(CLK_SCLK_PCM1, "sclk_pcm1", "sclk_pcm1_peric",
- 			ENABLE_SCLK_PERIC, 7, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_I2S1, "sclk_i2s1", "sclk_i2s1_peric",
--			ENABLE_SCLK_PERIC, 6, CLK_SET_RATE_PARENT, 0),
-+			ENABLE_SCLK_PERIC, 6,
-+			CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_SCLK_SPI2, "sclk_spi2", "sclk_spi2_peric", ENABLE_SCLK_PERIC,
- 			5, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_SPI1, "sclk_spi1", "sclk_spi1_peric", ENABLE_SCLK_PERIC,
+diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
+index 8ad14e5c02bf..917fd84c1c6f 100644
+--- a/drivers/vfio/mdev/mdev_sysfs.c
++++ b/drivers/vfio/mdev/mdev_sysfs.c
+@@ -110,7 +110,7 @@ static struct mdev_type *add_mdev_supported_type(struct mdev_parent *parent,
+ 				   "%s-%s", dev_driver_string(parent->dev),
+ 				   group->name);
+ 	if (ret) {
+-		kfree(type);
++		kobject_put(&type->kobj);
+ 		return ERR_PTR(ret);
+ 	}
+ 
 -- 
 2.25.1
 
