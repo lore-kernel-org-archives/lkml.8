@@ -4,53 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD02AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2D8C21BE5
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD81221EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442565;
-	bh=oYIe6/U8JRWSGr/ppugOUsi7E32io1WeQ87L2V4PHIw=;
+	s=default; t=1592442567;
+	bh=3Sxq9xEUjMoEAHJMR3O3vPC8exhvz74ULRwjGDQLRRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zMWNQmoRGHk8Hu6A9N8ArntTR6Al8ejkLaLBPrUM2cd9HzCn7CrB8XAHSqD91Eif8
-	 fZb4IOam2Lp6h/ftUdzqVXu5XEnktGLHgHio70gb6TrE4RkxUC+VRNUUCH9lfnxTbr
-	 ti5rXtTdDNyXYWexGwXc/F+zKTdNTRMX11dDaTho=
+	b=O7tpITgezBeXNrQYGVNbS6GAzBPJlzdWOyPYBQNeBHViIS7iefafwB5OHk97rIOPR
+	 EXNDT/+//6W/StUydDbdjxblRYhRLymqi08i3kN5YGjFCl5/lDWq/OTyQYbHr6l3pL
+	 5AdoTERdFOOhnRd4aZ0ZRFMlc+uinp+1+FggvV4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgFRBJZ (ORCPT
+        id S1728160AbgFRBJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:09:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35522 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:09:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728111AbgFRBJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:09:18 -0400
+        id S1728127AbgFRBJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA07F21974;
-        Thu, 18 Jun 2020 01:09:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0F9E21BE5;
+        Thu, 18 Jun 2020 01:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442557;
-        bh=oYIe6/U8JRWSGr/ppugOUsi7E32io1WeQ87L2V4PHIw=;
+        s=default; t=1592442561;
+        bh=3Sxq9xEUjMoEAHJMR3O3vPC8exhvz74ULRwjGDQLRRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j4SEtCX7Q3KiDsG4s+fe04YPbMu8K2cfwY0Zzrff6iaeo9f9C56sVyoYUM1cbCWou
-         hQbYojvZhZjcW+3QlNRXbizA84rHp8VnBii0qdAXWfS6dX95G+E9kPxYqlv1t6/Xsw
-         RKQIP1nqzyaYyZeJfyXBoMoKVcBqGiUchbKIRmE4=
+        b=fGuSW+Q2426utX2GDd1wrJRhtbaG/5B44+jEbLbMZ8S9KAAxz7g377R2Uh0o4qJ4K
+         vi7phIn37YboO12+4HNzu6G+XpWLdE79ulkgj8LWMh7WlLgThC38mvB9+X9ipoLv1c
+         DolWdQJ911siTbTm3YFkfZ1M53X8RsxgtHiZM/Tg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 054/388] clk: renesas: cpg-mssr: Fix STBCR suspend/resume handling
-Date:   Wed, 17 Jun 2020 21:02:31 -0400
-Message-Id: <20200618010805.600873-54-sashal@kernel.org>
+Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 057/388] PCI: aardvark: Don't blindly enable ASPM L0s and don't write to read-only register
+Date:   Wed, 17 Jun 2020 21:02:34 -0400
+Message-Id: <20200618010805.600873-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,58 +64,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Pali Rohár <pali@kernel.org>
 
-[ Upstream commit ace342097768e35fd41934285604fa97da1e235a ]
+[ Upstream commit 90c6cb4a355e7befcb557d217d1d8b8bd5875a05 ]
 
-On SoCs with Standby Control Registers (STBCRs) instead of Module Stop
-Control Registers (MSTPCRs), the suspend handler saves the wrong
-registers, and the resume handler prints the wrong register in an error
-message.
+Trying to change Link Status register does not have any effect as this
+is a read-only register. Trying to overwrite bits for Negotiated Link
+Width does not make sense.
 
-Fortunately this cannot happen yet, as the suspend/resume code is used
-on PSCI systems only, and systems with STBCRs (RZ/A1 and RZ/A2) do not
-use PSCI.  Still, it is better to fix this, to avoid this becoming a
-problem in the future.
+In future proper change of link width can be done via Lane Count Select
+bits in PCIe Control 0 register.
 
-Distinguish between STBCRs and MSTPCRs where needed.  Replace the
-useless printing of the virtual register address in the resume error
-message by printing the register index.
+Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
+Control register is wrong. There should be at least some detection if
+endpoint supports L0s as isn't mandatory.
 
-Fixes: fde35c9c7db5732c ("clk: renesas: cpg-mssr: Add R7S9210 support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20200507074713.30113-1-geert+renesas@glider.be
+Moreover ASPM Control bits in Link Control register are controlled by
+pcie/aspm.c code which sets it according to system ASPM settings,
+immediately after aardvark driver probes. So setting these bits by
+aardvark driver has no long running effect.
+
+Remove code which touches ASPM L0s bits from this driver and let
+kernel's ASPM implementation to set ASPM state properly.
+
+Some users are reporting issues that this code is problematic for some
+Intel wifi cards and removing it fixes them, see e.g.:
+https://bugzilla.kernel.org/show_bug.cgi?id=196339
+
+If problems with Intel wifi cards occur even after this commit, then
+pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
+for affected problematic cards.
+
+Link: https://lore.kernel.org/r/20200430080625.26070-3-pali@kernel.org
+Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/renesas-cpg-mssr.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
-index a2663fbbd7a5..d6a53c99b114 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.c
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-@@ -812,7 +812,8 @@ static int cpg_mssr_suspend_noirq(struct device *dev)
- 	/* Save module registers with bits under our control */
- 	for (reg = 0; reg < ARRAY_SIZE(priv->smstpcr_saved); reg++) {
- 		if (priv->smstpcr_saved[reg].mask)
--			priv->smstpcr_saved[reg].val =
-+			priv->smstpcr_saved[reg].val = priv->stbyctrl ?
-+				readb(priv->base + STBCR(reg)) :
- 				readl(priv->base + SMSTPCR(reg));
- 	}
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 2a20b649f40c..3a6d07dc0a38 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -353,10 +353,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
  
-@@ -872,8 +873,9 @@ static int cpg_mssr_resume_noirq(struct device *dev)
- 		}
+ 	advk_pcie_wait_for_link(pcie);
  
- 		if (!i)
--			dev_warn(dev, "Failed to enable SMSTP %p[0x%x]\n",
--				 priv->base + SMSTPCR(reg), oldval & mask);
-+			dev_warn(dev, "Failed to enable %s%u[0x%x]\n",
-+				 priv->stbyctrl ? "STB" : "SMSTP", reg,
-+				 oldval & mask);
- 	}
- 
- 	return 0;
+-	reg = PCIE_CORE_LINK_L0S_ENTRY |
+-		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
+-	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+-
+ 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+ 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
+ 		PCIE_CORE_CMD_IO_ACCESS_EN |
 -- 
 2.25.1
 
