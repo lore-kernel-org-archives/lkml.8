@@ -2,189 +2,97 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A319C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C034208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BED8E2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:26:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fMnEueT9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731272AbgFRQXd (ORCPT
+        id S1730721AbgFRQ0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:23:33 -0400
-Received: from mga06.intel.com ([134.134.136.31]:18458 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726981AbgFRQXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:23:31 -0400
-IronPort-SDR: DalMYkUIovDenS3rRjhBnn04QCEfuS7SBEGD9zcnk0jwaae60/mEfSUVKQbmeTnY+HcoYeIH5e
- gynoD7S6JRnA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="204130591"
-X-IronPort-AV: E=Sophos;i="5.75,251,1589266800"; 
-   d="scan'208";a="204130591"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 09:23:25 -0700
-IronPort-SDR: qX7R8j79zmP2NjUAVlcMr1vg/ibC0ww/wL32qvXjjmErmo0tc+v8JyC55vN+zndnXIFsm7IoBV
- vT1ix66ELVOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,251,1589266800"; 
-   d="scan'208";a="262970585"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by orsmga007.jf.intel.com with ESMTP; 18 Jun 2020 09:23:22 -0700
-Date:   Thu, 18 Jun 2020 09:23:22 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
-Message-ID: <20200618162322.GI34820@otc-nc-03>
-References: <20200616011742.138975-4-rajatja@google.com>
- <20200616073249.GB30385@infradead.org>
- <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
- <20200617073100.GA14424@infradead.org>
- <CACK8Z6FecYkAYQh4sm4RbAQ1iwb9gexqgY9ExD9BH2p-5Usj=g@mail.gmail.com>
- <CAHp75Vc6eA33cyAQH-m+yixTuHqiobg6fo7nzbbb-J6vN6qFcA@mail.gmail.com>
- <20200618083646.GA1066967@kroah.com>
- <CAHp75Vf71f2s6yipHJ4Ys1oe1v7L4PiqBCEbo0uBcG7Wpcs5dQ@mail.gmail.com>
- <CACK8Z6F2Ssj=EqhR2DZ114ETgQ-3PhzVi2rm2xxenCNOVH=60g@mail.gmail.com>
- <20200618160212.GB3076467@kroah.com>
+        Thu, 18 Jun 2020 12:26:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbgFRQ0q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 12:26:46 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52139C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 09:26:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zqaqiG8aBBfXnolcoZWCcqMsQ7mBjjocEXvjqDyysTI=; b=fMnEueT9WILfVhQXmU0o4+d5WF
+        LBtUw0dc3SmSXwMkFgB5ouipemTfNUZ1mZe2EY/Aphli1sWBMOOIhaYfc9l4arKSqZVeXLegDUjhY
+        BAVpj0HnITAn9Ygfsj5GEm9FQUW5OA2a8x87V4vjwnu0FOyglZyCm5KS5rhUWzEhVdwMcrQ31o8OX
+        XeewF+Ww3N0IpOLah9kCCoaNZfDBBkVVre1fCY9gDVasVJ9R4He4reVw0P0XIQ2Xc14W+5zrRzA9k
+        mHl6Rzni0p4Ht7IlujKJ8CXZI0C7bgHWnZAOnYHws0Rve63GW+Ahaxkh3VQ0GI5+4FIXdyKiO6ma4
+        7DHu98Nw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlxMP-00010y-7s; Thu, 18 Jun 2020 16:25:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0B27430018A;
+        Thu, 18 Jun 2020 18:25:49 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CCD122B9C1B8B; Thu, 18 Jun 2020 18:25:49 +0200 (CEST)
+Date:   Thu, 18 Jun 2020 18:25:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, paulmck@kernel.org, frederic@kernel.org,
+        tsbogend@alpha.franken.de, axboe@kernel.dk, rjw@rjwysocki.net,
+        daniel.lezcano@linaro.org, dchickles@marvell.com,
+        davem@davemloft.net, kuba@kernel.org, daniel.thompson@linaro.org,
+        gerald.schaefer@de.ibm.com
+Subject: Re: [PATCH 6/6] smp: Cleanup smp_call_function*()
+Message-ID: <20200618162549.GM576905@hirez.programming.kicks-ass.net>
+References: <20200615125654.678940605@infradead.org>
+ <20200615131143.434079683@infradead.org>
+ <20200617082349.GA19894@infradead.org>
+ <20200617110401.GG2531@hirez.programming.kicks-ass.net>
+ <20200618065107.GA4406@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200618160212.GB3076467@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200618065107.GA4406@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Wed, Jun 17, 2020 at 11:51:07PM -0700, Christoph Hellwig wrote:
+> Much better.  Although if we touch all the callers we might as well
+> pass the csd as the argument to the callback, as with that we can
+> pretty trivially remove the private data field later.
 
+My plan was to introduce a new function and type and convert
+smp_call_function_async() callers over to that. The csd as it exists is
+useful for the regular smp_call_function*() API.
 
-On Thu, Jun 18, 2020 at 06:02:12PM +0200, Greg Kroah-Hartman wrote:
-> On Thu, Jun 18, 2020 at 08:03:49AM -0700, Rajat Jain wrote:
-> > Hello,
-> > 
-> > On Thu, Jun 18, 2020 at 2:14 AM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > >
-> > > On Thu, Jun 18, 2020 at 11:36 AM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Thu, Jun 18, 2020 at 11:12:56AM +0300, Andy Shevchenko wrote:
-> > > > > On Wed, Jun 17, 2020 at 10:56 PM Rajat Jain <rajatja@google.com> wrote:
-> > > > > > On Wed, Jun 17, 2020 at 12:31 AM Christoph Hellwig <hch@infradead.org> wrote:
-> > > > >
-> > > > > ...
-> > > > >
-> > > > > > (and likely call it "external" instead of "untrusted".
-> > > > >
-> > > > > Which is not okay. 'External' to what? 'untrusted' has been carefully
-> > > > > chosen by the meaning of it.
-> > > > > What external does mean for M.2. WWAN card in my laptop? It's in ACPI
-> > > > > tables, but I can replace it.
-> > > >
-> > > > Then your ACPI tables should show this, there is an attribute for it,
-> > > > right?
-> > >
-> > > There is a _PLD() method, but it's for the USB devices (or optional
-> > > for others, I don't remember by heart). So, most of the ACPI tables,
-> > > alas, don't show this.
-> > >
-> > > > > This is only one example. Or if firmware of some device is altered,
-> > > > > and it's internal (whatever it means) is it trusted or not?
-> > > >
-> > > > That is what people are using policy for today, if you object to this,
-> > > > please bring it up to those developers :)
-> > >
-> > > > > So, please leave it as is (I mean name).
-> > > >
-> > > > firmware today exports this attribute, why do you not want userspace to
-> > > > also know it?
-> > 
-> > To clarify, the attribute exposed by the firmware today is
-> > "ExternalFacingPort" and "external-facing" respectively:
-> > 
-> > 617654aae50e ("PCI / ACPI: Identify untrusted PCI devices")
-> > 9cb30a71ac45d("PCI: OF: Support "external-facing" property")
-> > 
-> > The kernel flag was named "untrusted" though, hence the assumption
-> > that "external=untrusted" is currently baked into the kernel today.
-> > IMHO, using "external" would fix that (The assumption can thus be
-> > contained in the IOMMU drivers) and at the same time allow more use of
-> > this attribute.
-> > 
-> > > >
-> > > > Trust is different, yes, don't get the two mixed up please.  That should
-> > > > be a different sysfs attribute for obvious reasons.
-> > >
-> > > Yes, as a bottom line that's what I meant as well.
-> > 
-> > So what is the consensus here? I don't have a strong opinion - but it
-> > seemed to me Greg is saying "external" and Andy is saying "untrusted"?
+> Btw, it seems the callers that don't have the CSD embedded into the
+> containing structure seems to be of these two kinds:
 > 
-> Those two things are totally separate things when it comes to a device.
+>  - reimplementing on_each_cpumask (mostly because they can be called
+>    from irq context)
 
-Agree that these are two separate attributes, and better not mixed.
+These are fairly special purpose constructs; and they come at the cost
+of extra per-cpu storage and they have the limitiation that they must
+wait for completion of the first before they can be used again.
 
-> 
-> One (external) describes the location of the device in the system.
-> 
-> The other (untrusted) describes what you want the kernel to do with this
-> device (trust or not trust it).
-> 
-> One you can change (from trust to untrusted or back), the other you can
-> not, it is a fixed read-only property that describes the hardware device
-> as defined by the firmware.
+>  - reimplenenting smp_call_function_single because they want
+>    to sleep instead of busy wait
 
-The genesis is due to lack of a mechanism to establish if the device 
-is trusted or not was the due lack of some specs and implementation around
-Component Measurement And Authentication (CMA). Treating external as
-untrusted was the best first effort. i.e trust internal 
-devices and don't trust external devices for enabling ATS.
-
-But that said external is just describing topology, and if Linux wants to
-use that in the policy that's different. Some day external device may also
-use CMA to estabilish trust. FWIW even internal devices aren't trust
-worthy, except maybe RCIEP's. 
-
-> 
-> Depending on the policy you wish to define, you can use the location of
-> the device to determine if you want to trust the device or not.
-> 
-
-Cheers,
-Ashok
+These are atrocious pieces of crap (the x86/msr ones), the reason it was
+done is because virt :/
