@@ -2,111 +2,120 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D43EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBD4F20890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E3220890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:04:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592507046;
+	bh=FcKGLNRNqI63/khvEfTqTTG7E7jDUOi4glDel5vUcmk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=hNONcReFHWnzCAe1SeNCH4BsItiBF/ULLnnM3ZVE53eNf9hI94wR/ENMwgs4IouER
+	 ZsmlXXsAj7JU08QQFuPdVe6RkXgRrfjBPAsqg8aaoaKvzDT6QxTEiwcYrs59VQHa7G
+	 i/83NrJCcvMtV78A54AV66MEpRe+BdJXVeOaOKTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbgFRTDv convert rfc822-to-8bit (ORCPT
+        id S1729774AbgFRTEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 15:03:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbgFRTDu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 15:03:50 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C769C06174E;
-        Thu, 18 Jun 2020 12:03:50 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlzpC-0000we-N4; Thu, 18 Jun 2020 21:03:47 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2F5CB1C0087;
-        Thu, 18 Jun 2020 21:03:44 +0200 (CEST)
-Date:   Thu, 18 Jun 2020 19:03:43 -0000
-From:   "tip-bot2 for Benjamin Thiel" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/mm/32: Fix -Wmissing prototypes warnings for init.c
-Cc:     Benjamin Thiel <b.thiel@posteo.de>, Borislav Petkov <bp@suse.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200606123743.3277-1-b.thiel@posteo.de>
-References: <20200606123743.3277-1-b.thiel@posteo.de>
+        Thu, 18 Jun 2020 15:04:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726882AbgFRTD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 15:03:59 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F0B7207DD;
+        Thu, 18 Jun 2020 19:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592507039;
+        bh=FcKGLNRNqI63/khvEfTqTTG7E7jDUOi4glDel5vUcmk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=P4Z9iGwPuioH4OpAG4O0cRH6EmTmmFsbompSyHYUNcVMFj4kIXBJZ4NxzU5HDUTbA
+         tz+yfLch74E8uSVbm5UjQqxFX5apaeZzAQs6RVZ5M1PYrWVZPhCfKQ5XalneP6oJ13
+         yDxiCjOkY7eQ3gnqN5itSjKTn3IAbkzRhbCJEMrU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 149FD35229B4; Thu, 18 Jun 2020 12:03:59 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 12:03:59 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
+ ptrs
+Message-ID: <20200618190359.GU2723@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200525214800.93072-1-urezki@gmail.com>
+ <20200525214800.93072-10-urezki@gmail.com>
+ <20200617234609.GA10087@paulmck-ThinkPad-P72>
+ <20200618005214.GN8681@bombadil.infradead.org>
+ <20200618031823.GQ2723@paulmck-ThinkPad-P72>
+ <20200618173520.GC14613@pc636>
+ <20200618175719.GT2723@paulmck-ThinkPad-P72>
+ <20200618183448.GA15136@pc636>
 MIME-Version: 1.0
-Message-ID: <159250702393.16989.14264328319814076252.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618183448.GA15136@pc636>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+On Thu, Jun 18, 2020 at 08:34:48PM +0200, Uladzislau Rezki wrote:
+> > > > 
+> > > > I suspect that he would like to keep the tracing.
+> > > > 
+> > > > It might be worth trying the branches, given that they would be constant
+> > > > and indexed by "i".  The compiler might well remove the indirection.
+> > > > 
+> > > > The compiler guys brag about doing so, which of course might or might
+> > > > not have any correlation to a given compiler actually doing so.  :-/
+> > > > 
+> > > > Having a vfree_bulk() might well be useful, but I would feel more
+> > > > confidence in that if there were other callers of kfree_bulk().
+> > > >
+> > > Hmm... I think replacing that with vfree_bulk() is a good idea though.
+> > 
+> > In other words, get rid of kfree_bulk() in favor of vfree_bulk()?
+> > 
+> kfree_bulk() does not understand vmalloc memory. vfree_bulk() should
+> be implemented to release vmalloc's pointers. On i high level it will
+> be used the same way as kfree_bulk() but for vmalloc ptrs. only.
 
-Commit-ID:     56ce93700eb630a8d894f5a578f166888ae8cba6
-Gitweb:        https://git.kernel.org/tip/56ce93700eb630a8d894f5a578f166888ae8cba6
-Author:        Benjamin Thiel <b.thiel@posteo.de>
-AuthorDate:    Sat, 06 Jun 2020 14:37:43 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Thu, 18 Jun 2020 18:04:00 +02:00
+Ah, I thought that you guys were proposing something that did bulk
+free of both kmalloc and vmalloc memory.
 
-x86/mm/32: Fix -Wmissing prototypes warnings for init.c
+							Thanx, Paul
 
-Fix:
-
-  arch/x86/mm/init.c:503:21:
-  warning: no previous prototype for ‘init_memory_mapping’ [-Wmissing-prototypes]
-  unsigned long __ref init_memory_mapping(unsigned long start,
-
-  arch/x86/mm/init.c:745:13:
-  warning: no previous prototype for ‘poking_init’ [-Wmissing-prototypes]
-  void __init poking_init(void)
-
-Lift init_memory_mapping() and poking_init() out of the ifdef
-CONFIG_X86_64 to make the functions visible on 32-bit too.
-
-Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200606123743.3277-1-b.thiel@posteo.de
----
- arch/x86/include/asm/pgtable.h |  9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 76aa21e..b836138 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -999,15 +999,12 @@ extern int direct_gbpages;
- void init_mem_mapping(void);
- void early_alloc_pgt_buf(void);
- extern void memblock_find_dma_reserve(void);
--
--
--#ifdef CONFIG_X86_64
--extern pgd_t trampoline_pgd_entry;
--
- void __init poking_init(void);
--
- unsigned long init_memory_mapping(unsigned long start,
- 				  unsigned long end, pgprot_t prot);
-+
-+#ifdef CONFIG_X86_64
-+extern pgd_t trampoline_pgd_entry;
- #endif
- 
- /* local pte updates need not use xchg for locking */
+> > > > But again, either way, future work as far as this series is concerned.
+> > > > 
+> > > What do you mean: is concerned?
+> > 
+> > Apologies for the strange English.  How about this?
+> > 
+> > "This series is OK as is.  Any comments above did not prevent me from
+> > taking these patches, but instead discuss possible future work."
+> > 
+> That is perfectly clear to me :)
+> 
+> > > We are planning to implement kfree_rcu() to be integrated directly into
+> > > SLAB: SLAB, SLUB, SLOB. So, there are plenty of future work :)
+> >
+> > And I am glad that this is still the goal.  ;-)
+> >
+> :)
+> 
+> --
+> Vlad Rezki
