@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43130C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7753C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 152662222A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADECD2222A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445257;
-	bh=PYgYh5EClCZLJSgI9EwuJGo8e/rRyeyZ+97SNn09/1c=;
+	s=default; t=1592445259;
+	bh=BUvJVBC8cHLzO7AI89N4vy5cfwfV6G40U7bIhjVbmhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HDJZjMSyxASg2XPh5V5cZgzGEdauZpgkLQ7NieOKzYqSJvadKr1lJiyFSNO1xEQ8e
-	 eomXcuT23fBejXwUmT55JuroOfqiNIFFrbIWJuil8fS2Hddl8MwpWCa3DBom/eIg41
-	 HitURQDpo2cq3WBcXoxcRAKMSFMQXU36FXm+PuiM=
+	b=JS1pyAuooUEJT9p4J/uR7IWBrVcONR/OfX4TfFP7xkxQHZpMpmGNAMaDJ0eifATdF
+	 f7pS0AHS6+8bGnrvroNlNfjtoTFUk6zB2TN5yg8mGHYZtJqQbDNFPyBf5zV/sF0Npd
+	 cP+5EP6S7IsvyxJnhp1u2X1csjW5vyFBYZ7wrKlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732092AbgFRByL (ORCPT
+        id S1730644AbgFRB0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33446 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:26:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731599AbgFRB0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:26:08 -0400
+        id S1729487AbgFRBXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:23:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AE4021D7F;
-        Thu, 18 Jun 2020 01:26:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DDF320CC7;
+        Thu, 18 Jun 2020 01:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443568;
-        bh=PYgYh5EClCZLJSgI9EwuJGo8e/rRyeyZ+97SNn09/1c=;
+        s=default; t=1592443382;
+        bh=BUvJVBC8cHLzO7AI89N4vy5cfwfV6G40U7bIhjVbmhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mcWiJ3z3tVo1uV5mmprDD8oBu+41zhigyxTU7GStXh5GFnOpNM1Z9jbMRIF1J9Ne4
-         zjHLOTWuWKtxwV8wE2UAQ75qWD/hv7cFQ4T0e5bwqaAxMBeq1gh965J5iv8uF/GAEg
-         u/RuJw75UsBhHh5soCX7PtewYRz0oCLZAE/tUHZo=
+        b=zxwpg7INc1ZsfELqRCdOcNFqV5jWGIN+4PvmgK5ONaWyr+6Ze3F+tY9kkrm5eV7MO
+         DVc5PTUTmW8CSI52O6vkMolUn0FOEOf4Emn/eyqRL/PlfrBbZWrNh3LBbrmERzS7su
+         ktbGl/mIaknqdfSbXZMjpvNTUlTZ5+cRT+u3hPog=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Elder <elder@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suman Anna <s-anna@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-remoteproc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 006/108] remoteproc: Fix IDR initialisation in rproc_alloc()
-Date:   Wed, 17 Jun 2020 21:24:18 -0400
-Message-Id: <20200618012600.608744-6-sashal@kernel.org>
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Daniel Wagner <dwagner@suse.de>,
+        James Smart <james.smart@broadcom.com>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 033/172] scsi: lpfc: Fix lpfc_nodelist leak when processing unsolicited event
+Date:   Wed, 17 Jun 2020 21:19:59 -0400
+Message-Id: <20200618012218.607130-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
-References: <20200618012600.608744-1-sashal@kernel.org>
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,58 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Elder <elder@linaro.org>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 6442df49400b466431979e7634849a464a5f1861 ]
+[ Upstream commit 7217e6e694da3aae6d17db8a7f7460c8d4817ebf ]
 
-If ida_simple_get() returns an error when called in rproc_alloc(),
-put_device() is called to clean things up.  By this time the rproc
-device type has been assigned, with rproc_type_release() as the
-release function.
+In order to create or activate a new node, lpfc_els_unsol_buffer() invokes
+lpfc_nlp_init() or lpfc_enable_node() or lpfc_nlp_get(), all of them will
+return a reference of the specified lpfc_nodelist object to "ndlp" with
+increased refcnt.
 
-The first thing rproc_type_release() does is call:
-    idr_destroy(&rproc->notifyids);
+When lpfc_els_unsol_buffer() returns, local variable "ndlp" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-But at the time the ida_simple_get() call is made, the notifyids
-field in the remoteproc structure has not been initialized.
+The reference counting issue happens in one exception handling path of
+lpfc_els_unsol_buffer(). When "ndlp" in DEV_LOSS, the function forgets to
+decrease the refcnt increased by lpfc_nlp_init() or lpfc_enable_node() or
+lpfc_nlp_get(), causing a refcnt leak.
 
-I'm not actually sure this case causes an observable problem, but
-it's incorrect.  Fix this by initializing the notifyids field before
-calling ida_simple_get() in rproc_alloc().
+Fix this issue by calling lpfc_nlp_put() when "ndlp" in DEV_LOSS.
 
-Fixes: b5ab5e24e960 ("remoteproc: maintain a generic child device for each rproc")
-Signed-off-by: Alex Elder <elder@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Suman Anna <s-anna@ti.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200415204858.2448-2-mathieu.poirier@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/1590416184-52592-1-git-send-email-xiyuyang19@fudan.edu.cn
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/remoteproc_core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/lpfc/lpfc_els.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 8f4fa1a52f05..d6372470e5be 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1432,6 +1432,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
- 	rproc->dev.type = &rproc_type;
- 	rproc->dev.class = &rproc_class;
- 	rproc->dev.driver_data = rproc;
-+	idr_init(&rproc->notifyids);
- 
- 	/* Assign a unique device index and name */
- 	rproc->index = ida_simple_get(&rproc_dev_index, 0, 0, GFP_KERNEL);
-@@ -1450,8 +1451,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
- 
- 	mutex_init(&rproc->lock);
- 
--	idr_init(&rproc->notifyids);
--
- 	INIT_LIST_HEAD(&rproc->carveouts);
- 	INIT_LIST_HEAD(&rproc->mappings);
- 	INIT_LIST_HEAD(&rproc->traces);
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index 7398350b08b4..9032793c405e 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -7949,6 +7949,8 @@ lpfc_els_unsol_buffer(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
+ 	spin_lock_irq(shost->host_lock);
+ 	if (ndlp->nlp_flag & NLP_IN_DEV_LOSS) {
+ 		spin_unlock_irq(shost->host_lock);
++		if (newnode)
++			lpfc_nlp_put(ndlp);
+ 		goto dropit;
+ 	}
+ 	spin_unlock_irq(shost->host_lock);
 -- 
 2.25.1
 
