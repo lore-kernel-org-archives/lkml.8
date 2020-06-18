@@ -2,153 +2,113 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8130C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BEBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE645208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:06:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GWgIb4Di"
+	by mail.kernel.org (Postfix) with ESMTP id 3BE7A208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:07:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592503673;
+	bh=KA//1bD9BcrK8/lxvOXcCF+JQtiTauvjZLDS3E+OsfI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MWtqL3nhL8l4tQzU2PO/k8ziU94CpVTmbRjEnX0xZxeuhaoyilXz46g/Z6H/lvB1l
+	 dZNwQtKXy42t9fdqXDAMVPb/ZMLS3iVPfCfcikL3jXnOwf6m59/hznRGiwXF39kTKl
+	 aD3yueJWxWsk9E5kQWMnTQtxRueVjJlWLKzVo2zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729836AbgFRSGL (ORCPT
+        id S1729353AbgFRSHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 14:06:11 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:4151 "EHLO nat-hk.nvidia.com"
+        Thu, 18 Jun 2020 14:07:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726978AbgFRSGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 14:06:07 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.100]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eebad0c0000>; Fri, 19 Jun 2020 02:06:04 +0800
-Received: from HKMAIL102.nvidia.com ([10.18.16.11])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 18 Jun 2020 11:06:04 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Thu, 18 Jun 2020 11:06:04 -0700
-Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL102.nvidia.com
- (10.18.16.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jun
- 2020 18:05:56 +0000
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Thu, 18 Jun 2020 18:05:55 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gwfQvBkRHQKwJ62nQIJhEXkqejN0KSib8A8U6QXog7HbdrD+G8mrRQwc6DGpVvOte8eH6mBk7LkPkMBoSqtU5Wdxuptl7VWGSvpEueT7gwGAKq2U4Q9XLPUFxuGznArUovyJC4fK7m+piuH5XUlw16DdvO5gq0dmHrcMwcND28+Sr6n4j7F0LiQKYRcyYsCpM5s4QcaNrIus9MNQMLx0DP3lQ0+nln7i0bfFknLWTP7R5Vfaw6CdfrcgXqkWgDDkucOK9lw9kXKrvrBU24F54ENxI35uvyWPjRe4jFlgM6jUsOJDj8msDlg+QKM444gnQ6/DYdPQVZuFdvnKt2JCuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NQkTOcFwa+QpfQTMdcssUxhVbZS/aJCYgSb2LddHKMY=;
- b=MDgM0zZJaf2LHumXlqpoU0Z2D+xs+Wmj7spxVXu76jCJZlJmbLgsB3wGoCHYgBMF7T4V8EevHieprLzCGK+Rwn34QwRt/yB3xbGWGYiYv1Ygzv1LU7Q2ZRp8JWDAL78h8nfDaQry++0yjuVrSXE0SmtyXKprs4HzvsiTfbC5rsKJPFSmfOkglhXcVZXvoXPz00t9fQTXWRfOsYs+IKJJkCuPpMlBfgiPNIT7SdvNYbISKbTmTLFsKjl59nfPTX7haaWM03BGOss6/GTDv5XmE5TYkCgsp9HGbx9ZOuynFENhjmAcEtju0kBHdyPYQ6NrStaG8Ns9QKL0riX1WjvFtw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR1201MB2488.namprd12.prod.outlook.com (2603:10b6:3:e1::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Thu, 18 Jun
- 2020 18:05:54 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54%6]) with mapi id 15.20.3109.021; Thu, 18 Jun 2020
- 18:05:53 +0000
-Date:   Thu, 18 Jun 2020 15:05:52 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Leon Romanovsky <leon@kernel.org>
-CC:     Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Mark Zhang <markz@mellanox.com>
-Subject: Re: [PATCH rdma-rc 0/2] Two small fixes to the mlx5_ib
-Message-ID: <20200618180552.GB2449048@mellanox.com>
-References: <20200618112507.3453496-1-leon@kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200618112507.3453496-1-leon@kernel.org>
-X-NVConfidentiality: public
-X-ClientProxiedBy: MN2PR15CA0055.namprd15.prod.outlook.com
- (2603:10b6:208:237::24) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        id S1726940AbgFRSHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 14:07:49 -0400
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B712208DB;
+        Thu, 18 Jun 2020 18:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592503668;
+        bh=KA//1bD9BcrK8/lxvOXcCF+JQtiTauvjZLDS3E+OsfI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VwGa/w87tN4LTvCG5HLsX0B03TZZ05jRESXKSNMJlYy0Ut0/UfxI+I0BTQE5RY7lL
+         JUm15MDTU8QuakLegL5rwjtyRBttfGR+X89EGRFe1pjW4oiqp4I+ikmNbcjg+KuTuI
+         hJYCCO6Dzl+4CxEOo6DEvTxY2XU+INCx36cyAn4s=
+Received: by mail-ot1-f52.google.com with SMTP id k15so5268545otp.8;
+        Thu, 18 Jun 2020 11:07:48 -0700 (PDT)
+X-Gm-Message-State: AOAM530Axh54Y9pFBspxp/Y216RzLEakIrcIZATcByCa9tB0IzsPbTyb
+        kA3hXIxTl/ac+EXAJtNImmk7taojQ5Opfi9Opg==
+X-Google-Smtp-Source: ABdhPJz0B3UsnGoEf/FA5KAGc6jI6UDS3zxzffe1y+bD6ZgajEpGsDIKeXrt/kD/1a+oLZt7rG9XGQuJH/Sw3DDtGNM=
+X-Received: by 2002:a9d:3a36:: with SMTP id j51mr4707679otc.129.1592503667774;
+ Thu, 18 Jun 2020 11:07:47 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR15CA0055.namprd15.prod.outlook.com (2603:10b6:208:237::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend Transport; Thu, 18 Jun 2020 18:05:53 +0000
-Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@nvidia.com>)        id 1jlyvA-00AH7f-M2; Thu, 18 Jun 2020 15:05:52 -0300
-X-NVConfidentiality: public
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8b30b2f4-158e-4f4c-f684-08d813b23df5
-X-MS-TrafficTypeDiagnostic: DM5PR1201MB2488:
-X-Microsoft-Antispam-PRVS: <DM5PR1201MB2488EC99868FA368140E201DC29B0@DM5PR1201MB2488.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 0438F90F17
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: R0ADXH/6+l9Ve25mYUOzWmzJjy/BBqee6WkZwG0n7bnxA8q28eAW1BymVhByjZa5SXGcCo2Iu3x5sTJ893rNy/yl03OfjX70e3EPCWy4qBcHWRrbEiAhYRLvTYwkBBr1BXpiGtGr0V9twiRw0OS9/954cqzo4yGkw1gsNIPtA06h4fbGTLSVWUD05oLWMJLhVFavYD7JQFw5og1codl2SHjksCSjaNrMN3EXV2H3p181LLw2SEKgSy+rOX7eBBX121+nMZk4fk25YxA+9E8zpCo3KpHpWVB4yeTGdv5Zsfbu3MBeRJpVmH3d4NA8PXfIU2AuHJlNwmUZCHCIQ6p35g58AojXnBgnsFLHL6Urk6d+tJ509i5RZV61nwTwyT+YdcBwcumV+qVNJVMWKj8v6Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(396003)(136003)(39860400002)(376002)(346002)(2906002)(33656002)(54906003)(316002)(36756003)(4744005)(8676002)(6916009)(9686003)(66476007)(66946007)(966005)(66556008)(478600001)(86362001)(83380400001)(4326008)(1076003)(8936002)(9786002)(9746002)(5660300002)(186003)(26005)(426003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 2rGhp2tV4ePNTJUe/mkIIBJPaRDAaLMF+TMUtN+TDUtYpRHrG4jwgf9QGRhzCMptAzZczjHqDq0W9/6PQ8Puw02er8fKp8pVpG312aEeyOXBjivV6ofkWnmOOrsgq7NdYwOYitajCUCqSfOvNbMOZ7dooevj0T8aax0LkA/YhkLCvhbD50ZwJIDtqryIzcRSKsYVuQMdzgk5ltrofU4GgYMZSZEmbCWPFgOSRq2GdrId+F0dVAVITG93KsWiOLed7GSY9M9azwWj2cHe+j0A7FDsG33PhgANpIZQQtt/AM8IhKwBwZilVhHk1sFqoXKc9OoMLv8AK+rHX/sd9QLV4J6H0sGPzVjYCoLiwNmm+CNGs+5eOEISqP0LwRemhHv+gQOKqqDOWyN4pWnWt9fMZ6mReLtKPeqqYjHTte6VSViAfPWHT9G2PCdLAXwAsN3xOiOWfwSevdnytwjpImpyipvMl0eexfMme9X9LossQaI=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b30b2f4-158e-4f4c-f684-08d813b23df5
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2020 18:05:53.8930
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JF7IHw+gua1Y8nibOossqNfdNRqmejwV6CtX/BWEfjkC/nH3NrD+Ivjfn1Oq3hvt
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB2488
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592503564; bh=NQkTOcFwa+QpfQTMdcssUxhVbZS/aJCYgSb2LddHKMY=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-NVConfidentiality:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-NVConfidentiality:
-         X-Originating-IP:X-MS-PublicTrafficType:
-         X-MS-Office365-Filtering-Correlation-Id:X-MS-TrafficTypeDiagnostic:
-         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
-         X-Forefront-PRVS:X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=GWgIb4DiuVc5Z7BzVcCj3JzFY/eypg68DfxkNBozmruYp0EDXSCZrFded+zRI658b
-         nl20HFvYaXzLIeQM6+4Pni0jbl/O4HtNuMoAFQ6hpHvCqFHDjOKWx+pf4w2/sRRhyo
-         bBbiORps9IdsOgWsI1Z574ZsPIexG47/BACa08YADfpqRaOPsdYZb/PT4vFBEFuF0G
-         tUtVBLyc7dUQ31Y8SIOfUpkMQDzlPT2U5t/DX3LaP4ddJx6uwb3wm3J2EB3y6VmD3x
-         vLCogljFtD99tn9txbvykaEYwNHKmHn6iJXRyF5aEALtDE0yPhV/cik4X45kAU/+xH
-         jVU6nCmpei6CA==
+References: <20200611211144.9421-1-luca@lucaceresoli.net> <20200611211144.9421-4-luca@lucaceresoli.net>
+ <20200617223955.GA2967317@bogus> <b2c064c0-9a52-890d-b026-9cc1f4cab7d0@lucaceresoli.net>
+In-Reply-To: <b2c064c0-9a52-890d-b026-9cc1f4cab7d0@lucaceresoli.net>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 18 Jun 2020 12:07:32 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLCYdRci2W3otAwz_rDKQeFXuOdO0ZAv4fUGNZoiZb6hg@mail.gmail.com>
+Message-ID: <CAL_JsqLCYdRci2W3otAwz_rDKQeFXuOdO0ZAv4fUGNZoiZb6hg@mail.gmail.com>
+Subject: Re: [PATCH 4/5] dt-bindings: fpga: xilinx-slave-serial: add optional
+ INIT_B GPIO
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anatolij Gustschin <agust@denx.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 02:25:05PM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@mellanox.com>
-> 
-> Hi,
-> 
-> The following two fixes are user-visible one. The first patch is needed
-> to continue to use RAW_PACKET QPs after PR [1] is merged and new FW will
-> be released. The second patch fixes wrongly reported GID.
-> 
-> Thanks
-> 
-> [1] https://github.com/linux-rdma/rdma-core/pull/745
-> 
-> Leon Romanovsky (1):
->   RDMA/mlx5: Remove ECE limitation from the RAW_PACKET QPs
-> 
-> Maor Gottlieb (1):
->   RDMA/mlx5: Fix remote gid value in query QP
+On Wed, Jun 17, 2020 at 11:47 PM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+>
+> Hi Rob, Moritz,
+>
+> On 18/06/20 00:39, Rob Herring wrote:
+> > On Thu, Jun 11, 2020 at 11:11:43PM +0200, Luca Ceresoli wrote:
+> >> The INIT_B is used by the 6 and 7 series to report the programming status,
+> >> providing more control and information about programming errors.
+> >>
+> >> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> >> ---
+> >>  .../devicetree/bindings/fpga/xilinx-slave-serial.txt       | 7 ++++++-
+> >>  1 file changed, 6 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+> >> index 9f103f3872e8..a049082e1513 100644
+> >> --- a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+> >> +++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+> >> @@ -16,6 +16,10 @@ Required properties:
+> >>  - prog_b-gpios: config pin (referred to as PROGRAM_B in the manual)
+> >>  - done-gpios: config status pin (referred to as DONE in the manual)
+> >>
+> >> +Optional properties:
+> >> +- init_b-gpios: initialization status and configuration error pin
+> >> +                (referred to as INIT_B in the manual)
+> >
+> > Don't use '_' in property names:
+> >
+> > init-b-gpios
+>
+> OK, will fix.
+>
+> Moritz, please don't apply this version of patches 4 and 5 if you still
+> haven't done so.
+>
+> Now what about the existing prog_b-gpios property? Should we just leave
+> it as is for backward compatibility, or is there a migration path to fix
+> it as well?
 
-Applied to for-rc, thanks
+Just leave it.
 
-Jason
+Rob
