@@ -2,79 +2,105 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26560C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE52C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3CBC20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C4220707
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbgFRMaR (ORCPT
+        id S1729523AbgFRMbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:30:17 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:53560 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727093AbgFRMaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 08:30:14 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jltg5-00080e-08; Thu, 18 Jun 2020 14:29:57 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     wu000273@umn.edu
-Cc:     kjlu@umn.edu, Jacob Chen <jacob-chen@iotwrt.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hansverk@cisco.com>, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: rockchip/rga: Fix a reference count leak.
-Date:   Thu, 18 Jun 2020 14:29:56 +0200
-Message-ID: <2014126.fRahu6ktRn@diego>
-In-Reply-To: <20200613231350.15504-1-wu000273@umn.edu>
-References: <20200613231350.15504-1-wu000273@umn.edu>
+        Thu, 18 Jun 2020 08:31:19 -0400
+Received: from relay-b03.edpnet.be ([212.71.1.220]:39863 "EHLO
+        relay-b03.edpnet.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727093AbgFRMbO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 08:31:14 -0400
+X-ASG-Debug-ID: 1592483469-0a88187a02148760001-xx1T2L
+Received: from zotac.vandijck-laurijssen.be ([213.219.130.186]) by relay-b03.edpnet.be with ESMTP id ExykPAQwiLraKI9y; Thu, 18 Jun 2020 14:31:09 +0200 (CEST)
+X-Barracuda-Envelope-From: dev.kurt@vandijck-laurijssen.be
+X-Barracuda-Effective-Source-IP: UNKNOWN[213.219.130.186]
+X-Barracuda-Apparent-Source-IP: 213.219.130.186
+Received: from x1.vandijck-laurijssen.be (x1.vandijck-laurijssen.be [IPv6:fd01::1a1d:eaff:fe02:d339])
+        by zotac.vandijck-laurijssen.be (Postfix) with ESMTPSA id B9D1FF616B8;
+        Thu, 18 Jun 2020 14:31:02 +0200 (CEST)
+Date:   Thu, 18 Jun 2020 14:30:55 +0200
+From:   Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        wg@grandegger.com, kernel@martin.sperl.org,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] Add Microchip MCP25XXFD CAN driver
+Message-ID: <20200618123055.GA17496@x1.vandijck-laurijssen.be>
+X-ASG-Orig-Subj: Re: [PATCH 0/6] Add Microchip MCP25XXFD CAN driver
+Mail-Followup-To: Marc Kleine-Budde <mkl@pengutronix.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        wg@grandegger.com, kernel@martin.sperl.org,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200610074442.10808-1-manivannan.sadhasivam@linaro.org>
+ <fbbca009-3c53-6aa9-94ed-7e9e337c31a4@pengutronix.de>
+ <20200617165902.GB14228@x1.vandijck-laurijssen.be>
+ <2e80e2ed-d63d-5cc6-e1c6-e0c9e75c218e@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2e80e2ed-d63d-5cc6-e1c6-e0c9e75c218e@pengutronix.de>
+User-Agent: Mutt/1.5.22 (2013-10-16)
+X-Barracuda-Connect: UNKNOWN[213.219.130.186]
+X-Barracuda-Start-Time: 1592483469
+X-Barracuda-URL: https://212.71.1.220:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at edpnet.be
+X-Barracuda-Scan-Msg-Size: 1156
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: SPAM GLOBAL 1.0000 1.0000 4.3430
+X-Barracuda-Spam-Score: 4.34
+X-Barracuda-Spam-Status: No, SCORE=4.34 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=7.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.82637
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Sonntag, 14. Juni 2020, 01:13:49 CEST schrieb wu000273@umn.edu:
-> From: Qiushi Wu <wu000273@umn.edu>
+On do, 18 jun 2020 00:36:29 +0200, Marc Kleine-Budde wrote:
+> On 6/17/20 6:59 PM, Kurt Van Dijck wrote:
+> > I'm in the process of getting a Variscite imx8m mini SOM online, with
 > 
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> when it returns an error code. Thus call pm_runtime_put_noidle()
-> if pm_runtime_get_sync() fails.
+> Have your heard about the imx8m plus? It has CAN cores! We have a board in the
+> office to play with. :)
 > 
-> Fixes: f7e7b48e6d79 ("[media] rockchip/rga: v4l2 m2m support")
-> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-> ---
->  drivers/media/platform/rockchip/rga/rga-buf.c | 1 +
->  1 file changed, 1 insertion(+)
+> > MCP2517FD. The 4.19 kernel that comes with it, has a driver that is
 > 
-> diff --git a/drivers/media/platform/rockchip/rga/rga-buf.c b/drivers/media/platform/rockchip/rga/rga-buf.c
-> index 36b821ccc1db..bf9a75b75083 100644
-> --- a/drivers/media/platform/rockchip/rga/rga-buf.c
-> +++ b/drivers/media/platform/rockchip/rga/rga-buf.c
-> @@ -81,6 +81,7 @@ static int rga_buf_start_streaming(struct vb2_queue *q, unsigned int count)
->  
->  	ret = pm_runtime_get_sync(rga->dev);
->  	if (ret < 0) {
-> +		pm_runtime_put_noidle(rga->dev);
->  		rga_buf_return_buffers(q, VB2_BUF_STATE_QUEUED);
->  		return ret;
->  	}
+> You shall not start projects with 1,5 years old kernel.
+> And you probably shall not use vendor kernel for new projects.
+> :D
+
+your rpi kernel starts of v4.19.119 (or so), where the variscite starts
+of v4.19.35.
+The result was quite some list of merge conflicts, on top of a vendor
+kernel, so I took your advise and switched to the latest and greatest
+5.7.3.
+Luckily, we need no sound (yet) and no video. :-)
+
+> 
+> Not much, some bus off cleanups, however I've backported all changes to
+> v4.19-rpi/mcp25xxfd-20200429-41 (debug and log is still included).
+> 
+> When you port this to your mx8 take all from (including)
+> 
+>     097701d1ea4f can: dev: avoid long lines
+> to
+>     v4.19-rpi/mcp25xxfd-20200429-41
 > 
 
+I'll merge one of your latest ...
 
-
-
+Kurt
