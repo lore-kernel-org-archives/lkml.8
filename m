@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A6EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B934CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0402E20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D0F21532
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446909;
-	bh=s92cz/KclSxPalblzdGD4uhIFYB5I4LCbjOIdDePFDc=;
+	s=default; t=1592446919;
+	bh=XED/La/K5HyOjIfVSH+yJBOVDFcvzqktqsyFXZ2yA1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CHmcfnrEtrrxrMbz0fC7fEuMdP6Jm5bvOUQOElQQfS1Wos19uXvspk1LzyLXvHE1e
-	 niV/S3CZ5sIrX0F7Aul/k0YoIquH4sn+QveSvZ+95BdvKso5gefkPz7FtZk43krqJv
-	 E2m42YCgDS1JRXY6bXwaDnbzNMYfN1H26G3XCm1k=
+	b=lQkmMVdimAOPLvebZtDP5ZEGCDdtdNsC7kXu47AG4PSXkiSMUiFBYAAI/REPTcQXA
+	 4ZV6bhcKtI7NK5efdTDO0pv5j/uOjAsZVkNpaO9Y48GpI7wZVIIoKZnmA3DN77IDsi
+	 Zwd6yvhS2RtldKAoboICulEnFDouodQH6aKWAvD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbgFRCVr (ORCPT
+        id S1729961AbgFRBSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:21:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50042 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:18:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728710AbgFRBSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:18:36 -0400
+        id S1729228AbgFRBPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4B0221D82;
-        Thu, 18 Jun 2020 01:18:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89A172088E;
+        Thu, 18 Jun 2020 01:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443115;
-        bh=s92cz/KclSxPalblzdGD4uhIFYB5I4LCbjOIdDePFDc=;
+        s=default; t=1592442937;
+        bh=XED/La/K5HyOjIfVSH+yJBOVDFcvzqktqsyFXZ2yA1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nBcEg+WlICR3rwl1rFl/RkiOf1x8mRdjkFVGNasob/qmuW+dphrGIhbOVZVxP4p/9
-         ZdcRQeOmi9L4H3QXc8FflQH+VZTlwqq9oYQS/s7sFn3G88R9TFBbqo07gioCkKFR+u
-         9lbd+R8Y44mGOJaX7glsO84z/NMZy26ZPbmiPLgI=
+        b=d/OBfTJKJKB9Mkx2ydwXhjrlaU00QWt7/DUyRYXgbWfOCagA2kpAKZtV6jbWKe5JL
+         eAKSMU5tuYwz/VTYf/l4kH8pWe35ZaRMMRH2jBYqUsvwJA5BQskfWZnO3ejbfLYzY2
+         5zOSWZDAFHt37qXov6v5CSLdCv/OxI6T8PqM+USg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yishai Hadas <yishaih@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 091/266] RDMA/mlx5: Fix udata response upon SRQ creation
-Date:   Wed, 17 Jun 2020 21:13:36 -0400
-Message-Id: <20200618011631.604574-91-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Alexander Fomichev <fomichev.ru@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
+        linux-ntb@googlegroups.com
+Subject: [PATCH AUTOSEL 5.7 349/388] NTB: ntb_tool: reading the link file should not end in a NULL byte
+Date:   Wed, 17 Jun 2020 21:07:26 -0400
+Message-Id: <20200618010805.600873-349-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
-References: <20200618011631.604574-1-sashal@kernel.org>
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,48 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yishai Hadas <yishaih@mellanox.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit cf26deff9036cd3270af562dbec545239e5c7f07 ]
+[ Upstream commit 912e12813dd03c602e4922fc34709ec4d4380cf0 ]
 
-Fix udata response upon SRQ creation to use the UAPI structure (i.e.
-mlx5_ib_create_srq_resp). It did not zero the reserved field in userspace.
+When running ntb_test this warning is issued:
 
-Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
-Link: https://lore.kernel.org/r/20200406173540.1466477-1-leon@kernel.org
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+./ntb_test.sh: line 200: warning: command substitution: ignored null
+byte in input
+
+This is caused by the kernel returning one more byte than is necessary
+when reading the link file.
+
+Reduce the number of bytes read back to 2 as it was before the
+commit that regressed this.
+
+Fixes: 7f46c8b3a552 ("NTB: ntb_tool: Add full multi-port NTB API support")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Allen Hubbe <allenbh@gmail.com>
+Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/srq.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/ntb/test/ntb_tool.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/srq.c b/drivers/infiniband/hw/mlx5/srq.c
-index 4e7fde86c96b..c29c1f7da4a1 100644
---- a/drivers/infiniband/hw/mlx5/srq.c
-+++ b/drivers/infiniband/hw/mlx5/srq.c
-@@ -310,12 +310,18 @@ int mlx5_ib_create_srq(struct ib_srq *ib_srq,
- 	srq->msrq.event = mlx5_ib_srq_event;
- 	srq->ibsrq.ext.xrc.srq_num = srq->msrq.srqn;
+diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
+index 9eaeb221d980..b7bf3f863d79 100644
+--- a/drivers/ntb/test/ntb_tool.c
++++ b/drivers/ntb/test/ntb_tool.c
+@@ -504,7 +504,7 @@ static ssize_t tool_peer_link_read(struct file *filep, char __user *ubuf,
+ 	buf[1] = '\n';
+ 	buf[2] = '\0';
  
--	if (udata)
--		if (ib_copy_to_udata(udata, &srq->msrq.srqn, sizeof(__u32))) {
-+	if (udata) {
-+		struct mlx5_ib_create_srq_resp resp = {
-+			.srqn = srq->msrq.srqn,
-+		};
-+
-+		if (ib_copy_to_udata(udata, &resp, min(udata->outlen,
-+				     sizeof(resp)))) {
- 			mlx5_ib_dbg(dev, "copy to user failed\n");
- 			err = -EFAULT;
- 			goto err_core;
- 		}
-+	}
+-	return simple_read_from_buffer(ubuf, size, offp, buf, 3);
++	return simple_read_from_buffer(ubuf, size, offp, buf, 2);
+ }
  
- 	init_attr->attr.max_wr = srq->msrq.max - 1;
- 
+ static TOOL_FOPS_RDWR(tool_peer_link_fops,
+@@ -1690,4 +1690,3 @@ static void __exit tool_exit(void)
+ 	debugfs_remove_recursive(tool_dbgfs_topdir);
+ }
+ module_exit(tool_exit);
+-
 -- 
 2.25.1
 
