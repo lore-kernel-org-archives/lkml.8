@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B48C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5FE20853
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC8B720853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446581;
-	bh=KtA8mhHELH+n/ciQv/OODDDRgp1wxznsDrQScNAW2j8=;
+	s=default; t=1592446585;
+	bh=8JyAkH6qXlEWTgDmDyyoHedmSsQIwvlwfRUXETdFmJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DqG1aZbpu3os6Z0ItGL2wQ8EVXFh4jhoh0FWA/n4AArAGI9dvrLlFxvlCmQMLdXat
-	 Vv9MxS9bS3Sb0vtJRIO4bQyXI7HqksFjX6LZu5HMaDibeMU2RXTe58kG3p2UuCRdIU
-	 rr/5Xqtu5tZrOaddhjWDWNJW8Q6nzbB7LAX4LLic=
+	b=NVPJfA+HU05XsVkglUZIIKKPMO5zrBxHbyNkQs4Dy7RaZAGans7N4l9nyu20Q6G0w
+	 P6Sj6NY8BN21TjsWhs7Vwno9lkJ0nFC/4+Q+UvstQ9W2WGICLRVke1T+yxJsXm6ZI1
+	 Iwm2rRowSvwFwnCRZu1JslyKefI1qhNV769sTVbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387449AbgFRCQU (ORCPT
+        id S2387531AbgFRCQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:16:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52290 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:16:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730286AbgFRBUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:20 -0400
+        id S1728847AbgFRBUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EDC221D90;
-        Thu, 18 Jun 2020 01:20:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03FAD214DB;
+        Thu, 18 Jun 2020 01:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443220;
-        bh=KtA8mhHELH+n/ciQv/OODDDRgp1wxznsDrQScNAW2j8=;
+        s=default; t=1592443218;
+        bh=8JyAkH6qXlEWTgDmDyyoHedmSsQIwvlwfRUXETdFmJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sA/utWMrKWYOnCOwEZ5qajIxcUyV/GW7LXukdiwLWvJ+bxSU/T8oWV1XNySDUMRKr
-         EKgml2QTRxhmbHHvQibkKGeN43RbCj0Fzpj/K7vHVK/pNaylE62u3IqlP7HDcNhpX2
-         EEn7B5/1tDWg3YJAJQ+x+nARG7vK7Ftdq2jNEYNk=
+        b=gsQOL5DcnJjp6p2K1eAJO/20Yy1E1fCnp4RyHVJpBRFnoT33FZYU92j93xd/vst1y
+         z+9wgiwsyu0ru9H3EWJ08iqWUPzkelCMpau9CuO/92oq4+GiM4Dvt0z7w3fCDD3JyU
+         LoXJ/x1IwGZjcqc5fV6J7TS47gcZbU04ZEhZz0LQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Marc Zyngier <maz@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 175/266] PCI: amlogic: meson: Don't use FAST_LINK_MODE to set up link
-Date:   Wed, 17 Jun 2020 21:15:00 -0400
-Message-Id: <20200618011631.604574-175-sashal@kernel.org>
+        Jingoo Han <jingoohan1@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 174/266] PCI: dwc: Fix inner MSI IRQ domain registration
+Date:   Wed, 17 Jun 2020 21:14:59 -0400
+Message-Id: <20200618011631.604574-174-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -64,53 +62,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 87dccf09323fc363bd0d072fcc12b96622ab8c69 ]
+[ Upstream commit 0414b93e78d87ecc24ae1a7e61fe97deb29fa2f4 ]
 
-The vim3l board does not work with a standard PCIe switch (ASM1184e),
-spitting all kind of errors - hinting at HW misconfiguration (no link,
-port enumeration issues, etc).
+On a system that uses the internal DWC MSI widget, I get this
+warning from debugfs when CONFIG_GENERIC_IRQ_DEBUGFS is selected:
 
-According to the the Synopsys DWC PCIe Reference Manual, in the section
-dedicated to the PLCR register, bit 7 is described (FAST_LINK_MODE) as:
+  debugfs: File ':soc:pcie@fc000000' in directory 'domains' already present!
 
-"Sets all internal timers to fast mode for simulation purposes."
+This is due to the fact that the DWC MSI code tries to register two
+IRQ domains for the same firmware node, without telling the low
+level code how to distinguish them (by setting a bus token). This
+further confuses debugfs which tries to create corresponding
+files for each domain.
 
-it is sound to set this bit from a simulation perspective, but on actual
-silicon, which expects timers to have a nominal value, it is not.
+Fix it by tagging the inner domain as DOMAIN_BUS_NEXUS, which is
+the closest thing we have as to "generic MSI".
 
-Make sure the FAST_LINK_MODE bit is cleared when configuring the RC
-to solve this problem.
-
-Link: https://lore.kernel.org/r/20200429164230.309922-1-maz@kernel.org
-Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
+Link: https://lore.kernel.org/r/20200501113921.366597-1-maz@kernel.org
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-[lorenzo.pieralisi@arm.com: commit log]
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-meson.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index b927a92e3463..8c9f88704874 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -301,11 +301,11 @@ static void meson_pcie_init_dw(struct meson_pcie *mp)
- 	meson_cfg_writel(mp, val, PCIE_CFG0);
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 8615f1548882..fbcb211cceb4 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -263,6 +263,8 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
+ 		return -ENOMEM;
+ 	}
  
- 	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
--	val &= ~LINK_CAPABLE_MASK;
-+	val &= ~(LINK_CAPABLE_MASK | FAST_LINK_MODE);
- 	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
- 
- 	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
--	val |= LINK_CAPABLE_X1 | FAST_LINK_MODE;
-+	val |= LINK_CAPABLE_X1;
- 	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
- 
- 	val = meson_elb_readl(mp, PCIE_GEN2_CTRL_OFF);
++	irq_domain_update_bus_token(pp->irq_domain, DOMAIN_BUS_NEXUS);
++
+ 	pp->msi_domain = pci_msi_create_irq_domain(fwnode,
+ 						   &dw_pcie_msi_domain_info,
+ 						   pp->irq_domain);
 -- 
 2.25.1
 
