@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA62CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42A8621924
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1D72192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445362;
-	bh=yQ6zGEg68uBMvVRpNLAQbZHrrJu0GQfWTYez5A52PhU=;
+	s=default; t=1592445366;
+	bh=3jmixMD1aqvVxMgyqA6NUesXMHCJpUlIdFaZ9yIXDD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OTs0xFMXFzxOTkQ2SaQ7CjXfI0UQtJ2W2X6Lj4yikjpTOWDi9HHY0ZQg9rrt/ApFI
-	 ju4Q2rasRdpL5H0NLPO0eXDeWLmhm7a2YfurgQ5cm/zORvoaxOlKzs83zRSjvn6/E8
-	 ZzkURHwj+4OgE8aNeh/HayV7d+MpV47smNYrNuzo=
+	b=SVbcO+ofrIxp4R5UhI0ztef2QmwWu4JUIGkrWo8E5Ooek9DKj5yCBThiheG8BETFx
+	 zq7vmoEHV6/d0I8vs2Rll2ly2Y8hv6a7PD1TriGlL+46HIfjJ/lw3sFV0VYSY9oKzd
+	 v09SN/3dGPpfzRyOaG4RWnP/h0BBhwWWjq/0Pvo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733164AbgFRB4B (ORCPT
+        id S1731452AbgFRBZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:56:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60882 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:25:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731464AbgFRBZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:36 -0400
+        id S1730743AbgFRBW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:22:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 218802083B;
-        Thu, 18 Jun 2020 01:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8AAD20776;
+        Thu, 18 Jun 2020 01:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443535;
-        bh=yQ6zGEg68uBMvVRpNLAQbZHrrJu0GQfWTYez5A52PhU=;
+        s=default; t=1592443348;
+        bh=3jmixMD1aqvVxMgyqA6NUesXMHCJpUlIdFaZ9yIXDD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0xfHs2wuwzlK2XnFBK61XDuf4yMojmOsbyzylAYp26cNT7QE+wo3EOnWQCXeX2dqr
-         skGCvePbpF4GHsNQc3D1g4wBE1je0rrih1gYbK1jR/qudbvfn4mKlfo8Lq7bodZihe
-         5GPbFJfK/UKAc8X4vAtooI6GyzfdPq8e2Vouy5zk=
+        b=boZqIAPoA0yDcrnkeP4+kIMPccYJax72fdyraO2NmBqKZ66OSt80B31gToqnsZ7C6
+         MkxD0RtsktIuOPZdvlMU0EBg3adMNDFuK5f+R9rgO+h295WAiuzEi/4sz3UG14+qmq
+         d+FuuubJLxIUMgFEo2rMOk6Y8Ctw9I/HTXlaQ5ho=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sanjay R Mehta <sanju.mehta@amd.com>,
-        Arindam Nath <arindam.nath@amd.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 154/172] ntb_tool: pass correct struct device to dma_alloc_coherent
-Date:   Wed, 17 Jun 2020 21:22:00 -0400
-Message-Id: <20200618012218.607130-154-sashal@kernel.org>
+Cc:     Alex Elder <elder@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suman Anna <s-anna@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 008/172] remoteproc: Fix IDR initialisation in rproc_alloc()
+Date:   Wed, 17 Jun 2020 21:19:34 -0400
+Message-Id: <20200618012218.607130-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -60,59 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+From: Alex Elder <elder@linaro.org>
 
-[ Upstream commit 433efe720674efd9fdbcef78be75793393cf05db ]
+[ Upstream commit 6442df49400b466431979e7634849a464a5f1861 ]
 
-Currently, ntb->dev is passed to dma_alloc_coherent
-and dma_free_coherent calls. The returned dma_addr_t
-is the CPU physical address. This works fine as long
-as IOMMU is disabled. But when IOMMU is enabled, we
-need to make sure that IOVA is returned for dma_addr_t.
-So the correct way to achieve this is by changing the
-first parameter of dma_alloc_coherent() as ntb->pdev->dev
-instead.
+If ida_simple_get() returns an error when called in rproc_alloc(),
+put_device() is called to clean things up.  By this time the rproc
+device type has been assigned, with rproc_type_release() as the
+release function.
 
-Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-Signed-off-by: Arindam Nath <arindam.nath@amd.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+The first thing rproc_type_release() does is call:
+    idr_destroy(&rproc->notifyids);
+
+But at the time the ida_simple_get() call is made, the notifyids
+field in the remoteproc structure has not been initialized.
+
+I'm not actually sure this case causes an observable problem, but
+it's incorrect.  Fix this by initializing the notifyids field before
+calling ida_simple_get() in rproc_alloc().
+
+Fixes: b5ab5e24e960 ("remoteproc: maintain a generic child device for each rproc")
+Signed-off-by: Alex Elder <elder@linaro.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Suman Anna <s-anna@ti.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200415204858.2448-2-mathieu.poirier@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_tool.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/remoteproc/remoteproc_core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
-index d592c0ffbd19..025747c1568e 100644
---- a/drivers/ntb/test/ntb_tool.c
-+++ b/drivers/ntb/test/ntb_tool.c
-@@ -590,7 +590,7 @@ static int tool_setup_mw(struct tool_ctx *tc, int pidx, int widx,
- 	inmw->size = min_t(resource_size_t, req_size, size);
- 	inmw->size = round_up(inmw->size, addr_align);
- 	inmw->size = round_up(inmw->size, size_align);
--	inmw->mm_base = dma_alloc_coherent(&tc->ntb->dev, inmw->size,
-+	inmw->mm_base = dma_alloc_coherent(&tc->ntb->pdev->dev, inmw->size,
- 					   &inmw->dma_base, GFP_KERNEL);
- 	if (!inmw->mm_base)
- 		return -ENOMEM;
-@@ -612,7 +612,7 @@ static int tool_setup_mw(struct tool_ctx *tc, int pidx, int widx,
- 	return 0;
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index d5ff272fde34..e48069db1703 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1598,6 +1598,7 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+ 	rproc->dev.type = &rproc_type;
+ 	rproc->dev.class = &rproc_class;
+ 	rproc->dev.driver_data = rproc;
++	idr_init(&rproc->notifyids);
  
- err_free_dma:
--	dma_free_coherent(&tc->ntb->dev, inmw->size, inmw->mm_base,
-+	dma_free_coherent(&tc->ntb->pdev->dev, inmw->size, inmw->mm_base,
- 			  inmw->dma_base);
- 	inmw->mm_base = NULL;
- 	inmw->dma_base = 0;
-@@ -629,7 +629,7 @@ static void tool_free_mw(struct tool_ctx *tc, int pidx, int widx)
+ 	/* Assign a unique device index and name */
+ 	rproc->index = ida_simple_get(&rproc_dev_index, 0, 0, GFP_KERNEL);
+@@ -1622,8 +1623,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
  
- 	if (inmw->mm_base != NULL) {
- 		ntb_mw_clear_trans(tc->ntb, pidx, widx);
--		dma_free_coherent(&tc->ntb->dev, inmw->size,
-+		dma_free_coherent(&tc->ntb->pdev->dev, inmw->size,
- 				  inmw->mm_base, inmw->dma_base);
- 	}
+ 	mutex_init(&rproc->lock);
  
+-	idr_init(&rproc->notifyids);
+-
+ 	INIT_LIST_HEAD(&rproc->carveouts);
+ 	INIT_LIST_HEAD(&rproc->mappings);
+ 	INIT_LIST_HEAD(&rproc->traces);
 -- 
 2.25.1
 
