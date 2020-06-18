@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E668DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C397320899
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BCCA20776
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448799;
-	bh=oRtI3EK4vwV1BYLrXFSQDXPl5jMD+2koWknO8vkCueY=;
+	s=default; t=1592448806;
+	bh=YsbW/2Sjx82yuf77RSCjrp9J3UiouBg4iwv0NLfku1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vNpWjJ0NUYK5rb1eqwR+XUfQKhTfZbo19U/54EH++4VWOX9rwIeDnHc6rvOFMqCPg
-	 DKmxysBpewLgs8EP64IpveSvjy9W2kVhWMyjQXmotD9c8ldVcF45glQLW6Cm+aagIr
-	 TJZ0KdS8KDS20CRI6XGtO9Bbo1MumtZiGMNbvjn4=
+	b=Zyc9Neh9Bu2ihEErS9RNdOq6lWAVIEkPFn9hvc06I8R/NVsppbHncRaoeUH624fbZ
+	 eL+Mq0kjsj+pf/J/DrxBG/S6QqVa+m0ltkxbfodtekSHtVGxaT9ZhksbepusqmtYyB
+	 ctKnigV+XgKFzAKNvWKs2zzKur3tRji4QrOMv3Jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgFRCxR (ORCPT
+        id S1727040AbgFRBIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:53:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33754 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:08:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbgFRBIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:08:14 -0400
+        id S1726879AbgFRBIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:08:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 022BA21D7E;
-        Thu, 18 Jun 2020 01:08:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4435721D6C;
+        Thu, 18 Jun 2020 01:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442493;
-        bh=oRtI3EK4vwV1BYLrXFSQDXPl5jMD+2koWknO8vkCueY=;
+        s=default; t=1592442489;
+        bh=YsbW/2Sjx82yuf77RSCjrp9J3UiouBg4iwv0NLfku1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OXdRReb0B0GUDnHe+lOwP3g12ADCBF/jDSsnWQ6vYhh6x8RwbNb7inM4DstyVzCpJ
-         71OvCy+WTiAbHievzG+AHbBLWsErXM0GFgpjOQJMKCSj338so1S7EuKSZWsFUVyPV2
-         TUtpSu4g6qFLXdg5g70H0aWPlM+lrd8/RfVLusYo=
+        b=KAwigPD9fyCLs6HMfCqH/OKb3h/QIkpTNYmeqoDKLLKMFMr34B6O3z+JvwVHh8T4g
+         e+1XHphJHgSJwUtR9OgaGBl3HHJ9fyddglX0yBcaT4rl0Fs9FbbzNEIlUo8xIr2OV6
+         9XJXB+GcmzmqsZJ+Kn0qSsULUBq9phR4Z9CAO87o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adam Honse <calcprogrammer1@gmail.com>,
-        Jean Delvare <jdelvare@suse.de>,
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 006/388] i2c: piix4: Detect secondary SMBus controller on AMD AM4 chipsets
-Date:   Wed, 17 Jun 2020 21:01:43 -0400
-Message-Id: <20200618010805.600873-6-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 002/388] power: supply: bq24257_charger: Replace depends on REGMAP_I2C with select
+Date:   Wed, 17 Jun 2020 21:01:39 -0400
+Message-Id: <20200618010805.600873-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,49 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Honse <calcprogrammer1@gmail.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit f27237c174fd9653033330e4e532cd9d153ce824 ]
+[ Upstream commit 87c3d579c8ed0eaea6b1567d529a8daa85a2bc6c ]
 
-The AMD X370 and other AM4 chipsets (A/B/X 3/4/5 parts) and Threadripper
-equivalents have a secondary SMBus controller at I/O port address
-0x0B20.  This bus is used by several manufacturers to control
-motherboard RGB lighting via embedded controllers.  I have been using
-this bus in my OpenRGB project to control the Aura RGB on many
-motherboards and ASRock also uses this bus for their Polychrome RGB
-controller.
+regmap is a library function that gets selected by drivers that need
+it. No driver modules should depend on it. Depending on REGMAP_I2C makes
+this driver only build if another driver already selected REGMAP_I2C,
+as the symbol can't be selected through the menu kernel configuration.
 
-I am not aware of any CZ-compatible platforms which do not have the
-second SMBus channel.  All of AMD's AM4- and Threadripper- series
-chipsets that OpenRGB users have tested appear to have this secondary
-bus.  I also noticed this secondary bus is present on older AMD
-platforms including my FM1 home server.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202587
-Signed-off-by: Adam Honse <calcprogrammer1@gmail.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Tested-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: 2219a935963e ("power_supply: Add TI BQ24257 charger driver")
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-piix4.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/power/supply/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
-index 30ded6422e7b..69740a4ff1db 100644
---- a/drivers/i2c/busses/i2c-piix4.c
-+++ b/drivers/i2c/busses/i2c-piix4.c
-@@ -977,7 +977,8 @@ static int piix4_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	}
- 
- 	if (dev->vendor == PCI_VENDOR_ID_AMD &&
--	    dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) {
-+	    (dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS ||
-+	     dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)) {
- 		retval = piix4_setup_sb800(dev, id, 1);
- 	}
- 
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index f3424fdce341..d37ec0d03237 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -577,7 +577,7 @@ config CHARGER_BQ24257
+ 	tristate "TI BQ24250/24251/24257 battery charger driver"
+ 	depends on I2C
+ 	depends on GPIOLIB || COMPILE_TEST
+-	depends on REGMAP_I2C
++	select REGMAP_I2C
+ 	help
+ 	  Say Y to enable support for the TI BQ24250, BQ24251, and BQ24257 battery
+ 	  chargers.
 -- 
 2.25.1
 
