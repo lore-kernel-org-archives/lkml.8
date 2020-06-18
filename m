@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22690C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 203782158C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D5520FC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbgFRX4u (ORCPT
+        id S1728757AbgFRX4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 19:56:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35906 "EHLO mail.kernel.org"
+        Thu, 18 Jun 2020 19:56:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727019AbgFRX4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 19:56:41 -0400
+        id S1728115AbgFRX4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 19:56:42 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6874208C3;
-        Thu, 18 Jun 2020 23:56:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44991207FC;
+        Thu, 18 Jun 2020 23:56:41 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jm4Od-003lNB-NU; Thu, 18 Jun 2020 19:56:39 -0400
-Message-ID: <20200618235639.611366734@goodmis.org>
+        id 1jm4Oe-003lPF-AG; Thu, 18 Jun 2020 19:56:40 -0400
+Message-ID: <20200618235640.203943939@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Thu, 18 Jun 2020 19:55:59 -0400
+Date:   Thu, 18 Jun 2020 19:56:03 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [for-linus][PATCH 03/17] kprobes: Use non RCU traversal APIs on kprobe_tables if possible
+        stable@vger.kernel.org, Divya Indi <divya.indi@oracle.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [for-linus][PATCH 07/17] sample-trace-array: Fix sleeping function called from invalid context
 References: <20200618235556.451120786@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -45,137 +45,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-Current kprobes uses RCU traversal APIs on kprobe_tables
-even if it is safe because kprobe_mutex is locked.
+BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
+ in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0, name: swapper/5
+ 1 lock held by swapper/5/0:
+  #0: ffff80001002bd90 (samples/ftrace/sample-trace-array.c:38){+.-.}-{0:0}, at: call_timer_fn+0x8/0x3e0
+ CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.7.0+ #8
+ Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
+ Call trace:
+  dump_backtrace+0x0/0x1a0
+  show_stack+0x20/0x30
+  dump_stack+0xe4/0x150
+  ___might_sleep+0x160/0x200
+  __might_sleep+0x58/0x90
+  __mutex_lock+0x64/0x948
+  mutex_lock_nested+0x3c/0x58
+  __ftrace_set_clr_event+0x44/0x88
+  trace_array_set_clr_event+0x24/0x38
+  mytimer_handler+0x34/0x40 [sample_trace_array]
 
-Make those traversals to non-RCU APIs where the kprobe_mutex
-is locked.
+mutex_lock() will be called in interrupt context, using workqueue to fix it.
 
-Link: http://lkml.kernel.org/r/158927056452.27680.9710575332163005121.stgit@devnote2
+Link: https://lkml.kernel.org/r/20200610011244.2209486-1-wangkefeng.wang@huawei.com
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 89ed42495ef4 ("tracing: Sample module to demonstrate kernel access to Ftrace instances.")
+Reviewed-by: Divya Indi <divya.indi@oracle.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/kprobes.c | 29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ samples/ftrace/sample-trace-array.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 8b2fd4145ab3..ceb0e273bd69 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -46,6 +46,11 @@
+diff --git a/samples/ftrace/sample-trace-array.c b/samples/ftrace/sample-trace-array.c
+index d523450d73eb..9e437f930280 100644
+--- a/samples/ftrace/sample-trace-array.c
++++ b/samples/ftrace/sample-trace-array.c
+@@ -6,6 +6,7 @@
+ #include <linux/timer.h>
+ #include <linux/err.h>
+ #include <linux/jiffies.h>
++#include <linux/workqueue.h>
  
+ /*
+  * Any file that uses trace points, must include the header.
+@@ -20,6 +21,16 @@ struct trace_array *tr;
+ static void mytimer_handler(struct timer_list *unused);
+ static struct task_struct *simple_tsk;
  
- static int kprobes_initialized;
-+/* kprobe_table can be accessed by
-+ * - Normal hlist traversal and RCU add/del under kprobe_mutex is held.
-+ * Or
-+ * - RCU hlist traversal under disabling preempt (breakpoint handlers)
-+ */
- static struct hlist_head kprobe_table[KPROBE_TABLE_SIZE];
- static struct hlist_head kretprobe_inst_table[KPROBE_TABLE_SIZE];
- 
-@@ -850,7 +855,7 @@ static void optimize_all_kprobes(void)
- 	kprobes_allow_optimization = true;
- 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
- 		head = &kprobe_table[i];
--		hlist_for_each_entry_rcu(p, head, hlist)
-+		hlist_for_each_entry(p, head, hlist)
- 			if (!kprobe_disabled(p))
- 				optimize_kprobe(p);
- 	}
-@@ -877,7 +882,7 @@ static void unoptimize_all_kprobes(void)
- 	kprobes_allow_optimization = false;
- 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
- 		head = &kprobe_table[i];
--		hlist_for_each_entry_rcu(p, head, hlist) {
-+		hlist_for_each_entry(p, head, hlist) {
- 			if (!kprobe_disabled(p))
- 				unoptimize_kprobe(p, false);
- 		}
-@@ -1500,12 +1505,14 @@ static struct kprobe *__get_valid_kprobe(struct kprobe *p)
- {
- 	struct kprobe *ap, *list_p;
- 
-+	lockdep_assert_held(&kprobe_mutex);
++static void trace_work_fn(struct work_struct *work)
++{
++	/*
++	 * Disable tracing for event "sample_event".
++	 */
++	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
++			false);
++}
++static DECLARE_WORK(trace_work, trace_work_fn);
 +
- 	ap = get_kprobe(p->addr);
- 	if (unlikely(!ap))
- 		return NULL;
+ /*
+  * mytimer: Timer setup to disable tracing for event "sample_event". This
+  * timer is only for the purposes of the sample module to demonstrate access of
+@@ -29,11 +40,7 @@ static DEFINE_TIMER(mytimer, mytimer_handler);
  
- 	if (p != ap) {
--		list_for_each_entry_rcu(list_p, &ap->list, list)
-+		list_for_each_entry(list_p, &ap->list, list)
- 			if (list_p == p)
- 			/* kprobe p is a valid probe */
- 				goto valid;
-@@ -1670,7 +1677,9 @@ static int aggr_kprobe_disabled(struct kprobe *ap)
+ static void mytimer_handler(struct timer_list *unused)
  {
- 	struct kprobe *kp;
+-	/*
+-	 * Disable tracing for event "sample_event".
+-	 */
+-	trace_array_set_clr_event(tr, "sample-subsystem", "sample_event",
+-			false);
++	schedule_work(&trace_work);
+ }
  
--	list_for_each_entry_rcu(kp, &ap->list, list)
-+	lockdep_assert_held(&kprobe_mutex);
-+
-+	list_for_each_entry(kp, &ap->list, list)
- 		if (!kprobe_disabled(kp))
- 			/*
- 			 * There is an active probe on the list.
-@@ -1749,7 +1758,7 @@ static int __unregister_kprobe_top(struct kprobe *p)
- 	else {
- 		/* If disabling probe has special handlers, update aggrprobe */
- 		if (p->post_handler && !kprobe_gone(p)) {
--			list_for_each_entry_rcu(list_p, &ap->list, list) {
-+			list_for_each_entry(list_p, &ap->list, list) {
- 				if ((list_p != p) && (list_p->post_handler))
- 					goto noclean;
- 			}
-@@ -2063,13 +2072,15 @@ static void kill_kprobe(struct kprobe *p)
- {
- 	struct kprobe *kp;
+ static void simple_thread_func(int count)
+@@ -76,6 +83,7 @@ static int simple_thread(void *arg)
+ 		simple_thread_func(count++);
  
-+	lockdep_assert_held(&kprobe_mutex);
-+
- 	p->flags |= KPROBE_FLAG_GONE;
- 	if (kprobe_aggrprobe(p)) {
- 		/*
- 		 * If this is an aggr_kprobe, we have to list all the
- 		 * chained probes and mark them GONE.
- 		 */
--		list_for_each_entry_rcu(kp, &p->list, list)
-+		list_for_each_entry(kp, &p->list, list)
- 			kp->flags |= KPROBE_FLAG_GONE;
- 		p->post_handler = NULL;
- 		kill_optimized_kprobe(p);
-@@ -2313,7 +2324,7 @@ static int kprobes_module_callback(struct notifier_block *nb,
- 	mutex_lock(&kprobe_mutex);
- 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
- 		head = &kprobe_table[i];
--		hlist_for_each_entry_rcu(p, head, hlist)
-+		hlist_for_each_entry(p, head, hlist)
- 			if (within_module_init((unsigned long)p->addr, mod) ||
- 			    (checkcore &&
- 			     within_module_core((unsigned long)p->addr, mod))) {
-@@ -2551,7 +2562,7 @@ static int arm_all_kprobes(void)
- 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
- 		head = &kprobe_table[i];
- 		/* Arm all kprobes on a best-effort basis */
--		hlist_for_each_entry_rcu(p, head, hlist) {
-+		hlist_for_each_entry(p, head, hlist) {
- 			if (!kprobe_disabled(p)) {
- 				err = arm_kprobe(p);
- 				if (err)  {
-@@ -2594,7 +2605,7 @@ static int disarm_all_kprobes(void)
- 	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
- 		head = &kprobe_table[i];
- 		/* Disarm all kprobes on a best-effort basis */
--		hlist_for_each_entry_rcu(p, head, hlist) {
-+		hlist_for_each_entry(p, head, hlist) {
- 			if (!arch_trampoline_kprobe(p) && !kprobe_disabled(p)) {
- 				err = disarm_kprobe(p, false);
- 				if (err) {
+ 	del_timer(&mytimer);
++	cancel_work_sync(&trace_work);
+ 
+ 	/*
+ 	 * trace_array_put() decrements the reference counter associated with
 -- 
 2.26.2
 
