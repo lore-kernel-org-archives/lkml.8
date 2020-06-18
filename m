@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E60C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EB3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27F4F20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7995220885
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445484;
-	bh=iZZmz+Ap5bLY4GuNSraezb984yLj0cyMICkNa8CYumg=;
+	s=default; t=1592445490;
+	bh=Ztf0MFblqY398kSpaTyXtwRSKN22Zy4kdj7XYww3BJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GWGVsDe9eMi8SZ3+bNcCnQYWvy0j18tIPDgYlBBKLuKGfrXxlah/xWU3y+ufk9idq
-	 y7+TyU1+cJi+nzXnJ9cWx+pLzHIXnIAsR6MvWJx6H8nrwDLolxx8Yw5Pt4YG+7wo/1
-	 oulJdrqRd8Lao/yHrsW9gW/445YEwfo5Xb3fASkE=
+	b=0yAO6GDYJKUKD7QopypVyYVOQmjxog1ykjsKJc3HyT6J39/YHYyGOaCI5yvKaOBP0
+	 E6dbtyZ3WnbwngSoCJRSdY9KfsffNbk58/7RloWLZOgU5NM/jLHSCu4+tRPRIlTgvC
+	 slh4MPdbEkdwlEwhvnKujRjQKLtEetMSj+hu6hLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbgFRB6C (ORCPT
+        id S1731447AbgFRB6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:58:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59890 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729876AbgFRBZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:00 -0400
+        id S1731327AbgFRBY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:24:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D10A921D80;
-        Thu, 18 Jun 2020 01:24:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1198221E9;
+        Thu, 18 Jun 2020 01:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443500;
-        bh=iZZmz+Ap5bLY4GuNSraezb984yLj0cyMICkNa8CYumg=;
+        s=default; t=1592443499;
+        bh=Ztf0MFblqY398kSpaTyXtwRSKN22Zy4kdj7XYww3BJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cI7HSaNHUsvucnGgC1AzcnRcCXBVJEC/OxhzbKc/7c7nQ8bP3+wevweuMnBjyguaI
-         VzfDvKv2opvUXH6aVc8znl2QkbRoPYkj5tTj9cBPQj2epqcK9oDbOPTmCF4XceGmEU
-         2s8cprmhr7uekg1+wZjU5TXJr/9CpcqGMnZ4gwco=
+        b=c7qf1LhZ7LfJNZjexkox74btfOEZKIhFTK+icEmumws3Iv7TSQbHDG100a249sbFi
+         2dqXTHjB0kYFUT6AXhVrStujOj/S8QNoMtjPXRP0e3OnoPy9AzQoSpnIyJyBuvhxCT
+         oS6EXCRiMi5FXH6iD1e+uMymE5gtfOWP/Goefmu0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fedor Tokarev <ftokarev@gmail.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 126/172] net: sunrpc: Fix off-by-one issues in 'rpc_ntop6'
-Date:   Wed, 17 Jun 2020 21:21:32 -0400
-Message-Id: <20200618012218.607130-126-sashal@kernel.org>
+Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 125/172] clk: sprd: return correct type of value for _sprd_pll_recalc_rate
+Date:   Wed, 17 Jun 2020 21:21:31 -0400
+Message-Id: <20200618012218.607130-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -60,43 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fedor Tokarev <ftokarev@gmail.com>
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-[ Upstream commit 118917d696dc59fd3e1741012c2f9db2294bed6f ]
+[ Upstream commit c2f30986d418f26abefc2eec90ebf06716c970d2 ]
 
-Fix off-by-one issues in 'rpc_ntop6':
- - 'snprintf' returns the number of characters which would have been
-   written if enough space had been available, excluding the terminating
-   null byte. Thus, a return value of 'sizeof(scopebuf)' means that the
-   last character was dropped.
- - 'strcat' adds a terminating null byte to the string, thus if len ==
-   buflen, the null byte is written past the end of the buffer.
+The function _sprd_pll_recalc_rate() defines return value to unsigned
+long, but it would return a negative value when malloc fail, changing
+to return its parent_rate makes more sense, since if the callback
+.recalc_rate() is not set, the framework returns the parent_rate as
+well.
 
-Signed-off-by: Fedor Tokarev <ftokarev@gmail.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 3e37b005580b ("clk: sprd: add adjustable pll support")
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Link: https://lkml.kernel.org/r/20200519030036.1785-2-zhang.lyra@gmail.com
+Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/addr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clk/sprd/pll.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
-index 2e0a6f92e563..8391c2785550 100644
---- a/net/sunrpc/addr.c
-+++ b/net/sunrpc/addr.c
-@@ -81,11 +81,11 @@ static size_t rpc_ntop6(const struct sockaddr *sap,
+diff --git a/drivers/clk/sprd/pll.c b/drivers/clk/sprd/pll.c
+index 640270f51aa5..eb8862752c2b 100644
+--- a/drivers/clk/sprd/pll.c
++++ b/drivers/clk/sprd/pll.c
+@@ -105,7 +105,7 @@ static unsigned long _sprd_pll_recalc_rate(const struct sprd_pll *pll,
  
- 	rc = snprintf(scopebuf, sizeof(scopebuf), "%c%u",
- 			IPV6_SCOPE_DELIMITER, sin6->sin6_scope_id);
--	if (unlikely((size_t)rc > sizeof(scopebuf)))
-+	if (unlikely((size_t)rc >= sizeof(scopebuf)))
- 		return 0;
+ 	cfg = kcalloc(regs_num, sizeof(*cfg), GFP_KERNEL);
+ 	if (!cfg)
+-		return -ENOMEM;
++		return parent_rate;
  
- 	len += rc;
--	if (unlikely(len > buflen))
-+	if (unlikely(len >= buflen))
- 		return 0;
- 
- 	strcat(buf, scopebuf);
+ 	for (i = 0; i < regs_num; i++)
+ 		cfg[i] = sprd_pll_read(pll, i);
 -- 
 2.25.1
 
