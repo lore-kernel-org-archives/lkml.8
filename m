@@ -2,137 +2,101 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB058C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D77C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9832720888
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B753620899
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:46:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XjGUImD9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iQdiM599"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730939AbgFROq2 (ORCPT
+        id S1731247AbgFROqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:46:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57336 "EHLO
+        Thu, 18 Jun 2020 10:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730929AbgFROoC (ORCPT
+        with ESMTP id S1730924AbgFROqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:44:02 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 675F5C0613F0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:44:01 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ga6so2648429pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:44:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references:reply-to
-         :mime-version:content-transfer-encoding;
-        bh=AMBC//GM9TUmKqc/Ee7MUTX4MVxXaivvBIm8XTKWtjI=;
-        b=XjGUImD9rS9VeH3ATYR5UN46KsG/kGd5i8ObOVULAJ3bWbAHLUKz+Nt/bzRQeCC7k+
-         q4pmWPc7rGRsnlJnmLarBBAj7QbxKCn+OtJBti2v/itk1DKcuvDFfV26CpsOgPwwVj46
-         oKdSZT+E6O3bgsFXk2UysYjSDRy6zj4yUK78Rv1eqtIwgcAQ5nn/tpiH68Y8GD4/iHUw
-         3O1/2ihPs06whdoc10VZDpvDnnO0QVgM3L+4vMq/X6KTuGPCEjHx9ydMZTrOPjVK9Bkv
-         Qkf+MhMg3TkdzkCd8QX51qCa7+tmj/0j1O1H3Kj4Zv1sGjsxfa6mxtY9/zGOSIjiER3+
-         piRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:reply-to:mime-version:content-transfer-encoding;
-        bh=AMBC//GM9TUmKqc/Ee7MUTX4MVxXaivvBIm8XTKWtjI=;
-        b=LpLPL7oJSIrfVD20XCDO7CkhU1UVRLtz9AVsGcjmRH+1W11Jao/6fLPvNhltvnRtfN
-         oT5VdG39cVtcSc610bm33+TdR9w7R/dYsvA8ojYGWSR2PH9nSCh4tgS+sedWwsDjfSVB
-         Q/hTPgPdD51yzHN4YKT0GqRDEeNs8hG1ZItDnnqNuC/fzd5w0bBjwXsq7baI39Ne1C9E
-         Jyncr+gNCJCqUdo7+UieKMYaa1307i4QseDnj84zmYuNHBfsLLIMuRxydw7uwoMqkyQh
-         ZbVOw6rSaYzLfkL2quGeJ2BCgDDo6AgZobPRq03MO9w+CjMfpsEgD94Fke66cgsQiJb9
-         UVuA==
-X-Gm-Message-State: AOAM5336ne/99pi+eU7iKY0wsCKesBAZq/A2Dfm2RcqGB4+cBEWgrXDn
-        vFPWuNDolwMUML4igDbh3pZ8g8eVdAS1HA==
-X-Google-Smtp-Source: ABdhPJxPg9RpVdrGQ4Z6ww3Iq/Db4vGVv54cHwt8FNsBk1NOsUw3hrbUnoL/Xc/AmyjDRE+S7btjoQ==
-X-Received: by 2002:a17:90b:3004:: with SMTP id hg4mr5050010pjb.208.1592491440947;
-        Thu, 18 Jun 2020 07:44:00 -0700 (PDT)
-Received: from x1.localdomain ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id g9sm3127197pfm.151.2020.06.18.07.44.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 07:44:00 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 01/15] block: provide plug based way of signaling forced no-wait semantics
-Date:   Thu, 18 Jun 2020 08:43:41 -0600
-Message-Id: <20200618144355.17324-2-axboe@kernel.dk>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200618144355.17324-1-axboe@kernel.dk>
-References: <20200618144355.17324-1-axboe@kernel.dk>
-Reply-To: "[PATCHSET v7 0/15]"@vger.kernel.org, Add@vger.kernel.org,
-          support@vger.kernel.org, for@vger.kernel.org,
-          async@vger.kernel.org, buffered@vger.kernel.org,
-          reads@vger.kernel.org
+        Thu, 18 Jun 2020 10:46:34 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0076CC06174E;
+        Thu, 18 Jun 2020 07:46:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=8QjkAe3/WcEFMISjfM9pTovm01qLhHp9DQnrjNzziO4=; b=iQdiM599hgB2VTm8/MEfD5e9/h
+        IO+hz1X0s5Cn8wiQUVQtVfCpXN59W+JiOWbUz/qJ+Wi+5bUk+U1urz45Ia/FGyF1aSr3MZF7Rg/RO
+        9l/NhXWgIFhwKv7iM8TBk9QM9JZaMJlnOKs46CqmjjC7PvYBa7IB9dsmrqZegeIraDlbLZVnHa1Ry
+        MB8cB00346xJgkB5dzB+ZgbJy2kUELzEQMHasMsO9m6eD/c6LMDo7CAQj0xy7Id7nKDZ4tXmEE8r2
+        eXLQH6EWKGpzA918dD+CZQD7w06kzvF4KETxfdtIlU9jidmRg2U4PNNHtcGi4earl04GyeDkRZpG4
+        skbgKaNw==;
+Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlvoD-0006Ge-VD; Thu, 18 Jun 2020 14:46:30 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: properly support exec and wait with kernel pointers v2
+Date:   Thu, 18 Jun 2020 16:46:21 +0200
+Message-Id: <20200618144627.114057-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a way for the caller to specify that IO should be marked
-with REQ_NOWAIT to avoid blocking on allocation.
+Hi all,
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- block/blk-core.c       | 6 ++++++
- include/linux/blkdev.h | 1 +
- 2 files changed, 7 insertions(+)
+this series first cleans up the exec code and then adds proper
+kernel_execveat and kernel_wait callers instead of relying on the fact
+that the early init code and kernel threads implicitly run with
+the address limit set to KERNEL_DS.
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 03252af8c82c..62a4904db921 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -958,6 +958,7 @@ generic_make_request_checks(struct bio *bio)
- 	struct request_queue *q;
- 	int nr_sectors = bio_sectors(bio);
- 	blk_status_t status = BLK_STS_IOERR;
-+	struct blk_plug *plug;
- 	char b[BDEVNAME_SIZE];
- 
- 	might_sleep();
-@@ -971,6 +972,10 @@ generic_make_request_checks(struct bio *bio)
- 		goto end_io;
- 	}
- 
-+	plug = blk_mq_plug(q, bio);
-+	if (plug && plug->nowait)
-+		bio->bi_opf |= REQ_NOWAIT;
-+
- 	/*
- 	 * For a REQ_NOWAIT based request, return -EOPNOTSUPP
- 	 * if queue is not a request based queue.
-@@ -1800,6 +1805,7 @@ void blk_start_plug(struct blk_plug *plug)
- 	INIT_LIST_HEAD(&plug->cb_list);
- 	plug->rq_count = 0;
- 	plug->multiple_queues = false;
-+	plug->nowait = false;
- 
- 	/*
- 	 * Store ordering should not be needed here, since a potential
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 8fd900998b4e..6e067dca94cf 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1189,6 +1189,7 @@ struct blk_plug {
- 	struct list_head cb_list; /* md requires an unplug callback */
- 	unsigned short rq_count;
- 	bool multiple_queues;
-+	bool nowait;
- };
- #define BLK_MAX_REQUEST_COUNT 16
- #define BLK_PLUG_FLUSH_SIZE (128 * 1024)
--- 
-2.27.0
+Note that the cleanup removes the compat execve(at) handlers entirely, as
+we can handle the compat difference very nicely in a unified codebase.
+x32 needs two hacky #defines for that for now, although those can go
+away if the x32 syscall rework from Brian gets merged.
 
+Changes since v1:
+ - remove a pointless ifdef from get_user_arg_ptr
+ - remove the need for a compat syscall handler for x32
+
+
+Diffstat:
+ arch/arm64/include/asm/unistd32.h                  |    4 
+ arch/mips/kernel/syscalls/syscall_n32.tbl          |    4 
+ arch/mips/kernel/syscalls/syscall_o32.tbl          |    4 
+ arch/parisc/kernel/syscalls/syscall.tbl            |    4 
+ arch/powerpc/kernel/syscalls/syscall.tbl           |    4 
+ arch/s390/kernel/syscalls/syscall.tbl              |    4 
+ arch/sparc/kernel/syscalls.S                       |    4 
+ arch/x86/entry/syscall_x32.c                       |    7 
+ arch/x86/entry/syscalls/syscall_32.tbl             |    4 
+ arch/x86/entry/syscalls/syscall_64.tbl             |    4 
+ fs/exec.c                                          |  248 ++++++++-------------
+ include/linux/binfmts.h                            |   10 
+ include/linux/compat.h                             |    7 
+ include/linux/sched/task.h                         |    1 
+ include/uapi/asm-generic/unistd.h                  |    4 
+ init/main.c                                        |    5 
+ kernel/exit.c                                      |   16 +
+ kernel/umh.c                                       |   43 ---
+ tools/include/uapi/asm-generic/unistd.h            |    4 
+ tools/perf/arch/powerpc/entry/syscalls/syscall.tbl |    4 
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl    |    4 
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  |    4 
+ 22 files changed, 170 insertions(+), 223 deletions(-)
