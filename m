@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A09C621D93
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D91221EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442574;
-	bh=BCck0kQnMhAfG7wmIdj+cka0AdBZOnZe4nLqeQw3x8M=;
+	s=default; t=1592442577;
+	bh=VbvwX07h7tv/JNZrZ3PGvYl0YFbuhr9qHoWR3e3SoN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OmlhdB/dqBM40p+3x9C8nGcP1UVyIfkIAWtyCVjoFwHk1Upvvye7QY4XZVCjlbrYk
-	 4HB31hEtGFC/8jNPUq6pQzfFoIthJZmXrupS90XvsrqPXAzhAwVOvYWCqo/sSS4+JD
-	 /vyllBYbj+ZrzPsQD80JHkMZ50Aml+eX6Wem4raY=
+	b=JFOzJ8CmZnvTbqH0NnCzds/cXkaPKp9Jv5SkUL+tucxEH2F2muyDmciwgomBFYwmk
+	 /UMi+oAYrjsgtkBoRe1QZrGZNwp/9P7cuie/V4fsnifUkaeT2DfBJuScXOCIcBAMjs
+	 JbqLH62FUs4/b9o7QmdgCgVSKM1cjRHOnaWOksXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbgFRBJd (ORCPT
+        id S1728234AbgFRBJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35802 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:09:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728170AbgFRBJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:09:27 -0400
+        id S1728196AbgFRBJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31D5321BE5;
-        Thu, 18 Jun 2020 01:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33C9321D92;
+        Thu, 18 Jun 2020 01:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442567;
-        bh=BCck0kQnMhAfG7wmIdj+cka0AdBZOnZe4nLqeQw3x8M=;
+        s=default; t=1592442572;
+        bh=VbvwX07h7tv/JNZrZ3PGvYl0YFbuhr9qHoWR3e3SoN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YfFhefDlkiYbAMIMTLE2SROWppImYqa0AevDdoZFlJZvnVfh/GqBoMmLG4mmLtdJm
-         nEVRjA+NTJ/MW8V5YaCwv0JDWS18ATdIxpa8/dI856W5KqYQuswG54DlxXNtLOAKHm
-         VzXU/NqNygKWNVoZqKEXQu5B8iReZTzRB6ZB8Rk0=
+        b=2TnSmiB0gpUmHOt/bhDReDt9ZokH6KAzMGk8cbl+Bgf4iheIObCqeQG8uRvO/mJ45
+         fBRFFhmZAXotYk++yHQw25yjtVvp4yR0wP0lKFXBYui3KvtMscdh4Y2bC2ZO6cTOP7
+         dT5tqr81y+I1r3PPtV7ZddjJKoIPzTdCERz7mY28=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maulik Shah <mkshah@codeaurora.org>, devicetree@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 061/388] arm64: dts: qcom: sc7180: Correct the pdc interrupt ranges
-Date:   Wed, 17 Jun 2020 21:02:38 -0400
-Message-Id: <20200618010805.600873-61-sashal@kernel.org>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.7 065/388] powerpc/book3s64/radix/tlb: Determine hugepage flush correctly
+Date:   Wed, 17 Jun 2020 21:02:42 -0400
+Message-Id: <20200618010805.600873-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,37 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maulik Shah <mkshah@codeaurora.org>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 7d2f29e49477aa51339e719cf73f0945c39c8a9e ]
+[ Upstream commit 8f53f9c0f68ab2168f637494b9e24034899c1310 ]
 
-Few PDC interrupts do not map to respective parent GIC interrupt.
-Fix this by correcting the pdc interrupt map.
+With a 64K page size flush with start and end:
 
-Fixes: 22f185ee81d2 ("arm64: dts: qcom: sc7180: Add pdc interrupt controller")
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Link: https://lore.kernel.org/r/1589804402-27130-1-git-send-email-mkshah@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+  (start, end) = (721f680d0000, 721f680e0000)
+
+results in:
+
+  (hstart, hend) = (721f68200000, 721f68000000)
+
+ie. hstart is above hend, which indicates no huge page flush is
+needed.
+
+However the current logic incorrectly sets hflush = true in this case,
+because hstart != hend.
+
+That causes us to call __tlbie_va_range() passing hstart/hend, to do a
+huge page flush even though we don't need to. __tlbie_va_range() will
+skip the actual tlbie operation for start > end. But it will still end
+up calling fixup_tlbie_va_range() and doing the TLB fixups in there,
+which is harmless but unnecessary work.
+
+Reported-by: Bharata B Rao <bharata@linux.ibm.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+[mpe: Drop else case, hflush is already false, flesh out change log]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200513030616.152288-1-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/powerpc/mm/book3s64/radix_tlb.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 998f101ad623..eea92b314fc6 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1657,8 +1657,7 @@ dispcc: clock-controller@af00000 {
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
- 			reg = <0 0x0b220000 0 0x30000>;
--			qcom,pdc-ranges = <0 480 15>, <17 497 98>,
--					  <119 634 4>, <124 639 1>;
-+			qcom,pdc-ranges = <0 480 94>, <94 609 31>, <125 63 1>;
- 			#interrupt-cells = <2>;
- 			interrupt-parent = <&intc>;
- 			interrupt-controller;
+diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
+index 758ade2c2b6e..b5cc9b23cf02 100644
+--- a/arch/powerpc/mm/book3s64/radix_tlb.c
++++ b/arch/powerpc/mm/book3s64/radix_tlb.c
+@@ -884,9 +884,7 @@ static inline void __radix__flush_tlb_range(struct mm_struct *mm,
+ 		if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
+ 			hstart = (start + PMD_SIZE - 1) & PMD_MASK;
+ 			hend = end & PMD_MASK;
+-			if (hstart == hend)
+-				hflush = false;
+-			else
++			if (hstart < hend)
+ 				hflush = true;
+ 		}
+ 
 -- 
 2.25.1
 
