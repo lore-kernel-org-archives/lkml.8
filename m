@@ -2,86 +2,159 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C447DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADAF720739
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9149D20739
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:14:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="YTnUg2ze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730724AbgFRONv (ORCPT
+        id S1730749AbgFRON7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 18 Jun 2020 10:13:59 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:53767 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730714AbgFRONv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Jun 2020 10:13:51 -0400
-Received: from mga01.intel.com ([192.55.52.88]:41861 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730707AbgFRONu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:13:50 -0400
-IronPort-SDR: c4aarDERm/AHYz4XmbDck8mtVoDgoCk88l9yoXlq1vfB8fFDue9+NvhsvKxdrtqTYWXxviZfWW
- p6WMW/v7adLw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9655"; a="160677192"
-X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
-   d="scan'208";a="160677192"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 07:13:49 -0700
-IronPort-SDR: jk6Z/xghMixVveuzV47x56u8F2cumT/HPXJZLEnYZ6tSN6mZMWxSmnDjo/hzQoCQxld7bbEMsj
- m7YAfMudqZ0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
-   d="scan'208";a="262035116"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga007.fm.intel.com with ESMTP; 18 Jun 2020 07:13:48 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 7BDFA301674; Thu, 18 Jun 2020 07:13:49 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 07:13:49 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Gaurav Singh <gaurav1086@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] [perf] sort : Fix null pointer dereference in
- _hist_entry__sym_snprintf
-Message-ID: <20200618141349.GA793265@tassilo.jf.intel.com>
-References: <20200618003040.26360-1-gaurav1086@gmail.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592489631; x=1624025631;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Olbw4+eagxlIiCMHRbBmMPr4NjxHK3uFqmkVqHcK/q4=;
+  b=YTnUg2zepURhCxAVk1AoP8xZ1NjCbmlyECHcKlvrcBAsAsXXMpSK72Z4
+   tIkAKn9fPwpVcvpoLBlxKJPlNNP9X+ck/0KLizUksZbxSTFrsm0Q7SUbA
+   aEnqf8qbIJSYSyTRwIemhLXoNjl6Mk5LgRdzUzGaa7Swh+h5GBrVtUGs8
+   laTI5sv35DUTt+Lz2XvE4MAfBSKnSGmJ2aN3nBB7z/43NtgHGTjn1D3er
+   tSSYBO+n6LsmTMLrnpdO08EmvYQRwYhQgDw8PLsuy0FebCsezrQRzGkP3
+   AoQXMFlUwJ/0ez2aOoQ4nzov1wU9TIzY9NezcQd91K9beyp6w9KsArTH5
+   w==;
+IronPort-SDR: 2CsKK5r63mLQvZdKyfx+QCzw9HYCT3HhH8Co7yG6mbiG6QtFgIoTNegIS1xoCXlOOgqRDYvBW6
+ pS2fEos0owaLy6rUNv+Wah31AGLY7QvbLWLJGseUrgUrpCWlhDqm74SyT5d2yMw2aGNbovcZXE
+ 8stUTPcsrScLZJxhnR3Z7021PjJyjf7uUrj2PfHpk5blEIk2fSOcXdZSeE3Si7+RtF/3Rmtthj
+ JH6yM+pRgqElo72b0ibFsFCdkGeJFOKV2vGUxJoibuVKtQufHh2DTeX3m9Bk0TNEZA9iHSam81
+ ois=
+X-IronPort-AV: E=Sophos;i="5.73,526,1583218800"; 
+   d="scan'208";a="78953850"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Jun 2020 07:13:50 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 18 Jun 2020 07:13:44 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Thu, 18 Jun 2020 07:13:41 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v4 1/3] dt-bindings: mmc: Add Sparx5 SDHCI controller bindings
+Date:   Thu, 18 Jun 2020 16:13:24 +0200
+Message-ID: <20200618141326.25723-2-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200618141326.25723-1-lars.povlsen@microchip.com>
+References: <20200618141326.25723-1-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618003040.26360-1-gaurav1086@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index d42339df20f8..25c7c96893f6 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -294,6 +294,9 @@ static int _hist_entry__sym_snprintf(struct map_symbol *ms,
->  				     u64 ip, char level, char *bf, size_t size,
->  				     unsigned int width)
->  {
-> +	if (!ms) 
-> +		return 0;
-> +
->  	struct symbol *sym = ms->sym;
->  	struct map *map = ms->map;
->  	size_t ret = 0;
+The Sparx5 SDHCI controller is based on the Designware controller IP.
 
-This should have given warnings because Linux and perf coding style
-forbids fixed statement/declarations.
+Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+---
+ .../mmc/microchip,dw-sparx5-sdhci.yaml        | 65 +++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
 
-Also what's the backtrace where it is NULL? Perhaps better to fix it in
-the caller.
-
--Andi
+diff --git a/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml b/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
+new file mode 100644
+index 0000000000000..55883290543b9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mmc/microchip,dw-sparx5-sdhci.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip Sparx5 Mobile Storage Host Controller Binding
++
++allOf:
++  - $ref: "mmc-controller.yaml"
++
++maintainers:
++  - Lars Povlsen <lars.povlsen@microchip.com>
++
++# Everything else is described in the common file
++properties:
++  compatible:
++    const: microchip,dw-sparx5-sdhci
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++    description:
++      Handle to "core" clock for the sdhci controller.
++
++  clock-names:
++    items:
++      - const: core
++
++  microchip,clock-delay:
++    description: Delay clock to card to meet setup time requirements.
++      Each step increase by 1.25ns.
++    $ref: "/schemas/types.yaml#/definitions/uint32"
++    minimum: 1
++    maximum: 15
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/microchip,sparx5.h>
++    sdhci0: mmc@600800000 {
++        compatible = "microchip,dw-sparx5-sdhci";
++        reg = <0x00800000 0x1000>;
++        pinctrl-0 = <&emmc_pins>;
++        pinctrl-names = "default";
++        clocks = <&clks CLK_ID_AUX1>;
++        clock-names = "core";
++        assigned-clocks = <&clks CLK_ID_AUX1>;
++        assigned-clock-rates = <800000000>;
++        interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++        bus-width = <8>;
++        microchip,clock-delay = <10>;
++    };
+--
+2.27.0
