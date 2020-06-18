@@ -2,49 +2,51 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39082C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C757C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05B5D2220F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DBA7221F3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443695;
-	bh=XyRCdN9p5C6CuYb4vSPas0Kq+Ck26+4kNyBKxHF8lII=;
+	s=default; t=1592443698;
+	bh=gnZgp3PCi9ZYGPvqn4zHWQQFnbAdRy4IjHFqvLwdyZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t8ClzeLVuXVBX6ACI51fxTJy6aepfEwe4gS+LFxSd1D2aAV+yWZm02Yd/1LmnYGK7
-	 U7OuN6PZA7togv92guYo16Syvpcx4lahMTKFiadRk4V/wK8SL/g6E9ot3a//WVdmnT
-	 RP115TuhjWGtTSFCjWTefc/aqO2tNVml0Qtzu920=
+	b=vuarQjKoO2ZuqO5LOjAjnYzSTnEzF05TgHS3se4nsTQFUsIQHBiakBC7wLCMV6ddX
+	 94ZUnUqoMIvXNvgptq+y3b1xVDOYYWwplC6qaoj8CSlyhyeC7A9c63Oq2AUlckRmaT
+	 eFNj8C1GyUP1IRMz1534cAbHGOhh8/rEGzjctSd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732046AbgFRB2M (ORCPT
+        id S1732055AbgFRB2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:28:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59614 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:28:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731287AbgFRBYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:24:50 -0400
+        id S1731298AbgFRBYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:24:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 069D820776;
-        Thu, 18 Jun 2020 01:24:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E3F221927;
+        Thu, 18 Jun 2020 01:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443490;
-        bh=XyRCdN9p5C6CuYb4vSPas0Kq+Ck26+4kNyBKxHF8lII=;
+        s=default; t=1592443492;
+        bh=gnZgp3PCi9ZYGPvqn4zHWQQFnbAdRy4IjHFqvLwdyZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ok0XjG3IYzYZZUoSodprm4wQnD054k1IbMiwgUF6kYhMyTYzN46MZeiXhYZruUaUy
-         ih5VLy3V8laOGFcz53ty8btVO1TqyMepAsVXroEEUrkpS6Ag/aWRsPBepKlG3GMULu
-         S4vkGv0g9wnyA3ABfNlPQsfijfTUGSdJYOeaSd38=
+        b=ZvptfwnEsMF5CHIg7T0nGs8jzoOJ/KPq/qACGLDxq8zJicXzph6LZ2jFOE4I4TQM7
+         tcOeXHaIsHuysa8D9/GA9ARvgwF7iYCAl01sp7nIPrA0T9u/raPWqWCDhyK1ZXXO01
+         OXyxVUPWr0e8FfRKLOXYmXatINkHXGYMY7wNp+H0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 118/172] x86/apic: Make TSC deadline timer detection message visible
-Date:   Wed, 17 Jun 2020 21:21:24 -0400
-Message-Id: <20200618012218.607130-118-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 120/172] vfio/pci: fix memory leaks of eventfd ctx
+Date:   Wed, 17 Jun 2020 21:21:26 -0400
+Message-Id: <20200618012218.607130-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -57,45 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit de308d1815c9e8fe602a958c5c76142ff6501d75 ]
+[ Upstream commit 1518ac272e789cae8c555d69951b032a275b7602 ]
 
-The commit
+Finished a qemu-kvm (-device vfio-pci,host=0001:01:00.0) triggers a few
+memory leaks after a while because vfio_pci_set_ctx_trigger_single()
+calls eventfd_ctx_fdget() without the matching eventfd_ctx_put() later.
+Fix it by calling eventfd_ctx_put() for those memory in
+vfio_pci_release() before vfio_device_release().
 
-  c84cb3735fd5 ("x86/apic: Move TSC deadline timer debug printk")
+unreferenced object 0xebff008981cc2b00 (size 128):
+  comm "qemu-kvm", pid 4043, jiffies 4294994816 (age 9796.310s)
+  hex dump (first 32 bytes):
+    01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+    ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+  backtrace:
+    [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+    [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+    [<000000005fcec025>] do_eventfd+0x54/0x1ac
+    [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+    [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+    [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+    [<00000000d495ef94>] el0_sync+0x164/0x180
+unreferenced object 0x29ff008981cc4180 (size 128):
+  comm "qemu-kvm", pid 4043, jiffies 4294994818 (age 9796.290s)
+  hex dump (first 32 bytes):
+    01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+    ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+  backtrace:
+    [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+    [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+    [<000000005fcec025>] do_eventfd+0x54/0x1ac
+    [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+    [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+    [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+    [<00000000d495ef94>] el0_sync+0x164/0x180
 
-removed the message which said that the deadline timer was enabled.
-It added a pr_debug() message which is issued when deadline timer
-validation succeeds.
-
-Well, issued only when CONFIG_DYNAMIC_DEBUG is enabled - otherwise
-pr_debug() calls get optimized away if DEBUG is not defined in the
-compilation unit.
-
-Therefore, make the above message pr_info() so that it is visible in
-dmesg.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200525104218.27018-1-bp@alien8.de
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vfio/pci/vfio_pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 53dc8492f02f..e9456a2eef58 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -2024,7 +2024,7 @@ void __init init_apic_mappings(void)
- 	unsigned int new_apicid;
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 66783a37f450..36b2ea920bc9 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -407,6 +407,10 @@ static void vfio_pci_release(void *device_data)
+ 	if (!(--vdev->refcnt)) {
+ 		vfio_spapr_pci_eeh_release(vdev->pdev);
+ 		vfio_pci_disable(vdev);
++		if (vdev->err_trigger)
++			eventfd_ctx_put(vdev->err_trigger);
++		if (vdev->req_trigger)
++			eventfd_ctx_put(vdev->req_trigger);
+ 	}
  
- 	if (apic_validate_deadline_timer())
--		pr_debug("TSC deadline timer available\n");
-+		pr_info("TSC deadline timer available\n");
- 
- 	if (x2apic_mode) {
- 		boot_cpu_physical_apicid = read_apic_id();
+ 	mutex_unlock(&driver_lock);
 -- 
 2.25.1
 
