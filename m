@@ -2,140 +2,209 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D23C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6E7217A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:44:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592466269;
-	bh=LpxGETJrqE7ptBTScyTDcyHebnrA5FbmxlQMV/3rWPg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uB/qnwQ8T/ShjlzZdl7tK/B/CssVEJD9ZjArdFVhWcaCxrkEBsYAIGv7eQfIUsuWb
-	 OO9CbCf+rN9f2L/5ktW/1bIZqh8ScohJj0mEuYCCqJvIO8k1IYc/VG6SUz4KkXfBo3
-	 qrprrKpodZSkRkJibY5XDd80+kH0lMJkpgWhwYCw=
+	by mail.kernel.org (Postfix) with ESMTP id 87117217A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:44:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gKtk9wZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbgFRHo1 (ORCPT
+        id S1728203AbgFRHof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 03:44:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727930AbgFRHo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 03:44:27 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97A442166E;
-        Thu, 18 Jun 2020 07:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592466266;
-        bh=LpxGETJrqE7ptBTScyTDcyHebnrA5FbmxlQMV/3rWPg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hZoIdqxSbVDRXxRT8A4We5T4VQWpR3PAcfmToMUljypXIpacktpjV+CmnQQB5SQ31
-         zR8T61Em8Pusugz2FWs5OxzwVTrDHGA4mT3SiUiX02Ut+3iz4UTzxxeFkNQMbtIr26
-         UzYVdOCJx2i+M2nMRN6Wju/q4yzY4FS0kxVVlrHM=
-Date:   Thu, 18 Jun 2020 08:44:21 +0100
-From:   Will Deacon <will@kernel.org>
-To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-Cc:     Roman Gushchin <guro@fb.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "nsaenzjulienne@suse.de" <nsaenzjulienne@suse.de>,
-        "steve.capper@arm.com" <steve.capper@arm.com>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2] arm64: mm: reserve hugetlb CMA after numa_init
-Message-ID: <20200618074421.GA5109@willie-the-truck>
-References: <20200616221924.74780-1-song.bao.hua@hisilicon.com>
- <20200617101824.GB3368@willie-the-truck>
- <B926444035E5E2439431908E3842AFD2502AA9@DGGEMI525-MBS.china.huawei.com>
- <20200617182026.GA19784@carbon.dhcp.thefacebook.com>
- <B926444035E5E2439431908E3842AFD2503532@DGGEMI525-MBS.china.huawei.com>
- <20200618071934.GA4864@willie-the-truck>
- <B926444035E5E2439431908E3842AFD2507431@DGGEMI525-MBS.china.huawei.com>
+        Thu, 18 Jun 2020 03:44:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727930AbgFRHoe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 03:44:34 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4344EC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 00:44:34 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id b15so2623993ybg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 00:44:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I1V6PUODlcGEDi8aIH/E2hPEHAyYyK6vPY8h7Z/71Ro=;
+        b=gKtk9wZ/yS93Zt8oUcPIWUy6/SabjtFppGw/CFS0q/mSNzvWzCL+9yZUOwxjjka7Ir
+         hI7FmfntK0K0RgZWWC3xcq+IzWmkUnJiJ7jJWopv5BR9K1sMNICClnqx6codNnJM7Teg
+         tSPJ6aeFGeTLhraho8t3aWh75hdCvffjMHCp/bN4lTBLYF0O+QhiTDLfczDUn3Hx57yE
+         /Ip99COz1PmX4UUmUdb7hR+O1BoIpARhCCZ6z8tgNlcEYDWyB/oRgHwdOIOielQWan1e
+         wR39234G6y7QH2BgBNkZTslUEmLECYLmrMp6oGKY8U+SfUNVqE67T2QntFAW+ctyTubf
+         mxAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I1V6PUODlcGEDi8aIH/E2hPEHAyYyK6vPY8h7Z/71Ro=;
+        b=Sd1bvt2WF0kUTumHulwkmC7B4+aKEyT0tvn5P4V8f6Rg4Y6LB2E9EZhwNkhkYC1HxG
+         qz9sBM/vNzD5PBvGkWd6Kz7N2VGJvdBRrlfIoMCEH2hgpWi0PJVe5ppM/v0jzp2+aAzd
+         hxhwzFy41C7ZmomwnotOLwWyTDBSvO1tiL250SPA++P2P19sEfEwMCkEgENIvRPtbHUC
+         ISJNHMjmERmdT+X6dUWwRy0tMMPKe9mMeV77DQ9l5vLn3Jch66W5zojyrnHfTom5vZNQ
+         0EpkbVdqgj2/LpguUIXoqZIhbKkdQHNC/0PC99ZhUJh9GSecd+l6hTrSJuMDw81yG4w/
+         CDWw==
+X-Gm-Message-State: AOAM531l5OFWklnlh0PzalfMMSQpqKK/XN8YpT/003WlTYzgT0B+Ejn8
+        U2s1/iKk7YnAI1nTNa5T1RLTjb45hO7OM1cA5AJFwQ==
+X-Google-Smtp-Source: ABdhPJwDldk7wG6VclMUJbOGUeamqryW+XBYhBQREiA+8YAwYz9CJHWjHwk40PxP4WY5byYSGC4r97AXO94NLzjrJZs=
+X-Received: by 2002:a25:be81:: with SMTP id i1mr4411162ybk.243.1592466273392;
+ Thu, 18 Jun 2020 00:44:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <B926444035E5E2439431908E3842AFD2507431@DGGEMI525-MBS.china.huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
+ <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com>
+ <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org> <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
+ <6b67cd00-a302-55a1-1e56-d1f1e7a06cef@forissier.org>
+In-Reply-To: <6b67cd00-a302-55a1-1e56-d1f1e7a06cef@forissier.org>
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Thu, 18 Jun 2020 10:44:22 +0300
+Message-ID: <CAD8XO3YBmivv21Cb-AuUBkrFDyWZR5h6aq8gyec15B0exZ7=Bw@mail.gmail.com>
+Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+To:     Jerome Forissier <jerome@forissier.org>
+Cc:     Sumit Garg <sumit.garg@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@linaro.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 07:43:43AM +0000, Song Bao Hua (Barry Song) wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Will Deacon [mailto:will@kernel.org]
-> > Sent: Thursday, June 18, 2020 7:20 PM
-> > To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
-> > Cc: Roman Gushchin <guro@fb.com>; catalin.marinas@arm.com;
-> > nsaenzjulienne@suse.de; steve.capper@arm.com; rppt@linux.ibm.com;
-> > akpm@linux-foundation.org; linux-arm-kernel@lists.infradead.org;
-> > linux-kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>; Matthias
-> > Brugger <matthias.bgg@gmail.com>
-> > Subject: Re: [PATCH v2] arm64: mm: reserve hugetlb CMA after numa_init
-> > 
-> > On Wed, Jun 17, 2020 at 09:43:51PM +0000, Song Bao Hua (Barry Song)
-> > wrote:
-> > > > From: Roman Gushchin [mailto:guro@fb.com]
-> > > > On Wed, Jun 17, 2020 at 11:38:03AM +0000, Song Bao Hua (Barry Song)
-> > > > > > From: Will Deacon [mailto:will@kernel.org]
-> > > > > > On Wed, Jun 17, 2020 at 10:19:24AM +1200, Barry Song wrote:
-> > > > > > > hugetlb_cma_reserve() is called at the wrong place. numa_init has not
-> > > > > > > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > > > > > > index e631e6425165..41914b483d54 100644
-> > > > > > > --- a/arch/arm64/mm/init.c
-> > > > > > > +++ b/arch/arm64/mm/init.c
-> > > > > > > @@ -404,11 +404,6 @@ void __init arm64_memblock_init(void)
-> > > > > > >  	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
-> > > > > > >
-> > > > > > >  	dma_contiguous_reserve(arm64_dma32_phys_limit);
-> > > > > > > -
-> > > > > > > -#ifdef CONFIG_ARM64_4K_PAGES
-> > > > > > > -	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
-> > > > > > > -#endif
-> > > > > >
-> > > > > > Why is this dependent on CONFIG_ARM64_4K_PAGES? We
-> > unconditionally
-> > > > > > select ARCH_HAS_GIGANTIC_PAGE so this seems unnecessary.
-> > > > >
-> > > > > Roman, would you like to answer this question? Have you found any
-> > > > problem if system
-> > > > > doesn't set 4K_PAGES?
-> > > >
-> > > > No, I was just following the code in arch/arm64/mm/hugetlbpage.c where
-> > all
-> > > > related to PUD-sized pages is guarded by CONFIG_ARM64_4K_PAGES.
-> > > > Actually I did all my testing on x86-64, I don't even have any arm
-> > hardware.
-> > > >
-> > > > I'm totally fine with removing this #ifdef if it's not needed.
-> > >
-> > > At this moment, I would suggest we should keep this "ifdef". Otherwise,
-> > hugetlb_cma_reserve() won't be really useful.
-> > >
-> > > For example, while setting PAGE size to 64KB. I got this error in
-> > hugetlb_cma_reserve():
-> > > hugetlb_cma: cma area should be at least 4194304 MiB
-> > > This is absolutely unreasonable.
-> > 
-> > Maybe one for RaspberryPi 5, huh? ;)
-> > 
-> > But ok, I'll take your patch as-is and add a comment about NUMA.
-> 
-> Have you seen the v3 with comment? I've already sent.
+There was a comment about a new mailing list address in Documentation.
+Which one I should specify now?
 
-Thanks, just saw that (I'm going through morning email atm :)
-
-Will
+On Thu, 18 Jun 2020 at 09:57, Jerome Forissier <jerome@forissier.org> wrote:
+>
+> On 6/18/20 6:59 AM, Sumit Garg wrote:
+> > Hi Jerome,
+> >
+> > On Wed, 17 Jun 2020 at 20:46, Jerome Forissier <jerome@forissier.org> wrote:
+> >>
+> >>
+> >>
+> >> On 6/17/20 3:58 PM, Sumit Garg wrote:
+> >>> Hi Maxim,
+> >>>
+> >>> On Thu, 4 Jun 2020 at 23:28, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+> >>>>
+> >>>> With the evolving use-cases for TEE bus, now it's required to support
+> >>>> multi-stage enumeration process. But using a simple index doesn't
+> >>>> suffice this requirement and instead leads to duplicate sysfs entries.
+> >>>> So instead switch to use more informative device UUID for sysfs entry
+> >>>> like:
+> >>>> /sys/bus/tee/devices/optee-ta-<uuid>
+> >>>>
+> >>>> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> >>>> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+> >>>> ---
+> >>>>  Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
+> >>>>  MAINTAINERS                                       | 1 +
+> >>>>  drivers/tee/optee/device.c                        | 9 ++++++---
+> >>>>  3 files changed, 15 insertions(+), 3 deletions(-)
+> >>>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+> >>>>
+> >>>> diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> >>>> new file mode 100644
+> >>>> index 000000000000..0ae04ae5374a
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> >>>> @@ -0,0 +1,8 @@
+> >>>> +What:          /sys/bus/tee/devices/optee-ta-<uuid>/
+> >>>> +Date:           May 2020
+> >>>> +KernelVersion   5.7
+> >>>> +Contact:        tee-dev@lists.linaro.org
+> >>>> +Description:
+> >>>> +               OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
+> >>>> +               matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
+> >>>> +               are free to create needed API under optee-ta-<uuid> directory.
+> >>>> diff --git a/MAINTAINERS b/MAINTAINERS
+> >>>> index ecc0749810b0..6717afef2de3 100644
+> >>>> --- a/MAINTAINERS
+> >>>> +++ b/MAINTAINERS
+> >>>> @@ -12516,6 +12516,7 @@ OP-TEE DRIVER
+> >>>>  M:     Jens Wiklander <jens.wiklander@linaro.org>
+> >>>>  L:     tee-dev@lists.linaro.org
+> >>>>  S:     Maintained
+> >>>> +F:     Documentation/ABI/testing/sysfs-bus-optee-devices
+> >>>>  F:     drivers/tee/optee/
+> >>>>
+> >>>>  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
+> >>>> diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
+> >>>> index e3a148521ec1..23d264c8146e 100644
+> >>>> --- a/drivers/tee/optee/device.c
+> >>>> +++ b/drivers/tee/optee/device.c
+> >>>> @@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
+> >>>>         return 0;
+> >>>>  }
+> >>>>
+> >>>> -static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+> >>>> +static int optee_register_device(const uuid_t *device_uuid)
+> >>>>  {
+> >>>>         struct tee_client_device *optee_device = NULL;
+> >>>>         int rc;
+> >>>> @@ -75,7 +75,10 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+> >>>>                 return -ENOMEM;
+> >>>>
+> >>>>         optee_device->dev.bus = &tee_bus_type;
+> >>>> -       dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
+> >>>> +       if (dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid)) {
+> >>>
+> >>> You should be using format specifier as: "%pUb" instead of "%pUl" as
+> >>> UUID representation for TAs is in big endian format. See below:
+> >>
+> >> Where does device_uuid come from? If it comes directly from OP-TEE, then
+> >> it should be a pointer to the following struct:
+> >>
+> >> typedef struct
+> >> {
+> >>         uint32_t timeLow;
+> >>         uint16_t timeMid;
+> >>         uint16_t timeHiAndVersion;
+> >>         uint8_t clockSeqAndNode[8];
+> >> } TEE_UUID;
+> >>
+> >> (GlobalPlatform TEE Internal Core API spec v1.2.1 section 3.2.4)
+> >>
+> >> - The spec does not mandate any particular endianness and simply warns
+> >> about possible issues if secure and non-secure worlds differ in endianness.
+> >> - OP-TEE uses %pUl assuming that host order is little endian (that is
+> >> true for the Arm platforms that run OP-TEE currently). By the same logic
+> >> %pUl should be fine in the kernel.
+> >> - On the other hand, the UUID in a Trusted App header is always encoded
+> >> big endian by the Python script that signs and optionally encrypts the
+> >> TA. This should not have any visible impact on UUIDs exchanged between
+> >> the secure and non-secure world though.
+> >>
+> >> So I am wondering why you had to use %pUb. There must be some
+> >> inconsistency somewhere :-/
+> >
+> > Yes there is. Linux stores UUID in big endian format (16 byte octets)
+> > and OP-TEE stores UUID in little endian format (in form of struct you
+> > referenced above).
+> >
+> > And format conversion APIs [1] in OP-TEE OS are used while passing
+> > UUID among Linux and OP-TEE.
+> >
+> > So we need to use %pUb in case of Linux and %pUl in case of OP-TEE.
+> >
+> > [1] https://github.com/OP-TEE/optee_os/blob/master/core/tee/uuid.c
+>
+>
+> Got it now. The TA enumeration function in OP-TEE performs  the
+> conversion here:
+> https://github.com/OP-TEE/optee_os/blob/3.9.0/core/pta/device.c#L34
+>
+> Thanks for clarifying.
+>
+> --
+> Jerome
