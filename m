@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F66CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1AFD206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 057BE206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448024;
-	bh=Tdbq1AIrRfPytdRb5cFoCFNQsFQuC5C8Pjx/IhsP4n0=;
+	s=default; t=1592448028;
+	bh=nL86eyKcQHOkbTW1UwAV3bPu/ILP407AXd/OXEIVkEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dvqeec+Wc+SnP8ysyIv/hBiC2E6JLwBsVvIFskuY9Ludn4EVZWfCfA2OTCXG4E73f
-	 Sif2RB+VAwFLDyMxmde+KXyTTqQMbAO0WA7FmVeJAiBA2jfbtIQipCFb4JZ7LsDOGU
-	 zjT6MysqxvmmC8ODWrPtz8eGx+P+2Z3iqSqsLRV0=
+	b=DRnclyBsn2tLMSG5yToRa0NTl9WQUghnEEIpZAlqJrfLBrh8a75Wyk2sBpFZubwwU
+	 inTbkW7huwCQ7YRSw1qakFG4WPT7BBD/QI8JuVfvVOyWw6n8ficvleCCQsRL4TbedB
+	 Q/A1vmY4PlNu6V7mVsDQh6D+R42DamyA6gJJetvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387778AbgFRCkY (ORCPT
+        id S1727984AbgFRBMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41466 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:12:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728961AbgFRBMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:43 -0400
+        id S1728798AbgFRBLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA15020EDD;
-        Thu, 18 Jun 2020 01:12:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 187A82193E;
+        Thu, 18 Jun 2020 01:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442762;
-        bh=Tdbq1AIrRfPytdRb5cFoCFNQsFQuC5C8Pjx/IhsP4n0=;
+        s=default; t=1592442710;
+        bh=nL86eyKcQHOkbTW1UwAV3bPu/ILP407AXd/OXEIVkEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pp+Kmm1Hm1yN3PK9LTwI97SEQaTWYF/9hZxUcdW/16gy8Q5Q0vp0myEdkpiSm99yV
-         qYlnPZw4S/81ZyTk+Ur6Qv8dw2dg9Drblf16IgV4w2FLtdf7sY7qqIOORX6b58uZ1O
-         2MXZAL4Xm8969/VL0GRla/pS1MLfbBhQ8G0RR2Jg=
+        b=iIa99vN1gLGHVx///oy7jZTJ+qpdDoA/S3STg0N2JKHEJPLGFwL9+vm8lisdZBg1o
+         +N8hd9olE0+VsLipIi6VfUeUSg+xouGEAbqL+3FRXtrMZhiu4LfMwl2zW4ARKizupX
+         1pww3EjlyGIaYMokBwr3AEj34CryJ+AB0FJRpS+s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 212/388] PCI/PM: Assume ports without DLL Link Active train links in 100 ms
-Date:   Wed, 17 Jun 2020 21:05:09 -0400
-Message-Id: <20200618010805.600873-212-sashal@kernel.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Ajay Singh <ajay.kathat@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.7 170/388] staging: wilc1000: Increase the size of wid_list array
+Date:   Wed, 17 Jun 2020 21:04:27 -0400
+Message-Id: <20200618010805.600873-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,111 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Oscar Carter <oscar.carter@gmx.com>
 
-[ Upstream commit ec411e02b7a2e785a4ed9ed283207cd14f48699d ]
+[ Upstream commit a4338ed2e1cf724563956ec5f91deeaabfedbe23 ]
 
-Kai-Heng Feng reported that it takes a long time (> 1 s) to resume
-Thunderbolt-connected devices from both runtime suspend and system sleep
-(s2idle).
+Increase by one the size of wid_list array as index variable can reach a
+value of 5. If this happens, an out-of-bounds access is performed.
 
-This was because some Downstream Ports that support > 5 GT/s do not also
-support Data Link Layer Link Active reporting.  Per PCIe r5.0 sec 6.6.1:
+Also, use a #define instead of a hard-coded literal for the new array
+size.
 
-  With a Downstream Port that supports Link speeds greater than 5.0 GT/s,
-  software must wait a minimum of 100 ms after Link training completes
-  before sending a Configuration Request to the device immediately below
-  that Port. Software can determine when Link training completes by polling
-  the Data Link Layer Link Active bit or by setting up an associated
-  interrupt (see Section 6.7.3.3).
-
-Sec 7.5.3.6 requires such Ports to support DLL Link Active reporting, but
-at least the Intel JHL6240 Thunderbolt 3 Bridge [8086:15c0] and the Intel
-JHL7540 Thunderbolt 3 Bridge [8086:15ea] do not.
-
-Previously we tried to wait for Link training to complete, but since there
-was no DLL Link Active reporting, all we could do was wait the worst-case
-1000 ms, then another 100 ms.
-
-Instead of using the supported speeds to determine whether to wait for Link
-training, check whether the port supports DLL Link Active reporting.  The
-Ports in question do not, so we'll wait only the 100 ms required for Ports
-that support Link speeds <= 5 GT/s.
-
-This of course assumes these Ports always train the Link within 100 ms even
-if they are operating at > 5 GT/s, which is not required by the spec.
-
-[bhelgaas: commit log, comment]
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206837
-Link: https://lore.kernel.org/r/20200514133043.27429-1-mika.westerberg@linux.intel.com
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Addresses-Coverity-ID: 1451981 ("Out-of-bounds access")
+Fixes: f5a3cb90b802d ("staging: wilc1000: add passive scan support")
+Acked-by: Ajay Singh <ajay.kathat@microchip.com>
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+Link: https://lore.kernel.org/r/20200504150911.4470-1-oscar.carter@gmx.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 30 +++++++++++++++++++++---------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+ drivers/staging/wilc1000/hif.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 6d3234f75692..809f2584e338 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4660,7 +4660,8 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
-  * pcie_wait_for_link_delay - Wait until link is active or inactive
-  * @pdev: Bridge device
-  * @active: waiting for active or inactive?
-- * @delay: Delay to wait after link has become active (in ms)
-+ * @delay: Delay to wait after link has become active (in ms). Specify %0
-+ *	   for no delay.
-  *
-  * Use this to wait till link becomes active or inactive.
-  */
-@@ -4701,7 +4702,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
- 		msleep(10);
- 		timeout -= 10;
- 	}
--	if (active && ret)
-+	if (active && ret && delay)
- 		msleep(delay);
- 	else if (ret != active)
- 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
-@@ -4822,17 +4823,28 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
- 	if (!pcie_downstream_port(dev))
- 		return;
+diff --git a/drivers/staging/wilc1000/hif.c b/drivers/staging/wilc1000/hif.c
+index 6c7de2f8d3f2..d025a3093015 100644
+--- a/drivers/staging/wilc1000/hif.c
++++ b/drivers/staging/wilc1000/hif.c
+@@ -11,6 +11,8 @@
  
--	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
--		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
--		msleep(delay);
--	} else {
--		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
--			delay);
--		if (!pcie_wait_for_link_delay(dev, true, delay)) {
-+	/*
-+	 * Per PCIe r5.0, sec 6.6.1, for downstream ports that support
-+	 * speeds > 5 GT/s, we must wait for link training to complete
-+	 * before the mandatory delay.
-+	 *
-+	 * We can only tell when link training completes via DLL Link
-+	 * Active, which is required for downstream ports that support
-+	 * speeds > 5 GT/s (sec 7.5.3.6).  Unfortunately some common
-+	 * devices do not implement Link Active reporting even when it's
-+	 * required, so we'll check for that directly instead of checking
-+	 * the supported link speed.  We assume devices without Link Active
-+	 * reporting can train in 100 ms regardless of speed.
-+	 */
-+	if (dev->link_active_reporting) {
-+		pci_dbg(dev, "waiting for link to train\n");
-+		if (!pcie_wait_for_link_delay(dev, true, 0)) {
- 			/* Did not train, no need to wait any further */
- 			return;
- 		}
- 	}
-+	pci_dbg(child, "waiting %d ms to become accessible\n", delay);
-+	msleep(delay);
+ #define WILC_FALSE_FRMWR_CHANNEL		100
  
- 	if (!pci_device_is_present(child)) {
- 		pci_dbg(child, "waiting additional %d ms to become accessible\n", delay);
++#define WILC_SCAN_WID_LIST_SIZE		6
++
+ struct wilc_rcvd_mac_info {
+ 	u8 status;
+ };
+@@ -151,7 +153,7 @@ int wilc_scan(struct wilc_vif *vif, u8 scan_source, u8 scan_type,
+ 	      void *user_arg, struct cfg80211_scan_request *request)
+ {
+ 	int result = 0;
+-	struct wid wid_list[5];
++	struct wid wid_list[WILC_SCAN_WID_LIST_SIZE];
+ 	u32 index = 0;
+ 	u32 i, scan_timeout;
+ 	u8 *buffer;
 -- 
 2.25.1
 
