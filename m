@@ -2,100 +2,125 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ABBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E24DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1255206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592493348;
-	bh=OtEMXKIbYfiMajFJJ9GfH0wz9lo2cLUIGUNmkke2Bgw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0Wlb+U38975zYA76yd7yX30ugJ1U7LzR1eDSi780wa45RGZmNTc6KBCIHnbfDBKHm
-	 TyLTQhj77rGAW5ekVkq+iuYjV+E75YAL7M66eUy/2p/28cPvp0YPtan/6XKwtEOorl
-	 XBuJCK5DByDeBMADF1Xuxy9TyOxBy4pH0mhiphZc=
+	by mail.kernel.org (Postfix) with ESMTP id 48402206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:18:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V+OrRKM0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731104AbgFRPPr (ORCPT
+        id S1730858AbgFRPSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:15:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726879AbgFRPPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:15:43 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D8E6206F7;
-        Thu, 18 Jun 2020 15:15:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592493343;
-        bh=OtEMXKIbYfiMajFJJ9GfH0wz9lo2cLUIGUNmkke2Bgw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NffDdFvZnHR5CP/UhgpzK8VlGPWmPWdOYfrsJLPDmxJEzxn06fo1OupBF04msNFAT
-         Oo1S0Rey0WnSdOzbNnJb8YpbhXUdm81PtBwdPsgZ/WWD1loeJkJmMjyRqq9Iz7SGs7
-         2AXBQM7FDxP9tw/8d1TlRoDXsSX5Yt3AMjuY2Sq0=
-Date:   Thu, 18 Jun 2020 16:15:40 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     swboyd@chromium.org, Alok Chauhan <alokc@codeaurora.org>,
-        skakit@codeaurora.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] spi: spi-geni-qcom: No need for irqsave variant
- of spinlock calls
-Message-ID: <20200618151540.GL5789@sirena.org.uk>
-References: <20200618150626.237027-1-dianders@chromium.org>
- <20200618080459.v4.1.Ic50cccdf27d42420a63485082f8b5bf86ed1a2b6@changeid>
+        Thu, 18 Jun 2020 11:18:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54915 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728050AbgFRPSb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 11:18:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592493510;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rQYmuQ6MgsURSBqJgRafWuUZH2kgHeoFm2q5Vrdf7kM=;
+        b=V+OrRKM0fAX5wBvC9GSolRA0oS8Frr8GVadEOw5//oMSmyX/dx/BlVfJbLbORrfHzNTqvT
+        nh0N6Cm1TAmWjZYYgPu8oTsBQPESbKewPyEmxrMKYRWhkN9PuGrkxHNmJ4NJVaZ2/INSrb
+        DJR/WkDG9aF9zlatEUZJEkBSHbjucvY=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-43-6KnL345JNjiVuvF7UE5Nbg-1; Thu, 18 Jun 2020 11:18:28 -0400
+X-MC-Unique: 6KnL345JNjiVuvF7UE5Nbg-1
+Received: by mail-qt1-f200.google.com with SMTP id x21so4606366qtp.16
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:18:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=rQYmuQ6MgsURSBqJgRafWuUZH2kgHeoFm2q5Vrdf7kM=;
+        b=hKXrx14LKPUjfP8454dvPMofAKZBlQL6erqAbFC6XirtnBFLrlYZjyJoUxYlucsrkb
+         WtVDWnY4ctBkzILBcqI0jwGlXRuqwhfR2gIC0zFMzEiJL89CbxzgFyg6sQOmzkynUMUR
+         NnFlbxBwmvVRWVEclb3Fjtts4t4ZIof4/ZhDvTzSbVEav5I+6CMXmHL7rLEuIswF3KMY
+         /GZlna6J+zqf1B5zqXJhOipACkPH/LG+3jKn0CRo641Fvqxu2sU4IAL1HEBgPXY1CsIg
+         vimXxvxg4olhzm6VTWdb7i68ome0jc01/DcPqS2xQZYSJAoNBNNsmkLYroiq/1VHp4FC
+         XKIQ==
+X-Gm-Message-State: AOAM532jTUXXOaHb8HUoqGohOFRt8GIfTs/6DxXQhwQCafBdGLcA84Y9
+        PGavZGfuKaxCQl4HNeXnAR4sdwohHzdYKFrHm2Z7ha5kJ1M39NWx/qUY3DKaYLlbP/RUaAoJXKp
+        K5bLgyfjNyIfa38Hb3UQUX5yV
+X-Received: by 2002:ac8:23fb:: with SMTP id r56mr4946253qtr.197.1592493508007;
+        Thu, 18 Jun 2020 08:18:28 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyLgX4Z87MobK3H78vsTvXLd+/eu1CkxpTofEBBUyoXsAsemLOYYh7GV5x0KAA4BnDYUAMf5w==
+X-Received: by 2002:ac8:23fb:: with SMTP id r56mr4946222qtr.197.1592493507790;
+        Thu, 18 Jun 2020 08:18:27 -0700 (PDT)
+Received: from Whitewolf.lyude.net (static-173-76-190-23.bstnma.ftas.verizon.net. [173.76.190.23])
+        by smtp.gmail.com with ESMTPSA id c2sm3131786qkl.58.2020.06.18.08.18.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 08:18:26 -0700 (PDT)
+Message-ID: <0b1c1a07b6589e91701a1815400a56b66c5f480d.camel@redhat.com>
+Subject: Re: [PATCH] drm/noveau: fix reference count leak in
+ nv50_disp_atomic_commit
+From:   Lyude Paul <lyude@redhat.com>
+Reply-To: lyude@redhat.com
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, wu000273@umn.edu, Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Takashi Iwai <tiwai@suse.de>, James Jones <jajones@nvidia.com>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 18 Jun 2020 11:18:25 -0400
+In-Reply-To: <20200614012920.121567-1-pakki001@umn.edu>
+References: <20200614012920.121567-1-pakki001@umn.edu>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="z9sQuz+HmDh2hVO4"
-Content-Disposition: inline
-In-Reply-To: <20200618080459.v4.1.Ic50cccdf27d42420a63485082f8b5bf86ed1a2b6@changeid>
-X-Cookie: Androphobia:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 2020-06-13 at 20:29 -0500, Aditya Pakki wrote:
+> nv50_disp_atomic_commit() calls calls pm_runtime_get_sync and in turn
+> increments the reference count. In case of failure, decrement the
+> ref count before returning the error.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+>  drivers/gpu/drm/nouveau/dispnv50/disp.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c
+> b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+> index d472942102f5..b4039907f0d6 100644
+> --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
+> +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+> @@ -2157,8 +2157,10 @@ nv50_disp_atomic_commit(struct drm_device *dev,
+>  	int ret, i;
+>  
+>  	ret = pm_runtime_get_sync(dev->dev);
+> -	if (ret < 0 && ret != -EACCES)
+> +	if (ret < 0 && ret != -EACCES) {
+> +		pm_runtime_put_autosuspend(dev->dev);
 
---z9sQuz+HmDh2hVO4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+s/noveau/nouveau/ in the commit title, but other than that:
 
-On Thu, Jun 18, 2020 at 08:06:22AM -0700, Douglas Anderson wrote:
-> The driver locks its locks in two places.
->=20
-> In the first usage of the lock the function doing the locking already
-> has a sleeping call and thus we know we can't be called from interrupt
-> context.  That means we can use the "spin_lock_irq" variant of the
-> function.
+Reviewed-by: Lyude Paul <lyude@redhat.com>
 
-Please do not submit new versions of already applied patches, please
-submit incremental updates to the existing code.  Modifying existing
-commits creates problems for other users building on top of those
-commits so it's best practice to only change pubished git commits if
-absolutely essential.
+>  		return ret;
+> +	}
+>  
+>  	ret = drm_atomic_helper_setup_commit(state, nonblock);
+>  	if (ret)
 
---z9sQuz+HmDh2hVO4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7rhRwACgkQJNaLcl1U
-h9APzgf/VJoyNmJCoE/DF9WSzCtICt9DfHIZDE3SmkAD1NVeab83t23C8ryMJGnZ
-0bBf5ZxYJkc0COQSCu3WtBUTTzttHCvrg9XbdogG9EaDhJy+D4do1LwgSKegyR5o
-Wl/UW8hDGrZ8dTRwpe5JatiEhXvCqQwfpyK3j0I7v8J9BG8aix+stZogRryb/fVa
-Dek1aYxAE9IFtKe9KREaih9FiqNiSLNU+XrI7gV3FZRvpH7LafJ7Zok4JSIf71KU
-IedwPcxmqkLacJ+MkXDZ5uEaRqfXjAVOfq8tfTduJ/+BWNV43puEjVWCttFI69F1
-rfTESrTGfoDqUQEvRy9IvxFo7hZyFQ==
-=7ipB
------END PGP SIGNATURE-----
-
---z9sQuz+HmDh2hVO4--
