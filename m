@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D52C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C35C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD9220853
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8987620853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446410;
-	bh=qSWUva7WVPHlE3RKgcRXLdCFyKWBerSDst6rVbst7qk=;
+	s=default; t=1592446413;
+	bh=UE99R/8O57eB1sCguwm+EjnLTOZkZ01A8/nNZo5jfic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fgMZ4KFvTRI1JsN/55O1tsYXHrzPZjx+i0XVvxs5+c4B5EbcRbpgMefnyzC1szrMJ
-	 L46B2vNnS3FKeFGcRmOOGttdLgQSYemTanciyfYwF49Kp3ROZ0DuqAs+iSYMkO95gb
-	 /VPrJFJ9nXnO0valZYguVNxUuiqYARMuICQM2t3Y=
+	b=VkseGiaTeUqa+JXx0g4uKv2LqRWPH3qe5J6dTsEGLtn+OwFJv6Adf5OEUBYLvC+x+
+	 XA+caOkd1NAWxc1Eoz+90vn9gKVLDOlGcp9cn34Pa5ICKm/fvplcGAyD5dmqkQSqhW
+	 d5l0oSPzWNtN/i6Y7oLavUryZ5IyjTsMzp2xuSzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731193AbgFRCN3 (ORCPT
+        id S2387534AbgFRCNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:13:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53416 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730435AbgFRBVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:01 -0400
+        id S1730433AbgFRBVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:21:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86C2921927;
-        Thu, 18 Jun 2020 01:21:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61F7221974;
+        Thu, 18 Jun 2020 01:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443261;
-        bh=qSWUva7WVPHlE3RKgcRXLdCFyKWBerSDst6rVbst7qk=;
+        s=default; t=1592443260;
+        bh=UE99R/8O57eB1sCguwm+EjnLTOZkZ01A8/nNZo5jfic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pxbm2gFy0l68grFPD+eiH7+R5Y5u8jT5n7KMkArOCkUdNlalg89XoaHAZGfW7cgSV
-         T9vFB2xABLktnWsEXu2iDf3+Sjwy1OpzGa4NkIsYHeZdjAVaishuQnICSZ/WVhO6+F
-         e7+diAK4omEQc9QNhiuWk9X0DX3zyYMvLEt4q7J0=
+        b=HY7z4BeSWkV6UO0mlPwMcc52MtNobvARuV3wphSuyQzyaTaIoTk4hHSXgj1hqOqlS
+         NgiU6dow0FFeoH/tDAQE6hz8vaaxyFQ+8Qpa+yDTzcpMEdAPRbIuqL/b0gW/kskKK+
+         f5k9/ffWbeQZD7M2LPkpbgqMjwZyrRNhTnRFqe28=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 208/266] extcon: adc-jack: Fix an error handling path in 'adc_jack_probe()'
-Date:   Wed, 17 Jun 2020 21:15:33 -0400
-Message-Id: <20200618011631.604574-208-sashal@kernel.org>
+Cc:     huhai <huhai@tj.kylinos.cn>, Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 207/266] powerpc/4xx: Don't unmap NULL mbase
+Date:   Wed, 17 Jun 2020 21:15:32 -0400
+Message-Id: <20200618011631.604574-207-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,47 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: huhai <huhai@tj.kylinos.cn>
 
-[ Upstream commit bc84cff2c92ae5ccb2c37da73756e7174b1b430f ]
+[ Upstream commit bcec081ecc940fc38730b29c743bbee661164161 ]
 
-In some error handling paths, a call to 'iio_channel_get()' is not balanced
-by a corresponding call to 'iio_channel_release()'.
-
-This can be achieved easily by using the devm_ variant of
-'iio_channel_get()'.
-
-This has the extra benefit to simplify the remove function.
-
-Fixes: 19939860dcae ("extcon: adc_jack: adc-jack driver to support 3.5 pi or simliar devices")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: huhai <huhai@tj.kylinos.cn>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200521072648.1254699-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/extcon/extcon-adc-jack.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/powerpc/platforms/4xx/pci.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/extcon/extcon-adc-jack.c b/drivers/extcon/extcon-adc-jack.c
-index ad02dc6747a4..0317b614b680 100644
---- a/drivers/extcon/extcon-adc-jack.c
-+++ b/drivers/extcon/extcon-adc-jack.c
-@@ -124,7 +124,7 @@ static int adc_jack_probe(struct platform_device *pdev)
- 	for (i = 0; data->adc_conditions[i].id != EXTCON_NONE; i++);
- 	data->num_conditions = i;
+diff --git a/arch/powerpc/platforms/4xx/pci.c b/arch/powerpc/platforms/4xx/pci.c
+index e6e2adcc7b64..c13d64c3b019 100644
+--- a/arch/powerpc/platforms/4xx/pci.c
++++ b/arch/powerpc/platforms/4xx/pci.c
+@@ -1242,7 +1242,7 @@ static void __init ppc460sx_pciex_check_link(struct ppc4xx_pciex_port *port)
+ 	if (mbase == NULL) {
+ 		printk(KERN_ERR "%pOF: Can't map internal config space !",
+ 			port->node);
+-		goto done;
++		return;
+ 	}
  
--	data->chan = iio_channel_get(&pdev->dev, pdata->consumer_channel);
-+	data->chan = devm_iio_channel_get(&pdev->dev, pdata->consumer_channel);
- 	if (IS_ERR(data->chan))
- 		return PTR_ERR(data->chan);
- 
-@@ -164,7 +164,6 @@ static int adc_jack_remove(struct platform_device *pdev)
- 
- 	free_irq(data->irq, data);
- 	cancel_work_sync(&data->handler.work);
--	iio_channel_release(data->chan);
- 
- 	return 0;
+ 	while (attempt && (0 == (in_le32(mbase + PECFG_460SX_DLLSTA)
+@@ -1252,9 +1252,7 @@ static void __init ppc460sx_pciex_check_link(struct ppc4xx_pciex_port *port)
+ 	}
+ 	if (attempt)
+ 		port->link = 1;
+-done:
+ 	iounmap(mbase);
+-
  }
+ 
+ static struct ppc4xx_pciex_hwops ppc460sx_pcie_hwops __initdata = {
 -- 
 2.25.1
 
