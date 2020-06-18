@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F46C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A502C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22EEF22260
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B282224B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444023;
-	bh=P8963dETUzX8bx+UivL9M//VUnGMxCoatVm12LOeroY=;
+	s=default; t=1592444035;
+	bh=6HbBysbQbI04PyXHOLF2F38cZSJ9XcvJ66sJvhWba3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TMKRlG2RCmLJ3PJrHPno6KEK6JMiaXjwTr9LoNw47y3OQmsYzJolYAMWUCcErh0M7
-	 7BZqJ1GUj2uTXO5DLL12KnjlmTgGa0nY6HJzAEgX3rhkzcs3nIDjXeDYZiYQbhPSKo
-	 P05VeQtZK42as1VK7z0zQ/evmlF89eTmepWbfmVk=
+	b=BJpd0HbuTOSIiyg+8PZQH9SzieSuRB8oZ+NZHMo/Ow4PmVIPCOwZO5QhZL0JCT/yM
+	 c1neu2vFeBr0Ok+7qvRHV/kDZKJDo3rhN2mEEjk71O/pnYhsNJNBoGLC1fIq3pyWh+
+	 3LEgyaRZzF7yCcvZuq+O1I87mxoQOJlcC4iH8fEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732548AbgFRBdl (ORCPT
+        id S1731944AbgFRBdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:33:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41310 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:33:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732658AbgFRBa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:30:57 -0400
+        id S1732715AbgFRBbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:31:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B4C520773;
-        Thu, 18 Jun 2020 01:30:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE5A222254;
+        Thu, 18 Jun 2020 01:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443857;
-        bh=P8963dETUzX8bx+UivL9M//VUnGMxCoatVm12LOeroY=;
+        s=default; t=1592443867;
+        bh=6HbBysbQbI04PyXHOLF2F38cZSJ9XcvJ66sJvhWba3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q06kGMDXuWEIDj2jf0i7U7KDeeD33FH8FmysHchASxImM09QVca/5zlX2Od1UoqDD
-         xV+LYpmFXJZcj68xdf4V0GJznlUfTzfVT4/swnG8c44cTU1MXRn8w87KfdjNshwRah
-         NfJqr16HiHz82dxbW5NMso8LNK3KcOo6wVUuiOB8=
+        b=VZMvDUtJ166dZjJonBeb+ohaTJnFE4PqQBLThav8CIs4o12IWVuFTxuzEyLW2ALDC
+         M1igoftRiiLfnNAC6rMtBGT7zb7PWrI3OtqB2h6/kqo+Pip6eWYCHwQhDxnHuRiPRj
+         sCn5z9T1s34umcMpGubOqD3olafcCjbKVg/4uXLk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 40/60] vfio-pci: Mask cap zero
-Date:   Wed, 17 Jun 2020 21:29:44 -0400
-Message-Id: <20200618013004.610532-40-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 48/60] usb: gadget: lpc32xx_udc: don't dereference ep pointer before null check
+Date:   Wed, 17 Jun 2020 21:29:52 -0400
+Message-Id: <20200618013004.610532-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
 References: <20200618013004.610532-1-sashal@kernel.org>
@@ -59,48 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit bc138db1b96264b9c1779cf18d5a3b186aa90066 ]
+[ Upstream commit eafa80041645cd7604c4357b1a0cd4a3c81f2227 ]
 
-The PCI Code and ID Assignment Specification changed capability ID 0
-from reserved to a NULL capability in the v1.1 revision.  The NULL
-capability is defined to include only the 16-bit capability header,
-ie. only the ID and next pointer.  Unfortunately vfio-pci creates a
-map of config space, where ID 0 is used to reserve the standard type
-0 header.  Finding an actual capability with this ID therefore results
-in a bogus range marked in that map and conflicts with subsequent
-capabilities.  As this seems to be a dummy capability anyway and we
-already support dropping capabilities, let's hide this one rather than
-delving into the potentially subtle dependencies within our map.
+Currently pointer ep is being dereferenced before it is null checked
+leading to a null pointer dereference issue.  Fix this by only assigning
+pointer udc once ep is known to be not null.  Also remove a debug
+message that requires a valid udc which may not be possible at that
+point.
 
-Seen on an NVIDIA Tesla T4.
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 24a28e428351 ("USB: gadget driver for LPC32xx")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci_config.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/udc/lpc32xx_udc.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index bf65572f47a8..666b234acca0 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1405,7 +1405,12 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
- 		if (ret)
- 			return ret;
+diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
+index ea43cb74a6f2..c9590949e4f0 100644
+--- a/drivers/usb/gadget/udc/lpc32xx_udc.c
++++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
+@@ -1662,17 +1662,17 @@ static int lpc32xx_ep_enable(struct usb_ep *_ep,
+ 			     const struct usb_endpoint_descriptor *desc)
+ {
+ 	struct lpc32xx_ep *ep = container_of(_ep, struct lpc32xx_ep, ep);
+-	struct lpc32xx_udc *udc = ep->udc;
++	struct lpc32xx_udc *udc;
+ 	u16 maxpacket;
+ 	u32 tmp;
+ 	unsigned long flags;
  
--		if (cap <= PCI_CAP_ID_MAX) {
-+		/*
-+		 * ID 0 is a NULL capability, conflicting with our fake
-+		 * PCI_CAP_ID_BASIC.  As it has no content, consider it
-+		 * hidden for now.
-+		 */
-+		if (cap && cap <= PCI_CAP_ID_MAX) {
- 			len = pci_cap_length[cap];
- 			if (len == 0xFF) { /* Variable length */
- 				len = vfio_cap_len(vdev, cap, pos);
+ 	/* Verify EP data */
+ 	if ((!_ep) || (!ep) || (!desc) ||
+-	    (desc->bDescriptorType != USB_DT_ENDPOINT)) {
+-		dev_dbg(udc->dev, "bad ep or descriptor\n");
++	    (desc->bDescriptorType != USB_DT_ENDPOINT))
+ 		return -EINVAL;
+-	}
++
++	udc = ep->udc;
+ 	maxpacket = usb_endpoint_maxp(desc);
+ 	if ((maxpacket == 0) || (maxpacket > ep->maxpacket)) {
+ 		dev_dbg(udc->dev, "bad ep descriptor's packet size\n");
+@@ -1920,7 +1920,7 @@ static int lpc32xx_ep_dequeue(struct usb_ep *_ep, struct usb_request *_req)
+ static int lpc32xx_ep_set_halt(struct usb_ep *_ep, int value)
+ {
+ 	struct lpc32xx_ep *ep = container_of(_ep, struct lpc32xx_ep, ep);
+-	struct lpc32xx_udc *udc = ep->udc;
++	struct lpc32xx_udc *udc;
+ 	unsigned long flags;
+ 
+ 	if ((!ep) || (ep->hwep_num <= 1))
+@@ -1930,6 +1930,7 @@ static int lpc32xx_ep_set_halt(struct usb_ep *_ep, int value)
+ 	if (ep->is_in)
+ 		return -EAGAIN;
+ 
++	udc = ep->udc;
+ 	spin_lock_irqsave(&udc->lock, flags);
+ 
+ 	if (value == 1) {
 -- 
 2.25.1
 
