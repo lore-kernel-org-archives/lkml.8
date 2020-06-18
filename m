@@ -2,116 +2,138 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8216C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90D9122250
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445306;
-	bh=xoC0OkpbIYSVm+B7KGGEn3VSNd1DYO84tmDab8nUozk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UQ/gxh5iIHWzKsTe47+OX69dvGoI24A6bdUbkwFnRBWqLFmbxPGeMyNE7z5m1EaxA
-	 d8um12Sf450+Vc6+oi4w8pbbNGVG8BMYBq5ftL16GHUhnEdHOcgjeRGamMVq+g/tM2
-	 jA3O32VmXawe7kTGujgjKg9NsuytRQovG/keVzV8=
+	by mail.kernel.org (Postfix) with ESMTP id 9BBB12224A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bK1Z2s5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732850AbgFRBzE (ORCPT
+        id S1733230AbgFRBzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:55:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730057AbgFRBZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:51 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 17 Jun 2020 21:55:12 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44721 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729790AbgFRBZt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592443546;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y7xJe4wll8RNT7ZvRCMxIEw6+h6IlLNJEj6S4QZiEyg=;
+        b=bK1Z2s5NJT9WsMpxWp8hi9zPoQMzMglrY66d07/qVJ73brcBfV0GY+0G6jncKSJUBiPH69
+        4rNejfNLOIEkWnsXYjhY2aExNCb8YM+icqM6qeaG9wSIOloPZZhhRqxOKEo22YKbdhuWOt
+        ctUtK7GNSOS8l+AVZ/umwEVjBYK1vDc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-177-VWZLx5xVO2-22TnHDUQr5w-1; Wed, 17 Jun 2020 21:25:43 -0400
+X-MC-Unique: VWZLx5xVO2-22TnHDUQr5w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68C8C21D7A;
-        Thu, 18 Jun 2020 01:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443551;
-        bh=xoC0OkpbIYSVm+B7KGGEn3VSNd1DYO84tmDab8nUozk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qZUH0gRZNDBh0Rm8GmQ7c4d8gZXlRlWTy9K696wOhtF0ChbLr+vpUcFZv1qXo+WTd
-         ep2uHGrmOR9FXEXQ/rn7TVXaP51ZDPERFzqBzNSYV4b1QxWS07FPvO1hBNJJxFk5P9
-         a44qNzX6GCyESjJkonmc0FZ2idCA1ATllTRDTBmU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 166/172] ASoC: rt5645: Add platform-data for Asus T101HA
-Date:   Wed, 17 Jun 2020 21:22:12 -0400
-Message-Id: <20200618012218.607130-166-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C83A58018A6;
+        Thu, 18 Jun 2020 01:25:41 +0000 (UTC)
+Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 67DEA7CAC4;
+        Thu, 18 Jun 2020 01:25:41 +0000 (UTC)
+Date:   Wed, 17 Jun 2020 19:25:40 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, kvm@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.4 191/266] vfio/pci: fix memory leaks of
+ eventfd ctx
+Message-ID: <20200617192540.7da361fd@x1.home>
+In-Reply-To: <20200618011631.604574-191-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
+        <20200618011631.604574-191-sashal@kernel.org>
+Organization: Red Hat
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+On Wed, 17 Jun 2020 21:15:16 -0400
+Sasha Levin <sashal@kernel.org> wrote:
 
-[ Upstream commit 79d4f823a06796656289f97b922493da5690e46c ]
+> From: Qian Cai <cai@lca.pw>
+> 
+> [ Upstream commit 1518ac272e789cae8c555d69951b032a275b7602 ]
+> 
+> Finished a qemu-kvm (-device vfio-pci,host=0001:01:00.0) triggers a few
+> memory leaks after a while because vfio_pci_set_ctx_trigger_single()
+> calls eventfd_ctx_fdget() without the matching eventfd_ctx_put() later.
+> Fix it by calling eventfd_ctx_put() for those memory in
+> vfio_pci_release() before vfio_device_release().
+> 
+> unreferenced object 0xebff008981cc2b00 (size 128):
+>   comm "qemu-kvm", pid 4043, jiffies 4294994816 (age 9796.310s)
+>   hex dump (first 32 bytes):
+>     01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+>     ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+>   backtrace:
+>     [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+>     [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+>     [<000000005fcec025>] do_eventfd+0x54/0x1ac
+>     [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+>     [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+>     [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+>     [<00000000d495ef94>] el0_sync+0x164/0x180
+> unreferenced object 0x29ff008981cc4180 (size 128):
+>   comm "qemu-kvm", pid 4043, jiffies 4294994818 (age 9796.290s)
+>   hex dump (first 32 bytes):
+>     01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+>     ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+>   backtrace:
+>     [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+>     [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+>     [<000000005fcec025>] do_eventfd+0x54/0x1ac
+>     [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+>     [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+>     [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+>     [<00000000d495ef94>] el0_sync+0x164/0x180
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/vfio/pci/vfio_pci.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 02206162eaa9..d917dd2df3b3 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -472,6 +472,10 @@ static void vfio_pci_release(void *device_data)
+>  	if (!(--vdev->refcnt)) {
+>  		vfio_spapr_pci_eeh_release(vdev->pdev);
+>  		vfio_pci_disable(vdev);
+> +		if (vdev->err_trigger)
+> +			eventfd_ctx_put(vdev->err_trigger);
+> +		if (vdev->req_trigger)
+> +			eventfd_ctx_put(vdev->req_trigger);
+>  	}
+>  
+>  	mutex_unlock(&vdev->reflck->lock);
 
-The Asus T101HA uses the default jack-detect mode 3, but instead of
-using an analog microphone it is using a DMIC on dmic-data-pin 1,
-like the Asus T100HA. Note unlike the T100HA its jack-detect is not
-inverted.
+This has a fix pending, I'd suggest not picking it on its own:
 
-Add a DMI quirk with the correct settings for this model.
+https://lore.kernel.org/kvm/20200616085052.sahrunsesjyjeyf2@beryllium.lan/
+https://lore.kernel.org/kvm/159234276956.31057.6902954364435481688.stgit@gimli.home/
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200608204634.93407-2-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/codecs/rt5645.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
-index 7e3b47eeea04..9185bd7c5a6d 100644
---- a/sound/soc/codecs/rt5645.c
-+++ b/sound/soc/codecs/rt5645.c
-@@ -3656,6 +3656,12 @@ static const struct rt5645_platform_data asus_t100ha_platform_data = {
- 	.inv_jd1_1 = true,
- };
- 
-+static const struct rt5645_platform_data asus_t101ha_platform_data = {
-+	.dmic1_data_pin = RT5645_DMIC_DATA_IN2N,
-+	.dmic2_data_pin = RT5645_DMIC2_DISABLE,
-+	.jd_mode = 3,
-+};
-+
- static const struct rt5645_platform_data lenovo_ideapad_miix_310_pdata = {
- 	.jd_mode = 3,
- 	.in2_diff = true,
-@@ -3733,6 +3739,14 @@ static const struct dmi_system_id dmi_platform_data[] = {
- 		},
- 		.driver_data = (void *)&asus_t100ha_platform_data,
- 	},
-+	{
-+		.ident = "ASUS T101HA",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "T101HA"),
-+		},
-+		.driver_data = (void *)&asus_t101ha_platform_data,
-+	},
- 	{
- 		.ident = "MINIX Z83-4",
- 		.matches = {
--- 
-2.25.1
+Thanks,
+Alex
 
