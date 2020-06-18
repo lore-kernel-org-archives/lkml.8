@@ -7,55 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64951C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45633206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09BC120EDD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448001;
-	bh=s5tlMG5xYQEvcF25X+nwy3A9jSU1v8iqz8pZFmMrPIc=;
+	s=default; t=1592448007;
+	bh=YoXqK3VwWX/NJk5sqjpoTnUJTm/gb4JObnMUytC2uk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hx4DNFifQ9BaB8ujqMbRS08iJPG+nNL5g0GtkdjCs+jZa1N+jgq/7sGtFkBo1Tpr2
-	 aPV66F09gMjUGmba2y+oCarZbWqlKP+O++qn7gbKGMnq/bllSBQ9RI5Qzy8wppyOOa
-	 sJ3VOoS7F6PicJJEUNmOtxhd4zrf9E25uixFsdJU=
+	b=csvY8qYv9OMTiUwyOtKyQlYUKrPklhdJprUG12NTIYMBumCMyspxzgiAnZIxcAWdu
+	 hPdiGELKOrHokabuhalsp/29pU0xccn7NJ5trLlx6xSge25se5pVRO1B+NIVOcgxvq
+	 4HIanVHiBCRad4FUeORR4xRrpcT9Wy/TLRvitI1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387812AbgFRCjz (ORCPT
+        id S1732605AbgFRCkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:39:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41752 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:40:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729009AbgFRBMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:54 -0400
+        id S1728992AbgFRBMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33F0221974;
-        Thu, 18 Jun 2020 01:12:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD81A21D7E;
+        Thu, 18 Jun 2020 01:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442774;
-        bh=s5tlMG5xYQEvcF25X+nwy3A9jSU1v8iqz8pZFmMrPIc=;
+        s=default; t=1592442767;
+        bh=YoXqK3VwWX/NJk5sqjpoTnUJTm/gb4JObnMUytC2uk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bdjCOut2ZjdBTpoS5bkod65IoM+ujhhLeI5X6KlQiR5Wcu7s6AvIKRTBIjpwRazgJ
-         0p3NoTcUDigD6MZqTTgg1B3jPwi5XmJ2lM8IFry60EKg1YR8qVEx6w8pxdGRaES1yH
-         nQq6Ln8VP1Uv/RjQ4y02AnXV3EOZpU+w6XQwsMoQ=
+        b=nlJsqIaqZyhgZhOKTa0sm/ptKzCypbD0wVBHD/gZGZvS+xNagDzMeoWwlZqboFnBW
+         agxV8l4Oe7Gcna4AGdjvkz4ItJG2pEIq0bZ4ZdnuLFBAXWs1f4gk3vJTr797EeDrx8
+         P0KzA+t4wihnxEAD7CedsHM97RmaQSMdXImoxAYY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 221/388] PCI: aardvark: Train link immediately after enabling training
-Date:   Wed, 17 Jun 2020 21:05:18 -0400
-Message-Id: <20200618010805.600873-221-sashal@kernel.org>
+Cc:     Feng Tang <feng.tang@intel.com>,
+        Corey Minyard <cminyard@mvista.com>,
+        Sasha Levin <sashal@kernel.org>,
+        openipmi-developer@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.7 216/388] ipmi: use vzalloc instead of kmalloc for user creation
+Date:   Wed, 17 Jun 2020 21:05:13 -0400
+Message-Id: <20200618010805.600873-216-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,65 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+From: Feng Tang <feng.tang@intel.com>
 
-[ Upstream commit 6964494582f56a3882c2c53b0edbfe99eb32b2e1 ]
+[ Upstream commit 7c47a219b95d0e06b5ef5fcc7bad807895015eac ]
 
-Adding even 100ms (PCI_PM_D3COLD_WAIT) delay between enabling link
-training and starting link training causes detection issues with some
-buggy cards (such as Compex WLE900VX).
+We met mulitple times of failure of staring bmc-watchdog,
+due to the runtime memory allocation failure of order 4.
 
-Move the code which enables link training immediately before the one
-which starts link traning.
+     bmc-watchdog: page allocation failure: order:4, mode:0x40cc0(GFP_KERNEL|__GFP_COMP), nodemask=(null),cpuset=/,mems_allowed=0-1
+     CPU: 1 PID: 2571 Comm: bmc-watchdog Not tainted 5.5.0-00045-g7d6bb61d6188c #1
+     Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS SE5C620.86B.00.01.0015.110720180833 11/07/2018
+     Call Trace:
+      dump_stack+0x66/0x8b
+      warn_alloc+0xfe/0x160
+      __alloc_pages_slowpath+0xd3e/0xd80
+      __alloc_pages_nodemask+0x2f0/0x340
+      kmalloc_order+0x18/0x70
+      kmalloc_order_trace+0x1d/0xb0
+      ipmi_create_user+0x55/0x2c0 [ipmi_msghandler]
+      ipmi_open+0x72/0x110 [ipmi_devintf]
+      chrdev_open+0xcb/0x1e0
+      do_dentry_open+0x1ce/0x380
+      path_openat+0x305/0x14f0
+      do_filp_open+0x9b/0x110
+      do_sys_open+0x1bd/0x250
+      do_syscall_64+0x5b/0x1f0
+      entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-This fixes detection issues of Compex WLE900VX card on Turris MOX after
-cold boot.
+Using vzalloc/vfree for creating ipmi_user heals the
+problem
 
-Link: https://lore.kernel.org/r/20200430080625.26070-2-pali@kernel.org
-Fixes: f4c7d053d7f7 ("PCI: aardvark: Wait for endpoint to be ready...")
-Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Thanks to Stephen Rothwell for finding the vmalloc.h
+inclusion issue.
+
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/char/ipmi/ipmi_msghandler.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 3a6d07dc0a38..74b90940a9d4 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -300,11 +300,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 	reg |= LANE_COUNT_1;
- 	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+index c48d8f086382..9afd220cd824 100644
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@ -33,6 +33,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/uuid.h>
+ #include <linux/nospec.h>
++#include <linux/vmalloc.h>
  
--	/* Enable link training */
--	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
--	reg |= LINK_TRAINING_EN;
--	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
--
- 	/* Enable MSI */
- 	reg = advk_readl(pcie, PCIE_CORE_CTRL2_REG);
- 	reg |= PCIE_CORE_CTRL2_MSI_ENABLE;
-@@ -346,7 +341,15 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 	 */
- 	msleep(PCI_PM_D3COLD_WAIT);
+ #define IPMI_DRIVER_VERSION "39.2"
  
--	/* Start link training */
-+	/* Enable link training */
-+	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-+	reg |= LINK_TRAINING_EN;
-+	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-+
-+	/*
-+	 * Start link training immediately after enabling it.
-+	 * This solves problems for some buggy cards.
-+	 */
- 	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
- 	reg |= PCIE_CORE_LINK_TRAINING;
- 	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+@@ -1153,7 +1154,7 @@ static void free_user_work(struct work_struct *work)
+ 					      remove_work);
+ 
+ 	cleanup_srcu_struct(&user->release_barrier);
+-	kfree(user);
++	vfree(user);
+ }
+ 
+ int ipmi_create_user(unsigned int          if_num,
+@@ -1185,7 +1186,7 @@ int ipmi_create_user(unsigned int          if_num,
+ 	if (rv)
+ 		return rv;
+ 
+-	new_user = kmalloc(sizeof(*new_user), GFP_KERNEL);
++	new_user = vzalloc(sizeof(*new_user));
+ 	if (!new_user)
+ 		return -ENOMEM;
+ 
+@@ -1232,7 +1233,7 @@ int ipmi_create_user(unsigned int          if_num,
+ 
+ out_kfree:
+ 	srcu_read_unlock(&ipmi_interfaces_srcu, index);
+-	kfree(new_user);
++	vfree(new_user);
+ 	return rv;
+ }
+ EXPORT_SYMBOL(ipmi_create_user);
 -- 
 2.25.1
 
