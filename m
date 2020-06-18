@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D216C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27C9422269
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59FB20FC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443983;
-	bh=BNNH8wXOLzEpdqTfYme0mxdsQXeu5vh/B7BXxU0daxA=;
+	s=default; t=1592443985;
+	bh=XW4YMqzdu7MMmljPmA8IcaO8/WjKcSZmPg76Reym4oA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kdBCFu8l8R1jxJRdicaPPVnOW9LO7sqW6CIFhznl2jKnILUe2Vo+L7JIb4ZydgerY
-	 QogtRQHmLH/JMg+qwrzeD7naCzm+2eDcGvC/KP2eJpCn84wSr8/05vUqB6kRYIrL+m
-	 2lj5c1LtrfHyuolL2XILAREeZzI28lQOCQo6q/pA=
+	b=bf/T6/20ckz+/jswt7bb0Xj1B+qANlkAnveF4IUI5SuIuH9iXPbSDf7SMFtREKE+p
+	 6pjDAgLnVh0D24F+Xce3pzkhoig7LMGrJe8j728h8/C3cBxNJfjITnx6+Wqh+MPc8F
+	 wz1cawTJCGmEWv6+4FBcDzCo+q2VOeipzsTraOU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732920AbgFRBdB (ORCPT
+        id S1732925AbgFRBdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:33:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40078 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:33:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732474AbgFRBaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:30:11 -0400
+        id S1732488AbgFRBaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:30:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0E7E22251;
-        Thu, 18 Jun 2020 01:30:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4005C207E8;
+        Thu, 18 Jun 2020 01:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443810;
-        bh=BNNH8wXOLzEpdqTfYme0mxdsQXeu5vh/B7BXxU0daxA=;
+        s=default; t=1592443818;
+        bh=XW4YMqzdu7MMmljPmA8IcaO8/WjKcSZmPg76Reym4oA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V8P5VEUZczWEN4tKUrVm99RMBZGwzr2qQSCIcHZICz0FztF0y8RoN4AcI24HPBakN
-         HuIJPHFML6r3zJCzmLHr51WwleJxNVwG8PsXzzgWNc45IBcNr+0YJTvH3avELqOvqC
-         DKtpUPZX6pB3ijjG+wPf9ATIBegCQZoAn5leO+yA=
+        b=lQAL4RzWBx0mz4Rx+Ae8XG9968vR9xVJE7LkZ7dxvkYISM9z5NfqJXjsD+7g5PpB9
+         i9nUGEWLmSW3PPx/FtcotIRjEuX/b6gdcvyL6GtAlYE6kapGDHnpbHJ1Fqy6JnYq14
+         z9JL3CKRAm1P0bl2/4+KF6vy/5eX1QtN60uaPY30=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 04/60] clk: qcom: msm8916: Fix the address location of pll->config_reg
-Date:   Wed, 17 Jun 2020 21:29:08 -0400
-Message-Id: <20200618013004.610532-4-sashal@kernel.org>
+Cc:     Emmanuel Nicolet <emmanuel.nicolet@gmail.com>,
+        Geoff Levand <geoff@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 10/60] ps3disk: use the default segment boundary
+Date:   Wed, 17 Jun 2020 21:29:14 -0400
+Message-Id: <20200618013004.610532-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
 References: <20200618013004.610532-1-sashal@kernel.org>
@@ -64,92 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+From: Emmanuel Nicolet <emmanuel.nicolet@gmail.com>
 
-[ Upstream commit f47ab3c2f5338828a67e89d5f688d2cef9605245 ]
+[ Upstream commit 720bc316690bd27dea9d71510b50f0cd698ffc32 ]
 
-During the process of debugging a processor derived from the msm8916 which
-we found the new processor was not starting one of its PLLs.
+Since commit dcebd755926b ("block: use bio_for_each_bvec() to compute
+multi-page bvec count"), the kernel will bug_on on the PS3 because
+bio_split() is called with sectors == 0:
 
-After tracing the addresses and writes that downstream was doing and
-comparing to upstream it became obvious that we were writing to a different
-register location than downstream when trying to configure the PLL.
+  kernel BUG at block/bio.c:1853!
+  Oops: Exception in kernel mode, sig: 5 [#1]
+  BE PAGE_SIZE=4K MMU=Hash PREEMPT SMP NR_CPUS=8 NUMA PS3
+  Modules linked in: firewire_sbp2 rtc_ps3(+) soundcore ps3_gelic(+) \
+  ps3rom(+) firewire_core ps3vram(+) usb_common crc_itu_t
+  CPU: 0 PID: 97 Comm: blkid Not tainted 5.3.0-rc4 #1
+  NIP:  c00000000027d0d0 LR: c00000000027d0b0 CTR: 0000000000000000
+  REGS: c00000000135ae90 TRAP: 0700   Not tainted  (5.3.0-rc4)
+  MSR:  8000000000028032 <SF,EE,IR,DR,RI>  CR: 44008240  XER: 20000000
+  IRQMASK: 0
+  GPR00: c000000000289368 c00000000135b120 c00000000084a500 c000000004ff8300
+  GPR04: 0000000000000c00 c000000004c905e0 c000000004c905e0 000000000000ffff
+  GPR08: 0000000000000000 0000000000000001 0000000000000000 000000000000ffff
+  GPR12: 0000000000000000 c0000000008ef000 000000000000003e 0000000000080001
+  GPR16: 0000000000000100 000000000000ffff 0000000000000000 0000000000000004
+  GPR20: c00000000062fd7e 0000000000000001 000000000000ffff 0000000000000080
+  GPR24: c000000000781788 c00000000135b350 0000000000000080 c000000004c905e0
+  GPR28: c00000000135b348 c000000004ff8300 0000000000000000 c000000004c90000
+  NIP [c00000000027d0d0] .bio_split+0x28/0xac
+  LR [c00000000027d0b0] .bio_split+0x8/0xac
+  Call Trace:
+  [c00000000135b120] [c00000000027d130] .bio_split+0x88/0xac (unreliable)
+  [c00000000135b1b0] [c000000000289368] .__blk_queue_split+0x11c/0x53c
+  [c00000000135b2d0] [c00000000028f614] .blk_mq_make_request+0x80/0x7d4
+  [c00000000135b3d0] [c000000000283a8c] .generic_make_request+0x118/0x294
+  [c00000000135b4b0] [c000000000283d34] .submit_bio+0x12c/0x174
+  [c00000000135b580] [c000000000205a44] .mpage_bio_submit+0x3c/0x4c
+  [c00000000135b600] [c000000000206184] .mpage_readpages+0xa4/0x184
+  [c00000000135b750] [c0000000001ff8fc] .blkdev_readpages+0x24/0x38
+  [c00000000135b7c0] [c0000000001589f0] .read_pages+0x6c/0x1a8
+  [c00000000135b8b0] [c000000000158c74] .__do_page_cache_readahead+0x118/0x184
+  [c00000000135b9b0] [c0000000001591a8] .force_page_cache_readahead+0xe4/0xe8
+  [c00000000135ba50] [c00000000014fc24] .generic_file_read_iter+0x1d8/0x830
+  [c00000000135bb50] [c0000000001ffadc] .blkdev_read_iter+0x40/0x5c
+  [c00000000135bbc0] [c0000000001b9e00] .new_sync_read+0x144/0x1a0
+  [c00000000135bcd0] [c0000000001bc454] .vfs_read+0xa0/0x124
+  [c00000000135bd70] [c0000000001bc7a4] .ksys_read+0x70/0xd8
+  [c00000000135be20] [c00000000000a524] system_call+0x5c/0x70
+  Instruction dump:
+  7fe3fb78 482e30dc 7c0802a6 482e3085 7c9e2378 f821ff71 7ca42b78 7d3e00d0
+  7c7d1b78 79290fe0 7cc53378 69290001 <0b090000> 81230028 7bca0020 7929ba62
+  [ end trace 313fec760f30aa1f ]---
 
-This error is also present in upstream msm8916.
+The problem originates from setting the segment boundary of the
+request queue to -1UL. This makes get_max_segment_size() return zero
+when offset is zero, whatever the max segment size. The test with
+BLK_SEG_BOUNDARY_MASK fails and 'mask - (mask & offset) + 1' overflows
+to zero in the return statement.
 
-As an example clk-pll.c::clk_pll_recalc_rate wants to write to
-pll->config_reg updating the bit-field POST_DIV_RATIO. That bit-field is
-defined in PLL_USER_CTL not in PLL_CONFIG_CTL. Taking the BIMC PLL as an
-example
+Not setting the segment boundary and using the default
+value (BLK_SEG_BOUNDARY_MASK) fixes the problem.
 
-lm80-p0436-13_c_qc_snapdragon_410_processor_hrd.pdf
-
-0x01823010 GCC_BIMC_PLL_USER_CTL
-0x01823014 GCC_BIMC_PLL_CONFIG_CTL
-
-This pattern is repeated for gpll0, gpll1, gpll2 and bimc_pll.
-
-This error is likely not apparent since the bootloader will already have
-initialized these PLLs.
-
-This patch corrects the location of config_reg from PLL_CONFIG_CTL to
-PLL_USER_CTL for all relevant PLLs on msm8916.
-
-Fixes commit 3966fab8b6ab ("clk: qcom: Add MSM8916 Global Clock Controller support")
-
-Cc: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Link: https://lkml.kernel.org/r/20200329124116.4185447-1-bryan.odonoghue@linaro.org
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Emmanuel Nicolet <emmanuel.nicolet@gmail.com>
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/060a416c43138f45105c0540eff1a45539f7e2fc.1589049250.git.geoff@infradead.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-msm8916.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/block/ps3disk.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/gcc-msm8916.c b/drivers/clk/qcom/gcc-msm8916.c
-index 95a4dd290f35..d7dd0417ef5e 100644
---- a/drivers/clk/qcom/gcc-msm8916.c
-+++ b/drivers/clk/qcom/gcc-msm8916.c
-@@ -270,7 +270,7 @@ static struct clk_pll gpll0 = {
- 	.l_reg = 0x21004,
- 	.m_reg = 0x21008,
- 	.n_reg = 0x2100c,
--	.config_reg = 0x21014,
-+	.config_reg = 0x21010,
- 	.mode_reg = 0x21000,
- 	.status_reg = 0x2101c,
- 	.status_bit = 17,
-@@ -297,7 +297,7 @@ static struct clk_pll gpll1 = {
- 	.l_reg = 0x20004,
- 	.m_reg = 0x20008,
- 	.n_reg = 0x2000c,
--	.config_reg = 0x20014,
-+	.config_reg = 0x20010,
- 	.mode_reg = 0x20000,
- 	.status_reg = 0x2001c,
- 	.status_bit = 17,
-@@ -324,7 +324,7 @@ static struct clk_pll gpll2 = {
- 	.l_reg = 0x4a004,
- 	.m_reg = 0x4a008,
- 	.n_reg = 0x4a00c,
--	.config_reg = 0x4a014,
-+	.config_reg = 0x4a010,
- 	.mode_reg = 0x4a000,
- 	.status_reg = 0x4a01c,
- 	.status_bit = 17,
-@@ -351,7 +351,7 @@ static struct clk_pll bimc_pll = {
- 	.l_reg = 0x23004,
- 	.m_reg = 0x23008,
- 	.n_reg = 0x2300c,
--	.config_reg = 0x23014,
-+	.config_reg = 0x23010,
- 	.mode_reg = 0x23000,
- 	.status_reg = 0x2301c,
- 	.status_bit = 17,
+diff --git a/drivers/block/ps3disk.c b/drivers/block/ps3disk.c
+index c120d70d3fb3..fc7a20286090 100644
+--- a/drivers/block/ps3disk.c
++++ b/drivers/block/ps3disk.c
+@@ -464,7 +464,6 @@ static int ps3disk_probe(struct ps3_system_bus_device *_dev)
+ 	blk_queue_bounce_limit(queue, BLK_BOUNCE_HIGH);
+ 
+ 	blk_queue_max_hw_sectors(queue, dev->bounce_size >> 9);
+-	blk_queue_segment_boundary(queue, -1UL);
+ 	blk_queue_dma_alignment(queue, dev->blk_size-1);
+ 	blk_queue_logical_block_size(queue, dev->blk_size);
+ 
 -- 
 2.25.1
 
