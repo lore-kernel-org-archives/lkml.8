@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E040C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3FD6206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60297206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447768;
-	bh=Jiv2L8x1UrhUVZJ3+GJukZ7OLVFFYw+CmLuVM0LVPtU=;
+	s=default; t=1592447777;
+	bh=URc4789k/5yNLxNApylXOdyYnfGKoDQJ73exVVOeipg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tTRahdIztany5KllhgrVOrlLbr4RRaIQxXJhd/FxEzPVEChvbLdFTKNvBKiR/aNLy
-	 F7tmF+50vS0RGW7InMtr8TdM07hH+sa7wEC/wc2BUfF2C4muxC5aej3/iOyaFdt2Qc
-	 nageHsCKSWksofyBEL5ZzuwZODbyoDJ0OhNJv5T4=
+	b=QqHaNjhoP7JCf//x6xuFmu1Ps+uQfp89S8I5KwLHe7Mbcrp4trl2DRXqmVmroHYpf
+	 srrZ4enRmMvXzMLfvIIhhQEL/mKgqYx044tvt28xdwRlngkAEwOc9cb10CYBs0lcej
+	 e58Cj6W9AzPV36936MAkxA1Kdgd1KiIL1hR8nu6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732519AbgFRCgG (ORCPT
+        id S2387732AbgFRCgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:36:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43560 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:36:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729267AbgFRBOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:14:02 -0400
+        id S1729245AbgFRBOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9459C21D7B;
-        Thu, 18 Jun 2020 01:14:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 223FD20EDD;
+        Thu, 18 Jun 2020 01:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442842;
-        bh=Jiv2L8x1UrhUVZJ3+GJukZ7OLVFFYw+CmLuVM0LVPtU=;
+        s=default; t=1592442839;
+        bh=URc4789k/5yNLxNApylXOdyYnfGKoDQJ73exVVOeipg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cQ7Fm1k+AKPzjqzKsfXRA7cfcueEbtCEuK59uPtZ+4l/30P8eveuEXf+IDSqKoKPM
-         x2QxmAGh1Q/MI95W/El+oEvZF4U17/A9AOyfO1vX96v/W2Ppo0+NOK5rBybYzq0uVr
-         PEa6sXK8pFEq549B50Yyq9ru9Y0WN/3IoHyA1rUA=
+        b=pSDQeYDYBFBCuBZ/cOGU4Smv8XdIxIgV2D7BYLdeNtoR2jivQLPE1TnCyTPUaYlen
+         BA8V4L0TQwsvK0MP4P6WXwCSMzoLElJk4+9TB49k7JO4eltVOVZnWo8nGOtekY8/G/
+         hpOSiuJTz7EI0MPi3BviGS0qGEyyinit78TToNck=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Amelie Delaunay <amelie.delaunay@st.com>,
@@ -46,9 +46,9 @@ Cc:     Amelie Delaunay <amelie.delaunay@st.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 275/388] mfd: stmfx: Disable IRQ in suspend to avoid spurious interrupt
-Date:   Wed, 17 Jun 2020 21:06:12 -0400
-Message-Id: <20200618010805.600873-275-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 273/388] mfd: stmfx: Reset chip on resume as supply was disabled
+Date:   Wed, 17 Jun 2020 21:06:10 -0400
+Message-Id: <20200618010805.600873-273-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -63,64 +63,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Amelie Delaunay <amelie.delaunay@st.com>
 
-[ Upstream commit 97eda5dcc2cde5dcc778bef7a9344db3b6bf8ef5 ]
+[ Upstream commit e583649d87ec090444aa5347af0927cd6e8581ae ]
 
-When STMFX supply is stopped, spurious interrupt can occur. To avoid that,
-disable the interrupt in suspend before disabling the regulator and
-re-enable it at the end of resume.
+STMFX supply is disabled during suspend. To avoid a too early access to
+the STMFX firmware on resume, reset the chip and wait for its firmware to
+be loaded.
 
 Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/stmfx.c       | 6 ++++++
- include/linux/mfd/stmfx.h | 1 +
- 2 files changed, 7 insertions(+)
+ drivers/mfd/stmfx.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
-index 1977fe95f876..711979afd90a 100644
+index 857991cb3cbb..fde6541e347c 100644
 --- a/drivers/mfd/stmfx.c
 +++ b/drivers/mfd/stmfx.c
-@@ -296,6 +296,8 @@ static int stmfx_irq_init(struct i2c_client *client)
- 	if (ret)
- 		goto irq_exit;
+@@ -501,6 +501,13 @@ static int stmfx_resume(struct device *dev)
+ 		}
+ 	}
  
-+	stmfx->irq = client->irq;
++	/* Reset STMFX - supply has been stopped during suspend */
++	ret = stmfx_chip_reset(stmfx);
++	if (ret) {
++		dev_err(stmfx->dev, "Failed to reset chip: %d\n", ret);
++		return ret;
++	}
 +
- 	return 0;
- 
- irq_exit:
-@@ -486,6 +488,8 @@ static int stmfx_suspend(struct device *dev)
+ 	ret = regmap_raw_write(stmfx->map, STMFX_REG_SYS_CTRL,
+ 			       &stmfx->bkp_sysctrl, sizeof(stmfx->bkp_sysctrl));
  	if (ret)
- 		return ret;
- 
-+	disable_irq(stmfx->irq);
-+
- 	if (stmfx->vdd)
- 		return regulator_disable(stmfx->vdd);
- 
-@@ -529,6 +533,8 @@ static int stmfx_resume(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	enable_irq(stmfx->irq);
-+
- 	return 0;
- }
- #endif
-diff --git a/include/linux/mfd/stmfx.h b/include/linux/mfd/stmfx.h
-index 3c67983678ec..744dce63946e 100644
---- a/include/linux/mfd/stmfx.h
-+++ b/include/linux/mfd/stmfx.h
-@@ -109,6 +109,7 @@ struct stmfx {
- 	struct device *dev;
- 	struct regmap *map;
- 	struct regulator *vdd;
-+	int irq;
- 	struct irq_domain *irq_domain;
- 	struct mutex lock; /* IRQ bus lock */
- 	u8 irq_src;
 -- 
 2.25.1
 
