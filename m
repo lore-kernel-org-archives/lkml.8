@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B40EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55A4920720
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A398206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447858;
-	bh=+7/PlDzWUjyfolRw+6reVX66V0k0Iko13dyWim3CMY0=;
+	s=default; t=1592447867;
+	bh=iplyPM27PcNRmVU8iO4tDZsu6oYuCl3PiRkC1vxjPIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FBhk6Awz2IWSEU0wamIR5U5kKM+hIpUfZ8uYYT2jNPxSuJCNA6SlRXgmx4vvEeOxa
-	 ILI6CWyn874r/rbK4IrkB+Z903B4lIrVyRSvOnqFoHiOaqqIqeY4sZ3+bwf2e2mUrQ
-	 tv7zsQ+/g3PYNIAiWpDn/dDmkR6dyQLl7kouGTIA=
+	b=a++rxlCpU8eo0cQIDIzvnBQFwpDcV3/X8miEmUjLLUmNliSR/v75War7EYBw4c032
+	 Ffd+fH954XEtynfSRd5riT/+S85gObZUt+bdLz2J/z52j/Jp9m+Yz5pigJHWBVMUjB
+	 Rz6OPLn85hj2pleOwScdBXoeWpO8ee8lMQ9FFNhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732274AbgFRChh (ORCPT
+        id S1732557AbgFRCho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:37:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43014 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:37:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728610AbgFRBNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:42 -0400
+        id S1729167AbgFRBNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A740521924;
-        Thu, 18 Jun 2020 01:13:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E599D221EA;
+        Thu, 18 Jun 2020 01:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442821;
-        bh=+7/PlDzWUjyfolRw+6reVX66V0k0Iko13dyWim3CMY0=;
+        s=default; t=1592442817;
+        bh=iplyPM27PcNRmVU8iO4tDZsu6oYuCl3PiRkC1vxjPIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sddd2DOQO+XZ2HjHKK2SIMigVF5QnzkN/YU1b3nwiR0CruEdwju4p+BrzIOPxRCq2
-         q9nAFRs9vDiy398BWNeBsAYYihALdJaHYhyC3T0SzEh4X46mpj2jiHglHAgmSKE18V
-         L7BRkyq2WOuBhxmpbX2fdASNfjJVtUnhff5nJcq8=
+        b=iRNMlT1fh2ywQ/7mzE9QT2L4vbSA/XMlBigmCmGfm8Dfq/Lifgp+rnEfwWoO8f1xU
+         SI9q6np3FUr9WOi7f839TVRcoM//KG74uYKv11aMXVs2EWVtGstK5FPcdkfMtJ/p7p
+         Dh3bOf8QyuSr8WW33VX/Vu7/Jgc6fTCKGD3t9QpU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 258/388] PCI: dwc: Fix inner MSI IRQ domain registration
-Date:   Wed, 17 Jun 2020 21:05:55 -0400
-Message-Id: <20200618010805.600873-258-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 255/388] PCI/PTM: Inherit Switch Downstream Port PTM settings from Upstream Port
+Date:   Wed, 17 Jun 2020 21:05:52 -0400
+Message-Id: <20200618010805.600873-255-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,46 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit 0414b93e78d87ecc24ae1a7e61fe97deb29fa2f4 ]
+[ Upstream commit 7b38fd9760f51cc83d80eed2cfbde8b5ead9e93a ]
 
-On a system that uses the internal DWC MSI widget, I get this
-warning from debugfs when CONFIG_GENERIC_IRQ_DEBUGFS is selected:
+Except for Endpoints, we enable PTM at enumeration-time.  Previously we did
+not account for the fact that Switch Downstream Ports are not permitted to
+have a PTM capability; their PTM behavior is controlled by the Upstream
+Port (PCIe r5.0, sec 7.9.16).  Since Downstream Ports don't have a PTM
+capability, we did not mark them as "ptm_enabled", which meant that
+pci_enable_ptm() on an Endpoint failed because there was no PTM path to it.
 
-  debugfs: File ':soc:pcie@fc000000' in directory 'domains' already present!
+Mark Downstream Ports as "ptm_enabled" if their Upstream Port has PTM
+enabled.
 
-This is due to the fact that the DWC MSI code tries to register two
-IRQ domains for the same firmware node, without telling the low
-level code how to distinguish them (by setting a bus token). This
-further confuses debugfs which tries to create corresponding
-files for each domain.
-
-Fix it by tagging the inner domain as DOMAIN_BUS_NEXUS, which is
-the closest thing we have as to "generic MSI".
-
-Link: https://lore.kernel.org/r/20200501113921.366597-1-maz@kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Jingoo Han <jingoohan1@gmail.com>
+Fixes: eec097d43100 ("PCI: Add pci_enable_ptm() for drivers to enable PTM on endpoints")
+Reported-by: Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/pcie/ptm.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 395feb8ca051..3c43311bb95c 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -264,6 +264,8 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
- 		return -ENOMEM;
- 	}
+diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+index 9361f3aa26ab..357a454cafa0 100644
+--- a/drivers/pci/pcie/ptm.c
++++ b/drivers/pci/pcie/ptm.c
+@@ -39,10 +39,6 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	if (!pci_is_pcie(dev))
+ 		return;
  
-+	irq_domain_update_bus_token(pp->irq_domain, DOMAIN_BUS_NEXUS);
+-	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+-	if (!pos)
+-		return;
+-
+ 	/*
+ 	 * Enable PTM only on interior devices (root ports, switch ports,
+ 	 * etc.) on the assumption that it causes no link traffic until an
+@@ -52,6 +48,23 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
+ 		return;
+ 
++	/*
++	 * Switch Downstream Ports are not permitted to have a PTM
++	 * capability; their PTM behavior is controlled by the Upstream
++	 * Port (PCIe r5.0, sec 7.9.16).
++	 */
++	ups = pci_upstream_bridge(dev);
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM &&
++	    ups && ups->ptm_enabled) {
++		dev->ptm_granularity = ups->ptm_granularity;
++		dev->ptm_enabled = 1;
++		return;
++	}
 +
- 	pp->msi_domain = pci_msi_create_irq_domain(fwnode,
- 						   &dw_pcie_msi_domain_info,
- 						   pp->irq_domain);
++	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
++	if (!pos)
++		return;
++
+ 	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
+ 	local_clock = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
+ 
+@@ -61,7 +74,6 @@ void pci_ptm_init(struct pci_dev *dev)
+ 	 * the spec recommendation (PCIe r3.1, sec 7.32.3), select the
+ 	 * furthest upstream Time Source as the PTM Root.
+ 	 */
+-	ups = pci_upstream_bridge(dev);
+ 	if (ups && ups->ptm_enabled) {
+ 		ctrl = PCI_PTM_CTRL_ENABLE;
+ 		if (ups->ptm_granularity == 0)
 -- 
 2.25.1
 
