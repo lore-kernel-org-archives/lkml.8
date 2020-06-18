@@ -2,169 +2,150 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F14C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D62C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1D0020739
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C10520739
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="pU+0BBTG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUhjuTRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgFRO6Q (ORCPT
+        id S1730047AbgFRO6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:58:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59616 "EHLO
+        Thu, 18 Jun 2020 10:58:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgFRO6P (ORCPT
+        with ESMTP id S1726382AbgFRO6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:58:15 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B2F0C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:58:15 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id q22so165131pgk.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:58:15 -0700 (PDT)
+        Thu, 18 Jun 2020 10:58:52 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 749B5C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:58:52 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id e1so6405096wrt.5
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:58:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=4qs1f+nEe+7yGSY8KM4aiMoUDIO8E4RIV0sa26ps+ig=;
-        b=pU+0BBTGDjhgzS7MORx2UBJYd1V1GV3AY5eYBkSNXDxA3/HkDxzgK4oMRlbKp39Nb4
-         WVWITjoNoIHJGAN1YJfR7Vm58fRv/lXLn/UO1zORKHQiUOwcxgOM9Hnytx6/AJA+P9ot
-         6B2ExtON8cIZz7ZkmEeoLHRM2bv+J2TZvX4SvqPQDV3DAocw8Os5DIPwB1fcrUe8ts8y
-         k3veyDs/fZlHJsjoRwxSKyRhT6oywSLCxYPj3AsvAYVsfx8Szgy7RxAl3a41WJ0kEv1M
-         nvxW889+aAlkexajR1koYJboqCHTB/GMsgBVvPvH16YU2V6TuhicnZiJdfPqzw29185+
-         4h0Q==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jD/vaqPgqn/GbyEshdpFayy0rmaV/B8hrtCZ/Jh2OJE=;
+        b=MUhjuTRE41q8DNA4MiAfGDVi5SKnOjfYcFcOhQx7Q0shrPeqQgpSkt8vNdagw81CtD
+         lWLMX4+/HZFFKq9CRKzRPyqosy7lw1AjTREEIydy8HM7KhD0t5cCYtapY8p+iKvwIrJU
+         7Y88sQstzp0ZvxbnwwQ/GnOgH5HrC0o3bQQGhF1y9V/l2jWwfjAyYqDJ0mEp/rMQv6Bv
+         4Ijzapji4+JZXd8P9bxQJK/BbyzgGnHZJ85AWAhCegMt6uaB13sZTFWoihMIAObxx9kA
+         VnN/1RVFtOzFZJfnVmAtV2Nbbt8eJXjLOLPUk1vH1u2XdGfLw7QjcUBdogC9RiXY3BIR
+         g9YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=4qs1f+nEe+7yGSY8KM4aiMoUDIO8E4RIV0sa26ps+ig=;
-        b=WJpGkf9+TAmvZ/McYDPaU/xsoAcQdDg7KcbkSeAweDwhwKE27cp6JqkoiCLTCmnNay
-         iPXDymSXjNOglDWQ/cg2na3iC2jotfkM5cqV+t9jfudKPOmXcNTNOWfdJG8I8TNfah7Z
-         RFcGPllWpGtnPi7/w+XekbZif3WK8ieNirvl5O5yYqVtyFjBtjF5plv/2X3P5QJj7fcd
-         alvsK6KvQ/J9QlwT9FU35igu9+dUc+BBMBIoZ+2bEbmnJfgGYa7IFsYgWmQu435vtTuH
-         F5oRJ+dxMVzloo5ase4fnALX2JgYPAMuWcljQfaCl+3Lb22gYgQFIHfrD5As73zw1Ht+
-         mL3g==
-X-Gm-Message-State: AOAM532UnVMcmKjVvhPw4uMwW1Cm6sTidtApnCWQWfh9HAHQ8DpS3LU9
-        Pkfn8BhCHwq/0ZBUY2eARb4zlg==
-X-Google-Smtp-Source: ABdhPJzmWFzetzrUjWoQl+iciUZGJdkpoqxsOVcagOPo7ftOU914TFT4uydv7V5nrip4qzV6434C7w==
-X-Received: by 2002:a65:52c8:: with SMTP id z8mr648997pgp.266.1592492264654;
-        Thu, 18 Jun 2020 07:57:44 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:b1cd:76d5:31d4:cc5d? ([2601:646:c200:1ef2:b1cd:76d5:31d4:cc5d])
-        by smtp.gmail.com with ESMTPSA id q39sm2722958pja.30.2020.06.18.07.57.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 07:57:43 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 1/7] x86/entry: Fix #UD vs WARN more
-Date:   Thu, 18 Jun 2020 07:57:35 -0700
-Message-Id: <70455B9B-0952-4E03-B2CE-EEAE1E110C5B@amacapital.net>
-References: <20200618144801.642309720@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, dvyukov@google.com, elver@google.com,
-        andreyknvl@google.com, Mark.Rutland@arm.com, mhelsley@vmware.com,
-        rostedt@goodmis.org, jthierry@redhat.com, mbenes@suse.cz
-In-Reply-To: <20200618144801.642309720@infradead.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: iPhone Mail (17F80)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jD/vaqPgqn/GbyEshdpFayy0rmaV/B8hrtCZ/Jh2OJE=;
+        b=FgQYa6ea5x+j1lPrr1GMbDvzMNoccMTEbjyXl5KPRXpfevabZ31iSvqj51DYvSUmgd
+         dlAvLe9itdKlKDVxfnwwynMfXPR9fyjciTjZVjpoViWmJ9ScyMGvlkcpsbrtXtqKLl+D
+         uTicvfF88hVCKlXuzSsFDljPdpiUW8rCkiZsDH2JGyEtY77tn4+geybFWYIdkBgnKnuS
+         BwIiOUuX+0lwjL+6tNeGYpIAA8kgBOdblIiP4XwkrD+ZmsudVtMUCs6ar0bfq+aDGXCT
+         VhCTUc9E7Zck25IBWCJPMrLFmEwZW3E/MjfEUyPJ6G3AeIt7v9vFyJhQm451SaCXsGyd
+         GSYA==
+X-Gm-Message-State: AOAM533aMNDRPC1wdHj/3p6EscLxYZFSIlJX2ye9J/0u/mUH+pJrTVz7
+        kPO67W1DK3nEwU7OarrOQ6U=
+X-Google-Smtp-Source: ABdhPJzOZoyx7rjEtPKa6qEeScd/wg3eiCkfIoiDdKF8rKK6pseRXTi7+uxRtJKxdSB6is1mRGCuOw==
+X-Received: by 2002:adf:e2c9:: with SMTP id d9mr4969310wrj.227.1592492331224;
+        Thu, 18 Jun 2020 07:58:51 -0700 (PDT)
+Received: from kedthinkpad.tpwlan.net ([213.197.144.54])
+        by smtp.gmail.com with ESMTPSA id e2sm1941346wrt.76.2020.06.18.07.58.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 07:58:50 -0700 (PDT)
+From:   Andrey Lebedev <andrey.lebedev@gmail.com>
+To:     Qiang Yu <yuq825@gmail.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     andrey@lebedev.lt, kernel test robot <lkp@intel.com>
+Subject: [PATCH] drm/lima: Expose job_hang_limit module parameter
+Date:   Thu, 18 Jun 2020 17:58:38 +0300
+Message-Id: <20200618145838.2956591-1-andrey.lebedev@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAKGbVbuV8meZji9PqFUwt4CpFEy6efpX63hJBgMY7fzAnZS4Rg@mail.gmail.com>
+References: <CAKGbVbuV8meZji9PqFUwt4CpFEy6efpX63hJBgMY7fzAnZS4Rg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Andrey Lebedev <andrey@lebedev.lt>
 
+Some pp or gp jobs can be successfully repeated even after they time outs.
+Introduce lima module parameter to specify number of times a job can hang
+before being dropped.
 
-> On Jun 18, 2020, at 7:50 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
-> =EF=BB=BFvmlinux.o: warning: objtool: exc_invalid_op()+0x47: call to probe=
-_kernel_read() leaves .noinstr.text section
->=20
-> Since we use UD2 as a short-cut for 'CALL __WARN', treat it as such.
-> Have the bare exception handler do the report_bug() thing.
+Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
+---
 
-I think you should consider inlining or noinstr-ifying report_bug() too if y=
-ou want to make this more bulletproof. I admit the scenario where someone in=
-struments it and it goes wrong is farfetched.
+Fixes for the embarrassing build error
+Reported-by: kernel test robot <lkp@intel.com>
 
->=20
-> Fixes: 15a416e8aaa7 ("x86/entry: Treat BUG/WARN as NMI-like entries")
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
-> ---
-> arch/x86/kernel/traps.c |   50 +++++++++++++++++++++----------------------=
------
-> 1 file changed, 22 insertions(+), 28 deletions(-)
->=20
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -216,40 +216,34 @@ static inline void handle_invalid_op(str
->              ILL_ILLOPN, error_get_trap_addr(regs));
-> }
->=20
-> +static noinstr bool handle_bug(struct pt_regs *regs)
-> +{
-> +    bool handled =3D false;
-> +
-> +    /*
-> +     * All lies, just get the WARN/BUG out.
-> +     */
-> +    instrumentation_begin();
-> +    if (report_bug(regs->ip, regs) =3D=3D BUG_TRAP_TYPE_WARN) {
-> +        regs->ip +=3D LEN_UD2;
-> +        handled =3D true;
-> +    }
-> +    instrumentation_end();
-> +
-> +    return handled;
-> +}
-> +
-> DEFINE_IDTENTRY_RAW(exc_invalid_op)
-> {
->    bool rcu_exit;
->=20
->    /*
-> -     * Handle BUG/WARN like NMIs instead of like normal idtentries:
-> -     * if we bugged/warned in a bad RCU context, for example, the last
-> -     * thing we want is to BUG/WARN again in the idtentry code, ad
-> -     * infinitum.
-> +     * We use UD2 as a short encoding for 'CALL __WARN', as such
-> +     * handle it before exception entry to avoid recursive WARN
-> +     * in case exception entry is the one triggering WARNs.
->     */
-> -    if (!user_mode(regs) && is_valid_bugaddr(regs->ip)) {
-> -        enum bug_trap_type type;
-> -
-> -        nmi_enter();
-> -        instrumentation_begin();
-> -        trace_hardirqs_off_finish();
-> -        type =3D report_bug(regs->ip, regs);
-> -        if (regs->flags & X86_EFLAGS_IF)
-> -            trace_hardirqs_on_prepare();
-> -        instrumentation_end();
-> -        nmi_exit();
-> -
-> -        if (type =3D=3D BUG_TRAP_TYPE_WARN) {
-> -            /* Skip the ud2. */
-> -            regs->ip +=3D LEN_UD2;
-> -            return;
-> -        }
-> -
-> -        /*
-> -         * Else, if this was a BUG and report_bug returns or if this
-> -         * was just a normal #UD, we want to continue onward and
-> -         * crash.
-> -         */
-> -    }
-> +    if (!user_mode(regs) && handle_bug(regs))
-> +        return;
->=20
->    rcu_exit =3D idtentry_enter_cond_rcu(regs);
->    instrumentation_begin();
->=20
->=20
+ drivers/gpu/drm/lima/lima_drv.c   | 4 ++++
+ drivers/gpu/drm/lima/lima_drv.h   | 1 +
+ drivers/gpu/drm/lima/lima_sched.c | 5 +++--
+ 3 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/lima/lima_drv.c b/drivers/gpu/drm/lima/lima_drv.c
+index a831565af813..2400b8d52d92 100644
+--- a/drivers/gpu/drm/lima/lima_drv.c
++++ b/drivers/gpu/drm/lima/lima_drv.c
+@@ -19,6 +19,7 @@
+ int lima_sched_timeout_ms;
+ uint lima_heap_init_nr_pages = 8;
+ uint lima_max_error_tasks;
++uint lima_job_hang_limit;
+ 
+ MODULE_PARM_DESC(sched_timeout_ms, "task run timeout in ms");
+ module_param_named(sched_timeout_ms, lima_sched_timeout_ms, int, 0444);
+@@ -29,6 +30,9 @@ module_param_named(heap_init_nr_pages, lima_heap_init_nr_pages, uint, 0444);
+ MODULE_PARM_DESC(max_error_tasks, "max number of error tasks to save");
+ module_param_named(max_error_tasks, lima_max_error_tasks, uint, 0644);
+ 
++MODULE_PARM_DESC(job_hang_limit, "number of times to allow a job to hang before dropping it (default 0)");
++module_param_named(job_hang_limit, lima_job_hang_limit, int, 0444);
++
+ static int lima_ioctl_get_param(struct drm_device *dev, void *data, struct drm_file *file)
+ {
+ 	struct drm_lima_get_param *args = data;
+diff --git a/drivers/gpu/drm/lima/lima_drv.h b/drivers/gpu/drm/lima/lima_drv.h
+index fdbd4077c768..c738d288547b 100644
+--- a/drivers/gpu/drm/lima/lima_drv.h
++++ b/drivers/gpu/drm/lima/lima_drv.h
+@@ -11,6 +11,7 @@
+ extern int lima_sched_timeout_ms;
+ extern uint lima_heap_init_nr_pages;
+ extern uint lima_max_error_tasks;
++extern uint lima_job_hang_limit;
+ 
+ struct lima_vm;
+ struct lima_bo;
+diff --git a/drivers/gpu/drm/lima/lima_sched.c b/drivers/gpu/drm/lima/lima_sched.c
+index e6cefda00279..1602985dfa04 100644
+--- a/drivers/gpu/drm/lima/lima_sched.c
++++ b/drivers/gpu/drm/lima/lima_sched.c
+@@ -503,8 +503,9 @@ int lima_sched_pipe_init(struct lima_sched_pipe *pipe, const char *name)
+ 
+ 	INIT_WORK(&pipe->recover_work, lima_sched_recover_work);
+ 
+-	return drm_sched_init(&pipe->base, &lima_sched_ops, 1, 0,
+-			      msecs_to_jiffies(timeout), name);
++	return drm_sched_init(&pipe->base, &lima_sched_ops, 1,
++			      lima_job_hang_limit, msecs_to_jiffies(timeout),
++			      name);
+ }
+ 
+ void lima_sched_pipe_fini(struct lima_sched_pipe *pipe)
+-- 
+2.25.1
+
