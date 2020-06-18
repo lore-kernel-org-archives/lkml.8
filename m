@@ -2,205 +2,73 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C58BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 514B7207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:42:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VwLMLEBf"
+	by mail.kernel.org (Postfix) with ESMTP id 815AB207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbgFRNl6 (ORCPT
+        id S1730302AbgFRNnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:41:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26234 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727101AbgFRNly (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:41:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592487712;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5Cexa4tsvwTnBBGHx0OVpN/yf320flKSSjXgML68NX8=;
-        b=VwLMLEBfB1WXN8qBJQvFRkJ+hFb4TwYOqNXRfnwgPwDA/pufzfB5TD/WheDbBfkGaZDlJ1
-        2oZP/hxBYeVMQWT+LJsDL6KEjQdcWgzEJVO7PLrfLvHg4Im7h0lh0+CI8cj6nTPHnUDh3g
-        kX8za3lCJMzCtn/0EY8WhbhK/oO0x0w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-214-k6bxuqGrPWmC0i8HF5oCAg-1; Thu, 18 Jun 2020 09:41:48 -0400
-X-MC-Unique: k6bxuqGrPWmC0i8HF5oCAg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3938107ACF7;
-        Thu, 18 Jun 2020 13:41:46 +0000 (UTC)
-Received: from localhost (ovpn-12-22.pek2.redhat.com [10.72.12.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 961BB19C79;
-        Thu, 18 Jun 2020 13:41:45 +0000 (UTC)
-Date:   Thu, 18 Jun 2020 21:41:42 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Nitin Gupta <nigupta@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Nitin Gupta <ngupta@nitingupta.dev>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:PROC SYSCTL" <linux-fsdevel@vger.kernel.org>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
-Subject: Re: [PATCH] mm: Use unsigned types for fragmentation score
-Message-ID: <20200618134142.GD3346@MiWiFi-R3L-srv>
-References: <20200618010319.13159-1-nigupta@nvidia.com>
+        Thu, 18 Jun 2020 09:43:37 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50494 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728159AbgFRNnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 09:43:24 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 22F47ACB25179D748227;
+        Thu, 18 Jun 2020 21:43:20 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 18 Jun 2020 21:43:12 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Philippe CORNU <philippe.cornu@st.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] drm/panel: otm8009a: Drop unnessary backlight_device_unregister()
+Date:   Thu, 18 Jun 2020 13:46:50 +0000
+Message-ID: <20200618134650.44311-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618010319.13159-1-nigupta@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/17/20 at 06:03pm, Nitin Gupta wrote:
-> Proactive compaction uses per-node/zone "fragmentation score" which
-> is always in range [0, 100], so use unsigned type of these scores
-> as well as for related constants.
-> 
-> Signed-off-by: Nitin Gupta <nigupta@nvidia.com>
-> ---
->  include/linux/compaction.h |  4 ++--
->  kernel/sysctl.c            |  2 +-
->  mm/compaction.c            | 18 +++++++++---------
->  mm/vmstat.c                |  2 +-
->  4 files changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/include/linux/compaction.h b/include/linux/compaction.h
-> index 7a242d46454e..25a521d299c1 100644
-> --- a/include/linux/compaction.h
-> +++ b/include/linux/compaction.h
-> @@ -85,13 +85,13 @@ static inline unsigned long compact_gap(unsigned int order)
->  
->  #ifdef CONFIG_COMPACTION
->  extern int sysctl_compact_memory;
-> -extern int sysctl_compaction_proactiveness;
-> +extern unsigned int sysctl_compaction_proactiveness;
->  extern int sysctl_compaction_handler(struct ctl_table *table, int write,
->  			void *buffer, size_t *length, loff_t *ppos);
->  extern int sysctl_extfrag_threshold;
->  extern int sysctl_compact_unevictable_allowed;
->  
-> -extern int extfrag_for_order(struct zone *zone, unsigned int order);
-> +extern unsigned int extfrag_for_order(struct zone *zone, unsigned int order);
->  extern int fragmentation_index(struct zone *zone, unsigned int order);
->  extern enum compact_result try_to_compact_pages(gfp_t gfp_mask,
->  		unsigned int order, unsigned int alloc_flags,
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 58b0a59c9769..40180cdde486 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -2833,7 +2833,7 @@ static struct ctl_table vm_table[] = {
->  	{
->  		.procname	= "compaction_proactiveness",
->  		.data		= &sysctl_compaction_proactiveness,
-> -		.maxlen		= sizeof(int),
-> +		.maxlen		= sizeof(sysctl_compaction_proactiveness),
+It's not necessary to unregister backlight device which
+registered with devm_backlight_device_register().
 
-Patch looks good to me. Wondering why not using 'unsigned int' here,
-just curious.
+Fixes: 12a6cbd4f3f1 ("drm/panel: otm8009a: Use new backlight API")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ drivers/gpu/drm/panel/panel-orisetech-otm8009a.c | 1 -
+ 1 file changed, 1 deletion(-)
 
->  		.mode		= 0644,
->  		.proc_handler	= proc_dointvec_minmax,
->  		.extra1		= SYSCTL_ZERO,
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index ac2030814edb..45fd24a0ea0b 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -53,7 +53,7 @@ static inline void count_compact_events(enum vm_event_item item, long delta)
->  /*
->   * Fragmentation score check interval for proactive compaction purposes.
->   */
-> -static const int HPAGE_FRAG_CHECK_INTERVAL_MSEC = 500;
-> +static const unsigned int HPAGE_FRAG_CHECK_INTERVAL_MSEC = 500;
->  
->  /*
->   * Page order with-respect-to which proactive compaction
-> @@ -1890,7 +1890,7 @@ static bool kswapd_is_running(pg_data_t *pgdat)
->   * ZONE_DMA32. For smaller zones, the score value remains close to zero,
->   * and thus never exceeds the high threshold for proactive compaction.
->   */
-> -static int fragmentation_score_zone(struct zone *zone)
-> +static unsigned int fragmentation_score_zone(struct zone *zone)
->  {
->  	unsigned long score;
->  
-> @@ -1906,9 +1906,9 @@ static int fragmentation_score_zone(struct zone *zone)
->   * the node's score falls below the low threshold, or one of the back-off
->   * conditions is met.
->   */
-> -static int fragmentation_score_node(pg_data_t *pgdat)
-> +static unsigned int fragmentation_score_node(pg_data_t *pgdat)
->  {
-> -	unsigned long score = 0;
-> +	unsigned int score = 0;
->  	int zoneid;
->  
->  	for (zoneid = 0; zoneid < MAX_NR_ZONES; zoneid++) {
-> @@ -1921,17 +1921,17 @@ static int fragmentation_score_node(pg_data_t *pgdat)
->  	return score;
->  }
->  
-> -static int fragmentation_score_wmark(pg_data_t *pgdat, bool low)
-> +static unsigned int fragmentation_score_wmark(pg_data_t *pgdat, bool low)
->  {
-> -	int wmark_low;
-> +	unsigned int wmark_low;
->  
->  	/*
->  	 * Cap the low watermak to avoid excessive compaction
->  	 * activity in case a user sets the proactivess tunable
->  	 * close to 100 (maximum).
->  	 */
-> -	wmark_low = max(100 - sysctl_compaction_proactiveness, 5);
-> -	return low ? wmark_low : min(wmark_low + 10, 100);
-> +	wmark_low = max(100U - sysctl_compaction_proactiveness, 5U);
-> +	return low ? wmark_low : min(wmark_low + 10, 100U);
->  }
->  
->  static bool should_proactive_compact_node(pg_data_t *pgdat)
-> @@ -2604,7 +2604,7 @@ int sysctl_compact_memory;
->   * aggressively the kernel should compact memory in the
->   * background. It takes values in the range [0, 100].
->   */
-> -int __read_mostly sysctl_compaction_proactiveness = 20;
-> +unsigned int __read_mostly sysctl_compaction_proactiveness = 20;
->  
->  /*
->   * This is the entry point for compacting all nodes via
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 3e7ba8bce2ba..b1de695b826d 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1079,7 +1079,7 @@ static int __fragmentation_index(unsigned int order, struct contig_page_info *in
->   * It is defined as the percentage of pages found in blocks of size
->   * less than 1 << order. It returns values in range [0, 100].
->   */
-> -int extfrag_for_order(struct zone *zone, unsigned int order)
-> +unsigned int extfrag_for_order(struct zone *zone, unsigned int order)
->  {
->  	struct contig_page_info info;
->  
-> -- 
-> 2.27.0
-> 
-> 
+diff --git a/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c b/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c
+index 895ee3d1371e..d956522f32ee 100644
+--- a/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c
++++ b/drivers/gpu/drm/panel/panel-orisetech-otm8009a.c
+@@ -479,7 +479,6 @@ static int otm8009a_probe(struct mipi_dsi_device *dsi)
+ 	if (ret < 0) {
+ 		dev_err(dev, "mipi_dsi_attach failed. Is host ready?\n");
+ 		drm_panel_remove(&ctx->panel);
+-		backlight_device_unregister(ctx->bl_dev);
+ 		return ret;
+ 	}
+
+
 
