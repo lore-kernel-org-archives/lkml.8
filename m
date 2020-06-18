@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B845BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE07C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97FCA20897
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD3B721924
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445358;
-	bh=7UP8d+aNwH4B+abjTH5Mp+3kA+gA4M7eqyVYX0XBBlM=;
+	s=default; t=1592445360;
+	bh=5d3vNDNuQvODzfrN0SzSBAhnNYtyMFSiHtXdBNldzrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EAxiQXBgU8fM5ld1k34cuel6HdE2BL1cmzbgR4sHNUulxPHqPbMVfJLS5ShPrY9MU
-	 PeEuC3PwwBUygZovqYiuGBAQOgTstZgfuccteWpzMxETR8H+OwDwWtpZFJAC+NlK3T
-	 DAA6hsCYZSzNLecS720sIHTj2/0XUJfY57z5rSr4=
+	b=pdfCFTd95LgbK5zVerundunYqGP63Hg2FXmA/4kMcsFoR07azjcLXJrws7rfj7oW6
+	 76CkF39Cx1Q/WIxhvQE6tFzRtGKjUbeAR6EiPfG7mq901oMKNsO3dfcpKFdYpB91GO
+	 hYquhpxnYmib7bQEo8bWTS13+ky+/Batg+prr65M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731896AbgFRBz4 (ORCPT
+        id S1731466AbgFRBZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:55:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60916 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:25:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729902AbgFRBZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:37 -0400
+        id S1730759AbgFRBWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:22:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 506A12088E;
-        Thu, 18 Jun 2020 01:25:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75E9021D82;
+        Thu, 18 Jun 2020 01:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443537;
-        bh=7UP8d+aNwH4B+abjTH5Mp+3kA+gA4M7eqyVYX0XBBlM=;
+        s=default; t=1592443354;
+        bh=5d3vNDNuQvODzfrN0SzSBAhnNYtyMFSiHtXdBNldzrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ukjd0vt7TsbqRSonc+0GFz+SLdl9Y4pPCAT/+9a27sKTTndzsvuI0stjflPvv7zsy
-         lJNPGb0da4h1vK8rLEflZgNO5Sh2NERRL2Z5fJIC3W2AnvDyi71kvp7bajBgdfQY2u
-         d96u7cYL/dmmAv/7EFSj8dlMHaEeXegeRyed/U2I=
+        b=uDzzTZkeiHiY2fwxFMzNCZ9BPTlk082HXQWZg57j+yVuWo3/jlk5By8eR8NvoIoIx
+         tBF4FUZzxuLRtsFaH5+ZMEPqdQfWxKCHv7Fw2HgIfpXh316xo+W0Mgn0+oHx5lYnLj
+         czWOSAhJZ+NqRSfJ2WUTL77/J7tthN5nGp1IUiR0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Alexander Fomichev <fomichev.ru@gmail.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 155/172] NTB: ntb_tool: reading the link file should not end in a NULL byte
-Date:   Wed, 17 Jun 2020 21:22:01 -0400
-Message-Id: <20200618012218.607130-155-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 012/172] ARM: integrator: Add some Kconfig selections
+Date:   Wed, 17 Jun 2020 21:19:38 -0400
+Message-Id: <20200618012218.607130-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -61,49 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 912e12813dd03c602e4922fc34709ec4d4380cf0 ]
+[ Upstream commit d2854bbe5f5c4b4bec8061caf4f2e603d8819446 ]
 
-When running ntb_test this warning is issued:
+The CMA and DMA_CMA Kconfig options need to be selected
+by the Integrator in order to produce boot console on some
+Integrator systems.
 
-./ntb_test.sh: line 200: warning: command substitution: ignored null
-byte in input
+The REGULATOR and REGULATOR_FIXED_VOLTAGE need to be
+selected in order to boot the system from an external
+MMC card when using MMCI/PL181 from the device tree
+probe path.
 
-This is caused by the kernel returning one more byte than is necessary
-when reading the link file.
+Select these things directly from the Kconfig so we are
+sure to be able to bring the systems up with console
+from any device tree.
 
-Reduce the number of bytes read back to 2 as it was before the
-commit that regressed this.
-
-Fixes: 7f46c8b3a552 ("NTB: ntb_tool: Add full multi-port NTB API support")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Allen Hubbe <allenbh@gmail.com>
-Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_tool.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/mach-integrator/Kconfig | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
-index 025747c1568e..311d6ab8d016 100644
---- a/drivers/ntb/test/ntb_tool.c
-+++ b/drivers/ntb/test/ntb_tool.c
-@@ -504,7 +504,7 @@ static ssize_t tool_peer_link_read(struct file *filep, char __user *ubuf,
- 	buf[1] = '\n';
- 	buf[2] = '\0';
+diff --git a/arch/arm/mach-integrator/Kconfig b/arch/arm/mach-integrator/Kconfig
+index cefe44f6889b..ba124f8704fa 100644
+--- a/arch/arm/mach-integrator/Kconfig
++++ b/arch/arm/mach-integrator/Kconfig
+@@ -3,6 +3,8 @@ menuconfig ARCH_INTEGRATOR
+ 	depends on ARCH_MULTI_V4T || ARCH_MULTI_V5 || ARCH_MULTI_V6
+ 	select ARM_AMBA
+ 	select COMMON_CLK_VERSATILE
++	select CMA
++	select DMA_CMA
+ 	select HAVE_TCM
+ 	select ICST
+ 	select MFD_SYSCON
+@@ -34,14 +36,13 @@ config INTEGRATOR_IMPD1
+ 	select ARM_VIC
+ 	select GPIO_PL061
+ 	select GPIOLIB
++	select REGULATOR
++	select REGULATOR_FIXED_VOLTAGE
+ 	help
+ 	  The IM-PD1 is an add-on logic module for the Integrator which
+ 	  allows ARM(R) Ltd PrimeCells to be developed and evaluated.
+ 	  The IM-PD1 can be found on the Integrator/PP2 platform.
  
--	return simple_read_from_buffer(ubuf, size, offp, buf, 3);
-+	return simple_read_from_buffer(ubuf, size, offp, buf, 2);
- }
- 
- static TOOL_FOPS_RDWR(tool_peer_link_fops,
-@@ -1690,4 +1690,3 @@ static void __exit tool_exit(void)
- 	debugfs_remove_recursive(tool_dbgfs_topdir);
- }
- module_exit(tool_exit);
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called impd1.
 -
+ config INTEGRATOR_CM7TDMI
+ 	bool "Integrator/CM7TDMI core module"
+ 	depends on ARCH_INTEGRATOR_AP
 -- 
 2.25.1
 
