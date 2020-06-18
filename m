@@ -2,100 +2,171 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD48C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 739F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8010D207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E892073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730545AbgFRNuc (ORCPT
+        id S1730562AbgFRNvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:50:32 -0400
-Received: from verein.lst.de ([213.95.11.211]:49162 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730269AbgFRNub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:50:31 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0D7846736F; Thu, 18 Jun 2020 15:50:28 +0200 (CEST)
-Date:   Thu, 18 Jun 2020 15:50:27 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 2/3] arm64: use PAGE_KERNEL_ROX directly in
- alloc_insn_page
-Message-ID: <20200618135027.GA23534@lst.de>
-References: <20200618064307.32739-1-hch@lst.de> <20200618064307.32739-3-hch@lst.de> <90234f58-e83a-7f20-62a7-80a4e81cde95@redhat.com> <20200618103506.GH576905@hirez.programming.kicks-ass.net>
+        Thu, 18 Jun 2020 09:51:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729035AbgFRNvC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 09:51:02 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A428BC06174E;
+        Thu, 18 Jun 2020 06:51:01 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jluwT-0002im-TC; Thu, 18 Jun 2020 15:50:58 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E67A31C0489;
+        Thu, 18 Jun 2020 15:50:56 +0200 (CEST)
+Date:   Thu, 18 Jun 2020 13:50:56 -0000
+From:   "tip-bot2 for Chang S. Bae" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/fsgsbase] x86/entry/64: Introduce the FIND_PERCPU_BASE macro
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1557309753-24073-12-git-send-email-chang.seok.bae@intel.com>
+References: <1557309753-24073-12-git-send-email-chang.seok.bae@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618103506.GH576905@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Message-ID: <159248825673.16989.7101416393032677108.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 12:35:06PM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 18, 2020 at 10:55:58AM +0200, David Hildenbrand wrote:
-> > On 18.06.20 08:43, Christoph Hellwig wrote:
-> > > Use PAGE_KERNEL_ROX directly instead of allocating RWX and setting the
-> > > page read-only just after the allocation.
-> > > 
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > ---
-> > >  arch/arm64/kernel/probes/kprobes.c | 12 +++---------
-> > >  1 file changed, 3 insertions(+), 9 deletions(-)
-> > > 
-> > > diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-> > > index d1c95dcf1d7833..cbe49cd117cfec 100644
-> > > --- a/arch/arm64/kernel/probes/kprobes.c
-> > > +++ b/arch/arm64/kernel/probes/kprobes.c
-> > > @@ -120,15 +120,9 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
-> > >  
-> > >  void *alloc_insn_page(void)
-> > >  {
-> > > -	void *page;
-> > > -
-> > > -	page = vmalloc_exec(PAGE_SIZE);
-> > > -	if (page) {
-> > > -		set_memory_ro((unsigned long)page, 1);
-> > > -		set_vm_flush_reset_perms(page);
-> > > -	}
-> > > -
-> > > -	return page;
-> > > +	return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
-> > > +			GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
-> > > +			NUMA_NO_NODE, __func__);
-> > 
-> > I do wonder if something like vmalloc_prot(size, prot) would make this
-> > (and the other two users) easier to read.
-> > 
-> > So instead of ripping out vmalloc_exec(), converting it into
-> > vmalloc_prot() instead.
-> > 
-> > Did you consider that?
-> 
-> For x86 Christoph did module_alloc_prot(), which is in his more
-> extensive set of patches addressing this. I suspect that would be the
-> right thing for ARM64 as well.
+The following commit has been merged into the x86/fsgsbase branch of tip:
 
-Yes.  The somewhat hacky way I added it cause problems for UML, so I
-instead plan to do a series converting all architectures over to
-module_alloc_prot, plus lots of other cleanups in the area that I
-noticed.
+Commit-ID:     eaad981291ee36efee15a5e515d4598ae94ace07
+Gitweb:        https://git.kernel.org/tip/eaad981291ee36efee15a5e515d4598ae94ace07
+Author:        Chang S. Bae <chang.seok.bae@intel.com>
+AuthorDate:    Thu, 28 May 2020 16:13:56 -04:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 18 Jun 2020 15:47:04 +02:00
 
-I don't think vmalloc_prot is a good idea per se, as there only few
-potential users, and I don't want too many vmalloc APIs.
+x86/entry/64: Introduce the FIND_PERCPU_BASE macro
+
+GSBASE is used to find per-CPU data in the kernel. But when GSBASE is
+unknown, the per-CPU base can be found from the per_cpu_offset table with a
+CPU NR.  The CPU NR is extracted from the limit field of the CPUNODE entry
+in GDT, or by the RDPID instruction. This is a prerequisite for using
+FSGSBASE in the low level entry code.
+
+Also, add the GAS-compatible RDPID macro as binutils 2.23 do not support
+it. Support is added in version 2.27.
+
+[ tglx: Massaged changelog ]
+
+Suggested-by: H. Peter Anvin <hpa@zytor.com>
+Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1557309753-24073-12-git-send-email-chang.seok.bae@intel.com
+Link: https://lkml.kernel.org/r/20200528201402.1708239-11-sashal@kernel.org
+
+
+---
+ arch/x86/entry/calling.h    | 34 ++++++++++++++++++++++++++++++++++
+ arch/x86/include/asm/inst.h | 15 +++++++++++++++
+ 2 files changed, 49 insertions(+)
+
+diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
+index 4208c1e..5c0cbb4 100644
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -6,6 +6,7 @@
+ #include <asm/percpu.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/processor-flags.h>
++#include <asm/inst.h>
+ 
+ /*
+ 
+@@ -351,3 +352,36 @@ For 32-bit we have the following conventions - kernel is built with
+ 	call stackleak_erase
+ #endif
+ .endm
++
++#ifdef CONFIG_SMP
++
++/*
++ * CPU/node NR is loaded from the limit (size) field of a special segment
++ * descriptor entry in GDT.
++ */
++.macro LOAD_CPU_AND_NODE_SEG_LIMIT reg:req
++	movq	$__CPUNODE_SEG, \reg
++	lsl	\reg, \reg
++.endm
++
++/*
++ * Fetch the per-CPU GSBASE value for this processor and put it in @reg.
++ * We normally use %gs for accessing per-CPU data, but we are setting up
++ * %gs here and obviously can not use %gs itself to access per-CPU data.
++ */
++.macro GET_PERCPU_BASE reg:req
++	ALTERNATIVE \
++		"LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
++		"RDPID	\reg", \
++		X86_FEATURE_RDPID
++	andq	$VDSO_CPUNODE_MASK, \reg
++	movq	__per_cpu_offset(, \reg, 8), \reg
++.endm
++
++#else
++
++.macro GET_PERCPU_BASE reg:req
++	movq	pcpu_unit_offsets(%rip), \reg
++.endm
++
++#endif /* CONFIG_SMP */
+diff --git a/arch/x86/include/asm/inst.h b/arch/x86/include/asm/inst.h
+index f5a796d..d063841 100644
+--- a/arch/x86/include/asm/inst.h
++++ b/arch/x86/include/asm/inst.h
+@@ -306,6 +306,21 @@
+ 	.endif
+ 	MODRM 0xc0 movq_r64_xmm_opd1 movq_r64_xmm_opd2
+ 	.endm
++
++.macro RDPID opd
++	REG_TYPE rdpid_opd_type \opd
++	.if rdpid_opd_type == REG_TYPE_R64
++	R64_NUM rdpid_opd \opd
++	.else
++	R32_NUM rdpid_opd \opd
++	.endif
++	.byte 0xf3
++	.if rdpid_opd > 7
++	PFX_REX rdpid_opd 0
++	.endif
++	.byte 0x0f, 0xc7
++	MODRM 0xc0 rdpid_opd 0x7
++.endm
+ #endif
+ 
+ #endif
