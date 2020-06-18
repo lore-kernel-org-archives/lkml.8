@@ -2,308 +2,385 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F44C433FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DD9C433F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75F74206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54FE7206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:41:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qc9xM290"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731813AbgFRPla (ORCPT
+        id S1731801AbgFRPl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:41:30 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2328 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731736AbgFRPkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:40:53 -0400
-Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 69FA963F7BC3307C754F;
-        Thu, 18 Jun 2020 16:40:51 +0100 (IST)
-Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.90.32) by
- lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Thu, 18 Jun 2020 16:40:50 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <helgaas@kernel.org>, <bp@alien8.de>, <james.morse@arm.com>,
-        <lenb@kernel.org>, <tony.luck@intel.com>,
-        <dan.carpenter@oracle.com>, <zhangliguang@linux.alibaba.com>,
-        <andriy.shevchenko@linux.intel.com>, <wangkefeng.wang@huawei.com>,
-        <jroedel@suse.de>
-CC:     <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
-        <jonathan.cameron@huawei.com>, <tanxiaofei@huawei.com>
-Subject: [PATCH v10 1/2] ACPI / APEI: Add support to notify the vendor specific HW errors
-Date:   Thu, 18 Jun 2020 16:38:22 +0100
-Message-ID: <20200618153823.588-2-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20200618153823.588-1-shiju.jose@huawei.com>
-References: <20200618153823.588-1-shiju.jose@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.47.90.32]
-X-ClientProxiedBy: lhreml714-chm.china.huawei.com (10.201.108.65) To
- lhreml715-chm.china.huawei.com (10.201.108.66)
-X-CFilter-Loop: Reflected
+        Thu, 18 Jun 2020 11:41:26 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:54849 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731744AbgFRPk4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 11:40:56 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200618154039euoutp012b973feef4827c536649d0d6c105bf19~ZrZ56DALm1845318453euoutp01T
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:40:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200618154039euoutp012b973feef4827c536649d0d6c105bf19~ZrZ56DALm1845318453euoutp01T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592494839;
+        bh=bUR0gkYnHY2yGJNGlfsLKjT3FPrFZZ3Z2LsLuxLZIzE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qc9xM290EInWEc6qOa+aAiUjmqO3epRnOrc6nSHKgDev3t4LN1k4W5tu8cp34nabm
+         EbLBhXwwEgR9vg3caaX12Yd3RRi4t14YhzqOP3rbft79xPrudkTSZkrvLVsHu3/DMa
+         hYK4ZgDNP7wl2mquyDG44tghLtdaOQJWPJflaL9w=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200618154039eucas1p27f22f2881645b0769b94b16a5159f94d~ZrZ5oBFp40608806088eucas1p20;
+        Thu, 18 Jun 2020 15:40:39 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 61.70.60698.6FA8BEE5; Thu, 18
+        Jun 2020 16:40:38 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200618154038eucas1p1acd4fcdd183de4c19c4004778527a755~ZrZ5UdJYA1545815458eucas1p1o;
+        Thu, 18 Jun 2020 15:40:38 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200618154038eusmtrp12e800f642df656361881d213119aff1b~ZrZ5Ty4wZ2230622306eusmtrp1W;
+        Thu, 18 Jun 2020 15:40:38 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-54-5eeb8af69cde
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 76.F9.07950.6FA8BEE5; Thu, 18
+        Jun 2020 16:40:38 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200618154038eusmtip19632174da7f25d0e928d6533f76216c7~ZrZ4ojlkT0833608336eusmtip1V;
+        Thu, 18 Jun 2020 15:40:38 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Pawel Osciak <pawel@osciak.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org
+Subject: [PATCH v6 35/36] videobuf2: use sgtable-based scatterlist wrappers
+Date:   Thu, 18 Jun 2020 17:39:56 +0200
+Message-Id: <20200618153956.29558-36-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200618153956.29558-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSfSxVYRzuPeeec8+9uXW6bN6htLtVqy0y2s7GRMXO1h+ppbU+cOPsMp/d
+        g6g/ssR0XUYUSTGZb7ldopFEcUXdiBpJiLXrW7vubczIcaj/nt/z/J49z+/dS6DSLsyGCImI
+        ZpQR8jAZLhbUdyzpD5tV035HFtvdqDT9e4R6nluDUWv1mSjVb5rHqfLKdoTqfTgsoApbXKnF
+        /jGE0o5/xai+xnycUmteYFT1u2EhVaJdQajs2SUh1bowgXnspKueVAG62VwooLUVd3G6wTyK
+        0SOpOoSuLb5FD62Oo3TWQCmgmwYTcHp8eRKn0+sqAG3U7qG7TEahj+Si2C2ICQuJZZSO7gHi
+        4Lo7TVjU4zNxmYNvsQRQc0IFRAQkXWBxeg+iAmJCSpYBWNo/gfPDIoDjw29QfjACaNIX4FuW
+        0aFZAS+UAvjDYEA4YcNyf8aDwzjpBFWzqg2DFZkEYGeaBYdRsgaFRVUkhy3JU/CVqVfIYQG5
+        D36YasU4LCHdYbN5ZjPMHlZquBYiQrTOd+uSMC4Ykj+FUFOWg/JLJ2FnKm+GpCWc0tUJeWwH
+        u7PUAt6QCOCYvlrID2oA+27nAn7LFX7XL6/HEev1DsKaRkee9oSGri8oR0NyBxyY3cUfsAPe
+        q8/ZpCUwJVnKb++Hebpn/2Jbez5vVqPh4iezkH+sTADzH7ShGcA+739YIQAVwJqJYcMVDOsc
+        wVx3YOXhbEyEwiEwMlwL1n9Y96rO9BK8XrnaBkgCyCwkhnPTflJMHsvGh7cBSKAyK8nxj91+
+        UkmQPP4Go4z0V8aEMWwbsCUEMmuJc9HkFSmpkEczoQwTxSi3VIQQ2SQAu8Cg6NSGuaXta1bO
+        GeLzjnp1cHCKZvqaxne+ExObygfYuJLQZH3OseUDigxRbs82URwYS3Qe7Ajx81ww7vVHjK4t
+        BbWI+GbcJR8W9QLFj5xqn9p7H+2w/TZy+QJ6einAxScxg7I/W9ArBnO/e3u8s2ki0Xd385+W
+        X/Neah+ZgA2WOx1Claz8LxjfRMVdAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLIsWRmVeSWpSXmKPExsVy+t/xu7rful7HGZzepmvRe+4kk8XGGetZ
+        Lf5vm8hsceXrezaLlauPMllcnHmXxWLBfmuLL1ceMllsenyN1eLyrjlsFj0btrJarD1yl91i
+        2aY/TBZT3v5ktzj44QmrA7/HmnlrGD32flvA4rFpVSebx/ZvD1g97ncfZ/LYvKTe4/a/x8we
+        k28sZ/TYfbOBzePxr5dsHn1bVjF6fN4k53Hq62f2AN4oPZui/NKSVIWM/OISW6VoQwsjPUNL
+        Cz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYwtLbtZC+YGVky8eZi1gXG9cxcjJ4eEgInE
+        g9tvWboYuTiEBJYySmy79JwFIiEjcXJaAyuELSzx51oXG0TRJ6Cin8/ZQRJsAoYSXW8hEiIC
+        nYwS07o/soM4zAI7mSX2337KCFIlLOAtsefrRbAOFgFViTOvDoKN5RWwk9j77Q0bxAp5idUb
+        DjCD2JxA8dPHW8FqhARsJZ5/aGObwMi3gJFhFaNIamlxbnpusZFecWJucWleul5yfu4mRmBU
+        bTv2c8sOxq53wYcYBTgYlXh4X4S8jhNiTSwrrsw9xCjBwawkwut09nScEG9KYmVValF+fFFp
+        TmrxIUZToKMmMkuJJucDIz6vJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwf
+        EwenVAPjjl8WdSqe5595zjmo+Enw/Pe537TWvbJ7HvXl0bednWmh3OHLm9tSMyKe+WyW36Gm
+        Y9gXZ/rh7gxNBpEtEwzllrMeW3dCakl9z/VSZZX8aYzhqmf9NphnHOq8dcfyRHOJq5Xxn5fK
+        3/5ve6HgdUj62e6UH8/VQsUWuDXbLnF7/TLiwYq/YlcUlFiKMxINtZiLihMB19SdncACAAA=
+X-CMS-MailID: 20200618154038eucas1p1acd4fcdd183de4c19c4004778527a755
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200618154038eucas1p1acd4fcdd183de4c19c4004778527a755
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200618154038eucas1p1acd4fcdd183de4c19c4004778527a755
+References: <20200618153956.29558-1-m.szyprowski@samsung.com>
+        <CGME20200618154038eucas1p1acd4fcdd183de4c19c4004778527a755@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to report the vendor specific non-fatal HW errors
-to the drivers for the error recovery.
+Use recently introduced common wrappers operating directly on the struct
+sg_table objects and scatterlist page iterators to make the code a bit
+more compact, robust, easier to follow and copy/paste safe.
 
-The interface functions ghes_register_event_notifier() and
-ghes_unregister_event_notifier() enables the drivers to register and
-unregister the vendor specific error handlers. The interface uses
-work queue for queuing each vendor-specific error record and uses
-blocking notifier chain, in the work function, to report the error to
-the registered drivers.
-The drivers should match the section type of the error record before
-processing the error data.
+No functional change, because the code already properly did all the
+scaterlist related calls.
 
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-Reviewed-by: Bjorn Helgaas <helgaas@kernel.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- drivers/acpi/apei/ghes.c | 123 +++++++++++++++++++++++++++++++++++++++
- include/acpi/ghes.h      |  29 +++++++++
- 2 files changed, 152 insertions(+)
+ .../common/videobuf2/videobuf2-dma-contig.c   | 41 ++++++++-----------
+ .../media/common/videobuf2/videobuf2-dma-sg.c | 32 ++++++---------
+ .../common/videobuf2/videobuf2-vmalloc.c      | 12 ++----
+ 3 files changed, 34 insertions(+), 51 deletions(-)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 81bf71b10d44..b6dc4eaa6345 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -33,6 +33,7 @@
- #include <linux/irq_work.h>
- #include <linux/llist.h>
- #include <linux/genalloc.h>
-+#include <linux/kfifo.h>
- #include <linux/pci.h>
- #include <linux/pfn.h>
- #include <linux/aer.h>
-@@ -64,6 +65,7 @@
- #define GHES_ESTATUS_CACHES_SIZE	4
+diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+index f4b4a7c135eb..ba01a8692d88 100644
+--- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
++++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+@@ -48,16 +48,15 @@ struct vb2_dc_buf {
  
- #define GHES_ESTATUS_IN_CACHE_MAX_NSEC	10000000000ULL
-+
- /* Prevent too many caches are allocated because of RCU */
- #define GHES_ESTATUS_CACHE_ALLOCED_MAX	(GHES_ESTATUS_CACHES_SIZE * 3 / 2)
- 
-@@ -88,6 +90,10 @@
- #define FIX_APEI_GHES_SDEI_CRITICAL	__end_of_fixed_addresses
- #endif
- 
-+#define GHES_EVENT_RING_SIZE	256
-+#define GHES_EVENT_GDATA_POOL_MIN_ALLOC_ORDER	3
-+#define GHES_EVENT_GDATA_POOL_MIN_SIZE	65536
-+
- static inline bool is_hest_type_generic_v2(struct ghes *ghes)
+ static unsigned long vb2_dc_get_contiguous_size(struct sg_table *sgt)
  {
- 	return ghes->generic->header.type == ACPI_HEST_TYPE_GENERIC_ERROR_V2;
-@@ -123,6 +129,19 @@ static DEFINE_MUTEX(ghes_list_mutex);
-  */
- static DEFINE_SPINLOCK(ghes_notify_lock_irq);
+-	struct scatterlist *s;
+ 	dma_addr_t expected = sg_dma_address(sgt->sgl);
+-	unsigned int i;
++	struct sg_dma_page_iter dma_iter;
+ 	unsigned long size = 0;
  
-+struct ghes_event_entry {
-+	struct acpi_hest_generic_data *gdata;
-+	int error_severity;
-+};
-+
-+static DEFINE_KFIFO(ghes_event_ring, struct ghes_event_entry,
-+		    GHES_EVENT_RING_SIZE);
-+
-+static DEFINE_SPINLOCK(ghes_event_ring_lock);
-+
-+static struct gen_pool *ghes_event_gdata_pool;
-+static unsigned long ghes_event_gdata_pool_size_request;
-+
- static struct gen_pool *ghes_estatus_pool;
- static unsigned long ghes_estatus_pool_size_request;
+-	for_each_sg(sgt->sgl, s, sgt->nents, i) {
+-		if (sg_dma_address(s) != expected)
++	for_each_sgtable_dma_page(sgt, &dma_iter, 0) {
++		if (sg_page_iter_dma_address(&dma_iter) != expected)
+ 			break;
+-		expected = sg_dma_address(s) + sg_dma_len(s);
+-		size += sg_dma_len(s);
++		expected += PAGE_SIZE;
++		size += PAGE_SIZE;
+ 	}
+ 	return size;
+ }
+@@ -99,8 +98,7 @@ static void vb2_dc_prepare(void *buf_priv)
+ 	if (!sgt || buf->db_attach)
+ 		return;
  
-@@ -183,6 +202,38 @@ int ghes_estatus_pool_init(int num_ghes)
- 	return -ENOMEM;
+-	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->orig_nents,
+-			       buf->dma_dir);
++	dma_sync_sgtable_for_device(buf->dev, sgt, buf->dma_dir);
  }
  
-+static int ghes_event_gdata_pool_init(void)
-+{
-+	unsigned long addr, len;
-+	int rc;
-+
-+	ghes_event_gdata_pool = gen_pool_create(GHES_EVENT_GDATA_POOL_MIN_ALLOC_ORDER, -1);
-+	if (!ghes_event_gdata_pool)
-+		return -ENOMEM;
-+
-+	if (ghes_event_gdata_pool_size_request < GHES_EVENT_GDATA_POOL_MIN_SIZE)
-+		ghes_event_gdata_pool_size_request = GHES_EVENT_GDATA_POOL_MIN_SIZE;
-+
-+	len = ghes_event_gdata_pool_size_request;
-+	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
-+	if (!addr)
-+		goto err_pool_alloc;
-+
-+	rc = gen_pool_add(ghes_event_gdata_pool, addr, PAGE_ALIGN(len), -1);
-+	if (rc)
-+		goto err_pool_add;
-+
-+	return 0;
-+
-+err_pool_add:
-+	vfree((void *)addr);
-+
-+err_pool_alloc:
-+	gen_pool_destroy(ghes_event_gdata_pool);
-+
-+	return -ENOMEM;
-+}
-+
- static int map_gen_v2(struct ghes *ghes)
- {
- 	return apei_map_generic_address(&ghes->generic_v2->read_ack_register);
-@@ -242,6 +293,10 @@ static struct ghes *ghes_new(struct acpi_hest_generic *generic)
- 		goto err_unmap_status_addr;
+ static void vb2_dc_finish(void *buf_priv)
+@@ -112,7 +110,7 @@ static void vb2_dc_finish(void *buf_priv)
+ 	if (!sgt || buf->db_attach)
+ 		return;
+ 
+-	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->orig_nents, buf->dma_dir);
++	dma_sync_sgtable_for_cpu(buf->dev, sgt, buf->dma_dir);
+ }
+ 
+ /*********************************************/
+@@ -273,8 +271,8 @@ static void vb2_dc_dmabuf_ops_detach(struct dma_buf *dbuf,
+ 		 * memory locations do not require any explicit cache
+ 		 * maintenance prior or after being used by the device.
+ 		 */
+-		dma_unmap_sg_attrs(db_attach->dev, sgt->sgl, sgt->orig_nents,
+-				   attach->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
++		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir,
++				  DMA_ATTR_SKIP_CPU_SYNC);
+ 	sg_free_table(sgt);
+ 	kfree(attach);
+ 	db_attach->priv = NULL;
+@@ -299,8 +297,8 @@ static struct sg_table *vb2_dc_dmabuf_ops_map(
+ 
+ 	/* release any previous cache */
+ 	if (attach->dma_dir != DMA_NONE) {
+-		dma_unmap_sg_attrs(db_attach->dev, sgt->sgl, sgt->orig_nents,
+-				   attach->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
++		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir,
++				  DMA_ATTR_SKIP_CPU_SYNC);
+ 		attach->dma_dir = DMA_NONE;
  	}
  
-+	ghes_event_gdata_pool_size_request += generic->records_to_preallocate *
-+					      generic->max_sections_per_record *
-+					      generic->max_raw_data_length;
-+
- 	return ghes;
+@@ -308,9 +306,8 @@ static struct sg_table *vb2_dc_dmabuf_ops_map(
+ 	 * mapping to the client with new direction, no cache sync
+ 	 * required see comment in vb2_dc_dmabuf_ops_detach()
+ 	 */
+-	sgt->nents = dma_map_sg_attrs(db_attach->dev, sgt->sgl, sgt->orig_nents,
+-				      dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+-	if (!sgt->nents) {
++	if (dma_map_sgtable(db_attach->dev, sgt, dma_dir,
++			    DMA_ATTR_SKIP_CPU_SYNC)) {
+ 		pr_err("failed to map scatterlist\n");
+ 		mutex_unlock(lock);
+ 		return ERR_PTR(-EIO);
+@@ -423,8 +420,8 @@ static void vb2_dc_put_userptr(void *buf_priv)
+ 		 * No need to sync to CPU, it's already synced to the CPU
+ 		 * since the finish() memop will have been called before this.
+ 		 */
+-		dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
+-				   buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
++		dma_unmap_sgtable(buf->dev, sgt, buf->dma_dir,
++				  DMA_ATTR_SKIP_CPU_SYNC);
+ 		pages = frame_vector_pages(buf->vec);
+ 		/* sgt should exist only if vector contains pages... */
+ 		BUG_ON(IS_ERR(pages));
+@@ -521,9 +518,8 @@ static void *vb2_dc_get_userptr(struct device *dev, unsigned long vaddr,
+ 	 * No need to sync to the device, this will happen later when the
+ 	 * prepare() memop is called.
+ 	 */
+-	sgt->nents = dma_map_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
+-				      buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+-	if (sgt->nents <= 0) {
++	if (dma_map_sgtable(buf->dev, sgt, buf->dma_dir,
++			    DMA_ATTR_SKIP_CPU_SYNC)) {
+ 		pr_err("failed to map scatterlist\n");
+ 		ret = -EIO;
+ 		goto fail_sgt_init;
+@@ -545,8 +541,7 @@ static void *vb2_dc_get_userptr(struct device *dev, unsigned long vaddr,
+ 	return buf;
  
- err_unmap_status_addr:
-@@ -511,6 +566,69 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- #endif
+ fail_map_sg:
+-	dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
+-			   buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
++	dma_unmap_sgtable(buf->dev, sgt, buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+ 
+ fail_sgt_init:
+ 	sg_free_table(sgt);
+diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+index 92072a08af25..6ddf953efa11 100644
+--- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
++++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+@@ -142,9 +142,8 @@ static void *vb2_dma_sg_alloc(struct device *dev, unsigned long dma_attrs,
+ 	 * No need to sync to the device, this will happen later when the
+ 	 * prepare() memop is called.
+ 	 */
+-	sgt->nents = dma_map_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
+-				      buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+-	if (!sgt->nents)
++	if (dma_map_sgtable(buf->dev, sgt, buf->dma_dir,
++			    DMA_ATTR_SKIP_CPU_SYNC)) {
+ 		goto fail_map;
+ 
+ 	buf->handler.refcount = &buf->refcount;
+@@ -180,8 +179,8 @@ static void vb2_dma_sg_put(void *buf_priv)
+ 	if (refcount_dec_and_test(&buf->refcount)) {
+ 		dprintk(1, "%s: Freeing buffer of %d pages\n", __func__,
+ 			buf->num_pages);
+-		dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
+-				   buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
++		dma_unmap_sgtable(buf->dev, sgt, buf->dma_dir,
++				  DMA_ATTR_SKIP_CPU_SYNC);
+ 		if (buf->vaddr)
+ 			vm_unmap_ram(buf->vaddr, buf->num_pages);
+ 		sg_free_table(buf->dma_sgt);
+@@ -202,8 +201,7 @@ static void vb2_dma_sg_prepare(void *buf_priv)
+ 	if (buf->db_attach)
+ 		return;
+ 
+-	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->orig_nents,
+-			       buf->dma_dir);
++	dma_sync_sgtable_for_device(buf->dev, sgt, buf->dma_dir);
  }
  
-+static BLOCKING_NOTIFIER_HEAD(ghes_event_notify_list);
-+
-+/**
-+ * ghes_register_event_notifier - register an event notifier
-+ * for the non-fatal HW errors.Presently supported to notify
-+ * the vendor-specific HW errors only, though it can be used to
-+ * notify the standard errors also.
-+ * @nb: pointer to the notifier_block structure of the event handler.
-+ *
-+ * return 0 : SUCCESS, non-zero : FAIL
-+ */
-+int ghes_register_event_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&ghes_event_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(ghes_register_event_notifier);
-+
-+/**
-+ * ghes_unregister_event_notifier - unregister the previously
-+ * registered event notifier.
-+ * @nb: pointer to the notifier_block structure of the event handler.
-+ */
-+void ghes_unregister_event_notifier(struct notifier_block *nb)
-+{
-+	blocking_notifier_chain_unregister(&ghes_event_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(ghes_unregister_event_notifier);
-+
-+static void ghes_event_work_func(struct work_struct *work)
-+{
-+	struct ghes_event_entry entry;
-+	u32 len;
-+
-+	while (kfifo_get(&ghes_event_ring, &entry)) {
-+		blocking_notifier_call_chain(&ghes_event_notify_list,
-+					     entry.error_severity,
-+					     entry.gdata);
-+		len = acpi_hest_get_record_size(entry.gdata);
-+		gen_pool_free(ghes_event_gdata_pool, (unsigned long)entry.gdata, len);
-+	}
-+}
-+
-+static DECLARE_WORK(ghes_event_work, ghes_event_work_func);
-+
-+static void ghes_handle_non_standard_event(struct acpi_hest_generic_data *gdata,
-+					   int sev)
-+{
-+	u32 len;
-+	struct ghes_event_entry event_entry;
-+
-+	len = acpi_hest_get_record_size(gdata);
-+	event_entry.gdata = (void *)gen_pool_alloc(ghes_event_gdata_pool, len);
-+	if (!event_entry.gdata)
-+		return;
-+
-+	memcpy(event_entry.gdata, gdata, len);
-+	event_entry.error_severity = sev;
-+	if (kfifo_in_spinlocked(&ghes_event_ring, &event_entry, 1, &ghes_event_ring_lock))
-+		schedule_work(&ghes_event_work);
-+	else
-+		pr_warn(GHES_PFX "event notify queue full\n");
-+}
-+
- static bool ghes_do_proc(struct ghes *ghes,
- 			 const struct acpi_hest_generic_status *estatus)
- {
-@@ -549,6 +667,7 @@ static bool ghes_do_proc(struct ghes *ghes,
- 		} else {
- 			void *err = acpi_hest_get_payload(gdata);
+ static void vb2_dma_sg_finish(void *buf_priv)
+@@ -215,7 +213,7 @@ static void vb2_dma_sg_finish(void *buf_priv)
+ 	if (buf->db_attach)
+ 		return;
  
-+			ghes_handle_non_standard_event(gdata, sev);
- 			log_non_standard_event(sec_type, fru_id, fru_text,
- 					       sec_sev, err,
- 					       gdata->error_data_length);
-@@ -1385,6 +1504,10 @@ static int __init ghes_init(void)
- 	else
- 		pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
+-	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->orig_nents, buf->dma_dir);
++	dma_sync_sgtable_for_cpu(buf->dev, sgt, buf->dma_dir);
+ }
  
-+	rc = ghes_event_gdata_pool_init();
-+	if (rc)
-+		pr_warn(GHES_PFX "non-fatal vendor-specific errors not being notified\n");
-+
- 	return 0;
- err:
- 	return rc;
-diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
-index 517a5231cc1b..37a48ce13499 100644
---- a/include/acpi/ghes.h
-+++ b/include/acpi/ghes.h
-@@ -53,6 +53,35 @@ enum {
- 	GHES_SEV_PANIC = 0x3,
- };
+ static void *vb2_dma_sg_get_userptr(struct device *dev, unsigned long vaddr,
+@@ -258,9 +256,8 @@ static void *vb2_dma_sg_get_userptr(struct device *dev, unsigned long vaddr,
+ 	 * No need to sync to the device, this will happen later when the
+ 	 * prepare() memop is called.
+ 	 */
+-	sgt->nents = dma_map_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
+-				      buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+-	if (!sgt->nents)
++	if (dma_map_sgtable(buf->dev, sgt, buf->dma_dir,
++			    DMA_ATTR_SKIP_CPU_SYNC)) {
+ 		goto userptr_fail_map;
  
-+#ifdef CONFIG_ACPI_APEI_GHES
-+/**
-+ * ghes_register_event_notifier - register an event notifier
-+ * for the non-fatal HW errors.Presently supported to notify
-+ * the vendor-specific HW errors only, though it can be used to notify
-+ * the standard errors also.
-+ * @nb: pointer to the notifier_block structure of the event notifier.
-+ *
-+ * Return : 0 - SUCCESS, non-zero - FAIL.
-+ */
-+int ghes_register_event_notifier(struct notifier_block *nb);
-+
-+/**
-+ * ghes_unregister_event_notifier - unregister the previously
-+ * registered event notifier.
-+ * @nb: pointer to the notifier_block structure of the event notifier.
-+ */
-+void ghes_unregister_event_notifier(struct notifier_block *nb);
-+#else
-+static inline int ghes_register_event_notifier(struct notifier_block *nb)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline void ghes_unregister_event_notifier(struct notifier_block *nb)
-+{
-+}
-+#endif
-+
- int ghes_estatus_pool_init(int num_ghes);
+ 	return buf;
+@@ -286,8 +283,7 @@ static void vb2_dma_sg_put_userptr(void *buf_priv)
  
- /* From drivers/edac/ghes_edac.c */
+ 	dprintk(1, "%s: Releasing userspace buffer of %d pages\n",
+ 	       __func__, buf->num_pages);
+-	dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents, buf->dma_dir,
+-			   DMA_ATTR_SKIP_CPU_SYNC);
++	dma_unmap_sgtable(buf->dev, sgt, buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
+ 	if (buf->vaddr)
+ 		vm_unmap_ram(buf->vaddr, buf->num_pages);
+ 	sg_free_table(buf->dma_sgt);
+@@ -410,8 +406,7 @@ static void vb2_dma_sg_dmabuf_ops_detach(struct dma_buf *dbuf,
+ 
+ 	/* release the scatterlist cache */
+ 	if (attach->dma_dir != DMA_NONE)
+-		dma_unmap_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
+-			attach->dma_dir);
++		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir);
+ 	sg_free_table(sgt);
+ 	kfree(attach);
+ 	db_attach->priv = NULL;
+@@ -436,15 +431,12 @@ static struct sg_table *vb2_dma_sg_dmabuf_ops_map(
+ 
+ 	/* release any previous cache */
+ 	if (attach->dma_dir != DMA_NONE) {
+-		dma_unmap_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
+-			attach->dma_dir);
++		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir);
+ 		attach->dma_dir = DMA_NONE;
+ 	}
+ 
+ 	/* mapping to the client with new direction */
+-	sgt->nents = dma_map_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
+-				dma_dir);
+-	if (!sgt->nents) {
++	if (dma_map_sgtable(db_attach->dev, sgt, dma_dir, 0)) {
+ 		pr_err("failed to map scatterlist\n");
+ 		mutex_unlock(lock);
+ 		return ERR_PTR(-EIO);
+diff --git a/drivers/media/common/videobuf2/videobuf2-vmalloc.c b/drivers/media/common/videobuf2/videobuf2-vmalloc.c
+index c66fda4a65e4..bf5ac63a5742 100644
+--- a/drivers/media/common/videobuf2/videobuf2-vmalloc.c
++++ b/drivers/media/common/videobuf2/videobuf2-vmalloc.c
+@@ -229,7 +229,7 @@ static int vb2_vmalloc_dmabuf_ops_attach(struct dma_buf *dbuf,
+ 		kfree(attach);
+ 		return ret;
+ 	}
+-	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
++	for_each_sgtable_sg(sgt, sg, i) {
+ 		struct page *page = vmalloc_to_page(vaddr);
+ 
+ 		if (!page) {
+@@ -259,8 +259,7 @@ static void vb2_vmalloc_dmabuf_ops_detach(struct dma_buf *dbuf,
+ 
+ 	/* release the scatterlist cache */
+ 	if (attach->dma_dir != DMA_NONE)
+-		dma_unmap_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
+-			attach->dma_dir);
++		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir, 0);
+ 	sg_free_table(sgt);
+ 	kfree(attach);
+ 	db_attach->priv = NULL;
+@@ -285,15 +284,12 @@ static struct sg_table *vb2_vmalloc_dmabuf_ops_map(
+ 
+ 	/* release any previous cache */
+ 	if (attach->dma_dir != DMA_NONE) {
+-		dma_unmap_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
+-			attach->dma_dir);
++		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir, 0);
+ 		attach->dma_dir = DMA_NONE;
+ 	}
+ 
+ 	/* mapping to the client with new direction */
+-	sgt->nents = dma_map_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
+-				dma_dir);
+-	if (!sgt->nents) {
++	if (dma_map_sgtable(db_attach->dev, sgt, dma_dir, 0)) {
+ 		pr_err("failed to map scatterlist\n");
+ 		mutex_unlock(lock);
+ 		return ERR_PTR(-EIO);
 -- 
 2.17.1
-
 
