@@ -4,52 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F286C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3526FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFA2220853
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168DE20853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446502;
-	bh=jgjHGsVhsJSxDyGA5Ork60r7TWAvi3KNCTPoeYEILdo=;
+	s=default; t=1592446509;
+	bh=w3ChTkUJ7kKAcOUwVsofeHlMjwmkoQ+pP8IZYyjE00s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Op0mvzK8GWi0Ea3E8lvcKxnv+fGMFeZQzscSeGQipLWKlJiWNRqB7ezvmM1R80HOD
-	 uBP7ui0ds2m3wDMuCN/J8CUkkeqHUToEnbmLEnJosIXDNEIZhkGDFA5KHy08YgUPWL
-	 7cdepQj7vzfRep+cPR/grHMXnUrbOWcjhpEqpAI8=
+	b=qOMRLCJKsxrS2c3ayLceILkWqWMK+Bixsb/Xvw6Y1khilMhjIQdIzdGANiasIM4ta
+	 lXhYEzwNujtCOD2BQQb4/pUvvAeol7rALz6k3paeHJtTjKymVCjugRGqY1I4RoCQwX
+	 TtMSdfGh5Zx9HqiQAjRa2x4i0DmiJyAmNnpt8EUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbgFRCPB (ORCPT
+        id S1729967AbgFRBUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:15:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52956 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:20:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730332AbgFRBUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:41 -0400
+        id S1729769AbgFRBRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0738720776;
-        Thu, 18 Jun 2020 01:20:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45BB3221F1;
+        Thu, 18 Jun 2020 01:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443241;
-        bh=jgjHGsVhsJSxDyGA5Ork60r7TWAvi3KNCTPoeYEILdo=;
+        s=default; t=1592443035;
+        bh=w3ChTkUJ7kKAcOUwVsofeHlMjwmkoQ+pP8IZYyjE00s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I6TMmsQlwvykcti/s8QMx1bkCetcMEhYB0W0gNap1elxP8QJbf4DeVZmO+OxtOC9v
-         krn4CuDK1MbEQoRtQvBjqrUq9ZAL51YU+BNjC8WPswgkvFs2LxqlNu9zu+wPqPkr1t
-         Ch0b+IQ/CaiB8vj8rcqRtV6ISmPd6IfOT7LSB6o0=
+        b=QK/wpH3sqiAEQNMIQyabBLa7afD2AvghoKCi3eZ3ScyIM+GhxrXd5JwB31d57Od9Z
+         1W4Jm5XmRan3SUAuWr4PPcSfn34aY4RLl4XbXjAt8pZ243vYRitPzhDJHGWr/DNrhy
+         3gp4lPLd0evpqveZEy1ikJ2WvnHZezsqSTxEmMg4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Mike Christie <mchristi@redhat.com>,
-        David Disseldorp <ddiss@suse.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 192/266] scsi: target: tcmu: Fix a use after free in tcmu_check_expired_queue_cmd()
-Date:   Wed, 17 Jun 2020 21:15:17 -0400
-Message-Id: <20200618011631.604574-192-sashal@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Long Cheng <long.cheng@mediatek.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 032/266] serial: 8250: Fix max baud limit in generic 8250 port
+Date:   Wed, 17 Jun 2020 21:12:37 -0400
+Message-Id: <20200618011631.604574-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -62,45 +72,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 9d7464b18892332e35ff37f0b024429a1a9835e6 ]
+[ Upstream commit 7b668c064ec33f3d687c3a413d05e355172e6c92 ]
 
-The pr_debug() dereferences "cmd" after we already freed it by calling
-tcmu_free_cmd(cmd).  The debug printk needs to be done earlier.
+Standard 8250 UART ports are designed in a way so they can communicate
+with baud rates up to 1/16 of a reference frequency. It's expected from
+most of the currently supported UART controllers. That's why the former
+version of serial8250_get_baud_rate() method called uart_get_baud_rate()
+with min and max baud rates passed as (port->uartclk / 16 / UART_DIV_MAX)
+and ((port->uartclk + tolerance) / 16) respectively. Doing otherwise, like
+it was suggested in commit ("serial: 8250_mtk: support big baud rate."),
+caused acceptance of bauds, which was higher than the normal UART
+controllers actually supported. As a result if some user-space program
+requested to set a baud greater than (uartclk / 16) it would have been
+permitted without truncation, but then serial8250_get_divisor(baud)
+(which calls uart_get_divisor() to get the reference clock divisor) would
+have returned a zero divisor. Setting zero divisor will cause an
+unpredictable effect varying from chip to chip. In case of DW APB UART the
+communications just stop.
 
-Link: https://lore.kernel.org/r/20200523101129.GB98132@mwanda
-Fixes: 61fb24822166 ("scsi: target: tcmu: Userspace must not complete queued commands")
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Reviewed-by: David Disseldorp <ddiss@suse.de>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Lets fix this problem by getting back the limitation of (uartclk +
+tolerance) / 16 maximum baud supported by the generic 8250 port. Mediatek
+8250 UART ports driver developer shouldn't have touched it in the first
+place  notably seeing he already provided a custom version of set_termios()
+callback in that glue-driver which took into account the extended baud
+rate values and accordingly updated the standard and vendor-specific
+divisor latch registers anyway.
+
+Fixes: 81bb549fdf14 ("serial: 8250_mtk: support big baud rate.")
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Long Cheng <long.cheng@mediatek.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Link: https://lore.kernel.org/r/20200506233136.11842-2-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_user.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/8250/8250_port.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index 70c64e69a1d2..a497e7c1f4fc 100644
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -1292,13 +1292,13 @@ static void tcmu_check_expired_queue_cmd(struct tcmu_cmd *cmd)
- 	if (!time_after(jiffies, cmd->deadline))
- 		return;
- 
-+	pr_debug("Timing out queued cmd %p on dev %s.\n",
-+		  cmd, cmd->tcmu_dev->name);
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 2c65c775bf5a..dbb27303a6b4 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2539,6 +2539,8 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
+ 					     struct ktermios *termios,
+ 					     struct ktermios *old)
+ {
++	unsigned int tolerance = port->uartclk / 100;
 +
- 	list_del_init(&cmd->queue_entry);
- 	se_cmd = cmd->se_cmd;
- 	tcmu_free_cmd(cmd);
- 
--	pr_debug("Timing out queued cmd %p on dev %s.\n",
--		  cmd, cmd->tcmu_dev->name);
--
- 	target_complete_cmd(se_cmd, SAM_STAT_TASK_SET_FULL);
+ 	/*
+ 	 * Ask the core to calculate the divisor for us.
+ 	 * Allow 1% tolerance at the upper limit so uart clks marginally
+@@ -2547,7 +2549,7 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
+ 	 */
+ 	return uart_get_baud_rate(port, termios, old,
+ 				  port->uartclk / 16 / UART_DIV_MAX,
+-				  port->uartclk);
++				  (port->uartclk + tolerance) / 16);
  }
  
+ void
 -- 
 2.25.1
 
