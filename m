@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE2FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA35C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A349206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D832080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446214;
-	bh=i2QJld9jHoa2EVcRH0yD7NLPRaDjnpaD6TgkXltOpEk=;
+	s=default; t=1592446221;
+	bh=X4mFPAhXCqgWnpjyToeM07iL7ggBfJsvEFxQqtErWhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dfrah68KKp06HfU38rDC7GBK+4NWG2r5ks+QGl17pmZvlEjxlSevfuEU8ksKS4/lH
-	 twnXdrUM/w9WQdkbGQ3bnTaMkHF4hFgDsIyrGG62+Qn/dllot7oPMepPAsNUORY+o0
-	 /VnRH52hXFizyvfHxFhj4+ZoZOIDRF959mazL/Oc=
+	b=q5cxRyQpeQWyr7e+4KLj8t4sQVM69WPxptgY4FOEq8MTyU/KSHxf8xdIt5k0PVVk5
+	 lpFHzp9rTZEACNVunby/6hacQ6NrgaRP5Xy6QqvHsO1Qc3/RyL9aseaAxfuJnCrL+X
+	 ixFdRT1He8Dlm91A9gNBN0m1dZJzyHVpzcHkoPRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730656AbgFRCKN (ORCPT
+        id S1730210AbgFRBVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:10:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54590 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:21:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730616AbgFRBVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:54 -0400
+        id S1729944AbgFRBSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:18:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6F6721D79;
-        Thu, 18 Jun 2020 01:21:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C9A521D79;
+        Thu, 18 Jun 2020 01:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443313;
-        bh=i2QJld9jHoa2EVcRH0yD7NLPRaDjnpaD6TgkXltOpEk=;
+        s=default; t=1592443110;
+        bh=X4mFPAhXCqgWnpjyToeM07iL7ggBfJsvEFxQqtErWhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yDbZUEQeO1iiJTMzJelSKg/tC2bn5jC35qUQhUS3hrlBbEMz7Xks8xJEj0/f8sd1I
-         Snxn7WYKOkMbveurqS6J+AEYHIDmEC4/mUvNfH1wbhkw0ZltyARdKGhtiAAX8xpXJU
-         PdypScb4mRCET+ombde11/8Jn060lf74MKev1yRs=
+        b=gNLhIbzrXOrJ8m9dDiDFjcteiKwDMnPxxooVGX+fwnB6B+egpbjfUwEAb3uN65cMo
+         QxkZ0HpUkhttX3EDrBzhLafB5Pr7irSseWda5EcqeIPz4/N9MrNH0wcFnnzD7daAQS
+         +RFZrUGVP0FY/OJNs91BgYKpYiP4LZL/zRBJgoqM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 250/266] ASoC: core: only convert non DPCM link to DPCM link
-Date:   Wed, 17 Jun 2020 21:16:15 -0400
-Message-Id: <20200618011631.604574-250-sashal@kernel.org>
+Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 087/266] arm64: dts: mt8173: fix unit name warnings
+Date:   Wed, 17 Jun 2020 21:13:32 -0400
+Message-Id: <20200618011631.604574-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -63,70 +61,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bard Liao <yung-chuan.liao@linux.intel.com>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-[ Upstream commit 607fa205a7e4dfad28b8a67ab1c985756ddbccb0 ]
+[ Upstream commit 72b29215aced394d01ca25e432963b619daa0098 ]
 
-Additional checks for valid DAIs expose a corner case, where existing
-BE dailinks get modified, e.g. HDMI links are tagged with
-dpcm_capture=1 even if the DAIs are for playback.
+Fixing several unit name warnings:
 
-This patch makes those changes conditional and flags configuration
-issues when a BE dailink is has no_pcm=0 but dpcm_playback or
-dpcm_capture=1 (which makes no sense).
+Warning (unit_address_vs_reg): /oscillator@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /oscillator@1: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /oscillator@2: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/trip-point@1: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/trips/cpu_crit@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@0: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /thermal-zones/cpu_thermal/cooling-maps/map@1: node has a unit name, but no reg property
+Warning (unit_address_vs_reg): /reserved-memory/vpu_dma_mem_region: node has a reg or ranges property, but no unit name
+Warning (simple_bus_reg): /soc/pinctrl@10005000: simple-bus unit address format error, expected "1000b000"
+Warning (simple_bus_reg): /soc/interrupt-controller@10220000: simple-bus unit address format error, expected "10221000"
 
-As discussed on the alsa-devel mailing list, there are redundant flags
-for dpcm_playback, dpcm_capture, playback_only, capture_only. This
-will have to be cleaned-up in a future update. For now only correct
-and flag problematic configurations.
-
-Fixes: 218fe9b7ec7f3 ("ASoC: soc-core: Set dpcm_playback / dpcm_capture")
-Suggested-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@gmail.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Link: https://lore.kernel.org/r/20200608194415.4663-3-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Link: https://lore.kernel.org/r/20200210063523.133333-4-hsinyi@chromium.org
+[mb: drop fixes for '_' in property name]
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-core.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 0215e2c94bf0..9df20768a8f2 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -1895,9 +1895,25 @@ static void soc_check_tplg_fes(struct snd_soc_card *card)
- 			dai_link->platforms->name = component->name;
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 5891b7151432..dec5e4113ce4 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -238,21 +238,21 @@ psci {
+ 		cpu_on	      = <0x84000003>;
+ 	};
  
- 			/* convert non BE into BE */
--			dai_link->no_pcm = 1;
--			dai_link->dpcm_playback = 1;
--			dai_link->dpcm_capture = 1;
-+			if (!dai_link->no_pcm) {
-+				dai_link->no_pcm = 1;
-+
-+				if (dai_link->dpcm_playback)
-+					dev_warn(card->dev,
-+						 "invalid configuration, dailink %s has flags no_pcm=0 and dpcm_playback=1\n",
-+						 dai_link->name);
-+				if (dai_link->dpcm_capture)
-+					dev_warn(card->dev,
-+						 "invalid configuration, dailink %s has flags no_pcm=0 and dpcm_capture=1\n",
-+						 dai_link->name);
-+
-+				/* convert normal link into DPCM one */
-+				if (!(dai_link->dpcm_playback ||
-+				      dai_link->dpcm_capture)) {
-+					dai_link->dpcm_playback = !dai_link->capture_only;
-+					dai_link->dpcm_capture = !dai_link->playback_only;
-+				}
-+			}
+-	clk26m: oscillator@0 {
++	clk26m: oscillator0 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <26000000>;
+ 		clock-output-names = "clk26m";
+ 	};
  
- 			/* override any BE fixups */
- 			dai_link->be_hw_params_fixup =
+-	clk32k: oscillator@1 {
++	clk32k: oscillator1 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <32000>;
+ 		clock-output-names = "clk32k";
+ 	};
+ 
+-	cpum_ck: oscillator@2 {
++	cpum_ck: oscillator2 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <0>;
+@@ -268,19 +268,19 @@ cpu_thermal: cpu_thermal {
+ 			sustainable-power = <1500>; /* milliwatts */
+ 
+ 			trips {
+-				threshold: trip-point@0 {
++				threshold: trip-point0 {
+ 					temperature = <68000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				target: trip-point@1 {
++				target: trip-point1 {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+ 
+-				cpu_crit: cpu_crit@0 {
++				cpu_crit: cpu_crit0 {
+ 					temperature = <115000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+@@ -288,13 +288,13 @@ cpu_crit: cpu_crit@0 {
+ 			};
+ 
+ 			cooling-maps {
+-				map@0 {
++				map0 {
+ 					trip = <&target>;
+ 					cooling-device = <&cpu0 0 0>,
+ 							 <&cpu1 0 0>;
+ 					contribution = <3072>;
+ 				};
+-				map@1 {
++				map1 {
+ 					trip = <&target>;
+ 					cooling-device = <&cpu2 0 0>,
+ 							 <&cpu3 0 0>;
+@@ -308,7 +308,7 @@ reserved-memory {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges;
+-		vpu_dma_reserved: vpu_dma_mem_region {
++		vpu_dma_reserved: vpu_dma_mem_region@b7000000 {
+ 			compatible = "shared-dma-pool";
+ 			reg = <0 0xb7000000 0 0x500000>;
+ 			alignment = <0x1000>;
+@@ -360,7 +360,7 @@ syscfg_pctl_a: syscfg_pctl_a@10005000 {
+ 			reg = <0 0x10005000 0 0x1000>;
+ 		};
+ 
+-		pio: pinctrl@10005000 {
++		pio: pinctrl@1000b000 {
+ 			compatible = "mediatek,mt8173-pinctrl";
+ 			reg = <0 0x1000b000 0 0x1000>;
+ 			mediatek,pctl-regmap = <&syscfg_pctl_a>;
+@@ -567,7 +567,7 @@ mipi_tx1: mipi-dphy@10216000 {
+ 			status = "disabled";
+ 		};
+ 
+-		gic: interrupt-controller@10220000 {
++		gic: interrupt-controller@10221000 {
+ 			compatible = "arm,gic-400";
+ 			#interrupt-cells = <3>;
+ 			interrupt-parent = <&gic>;
 -- 
 2.25.1
 
