@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22174C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD68BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E72DB2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B368020853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446543;
-	bh=fdOGuCa3JQl7tLPU51z62udmLQ0Y1JPeU/lcXBm4I/E=;
+	s=default; t=1592446548;
+	bh=2SXgvA7tUSdP75dvHaiTMCQP+0FRDnVljzClLq3/NNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jnrl1dA6cD7Kgcf4Yo//6cIpEy9s/V9cGtpI6VKx9TbaDWC9FtH9qE0JVi1YpFffq
-	 HtHvvdOlcBjwOo1gap978PG+ZlQQDhlARSeViIfKdggosUw7XIMayCStkIJqdhlyde
-	 /xW3AJJeH74Xrg0NMZT2kTMpBVUvsPxeXXT6lVXg=
+	b=rpESvjGzRnAUIxrd2G3dLKNpf+qsf9+hSdalwskXXBYylowQTGUoBrfF+oAQ1B72l
+	 fJnVcqPlv1vgQP5qatGvZKbUgcYhoV5/NWUrSc0S+L4dS1yaFUgv6NTZjszkCwhVwf
+	 TJ3ykEOUaoAtuijxmeJbFR6WT65zItAq+mxwiKeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730308AbgFRBU3 (ORCPT
+        id S1729421AbgFRCPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:20:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48158 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729724AbgFRBRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:04 -0400
+        id S1730304AbgFRBU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F01821D94;
-        Thu, 18 Jun 2020 01:17:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49DC920CC7;
+        Thu, 18 Jun 2020 01:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443023;
-        bh=fdOGuCa3JQl7tLPU51z62udmLQ0Y1JPeU/lcXBm4I/E=;
+        s=default; t=1592443228;
+        bh=2SXgvA7tUSdP75dvHaiTMCQP+0FRDnVljzClLq3/NNo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NA5UFABagwZUKP2rqQF7XPZShqWpPLwVwYYpjN3SHcolrbCfM/aYVlSQqNondvUY8
-         FMo7c7Cdq5eiTQLicLNDt4fdhnusUNPcrRDhBhtKIy9gDUO8QbVOOULHv+OGv3Aw7R
-         dlmMPoDCOSorru3ZXM7vBe3lsezM4NwUDGahFJH8=
+        b=septxn67crc3dwdorjlqZCSSwrjS50+ctMveQVph0Wj2Ab/zcytIpWGe1tZq44QyC
+         0SXm3P623fs0TsJE4fw5bpELpfjVFeO6D8rJwA4LI4jn2scWXTtEjsu5ckTfs1eIe1
+         gAldO5R+elMQbB0n2rOQIpkaNLiA9iGtp2Dj9RwI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>, erhard_f@mailbox.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 024/266] powerpc/kasan: Fix stack overflow by increasing THREAD_SHIFT
-Date:   Wed, 17 Jun 2020 21:12:29 -0400
-Message-Id: <20200618011631.604574-24-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 181/266] usb: gadget: fix potential double-free in m66592_probe.
+Date:   Wed, 17 Jun 2020 21:15:06 -0400
+Message-Id: <20200618011631.604574-181-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,38 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit edbadaf0671072298e506074128b64e003c5812c ]
+[ Upstream commit 44734a594196bf1d474212f38fe3a0d37a73278b ]
 
-When CONFIG_KASAN is selected, the stack usage is increased.
+m66592_free_request() is called under label "err_add_udc"
+and "clean_up", and m66592->ep0_req is not set to NULL after
+first free, leading to a double-free. Fix this issue by
+setting m66592->ep0_req to NULL after the first free.
 
-In the same way as x86 and arm64 architectures, increase
-THREAD_SHIFT when CONFIG_KASAN is selected.
-
-Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
-Reported-by: <erhard_f@mailbox.org>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=207129
-Link: https://lore.kernel.org/r/2c50f3b1c9bbaa4217c9a98f3044bd2a36c46a4f.1586361277.git.christophe.leroy@c-s.fr
+Fixes: 0f91349b89f3 ("usb: gadget: convert all users to the new udc infrastructure")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/udc/m66592-udc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 3dc5aecdd853..135d770e8e57 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -747,6 +747,7 @@ config THREAD_SHIFT
- 	range 13 15
- 	default "15" if PPC_256K_PAGES
- 	default "14" if PPC64
-+	default "14" if KASAN
- 	default "13"
- 	help
- 	  Used to define the stack size. The default is almost always what you
+diff --git a/drivers/usb/gadget/udc/m66592-udc.c b/drivers/usb/gadget/udc/m66592-udc.c
+index a8288df6aadf..ea59b56e5402 100644
+--- a/drivers/usb/gadget/udc/m66592-udc.c
++++ b/drivers/usb/gadget/udc/m66592-udc.c
+@@ -1667,7 +1667,7 @@ static int m66592_probe(struct platform_device *pdev)
+ 
+ err_add_udc:
+ 	m66592_free_request(&m66592->ep[0].ep, m66592->ep0_req);
+-
++	m66592->ep0_req = NULL;
+ clean_up3:
+ 	if (m66592->pdata->on_chip) {
+ 		clk_disable(m66592->clk);
 -- 
 2.25.1
 
