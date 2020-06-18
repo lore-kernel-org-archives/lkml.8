@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C638AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C53CA206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B2620720
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447967;
-	bh=tSkrvnMpksnJQhC64AZxp0y0YhNgOq7eJDfG0aV9Ngs=;
+	s=default; t=1592447977;
+	bh=ogNUmHb4ecHAb3xp0gFwbZJRDxgJbUk5Zy0HwUo3QbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mn5TWuKlpK58hE+hllanGzhdsBei/Mhcg3yCAGsV7j8nVlhmlLYrJJ+YHp+MGfEqH
-	 0Gncbj/zvBhJ98mkCFOPHm8yZnJEEwqKhw28LHsB8BFZ5Q/pYE7vZAIdvWDQFaMyCA
-	 7E4CgcoX9hAkl/ROFWZ3mZ3e7bBKvEiHdSNtLV6U=
+	b=W6c5H++CVZtX7faXKelCDn2c9IopPsJDSLeqTJqSYFczvKG3Gkeefzdey1v3LE02Z
+	 Ur6jzcmeC5XDq6+6EYOmUa6EujqJy+mIX14H7Ujo8+0Gdr95shTtuOXW+UMYTicdYv
+	 IdAw3j5pTtRxaesV98aS0SeFwuYnoGhNXtRPLF9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbgFRBNF (ORCPT
+        id S2387727AbgFRCjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:13:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40494 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:39:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728847AbgFRBMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:05 -0400
+        id S1729032AbgFRBNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0B1E21924;
-        Thu, 18 Jun 2020 01:12:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E4E5214DB;
+        Thu, 18 Jun 2020 01:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442724;
-        bh=tSkrvnMpksnJQhC64AZxp0y0YhNgOq7eJDfG0aV9Ngs=;
+        s=default; t=1592442782;
+        bh=ogNUmHb4ecHAb3xp0gFwbZJRDxgJbUk5Zy0HwUo3QbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YcRGsN56A8Ustpk3K5nxRYuyhwyI5psnJ1B1rarHSykTDwVWOUAh2dzVfPLX60Ac2
-         SVytTJGkciqdki3jNLAUagPDxhlbZ16CC//CJSUMeYWPj0fc1nRUphCNhsqn/3lw5f
-         BLrnHP6D0rJd25SW2h8tEzB6XYeWvxrj4PP+yJdE=
+        b=iomfH5F2e1MPXSIL4LniY2fzXvlFgV9CjbLYokI+7d0Zle+cUGZMnlbRSgZLYctW5
+         gUnNj+Nl1CHvljDckwDNQdZ/1jvYj9C2bTb8UcPmShXG87SGa6TMicPyCUIFXxROYD
+         7G9juesyDK2VyOvhvdphGbM6yOod/jUQQa6CTdT8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 182/388] PCI: brcmstb: Assert fundamental reset on initialization
-Date:   Wed, 17 Jun 2020 21:04:39 -0400
-Message-Id: <20200618010805.600873-182-sashal@kernel.org>
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.7 227/388] iommu/arm-smmu-v3: Don't reserve implementation defined register space
+Date:   Wed, 17 Jun 2020 21:05:24 -0400
+Message-Id: <20200618010805.600873-227-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -63,38 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-[ Upstream commit 22e21e51ce755399fd42055a3f668ee4af370881 ]
+[ Upstream commit 52f3fab0067d6fa9e99c1b7f63265dd48ca76046 ]
 
-While preparing the driver for upstream this detail was missed.
+Some SMMUv3 implementation embed the Perf Monitor Group Registers (PMCG)
+inside the first 64kB region of the SMMU. Since PMCG are managed by a
+separate driver, this layout causes resource reservation conflicts
+during boot.
 
-If not asserted during the initialization process, devices connected on
-the bus will not be made aware of the internal reset happening. This,
-potentially resulting in unexpected behavior.
+To avoid this conflict, don't reserve the MMIO regions that are
+implementation defined. Although devm_ioremap_resource() still works on
+full pages under the hood, this way we benefit from resource conflict
+checks.
 
-Link: https://lore.kernel.org/r/20200507172020.18000-1-nsaenzjulienne@suse.de
-Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host controller driver")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 7d839b4b9e00 ("perf/smmuv3: Add arm64 smmuv3 pmu driver")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Link: https://lore.kernel.org/r/20200513110255.597203-1-jean-philippe@linaro.org
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/arm-smmu-v3.c | 35 +++++++++++++++++++++++++++++++----
+ 1 file changed, 31 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index c9ecc4d639c1..2297910bf6e4 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -697,6 +697,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 82508730feb7..af21d24a09e8 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -171,6 +171,8 @@
+ #define ARM_SMMU_PRIQ_IRQ_CFG1		0xd8
+ #define ARM_SMMU_PRIQ_IRQ_CFG2		0xdc
  
- 	/* Reset the bridge */
- 	brcm_pcie_bridge_sw_init_set(pcie, 1);
-+	brcm_pcie_perst_set(pcie, 1);
++#define ARM_SMMU_REG_SZ			0xe00
++
+ /* Common MSI config fields */
+ #define MSI_CFG0_ADDR_MASK		GENMASK_ULL(51, 2)
+ #define MSI_CFG2_SH			GENMASK(5, 4)
+@@ -628,6 +630,7 @@ struct arm_smmu_strtab_cfg {
+ struct arm_smmu_device {
+ 	struct device			*dev;
+ 	void __iomem			*base;
++	void __iomem			*page1;
  
- 	usleep_range(100, 200);
+ #define ARM_SMMU_FEAT_2_LVL_STRTAB	(1 << 0)
+ #define ARM_SMMU_FEAT_2_LVL_CDTAB	(1 << 1)
+@@ -733,9 +736,8 @@ static struct arm_smmu_option_prop arm_smmu_options[] = {
+ static inline void __iomem *arm_smmu_page1_fixup(unsigned long offset,
+ 						 struct arm_smmu_device *smmu)
+ {
+-	if ((offset > SZ_64K) &&
+-	    (smmu->options & ARM_SMMU_OPT_PAGE0_REGS_ONLY))
+-		offset -= SZ_64K;
++	if (offset > SZ_64K)
++		return smmu->page1 + offset - SZ_64K;
  
+ 	return smmu->base + offset;
+ }
+@@ -4021,6 +4023,18 @@ err_reset_pci_ops: __maybe_unused;
+ 	return err;
+ }
+ 
++static void __iomem *arm_smmu_ioremap(struct device *dev, resource_size_t start,
++				      resource_size_t size)
++{
++	struct resource res = {
++		.flags = IORESOURCE_MEM,
++		.start = start,
++		.end = start + size - 1,
++	};
++
++	return devm_ioremap_resource(dev, &res);
++}
++
+ static int arm_smmu_device_probe(struct platform_device *pdev)
+ {
+ 	int irq, ret;
+@@ -4056,10 +4070,23 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 	}
+ 	ioaddr = res->start;
+ 
+-	smmu->base = devm_ioremap_resource(dev, res);
++	/*
++	 * Don't map the IMPLEMENTATION DEFINED regions, since they may contain
++	 * the PMCG registers which are reserved by the PMU driver.
++	 */
++	smmu->base = arm_smmu_ioremap(dev, ioaddr, ARM_SMMU_REG_SZ);
+ 	if (IS_ERR(smmu->base))
+ 		return PTR_ERR(smmu->base);
+ 
++	if (arm_smmu_resource_size(smmu) > SZ_64K) {
++		smmu->page1 = arm_smmu_ioremap(dev, ioaddr + SZ_64K,
++					       ARM_SMMU_REG_SZ);
++		if (IS_ERR(smmu->page1))
++			return PTR_ERR(smmu->page1);
++	} else {
++		smmu->page1 = smmu->base;
++	}
++
+ 	/* Interrupt lines */
+ 
+ 	irq = platform_get_irq_byname_optional(pdev, "combined");
 -- 
 2.25.1
 
