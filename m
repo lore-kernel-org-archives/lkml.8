@@ -2,73 +2,63 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2004C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A547207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027FD20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:27:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cEFv3E7h"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GyOtOFGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732148AbgFRW0d (ORCPT
+        id S1732182AbgFRW1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:26:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732063AbgFRW0b (ORCPT
+        Thu, 18 Jun 2020 18:27:05 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:45771 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728597AbgFRW1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 18:26:31 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 120A4C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:26:31 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id gl26so8079130ejb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:26:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SvWfXIMWoA6MVSNkVag1xUER2gYc00hqPnjKfTiOEUs=;
-        b=cEFv3E7h+DeOt+sPvYPXJNfnwGAEI4q/BQ2arjcoupkTEPfuV/YcVrAtWqRxoJZEsJ
-         vbK8c2BKsZjXfUERfl4UO0tCiyClOgmgDCmnXUm6mTsz5EJMJqjMK8/VY1ipgnwKcNBJ
-         Z8DdBhfc9JCnGAvHRNCdx3bEXVUKeTzr8BRz/d4iOoVSrekSaO5xfmlAFC6BJjkbYAie
-         SIfrh/JnZYmK2anLSzIPSoW3GpPy/4axBeB6t7uqoPCWXCzfyCvDIfh2IFHxgmEb2rWe
-         7PGsdoiXVDZAbl4UxfnPgGReKD3KyG1Y1LNqXJjHRsawyrONDiU/LFqWrWeMGvIAX9HV
-         Pq7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SvWfXIMWoA6MVSNkVag1xUER2gYc00hqPnjKfTiOEUs=;
-        b=fLfvugV1tzMVbshuUcnCiuR14TjVZ3bmPV/khh1HEh58qGQWGUs2gwnhflxQO4RIlF
-         SHiwji4t9o4aSAc+8SsmEULS/bYZb5Pc80+FvlXzS5SCwWhyVRU+K5PB2WIpjRx2YdXf
-         jfqOs2fL/D9f60d6dhf5a0nZTzkrYFsNAdFTPTcH6mzrGDSyuK+zKGPaJJWB+PsajieQ
-         MAwPHSnkZSczG2Y6ZYqewNDXtDoEuOTT9pM9I2UhtcI1kN3paEqtCYa60mTMfHup8Ml4
-         y+kbscjIkfb2jb5Rrxnx6nVY0ILUufkoPHYncVHKDHO+NX3XXb5fJu8rv9+Zy9vD4KoQ
-         PnRQ==
-X-Gm-Message-State: AOAM530gAwUZZpBJgedr1jwg0CfFFUbTeKfmB8JyorB4jRz1U+qr7ylp
-        FxSCFWOqMSZJZKPJwuiRhco8VsAi
-X-Google-Smtp-Source: ABdhPJy8nWz4vsqTJbJfuEoFndOswXJ0Dgs4TBpBUcPHNhOfCp+xuz3zsh8wqEp5U9dQYTvi0fWW9A==
-X-Received: by 2002:a17:906:3a0d:: with SMTP id z13mr848475eje.122.1592519189818;
-        Thu, 18 Jun 2020 15:26:29 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:4c3c:7f8a:3583:598e])
-        by smtp.gmail.com with ESMTPSA id oq28sm3249766ejb.12.2020.06.18.15.26.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 15:26:28 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Marco Elver <elver@google.com>, Borislav Petkov <bp@suse.de>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH] sparse: use the _Generic() version of __unqual_scalar_typeof()
-Date:   Fri, 19 Jun 2020 00:26:20 +0200
-Message-Id: <20200618222620.5069-1-luc.vanoostenryck@gmail.com>
+        Thu, 18 Jun 2020 18:27:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592519222; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=c9n1umGkoncSZRzNPgw5Ef58qoJ8UehY4+SX9LXN1t8=; b=GyOtOFGb44yqMiIxrSKI4hELdfGXt95V4bbbB0cyebWUt/EvKkU/pkDYshlhxxhLfh9lRBEc
+ VTENj2RV8Q8yULZic4hR7JooRogDXmiy9RuuVHETrfiJsltiUnAXPcrdyD08zomP3mx+vzw0
+ Sl24KnGpkUUOTo1PUl5bRjEbtfM=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
+ 5eebea2aa6e154319f3ebb55 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 18 Jun 2020 22:26:50
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 90136C433A0; Thu, 18 Jun 2020 22:26:49 +0000 (UTC)
+Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C3A70C433CA;
+        Thu, 18 Jun 2020 22:26:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C3A70C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     robh+dt@kernel.org, swboyd@chromium.org, sam@ravnborg.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
+        robdclark@gmail.com, daniel@ffwll.ch, airlied@linux.ie,
+        aravindh@codeaurora.org, abhinavk@codeaurora.org,
+        chandanu@codeaurora.org, varar@codeaurora.org,
+        Tanmay Shah <tanmay@codeaurora.org>
+Subject: [PATCH v7 0/6] Add support for DisplayPort driver on SnapDragon
+Date:   Thu, 18 Jun 2020 15:26:08 -0700
+Message-Id: <20200618222614.14061-1-tanmay@codeaurora.org>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -77,38 +67,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the file is being checked with sparse, use the version of
-__unqual_scalar_typeof() using _Generic(), leaving the unoptimized
-version only for the oldest versions of GCC.
+These patches add Display-Port driver on SnapDragon/msm hardware.
+This series also contains device-tree bindings for msm DP driver.
+It also contains Makefile and Kconfig changes to compile msm DP driver.
 
-This reverts commit
-  b398ace5d2ea ("compiler_types.h: Use unoptimized __unqual_scalar_typeof for sparse")
+The block diagram of DP driver is shown below:
 
-Note: a recent version of sparse will be needed (minimum v0.6.2-rc2
-       or later than 2020-05-28).
 
-Cc: Marco Elver <elver@google.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Will Deacon <will@kernel.org>
-Link: https://marc.info/?l=linux-sparse&m=159233481816454
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
- include/linux/compiler_types.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+                 +-------------+
+                 |DRM FRAMEWORK|
+                 +------+------+
+                        |
+                   +----v----+
+                   | DP DRM  |
+                   +----+----+
+                        |
+                   +----v----+
+     +------------+|   DP    +----------++------+
+     +        +---+| DISPLAY |+---+      |      |
+     |        +    +-+-----+-+    |      |      |
+     |        |      |     |      |      |      |
+     |        |      |     |      |      |      |
+     |        |      |     |      |      |      |
+     v        v      v     v      v      v      v
+ +------+ +------+ +---+ +----+ +----+ +---+ +-----+
+ |  DP  | |  DP  | |DP | | DP | | DP | |DP | | DP  |
+ |PARSER| | HPD  | |AUX| |LINK| |CTRL| |PHY| |POWER|
+ +--+---+ +---+--+ +---+ +----+ +--+-+ +-+-+ +-----+
+    |                              |     |
+ +--v---+                         +v-----v+
+ |DEVICE|                         |  DP   |
+ | TREE |                         |CATALOG|
+ +------+                         +---+---+
+                                      |
+                                  +---v----+
+                                  |CTRL/PHY|
+                                  |   HW   |
+                                  +--------+
 
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index e368384445b6..e34a1080f36b 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -254,7 +254,7 @@ struct ftrace_likely_data {
-  * __unqual_scalar_typeof(x) - Declare an unqualified scalar type, leaving
-  *			       non-scalar types unchanged.
-  */
--#if (defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 40900) || defined(__CHECKER__)
-+#if defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 40900
- /*
-  * We build this out of a couple of helper macros in a vain attempt to
-  * help you keep your lunch down while reading it.
+This series depends-on:
+https://patchwork.freedesktop.org/patch/366159/
+
+Changes in v7:
+
+- Modify cover letter description and fix title.
+- Introduce dp-controller.yaml for common bindings across SOC
+- Rename dp-sc7180.yaml to dp-controller-sc7180.yaml for SC7180 bindings
+- Rename compatible string to qcom,sc7180-dp
+- Add assigned-clocks and assigned-clock-parents properties in bindings
+- Remove redundant code from driver
+- Extend series to include HPD detection logic
+
+This series depends-on:
+	https://patchwork.freedesktop.org/patch/366159/
+
+
+Chandan Uddaraju (4):
+  dt-bindings: msm/dp: add bindings of DP/DP-PLL driver for Snapdragon
+  drm: add constant N value in helper file
+  drm/msm/dp: add displayPort driver support
+  drm/msm/dp: add support for DP PLL driver
+
+Jeykumar Sankaran (1):
+  drm/msm/dpu: add display port support in DPU
+
+Tanmay Shah (1):
+  drm/msm/dp: Add Display Port HPD feature
+
+ .../display/msm/dp-controller-sc7180.yaml     |  147 ++
+ .../bindings/display/msm/dp-controller.yaml   |   59 +
+ .../bindings/display/msm/dpu-sc7180.yaml      |   11 +
+ drivers/gpu/drm/i915/display/intel_display.c  |    2 +-
+ drivers/gpu/drm/msm/Kconfig                   |   16 +
+ drivers/gpu/drm/msm/Makefile                  |   14 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c   |   29 +-
+ .../drm/msm/disp/dpu1/dpu_encoder_phys_vid.c  |    8 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |   83 +-
+ drivers/gpu/drm/msm/dp/dp_aux.c               |  530 +++++
+ drivers/gpu/drm/msm/dp/dp_aux.h               |   35 +
+ drivers/gpu/drm/msm/dp/dp_catalog.c           | 1065 ++++++++++
+ drivers/gpu/drm/msm/dp/dp_catalog.h           |   89 +
+ drivers/gpu/drm/msm/dp/dp_ctrl.c              | 1707 +++++++++++++++++
+ drivers/gpu/drm/msm/dp/dp_ctrl.h              |   35 +
+ drivers/gpu/drm/msm/dp/dp_display.c           | 1006 ++++++++++
+ drivers/gpu/drm/msm/dp/dp_display.h           |   31 +
+ drivers/gpu/drm/msm/dp/dp_drm.c               |  170 ++
+ drivers/gpu/drm/msm/dp/dp_drm.h               |   18 +
+ drivers/gpu/drm/msm/dp/dp_hpd.c               |   69 +
+ drivers/gpu/drm/msm/dp/dp_hpd.h               |   79 +
+ drivers/gpu/drm/msm/dp/dp_link.c              | 1216 ++++++++++++
+ drivers/gpu/drm/msm/dp/dp_link.h              |  132 ++
+ drivers/gpu/drm/msm/dp/dp_panel.c             |  491 +++++
+ drivers/gpu/drm/msm/dp/dp_panel.h             |   95 +
+ drivers/gpu/drm/msm/dp/dp_parser.c            |  268 +++
+ drivers/gpu/drm/msm/dp/dp_parser.h            |  202 ++
+ drivers/gpu/drm/msm/dp/dp_pll.c               |   93 +
+ drivers/gpu/drm/msm/dp/dp_pll.h               |   59 +
+ drivers/gpu/drm/msm/dp/dp_pll_10nm.c          |  884 +++++++++
+ drivers/gpu/drm/msm/dp/dp_pll_private.h       |  103 +
+ drivers/gpu/drm/msm/dp/dp_power.c             |  392 ++++
+ drivers/gpu/drm/msm/dp/dp_power.h             |  103 +
+ drivers/gpu/drm/msm/dp/dp_reg.h               |  517 +++++
+ drivers/gpu/drm/msm/msm_drv.c                 |    2 +
+ drivers/gpu/drm/msm/msm_drv.h                 |   59 +-
+ include/drm/drm_dp_helper.h                   |    1 +
+ 37 files changed, 9801 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/msm/dp-controller-sc7180.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/msm/dp-controller.yaml
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_aux.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_aux.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_catalog.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_catalog.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_ctrl.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_ctrl.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_display.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_display.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_drm.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_drm.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_hpd.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_hpd.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_link.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_link.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_panel.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_panel.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_parser.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_parser.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll_10nm.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_pll_private.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_power.c
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_power.h
+ create mode 100644 drivers/gpu/drm/msm/dp/dp_reg.h
+
+
+base-commit: 66057dd1d1cf2149e0f5fdaee58d6ea69bc98048
+prerequisite-patch-id: 8058026a54241aa728a91dd1685419afb249959e
 -- 
-2.27.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
