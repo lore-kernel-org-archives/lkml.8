@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF23C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526B7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 311C021927
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2163D21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448124;
-	bh=ZYAJ00KFqyy/tvH5dMqM3Tjkm+Yhg3s3YaLpmyGJbto=;
+	s=default; t=1592448127;
+	bh=z22Di1OaYRhfoLSdQDUT6FgZNUHWs+7Pv+CcZyeFtLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eEL+9oT0PO18hnsWxn6eBbR6vL2+Cb9F6uiB+FxXnBUtF9+DWjzTJ6TwzwuJl5okG
-	 SFoKNP2x7xm+geSHp/wt3JidnPjWS+cAgno/HKy0AComTSCR640ZX2E6Kz8rY/Q8ES
-	 uMhsukRGSDfK7wToZIv46bLsSU0kL50IQmbdzN+c=
+	b=cV3ZEAQz2wwcchcMCIRd56oPP/qAaO6o5yI6jlXCU0up3B6oIJzN/qXn1A0iTofIk
+	 0yF3FUrrrRGeCbPAHNULrfA5R5xKBgFxznps0qVcdKCcYEch85AxCfB9DAO6EcUU4I
+	 xH8STsjfr+fIMN7f5zfXjFVRG4X8AMvkF0V05Ajs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbgFRBMM (ORCPT
+        id S1730367AbgFRCmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:12:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39494 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:42:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728741AbgFRBLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:32 -0400
+        id S1728863AbgFRBMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A19D820B1F;
-        Thu, 18 Jun 2020 01:11:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFFEB20B1F;
+        Thu, 18 Jun 2020 01:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442692;
-        bh=ZYAJ00KFqyy/tvH5dMqM3Tjkm+Yhg3s3YaLpmyGJbto=;
+        s=default; t=1592442731;
+        bh=z22Di1OaYRhfoLSdQDUT6FgZNUHWs+7Pv+CcZyeFtLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KESwxvfTZmm/vtKve9biDYZHrYPEdeqPRLfwTyMRdNzG1VffTo2UX8BfKyjHsA6MA
-         HqbR2AadqymL8kvSEwIw2FWRAL5oaRqCMgVdf8vMPk4g331BQO9MAmFu9UeOB+je8z
-         ac1scu7ZBnwWME1yqLaTPe/TpWjP1mhooWTeGXYo=
+        b=Lt4OpY2kEuc70Cm1uPEc9kcLWKoHg/aFVIEUjGWCCW8IS3FOUz1YtnnwhwHBwzlyf
+         O1HLTccr4OeX4xUqGgaqxosBRQfUIujvPlm4Qyidqm71ARBQvdxqRL5s7BeINwpT4g
+         Cj8mdJK9mmSwJw24Nb0hdxn13/9/t2w+36kDRQxg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 157/388] ASoC: rt5682: fix I2C/Soundwire dependencies
-Date:   Wed, 17 Jun 2020 21:04:14 -0400
-Message-Id: <20200618010805.600873-157-sashal@kernel.org>
+Cc:     Suganath Prabu S <suganath-prabu.subramani@broadcom.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 187/388] scsi: mpt3sas: Fix double free warnings
+Date:   Wed, 17 Jun 2020 21:04:44 -0400
+Message-Id: <20200618010805.600873-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -58,48 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
 
-[ Upstream commit fd443a20c2f0950f3c31765a08f7dd49b3bc69cb ]
+[ Upstream commit cbbfdb2a2416c9f0cde913cf09670097ac281282 ]
 
-If one of the two is a loadable module, the combined driver must
-not be built-in:
+Fix following warning from Smatch static analyser:
 
-aarch64-linux-ld: sound/soc/codecs/rt5682.o: in function `rt5682_sdw_hw_free':
-rt5682.c:(.text+0xb34): undefined reference to `sdw_stream_remove_slave'
-aarch64-linux-ld: sound/soc/codecs/rt5682.o: in function `rt5682_sdw_hw_params':
-rt5682.c:(.text+0xe78): undefined reference to `sdw_stream_add_slave'
+drivers/scsi/mpt3sas/mpt3sas_base.c:5256 _base_allocate_memory_pools()
+warn: 'ioc->hpr_lookup' double freed
 
-In particular, the soundwire driver must not be built-in if
-CONFIG_I2C=m.
+drivers/scsi/mpt3sas/mpt3sas_base.c:5256 _base_allocate_memory_pools()
+warn: 'ioc->internal_lookup' double freed
 
-Fixes: 5549ea647997 ("ASoC: rt5682: fix unmet dependencies")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200428214642.3925004-1-arnd@arndb.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20200508110738.30732-1-suganath-prabu.subramani@broadcom.com
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/mpt3sas/mpt3sas_base.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 7d2cbed55a9d..4c643d2e6d6b 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -1136,10 +1136,13 @@ config SND_SOC_RT5677_SPI
- config SND_SOC_RT5682
- 	tristate
- 	depends on I2C || SOUNDWIRE
-+	depends on SOUNDWIRE || !SOUNDWIRE
-+	depends on I2C || !I2C
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
+index 663782bb790d..39d233262039 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -4915,7 +4915,9 @@ _base_release_memory_pools(struct MPT3SAS_ADAPTER *ioc)
+ 	}
  
- config SND_SOC_RT5682_SDW
- 	tristate "Realtek RT5682 Codec - SDW"
- 	depends on SOUNDWIRE
-+	depends on I2C || !I2C
- 	select SND_SOC_RT5682
- 	select REGMAP_SOUNDWIRE
- 
+ 	kfree(ioc->hpr_lookup);
++	ioc->hpr_lookup = NULL;
+ 	kfree(ioc->internal_lookup);
++	ioc->internal_lookup = NULL;
+ 	if (ioc->chain_lookup) {
+ 		for (i = 0; i < ioc->scsiio_depth; i++) {
+ 			for (j = ioc->chains_per_prp_buffer;
 -- 
 2.25.1
 
