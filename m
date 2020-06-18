@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D3EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F9FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B69F82220E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA7C2222A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445232;
-	bh=5d3vNDNuQvODzfrN0SzSBAhnNYtyMFSiHtXdBNldzrM=;
+	s=default; t=1592445237;
+	bh=K8lY8WWpQEzL/M2JXmgJzQ7DejJQt21GSbyKMBj1fUA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hMFJU5Mj9za8TlqpveF5yjIDOCb6u48HWiTbPpi31AkSaQLUYlwZFHJJo1LVa/nRk
-	 z+HaIPSDIt36nvBygguy2UW1M65kybcC7S04iVzPSMGNu2rWfvqUKC+F0TA3ZDcSEi
-	 hDn6yQ69zWUIhiulrdH8mjPkmwnIujoOqxz7l62k=
+	b=MEGu0LDNNtR8eq/HzSZV7/+xM5vWVHTSxGj1IZZXiONOMthzlGtmO1X1OneLUO3Lq
+	 //fGfQd9ikfhZjQgkqUE34xqlPliwRQvIuR/03n/I1YsgL9FVEJgIQx2J+OwEBYH5F
+	 tCRRs1gPvLrpjQNsDjpJYhGfYLUC/KMSTMvuKir0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733024AbgFRBxv (ORCPT
+        id S1733221AbgFRBxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:53:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33614 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:53:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731620AbgFRB0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:26:14 -0400
+        id S1730648AbgFRB0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:26:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21CA421D80;
-        Thu, 18 Jun 2020 01:26:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C62B22088E;
+        Thu, 18 Jun 2020 01:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443573;
-        bh=5d3vNDNuQvODzfrN0SzSBAhnNYtyMFSiHtXdBNldzrM=;
+        s=default; t=1592443572;
+        bh=K8lY8WWpQEzL/M2JXmgJzQ7DejJQt21GSbyKMBj1fUA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jTbtHcj7jBIdSOy7B5lOFkPaDJaQGWreTAxYWaVMOxPpZB4q+5HW/tEH0viTerB79
-         7DqnrdEdmxQzKfuZnxeNwLCHFcsk9CUXESZQfRKnsrDASDFqfJ8balszE/GdsXV8so
-         Tm0jfnSWzv0i4lmLz8/5iBEhHihQndYsw2ZMPCj4=
+        b=V7dCFDQBqEVi4XmBsx7h/U4ZGB9cfgCZeOA+PuA/vBcvGbjnzVjYsyDHztmIfoHSi
+         aUa0Q9Agb0p1eFntCbIaA0zsrdIJFZkjpfayc0tOliAEw6DNSsPq9/0CqEcS+YIue3
+         CSPkISIe4CaIFCPqIAnE7PdfW+y8u7bDa1nIDciE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 010/108] ARM: integrator: Add some Kconfig selections
-Date:   Wed, 17 Jun 2020 21:24:22 -0400
-Message-Id: <20200618012600.608744-10-sashal@kernel.org>
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 009/108] ASoC: davinci-mcasp: Fix dma_chan refcnt leak when getting dma type
+Date:   Wed, 17 Jun 2020 21:24:21 -0400
+Message-Id: <20200618012600.608744-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -59,59 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit d2854bbe5f5c4b4bec8061caf4f2e603d8819446 ]
+[ Upstream commit a697ae6ea56e23397341b027098c1b11d9ab13da ]
 
-The CMA and DMA_CMA Kconfig options need to be selected
-by the Integrator in order to produce boot console on some
-Integrator systems.
+davinci_mcasp_get_dma_type() invokes dma_request_chan(), which returns a
+reference of the specified dma_chan object to "chan" with increased
+refcnt.
 
-The REGULATOR and REGULATOR_FIXED_VOLTAGE need to be
-selected in order to boot the system from an external
-MMC card when using MMCI/PL181 from the device tree
-probe path.
+When davinci_mcasp_get_dma_type() returns, local variable "chan" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-Select these things directly from the Kconfig so we are
-sure to be able to bring the systems up with console
-from any device tree.
+The reference counting issue happens in one exception handling path of
+davinci_mcasp_get_dma_type(). When chan device is NULL, the function
+forgets to decrease the refcnt increased by dma_request_chan(), causing
+a refcnt leak.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fix this issue by calling dma_release_channel() when chan device is
+NULL.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/1587818916-38730-1-git-send-email-xiyuyang19@fudan.edu.cn
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-integrator/Kconfig | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ sound/soc/davinci/davinci-mcasp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-integrator/Kconfig b/arch/arm/mach-integrator/Kconfig
-index cefe44f6889b..ba124f8704fa 100644
---- a/arch/arm/mach-integrator/Kconfig
-+++ b/arch/arm/mach-integrator/Kconfig
-@@ -3,6 +3,8 @@ menuconfig ARCH_INTEGRATOR
- 	depends on ARCH_MULTI_V4T || ARCH_MULTI_V5 || ARCH_MULTI_V6
- 	select ARM_AMBA
- 	select COMMON_CLK_VERSATILE
-+	select CMA
-+	select DMA_CMA
- 	select HAVE_TCM
- 	select ICST
- 	select MFD_SYSCON
-@@ -34,14 +36,13 @@ config INTEGRATOR_IMPD1
- 	select ARM_VIC
- 	select GPIO_PL061
- 	select GPIOLIB
-+	select REGULATOR
-+	select REGULATOR_FIXED_VOLTAGE
- 	help
- 	  The IM-PD1 is an add-on logic module for the Integrator which
- 	  allows ARM(R) Ltd PrimeCells to be developed and evaluated.
- 	  The IM-PD1 can be found on the Integrator/PP2 platform.
+diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
+index e10e03800cce..6991718d7c8a 100644
+--- a/sound/soc/davinci/davinci-mcasp.c
++++ b/sound/soc/davinci/davinci-mcasp.c
+@@ -1747,8 +1747,10 @@ static int davinci_mcasp_get_dma_type(struct davinci_mcasp *mcasp)
+ 				PTR_ERR(chan));
+ 		return PTR_ERR(chan);
+ 	}
+-	if (WARN_ON(!chan->device || !chan->device->dev))
++	if (WARN_ON(!chan->device || !chan->device->dev)) {
++		dma_release_channel(chan);
+ 		return -EINVAL;
++	}
  
--	  To compile this driver as a module, choose M here: the
--	  module will be called impd1.
--
- config INTEGRATOR_CM7TDMI
- 	bool "Integrator/CM7TDMI core module"
- 	depends on ARCH_INTEGRATOR_AP
+ 	if (chan->device->dev->of_node)
+ 		ret = of_property_read_string(chan->device->dev->of_node,
 -- 
 2.25.1
 
