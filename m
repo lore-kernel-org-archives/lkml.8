@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47865C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DF0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27EA9208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1DD20890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbgFRUmo (ORCPT
+        id S1732372AbgFRUml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:42:44 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:4267 "EHLO
+        Thu, 18 Jun 2020 16:42:41 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:4380 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731295AbgFRUjV (ORCPT
+        by vger.kernel.org with ESMTP id S1731313AbgFRUjW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:39:21 -0400
+        Thu, 18 Jun 2020 16:39:22 -0400
 Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Thu, 18 Jun 2020 13:39:15 -0700
+ 15.0.1156.6; Thu, 18 Jun 2020 13:39:17 -0700
 Received: from sc9-mailhost2.vmware.com (unknown [10.129.221.29])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 33CFAB2656;
-        Thu, 18 Jun 2020 16:39:19 -0400 (EDT)
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 0EB95B265D;
+        Thu, 18 Jun 2020 16:39:21 -0400 (EDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -34,9 +34,9 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Julien Thierry <jthierry@redhat.com>,
         Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH v5 26/51] objtool: mcount: Remove unused file mapping
-Date:   Thu, 18 Jun 2020 13:38:12 -0700
-Message-ID: <79d29ed011f2afda285691a47b157363ab547204.1592510545.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH v5 28/51] objtool: mcount: Move mcount_adjust out of wrapper
+Date:   Thu, 18 Jun 2020 13:38:14 -0700
+Message-ID: <d6d0f204075d948b353a9f5793abc632067b0d36.1592510545.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1592510545.git.mhelsley@vmware.com>
 References: <cover.1592510545.git.mhelsley@vmware.com>
@@ -50,187 +50,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ELF data is now accessed completely through objtool's
-ELF code. We can remove the mapping of the original ELF
-file and propagate elf_open_read(), elf_close(), and malloc()
-up in place of mmap_file(), mmap_cleanup(), and umalloc()
-respectively. This also eliminates the last use of the
-umalloc() wrapper, reduces the number of global
-variables, and limits the use of globals to:
-
-	The struct elf for the file we're working on. This
-	saves passing it to nearly every function as a parameter.
-
-	Variables set depending on the ELF file endian, wordsize,
-	and arch so that the appropriate relocation structures,
-	offset sizes, architecture quirks, and nop encodings will
-	be used.
-
-	One command-line option
-
-Note that we're still using the recordmcount wrapper to change
-variable sizes and structure definitions we use to build the
-mcount relocation data and call instruction offsets.
+The mcount_adjust variable defines how many bytes to move back
+from the relocation address in order to be able to get to the
+start of the function call instruction(s) needed to turn it
+into a no-op. The values are very small and signed so we don't
+need to worry about changing the size of the variable's type
+inside the wrapper -- we can just use a regular int.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/recordmcount.c | 99 +++---------------------------------
- tools/objtool/recordmcount.h |  4 +-
- 2 files changed, 9 insertions(+), 94 deletions(-)
+ tools/objtool/recordmcount.c | 11 ++++++++---
+ tools/objtool/recordmcount.h |  5 -----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-index f8699e52e7e5..a263062c9c64 100644
+index a263062c9c64..bb53927612fb 100644
 --- a/tools/objtool/recordmcount.c
 +++ b/tools/objtool/recordmcount.c
-@@ -41,104 +41,14 @@
- #define R_AARCH64_ABS64	257
- #endif
- 
--#define R_ARM_PC24		1
- #define R_ARM_THM_CALL		10
--#define R_ARM_CALL		28
- 
--static int fd_map;	/* File descriptor for file being modified. */
--static int mmap_failed; /* Boolean flag. */
- static char gpfx;	/* prefix for global symbol name (sometimes '_') */
- static const char *altmcount;	/* alternate mcount symbol name */
- extern int warn_on_notrace_sect; /* warn when section has mcount not being recorded */
--static void *file_map;	/* pointer of the mapped file */
--static size_t file_map_size; /* original ELF file size */
- 
- static struct elf *lf;
- 
--static void mmap_cleanup(void)
--{
--	if (!mmap_failed)
--		munmap(file_map, file_map_size);
--	else
--		free(file_map);
--	file_map = NULL;
--	if (lf)
--		elf_close(lf);
--	lf = NULL;
--}
--
--static void * umalloc(size_t size)
--{
--	void *const addr = malloc(size);
--	if (addr == 0) {
--		fprintf(stderr, "malloc failed: %zu bytes\n", size);
--		mmap_cleanup();
--		return NULL;
--	}
--	return addr;
--}
--
--/*
-- * Get the whole file as a programming convenience in order to avoid
-- * malloc+lseek+read+free of many pieces.  If successful, then mmap
-- * avoids copying unused pieces; else just read the whole file.
-- * Open for both read and write; new info will be appended to the file.
-- * Use MAP_PRIVATE so that a few changes to the in-memory ElfXX_Ehdr
-- * do not propagate to the file until an explicit overwrite at the last.
-- * This preserves most aspects of consistency (all except .st_size)
-- * for simultaneous readers of the file while we are appending to it.
-- * However, multiple writers still are bad.  We choose not to use
-- * locking because it is expensive and the use case of kernel build
-- * makes multiple writers unlikely.
-- */
--static void *mmap_file(char const *fname)
--{
--	struct stat sb;
--
--	/* Avoid problems if early cleanup() */
--	fd_map = -1;
--	mmap_failed = 1;
--	file_map = NULL;
--	file_map_size = 0;
--
--	lf = elf_open_read(fname, O_RDWR);
--	if (!lf) {
--		perror(fname);
--		return NULL;
--	}
--	fd_map = lf->fd;
--	if (fstat(fd_map, &sb) < 0) {
--		perror(fname);
--		goto out;
--	}
--	if (!S_ISREG(sb.st_mode)) {
--		fprintf(stderr, "not a regular file: %s\n", fname);
--		goto out;
--	}
--	file_map = mmap(0, sb.st_size, PROT_READ|PROT_WRITE, MAP_PRIVATE,
--			fd_map, 0);
--	if (file_map == MAP_FAILED) {
--		mmap_failed = 1;
--		file_map = umalloc(sb.st_size);
--		if (!file_map) {
--			perror(fname);
--			goto out;
--		}
--		if (read(fd_map, file_map, sb.st_size) != sb.st_size) {
--			perror(fname);
--			mmap_cleanup();
--			goto out;
--		}
--	} else
--		mmap_failed = 0;
--	file_map_size = sb.st_size;
--out:
--	fd_map = -1;
--
--	return file_map;
--}
--
--
- static unsigned char ideal_nop5_x86_64[5] = { 0x0f, 0x1f, 0x44, 0x00, 0x00 };
- static unsigned char ideal_nop5_x86_32[5] = { 0x3e, 0x8d, 0x74, 0x26, 0x00 };
- static unsigned char *ideal_nop;
-@@ -527,8 +437,11 @@ static int do_file(char const *const fname)
- 	unsigned int reltype = 0;
- 	int rc = -1;
- 
--	if (!mmap_file(fname))
-+	lf = elf_open_read(fname, O_RDWR);
-+	if (!lf) {
-+		perror(fname);
- 		goto out;
-+	}
- 
- 	w = w4nat;
- 	w2 = w2nat;
-@@ -658,7 +571,9 @@ static int do_file(char const *const fname)
- 	}  /* end switch */
- 
- out:
--	mmap_cleanup();
-+	if (lf)
-+		elf_close(lf);
-+	lf = NULL;
- 	return rc;
+@@ -387,6 +387,11 @@ static unsigned tot_relsize(unsigned int *rel_entsize)
+ 	return totrelsz;
  }
  
++/* zero or a small negative offset added to get the start of the call
++ * instruction
++ */
++static int mcount_adjust = 0;
++
+ /* 32 bit and 64 bit are very similar */
+ #include "recordmcount.h"
+ #define RECORD_MCOUNT_64
+@@ -497,7 +502,7 @@ static int do_file(char const *const fname)
+ 		rel_type_nop = R_386_NONE;
+ 		make_nop = make_nop_x86;
+ 		ideal_nop = ideal_nop5_x86_32;
+-		mcount_adjust_32 = -1;
++		mcount_adjust = -1;
+ 		gpfx = 0;
+ 		break;
+ 	case EM_ARM:
+@@ -526,7 +531,7 @@ static int do_file(char const *const fname)
+ 		ideal_nop = ideal_nop5_x86_64;
+ 		reltype = R_X86_64_64;
+ 		rel_type_nop = R_X86_64_NONE;
+-		mcount_adjust_64 = -1;
++		mcount_adjust = -1;
+ 		gpfx = 0;
+ 		break;
+ 	}  /* end switch */
+@@ -558,7 +563,7 @@ static int do_file(char const *const fname)
+ 		}
+ 		if (lf->ehdr.e_machine == EM_S390) {
+ 			reltype = R_390_64;
+-			mcount_adjust_64 = -14;
++			mcount_adjust = -14;
+ 		}
+ 		if (lf->ehdr.e_machine == EM_MIPS) {
+ 			reltype = R_MIPS_64;
 diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index 5ca488f3471c..fcc4f1a74d60 100644
+index a74a80b3356e..e2c8b9d4725d 100644
 --- a/tools/objtool/recordmcount.h
 +++ b/tools/objtool/recordmcount.h
-@@ -184,13 +184,13 @@ static int do_func(unsigned const reltype)
- 	totrelsz = tot_relsize(&rel_entsize);
- 	if (totrelsz == 0)
- 		return 0;
--	mrel0 = umalloc(totrelsz);
-+	mrel0 = malloc(totrelsz);
- 	mrelp = mrel0;
- 	if (!mrel0)
- 		return -1;
+@@ -18,7 +18,6 @@
+  * Copyright 2010 Steven Rostedt <srostedt@redhat.com>, Red Hat Inc.
+  */
+ #undef append_func
+-#undef mcount_adjust
+ #undef sift_rel_mcount
+ #undef do_func
+ #undef Elf_Shdr
+@@ -35,7 +34,6 @@
+ # define append_func		append64
+ # define sift_rel_mcount	sift64_rel_mcount
+ # define do_func		do64
+-# define mcount_adjust		mcount_adjust_64
+ # define Elf_Rel		Elf64_Rel
+ # define Elf_Rela		Elf64_Rela
+ # define ELF_R_INFO		ELF64_R_INFO
+@@ -48,7 +46,6 @@
+ # define append_func		append32
+ # define sift_rel_mcount	sift32_rel_mcount
+ # define do_func		do32
+-# define mcount_adjust		mcount_adjust_32
+ # define Elf_Rel		Elf32_Rel
+ # define Elf_Rela		Elf32_Rela
+ # define ELF_R_INFO		ELF32_R_INFO
+@@ -65,8 +62,6 @@ static void fn_ELF_R_INFO(Elf_Rel *const rp, unsigned sym, unsigned type)
+ }
+ static void (*Elf_r_info)(Elf_Rel *const rp, unsigned sym, unsigned type) = fn_ELF_R_INFO;
  
- 	/* 2*sizeof(address) <= sizeof(Elf_Rel) */
--	mloc0 = umalloc(totrelsz>>1);
-+	mloc0 = malloc(totrelsz>>1);
- 	mlocp = mloc0;
- 	if (!mloc0) {
- 		free(mrel0);
+-static int mcount_adjust = 0;
+-
+ /* Append the new  __mcount_loc and its relocations. */
+ static int append_func(uint_t const *const mloc0,
+ 			uint_t const *const mlocp,
 -- 
 2.20.1
 
