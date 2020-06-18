@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A40AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D13C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA9902220E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93AD22210
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444556;
-	bh=dPteiSV/kKE689tA8hP9phkFLANeBY/7ZzDTa17iXBY=;
+	s=default; t=1592444564;
+	bh=RvTCFn4Y/pb0w9/1tnnkax2gSVbLbcvRmLSmjEwBzQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=05dTBEFWyUg2CfsdJKQ3hkz7M1Oy7uUMva6emSIYKhpmsvYblOl9sTv2MciJ/kb10
-	 CcXY4jililtVzUj5eTzhUdevuUjLCP2qSJYV076+QSzclMPXsbJu2jvAohdBvo9l79
-	 gTssaJKXDmI00n3n6xpzQtu55SGmcOsvIgq0MSjE=
+	b=0HrcWppZTfVW2UZti5kqZsJfi8Dx2wbWd6/Sitp+w6lOkFe/5H3+mnhSwP0YGPUYJ
+	 XGQ2wgJ6uVyBhb6fgGrfYO3gjuolCIpbV2zkBP8jdXHfoYVYeYgn+QbUKzVr8YaxTB
+	 rx7mDJBQi0HFhAbLf48f9F1NzzD8W0WgWkG3OsFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732550AbgFRBmf (ORCPT
+        id S1732579AbgFRBmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:42:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38660 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:42:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732280AbgFRB3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:21 -0400
+        id S1732273AbgFRB3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:29:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E66722229;
-        Thu, 18 Jun 2020 01:29:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF7AB22240;
+        Thu, 18 Jun 2020 01:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443761;
-        bh=dPteiSV/kKE689tA8hP9phkFLANeBY/7ZzDTa17iXBY=;
+        s=default; t=1592443757;
+        bh=RvTCFn4Y/pb0w9/1tnnkax2gSVbLbcvRmLSmjEwBzQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uUmcRfpdAM7kKA25EXARslBkFQ6zWh4zEP00u4nSMaTU7X/frcGhF2lrPaZQ5+YuE
-         KUvJ9qOb09ByYd6KXKWxx3uDDVZciBrg7ltR/gxarO0twKLl3DdohkHG1X5ZxrMsYk
-         Jfy31/WzXLJOQm3xgwHdYohOeVwcgEhBVsDxG8XQ=
+        b=F6ueyZIjCFYwirqsvQVgJpZ2CPB+NOdL7xoXsATOzcMEsiJDU6wt9X/JPutsXMNyz
+         5YwLCOZ9Xo7Zd1q92cxHwo9Cm1mDxj+fSv5y+ky4gZtKPKjnxe3xTZgzyP+FHFRE3m
+         b+bDKKjH3XxuGdGZey05iGMooyIklirRQs0q9f2A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 47/80] powerpc/pseries/ras: Fix FWNMI_VALID off by one
-Date:   Wed, 17 Jun 2020 21:27:46 -0400
-Message-Id: <20200618012819.609778-47-sashal@kernel.org>
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 44/80] clk: ti: composite: fix memory leak
+Date:   Wed, 17 Jun 2020 21:27:43 -0400
+Message-Id: <20200618012819.609778-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
 References: <20200618012819.609778-1-sashal@kernel.org>
@@ -60,44 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit deb70f7a35a22dffa55b2c3aac71bc6fb0f486ce ]
+[ Upstream commit c7c1cbbc9217ebb5601b88d138d4a5358548de9d ]
 
-This was discovered developing qemu fwnmi sreset support. This
-off-by-one bug means the last 16 bytes of the rtas area can not
-be used for a 16 byte save area.
+The parent_names is never released for a component clock definition,
+causing some memory leak. Fix by releasing it once it is no longer
+needed.
 
-It's not a serious bug, and QEMU implementation has to retain a
-workaround for old kernels, but it's good to tighten it.
-
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Acked-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200508043408.886394-7-npiggin@gmail.com
+Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Link: https://lkml.kernel.org/r/20200429131341.4697-2-t-kristo@ti.com
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/ras.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/clk/ti/composite.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
-index 8799d8a83d56..0af19aa1df57 100644
---- a/arch/powerpc/platforms/pseries/ras.c
-+++ b/arch/powerpc/platforms/pseries/ras.c
-@@ -311,10 +311,11 @@ static irqreturn_t ras_error_interrupt(int irq, void *dev_id)
- /*
-  * Some versions of FWNMI place the buffer inside the 4kB page starting at
-  * 0x7000. Other versions place it inside the rtas buffer. We check both.
-+ * Minimum size of the buffer is 16 bytes.
-  */
- #define VALID_FWNMI_BUFFER(A) \
--	((((A) >= 0x7000) && ((A) < 0x7ff0)) || \
--	(((A) >= rtas.base) && ((A) < (rtas.base + rtas.size - 16))))
-+	((((A) >= 0x7000) && ((A) <= 0x8000 - 16)) || \
-+	(((A) >= rtas.base) && ((A) <= (rtas.base + rtas.size - 16))))
+diff --git a/drivers/clk/ti/composite.c b/drivers/clk/ti/composite.c
+index 1cf70f452e1e..3725b2e0c788 100644
+--- a/drivers/clk/ti/composite.c
++++ b/drivers/clk/ti/composite.c
+@@ -226,6 +226,7 @@ static void __init _register_composite(struct clk_hw *hw,
+ 		if (!cclk->comp_clks[i])
+ 			continue;
+ 		list_del(&cclk->comp_clks[i]->link);
++		kfree(cclk->comp_clks[i]->parent_names);
+ 		kfree(cclk->comp_clks[i]);
+ 	}
  
- /*
-  * Get the error information for errors coming through the
 -- 
 2.25.1
 
