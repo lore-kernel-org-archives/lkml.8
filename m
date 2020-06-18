@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7343C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D23C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8426206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EAC1206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447547;
-	bh=xbcdMyZ/zU7XdYMLaTEcniBciHD6hTU30WYvpM9EXOc=;
+	s=default; t=1592447563;
+	bh=8dWe8dNHmHjFruy6tr76/ZHDAnAMRcZD/e9OgpgnMeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQKrjGnLjsXKMsGHwoiRyY00S+mcuRZ/3sX1ud/OPeoldGBaHlGnXo0a2ARsSf/Ij
-	 XNohjFo+8FKyyKwQzfGb0hInGuPctEEFjgiowUT+Ap8/mzNWU2JPxTiqdryTlrK/Iy
-	 i+uaUdb9BVi7RbM+UbyxEt/DdlqPVXi3cezGiB6I=
+	b=ewxr/1YYznpHOjavXnZqcwWl4QmASQe8nYpoFuzciGPsAfcZBqak7+736PubwLQVN
+	 wIUD4wEFd2MBRfQdL8QiHoccXRZRHR7hik6ElnVYMv2jyBvc8qOYS8ikiw6HzCGeFz
+	 b5N7fg0kFFd7CGGC/ZYPJK2/OxRokQnE1Wpn56I4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbgFRCc0 (ORCPT
+        id S1729858AbgFRCcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:32:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:32:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729445AbgFRBPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:13 -0400
+        id S1729442AbgFRBPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E101C221EB;
-        Thu, 18 Jun 2020 01:15:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 880F8221EB;
+        Thu, 18 Jun 2020 01:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442913;
-        bh=xbcdMyZ/zU7XdYMLaTEcniBciHD6hTU30WYvpM9EXOc=;
+        s=default; t=1592442909;
+        bh=8dWe8dNHmHjFruy6tr76/ZHDAnAMRcZD/e9OgpgnMeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FUasuUFcD3ZJB5r0rJL5sumgGxjBjfF51E/VhLCQWmlooTNbubu6VDkr3ZehHXr+G
-         onhoOct+OkdGSwJ3j4UkSwym1s70E6B84resIjSSVj/1MQaujfpt/yiDcULXv9SnPT
-         kQ4UPvc+rLBkwB+8MIlBBMBvgojOwgwyeGOzKrfA=
+        b=PoFdzrhR+ZS7JKtwQW+pROHz69+WHZnOQhWT+HMqMs+vCXXegeI3NiuiCYOOzgLfV
+         YXaz0QaKa+ncxckr3qKX8wZr2PW5DblR0EiQngSh4HjpseQEMiDCfu1wjS3yAArR1y
+         mWRnKV1x/qxZWT3yvvwdMOH+85Sxh3N6MBtXsgqE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Theodore Ts'o <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 331/388] ext4: don't block for O_DIRECT if IOCB_NOWAIT is set
-Date:   Wed, 17 Jun 2020 21:07:08 -0400
-Message-Id: <20200618010805.600873-331-sashal@kernel.org>
+Cc:     Ka-Cheong Poon <ka-cheong.poon@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 328/388] RDMA/cm: Spurious WARNING triggered in cm_destroy_id()
+Date:   Wed, 17 Jun 2020 21:07:05 -0400
+Message-Id: <20200618010805.600873-328-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -58,43 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Ka-Cheong Poon <ka-cheong.poon@oracle.com>
 
-[ Upstream commit 6e014c621e7271649f0d51e54dbe1db4c10486c8 ]
+[ Upstream commit fba97dc7fc76b2c9a909fa0b3786d30a9899f5cf ]
 
-Running with some debug patches to detect illegal blocking triggered the
-extend/unaligned condition in ext4. If ext4 needs to extend the file (and
-hence go to buffered IO), or if the app is doing unaligned IO, then ext4
-asks the iomap code to wait for IO completion. If the caller asked for
-no-wait semantics by setting IOCB_NOWAIT, then ext4 should return -EAGAIN
-instead.
+If the cm_id state is IB_CM_REP_SENT when cm_destroy_id() is called, it
+calls cm_send_rej_locked().
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+In cm_send_rej_locked(), it calls cm_enter_timewait() and the state is
+changed to IB_CM_TIMEWAIT.
 
-Link: https://lore.kernel.org/r/76152096-2bbb-7682-8fce-4cb498bcd909@kernel.dk
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Now back to cm_destroy_id(), it breaks from the switch statement, and the
+next call is WARN_ON(cm_id->state != IB_CM_IDLE).
+
+This triggers a spurious warning. Instead, the code should goto retest
+after returning from cm_send_rej_locked() to move the state to IDLE.
+
+Fixes: 67b3c8dceac6 ("RDMA/cm: Make sure the cm_id is in the IB_CM_IDLE state in destroy")
+Link: https://lore.kernel.org/r/1591191218-9446-1-git-send-email-ka-cheong.poon@oracle.com
+Signed-off-by: Ka-Cheong Poon <ka-cheong.poon@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/file.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/infiniband/core/cm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ext4/file.c b/fs/ext4/file.c
-index b8e69f9e3858..2a01e31a032c 100644
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -502,6 +502,12 @@ static ssize_t ext4_dio_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	if (ret <= 0)
- 		return ret;
- 
-+	/* if we're going to block and IOCB_NOWAIT is set, return -EAGAIN */
-+	if ((iocb->ki_flags & IOCB_NOWAIT) && (unaligned_io || extend)) {
-+		ret = -EAGAIN;
-+		goto out;
-+	}
-+
- 	offset = iocb->ki_pos;
- 	count = ret;
- 
+diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
+index 17f14e0eafe4..1c2bf18cda9f 100644
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -1076,7 +1076,9 @@ static void cm_destroy_id(struct ib_cm_id *cm_id, int err)
+ 	case IB_CM_REP_SENT:
+ 	case IB_CM_MRA_REP_RCVD:
+ 		ib_cancel_mad(cm_id_priv->av.port->mad_agent, cm_id_priv->msg);
+-		/* Fall through */
++		cm_send_rej_locked(cm_id_priv, IB_CM_REJ_CONSUMER_DEFINED, NULL,
++				   0, NULL, 0);
++		goto retest;
+ 	case IB_CM_MRA_REQ_SENT:
+ 	case IB_CM_REP_RCVD:
+ 	case IB_CM_MRA_REP_SENT:
 -- 
 2.25.1
 
