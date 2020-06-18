@@ -2,108 +2,228 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 177E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1820C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7AEC206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A309F2071A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:09:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592521777;
+	bh=H6IO8yxoUcYmqjy//mv0HgVprmtMPdFrIekLt6GlDl0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=u7TRt3K4gTujKg7aMaJVQR+OQ1OCrkpDGQnzd0W+BqFMF11AaWsk8N0zsxRp81deZ
+	 TVmeRjCHZ9GOAJRorQ0Z0lRU2EW4V9HTzzVf8wUid51ErJs2lglOoNiPK9uwlwHIx+
+	 7ftENQmrO7QETXqkqXorIRBtKDMQvtsRqF2R1aIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731572AbgFRXEf (ORCPT
+        id S1729125AbgFRXJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 19:04:35 -0400
-Received: from [211.29.132.53] ([211.29.132.53]:37099 "EHLO
-        mail107.syd.optusnet.com.au" rhost-flags-FAIL-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1728387AbgFRXEe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 19:04:34 -0400
-Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
-        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id C464AD5D71B;
-        Fri, 19 Jun 2020 09:04:10 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jm3Zl-00015Z-1z; Fri, 19 Jun 2020 09:04:05 +1000
-Date:   Fri, 19 Jun 2020 09:04:05 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>
-Subject: Re: [PATCH v4] xfs: Fix false positive lockdep warning with
- sb_internal & fs_reclaim
-Message-ID: <20200618230405.GK2005@dread.disaster.area>
-References: <20200618171941.9475-1-longman@redhat.com>
- <20200618225810.GJ2005@dread.disaster.area>
+        Thu, 18 Jun 2020 19:09:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33836 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727776AbgFRXJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 19:09:35 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AFFB206F1;
+        Thu, 18 Jun 2020 23:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592521774;
+        bh=H6IO8yxoUcYmqjy//mv0HgVprmtMPdFrIekLt6GlDl0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=oXclqOsqiaFDbwxelChz35mjJPApOJ2t6/OJYOhfj6dU7zgftmHcmoDdH/grPVi8R
+         qiBRLHyfXup4jsmkOF9JETm2t/hdfECKSaZz5fI0ZuvHvBzdfS3g27cednpHK1kjMh
+         1LqZbZcH/yUlpFyewNUgD2uv831LZ7LXAVdeYAW0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 85C83352264E; Thu, 18 Jun 2020 16:09:34 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 16:09:34 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, urezki@gmail.com,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 1/7] rcu/segcblist: Prevent useless GP start if no CBs to
+ accelerate
+Message-ID: <20200618230934.GA31937@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200618202955.4024-1-joel@joelfernandes.org>
+ <20200618221119.GX2723@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200618225810.GJ2005@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=7-415B0cAAAA:8
-        a=k999_xXsWlR2ZBYdmagA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20200618221119.GX2723@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 19, 2020 at 08:58:10AM +1000, Dave Chinner wrote:
-> On Thu, Jun 18, 2020 at 01:19:41PM -0400, Waiman Long wrote:
-> > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> > index 379cbff438bc..1b94b9bfa4d7 100644
-> > --- a/fs/xfs/xfs_super.c
-> > +++ b/fs/xfs/xfs_super.c
-> > @@ -913,11 +913,33 @@ xfs_fs_freeze(
-> >  	struct super_block	*sb)
-> >  {
-> >  	struct xfs_mount	*mp = XFS_M(sb);
-> > +	unsigned long		pflags;
-> > +	int			ret;
-> >  
-> > +	/*
-> > +	 * A fs_reclaim pseudo lock is added to check for potential deadlock
-> > +	 * condition with fs reclaim. The following lockdep splat was hit
-> > +	 * occasionally. This is actually a false positive as the allocation
-> > +	 * is being done only after the frozen filesystem is no longer dirty.
-> > +	 * One way to avoid this splat is to add GFP_NOFS to the affected
-> > +	 * allocation calls. This is what PF_MEMALLOC_NOFS is for.
-> > +	 *
-> > +	 *       CPU0                    CPU1
-> > +	 *       ----                    ----
-> > +	 *  lock(sb_internal);
-> > +	 *                               lock(fs_reclaim);
-> > +	 *                               lock(sb_internal);
-> > +	 *  lock(fs_reclaim);
-> > +	 *
-> > +	 *  *** DEADLOCK ***
-> > +	 */
+On Thu, Jun 18, 2020 at 03:11:19PM -0700, Paul E. McKenney wrote:
+> On Thu, Jun 18, 2020 at 04:29:49PM -0400, Joel Fernandes (Google) wrote:
 > 
-> The lockdep splat is detailed in the commit message - it most
-> definitely does not need to be repeated in full here because:
+> First, this looks like a very nice optimization, thank you!
 > 
-> 	a) it doesn't explain why the splat occurring is, and
-> 	b) we most definitely don't care about how the lockdep check
-> 	   that triggered it is implemented.
+> > rcu_segcblist_accelerate() returns true if a GP is to be
+> > started/requested and false if not. During tracing, I found that it is
+> > asking that GPs be requested
+> 
+> s/GPs/unnecessary GPs/?  Plus "." at end of the sentence.
+> 
+> > The exact flow seems to be something like:
+> > 1. Callbacks are queued on CPU A - into the NEXT list.
+> > 2. softirq runs on CPU A, accelerate all CBs from NEXT->WAIT and request a GP X.
+> > 3. GP thread wakes up on another CPU, starts the GP X and requests QS from CPU A.
+> > 4. CPU A's softirq runs again presumably because of #3.
+> 
+> Yes, that is one reason RCU softirq might run again.
+> 
+> > 5. CPU A's softirq now does acceleration again, this time no CBs are
+> >    accelerated since last attempt, but it still requests GP X+1 which
+> >    could be useless.
+> 
+> I can't think of a case where this request helps.  How about: "but
+> it still unnecessarily requests GP X+1"?
+> 
+> > The fix is, prevent the useless GP start if we detect no CBs are there
+> > to accelerate.
+> > 
+> > With this, we have the following improvement in short runs of
+> > rcutorture (5 seconds each):
+> > +----+-------------------+-------------------+
+> > | #  | Number of GPs     | Number of Wakeups |
+> > +====+=========+=========+=========+=========+
+> > | 1  | With    | Without | With    | Without |
+> > +----+---------+---------+---------+---------+
+> > | 2  |      75 |      89 |     113 |     119 |
+> > +----+---------+---------+---------+---------+
+> > | 3  |      62 |      91 |     105 |     123 |
+> > +----+---------+---------+---------+---------+
+> > | 4  |      60 |      79 |      98 |     110 |
+> > +----+---------+---------+---------+---------+
+> > | 5  |      63 |      79 |      99 |     112 |
+> > +----+---------+---------+---------+---------+
+> > | 6  |      57 |      89 |      96 |     123 |
+> > +----+---------+---------+---------+---------+
+> > | 7  |      64 |      85 |      97 |     118 |
+> > +----+---------+---------+---------+---------+
+> > | 8  |      58 |      83 |      98 |     113 |
+> > +----+---------+---------+---------+---------+
+> > | 9  |      57 |      77 |      89 |     104 |
+> > +----+---------+---------+---------+---------+
+> > | 10 |      66 |      82 |      98 |     119 |
+> > +----+---------+---------+---------+---------+
+> > | 11 |      52 |      82 |      83 |     117 |
+> > +----+---------+---------+---------+---------+
+> 
+> So the reductions in wakeups ranges from 5% to 40%, with almost a 20%
+> overall reduction in wakeups across all the runs.  That should be of
+> some use to someone.  ;-)
+> 
+> I do run rcutorture quite a bit, but is there a more real-world
+> benchmark that could be tried?
+> 
+> > Cc: urezki@gmail.com
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-I should have added this:
+As discussed over IRC, I updated the patch as shown below.  Does that
+work for you?
 
-	c) a lot of people don't understand what lockdep reports
-	   are telling them is a problem.
+							Thanx, Paul
 
-I get a lot of questions like "I saw this lockdep thing, but I can't
-work out what it actually means, so can you have a look at it
-Dave?". Hence I think directly quoting something people tend not to
-understand to explain the problem they didn't understand isn't the
-best approach to improving understanding of the problem...
+------------------------------------------------------------------------
 
-Cheers,
+commit ec037e1f438074eb16fd68a63d699fc419c9ba0c
+Author: Joel Fernandes (Google) <joel@joelfernandes.org>
+Date:   Thu Jun 18 16:29:49 2020 -0400
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+    rcu/segcblist: Prevent useless GP start if no CBs to accelerate
+    
+    The rcu_segcblist_accelerate() function returns true iff it is necessary
+    to request another grace period.  A tracing session showed that this
+    function unnecessarily requests grace periods.
+    
+    For exmaple, consider the following sequence of events:
+    1. Callbacks are queued only on the NEXT segment of CPU A's callback list.
+    2. CPU A runs RCU_SOFTIRQ, accelerating these callbacks from NEXT to WAIT.
+    3. Thus rcu_segcblist_accelerate() returns true, requesting grace period N.
+    4. RCU's grace-period kthread wakes up on CPU B and starts grace period N.
+    4. CPU A notices the new grace period and invokes RCU_SOFTIRQ.
+    5. CPU A's RCU_SOFTIRQ again invokes rcu_segcblist_accelerate(), but
+       there are no new callbacks.  However, rcu_segcblist_accelerate()
+       nevertheless (uselessly) requests a new grace period N+1.
+    
+    This extra grace period results in additional lock contention and also
+    additional wakeups, all for no good reason.
+    
+    This commit therefore adds a check to rcu_segcblist_accelerate() that
+    prevents the return of true when there are no new callbacks.
+    
+    This change reduces the number of grace periods (GPs) and wakeups in each
+    of eleven five-second rcutorture runs as follows:
+    
+    +----+-------------------+-------------------+
+    | #  | Number of GPs     | Number of Wakeups |
+    +====+=========+=========+=========+=========+
+    | 1  | With    | Without | With    | Without |
+    +----+---------+---------+---------+---------+
+    | 2  |      75 |      89 |     113 |     119 |
+    +----+---------+---------+---------+---------+
+    | 3  |      62 |      91 |     105 |     123 |
+    +----+---------+---------+---------+---------+
+    | 4  |      60 |      79 |      98 |     110 |
+    +----+---------+---------+---------+---------+
+    | 5  |      63 |      79 |      99 |     112 |
+    +----+---------+---------+---------+---------+
+    | 6  |      57 |      89 |      96 |     123 |
+    +----+---------+---------+---------+---------+
+    | 7  |      64 |      85 |      97 |     118 |
+    +----+---------+---------+---------+---------+
+    | 8  |      58 |      83 |      98 |     113 |
+    +----+---------+---------+---------+---------+
+    | 9  |      57 |      77 |      89 |     104 |
+    +----+---------+---------+---------+---------+
+    | 10 |      66 |      82 |      98 |     119 |
+    +----+---------+---------+---------+---------+
+    | 11 |      52 |      82 |      83 |     117 |
+    +----+---------+---------+---------+---------+
+    
+    The reduction in the number of wakeups ranges from 5% to 40%.
+    
+    Cc: urezki@gmail.com
+    [ paulmck: Rework commit log and comment. ]
+    Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
+index 9a0f661..2d2a6b6b9 100644
+--- a/kernel/rcu/rcu_segcblist.c
++++ b/kernel/rcu/rcu_segcblist.c
+@@ -475,8 +475,16 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
+ 	 * Also advance to the oldest segment of callbacks whose
+ 	 * ->gp_seq[] completion is at or after that passed in via "seq",
+ 	 * skipping any empty segments.
++	 *
++	 * Note that segment "i" (and any lower-numbered segments
++	 * containing older callbacks) will be unaffected, and their
++	 * grace-period numbers remain unchanged.  For example, if i ==
++	 * WAIT_TAIL, then neither WAIT_TAIL nor DONE_TAIL will be touched.
++	 * Instead, the CBs in NEXT_TAIL will be merged with those in
++	 * NEXT_READY_TAIL and the grace-period number of NEXT_READY_TAIL
++	 * would be updated.  NEXT_TAIL would then be empty.
+ 	 */
+-	if (++i >= RCU_NEXT_TAIL)
++	if (rcu_segcblist_restempty(rsclp, i) || ++i >= RCU_NEXT_TAIL)
+ 		return false;
+ 
+ 	/*
