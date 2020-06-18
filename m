@@ -2,54 +2,53 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B68CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0F62222A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3732E22240
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445290;
-	bh=+bbfq/lOHEvGvceV96zCfrP87tJ+zhiGJCMnu/R7Jj0=;
+	s=default; t=1592445298;
+	bh=bIk6w6VvDx5GaB2S3OeclfhGrx+NuGFb52D0NAChQF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6oxHlfEEchL4AqvqbU+f7QEpPQDqi/bicOSD6GchjXncgDMD63xiLQm8tYJfBgpV
-	 rfGgSS5fnAauIHjA7gDPcDZgd/T92SMiiJltNxHzX5w9Oe2613eAnWdNq0/cg77rg2
-	 YLp9qojjy9tNEq8Q4sho/jtFK54djABu56QNwjZo=
+	b=jr2BDxtFAsCDtAuq68hg9YS6p1ZEcX/EAtArIrMuFACmFm/8W7D+i/iq1RhGFSkoA
+	 eJfTDZTPBz1e3rE9B8b56s//wcoKF8huC7eksAoFg7AmB6UE1PY0A8j28dT1uc+8lN
+	 Kl/wg0tShFvoliiQagp47U8MQkPTQSCy9hQBNfEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733027AbgFRByt (ORCPT
+        id S1727071AbgFRBy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:54:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33112 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729944AbgFRBZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:54 -0400
+        id S1731528AbgFRBZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8A462088E;
-        Thu, 18 Jun 2020 01:25:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A175421974;
+        Thu, 18 Jun 2020 01:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443553;
-        bh=+bbfq/lOHEvGvceV96zCfrP87tJ+zhiGJCMnu/R7Jj0=;
+        s=default; t=1592443552;
+        bh=bIk6w6VvDx5GaB2S3OeclfhGrx+NuGFb52D0NAChQF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zlxnjJrl3bjircbiSOcl3cxwp4kDodipNAf+jROLhfVdov3If8QX+xmuqqxqCYKJx
-         sqewsxJwEUUDGXI7GKXruf9j8hKPqfSdrQ+PnTh/G7iuPB363AaFDwIxb+xN+Rx1SY
-         +77Pg00vHSgBdZaT6j/ILAi0DnwS59lhxbaqe82g=
+        b=Wc9k4r+EPEe2SHZeAvvwqVZokx1WnCJnfnyVyhm06Nxvl3LcJ6IQaMmHwXrC6Mm+R
+         jg6wIxjkSHq1CJkR5MFZ0oGRt7UYcozk46OtL4+DWzWq9omvD2zaUUE9ADPGa5+Sou
+         sxjl8IGL4FxaJB1A7pyf3XBnagjuhm8jgeEKI0as=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime@cerno.tech>,
+Cc:     tannerlove <tannerlove@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 168/172] drm/sun4i: hdmi ddc clk: Fix size of m divider
-Date:   Wed, 17 Jun 2020 21:22:14 -0400
-Message-Id: <20200618012218.607130-168-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 167/172] selftests/net: in rxtimestamp getopt_long needs terminating null entry
+Date:   Wed, 17 Jun 2020 21:22:13 -0400
+Message-Id: <20200618012218.607130-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -62,49 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: tannerlove <tannerlove@google.com>
 
-[ Upstream commit 54e1e06bcf1cf6e7ac3f86daa5f7454add24b494 ]
+[ Upstream commit 865a6cbb2288f8af7f9dc3b153c61b7014fdcf1e ]
 
-m divider in DDC clock register is 4 bits wide. Fix that.
+getopt_long requires the last element to be filled with zeros.
+Otherwise, passing an unrecognized option can cause a segfault.
 
-Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200413095457.1176754-1-jernej.skrabec@siol.net
+Fixes: 16e781224198 ("selftests/net: Add a test to validate behavior of rx timestamps")
+Signed-off-by: Tanner Love <tannerlove@google.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi.h         | 2 +-
- drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/networking/timestamping/rxtimestamp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-index b685ee11623d..a13e14dd7746 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-@@ -152,7 +152,7 @@
- #define SUN4I_HDMI_DDC_CMD_IMPLICIT_WRITE	3
+diff --git a/tools/testing/selftests/networking/timestamping/rxtimestamp.c b/tools/testing/selftests/networking/timestamping/rxtimestamp.c
+index dd4162fc0419..7a573fb4c1c4 100644
+--- a/tools/testing/selftests/networking/timestamping/rxtimestamp.c
++++ b/tools/testing/selftests/networking/timestamping/rxtimestamp.c
+@@ -114,6 +114,7 @@ static struct option long_options[] = {
+ 	{ "tcp", no_argument, 0, 't' },
+ 	{ "udp", no_argument, 0, 'u' },
+ 	{ "ip", no_argument, 0, 'i' },
++	{ NULL, 0, NULL, 0 },
+ };
  
- #define SUN4I_HDMI_DDC_CLK_REG		0x528
--#define SUN4I_HDMI_DDC_CLK_M(m)			(((m) & 0x7) << 3)
-+#define SUN4I_HDMI_DDC_CLK_M(m)			(((m) & 0xf) << 3)
- #define SUN4I_HDMI_DDC_CLK_N(n)			((n) & 0x7)
- 
- #define SUN4I_HDMI_DDC_LINE_CTRL_REG	0x540
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-index e826da34e919..14b6762567fb 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-@@ -37,7 +37,7 @@ static unsigned long sun4i_ddc_calc_divider(unsigned long rate,
- 	unsigned long best_rate = 0;
- 	u8 best_m = 0, best_n = 0, _m, _n;
- 
--	for (_m = 0; _m < 8; _m++) {
-+	for (_m = 0; _m < 16; _m++) {
- 		for (_n = 0; _n < 8; _n++) {
- 			unsigned long tmp_rate;
- 
+ static int next_port = 19999;
 -- 
 2.25.1
 
