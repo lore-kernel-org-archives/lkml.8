@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71097C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4550B20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E0F2088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446775;
-	bh=Il+45iujVCYEqM5m6qUHQmdBDfODZnNhkilSBuA698g=;
+	s=default; t=1592446779;
+	bh=ethD8dTy4YVainUb2vc8hanwnVhOe3rBhpsSWWKxogU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fy1NORkwyOkFf+3rnIhnn1s1bG1JHtA/qECZSV9u0f36wVseAeQD+wcx44RYMlECn
-	 r68AAE8S6OM7SEbYUKhvIn1g8jgH/oL8cSBP3tXx+wckAiuE19ndLtekq96TuxGIvF
-	 96BZFObD7nLxW4qZXbskZfH1E2fc193GLMyR6Myw=
+	b=iKhG6sAo4s4Z/MlFoM9iVWpe0MLL1TA1Ba/Dbsk3p/BW9NcY6i1A9JMj2gwggDROU
+	 7iGlLU1zzYMuzmSMGD0CjUPv3cAJPsioYMFlvtGG+xYBq5i4+Woh0rWraHxHcYkqXN
+	 gLP2iomeLWbo6+rUfJTtBIwct0j+xcHd+C0dFgEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbgFRBTQ (ORCPT
+        id S1730111AbgFRCTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:19:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46498 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:19:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728503AbgFRBQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:16:19 -0400
+        id S1727994AbgFRBTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94565206F1;
-        Thu, 18 Jun 2020 01:16:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9806921D79;
+        Thu, 18 Jun 2020 01:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442979;
-        bh=Il+45iujVCYEqM5m6qUHQmdBDfODZnNhkilSBuA698g=;
+        s=default; t=1592443156;
+        bh=ethD8dTy4YVainUb2vc8hanwnVhOe3rBhpsSWWKxogU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FEVSBByQ2cWOjSfASPgx2tKY2JMj3drUnppnVLGC63TV1FZrvMGZ4fynMFL9DyXdr
-         AVZ3xV6HzY0KUSivqbz9k5PEsrDxPd0HiUgp1iMFwecrHgjEfHB+tDah/XdirmWW8A
-         HCTZ8hwPvqWD0QRRms1U7E4z8cyYP2etxr7BLZrY=
+        b=DfXzJrETTV1wAKoc0YFN5+ZVJCv6OJqcibrvE8PEVDz60mrrqfulGvyOtqtMhNGcp
+         Huhkmr9GUjNKYc7RUBE1WOlMt7S5p5Ol5958/QOTlXmKdFiFLiSUCgWTyG5sgC7l2X
+         4pkRKfDRXu+qvxIl+E1Xl1SFjU/ZLCIOnV0jAzwk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 381/388] NFS: Fix direct WRITE throughput regression
-Date:   Wed, 17 Jun 2020 21:07:58 -0400
-Message-Id: <20200618010805.600873-381-sashal@kernel.org>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 123/266] drivers: base: Fix NULL pointer exception in __platform_driver_probe() if a driver developer is foolish
+Date:   Wed, 17 Jun 2020 21:14:08 -0400
+Message-Id: <20200618011631.604574-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,48 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-[ Upstream commit ba838a75e73f55a780f1ee896b8e3ecb032dba0f ]
+[ Upstream commit 388bcc6ecc609fca1b4920de7dc3806c98ec535e ]
 
-I measured a 50% throughput regression for large direct writes.
+If platform bus driver registration is failed then, accessing
+platform bus spin lock (&drv->driver.bus->p->klist_drivers.k_lock)
+in __platform_driver_probe() without verifying the return value
+__platform_driver_register() can lead to NULL pointer exception.
 
-The observed on-the-wire behavior is that the client sends every
-NFS WRITE twice: once as an UNSTABLE WRITE plus a COMMIT, and once
-as a FILE_SYNC WRITE.
+So check the return value before attempting the spin lock.
 
-This is because the nfs_write_match_verf() check in
-nfs_direct_commit_complete() fails for every WRITE.
+One such example is below:
 
-Buffered writes use nfs_write_completion(), which sets req->wb_verf
-correctly. Direct writes use nfs_direct_write_completion(), which
-does not set req->wb_verf at all. This leaves req->wb_verf set to
-all zeroes for every direct WRITE, and thus
-nfs_direct_commit_completion() always sets NFS_ODIRECT_RESCHED_WRITES.
+For a custom usecase, I have intentionally failed the platform bus
+registration and I expected all the platform device/driver
+registrations to fail gracefully. But I came across this panic
+issue.
 
-This fix appears to restore nearly all of the lost performance.
+[    1.331067] BUG: kernel NULL pointer dereference, address: 00000000000000c8
+[    1.331118] #PF: supervisor write access in kernel mode
+[    1.331163] #PF: error_code(0x0002) - not-present page
+[    1.331208] PGD 0 P4D 0
+[    1.331233] Oops: 0002 [#1] PREEMPT SMP
+[    1.331268] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-00049-g670d35fb0144 #165
+[    1.331341] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[    1.331406] RIP: 0010:_raw_spin_lock+0x15/0x30
+[    1.331588] RSP: 0000:ffffc9000001be70 EFLAGS: 00010246
+[    1.331632] RAX: 0000000000000000 RBX: 00000000000000c8 RCX: 0000000000000001
+[    1.331696] RDX: 0000000000000001 RSI: 0000000000000092 RDI: 0000000000000000
+[    1.331754] RBP: 00000000ffffffed R08: 0000000000000501 R09: 0000000000000001
+[    1.331817] R10: ffff88817abcc520 R11: 0000000000000670 R12: 00000000ffffffed
+[    1.331881] R13: ffffffff82dbc268 R14: ffffffff832f070a R15: 0000000000000000
+[    1.331945] FS:  0000000000000000(0000) GS:ffff88817bd80000(0000) knlGS:0000000000000000
+[    1.332008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.332062] CR2: 00000000000000c8 CR3: 000000000681e001 CR4: 00000000003606e0
+[    1.332126] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    1.332189] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    1.332252] Call Trace:
+[    1.332281]  __platform_driver_probe+0x92/0xee
+[    1.332323]  ? rtc_dev_init+0x2b/0x2b
+[    1.332358]  cmos_init+0x37/0x67
+[    1.332396]  do_one_initcall+0x7d/0x168
+[    1.332428]  kernel_init_freeable+0x16c/0x1c9
+[    1.332473]  ? rest_init+0xc0/0xc0
+[    1.332508]  kernel_init+0x5/0x100
+[    1.332543]  ret_from_fork+0x1f/0x30
+[    1.332579] CR2: 00000000000000c8
+[    1.332616] ---[ end trace 3bd87f12e9010b87 ]---
+[    1.333549] note: swapper/0[1] exited with preempt_count 1
+[    1.333592] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+[    1.333736] Kernel Offset: disabled
 
-Fixes: 1f28476dcb98 ("NFS: Fix O_DIRECT commit verifier handling")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Note, this can only be triggered if a driver errors out from this call,
+which should never happen.  If it does, the driver needs to be fixed.
+
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Link: https://lore.kernel.org/r/20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/direct.c | 2 ++
+ drivers/base/platform.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index a57e7c72c7f4..d49b1d197908 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -731,6 +731,8 @@ static void nfs_direct_write_completion(struct nfs_pgio_header *hdr)
- 		nfs_list_remove_request(req);
- 		if (request_commit) {
- 			kref_get(&req->wb_kref);
-+			memcpy(&req->wb_verf, &hdr->verf.verifier,
-+			       sizeof(req->wb_verf));
- 			nfs_mark_request_commit(req, hdr->lseg, &cinfo,
- 				hdr->ds_commit_idx);
- 		}
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 604a461848c9..0b67d41bab8f 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -802,6 +802,8 @@ int __init_or_module __platform_driver_probe(struct platform_driver *drv,
+ 	/* temporary section violation during probe() */
+ 	drv->probe = probe;
+ 	retval = code = __platform_driver_register(drv, module);
++	if (retval)
++		return retval;
+ 
+ 	/*
+ 	 * Fixup that section violation, being paranoid about code scanning
 -- 
 2.25.1
 
