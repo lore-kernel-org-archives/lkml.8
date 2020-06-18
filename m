@@ -2,54 +2,53 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C924FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A61A82088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6136320853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446563;
-	bh=H1+rkYYD5MbKVuKaLvWXX7/OscxE7Y+zr44KM1l1ZxQ=;
+	s=default; t=1592446570;
+	bh=H567rIveBQagBeIyCQT4uZJ6nC8iGaFQT5iuc7GH3jU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0YO+BAR1FsNUX/pR4rO9u85ywivO/FIdTAy41eVl0tSR2WarkedlUjC97OeXhNF0M
-	 LthX9guwXhTxho/t6677GJTmDCYRWyC7EL5tY30cbNderDZjAuIZDFDS8TwIjL/8VI
-	 GX2VLy0qXcAWCPgFwKXMl4Wi9UQRZRAG7UqQLcBU=
+	b=dYr/7rTplfww3p/+nZSD7KgXuM4nWbL8z4JJPM0U9R/yAvizzUHaAmhnpYumEAEVl
+	 dxn/kbOCHc07ftZAT+ItaAVsoLdZIbYB+OemrBWmi4NXZbClHmlWtybLu7aGyplNMq
+	 hoSPPoWDhSZYginChhOMtoGxaU4929nFsL+86H34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733187AbgFRCQA (ORCPT
+        id S1733257AbgFRCQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:16:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52600 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:16:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729332AbgFRBUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:25 -0400
+        id S1730298AbgFRBUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E76520776;
-        Thu, 18 Jun 2020 01:20:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB57620663;
+        Thu, 18 Jun 2020 01:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443225;
-        bh=H1+rkYYD5MbKVuKaLvWXX7/OscxE7Y+zr44KM1l1ZxQ=;
+        s=default; t=1592443222;
+        bh=H567rIveBQagBeIyCQT4uZJ6nC8iGaFQT5iuc7GH3jU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YJm5q1VFZShHWFcNJHyGeRtMiN/j4B94kFOUiZ0eIXLKHHDdIJ3+4TmbgkdBSbWmt
-         zVE70+b/g/jLgUcD5Q7QGlanIsb4KAsv3cs+4W1lOTy3l3tdYFrb9rqRUZ/ZNsDIgs
-         NPCZen30Imau2eGdeq5hrN9o2qZdEQkNeewzpEoA=
+        b=Bgu7DCubv2KG0ZuA1MKNueFPurf1cfXwc7EOtE7RQWp3G/Q3E/Nq5jFV2zaBqhz0x
+         y7wz3mCa2x3B5lYX6/jBJQKKPOJE96sqbWPtdIJluRXMOSz/U/l5pMj++MUf+Ahtcv
+         qCftXpK7fnZPQArPrp8EPWRUiBxy6QiV7YoRnJZM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        kbuild test robot <lkp@intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 179/266] USB: gadget: udc: s3c2410_udc: Remove pointless NULL check in s3c2410_udc_nuke
-Date:   Wed, 17 Jun 2020 21:15:04 -0400
-Message-Id: <20200618011631.604574-179-sashal@kernel.org>
+Cc:     Stefan Riedmueller <s.riedmueller@phytec.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 177/266] watchdog: da9062: No need to ping manually before setting timeout
+Date:   Wed, 17 Jun 2020 21:15:02 -0400
+Message-Id: <20200618011631.604574-177-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -62,54 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Stefan Riedmueller <s.riedmueller@phytec.de>
 
-[ Upstream commit 7a0fbcf7c308920bc6116b3a5fb21c8cc5fec128 ]
+[ Upstream commit a0948ddba65f4f6d3cfb5e2b84685485d0452966 ]
 
-Clang warns:
+There is actually no need to ping the watchdog before disabling it
+during timeout change. Disabling the watchdog already takes care of
+resetting the counter.
 
-drivers/usb/gadget/udc/s3c2410_udc.c:255:11: warning: comparison of
-address of 'ep->queue' equal to a null pointer is always false
-[-Wtautological-pointer-compare]
-        if (&ep->queue == NULL)
-             ~~~~^~~~~    ~~~~
-1 warning generated.
+This fixes an issue during boot when the userspace watchdog handler takes
+over and the watchdog is already running. Opening the watchdog in this case
+leads to the first ping and directly after that without the required
+heartbeat delay a second ping issued by the set_timeout call. Due to the
+missing delay this resulted in a reset.
 
-It is not wrong, queue is not a pointer so if ep is not NULL, the
-address of queue cannot be NULL. No other driver does a check like this
-and this check has been around since the driver was first introduced,
-presumably with no issues so it does not seem like this check should be
-something else. Just remove it.
-
-Commit afe956c577b2d ("kbuild: Enable -Wtautological-compare") exposed
-this but it is not the root cause of the warning.
-
-Fixes: 3fc154b6b8134 ("USB Gadget driver for Samsung s3c2410 ARM SoC")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1004
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Link: https://lore.kernel.org/r/20200403130728.39260-3-s.riedmueller@phytec.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/s3c2410_udc.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/watchdog/da9062_wdt.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/s3c2410_udc.c b/drivers/usb/gadget/udc/s3c2410_udc.c
-index f82208fbc249..5dcc0692b95c 100644
---- a/drivers/usb/gadget/udc/s3c2410_udc.c
-+++ b/drivers/usb/gadget/udc/s3c2410_udc.c
-@@ -251,10 +251,6 @@ static void s3c2410_udc_done(struct s3c2410_ep *ep,
- static void s3c2410_udc_nuke(struct s3c2410_udc *udc,
- 		struct s3c2410_ep *ep, int status)
+diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
+index e92f38fcb7a4..1b9bcfed39e9 100644
+--- a/drivers/watchdog/da9062_wdt.c
++++ b/drivers/watchdog/da9062_wdt.c
+@@ -55,11 +55,6 @@ static int da9062_wdt_update_timeout_register(struct da9062_watchdog *wdt,
+ 					      unsigned int regval)
  {
--	/* Sanity check */
--	if (&ep->queue == NULL)
--		return;
+ 	struct da9062 *chip = wdt->hw;
+-	int ret;
 -
- 	while (!list_empty(&ep->queue)) {
- 		struct s3c2410_request *req;
- 		req = list_entry(ep->queue.next, struct s3c2410_request,
+-	ret = da9062_reset_watchdog_timer(wdt);
+-	if (ret)
+-		return ret;
+ 
+ 	regmap_update_bits(chip->regmap,
+ 				  DA9062AA_CONTROL_D,
 -- 
 2.25.1
 
