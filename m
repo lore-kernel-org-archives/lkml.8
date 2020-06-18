@@ -2,113 +2,162 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7207CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEC922206
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93BDC221F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445058;
-	bh=A8WtP3vMsswmUtj7/Z5FBorv3GFfxNsg9zYgCEOcPjA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kuOX3q9rHVaOcLTF6LhRBBo6/YP/BAIC4Ba3bn8fElfanbLc4fbhh8JXhKqMZT9SZ
-	 aP9GXNFjXFwX8eh1t1hoPCo80yEVBvSjqs0zXTxLQdbpOQm6bIK4/521sxA+cDeaH/
-	 rhX5YDIm/5KPQ0IJLKNu9aqvZSrTsX9NMWvKwlzA=
+	s=default; t=1592445063;
+	bh=hsD8rEWgNzJQVshX0lx5pB7GQ9Y4hZ3wbaRlnnuycxI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PihVINOgQv5dJRz3YEBmoxzWqUi3xb3icYaVts5QxSysZr2u77jHuwk8/lFojj08A
+	 qam/RY82CcyY0dwnN5l+AhkEe4VARByQYc12EjpuYv27DQTOcmcZ5oBOWioND9vmLd
+	 mV/Ss7ptnmSRSZcXh8+7xSwfUA4biB8TVRPN5/0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732199AbgFRBu4 (ORCPT
+        id S1733037AbgFRBvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:50:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35292 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:51:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731825AbgFRB1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731646AbgFRBu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:50:56 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 820EA20776;
-        Thu, 18 Jun 2020 01:27:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDDD322205;
+        Thu, 18 Jun 2020 01:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443635;
-        bh=A8WtP3vMsswmUtj7/Z5FBorv3GFfxNsg9zYgCEOcPjA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jx3w52ZGVKL11CwIdZROTimW6a2ZZ5UCDSB4ATaG1KebCS0dkZLIG1KpTDQyGqWGZ
-         HpTGB+m1ZZq1uNiSSUEwbOksTZJkXlE6NYW1Nv/9gQw5YuTg0JGSfbnAKfyt3CPSHU
-         IABk8HChMHDEpnqpdx3GfIN15nhefPOHjQ5PlLUI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 058/108] tty: n_gsm: Fix SOF skipping
-Date:   Wed, 17 Jun 2020 21:25:10 -0400
-Message-Id: <20200618012600.608744-58-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
-References: <20200618012600.608744-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        s=default; t=1592445055;
+        bh=hsD8rEWgNzJQVshX0lx5pB7GQ9Y4hZ3wbaRlnnuycxI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LTE+D4UbUcEkUSMktV4ESXw4EIEzIOD6H0gorecjoVPo/NCOAK0S7MJPdzPbaPD30
+         vCuOSYNxu6jFgtFv+weatEHa28lHxUrpTm/yWwt2EuwKv7ldq/dqZ94lFq6+UyI9tg
+         JZzjiI9BChv95Mdd+umax1KbG4dXUzdpcuYsEKNQ=
+Date:   Thu, 18 Jun 2020 10:50:51 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
+Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mingo@redhat.com, linux-trace-devel@vger.kernel.org,
+        linux-kernel@i4.cs.fau.de,
+        Maximilian Werner <maximilian.werner96@gmail.com>
+Subject: Re: [PATCH] tracing/boottime: Fix kprobe multiple events
+Message-Id: <20200618105051.ce01a84a13bbf67b816c1363@kernel.org>
+In-Reply-To: <20200617140817.17161-1-sascha.ortmann@stud.uni-hannover.de>
+References: <20200617140817.17161-1-sascha.ortmann@stud.uni-hannover.de>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Hi,
 
-[ Upstream commit 84d6f81c1fb58b56eba81ff0a36cf31946064b40 ]
+On Wed, 17 Jun 2020 16:08:17 +0200
+Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de> wrote:
 
-For at least some modems like the TELIT LE910, skipping SOF makes
-transfers blocking indefinitely after a short amount of data
-transferred.
+> Fix boottime kprobe events to add multiple events even if one fails
+> and report probe generation failures.
+> 
+> As an example, when we try to set multiprobe kprobe events in
+> bootconfig like this:
+> 
+> ftrace.event.kprobes.vfsevents {
+> 	probes = "vfs_read $arg1 $arg2,,
+>                  !error! not reported;?", // leads to error
+> 		 "vfs_write $arg1 $arg2"
+> }
+> 
+> this will not work like expected. After commit
+> da0f1f4167e3af69e1d8b32d6d65195ddd2bfb64 ("tracing/boottime:
+> Fix kprobe event API usage"), the function
+> trace_boot_add_kprobe_event will not produce any error message,
+> aborting the function and stopping subsequent probes from getting
+> installed when adding a probe fails at kprobe_event_gen_cmd_start.
 
-Given the small improvement provided by skipping the SOF (just one
-byte on about 100 bytes), it seems better to completely remove this
-"feature" than make it optional.
+Ah, good catch!
+Indeed, I missed the error message.
 
-Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20200512115323.1447922-3-gregory.clement@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/tty/n_gsm.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+> Furthermore, probes continue when kprobe_event_gen_cmd_end fails
+> (and kprobe_event_gen_cmd_start did not fail). In this case the
+> function even returns successfully when the last call to
+> kprobe_event_gen_cmd_end is successful.
+> 
+> The behaviour of reporting and aborting after failures is not
+> consistent.
 
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index f46bd1af7a10..eabdcfa414aa 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -681,7 +681,6 @@ static void gsm_data_kick(struct gsm_mux *gsm)
- {
- 	struct gsm_msg *msg, *nmsg;
- 	int len;
--	int skip_sof = 0;
- 
- 	list_for_each_entry_safe(msg, nmsg, &gsm->tx_list, list) {
- 		if (gsm->constipated && msg->addr)
-@@ -703,15 +702,10 @@ static void gsm_data_kick(struct gsm_mux *gsm)
- 			print_hex_dump_bytes("gsm_data_kick: ",
- 					     DUMP_PREFIX_OFFSET,
- 					     gsm->txframe, len);
--
--		if (gsm->output(gsm, gsm->txframe + skip_sof,
--						len - skip_sof) < 0)
-+		if (gsm->output(gsm, gsm->txframe, len) < 0)
- 			break;
- 		/* FIXME: Can eliminate one SOF in many more cases */
- 		gsm->tx_bytes -= msg->len;
--		/* For a burst of frames skip the extra SOF within the
--		   burst */
--		skip_sof = 1;
- 
- 		list_del(&msg->list);
- 		kfree(msg);
+OK. And for more consistency, we should abort the loop if we hit any
+error instead of continuing, because if trace_boot_add_kprobe_event()
+returns an error code, the rest of event settings are skipped.
+(See trace_boot_init_one_event())
+
+> 
+> The function trace_boot_add_kprobe_event now continues even when
+> one of the multiple events fails. Each failure is now reported
+> individually. Since the function can only return one result to the
+> caller, the function returns now the last failure (or none, if
+> nothing fails).
+> 
+> Cc: linux-kernel@i4.cs.fau.de
+> Signed-off-by: Maximilian Werner <maximilian.werner96@gmail.com>
+> Signed-off-by: Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
+> ---
+>  kernel/trace/trace_boot.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+> index 9de29bb45a27..dbb50184e060 100644
+> --- a/kernel/trace/trace_boot.c
+> +++ b/kernel/trace/trace_boot.c
+> @@ -95,18 +95,24 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
+>  	struct xbc_node *anode;
+>  	char buf[MAX_BUF_LEN];
+>  	const char *val;
+> +	int error = 0;
+>  	int ret = 0;
+>  
+>  	xbc_node_for_each_array_value(node, "probes", anode, val) {
+>  		kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
+>  
+> -		ret = kprobe_event_gen_cmd_start(&cmd, event, val);
+> -		if (ret)
+> -			break;
+> +		error = kprobe_event_gen_cmd_start(&cmd, event, val);
+> +		if (error) {
+> +			pr_err("Failed to generate probe: %s\n", buf);
+> +			ret = error;
+> +			continue;
+
+so, could you break here?
+
+> +		}
+>  
+> -		ret = kprobe_event_gen_cmd_end(&cmd);
+> -		if (ret)
+> +		error = kprobe_event_gen_cmd_end(&cmd);
+> +		if (error) {
+>  			pr_err("Failed to add probe: %s\n", buf);
+> +			ret = error;
+
+And here.
+
+> +		}
+>  	}
+>  
+>  	return ret;
+> -- 
+> 2.17.1
+> 
+
+Thank you!
+
+
 -- 
-2.25.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
