@@ -2,101 +2,99 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A55C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC83C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B66E21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401A921924
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:57:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kEUGfJfp"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="NHTZlTX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbgFRAzi (ORCPT
+        id S1726931AbgFRA55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 20:55:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbgFRAzh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 20:55:37 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5502CC06174E;
-        Wed, 17 Jun 2020 17:55:37 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id p15so1995362qvr.9;
-        Wed, 17 Jun 2020 17:55:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=QkrtFvauH63vzyLl34SLgBXYBYzigso9U0CawvX780o=;
-        b=kEUGfJfpHGMgCu7c+K4a12UZVAfTXaQAy5kfhgscxhv/TKrTbfU3whZB3RZtjyODLN
-         cA9BnCMs90sxMBgjq6OnVhuQw+MvyaWKcBLwJZVShVCQ3IpRPU8WkpwZ7yrp7fTIgC1a
-         vn/soMmN0mV9Vt+D/N2r2eiTCZL9QJhjo8kc+9lawnsy76DCgtoIQccXEatSoxs3+1M9
-         txiO827hlQrX0GG7QggjCEtYs8O1+7fsRWTcapXdN2OLCCuF1qx8ZEKLMXtnoh3a5djS
-         auF0vWUc2T2OQ1ywqTIwmydmY+i7NOGVZE0czjHptQvqAo4L1YjRF2OmLZ9Ome/MLAQM
-         FBGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=QkrtFvauH63vzyLl34SLgBXYBYzigso9U0CawvX780o=;
-        b=JiQKdJpbt+hIwVO/lHj3RrVmBlrtgarrETm+sfotq0pCLt5zylwWmldycwVTSNBCBH
-         V+s1lxXdNRJ02MnrpZiLxKOL8iNEsTlbsnyq8c96btHbhFO9Plfkd8ySOfR0++fCzqiG
-         yn7byo9jiaHp1+jLQJR5kYDPEotQD4NosRzZ+Q8ym+K0GxQjDa8XrdLFDVWm17L0dCT3
-         AaKlDStc+wsncRG3Po5os622nreEJgWRb70+oK191saFq9Sv1ppLpreRn2knGjiEVX/F
-         tY0WartZYFEnfi2z3TTw9bON9QvLajOdbT6dVLR3+fBgQ0V9q4RMJBbGBMXKBgVDxH6O
-         OAoA==
-X-Gm-Message-State: AOAM530s/tb/+sm0ABm0el7IEQIaBUu4d4bBgsmQroeYcvDB83bwck98
-        52fxWuGKgJLvP8uXDlZ3a2Q=
-X-Google-Smtp-Source: ABdhPJw3XybahemiQNIeKp8LJpmX8EUeDDm0yVJR0PAc9Jwu3boUpU3kND1lRJ3i9Q8hgAX+/304aQ==
-X-Received: by 2002:ad4:4368:: with SMTP id u8mr1326797qvt.227.1592441736093;
-        Wed, 17 Jun 2020 17:55:36 -0700 (PDT)
-Received: from linux.home ([2604:2000:1344:41d:9c3:b47c:c995:4853])
-        by smtp.googlemail.com with ESMTPSA id c6sm1527351qkg.93.2020.06.17.17.55.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 17:55:35 -0700 (PDT)
-From:   Gaurav Singh <gaurav1086@gmail.com>
-To:     gaurav1086@gmail.com, Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev@vger.kernel.org (open list:TC subsystem),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] [net/sched]: Remove redundant condition in qdisc_graft
-Date:   Wed, 17 Jun 2020 20:55:26 -0400
-Message-Id: <20200618005526.27101-1-gaurav1086@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 17 Jun 2020 20:57:57 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45981 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726879AbgFRA55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 20:57:57 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49nNpC6gn1z9sSc;
+        Thu, 18 Jun 2020 10:57:55 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1592441876;
+        bh=6zbfkIJEcTCwhluvkJvBqEMwTUGHoNtvQJF2+Rj1LaM=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=NHTZlTX/5g6rn40qsPCUdD6fSYs3H/O96lPB5Od0iDL+byhDWHWQIQLE27MzX0zhE
+         9gsbQEXMgI1UPVY4mdvDy4wx0BLwEFro2ntSpgtfXzlbJHxHhgyLf98H4FhbaT8dY5
+         T91UAEm4lqMTVsgNKXUL0DxccrN73ibptXw5UT1d41o6J5a9E8Z3t7whaBu9ZvCQ4s
+         5Fc//tbxV8gTmwVK6YMSylhlNXJT4WpKvPERA/V1PRuNcd3MzmBiYkdJdjpJ0qgybm
+         I3vWexaORUZkpPuXQ/95I8XjjaSBfuKhGXTJ2Ixrv/l/P0xbKvBR/VShg2ea7diDVv
+         Li/WBRKe9KZ6Q==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 3/3] powerpc/8xx: Provide ptep_get() with 16k pages
+In-Reply-To: <20200617143826.GJ2531@hirez.programming.kicks-ass.net>
+References: <cover.1592225557.git.christophe.leroy@csgroup.eu> <341688399c1b102756046d19ea6ce39db1ae4742.1592225558.git.christophe.leroy@csgroup.eu> <20200615132244.GR2531@hirez.programming.kicks-ass.net> <87wo45db8d.fsf@mpe.ellerman.id.au> <20200617143826.GJ2531@hirez.programming.kicks-ass.net>
+Date:   Thu, 18 Jun 2020 10:58:26 +1000
+Message-ID: <87pn9xchql.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-parent cannot be NULL here since its in the else part
-of the if (parent == NULL) condition. Remove the extra
-check on parent pointer.
+Peter Zijlstra <peterz@infradead.org> writes:
+> On Thu, Jun 18, 2020 at 12:21:22AM +1000, Michael Ellerman wrote:
+>> Peter Zijlstra <peterz@infradead.org> writes:
+>> > On Mon, Jun 15, 2020 at 12:57:59PM +0000, Christophe Leroy wrote:
+>
+>> >> +#if defined(CONFIG_PPC_8xx) && defined(CONFIG_PPC_16K_PAGES)
+>> >> +#define __HAVE_ARCH_PTEP_GET
+>> >> +static inline pte_t ptep_get(pte_t *ptep)
+>> >> +{
+>> >> +	pte_t pte = {READ_ONCE(ptep->pte), 0, 0, 0};
+>> >> +
+>> >> +	return pte;
+>> >> +}
+>> >> +#endif
+>> >
+>> > Would it make sense to have a comment with this magic? The casual reader
+>> > might wonder WTH just happened when he stumbles on this :-)
+>> 
+>> I tried writing a helpful comment but it's too late for my brain to form
+>> sensible sentences.
+>> 
+>> Christophe can you send a follow-up with a comment explaining it? In
+>> particular the zero entries stand out, it's kind of subtle that those
+>> entries are only populated with the right value when we write to the
+>> page table.
+>
+> static inline pte_t ptep_get(pte_t *ptep)
+> {
+> 	unsigned long val = READ_ONCE(ptep->pte);
+> 	/* 16K pages have 4 identical value 4K entries */
+> 	pte_t pte = {val, val, val, val);
+> 	return pte;
+> }
+>
+> Maybe something like that?
 
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
----
- net/sched/sch_api.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think val wants to be pte_basic_t, but otherwise yeah I like that much
+better.
 
-diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
-index 9a3449b56bd6..8c92d00c5c8e 100644
---- a/net/sched/sch_api.c
-+++ b/net/sched/sch_api.c
-@@ -1094,7 +1094,7 @@ static int qdisc_graft(struct net_device *dev, struct Qdisc *parent,
- 
- 		/* Only support running class lockless if parent is lockless */
- 		if (new && (new->flags & TCQ_F_NOLOCK) &&
--		    parent && !(parent->flags & TCQ_F_NOLOCK))
-+		    && !(parent->flags & TCQ_F_NOLOCK))
- 			qdisc_clear_nolock(new);
- 
- 		if (!cops || !cops->graft)
--- 
-2.17.1
-
+cheers
