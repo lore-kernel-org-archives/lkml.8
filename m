@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0296BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C03C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D829D214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50618214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442651;
-	bh=OeDBeLcNk9Jymm8syCr+lEMv51GWrupM4856RcZCB9s=;
+	s=default; t=1592442655;
+	bh=/5CTNdM+F7gp4IC14sNl6sz4EKBucflwPUzL4O4i0n0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r+RcUtoZivrcUC1ehRS5GH/hTk9jnYBoIAS2pjgXB35SgDgRF8iYCrt7aL9X7U3Ac
-	 lkeJYpRszH7d6KyKvagNVBUF2qwSIThiIHeWym6Ijw4DqL0wiDdL89C5xFaUDOPi02
-	 /pQPnxihNJ9O6+Zsrff0F07PN8zWTEQ9CMHaBxZU=
+	b=Gk/kbsSMxQieMfcC96lJ6T+35hTZViIkXMKBd1vFaRWQv8+ynuFATMJq0sfhQKpJI
+	 hjZsEv4XedyCUXBMQsmVAiKxZwiYpy4HEDq6rA95++M253XQBoyOfyKfV78H9cHL5W
+	 zJoRwTY9btCe79KrRJ7Hh8bCnmkZauXk/zP0eJ+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgFRBKu (ORCPT
+        id S1728642AbgFRBKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:10:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38298 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:10:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728609AbgFRBKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:48 -0400
+        id S1728626AbgFRBKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CC9B214DB;
-        Thu, 18 Jun 2020 01:10:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2DED21924;
+        Thu, 18 Jun 2020 01:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442647;
-        bh=OeDBeLcNk9Jymm8syCr+lEMv51GWrupM4856RcZCB9s=;
+        s=default; t=1592442650;
+        bh=/5CTNdM+F7gp4IC14sNl6sz4EKBucflwPUzL4O4i0n0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aaOyxYij5SBkvwxxO48xe1hEWbTIRzWGXh19QZHw3DHJFwbfdinfyrikGgLfj7RjU
-         1cohyafayB7LkdmOUysJjbasSSgOU2r1guwt0fVEF6vlvMrlkLh9wD16tHt0j85sgZ
-         sKw0OZNu6LRTeIPDV/l4ov0SXvgNi/E/cCmd2wGQ=
+        b=1Er9sbcQ7PIBWiAx+YlbbAU4F/4e14FMmyF95Xe+B5nyfngitw0f8J6shQxhm52PW
+         XVkU/Q1ElXDg8hAYrt4elr3keCfeQC42Fc6PAXqHng25oiFweJHJ8AwnkSqpcmUuKm
+         Bx1DeCynDg6DnIVuV/LFUad2aiqI+EXJAY4AtWQU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 121/388] arm64: dts: qcom: msm8916: remove unit name for thermal trip points
-Date:   Wed, 17 Jun 2020 21:03:38 -0400
-Message-Id: <20200618010805.600873-121-sashal@kernel.org>
+Cc:     Yishai Hadas <yishaih@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 123/388] RDMA/mlx5: Fix udata response upon SRQ creation
+Date:   Wed, 17 Jun 2020 21:03:40 -0400
+Message-Id: <20200618010805.600873-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,82 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amit Kucheria <amit.kucheria@linaro.org>
+From: Yishai Hadas <yishaih@mellanox.com>
 
-[ Upstream commit fe2aff0c574d206f34f1864d5a0b093694c27142 ]
+[ Upstream commit cf26deff9036cd3270af562dbec545239e5c7f07 ]
 
-The thermal trip points have unit name but no reg property, so we can
-remove them. It also fixes the following warnings from 'make dtbs_check'
-after adding the thermal yaml bindings.
+Fix udata response upon SRQ creation to use the UAPI structure (i.e.
+mlx5_ib_create_srq_resp). It did not zero the reserved field in userspace.
 
-arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
-gpu-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
-camera-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: thermal-zones:
-modem-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-
-arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
-gpu-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
-camera-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml: thermal-zones:
-modem-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Link: https://lore.kernel.org/r/2d3d045c18a2fb85b28cf304aa11ae6e6538d75e.1585562459.git.amit.kucheria@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
+Link: https://lore.kernel.org/r/20200406173540.1466477-1-leon@kernel.org
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/mlx5/srq.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index a88a15f2352b..5548d7b5096c 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -261,7 +261,7 @@ cpu2_3-thermal {
- 			thermal-sensors = <&tsens 4>;
+diff --git a/drivers/infiniband/hw/mlx5/srq.c b/drivers/infiniband/hw/mlx5/srq.c
+index b1a8a9175040..6d1ff13d2283 100644
+--- a/drivers/infiniband/hw/mlx5/srq.c
++++ b/drivers/infiniband/hw/mlx5/srq.c
+@@ -310,12 +310,18 @@ int mlx5_ib_create_srq(struct ib_srq *ib_srq,
+ 	srq->msrq.event = mlx5_ib_srq_event;
+ 	srq->ibsrq.ext.xrc.srq_num = srq->msrq.srqn;
  
- 			trips {
--				cpu2_3_alert0: trip-point@0 {
-+				cpu2_3_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -291,7 +291,7 @@ gpu-thermal {
- 			thermal-sensors = <&tsens 2>;
+-	if (udata)
+-		if (ib_copy_to_udata(udata, &srq->msrq.srqn, sizeof(__u32))) {
++	if (udata) {
++		struct mlx5_ib_create_srq_resp resp = {
++			.srqn = srq->msrq.srqn,
++		};
++
++		if (ib_copy_to_udata(udata, &resp, min(udata->outlen,
++				     sizeof(resp)))) {
+ 			mlx5_ib_dbg(dev, "copy to user failed\n");
+ 			err = -EFAULT;
+ 			goto err_core;
+ 		}
++	}
  
- 			trips {
--				gpu_alert0: trip-point@0 {
-+				gpu_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -311,7 +311,7 @@ camera-thermal {
- 			thermal-sensors = <&tsens 1>;
+ 	init_attr->attr.max_wr = srq->msrq.max - 1;
  
- 			trips {
--				cam_alert0: trip-point@0 {
-+				cam_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -326,7 +326,7 @@ modem-thermal {
- 			thermal-sensors = <&tsens 0>;
- 
- 			trips {
--				modem_alert0: trip-point@0 {
-+				modem_alert0: trip-point0 {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
- 					type = "hot";
 -- 
 2.25.1
 
