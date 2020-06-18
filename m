@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A06C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF95C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEEB721D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD3220CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443226;
-	bh=1KY3sCatdlrZk8pPgJHuVIdcaXAwLRkY5NEVDPA9ANA=;
+	s=default; t=1592443236;
+	bh=ZdkxLbvJy2bvMzWtQalS9auF7+faPIQZEi6k7SJBIdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZE3QZ3ftHkMBULB/xa/6V6k3J5LNeRFsXF5PInlzeOAm3H5XsMSOXPkdKLG9thRz5
-	 ov0CcQDEqlA8FEo1IxlitEMr488hTIHUaJYM4lKAHP411nJvlPX6BLPlIXHRQJzWLc
-	 swICB0d5N5iMhQCCvr9oaxhKhdBqRqjf9h+7dhhI=
+	b=ExVAkczNYhrQ7mLOFLtlTd+KohtgAXSkEEdMq4hbyR8Fsd7xhAA2DH7iz0+AR4437
+	 5ytZWxTj5VnlEAggHdt3yXcaUSDI7RgKZf7iwjpcXS0jzNxSlBqnOqRcbbChpqHSTT
+	 9VxMULmAF5mc07tChUJxBqbKx/iPGXXTmY6lrMuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbgFRBUW (ORCPT
+        id S1728449AbgFRBUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:20:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48098 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:20:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729696AbgFRBRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:00 -0400
+        id S1729754AbgFRBRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43ADE221ED;
-        Thu, 18 Jun 2020 01:16:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1299C21D94;
+        Thu, 18 Jun 2020 01:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443020;
-        bh=1KY3sCatdlrZk8pPgJHuVIdcaXAwLRkY5NEVDPA9ANA=;
+        s=default; t=1592443032;
+        bh=ZdkxLbvJy2bvMzWtQalS9auF7+faPIQZEi6k7SJBIdI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F8HMURgA9Ov6l/ktEy9/hlAf4Vd1UxLn396UaHVNyrm41079AUDbBKT0j1NyTfI/y
-         9+ZRy9VMKHqMZaZlKzW4KFc2T2IiHDPMSX70G796aZXuACpYEMHt49DScOvpkVVsXX
-         x/azJp7reg/0yJm9TgZk9wgw8U5uS9cQ66YRvDU0=
+        b=fxTgzxhxu02PQ3BDxCCX2KT/dpXNHT+7T9+s3+vAJucuFY9XMiu09jZtj0gAn9zjX
+         Q+1lM4063yx9+sbOfqCNbMVIFudASeUs8GQPwUlC50TmPxWKd28vhFnVuX2Op0XhnL
+         M5yxZ27hjtb70MPdS8Hcmqv37RsJxqo4rb9v0o0I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 021/266] PCI: Allow pci_resize_resource() for devices on root bus
-Date:   Wed, 17 Jun 2020 21:12:26 -0400
-Message-Id: <20200618011631.604574-21-sashal@kernel.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 031/266] usblp: poison URBs upon disconnect
+Date:   Wed, 17 Jun 2020 21:12:36 -0400
+Message-Id: <20200618011631.604574-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,51 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit d09ddd8190fbdc07696bf34b548ae15aa1816714 ]
+[ Upstream commit 296a193b06120aa6ae7cf5c0d7b5e5b55968026e ]
 
-When resizing a BAR, pci_reassign_bridge_resources() is invoked to bring
-the bridge windows of parent bridges in line with the new BAR assignment.
+syzkaller reported an URB that should have been killed to be active.
+We do not understand it, but this should fix the issue if it is real.
 
-This assumes the device whose BAR is being resized lives on a subordinate
-bus, but this is not necessarily the case. A device may live on the root
-bus, in which case dev->bus->self is NULL, and passing a NULL pci_dev
-pointer to pci_reassign_bridge_resources() will cause it to crash.
-
-So let's make the call to pci_reassign_bridge_resources() conditional on
-whether dev->bus->self is non-NULL in the first place.
-
-Fixes: 8bb705e3e79d84e7 ("PCI: Add pci_resize_resource() for resizing BARs")
-Link: https://lore.kernel.org/r/20200421162256.26887-1-ardb@kernel.org
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20200507085806.5793-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/setup-res.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/usb/class/usblp.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index d8ca40a97693..d21fa04fa44d 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -439,10 +439,11 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- 	res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
+diff --git a/drivers/usb/class/usblp.c b/drivers/usb/class/usblp.c
+index 0d8e3f3804a3..084c48c5848f 100644
+--- a/drivers/usb/class/usblp.c
++++ b/drivers/usb/class/usblp.c
+@@ -468,7 +468,8 @@ static int usblp_release(struct inode *inode, struct file *file)
+ 	usb_autopm_put_interface(usblp->intf);
  
- 	/* Check if the new config works by trying to assign everything. */
--	ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
--	if (ret)
--		goto error_resize;
--
-+	if (dev->bus->self) {
-+		ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
-+		if (ret)
-+			goto error_resize;
-+	}
+ 	if (!usblp->present)		/* finish cleanup from disconnect */
+-		usblp_cleanup(usblp);
++		usblp_cleanup(usblp);	/* any URBs must be dead */
++
+ 	mutex_unlock(&usblp_mutex);
  	return 0;
+ }
+@@ -1375,9 +1376,11 @@ static void usblp_disconnect(struct usb_interface *intf)
  
- error_resize:
+ 	usblp_unlink_urbs(usblp);
+ 	mutex_unlock(&usblp->mut);
++	usb_poison_anchored_urbs(&usblp->urbs);
+ 
+ 	if (!usblp->used)
+ 		usblp_cleanup(usblp);
++
+ 	mutex_unlock(&usblp_mutex);
+ }
+ 
 -- 
 2.25.1
 
