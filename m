@@ -2,222 +2,103 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A88C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52447208B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855D9206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:10:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kBge8xWu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cXUo81oI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730484AbgFRVKU (ORCPT
+        id S1730759AbgFRVK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 17:10:20 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:52560 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgFRVKR (ORCPT
+        Thu, 18 Jun 2020 17:10:26 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53322 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729195AbgFRVKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 17:10:17 -0400
-Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 3649420B4781;
-        Thu, 18 Jun 2020 14:10:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3649420B4781
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1592514616;
-        bh=7mTVDsv+GEUPRlgSONBCE30TBmxj3kFMNMzV7rQN000=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kBge8xWuXPYlYpN1G/JDzNbB8BiaZPSDToFXlJFw9L6KvUdN+ZSNe3gMgGWmTvsTc
-         lW1aQwuveyqk+ZKNaHVfrPeXTE8avatV/+2U0t7TjJvpjBPp+9qtsJtFZ/TCRRsmGn
-         ELFhjMv5io+0tJ15mT1zJtfylhhV1am60q8yZ8co=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, sgrubb@redhat.com, paul@paul-moore.com
-Cc:     rgb@redhat.com, linux-integrity@vger.kernel.org,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] IMA: Add audit log for failure conditions
-Date:   Thu, 18 Jun 2020 14:10:12 -0700
-Message-Id: <20200618211012.2823-2-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200618211012.2823-1-nramas@linux.microsoft.com>
-References: <20200618211012.2823-1-nramas@linux.microsoft.com>
+        Thu, 18 Jun 2020 17:10:25 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05ILAHLT068318;
+        Thu, 18 Jun 2020 16:10:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592514617;
+        bh=YNkd5BKK3m+Z/j2Cyk31Fc9N+s+2pNUFvbS3FNNHZKQ=;
+        h=From:To:CC:Subject:Date;
+        b=cXUo81oIksHgez8q4UUWPj60V1eJUnCjKgEerTqiG5hrMj0rAVrihdQvuwVtjqdUU
+         eYDXw0WfllWs4QZwEJqE2/fIU1C2N8/EuODfMGcgEaeQQd77ZnD/e/H003XKY0WKyX
+         hL6DCEtRXvJehFMnU5wAYZM5uLAQiwZr+oi2GUU0=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05ILAHj2021312
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 18 Jun 2020 16:10:17 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 18
+ Jun 2020 16:10:17 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 18 Jun 2020 16:10:17 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05ILAHml014723;
+        Thu, 18 Jun 2020 16:10:17 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v8 0/5] RGMII Internal delay common property
+Date:   Thu, 18 Jun 2020 16:10:06 -0500
+Message-ID: <20200618211011.28837-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-process_buffer_measurement() and ima_alloc_key_entry() functions need to
-log an audit message for auditing integrity measurement failures.
+Hello
 
-Add audit message in these two functions. Remove "pr_devel" log message
-in process_buffer_measurement().
+The RGMII internal delay is a common setting found in most RGMII capable PHY
+devices.  It was found that many vendor specific device tree properties exist
+to do the same function. This creates a common property to be used for PHY's
+that have internal delays for the Rx and Tx paths.
 
-Sample audit messages:
+If the internal delay is tunable then the caller needs to pass the internal
+delay array and the return will be the index in the array that was found in
+the firmware node.
 
-[    6.303048] audit: type=1804 audit(1592506281.627:2): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=kernel op=measuring_key cause=ENOMEM comm="swapper/0" name=".builtin_trusted_keys" res=0 errno=-12
+If the internal delay is fixed then the caller only needs to indicate which
+delay to return.  There is no need for a fixed delay to add device properties
+since the value is not configurable. Per the ethernet-controller.yaml the
+interface type indicates that the PHY should provide the delay.
 
-[    8.019432] audit: type=1804 audit(1592506283.344:10): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=measuring_kexec_cmdline cause=hashing_error comm="systemd" name="kexec-cmdline" res=0 errno=-22
+This series contains examples of both a configurable delay and a fixed delay.
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
----
- security/integrity/ima/ima.h            | 48 ++++++++++++++++---------
- security/integrity/ima/ima_main.c       | 18 +++++++---
- security/integrity/ima/ima_policy.c     |  2 +-
- security/integrity/ima/ima_queue_keys.c |  5 +++
- 4 files changed, 51 insertions(+), 22 deletions(-)
+Dan Murphy (5):
+  dt-bindings: net: Add tx and rx internal delays
+  net: phy: Add a helper to return the index for of the internal delay
+  dt-bindings: net: Add RGMII internal delay for DP83869
+  net: dp83869: Add RGMII internal delay configuration
+  net: phy: DP83822: Add setting the fixed internal delay
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index df93ac258e01..c3a32e181b48 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -186,27 +186,43 @@ static inline unsigned int ima_hash_key(u8 *digest)
- 	return (digest[0] | digest[1] << 8) % IMA_MEASURE_HTABLE_SIZE;
- }
- 
--#define __ima_hooks(hook)		\
--	hook(NONE)			\
--	hook(FILE_CHECK)		\
--	hook(MMAP_CHECK)		\
--	hook(BPRM_CHECK)		\
--	hook(CREDS_CHECK)		\
--	hook(POST_SETATTR)		\
--	hook(MODULE_CHECK)		\
--	hook(FIRMWARE_CHECK)		\
--	hook(KEXEC_KERNEL_CHECK)	\
--	hook(KEXEC_INITRAMFS_CHECK)	\
--	hook(POLICY_CHECK)		\
--	hook(KEXEC_CMDLINE)		\
--	hook(KEY_CHECK)			\
--	hook(MAX_CHECK)
--#define __ima_hook_enumify(ENUM)	ENUM,
-+#define __ima_hooks(hook)				\
-+	hook(NONE, none)				\
-+	hook(FILE_CHECK, file)				\
-+	hook(MMAP_CHECK, mmap)				\
-+	hook(BPRM_CHECK, bprm)				\
-+	hook(CREDS_CHECK, creds)			\
-+	hook(POST_SETATTR, post_setattr)		\
-+	hook(MODULE_CHECK, module)			\
-+	hook(FIRMWARE_CHECK, firmware)			\
-+	hook(KEXEC_KERNEL_CHECK, kexec_kernel)		\
-+	hook(KEXEC_INITRAMFS_CHECK, kexec_initramfs)	\
-+	hook(POLICY_CHECK, policy)			\
-+	hook(KEXEC_CMDLINE, kexec_cmdline)		\
-+	hook(KEY_CHECK, key)				\
-+	hook(MAX_CHECK, none)
-+
-+#define __ima_hook_enumify(ENUM, str)	ENUM,
-+#define __ima_stringify(arg) (#arg)
-+#define __ima_hook_measuring_stringify(ENUM, str) \
-+		(__ima_stringify(measuring_ ##str)),
- 
- enum ima_hooks {
- 	__ima_hooks(__ima_hook_enumify)
- };
- 
-+static const char * const ima_hooks_measure_str[] = {
-+	__ima_hooks(__ima_hook_measuring_stringify)
-+};
-+
-+static inline const char *func_measure_str(enum ima_hooks func)
-+{
-+	if (func >= MAX_CHECK)
-+		return ima_hooks_measure_str[NONE];
-+
-+	return ima_hooks_measure_str[func];
-+}
-+
- extern const char *const func_tokens[];
- 
- struct modsig;
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index c1583d98c5e5..8351b2fd48e0 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -740,6 +740,7 @@ void process_buffer_measurement(const void *buf, int size,
- 				int pcr, const char *keyring)
- {
- 	int ret = 0;
-+	const char *audit_cause = "ENOMEM";
- 	struct ima_template_entry *entry = NULL;
- 	struct integrity_iint_cache iint = {};
- 	struct ima_event_data event_data = {.iint = &iint,
-@@ -794,21 +795,28 @@ void process_buffer_measurement(const void *buf, int size,
- 	iint.ima_hash->length = hash_digest_size[ima_hash_algo];
- 
- 	ret = ima_calc_buffer_hash(buf, size, iint.ima_hash);
--	if (ret < 0)
-+	if (ret < 0) {
-+		audit_cause = "hashing_error";
- 		goto out;
-+	}
- 
- 	ret = ima_alloc_init_template(&event_data, &entry, template);
--	if (ret < 0)
-+	if (ret < 0) {
-+		audit_cause = "alloc_entry";
- 		goto out;
-+	}
- 
- 	ret = ima_store_template(entry, violation, NULL, buf, pcr);
--
--	if (ret < 0)
-+	if (ret < 0) {
-+		audit_cause = "store_entry";
- 		ima_free_template_entry(entry);
-+	}
- 
- out:
- 	if (ret < 0)
--		pr_devel("%s: failed, result: %d\n", __func__, ret);
-+		integrity_audit_message(AUDIT_INTEGRITY_PCR, NULL, eventname,
-+					func_measure_str(func),
-+					audit_cause, ret, 0, ret);
- 
- 	return;
- }
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index e493063a3c34..66aa3e17a888 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -1414,7 +1414,7 @@ void ima_delete_rules(void)
- 	}
- }
- 
--#define __ima_hook_stringify(str)	(#str),
-+#define __ima_hook_stringify(func, str)	(#func),
- 
- const char *const func_tokens[] = {
- 	__ima_hooks(__ima_hook_stringify)
-diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
-index cb3e3f501593..56ce24a18b66 100644
---- a/security/integrity/ima/ima_queue_keys.c
-+++ b/security/integrity/ima/ima_queue_keys.c
-@@ -68,6 +68,7 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
- 						 size_t payload_len)
- {
- 	int rc = 0;
-+	const char *audit_cause = "ENOMEM";
- 	struct ima_key_entry *entry;
- 
- 	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-@@ -88,6 +89,10 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
- 
- out:
- 	if (rc) {
-+		integrity_audit_message(AUDIT_INTEGRITY_PCR, NULL,
-+					keyring->description,
-+					func_measure_str(KEY_CHECK),
-+					audit_cause, rc, 0, rc);
- 		ima_free_key_entry(entry);
- 		entry = NULL;
- 	}
+ .../devicetree/bindings/net/ethernet-phy.yaml |  13 +++
+ .../devicetree/bindings/net/ti,dp83869.yaml   |  16 ++-
+ drivers/net/phy/dp83822.c                     |  78 ++++++++++++--
+ drivers/net/phy/dp83869.c                     |  53 +++++++++-
+ drivers/net/phy/phy_device.c                  | 100 ++++++++++++++++++
+ include/linux/phy.h                           |   4 +
+ 6 files changed, 250 insertions(+), 14 deletions(-)
+
 -- 
-2.27.0
+2.26.2
 
