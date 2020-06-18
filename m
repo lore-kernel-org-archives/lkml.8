@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3417C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A13B3221F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823E0221ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443028;
-	bh=zfTeIo+BVRtRoc7eft2NV/gL6iT1G/ojaPuXOpIbn/0=;
+	s=default; t=1592443037;
+	bh=IgNxQZbR1gZR1QJHVrko2DBUykRdC1v95tFrjcV+KKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0vnMlM5530/snW3sFPe8SM/AKyzYK1XvyG46bM5NAVsqvYYZAnMTN9DtJCwv+jQma
-	 BDzX49WZfm9u1ZMOx6+hO+Pn/kKI4ZIlpF6jqyre/eY6+w+c4rWbf0kuE0g0agG+Xy
-	 TmMYM2fVQqUgG2IoX/j0NbIALM7s1KbqBhmTZprU=
+	b=FP3TYM3xkxDKjFf5M+LmKI3XA38JBLtGlV8uUEY0A7Cl3IfeI9yQgOMB06fqjj7lx
+	 IfZ58OpeqpMFynZZJ8PYJmeoYYJ1AbgPAJmYEkDVzpahUG/APzyfLqqdPgIH+cokWd
+	 516T+foFaD8kbZDbt2htIGzYEgEtfsVsqzyTr3M4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgFRBRF (ORCPT
+        id S1728031AbgFRBRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:17:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44428 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:17:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728724AbgFRBOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:14:42 -0400
+        id S1729365AbgFRBOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3644221D7E;
-        Thu, 18 Jun 2020 01:14:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A584E221ED;
+        Thu, 18 Jun 2020 01:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442882;
-        bh=zfTeIo+BVRtRoc7eft2NV/gL6iT1G/ojaPuXOpIbn/0=;
+        s=default; t=1592442888;
+        bh=IgNxQZbR1gZR1QJHVrko2DBUykRdC1v95tFrjcV+KKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bd529Ew78SQDmn7+K9jbRar61LwF2Zz1L8TeEsIE6RbLeEToqpKfzRdDHO7HEuhvZ
-         JQwIEav5bhmSRWwtsHb2yHG85iDtixDTbHrVMGj7Xe+08zxJPekdIOHIUu1YQAdIOq
-         XreIn7hyBk2xR2NKqdzUcasSiT11B3RHMdrm9S50=
+        b=VvLev73I+gep7i5Six6n4RxjUTSzYcpuPTjmQkAGK3P0lyKeQMczEI/3SRAXzCXYl
+         m5ryyl66qG/pCLm3CaTBBhwSCQni6tfQZhQtjnJYY+nnOxhxuyDAKsG7B1e52+cc5P
+         NCHcedih61Ljk4WH1fo4C7Oq0ix19IQo6zbmr/cw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 306/388] ASoC: fsl_asrc_dma: Fix dma_chan leak when config DMA channel failed
-Date:   Wed, 17 Jun 2020 21:06:43 -0400
-Message-Id: <20200618010805.600873-306-sashal@kernel.org>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 311/388] mailbox: zynqmp-ipi: Fix NULL vs IS_ERR() check in zynqmp_ipi_mbox_probe()
+Date:   Wed, 17 Jun 2020 21:06:48 -0400
+Message-Id: <20200618010805.600873-311-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,44 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 36124fb19f1ae68a500cd76a76d40c6e81bee346 ]
+[ Upstream commit 445aeeb569f8d7904f8cf80b7c6826bb651ef80e ]
 
-fsl_asrc_dma_hw_params() invokes dma_request_channel() or
-fsl_asrc_get_dma_channel(), which returns a reference of the specified
-dma_chan object to "pair->dma_chan[dir]" with increased refcnt.
+In case of error, the function devm_ioremap() returns NULL pointer not
+ERR_PTR(). So we should check whether the return value of devm_ioremap()
+is NULL instead of IS_ERR.
 
-The reference counting issue happens in one exception handling path of
-fsl_asrc_dma_hw_params(). When config DMA channel failed for Back-End,
-the function forgets to decrease the refcnt increased by
-dma_request_channel() or fsl_asrc_get_dma_channel(), causing a refcnt
-leak.
-
-Fix this issue by calling dma_release_channel() when config DMA channel
-failed.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Link: https://lore.kernel.org/r/1590415966-52416-1-git-send-email-xiyuyang19@fudan.edu.cn
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 4981b82ba2ff ("mailbox: ZynqMP IPI mailbox controller")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_asrc_dma.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mailbox/zynqmp-ipi-mailbox.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-index e7178817d7a7..1ee10eafe3e6 100644
---- a/sound/soc/fsl/fsl_asrc_dma.c
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -252,6 +252,7 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
- 	ret = dmaengine_slave_config(pair->dma_chan[dir], &config_be);
- 	if (ret) {
- 		dev_err(dev, "failed to config DMA channel for Back-End\n");
-+		dma_release_channel(pair->dma_chan[dir]);
- 		return ret;
- 	}
- 
+diff --git a/drivers/mailbox/zynqmp-ipi-mailbox.c b/drivers/mailbox/zynqmp-ipi-mailbox.c
+index 86887c9a349a..f9cc674ba9b7 100644
+--- a/drivers/mailbox/zynqmp-ipi-mailbox.c
++++ b/drivers/mailbox/zynqmp-ipi-mailbox.c
+@@ -504,10 +504,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
+ 		mchan->req_buf_size = resource_size(&res);
+ 		mchan->req_buf = devm_ioremap(mdev, res.start,
+ 					      mchan->req_buf_size);
+-		if (IS_ERR(mchan->req_buf)) {
++		if (!mchan->req_buf) {
+ 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
+-			ret = PTR_ERR(mchan->req_buf);
+-			return ret;
++			return -ENOMEM;
+ 		}
+ 	} else if (ret != -ENODEV) {
+ 		dev_err(mdev, "Unmatched resource %s, %d.\n", name, ret);
+@@ -520,10 +519,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
+ 		mchan->resp_buf_size = resource_size(&res);
+ 		mchan->resp_buf = devm_ioremap(mdev, res.start,
+ 					       mchan->resp_buf_size);
+-		if (IS_ERR(mchan->resp_buf)) {
++		if (!mchan->resp_buf) {
+ 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
+-			ret = PTR_ERR(mchan->resp_buf);
+-			return ret;
++			return -ENOMEM;
+ 		}
+ 	} else if (ret != -ENODEV) {
+ 		dev_err(mdev, "Unmatched resource %s.\n", name);
+@@ -543,10 +541,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
+ 		mchan->req_buf_size = resource_size(&res);
+ 		mchan->req_buf = devm_ioremap(mdev, res.start,
+ 					      mchan->req_buf_size);
+-		if (IS_ERR(mchan->req_buf)) {
++		if (!mchan->req_buf) {
+ 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
+-			ret = PTR_ERR(mchan->req_buf);
+-			return ret;
++			return -ENOMEM;
+ 		}
+ 	} else if (ret != -ENODEV) {
+ 		dev_err(mdev, "Unmatched resource %s.\n", name);
+@@ -559,10 +556,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
+ 		mchan->resp_buf_size = resource_size(&res);
+ 		mchan->resp_buf = devm_ioremap(mdev, res.start,
+ 					       mchan->resp_buf_size);
+-		if (IS_ERR(mchan->resp_buf)) {
++		if (!mchan->resp_buf) {
+ 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
+-			ret = PTR_ERR(mchan->resp_buf);
+-			return ret;
++			return -ENOMEM;
+ 		}
+ 	} else if (ret != -ENODEV) {
+ 		dev_err(mdev, "Unmatched resource %s.\n", name);
 -- 
 2.25.1
 
