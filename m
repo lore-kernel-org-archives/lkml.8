@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C5DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29157221FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD952220C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444529;
-	bh=grTMoYmHUjnzVf/gn68pvoeTwzVuwA9jfHoZouBcFWo=;
+	s=default; t=1592444535;
+	bh=rquLcWC4YtiKOb0ygjRmmWfIq8S43jtn/9IxyUHEXBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oDdFLErxAeKpnAzWByhbdizzW8JxFVuH3sKeKVwGc7TVIBhELxYvHBGmH3eGbRHtg
-	 S0cuRr6yMdAc7FBRRm/v8A3N4892foybbemIRNHy7KEdhYHiw+9Wvk/oDPpO495JPq
-	 8YLpGjbEMcdO7XtWWFiv9sUzd2s/YXfQtNQK10Ik=
+	b=fV7Pa5bmMAuzKv33vZ9B80DYta6Zvw4/QYQK7dPF8MbpZ1SpAk+xSA8h/ELy9Yb9V
+	 MIucDxPIsN29oQ7qbiUC7lbuFA4lJZjyXiOpD9DjHu7HSLRdGX0oTudY53FFgCbjj2
+	 eQKMqCLmwwqYnsTzAgDIVJi/ZeqYg3s5x8MxS1aM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgFRBmH (ORCPT
+        id S1732532AbgFRBmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:42:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38902 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:42:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732305AbgFRB3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:30 -0400
+        id S1732303AbgFRB33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:29:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BA0322229;
-        Thu, 18 Jun 2020 01:29:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2199E221E6;
+        Thu, 18 Jun 2020 01:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443770;
-        bh=grTMoYmHUjnzVf/gn68pvoeTwzVuwA9jfHoZouBcFWo=;
+        s=default; t=1592443768;
+        bh=rquLcWC4YtiKOb0ygjRmmWfIq8S43jtn/9IxyUHEXBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yRXkleAXMBoN67YTSAlQRVsigDnyZGfsaV3PQvzSmhUV8DcqQ5+2hiytPeCeoWFbH
-         6tFHF4cyEty3+ngcDVmTBh3XILFk6p+H9sQWL6z/0yqNO12h5bArqJRbCuJ42OPcow
-         rjCqOji+T00qn8UzYytzyD4mKwc7CuSxiapTbBas=
+        b=OEKbw47jxJJkVA1FnavcAM+mpAGsWTkslKfEF3Zka8nzGxGZl+oo01X5ObyoOveIH
+         Xjikd8ed69PaNQhBv4FC+3CyZ9HBcNXmHTAqc9b5WdCs3EVvJAyMEl/MbAXz9mnGFF
+         6UVtlJ3hlGcFpytk0btnkvugplyS0iLQ+zqmI9hM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 54/80] clk: samsung: exynos5433: Add IGNORE_UNUSED flag to sclk_i2s1
-Date:   Wed, 17 Jun 2020 21:27:53 -0400
-Message-Id: <20200618012819.609778-54-sashal@kernel.org>
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 53/80] tty: n_gsm: Fix bogus i++ in gsm_data_kick
+Date:   Wed, 17 Jun 2020 21:27:52 -0400
+Message-Id: <20200618012819.609778-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
 References: <20200618012819.609778-1-sashal@kernel.org>
@@ -61,66 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-[ Upstream commit 25bdae0f1c6609ceaf55fe6700654f0be2253d8e ]
+[ Upstream commit 4dd31f1ffec6c370c3c2e0c605628bf5e16d5c46 ]
 
-Mark the SCLK clock for Exynos5433 I2S1 device with IGNORE_UNUSED flag to
-match its behaviour with SCLK clock for AUD_I2S (I2S0) device until
-a proper fix for Exynos I2S driver is ready.
+When submitting the previous fix "tty: n_gsm: Fix waking up upper tty
+layer when room available". It was suggested to switch from a while to
+a for loop, but when doing it, there was a remaining bogus i++.
 
-This fixes the following synchronous abort issue revealed by the probe
-order change caused by the commit 93d2e4322aa7 ("of: platform: Batch
-fwnode parsing when adding all top level devices")
+This patch removes this i++ and also reorganizes the code making it more
+compact.
 
-Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 0 PID: 50 Comm: kworker/0:1 Not tainted 5.7.0-rc5+ #701
-Hardware name: Samsung TM2E board (DT)
-Workqueue: events deferred_probe_work_func
-pstate: 60000005 (nZCv daif -PAN -UAO)
-pc : samsung_i2s_probe+0x768/0x8f0
-lr : samsung_i2s_probe+0x688/0x8f0
-...
-Call trace:
- samsung_i2s_probe+0x768/0x8f0
- platform_drv_probe+0x50/0xa8
- really_probe+0x108/0x370
- driver_probe_device+0x54/0xb8
- __device_attach_driver+0x90/0xc0
- bus_for_each_drv+0x70/0xc8
- __device_attach+0xdc/0x140
- device_initial_probe+0x10/0x18
- bus_probe_device+0x94/0xa0
- deferred_probe_work_func+0x70/0xa8
- process_one_work+0x2a8/0x718
- worker_thread+0x48/0x470
- kthread+0x134/0x160
- ret_from_fork+0x10/0x1c
-Code: 17ffffaf d503201f f94086c0 91003000 (88dffc00)
----[ end trace ccf721c9400ddbd6 ]---
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20200518084517.2173242-3-gregory.clement@bootlin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5433.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/n_gsm.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-index 09cdd35dc434..a082b026791a 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -1672,7 +1672,8 @@ static const struct samsung_gate_clock peric_gate_clks[] __initconst = {
- 	GATE(CLK_SCLK_PCM1, "sclk_pcm1", "sclk_pcm1_peric",
- 			ENABLE_SCLK_PERIC, 7, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_I2S1, "sclk_i2s1", "sclk_i2s1_peric",
--			ENABLE_SCLK_PERIC, 6, CLK_SET_RATE_PARENT, 0),
-+			ENABLE_SCLK_PERIC, 6,
-+			CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_SCLK_SPI2, "sclk_spi2", "sclk_spi2_peric", ENABLE_SCLK_PERIC,
- 			5, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_SPI1, "sclk_spi1", "sclk_spi1_peric", ENABLE_SCLK_PERIC,
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index 56716f525030..1ab9bd433542 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -719,17 +719,9 @@ static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
+ 		} else {
+ 			int i = 0;
+ 
+-			for (i = 0; i < NUM_DLCI; i++) {
+-				struct gsm_dlci *dlci;
+-
+-				dlci = gsm->dlci[i];
+-				if (dlci == NULL) {
+-					i++;
+-					continue;
+-				}
+-
+-				tty_port_tty_wakeup(&dlci->port);
+-			}
++			for (i = 0; i < NUM_DLCI; i++)
++				if (gsm->dlci[i])
++					tty_port_tty_wakeup(&gsm->dlci[i]->port);
+ 		}
+ 	}
+ }
 -- 
 2.25.1
 
