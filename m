@@ -2,303 +2,129 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF784C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B97282186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F7B208D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:25:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jytRn0Zk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732143AbgFRRYj (ORCPT
+        id S1732156AbgFRRZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:24:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:55728 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732098AbgFRRYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 13:24:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F334031B;
-        Thu, 18 Jun 2020 10:24:37 -0700 (PDT)
-Received: from e119603-lin.cambridge.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 725D23F6CF;
-        Thu, 18 Jun 2020 10:24:36 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 18:24:30 +0100
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        lukasz.luba@arm.com, james.quinlan@broadcom.com,
-        Jonathan.Cameron@Huawei.com, dave.martin@arm.com,
-        cristian.marussi@arm.com
-Subject: Re: [PATCH v8 9/9] firmware: arm_scmi: Add Base notifications support
-Message-ID: <20200618172430.GA9998@e119603-lin.cambridge.arm.com>
-References: <20200520081118.54897-1-cristian.marussi@arm.com>
- <20200520081118.54897-10-cristian.marussi@arm.com>
- <20200608170239.GA13622@bogus>
+        Thu, 18 Jun 2020 13:25:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732048AbgFRRZM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 13:25:12 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D931C06174E;
+        Thu, 18 Jun 2020 10:25:12 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id 9so8221016ljv.5;
+        Thu, 18 Jun 2020 10:25:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qDul8Qh0CB358ogHpHF9Y6TUm3gZ3Awnu5uEsfMvzXo=;
+        b=jytRn0ZkcCvASYLtuAiqO9TmsCYp2QNKntI0YdNmcgXJwlmGLswJemHy2QXPvAcih4
+         pD8+g+itRn+Ctf2uJagLKgIMldVzgnPVDWJ+L3RzpwZJbpEaoEoMQlJdUpka7cimkl5K
+         22IRvWru1/LyN7cgSww3ZBFwkQ/c/3G8eDYLfA9Z0G0KEioP/FueqqBL4/If1LTa0yfg
+         sWZ98NCBnDO11r9wD1v6OfoLdojloPVlkYCHi3qfjsbuekNO7zGUhmx73/aOCl7rKUJj
+         WbAxErDCxHChAFUAwPxCPf1v9wmZS4rFAADUpxZurdyBg/vp+SEkPKmBN/QwsXYI97hZ
+         WLGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qDul8Qh0CB358ogHpHF9Y6TUm3gZ3Awnu5uEsfMvzXo=;
+        b=JRrivbpbnRPGgaI4/dzf7anFYrTW9je+qMwR3wvYGMvVTUm8y/r3VqKlfbjxya1ExE
+         IIwW+ZhnKQr+ot+Eeyo5pUhi3vO4UYj4ZveK06Fof/R8np2h5IEXTGA7xyp0FYnOnD3y
+         H6bIuWh8GVg5vBIxQvUfiZbrKOqQQUdtCnmmQcZWos68qpTT1xDXeMeCXUIit05oG8ft
+         XBYG+3JgchNjfyYNIRlSsSjAPbCcx13KtvBpwt81O+o6Tmoq2tsBVUXj/ggU5cxgUbe1
+         e+vqRUysMfs52gfDvJrssD4+pJxYQRTPha9+ZQsEVIFzH2PMi4O8xR9bZBsZ/fEbUR2+
+         g5CA==
+X-Gm-Message-State: AOAM5325C0+SGDA5bPrSqOfvCLkKz3eEstlrU1GYM4zfenvRaprBddEI
+        88mMMB851boljoI764WG8m4=
+X-Google-Smtp-Source: ABdhPJyEksYH81Qt/PCV8lSVyrUxAJi2V+HPAy2DPTvZAwNg9dIvImJ1AnOc8JkDn8zCVvJwpRi+ug==
+X-Received: by 2002:a05:651c:50d:: with SMTP id o13mr3061382ljp.181.1592501110117;
+        Thu, 18 Jun 2020 10:25:10 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id s20sm846671ljs.36.2020.06.18.10.25.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 10:25:06 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Thu, 18 Jun 2020 19:25:04 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
+ ptrs
+Message-ID: <20200618172504.GA14613@pc636>
+References: <20200525214800.93072-1-urezki@gmail.com>
+ <20200525214800.93072-10-urezki@gmail.com>
+ <20200617234609.GA10087@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200608170239.GA13622@bogus>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200617234609.GA10087@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 06:02:39PM +0100, Sudeep Holla wrote:
-> On Wed, May 20, 2020 at 09:11:18AM +0100, Cristian Marussi wrote:
-> > Make SCMI Base protocol register with the notification core.
-> >
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-> > ---
-> > V6 --> V7
-> > - fixed report.timestamp type
-> > - fix max_payld_sz initialization
-> > - fix report layout and initialization
-> > - expose SCMI_EVENT_ in linux/scmi_protocol.h
-> > V5 --> V6
-> > - added handle argument to fill_custom_report()
-> > V4 --> V5
-> > - fixed unsual return construct
-> > V3 --> V4
-> > - scmi_event field renamed
-> > V2 --> V3
-> > - added handle awareness
-> > V1 --> V2
-> > - simplified .set_notify_enabled() implementation moving the ALL_SRCIDs
-> >   logic out of protocol. ALL_SRCIDs logic is now in charge of the
-> >   notification core, together with proper reference counting of enables
-> > - switched to devres protocol-registration
-> > ---
-> >  drivers/firmware/arm_scmi/base.c | 118 +++++++++++++++++++++++++++++--
-> >  include/linux/scmi_protocol.h    |   9 +++
-> >  2 files changed, 123 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/firmware/arm_scmi/base.c b/drivers/firmware/arm_scmi/base.c
-> > index ce7d9203e41b..dcb098d8d823 100644
-> > --- a/drivers/firmware/arm_scmi/base.c
-> > +++ b/drivers/firmware/arm_scmi/base.c
-> > @@ -5,7 +5,13 @@
-> >   * Copyright (C) 2018 ARM Ltd.
-> >   */
-> >
-> > +#include <linux/scmi_protocol.h>
+> > +	// Handle two first channels.
+> > +	for (i = 0; i < FREE_N_CHANNELS; i++) {
+> > +		for (; bkvhead[i]; bkvhead[i] = bnext) {
+> > +			bnext = bkvhead[i]->next;
+> > +			debug_rcu_bhead_unqueue(bkvhead[i]);
 > > +
-> >  #include "common.h"
-> > +#include "notify.h"
+> > +			rcu_lock_acquire(&rcu_callback_map);
+> > +			if (i == 0) { // kmalloc() / kfree().
+> > +				trace_rcu_invoke_kfree_bulk_callback(
+> > +					rcu_state.name, bkvhead[i]->nr_records,
+> > +					bkvhead[i]->records);
 > > +
-> > +#define SCMI_BASE_NUM_SOURCES		1
-> > +#define SCMI_BASE_MAX_CMD_ERR_COUNT	1024
-> >
+> > +				kfree_bulk(bkvhead[i]->nr_records,
+> > +					bkvhead[i]->records);
+> > +			} else { // vmalloc() / vfree().
+> > +				for (j = 0; j < bkvhead[i]->nr_records; j++) {
+> > +					trace_rcu_invoke_kfree_callback(
+> > +						rcu_state.name,
+> > +						bkvhead[i]->records[j], 0);
+> > +
+> > +					vfree(bkvhead[i]->records[j]);
+> > +				}
+> > +			}
+> > +			rcu_lock_release(&rcu_callback_map);
 > 
-> I am not sure of this, see below.
+> Not an emergency, but did you look into replacing this "if" statement
+> with an array of pointers to functions implementing the legs of the
+> "if" statement?  If nothing else, this would greatly reduced indentation.
 > 
-Ok
-
-> >  enum scmi_base_protocol_cmd {
-> >  	BASE_DISCOVER_VENDOR = 0x3,
-> > @@ -19,16 +25,25 @@ enum scmi_base_protocol_cmd {
-> >  	BASE_RESET_AGENT_CONFIGURATION = 0xb,
-> >  };
-> >
-> > -enum scmi_base_protocol_notify {
-> > -	BASE_ERROR_EVENT = 0x0,
-> > -};
-> > -
-> >  struct scmi_msg_resp_base_attributes {
-> >  	u8 num_protocols;
-> >  	u8 num_agents;
-> >  	__le16 reserved;
-> >  };
-> >
-> > +struct scmi_msg_base_error_notify {
-> > +	__le32 event_control;
-> > +#define BASE_TP_NOTIFY_ALL	BIT(0)
-> > +};
-> > +
-> > +struct scmi_base_error_notify_payld {
-> > +	__le32 agent_id;
-> > +	__le32 error_status;
-> > +#define IS_FATAL_ERROR(x)	((x) & BIT(31))
-> > +#define ERROR_CMD_COUNT(x)	FIELD_GET(GENMASK(9, 0), (x))
-> > +	__le64 msg_reports[SCMI_BASE_MAX_CMD_ERR_COUNT];
+>
+> I am taking this as is, but if you have not already done so, could you
+> please look into this for a follow-up patch?
 > 
-> This entire payload needs to fit in shmem and having huge shmem just
-> for this sounds not so good to me. If this can be large, it needs to
-> be iterated multiple times to get the full log.
-> 
+I do not think it makes sense, because it would require to check each
+pointer in the array, what can lead to many branching, i.e. "if-else"
+instructions.
 
-I think it's a good point, if a platform implementation would generate
-such jumbo payloads for this events no matter what the actual trasport
-message size was, we're definitely going to receive corrupted packets.
+Paul, thank you to take it in!
 
-Spec says about BASE_ERROR_EVENT:
-
-Bits[9:0]	Command count, number of commands in the
-		command list. A value of zero is possible if the
-		error cannot be attributed.
-
-I'll ask Souvik if it's not the case to amend the spec to highlight this
-possibility. (being errors notifications I suppose platform could simply
-chunk the big packet in multiple pieces to fit into the current transport)
-
-Anyway reviewing this implementation this payld struct here is defined as
-to be big enough to contain the maximum allowed size by the current spec,
-it is not that I am expecting to strictly receive packets sized exacly as
-that; it's the same appproach I use thorughout the notifications: I reserve
-an area big enough to hold any possible packet (.max_payld_sz) and then I
-just check that I received a packets that fits (sizeof(*p) < payld_sz), in
-case I received a variable length payload event packet as this, or check,
-for other fixed-size payload events, that the received packet is of the
-exact specified length.
-
-It's just that I'm trying to pre-allocate spare areas that can fit any
-possible packet length (if variable) for any possible transport.
-
-> > +};
-> > +
-> >  /**
-> >   * scmi_base_attributes_get() - gets the implementation details
-> >   *	that are associated with the base protocol.
-> > @@ -222,6 +237,95 @@ static int scmi_base_discover_agent_get(const struct scmi_handle *handle,
-> >  	return ret;
-> >  }
-> >
-> > +static int scmi_base_error_notify(const struct scmi_handle *handle, bool enable)
-> > +{
-> > +	int ret;
-> > +	u32 evt_cntl = enable ? BASE_TP_NOTIFY_ALL : 0;
-> > +	struct scmi_xfer *t;
-> > +	struct scmi_msg_base_error_notify *cfg;
-> > +
-> > +	ret = scmi_xfer_get_init(handle, BASE_NOTIFY_ERRORS,
-> > +				 SCMI_PROTOCOL_BASE, sizeof(*cfg), 0, &t);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	cfg = t->tx.buf;
-> > +	cfg->event_control = cpu_to_le32(evt_cntl);
-> > +
-> > +	ret = scmi_do_xfer(handle, t);
-> > +
-> > +	scmi_xfer_put(handle, t);
-> > +	return ret;
-> > +}
-> > +
-> > +static bool scmi_base_set_notify_enabled(const struct scmi_handle *handle,
-> > +					 u8 evt_id, u32 src_id, bool enable)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = scmi_base_error_notify(handle, enable);
-> > +	if (ret)
-> > +		pr_warn("SCMI Notifications - Proto:%X - FAIL_ENABLED - evt[%X] ret:%d\n",
-> > +			SCMI_PROTOCOL_BASE, evt_id, ret);
-> > +
-> 
-> I would make all these debug as they are not fatal. The users can decide
-> if they are fatal and log it appropriately.
-> 
-
-Ok.
-
-> > +	return !ret;
-> > +}
-> > +
-> > +static void *scmi_base_fill_custom_report(const struct scmi_handle *handle,
-> > +					  u8 evt_id, u64 timestamp,
-> > +					  const void *payld, size_t payld_sz,
-> > +					  void *report, u32 *src_id)
-> > +{
-> > +	void *rep = NULL;
-> > +
-> > +	switch (evt_id) {
-> > +	case SCMI_EVENT_BASE_ERROR_EVENT:
-> 
-> Drop switch for now, just check for evt_id to be SCMI_EVENT_BASE_ERROR_EVENT.
-> 
-
-Ok
-> > +	{
-> > +		int i;
-> > +		const struct scmi_base_error_notify_payld *p = payld;
-> > +		struct scmi_base_error_report *r = report;
-> > +
-> > +		/*
-> > +		 * BaseError notification payload is variable in size but
-> > +		 * up to a maximum length determined by the struct ponted by p.
-> > +		 * Instead payld_sz is the effective length of this notification
-> > +		 * payload so cannot be greater of the maximum allowed size as
-> > +		 * pointed by p.
-> > +		 */
-> > +		if (sizeof(*p) < payld_sz)
-> > +			break;
-> > +
-> > +		r->timestamp = timestamp;
-> > +		r->agent_id = le32_to_cpu(p->agent_id);
-> > +		r->fatal = IS_FATAL_ERROR(le32_to_cpu(p->error_status));
-> > +		r->cmd_count = ERROR_CMD_COUNT(le32_to_cpu(p->error_status));
-> > +		for (i = 0; i < r->cmd_count; i++)
-> > +			r->reports[i] = le64_to_cpu(p->msg_reports[i]);
-> > +		*src_id = 0;
-> > +		rep = r;
-> > +		break;
-> > +	}
-> > +	default:
-> > +		break;
-> > +	}
-> > +
-> > +	return rep;
-> > +}
-> > +
-> > +static const struct scmi_event base_events[] = {
-> > +	{
-> > +		.id = SCMI_EVENT_BASE_ERROR_EVENT,
-> > +		.max_payld_sz = sizeof(struct scmi_base_error_notify_payld),
-> > +		.max_report_sz = sizeof(struct scmi_base_error_report) +
-> > +				  SCMI_BASE_MAX_CMD_ERR_COUNT * sizeof(u64),
-> > +	},
-> > +};
-> > +
-> > +static const struct scmi_protocol_event_ops base_event_ops = {
-> > +	.set_notify_enabled = scmi_base_set_notify_enabled,
-> > +	.fill_custom_report = scmi_base_fill_custom_report,
-> > +};
-> > +
-> >  int scmi_base_protocol_init(struct scmi_handle *h)
-> >  {
-> >  	int id, ret;
-> > @@ -256,6 +360,12 @@ int scmi_base_protocol_init(struct scmi_handle *h)
-> >  	dev_dbg(dev, "Found %d protocol(s) %d agent(s)\n", rev->num_protocols,
-> >  		rev->num_agents);
-> >
-> > +	scmi_register_protocol_events(handle,
-> > +				      SCMI_PROTOCOL_BASE, (4 * PAGE_SIZE),
-> 
-> The size 4 * PAGE_SZ is not clear. For me this can't be more that
-> max_msg_size.
-
-This is the size required by this protocol for the per-protocol kfifo queue
-allocation: it is anyway wrong as my aim was to default to 4k (or 16k for this
-possibly jumbo sized packet), but this way is needlessly bound to the configured
-PAGE_SIZE.
-
-I'll introduce a define for a base 4k proto queue size and use that.
-
-> 
-> The comments in this patch applies to last 5 patches(all protocols basically)
-> 
-
-Ok I'll do.
-
-
-Thanks
-
-Cristian
-
-> --
-> Regards,
-> Sudeep
+--
+Vlad Rezki
