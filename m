@@ -2,550 +2,154 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8581C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E19CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB06B20890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6419420897
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:44:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="yzp2+WvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730897AbgFROnk (ORCPT
+        id S1730985AbgFROoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:43:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57272 "EHLO
+        Thu, 18 Jun 2020 10:44:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgFROni (ORCPT
+        with ESMTP id S1730938AbgFROoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:43:38 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E4AAC06174E;
-        Thu, 18 Jun 2020 07:43:38 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jlvlA-000445-Qe; Thu, 18 Jun 2020 16:43:20 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 540051C0087;
-        Thu, 18 Jun 2020 16:43:20 +0200 (CEST)
-Date:   Thu, 18 Jun 2020 14:43:20 -0000
-From:   "tip-bot2 for Herbert Xu" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] lockdep: Split header file into lockdep and lockdep_types
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <E1jlSJz-0003hE-8g@fornost.hmeau.com>
-References: <E1jlSJz-0003hE-8g@fornost.hmeau.com>
+        Thu, 18 Jun 2020 10:44:04 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16C1BC0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:44:03 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id j4so2530037plk.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references:reply-to
+         :mime-version:content-transfer-encoding;
+        bh=aZaDFCszZJWwvw+YU15551W6DS/tp5Q0zZ/e2mzcPKg=;
+        b=yzp2+WvVYDYAjxYEzGcL7PkavHxDy3cpr9qzW1IWcotTTR9f4VhesgN5dhZI94+PsU
+         D9XrCxqsfO+3+KrzN5/i59EGbZklLXhJ8EEfRkcKjS+RSy9l3JJAAb3DNGy49QESvyup
+         y+54KKaMpJCnfzL+F+KC8Nq7RiZ+0vIr9IiDsumf++0aVkCJenAnaKTtA3JP5ygXQhYB
+         2HbmH52rlEtjDxPlJY6OwsA0PBg77wgg7/2VGxIMl44vnzaycw7+hUNxlA6Vq9Gzvp1p
+         BDytFguC2D8/8IQpvQ3NiTjxRjsGSXn+74N6mA5zAWSn0EOSGif2RsltVaUOkZ/y9GnI
+         oyUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:reply-to:mime-version:content-transfer-encoding;
+        bh=aZaDFCszZJWwvw+YU15551W6DS/tp5Q0zZ/e2mzcPKg=;
+        b=oVnqlCB1l4aSWCFgH9+VJR0pixuq+QU1zsQlF6/61IQpQStIGNXcJaGetuLNRmpWOu
+         1KemfaVW0v0h1qI/AW6lqDm1Hby1ga4+fuiw9Vpuon9FpfI1aaM4GkH4N+6Q7On8m8CJ
+         KCb6rdW75qkLhX7aSe5nUVP8nzs3+Rih5jaJJ6MiS/XDircMMMozSHmhTn1s2fbz4iwE
+         YwKghemZIhp0BQRDcS+vqXkZympkSC750j2byTOzxsUPMsqrUTR0MMnOdp5o2eav4Ecy
+         NMDuUh5VF9OJw+cPILH8nFUHa1Pmg1ViyvjeJYMI2zfO2n4CZf4fH191RQlDi/m/Vn/+
+         6A5Q==
+X-Gm-Message-State: AOAM531HWSjDMJ/EduuZeFUshYaf4TiskfV1+9fpf60sur9xULRt1FJ3
+        DhovO3qeWX3pNlkQ6xXEMJ3s0g==
+X-Google-Smtp-Source: ABdhPJwcpBuWJToBprbE+kBnwBY9JxdUaCcM4SRk7uPRoXVsDbkErSY+i9Q0PI2mKLg9/3NhPQrRsQ==
+X-Received: by 2002:a17:90b:915:: with SMTP id bo21mr4702163pjb.52.1592491442581;
+        Thu, 18 Jun 2020 07:44:02 -0700 (PDT)
+Received: from x1.localdomain ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id g9sm3127197pfm.151.2020.06.18.07.44.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 07:44:01 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     io-uring@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 02/15] io_uring: always plug for any number of IOs
+Date:   Thu, 18 Jun 2020 08:43:42 -0600
+Message-Id: <20200618144355.17324-3-axboe@kernel.dk>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200618144355.17324-1-axboe@kernel.dk>
+References: <20200618144355.17324-1-axboe@kernel.dk>
+Reply-To: "[PATCHSET v7 0/15]"@vger.kernel.org, Add@vger.kernel.org,
+          support@vger.kernel.org, for@vger.kernel.org,
+          async@vger.kernel.org, buffered@vger.kernel.org,
+          reads@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <159249140001.16989.17025686502742755136.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/core branch of tip:
+Currently we only plug if we're doing more than two request. We're going
+to be relying on always having the plug there to pass down information,
+so plug unconditionally.
 
-Commit-ID:     c935cd62d3fe985d7f0ebea185d2759e8992e96f
-Gitweb:        https://git.kernel.org/tip/c935cd62d3fe985d7f0ebea185d2759e8992e96f
-Author:        Herbert Xu <herbert@gondor.apana.org.au>
-AuthorDate:    Wed, 17 Jun 2020 17:17:19 +10:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 17 Jun 2020 18:33:13 +02:00
-
-lockdep: Split header file into lockdep and lockdep_types
-
-There is a header file inclusion loop between asm-generic/bug.h
-and linux/kernel.h.  This causes potential compile failurs depending
-on the which file is included first.  One way of breaking this loop
-is to stop spinlock_types.h from including lockdep.h.  This patch
-splits lockdep.h into two files for this purpose.
-
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Acked-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://lkml.kernel.org/r/E1jlSJz-0003hE-8g@fornost.hmeau.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- include/linux/lockdep.h        | 178 +-----------------------------
- include/linux/lockdep_types.h  | 196 ++++++++++++++++++++++++++++++++-
- include/linux/spinlock.h       |   1 +-
- include/linux/spinlock_types.h |   2 +-
- 4 files changed, 200 insertions(+), 177 deletions(-)
- create mode 100644 include/linux/lockdep_types.h
+ fs/io_uring.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 8fce5c9..3b73cf8 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -10,181 +10,20 @@
- #ifndef __LINUX_LOCKDEP_H
- #define __LINUX_LOCKDEP_H
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index b14a8e6a0e15..ca78dd7c79da 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -676,7 +676,6 @@ struct io_kiocb {
+ 	};
+ };
  
-+#include <linux/lockdep_types.h>
-+
- struct task_struct;
--struct lockdep_map;
+-#define IO_PLUG_THRESHOLD		2
+ #define IO_IOPOLL_BATCH			8
  
- /* for sysctl */
- extern int prove_locking;
- extern int lock_stat;
- 
--#define MAX_LOCKDEP_SUBCLASSES		8UL
--
--#include <linux/types.h>
--
--enum lockdep_wait_type {
--	LD_WAIT_INV = 0,	/* not checked, catch all */
--
--	LD_WAIT_FREE,		/* wait free, rcu etc.. */
--	LD_WAIT_SPIN,		/* spin loops, raw_spinlock_t etc.. */
--
--#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
--	LD_WAIT_CONFIG,		/* CONFIG_PREEMPT_LOCK, spinlock_t etc.. */
--#else
--	LD_WAIT_CONFIG = LD_WAIT_SPIN,
--#endif
--	LD_WAIT_SLEEP,		/* sleeping locks, mutex_t etc.. */
--
--	LD_WAIT_MAX,		/* must be last */
--};
--
- #ifdef CONFIG_LOCKDEP
- 
- #include <linux/linkage.h>
--#include <linux/list.h>
- #include <linux/debug_locks.h>
- #include <linux/stacktrace.h>
- 
--/*
-- * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
-- * the total number of states... :-(
-- */
--#define XXX_LOCK_USAGE_STATES		(1+2*4)
--
--/*
-- * NR_LOCKDEP_CACHING_CLASSES ... Number of classes
-- * cached in the instance of lockdep_map
-- *
-- * Currently main class (subclass == 0) and signle depth subclass
-- * are cached in lockdep_map. This optimization is mainly targeting
-- * on rq->lock. double_rq_lock() acquires this highly competitive with
-- * single depth.
-- */
--#define NR_LOCKDEP_CACHING_CLASSES	2
--
--/*
-- * A lockdep key is associated with each lock object. For static locks we use
-- * the lock address itself as the key. Dynamically allocated lock objects can
-- * have a statically or dynamically allocated key. Dynamically allocated lock
-- * keys must be registered before being used and must be unregistered before
-- * the key memory is freed.
-- */
--struct lockdep_subclass_key {
--	char __one_byte;
--} __attribute__ ((__packed__));
--
--/* hash_entry is used to keep track of dynamically allocated keys. */
--struct lock_class_key {
--	union {
--		struct hlist_node		hash_entry;
--		struct lockdep_subclass_key	subkeys[MAX_LOCKDEP_SUBCLASSES];
--	};
--};
--
--extern struct lock_class_key __lockdep_no_validate__;
--
--struct lock_trace;
--
--#define LOCKSTAT_POINTS		4
--
--/*
-- * The lock-class itself. The order of the structure members matters.
-- * reinit_class() zeroes the key member and all subsequent members.
-- */
--struct lock_class {
--	/*
--	 * class-hash:
--	 */
--	struct hlist_node		hash_entry;
--
--	/*
--	 * Entry in all_lock_classes when in use. Entry in free_lock_classes
--	 * when not in use. Instances that are being freed are on one of the
--	 * zapped_classes lists.
--	 */
--	struct list_head		lock_entry;
--
--	/*
--	 * These fields represent a directed graph of lock dependencies,
--	 * to every node we attach a list of "forward" and a list of
--	 * "backward" graph nodes.
--	 */
--	struct list_head		locks_after, locks_before;
--
--	const struct lockdep_subclass_key *key;
--	unsigned int			subclass;
--	unsigned int			dep_gen_id;
--
--	/*
--	 * IRQ/softirq usage tracking bits:
--	 */
--	unsigned long			usage_mask;
--	const struct lock_trace		*usage_traces[XXX_LOCK_USAGE_STATES];
--
--	/*
--	 * Generation counter, when doing certain classes of graph walking,
--	 * to ensure that we check one node only once:
--	 */
--	int				name_version;
--	const char			*name;
--
--	short				wait_type_inner;
--	short				wait_type_outer;
--
--#ifdef CONFIG_LOCK_STAT
--	unsigned long			contention_point[LOCKSTAT_POINTS];
--	unsigned long			contending_point[LOCKSTAT_POINTS];
--#endif
--} __no_randomize_layout;
--
--#ifdef CONFIG_LOCK_STAT
--struct lock_time {
--	s64				min;
--	s64				max;
--	s64				total;
--	unsigned long			nr;
--};
--
--enum bounce_type {
--	bounce_acquired_write,
--	bounce_acquired_read,
--	bounce_contended_write,
--	bounce_contended_read,
--	nr_bounce_types,
--
--	bounce_acquired = bounce_acquired_write,
--	bounce_contended = bounce_contended_write,
--};
--
--struct lock_class_stats {
--	unsigned long			contention_point[LOCKSTAT_POINTS];
--	unsigned long			contending_point[LOCKSTAT_POINTS];
--	struct lock_time		read_waittime;
--	struct lock_time		write_waittime;
--	struct lock_time		read_holdtime;
--	struct lock_time		write_holdtime;
--	unsigned long			bounces[nr_bounce_types];
--};
--
--struct lock_class_stats lock_stats(struct lock_class *class);
--void clear_lock_stats(struct lock_class *class);
--#endif
--
--/*
-- * Map the lock object (the lock instance) to the lock-class object.
-- * This is embedded into specific lock instances:
-- */
--struct lockdep_map {
--	struct lock_class_key		*key;
--	struct lock_class		*class_cache[NR_LOCKDEP_CACHING_CLASSES];
--	const char			*name;
--	short				wait_type_outer; /* can be taken in this context */
--	short				wait_type_inner; /* presents this context */
--#ifdef CONFIG_LOCK_STAT
--	int				cpu;
--	unsigned long			ip;
--#endif
--};
--
- static inline void lockdep_copy_map(struct lockdep_map *to,
- 				    struct lockdep_map *from)
+ struct io_submit_state {
+@@ -5914,7 +5913,7 @@ static int io_init_req(struct io_ring_ctx *ctx, struct io_kiocb *req,
+ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 			  struct file *ring_file, int ring_fd)
  {
-@@ -440,8 +279,6 @@ static inline void lock_set_subclass(struct lockdep_map *lock,
+-	struct io_submit_state state, *statep = NULL;
++	struct io_submit_state state;
+ 	struct io_kiocb *link = NULL;
+ 	int i, submitted = 0;
  
- extern void lock_downgrade(struct lockdep_map *lock, unsigned long ip);
+@@ -5931,10 +5930,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 	if (!percpu_ref_tryget_many(&ctx->refs, nr))
+ 		return -EAGAIN;
  
--struct pin_cookie { unsigned int val; };
--
- #define NIL_COOKIE (struct pin_cookie){ .val = 0U, }
+-	if (nr > IO_PLUG_THRESHOLD) {
+-		io_submit_state_start(&state, nr);
+-		statep = &state;
+-	}
++	io_submit_state_start(&state, nr);
  
- extern struct pin_cookie lock_pin_lock(struct lockdep_map *lock);
-@@ -520,10 +357,6 @@ static inline void lockdep_set_selftest_task(struct task_struct *task)
- # define lockdep_reset()		do { debug_locks = 1; } while (0)
- # define lockdep_free_key_range(start, size)	do { } while (0)
- # define lockdep_sys_exit() 			do { } while (0)
--/*
-- * The class key takes no space if lockdep is disabled:
-- */
--struct lock_class_key { };
+ 	ctx->ring_fd = ring_fd;
+ 	ctx->ring_file = ring_file;
+@@ -5949,14 +5945,14 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 			io_consume_sqe(ctx);
+ 			break;
+ 		}
+-		req = io_alloc_req(ctx, statep);
++		req = io_alloc_req(ctx, &state);
+ 		if (unlikely(!req)) {
+ 			if (!submitted)
+ 				submitted = -EAGAIN;
+ 			break;
+ 		}
  
- static inline void lockdep_register_key(struct lock_class_key *key)
- {
-@@ -533,11 +366,6 @@ static inline void lockdep_unregister_key(struct lock_class_key *key)
- {
- }
+-		err = io_init_req(ctx, req, sqe, statep);
++		err = io_init_req(ctx, req, sqe, &state);
+ 		io_consume_sqe(ctx);
+ 		/* will complete beyond this point, count as submitted */
+ 		submitted++;
+@@ -5982,8 +5978,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 	}
+ 	if (link)
+ 		io_queue_link_head(link);
+-	if (statep)
+-		io_submit_state_end(&state);
++	io_submit_state_end(&state);
  
--/*
-- * The lockdep_map takes no space if lockdep is disabled:
-- */
--struct lockdep_map { };
--
- #define lockdep_depth(tsk)	(0)
- 
- #define lockdep_is_held_type(l, r)		(1)
-@@ -549,8 +377,6 @@ struct lockdep_map { };
- 
- #define lockdep_recursing(tsk)			(0)
- 
--struct pin_cookie { };
--
- #define NIL_COOKIE (struct pin_cookie){ }
- 
- #define lockdep_pin_lock(l)			({ struct pin_cookie cookie = { }; cookie; })
-diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
-new file mode 100644
-index 0000000..7b93506
---- /dev/null
-+++ b/include/linux/lockdep_types.h
-@@ -0,0 +1,196 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Runtime locking correctness validator
-+ *
-+ *  Copyright (C) 2006,2007 Red Hat, Inc., Ingo Molnar <mingo@redhat.com>
-+ *  Copyright (C) 2007 Red Hat, Inc., Peter Zijlstra
-+ *
-+ * see Documentation/locking/lockdep-design.rst for more details.
-+ */
-+#ifndef __LINUX_LOCKDEP_TYPES_H
-+#define __LINUX_LOCKDEP_TYPES_H
-+
-+#include <linux/types.h>
-+
-+#define MAX_LOCKDEP_SUBCLASSES		8UL
-+
-+enum lockdep_wait_type {
-+	LD_WAIT_INV = 0,	/* not checked, catch all */
-+
-+	LD_WAIT_FREE,		/* wait free, rcu etc.. */
-+	LD_WAIT_SPIN,		/* spin loops, raw_spinlock_t etc.. */
-+
-+#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
-+	LD_WAIT_CONFIG,		/* CONFIG_PREEMPT_LOCK, spinlock_t etc.. */
-+#else
-+	LD_WAIT_CONFIG = LD_WAIT_SPIN,
-+#endif
-+	LD_WAIT_SLEEP,		/* sleeping locks, mutex_t etc.. */
-+
-+	LD_WAIT_MAX,		/* must be last */
-+};
-+
-+#ifdef CONFIG_LOCKDEP
-+
-+#include <linux/list.h>
-+
-+/*
-+ * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
-+ * the total number of states... :-(
-+ */
-+#define XXX_LOCK_USAGE_STATES		(1+2*4)
-+
-+/*
-+ * NR_LOCKDEP_CACHING_CLASSES ... Number of classes
-+ * cached in the instance of lockdep_map
-+ *
-+ * Currently main class (subclass == 0) and signle depth subclass
-+ * are cached in lockdep_map. This optimization is mainly targeting
-+ * on rq->lock. double_rq_lock() acquires this highly competitive with
-+ * single depth.
-+ */
-+#define NR_LOCKDEP_CACHING_CLASSES	2
-+
-+/*
-+ * A lockdep key is associated with each lock object. For static locks we use
-+ * the lock address itself as the key. Dynamically allocated lock objects can
-+ * have a statically or dynamically allocated key. Dynamically allocated lock
-+ * keys must be registered before being used and must be unregistered before
-+ * the key memory is freed.
-+ */
-+struct lockdep_subclass_key {
-+	char __one_byte;
-+} __attribute__ ((__packed__));
-+
-+/* hash_entry is used to keep track of dynamically allocated keys. */
-+struct lock_class_key {
-+	union {
-+		struct hlist_node		hash_entry;
-+		struct lockdep_subclass_key	subkeys[MAX_LOCKDEP_SUBCLASSES];
-+	};
-+};
-+
-+extern struct lock_class_key __lockdep_no_validate__;
-+
-+struct lock_trace;
-+
-+#define LOCKSTAT_POINTS		4
-+
-+/*
-+ * The lock-class itself. The order of the structure members matters.
-+ * reinit_class() zeroes the key member and all subsequent members.
-+ */
-+struct lock_class {
-+	/*
-+	 * class-hash:
-+	 */
-+	struct hlist_node		hash_entry;
-+
-+	/*
-+	 * Entry in all_lock_classes when in use. Entry in free_lock_classes
-+	 * when not in use. Instances that are being freed are on one of the
-+	 * zapped_classes lists.
-+	 */
-+	struct list_head		lock_entry;
-+
-+	/*
-+	 * These fields represent a directed graph of lock dependencies,
-+	 * to every node we attach a list of "forward" and a list of
-+	 * "backward" graph nodes.
-+	 */
-+	struct list_head		locks_after, locks_before;
-+
-+	const struct lockdep_subclass_key *key;
-+	unsigned int			subclass;
-+	unsigned int			dep_gen_id;
-+
-+	/*
-+	 * IRQ/softirq usage tracking bits:
-+	 */
-+	unsigned long			usage_mask;
-+	const struct lock_trace		*usage_traces[XXX_LOCK_USAGE_STATES];
-+
-+	/*
-+	 * Generation counter, when doing certain classes of graph walking,
-+	 * to ensure that we check one node only once:
-+	 */
-+	int				name_version;
-+	const char			*name;
-+
-+	short				wait_type_inner;
-+	short				wait_type_outer;
-+
-+#ifdef CONFIG_LOCK_STAT
-+	unsigned long			contention_point[LOCKSTAT_POINTS];
-+	unsigned long			contending_point[LOCKSTAT_POINTS];
-+#endif
-+} __no_randomize_layout;
-+
-+#ifdef CONFIG_LOCK_STAT
-+struct lock_time {
-+	s64				min;
-+	s64				max;
-+	s64				total;
-+	unsigned long			nr;
-+};
-+
-+enum bounce_type {
-+	bounce_acquired_write,
-+	bounce_acquired_read,
-+	bounce_contended_write,
-+	bounce_contended_read,
-+	nr_bounce_types,
-+
-+	bounce_acquired = bounce_acquired_write,
-+	bounce_contended = bounce_contended_write,
-+};
-+
-+struct lock_class_stats {
-+	unsigned long			contention_point[LOCKSTAT_POINTS];
-+	unsigned long			contending_point[LOCKSTAT_POINTS];
-+	struct lock_time		read_waittime;
-+	struct lock_time		write_waittime;
-+	struct lock_time		read_holdtime;
-+	struct lock_time		write_holdtime;
-+	unsigned long			bounces[nr_bounce_types];
-+};
-+
-+struct lock_class_stats lock_stats(struct lock_class *class);
-+void clear_lock_stats(struct lock_class *class);
-+#endif
-+
-+/*
-+ * Map the lock object (the lock instance) to the lock-class object.
-+ * This is embedded into specific lock instances:
-+ */
-+struct lockdep_map {
-+	struct lock_class_key		*key;
-+	struct lock_class		*class_cache[NR_LOCKDEP_CACHING_CLASSES];
-+	const char			*name;
-+	short				wait_type_outer; /* can be taken in this context */
-+	short				wait_type_inner; /* presents this context */
-+#ifdef CONFIG_LOCK_STAT
-+	int				cpu;
-+	unsigned long			ip;
-+#endif
-+};
-+
-+struct pin_cookie { unsigned int val; };
-+
-+#else /* !CONFIG_LOCKDEP */
-+
-+/*
-+ * The class key takes no space if lockdep is disabled:
-+ */
-+struct lock_class_key { };
-+
-+/*
-+ * The lockdep_map takes no space if lockdep is disabled:
-+ */
-+struct lockdep_map { };
-+
-+struct pin_cookie { };
-+
-+#endif /* !LOCKDEP */
-+
-+#endif /* __LINUX_LOCKDEP_TYPES_H */
-diff --git a/include/linux/spinlock.h b/include/linux/spinlock.h
-index d3770b3..f2f12d7 100644
---- a/include/linux/spinlock.h
-+++ b/include/linux/spinlock.h
-@@ -56,6 +56,7 @@
- #include <linux/kernel.h>
- #include <linux/stringify.h>
- #include <linux/bottom_half.h>
-+#include <linux/lockdep.h>
- #include <asm/barrier.h>
- #include <asm/mmiowb.h>
- 
-diff --git a/include/linux/spinlock_types.h b/include/linux/spinlock_types.h
-index 6102e6b..b981caa 100644
---- a/include/linux/spinlock_types.h
-+++ b/include/linux/spinlock_types.h
-@@ -15,7 +15,7 @@
- # include <linux/spinlock_types_up.h>
- #endif
- 
--#include <linux/lockdep.h>
-+#include <linux/lockdep_types.h>
- 
- typedef struct raw_spinlock {
- 	arch_spinlock_t raw_lock;
+ 	 /* Commit SQ ring head once we've consumed and submitted all SQEs */
+ 	io_commit_sqring(ctx);
+-- 
+2.27.0
+
