@@ -2,104 +2,102 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D1FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB31C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 571F22080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592482427;
-	bh=zlMHpKPW0q09W6RDM2ggzLUYctacuDuqAbHYFurGPzg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YVbZnug2T5tIZK5cLqxCIdudYKErtxfX2PDGTwtEwIwAChiph4ok5MbRM8efiaib3
-	 4bYMV+lfKqVyxwDat/YNfqOD9eDDQ6uwMFxsE1A/cKlyzevRHsld41nJEIgB3/2NQQ
-	 mfF2EtHYQHjifPV1UR3SKXKt32wqGqMCikOBjZp0=
+	by mail.kernel.org (Postfix) with ESMTP id 15D1D207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgFRMNq (ORCPT
+        id S1727019AbgFRMOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:13:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40066 "EHLO mail.kernel.org"
+        Thu, 18 Jun 2020 08:14:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:48996 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbgFRMNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 08:13:42 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0F31207DD;
-        Thu, 18 Jun 2020 12:13:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592482422;
-        bh=zlMHpKPW0q09W6RDM2ggzLUYctacuDuqAbHYFurGPzg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MgTrurpY2WwRFZMiFOLuc/+EX73he9w5/j8XNdxcMhxek2dHNTznYTzwpPoDCAUkM
-         3WUYySfhviMyex2qyhsZgUM/Vu50MXK3YJnnuwryA2FLP4X2eAlASLvfXXEP4TOYQq
-         U9KVJQcYYf1syoJnX5w9cJn4RYObOuhyjQB5cvws=
-Date:   Thu, 18 Jun 2020 13:13:39 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH AUTOSEL 5.7 055/388] ASoC: SOF: Do nothing when DSP PM
- callbacks are not set
-Message-ID: <20200618121339.GH5789@sirena.org.uk>
-References: <20200618010805.600873-1-sashal@kernel.org>
- <20200618010805.600873-55-sashal@kernel.org>
- <20200618110126.GC5789@sirena.org.uk>
- <1d1041f9-521b-98f5-a6ef-12d43615bc13@nxp.com>
+        id S1727845AbgFRMOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 08:14:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 516561045;
+        Thu, 18 Jun 2020 05:14:07 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 30A003F71F;
+        Thu, 18 Jun 2020 05:14:07 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id E2260682412; Thu, 18 Jun 2020 13:14:05 +0100 (BST)
+Date:   Thu, 18 Jun 2020 13:14:05 +0100
+From:   Liviu Dudau <liviu.dudau@arm.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Brian Starkey <brian.starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/arm: fix unintentional integer overflow on left shift
+Message-ID: <20200618121405.GJ159988@e110455-lin.cambridge.arm.com>
+References: <20200618100400.11464-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="y0Ed1hDcWxc3B7cn"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1d1041f9-521b-98f5-a6ef-12d43615bc13@nxp.com>
-X-Cookie: Androphobia:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200618100400.11464-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 18, 2020 at 11:04:00AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 
---y0Ed1hDcWxc3B7cn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Colin,
 
-On Thu, Jun 18, 2020 at 02:44:18PM +0300, Daniel Baluta wrote:
+> 
+> Shifting the integer value 1 is evaluated using 32-bit arithmetic
+> and then used in an expression that expects a long value leads to
+> a potential integer overflow.
 
-> Indeed can be seen as an optimization, but it does unexpected things which
-> can cause trouble
+I'm afraid this explanation makes no sense to me. Do you care to explain better what
+you think the issue is? If the shift is done as 32-bit arithmetic and then promoted
+to long how does the overflow happen?
 
-> and weird behavior for people not familiar with the matter.
+Best regards,
+Liviu
 
-> For example, as explained in the commit message if you only provide
+> Fix this by using the BIT macro to
+> perform the shift to avoid the overflow.
+> 
+> Addresses-Coverity: ("Unintentional integer overflow")
+> Fixes: ad49f8602fe8 ("drm/arm: Add support for Mali Display Processors")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/gpu/drm/arm/malidp_planes.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/arm/malidp_planes.c b/drivers/gpu/drm/arm/malidp_planes.c
+> index 37715cc6064e..ab45ac445045 100644
+> --- a/drivers/gpu/drm/arm/malidp_planes.c
+> +++ b/drivers/gpu/drm/arm/malidp_planes.c
+> @@ -928,7 +928,7 @@ int malidp_de_planes_init(struct drm_device *drm)
+>  	const struct malidp_hw_regmap *map = &malidp->dev->hw->map;
+>  	struct malidp_plane *plane = NULL;
+>  	enum drm_plane_type plane_type;
+> -	unsigned long crtcs = 1 << drm->mode_config.num_crtc;
+> +	unsigned long crtcs = BIT(drm->mode_config.num_crtc);
+>  	unsigned long flags = DRM_MODE_ROTATE_0 | DRM_MODE_ROTATE_90 | DRM_MODE_ROTATE_180 |
+>  			      DRM_MODE_ROTATE_270 | DRM_MODE_REFLECT_X | DRM_MODE_REFLECT_Y;
+>  	unsigned int blend_caps = BIT(DRM_MODE_BLEND_PIXEL_NONE) |
+> -- 
+> 2.27.0.rc0
+> 
 
-> System PM handler but not runtime PM handler, then the DSP will be resetted
-
-> even if this is not the intention.
-
-The user shouldn't be thinking about if the DSP is reset during runtime
-PM, or if it's being reset...
-
---y0Ed1hDcWxc3B7cn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7rWnMACgkQJNaLcl1U
-h9CkHwf/fzvqyfr+cua8XR1XxSJiEGTyXJ/VvKSilf0hGJm5j4pkchTP+QMu+u84
-NJ05+mKUW1R9f5iHvCFhu+DvcSnUqPwP5cNDwqNNG2LgiMVV7ncOdmfVAx0iez/9
-LWr9pv2xR7OoeZUWBGButW0vR+Db7otynZ0g4KJUK32rQDdV7fDhd83v3PxZLZAT
-ihIb7y2cGeyXAXNqxLqCqPnuPRnC1dzYdMxT9J5OKH2kfahG8O1pAuu4XZtAE68l
-vFCQ7SgIqkq2HxAhen6J4rd+bTb0W9hpEL+/ltebF4Q1gw7nkruhZaEheiKrj6Ex
-hUY08U4sFWY1/kA0scUxNk1+iGvIRA==
-=wOoM
------END PGP SIGNATURE-----
-
---y0Ed1hDcWxc3B7cn--
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
