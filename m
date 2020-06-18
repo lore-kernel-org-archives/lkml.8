@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB6AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2441A2088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0E521D7A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443588;
-	bh=8rEuU+HOd7oL+2eFUd+0ScN7CiMpOIKu5iY4f3aIeb8=;
+	s=default; t=1592443591;
+	bh=8nYM76nMA33YbflA8NpPkoeLy8IEh0EayB8T55DpMXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OaK+/Ib+57B//Ejtv6n7hZNHyvtPyZoJ1ZfH1apNcmbC91ekVWsh8N9pjKvTADwE0
-	 5H4LEy0MaHXTPRxiHE6ZHMt4LQ6nokq5aU2kzH/ElfcvD8aL1IH7qNp/SjSkJkAVGo
-	 0JbvaVYjhdBN9Qg/pc/ahqlnDmVOyWT424Qum98M=
+	b=VqvuP5dtIt17FsDkqii5fE8aMIIZOJAgMO73dbsi6CaZOMPGBmed1s9uj3RoSL/FO
+	 nbhXhgVTxeWw8ARgzfD7FwPB/KAW6/cW8DF0Oka7H5MYJ1SaehVRGilAbQjBHVMAvf
+	 CCvUmfyS66Ikk4ItHCwWmmcGnaIhGLRaLwSHlShg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730091AbgFRB0Z (ORCPT
+        id S1731016AbgFRB03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:26:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56746 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:26:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729544AbgFRBXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:23:15 -0400
+        id S1730454AbgFRBXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:23:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC86E20776;
-        Thu, 18 Jun 2020 01:23:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BA3F21927;
+        Thu, 18 Jun 2020 01:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443394;
-        bh=8rEuU+HOd7oL+2eFUd+0ScN7CiMpOIKu5iY4f3aIeb8=;
+        s=default; t=1592443396;
+        bh=8nYM76nMA33YbflA8NpPkoeLy8IEh0EayB8T55DpMXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vHC1G7fSTeXcdd4UZTuqoWHvdehDYxOmLD94izq/z52NvB/26vLrv+vHhnjJh2waj
-         sm3NDzPOEAqg4ixQRKCFujAtlfiGgGiXk3sZqOaVuuYlsjyBTf+7Dh/DZ9YHvtlfQW
-         a4lBXYWc1ui3xaiZNb2DSW5VkORyjhmrB+2Mf/y8=
+        b=pzYbYkFtS0kbQnWAaurMtfEucMcOQ3R8MiXP5yNMlDTJewOX6I3k6T2nYzeWC6Wyk
+         iovCCWt5CSxHWg7UQhsmYwmwfpqoE4U7C+apafxlXzQt3aFtvqfv9MP5Q9igSCIcp7
+         u+H8EDoSda45oOralbzJ7Gz1gopqMik7k7rp7Z0Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        syzbot+6f1624f937d9d6911e2d@syzkaller.appspotmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 041/172] fat: don't allow to mount if the FAT length == 0
-Date:   Wed, 17 Jun 2020 21:20:07 -0400
-Message-Id: <20200618012218.607130-41-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Alexander Fomichev <fomichev.ru@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
+        linux-ntb@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 042/172] NTB: ntb_pingpong: Choose doorbells based on port number
+Date:   Wed, 17 Jun 2020 21:20:08 -0400
+Message-Id: <20200618012218.607130-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -63,44 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit b1b65750b8db67834482f758fc385bfa7560d228 ]
+[ Upstream commit ca93c45755da98302c93abdd788fc09113baf9e0 ]
 
-If FAT length == 0, the image doesn't have any data. And it can be the
-cause of overlapping the root dir and FAT entries.
+This commit fixes pingpong support for existing drivers that do not
+implement ntb_default_port_number() and ntb_default_peer_port_number().
+This is required for hardware (like the crosslink topology of
+switchtec) which cannot assign reasonable port numbers to each port due
+to its perfect symmetry.
 
-Also Windows treats it as invalid format.
+Instead of picking the doorbell to use based on the the index of the
+peer, we use the peer's port number. This is a bit clearer and easier
+to understand.
 
-Reported-by: syzbot+6f1624f937d9d6911e2d@syzkaller.appspotmail.com
-Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Marco Elver <elver@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Link: http://lkml.kernel.org/r/87r1wz8mrd.fsf@mail.parknet.co.jp
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: c7aeb0afdcc2 ("NTB: ntb_pp: Add full multi-port NTB API support")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Allen Hubbe <allenbh@gmail.com>
+Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fat/inode.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/ntb/test/ntb_pingpong.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/fs/fat/inode.c b/fs/fat/inode.c
-index 70d37a5fd72c..607e1d124062 100644
---- a/fs/fat/inode.c
-+++ b/fs/fat/inode.c
-@@ -1519,6 +1519,12 @@ static int fat_read_bpb(struct super_block *sb, struct fat_boot_sector *b,
- 		goto out;
+diff --git a/drivers/ntb/test/ntb_pingpong.c b/drivers/ntb/test/ntb_pingpong.c
+index 65865e460ab8..18d00eec7b02 100644
+--- a/drivers/ntb/test/ntb_pingpong.c
++++ b/drivers/ntb/test/ntb_pingpong.c
+@@ -121,15 +121,14 @@ static int pp_find_next_peer(struct pp_ctx *pp)
+ 	link = ntb_link_is_up(pp->ntb, NULL, NULL);
+ 
+ 	/* Find next available peer */
+-	if (link & pp->nmask) {
++	if (link & pp->nmask)
+ 		pidx = __ffs64(link & pp->nmask);
+-		out_db = BIT_ULL(pidx + 1);
+-	} else if (link & pp->pmask) {
++	else if (link & pp->pmask)
+ 		pidx = __ffs64(link & pp->pmask);
+-		out_db = BIT_ULL(pidx);
+-	} else {
++	else
+ 		return -ENODEV;
+-	}
++
++	out_db = BIT_ULL(ntb_peer_port_number(pp->ntb, pidx));
+ 
+ 	spin_lock(&pp->lock);
+ 	pp->out_pidx = pidx;
+@@ -303,7 +302,7 @@ static void pp_init_flds(struct pp_ctx *pp)
+ 			break;
  	}
  
-+	if (bpb->fat_fat_length == 0 && bpb->fat32_length == 0) {
-+		if (!silent)
-+			fat_msg(sb, KERN_ERR, "bogus number of FAT sectors");
-+		goto out;
-+	}
-+
- 	error = 0;
+-	pp->in_db = BIT_ULL(pidx);
++	pp->in_db = BIT_ULL(lport);
+ 	pp->pmask = GENMASK_ULL(pidx, 0) >> 1;
+ 	pp->nmask = GENMASK_ULL(pcnt - 1, pidx);
  
- out:
+@@ -435,4 +434,3 @@ static void __exit pp_exit(void)
+ 	debugfs_remove_recursive(pp_dbgfs_topdir);
+ }
+ module_exit(pp_exit);
+-
 -- 
 2.25.1
 
