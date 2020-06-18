@@ -4,62 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A7BC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8216C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 666DF22249
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90D9122250
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445300;
-	bh=Eq1DcpXNBEZu/BqwZzcK+uB2YIFarNYs5ivrXYLr4uU=;
+	s=default; t=1592445306;
+	bh=xoC0OkpbIYSVm+B7KGGEn3VSNd1DYO84tmDab8nUozk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n905sdFg0ZdGNcXTOnLVZ2uiNTrqS6rNSPzx+uG0dtb66Zpp16sTeRUfuR2WEXmjJ
-	 FfZap8hDaVDKwH+dMk2CdcnW3w64MtQM2qwRI5VZnLf1CN7ihOhjN9TAnMBZqZjmoV
-	 y6BbLuf5RXy3DlpgZozPF0QrclccR5Br+P21DBm0=
+	b=UQ/gxh5iIHWzKsTe47+OX69dvGoI24A6bdUbkwFnRBWqLFmbxPGeMyNE7z5m1EaxA
+	 d8um12Sf450+Vc6+oi4w8pbbNGVG8BMYBq5ftL16GHUhnEdHOcgjeRGamMVq+g/tM2
+	 jA3O32VmXawe7kTGujgjKg9NsuytRQovG/keVzV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731527AbgFRBZw (ORCPT
+        id S1732850AbgFRBzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56042 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:55:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730850AbgFRBWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:51 -0400
+        id S1730057AbgFRBZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A066020B1F;
-        Thu, 18 Jun 2020 01:22:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68C8C21D7A;
+        Thu, 18 Jun 2020 01:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443370;
-        bh=Eq1DcpXNBEZu/BqwZzcK+uB2YIFarNYs5ivrXYLr4uU=;
+        s=default; t=1592443551;
+        bh=xoC0OkpbIYSVm+B7KGGEn3VSNd1DYO84tmDab8nUozk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ESi6GQCCQBMA/Crc6rCGnoKGZO/PQsOupHh42boP8MfuWeVhEyN0U3awrkRFt6vnZ
-         /fx4NxDfTFg9y5sJqfRIgVKjVgKwz0PFglKmFFAnzMrfqvM2LeLkJPPZsapHA89+Ej
-         uAf45wkj0e16cTKMIw3YKM/vvxyX17Yumu4kq/W4=
+        b=qZUH0gRZNDBh0Rm8GmQ7c4d8gZXlRlWTy9K696wOhtF0ChbLr+vpUcFZv1qXo+WTd
+         ep2uHGrmOR9FXEXQ/rn7TVXaP51ZDPERFzqBzNSYV4b1QxWS07FPvO1hBNJJxFk5P9
+         a44qNzX6GCyESjJkonmc0FZ2idCA1ATllTRDTBmU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Long Cheng <long.cheng@mediatek.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 024/172] serial: 8250: Fix max baud limit in generic 8250 port
-Date:   Wed, 17 Jun 2020 21:19:50 -0400
-Message-Id: <20200618012218.607130-24-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 166/172] ASoC: rt5645: Add platform-data for Asus T101HA
+Date:   Wed, 17 Jun 2020 21:22:12 -0400
+Message-Id: <20200618012218.607130-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -72,79 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 7b668c064ec33f3d687c3a413d05e355172e6c92 ]
+[ Upstream commit 79d4f823a06796656289f97b922493da5690e46c ]
 
-Standard 8250 UART ports are designed in a way so they can communicate
-with baud rates up to 1/16 of a reference frequency. It's expected from
-most of the currently supported UART controllers. That's why the former
-version of serial8250_get_baud_rate() method called uart_get_baud_rate()
-with min and max baud rates passed as (port->uartclk / 16 / UART_DIV_MAX)
-and ((port->uartclk + tolerance) / 16) respectively. Doing otherwise, like
-it was suggested in commit ("serial: 8250_mtk: support big baud rate."),
-caused acceptance of bauds, which was higher than the normal UART
-controllers actually supported. As a result if some user-space program
-requested to set a baud greater than (uartclk / 16) it would have been
-permitted without truncation, but then serial8250_get_divisor(baud)
-(which calls uart_get_divisor() to get the reference clock divisor) would
-have returned a zero divisor. Setting zero divisor will cause an
-unpredictable effect varying from chip to chip. In case of DW APB UART the
-communications just stop.
+The Asus T101HA uses the default jack-detect mode 3, but instead of
+using an analog microphone it is using a DMIC on dmic-data-pin 1,
+like the Asus T100HA. Note unlike the T100HA its jack-detect is not
+inverted.
 
-Lets fix this problem by getting back the limitation of (uartclk +
-tolerance) / 16 maximum baud supported by the generic 8250 port. Mediatek
-8250 UART ports driver developer shouldn't have touched it in the first
-place  notably seeing he already provided a custom version of set_termios()
-callback in that glue-driver which took into account the extended baud
-rate values and accordingly updated the standard and vendor-specific
-divisor latch registers anyway.
+Add a DMI quirk with the correct settings for this model.
 
-Fixes: 81bb549fdf14 ("serial: 8250_mtk: support big baud rate.")
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Long Cheng <long.cheng@mediatek.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-Link: https://lore.kernel.org/r/20200506233136.11842-2-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200608204634.93407-2-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_port.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/codecs/rt5645.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 5a04d4ddca73..20b799219826 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -2628,6 +2628,8 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
- 					     struct ktermios *termios,
- 					     struct ktermios *old)
- {
-+	unsigned int tolerance = port->uartclk / 100;
-+
- 	/*
- 	 * Ask the core to calculate the divisor for us.
- 	 * Allow 1% tolerance at the upper limit so uart clks marginally
-@@ -2636,7 +2638,7 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
- 	 */
- 	return uart_get_baud_rate(port, termios, old,
- 				  port->uartclk / 16 / UART_DIV_MAX,
--				  port->uartclk);
-+				  (port->uartclk + tolerance) / 16);
- }
+diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
+index 7e3b47eeea04..9185bd7c5a6d 100644
+--- a/sound/soc/codecs/rt5645.c
++++ b/sound/soc/codecs/rt5645.c
+@@ -3656,6 +3656,12 @@ static const struct rt5645_platform_data asus_t100ha_platform_data = {
+ 	.inv_jd1_1 = true,
+ };
  
- void
++static const struct rt5645_platform_data asus_t101ha_platform_data = {
++	.dmic1_data_pin = RT5645_DMIC_DATA_IN2N,
++	.dmic2_data_pin = RT5645_DMIC2_DISABLE,
++	.jd_mode = 3,
++};
++
+ static const struct rt5645_platform_data lenovo_ideapad_miix_310_pdata = {
+ 	.jd_mode = 3,
+ 	.in2_diff = true,
+@@ -3733,6 +3739,14 @@ static const struct dmi_system_id dmi_platform_data[] = {
+ 		},
+ 		.driver_data = (void *)&asus_t100ha_platform_data,
+ 	},
++	{
++		.ident = "ASUS T101HA",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "T101HA"),
++		},
++		.driver_data = (void *)&asus_t101ha_platform_data,
++	},
+ 	{
+ 		.ident = "MINIX Z83-4",
+ 		.matches = {
 -- 
 2.25.1
 
