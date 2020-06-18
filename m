@@ -2,95 +2,211 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51749C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A98C206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:42:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="R4YGlhCq"
+	by mail.kernel.org (Postfix) with ESMTP id 678B02075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731861AbgFRPmD (ORCPT
+        id S1731874AbgFRPmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:42:03 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:50726 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731506AbgFRPl6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:41:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592494917; x=1624030917;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=/xPz/XUkWYQ+/6NSvaaOEEb50Wks9JYr5YDDXFtRas0=;
-  b=R4YGlhCq2OJrPnrx2vfrgRw2d8OywyAsb365DBN1Jih3N++eXh9WR2Xo
-   nzCOMhcmTqFyHEddYR2e3zMDEzjjBeTU184deKwbjJnvrZk/E5pqj5BCu
-   D3ISSc6HmouKD3rmxQv75I3r9UP5H9DkjyMMlxPUsiPinjxcvFynRtjr3
-   /mzLzKJ5LLUSxe+4UU78fMNShdMtIVdlXMC0viYr2eNUKLMeFq81UVwru
-   /huNlOL27l0RqvFUrLbgbFxqL8q+S6pjOyedMV1a1H1xsz273HqZezjtn
-   cjVbRoaOWrPemu0abxf/3pSJlX75ib9ey17JkmWJWicBndqqv57iTXZnU
-   w==;
-IronPort-SDR: E2EVEbmoB+k9vNfuRVb4TC/r1xLs5eNFWooUjCtOVDwuTIeMhurjvIlZ6cRHGpJUYf/s5WjebJ
- y83z/8whG5O7zm0FIM16nmGMaLDGRxMZUzejqcTXvvTibw0inqRmKpgUhcyg8tjEL6mGGYqycj
- 43io/Nmr5coJ0xAZk6ytCZFpDd/limNeZgPSO2n0N3G9CU3mAoH9eSbSo7lsqBCgIw6y76VibB
- Cn+HaNe+AMIl04cJCr2G5/KrfuqLxXzu88k5d/hiv8kOATt2YBQlQV7ux+Gb4ho+zt7IhsQQ2m
- +aM=
-X-IronPort-AV: E=Sophos;i="5.75,251,1589266800"; 
-   d="scan'208";a="84149583"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Jun 2020 08:41:56 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 18 Jun 2020 08:41:56 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 18 Jun 2020 08:41:43 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <linux@armlinux.org.uk>, <olof@lixom.net>,
-        <alexandre.belloni@bootlin.com>, <krzk@kernel.org>,
-        <sudeep.holla@arm.com>, <nicolas.ferre@microchip.com>,
-        <ludovic.desroches@microchip.com>,
-        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
-Subject: [PATCH] ARM: configs: at91: sama5: Enable CLASSD
-Date:   Thu, 18 Jun 2020 18:41:47 +0300
-Message-ID: <20200618154147.687878-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 18 Jun 2020 11:42:13 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:55232 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731863AbgFRPmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 11:42:06 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jlwfr-0001YL-55; Thu, 18 Jun 2020 17:41:55 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net, kuba@kernel.org,
+        robh+dt@kernel.org, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com
+Subject: Re: [PATCH v5 3/3] net: phy: mscc: handle the clkout control on some phy variants
+Date:   Thu, 18 Jun 2020 17:41:54 +0200
+Message-ID: <2277698.LFZWc9m3Y3@diego>
+In-Reply-To: <20200618134102.GA1551@shell.armlinux.org.uk>
+References: <20200618121139.1703762-1-heiko@sntech.de> <20200618132822.GN249144@lunn.ch> <20200618134102.GA1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CLASSD is present on SAMA5d2 SoCs.
+Am Donnerstag, 18. Juni 2020, 15:41:02 CEST schrieb Russell King - ARM Linux admin:
+> On Thu, Jun 18, 2020 at 03:28:22PM +0200, Andrew Lunn wrote:
+> > On Thu, Jun 18, 2020 at 02:11:39PM +0200, Heiko Stuebner wrote:
+> > > From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> > > 
+> > > At least VSC8530/8531/8540/8541 contain a clock output that can emit
+> > > a predefined rate of 25, 50 or 125MHz.
+> > > 
+> > > This may then feed back into the network interface as source clock.
+> > > So expose a clock-provider from the phy using the common clock framework
+> > > to allow setting the rate.
+> > > 
+> > > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> > > ---
+> > >  drivers/net/phy/mscc/mscc.h      |  13 +++
+> > >  drivers/net/phy/mscc/mscc_main.c | 182 +++++++++++++++++++++++++++++--
+> > >  2 files changed, 187 insertions(+), 8 deletions(-)
+> > > 
+> > > diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
+> > > index fbcee5fce7b2..94883dab5cc1 100644
+> > > --- a/drivers/net/phy/mscc/mscc.h
+> > > +++ b/drivers/net/phy/mscc/mscc.h
+> > > @@ -218,6 +218,13 @@ enum rgmii_clock_delay {
+> > >  #define INT_MEM_DATA_M			  0x00ff
+> > >  #define INT_MEM_DATA(x)			  (INT_MEM_DATA_M & (x))
+> > >  
+> > > +#define MSCC_CLKOUT_CNTL		  13
+> > > +#define CLKOUT_ENABLE			  BIT(15)
+> > > +#define CLKOUT_FREQ_MASK		  GENMASK(14, 13)
+> > > +#define CLKOUT_FREQ_25M			  (0x0 << 13)
+> > > +#define CLKOUT_FREQ_50M			  (0x1 << 13)
+> > > +#define CLKOUT_FREQ_125M		  (0x2 << 13)
+> > > +
+> > >  #define MSCC_PHY_PROC_CMD		  18
+> > >  #define PROC_CMD_NCOMPLETED		  0x8000
+> > >  #define PROC_CMD_FAILED			  0x4000
+> > > @@ -360,6 +367,12 @@ struct vsc8531_private {
+> > >  	 */
+> > >  	unsigned int base_addr;
+> > >  
+> > > +#ifdef CONFIG_COMMON_CLK
+> > > +	struct clk_hw clkout_hw;
+> > > +#endif
+> > > +	u32 clkout_rate;
+> > > +	int clkout_enabled;
+> > > +
+> > >  #if IS_ENABLED(CONFIG_MACSEC)
+> > >  	/* MACsec fields:
+> > >  	 * - One SecY per device (enforced at the s/w implementation level)
+> > > diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+> > > index 5d2777522fb4..727a9dd58403 100644
+> > > --- a/drivers/net/phy/mscc/mscc_main.c
+> > > +++ b/drivers/net/phy/mscc/mscc_main.c
+> > > @@ -7,6 +7,7 @@
+> > >   * Copyright (c) 2016 Microsemi Corporation
+> > >   */
+> > >  
+> > > +#include <linux/clk-provider.h>
+> > >  #include <linux/firmware.h>
+> > >  #include <linux/jiffies.h>
+> > >  #include <linux/kernel.h>
+> > > @@ -431,7 +432,6 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
+> > >  
+> > >  	return led_mode;
+> > >  }
+> > > -
+> > >  #else
+> > >  static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+> > >  {
+> > > @@ -1508,6 +1508,43 @@ static int vsc85xx_config_init(struct phy_device *phydev)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +static int vsc8531_config_init(struct phy_device *phydev)
+> > > +{
+> > > +	struct vsc8531_private *vsc8531 = phydev->priv;
+> > > +	u16 val;
+> > > +	int rc;
+> > > +
+> > > +	rc = vsc85xx_config_init(phydev);
+> > > +	if (rc)
+> > > +		return rc;
+> > > +
+> > > +#ifdef CONFIG_COMMON_CLK
+> > > +	switch (vsc8531->clkout_rate) {
+> > > +	case 25000000:
+> > > +		val = CLKOUT_FREQ_25M;
+> > > +		break;
+> > > +	case 50000000:
+> > > +		val = CLKOUT_FREQ_50M;
+> > > +		break;
+> > > +	case 125000000:
+> > > +		val = CLKOUT_FREQ_125M;
+> > > +		break;
+> > > +	default:
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	if (vsc8531->clkout_enabled)
+> > > +		val |= CLKOUT_ENABLE;
+> > > +
+> > > +	rc = phy_write_paged(phydev, MSCC_PHY_PAGE_EXTENDED_GPIO,
+> > > +			     MSCC_CLKOUT_CNTL, val);
+> > > +	if (rc)
+> > > +		return rc;
+> > > +#endif
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > 
+> > > +static int vsc8531_clkout_prepare(struct clk_hw *hw)
+> > > +{
+> > > +	struct vsc8531_private *vsc8531 = clkout_hw_to_vsc8531(hw);
+> > > +
+> > > +	vsc8531->clkout_enabled = true;
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static void vsc8531_clkout_unprepare(struct clk_hw *hw)
+> > > +{
+> > > +	struct vsc8531_private *vsc8531 = clkout_hw_to_vsc8531(hw);
+> > > +
+> > > +	vsc8531->clkout_enabled = false;
+> > > +}
+> > > +
+> > 
+> > > +static const struct clk_ops vsc8531_clkout_ops = {
+> > > +	.prepare = vsc8531_clkout_prepare,
+> > > +	.unprepare = vsc8531_clkout_unprepare,
+> > > +	.is_prepared = vsc8531_clkout_is_prepared,
+> > > +	.recalc_rate = vsc8531_clkout_recalc_rate,
+> > > +	.round_rate = vsc8531_clkout_round_rate,
+> > > +	.set_rate = vsc8531_clkout_set_rate,
+> > 
+> > I'm not sure this is the expected behaviour. The clk itself should
+> > only start ticking when the enable callback is called. But this code
+> > will enable the clock when config_init() is called. I think you should
+> > implement the enable and disable methods.
+> 
+> That is actually incorrect.  The whole "prepare" vs "enable" difference
+> is that prepare can schedule, enable isn't permitted.  So, if you need
+> to sleep to enable the clock, then enabling the clock in the prepare
+> callback is the right thing to do.
+> 
+> However, the above driver just sets a flag, which only gets used when
+> the PHY's config_init method is called; that really doesn't seem to be
+> sane - the clock is available from the point that the PHY has been
+> probed, and it'll be expected that once the clock is published, it can
+> be made functional.
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- arch/arm/configs/sama5_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Though I'm not sure how this fits in the whole bringup of ethernet phys.
+Like the phy is dependent on the underlying ethernet controller to
+actually turn it on.
 
-diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
-index 8e1f78c19920..f688443fe7bf 100644
---- a/arch/arm/configs/sama5_defconfig
-+++ b/arch/arm/configs/sama5_defconfig
-@@ -165,6 +165,7 @@ CONFIG_SND_SOC=y
- CONFIG_SND_ATMEL_SOC=y
- CONFIG_SND_ATMEL_SOC_WM8904=y
- # CONFIG_HID_GENERIC is not set
-+CONFIG_SND_ATMEL_SOC_CLASSD=y
- CONFIG_SND_ATMEL_SOC_PDMIC=y
- CONFIG_SND_ATMEL_SOC_TSE850_PCM5142=m
- CONFIG_SND_ATMEL_SOC_I2S=y
--- 
-2.25.1
+I guess we should check the phy-state and if it's not accessible, just
+keep the values and if it's in a suitable state do the configuration.
+
+Calling a vsc8531_config_clkout() from both the vsc8531_config_init()
+as well as the clk_(un-)prepare  and clk_set_rate functions and being
+protected by a check against phy_is_started() ?
+
+
+Heiko
+
 
