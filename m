@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3417C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFCCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 823E0221ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B0821D82
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443037;
-	bh=IgNxQZbR1gZR1QJHVrko2DBUykRdC1v95tFrjcV+KKg=;
+	s=default; t=1592443043;
+	bh=gcYIdJSBndXo8ib41qkOp7IDNKCp6T94n1aw+8dxIIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FP3TYM3xkxDKjFf5M+LmKI3XA38JBLtGlV8uUEY0A7Cl3IfeI9yQgOMB06fqjj7lx
-	 IfZ58OpeqpMFynZZJ8PYJmeoYYJ1AbgPAJmYEkDVzpahUG/APzyfLqqdPgIH+cokWd
-	 516T+foFaD8kbZDbt2htIGzYEgEtfsVsqzyTr3M4=
+	b=D7Ay+CvCI5iXNEqyR+n7juxks8EAid9o8Y7F6AXbT8rUnXnZmDHcHALK0N0vqsHYQ
+	 +kBxa2u0TA8WSkF5KzOennGPm2aG6Hl0f6orvYXowlgEdLlL/+yWqxnXCQDim5VI8X
+	 mkYUMgKf4gHUHYNQgnIN9gGDQ0bGx7lrkk1NG+Xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgFRBRQ (ORCPT
+        id S1727858AbgFRBRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:17:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44564 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:17:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729365AbgFRBOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:14:49 -0400
+        id S1729380AbgFRBOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A584E221ED;
-        Thu, 18 Jun 2020 01:14:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0009B2193E;
+        Thu, 18 Jun 2020 01:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442888;
-        bh=IgNxQZbR1gZR1QJHVrko2DBUykRdC1v95tFrjcV+KKg=;
+        s=default; t=1592442890;
+        bh=gcYIdJSBndXo8ib41qkOp7IDNKCp6T94n1aw+8dxIIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VvLev73I+gep7i5Six6n4RxjUTSzYcpuPTjmQkAGK3P0lyKeQMczEI/3SRAXzCXYl
-         m5ryyl66qG/pCLm3CaTBBhwSCQni6tfQZhQtjnJYY+nnOxhxuyDAKsG7B1e52+cc5P
-         NCHcedih61Ljk4WH1fo4C7Oq0ix19IQo6zbmr/cw=
+        b=cHRfdvLqjyZsW6g99eM1+psSgkitdeKAGnxLTD8c6VwttLrH4Wy5Y9NyD+V0zNWaG
+         unnA3eH0b9PIQ56xZZrlLzNzVqIbOJrU2Wf4VyESzbpJU7DLkZwWAke5MMjaNtfOuh
+         l0KuCXWKWnMw+YSp3XHG+JniHPEL40vZDv1NYUH4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 311/388] mailbox: zynqmp-ipi: Fix NULL vs IS_ERR() check in zynqmp_ipi_mbox_probe()
-Date:   Wed, 17 Jun 2020 21:06:48 -0400
-Message-Id: <20200618010805.600873-311-sashal@kernel.org>
+Cc:     Stafford Horne <shorne@gmail.com>, Sasha Levin <sashal@kernel.org>,
+        openrisc@lists.librecores.org
+Subject: [PATCH AUTOSEL 5.7 313/388] openrisc: Fix issue with argument clobbering for clone/fork
+Date:   Wed, 17 Jun 2020 21:06:50 -0400
+Message-Id: <20200618010805.600873-313-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,78 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Stafford Horne <shorne@gmail.com>
 
-[ Upstream commit 445aeeb569f8d7904f8cf80b7c6826bb651ef80e ]
+[ Upstream commit 6bd140e14d9aaa734ec37985b8b20a96c0ece948 ]
 
-In case of error, the function devm_ioremap() returns NULL pointer not
-ERR_PTR(). So we should check whether the return value of devm_ioremap()
-is NULL instead of IS_ERR.
+Working on the OpenRISC glibc port I found that sometimes clone was
+working strange.  That the tls data argument sent in r7 was always
+wrong.  Further investigation revealed that the arguments were getting
+clobbered in the entry code.  This patch removes the code that writes to
+the argument registers.  This was likely due to some old code hanging
+around.
 
-Fixes: 4981b82ba2ff ("mailbox: ZynqMP IPI mailbox controller")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+This patch fixes this up for clone and fork.  This fork clobber is
+harmless but also useless so remove.
+
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/zynqmp-ipi-mailbox.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ arch/openrisc/kernel/entry.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mailbox/zynqmp-ipi-mailbox.c b/drivers/mailbox/zynqmp-ipi-mailbox.c
-index 86887c9a349a..f9cc674ba9b7 100644
---- a/drivers/mailbox/zynqmp-ipi-mailbox.c
-+++ b/drivers/mailbox/zynqmp-ipi-mailbox.c
-@@ -504,10 +504,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
- 		mchan->req_buf_size = resource_size(&res);
- 		mchan->req_buf = devm_ioremap(mdev, res.start,
- 					      mchan->req_buf_size);
--		if (IS_ERR(mchan->req_buf)) {
-+		if (!mchan->req_buf) {
- 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
--			ret = PTR_ERR(mchan->req_buf);
--			return ret;
-+			return -ENOMEM;
- 		}
- 	} else if (ret != -ENODEV) {
- 		dev_err(mdev, "Unmatched resource %s, %d.\n", name, ret);
-@@ -520,10 +519,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
- 		mchan->resp_buf_size = resource_size(&res);
- 		mchan->resp_buf = devm_ioremap(mdev, res.start,
- 					       mchan->resp_buf_size);
--		if (IS_ERR(mchan->resp_buf)) {
-+		if (!mchan->resp_buf) {
- 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
--			ret = PTR_ERR(mchan->resp_buf);
--			return ret;
-+			return -ENOMEM;
- 		}
- 	} else if (ret != -ENODEV) {
- 		dev_err(mdev, "Unmatched resource %s.\n", name);
-@@ -543,10 +541,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
- 		mchan->req_buf_size = resource_size(&res);
- 		mchan->req_buf = devm_ioremap(mdev, res.start,
- 					      mchan->req_buf_size);
--		if (IS_ERR(mchan->req_buf)) {
-+		if (!mchan->req_buf) {
- 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
--			ret = PTR_ERR(mchan->req_buf);
--			return ret;
-+			return -ENOMEM;
- 		}
- 	} else if (ret != -ENODEV) {
- 		dev_err(mdev, "Unmatched resource %s.\n", name);
-@@ -559,10 +556,9 @@ static int zynqmp_ipi_mbox_probe(struct zynqmp_ipi_mbox *ipi_mbox,
- 		mchan->resp_buf_size = resource_size(&res);
- 		mchan->resp_buf = devm_ioremap(mdev, res.start,
- 					       mchan->resp_buf_size);
--		if (IS_ERR(mchan->resp_buf)) {
-+		if (!mchan->resp_buf) {
- 			dev_err(mdev, "Unable to map IPI buffer I/O memory\n");
--			ret = PTR_ERR(mchan->resp_buf);
--			return ret;
-+			return -ENOMEM;
- 		}
- 	} else if (ret != -ENODEV) {
- 		dev_err(mdev, "Unmatched resource %s.\n", name);
+diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
+index e4a78571f883..c6481cfc5220 100644
+--- a/arch/openrisc/kernel/entry.S
++++ b/arch/openrisc/kernel/entry.S
+@@ -1166,13 +1166,13 @@ ENTRY(__sys_clone)
+ 	l.movhi	r29,hi(sys_clone)
+ 	l.ori	r29,r29,lo(sys_clone)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r7,r1,0
++	 l.nop
+ 
+ ENTRY(__sys_fork)
+ 	l.movhi	r29,hi(sys_fork)
+ 	l.ori	r29,r29,lo(sys_fork)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r3,r1,0
++	 l.nop
+ 
+ ENTRY(sys_rt_sigreturn)
+ 	l.jal	_sys_rt_sigreturn
 -- 
 2.25.1
 
