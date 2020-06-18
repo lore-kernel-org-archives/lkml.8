@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4F4C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F71C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A33D221F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87B512220E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445066;
-	bh=g4pjzjoWwC5uwkYkxbzWhhntYB8sIO5y6DGTwIdZYgU=;
+	s=default; t=1592445070;
+	bh=BsadBBKHMduPoUtjwsrBRPIOISPZDN5z2L7lqKeMfHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r6qZUThtPefeU3GHoRK9POhyuHOFjAPQCcJlu8OZbgthhD3iRv8CWEMCaBjMEWlzn
-	 WEbyWjKs4pMupWbZ7C8fuBhyQbh28NskHKUKLzRKb+RVb+Qu24bjkx5rMJT9C8H9b9
-	 haXuOcyWZPuajP8y55bOgKeOfAugPfqnVkyzWsBA=
+	b=Lj5ZdNPzwcOWtRNYCm+cdA/kh+BHnrMHAwlrD9qbkKeqPGdMRrGF5TB9WgTWpTppI
+	 u40+Jal0Mr13QNDM0qhAO39PM/QSLC69uqKlb+3nKxRyDYCNTrsVpR46RTOmp/0xEZ
+	 bj5X2mdPKSVesyQ5N7D3I2C/zYpRUnxQjmf0wMhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730839AbgFRB1O (ORCPT
+        id S1731804AbgFRB1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:27:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57748 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:27:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731059AbgFRBXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731053AbgFRBXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:23:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B023620CC7;
-        Thu, 18 Jun 2020 01:23:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5632D20B1F;
+        Thu, 18 Jun 2020 01:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443427;
-        bh=g4pjzjoWwC5uwkYkxbzWhhntYB8sIO5y6DGTwIdZYgU=;
+        s=default; t=1592443426;
+        bh=BsadBBKHMduPoUtjwsrBRPIOISPZDN5z2L7lqKeMfHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lWabb/ugq0NkDK+CuMg/sN5WIt2KDb68Q1FQRQGKPwvkVtF12GE7NIU8L8vbcjtW2
-         Y/W8d0MRlYPPEXo0nJD4yN+cRjq9jukiS0wVmOzu7EV6ZSTC89OV8EXxfYLO3tU+hV
-         HPMMimR6gUJinSNQ5e73jcgBougBtiCmwyOgejrY=
+        b=bJZsR2EBNiKSDzEEUg4RwGQxERRxHS/c8/AwgGpbXOBtBb66DLmVfU8fJLjHIdE0P
+         P5dE1F9oLd0ILW+zFpc8px6t0lxhya2RISfchS+U8N2xNEj85fGdOoCtSlx/P+ECIF
+         aHZEAE9dWphDZNyA/0YvnwURWWfpROMZf0lo1pQQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 067/172] s390/qdio: put thinint indicator after early error
-Date:   Wed, 17 Jun 2020 21:20:33 -0400
-Message-Id: <20200618012218.607130-67-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Andi Shyti <andi@etezian.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 066/172] Input: mms114 - add extra compatible for mms345l
+Date:   Wed, 17 Jun 2020 21:20:32 -0400
+Message-Id: <20200618012218.607130-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -60,83 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 75e82bec6b2622c6f455b7a543fb5476a5d0eed7 ]
+[ Upstream commit 7842087b0196d674ed877d768de8f2a34d7fdc53 ]
 
-qdio_establish() calls qdio_setup_thinint() via qdio_setup_irq().
-If the subsequent qdio_establish_thinint() fails, we miss to put the
-DSCI again. Thus the DSCI isn't available for re-use. Given enough of
-such errors, we could end up with having only the shared DSCI available.
+MMS345L is another first generation touch screen from Melfas,
+which uses mostly the same registers as MMS152.
 
-Merge qdio_setup_thinint() into qdio_establish_thinint(), and deal with
-such an error internally.
+However, there is some garbage printed during initialization.
+Apparently MMS345L does not have the MMS152_COMPAT_GROUP register
+that is read+printed during initialization.
 
-Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+  TSP FW Rev: bootloader 0x6 / core 0x26 / config 0x26, Compat group: \x06
+
+On earlier kernel versions the compat group was actually printed as
+an ASCII control character, seems like it gets escaped now.
+
+But we probably shouldn't print something from a random register.
+
+Add a separate "melfas,mms345l" compatible that avoids reading
+from the MMS152_COMPAT_GROUP register. This might also help in case
+there is some other device-specific quirk in the future.
+
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Andi Shyti <andi@etezian.org>
+Link: https://lore.kernel.org/r/20200423102431.2715-1-stephan@gerhold.net
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/qdio.h         |  1 -
- drivers/s390/cio/qdio_setup.c   |  1 -
- drivers/s390/cio/qdio_thinint.c | 14 ++++++++------
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/input/touchscreen/mms114.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/cio/qdio.h b/drivers/s390/cio/qdio.h
-index a6f7c2986b94..ed60b8d4efe6 100644
---- a/drivers/s390/cio/qdio.h
-+++ b/drivers/s390/cio/qdio.h
-@@ -377,7 +377,6 @@ static inline int multicast_outbound(struct qdio_q *q)
- extern u64 last_ai_time;
+diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
+index a5ab774da4cc..a31b593f5b5f 100644
+--- a/drivers/input/touchscreen/mms114.c
++++ b/drivers/input/touchscreen/mms114.c
+@@ -54,6 +54,7 @@
+ enum mms_type {
+ 	TYPE_MMS114	= 114,
+ 	TYPE_MMS152	= 152,
++	TYPE_MMS345L	= 345,
+ };
  
- /* prototypes for thin interrupt */
--void qdio_setup_thinint(struct qdio_irq *irq_ptr);
- int qdio_establish_thinint(struct qdio_irq *irq_ptr);
- void qdio_shutdown_thinint(struct qdio_irq *irq_ptr);
- void tiqdio_add_input_queues(struct qdio_irq *irq_ptr);
-diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
-index d040c4920ee7..b8955e20f246 100644
---- a/drivers/s390/cio/qdio_setup.c
-+++ b/drivers/s390/cio/qdio_setup.c
-@@ -480,7 +480,6 @@ int qdio_setup_irq(struct qdio_initialize *init_data)
- 	setup_queues(irq_ptr, init_data);
+ struct mms114_data {
+@@ -250,6 +251,15 @@ static int mms114_get_version(struct mms114_data *data)
+ 	int error;
  
- 	setup_qib(irq_ptr, init_data);
--	qdio_setup_thinint(irq_ptr);
- 	set_impl_params(irq_ptr, init_data->qib_param_field_format,
- 			init_data->qib_param_field,
- 			init_data->input_slib_elements,
-diff --git a/drivers/s390/cio/qdio_thinint.c b/drivers/s390/cio/qdio_thinint.c
-index 6628e0c9e70e..e6b22a58150a 100644
---- a/drivers/s390/cio/qdio_thinint.c
-+++ b/drivers/s390/cio/qdio_thinint.c
-@@ -267,17 +267,19 @@ int __init tiqdio_register_thinints(void)
- 
- int qdio_establish_thinint(struct qdio_irq *irq_ptr)
- {
-+	int rc;
+ 	switch (data->type) {
++	case TYPE_MMS345L:
++		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
++		if (error)
++			return error;
 +
- 	if (!is_thinint_irq(irq_ptr))
++		dev_info(dev, "TSP FW Rev: bootloader 0x%x / core 0x%x / config 0x%x\n",
++			 buf[0], buf[1], buf[2]);
++		break;
++
+ 	case TYPE_MMS152:
+ 		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
+ 		if (error)
+@@ -287,8 +297,8 @@ static int mms114_setup_regs(struct mms114_data *data)
+ 	if (error < 0)
+ 		return error;
+ 
+-	/* MMS152 has no configuration or power on registers */
+-	if (data->type == TYPE_MMS152)
++	/* Only MMS114 has configuration and power on registers */
++	if (data->type != TYPE_MMS114)
  		return 0;
--	return set_subchannel_ind(irq_ptr, 0);
--}
  
--void qdio_setup_thinint(struct qdio_irq *irq_ptr)
--{
--	if (!is_thinint_irq(irq_ptr))
--		return;
- 	irq_ptr->dsci = get_indicator();
- 	DBF_HEX(&irq_ptr->dsci, sizeof(void *));
-+
-+	rc = set_subchannel_ind(irq_ptr, 0);
-+	if (rc)
-+		put_indicator(irq_ptr->dsci);
-+
-+	return rc;
- }
- 
- void qdio_shutdown_thinint(struct qdio_irq *irq_ptr)
+ 	error = mms114_set_active(data, true);
+@@ -600,6 +610,9 @@ static const struct of_device_id mms114_dt_match[] = {
+ 	}, {
+ 		.compatible = "melfas,mms152",
+ 		.data = (void *)TYPE_MMS152,
++	}, {
++		.compatible = "melfas,mms345l",
++		.data = (void *)TYPE_MMS345L,
+ 	},
+ 	{ }
+ };
 -- 
 2.25.1
 
