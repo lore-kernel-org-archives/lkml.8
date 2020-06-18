@@ -2,85 +2,148 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56338C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62575C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31FB8208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:20:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592500858;
-	bh=gQ5nDAf/oiHGfaluw9ZDydOEIYrhctuUkCR/rgi4JJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vScl2719wYMW0RmBe1hVZ7FzSwxu+gDrxTCRWdw5AJv3O2OrNfGcw+0dsvVjdN7Tw
-	 X/l8KMlIBVNJQmXZLZEGeikrcMnCKn+QicZ1/CLzQ4r7IU6vviHp8PlQzXjklOvu9O
-	 QtJDjYMgMg2/O2RPeVqSGBvm+SSBylOqWykhwF4g=
+	by mail.kernel.org (Postfix) with ESMTP id 394CC217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:23:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="pQnJk2Bk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbgFRRU4 (ORCPT
+        id S1732121AbgFRRXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:20:56 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43539 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732087AbgFRRUz (ORCPT
+        Thu, 18 Jun 2020 13:23:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732095AbgFRRXl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 13:20:55 -0400
-Received: by mail-io1-f68.google.com with SMTP id u13so7921097iol.10;
-        Thu, 18 Jun 2020 10:20:55 -0700 (PDT)
+        Thu, 18 Jun 2020 13:23:41 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8471AC0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:23:41 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id di13so3113514qvb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:23:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=C9fZMsXo2SZ80We4hmJmwmW4hWECtoNb2OioHXlz4pQ=;
+        b=pQnJk2BkLr+MSY/ZKoRYO3N7SBKy2now/VahbHpiE0ODVcJ+6O7j84vau1mwIApvP7
+         GOdC6OeYk1H3WeQLOrd9w3MqHQZy0OvARyydS7GgAQeW47MnQWfeepZVJrUJjSv717D6
+         71Y1Jcf/9bD++nyhtsm877xpne1ScehVboFxAFrIK686JYR5j1zM1IYedzgkhSMFLH+q
+         BA1fweTgPgjhYb+wikYXhEAlUND0ztF/D51np5BJ3v4C46sZQvCASI5ckldnPRlU+3hi
+         s8pkLypTSa4SZ0xCcdQBCFHr3EIFZ3G/Xkv9NnnR/g9tJLHfZHgrYGhT36a3jHhTjSZ1
+         XJ3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=VH8S2v7O8diZS51/azFiEAEdYRzI1ehg79BFv839KHc=;
-        b=GvqDJdsTQuUHRHA2BBO2DzswubLbXGgWNk0opG9MK4spBA9O5Qj089dAIHq4Ozt22C
-         cpkjIo2XtlCJyMzcs9WWyEb9eUbaLnJjBu5W5SqaAf/eeixWjo9OY6lDhkjJ2Av+cWQU
-         577P9rahSOt/5Zf309QUXP67pajxUMq+4lYxqkeE20VTK6GDFEnWhVbY1iYNkWhyaHzB
-         ZfNlfkHKNKo0HjFle0oWvpYY+r5zAaj8dUqRAKIhP0iiNxWCzmkAIk1qaT2bjDgK11lO
-         DVl8GK3g2zTW2YDGM/laFYn7ep/ex39irjkUu0ktmCrBeiZPXi/bxnBPOx+YbvF26rox
-         KcIQ==
-X-Gm-Message-State: AOAM5332v9yt/+rOjjLuLMUXaQyNfWiRMT7jpsrDZ1sV7kcWHSaFzQ7h
-        f8r8mLkVU3OVV1vzVONP7A==
-X-Google-Smtp-Source: ABdhPJyxO5bc/mOKqhGBEaIj5NAcpWG9wYgFOjedTsxJz93sZ6cHC5TNkIg0xUBUJ1tUVM5f+CLABw==
-X-Received: by 2002:a05:6602:13c6:: with SMTP id o6mr5924431iov.84.1592500854999;
-        Thu, 18 Jun 2020 10:20:54 -0700 (PDT)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id v11sm1806720ile.61.2020.06.18.10.20.53
+        bh=C9fZMsXo2SZ80We4hmJmwmW4hWECtoNb2OioHXlz4pQ=;
+        b=BydVFdOL5jBbCoAGC7zJQxbBV3lTllet8OZk8qiyf/fS9XMuPQqhp6K4Nur6lqVFoH
+         SC/a0WwZQOGq3xRmjr+pLw+Sb2BK6OsZsP51qAq3ntoFWo2bjJTZitY4Z5uEL0Dc/kQK
+         pueydAHXy3wswhTNzgr78VG3EgCgIRR5dZ6FvLplUEACo5gObDO40iqDe4hsUDogTAds
+         /7HQfRsI3QkHPvLEi4b5RNMzRo1QxB0tKJcmvW1k5Kl/5/g9uYD/zALYhshxzT4VwMoB
+         By2OVggaVoJkSUmu0gWj+iKN1+PnfeZ+D9scKNxKkZypQJfzbEAh6ZW3Fnt4hpPQdQVx
+         xh8Q==
+X-Gm-Message-State: AOAM533tyLI3dtMpBa72oXw6LHv8puqeq8S3fhHZJMRRmQ6llnwB+nN6
+        WZucKBqESF/3+e+VziYqwvLqac28G4SlpA==
+X-Google-Smtp-Source: ABdhPJwk2YUvEzLHMclGfpDEafJPYyQ0A/CvUD7gNhvGjyNa2/WErZ+AilnbN9Hdt0RsaqZHbhBdmA==
+X-Received: by 2002:a05:6214:1705:: with SMTP id db5mr4740498qvb.14.1592501020440;
+        Thu, 18 Jun 2020 10:23:40 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id r7sm2644175qtm.66.2020.06.18.10.23.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 10:20:54 -0700 (PDT)
-Received: (nullmailer pid 561584 invoked by uid 1000);
-        Thu, 18 Jun 2020 17:20:52 -0000
-Date:   Thu, 18 Jun 2020 11:20:52 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 27/29] docs: dt: minor adjustments at writing-schema.rst
-Message-ID: <20200618172052.GA561010@bogus>
-References: <cover.1592203542.git.mchehab+huawei@kernel.org>
- <14fc680fd6596b277f94bb5a240cc9dfc41d59bf.1592203542.git.mchehab+huawei@kernel.org>
+        Thu, 18 Jun 2020 10:23:39 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jlyGI-00AEEp-Qj; Thu, 18 Jun 2020 14:23:38 -0300
+Date:   Thu, 18 Jun 2020 14:23:38 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Thomas =?utf-8?B?SGVsbHN0csO2bSAoSW50ZWwp?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200618172338.GM6578@ziepe.ca>
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+ <20200604081224.863494-5-daniel.vetter@ffwll.ch>
+ <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
+ <20200611083430.GD20149@phenom.ffwll.local>
+ <20200611141515.GW6578@ziepe.ca>
+ <20200616120719.GL20149@phenom.ffwll.local>
+ <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
+ <20200617152835.GF6578@ziepe.ca>
+ <20200618150051.GS20149@phenom.ffwll.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <14fc680fd6596b277f94bb5a240cc9dfc41d59bf.1592203542.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20200618150051.GS20149@phenom.ffwll.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 08:47:06AM +0200, Mauro Carvalho Chehab wrote:
-> There are two literal blocks that aren't mark as such. Mark them,
-> in order to make the document to produce a better html output.
+On Thu, Jun 18, 2020 at 05:00:51PM +0200, Daniel Vetter wrote:
+> On Wed, Jun 17, 2020 at 12:28:35PM -0300, Jason Gunthorpe wrote:
+> > On Wed, Jun 17, 2020 at 08:48:50AM +0200, Daniel Vetter wrote:
+> > 
+> > > Now my understanding for rdma is that if you don't have hw page fault
+> > > support,
+> > 
+> > The RDMA ODP feature is restartable HW page faulting just like nouveau
+> > has. The classical MR feature doesn't have this. Only mlx5 HW supports
+> > ODP today.
+> > 
+> > > It's only gpus (I think) which are in this awkward in-between spot
+> > > where dynamic memory management really is much wanted, but the hw
+> > > kinda sucks. Aside, about 10+ years ago we had a similar problem with
+> > > gpu hw, but for security: Many gpu didn't have any kinds of page
+> > > tables to isolate different clients from each another. drivers/gpu
+> > > fixed this by parsing&validating what userspace submitted to make sure
+> > > it's only every accessing its own buffers. Most gpus have become
+> > > reasonable nowadays and do have proper per-process pagetables (gpu
+> > > process, not the pasid stuff), but even today there's still some of
+> > > the old model left in some of the smallest SoC.
+> > 
+> > But I still don't understand why a dma fence is needed inside the GPU
+> > driver itself in the notifier.
+> > 
+> > Surely the GPU driver can block and release the notifier directly from
+> > its own command processing channel?
+> > 
+> > Why does this fence and all it entails need to leak out across
+> > drivers?
 > 
-> While here, also add a SPDX header to it.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/devicetree/writing-schema.rst | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+> So 10 years ago we had this world of every gpu driver is its own bucket,
+> nothing leaks out to the world. But the world had a different idea how
+> gpus where supposed to work, with stuff like:
 
-Applied, thanks.
+Sure, I understand DMA fence, but why does a *notifier* need it?
 
-Rob
+The job of the notifier is to guarentee that the device it is
+connected to is not doing DMA before it returns.
+
+That just means you need to prove that device is done with the buffer.
+
+As I've understood GPU that means you need to show that the commands
+associated with the buffer have completed. This is all local stuff
+within the driver, right? Why use fence (other than it already exists)
+
+Jason
