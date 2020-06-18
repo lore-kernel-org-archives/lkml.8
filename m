@@ -4,53 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B7AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB122193E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9DD2193E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446015;
-	bh=RiDtdkqldGEv6LhvQoPOjNzyucZ0WuaO6MrRGi5SRDg=;
+	s=default; t=1592446020;
+	bh=cTOLi/ciaKomP/JR0cQ5e2fwwWUbRGRAWN8tGxILFp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kVytRIXvhSaXd7TexYTLK9AJFYRWmXkEHye/D9skfNO7krS+75JfPpm16XGciOuWX
-	 PoGDd7TdfeBJF2/GwNSQyDiZE0BswuE8sSYcQiNtNAEISqEPDEygP9tyGNucGAoUCc
-	 NRXhykCLMcEyPhTWWdUm6juFr9mTBNHMgaC+/cSw=
+	b=X1tqvuPMDxTHTxNJQy71yTx9ucYkq51j9kax3qYMh5sT93FIQNmZVSRqJ5PyoV+xk
+	 BPM9feLunRNLmc9N+TD0h58If1B7blffjnydbNZjHIT+EbM3leluWBNLAOhPai2GdH
+	 zTzu0VdZaVSeKXMsLFdriEwuiqBdCzVTNzX6m+hA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731778AbgFRCGy (ORCPT
+        id S1728291AbgFRBW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55496 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730269AbgFRBW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:28 -0400
+        id S1730057AbgFRBTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B536720663;
-        Thu, 18 Jun 2020 01:22:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29F3621D7E;
+        Thu, 18 Jun 2020 01:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443347;
-        bh=RiDtdkqldGEv6LhvQoPOjNzyucZ0WuaO6MrRGi5SRDg=;
+        s=default; t=1592443140;
+        bh=cTOLi/ciaKomP/JR0cQ5e2fwwWUbRGRAWN8tGxILFp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t+BpT40+rO5X0M346TJVtyh3N9bT1+VRSQSex6UxJ8Mvmqphs4P8AIYZV3X//Ea3g
-         QJx3CbIlqo7su2rywDzjJNjP/40fEFYaoK51XiKOX+QwCPRNxV/3GKeWa5WIiNlAej
-         aWdwC6dqHAVPPhV3p5VNxnsUgKUiBJJhjFTTB8Dw=
+        b=CeyWZYOIO8yUW0Zr8WvXzBecGdk/C5zmrPpi6bfl1lKca/+Vx+D+GChC7W+ab7rKz
+         g2ODmJzJpCnUtqQgFB8BG8uGfPLvWpSjV39TchQ/YzXFWXT9wUl4146wmHv2T9oA5Z
+         0TS1p4ujBXGDBoYkSMQwzfJvMHifoYJOgN+P/4LA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 007/172] iio: light: isl29125: fix iio_triggered_buffer_{predisable,postenable} positions
-Date:   Wed, 17 Jun 2020 21:19:33 -0400
-Message-Id: <20200618012218.607130-7-sashal@kernel.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Marcel Gudert <m.gudert@eckelmann.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 110/266] gpio: pca953x: fix handling of automatic address incrementing
+Date:   Wed, 17 Jun 2020 21:13:55 -0400
+Message-Id: <20200618011631.604574-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,87 +63,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 9b7a12c3e090cf3fba6f66f1f23abbc6e0e86021 ]
+[ Upstream commit bcf41dc480b179bfb669a232080a2e26dc7294b4 ]
 
-The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-the poll functions.
+Some of the chips supported by the pca953x driver need the most
+significant bit in the address word set to automatically increment the
+address pointer on subsequent reads and writes (example: PCA9505). With
+this bit unset the same register is read multiple times on a multi-byte
+read sequence. Other chips must not have this bit set and autoincrement
+always (example: PCA9555).
 
-For the predisable hook, the disable code should occur before detaching
-the poll func, and for the postenable hook, the poll func should be
-attached before the enable code.
+Up to now this AI bit was interpreted to be part of the address, which
+resulted in inconsistent regmap caching when a register was written with
+AI set and then read without it. This happened for the PCA9505 in
+pca953x_gpio_set_multiple() where pca953x_read_regs() bulk read from the
+cache for registers 0x8-0xc and then wrote to registers 0x88-0x8c. (Side
+note: reading 5 values from offset 0x8 yiels OP0 5 times because AI must
+be set to get OP0-OP4, which is another bug that is resolved here as a
+by-product.) The same problem happens when calls to gpio_set_value() and
+gpio_set_array_value() were mixed.
 
-This change reworks the predisable/postenable hooks so that the pollfunc is
-attached/detached in the correct position.
-It also balances the calls a bit, by grouping the preenable and the
-iio_triggered_buffer_postenable() into a single
-isl29125_buffer_postenable() function.
+With this patch the AI bit is always set for chips that support it. This
+works as there are no code locations that make use of the behaviour with
+AI unset (for the chips that support it).
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Note that the call to pca953x_setup_gpio() had to be done a bit earlier
+to make the NBANK macro work.
+
+The history of this bug is a bit complicated. Commit b32cecb46bdc
+("gpio: pca953x: Extract the register address mangling to single
+function") changed which chips and functions are affected. Commit
+3b00691cc46a ("gpio: pca953x: hack to fix 24 bit gpio expanders") used
+some duct tape to make the driver at least appear to work. Commit
+49427232764d ("gpio: pca953x: Perform basic regmap conversion")
+introduced the caching. Commit b4818afeacbd ("gpio: pca953x: Add
+set_multiple to allow multiple bits to be set in one write.") introduced
+the .set_multiple() callback which didn't work for chips that need the
+AI bit which was fixed later for some chips in 8958262af3fb ("gpio:
+pca953x: Repair multi-byte IO address increment on PCA9575"). So I'm
+sorry, I don't know which commit I should pick for a Fixes: line.
+
+Tested-by: Marcel Gudert <m.gudert@eckelmann.de>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/light/isl29125.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 44 +++++++++++++++++++++++--------------
+ 1 file changed, 28 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/iio/light/isl29125.c b/drivers/iio/light/isl29125.c
-index ed38edcd5efe..2175cb9c2908 100644
---- a/drivers/iio/light/isl29125.c
-+++ b/drivers/iio/light/isl29125.c
-@@ -216,13 +216,24 @@ static const struct iio_info isl29125_info = {
- 	.attrs = &isl29125_attribute_group,
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 3edc1762803a..29ba26742c8f 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -306,8 +306,22 @@ static const struct regmap_config pca953x_i2c_regmap = {
+ 	.volatile_reg = pca953x_volatile_register,
+ 
+ 	.cache_type = REGCACHE_RBTREE,
+-	/* REVISIT: should be 0x7f but some 24 bit chips use REG_ADDR_AI */
+-	.max_register = 0xff,
++	.max_register = 0x7f,
++};
++
++static const struct regmap_config pca953x_ai_i2c_regmap = {
++	.reg_bits = 8,
++	.val_bits = 8,
++
++	.read_flag_mask = REG_ADDR_AI,
++	.write_flag_mask = REG_ADDR_AI,
++
++	.readable_reg = pca953x_readable_register,
++	.writeable_reg = pca953x_writeable_register,
++	.volatile_reg = pca953x_volatile_register,
++
++	.cache_type = REGCACHE_RBTREE,
++	.max_register = 0x7f,
  };
  
--static int isl29125_buffer_preenable(struct iio_dev *indio_dev)
-+static int isl29125_buffer_postenable(struct iio_dev *indio_dev)
- {
- 	struct isl29125_data *data = iio_priv(indio_dev);
-+	int err;
-+
-+	err = iio_triggered_buffer_postenable(indio_dev);
-+	if (err)
-+		return err;
+ static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
+@@ -318,18 +332,6 @@ static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
+ 	int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
+ 	u8 regaddr = pinctrl | addr | (off / BANK_SZ);
  
- 	data->conf1 |= ISL29125_MODE_RGB;
--	return i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
-+	err = i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
- 		data->conf1);
-+	if (err) {
-+		iio_triggered_buffer_predisable(indio_dev);
-+		return err;
+-	/* Single byte read doesn't need AI bit set. */
+-	if (!addrinc)
+-		return regaddr;
+-
+-	/* Chips with 24 and more GPIOs always support Auto Increment */
+-	if (write && NBANK(chip) > 2)
+-		regaddr |= REG_ADDR_AI;
+-
+-	/* PCA9575 needs address-increment on multi-byte writes */
+-	if (PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE)
+-		regaddr |= REG_ADDR_AI;
+-
+ 	return regaddr;
+ }
+ 
+@@ -897,6 +899,7 @@ static int pca953x_probe(struct i2c_client *client,
+ 	int ret;
+ 	u32 invert = 0;
+ 	struct regulator *reg;
++	const struct regmap_config *regmap_config;
+ 
+ 	chip = devm_kzalloc(&client->dev,
+ 			sizeof(struct pca953x_chip), GFP_KERNEL);
+@@ -960,7 +963,17 @@ static int pca953x_probe(struct i2c_client *client,
+ 
+ 	i2c_set_clientdata(client, chip);
+ 
+-	chip->regmap = devm_regmap_init_i2c(client, &pca953x_i2c_regmap);
++	pca953x_setup_gpio(chip, chip->driver_data & PCA_GPIO_MASK);
++
++	if (NBANK(chip) > 2 || PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE) {
++		dev_info(&client->dev, "using AI\n");
++		regmap_config = &pca953x_ai_i2c_regmap;
++	} else {
++		dev_info(&client->dev, "using no AI\n");
++		regmap_config = &pca953x_i2c_regmap;
 +	}
 +
-+	return 0;
- }
++	chip->regmap = devm_regmap_init_i2c(client, regmap_config);
+ 	if (IS_ERR(chip->regmap)) {
+ 		ret = PTR_ERR(chip->regmap);
+ 		goto err_exit;
+@@ -991,7 +1004,6 @@ static int pca953x_probe(struct i2c_client *client,
+ 	/* initialize cached registers from their original values.
+ 	 * we can't share this chip with another i2c master.
+ 	 */
+-	pca953x_setup_gpio(chip, chip->driver_data & PCA_GPIO_MASK);
  
- static int isl29125_buffer_predisable(struct iio_dev *indio_dev)
-@@ -230,19 +241,18 @@ static int isl29125_buffer_predisable(struct iio_dev *indio_dev)
- 	struct isl29125_data *data = iio_priv(indio_dev);
- 	int ret;
- 
--	ret = iio_triggered_buffer_predisable(indio_dev);
--	if (ret < 0)
--		return ret;
--
- 	data->conf1 &= ~ISL29125_MODE_MASK;
- 	data->conf1 |= ISL29125_MODE_PD;
--	return i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
-+	ret = i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
- 		data->conf1);
-+
-+	iio_triggered_buffer_predisable(indio_dev);
-+
-+	return ret;
- }
- 
- static const struct iio_buffer_setup_ops isl29125_buffer_setup_ops = {
--	.preenable = isl29125_buffer_preenable,
--	.postenable = &iio_triggered_buffer_postenable,
-+	.postenable = isl29125_buffer_postenable,
- 	.predisable = isl29125_buffer_predisable,
- };
- 
+ 	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
+ 		chip->regs = &pca953x_regs;
 -- 
 2.25.1
 
