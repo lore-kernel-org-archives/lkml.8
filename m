@@ -2,138 +2,105 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EF9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD81C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 886C22192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d3tAI7/7"
+	by mail.kernel.org (Postfix) with ESMTP id 2424C221E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592444265;
+	bh=eRjf+cH66X240ZxJWU85UNzRiBGQvPd8fyerJQuc2vY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kVwUmeBlysUoNUcMYt8JpuOYdU5haR2z9V6EYqNpOjA41kN0R7Mre5ijxbTtKkDoN
+	 Z4E8Cm47ZZz/5WkQFvT2n9yr+3+AeYj3uqe+KGBjJl6JDylqGaVzfSDALiTqzAQuHz
+	 LJtz8lm5x4PJ+cLfG57KhXhyVxHLZbp5r38efJWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731059AbgFRBhl (ORCPT
+        id S1732611AbgFRBap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:37:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20816 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732858AbgFRBhf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:37:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592444254;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uAQoxQtYf9o5VqaT/fLVHNu7f5XQuSefUz3MAMf7JgU=;
-        b=d3tAI7/7HIwOa1whht1VIp6UxTwoPQEr3ZrnlRSjKTmnGDqdt1D1UGM20AshibNHFzyf/5
-        swcWgGvyrBpugPuwFyQkM12GznyMUVuTcTm1pPFT8o9bG3Vt3t0e0DNdAfzv7FfzCKMyik
-        F/n8ymOs9wy3kRQnuGV+Dm32RAdP9lc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-SgHeQMSeMj6EAXqzuPBpVA-1; Wed, 17 Jun 2020 21:37:30 -0400
-X-MC-Unique: SgHeQMSeMj6EAXqzuPBpVA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 17 Jun 2020 21:30:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731840AbgFRB1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:20 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3DCBF107ACCA;
-        Thu, 18 Jun 2020 01:37:29 +0000 (UTC)
-Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D1D847CAC4;
-        Thu, 18 Jun 2020 01:37:28 +0000 (UTC)
-Date:   Wed, 17 Jun 2020 19:37:28 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, kvm@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.4 50/60] vfio/pci: fix memory leaks of eventfd
- ctx
-Message-ID: <20200617193728.30244c2b@x1.home>
-In-Reply-To: <20200618013004.610532-50-sashal@kernel.org>
-References: <20200618013004.610532-1-sashal@kernel.org>
-        <20200618013004.610532-50-sashal@kernel.org>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id E4A3C20B1F;
+        Thu, 18 Jun 2020 01:27:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592443639;
+        bh=eRjf+cH66X240ZxJWU85UNzRiBGQvPd8fyerJQuc2vY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EHFDT+JLw1rxruu/IBHeKUga0GQNEJEO1mTCTsZF0DYAzLJw5s8KjnUgAt+cMTpKq
+         Sbk0eSvsb4MZBYzn102uvnSkyjk7oc9gMZR8CJZPCuWAh3eJxuHavDiribx5OTiZH1
+         6JB8EZ3PGrjPyXycI9CfXPDORYuhz/586dZqZKd0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 062/108] vfio-pci: Mask cap zero
+Date:   Wed, 17 Jun 2020 21:25:14 -0400
+Message-Id: <20200618012600.608744-62-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 21:29:54 -0400
-Sasha Levin <sashal@kernel.org> wrote:
+From: Alex Williamson <alex.williamson@redhat.com>
 
-> From: Qian Cai <cai@lca.pw>
-> 
-> [ Upstream commit 1518ac272e789cae8c555d69951b032a275b7602 ]
-> 
-> Finished a qemu-kvm (-device vfio-pci,host=0001:01:00.0) triggers a few
-> memory leaks after a while because vfio_pci_set_ctx_trigger_single()
-> calls eventfd_ctx_fdget() without the matching eventfd_ctx_put() later.
-> Fix it by calling eventfd_ctx_put() for those memory in
-> vfio_pci_release() before vfio_device_release().
-> 
-> unreferenced object 0xebff008981cc2b00 (size 128):
->   comm "qemu-kvm", pid 4043, jiffies 4294994816 (age 9796.310s)
->   hex dump (first 32 bytes):
->     01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
->     ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
->   backtrace:
->     [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
->     [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
->     [<000000005fcec025>] do_eventfd+0x54/0x1ac
->     [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
->     [<00000000b819758c>] do_el0_svc+0x128/0x1dc
->     [<00000000b244e810>] el0_sync_handler+0xd0/0x268
->     [<00000000d495ef94>] el0_sync+0x164/0x180
-> unreferenced object 0x29ff008981cc4180 (size 128):
->   comm "qemu-kvm", pid 4043, jiffies 4294994818 (age 9796.290s)
->   hex dump (first 32 bytes):
->     01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
->     ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
->   backtrace:
->     [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
->     [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
->     [<000000005fcec025>] do_eventfd+0x54/0x1ac
->     [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
->     [<00000000b819758c>] do_el0_svc+0x128/0x1dc
->     [<00000000b244e810>] el0_sync_handler+0xd0/0x268
->     [<00000000d495ef94>] el0_sync+0x164/0x180
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/vfio/pci/vfio_pci.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index 7a82735d5308..ab765770e8dd 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -255,6 +255,10 @@ static void vfio_pci_release(void *device_data)
->  	if (!(--vdev->refcnt)) {
->  		vfio_spapr_pci_eeh_release(vdev->pdev);
->  		vfio_pci_disable(vdev);
-> +		if (vdev->err_trigger)
-> +			eventfd_ctx_put(vdev->err_trigger);
-> +		if (vdev->req_trigger)
-> +			eventfd_ctx_put(vdev->req_trigger);
->  	}
->  
->  	mutex_unlock(&driver_lock);
+[ Upstream commit bc138db1b96264b9c1779cf18d5a3b186aa90066 ]
 
-This has a fix pending, I'd suggest not picking it on its own:
+The PCI Code and ID Assignment Specification changed capability ID 0
+from reserved to a NULL capability in the v1.1 revision.  The NULL
+capability is defined to include only the 16-bit capability header,
+ie. only the ID and next pointer.  Unfortunately vfio-pci creates a
+map of config space, where ID 0 is used to reserve the standard type
+0 header.  Finding an actual capability with this ID therefore results
+in a bogus range marked in that map and conflicts with subsequent
+capabilities.  As this seems to be a dummy capability anyway and we
+already support dropping capabilities, let's hide this one rather than
+delving into the potentially subtle dependencies within our map.
 
-https://lore.kernel.org/kvm/20200616085052.sahrunsesjyjeyf2@beryllium.lan/
-https://lore.kernel.org/kvm/159234276956.31057.6902954364435481688.stgit@gimli.home/
+Seen on an NVIDIA Tesla T4.
 
-Thanks,
-Alex
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/vfio/pci/vfio_pci_config.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index c2d300bc37f6..36bc8f104e42 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -1464,7 +1464,12 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
+ 		if (ret)
+ 			return ret;
+ 
+-		if (cap <= PCI_CAP_ID_MAX) {
++		/*
++		 * ID 0 is a NULL capability, conflicting with our fake
++		 * PCI_CAP_ID_BASIC.  As it has no content, consider it
++		 * hidden for now.
++		 */
++		if (cap && cap <= PCI_CAP_ID_MAX) {
+ 			len = pci_cap_length[cap];
+ 			if (len == 0xFF) { /* Variable length */
+ 				len = vfio_cap_len(vdev, cap, pos);
+-- 
+2.25.1
 
