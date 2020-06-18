@@ -4,58 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69C652220B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F3C2220B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445902;
-	bh=ptpv6AaHe3Ar61d8PWH8ycxxaQqCbcDaY5LkOUNJEmI=;
+	s=default; t=1592445906;
+	bh=zrR7EWqR9FOZ7/8Tm7ym4wywgV/bCyV61N5vb0zUF8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w/oWSAzaGagUK5RFxssMZsZivJbJiibBWCDJlprxnNrGOOZugsElsi3SFZPBagAVu
-	 O8hhzAtVvH3SVWUzYDgy7uvXHLO6S8PJxzYE59/EeEkEbSB11SvYcfstmECfOTmZGx
-	 sL0aGrIc+MyUwQ6Kq8NvGoHtcBsY6Y6WSHlyV2Sc=
+	b=AqXAk+lnjWPcaldWeffxefJ+fIPg1iPUxdTKBTeltKfC0EaZChckwNOtl8BKZ6naK
+	 J/FWDtEpad8oapYPx4ig/oc0DGpJmj0yQjenSykTp8G5t4HnyQ0CGJguORPGzHk8bI
+	 jm1AUy6qT+h7Tt8NJuDYHcYyzhFDkZXGTzNsQRKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730882AbgFRCFA (ORCPT
+        id S1730853AbgFRBWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:05:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56112 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:22:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730367AbgFRBWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:53 -0400
+        id S1730142AbgFRBTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44B9B20663;
-        Thu, 18 Jun 2020 01:22:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BE94221F1;
+        Thu, 18 Jun 2020 01:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443373;
-        bh=ptpv6AaHe3Ar61d8PWH8ycxxaQqCbcDaY5LkOUNJEmI=;
+        s=default; t=1592443170;
+        bh=zrR7EWqR9FOZ7/8Tm7ym4wywgV/bCyV61N5vb0zUF8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tvsEWH/GXosw17DHT7zf6Rt6Gd2qjIh8yvLXdn+HOBiyZylzr8V3e7PmFIeMUk4mb
-         hxQI+4XZ9O/8I3rQaNFhabFk46B0qTwKxVu9JBPq2LkebuUwn1+T6v9+Sa4SPOkW0S
-         ojnejE6wheRLsoRNVqRjeqVA9NoAxNvIzPx+fEfM=
+        b=hzglrgyd6wiC2jS+20fpX0x/FG5C6cryT5WLJjUHAFP4NAAv8QdwfURYQqvF1mF0I
+         jajC9H8y0K1ba+nOCGMB3EFsVSxHSQSZlzKEoZk1ngEqq3JlBwxt5NJg3AFqHmc/kl
+         thk6JEilGswwQwpVyJCdI5bMnSS593fKATslnDrg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 026/172] PCI: aardvark: Don't blindly enable ASPM L0s and don't write to read-only register
-Date:   Wed, 17 Jun 2020 21:19:52 -0400
-Message-Id: <20200618012218.607130-26-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 135/266] ASoC: ux500: mop500: Fix some refcounted resources issues
+Date:   Wed, 17 Jun 2020 21:14:20 -0400
+Message-Id: <20200618011631.604574-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,63 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 90c6cb4a355e7befcb557d217d1d8b8bd5875a05 ]
+[ Upstream commit 4e8748fcaeec073e3ba794871ce86c545e4f961f ]
 
-Trying to change Link Status register does not have any effect as this
-is a read-only register. Trying to overwrite bits for Negotiated Link
-Width does not make sense.
+There are 2 issues here:
+   - if one of the 'of_parse_phandle' fails, calling 'mop500_of_node_put()'
+     is a no-op because the 'mop500_dai_links' structure has not been
+     initialized yet, so the referenced are not decremented
+   - The reference stored in 'mop500_dai_links[i].codecs' is refcounted
+     only once in the probe and must be decremented only once.
 
-In future proper change of link width can be done via Lane Count Select
-bits in PCIe Control 0 register.
-
-Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
-Control register is wrong. There should be at least some detection if
-endpoint supports L0s as isn't mandatory.
-
-Moreover ASPM Control bits in Link Control register are controlled by
-pcie/aspm.c code which sets it according to system ASPM settings,
-immediately after aardvark driver probes. So setting these bits by
-aardvark driver has no long running effect.
-
-Remove code which touches ASPM L0s bits from this driver and let
-kernel's ASPM implementation to set ASPM state properly.
-
-Some users are reporting issues that this code is problematic for some
-Intel wifi cards and removing it fixes them, see e.g.:
-https://bugzilla.kernel.org/show_bug.cgi?id=196339
-
-If problems with Intel wifi cards occur even after this commit, then
-pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
-for affected problematic cards.
-
-Link: https://lore.kernel.org/r/20200430080625.26070-3-pali@kernel.org
-Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Fixes: 39013bd60e79 ("ASoC: Ux500: Dispose of device nodes correctly")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Link: https://lore.kernel.org/r/20200512100705.246349-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 4 ----
- 1 file changed, 4 deletions(-)
+ sound/soc/ux500/mop500.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 6b4555ff2548..0235b6e7dcd1 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -321,10 +321,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+diff --git a/sound/soc/ux500/mop500.c b/sound/soc/ux500/mop500.c
+index 2873e8e6f02b..cdae1190b930 100644
+--- a/sound/soc/ux500/mop500.c
++++ b/sound/soc/ux500/mop500.c
+@@ -63,10 +63,11 @@ static void mop500_of_node_put(void)
+ {
+ 	int i;
  
- 	advk_pcie_wait_for_link(pcie);
+-	for (i = 0; i < 2; i++) {
++	for (i = 0; i < 2; i++)
+ 		of_node_put(mop500_dai_links[i].cpus->of_node);
+-		of_node_put(mop500_dai_links[i].codecs->of_node);
+-	}
++
++	/* Both links use the same codec, which is refcounted only once */
++	of_node_put(mop500_dai_links[0].codecs->of_node);
+ }
  
--	reg = PCIE_CORE_LINK_L0S_ENTRY |
--		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
--	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
--
- 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
- 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
- 		PCIE_CORE_CMD_IO_ACCESS_EN |
+ static int mop500_of_probe(struct platform_device *pdev,
+@@ -81,7 +82,9 @@ static int mop500_of_probe(struct platform_device *pdev,
+ 
+ 	if (!(msp_np[0] && msp_np[1] && codec_np)) {
+ 		dev_err(&pdev->dev, "Phandle missing or invalid\n");
+-		mop500_of_node_put();
++		for (i = 0; i < 2; i++)
++			of_node_put(msp_np[i]);
++		of_node_put(codec_np);
+ 		return -EINVAL;
+ 	}
+ 
 -- 
 2.25.1
 
