@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B447C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88326214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5521E214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447090;
-	bh=St+32PWtOnP3r5Q0VnSaOgp8ULPNXgJlQD252LrToqI=;
+	s=default; t=1592447095;
+	bh=rg6dt3CgmhuAqP0vnDsrUS7uZ9EdNF3ayal5wE+ExhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JGNqoXHuHJp8l6mssOt9PgB2NbBxL3+ZBC/gcGTRi9Giu4hndazclAdzKlTfUQCl/
-	 SeR7JmxSNOn2C/YP+vMhqt+0VAieVvcLK9lXYkz1qdep08rU+Uc2QkVCV1stHnzCmV
-	 FUVgppxzkv2wzBlXmCQprnCkdZQJQUWPGt1tQECk=
+	b=oYsV9KvaFctAGLu4yn28VvfIPG4BOr4/uGOkkF+AMalQ/oC89TvwRFmI1lvilFFLT
+	 My/+xdeGkD6gIDok8o9cJVweszInJxWXP+pnXXR8jTYkBYRgIILwDBRkNoHpcVsV8L
+	 2WR+sMTUtyvxsa73QRLyCAq8AJMvy892AVYYwzE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730983AbgFRCYr (ORCPT
+        id S1729915AbgFRCYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:24:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48744 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:24:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729473AbgFRBRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:36 -0400
+        id S1728878AbgFRBRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BE8621D90;
-        Thu, 18 Jun 2020 01:17:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46CE7206F1;
+        Thu, 18 Jun 2020 01:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443055;
-        bh=St+32PWtOnP3r5Q0VnSaOgp8ULPNXgJlQD252LrToqI=;
+        s=default; t=1592443058;
+        bh=rg6dt3CgmhuAqP0vnDsrUS7uZ9EdNF3ayal5wE+ExhQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d+ivjD8VWifDsUTjT5+6fbBgXBefpI5rTRhLbfbSWNa8YeLJOHhHfaGfuYUdbpBnu
-         bE8RBcaXlbTAU1QFpJocupIRz2524gOvvk5zi0GEPEQODrdHQ7zTaWb6Lg0OpS8q+T
-         g7ltwHb+oGGdoCFcDgRUaIl7E5g76RvgdLwFlMSg=
+        b=MKSWhK/jktlyFrX0JWHAn19Oquu0/KDMbSbB2bQO4uwYsy136Qsa/njabdAd4LKqI
+         4z1uxCByBKlh8/q8LmuAdybyLlwXu0sHmF8rFvfpYTzBMyivOXKkMB1W69xabAKk+4
+         Qab/ex5TWfjTr/5WQ2H/Z8uEn3aKkUruEN3aIyRc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 047/266] coresight: tmc: Fix TMC mode read in tmc_read_prepare_etb()
-Date:   Wed, 17 Jun 2020 21:12:52 -0400
-Message-Id: <20200618011631.604574-47-sashal@kernel.org>
+Cc:     Luo Jiaxing <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 049/266] scsi: hisi_sas: Do not reset phy timer to wait for stray phy up
+Date:   Wed, 17 Jun 2020 21:12:54 -0400
+Message-Id: <20200618011631.604574-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -62,91 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+From: Luo Jiaxing <luojiaxing@huawei.com>
 
-[ Upstream commit 347adb0d6385c3220dc01ab61807a5b1892901cc ]
+[ Upstream commit e16b9ed61e078d836a0f24a82080cf29d7539c7e ]
 
-On some QCOM platforms like SC7180, SDM845 and SM8150,
-reading TMC mode register without proper coresight power
-management can lead to async exceptions like the one in
-the call trace below in tmc_read_prepare_etb(). This can
-happen if the user tries to read the TMC etf data via
-device node without setting up source and the sink first.
-Fix this by having a check for coresight sysfs mode
-before reading TMC mode management register.
+We found out that after phy up, the hardware reports another oob interrupt
+but did not follow a phy up interrupt:
 
- Kernel panic - not syncing: Asynchronous SError Interrupt
- CPU: 7 PID: 2605 Comm: hexdump Tainted: G S                5.4.30 #122
- Call trace:
-  dump_backtrace+0x0/0x188
-  show_stack+0x20/0x2c
-  dump_stack+0xdc/0x144
-  panic+0x168/0x36c
-  panic+0x0/0x36c
-  arm64_serror_panic+0x78/0x84
-  do_serror+0x130/0x138
-  el1_error+0x84/0xf8
-  tmc_read_prepare_etb+0x88/0xb8
-  tmc_open+0x40/0xd8
-  misc_open+0x120/0x158
-  chrdev_open+0xb8/0x1a4
-  do_dentry_open+0x268/0x3a0
-  vfs_open+0x34/0x40
-  path_openat+0x39c/0xdf4
-  do_filp_open+0x90/0x10c
-  do_sys_open+0x150/0x3e8
-  __arm64_compat_sys_openat+0x28/0x34
-  el0_svc_common+0xa8/0x160
-  el0_svc_compat_handler+0x2c/0x38
-  el0_svc_compat+0x8/0x10
+oob ready -> phy up -> DEV found -> oob read -> wait phy up -> timeout
 
-Fixes: 4525412a5046 ("coresight: tmc: making prepare/unprepare functions generic")
-Reported-by: Stephen Boyd <swboyd@chromium.org>
-Suggested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20200518180242.7916-14-mathieu.poirier@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We run link reset when wait phy up timeout, and it send a normal disk into
+reset processing. So we made some circumvention action in the code, so that
+this abnormal oob interrupt will not start the timer to wait for phy up.
+
+Link: https://lore.kernel.org/r/1589552025-165012-2-git-send-email-john.garry@huawei.com
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-tmc-etf.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index d0cc3985b72a..36cce2bfb744 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -596,13 +596,6 @@ int tmc_read_prepare_etb(struct tmc_drvdata *drvdata)
- 		goto out;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 6f4692f0d714..031aa4043c5e 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -904,8 +904,11 @@ void hisi_sas_phy_oob_ready(struct hisi_hba *hisi_hba, int phy_no)
+ 	struct hisi_sas_phy *phy = &hisi_hba->phy[phy_no];
+ 	struct device *dev = hisi_hba->dev;
+ 
++	dev_dbg(dev, "phy%d OOB ready\n", phy_no);
++	if (phy->phy_attached)
++		return;
++
+ 	if (!timer_pending(&phy->timer)) {
+-		dev_dbg(dev, "phy%d OOB ready\n", phy_no);
+ 		phy->timer.expires = jiffies + HISI_SAS_WAIT_PHYUP_TIMEOUT * HZ;
+ 		add_timer(&phy->timer);
  	}
- 
--	/* There is no point in reading a TMC in HW FIFO mode */
--	mode = readl_relaxed(drvdata->base + TMC_MODE);
--	if (mode != TMC_MODE_CIRCULAR_BUFFER) {
--		ret = -EINVAL;
--		goto out;
--	}
--
- 	/* Don't interfere if operated from Perf */
- 	if (drvdata->mode == CS_MODE_PERF) {
- 		ret = -EINVAL;
-@@ -616,8 +609,15 @@ int tmc_read_prepare_etb(struct tmc_drvdata *drvdata)
- 	}
- 
- 	/* Disable the TMC if need be */
--	if (drvdata->mode == CS_MODE_SYSFS)
-+	if (drvdata->mode == CS_MODE_SYSFS) {
-+		/* There is no point in reading a TMC in HW FIFO mode */
-+		mode = readl_relaxed(drvdata->base + TMC_MODE);
-+		if (mode != TMC_MODE_CIRCULAR_BUFFER) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
- 		__tmc_etb_disable_hw(drvdata);
-+	}
- 
- 	drvdata->reading = true;
- out:
 -- 
 2.25.1
 
