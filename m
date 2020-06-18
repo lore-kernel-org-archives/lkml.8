@@ -2,219 +2,149 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88073C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7E1208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:46:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592505995;
-	bh=39kwGWJQnjfPiKs05x4HsotVBIPPsgkmzXLdYD1Ko8E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LcuyWF+U8rQYCVrHkGwfIhLdNAJCQIQ9MGTYbFdNJeKRfKFZxZcYsBPg0QMCH+T9N
-	 b9Bz1Y4HMASD7TS7kmNKPLPINL73ygOAhl/8odnoxeEZVN9uQ9T1lD9HHU/CrVlfT2
-	 6c8U4eTLwJf//9iZR90uLzAs5xytIEtB8qQ6z8DE=
+	by mail.kernel.org (Postfix) with ESMTP id 669D720C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:48:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sfBv5FER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbgFRSqd (ORCPT
+        id S1729508AbgFRSsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 14:46:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbgFRSqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 14:46:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B2B2208DB;
-        Thu, 18 Jun 2020 18:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592505989;
-        bh=39kwGWJQnjfPiKs05x4HsotVBIPPsgkmzXLdYD1Ko8E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ji8AXAluHvvoAmMwrjxl6TLNm7J2vVNMEj/eNho7vDCFnChfn98b6KVXCtZxL1CFE
-         rGdaWGvdez9DKhhUd+a6J00iz0MRvJO/NRn8tTpyPk3hgUM520s8gGhy692qvYxDx6
-         1rgnQYgfRwNPX6/IxJPJpm+MD8Z+tVbt6MWvsfsU=
-Date:   Thu, 18 Jun 2020 20:46:21 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
-Message-ID: <20200618184621.GA446639@kroah.com>
-References: <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
- <20200617073100.GA14424@infradead.org>
- <CACK8Z6FecYkAYQh4sm4RbAQ1iwb9gexqgY9ExD9BH2p-5Usj=g@mail.gmail.com>
- <CAHp75Vc6eA33cyAQH-m+yixTuHqiobg6fo7nzbbb-J6vN6qFcA@mail.gmail.com>
- <20200618083646.GA1066967@kroah.com>
- <CAHp75Vf71f2s6yipHJ4Ys1oe1v7L4PiqBCEbo0uBcG7Wpcs5dQ@mail.gmail.com>
- <CACK8Z6F2Ssj=EqhR2DZ114ETgQ-3PhzVi2rm2xxenCNOVH=60g@mail.gmail.com>
- <20200618160212.GB3076467@kroah.com>
- <20200618162322.GI34820@otc-nc-03>
- <CACK8Z6EnqmJtSqPPz2ARk0jwFLR_yCTS0vSLQ0v4C9QF-6BQ1w@mail.gmail.com>
+        Thu, 18 Jun 2020 14:48:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbgFRSsz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 14:48:55 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA137C06174E;
+        Thu, 18 Jun 2020 11:48:54 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id d7so4083036lfi.12;
+        Thu, 18 Jun 2020 11:48:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wjGYovLtwBVlU5MI/beQQwAXgK/hwRXYMWBKVKLVNRA=;
+        b=sfBv5FERRlAV1kHakd7ts07E2smqihvzD7VSa9Tt7zTel6b3kl2rTRGe0vlGzbZKfE
+         Fx9j6aRPtNagG/9DeFubgJYIrcF2edD6gAYWYqj7OkC4oSD6S6S2JiGCeq0nPVvb8Dqp
+         qv9bcrWLabN83XWkGXni8qWT7qUpctpRn4HtBFJakYdOJ7Ho+ifcA6zbuaSwadU8SBe7
+         dGJFZMh34YLyW/PZz5taNPPPlFki3X5axqAs9zefhyfyGkRvuYEA1C7RQ9NChNGy23K9
+         +71RqwAEV6vqZ4sDiZ1b07Yg+wrSYiQi3PLxo6J3xMm3MHnEj50YpoCzg4Q4LpXLgI+2
+         +Ajw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wjGYovLtwBVlU5MI/beQQwAXgK/hwRXYMWBKVKLVNRA=;
+        b=fQTUkERXQx9ZSUixOqQh4Ot+HiZqWHgV60RyDEw+j3vImDYW6bQqoacq/4dCR9cVNR
+         XWXMTl0MRgTYcBnjoDA4d+JWmvYF5Nq5L3OSOa5Y16H1VkRBTssHdKCvQgoDnPHsYjx4
+         UXZdP4k4jauqBLKXSwWv2QVZwooFIHahgv7VOBcNsWy6xmbjX10YbUkcSXzXFvVkn/lr
+         RHHm25OlFZsl+uwFQJycX7DrfN7VB/YFFUngVo6pg8nrPe89fGoWo7+5U3M8SNpinftd
+         2orP4mO/i7HsTwz8tAO9V4a96xvQQ2cSOUALKOlV9Dtqp1kcevHfNhEeLr01ZXh01IRg
+         6htw==
+X-Gm-Message-State: AOAM533xyOZabQG51z3ujAHAfPg/dhSzc/3UB+8h6ZJkJ2Vk1QhWJac9
+        gd9k6QWeqk+fhtBYFwhlHyg=
+X-Google-Smtp-Source: ABdhPJzywC1l9vH4+kWG5TPIS2ra8u/BjFMfL86zBPsbqe2KWx6N0hXCTICdtbuHfyGhwJcnPCn15g==
+X-Received: by 2002:ac2:5de1:: with SMTP id z1mr3087783lfq.183.1592506133214;
+        Thu, 18 Jun 2020 11:48:53 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id q190sm775656ljb.29.2020.06.18.11.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 11:48:52 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Thu, 18 Jun 2020 20:48:50 +0200
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
+ ptrs
+Message-ID: <20200618184850.GA15211@pc636>
+References: <20200525214800.93072-1-urezki@gmail.com>
+ <20200525214800.93072-10-urezki@gmail.com>
+ <20200617234609.GA10087@paulmck-ThinkPad-P72>
+ <20200618172504.GA14613@pc636>
+ <20200618173206.GS2723@paulmck-ThinkPad-P72>
+ <20200618175623.GA14865@pc636>
+ <20200618181541.GS8681@bombadil.infradead.org>
+ <20200618182333.GA15082@pc636>
+ <20200618183751.GT8681@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACK8Z6EnqmJtSqPPz2ARk0jwFLR_yCTS0vSLQ0v4C9QF-6BQ1w@mail.gmail.com>
+In-Reply-To: <20200618183751.GT8681@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 10:23:38AM -0700, Rajat Jain wrote:
-> Thanks Greg and Andy for your continued inputs, and thanks Ashok for chiming in.
-> 
-> On Thu, Jun 18, 2020 at 9:23 AM Raj, Ashok <ashok.raj@intel.com> wrote:
-> >
-> > Hi Greg,
-> >
-> >
-> > On Thu, Jun 18, 2020 at 06:02:12PM +0200, Greg Kroah-Hartman wrote:
-> > > On Thu, Jun 18, 2020 at 08:03:49AM -0700, Rajat Jain wrote:
-> > > > Hello,
-> > > >
-> > > > On Thu, Jun 18, 2020 at 2:14 AM Andy Shevchenko
-> > > > <andy.shevchenko@gmail.com> wrote:
-> > > > >
-> > > > > On Thu, Jun 18, 2020 at 11:36 AM Greg Kroah-Hartman
-> > > > > <gregkh@linuxfoundation.org> wrote:
-> > > > > >
-> > > > > > On Thu, Jun 18, 2020 at 11:12:56AM +0300, Andy Shevchenko wrote:
-> > > > > > > On Wed, Jun 17, 2020 at 10:56 PM Rajat Jain <rajatja@google.com> wrote:
-> > > > > > > > On Wed, Jun 17, 2020 at 12:31 AM Christoph Hellwig <hch@infradead.org> wrote:
-> > > > > > >
-> > > > > > > ...
-> > > > > > >
-> > > > > > > > (and likely call it "external" instead of "untrusted".
-> > > > > > >
-> > > > > > > Which is not okay. 'External' to what? 'untrusted' has been carefully
-> > > > > > > chosen by the meaning of it.
-> > > > > > > What external does mean for M.2. WWAN card in my laptop? It's in ACPI
-> > > > > > > tables, but I can replace it.
-> > > > > >
-> > > > > > Then your ACPI tables should show this, there is an attribute for it,
-> > > > > > right?
-> > > > >
-> > > > > There is a _PLD() method, but it's for the USB devices (or optional
-> > > > > for others, I don't remember by heart). So, most of the ACPI tables,
-> > > > > alas, don't show this.
-> > > > >
-> > > > > > > This is only one example. Or if firmware of some device is altered,
-> > > > > > > and it's internal (whatever it means) is it trusted or not?
-> > > > > >
-> > > > > > That is what people are using policy for today, if you object to this,
-> > > > > > please bring it up to those developers :)
-> > > > >
-> > > > > > > So, please leave it as is (I mean name).
-> > > > > >
-> > > > > > firmware today exports this attribute, why do you not want userspace to
-> > > > > > also know it?
-> > > >
-> > > > To clarify, the attribute exposed by the firmware today is
-> > > > "ExternalFacingPort" and "external-facing" respectively:
-> > > >
-> > > > 617654aae50e ("PCI / ACPI: Identify untrusted PCI devices")
-> > > > 9cb30a71ac45d("PCI: OF: Support "external-facing" property")
-> > > >
-> > > > The kernel flag was named "untrusted" though, hence the assumption
-> > > > that "external=untrusted" is currently baked into the kernel today.
-> > > > IMHO, using "external" would fix that (The assumption can thus be
-> > > > contained in the IOMMU drivers) and at the same time allow more use of
-> > > > this attribute.
-> > > >
-> > > > > >
-> > > > > > Trust is different, yes, don't get the two mixed up please.  That should
-> > > > > > be a different sysfs attribute for obvious reasons.
-> > > > >
-> > > > > Yes, as a bottom line that's what I meant as well.
-> > > >
-> > > > So what is the consensus here? I don't have a strong opinion - but it
-> > > > seemed to me Greg is saying "external" and Andy is saying "untrusted"?
+On Thu, Jun 18, 2020 at 11:37:51AM -0700, Matthew Wilcox wrote:
+> On Thu, Jun 18, 2020 at 08:23:33PM +0200, Uladzislau Rezki wrote:
+> > > +void vfree_bulk(size_t count, void **addrs)
+> > > +{
+> > > +	unsigned int i;
+> > > +
+> > > +	BUG_ON(in_nmi());
+> > > +	might_sleep_if(!in_interrupt());
+> > > +
+> > > +	for (i = 0; i < count; i++) {
+> > > +		void *addr = addrs[i];
+> > > +		kmemleak_free(addr);
+> > > +		if (addr)
+> > > +			__vfree(addr);
+> > > +	}
+> > > +}
+> > > +EXPORT_SYMBOL(vfree_bulk);
+> > > +
 > > >
-> > > Those two things are totally separate things when it comes to a device.
-> >
-> > Agree that these are two separate attributes, and better not mixed.
+> > Can we just do addrs[i] all over the loop?
+> > 
+> > Also, we can just call vfree() instead that has all checking we
+> > need: NMI, kmemleak, might_sleep.
 > 
-> +1.
+> Of course we _can_.  But would we want to?  This way, we only do these
+> checks once instead of once per pointer, which is rather the point
+> of batching.
+>
+Ahh, right. I briefly looked at it and missed that point. Right you
+are we do not want the vfree() here!
+
 > 
-> >
-> > >
-> > > One (external) describes the location of the device in the system.
-> > >
-> > > The other (untrusted) describes what you want the kernel to do with this
-> > > device (trust or not trust it).
-> > >
-> > > One you can change (from trust to untrusted or back), the other you can
-> > > not, it is a fixed read-only property that describes the hardware device
-> > > as defined by the firmware.
-> 
-> Correct. I believe what is being described by the firmware is a fixed
-> read-only property describing the location of the device ("external")
-> - not what to do with it ("untrusted").
-> 
-> >
-> > The genesis is due to lack of a mechanism to establish if the device
-> > is trusted or not was the due lack of some specs and implementation around
-> > Component Measurement And Authentication (CMA). Treating external as
-> > untrusted was the best first effort. i.e trust internal
-> > devices and don't trust external devices for enabling ATS.
-> >
-> > But that said external is just describing topology, and if Linux wants to
-> > use that in the policy that's different. Some day external device may also
-> > use CMA to estabilish trust. FWIW even internal devices aren't trust
-> > worthy, except maybe RCIEP's.
-> 
-> Correct. Since the firmware is actually describing the unchangeable
-> topology (and not the policy), the takeaway I am taking from this
-> discussion is that the flag should be called "external".
+> I might actually go further and hoist the in_interrupt() check into
+> this function ...
+>
+Why do you need it? Just to inline below code:
 
-The attribute should be called something like "location" or something
-like that (naming is hard), as you don't always know if something is
-external or not (it could be internal, it could be unknown, it could be
-internal to an external device that you trust (think PCI drawers for
-"super" computers that are hot pluggable but yet really part of the
-internal bus).
+<snip>
+ if (unlikely(in_interrupt()))
+  __vfree_deferred(addr);
+ else
+  __vunmap(addr, 1);
+<snip>
 
-> Like I said, I don't have any hard opinions on this. So if you feel
-> that my conclusion is wrong and consensus was the other way around
-> ("untrusted"), let me know and I'll be happy to change this.
+and bypass the __vfree() call(that is not marked as inline one)?
+I mean to inline above into  vfree_bulk().
 
-"trust" has no direct relation to the location, except in a policy of
-what you wish to do with that device, so as long as you keep them
-separate that way, I am fine with it.
+>
+> I suspect the RCU code always runs in_interrupt()
+> and so we always call vfree_deferred().
+>
+No. We release the memory from workqueue context.
 
-thanks,
-
-greg k-h
+--
+Vlad Rezki
