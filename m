@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED91DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCCBE21534
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1562192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447139;
-	bh=tD5j7ovHVvM5Vak2kqUggUsaJKoLuVpTaLLj35dC8Yo=;
+	s=default; t=1592447145;
+	bh=E26Z2uGMlLvZZQOaDHdserktZJN5eR2gHFfLP0ErK4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wm1aD4GCXsG92Lme/+RYp1AYe668l5XEOKDj8LsfpqOfGSlxeLh1VpCxDf+7ZM089
-	 c5Zw+MG9E8qTCrhrK4bwNlU+Rx71Zg5KINvc7x266syr5+jBAAJYayIG3huceq/ET+
-	 GFKauvcj4ffUjobQwzwzb7/vNwJJQqf/2Ih/NdvA=
+	b=S3xy3lGAR0F6x8o8lW/CPpu9NerI0qTMiH18p3xfSKDpHYy8OzNn8tdHIBQzsey4O
+	 Z0OJXi7KjvkBHK9x9XjBpIfUULGtUJKt+T5ozbr0gLp4IVJThujyGyhR3gOR5DhZR5
+	 4nfWqQUWl55l/7e+9EGYbMcYC5X20bt2BCCDeSXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgFRCZh (ORCPT
+        id S1730371AbgFRCZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:25:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48552 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:25:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729785AbgFRBRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:23 -0400
+        id S1728962AbgFRBRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2916A206F1;
-        Thu, 18 Jun 2020 01:17:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ACDA21D80;
+        Thu, 18 Jun 2020 01:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443042;
-        bh=tD5j7ovHVvM5Vak2kqUggUsaJKoLuVpTaLLj35dC8Yo=;
+        s=default; t=1592443038;
+        bh=E26Z2uGMlLvZZQOaDHdserktZJN5eR2gHFfLP0ErK4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=stsXElKcIxLe2UDTLK8CusR+meW2brBzj2wUXlndL5GQ/qKzpLfIL0TKIr1+xLxcG
-         3IUrWokn8nt/Y2w02ZXeka6bf+8lX0YJkXuOzsVNmq/QER0W3IQyKMrc/qlDa+rOWW
-         9TnxGnp6uEOqiW4LzvXvf7deUqP4MZe/olxvHQDY=
+        b=zEc6XMqhw4Q4dZmVKey04RAxaAEDTc6sZhD3H9ZPxD8Io7kGYx2VlHjZc+8pyVHAU
+         n+IXLn8iN9fokRROB/id0o35364E5I/H0pmk6kFYDcebft/Tfbh5MBK23vJbo9PPGk
+         8cUZ+CB+gjWPhntWOZVD76bz2jXN5Pio5RYt2/NA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 038/266] arm64: dts: juno: Fix GIC child nodes
-Date:   Wed, 17 Jun 2020 21:12:43 -0400
-Message-Id: <20200618011631.604574-38-sashal@kernel.org>
+Cc:     Martin Wilck <mwilck@suse.com>, Hannes Reinecke <hare@suse.de>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.4 035/266] dm mpath: switch paths in dm_blk_ioctl() code path
+Date:   Wed, 17 Jun 2020 21:12:40 -0400
+Message-Id: <20200618011631.604574-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,130 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Martin Wilck <mwilck@suse.com>
 
-[ Upstream commit a78aee9e434932a500db36cc6d88daeff3745e9f ]
+[ Upstream commit 2361ae595352dec015d14292f1b539242d8446d6 ]
 
-The GIC DT nodes for the Juno boards were not fully compliant with
-the DT binding, which has certain expectations about child nodes and
-their size and address cells values.
+SCSI LUN passthrough code such as qemu's "scsi-block" device model
+pass every IO to the host via SG_IO ioctls. Currently, dm-multipath
+calls choose_pgpath() only in the block IO code path, not in the ioctl
+code path (unless current_pgpath is NULL). This has the effect that no
+path switching and thus no load balancing is done for SCSI-passthrough
+IO, unless the active path fails.
 
-Use smaller #address-cells and #size-cells values, as the binding
-requests, and adjust the reg properties accordingly.
-This requires adjusting the interrupt nexus nodes as well, as one
-field of the interrupt-map property depends on the GIC's address-size.
+Fix this by using the same logic in multipath_prepare_ioctl() as in
+multipath_clone_and_map().
 
-Link: https://lore.kernel.org/r/20200513103016.130417-10-andre.przywara@arm.com
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Note: The allegedly best path selection algorithm, service-time,
+still wouldn't work perfectly, because the io size of the current
+request is always set to 0. Changing that for the IO passthrough
+case would require the ioctl cmd and arg to be passed to dm's
+prepare_ioctl() method.
+
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/arm/juno-base.dtsi | 50 +++++++++++++-------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+ drivers/md/dm-mpath.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-index 8c11660bbe40..c47f76b01c4b 100644
---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -62,35 +62,35 @@ gic: interrupt-controller@2c010000 {
- 		      <0x0 0x2c02f000 0 0x2000>,
- 		      <0x0 0x2c04f000 0 0x2000>,
- 		      <0x0 0x2c06f000 0 0x2000>;
--		#address-cells = <2>;
-+		#address-cells = <1>;
- 		#interrupt-cells = <3>;
--		#size-cells = <2>;
-+		#size-cells = <1>;
- 		interrupt-controller;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
--		ranges = <0 0 0 0x2c1c0000 0 0x40000>;
-+		ranges = <0 0 0x2c1c0000 0x40000>;
+diff --git a/drivers/md/dm-mpath.c b/drivers/md/dm-mpath.c
+index 456d790c918c..f2de4c73cc8f 100644
+--- a/drivers/md/dm-mpath.c
++++ b/drivers/md/dm-mpath.c
+@@ -1856,7 +1856,7 @@ static int multipath_prepare_ioctl(struct dm_target *ti,
+ 	int r;
  
- 		v2m_0: v2m@0 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0 0 0 0x10000>;
-+			reg = <0 0x10000>;
- 		};
+ 	current_pgpath = READ_ONCE(m->current_pgpath);
+-	if (!current_pgpath)
++	if (!current_pgpath || !test_bit(MPATHF_QUEUE_IO, &m->flags))
+ 		current_pgpath = choose_pgpath(m, 0);
  
- 		v2m@10000 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0 0x10000 0 0x10000>;
-+			reg = <0x10000 0x10000>;
- 		};
- 
- 		v2m@20000 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0 0x20000 0 0x10000>;
-+			reg = <0x20000 0x10000>;
- 		};
- 
- 		v2m@30000 {
- 			compatible = "arm,gic-v2m-frame";
- 			msi-controller;
--			reg = <0 0x30000 0 0x10000>;
-+			reg = <0x30000 0x10000>;
- 		};
- 	};
- 
-@@ -519,10 +519,10 @@ pcie_ctlr: pcie@40000000 {
- 			 <0x42000000 0x40 0x00000000 0x40 0x00000000 0x1 0x00000000>;
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0 0 7>;
--		interrupt-map = <0 0 0 1 &gic 0 0 GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 0 2 &gic 0 0 GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 0 3 &gic 0 0 GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 0 4 &gic 0 0 GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map = <0 0 0 1 &gic 0 GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 0 2 &gic 0 GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 0 3 &gic 0 GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 0 4 &gic 0 GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
- 		msi-parent = <&v2m_0>;
- 		status = "disabled";
- 		iommu-map-mask = <0x0>;	/* RC has no means to output PCI RID */
-@@ -786,19 +786,19 @@ smb@8000000 {
- 
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0 15>;
--		interrupt-map = <0 0  0 &gic 0 0 GIC_SPI  68 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  1 &gic 0 0 GIC_SPI  69 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  2 &gic 0 0 GIC_SPI  70 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  3 &gic 0 0 GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  4 &gic 0 0 GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  5 &gic 0 0 GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  6 &gic 0 0 GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  7 &gic 0 0 GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  8 &gic 0 0 GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0  9 &gic 0 0 GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 10 &gic 0 0 GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 11 &gic 0 0 GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
--				<0 0 12 &gic 0 0 GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map = <0 0  0 &gic 0 GIC_SPI  68 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  1 &gic 0 GIC_SPI  69 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  2 &gic 0 GIC_SPI  70 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  3 &gic 0 GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  4 &gic 0 GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  5 &gic 0 GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  6 &gic 0 GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  7 &gic 0 GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  8 &gic 0 GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0  9 &gic 0 GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 10 &gic 0 GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 11 &gic 0 GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 12 &gic 0 GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- 
- 	site2: tlx@60000000 {
-@@ -808,6 +808,6 @@ site2: tlx@60000000 {
- 		ranges = <0 0 0x60000000 0x10000000>;
- 		#interrupt-cells = <1>;
- 		interrupt-map-mask = <0 0>;
--		interrupt-map = <0 0 &gic 0 0 GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-map = <0 0 &gic 0 GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
- 	};
- };
+ 	if (current_pgpath) {
 -- 
 2.25.1
 
