@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6346AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A57521D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13B3221F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443019;
-	bh=KQ6p3Q2gZc/JWmJeHca1YwO82RbLgolHIp072IFgEy0=;
+	s=default; t=1592443028;
+	bh=zfTeIo+BVRtRoc7eft2NV/gL6iT1G/ojaPuXOpIbn/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QPDgK6D52DChmXQbz4waUtXuLLxUAHyy1mulmtjLcwH/DCeLOWB9Aw/G0yh54n9FZ
-	 uysBfBIIdaF2wbs/UH/O32ngtryKY6UynQVukJhWlElGVhVCq+LiNV9lZzkwrHmr9g
-	 6iZRuzZRBbG00zFrydYezwvQiTmOMj8JzHtsf2WU=
+	b=0vnMlM5530/snW3sFPe8SM/AKyzYK1XvyG46bM5NAVsqvYYZAnMTN9DtJCwv+jQma
+	 BDzX49WZfm9u1ZMOx6+hO+Pn/kKI4ZIlpF6jqyre/eY6+w+c4rWbf0kuE0g0agG+Xy
+	 TmMYM2fVQqUgG2IoX/j0NbIALM7s1KbqBhmTZprU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgFRBQ5 (ORCPT
+        id S1729727AbgFRBRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:16:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44202 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:17:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729323AbgFRBOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:14:33 -0400
+        id S1728724AbgFRBOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69DC7221EE;
-        Thu, 18 Jun 2020 01:14:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3644221D7E;
+        Thu, 18 Jun 2020 01:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442872;
-        bh=KQ6p3Q2gZc/JWmJeHca1YwO82RbLgolHIp072IFgEy0=;
+        s=default; t=1592442882;
+        bh=zfTeIo+BVRtRoc7eft2NV/gL6iT1G/ojaPuXOpIbn/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wEEknvDHfHcdHzzpkSnMTBsFKth8q3sOHKbWBdyQO8yQ4ugj6k+52yWWEH47hMYgo
-         /nW9QkGIvb2jKtRXZCKygq2ezs6uza7GUJkrkBuR93N6lRjIJXI8OTfPseCuRlekPJ
-         jXqnKvC/DFTelKuG7qOl9K9dq3ZopOXyeGHxVOi0=
+        b=Bd529Ew78SQDmn7+K9jbRar61LwF2Zz1L8TeEsIE6RbLeEToqpKfzRdDHO7HEuhvZ
+         JQwIEav5bhmSRWwtsHb2yHG85iDtixDTbHrVMGj7Xe+08zxJPekdIOHIUu1YQAdIOq
+         XreIn7hyBk2xR2NKqdzUcasSiT11B3RHMdrm9S50=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kevin Buettner <kevinb@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 298/388] PCI: Avoid FLR for AMD Starship USB 3.0
-Date:   Wed, 17 Jun 2020 21:06:35 -0400
-Message-Id: <20200618010805.600873-298-sashal@kernel.org>
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.7 306/388] ASoC: fsl_asrc_dma: Fix dma_chan leak when config DMA channel failed
+Date:   Wed, 17 Jun 2020 21:06:43 -0400
+Message-Id: <20200618010805.600873-306-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,67 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Buettner <kevinb@redhat.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 5727043c73fdfe04597971b5f3f4850d879c1f4f ]
+[ Upstream commit 36124fb19f1ae68a500cd76a76d40c6e81bee346 ]
 
-The AMD Starship USB 3.0 host controller advertises Function Level Reset
-support, but it apparently doesn't work.  Add a quirk to prevent use of FLR
-on this device.
+fsl_asrc_dma_hw_params() invokes dma_request_channel() or
+fsl_asrc_get_dma_channel(), which returns a reference of the specified
+dma_chan object to "pair->dma_chan[dir]" with increased refcnt.
 
-Without this quirk, when attempting to assign (pass through) an AMD
-Starship USB 3.0 host controller to a guest OS, the system becomes
-increasingly unresponsive over the course of several minutes, eventually
-requiring a hard reset.  Shortly after attempting to start the guest, I see
-these messages:
+The reference counting issue happens in one exception handling path of
+fsl_asrc_dma_hw_params(). When config DMA channel failed for Back-End,
+the function forgets to decrease the refcnt increased by
+dma_request_channel() or fsl_asrc_get_dma_channel(), causing a refcnt
+leak.
 
-  vfio-pci 0000:05:00.3: not ready 1023ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 2047ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 4095ms after FLR; waiting
-  vfio-pci 0000:05:00.3: not ready 8191ms after FLR; waiting
+Fix this issue by calling dma_release_channel() when config DMA channel
+failed.
 
-And then eventually:
-
-  vfio-pci 0000:05:00.3: not ready 65535ms after FLR; giving up
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 0.000 msecs
-  perf: interrupt took too long (642744 > 2500), lowering kernel.perf_event_max_sample_rate to 1000
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 82.270 msecs
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 680.608 msecs
-  INFO: NMI handler (perf_event_nmi_handler) took too long to run: 100.952 msecs
-  ...
-  watchdog: BUG: soft lockup - CPU#3 stuck for 22s! [qemu-system-x86:7487]
-
-Tested on a Micro-Star International Co., Ltd. MS-7C59/Creator TRX40
-motherboard with an AMD Ryzen Threadripper 3970X.
-
-Link: https://lore.kernel.org/r/20200524003529.598434ff@f31-4.lan
-Signed-off-by: Kevin Buettner <kevinb@redhat.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Link: https://lore.kernel.org/r/1590415966-52416-1-git-send-email-xiyuyang19@fudan.edu.cn
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/fsl/fsl_asrc_dma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 43a0c2ce635e..b1db58d00d2b 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5133,6 +5133,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
-  * FLR may cause the following to devices to hang:
-  *
-  * AMD Starship/Matisse HD Audio Controller 0x1487
-+ * AMD Starship USB 3.0 Host Controller 0x148c
-  * AMD Matisse USB 3.0 Host Controller 0x149c
-  * Intel 82579LM Gigabit Ethernet Controller 0x1502
-  * Intel 82579V Gigabit Ethernet Controller 0x1503
-@@ -5143,6 +5144,7 @@ static void quirk_no_flr(struct pci_dev *dev)
- 	dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
- }
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x148c, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
+diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
+index e7178817d7a7..1ee10eafe3e6 100644
+--- a/sound/soc/fsl/fsl_asrc_dma.c
++++ b/sound/soc/fsl/fsl_asrc_dma.c
+@@ -252,6 +252,7 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
+ 	ret = dmaengine_slave_config(pair->dma_chan[dir], &config_be);
+ 	if (ret) {
+ 		dev_err(dev, "failed to config DMA channel for Back-End\n");
++		dma_release_channel(pair->dma_chan[dir]);
+ 		return ret;
+ 	}
+ 
 -- 
 2.25.1
 
