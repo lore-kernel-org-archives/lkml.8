@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84479C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C664C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56B1320853
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7741620853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446439;
-	bh=jZ92myoh9p0SwxIy56nhQlfUDjZkGC29YAyAi+XrVCw=;
+	s=default; t=1592446447;
+	bh=vdJFMv8yHEs/2MvMI6fAtqmj1XRhq7UnKx2s5j72/GI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OReUp05Nb19hhrV/g41tgYbIXQ3xrSjIgNkXgvBdkMXOcifESUAKlOyG/7f9hwWXu
-	 5NNlW69F/m03/z2mZHi3/Oi6J6uR4bczucDqQxM0kjThIhR3RniDdGD8APYcCSymue
-	 66flxNuht6YZcvAsORaCUQFNU3opmIPhr13SmhqY=
+	b=qlNPTLNOagF2rJ7EVQs6zYgKkLgQEM+vG6xT6Bg7LpOpEN7z0Psg9j93TbyThqcBW
+	 B9OcDorMRsCqwjVdudLGlH4Invrx06ydtiY3nrITJv7mcY0O17PZ1oE337IN106jhP
+	 l3EyjxWsheIiXYFx55D38wqhCZs463kY9gbc9zaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387546AbgFRCN5 (ORCPT
+        id S1730404AbgFRBUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:13:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53240 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:20:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730410AbgFRBUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:55 -0400
+        id S1729807AbgFRBRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D5B520FC3;
-        Thu, 18 Jun 2020 01:20:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07DB3221F3;
+        Thu, 18 Jun 2020 01:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443255;
-        bh=jZ92myoh9p0SwxIy56nhQlfUDjZkGC29YAyAi+XrVCw=;
+        s=default; t=1592443061;
+        bh=vdJFMv8yHEs/2MvMI6fAtqmj1XRhq7UnKx2s5j72/GI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=djTfkVbCas+38Y7Si6p1NacFON6GHeJ7osJz/zAXC7xJEV/8pxSielnNb9dQemgfY
-         JpEE409dhWac1JiblsJJfTjxDjEAC7wiJJZlHVvMHseCjEK2wW1U8ntkBPSuulhgya
-         fur3E3CWilMYRlB+EwBrInhvwUeipe4I+BoMM0HE=
+        b=2QJ7Pg2C5+LlSEEnS0YBZvGqQ5ujyDLi5fXebjV72O+pWPaio3+i9JhVJwbbpTkQD
+         idQgiQlEc7/F9e6lUk//1kI9/49MwE8VNcBTLytuHLdhBzrkGXuOX/eLTYGUsFQXPE
+         d1mY1sTfIhHA+HDXuCVQxF0/6oyRsdkMfg5z8jZk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcos Scriven <marcos@scriven.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 203/266] PCI: Avoid FLR for AMD Matisse HD Audio & USB 3.0
-Date:   Wed, 17 Jun 2020 21:15:28 -0400
-Message-Id: <20200618011631.604574-203-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 052/266] gpio: dwapb: Call acpi_gpiochip_free_interrupts() on GPIO chip de-registration
+Date:   Wed, 17 Jun 2020 21:12:57 -0400
+Message-Id: <20200618011631.604574-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,60 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcos Scriven <marcos@scriven.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 0d14f06cd6657ba3446a5eb780672da487b068e7 ]
+[ Upstream commit 494a94e38dcf62543a32a4424d646ff80b4b28bd ]
 
-The AMD Matisse HD Audio & USB 3.0 devices advertise Function Level Reset
-support, but hang when an FLR is triggered.
+Add missed acpi_gpiochip_free_interrupts() call when unregistering ports.
 
-To reproduce the problem, attach the device to a VM, then detach and try to
-attach again.
+While at it, drop extra check to call acpi_gpiochip_request_interrupts().
+There is no need to have an additional check to call
+acpi_gpiochip_request_interrupts(). Even without any interrupts available
+the registered ACPI Event handlers can be useful for debugging purposes.
 
-Rename the existing quirk_intel_no_flr(), which was not Intel-specific, to
-quirk_no_flr(), and apply it to prevent the use of FLR on these AMD
-devices.
-
-Link: https://lore.kernel.org/r/CAAri2DpkcuQZYbT6XsALhx2e6vRqPHwtbjHYeiH7MNp4zmt1RA@mail.gmail.com
-Signed-off-by: Marcos Scriven <marcos@scriven.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: e6cb3486f5a1 ("gpio: dwapb: add gpio-signaled acpi event support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
+Acked-by: Serge Semin <fancer.lancer@gmail.com>
+Link: https://lore.kernel.org/r/20200519131233.59032-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-dwapb.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 798e52051ecc..3f89ba7fe7fb 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5130,13 +5130,23 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
- }
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 92e127e74813..02cf4c43a4c4 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -533,26 +533,33 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+ 		dwapb_configure_irqs(gpio, port, pp);
  
--/* FLR may cause some 82579 devices to hang */
--static void quirk_intel_no_flr(struct pci_dev *dev)
-+/*
-+ * FLR may cause the following to devices to hang:
-+ *
-+ * AMD Starship/Matisse HD Audio Controller 0x1487
-+ * AMD Matisse USB 3.0 Host Controller 0x149c
-+ * Intel 82579LM Gigabit Ethernet Controller 0x1502
-+ * Intel 82579V Gigabit Ethernet Controller 0x1503
-+ *
-+ */
-+static void quirk_no_flr(struct pci_dev *dev)
- {
- 	dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
- }
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_intel_no_flr);
--DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_intel_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
+ 	err = gpiochip_add_data(&port->gc, port);
+-	if (err)
++	if (err) {
+ 		dev_err(gpio->dev, "failed to register gpiochip for port%d\n",
+ 			port->idx);
+-	else
+-		port->is_registered = true;
++		return err;
++	}
  
- static void quirk_no_ext_tags(struct pci_dev *pdev)
+ 	/* Add GPIO-signaled ACPI event support */
+-	if (pp->has_irq)
+-		acpi_gpiochip_request_interrupts(&port->gc);
++	acpi_gpiochip_request_interrupts(&port->gc);
+ 
+-	return err;
++	port->is_registered = true;
++
++	return 0;
+ }
+ 
+ static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
  {
+ 	unsigned int m;
+ 
+-	for (m = 0; m < gpio->nr_ports; ++m)
+-		if (gpio->ports[m].is_registered)
+-			gpiochip_remove(&gpio->ports[m].gc);
++	for (m = 0; m < gpio->nr_ports; ++m) {
++		struct dwapb_gpio_port *port = &gpio->ports[m];
++
++		if (!port->is_registered)
++			continue;
++
++		acpi_gpiochip_free_interrupts(&port->gc);
++		gpiochip_remove(&port->gc);
++	}
+ }
+ 
+ static struct dwapb_platform_data *
 -- 
 2.25.1
 
