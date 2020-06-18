@@ -2,129 +2,119 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC07C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64677C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B40207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC13207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:43:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jjVpbJV1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UXILqYGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbgFRTlL (ORCPT
+        id S1729278AbgFRTnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 15:41:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728775AbgFRTlL (ORCPT
+        Thu, 18 Jun 2020 15:43:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23177 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728137AbgFRTna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 15:41:11 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E779BC06174E;
-        Thu, 18 Jun 2020 12:41:10 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id l6so7084065ilo.2;
-        Thu, 18 Jun 2020 12:41:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wZg6yRbftXiW6TCni10DoNGM70aOuUyAxCGfvTDR9XU=;
-        b=jjVpbJV1ixssIdVOYNxSsU8+EfmTLuFYsg3C1ud0mv2xDTmc9ddZCS0gJMFQYgE+5u
-         Gv1oOxg3fM+2wUPW/j8PTyaEwY6DRtqXMN25FtLavH0DzButhP6O1K8rJ6XrqvHm6MGb
-         w2xknfQGyBdA1Dt0SruZxJD+bMDkg6RP+DM+2qYKnUbcP51gyRyRtK14g5hg0xj5nmNV
-         hMgicqY4Wn8Z81f8PGUsMqNgOFXPXAE1r5rh8S21EdY94jTHm70562zS/fhpb84I9gQn
-         FxiI+kSx0Q9GUDzbqFFaFODcu3aBvPN/R+Wo++oDfJjLZ3Ue30bnDl93RSKpG0cZYsnK
-         J/Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wZg6yRbftXiW6TCni10DoNGM70aOuUyAxCGfvTDR9XU=;
-        b=h7CqWjHG3k4JOGFXx/CKbco3oL6ldBV4QZJevKcrRBsX1+c/JZRkkppRQNJ4gse9NM
-         z1m+4BgH9aNI2hg7G96kcDEf3goBwCq6DH587zwCu3sSD8RgwCwtjDF80yChvI4QNj5J
-         DovDfbqwsm/QhGBfMCNrin93nD2E6tpHNx2Ygqup2KIPEHuuHxes3vRLAKyP0UoneCfI
-         hW6rWCJPRfB6UbYIl2Y506uEWVYKYSXEdaagamQwSb953YVaHoF8EfrIbnoLupQXQDfe
-         bYMyNcglwia0KA+vg1993rb0uzb0Kj5jSKFiC9RNBg9AkM9BaOjg4WQdDthZ4Khslyt9
-         /ehQ==
-X-Gm-Message-State: AOAM531s1EPWrEZFPKtSeBGsiUcvJkCgU7IQNiWE8p/PY5p5M6RNsFFY
-        jPJhDVJC6brJ2Czhm6E9Jrair5lo1OiL9US1Tw8yJBNmgrhYzQ==
-X-Google-Smtp-Source: ABdhPJycBUSitplzrcQ5ab7GadNEq5wup1y9ndBKlbjuu5aP4JH5PshANb+lUZSaK4NWS1wdi+Xvozb0jGgJEcC28gE=
-X-Received: by 2002:a05:6e02:13c7:: with SMTP id v7mr99568ilj.230.1592509270309;
- Thu, 18 Jun 2020 12:41:10 -0700 (PDT)
+        Thu, 18 Jun 2020 15:43:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592509409;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cBX34+Jjqml76C2Svn4EX3pnXJ1NO9Juk7OLBDMj9Lg=;
+        b=UXILqYGHtJLpuPE1WJqdyXgi2MzmmITzxWVPjISPV4ukYNTkLXQr3NAh9aNTNMl5p8U/bq
+        wBef9+aE+woj7dXX4Q5yFKmb/TysH8sfx1Cu5oDGg0jBJ6l7XUTFwGYUXyDVozvhPEQpbC
+        vhTA/Wmpaq3MNeD8rhu3wPJ24YQ2X7U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-201-8DV_LZF3O-iZpVOoJZf6bQ-1; Thu, 18 Jun 2020 15:43:25 -0400
+X-MC-Unique: 8DV_LZF3O-iZpVOoJZf6bQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6CE5D8018AC;
+        Thu, 18 Jun 2020 19:43:24 +0000 (UTC)
+Received: from localhost (ovpn-116-72.gru2.redhat.com [10.97.116.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B4E9C1002396;
+        Thu, 18 Jun 2020 19:43:19 +0000 (UTC)
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     zohar@linux.ibm.com, erichte@linux.ibm.com, nayna@linux.ibm.com,
+        Bruno Meneguele <bmeneg@redhat.com>, stable@vger.kernel.org
+Subject: [PATCH] ima: move APPRAISE_BOOTPARAM dependency on ARCH_POLICY to runtime
+Date:   Thu, 18 Jun 2020 16:43:10 -0300
+Message-Id: <20200618194310.169197-1-bmeneg@redhat.com>
 MIME-Version: 1.0
-References: <20200618183310.5352-1-alexander.kapshuk@gmail.com> <20200618190807.GA20699@nautica>
-In-Reply-To: <20200618190807.GA20699@nautica>
-From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Date:   Thu, 18 Jun 2020 22:40:34 +0300
-Message-ID: <CAJ1xhMX97LwVbTyGcV=bT2mYTPAZy=cU5SKtzYYqH4jbT_qPGw@mail.gmail.com>
-Subject: Re: [PATCH] net/9p: Fix sparse rcu warnings in client.c
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     ericvh@gmail.com, lucho@ionkov.net, davem@davemloft.net,
-        kuba@kernel.org, v9fs-developer@lists.sourceforge.net,
-        netdev@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 10:08 PM Dominique Martinet
-<asmadeus@codewreck.org> wrote:
->
-> Alexander Kapshuk wrote on Thu, Jun 18, 2020:
-> > Address sparse nonderef rcu warnings:
-> > net/9p/client.c:790:17: warning: incorrect type in argument 1 (different address spaces)
-> > net/9p/client.c:790:17:    expected struct spinlock [usertype] *lock
-> > net/9p/client.c:790:17:    got struct spinlock [noderef] <asn:4> *
-> > net/9p/client.c:792:48: warning: incorrect type in argument 1 (different address spaces)
-> > net/9p/client.c:792:48:    expected struct spinlock [usertype] *lock
-> > net/9p/client.c:792:48:    got struct spinlock [noderef] <asn:4> *
-> > net/9p/client.c:872:17: warning: incorrect type in argument 1 (different address spaces)
-> > net/9p/client.c:872:17:    expected struct spinlock [usertype] *lock
-> > net/9p/client.c:872:17:    got struct spinlock [noderef] <asn:4> *
-> > net/9p/client.c:874:48: warning: incorrect type in argument 1 (different address spaces)
-> > net/9p/client.c:874:48:    expected struct spinlock [usertype] *lock
-> > net/9p/client.c:874:48:    got struct spinlock [noderef] <asn:4> *
-> >
-> > Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
->
-> Thanks for this patch.
-> From what I can see, there are tons of other parts of the code doing the
-> same noderef access pattern to access current->sighand->siglock and I
-> don't see much doing that.
-> A couple of users justify this by saying SLAB_TYPESAFE_BY_RCU ensures
-> we'll always get a usable lock which won't be reinitialized however we
-> access it... It's a bit dubious we'll get the same lock than unlock to
-> me, so I agree to some change though.
->
-> After a second look I think we should use something like the following:
->
-> if (!lock_task_sighand(current, &flags))
->         warn & skip (or some error, we'd null deref if this happened currently);
-> recalc_sigpending();
-> unlock_task_sighand(current, &flags);
->
-> As you can see, the rcu_read_lock() isn't kept until the unlock so I'm
-> not sure it will be enough to please sparse, but I've convinced myself
-> current->sighand cannot change while we hold the lock and there just are
-> too many such patterns in the kernel.
->
-> Please let me know if I missed something or if there is an ongoing
-> effort to change how this works; I'll wait for a v2.
->
-> --
-> Dominique
+IMA_APPRAISE_BOOTPARAM has been marked as dependent on !IMA_ARCH_POLICY in
+compile time, enforcing the appraisal whenever the kernel had the arch
+policy option enabled.
 
-Thanks for your prompt response.
-I too made the same observation of the numerous patterns in the kernel
-where current->sighand is accessed without being rcu_dereference()'d.
-For this patch I used kernel/signal.c:1368,1398: __lock_task_sighand()
-as an example.
+However it breaks systems where the option is actually set but the system
+wasn't booted in a "secure boot" platform. In this scenario, anytime the
+an appraisal policy (i.e. ima_policy=appraisal_tcb) is used it will be
+forced, giving no chance to the user set the 'fix' state (ima_appraise=fix)
+to actually measure system's files.
 
-I will give your suggestion a careful consideration and will get back
-to you soon.
-Thanks.
+This patch remove this compile time dependency and move it to a runtime
+decision, based on the arch policy loading failure/success.
+
+Cc: stable@vger.kernel.org
+Fixes: d958083a8f64 ("x86/ima: define arch_get_ima_policy() for x86")
+Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
+---
+ security/integrity/ima/Kconfig      | 2 +-
+ security/integrity/ima/ima_policy.c | 8 ++++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+index edde88dbe576..62dc11a5af01 100644
+--- a/security/integrity/ima/Kconfig
++++ b/security/integrity/ima/Kconfig
+@@ -232,7 +232,7 @@ config IMA_APPRAISE_REQUIRE_POLICY_SIGS
+ 
+ config IMA_APPRAISE_BOOTPARAM
+ 	bool "ima_appraise boot parameter"
+-	depends on IMA_APPRAISE && !IMA_ARCH_POLICY
++	depends on IMA_APPRAISE
+ 	default y
+ 	help
+ 	  This option enables the different "ima_appraise=" modes
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index e493063a3c34..d6f8f513f447 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -733,11 +733,15 @@ void __init ima_init_policy(void)
+ 	 * (Highest priority)
+ 	 */
+ 	arch_entries = ima_init_arch_policy();
+-	if (!arch_entries)
++	if (!arch_entries) {
+ 		pr_info("No architecture policies found\n");
+-	else
++	} else {
++		/* Force appraisal, preventing runtime xattr changes */
++		pr_info("ima: setting IMA appraisal to enforced\n");
++		ima_appraise = IMA_APPRAISE_ENFORCE;
+ 		add_rules(arch_policy_entry, arch_entries,
+ 			  IMA_DEFAULT_POLICY | IMA_CUSTOM_POLICY);
++	}
+ 
+ 	/*
+ 	 * Insert the builtin "secure_boot" policy rules requiring file
+-- 
+2.26.2
+
