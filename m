@@ -2,130 +2,98 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0D4C207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:54:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="HFQhLaYw"
+	by mail.kernel.org (Postfix) with ESMTP id 3C5CA2168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgFRXys (ORCPT
+        id S1728537AbgFRX4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 19:54:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbgFRXyq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 19:54:46 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 822F4C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:54:46 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id q8so7354014qkm.12
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:54:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YDvDd70QEgXgwyT4Q35elQVEcGFI1GdqJOBPMEPxGFs=;
-        b=HFQhLaYwq0gsCyRls2cQYYsziEWpQgnhe980EFFGUMuG5cZBXEQAw5Gu1gYTrV+tkx
-         xUjGCkGqKfPl3lJfzuv1qlcBUGpvCutbj2cwbpZ8Efay6x+3g6R7Ia8/8LVWw5+YZY4g
-         /wbjMn6DXmjiefFJiO/zTQbOlLA0XZYuzsGu4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YDvDd70QEgXgwyT4Q35elQVEcGFI1GdqJOBPMEPxGFs=;
-        b=mcRRtjSsPODsbJdU887267mnUkwI8rxgZtne3qbFeQPVzCZe3hToGnAwnElg8QmYwV
-         R9JWEX85wBGjwKTSh/p/0d8SFBVGN5BeW6dYoYGfBRGsdCY0my4Oy8R4QxT5AkvOqI2X
-         RKG1V+UH4MX1e+o4UqF8y4pGi1CPqxZ0dWSTddjTjvqXzME72odgrePoRwDOe+ZkV63j
-         AK7Th08MeJrXGF2E1xl8s/wnp99SHOxbzcmDPtgacKUEx2nTtAsFrUG+DXqtQ874ovhL
-         UJAPIVtpUsAAwJBGI1s7nWWmi5RPKHU9u8GFhcw1Anpjw7RehWWyatbZXBdb29HKRc04
-         QsTw==
-X-Gm-Message-State: AOAM533ckjx+4NmkU6QhHeXzXCg78XQYFanK7zjHoYHpYZPI5sEjhvA8
-        ogoNtOKL/FfZToSfihZOe29IsQ==
-X-Google-Smtp-Source: ABdhPJxnFkj3cOEHwReARlTrUr3tDwHBIA6+lZCUlWL5WSbOcXG8+YtXVwZCEG6S4uKVshNg/py84w==
-X-Received: by 2002:a37:a985:: with SMTP id s127mr1032937qke.198.1592524485683;
-        Thu, 18 Jun 2020 16:54:45 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id n36sm828983qtc.35.2020.06.18.16.54.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 16:54:45 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 19:54:44 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: Re: [PATCH 5/7] rcu/trace: Use rsp's gp_seq in acceleration's
- rcu_grace_period tracepoint
-Message-ID: <20200618235444.GC40119@google.com>
-References: <20200618202955.4024-1-joel@joelfernandes.org>
- <20200618202955.4024-5-joel@joelfernandes.org>
- <20200618222721.GA2723@paulmck-ThinkPad-P72>
+        Thu, 18 Jun 2020 19:56:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726998AbgFRX4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 19:56:40 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B85C20899;
+        Thu, 18 Jun 2020 23:56:40 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1jm4Od-003lMf-Iv; Thu, 18 Jun 2020 19:56:39 -0400
+Message-ID: <20200618235639.461957330@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Thu, 18 Jun 2020 19:55:58 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [for-linus][PATCH 02/17] kprobes: Suppress the suspicious RCU warning on kprobes
+References: <20200618235556.451120786@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618222721.GA2723@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 03:27:21PM -0700, Paul E. McKenney wrote:
-> On Thu, Jun 18, 2020 at 04:29:53PM -0400, Joel Fernandes (Google) wrote:
-> > During acceleration of CB, the rsp's gp_seq is rcu_seq_snap'd. This is
-> > the value used for acceleration - it is the value of gp_seq at which it
-> > is safe the execute all callbacks in the callback list.
-> > 
-> > The rdp's gp_seq is not very useful for this scenario. Make
-> > rcu_grace_period report the rsp's gp_seq instead as it allows one to
-> > reason about how the acceleration works.
-> 
-> Good catch, but please instead trace the gp_seq_req local variable.
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Oh sure, I will do that. Actually I was planning to, but was wondering if it
-would be inconsistent with other trace_rcu_grace_period() invocations which
-pass a real gp_seq (one that is as old as rcu_state.gp_seq). But agreed, this
-is better since the acceleration uses it.
+Anders reported that the lockdep warns that suspicious
+RCU list usage in register_kprobe() (detected by
+CONFIG_PROVE_RCU_LIST.) This is because get_kprobe()
+access kprobe_table[] by hlist_for_each_entry_rcu()
+without rcu_read_lock.
 
-thanks,
+If we call get_kprobe() from the breakpoint handler context,
+it is run with preempt disabled, so this is not a problem.
+But in other cases, instead of rcu_read_lock(), we locks
+kprobe_mutex so that the kprobe_table[] is not updated.
+So, current code is safe, but still not good from the view
+point of RCU.
 
- - Joel
+Joel suggested that we can silent that warning by passing
+lockdep_is_held() to the last argument of
+hlist_for_each_entry_rcu().
 
-> 							Thanx, Paul
-> 
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > ---
-> >  kernel/rcu/tree.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 81df1b837dd9d..c3bae7a83d792 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -1437,9 +1437,9 @@ static bool rcu_accelerate_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
-> >  
-> >  	/* Trace depending on how much we were able to accelerate. */
-> >  	if (rcu_segcblist_restempty(&rdp->cblist, RCU_WAIT_TAIL))
-> > -		trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("AccWaitCB"));
-> > +		trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq, TPS("AccWaitCB"));
-> >  	else
-> > -		trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("AccReadyCB"));
-> > +		trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq, TPS("AccReadyCB"));
-> >  
-> >  	/* Count CBs for tracing. */
-> >  	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
-> > -- 
-> > 2.27.0.111.gc72c7da667-goog
-> > 
+Add lockdep_is_held(&kprobe_mutex) at the end of the
+hlist_for_each_entry_rcu() to suppress the warning.
+
+Link: http://lkml.kernel.org/r/158927055350.27680.10261450713467997503.stgit@devnote2
+
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Suggested-by: Joel Fernandes <joel@joelfernandes.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ kernel/kprobes.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 50cd84f53df0..8b2fd4145ab3 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -326,7 +326,8 @@ struct kprobe *get_kprobe(void *addr)
+ 	struct kprobe *p;
+ 
+ 	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
+-	hlist_for_each_entry_rcu(p, head, hlist) {
++	hlist_for_each_entry_rcu(p, head, hlist,
++				 lockdep_is_held(&kprobe_mutex)) {
+ 		if (p->addr == addr)
+ 			return p;
+ 	}
+-- 
+2.26.2
+
+
