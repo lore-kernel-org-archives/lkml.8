@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B780FC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3AC221E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C471921D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442672;
-	bh=rGnkqzOklVdCYmtctnndT4Xj7oX+ndcWZlmsfC9t1nQ=;
+	s=default; t=1592442688;
+	bh=YCQS6hEr2QhFxvArNcCpAAQU25JO6BILq2777jLW69Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tclvv5j3NLi17ZH6/RwtYwqI1rnLuwobotxX7qeaqRU18weh5C6SGaLD3QonNgVIi
-	 GVLs1vSoJMYtIbKJrQhC4Gs0AplTvfFCUEs7KkEE5kwMKl8c49f2CxHyU0uGHq6e1T
-	 xDxemu/djB5ly3KNJ2NmnRcf6aZGyiElpfTSSOA4=
+	b=M6U6CJvR8rHYzMJ1dnqY/JKt91N22ebZ8q1CTI9kY8SJihvibetoxpgdSpU3lcqZ+
+	 dW/2ts3S9IJUR+QM3OakLGwcau31GU3m6CXQU9fyKDw4DQNLe7IO4KS4o7jWDy73W4
+	 Y1t/FqJaxNzBaQOEyEtGcXfhLsquov85g3ZiULus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgFRBLJ (ORCPT
+        id S1728735AbgFRBL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:11:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38680 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:11:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727809AbgFRBK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:59 -0400
+        id S1728710AbgFRBLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A996214DB;
-        Thu, 18 Jun 2020 01:10:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB180221E6;
+        Thu, 18 Jun 2020 01:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442659;
-        bh=rGnkqzOklVdCYmtctnndT4Xj7oX+ndcWZlmsfC9t1nQ=;
+        s=default; t=1592442666;
+        bh=YCQS6hEr2QhFxvArNcCpAAQU25JO6BILq2777jLW69Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XthIOUjfoIfJn6EEqPux7QG7JwkqZfGdn+/wGnDRJPEInZF/cWZDcQcTlF7bzDKUU
-         lxngtltCsXXcyha2RZ9bp/ztAhov6zmJqxEsKlcQ6x1qw+JvgUk01xemNosPy3SeD2
-         +LzRT9+0CI1BfwT+k36G5YrYU7olLOducGLhOQXM=
+        b=Rf26kPiiLbpYbtPUUt/fBpzt8kUAe/GCWYCUipw0BTLX6nulLS0xoCk/qTSvBan3d
+         /O651SahvYSK5QNRvypRu2zlpsHNaQqNwXLDHIDW5+YmejuKqs2365sxu/m3f7By5U
+         Ob3jd1pq1NGFIWBzMUZJDHkEjXrE6UHAK1NS6IOE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Li <liwei391@huawei.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 130/388] ASoC: Fix wrong dependency of da7210 and wm8983
-Date:   Wed, 17 Jun 2020 21:03:47 -0400
-Message-Id: <20200618010805.600873-130-sashal@kernel.org>
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.7 136/388] staging: gasket: Fix mapping refcnt leak when put attribute fails
+Date:   Wed, 17 Jun 2020 21:03:53 -0400
+Message-Id: <20200618010805.600873-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -58,44 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit c1c050ee74d67aeb879fd38e3a07139d7fdb79f4 ]
+[ Upstream commit 57a66838e1494cd881b7f4e110ec685736e8e3ca ]
 
-As these two drivers support I2C and SPI, we should add the SND_SOC_I2C_AND_SPI
-dependency instead.
+gasket_sysfs_put_attr() invokes get_mapping(), which returns a reference
+of the specified gasket_sysfs_mapping object to "mapping" with increased
+refcnt.
 
-Fixes: ce0c97f8a2936 ("ASoC: Fix SND_SOC_ALL_CODECS imply SPI fallout")
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Link: https://lore.kernel.org/r/20200420202410.47327-3-liwei391@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+When gasket_sysfs_put_attr() returns, local variable "mapping" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
+
+The reference counting issue happens in one path of
+gasket_sysfs_put_attr(). When mapping attribute is unknown, the function
+forgets to decrease the refcnt increased by get_mapping(), causing a
+refcnt leak.
+
+Fix this issue by calling put_mapping() when put attribute fails due to
+unknown attribute.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Link: https://lore.kernel.org/r/1587618895-13660-1-git-send-email-xiyuyang19@fudan.edu.cn
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/gasket/gasket_sysfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 8cdc68c141dc..7d2cbed55a9d 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -717,7 +717,7 @@ config SND_SOC_L3
+diff --git a/drivers/staging/gasket/gasket_sysfs.c b/drivers/staging/gasket/gasket_sysfs.c
+index 5f0e089573a2..ad852ea1d4a9 100644
+--- a/drivers/staging/gasket/gasket_sysfs.c
++++ b/drivers/staging/gasket/gasket_sysfs.c
+@@ -339,6 +339,7 @@ void gasket_sysfs_put_attr(struct device *device,
  
- config SND_SOC_DA7210
- 	tristate
--	depends on I2C
-+	depends on SND_SOC_I2C_AND_SPI
+ 	dev_err(device, "Unable to put unknown attribute: %s\n",
+ 		attr->attr.attr.name);
++	put_mapping(mapping);
+ }
+ EXPORT_SYMBOL(gasket_sysfs_put_attr);
  
- config SND_SOC_DA7213
- 	tristate "Dialog DA7213 CODEC"
-@@ -1569,7 +1569,7 @@ config SND_SOC_WM8978
- 
- config SND_SOC_WM8983
- 	tristate
--	depends on I2C
-+	depends on SND_SOC_I2C_AND_SPI
- 
- config SND_SOC_WM8985
- 	tristate "Wolfson Microelectronics WM8985 and WM8758 codec driver"
 -- 
 2.25.1
 
