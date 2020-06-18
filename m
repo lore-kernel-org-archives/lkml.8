@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70593C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1674AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5482192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54D2214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447249;
-	bh=7nE8C1YbYrTwvD5y/SKbRWoc0Mb/3j5lKq5bUoSzKQc=;
+	s=default; t=1592447258;
+	bh=uq/vJ5FGrTpOVRKK3JW4bg+gc1FHs5ImLSPzkZZ8Tqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sJkqh7aZV2CBfqvjCR9f+OkKSsuBVn4hHY+DZaYAKq94y4bwGhpc4AhdiXBK3zkxX
-	 MnpgI/HfmRCevCmQjBsOLe96Sa0dJy4rQcyj6S73dkSGWWAEI00gjPUWGNzTVNfezq
-	 yuMjoA5b2Z85A7WJ/cIZDrGECyGzZL9A91jjfjek=
+	b=oW9VpjXDk0ZyD+VirNmQzW82spIBF7Sa9b0be+8C5iYnN9k6mK4BiUnQAUl2AEVjJ
+	 T7OWYQ1uuKzScyi4zY0BI7TEEergBbs25aswE5K7wbVir7U6byTyqbXqvrgiIshIG9
+	 ngztDly+XjQSVv+nK9ZcbiOTgW7xLLaf/rdPH93A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733170AbgFRC12 (ORCPT
+        id S1732952AbgFRC1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:27:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47578 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:27:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728523AbgFRBQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:16:44 -0400
+        id S1729619AbgFRBQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:16:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C411D21D80;
-        Thu, 18 Jun 2020 01:16:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54672206F1;
+        Thu, 18 Jun 2020 01:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443003;
-        bh=7nE8C1YbYrTwvD5y/SKbRWoc0Mb/3j5lKq5bUoSzKQc=;
+        s=default; t=1592443001;
+        bh=uq/vJ5FGrTpOVRKK3JW4bg+gc1FHs5ImLSPzkZZ8Tqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1E3nw04DA/peSAtoBDANNYNvgu7BUX51mp3zuumnX0XbH43A+PChiUVDA4EWXiMZP
-         IZTPNIDL6b6FlRauoQo6RcA1rGoV45ikrx/xFDQsw91PhMCgnH+G3dEF+ulQfy73jR
-         LZqMdfGPqbnX3yBpZwIOUuCaJVlBI20HiM3h3AcQ=
+        b=diLoyWPOkOmdEZiplogAPUjPlUWgsvcz4+ZKUa1RgWlfa8MtIH6ZlvSaNCw3g0yZv
+         rdtHOOrcAfu+OL3EsEbp3y1f/GAoflVWcOO6OoYm23/eLVcfv7wiYzHzPSjSrNB0nb
+         h9XWgT7HeKzMHIKKRmGUlJg8xx+iU6o+um8+Xjb4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 009/266] clk: qcom: msm8916: Fix the address location of pll->config_reg
-Date:   Wed, 17 Jun 2020 21:12:14 -0400
-Message-Id: <20200618011631.604574-9-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 007/266] iio: light: isl29125: fix iio_triggered_buffer_{predisable,postenable} positions
+Date:   Wed, 17 Jun 2020 21:12:12 -0400
+Message-Id: <20200618011631.604574-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -64,92 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit f47ab3c2f5338828a67e89d5f688d2cef9605245 ]
+[ Upstream commit 9b7a12c3e090cf3fba6f66f1f23abbc6e0e86021 ]
 
-During the process of debugging a processor derived from the msm8916 which
-we found the new processor was not starting one of its PLLs.
+The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+the poll functions.
 
-After tracing the addresses and writes that downstream was doing and
-comparing to upstream it became obvious that we were writing to a different
-register location than downstream when trying to configure the PLL.
+For the predisable hook, the disable code should occur before detaching
+the poll func, and for the postenable hook, the poll func should be
+attached before the enable code.
 
-This error is also present in upstream msm8916.
+This change reworks the predisable/postenable hooks so that the pollfunc is
+attached/detached in the correct position.
+It also balances the calls a bit, by grouping the preenable and the
+iio_triggered_buffer_postenable() into a single
+isl29125_buffer_postenable() function.
 
-As an example clk-pll.c::clk_pll_recalc_rate wants to write to
-pll->config_reg updating the bit-field POST_DIV_RATIO. That bit-field is
-defined in PLL_USER_CTL not in PLL_CONFIG_CTL. Taking the BIMC PLL as an
-example
-
-lm80-p0436-13_c_qc_snapdragon_410_processor_hrd.pdf
-
-0x01823010 GCC_BIMC_PLL_USER_CTL
-0x01823014 GCC_BIMC_PLL_CONFIG_CTL
-
-This pattern is repeated for gpll0, gpll1, gpll2 and bimc_pll.
-
-This error is likely not apparent since the bootloader will already have
-initialized these PLLs.
-
-This patch corrects the location of config_reg from PLL_CONFIG_CTL to
-PLL_USER_CTL for all relevant PLLs on msm8916.
-
-Fixes commit 3966fab8b6ab ("clk: qcom: Add MSM8916 Global Clock Controller support")
-
-Cc: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Link: https://lkml.kernel.org/r/20200329124116.4185447-1-bryan.odonoghue@linaro.org
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-msm8916.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/iio/light/isl29125.c | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-msm8916.c b/drivers/clk/qcom/gcc-msm8916.c
-index 4e329a7baf2b..17e4a5a2a9fd 100644
---- a/drivers/clk/qcom/gcc-msm8916.c
-+++ b/drivers/clk/qcom/gcc-msm8916.c
-@@ -260,7 +260,7 @@ static struct clk_pll gpll0 = {
- 	.l_reg = 0x21004,
- 	.m_reg = 0x21008,
- 	.n_reg = 0x2100c,
--	.config_reg = 0x21014,
-+	.config_reg = 0x21010,
- 	.mode_reg = 0x21000,
- 	.status_reg = 0x2101c,
- 	.status_bit = 17,
-@@ -287,7 +287,7 @@ static struct clk_pll gpll1 = {
- 	.l_reg = 0x20004,
- 	.m_reg = 0x20008,
- 	.n_reg = 0x2000c,
--	.config_reg = 0x20014,
-+	.config_reg = 0x20010,
- 	.mode_reg = 0x20000,
- 	.status_reg = 0x2001c,
- 	.status_bit = 17,
-@@ -314,7 +314,7 @@ static struct clk_pll gpll2 = {
- 	.l_reg = 0x4a004,
- 	.m_reg = 0x4a008,
- 	.n_reg = 0x4a00c,
--	.config_reg = 0x4a014,
-+	.config_reg = 0x4a010,
- 	.mode_reg = 0x4a000,
- 	.status_reg = 0x4a01c,
- 	.status_bit = 17,
-@@ -341,7 +341,7 @@ static struct clk_pll bimc_pll = {
- 	.l_reg = 0x23004,
- 	.m_reg = 0x23008,
- 	.n_reg = 0x2300c,
--	.config_reg = 0x23014,
-+	.config_reg = 0x23010,
- 	.mode_reg = 0x23000,
- 	.status_reg = 0x2301c,
- 	.status_bit = 17,
+diff --git a/drivers/iio/light/isl29125.c b/drivers/iio/light/isl29125.c
+index e37894f0ae0b..95611f5eff01 100644
+--- a/drivers/iio/light/isl29125.c
++++ b/drivers/iio/light/isl29125.c
+@@ -213,13 +213,24 @@ static const struct iio_info isl29125_info = {
+ 	.attrs = &isl29125_attribute_group,
+ };
+ 
+-static int isl29125_buffer_preenable(struct iio_dev *indio_dev)
++static int isl29125_buffer_postenable(struct iio_dev *indio_dev)
+ {
+ 	struct isl29125_data *data = iio_priv(indio_dev);
++	int err;
++
++	err = iio_triggered_buffer_postenable(indio_dev);
++	if (err)
++		return err;
+ 
+ 	data->conf1 |= ISL29125_MODE_RGB;
+-	return i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
++	err = i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
+ 		data->conf1);
++	if (err) {
++		iio_triggered_buffer_predisable(indio_dev);
++		return err;
++	}
++
++	return 0;
+ }
+ 
+ static int isl29125_buffer_predisable(struct iio_dev *indio_dev)
+@@ -227,19 +238,18 @@ static int isl29125_buffer_predisable(struct iio_dev *indio_dev)
+ 	struct isl29125_data *data = iio_priv(indio_dev);
+ 	int ret;
+ 
+-	ret = iio_triggered_buffer_predisable(indio_dev);
+-	if (ret < 0)
+-		return ret;
+-
+ 	data->conf1 &= ~ISL29125_MODE_MASK;
+ 	data->conf1 |= ISL29125_MODE_PD;
+-	return i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
++	ret = i2c_smbus_write_byte_data(data->client, ISL29125_CONF1,
+ 		data->conf1);
++
++	iio_triggered_buffer_predisable(indio_dev);
++
++	return ret;
+ }
+ 
+ static const struct iio_buffer_setup_ops isl29125_buffer_setup_ops = {
+-	.preenable = isl29125_buffer_preenable,
+-	.postenable = &iio_triggered_buffer_postenable,
++	.postenable = isl29125_buffer_postenable,
+ 	.predisable = isl29125_buffer_predisable,
+ };
+ 
 -- 
 2.25.1
 
