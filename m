@@ -2,106 +2,192 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E600C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 953F0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0675F20EDD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D22720884
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgFRJUK (ORCPT
+        id S1729096AbgFRJU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 05:20:10 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2324 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728995AbgFRJUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 05:20:09 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id F2C18BCA44432416FAA3;
-        Thu, 18 Jun 2020 10:20:07 +0100 (IST)
-Received: from [127.0.0.1] (10.210.165.247) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Thu, 18 Jun
- 2020 10:20:07 +0100
-Subject: Re: [PATCH] drivers/perf: hisi: Add identifier sysfs file
-To:     Shaokun Zhang <zhangshaokun@hisilicon.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <qiangqing.zhang@nxp.com>,
-        <jolsa@redhat.com>, <linuxarm@huawei.com>
-References: <1592399111-134786-1-git-send-email-john.garry@huawei.com>
- <089b4276-a247-5d39-4227-32629d3ee888@hisilicon.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <086e0fd0-590b-8a95-5ac9-9d585e8a3342@huawei.com>
-Date:   Thu, 18 Jun 2020 10:18:42 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Thu, 18 Jun 2020 05:20:59 -0400
+Received: from smtp4-g21.free.fr ([212.27.42.4]:17268 "EHLO smtp4-g21.free.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728343AbgFRJU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 05:20:58 -0400
+Received: from [192.168.1.91] (unknown [77.207.133.132])
+        (Authenticated sender: marc.w.gonzalez)
+        by smtp4-g21.free.fr (Postfix) with ESMTPSA id 664CE19F5AB;
+        Thu, 18 Jun 2020 11:20:12 +0200 (CEST)
+Subject: Re: [RFC 3/4] media: dvb_frontend: move algo-specific settings to a
+ function
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>
+Cc:     Brad Love <brad@nextdimension.cc>, Sean Young <sean@mess.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <cover.1592419750.git.mchehab+huawei@kernel.org>
+ <daa69edd80e7fcf979062273f3067cb7b5573d52.1592419750.git.mchehab+huawei@kernel.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <8956d79a-cc5a-b744-3e21-25e9b4267dea@free.fr>
+Date:   Thu, 18 Jun 2020 11:20:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <089b4276-a247-5d39-4227-32629d3ee888@hisilicon.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
+In-Reply-To: <daa69edd80e7fcf979062273f3067cb7b5573d52.1592419750.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.165.247]
-X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/06/2020 02:40, Shaokun Zhang wrote:
->> }
->>   
->> +	hha_pmu->identifier = readl(hha_pmu->base + HHA_VERSION);
-> Since we are now refactoring the PMU framework, the PMU version offset
-> is always the same except DDRC PMU and other uncore PMU modules will
-> also use this, how about we do it as the common code:
+On 17/06/2020 20:52, Mauro Carvalho Chehab wrote:
+
+> As we're planning to call this code on a separate place, let's
+
+s/on/from/
+Suggest: "to call this code from somewhere else"
+
+> fist move it to a different function.
+
+s/fist/first
+Suggest: "first move it to its own function"
+
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  drivers/media/dvb-core/dvb_frontend.c | 90 +++++++++++++++------------
+>  1 file changed, 49 insertions(+), 41 deletions(-)
 > 
-> #define HISI_PMU_VERSION_REG   0x1CF0
-> int hisi_uncore_pmu_version(struct hisi_pmu *hisi_pmu)
-> {
->         return readl(hisi_pmu->base + HISI_PMU_VERSION_REG);
-> }
-> EXPORT_SYMBOL_GPL(hisi_uncore_pmu_version);
+> diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+> index 06ea30a689d7..ed85dc2a9183 100644
+> --- a/drivers/media/dvb-core/dvb_frontend.c
+> +++ b/drivers/media/dvb-core/dvb_frontend.c
+> @@ -1790,6 +1790,54 @@ static int dvbv3_set_delivery_system(struct dvb_frontend *fe)
+>  	return emulate_delivery_system(fe, delsys);
+>  }
+>  
+> +static void prepare_tuning_algo_parameters(struct dvb_frontend *fe)
+> +{
+> +	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+> +	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+> +	struct dvb_frontend_tune_settings fetunesettings;
 
-Hi Shaokun,
+Suggest: fetunesettings = { 0 };
+then we can remove the memset() below.
 
-Some points to make:
+> +
+> +	/* get frontend-specific tuning settings */
+> +	memset(&fetunesettings, 0, sizeof(struct dvb_frontend_tune_settings));
+> +	if (fe->ops.get_tune_settings && (fe->ops.get_tune_settings(fe, &fetunesettings) == 0)) {
+> +		fepriv->min_delay = (fetunesettings.min_delay_ms * HZ) / 1000;
+> +		fepriv->max_drift = fetunesettings.max_drift;
+> +		fepriv->step_size = fetunesettings.step_size;
+> +	} else {
+> +		/* default values */
+> +		switch (c->delivery_system) {
+> +		case SYS_DVBS:
+> +		case SYS_DVBS2:
+> +		case SYS_ISDBS:
+> +		case SYS_TURBO:
+> +		case SYS_DVBC_ANNEX_A:
+> +		case SYS_DVBC_ANNEX_C:
+> +			fepriv->min_delay = HZ / 20;
+> +			fepriv->step_size = c->symbol_rate / 16000;
+> +			fepriv->max_drift = c->symbol_rate / 2000;
+> +			break;
+> +		case SYS_DVBT:
+> +		case SYS_DVBT2:
+> +		case SYS_ISDBT:
+> +		case SYS_DTMB:
+> +			fepriv->min_delay = HZ / 20;
+> +			fepriv->step_size = dvb_frontend_get_stepsize(fe) * 2;
+> +			fepriv->max_drift = (dvb_frontend_get_stepsize(fe) * 2) + 1;
+> +			break;
+> +		default:
+> +			/*
+> +			 * FIXME: This sounds wrong! if freqency_stepsize is
+> +			 * defined by the frontend, why not use it???
+> +			 */
+> +			fepriv->min_delay = HZ / 20;
+> +			fepriv->step_size = 0; /* no zigzag */
+> +			fepriv->max_drift = 0;
+> +			break;
+> +		}
+> +	}
+> +	if (dvb_override_tune_delay > 0)
+> +		fepriv->min_delay = (dvb_override_tune_delay * HZ) / 1000;
+> +}
+> +
+>  /**
+>   * dtv_property_process_set -  Sets a single DTV property
+>   * @fe:		Pointer to &struct dvb_frontend
+> @@ -2182,7 +2230,6 @@ static int dtv_set_frontend(struct dvb_frontend *fe)
+>  {
+>  	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+>  	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+> -	struct dvb_frontend_tune_settings fetunesettings;
+>  	u32 rolloff = 0;
+>  
+>  	if (dvb_frontend_check_parameters(fe) < 0)
+> @@ -2260,46 +2307,7 @@ static int dtv_set_frontend(struct dvb_frontend *fe)
+>  	if (c->hierarchy == HIERARCHY_NONE && c->code_rate_LP == FEC_NONE)
+>  		c->code_rate_LP = FEC_AUTO;
+>  
+> -	/* get frontend-specific tuning settings */
+> -	memset(&fetunesettings, 0, sizeof(struct dvb_frontend_tune_settings));
+> -	if (fe->ops.get_tune_settings && (fe->ops.get_tune_settings(fe, &fetunesettings) == 0)) {
+> -		fepriv->min_delay = (fetunesettings.min_delay_ms * HZ) / 1000;
+> -		fepriv->max_drift = fetunesettings.max_drift;
+> -		fepriv->step_size = fetunesettings.step_size;
+> -	} else {
+> -		/* default values */
+> -		switch (c->delivery_system) {
+> -		case SYS_DVBS:
+> -		case SYS_DVBS2:
+> -		case SYS_ISDBS:
+> -		case SYS_TURBO:
+> -		case SYS_DVBC_ANNEX_A:
+> -		case SYS_DVBC_ANNEX_C:
+> -			fepriv->min_delay = HZ / 20;
+> -			fepriv->step_size = c->symbol_rate / 16000;
+> -			fepriv->max_drift = c->symbol_rate / 2000;
+> -			break;
+> -		case SYS_DVBT:
+> -		case SYS_DVBT2:
+> -		case SYS_ISDBT:
+> -		case SYS_DTMB:
+> -			fepriv->min_delay = HZ / 20;
+> -			fepriv->step_size = dvb_frontend_get_stepsize(fe) * 2;
+> -			fepriv->max_drift = (dvb_frontend_get_stepsize(fe) * 2) + 1;
+> -			break;
 
-- It's hardly worth having a separate function to do this 1-line readl() 
-call, especially since it not even generic (DDRC is different)
+As an aside, I find it confusing that there are 3 sources for the stepsize.
+1) fe->ops.get_tune_settings().step_size
+2) fe->ops.info.frequency_stepsize_hz
+3) fe->ops.tuner_ops.info.frequency_step_hz
 
-- We would have to export it (or put in a common header file with static 
-inline keywords) - less exports are good
+> -		default:
+> -			/*
+> -			 * FIXME: This sounds wrong! if freqency_stepsize is
+> -			 * defined by the frontend, why not use it???
+> -			 */
+> -			fepriv->min_delay = HZ / 20;
+> -			fepriv->step_size = 0; /* no zigzag */
+> -			fepriv->max_drift = 0;
+> -			break;
+> -		}
+> -	}
+> -	if (dvb_override_tune_delay > 0)
+> -		fepriv->min_delay = (dvb_override_tune_delay * HZ) / 1000;
+> +	prepare_tuning_algo_parameters(fe);
 
-- with factoring out common code, it's good to reduce total code - this 
-change would increase it, AFAICS
+LGTM
 
-- This is HW specific. The driver is currently layered such that all HW 
-specific stuff is in the HW driver (like hisi_uncore_ddrc_pmu.c), and 
-not library code (hisi_uncore_pmu.c). I don't see why you want to mix 
-that, like you're proposing in the framework revision you proposed 
-internally.
-
-Thanks,
-John
-
-> 
-> hha_pmu->identifier = hisi_uncore_pmu_version(hha_pmu);
-> we can remove the duplicated PMU version register definition in each module.
-> 
-> Thanks,
-> Shaokun
-> 
->> +
->>   	return 0;
->>   }
->>   
->> @@ -320,10 +323,23 @@ static const struct attribute_group hisi_hha_pmu_cpumask_attr_group = {
->>   	.attrs = hisi_hha_pmu_cpumask_attrs,
->>   };
-
+Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
