@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDC2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABA2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD1521927
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D4CB21927
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448140;
-	bh=3i9CW9vR+vvaNTTVUkiKlJA0CPyN9WMXuwYIQbi6hqQ=;
+	s=default; t=1592448144;
+	bh=lmsOjpJfu1F/07xtNKZqZw1bsoKKOBllErHB92ejtMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EGYj5hTbCjEth740zZGUNCPz2iFxzttQvHByQflukGZZlRLGNt6GKb9Db50NPliGT
-	 tR4VFCcqxtkv5RBRIQRYZ7IHJRiF3EVGmXI0dBSsI2Uo65+t7PBDiDGNYFFXMBoMqP
-	 6rR9d9P1Cviwa9xlMYYa1Yto8rWCjTEsgBlHcZlE=
+	b=ZLggH2i5xonJBf/4p4Bpe5Lfu9drH7WEci6BqheiqvU9WyIZ+H7+kNFI33HcJopvA
+	 cYENp7N4NsseZUNR3cFj2nyu79MpyWI/m3tREAIhBVm4eyFKgCuR1Ii+ut0Z83iME4
+	 +DpsBOz/p8rwmXg9KKTMMoRvD6bSqWBeyXxBwd2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbgFRBMI (ORCPT
+        id S1733210AbgFRCmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:12:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39242 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:42:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728018AbgFRBL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:28 -0400
+        id S1728117AbgFRBMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54E6620CC7;
-        Thu, 18 Jun 2020 01:11:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF521214DB;
+        Thu, 18 Jun 2020 01:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442687;
-        bh=3i9CW9vR+vvaNTTVUkiKlJA0CPyN9WMXuwYIQbi6hqQ=;
+        s=default; t=1592442727;
+        bh=lmsOjpJfu1F/07xtNKZqZw1bsoKKOBllErHB92ejtMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UaHqaSGKuMBNSO4GVdz+Dg6V22FOVcHsEnveuLNmMydlIsEWdmyIMB4ETRnq4XW9L
-         42uobZyg0uN/OtzNQgaw1Iy2kR04RR4mfKJxmRD506vWcX7RMcph/k24YSn3WluH0B
-         WKY36q+uPO1xAOnqYghKMPLRxr74VcuzZVvwrBDc=
+        b=PZ6MzIOaugBA/g2Wf9m1vzM4ijJcm03pDC4uK7O2uWisbMydpPHo3Q/mJ+MDZC1D6
+         YJxu32lDkhGdgICn/zxdfDylij2Y02UQBmr4687lt5TyBu8Vmw02EH+4XvxWY5OMx/
+         nu8y/Liz7m9tt/gGBJuiHvXt0ZTSTvZFRCi9gsEI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Hulk Robot <hulkci@huawei.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 153/388] clk: meson: meson8b: Fix the vclk_div{1, 2, 4, 6, 12}_en gate bits
-Date:   Wed, 17 Jun 2020 21:04:10 -0400
-Message-Id: <20200618010805.600873-153-sashal@kernel.org>
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 184/388] remoteproc/mediatek: fix invalid use of sizeof in scp_ipi_init()
+Date:   Wed, 17 Jun 2020 21:04:41 -0400
+Message-Id: <20200618010805.600873-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,79 +64,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 8bb629cfb28f4dad9d47f69249366e50ae5edc25 ]
+[ Upstream commit 8096f80a5c09b716be207eb042c4e40d6cdefbd2 ]
 
-The DIV{1,2,4,6,12}_EN bits are actually located in HHI_VID_CLK_CNTL
-register:
-- HHI_VID_CLK_CNTL[0] = DIV1_EN
-- HHI_VID_CLK_CNTL[1] = DIV2_EN
-- HHI_VID_CLK_CNTL[2] = DIV4_EN
-- HHI_VID_CLK_CNTL[3] = DIV6_EN
-- HHI_VID_CLK_CNTL[4] = DIV12_EN
+sizeof() when applied to a pointer typed expression gives the
+size of the pointer, not that of the pointed data.
 
-Update the bits accordingly so we will enable the bits in the correct
-register once we switch these clocks to be mutable.
-
-Fixes: 6cb57c678bb70e ("clk: meson: meson8b: add the read-only video clock trees")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200417184127.1319871-4-martin.blumenstingl@googlemail.com
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Fixes: 63c13d61eafe ("remoteproc/mediatek: add SCP support for mt8183")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Link: https://lore.kernel.org/r/20200509084237.36293-1-weiyongjun1@huawei.com
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/meson8b.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/remoteproc/mtk_scp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index ecd78cdca8ce..5f375799ce46 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -1213,7 +1213,7 @@ static struct clk_regmap meson8b_vclk_in_en = {
+diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
+index 2bead57c9cf9..ac13e7b046a6 100644
+--- a/drivers/remoteproc/mtk_scp.c
++++ b/drivers/remoteproc/mtk_scp.c
+@@ -132,8 +132,8 @@ static int scp_ipi_init(struct mtk_scp *scp)
+ 		(struct mtk_share_obj __iomem *)(scp->sram_base + recv_offset);
+ 	scp->send_buf =
+ 		(struct mtk_share_obj __iomem *)(scp->sram_base + send_offset);
+-	memset_io(scp->recv_buf, 0, sizeof(scp->recv_buf));
+-	memset_io(scp->send_buf, 0, sizeof(scp->send_buf));
++	memset_io(scp->recv_buf, 0, sizeof(*scp->recv_buf));
++	memset_io(scp->send_buf, 0, sizeof(*scp->send_buf));
  
- static struct clk_regmap meson8b_vclk_div1_gate = {
- 	.data = &(struct clk_regmap_gate_data){
--		.offset = HHI_VID_CLK_DIV,
-+		.offset = HHI_VID_CLK_CNTL,
- 		.bit_idx = 0,
- 	},
- 	.hw.init = &(struct clk_init_data){
-@@ -1243,7 +1243,7 @@ static struct clk_fixed_factor meson8b_vclk_div2_div = {
- 
- static struct clk_regmap meson8b_vclk_div2_div_gate = {
- 	.data = &(struct clk_regmap_gate_data){
--		.offset = HHI_VID_CLK_DIV,
-+		.offset = HHI_VID_CLK_CNTL,
- 		.bit_idx = 1,
- 	},
- 	.hw.init = &(struct clk_init_data){
-@@ -1273,7 +1273,7 @@ static struct clk_fixed_factor meson8b_vclk_div4_div = {
- 
- static struct clk_regmap meson8b_vclk_div4_div_gate = {
- 	.data = &(struct clk_regmap_gate_data){
--		.offset = HHI_VID_CLK_DIV,
-+		.offset = HHI_VID_CLK_CNTL,
- 		.bit_idx = 2,
- 	},
- 	.hw.init = &(struct clk_init_data){
-@@ -1303,7 +1303,7 @@ static struct clk_fixed_factor meson8b_vclk_div6_div = {
- 
- static struct clk_regmap meson8b_vclk_div6_div_gate = {
- 	.data = &(struct clk_regmap_gate_data){
--		.offset = HHI_VID_CLK_DIV,
-+		.offset = HHI_VID_CLK_CNTL,
- 		.bit_idx = 3,
- 	},
- 	.hw.init = &(struct clk_init_data){
-@@ -1333,7 +1333,7 @@ static struct clk_fixed_factor meson8b_vclk_div12_div = {
- 
- static struct clk_regmap meson8b_vclk_div12_div_gate = {
- 	.data = &(struct clk_regmap_gate_data){
--		.offset = HHI_VID_CLK_DIV,
-+		.offset = HHI_VID_CLK_CNTL,
- 		.bit_idx = 4,
- 	},
- 	.hw.init = &(struct clk_init_data){
+ 	return 0;
+ }
 -- 
 2.25.1
 
