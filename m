@@ -2,61 +2,117 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD04C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 111F020578
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9637121D79
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592442922;
+	bh=++TE833j+DXLC/txZxLB2LxUhnJsxmm4FsnYJoi9dB0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=itnt8TtMGVerZA85ayUPnJF0oQLLaswS7sGNa5sf6y9g0twlgs/6UARs9my3kjJ4h
+	 /WsJPQEo3ooXOM67CvK4weH2LOLwzVfSRjDA2HEkx7Ph3VBb40kVUSanrtNOHZvWqf
+	 ubtYbn0I8e/6+DEzgXRmwxkS9nzJrHYFjp5FBK3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgFRBPM (ORCPT
+        id S1729452AbgFRBPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:15:12 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45354 "EHLO vps0.lunn.ch"
+        Wed, 17 Jun 2020 21:15:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729153AbgFRBNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:36 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jlj7O-0012r4-Tx; Thu, 18 Jun 2020 03:13:26 +0200
-Date:   Thu, 18 Jun 2020 03:13:26 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     davem@davemloft.net, kuba@kernel.org, robh+dt@kernel.org,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH v4 1/3] net: phy: mscc: move shared probe code into a
- helper
-Message-ID: <20200618011326.GA249144@lunn.ch>
-References: <20200617213326.1532365-1-heiko@sntech.de>
- <20200617213326.1532365-2-heiko@sntech.de>
+        id S1728014AbgFRBNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:39 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08E3421924;
+        Thu, 18 Jun 2020 01:13:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592442819;
+        bh=++TE833j+DXLC/txZxLB2LxUhnJsxmm4FsnYJoi9dB0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=C6pUeXGKa7SvAt8zdK9LNe/ol6sjtyqgKQ5X5hQ8E0JuvdZ4q3K2M7+n3BqaIy/CA
+         DvPbgWIZi/rtvsJ7n6o5upj2TuTJMY94nZscG/xjjg8Bzr7iJLf9wIvfkDwU2rjNVX
+         VkVo74y7fqEIceYjQnFI7vTeqfwwXZHUeJ1wcFtg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hemant Kumar <hemantk@codeaurora.org>,
+        Bhaumik Bhatt <bbhatt@codeaurora.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 256/388] bus: mhi: core: Read transfer length from an event properly
+Date:   Wed, 17 Jun 2020 21:05:53 -0400
+Message-Id: <20200618010805.600873-256-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617213326.1532365-2-heiko@sntech.de>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 11:33:24PM +0200, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> 
-> The different probe functions share a lot of code, so move the
-> common parts into a helper to reduce duplication.
-> 
-> This moves the devm_phy_package_join below the general allocation
-> but as all components just allocate things, this should be ok.
-> 
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Hemant Kumar <hemantk@codeaurora.org>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+[ Upstream commit ee75cedf82d832561af8ba8380aeffd00a9eea77 ]
 
-    Andrew
+When MHI Driver receives an EOT event, it reads xfer_len from the
+event in the last TRE. The value is under control of the MHI device
+and never validated by Host MHI driver. The value should never be
+larger than the real size of the buffer but a malicious device can
+set the value 0xFFFF as maximum. This causes driver to memory
+overflow (both read or write). Fix this issue by reading minimum of
+transfer length from event and the buffer length provided.
+
+Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Link: https://lore.kernel.org/r/20200521170249.21795-5-manivannan.sadhasivam@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/bus/mhi/core/main.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+index 97e06cc586e4..8be3d0fb0614 100644
+--- a/drivers/bus/mhi/core/main.c
++++ b/drivers/bus/mhi/core/main.c
+@@ -513,7 +513,10 @@ static int parse_xfer_event(struct mhi_controller *mhi_cntrl,
+ 				mhi_cntrl->unmap_single(mhi_cntrl, buf_info);
+ 
+ 			result.buf_addr = buf_info->cb_buf;
+-			result.bytes_xferd = xfer_len;
++
++			/* truncate to buf len if xfer_len is larger */
++			result.bytes_xferd =
++				min_t(u16, xfer_len, buf_info->len);
+ 			mhi_del_ring_element(mhi_cntrl, buf_ring);
+ 			mhi_del_ring_element(mhi_cntrl, tre_ring);
+ 			local_rp = tre_ring->rp;
+@@ -597,7 +600,9 @@ static int parse_rsc_event(struct mhi_controller *mhi_cntrl,
+ 
+ 	result.transaction_status = (ev_code == MHI_EV_CC_OVERFLOW) ?
+ 		-EOVERFLOW : 0;
+-	result.bytes_xferd = xfer_len;
++
++	/* truncate to buf len if xfer_len is larger */
++	result.bytes_xferd = min_t(u16, xfer_len, buf_info->len);
+ 	result.buf_addr = buf_info->cb_buf;
+ 	result.dir = mhi_chan->dir;
+ 
+-- 
+2.25.1
+
