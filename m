@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E75FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA169C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 747AC214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACFF4214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443818;
-	bh=E8MpjFsnS/fVelmiWWf4CED6UGJ4st/XyfkvcetkX20=;
+	s=default; t=1592443820;
+	bh=lvqK+OEl2mVBWoRcfXzFrNQSTJaOjX4d3F1R6xzTIUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZPEreyGJOcOItW6g7EIV1u8jYayLZtxr92rrsYqhM2DrW+evyuIuBHinIQ+3mD445
-	 +B3lEWiegOyUyw2y01o16J9nPSbLJNRLbx0PmqcBhshRrmrfUrRrO093+dRpzep64g
-	 1jjjn1Cv2nFxQzSo2oL8pPzqxuda9ANXuTTr6Hqc=
+	b=bLTnJWtJhpneEpHUmtmzkxXcOkfp3c5iU33Jqt/aeWug3JkC2zhygyMNsWWdaBG4/
+	 TTT8CG7GxGg3hpm/YY4wT+Xx4VZa8S/zvMpswMYcTHcwhcjJEDBf0REQQoktRfbdeG
+	 Zg53fI37iBAakbfBASidYEdzcK+O+rL7d8sDjAdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732483AbgFRBaR (ORCPT
+        id S1732495AbgFRBaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:30:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34808 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:30:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730996AbgFRB07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:26:59 -0400
+        id S1731013AbgFRB1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5589F20776;
-        Thu, 18 Jun 2020 01:26:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8690D21D7A;
+        Thu, 18 Jun 2020 01:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443619;
-        bh=E8MpjFsnS/fVelmiWWf4CED6UGJ4st/XyfkvcetkX20=;
+        s=default; t=1592443620;
+        bh=lvqK+OEl2mVBWoRcfXzFrNQSTJaOjX4d3F1R6xzTIUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a8DxBWpSzPGPn77wvIC4G6Z7zalEFvIP39TDuTWsIgUlmui+JzJ4KVj51d4E0h4QL
-         lUGwJ07aPbQZw8Zl2VBs3Gc6u4wEjvJC2qNtMixreqUgd/R2lZejoGRBMOj/54g79C
-         Rwg05LvDLJpabriu2Q2MAS5l8RVcXqZwAtRKNOgc=
+        b=jxY4LHm+0zh22icMEFfu38SVD1apaIshW1EOE8WOXWwnDgWHBGEV9N7pqwzOvEuSx
+         C+X5AS39kcHZ8IPFo4BirFRX0MuhYoAtm3dctZNMvbq62C3knYDvYa/AK34XRQqTNJ
+         u7vwmxK7YbbfEoq2gGV9+FWMeNRSbaFvQoF9YjoA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matej Dujava <mdujava@kocurkovo.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.14 045/108] staging: sm750fb: add missing case while setting FB_VISUAL
-Date:   Wed, 17 Jun 2020 21:24:57 -0400
-Message-Id: <20200618012600.608744-45-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 046/108] i2c: pxa: fix i2c_pxa_scream_blue_murder() debug output
+Date:   Wed, 17 Jun 2020 21:24:58 -0400
+Message-Id: <20200618012600.608744-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -60,34 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matej Dujava <mdujava@kocurkovo.cz>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit fa90133377f4a7f15a937df6ad55133bb57c5665 ]
+[ Upstream commit 88b73ee7ca4c90baf136ed5a8377fc5a9b73ac08 ]
 
-Switch statement does not contain all cases: 8, 16, 24, 32.
-This patch will add missing one (24)
+The IRQ log output is supposed to appear on a single line.  However,
+commit 3a2dc1677b60 ("i2c: pxa: Update debug function to dump more info
+on error") resulted in it being printed one-entry-per-line, which is
+excessively long.
 
-Fixes: 81dee67e215b ("staging: sm750fb: add sm750 to staging")
-Signed-off-by: Matej Dujava <mdujava@kocurkovo.cz>
-Link: https://lore.kernel.org/r/1588277366-19354-2-git-send-email-mdujava@kocurkovo.cz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixing this is not a trivial matter; using pr_cont() doesn't work as
+the previous dev_dbg() may not have been compiled in, or may be
+dynamic.
+
+Since the rest of this function output is at error level, and is also
+debug output, promote this to error level as well to avoid this
+problem.
+
+Reduce the number of always zero prefix digits to save screen real-
+estate.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/sm750fb/sm750.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/i2c/busses/i2c-pxa.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-index 67207b0554cd..5d6f3686c0de 100644
---- a/drivers/staging/sm750fb/sm750.c
-+++ b/drivers/staging/sm750fb/sm750.c
-@@ -899,6 +899,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
- 		fix->visual = FB_VISUAL_PSEUDOCOLOR;
- 		break;
- 	case 16:
-+	case 24:
- 	case 32:
- 		fix->visual = FB_VISUAL_TRUECOLOR;
- 		break;
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index ecc84aea5131..e300f9530f19 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -315,11 +315,10 @@ static void i2c_pxa_scream_blue_murder(struct pxa_i2c *i2c, const char *why)
+ 	dev_err(dev, "IBMR: %08x IDBR: %08x ICR: %08x ISR: %08x\n",
+ 		readl(_IBMR(i2c)), readl(_IDBR(i2c)), readl(_ICR(i2c)),
+ 		readl(_ISR(i2c)));
+-	dev_dbg(dev, "log: ");
++	dev_err(dev, "log:");
+ 	for (i = 0; i < i2c->irqlogidx; i++)
+-		pr_debug("[%08x:%08x] ", i2c->isrlog[i], i2c->icrlog[i]);
+-
+-	pr_debug("\n");
++		pr_cont(" [%03x:%05x]", i2c->isrlog[i], i2c->icrlog[i]);
++	pr_cont("\n");
+ }
+ 
+ #else /* ifdef DEBUG */
 -- 
 2.25.1
 
