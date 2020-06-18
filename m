@@ -2,138 +2,108 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A737C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177E8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F797206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:01:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fMHKBye7"
+	by mail.kernel.org (Postfix) with ESMTP id E7AEC206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbgFRXBi (ORCPT
+        id S1731572AbgFRXEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 19:01:38 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57199 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730750AbgFRXBf (ORCPT
+        Thu, 18 Jun 2020 19:04:35 -0400
+Received: from [211.29.132.53] ([211.29.132.53]:37099 "EHLO
+        mail107.syd.optusnet.com.au" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1728387AbgFRXEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 19:01:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592521294;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=fVl7NirlPBDaZbv0g3tbYP7L/Gzjwfxt3r7f0D5EtyA=;
-        b=fMHKBye7qMOKzFq+rFofKjt/PWcGai6G+BvQvCxHygpQ+0yg2TmZq4S6dcKhUETjJF/XDi
-        aD8NVg5LiE4BHUB1RRVdIdDP/Rhh8bepGR0ZZ8a21v13Kp/qBYkNg4EUWZ6tmv4tVltkA/
-        CNLPrqir2ShHtAU2SEtzoaZz1KyrDes=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-471-I141doS4NfOHr44PF510Eg-1; Thu, 18 Jun 2020 19:01:32 -0400
-X-MC-Unique: I141doS4NfOHr44PF510Eg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02636464;
-        Thu, 18 Jun 2020 23:01:31 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 07EEF5D9C5;
-        Thu, 18 Jun 2020 23:01:28 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] afs: Fix afs_do_lookup() to call correct fetch-status op
- variant
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 19 Jun 2020 00:01:28 +0100
-Message-ID: <159252128817.1594103.7234386826450496394.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
+        Thu, 18 Jun 2020 19:04:34 -0400
+Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
+        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id C464AD5D71B;
+        Fri, 19 Jun 2020 09:04:10 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jm3Zl-00015Z-1z; Fri, 19 Jun 2020 09:04:05 +1000
+Date:   Fri, 19 Jun 2020 09:04:05 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>
+Subject: Re: [PATCH v4] xfs: Fix false positive lockdep warning with
+ sb_internal & fs_reclaim
+Message-ID: <20200618230405.GK2005@dread.disaster.area>
+References: <20200618171941.9475-1-longman@redhat.com>
+ <20200618225810.GJ2005@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618225810.GJ2005@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
+        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=7-415B0cAAAA:8
+        a=k999_xXsWlR2ZBYdmagA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix afs_do_lookup()'s fallback case for when FS.InlineBulkStatus isn't
-supported by the server.  In the fallback, it calls FS.FetchStatus for the
-specific vnode it's meant to be looking up.  Commit b6489a49f7b7 broke this
-by renaming one of the two identically-named afs_fetch_status_operation
-descriptors to something else so that one of them could be made non-static.
-The site that used the renamed one, however, wasn't renamed and didn't
-produce any warning because the other was declared in a header.
+On Fri, Jun 19, 2020 at 08:58:10AM +1000, Dave Chinner wrote:
+> On Thu, Jun 18, 2020 at 01:19:41PM -0400, Waiman Long wrote:
+> > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> > index 379cbff438bc..1b94b9bfa4d7 100644
+> > --- a/fs/xfs/xfs_super.c
+> > +++ b/fs/xfs/xfs_super.c
+> > @@ -913,11 +913,33 @@ xfs_fs_freeze(
+> >  	struct super_block	*sb)
+> >  {
+> >  	struct xfs_mount	*mp = XFS_M(sb);
+> > +	unsigned long		pflags;
+> > +	int			ret;
+> >  
+> > +	/*
+> > +	 * A fs_reclaim pseudo lock is added to check for potential deadlock
+> > +	 * condition with fs reclaim. The following lockdep splat was hit
+> > +	 * occasionally. This is actually a false positive as the allocation
+> > +	 * is being done only after the frozen filesystem is no longer dirty.
+> > +	 * One way to avoid this splat is to add GFP_NOFS to the affected
+> > +	 * allocation calls. This is what PF_MEMALLOC_NOFS is for.
+> > +	 *
+> > +	 *       CPU0                    CPU1
+> > +	 *       ----                    ----
+> > +	 *  lock(sb_internal);
+> > +	 *                               lock(fs_reclaim);
+> > +	 *                               lock(sb_internal);
+> > +	 *  lock(fs_reclaim);
+> > +	 *
+> > +	 *  *** DEADLOCK ***
+> > +	 */
+> 
+> The lockdep splat is detailed in the commit message - it most
+> definitely does not need to be repeated in full here because:
+> 
+> 	a) it doesn't explain why the splat occurring is, and
+> 	b) we most definitely don't care about how the lockdep check
+> 	   that triggered it is implemented.
 
-Fix this by making afs_do_lookup() use the renamed variant.
+I should have added this:
 
-Note that there are two variants of the success method because one is
-called from ->lookup() where we may or may not have an inode, but can't
-call iget until after we've talked to the server - whereas the other is
-called from within iget where we have an inode, but it may or may not be
-initialised.
+	c) a lot of people don't understand what lockdep reports
+	   are telling them is a problem.
 
-The latter variant expects there to be an inode, but because it's being
-called from there former case, there might not be - resulting in an oops
-like the following:
+I get a lot of questions like "I saw this lockdep thing, but I can't
+work out what it actually means, so can you have a look at it
+Dave?". Hence I think directly quoting something people tend not to
+understand to explain the problem they didn't understand isn't the
+best approach to improving understanding of the problem...
 
- BUG: kernel NULL pointer dereference, address: 00000000000000b0
- ...
- RIP: 0010:afs_fetch_status_success+0x27/0x7e
- ...
- Call Trace:
-  ? rxrpc_cleanup_call+0xb5/0xc5
-  afs_wait_for_operation+0xda/0x234
-  afs_do_lookup+0x2fe/0x3c1
-  afs_lookup+0x3c5/0x4bd
-  __lookup_slow+0xcd/0x10f
-  walk_component+0xa2/0x10c
-  ? path_init+0x101/0x2eb
-  path_lookupat.isra.0+0x80/0x110
-  filename_lookup+0x81/0x104
-  ? slab_post_alloc_hook.isra.0+0xa/0x1a
-  ? kmem_cache_alloc+0xc3/0x129
-  vfs_statx+0x76/0x109
-  ? touch_atime+0x33/0xac
-  __do_sys_newlstat+0x39/0x6b
-  ? ksys_getdents64+0xb9/0xe0
-  ? vtime_delta.isra.0+0xe/0x24
-  ? vtime_delta.isra.0+0xe/0x24
-  ? get_vtime_delta+0x12/0x20
-  ? vtime_user_exit+0x21/0x61
-  ? __context_tracking_exit+0x3a/0x87
-  do_syscall_64+0x4c/0x78
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Cheers,
 
-
-Fixes: b6489a49f7b7 ("afs: Fix silly rename")
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- fs/afs/dir.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 3e3c2bf0a722..96757f3abd74 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -845,7 +845,7 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
- 		 * to FS.FetchStatus for op->file[1].
- 		 */
- 		op->fetch_status.which = 1;
--		op->ops = &afs_fetch_status_operation;
-+		op->ops = &afs_lookup_fetch_status_operation;
- 		afs_begin_vnode_operation(op);
- 		afs_wait_for_operation(op);
- 	}
-
-
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
