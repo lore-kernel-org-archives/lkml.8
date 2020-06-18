@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 045B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36007C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D794D21D82
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1120A221F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443138;
-	bh=gXL3bSVpz6/25LWNlUTD5b7GAglv32K1RsVfRFyM3L0=;
+	s=default; t=1592443143;
+	bh=2IUiHoymIrYjFEDbj091DZ0l/oyOtu7lRheoK0g5pe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ppJSjq03Bd2FYeP4NxUdV6HSbFTSE9fvj6UQ/8//PPRYVec++1GfXqR7eu0U5Ip/W
-	 91om0ozOUR2sI90oUFsFzeSUzmOMx/Dw2u1XnVVUsJobFyjzEOTSmJumKgHqyv0Igx
-	 AeP3OUD8D9aU81f9q25ulwnpk38ltYrh5ttYmQ4U=
+	b=BsdDFV5hDXSI0cg8jkgIeJt+aXfXePiY/xdDgwy06KZEWSROQYmqoZVSO1QUk51fK
+	 d/lErJyc7eKm4MXZPAulZWEKjGqvfKbiZVaMmCzWJJ/Owg64ik3fTzGlxz9cVGKu/g
+	 lukWj1mWSwXAi8GMUr3289fdBIDMVtZTDOlVmQiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbgFRBS5 (ORCPT
+        id S1730061AbgFRBTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:18:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46210 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:19:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729525AbgFRBP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:56 -0400
+        id S1729539AbgFRBQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:16:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B514206F1;
-        Thu, 18 Jun 2020 01:15:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77BDB221EB;
+        Thu, 18 Jun 2020 01:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442955;
-        bh=gXL3bSVpz6/25LWNlUTD5b7GAglv32K1RsVfRFyM3L0=;
+        s=default; t=1592442962;
+        bh=2IUiHoymIrYjFEDbj091DZ0l/oyOtu7lRheoK0g5pe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K33EsTmqZe2Dlv/D6EEOBUdWdgH32kSA8n21dB+UYbOPmXjXMktGuzKIH5CHMSu2R
-         2UOCOVpWxAVY2dyeIPtT+IQYtieRWpFBTgewHM2OleQV6QOgAh3+W5nUZzmzpS1Tut
-         P7CjcX9VbyTAKoSKiPk5ArEknSgr1bR8St5B6EAo=
+        b=jOtgClOaIsG7i9z4bxvl8QaQnZNPdl7n154YtFlwwwI50FSASXZaIDWG906ei/7nC
+         jJAk+v8IC5tnnoWHCk2/LMQTKJABevsbgYnEkaF1KbJVerJh9NH5pZqT0OXCW7r70Q
+         BBis2IePGmI8l8/W7Y8er56CyYIWdyIEQ59n1m6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 363/388] ASoC: core: only convert non DPCM link to DPCM link
-Date:   Wed, 17 Jun 2020 21:07:40 -0400
-Message-Id: <20200618010805.600873-363-sashal@kernel.org>
+Cc:     Jakub Sitnicki <jakub@cloudflare.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 368/388] bpf, sockhash: Synchronize delete from bucket list on map free
+Date:   Wed, 17 Jun 2020 21:07:45 -0400
+Message-Id: <20200618010805.600873-368-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -63,70 +62,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bard Liao <yung-chuan.liao@linux.intel.com>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-[ Upstream commit 607fa205a7e4dfad28b8a67ab1c985756ddbccb0 ]
+[ Upstream commit 75e68e5bf2c7fa9d3e874099139df03d5952a3e1 ]
 
-Additional checks for valid DAIs expose a corner case, where existing
-BE dailinks get modified, e.g. HDMI links are tagged with
-dpcm_capture=1 even if the DAIs are for playback.
+We can end up modifying the sockhash bucket list from two CPUs when a
+sockhash is being destroyed (sock_hash_free) on one CPU, while a socket
+that is in the sockhash is unlinking itself from it on another CPU
+it (sock_hash_delete_from_link).
 
-This patch makes those changes conditional and flags configuration
-issues when a BE dailink is has no_pcm=0 but dpcm_playback or
-dpcm_capture=1 (which makes no sense).
+This results in accessing a list element that is in an undefined state as
+reported by KASAN:
 
-As discussed on the alsa-devel mailing list, there are redundant flags
-for dpcm_playback, dpcm_capture, playback_only, capture_only. This
-will have to be cleaned-up in a future update. For now only correct
-and flag problematic configurations.
+| ==================================================================
+| BUG: KASAN: wild-memory-access in sock_hash_free+0x13c/0x280
+| Write of size 8 at addr dead000000000122 by task kworker/2:1/95
+|
+| CPU: 2 PID: 95 Comm: kworker/2:1 Not tainted 5.7.0-rc7-02961-ge22c35ab0038-dirty #691
+| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+| Workqueue: events bpf_map_free_deferred
+| Call Trace:
+|  dump_stack+0x97/0xe0
+|  ? sock_hash_free+0x13c/0x280
+|  __kasan_report.cold+0x5/0x40
+|  ? mark_lock+0xbc1/0xc00
+|  ? sock_hash_free+0x13c/0x280
+|  kasan_report+0x38/0x50
+|  ? sock_hash_free+0x152/0x280
+|  sock_hash_free+0x13c/0x280
+|  bpf_map_free_deferred+0xb2/0xd0
+|  ? bpf_map_charge_finish+0x50/0x50
+|  ? rcu_read_lock_sched_held+0x81/0xb0
+|  ? rcu_read_lock_bh_held+0x90/0x90
+|  process_one_work+0x59a/0xac0
+|  ? lock_release+0x3b0/0x3b0
+|  ? pwq_dec_nr_in_flight+0x110/0x110
+|  ? rwlock_bug.part.0+0x60/0x60
+|  worker_thread+0x7a/0x680
+|  ? _raw_spin_unlock_irqrestore+0x4c/0x60
+|  kthread+0x1cc/0x220
+|  ? process_one_work+0xac0/0xac0
+|  ? kthread_create_on_node+0xa0/0xa0
+|  ret_from_fork+0x24/0x30
+| ==================================================================
 
-Fixes: 218fe9b7ec7f3 ("ASoC: soc-core: Set dpcm_playback / dpcm_capture")
-Suggested-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@gmail.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Link: https://lore.kernel.org/r/20200608194415.4663-3-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix it by reintroducing spin-lock protected critical section around the
+code that removes the elements from the bucket on sockhash free.
+
+To do that we also need to defer processing of removed elements, until out
+of atomic context so that we can unlink the socket from the map when
+holding the sock lock.
+
+Fixes: 90db6d772f74 ("bpf, sockmap: Remove bucket->lock from sock_{hash|map}_free")
+Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Link: https://lore.kernel.org/bpf/20200607205229.2389672-3-jakub@cloudflare.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-core.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ net/core/sock_map.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 843b8b1c89d4..e5433e8fcf19 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -1720,9 +1720,25 @@ static void soc_check_tplg_fes(struct snd_soc_card *card)
- 			dai_link->platforms->name = component->name;
- 
- 			/* convert non BE into BE */
--			dai_link->no_pcm = 1;
--			dai_link->dpcm_playback = 1;
--			dai_link->dpcm_capture = 1;
-+			if (!dai_link->no_pcm) {
-+				dai_link->no_pcm = 1;
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 7edbf1e92457..050bfac97cfb 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -1006,6 +1006,7 @@ static void sock_hash_free(struct bpf_map *map)
+ {
+ 	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
+ 	struct bpf_htab_bucket *bucket;
++	struct hlist_head unlink_list;
+ 	struct bpf_htab_elem *elem;
+ 	struct hlist_node *node;
+ 	int i;
+@@ -1017,13 +1018,31 @@ static void sock_hash_free(struct bpf_map *map)
+ 	synchronize_rcu();
+ 	for (i = 0; i < htab->buckets_num; i++) {
+ 		bucket = sock_hash_select_bucket(htab, i);
+-		hlist_for_each_entry_safe(elem, node, &bucket->head, node) {
+-			hlist_del_rcu(&elem->node);
 +
-+				if (dai_link->dpcm_playback)
-+					dev_warn(card->dev,
-+						 "invalid configuration, dailink %s has flags no_pcm=0 and dpcm_playback=1\n",
-+						 dai_link->name);
-+				if (dai_link->dpcm_capture)
-+					dev_warn(card->dev,
-+						 "invalid configuration, dailink %s has flags no_pcm=0 and dpcm_capture=1\n",
-+						 dai_link->name);
++		/* We are racing with sock_hash_delete_from_link to
++		 * enter the spin-lock critical section. Every socket on
++		 * the list is still linked to sockhash. Since link
++		 * exists, psock exists and holds a ref to socket. That
++		 * lets us to grab a socket ref too.
++		 */
++		raw_spin_lock_bh(&bucket->lock);
++		hlist_for_each_entry(elem, &bucket->head, node)
++			sock_hold(elem->sk);
++		hlist_move_list(&bucket->head, &unlink_list);
++		raw_spin_unlock_bh(&bucket->lock);
 +
-+				/* convert normal link into DPCM one */
-+				if (!(dai_link->dpcm_playback ||
-+				      dai_link->dpcm_capture)) {
-+					dai_link->dpcm_playback = !dai_link->capture_only;
-+					dai_link->dpcm_capture = !dai_link->playback_only;
-+				}
-+			}
- 
- 			/* override any BE fixups */
- 			dai_link->be_hw_params_fixup =
++		/* Process removed entries out of atomic context to
++		 * block for socket lock before deleting the psock's
++		 * link to sockhash.
++		 */
++		hlist_for_each_entry_safe(elem, node, &unlink_list, node) {
++			hlist_del(&elem->node);
+ 			lock_sock(elem->sk);
+ 			rcu_read_lock();
+ 			sock_map_unref(elem->sk, elem);
+ 			rcu_read_unlock();
+ 			release_sock(elem->sk);
++			sock_put(elem->sk);
+ 			sock_hash_free_elem(htab, elem);
+ 		}
+ 	}
 -- 
 2.25.1
 
