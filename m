@@ -2,132 +2,171 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC39AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01559C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB45C20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D04B420B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:57:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XIoxWHiq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ameJyOcl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbgFRIzw (ORCPT
+        id S1728960AbgFRI5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:55:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728877AbgFRIzn (ORCPT
+        Thu, 18 Jun 2020 04:57:00 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24570 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728877AbgFRI40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:55:43 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E2B7C0613EE
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:55:42 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id s23so2482172pfh.7
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:55:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bD+k/71u8ehtJTB/BfPHQSZXrBCbz3j42tBcsHer+pc=;
-        b=XIoxWHiq6wFH2Q4rKPjZbpDTtMZUUxXaqOIOfCZc46/aabF3E+FLUQc2JP+DFmNg3Z
-         Io04YnjNr3iIYoMsgpwcYbm3HWzTnyaQR8asCJTUmZq05R2nDZZ/cjYreN1csbYQeMwx
-         IqDgU7EpjpDytHFWxPjZNW2LHSvLSx47Y8tILYBSyTev7/b71tl2kLgYgBeEHuQUUp+0
-         nEFbD1NFHIW66S0o9fqRDWL0DZCOt5WkXszK3fDptKYRf9DCos8fHA72AHJfVQA7AaKZ
-         4kNdnYOfwXwHIyaYn/xO2D4xBeuO1Y+neyApEzfEGNN1OrS7TJovSH8UQzH1rfRmyD46
-         Xllw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bD+k/71u8ehtJTB/BfPHQSZXrBCbz3j42tBcsHer+pc=;
-        b=bmPZHagqfjcCh+Gb7YshpYqERNjCYgG0BAJvsi7tfw97y0Jwd/yyeWn5w+uzLcW8Kj
-         EIVFm3P2ShJwGcDuzR07fsK8hDdE+ZgkjsWOHJHYhjwKr7jFXMFZCUT0dRzlrxlg9FAf
-         12KAvuYMk0tLRLHpyAC2hI/D4dEc/VCC1sCrRrFw+eO5Ea79Ui9SrUUtmLGihFfS8qzq
-         FROuzo5o13kYjD/C+3qaOdF5MvLMbWBT+DOfWn912w6MMByiELiejslXi6JpezJ8px0O
-         XHHGrfGcDHBBMVtTC3z15G8brHAHKv6u0Qzrg8BmXVG2YWZPoQeWhhbUS6XXIZRWz/tL
-         23TA==
-X-Gm-Message-State: AOAM532GjP8UundjMRLxEk8GXKXGORvxiZNoZB/xfhSaNbosOfrg/M0Q
-        m+5RuJXeliTS6JaXAv1HaVts1Go4J1TM
-X-Google-Smtp-Source: ABdhPJwpBS38djhjYupgYTEAVkCqPNakXAMmYdvNAvb8uT0GZ4JqP+WK/Ds5JalxsgdaNkXTKlaIBw==
-X-Received: by 2002:a62:37c1:: with SMTP id e184mr2628635pfa.238.1592470541355;
-        Thu, 18 Jun 2020 01:55:41 -0700 (PDT)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id j12sm2273422pfd.21.2020.06.18.01.55.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 18 Jun 2020 01:55:40 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 14:25:33 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Marc Kleine-Budde <mkl@pengutronix.de>
-Cc:     wg@grandegger.com, kernel@martin.sperl.org,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] Add Microchip MCP25XXFD CAN driver
-Message-ID: <20200618085533.GA26093@mani>
-References: <20200610074442.10808-1-manivannan.sadhasivam@linaro.org>
- <fbbca009-3c53-6aa9-94ed-7e9e337c31a4@pengutronix.de>
+        Thu, 18 Jun 2020 04:56:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592470567;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=zVsFA0HcziVwbid+adziRpSXZEXSYz+yDT/cdLTUesM=;
+        b=ameJyOclh2GQI/5PAkq1tU4x0kp8JSdzHCJRJ1r/6iLAByEelzo//tv1eljAOkxrSz8y1S
+        x+H9GewbkN3PVF0ZIvbs2Fr3NIaVFA0SftGZojyF9uQy+lY2+nnkWFJ8FuXnd4Cc7CO5Pn
+        Yot3zlZNFKoEiOlf+iePosLHvxN8s8U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-192-bZPApbCcOcWmfkCGC_nWrg-1; Thu, 18 Jun 2020 04:56:04 -0400
+X-MC-Unique: bZPApbCcOcWmfkCGC_nWrg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD59B1800D42;
+        Thu, 18 Jun 2020 08:56:01 +0000 (UTC)
+Received: from [10.36.114.105] (ovpn-114-105.ams2.redhat.com [10.36.114.105])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 555E95C1D6;
+        Thu, 18 Jun 2020 08:55:59 +0000 (UTC)
+Subject: Re: [PATCH 2/3] arm64: use PAGE_KERNEL_ROX directly in
+ alloc_insn_page
+To:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20200618064307.32739-1-hch@lst.de>
+ <20200618064307.32739-3-hch@lst.de>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <90234f58-e83a-7f20-62a7-80a4e81cde95@redhat.com>
+Date:   Thu, 18 Jun 2020 10:55:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fbbca009-3c53-6aa9-94ed-7e9e337c31a4@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200618064307.32739-3-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 0611, Marc Kleine-Budde wrote:
-> On 6/10/20 9:44 AM, Manivannan Sadhasivam wrote:
-> > Hello,
-> > 
-> > This series adds CAN network driver support for Microchip MCP25XXFD CAN
-> > Controller with MCP2517FD as the target controller version. This series is
-> > mostly inspired (or taken) from the previous iterations posted by Martin Sperl.
-> > I've trimmed down the parts which are not necessary for the initial version
-> > to ease review. Still the series is relatively huge but I hope to get some
-> > reviews (post -rcX ofc!).
-> > 
-> > Link to the origial series posted by Martin:
-> > https://www.spinics.net/lists/devicetree/msg284462.html
-> > 
-> > I've not changed the functionality much but done some considerable amount of
-> > cleanups and also preserved the authorship of Martin for all the patches he has
-> > posted earlier. This series has been tested on 96Boards RB3 platform by myself
-> > and Martin has tested the previous version on Rpi3 with external MCP2517FD
-> > controller.
+On 18.06.20 08:43, Christoph Hellwig wrote:
+> Use PAGE_KERNEL_ROX directly instead of allocating RWX and setting the
+> page read-only just after the allocation.
 > 
-> I initially started looking at Martin's driver and it was not using several
-> modern CAN driver infrastructures. I then posted some cleanup patches but Martin
-> was not working on the driver any more. Then I decided to rewrite the driver,
-> that is the one I'm hoping to mainline soon.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/arm64/kernel/probes/kprobes.c | 12 +++---------
+>  1 file changed, 3 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+> index d1c95dcf1d7833..cbe49cd117cfec 100644
+> --- a/arch/arm64/kernel/probes/kprobes.c
+> +++ b/arch/arm64/kernel/probes/kprobes.c
+> @@ -120,15 +120,9 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
+>  
+>  void *alloc_insn_page(void)
+>  {
+> -	void *page;
+> -
+> -	page = vmalloc_exec(PAGE_SIZE);
+> -	if (page) {
+> -		set_memory_ro((unsigned long)page, 1);
+> -		set_vm_flush_reset_perms(page);
+> -	}
+> -
+> -	return page;
+> +	return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
+> +			GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
+> +			NUMA_NO_NODE, __func__);
+
+I do wonder if something like vmalloc_prot(size, prot) would make this
+(and the other two users) easier to read.
+
+So instead of ripping out vmalloc_exec(), converting it into
+vmalloc_prot() instead.
+
+Did you consider that?
+
+Apart from that LGTM
+
+>  }
+>  
+>  /* arm kprobe: install breakpoint in text */
 > 
 
-So how should we proceed from here? It is okay for me to work on adding some
-features and also fixing the issues you've reported so far. But I want to reach
-a consensus before moving forward.
 
-If you think that it makes sense to go with your set of patches, then I need an
-estimate on when you'll post the first revision.
-
-> Can you give it a try?
-> 
-> https://github.com/marckleinebudde/linux/commits/v5.6-rpi/mcp25xxfd-20200607-41
-> 
-
-Sure thing. Will do.
-
+-- 
 Thanks,
-Mani
 
-> Marc
-> 
-> -- 
-> Pengutronix e.K.                 | Marc Kleine-Budde           |
-> Embedded Linux                   | https://www.pengutronix.de  |
-> Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-> Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+David / dhildenb
+
