@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8679A21534
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A752421534
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447175;
-	bh=w/jKC3oogy5ZB6zJtKnaNK9AIPh4tkCpqZ3GY+mF9eI=;
+	s=default; t=1592447179;
+	bh=2cMtX8fwpKcEiA6q2xD7o+IaXiYer2+ESCtWjkQfOTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aJa0FRDPsjhCTyuAmkoRnd+JJ+FWXJ6Kk6n8Wg1vDYk5D4xt0lPXMBwgJg0AQ2B0I
-	 OnlulrZ2RUsXDZ5eLNolChUt2I1MbE6BQI0wTlRwyMmOI+YMXITbM+HzDX21vD7i/D
-	 LB2nfqQDo2R+rZ8Q85rjJaYA50SsOjw+ciy9bYGc=
+	b=a/LU2Njn5Tf6kRqZ8YMEwSY2LWbOTggONY60Vjy5/hZHuCsQOuqji8+TXp56VPEAp
+	 RCvciZGFgOuK39J9q+/NvobGwh32Eh3puMisvaTuozrzp3W1aLIw54Cp4gj+beCEYc
+	 7XF9UP4PsS3uQ1/uTeN0Jmrmg1K+TPhFjpY/IniY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733233AbgFRC0O (ORCPT
+        id S1733263AbgFRC0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:26:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48222 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:26:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728952AbgFRBRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:09 -0400
+        id S1729355AbgFRBRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15E7821D80;
-        Thu, 18 Jun 2020 01:17:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84A0121D82;
+        Thu, 18 Jun 2020 01:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443028;
-        bh=w/jKC3oogy5ZB6zJtKnaNK9AIPh4tkCpqZ3GY+mF9eI=;
+        s=default; t=1592443026;
+        bh=2cMtX8fwpKcEiA6q2xD7o+IaXiYer2+ESCtWjkQfOTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RB/mH/tJvhaQCNaB7ps3CW+as/o/RtKxUcRrBkhoL94F22Sx3T9ypUVzh8Gxh1ZAZ
-         Cg9HZyIPlofSqYUhnFuOXaQRsvjJFZhFVhYSgV0a3U6iIEOFJsi8Pk6E5+xcgx/KXt
-         bEO0sr/Khmz8uAFdaXUSf7aF/5rIKm+stEx5mUHs=
+        b=TfutdW6N2wzatsNXXMiXbi3wl9e+9lLOjdJghxqnipqCZcE7XWdT4Z8ZskvD7uAZ5
+         wOwKOblKDryPy+2uemuC9YXAJY9xYAJ6v2aTVBRupDfB6FF1RnpW/s+yes7SK7NleN
+         9CX1TXd6QeQNKSHN/VClrDbzcFH8MVl846unkMD8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 028/266] i2c: pxa: clear all master action bits in i2c_pxa_stop_message()
-Date:   Wed, 17 Jun 2020 21:12:33 -0400
-Message-Id: <20200618011631.604574-28-sashal@kernel.org>
+Cc:     Andreas Klinger <ak@it-klinger.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 026/266] iio: bmp280: fix compensation of humidity
+Date:   Wed, 17 Jun 2020 21:12:31 -0400
+Message-Id: <20200618011631.604574-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,42 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Andreas Klinger <ak@it-klinger.de>
 
-[ Upstream commit e81c979f4e071d516aa27cf5a0c3939da00dc1ca ]
+[ Upstream commit dee2dabc0e4115b80945fe2c91603e634f4b4686 ]
 
-If we timeout during a message transfer, the control register may
-contain bits that cause an action to be set. Read-modify-writing the
-register leaving these bits set may trigger the hardware to attempt
-one of these actions unintentionally.
+Limit the output of humidity compensation to the range between 0 and 100
+percent.
 
-Always clear these bits when cleaning up after a message or after
-a timeout.
+Depending on the calibration parameters of the individual sensor it
+happens, that a humidity above 100 percent or below 0 percent is
+calculated, which don't make sense in terms of relative humidity.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Add a clamp to the compensation formula as described in the datasheet of
+the sensor in chapter 4.2.3.
+
+Although this clamp is documented, it was never in the driver of the
+kernel.
+
+It depends on the circumstances (calibration parameters, temperature,
+humidity) if one can see a value above 100 percent without the clamp.
+The writer of this patch was working with this type of sensor without
+noting this error. So it seems to be a rare event when this bug occures.
+
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pxa.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/iio/pressure/bmp280-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index 2c3c3d6935c0..c9cbc9894bac 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -706,11 +706,9 @@ static inline void i2c_pxa_stop_message(struct pxa_i2c *i2c)
- {
- 	u32 icr;
+diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+index 084a1d56cc2f..0a95afaa48fe 100644
+--- a/drivers/iio/pressure/bmp280-core.c
++++ b/drivers/iio/pressure/bmp280-core.c
+@@ -264,6 +264,8 @@ static u32 bmp280_compensate_humidity(struct bmp280_data *data,
+ 		+ (s32)2097152) * calib->H2 + 8192) >> 14);
+ 	var -= ((((var >> 15) * (var >> 15)) >> 7) * (s32)calib->H1) >> 4;
  
--	/*
--	 * Clear the STOP and ACK flags
--	 */
-+	/* Clear the START, STOP, ACK, TB and MA flags */
- 	icr = readl(_ICR(i2c));
--	icr &= ~(ICR_STOP | ICR_ACKNAK);
-+	icr &= ~(ICR_START | ICR_STOP | ICR_ACKNAK | ICR_TB | ICR_MA);
- 	writel(icr, _ICR(i2c));
- }
++	var = clamp_val(var, 0, 419430400);
++
+ 	return var >> 12;
+ };
  
 -- 
 2.25.1
