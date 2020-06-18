@@ -2,101 +2,134 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3569C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB5EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1A0B204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C782208D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:35:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="kiq7EiV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbgFRIcY (ORCPT
+        id S1728587AbgFRIfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:32:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33096 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727121AbgFRIcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:32:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1EBA8AD35;
-        Thu, 18 Jun 2020 08:32:20 +0000 (UTC)
-Subject: Re: [PATCH 7/9] mm, slub: introduce kmem_cache_debug_flags()
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        vinmenon@codeaurora.org, Matthew Garrett <mjg59@google.com>,
-        Roman Gushchin <guro@fb.com>, Jann Horn <jannh@google.com>,
-        Vijayanand Jitta <vjitta@codeaurora.org>
-References: <20200610163135.17364-1-vbabka@suse.cz>
- <20200610163135.17364-8-vbabka@suse.cz> <202006171055.64F6EB665@keescook>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <5dcd5d95-15e9-cc17-908c-a2de9f61e97f@suse.cz>
-Date:   Thu, 18 Jun 2020 10:32:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 18 Jun 2020 04:35:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728320AbgFRIfe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:35:34 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93B68C0613EF
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:35:32 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g21so290206wmg.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:35:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XeqeGCk0h227IbaUO31Te14Ep+DTbyrxKQiQv5iAGUM=;
+        b=kiq7EiV+NbQ+zkWGdgIxS4diLlNIdZsy2YpyY3fOoiZjFDoM0Aw6xumKAxZS8JZzes
+         zO3LwZzOCRwhTJFyYgu8zjkLrrxAagZ4Jghj75zv7UmdYqQRe0UQQ4rp7mQe9gT+3DBQ
+         E3KhxmSl9KeqSnzdjpseVAnl6szVQLo7mK4OSBlhrJyeLRX9wxXnNXylUlMZf3cZVOfj
+         b8NjNpKi1pG/3ppOO5b6K+Qux02YUgTs1Ps61lEFB4AE7Ah1+gUS6EmumutAEX2+bxqv
+         AYPqalk+OtcLwX1ByIUhfHA3xjSQ1z7rf263yTQoxc9nZkTIwpp1FdRddEVbaWxsJ7qt
+         9LOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XeqeGCk0h227IbaUO31Te14Ep+DTbyrxKQiQv5iAGUM=;
+        b=aSKn0djVW1maNRBBSI3vQaCabVrzUylHM8WbAxVUDjpjsoo43l8Yc4PXyH+RX8HHms
+         AU+184RrSR8Ot8yaNRlL+NJA7nyw9/glo2foptY2Lv9aTZzWoQA8esFnPQTnmFPJT5Xe
+         iZxZiLBi85k27N5XL9avwXTj7Xo/iuI/bmzlCNvvvKbJ++OlzyhiARvTYF0pHMNFoIYb
+         yc/Jw9ahcmMYom30yufAafxKNvn87a322fHR+IxZJJw5LZWMfYtSEF2eaUT474/003EV
+         GCDVZfRP0lrIEVcEBSvc0e65vyNHqiqR1gx5xpxE2x6nC/hwOa80e9cd8zfrPZHVapJb
+         /Uag==
+X-Gm-Message-State: AOAM532tPjgxcr/tRqLYAR7Q5y9xiSSb8I5PfmCjI/MnoRf+1ApdSUJA
+        k7dOQDVnJDAkCZF6z8ra6Musbg==
+X-Google-Smtp-Source: ABdhPJzAKFaR/sh/flHYyjmoEWwug3yFpLTufpPxJ16XUVsPQXHOB0qJvJqSG0H/AvgdiFKjJBfaiA==
+X-Received: by 2002:a1c:dcc2:: with SMTP id t185mr2957197wmg.91.1592469331180;
+        Thu, 18 Jun 2020 01:35:31 -0700 (PDT)
+Received: from localhost ([194.62.217.57])
+        by smtp.gmail.com with ESMTPSA id z7sm1541167wmb.42.2020.06.18.01.35.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 01:35:30 -0700 (PDT)
+From:   "javier.gonz@samsung.com" <javier@javigon.com>
+X-Google-Original-From: "javier.gonz@samsung.com" <javier.gonz@samsung.com>
+Date:   Thu, 18 Jun 2020 10:35:29 +0200
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
+        "nj.shetty@samsung.com" <nj.shetty@samsung.com>
+Subject: Re: [PATCH 3/3] io_uring: add support for zone-append
+Message-ID: <20200618083529.ciifu4chr4vrv2j5@mpHalley.local>
+References: <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200617172713epcas5p352f2907a12bd4ee3c97be1c7d8e1569e@epcas5p3.samsung.com>
+ <1592414619-5646-4-git-send-email-joshi.k@samsung.com>
+ <CY4PR04MB37510E916B6F243D189B4EB0E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <202006171055.64F6EB665@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CY4PR04MB37510E916B6F243D189B4EB0E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/20 7:56 PM, Kees Cook wrote:
-> On Wed, Jun 10, 2020 at 06:31:33PM +0200, Vlastimil Babka wrote:
->> There are few places that call kmem_cache_debug(s) (which tests if any of debug
->> flags are enabled for a cache) immediatelly followed by a test for a specific
->> flag. The compiler can probably eliminate the extra check, but we can make the
->> code nicer by introducing kmem_cache_debug_flags() that works like
->> kmem_cache_debug() (including the static key check) but tests for specifig
->> flag(s). The next patches will add more users.
->> 
->> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+On 18.06.2020 07:39, Damien Le Moal wrote:
+>On 2020/06/18 2:27, Kanchan Joshi wrote:
+>> From: Selvakumar S <selvakuma.s1@samsung.com>
+>>
+>> Introduce three new opcodes for zone-append -
+>>
+>>    IORING_OP_ZONE_APPEND     : non-vectord, similiar to IORING_OP_WRITE
+>>    IORING_OP_ZONE_APPENDV    : vectored, similar to IORING_OP_WRITEV
+>>    IORING_OP_ZONE_APPEND_FIXED : append using fixed-buffers
+>>
+>> Repurpose cqe->flags to return zone-relative offset.
+>>
+>> Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>
+>> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+>> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
 >> ---
->>  mm/slub.c | 18 ++++++++++++++----
->>  1 file changed, 14 insertions(+), 4 deletions(-)
->> 
->> diff --git a/mm/slub.c b/mm/slub.c
->> index 24d3e5f832aa..c8e8b4ae2451 100644
->> --- a/mm/slub.c
->> +++ b/mm/slub.c
->> @@ -122,18 +122,28 @@ DEFINE_STATIC_KEY_FALSE(slub_debug_enabled);
->>  #endif
->>  #endif
->>  
->> -static inline int kmem_cache_debug(struct kmem_cache *s)
->> +/*
->> + * Returns true if any of the specified slub_debug flags is enabled for the
->> + * cache. Use only for flags parsed by setup_slub_debug() as it also enables
->> + * the static key.
->> + */
->> +static inline int kmem_cache_debug_flags(struct kmem_cache *s, slab_flags_t flags)
-> 
-> This should return slab_flag_t, yes?
+>>  fs/io_uring.c                 | 72 +++++++++++++++++++++++++++++++++++++++++--
+>>  include/uapi/linux/io_uring.h |  8 ++++-
+>>  2 files changed, 77 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>> index 155f3d8..c14c873 100644
+>> --- a/fs/io_uring.c
+>> +++ b/fs/io_uring.c
+>> @@ -649,6 +649,10 @@ struct io_kiocb {
+>>  	unsigned long		fsize;
+>>  	u64			user_data;
+>>  	u32			result;
+>> +#ifdef CONFIG_BLK_DEV_ZONED
+>> +	/* zone-relative offset for append, in bytes */
+>> +	u32			append_offset;
+>
+>this can overflow. u64 is needed.
 
-bool, actually
+We chose to do it this way to start with because struct io_uring_cqe
+only has space for u32 when we reuse the flags.
 
->>  {
->>  #ifdef CONFIG_SLUB_DEBUG
->>  	if (static_branch_unlikely(&slub_debug_enabled))
->> -		return s->flags & SLAB_DEBUG_FLAGS;
->> +		return s->flags & flags;
->>  #endif
->>  	return 0;
->>  }
->>  
->> +static inline int kmem_cache_debug(struct kmem_cache *s)
-> 
-> And this too, as long as we're making changes here.
+We can of course create a new cqe structure, but that will come with
+larger changes to io_uring for supporting append.
 
-OK
+Do you believe this is a better approach?
+
+Javier
