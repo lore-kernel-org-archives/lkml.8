@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38575C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 108F820EDD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB49520885
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:18:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446732;
-	bh=lwzRwsrx3YiJQpfwmDmgLujx4GshtpM/4E4B9ChFbrU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rJRNVFMFN/sJLm2/gao/Gh0xIrwISapFGkXZFkMHfcEjZ9AOx7xyoU/gT9Fu6gqht
-	 gn5lGEkX1P9c4OuO2xcUHWlMswF7qA0wDMuhLn71bVZ6vVJFzsQLixZzbN2ugsxIgS
-	 rl+kO5C9tpR/74molUGQsT6ghj+4mWix+6HufBiA=
+	s=default; t=1592446738;
+	bh=UxPnFlX+RCpVN17Rxz0hGgqmZ5jg4GqP7f4f9zBzKIE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=X9WBIspK5vEzZ3OrY/1Ym5bLDcX8yB9Lxqx1AYw8tv6PV5/07xAQxH2HhzVgiP8A3
+	 PryyueCEgTOW7YZ9idcCWKwtQ8/xPpjvfoofAkR//lKybn9nba26oAUuJhmsrlEiZR
+	 nyUyAWiWJqS1WcUvsJXfu7nEF+2yHxHvxF7iCrnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733125AbgFRCSu (ORCPT
+        id S1730137AbgFRBT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:18:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51360 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:19:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730147AbgFRBTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:19:32 -0400
+        id S1728169AbgFRBQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:16:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C477221EB;
-        Thu, 18 Jun 2020 01:19:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA6DA206F1;
+        Thu, 18 Jun 2020 01:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443172;
-        bh=lwzRwsrx3YiJQpfwmDmgLujx4GshtpM/4E4B9ChFbrU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qoAsQ1m1vBgBx7VgYVPsOdx9J2BWhxLFYg5z2k5GH4bxZNk68SdQHVs4qkU5qr3wX
-         5vrtPiPdT1y5OdK+++PInHteyWnFNenjFzlD4kfj/2YOwBGSc08QoPnA/GjwZh5BAX
-         GPRC6SvzdT2xsIk8wzFaggxK5DXfX0+ymS8b9nsY=
+        s=default; t=1592442993;
+        bh=UxPnFlX+RCpVN17Rxz0hGgqmZ5jg4GqP7f4f9zBzKIE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=A78nSsp7FSenQYB5xCrE84PM6ohazSZoSMCRK9AVFtXamQo9FtVVfiIW6e88dzCye
+         yiC3F2OP/NHTJRES25H0BfkIY4l3Yt2fEnmKvjUwIrG3mCN9EtHcB4vp1Mo5aOapdO
+         XJmcfqGOjAoOW7K87nFxNMB+/McuRd07FRb/InA4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Peter Ujfalusi <peter.ujflausi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 136/266] ASoC: ti: omap-mcbsp: Fix an error handling path in 'asoc_mcbsp_probe()'
-Date:   Wed, 17 Jun 2020 21:14:21 -0400
-Message-Id: <20200618011631.604574-136-sashal@kernel.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 001/266] power: supply: bq24257_charger: Replace depends on REGMAP_I2C with select
+Date:   Wed, 17 Jun 2020 21:12:06 -0400
+Message-Id: <20200618011631.604574-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
-References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,68 +57,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-[ Upstream commit 03990fd58d2b7c8f7d53e514ba9b8749fac260f9 ]
+[ Upstream commit 87c3d579c8ed0eaea6b1567d529a8daa85a2bc6c ]
 
-If an error occurs after the call to 'omap_mcbsp_init()', the reference to
-'mcbsp->fclk' must be decremented, as already done in the remove function.
+regmap is a library function that gets selected by drivers that need
+it. No driver modules should depend on it. Depending on REGMAP_I2C makes
+this driver only build if another driver already selected REGMAP_I2C,
+as the symbol can't be selected through the menu kernel configuration.
 
-This can be achieved easily by using the devm_ variant of 'clk_get()'
-when the reference is taken in 'omap_mcbsp_init()'
-
-This fixes the leak in the probe and has the side effect to simplify both
-the error handling path of 'omap_mcbsp_init()' and the remove function.
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Acked-by: Peter Ujfalusi <peter.ujflausi@ti.com>
-Link: https://lore.kernel.org/r/20200512134325.252073-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 2219a935963e ("power_supply: Add TI BQ24257 charger driver")
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/ti/omap-mcbsp.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/power/supply/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
-index 26b503bbdb5f..3273b317fa3b 100644
---- a/sound/soc/ti/omap-mcbsp.c
-+++ b/sound/soc/ti/omap-mcbsp.c
-@@ -686,7 +686,7 @@ static int omap_mcbsp_init(struct platform_device *pdev)
- 	mcbsp->dma_data[1].addr = omap_mcbsp_dma_reg_params(mcbsp,
- 						SNDRV_PCM_STREAM_CAPTURE);
- 
--	mcbsp->fclk = clk_get(&pdev->dev, "fck");
-+	mcbsp->fclk = devm_clk_get(&pdev->dev, "fck");
- 	if (IS_ERR(mcbsp->fclk)) {
- 		ret = PTR_ERR(mcbsp->fclk);
- 		dev_err(mcbsp->dev, "unable to get fck: %d\n", ret);
-@@ -711,7 +711,7 @@ static int omap_mcbsp_init(struct platform_device *pdev)
- 		if (ret) {
- 			dev_err(mcbsp->dev,
- 				"Unable to create additional controls\n");
--			goto err_thres;
-+			return ret;
- 		}
- 	}
- 
-@@ -724,8 +724,6 @@ static int omap_mcbsp_init(struct platform_device *pdev)
- err_st:
- 	if (mcbsp->pdata->buffer_size)
- 		sysfs_remove_group(&mcbsp->dev->kobj, &additional_attr_group);
--err_thres:
--	clk_put(mcbsp->fclk);
- 	return ret;
- }
- 
-@@ -1442,8 +1440,6 @@ static int asoc_mcbsp_remove(struct platform_device *pdev)
- 
- 	omap_mcbsp_st_cleanup(pdev);
- 
--	clk_put(mcbsp->fclk);
--
- 	return 0;
- }
- 
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index c84a7b1caeb6..d6fdc10c29f0 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -577,7 +577,7 @@ config CHARGER_BQ24257
+ 	tristate "TI BQ24250/24251/24257 battery charger driver"
+ 	depends on I2C
+ 	depends on GPIOLIB || COMPILE_TEST
+-	depends on REGMAP_I2C
++	select REGMAP_I2C
+ 	help
+ 	  Say Y to enable support for the TI BQ24250, BQ24251, and BQ24257 battery
+ 	  chargers.
 -- 
 2.25.1
 
