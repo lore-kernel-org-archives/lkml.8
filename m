@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A09C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA805C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E835A20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5CFF20776
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448407;
-	bh=gQ+2o7PW7t3IXq8X3hPmf/IAe1h0el2iVacA1Qw7i/A=;
+	s=default; t=1592448416;
+	bh=OhuwWR1pHKkKg0JA0TgwM8GDNArAPfNmbW5ZA4DO098=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O3ZTmxqqh5hjM8dXseo3fFm6PXjZeie67nlCxXctHVjqIQ1uPlHYIGufUelPqrt0F
-	 2WOiOmN4wQZywMcGibqvRUsvhUHTqYrcnPq/Q6TzzSCmEgm2lFqWWgJMqRNmQm1ulX
-	 kmhU/rFzkzRS3gKatTQkMrUCsmiHE/0MjR86TZDM=
+	b=ydycUOSRJXWjGvDnHtXXijYgZ5HgB0QKpX0tWCjtr6ydK36fMj6nVs0YfkmC1XfWG
+	 DL7M4Y548tQrkXb29VYMk0bc3XeH5tpsFlkxBjrRGgT5JDBVzSK2pJlZK1Ss93qHtJ
+	 6Sh+9P7ai+laok1XPraklRLpfQVJEEwTvdAt+Jm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387815AbgFRCqp (ORCPT
+        id S1730748AbgFRCqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:46:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37848 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:46:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728538AbgFRBKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:35 -0400
+        id S1727107AbgFRBKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C937F21927;
-        Thu, 18 Jun 2020 01:10:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BF9320CC7;
+        Thu, 18 Jun 2020 01:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442634;
-        bh=gQ+2o7PW7t3IXq8X3hPmf/IAe1h0el2iVacA1Qw7i/A=;
+        s=default; t=1592442632;
+        bh=OhuwWR1pHKkKg0JA0TgwM8GDNArAPfNmbW5ZA4DO098=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LqFPd0j8aOkawlakcLEhBUJqAcOj2a3Xhyv2gfE6ameoYTk3XKGAZgwpx1ZuV4+J5
-         xEOxF4UjVIAcbt1b0yxdYSOx3WJYMAiRbbV7dOjoST+GGCgf4nxKnrE0hmfJ4RT2k7
-         fSq7ZWTfkbxtcKjtJ7jl8bkNdBBv9DR/zJcQTAbs=
+        b=1Fyu65O0yPxm1z8XBQ6qO1s0hvFoU2WT43c3qNFawxAO16XPmp+QotEB1TwVMUFGX
+         /0lX+Bqy+sU8Zvnlvd5THQEH45zclicLcle607KZETvNrBV6L6OKPcANlhJJaGSkZF
+         Tz56NMcz2fw3KVK0lM6juhOxy2kmmEKur2rl/sm8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sabrina Dubroca <sd@queasysnail.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 111/388] bpf: tcp: Recv() should return 0 when the peer socket is closed
-Date:   Wed, 17 Jun 2020 21:03:28 -0400
-Message-Id: <20200618010805.600873-111-sashal@kernel.org>
+Cc:     Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 109/388] media: v4l2-ctrls: Unset correct HEVC loop filter flag
+Date:   Wed, 17 Jun 2020 21:03:26 -0400
+Message-Id: <20200618010805.600873-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,51 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+From: Jonas Karlman <jonas@kwiboo.se>
 
-[ Upstream commit 2c7269b231194aae23fb90ab65842573a91acbc9 ]
+[ Upstream commit 88441917dc6cd995cb993df603e264f5b88be50c ]
 
-If the peer is closed, we will never get more data, so
-tcp_bpf_wait_data will get stuck forever. In case we passed
-MSG_DONTWAIT to recv(), we get EAGAIN but we should actually get
-0.
+Wrong loop filter flag is unset when tiles enabled flag is not set,
+this cause HEVC decoding issues with Rockchip Video Decoder.
 
->From man 2 recv:
+Fix this by unsetting the loop filter across tiles enabled flag instead of
+the pps loop filter across slices enabled flag when tiles are disabled.
 
-    RETURN VALUE
-
-    When a stream socket peer has performed an orderly shutdown, the
-    return value will be 0 (the traditional "end-of-file" return).
-
-This patch makes tcp_bpf_wait_data always return 1 when the peer
-socket has been shutdown. Either we have data available, and it would
-have returned 1 anyway, or there isn't, in which case we'll call
-tcp_recvmsg which does the right thing in this situation.
-
-Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Jakub Sitnicki <jakub@cloudflare.com>
-Link: https://lore.kernel.org/bpf/26038a28c21fea5d04d4bd4744c5686d3f2e5504.1591784177.git.sd@queasysnail.net
+Fixes: 256fa3920874 ("media: v4l: Add definitions for HEVC stateless decoding")
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_bpf.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/v4l2-core/v4l2-ctrls.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index 629aaa9a1eb9..9c5540887fbe 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -242,6 +242,9 @@ static int tcp_bpf_wait_data(struct sock *sk, struct sk_psock *psock,
- 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
- 	int ret = 0;
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 93d33d1db4e8..07d9ae7a929c 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -1825,7 +1825,7 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+ 			       sizeof(p_hevc_pps->row_height_minus1));
  
-+	if (sk->sk_shutdown & RCV_SHUTDOWN)
-+		return 1;
-+
- 	if (!timeo)
- 		return ret;
+ 			p_hevc_pps->flags &=
+-				~V4L2_HEVC_PPS_FLAG_PPS_LOOP_FILTER_ACROSS_SLICES_ENABLED;
++				~V4L2_HEVC_PPS_FLAG_LOOP_FILTER_ACROSS_TILES_ENABLED;
+ 		}
  
+ 		if (p_hevc_pps->flags &
 -- 
 2.25.1
 
