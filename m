@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B30EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA90206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C68206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447914;
-	bh=cXzM0HwmnhLTWU3D2/CI1kjx1fxQuOW04icjN0TxhcY=;
+	s=default; t=1592447917;
+	bh=o7HWOg7d4ZD/pc/7wRN0L2pGlvAuNr+3UrYtOB7V8MI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kn3G4u9VRzelYHDkbRDoMiK57tzQYjQ3SZJU2WRExEO93PS8f150dVzwi/Vk1kl+C
-	 tOErHG1h3CwyYJQNDC/MDnPY/B2erfnJS3fVj5QzVmbhq0O0nKjX0UiuU8smsapoDE
-	 NdYEIhSdNma4suDVCEISc/1w4iuaHy1cBmDzS0NE=
+	b=kK7x2XPHyCL2QyivEO+4axt434DNCDee5Z4x5KgWLu6spTCU+Oz2LXTRNgn6KZ7QL
+	 C5XqEz1xjEeon+7WoX8/rrV0bPNyutJmszfj9ZpYsB2ZaM9UeKaCKV0Y0s7x10zGj5
+	 Pg2FFbMH/kPw3PsHViJPwUvF/s9fnIjPvOQU+MNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387788AbgFRCic (ORCPT
+        id S2387793AbgFRCig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:38:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42618 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:38:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbgFRBNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:24 -0400
+        id S1729108AbgFRBNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B07C0221EB;
-        Thu, 18 Jun 2020 01:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EDE821974;
+        Thu, 18 Jun 2020 01:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442804;
-        bh=cXzM0HwmnhLTWU3D2/CI1kjx1fxQuOW04icjN0TxhcY=;
+        s=default; t=1592442803;
+        bh=o7HWOg7d4ZD/pc/7wRN0L2pGlvAuNr+3UrYtOB7V8MI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aP6wCBQr9aC22M9A9ae/HjabcGxZ+T52UqPv6c+TE30I+2kO05cz88s07xSKxPPeB
-         Mne/Dk4iT1lBZya4devrX42M+XRbre3ihD5klENtkLmnIwb+YO61PczkBnWrs6kgY1
-         kpHyGC0XAx5LRv/WyrhRsYPfN609LYlbaLXsNq2s=
+        b=PD3a/+gMo6zM2CdoV4Wyl3bBxBJkYbtTsK/44iSxn09pOYu+hYRM5JnBUbUoSdreF
+         GMXSlLEwdzwfrzornzEsDU48CcKTaeiuZuu1yHxE6WBqGHhw2qm6FXzPHxX2xqEW9u
+         Z4UYfKxKI9E9WOaFd8845FKgeRyZDRAS1L51vID8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 244/388] firmware: imx: scu: Fix possible memory leak in imx_scu_probe()
-Date:   Wed, 17 Jun 2020 21:05:41 -0400
-Message-Id: <20200618010805.600873-244-sashal@kernel.org>
+Cc:     Ye Bin <yebin10@huawei.com>, Bart Van Assche <bvanassche@acm.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 243/388] scsi: core: Fix incorrect usage of shost_for_each_device
+Date:   Wed, 17 Jun 2020 21:05:40 -0400
+Message-Id: <20200618010805.600873-243-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,35 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Ye Bin <yebin10@huawei.com>
 
-[ Upstream commit 89f12d6509bff004852c51cb713a439a86816b24 ]
+[ Upstream commit 4dea170f4fb225984b4f2f1cf0a41d485177b905 ]
 
-'chan_name' is malloced in imx_scu_probe() and should be freed
-before leaving from the error handling cases, otherwise it will
-cause memory leak.
+shost_for_each_device(sdev, shost) \
+	for ((sdev) = __scsi_iterate_devices((shost), NULL); \
+	     (sdev); \
+	     (sdev) = __scsi_iterate_devices((shost), (sdev)))
 
-Fixes: edbee095fafb ("firmware: imx: add SCU firmware driver support")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+When terminating shost_for_each_device() iteration with break or return,
+scsi_device_put() should be used to prevent stale scsi device references
+from being left behind.
+
+Link: https://lore.kernel.org/r/20200518074420.39275-1-yebin10@huawei.com
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Ye Bin <yebin10@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/imx/imx-scu.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/scsi_error.c | 2 ++
+ drivers/scsi/scsi_lib.c   | 4 +++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-index b3da2e193ad2..176ddd151375 100644
---- a/drivers/firmware/imx/imx-scu.c
-+++ b/drivers/firmware/imx/imx-scu.c
-@@ -314,6 +314,7 @@ static int imx_scu_probe(struct platform_device *pdev)
- 			if (ret != -EPROBE_DEFER)
- 				dev_err(dev, "Failed to request mbox chan %s ret %d\n",
- 					chan_name, ret);
-+			kfree(chan_name);
- 			return ret;
+diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
+index 978be1602f71..927b1e641842 100644
+--- a/drivers/scsi/scsi_error.c
++++ b/drivers/scsi/scsi_error.c
+@@ -1412,6 +1412,7 @@ static int scsi_eh_stu(struct Scsi_Host *shost,
+ 				sdev_printk(KERN_INFO, sdev,
+ 					    "%s: skip START_UNIT, past eh deadline\n",
+ 					    current->comm));
++			scsi_device_put(sdev);
+ 			break;
  		}
+ 		stu_scmd = NULL;
+@@ -1478,6 +1479,7 @@ static int scsi_eh_bus_device_reset(struct Scsi_Host *shost,
+ 				sdev_printk(KERN_INFO, sdev,
+ 					    "%s: skip BDR, past eh deadline\n",
+ 					     current->comm));
++			scsi_device_put(sdev);
+ 			break;
+ 		}
+ 		bdr_scmd = NULL;
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 3ecdae18597d..b8b4366f1200 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -2865,8 +2865,10 @@ scsi_host_unblock(struct Scsi_Host *shost, int new_state)
  
+ 	shost_for_each_device(sdev, shost) {
+ 		ret = scsi_internal_device_unblock(sdev, new_state);
+-		if (ret)
++		if (ret) {
++			scsi_device_put(sdev);
+ 			break;
++		}
+ 	}
+ 	return ret;
+ }
 -- 
 2.25.1
 
