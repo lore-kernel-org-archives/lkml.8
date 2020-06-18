@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ADDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D93C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A18D20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15A320CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443360;
-	bh=COgDednjpZf6sWQLysDO7YXN00Jr1Nsdc0UeTybDPpo=;
+	s=default; t=1592443367;
+	bh=AW3OXIUt1qQbvwoJuDyDdmSrp6U4uI0paxuvM5jybhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J4NZqOy7O63nCh7ChfR/81vZWdCmNKtHd/zFM1TLUYYoeZsa5CURBiGisaj1nLWrT
-	 uOez2j2JYugHIdZWYGz5lxJszNz58DhpiqZdVri23Li1kbe1aTPgR/dn8le1Ed6UQ0
-	 +tveXx6IuEX6ogSC4Pvdvd329GmgaeV2jIIRoqic=
+	b=KWPbvceo98QWDS403uk6ElPrxwPwM5lQ+nNumfPPXZgetwva+ca0yTEzEKTk+2VM5
+	 2nq2CdxcCVJ3Ewq9CxScqri6IWmK74C/lo4hqhf/8Wgyfl8YVOjp3sJ2Eu05oqV73M
+	 6fHbil/9UEGKiprJSeRVzcaD3m9/Bkwt2JwMXYSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730806AbgFRBWj (ORCPT
+        id S1730826AbgFRBWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:22:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51028 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:22:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730098AbgFRBTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:19:19 -0400
+        id S1730124AbgFRBT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E569321D94;
-        Thu, 18 Jun 2020 01:19:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BBE821D79;
+        Thu, 18 Jun 2020 01:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443158;
-        bh=COgDednjpZf6sWQLysDO7YXN00Jr1Nsdc0UeTybDPpo=;
+        s=default; t=1592443165;
+        bh=AW3OXIUt1qQbvwoJuDyDdmSrp6U4uI0paxuvM5jybhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zc2pwAGP/aVaUx5TWjPqShfOb9JZHdHQYKoSerFsGC754tnCyxoK1xIyTuNzqZw+X
-         V1iJ7Ni2e7+fYPmxEXXmjLdQmp0sZ4ennYhITeE4cOeHphzT0aw5Qn9i1pBIam+bSR
-         2fme7Svm2Grpr+1msvbDF0o0MyfI7v/GDP3lmQus=
+        b=aWLJOzxNrJOkNTCGdOzYgiRymgtMiwoptONz1Wiha8jsFqtEC0z00tNhCMIfYPi/b
+         a1T25rFymSt21n7afP0JaDvQUzwcZZp0EN/4Lx4e220COWxuEE0HQ9XODKH+BtlNml
+         /2ISsHgOzCvrp6y1VK7fbC8m8dWAbWe9LPCOtelY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 125/266] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
-Date:   Wed, 17 Jun 2020 21:14:10 -0400
-Message-Id: <20200618011631.604574-125-sashal@kernel.org>
+Cc:     Loic Poulain <loic.poulain@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 131/266] arm64: dts: msm8996: Fix CSI IRQ types
+Date:   Wed, 17 Jun 2020 21:14:16 -0400
+Message-Id: <20200618011631.604574-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,53 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Loic Poulain <loic.poulain@linaro.org>
 
-[ Upstream commit 66ff14e59e8a30690755b08bc3042359703fb07a ]
+[ Upstream commit 4a4a26317ec8aba575f6b85789a42639937bc1a4 ]
 
-7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
-Linux to enable ASPM, but for some undocumented reason, it didn't enable
-ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
+Each IRQ_TYPE_NONE interrupt causes a warning at boot.
+Fix that by defining an appropriate type.
 
-Remove this exclusion so we can enable ASPM on these links.
-
-The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
-PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
-Intel SoC to enter deeper Package C-states, which is a significant power
-savings.
-
-[bhelgaas: commit log]
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
-Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Fixes: e0531312e78f ("arm64: dts: qcom: msm8996: Add CAMSS support")
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Link: https://lore.kernel.org/r/1587470425-13726-1-git-send-email-loic.poulain@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aspm.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 5a1bbf2cb7e9..4a0ec34062d6 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -628,16 +628,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
- 
- 	/* Setup initial capable state. Will be updated later */
- 	link->aspm_capable = link->aspm_support;
--	/*
--	 * If the downstream component has pci bridge function, don't
--	 * do ASPM for now.
--	 */
--	list_for_each_entry(child, &linkbus->devices, bus_list) {
--		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
--			link->aspm_disable = ASPM_STATE_ALL;
--			break;
--		}
--	}
- 
- 	/* Get and check endpoint acceptable latencies */
- 	list_for_each_entry(child, &linkbus->devices, bus_list) {
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index fbb8ce78f95b..d303df3887d9 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -1681,16 +1681,16 @@ camss: camss@a00000 {
+ 				"csi_clk_mux",
+ 				"vfe0",
+ 				"vfe1";
+-			interrupts = <GIC_SPI 78 0>,
+-				<GIC_SPI 79 0>,
+-				<GIC_SPI 80 0>,
+-				<GIC_SPI 296 0>,
+-				<GIC_SPI 297 0>,
+-				<GIC_SPI 298 0>,
+-				<GIC_SPI 299 0>,
+-				<GIC_SPI 309 0>,
+-				<GIC_SPI 314 0>,
+-				<GIC_SPI 315 0>;
++			interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 79 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 80 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 296 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 297 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 298 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 299 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 309 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 314 IRQ_TYPE_EDGE_RISING>,
++				<GIC_SPI 315 IRQ_TYPE_EDGE_RISING>;
+ 			interrupt-names = "csiphy0",
+ 				"csiphy1",
+ 				"csiphy2",
 -- 
 2.25.1
 
