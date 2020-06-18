@@ -2,61 +2,61 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99900C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DE0C433EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF722070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7BF206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ag9q+tFW"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="M77Z30Ub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731606AbgFRPkW (ORCPT
+        id S1731621AbgFRPk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:40:22 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:38287 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbgFRPkR (ORCPT
+        Thu, 18 Jun 2020 11:40:28 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:54583 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731554AbgFRPkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:40:17 -0400
+        Thu, 18 Jun 2020 11:40:19 -0400
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200618154014euoutp02e6b7185a01c430f5a4eb3f6f788d0ca0~ZrZjBJwPW1354913549euoutp02h
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:40:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200618154014euoutp02e6b7185a01c430f5a4eb3f6f788d0ca0~ZrZjBJwPW1354913549euoutp02h
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200618154017euoutp0106eff206b9dbed0dd3849c4ae347a2e2~ZrZl758Y41844218442euoutp01u
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:40:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200618154017euoutp0106eff206b9dbed0dd3849c4ae347a2e2~ZrZl758Y41844218442euoutp01u
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592494814;
-        bh=wHz+1oT1mS/67aiyQy0jjk1GsbyT14KOgyDUgQzHDZU=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=Ag9q+tFWmDXhDm2cIUIZjsvXfGhdYVHowynuAxfDQ8wtbhFc6ftvZtjuBJsH2AQjj
-         ELn5z6fTZnb8tkdkejgLfKWe2woE+MTd2DIGBO8Rkx7ckrUMsrUuQcOlUz3+TKNwZe
-         zLr5cwUZ8/9+m4+ACGXbBzGjaeH3zzVCKzNL1lKA=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200618154014eucas1p1750552d5d5fd172efdc4726bcfe4d745~ZrZitQfH_0074000740eucas1p1t;
-        Thu, 18 Jun 2020 15:40:14 +0000 (GMT)
+        s=mail20170921; t=1592494818;
+        bh=2j4VOIyj+ZqS7pbMauJtR1DqpO1spnMvG+cpfDpVzMs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=M77Z30UbbET4XcjuS422RXVyLFI7E7quP6UhDnBUIwUeKt3LnFvTY1P7iZYZ76tQV
+         DweAD/0/BYc3eNiBWd6QiugEYCitA9TMAv+WDL6LLuqMftB0Ya8/0nqXHqM2rh974K
+         vGVw1qWhs7aYrozMpKT/QbeAffurawZeyUlUTTUk=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200618154017eucas1p2279d84a738dd9298e930e52c5efcc17e~ZrZlVclah2502725027eucas1p21;
+        Thu, 18 Jun 2020 15:40:17 +0000 (GMT)
 Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 4A.CE.60679.EDA8BEE5; Thu, 18
-        Jun 2020 16:40:14 +0100 (BST)
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id EC.0F.61286.1EA8BEE5; Thu, 18
+        Jun 2020 16:40:17 +0100 (BST)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200618154014eucas1p236960ab27d628f94d68a6b8ddb8b07ff~ZrZiS_kei0608806088eucas1p2J;
-        Thu, 18 Jun 2020 15:40:14 +0000 (GMT)
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200618154016eucas1p12cda9c412f9891f191cb9e997be9da26~ZrZk527A61547315473eucas1p1I;
+        Thu, 18 Jun 2020 15:40:16 +0000 (GMT)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200618154014eusmtrp29d2b3c5366f970ed2dd895b043a9f389~ZrZiSTB2S0399203992eusmtrp2O;
-        Thu, 18 Jun 2020 15:40:14 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-16-5eeb8ade86ee
+        20200618154016eusmtrp269f3266141679068fd302e3ea7f17450~ZrZk5OVbL0370403704eusmtrp2a;
+        Thu, 18 Jun 2020 15:40:16 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-ba-5eeb8ae11c8f
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id AE.DE.08375.DDA8BEE5; Thu, 18
-        Jun 2020 16:40:13 +0100 (BST)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id E1.EE.08375.0EA8BEE5; Thu, 18
+        Jun 2020 16:40:16 +0100 (BST)
 Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200618154013eusmtip14d3be64110190393ab466c1b0ffef720~ZrZhr5eCw0864308643eusmtip1E;
-        Thu, 18 Jun 2020 15:40:13 +0000 (GMT)
+        20200618154016eusmtip1ceb3a9fbdfde399373beba80c1e11c50~ZrZkJ2UT40709107091eusmtip1q;
+        Thu, 18 Jun 2020 15:40:16 +0000 (GMT)
 From:   Marek Szyprowski <m.szyprowski@samsung.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
         linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
@@ -66,250 +66,186 @@ Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         linux-arm-kernel@lists.infradead.org,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v6 00/36] DRM: fix struct sg_table nents vs. orig_nents
- misuse
-Date:   Thu, 18 Jun 2020 17:39:21 +0200
-Message-Id: <20200618153956.29558-1-m.szyprowski@samsung.com>
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        amd-gfx@lists.freedesktop.org
+Subject: [PATCH v6 04/36] drm: amdgpu: fix common struct sg_table related
+ issues
+Date:   Thu, 18 Jun 2020 17:39:25 +0200
+Message-Id: <20200618153956.29558-5-m.szyprowski@samsung.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200618153956.29558-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBKsWRmVeSWpSXmKPExsWy7djPc7r3ul7HGfycKGXRe+4kk8XGGetZ
-        Lf5vm8hsceXrezaLlauPMlks2G9t8eXKQyaLTY+vsVpc3jWHzWLtkbvsFgc/PGF14PZYM28N
-        o8febwtYPLZ/e8Dqcb/7OJPH5iX1Hrf/PWb2mHxjOaPH7psNbB59W1YxenzeJBfAFcVlk5Ka
-        k1mWWqRvl8CV8ejLVdaCNr+Kc5+9Gxgn2HUxcnJICJhIHHm9k6mLkYtDSGAFo0Tz6RlMIAkh
-        gS+MEvMP5kIkPjNKHDuzmAWm4337RmaIxHJGiZO370G1A3Ucub+bGaSKTcBQouttFxuILSLQ
-        yihxopcHxGYWmMEkcfR1KYgtLBAgMWfBVLB6FgFViTUPvoKt5hWwlWjc8ZwJYpu8xOoNB5gh
-        4oISJ2c+YYGYIy/RvHU22BUSAqfYJV5++88I0eAice7jVahmYYlXx7ewQ9gyEv93zmeCaGhm
-        lHh4bi07hNPDKHG5aQZUt7XEnXO/gM7mAFqhKbF+lz6IKSHgKLH7gxSEySdx460gxA18EpO2
-        TWeGCPNKdLQJQcxQk5h1fB3c1oMXLjFD2B4SZ3d1s0BCN1Zi9fNm9gmMCrOQfDYLyWezEE5Y
-        wMi8ilE8tbQ4Nz212CgvtVyvODG3uDQvXS85P3cTIzB9nf53/MsOxl1/kg4xCnAwKvHwvgh5
-        HSfEmlhWXJl7iFGCg1lJhNfp7Ok4Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rzGi17GCgmkJ5ak
-        ZqemFqQWwWSZODilGhjzm25PVC1mr8r4pbtG6I/+90wbFaYnHFN4L7Sp3Iv8Lz5/7Q/7iXJ6
-        u0T/r9+nFu/d+Ep9VuW/Q17acnrGDaFqPs0FbhZtbcIelmou7PaF77b7+v1UKy9YJroj4Jrw
-        S/5N/+5cX7s2v3OCubZA3pv/MpIqzDZNfaxXXn9endn082UQs6TeNyWW4oxEQy3mouJEAH47
-        1ANbAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOIsWRmVeSWpSXmKPExsVy+t/xu7p3u17HGSzbZGXRe+4kk8XGGetZ
-        Lf5vm8hsceXrezaLlauPMlks2G9t8eXKQyaLTY+vsVpc3jWHzWLtkbvsFgc/PGF14PZYM28N
-        o8febwtYPLZ/e8Dqcb/7OJPH5iX1Hrf/PWb2mHxjOaPH7psNbB59W1YxenzeJBfAFaVnU5Rf
-        WpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX8ejLVdaCNr+K
-        c5+9Gxgn2HUxcnJICJhIvG/fyNzFyMUhJLCUUaLtwgVmiISMxMlpDawQtrDEn2tdbBBFnxgl
-        9na+ZwNJsAkYSnS9hUiICHQySkzr/sgO4jALzGOSWPTwEDtIlbCAn8THbQ/BxrIIqEqsefCV
-        CcTmFbCVaNzxnAlihbzE6g0HmCHighInZz5h6WLkABqkLrF+nhBImBmopHnrbOYJjPyzkFTN
-        QqiahaRqASPzKkaR1NLi3PTcYkO94sTc4tK8dL3k/NxNjMBI23bs5+YdjJc2Bh9iFOBgVOLh
-        fRHyOk6INbGsuDL3EKMEB7OSCK/T2dNxQrwpiZVVqUX58UWlOanFhxhNgV6YyCwlmpwPTAJ5
-        JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoY+Xvypjz8yL1jizJv
-        uUT+Yt73029yXVxvejBv1U4e6VevtRVuhs6abJKoW9Xeq6+1NujC750dJZzeBjxek+NVJkZX
-        1B8S8QsXa/jo/Gb++74JnR7lKzm/1sxRfbGoW+lmkcNZiamhbv1tFvz/JjoLaVTquPyIie0U
-        eb20m29jmVgMZ9tZ/kIlluKMREMt5qLiRAC9LcEoygIAAA==
-X-CMS-MailID: 20200618154014eucas1p236960ab27d628f94d68a6b8ddb8b07ff
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURTN63TaAWkzFBKegAJ1QQlrAB1FEYkm86VGP0hMRCoMi9JCWhYx
+        JlQISiooQiIIIpXUgKyKUFksW8SCQIGyCAEFBD8AQcOWsNaWAeTvnHPPeefe5GEIbxS1xMJE
+        UZRYJAjns4yZyi8rGqdx2Yy/a7uCS6Rq2hjE85E6lHhT/oBNvM8qR4nZUT3VKZ8hRN/SHxbx
+        triFQcgbvIjFvnEGUTExgBK9tS9ZROnn72yi6e8k6sMlk7QbLLLkVQkgVctyJvlxeQwlRx+r
+        GeQHRTw5vDmBkBmDBYCsG5KyyCeVRYBcqDh4Zd914zNBVHhYDCV28Q4wDlWqNkBklv3dfIWf
+        FIzayoARBnEPKHuUzpABY4yHFwKYNKdj02QRwPr1cSZNFgDMnVtl70R6kssQelAAoLYzhbUb
+        0U2pgMHFwt2gbFbGMmBzPAnA1lQTgwnBFQhUjNQzDQMz/CrMWUvbepaJH4GVGfmIAXPws/Dr
+        ylMmXWcDi981bulGuDdsVyehtMcUtr2Y3PIgek9iVc7WShDfYMOuto7t8AWo+bmwvbcZnFZX
+        bmNrqKvJY9CBRADHNaVsmqQA2JuQBWiXFxzRrOpvwPQVx2F5rQstn4fT8+WoQYY4Fw7OmtJL
+        cGG6MhOhZQ5Mfsij3Udhtrpst7apW4vQmIQNHclIGrDL3nNO9p5zsv/3ygFSBCyoaIkwhJK4
+        iahYZ4lAKIkWhTgHRggrgP7btW+q56vBkvZWM8AxwDfh+PjN+PNQQYwkTtgMIIbwzTm+ne3+
+        PE6QIO4eJY64KY4OpyTNwApj8i047vlTN3h4iCCKukNRkZR4Z8rAjCylwNHj9IHhIaz0csTF
+        zCGnH6lSVBpSNxZQKLrta0Y5ULGtNodPRX9r/D2hq/RVVcd5WtnJTxpNulpaxq90Kep/naix
+        trPoX8wzcffEg1U93v2fzq3bxm8o7b0cXzvODWoHVnMD87XX+DnN3ABlQsshoeKYyrwzeH/3
+        /TWTqkugYpLPlIQK3BwQsUTwD1/fY55yAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEIsWRmVeSWpSXmKPExsVy+t/xu7oPul7HGbRN17XoPXeSyWLand2s
+        FkvXN7JbbJyxntXi7X0g9/+2icwWV76+Z7NYufook8WC/dYWX648ZLLY9Pgaq8XlXXPYLNYe
+        uctucfDDE1YHPo/WS3/ZPNbMW8PosffbAhaP7d8esHrc7z7O5LF5Sb3H7X+PmT0m31jO6LH7
+        ZgObR9+WVYwenzfJBXBH6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mk
+        pOZklqUW6dsl6GVs2/uXsWCGesWiJeENjPcVuhg5OSQETCQudqxj7mLk4hASWMooseBRByNE
+        Qkbi5LQGVghbWOLPtS42iKJPjBJn+pewgCTYBAwlut5CJEQEOhklpnV/ZAdxmAXWMEvc+74c
+        yOHgEBYIkLi3oACkgUVAVWLL5EXMIDavgK3EqZ/9LBAb5CVWbzgAFucUsJM4fbwVbLMQUM3z
+        D21sEPWCEidnPmEBGcksoC6xfp4QSJgZqLV562zmCYyCs5BUzUKomoWkagEj8ypGkdTS4tz0
+        3GJDveLE3OLSvHS95PzcTYzA+N127OfmHYyXNgYfYhTgYFTi4X0R8jpOiDWxrLgy9xCjBAez
+        kgiv09nTcUK8KYmVValF+fFFpTmpxYcYTYFem8gsJZqcD0wteSXxhqaG5haWhubG5sZmFkri
+        vB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGAWcPa/3+e5vuzzdclfL0b1vcld032429InnMfGV
+        XGFt5qNkUXujLCsgMM7s7v/rQieuqPAsqTodu1fR1IvXeQPnfUnmE7m6U8MjWcp9TiouuRWU
+        9Wn/apn/rbVOLGoi3zccTe95r/l8ulSD/J3y/zL9F18tfSCmGRjHeaRhj8rUnI4WTg8pJZbi
+        jERDLeai4kQASBqYOvUCAAA=
+X-CMS-MailID: 20200618154016eucas1p12cda9c412f9891f191cb9e997be9da26
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200618154014eucas1p236960ab27d628f94d68a6b8ddb8b07ff
+X-RootMTR: 20200618154016eucas1p12cda9c412f9891f191cb9e997be9da26
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200618154014eucas1p236960ab27d628f94d68a6b8ddb8b07ff
-References: <CGME20200618154014eucas1p236960ab27d628f94d68a6b8ddb8b07ff@eucas1p2.samsung.com>
+X-CMS-RootMailID: 20200618154016eucas1p12cda9c412f9891f191cb9e997be9da26
+References: <20200618153956.29558-1-m.szyprowski@samsung.com>
+        <CGME20200618154016eucas1p12cda9c412f9891f191cb9e997be9da26@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear All,
+The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+returns the number of the created entries in the DMA address space.
+However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+dma_unmap_sg must be called with the original number of the entries
+passed to the dma_map_sg().
 
-During the Exynos DRM GEM rework and fixing the issues in the.
-drm_prime_sg_to_page_addr_arrays() function [1] I've noticed that most
-drivers in DRM framework incorrectly use nents and orig_nents entries of
-the struct sg_table.
+struct sg_table is a common structure used for describing a non-contiguous
+memory buffer, used commonly in the DRM and graphics subsystems. It
+consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+and DMA mapped pages (nents entry).
 
-In case of the most DMA-mapping implementations exchanging those two
-entries or using nents for all loops on the scatterlist is harmless,
-because they both have the same value. There exists however a DMA-mapping
-implementations, for which such incorrect usage breaks things. The nents
-returned by dma_map_sg() might be lower than the nents passed as its
-parameter and this is perfectly fine. DMA framework or IOMMU is allowed
-to join consecutive chunks while mapping if such operation is supported
-by the underlying HW (bus, bridge, IOMMU, etc). Example of the case
-where dma_map_sg() might return 1 'DMA' chunk for the 4 'physical' pages
-is described here [2]
+It turned out that it was a common mistake to misuse nents and orig_nents
+entries, calling DMA-mapping functions with a wrong number of entries or
+ignoring the number of mapped entries returned by the dma_map_sg()
+function.
 
-The DMA-mapping framework documentation [3] states that dma_map_sg()
-returns the numer of the created entries in the DMA address space.
-However the subsequent calls to dma_sync_sg_for_{device,cpu} and
-dma_unmap_sg must be called with the original number of entries passed to
-dma_map_sg. The common pattern in DRM drivers were to assign the
-dma_map_sg() return value to sg_table->nents and use that value for
-the subsequent calls to dma_sync_sg_* or dma_unmap_sg functions. Also
-the code iterated over nents times to access the pages stored in the
-processed scatterlist, while it should use orig_nents as the numer of
-the page entries.
+To avoid such issues, lets use a common dma-mapping wrappers operating
+directly on the struct sg_table objects and use scatterlist page
+iterators where possible. This, almost always, hides references to the
+nents and orig_nents entries, making the code robust, easier to follow
+and copy/paste safe.
 
-I've tried to identify all such incorrect usage of sg_table->nents and
-this is a result of my research. It looks that the incorrect pattern has
-been copied over the many drivers mainly in the DRM subsystem. Too bad in
-most cases it even worked correctly if the system used a simple, linear
-DMA-mapping implementation, for which swapping nents and orig_nents
-doesn't make any difference. To avoid similar issues in the future, I've
-introduced a common wrappers for DMA-mapping calls, which operate directly
-on the sg_table objects. I've also added wrappers for iterating over the
-scatterlists stored in the sg_table objects and applied them where
-possible. This, together with some common DRM prime helpers, allowed me
-to almost get rid of all nents/orig_nents usage in the drivers. I hope
-that such change makes the code robust, easier to follow and copy/paste
-safe.
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c  | 6 +++---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c      | 9 +++------
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c | 8 ++++----
+ 3 files changed, 10 insertions(+), 13 deletions(-)
 
-The biggest TODO is DRM/i915 driver and I don't feel brave enough to fix
-it fully. The driver creatively uses sg_table->orig_nents to store the
-size of the allocate scatterlist and ignores the number of the entries
-returned by dma_map_sg function. In this patchset I only fixed the
-sg_table objects exported by dmabuf related functions. I hope that I
-didn't break anything there.
-
-Patches are based on top of Linux next-20200618. The required changes to
-DMA-mapping framework has been already merged to v5.8-rc1.
-
-If possible I would like ask for merging most of the patches via DRM
-tree.
-
-Best regards,
-Marek Szyprowski
-
-
-References:
-
-[1] https://lkml.org/lkml/2020/3/27/555
-[2] https://lkml.org/lkml/2020/3/29/65
-[3] Documentation/DMA-API-HOWTO.txt
-[4] https://lore.kernel.org/linux-iommu/20200512121931.GD20393@lst.de/T/#ma18c958a48c3b241d5409517fa7d192eef87459b
-
-Changelog:
-
-v6:
-- rebased onto Linux next-20200618, which is based on v5.8-rc1; fixed conflicts
-
-v5: https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
-- fixed some minor style issues and typos
-- fixed lack of the attrs argument in ion, dmabuf, rapidio, fastrpc and
-  vfio patches
-
-v4: https://lore.kernel.org/linux-iommu/20200512121931.GD20393@lst.de/T/
-- added for_each_sgtable_* wrappers and applied where possible
-- added drm_prime_get_contiguous_size() and applied where possible
-- applied drm_prime_sg_to_page_addr_arrays() where possible to remove page
-  extraction from sg_table objects
-- added documentation for the introduced wrappers
-- improved patches description a bit
-
-v3: https://lore.kernel.org/dri-devel/20200505083926.28503-1-m.szyprowski@samsung.com/
-- introduce dma_*_sgtable_* wrappers and use them in all patches
-
-v2: https://lore.kernel.org/linux-iommu/c01c9766-9778-fd1f-f36e-2dc7bd376ba4@arm.com/T/
-- dropped most of the changes to drm/i915
-- added fixes for rcar-du, xen, media and ion
-- fixed a few issues pointed by kbuild test robot
-- added wide cc: list for each patch
-
-v1: https://lore.kernel.org/linux-iommu/c01c9766-9778-fd1f-f36e-2dc7bd376ba4@arm.com/T/
-- initial version
-
-
-Patch summary:
-
-Marek Szyprowski (36):
-  drm: prime: add common helper to check scatterlist contiguity
-  drm: prime: use sgtable iterators in
-    drm_prime_sg_to_page_addr_arrays()
-  drm: core: fix common struct sg_table related issues
-  drm: amdgpu: fix common struct sg_table related issues
-  drm: armada: fix common struct sg_table related issues
-  drm: etnaviv: fix common struct sg_table related issues
-  drm: exynos: use common helper for a scatterlist contiguity check
-  drm: exynos: fix common struct sg_table related issues
-  drm: i915: fix common struct sg_table related issues
-  drm: lima: fix common struct sg_table related issues
-  drm: mediatek: use common helper for a scatterlist contiguity check
-  drm: mediatek: use common helper for extracting pages array
-  drm: msm: fix common struct sg_table related issues
-  drm: omapdrm: use common helper for extracting pages array
-  drm: omapdrm: fix common struct sg_table related issues
-  drm: panfrost: fix common struct sg_table related issues
-  drm: radeon: fix common struct sg_table related issues
-  drm: rockchip: use common helper for a scatterlist contiguity check
-  drm: rockchip: fix common struct sg_table related issues
-  drm: tegra: fix common struct sg_table related issues
-  drm: v3d: fix common struct sg_table related issues
-  drm: virtio: fix common struct sg_table related issues
-  drm: vmwgfx: fix common struct sg_table related issues
-  xen: gntdev: fix common struct sg_table related issues
-  drm: host1x: fix common struct sg_table related issues
-  drm: rcar-du: fix common struct sg_table related issues
-  dmabuf: fix common struct sg_table related issues
-  staging: ion: remove dead code
-  staging: ion: fix common struct sg_table related issues
-  staging: tegra-vde: fix common struct sg_table related issues
-  misc: fastrpc: fix common struct sg_table related issues
-  rapidio: fix common struct sg_table related issues
-  samples: vfio-mdev/mbochs: fix common struct sg_table related issues
-  media: pci: fix common ALSA DMA-mapping related codes
-  videobuf2: use sgtable-based scatterlist wrappers
-  drm: xen: fix common struct sg_table related issues
-
- drivers/dma-buf/heaps/heap-helpers.c          | 13 ++-
- drivers/dma-buf/udmabuf.c                     |  7 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c   |  6 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c       |  9 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c  |  8 +-
- drivers/gpu/drm/armada/armada_gem.c           | 12 +--
- drivers/gpu/drm/drm_cache.c                   |  2 +-
- drivers/gpu/drm/drm_gem_cma_helper.c          | 23 +----
- drivers/gpu/drm/drm_gem_shmem_helper.c        | 14 +--
- drivers/gpu/drm/drm_prime.c                   | 86 ++++++++++---------
- drivers/gpu/drm/etnaviv/etnaviv_gem.c         | 12 ++-
- drivers/gpu/drm/etnaviv/etnaviv_mmu.c         | 13 +--
- drivers/gpu/drm/exynos/exynos_drm_g2d.c       | 10 +--
- drivers/gpu/drm/exynos/exynos_drm_gem.c       | 23 +----
- drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c    | 11 +--
- .../gpu/drm/i915/gem/selftests/mock_dmabuf.c  |  7 +-
- drivers/gpu/drm/lima/lima_gem.c               | 11 ++-
- drivers/gpu/drm/lima/lima_vm.c                |  5 +-
- drivers/gpu/drm/mediatek/mtk_drm_gem.c        | 37 ++------
- drivers/gpu/drm/msm/msm_gem.c                 | 13 ++-
- drivers/gpu/drm/msm/msm_gpummu.c              | 14 ++-
- drivers/gpu/drm/msm/msm_iommu.c               |  2 +-
- drivers/gpu/drm/omapdrm/omap_gem.c            | 20 ++---
- drivers/gpu/drm/panfrost/panfrost_gem.c       |  4 +-
- drivers/gpu/drm/panfrost/panfrost_mmu.c       |  7 +-
- drivers/gpu/drm/radeon/radeon_ttm.c           | 11 ++-
- drivers/gpu/drm/rcar-du/rcar_du_vsp.c         |  3 +-
- drivers/gpu/drm/rockchip/rockchip_drm_gem.c   | 42 +++------
- drivers/gpu/drm/tegra/gem.c                   | 27 +++---
- drivers/gpu/drm/tegra/plane.c                 | 15 ++--
- drivers/gpu/drm/v3d/v3d_mmu.c                 | 17 ++--
- drivers/gpu/drm/virtio/virtgpu_object.c       | 36 ++++----
- drivers/gpu/drm/virtio/virtgpu_vq.c           | 12 ++-
- drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c    | 17 +---
- drivers/gpu/drm/xen/xen_drm_front_gem.c       |  2 +-
- drivers/gpu/host1x/job.c                      | 22 ++---
- .../common/videobuf2/videobuf2-dma-contig.c   | 41 ++++-----
- .../media/common/videobuf2/videobuf2-dma-sg.c | 32 +++----
- .../common/videobuf2/videobuf2-vmalloc.c      | 12 +--
- drivers/media/pci/cx23885/cx23885-alsa.c      |  2 +-
- drivers/media/pci/cx25821/cx25821-alsa.c      |  2 +-
- drivers/media/pci/cx88/cx88-alsa.c            |  2 +-
- drivers/media/pci/saa7134/saa7134-alsa.c      |  2 +-
- drivers/media/platform/vsp1/vsp1_drm.c        |  8 +-
- drivers/misc/fastrpc.c                        |  4 +-
- drivers/rapidio/devices/rio_mport_cdev.c      |  8 +-
- drivers/staging/android/ion/ion.c             | 25 +++---
- drivers/staging/android/ion/ion.h             |  1 -
- drivers/staging/android/ion/ion_heap.c        | 53 +++---------
- drivers/staging/android/ion/ion_system_heap.c |  2 +-
- drivers/staging/media/tegra-vde/iommu.c       |  4 +-
- drivers/xen/gntdev-dmabuf.c                   | 13 ++-
- include/drm/drm_prime.h                       |  2 +
- samples/vfio-mdev/mbochs.c                    |  3 +-
- 54 files changed, 311 insertions(+), 478 deletions(-)
-
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+index 43d8ed7dbd00..519ce4427fce 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+@@ -307,8 +307,8 @@ static struct sg_table *amdgpu_dma_buf_map(struct dma_buf_attachment *attach,
+ 		if (IS_ERR(sgt))
+ 			return sgt;
+ 
+-		if (!dma_map_sg_attrs(attach->dev, sgt->sgl, sgt->nents, dir,
+-				      DMA_ATTR_SKIP_CPU_SYNC))
++		if (dma_map_sgtable(attach->dev, sgt, dir,
++				    DMA_ATTR_SKIP_CPU_SYNC))
+ 			goto error_free;
+ 		break;
+ 
+@@ -349,7 +349,7 @@ static void amdgpu_dma_buf_unmap(struct dma_buf_attachment *attach,
+ 	struct amdgpu_device *adev = amdgpu_ttm_adev(bo->tbo.bdev);
+ 
+ 	if (sgt->sgl->page_link) {
+-		dma_unmap_sg(attach->dev, sgt->sgl, sgt->nents, dir);
++		dma_unmap_sgtable(attach->dev, sgt, dir, 0);
+ 		sg_free_table(sgt);
+ 		kfree(sgt);
+ 	} else {
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+index 5129a996e941..97fb73e5a6ae 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+@@ -1025,7 +1025,6 @@ static int amdgpu_ttm_tt_pin_userptr(struct ttm_tt *ttm)
+ {
+ 	struct amdgpu_device *adev = amdgpu_ttm_adev(ttm->bdev);
+ 	struct amdgpu_ttm_tt *gtt = (void *)ttm;
+-	unsigned nents;
+ 	int r;
+ 
+ 	int write = !(gtt->userflags & AMDGPU_GEM_USERPTR_READONLY);
+@@ -1040,9 +1039,8 @@ static int amdgpu_ttm_tt_pin_userptr(struct ttm_tt *ttm)
+ 		goto release_sg;
+ 
+ 	/* Map SG to device */
+-	r = -ENOMEM;
+-	nents = dma_map_sg(adev->dev, ttm->sg->sgl, ttm->sg->nents, direction);
+-	if (nents == 0)
++	r = dma_map_sgtable(adev->dev, ttm->sg, direction, 0);
++	if (r)
+ 		goto release_sg;
+ 
+ 	/* convert SG to linear array of pages and dma addresses */
+@@ -1073,8 +1071,7 @@ static void amdgpu_ttm_tt_unpin_userptr(struct ttm_tt *ttm)
+ 		return;
+ 
+ 	/* unmap the pages mapped to the device */
+-	dma_unmap_sg(adev->dev, ttm->sg->sgl, ttm->sg->nents, direction);
+-
++	dma_unmap_sgtable(adev->dev, ttm->sg, direction, 0);
+ 	sg_free_table(ttm->sg);
+ 
+ #if IS_ENABLED(CONFIG_DRM_AMDGPU_USERPTR)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+index d399e5893170..75495a7898b9 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+@@ -477,11 +477,11 @@ int amdgpu_vram_mgr_alloc_sgt(struct amdgpu_device *adev,
+ 	if (r)
+ 		goto error_free;
+ 
+-	for_each_sg((*sgt)->sgl, sg, num_entries, i)
++	for_each_sgtable_sg(*sgt, sg, i)
+ 		sg->length = 0;
+ 
+ 	node = mem->mm_node;
+-	for_each_sg((*sgt)->sgl, sg, num_entries, i) {
++	for_each_sgtable_sg(*sgt, sg, i) {
+ 		phys_addr_t phys = (node->start << PAGE_SHIFT) +
+ 			adev->gmc.aper_base;
+ 		size_t size = node->size << PAGE_SHIFT;
+@@ -501,7 +501,7 @@ int amdgpu_vram_mgr_alloc_sgt(struct amdgpu_device *adev,
+ 	return 0;
+ 
+ error_unmap:
+-	for_each_sg((*sgt)->sgl, sg, num_entries, i) {
++	for_each_sgtable_sg(*sgt, sg, i) {
+ 		if (!sg->length)
+ 			continue;
+ 
+@@ -532,7 +532,7 @@ void amdgpu_vram_mgr_free_sgt(struct amdgpu_device *adev,
+ 	struct scatterlist *sg;
+ 	int i;
+ 
+-	for_each_sg(sgt->sgl, sg, sgt->nents, i)
++	for_each_sgtable_sg(sgt, sg, i)
+ 		dma_unmap_resource(dev, sg->dma_address,
+ 				   sg->length, dir,
+ 				   DMA_ATTR_SKIP_CPU_SYNC);
 -- 
 2.17.1
 
