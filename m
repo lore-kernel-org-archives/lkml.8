@@ -2,277 +2,144 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5926C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB3EE20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:16:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592518607;
-	bh=vp/SetVWiDplCHFEq5Q6ees2AeatpWF/JrR/DBv7qH0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Vrsr+bCu2FwNqkPkaZIRkcR4mxZd711JLhQ0pUs/K8TXLTlSUw4HI/e+zi9mmN8I7
-	 t9ZqXiCj89Hp+r6ZDxdyXyNmwKxTLILoXayeHzA0qDEs7qIBd1IlZR+rsW9yzjG3ts
-	 qaXS74B5U07mv+Eg19woSrtlhkPZA5lM06Njfxs8=
+	by mail.kernel.org (Postfix) with ESMTP id 9A72420786
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:16:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="EV4OK8Sy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731801AbgFRWQq (ORCPT
+        id S1731923AbgFRWQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:16:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731811AbgFRWQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 18:16:41 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF51F207D8;
-        Thu, 18 Jun 2020 22:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592518599;
-        bh=vp/SetVWiDplCHFEq5Q6ees2AeatpWF/JrR/DBv7qH0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=R/EiFM4dUIdNPR+uTDhEPM52KejUsnJQbJRGLsQVGT/AakiGHsjNVE6fiJO+pVC7v
-         YMgy6WHevA5dD16ZWgVVB/txkALDkxcokWy6VC0HPSmaDnx7RHXQOk0FrzRmtMIUBk
-         y6RGFB44Pl9SwLej/zJnnKZyFAaRKiI2UAuTXEIA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id AE101352264E; Thu, 18 Jun 2020 15:16:39 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 15:16:39 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: Re: [PATCH 2/7] rcu/trace: Add tracing for how segcb list changes
-Message-ID: <20200618221639.GY2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200618202955.4024-1-joel@joelfernandes.org>
- <20200618202955.4024-2-joel@joelfernandes.org>
+        Thu, 18 Jun 2020 18:16:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731865AbgFRWQu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 18:16:50 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA01CC061794
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:16:48 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id 9so7499151ilg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:16:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1SwhXxxcqMA/2xg9WoRLda6uaTbILklISXGnrNM7z5g=;
+        b=EV4OK8SyfSmB1iDadMyS6GSSAb/y8zP9pbU0Qq6cW8ldk3zk+IGjfY2mwBS7kzw4+U
+         MueNz1lmVzja+fcXE6FnhayjVrm0XuFnJWBq6+5FDBnmi1hHaih73zql3UKX/jPFPBij
+         cTvcS7wpwiveD7okKpYA13MpaMis17aHOXQ6U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1SwhXxxcqMA/2xg9WoRLda6uaTbILklISXGnrNM7z5g=;
+        b=dv9HpABALDXoNJCmSjfal4cjpWyPODNfVjmOWATVNPzHHxTaDbNbAaajkCi7dXKBBF
+         YOBDohBGKTLoofsi3S54WD8TnbKPpwxcCYIFEvbUQ/u2No8rojVFSibDu4Yms2i2x1gN
+         p+ZsmiC3lfXy9iliKL4CzeycIZBPRA3+5gOUTf1pMOaUacJY/ivP7QDzjthKb2rmm9Jg
+         SfHvXipggBg3oJPkyAGSR4HaRN1o7KXM5q5dqUNig1kw4r09mMitSD42uZ2G9kFQ/j8r
+         //ABq5M4sFqjIh3X7bcGcguLqzMfvAHbMvFDiQaYrR/9kcMX+xFLX1ivE8KQhlj0Rw1X
+         PDng==
+X-Gm-Message-State: AOAM532u+c5lt0GIOhPqo5FFSOcuOtJBniv2l+yzsouffUDotLTka7W9
+        yszTMDv7aP6PVlFMXRdI0v8CgQ==
+X-Google-Smtp-Source: ABdhPJzNjXEHGSDFRIEtFgNEH0DkmyvOyUoU/9h2R+dUGaWvU4v5dYNDSJa/KV3ePKb8DIvlf17A1A==
+X-Received: by 2002:a92:d9c1:: with SMTP id n1mr673192ilq.148.1592518607785;
+        Thu, 18 Jun 2020 15:16:47 -0700 (PDT)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id j80sm2256501ili.65.2020.06.18.15.16.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Jun 2020 15:16:47 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 22:16:45 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christoph Hellwig <hch@lst.de>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v4 00/11] Add seccomp notifier ioctl that enables adding
+ fds
+Message-ID: <20200618221644.GA31321@ircssh-2.c.rugged-nimbus-611.internal>
+References: <20200616032524.460144-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200618202955.4024-2-joel@joelfernandes.org>
+In-Reply-To: <20200616032524.460144-1-keescook@chromium.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 04:29:50PM -0400, Joel Fernandes (Google) wrote:
-> Track how the segcb list changes before/after acceleration, during
-> queuing and during dequeuing.
+On Mon, Jun 15, 2020 at 08:25:13PM -0700, Kees Cook wrote:
+> Hello!
 > 
-> This has proved useful to discover an optimization to avoid unwanted GP
-> requests when there are no callbacks accelerated.
+> This is a bit of thread-merge between [1] and [2]. tl;dr: add a way for
+> a seccomp user_notif process manager to inject files into the managed
+> process in order to handle emulation of various fd-returning syscalls
+> across security boundaries. Containers folks and Chrome are in need
+> of the feature, and investigating this solution uncovered (and fixed)
+> implementation issues with existing file sending routines.
 > 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-It does look like it provides some useful information, but the fact
-that callback lists can contain millions of callbacks makes the
-rcu_segcblist_countseq() a non-starter for mainline use.
-
-One thing that has been on my list for some time is to associate counts
-with the rcu_segcblist segments, which would make this sort of tracing
-more palatable.  This would be a fiddly change requiring careful testing,
-which might be why I have not yet done it myself.  One benefit of such
-counts is to allow RCU to determine whether callbacks are being held up by
-the grace period on the one hand or by callback invocation on the other.
-
-						Thanx, Paul
-
-> ---
->  include/trace/events/rcu.h | 25 +++++++++++++++++++++++++
->  kernel/rcu/rcu_segcblist.c | 37 +++++++++++++++++++++++++++++++++++++
->  kernel/rcu/rcu_segcblist.h |  7 +++++++
->  kernel/rcu/tree.c          | 24 ++++++++++++++++++++++++
->  4 files changed, 93 insertions(+)
+> I intend to carry this in the seccomp tree, unless someone has objections.
+> :) Please review and test!
 > 
-> diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
-> index 02dcd119f3263..a6d49864dcc27 100644
-> --- a/include/trace/events/rcu.h
-> +++ b/include/trace/events/rcu.h
-> @@ -507,6 +507,31 @@ TRACE_EVENT_RCU(rcu_callback,
->  		  __entry->qlen)
->  );
->  
-> +TRACE_EVENT_RCU(rcu_segcb,
-> +
-> +		TP_PROTO(const char *ctx, int *cb_count, unsigned long *gp_seq),
-> +
-> +		TP_ARGS(ctx, cb_count, gp_seq),
-> +
-> +		TP_STRUCT__entry(
-> +			__field(const char *, ctx)
-> +			__array(int, cb_count, 4)
-> +			__array(unsigned long, gp_seq, 4)
-> +		),
-> +
-> +		TP_fast_assign(
-> +			__entry->ctx = ctx;
-> +			memcpy(__entry->cb_count, cb_count, 4 * sizeof(int));
-> +			memcpy(__entry->gp_seq, gp_seq, 4 * sizeof(unsigned long));
-> +		),
-> +
-> +		TP_printk("%s cb_count: (DONE=%d, WAIT=%d, NEXT_READY=%d, NEXT=%d) "
-> +			  "gp_seq: (DONE=%lu, WAIT=%lu, NEXT_READY=%lu, NEXT=%lu)", __entry->ctx,
-> +			  __entry->cb_count[0], __entry->cb_count[1], __entry->cb_count[2], __entry->cb_count[3],
-> +			  __entry->gp_seq[0], __entry->gp_seq[1], __entry->gp_seq[2], __entry->gp_seq[3])
-> +
-> +);
-> +
->  /*
->   * Tracepoint for the registration of a single RCU callback of the special
->   * kfree() form.  The first argument is the RCU type, the second argument
-> diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-> index 4782cf17bf4f9..036d4abac7c5a 100644
-> --- a/kernel/rcu/rcu_segcblist.c
-> +++ b/kernel/rcu/rcu_segcblist.c
-> @@ -316,6 +316,43 @@ void rcu_segcblist_extract_done_cbs(struct rcu_segcblist *rsclp,
->  			WRITE_ONCE(rsclp->tails[i], &rsclp->head);
->  }
->  
-> +/*
-> + * Return how many CBs each segment along with their gp_seq values.
-> + *
-> + * This function is O(N) where N is the number of callbacks. Only used from
-> + * tracing code which is usually disabled in production.
-> + */
-> +#ifdef CONFIG_RCU_TRACE
-> +void rcu_segcblist_countseq(struct rcu_segcblist *rsclp,
-> +			 int cbcount[RCU_CBLIST_NSEGS],
-> +			 unsigned long gpseq[RCU_CBLIST_NSEGS])
-> +{
-> +	struct rcu_head **cur_tail, *h;
-> +	int i, c;
-> +
-> +	for (i = 0; i < RCU_CBLIST_NSEGS; i++)
-> +		cbcount[i] = 0;
-> +
-> +	cur_tail = &(rsclp->head);
-> +
-> +	for (i = 0; i < RCU_CBLIST_NSEGS; i++) {
-> +		c = 0;
-> +		// List empty?
-> +		if (rsclp->tails[i] != cur_tail) {
-> +			// The loop skips the last node
-> +			c = 1;
-> +			for (h = *cur_tail; h->next != *(rsclp->tails[i]); h = h->next) {
-> +				c++;
-> +			}
-> +		}
-> +
-> +		cbcount[i] = c;
-> +		gpseq[i] = rsclp->gp_seq[i];
-> +		cur_tail = rsclp->tails[i];
-> +	}
-> +}
-> +#endif
-> +
->  /*
->   * Extract only those callbacks still pending (not yet ready to be
->   * invoked) from the specified rcu_segcblist structure and place them in
-> diff --git a/kernel/rcu/rcu_segcblist.h b/kernel/rcu/rcu_segcblist.h
-> index 5c293afc07b8e..0a8dbac438529 100644
-> --- a/kernel/rcu/rcu_segcblist.h
-> +++ b/kernel/rcu/rcu_segcblist.h
-> @@ -104,3 +104,10 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq);
->  bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq);
->  void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
->  			 struct rcu_segcblist *src_rsclp);
-> +#ifdef CONFIG_RCU_TRACE
-> +void rcu_segcblist_countseq(struct rcu_segcblist *rsclp,
-> +			 int cbcount[RCU_CBLIST_NSEGS],
-> +			 unsigned long gpseq[RCU_CBLIST_NSEGS]);
-> +#else
-> +#define rcu_segcblist_countseq(...)
-> +#endif
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index ebce14e470d0e..c61af6a33fbfd 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -1407,6 +1407,8 @@ static bool rcu_accelerate_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
->  {
->  	unsigned long gp_seq_req;
->  	bool ret = false;
-> +	int cbs[RCU_CBLIST_NSEGS];
-> +	unsigned long gps[RCU_CBLIST_NSEGS];
->  
->  	rcu_lockdep_assert_cblist_protected(rdp);
->  	raw_lockdep_assert_held_rcu_node(rnp);
-> @@ -1415,6 +1417,10 @@ static bool rcu_accelerate_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
->  	if (!rcu_segcblist_pend_cbs(&rdp->cblist))
->  		return false;
->  
-> +	/* Count CBs for tracing. */
-> +	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
-> +	trace_rcu_segcb("SegCbPreAcc", cbs, gps);
-> +
->  	/*
->  	 * Callbacks are often registered with incomplete grace-period
->  	 * information.  Something about the fact that getting exact
-> @@ -1434,6 +1440,11 @@ static bool rcu_accelerate_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
->  		trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("AccWaitCB"));
->  	else
->  		trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("AccReadyCB"));
-> +
-> +	/* Count CBs for tracing. */
-> +	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
-> +	trace_rcu_segcb("SegCbPostAcc", cbs, gps);
-> +
->  	return ret;
->  }
->  
-> @@ -2316,6 +2327,8 @@ static void rcu_do_batch(struct rcu_data *rdp)
->  	struct rcu_cblist rcl = RCU_CBLIST_INITIALIZER(rcl);
->  	long bl, count;
->  	long pending, tlimit = 0;
-> +	int cbs[RCU_CBLIST_NSEGS];
-> +	unsigned long gps[RCU_CBLIST_NSEGS];
->  
->  	/* If no callbacks are ready, just return. */
->  	if (!rcu_segcblist_ready_cbs(&rdp->cblist)) {
-> @@ -2350,6 +2363,11 @@ static void rcu_do_batch(struct rcu_data *rdp)
->  	/* Invoke callbacks. */
->  	tick_dep_set_task(current, TICK_DEP_BIT_RCU);
->  	rhp = rcu_cblist_dequeue(&rcl);
-> +
-> +	/* Count CBs for tracing. */
-> +	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
-> +	trace_rcu_segcb("SegCbDequeued", cbs, gps);
-> +
->  	for (; rhp; rhp = rcu_cblist_dequeue(&rcl)) {
->  		rcu_callback_t f;
->  
-> @@ -2808,6 +2826,8 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
->  	unsigned long flags;
->  	struct rcu_data *rdp;
->  	bool was_alldone;
-> +	int cbs[RCU_CBLIST_NSEGS];
-> +	unsigned long gps[RCU_CBLIST_NSEGS];
->  
->  	/* Misaligned rcu_head! */
->  	WARN_ON_ONCE((unsigned long)head & (sizeof(void *) - 1));
-> @@ -2852,6 +2872,10 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
->  		trace_rcu_callback(rcu_state.name, head,
->  				   rcu_segcblist_n_cbs(&rdp->cblist));
->  
-> +	/* Count CBs for tracing. */
-> +	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
-> +	trace_rcu_segcb("SegCBQueued", cbs, gps);
-> +
->  	/* Go handle any RCU core processing required. */
->  	if (IS_ENABLED(CONFIG_RCU_NOCB_CPU) &&
->  	    unlikely(rcu_segcblist_is_offloaded(&rdp->cblist))) {
+> -Kees
+> 
+> [1] https://lore.kernel.org/lkml/20200603011044.7972-1-sargun@sargun.me/
+> [2] https://lore.kernel.org/lkml/20200610045214.1175600-1-keescook@chromium.org/
+> 
+> Kees Cook (9):
+>   net/scm: Regularize compat handling of scm_detach_fds()
+>   fs: Move __scm_install_fd() to __fd_install_received()
+>   fs: Add fd_install_received() wrapper for __fd_install_received()
+>   pidfd: Replace open-coded partial fd_install_received()
+>   fs: Expand __fd_install_received() to accept fd
+>   selftests/seccomp: Make kcmp() less required
+>   selftests/seccomp: Rename user_trap_syscall() to user_notif_syscall()
+>   seccomp: Switch addfd to Extensible Argument ioctl
+>   seccomp: Fix ioctl number for SECCOMP_IOCTL_NOTIF_ID_VALID
+> 
+This looks much cleaner than the original patchset. Thanks.
+
+Reviewed-by: Sargun Dhillon <sargun@sargun.me>
+
+on the pidfd, change fs* changes.
+
+> Sargun Dhillon (2):
+>   seccomp: Introduce addfd ioctl to seccomp user notifier
+>   selftests/seccomp: Test SECCOMP_IOCTL_NOTIF_ADDFD
+> 
+>  fs/file.c                                     |  65 ++++
+>  include/linux/file.h                          |  16 +
+>  include/uapi/linux/seccomp.h                  |  25 +-
+>  kernel/pid.c                                  |  11 +-
+>  kernel/seccomp.c                              | 181 ++++++++-
+>  net/compat.c                                  |  55 ++-
+>  net/core/scm.c                                |  50 +--
+>  tools/testing/selftests/seccomp/seccomp_bpf.c | 350 +++++++++++++++---
+>  8 files changed, 618 insertions(+), 135 deletions(-)
+> 
 > -- 
-> 2.27.0.111.gc72c7da667-goog
+> 2.25.1
 > 
