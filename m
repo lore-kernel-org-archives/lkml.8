@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36064C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCBCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08AD82224B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16A3120FC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443842;
-	bh=hTs1k0M7+pAaphxnvqTDxVasTi0/i3ppGZbf00HdBtY=;
+	s=default; t=1592443850;
+	bh=YNtaBR09aINb8xUXDQX22mBvIiIGlBbMCTfL2qGDtzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ieMlbzG8siWnfsGH+BQOaY/xV+vppSUSUgwXCfDhnVYYVpSYdT0eVnKgBQEy7EZ/z
-	 ic39ZXLVZlznRnBvA1A3GJDlFEhaqHDePWjD0UpXQUKd+37dccuaFpPfkYP+u52Mye
-	 56EsDg0UtnUtF7UMUMnLCrMBzMiwEBQtURthjCOk=
+	b=MfhaHMCPKeisFq8rMnl1NlK45VGGuCrJ9eVgerezbSmdBAEUdOkNRvkUXR7a/10EJ
+	 jK4ew7an+v4h0/7n7ZgdkHEeNFPsw35a6wL/cdUUdLmq19SZY4c62Bl1gQO3tDaLi3
+	 buzut3NdRjEcTcsuF/h6WNhCwjaNeDVtHwI65hAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732588AbgFRBak (ORCPT
+        id S1732629AbgFRBas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:30:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35366 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:30:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730971AbgFRB1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:18 -0400
+        id S1731283AbgFRB13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 987FF221F4;
-        Thu, 18 Jun 2020 01:27:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0F04221EB;
+        Thu, 18 Jun 2020 01:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443637;
-        bh=hTs1k0M7+pAaphxnvqTDxVasTi0/i3ppGZbf00HdBtY=;
+        s=default; t=1592443648;
+        bh=YNtaBR09aINb8xUXDQX22mBvIiIGlBbMCTfL2qGDtzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xxi/rOx0niSA5O9gYMqVg7dGUJQjmkxgQfiduVF1C0tCJcBcYGlafDUUfAaquecXs
-         Q38QJKgKsYhk74MKZ54DkzVBBpvwWCkpmvo6+6UYyp3DZwNrPHFbOJYeGaCGwKAmXT
-         QawSWgWO0g26aRQp6RD9m9pHeGxp6CjyWDTbX7hM=
+        b=y+hSdBB1+NMvA6QDBjIeAaX23CIUajat31+HqTpepqQR0q2+pG/aJSJDYXHEdkbe3
+         Pt9gLYbZ60qBzjUe3QokGXnW1snj2KGhR+o8tZkW9lKHw+efJG2hkYsRuxdGmmdnFg
+         EzNTJ+gU2KnCDgylbTBYNlAMqYluhliiOwKx0NC0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 060/108] powerpc/pseries/ras: Fix FWNMI_VALID off by one
-Date:   Wed, 17 Jun 2020 21:25:12 -0400
-Message-Id: <20200618012600.608744-60-sashal@kernel.org>
+Cc:     Hannes Reinecke <hare@suse.de>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.14 069/108] dm zoned: return NULL if dmz_get_zone_for_reclaim() fails to find a zone
+Date:   Wed, 17 Jun 2020 21:25:21 -0400
+Message-Id: <20200618012600.608744-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -60,44 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Hannes Reinecke <hare@suse.de>
 
-[ Upstream commit deb70f7a35a22dffa55b2c3aac71bc6fb0f486ce ]
+[ Upstream commit 489dc0f06a5837f87482c0ce61d830d24e17082e ]
 
-This was discovered developing qemu fwnmi sreset support. This
-off-by-one bug means the last 16 bytes of the rtas area can not
-be used for a 16 byte save area.
+The only case where dmz_get_zone_for_reclaim() cannot return a zone is
+if the respective lists are empty. So we should just return a simple
+NULL value here as we really don't have an error code which would make
+sense.
 
-It's not a serious bug, and QEMU implementation has to retain a
-workaround for old kernels, but it's good to tighten it.
-
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Acked-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200508043408.886394-7-npiggin@gmail.com
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/ras.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/md/dm-zoned-metadata.c | 4 ++--
+ drivers/md/dm-zoned-reclaim.c  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
-index 99d1152ae224..5ec935521204 100644
---- a/arch/powerpc/platforms/pseries/ras.c
-+++ b/arch/powerpc/platforms/pseries/ras.c
-@@ -325,10 +325,11 @@ static irqreturn_t ras_error_interrupt(int irq, void *dev_id)
- /*
-  * Some versions of FWNMI place the buffer inside the 4kB page starting at
-  * 0x7000. Other versions place it inside the rtas buffer. We check both.
-+ * Minimum size of the buffer is 16 bytes.
-  */
- #define VALID_FWNMI_BUFFER(A) \
--	((((A) >= 0x7000) && ((A) < 0x7ff0)) || \
--	(((A) >= rtas.base) && ((A) < (rtas.base + rtas.size - 16))))
-+	((((A) >= 0x7000) && ((A) <= 0x8000 - 16)) || \
-+	(((A) >= rtas.base) && ((A) <= (rtas.base + rtas.size - 16))))
+diff --git a/drivers/md/dm-zoned-metadata.c b/drivers/md/dm-zoned-metadata.c
+index 4d658a0c6025..c6d3a4bc811c 100644
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -1580,7 +1580,7 @@ static struct dm_zone *dmz_get_rnd_zone_for_reclaim(struct dmz_metadata *zmd)
+ 			return dzone;
+ 	}
+ 
+-	return ERR_PTR(-EBUSY);
++	return NULL;
+ }
  
  /*
-  * Get the error information for errors coming through the
+@@ -1600,7 +1600,7 @@ static struct dm_zone *dmz_get_seq_zone_for_reclaim(struct dmz_metadata *zmd)
+ 			return zone;
+ 	}
+ 
+-	return ERR_PTR(-EBUSY);
++	return NULL;
+ }
+ 
+ /*
+diff --git a/drivers/md/dm-zoned-reclaim.c b/drivers/md/dm-zoned-reclaim.c
+index 2fad512dce98..1015b200330b 100644
+--- a/drivers/md/dm-zoned-reclaim.c
++++ b/drivers/md/dm-zoned-reclaim.c
+@@ -350,8 +350,8 @@ static int dmz_do_reclaim(struct dmz_reclaim *zrc)
+ 
+ 	/* Get a data zone */
+ 	dzone = dmz_get_zone_for_reclaim(zmd);
+-	if (IS_ERR(dzone))
+-		return PTR_ERR(dzone);
++	if (!dzone)
++		return -EBUSY;
+ 
+ 	start = jiffies;
+ 
 -- 
 2.25.1
 
