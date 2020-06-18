@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0BBC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11105C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E099A221F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDBC821D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444353;
-	bh=nbkmqZukT/Tkw7WWqBVK/Bb+JkaY0QMzxUMcKu2QFLg=;
+	s=default; t=1592444369;
+	bh=jv+js8+opeJ5YoDFZIKWgYWMSWoNNt7fCTBc5d79PNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=syHXwJpsJ9KgXeHTrloQOiTL6fNr+Nx4Lk0vt16TG+dKBse0f2IwFUO8SDz2oJY5d
-	 DgSPmTNtJ4KcYGZzDKVG967BqVBS2CRQjQXpk20fUCpUI2t7qcCUxIzO7zmNtuO//D
-	 vQSaHBZtaUet36A4hOh6rQ1xGXwJpcxBWvVpk2V4=
+	b=u1dd/i3O8m1OCaclv5Zwzge8h4MZFm86xVplBYgRVnebQq+IlyqfzoJzVzP+FSf11
+	 6Q4Kb7EPAACrFxA81Nm96ei87TBHz59zL7dPRvK+8jv5MbvDhotMotpf5MtrAOM3jO
+	 /3Sv7YJIFuCC3FsNNEtNtsVoQupgTZeVaBfZO/O8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732506AbgFRBaW (ORCPT
+        id S1728186AbgFRBjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:30:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34916 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:39:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729997AbgFRB1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:03 -0400
+        id S1732498AbgFRBaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:30:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 246CD221F1;
-        Thu, 18 Jun 2020 01:27:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E67F206E2;
+        Thu, 18 Jun 2020 01:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443622;
-        bh=nbkmqZukT/Tkw7WWqBVK/Bb+JkaY0QMzxUMcKu2QFLg=;
+        s=default; t=1592443820;
+        bh=jv+js8+opeJ5YoDFZIKWgYWMSWoNNt7fCTBc5d79PNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T6yC4ntFT/yO0mTNAFjVe1vwHqqQp02qZzuZwiw37VtntOrgMGbB4cbMSyG1KRojO
-         xqx+3do30l707/wbQ6mBSgf9hMDs5ajlefbKiThLzfxv5mkHkxWCF/pLmdzJZLeIif
-         5b3o5xpHT2Q2j6XtXI/15EVcPXYaA5iq4x+HXSxY=
+        b=ypV/wqiOBt6Pp4Cm3oSJLlJtoXzTC558PaAOTr62tDAsbFkcFKH5SSc9uYV6Z/SmJ
+         4Of7q+NHQicG9JT0srmDcnUwerhclhBH8pxCxZuhKpkaKLwK+rLXynONXTcuKUQEt1
+         2+qR3v4fAi9X/wkLMieWtdpZUbzh75SrF+XeIS34=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 048/108] drivers: base: Fix NULL pointer exception in __platform_driver_probe() if a driver developer is foolish
-Date:   Wed, 17 Jun 2020 21:25:00 -0400
-Message-Id: <20200618012600.608744-48-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
+Subject: [PATCH AUTOSEL 4.4 12/60] mfd: wm8994: Fix driver operation if loaded as modules
+Date:   Wed, 17 Jun 2020 21:29:16 -0400
+Message-Id: <20200618013004.610532-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
-References: <20200618012600.608744-1-sashal@kernel.org>
+In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
+References: <20200618013004.610532-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,82 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 388bcc6ecc609fca1b4920de7dc3806c98ec535e ]
+[ Upstream commit d4f9b5428b53dd67f49ee8deed8d4366ed6b1933 ]
 
-If platform bus driver registration is failed then, accessing
-platform bus spin lock (&drv->driver.bus->p->klist_drivers.k_lock)
-in __platform_driver_probe() without verifying the return value
-__platform_driver_register() can lead to NULL pointer exception.
+WM8994 chip has built-in regulators, which might be used for chip
+operation. They are controlled by a separate wm8994-regulator driver,
+which should be loaded before this driver calls regulator_get(), because
+that driver also provides consumer-supply mapping for the them. If that
+driver is not yet loaded, regulator core substitute them with dummy
+regulator, what breaks chip operation, because the built-in regulators are
+never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
+"pre" dependency to "wm8994_regulator" module.
 
-So check the return value before attempting the spin lock.
-
-One such example is below:
-
-For a custom usecase, I have intentionally failed the platform bus
-registration and I expected all the platform device/driver
-registrations to fail gracefully. But I came across this panic
-issue.
-
-[    1.331067] BUG: kernel NULL pointer dereference, address: 00000000000000c8
-[    1.331118] #PF: supervisor write access in kernel mode
-[    1.331163] #PF: error_code(0x0002) - not-present page
-[    1.331208] PGD 0 P4D 0
-[    1.331233] Oops: 0002 [#1] PREEMPT SMP
-[    1.331268] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-00049-g670d35fb0144 #165
-[    1.331341] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[    1.331406] RIP: 0010:_raw_spin_lock+0x15/0x30
-[    1.331588] RSP: 0000:ffffc9000001be70 EFLAGS: 00010246
-[    1.331632] RAX: 0000000000000000 RBX: 00000000000000c8 RCX: 0000000000000001
-[    1.331696] RDX: 0000000000000001 RSI: 0000000000000092 RDI: 0000000000000000
-[    1.331754] RBP: 00000000ffffffed R08: 0000000000000501 R09: 0000000000000001
-[    1.331817] R10: ffff88817abcc520 R11: 0000000000000670 R12: 00000000ffffffed
-[    1.331881] R13: ffffffff82dbc268 R14: ffffffff832f070a R15: 0000000000000000
-[    1.331945] FS:  0000000000000000(0000) GS:ffff88817bd80000(0000) knlGS:0000000000000000
-[    1.332008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.332062] CR2: 00000000000000c8 CR3: 000000000681e001 CR4: 00000000003606e0
-[    1.332126] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    1.332189] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    1.332252] Call Trace:
-[    1.332281]  __platform_driver_probe+0x92/0xee
-[    1.332323]  ? rtc_dev_init+0x2b/0x2b
-[    1.332358]  cmos_init+0x37/0x67
-[    1.332396]  do_one_initcall+0x7d/0x168
-[    1.332428]  kernel_init_freeable+0x16c/0x1c9
-[    1.332473]  ? rest_init+0xc0/0xc0
-[    1.332508]  kernel_init+0x5/0x100
-[    1.332543]  ret_from_fork+0x1f/0x30
-[    1.332579] CR2: 00000000000000c8
-[    1.332616] ---[ end trace 3bd87f12e9010b87 ]---
-[    1.333549] note: swapper/0[1] exited with preempt_count 1
-[    1.333592] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-[    1.333736] Kernel Offset: disabled
-
-Note, this can only be triggered if a driver errors out from this call,
-which should never happen.  If it does, the driver needs to be fixed.
-
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Link: https://lore.kernel.org/r/20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mfd/wm8994-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index bcb6519fe211..0ee3cab88f70 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -702,6 +702,8 @@ int __init_or_module __platform_driver_probe(struct platform_driver *drv,
- 	/* temporary section violation during probe() */
- 	drv->probe = probe;
- 	retval = code = __platform_driver_register(drv, module);
-+	if (retval)
-+		return retval;
- 
- 	/*
- 	 * Fixup that section violation, being paranoid about code scanning
+diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
+index 7eec619a6023..3d1457189fa2 100644
+--- a/drivers/mfd/wm8994-core.c
++++ b/drivers/mfd/wm8994-core.c
+@@ -690,3 +690,4 @@ module_i2c_driver(wm8994_i2c_driver);
+ MODULE_DESCRIPTION("Core support for the WM8994 audio CODEC");
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
++MODULE_SOFTDEP("pre: wm8994_regulator");
 -- 
 2.25.1
 
