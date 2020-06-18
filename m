@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED19AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D8DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC635206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827B620720
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447890;
-	bh=Bxm1IXhPhmJlEOsXKfUJfwDjGaZpX7kqDL/sa5kdcJM=;
+	s=default; t=1592447899;
+	bh=sbGwC6NhDmYEFi7b4f6rPFlvOBAV0L/Avk5C5yKYsRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1SeJ4RKxr3+9QnHMZbzpXtzJPFVs+50Y91ZMSGsyysRJfB01FPYz3kmOOnkfNlgZp
-	 C/fPUYz4dGs9Rc8mZQ0+HTd6I8NfsG0q322HxnnWY1xsA/5a1jGhxAr30K42f/qCFh
-	 yy8zkzydxhTTV0/q+Igbd/dkrWiGetlq396EjmSg=
+	b=R/Ypb/TmMjyZknxUWANRk6oa1qHUMTrt4gaSjLQAKtd83C7RPKF/NLGDXfvueb4bP
+	 rHthyVfj/J9xk69+2CqEIAq58dHTfrqvIfhRmgzuM1a/hH0UaheqpqrAlEGy4CW239
+	 1N1zZtJlmc6IyzGvy+BbPbiDX4zmzEwwJ7vVAiRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgFRBNb (ORCPT
+        id S2387734AbgFRCiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:13:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40868 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:38:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728745AbgFRBMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:23 -0400
+        id S1729123AbgFRBN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC1B920B1F;
-        Thu, 18 Jun 2020 01:12:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED39E221E6;
+        Thu, 18 Jun 2020 01:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442742;
-        bh=Bxm1IXhPhmJlEOsXKfUJfwDjGaZpX7kqDL/sa5kdcJM=;
+        s=default; t=1592442806;
+        bh=sbGwC6NhDmYEFi7b4f6rPFlvOBAV0L/Avk5C5yKYsRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QM6/A3ekay6DP8zupekGvHNh3WUzesZF9Q94UREzKi4kZLnNzyWwRL6iX7ZUlu87I
-         bTfDyNATio8is97xEY2AB/g5sUpw5xwmTMz0U8TcIbYTKG6BPJuytd2Na0sgZ/Xm9a
-         5hu5j6P5H86qKA0xlHM8gOf7O0C/uRPcBUl+nmsk=
+        b=xSShlrtQ2GDLZKADpQlGaoe9G6hk3uh2y9JoV6j8aakROp7QSg/HnrsZCcyQleSNB
+         2xXXuMwvMML+AL3xWi2VcsiPhUK5CHK3FqnXJH02FontTqamt9OOaHXwuxJqF971Ul
+         T65pDPHivubPtjvS/T30ftER6hLWqRVwvRKhmZU8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 196/388] pinctrl: rockchip: fix memleak in rockchip_dt_node_to_map
-Date:   Wed, 17 Jun 2020 21:04:53 -0400
-Message-Id: <20200618010805.600873-196-sashal@kernel.org>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 246/388] fuse: copy_file_range should truncate cache
+Date:   Wed, 17 Jun 2020 21:05:43 -0400
+Message-Id: <20200618010805.600873-246-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -62,62 +58,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-[ Upstream commit d7faa8ffb6be57bf8233a4b5a636d76b83c51ce7 ]
+[ Upstream commit 9b46418c40fe910e6537618f9932a8be78a3dd6c ]
 
-In function rockchip_dt_node_to_map, a new_map variable is
-allocated by:
+After the copy operation completes the cache is not up-to-date.  Truncate
+all pages in the interval that has successfully been copied.
 
-new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
-		       GFP_KERNEL);
+Truncating completely copied dirty pages is okay, since the data has been
+overwritten anyway.  Truncating partially copied dirty pages is not okay;
+add a comment for now.
 
-This uses devres and attaches new_map to the pinctrl driver.
-This cause a leak since new_map is not released when the probed
-driver is removed. Fix it by using kcalloc to allocate new_map
-and free it in `rockchip_dt_free_map`
-
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://lore.kernel.org/r/20200506100903.15420-1-dafna.hirschfeld@collabora.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 88bc7d5097a1 ("fuse: add support for copy_file_range()")
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-rockchip.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/fuse/file.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index 098951346339..d7869b636889 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -508,8 +508,8 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	}
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index d58324198b7a..e3afceecaa6b 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -3292,6 +3292,24 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
+ 	if (err)
+ 		goto out;
  
- 	map_num += grp->npins;
--	new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
--								GFP_KERNEL);
++	/*
++	 * Write out dirty pages in the destination file before sending the COPY
++	 * request to userspace.  After the request is completed, truncate off
++	 * pages (including partial ones) from the cache that have been copied,
++	 * since these contain stale data at that point.
++	 *
++	 * This should be mostly correct, but if the COPY writes to partial
++	 * pages (at the start or end) and the parts not covered by the COPY are
++	 * written through a memory map after calling fuse_writeback_range(),
++	 * then these partial page modifications will be lost on truncation.
++	 *
++	 * It is unlikely that someone would rely on such mixed style
++	 * modifications.  Yet this does give less guarantees than if the
++	 * copying was performed with write(2).
++	 *
++	 * To fix this a i_mmap_sem style lock could be used to prevent new
++	 * faults while the copy is ongoing.
++	 */
+ 	err = fuse_writeback_range(inode_out, pos_out, pos_out + len - 1);
+ 	if (err)
+ 		goto out;
+@@ -3315,6 +3333,10 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
+ 	if (err)
+ 		goto out;
+ 
++	truncate_inode_pages_range(inode_out->i_mapping,
++				   ALIGN_DOWN(pos_out, PAGE_SIZE),
++				   ALIGN(pos_out + outarg.size, PAGE_SIZE) - 1);
 +
-+	new_map = kcalloc(map_num, sizeof(*new_map), GFP_KERNEL);
- 	if (!new_map)
- 		return -ENOMEM;
- 
-@@ -519,7 +519,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	/* create mux map */
- 	parent = of_get_parent(np);
- 	if (!parent) {
--		devm_kfree(pctldev->dev, new_map);
-+		kfree(new_map);
- 		return -EINVAL;
- 	}
- 	new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
-@@ -546,6 +546,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
- static void rockchip_dt_free_map(struct pinctrl_dev *pctldev,
- 				    struct pinctrl_map *map, unsigned num_maps)
- {
-+	kfree(map);
- }
- 
- static const struct pinctrl_ops rockchip_pctrl_ops = {
+ 	if (fc->writeback_cache) {
+ 		fuse_write_update_size(inode_out, pos_out + outarg.size);
+ 		file_update_time(file_out);
 -- 
 2.25.1
 
