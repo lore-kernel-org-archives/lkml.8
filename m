@@ -2,171 +2,129 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E476C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2EA02075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8260204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:06:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QIP0WJ0p"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aB8ub7BN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731301AbgFRPEa (ORCPT
+        id S1731310AbgFRPGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:04:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60596 "EHLO
+        Thu, 18 Jun 2020 11:06:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728788AbgFRPE2 (ORCPT
+        with ESMTP id S1726193AbgFRPGI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:04:28 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA0AC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:04:27 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 9so7642964ljv.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:04:27 -0700 (PDT)
+        Thu, 18 Jun 2020 11:06:08 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233FFC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:06:08 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id n22so1509826vkm.7
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:06:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=e3AaxzkJKvuJF6KN/5uB+HjzXUCfsnMRb9K1Yv0qPEs=;
-        b=QIP0WJ0pNtpLo2KJbUw4+wbBhH7Nnk4+ZwOpPnliesoYCCasWqpMx0mMvynxG60m+Z
-         u9PE+P5aKkxeVIOwcEMeLon6Vxu0ScvNx/Niy7Yn8ML9ty8p1K5Wm8ci57YEPFHfrR4P
-         nuNnTB8kCWrogjZzQY7mXYIRdfoRzg01usyn60SP5OxOh7iWQEaYWfIvSZ3N8Zte4yZC
-         Rmwzx1CddNdJNUqFG/N0Uke9o/ae2SSRn86wCciYZsKbVFC/U3vXdqP1N9vMXMDCRKEZ
-         nivk6Tb2mzWBW2DcZpP2cyo8FA3tGarbAyFlHjAkABu/Oq6U36aYxnJ+PE3wuHAxS/BG
-         aYWg==
+        bh=Uhyo0sKph8oAx2mIyvhHF5US4adK0E3GfKdnIj29E9Y=;
+        b=aB8ub7BN1xbigSK9olQdwudzkwJ1S2Yyrfdib2JJjs9mSUrmcIBMO2frrAcBiZHX7l
+         4L9kXEoi3EWaFw233GFFuBhCKCauoatr3Dh0Zel+L6LuxU0GkTw8Fz5FrXpPncLbU1ap
+         Wjgam1IaQoIbFXWShumV1iaHOZseVhcJ8qLaQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=e3AaxzkJKvuJF6KN/5uB+HjzXUCfsnMRb9K1Yv0qPEs=;
-        b=Bx32QyyZPbdcgLLHkB4SU68FKnZPig1xx7HirNtJhxvMQ3yp4/xBpfVZJI6zI6iZEx
-         xtjkP2OKCTVVSsF/PCb3T7LIFr8NeTtDfTwn1OmhhXR5gIxfr5+mQXl/L9yB7YtU1C9m
-         F1kMNLHabjXwBaxuN0QeVgJ6M89qdFNco0eAU84KvSrxzBVcrl8jN9cN8ktXpj9qExj8
-         I0TnrSMTL5xoncH+uOh5ZRqFLgqy6+rARgE+iZaeZp4bmvMCKoKadZed5sTNOp4z1U+I
-         UC4rLTaOZIf6QPKm/21PJla/TPWPAXpWsHmqjJ2rhHf2a+99YoseyetjKPZ3ZGznrrKe
-         keDw==
-X-Gm-Message-State: AOAM5335j0IaoA928o9l977Tv0y5wGFFWnzU5HT6VyLVOg6Y8yHR+gbj
-        Jq8rcHZ+4u4O6e64QtlH98OY9mbXnhR0/tuc2SAMkQ==
-X-Google-Smtp-Source: ABdhPJwvN0DsAWY3KYiObhTJs8ezFwVTnlVqyM1Aw6aFgxEL3CC4+lrTUDtkDUUgYpMKr67ZSTWxedjAX6xltpaE9DI=
-X-Received: by 2002:a2e:908f:: with SMTP id l15mr2330895ljg.307.1592492665864;
- Thu, 18 Jun 2020 08:04:25 -0700 (PDT)
+        bh=Uhyo0sKph8oAx2mIyvhHF5US4adK0E3GfKdnIj29E9Y=;
+        b=UjIWj9r7KO2rMJkVHDXS5PSvJ4P34SjLGHmaPVUNOUPwDDZ0d/xysmGnwmQ84IrHlG
+         VOoVF7Dz3pvrAkXzDwyl2h151T21qbwid5NyapaCdodTyI91wTeBzGzdENGxoIqQEpw9
+         nCCw6DtpI4ruhWu2q7fuOm8NNVD3VfpYRQI4azjeRV1n+QMSmzjcTqAhNFklA5LNCm1z
+         rjD5jl+Dtxko81rDIWGtqeWwPLoho2ygdxruEMIYCmNDmfCgH7rm4HT8Ef3oJ/0CBNIm
+         aLMHzcvZ6iLb0CShmCdsCJ1SYZZ+y4K8USNHbc8ej8E/lyfY+Wcu8hCZtLzRz+b5mqo8
+         y1Xg==
+X-Gm-Message-State: AOAM530zTqU0v+U0sQoYoGng6UGBV3+9nQnOwbuSqz1NCvcnkJNNVl0z
+        e4l+50fWMRk0VLZN4fDMkwdChKvpjoU=
+X-Google-Smtp-Source: ABdhPJwQotPmEPLNgCD12BohWZyNgp7TQAeoq2Mwj5j7N82gkg1cKH8Za43OMXFuU9sDT7F9rRpAeQ==
+X-Received: by 2002:a1f:ea82:: with SMTP id i124mr3600394vkh.62.1592492766914;
+        Thu, 18 Jun 2020 08:06:06 -0700 (PDT)
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
+        by smtp.gmail.com with ESMTPSA id r139sm356296vkr.20.2020.06.18.08.06.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 08:06:06 -0700 (PDT)
+Received: by mail-vk1-f173.google.com with SMTP id e1so1513631vkd.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:06:06 -0700 (PDT)
+X-Received: by 2002:ac5:ce86:: with SMTP id 6mr3726475vke.75.1592492765249;
+ Thu, 18 Jun 2020 08:06:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200616011742.138975-1-rajatja@google.com> <20200616011742.138975-4-rajatja@google.com>
- <20200616073249.GB30385@infradead.org> <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
- <20200617073100.GA14424@infradead.org> <CACK8Z6FecYkAYQh4sm4RbAQ1iwb9gexqgY9ExD9BH2p-5Usj=g@mail.gmail.com>
- <CAHp75Vc6eA33cyAQH-m+yixTuHqiobg6fo7nzbbb-J6vN6qFcA@mail.gmail.com>
- <20200618083646.GA1066967@kroah.com> <CAHp75Vf71f2s6yipHJ4Ys1oe1v7L4PiqBCEbo0uBcG7Wpcs5dQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vf71f2s6yipHJ4Ys1oe1v7L4PiqBCEbo0uBcG7Wpcs5dQ@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 18 Jun 2020 08:03:49 -0700
-Message-ID: <CACK8Z6F2Ssj=EqhR2DZ114ETgQ-3PhzVi2rm2xxenCNOVH=60g@mail.gmail.com>
-Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>
+References: <20200616104050.84764-1-dianders@chromium.org> <20200616034044.v3.5.Ib1e6855405fc9c99916ab7c7dee84d73a8bf3d68@changeid>
+ <159242860191.62212.18088243128415903480@swboyd.mtv.corp.google.com>
+In-Reply-To: <159242860191.62212.18088243128415903480@swboyd.mtv.corp.google.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 18 Jun 2020 08:05:52 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XfYnkw2EFFHZNMRffmO3XJE9Qm8YtMzjK8OWLgL39XKQ@mail.gmail.com>
+Message-ID: <CAD=FV=XfYnkw2EFFHZNMRffmO3XJE9Qm8YtMzjK8OWLgL39XKQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] spi: spi-geni-qcom: Don't keep a local state variable
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-On Thu, Jun 18, 2020 at 2:14 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Wed, Jun 17, 2020 at 2:16 PM Stephen Boyd <swboyd@chromium.org> wrote:
 >
-> On Thu, Jun 18, 2020 at 11:36 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
+> Quoting Douglas Anderson (2020-06-16 03:40:50)
+> > diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+> > index 63a62548b078..6feea88d63ac 100644
+> > --- a/drivers/spi/spi-geni-qcom.c
+> > +++ b/drivers/spi/spi-geni-qcom.c
+> > @@ -63,13 +63,6 @@
+> >  #define TIMESTAMP_AFTER                BIT(3)
+> >  #define POST_CMD_DELAY         BIT(4)
 > >
-> > On Thu, Jun 18, 2020 at 11:12:56AM +0300, Andy Shevchenko wrote:
-> > > On Wed, Jun 17, 2020 at 10:56 PM Rajat Jain <rajatja@google.com> wrote:
-> > > > On Wed, Jun 17, 2020 at 12:31 AM Christoph Hellwig <hch@infradead.org> wrote:
-> > >
-> > > ...
-> > >
-> > > > (and likely call it "external" instead of "untrusted".
-> > >
-> > > Which is not okay. 'External' to what? 'untrusted' has been carefully
-> > > chosen by the meaning of it.
-> > > What external does mean for M.2. WWAN card in my laptop? It's in ACPI
-> > > tables, but I can replace it.
-> >
-> > Then your ACPI tables should show this, there is an attribute for it,
-> > right?
+> > -enum spi_m_cmd_opcode {
+> > -       CMD_NONE,
+> > -       CMD_XFER,
+> > -       CMD_CS,
+> > -       CMD_CANCEL,
+> > -};
+> > -
+> >  struct spi_geni_master {
+> >         struct geni_se se;
+> >         struct device *dev;
+> > @@ -81,10 +74,11 @@ struct spi_geni_master {
+> >         unsigned int tx_rem_bytes;
+> >         unsigned int rx_rem_bytes;
+> >         const struct spi_transfer *cur_xfer;
+> > -       struct completion xfer_done;
+> > +       struct completion cs_done;
+> > +       struct completion cancel_done;
+> > +       struct completion abort_done;
 >
-> There is a _PLD() method, but it's for the USB devices (or optional
-> for others, I don't remember by heart). So, most of the ACPI tables,
-> alas, don't show this.
+> I wonder if it would be better to use the wait_bit() APIs. That would
+> let us have one word for various bits like CS_DONE, CANCEL_DONE,
+> ABORT_DONE and then wake up the waiters when the particular bit happens
+> to come in through the isr. It is probably over-engineering though
+> because it saves a handful of bytes while increasing complexity.
 >
-> > > This is only one example. Or if firmware of some device is altered,
-> > > and it's internal (whatever it means) is it trusted or not?
-> >
-> > That is what people are using policy for today, if you object to this,
-> > please bring it up to those developers :)
->
-> > > So, please leave it as is (I mean name).
-> >
-> > firmware today exports this attribute, why do you not want userspace to
-> > also know it?
+> Otherwise I like this patch.
 
-To clarify, the attribute exposed by the firmware today is
-"ExternalFacingPort" and "external-facing" respectively:
+I'm going to leave it as-is for v4.  We can always make it a future
+improvement if we want.
 
-617654aae50e ("PCI / ACPI: Identify untrusted PCI devices")
-9cb30a71ac45d("PCI: OF: Support "external-facing" property")
-
-The kernel flag was named "untrusted" though, hence the assumption
-that "external=untrusted" is currently baked into the kernel today.
-IMHO, using "external" would fix that (The assumption can thus be
-contained in the IOMMU drivers) and at the same time allow more use of
-this attribute.
-
-> >
-> > Trust is different, yes, don't get the two mixed up please.  That should
-> > be a different sysfs attribute for obvious reasons.
->
-> Yes, as a bottom line that's what I meant as well.
-
-So what is the consensus here? I don't have a strong opinion - but it
-seemed to me Greg is saying "external" and Andy is saying "untrusted"?
-
-Thanks,
-Rajat
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+-Doug
