@@ -2,111 +2,158 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2115C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F77C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 975DF204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592473839;
-	bh=F0mHrmIfDX6Kuk9+3Hgh9PYce9TZgz8bGDX3F2Xq7yg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=liYwYPgIzk9/HIlSExYNoOnngpuAsBCUIHxf1aO7QSfaqESOzgIcNN9MKJb0kJPZD
-	 5qj8wa0rWasIZZQBUbAuWRoztol/bxmwifE5CWyrRx0dOzi8tfWlyR/UR7DINUrlFl
-	 ncQ2nOi/HIh91PTmd+5Yknn7E2wZ6dRiKY0+Eb2I=
+	by mail.kernel.org (Postfix) with ESMTP id C983921548
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:51:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbgFRJuh (ORCPT
+        id S1729292AbgFRJvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 05:50:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45348 "EHLO mail.kernel.org"
+        Thu, 18 Jun 2020 05:51:40 -0400
+Received: from smtp4-g21.free.fr ([212.27.42.4]:51292 "EHLO smtp4-g21.free.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729060AbgFRJuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 05:50:35 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AD63204EA;
-        Thu, 18 Jun 2020 09:50:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592473834;
-        bh=F0mHrmIfDX6Kuk9+3Hgh9PYce9TZgz8bGDX3F2Xq7yg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Yi/kPSWjPKq7vjvVPdM8ROse+MVAcIlqSfhz+akzk8JbIpIvCPW1iGgMM+7NoXyPa
-         8fwS2TTiUIvUqGdjM06a5kgBR1T3PtM2KV2csFREIvvqP7w2ouLbekxclP/58tOMbD
-         +YCsgdxEu5hx97TeLGI6/mPjfdZ8dgOfY6wBXmoY=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jlrBp-0047dq-3G; Thu, 18 Jun 2020 10:50:33 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 18 Jun 2020 10:50:32 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Neal Liu <neal.liu@mediatek.com>
-Cc:     Julius Werner <jwerner@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        id S1729060AbgFRJvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 05:51:40 -0400
+Received: from [192.168.1.91] (unknown [77.207.133.132])
+        (Authenticated sender: marc.w.gonzalez)
+        by smtp4-g21.free.fr (Postfix) with ESMTPSA id B434C19F5B2;
+        Thu, 18 Jun 2020 11:50:54 +0200 (CEST)
+Subject: Re: [RFC 4/4] media: dvb_frontend: disable zigzag mode if not
+ possible
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>
+Cc:     Brad Love <brad@nextdimension.cc>, Sean Young <sean@mess.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?Q?Crystal_Guo_=28=E9=83=AD?= =?UTF-8?Q?=E6=99=B6=29?= 
-        <Crystal.Guo@mediatek.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Jose.Marinho@arm.com
-Subject: Re: Security Random Number Generator support
-In-Reply-To: <1591170857.19414.5.camel@mtkswgap22>
-References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
- <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
- <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org>
- <1591169342.4878.9.camel@mtkswgap22>
- <fcbe37f6f9cbcde24f9c28bc504f1f0e@kernel.org>
- <1591170857.19414.5.camel@mtkswgap22>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <c3d5d4a79c7fe158cae117ff79ab332b@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: neal.liu@mediatek.com, jwerner@google.com, ardb@kernel.org, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, sean.wang@kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com, robh+dt@kernel.org, linux-crypto@vger.kernel.org, mpm@selenic.com, matthias.bgg@gmail.com, Crystal.Guo@mediatek.com, linux-arm-kernel@lists.infradead.org, Jose.Marinho@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        LKML <linux-kernel@vger.kernel.org>
+References: <cover.1592419750.git.mchehab+huawei@kernel.org>
+ <974065921c41fa0c97700196de1d921c95fafaaf.1592419750.git.mchehab+huawei@kernel.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <20bb2501-8307-185e-ebec-a83488353a0b@free.fr>
+Date:   Thu, 18 Jun 2020 11:50:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <974065921c41fa0c97700196de1d921c95fafaaf.1592419750.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-03 08:54, Neal Liu wrote:
+On 17/06/2020 20:52, Mauro Carvalho Chehab wrote:
 
-Hi Neal,
+> For the zigzag to work, the core needs to have a frequency
+> shift. Without that, the zigzag code will just try re-tuning
+> several times at the very same frequency, with seems wrong.
 
-> Do you know which ARM expert could edict this standard?
-> Or is there any chance that we can make one? And be reviewed by
-> maintainers?
+s/with/which
 
-It appears that ARM just released a beta version of the spec at [1].
+Suggest: "the core requires a frequency shift value"
 
-I'd encourage you (and anyone else) to have a look at it and provide 
-feedback to ARM.
+> So, add a warning when this happens, and fall back to the
+> single-shot mode.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  drivers/media/dvb-core/dvb_frontend.c | 141 +++++++++++++++-----------
+>  1 file changed, 79 insertions(+), 62 deletions(-)
 
-Thanks,
+It's hard to discern in the diff what is just white-space adjustment
+from one less tab, and what is new code that requires more scrutiny.
+I'll try applying the patch, and then diff -w.
+Yes, that's much better.
 
-         M.
+> diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+> index ed85dc2a9183..cb577924121e 100644
+> --- a/drivers/media/dvb-core/dvb_frontend.c
+> +++ b/drivers/media/dvb-core/dvb_frontend.c
+> @@ -642,6 +642,9 @@ static void dvb_frontend_wakeup(struct dvb_frontend *fe)
+>  	wake_up_interruptible(&fepriv->wait_queue);
+>  }
+>  
+> +static u32 dvb_frontend_get_stepsize(struct dvb_frontend *fe);
+> +static void prepare_tuning_algo_parameters(struct dvb_frontend *fe);
+> +
+>  static int dvb_frontend_thread(void *data)
+>  {
+>  	struct dvb_frontend *fe = data;
+> @@ -696,78 +699,92 @@ static int dvb_frontend_thread(void *data)
+>  			fepriv->reinitialise = 0;
+>  		}
+>  
+> -		/* do an iteration of the tuning loop */
+> -		if (fe->ops.get_frontend_algo) {
+> +		if (fe->ops.get_frontend_algo)
+>  			algo = fe->ops.get_frontend_algo(fe);
+> -			switch (algo) {
+> -			case DVBFE_ALGO_HW:
+> -				dev_dbg(fe->dvb->device, "%s: Frontend ALGO = DVBFE_ALGO_HW\n", __func__);
+> +		else
+> +			algo = DVBFE_ALGO_SW;
+>  
+> -				if (fepriv->state & FESTATE_RETUNE) {
+> -					dev_dbg(fe->dvb->device, "%s: Retune requested, FESTATE_RETUNE\n", __func__);
+> -					re_tune = true;
+> -					fepriv->state = FESTATE_TUNED;
+> -				} else {
+> -					re_tune = false;
+> -				}
+> +		/* do an iteration of the tuning loop */
+> +		switch (algo) {
+> +		case DVBFE_ALGO_SW:
+> +			prepare_tuning_algo_parameters(fe);
+>  
+> -				if (fe->ops.tune)
+> -					fe->ops.tune(fe, re_tune, fepriv->tune_mode_flags, &fepriv->delay, &s);
+> -
+> -				if (s != fepriv->status && !(fepriv->tune_mode_flags & FE_TUNE_MODE_ONESHOT)) {
+> -					dev_dbg(fe->dvb->device, "%s: state changed, adding current state\n", __func__);
+> -					dvb_frontend_add_event(fe, s);
+> -					fepriv->status = s;
+> -				}
+> -				break;
+> -			case DVBFE_ALGO_SW:
+> +			if (fepriv->max_drift) {
+>  				dev_dbg(fe->dvb->device, "%s: Frontend ALGO = DVBFE_ALGO_SW\n", __func__);
+>  				dvb_frontend_swzigzag(fe);
+>  				break;
+> -			case DVBFE_ALGO_CUSTOM:
+> -				dev_dbg(fe->dvb->device, "%s: Frontend ALGO = DVBFE_ALGO_CUSTOM, state=%d\n", __func__, fepriv->state);
+> -				if (fepriv->state & FESTATE_RETUNE) {
+> -					dev_dbg(fe->dvb->device, "%s: Retune requested, FESTAT_RETUNE\n", __func__);
+> -					fepriv->state = FESTATE_TUNED;
+> +			}
+> +
+> +			/*
+> +			 * See prepare_tuning_algo_parameters():
+> +			 *   - Some standards may not use zigzag.
+> +			 */
+> +			if (!dvb_frontend_get_stepsize(fe))
+> +				dev_warn(fe->dvb->device,
+> +					"disabling sigzag, as frontend doesn't set frequency step size\n");
 
-[1] 
-https://developer.arm.com/-/media/Files/pdf/DEN0098-True_Random_Number_Generator_Firmware_Interface-1.0BET2.pdf
--- 
-Jazz is not dead. It just smells funny...
+s/sigzag/zigzag
+
+I don't understand why you're calling dvb_frontend_get_stepsize() again?
+prepare_tuning_algo_parameters() already tried its best to set fepriv->step_size
+
+Why not just:
+
+	if (fepriv->max_drift)
+		do the zigzag
+	else
+		warn that zigzag is disabled
+
+> +
+> +			/* fall through */
+
+Why would you want to fall through from DVBFE_ALGO_SW to DVBFE_ALGO_HW?
+I think this changes the behavior before the patch.
