@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB15C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5228AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0DA221EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2187D221F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443076;
-	bh=DdzfsFUTBuNCx27Rd/SiNHCfH/ifH2yDGhE13vpwydM=;
+	s=default; t=1592443085;
+	bh=rutzPEl2f7cOnbva9y8pjKUQeM2RyFfBKGQFZIhc/3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y/ufWuSxNEW5FskHS2ucmPWbos0DZMTUhR2lBW9+aKGhktQAsm7FZyV262NXv99pK
-	 V+KAkWmMQbZPEQSukRG6Y9cDIqxlhj0dqxxgpYdluw+WuQDQ9tyYIhA9Drb9RUVYgE
-	 zMi0PWksyaRxwrsSCHG0xBFCrH+AlJe55WTlasTw=
+	b=qfQ3goxpx4woscvP+NkS1JvNzE065h0nRzc6PIFEnG2TKpOYXMY3Ol6oJVIEnso8h
+	 UbXYkggD9fxRejJ5LrqfeNISpRjikkVhYD+hNuSb/BCFtVKY8TwAzfbdMhmYwJivsL
+	 8ypVTQLJ8qGUjvqUsZf/uU/t7KWjWb4pWAxoXVws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729840AbgFRBRz (ORCPT
+        id S1729875AbgFRBSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:17:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45042 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:18:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729432AbgFRBPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:04 -0400
+        id S1729454AbgFRBPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83DFA20EDD;
-        Thu, 18 Jun 2020 01:15:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACE5420EDD;
+        Thu, 18 Jun 2020 01:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442904;
-        bh=DdzfsFUTBuNCx27Rd/SiNHCfH/ifH2yDGhE13vpwydM=;
+        s=default; t=1592442918;
+        bh=rutzPEl2f7cOnbva9y8pjKUQeM2RyFfBKGQFZIhc/3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sRdrQw0HHzarDlyxwquBKjgiqKZ8TCBym7DQkUr1ioMz4RkmzzL66TOmT33i1Lyv1
-         vO6Zmf+enSGxKIrnthIqV8WfhTfLyEeav4TjSj6xMfFkTqYnpbvAstbFOfsiCuHBrj
-         SR7gNl+7Vc3+t+cUQQD48G1Gza9XzoyT+LhmY7HI=
+        b=BbFKMkX8jzMmyE6WbLAlzlaS5zk77ITpjjmnJGxsbFDodDg50DEaklLv5IzZ7CiV1
+         jRwCJMjouEC/F3fBHyf1C+cLMmnmN9J4cy/WdrEGit0VZSCVOKrXm1jz0sHhU9Oqww
+         C6j/2BQVhnGRGxl7tZV9W7k4B7KwcKcav8TACQRQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 324/388] pinctrl: sirf: add missing put_device() call in sirfsoc_gpio_probe()
-Date:   Wed, 17 Jun 2020 21:07:01 -0400
-Message-Id: <20200618010805.600873-324-sashal@kernel.org>
+Cc:     Jiri Benc <jbenc@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 335/388] geneve: change from tx_error to tx_dropped on missing metadata
+Date:   Wed, 17 Jun 2020 21:07:12 -0400
+Message-Id: <20200618010805.600873-335-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,78 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Jiri Benc <jbenc@redhat.com>
 
-[ Upstream commit 66339f2fba3fa05b0507e1887e4c6abcfc6228a3 ]
+[ Upstream commit 9d149045b3c0e44c049cdbce8a64e19415290017 ]
 
-A coccicheck run provided information like the following:
+If the geneve interface is in collect_md (external) mode, it can't send any
+packets submitted directly to its net interface, as such packets won't have
+metadata attached. This is expected.
 
-drivers/pinctrl/sirf/pinctrl-sirf.c:798:2-8: ERROR: missing put_device;
-call of_find_device_by_node on line 792, but without a corresponding
-object release within this function.
+However, the kernel itself sends some packets to the interface, most
+notably, IPv6 DAD, IPv6 multicast listener reports, etc. This is not wrong,
+as tunnel metadata can be specified in routing table (although technically,
+that has never worked for IPv6, but hopefully will be fixed eventually) and
+then the interface must correctly participate in IPv6 housekeeping.
 
-Generated by: scripts/coccinelle/free/put_device.cocci
+The problem is that any such attempt increases the tx_error counter. Just
+bringing up a geneve interface with IPv6 enabled is enough to see a number
+of tx_errors. That causes confusion among users, prompting them to find
+a network error where there is none.
 
-Thus add a jump target to fix the exception handling for this
-function implementation.
+Change the counter used to tx_dropped. That better conveys the meaning
+(there's nothing wrong going on, just some packets are getting dropped) and
+hopefully will make admins panic less.
 
-Fixes: 5130216265f6 ("PINCTRL: SiRF: add GPIO and GPIO irq support in CSR SiRFprimaII")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Link: https://lore.kernel.org/r/20200603013532.755220-1-yukuai3@huawei.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Jiri Benc <jbenc@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sirf/pinctrl-sirf.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/net/geneve.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/sirf/pinctrl-sirf.c b/drivers/pinctrl/sirf/pinctrl-sirf.c
-index 1ebcb957c654..63a287d5795f 100644
---- a/drivers/pinctrl/sirf/pinctrl-sirf.c
-+++ b/drivers/pinctrl/sirf/pinctrl-sirf.c
-@@ -794,13 +794,17 @@ static int sirfsoc_gpio_probe(struct device_node *np)
- 		return -ENODEV;
+diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
+index 6b461be1820b..75266580b586 100644
+--- a/drivers/net/geneve.c
++++ b/drivers/net/geneve.c
+@@ -987,9 +987,10 @@ static netdev_tx_t geneve_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	if (geneve->collect_md) {
+ 		info = skb_tunnel_info(skb);
+ 		if (unlikely(!info || !(info->mode & IP_TUNNEL_INFO_TX))) {
+-			err = -EINVAL;
+ 			netdev_dbg(dev, "no tunnel metadata\n");
+-			goto tx_error;
++			dev_kfree_skb(skb);
++			dev->stats.tx_dropped++;
++			return NETDEV_TX_OK;
+ 		}
+ 	} else {
+ 		info = &geneve->info;
+@@ -1006,7 +1007,7 @@ static netdev_tx_t geneve_xmit(struct sk_buff *skb, struct net_device *dev)
  
- 	sgpio = devm_kzalloc(&pdev->dev, sizeof(*sgpio), GFP_KERNEL);
--	if (!sgpio)
--		return -ENOMEM;
-+	if (!sgpio) {
-+		err = -ENOMEM;
-+		goto out_put_device;
-+	}
- 	spin_lock_init(&sgpio->lock);
+ 	if (likely(!err))
+ 		return NETDEV_TX_OK;
+-tx_error:
++
+ 	dev_kfree_skb(skb);
  
- 	regs = of_iomap(np, 0);
--	if (!regs)
--		return -ENOMEM;
-+	if (!regs) {
-+		err = -ENOMEM;
-+		goto out_put_device;
-+	}
- 
- 	sgpio->chip.gc.request = sirfsoc_gpio_request;
- 	sgpio->chip.gc.free = sirfsoc_gpio_free;
-@@ -824,8 +828,10 @@ static int sirfsoc_gpio_probe(struct device_node *np)
- 	girq->parents = devm_kcalloc(&pdev->dev, SIRFSOC_GPIO_NO_OF_BANKS,
- 				     sizeof(*girq->parents),
- 				     GFP_KERNEL);
--	if (!girq->parents)
--		return -ENOMEM;
-+	if (!girq->parents) {
-+		err = -ENOMEM;
-+		goto out_put_device;
-+	}
- 	for (i = 0; i < SIRFSOC_GPIO_NO_OF_BANKS; i++) {
- 		bank = &sgpio->sgpio_bank[i];
- 		spin_lock_init(&bank->lock);
-@@ -868,6 +874,8 @@ static int sirfsoc_gpio_probe(struct device_node *np)
- 	gpiochip_remove(&sgpio->chip.gc);
- out:
- 	iounmap(regs);
-+out_put_device:
-+	put_device(&pdev->dev);
- 	return err;
- }
- 
+ 	if (err == -ELOOP)
 -- 
 2.25.1
 
