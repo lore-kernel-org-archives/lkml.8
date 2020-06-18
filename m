@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F07C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B845BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBDA72192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97FCA20897
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445352;
-	bh=x6Jt4u/AbNqqCP3lAECzhXP1uii5dlx4/WV6Cw+sor0=;
+	s=default; t=1592445358;
+	bh=7UP8d+aNwH4B+abjTH5Mp+3kA+gA4M7eqyVYX0XBBlM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=olf09IUEjdO/Coiiz6U/XNWikRVEI5qFbeOG7kfrA6IPshwFqbiX4KQlE2GnUsFfx
-	 iD6VTb2I8muhsTbFovZSf/709aCYaJ/DDW6+WW1M2EZ9DLRRExcKnJWx1WFDbUZE/j
-	 /cjC0dtJBHNgLSkfGqV8otfx9sVnk7XGba9HWhok=
+	b=EAxiQXBgU8fM5ld1k34cuel6HdE2BL1cmzbgR4sHNUulxPHqPbMVfJLS5ShPrY9MU
+	 PeEuC3PwwBUygZovqYiuGBAQOgTstZgfuccteWpzMxETR8H+OwDwWtpZFJAC+NlK3T
+	 DAA6hsCYZSzNLecS720sIHTj2/0XUJfY57z5rSr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730903AbgFRBZh (ORCPT
+        id S1731896AbgFRBz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:25:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55666 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:55:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730775AbgFRBWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:35 -0400
+        id S1729902AbgFRBZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88F7F20776;
-        Thu, 18 Jun 2020 01:22:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 506A12088E;
+        Thu, 18 Jun 2020 01:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443355;
-        bh=x6Jt4u/AbNqqCP3lAECzhXP1uii5dlx4/WV6Cw+sor0=;
+        s=default; t=1592443537;
+        bh=7UP8d+aNwH4B+abjTH5Mp+3kA+gA4M7eqyVYX0XBBlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0nxhdy7FJuYZl64B+l/YwWojeOcjlEtBugJNT3AOU9m7Or+Ux5/hslHm/M/PsL9ZD
-         vpdp+YApJEzQHfMl0Rpb/+GBW+YnNEoHAtDj+qInYTP3HPfIXFe6CX4v99Bl4jijsO
-         nfrdYAOrDgrAahG3Ko7F7Kccz9zoDGovuaX9Q0YE=
+        b=Ukjd0vt7TsbqRSonc+0GFz+SLdl9Y4pPCAT/+9a27sKTTndzsvuI0stjflPvv7zsy
+         lJNPGb0da4h1vK8rLEflZgNO5Sh2NERRL2Z5fJIC3W2AnvDyi71kvp7bajBgdfQY2u
+         d96u7cYL/dmmAv/7EFSj8dlMHaEeXegeRyed/U2I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 013/172] scsi: qedi: Check for buffer overflow in qedi_set_path()
-Date:   Wed, 17 Jun 2020 21:19:39 -0400
-Message-Id: <20200618012218.607130-13-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Alexander Fomichev <fomichev.ru@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
+        linux-ntb@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 155/172] NTB: ntb_tool: reading the link file should not end in a NULL byte
+Date:   Wed, 17 Jun 2020 21:22:01 -0400
+Message-Id: <20200618012218.607130-155-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -60,43 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 4a4c0cfb4be74e216dd4446b254594707455bfc6 ]
+[ Upstream commit 912e12813dd03c602e4922fc34709ec4d4380cf0 ]
 
-Smatch complains that the "path_data->handle" variable is user controlled.
-It comes from iscsi_set_path() so that seems possible.  It's harmless to
-add a limit check.
+When running ntb_test this warning is issued:
 
-The qedi->ep_tbl[] array has qedi->max_active_conns elements (which is
-always ISCSI_MAX_SESS_PER_HBA (4096) elements).  The array is allocated in
-the qedi_cm_alloc_mem() function.
+./ntb_test.sh: line 200: warning: command substitution: ignored null
+byte in input
 
-Link: https://lore.kernel.org/r/20200428131939.GA696531@mwanda
-Fixes: ace7f46ba5fd ("scsi: qedi: Add QLogic FastLinQ offload iSCSI driver framework.")
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This is caused by the kernel returning one more byte than is necessary
+when reading the link file.
+
+Reduce the number of bytes read back to 2 as it was before the
+commit that regressed this.
+
+Fixes: 7f46c8b3a552 ("NTB: ntb_tool: Add full multi-port NTB API support")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Allen Hubbe <allenbh@gmail.com>
+Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_iscsi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/ntb/test/ntb_tool.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-index 1b7049dce169..d59473d1679f 100644
---- a/drivers/scsi/qedi/qedi_iscsi.c
-+++ b/drivers/scsi/qedi/qedi_iscsi.c
-@@ -1217,6 +1217,10 @@ static int qedi_set_path(struct Scsi_Host *shost, struct iscsi_path *path_data)
- 	}
+diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
+index 025747c1568e..311d6ab8d016 100644
+--- a/drivers/ntb/test/ntb_tool.c
++++ b/drivers/ntb/test/ntb_tool.c
+@@ -504,7 +504,7 @@ static ssize_t tool_peer_link_read(struct file *filep, char __user *ubuf,
+ 	buf[1] = '\n';
+ 	buf[2] = '\0';
  
- 	iscsi_cid = (u32)path_data->handle;
-+	if (iscsi_cid >= qedi->max_active_conns) {
-+		ret = -EINVAL;
-+		goto set_path_exit;
-+	}
- 	qedi_ep = qedi->ep_tbl[iscsi_cid];
- 	QEDI_INFO(&qedi->dbg_ctx, QEDI_LOG_INFO,
- 		  "iscsi_cid=0x%x, qedi_ep=%p\n", iscsi_cid, qedi_ep);
+-	return simple_read_from_buffer(ubuf, size, offp, buf, 3);
++	return simple_read_from_buffer(ubuf, size, offp, buf, 2);
+ }
+ 
+ static TOOL_FOPS_RDWR(tool_peer_link_fops,
+@@ -1690,4 +1690,3 @@ static void __exit tool_exit(void)
+ 	debugfs_remove_recursive(tool_dbgfs_topdir);
+ }
+ module_exit(tool_exit);
+-
 -- 
 2.25.1
 
