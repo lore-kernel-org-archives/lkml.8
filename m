@@ -2,141 +2,122 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F557C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E15C920707
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76DAA20897
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:07:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="s45rwrEV"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="oAdAxGYN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730051AbgFRNGX (ORCPT
+        id S1730106AbgFRNHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:06:23 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:22381 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728303AbgFRNGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:06:22 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592485581; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=hMRM2QVP/ewY7wLU63zjCcKd42Mc9s6EEHHa9yVORQk=; b=s45rwrEVb9WkokjoOmLDPriBlTFHozs/eUFVklVAKvSRZpGKEneLVNNui2OF6nSGJ4cLue9U
- tjyJ1C3tsnLUBQu22Sv8U36AItfHAXq0t3rPB4Uy4HugSvu6LZh/dqb1nMY+S2+sQ6zgvbBL
- VtR/FYVbwd5cRF9fIumTU7pjJ4w=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
- 5eeb66c8ad153efa3425df8d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 18 Jun 2020 13:06:16
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CC7B2C43391; Thu, 18 Jun 2020 13:06:15 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D58D8C433C8;
-        Thu, 18 Jun 2020 13:06:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D58D8C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     bjorn.andersson@linaro.org, agross@kernel.org,
-        georgi.djakov@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org,
-        swboyd@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org, Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH] soc: qcom: rpmh: Update rpmh_invalidate function to return void
-Date:   Thu, 18 Jun 2020 18:35:53 +0530
-Message-Id: <1592485553-29163-1-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 18 Jun 2020 09:07:17 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56998 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725953AbgFRNHP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 09:07:15 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05ID2ZVf030156;
+        Thu, 18 Jun 2020 15:07:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=wzZNcYBfyuUeNiTtVen51N6/kCN5vjlsNYLVHoB5I1A=;
+ b=oAdAxGYNAqXNISIMfpu6F7A2plIhnbbyY82kJ4K6Q3tUNw6HZQ/IbOIeizV1OgbHdghB
+ Ra4ZHCnBrxYdLr2yLFl9YLTdsByD3OACm9Rdv96xR10vie6X3HOrzHCoN6lj2Y012Owm
+ jn2HJmRaVIGLs3A8GWse3kDi/bVmm4kAit885Vo1iZ51wVu4GuHkCFfMUnwcT/ptbQO+
+ yW7PBpCApFW1FpWzqLS4PzwLXaKsUzJ+eHvAZxfJgg7sOfVH8dLtfr+jwwcKnZFS1Zmx
+ 581JUZ6BYRim+d3pi0i7+hYMTeS29ZY06KfexohQm1IFyoWu42mAoe0rig/jGA9ep8rF zQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31q64cb3ft-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 15:07:02 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 30FFD10002A;
+        Thu, 18 Jun 2020 15:07:01 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 248C62B8A0D;
+        Thu, 18 Jun 2020 15:07:01 +0200 (CEST)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jun 2020 15:07:00
+ +0200
+From:   Erwan Le Ray <erwan.leray@st.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Erwan Le Ray <erwan.leray@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v2 3/5] ARM: dts: stm32: add usart3 node to stm32mp157c-ev1
+Date:   Thu, 18 Jun 2020 15:06:49 +0200
+Message-ID: <20200618130651.29836-4-erwan.leray@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200618130651.29836-1-erwan.leray@st.com>
+References: <20200618130651.29836-1-erwan.leray@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-18_12:2020-06-18,2020-06-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently rpmh_invalidate() always returns success. Update its
-return type to void.
+Adds the usart3 node to stm32mp157c-ev1 board. usart3 pins are connected to
+GPIO Expansion connector. usart3 is disabled by default.
 
-Suggested-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/interconnect/qcom/bcm-voter.c | 6 +-----
- drivers/soc/qcom/rpmh.c               | 4 +---
- include/soc/qcom/rpmh.h               | 7 ++++---
- 3 files changed, 6 insertions(+), 11 deletions(-)
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
 
-diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
-index 2a11a63..a3d2ef1 100644
---- a/drivers/interconnect/qcom/bcm-voter.c
-+++ b/drivers/interconnect/qcom/bcm-voter.c
-@@ -266,11 +266,7 @@ int qcom_icc_bcm_voter_commit(struct bcm_voter *voter)
- 	if (!commit_idx[0])
- 		goto out;
+Changes in v2:
+ - Add a comment to indicate how to wire USART3_RTS flow control to the GPIO
+   expansion connector on ev1. 
+
+diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+index b19056557ef0..85628e16d2d5 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+@@ -19,6 +19,7 @@
  
--	ret = rpmh_invalidate(voter->dev);
--	if (ret) {
--		pr_err("Error invalidating RPMH client (%d)\n", ret);
--		goto out;
--	}
-+	rpmh_invalidate(voter->dev);
+ 	aliases {
+ 		serial0 = &uart4;
++		serial1 = &usart3;
+ 		ethernet0 = &ethernet0;
+ 	};
  
- 	ret = rpmh_write_batch(voter->dev, RPMH_ACTIVE_ONLY_STATE,
- 			       cmds, commit_idx);
-diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-index f2b5b46c..b61e183 100644
---- a/drivers/soc/qcom/rpmh.c
-+++ b/drivers/soc/qcom/rpmh.c
-@@ -497,7 +497,7 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
-  *
-  * Invalidate the sleep and wake values in batch_cache.
-  */
--int rpmh_invalidate(const struct device *dev)
-+void rpmh_invalidate(const struct device *dev)
- {
- 	struct rpmh_ctrlr *ctrlr = get_rpmh_ctrlr(dev);
- 	struct batch_cache_req *req, *tmp;
-@@ -509,7 +509,5 @@ int rpmh_invalidate(const struct device *dev)
- 	INIT_LIST_HEAD(&ctrlr->batch_cache);
- 	ctrlr->dirty = true;
- 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
--
--	return 0;
- }
- EXPORT_SYMBOL(rpmh_invalidate);
-diff --git a/include/soc/qcom/rpmh.h b/include/soc/qcom/rpmh.h
-index f9ec353..bdbee1a 100644
---- a/include/soc/qcom/rpmh.h
-+++ b/include/soc/qcom/rpmh.h
-@@ -20,7 +20,7 @@ int rpmh_write_async(const struct device *dev, enum rpmh_state state,
- int rpmh_write_batch(const struct device *dev, enum rpmh_state state,
- 		     const struct tcs_cmd *cmd, u32 *n);
+@@ -341,6 +342,20 @@
+ 	};
+ };
  
--int rpmh_invalidate(const struct device *dev);
-+void rpmh_invalidate(const struct device *dev);
- 
- #else
- 
-@@ -38,8 +38,9 @@ static inline int rpmh_write_batch(const struct device *dev,
- 				   const struct tcs_cmd *cmd, u32 *n)
- { return -ENODEV; }
- 
--static inline int rpmh_invalidate(const struct device *dev)
--{ return -ENODEV; }
-+static inline void rpmh_invalidate(const struct device *dev)
-+{
-+}
- 
- #endif /* CONFIG_QCOM_RPMH */
- 
++&usart3 {
++	pinctrl-names = "default", "sleep", "idle";
++	pinctrl-0 = <&usart3_pins_b>;
++	pinctrl-1 = <&usart3_sleep_pins_b>;
++	pinctrl-2 = <&usart3_idle_pins_b>;
++	/*
++	 * HW flow control USART3_RTS is optional, and isn't default wired to
++	 * the connector. SB23 needs to be soldered in order to use it, and R77
++	 * (ETH_CLK) should be removed.
++	 */
++	uart-has-rtscts;
++	status = "disabled";
++};
++
+ &usbh_ehci {
+ 	phys = <&usbphyc_port0>;
+ 	status = "okay";
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.17.1
 
