@@ -2,124 +2,232 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5B692070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA1392070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:35:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MHnbzQNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbgFRMfg (ORCPT
+        id S1729777AbgFRMfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:35:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37530 "EHLO
+        Thu, 18 Jun 2020 08:35:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbgFRMff (ORCPT
+        with ESMTP id S1729445AbgFRMfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 08:35:35 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43242C0613ED
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 05:35:35 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1jltlT-00029o-O5; Thu, 18 Jun 2020 14:35:31 +0200
-Received: from [IPv6:2a03:f580:87bc:d400:789c:8c3:eaa5:9d1b] (unknown [IPv6:2a03:f580:87bc:d400:789c:8c3:eaa5:9d1b])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 62E6551C124;
-        Thu, 18 Jun 2020 12:35:30 +0000 (UTC)
-Subject: Re: [PATCH 0/6] Add Microchip MCP25XXFD CAN driver
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        wg@grandegger.com, kernel@martin.sperl.org,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200610074442.10808-1-manivannan.sadhasivam@linaro.org>
- <fbbca009-3c53-6aa9-94ed-7e9e337c31a4@pengutronix.de>
- <20200617165902.GB14228@x1.vandijck-laurijssen.be>
- <2e80e2ed-d63d-5cc6-e1c6-e0c9e75c218e@pengutronix.de>
- <20200618123055.GA17496@x1.vandijck-laurijssen.be>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
- zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
- QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
- 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
- Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
- XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
- nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
- Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
- eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
- kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
- ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
- CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
- iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
- Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
- Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
- tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
- yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
- BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
- mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
- 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
- Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
- 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
-Message-ID: <c8267280-e7a9-8171-d714-fa392ccb5537@pengutronix.de>
-Date:   Thu, 18 Jun 2020 14:35:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 18 Jun 2020 08:35:50 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA1AC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 05:35:49 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id g139so2566607lfd.10
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 05:35:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oLgCwziopXCH577D68AEHtwfUvlf8aXb2mGhRu95Jdc=;
+        b=MHnbzQNLtZ9AS8NhgZhO26iAl+Iyf13cOjfRhFaRg/fkYyXCRFA2RZoa6faSock/qG
+         v8ybP4J29FdUA3Z7ACS1nOIlj9szfHxz9fC727ecwoXcMP2XNx88CyrRjiiTRRtGXwuw
+         mPnK4qT/6EJ8PjDQzpnsN6x4dNX+ljwk1xhdpOdBMQ8IIwfMxiPOf4jia8X1/q0K3fbI
+         1uTxtSs63FbiPub95FkFvudKQUbeCSSBlEitbUlhrx/vEjYiDLKUjydB4jmLA8zjzQ/t
+         ehaV/ytiWntchnqYDOBldwrnkx4HJ4JkFKQOrYO9ieh2SJ4fH6wbYxlvRg9aQHNC5yuW
+         aR1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oLgCwziopXCH577D68AEHtwfUvlf8aXb2mGhRu95Jdc=;
+        b=qUlHrhiL4Bi0n0W2i/g8RREaCsv1n4BvFYip2Go3S8wPI84xgd3DkED7lhg4Zf0KCq
+         zcTzWexScST5n4o78Qh9FeCvaHBBAkvL3yJi6hkazyvzm+caYt+ufSXWI4C1jHIhluSu
+         ezWboFcUx6wajn8OJV5hSMAQKd2oDQAxqr75mYykMq9LuWk6rnrNjYJ2RKfkkW+rwSiS
+         xLfMyijVeyH0YZkFOaxFuMZM4bJUP6Nayq0VAXorb25j2toLRtzQJcoT4CVwDm6/YD2g
+         GEtTfPOgt4ulRzP4lljjwx6SygPbsCDzXgzTrkmWQ3y0/Qp51Nn55gvAeMoKE9+gTQbU
+         gLQw==
+X-Gm-Message-State: AOAM5300xe7xJKV3t8yNVc8Rexk0KoeNz3ozpjnBCXlqMsK+W5P6Js78
+        Yyq15p6vaTNh+zKTf9zPIbvvA/TcbkjTNmRNGPFeMA==
+X-Google-Smtp-Source: ABdhPJzCyHQlXAI2ejRv1CgoJboqx8jP/Mjs8N9Np3FKjp77Zk2tNXmnTna/BYSNe6lH2sujmgQ48+7qlUVPFFZiY7w=
+X-Received: by 2002:a19:8806:: with SMTP id k6mr1079090lfd.189.1592483747764;
+ Thu, 18 Jun 2020 05:35:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200618123055.GA17496@x1.vandijck-laurijssen.be>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200319023819.GO11705@shao2-debian> <20200612110616.20264-1-hdanton@sina.com>
+ <90f4036d-bb16-af67-8776-a2cbe67dfe7f@linux.intel.com> <20200615081041.GA16990@vingu-book>
+ <d60343e9-b3a0-bdc7-84f4-e8c912f92c46@linux.intel.com> <20200616065432.GA18401@vingu-book>
+ <3de4937b-1dcd-6d2e-836f-fed1c295dd7c@linux.intel.com> <20200617145725.GA12524@vingu-book>
+ <20200617162558.GA3253@vingu-book> <451eabaf-c425-8e05-f5d4-3074c867cea6@linux.intel.com>
+In-Reply-To: <451eabaf-c425-8e05-f5d4-3074c867cea6@linux.intel.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 18 Jun 2020 14:35:36 +0200
+Message-ID: <CAKfTPtCSGcx0_0b7PTWPNi9LnGqCCTpt4zswOBumVgr7CWAJbQ@mail.gmail.com>
+Subject: Re: [LKP] [sched/fair] 070f5e860e: reaim.jobs_per_min -10.5% regression
+To:     Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/20 2:30 PM, Kurt Van Dijck wrote:
-> On do, 18 jun 2020 00:36:29 +0200, Marc Kleine-Budde wrote:
->> On 6/17/20 6:59 PM, Kurt Van Dijck wrote:
->>> I'm in the process of getting a Variscite imx8m mini SOM online, with
->>
->> Have your heard about the imx8m plus? It has CAN cores! We have a board in the
->> office to play with. :)
->>
->>> MCP2517FD. The 4.19 kernel that comes with it, has a driver that is
->>
->> You shall not start projects with 1,5 years old kernel.
->> And you probably shall not use vendor kernel for new projects.
->> :D
-> 
-> your rpi kernel starts of v4.19.119 (or so), where the variscite starts
-> of v4.19.35.
+On Thu, 18 Jun 2020 at 04:45, Xing Zhengjun
+<zhengjun.xing@linux.intel.com> wrote:
+>
+>
+>
 
-You're missing some stable backports for the kernel then.
+> >>
+> >> This bench forks a new thread for each and every new step. But a newly=
+ forked
+> >> threads start with a load_avg and a runnable_avg set to max whereas th=
+e threads
+> >> are running shortly before exiting. This makes the CPU to be set overl=
+oaded in
+> >> some case whereas it isn't.
+> >>
+> >> Could you try the patch below ?
+> >> It fixes the problem on my setup (I have finally been able to reproduc=
+e the problem)
+> >>
+> >> ---
+> >>   kernel/sched/fair.c | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> >> index 0aeffff62807..b33a4a9e1491 100644
+> >> --- a/kernel/sched/fair.c
+> >> +++ b/kernel/sched/fair.c
+> >> @@ -807,7 +807,7 @@ void post_init_entity_util_avg(struct task_struct =
+*p)
+> >>              }
+> >>      }
+> >>
+> >> -    sa->runnable_avg =3D cpu_scale;
+> >> +    sa->runnable_avg =3D sa->util_avg;
+> >>
+> >>      if (p->sched_class !=3D &fair_sched_class) {
+> >>              /*
+> >> --
+> >> 2.17.1
+> >>
+> >
+> > The patch above tries to move back to the group in the same classificat=
+ion as
+> > before but this could harm other benchmarks.
+> >
+> > There is another way to fix this by easing the migration of task in the=
+ case
+> > of migrate_util imbalance.
+> >
+> > Could you also try the patch below instead of the one above ?
+> >
+> > ---
+> >   kernel/sched/fair.c | 3 ++-
+> >   1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 0aeffff62807..fcaf66c4d086 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -7753,7 +7753,8 @@ static int detach_tasks(struct lb_env *env)
+> >               case migrate_util:
+> >                       util =3D task_util_est(p);
+> >
+> > -                     if (util > env->imbalance)
+> > +                     if (util/2 > env->imbalance &&
+> > +                         env->sd->nr_balance_failed <=3D env->sd->cach=
+e_nice_tries)
+> >                               goto next;
+> >
+> >                       env->imbalance -=3D util;
+> > --
+> > 2.17.1
+> >
+> >
+>
+> I apply the patch based on v5.7, the test result is as the following:
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> tbox_group/testcase/rootfs/kconfig/compiler/runtime/nr_task/debug-setup/t=
+est/cpufreq_governor/ucode:
+>
+> lkp-ivb-d04/reaim/debian-x86_64-20191114.cgz/x86_64-rhel-7.6/gcc-7/300s/1=
+00%/test/five_sec/performance/0x21
+>
+> commit:
+>    9f68395333ad7f5bfe2f83473fed363d4229f11c
+>    070f5e860ee2bf588c99ef7b4c202451faa48236
+>    v5.7
+>    69c81543653bf5f2c7105086502889fa019c15cb  (the test patch)
+>
+> 9f68395333ad7f5b 070f5e860ee2bf588c99ef7b4c2                        v5.7
+> 69c81543653bf5f2c7105086502
+> ---------------- --------------------------- ---------------------------
+> ---------------------------
+>           %stddev     %change         %stddev     %change
+> %stddev     %change         %stddev
+>               \          |                \          |                \
+>          |                \
+>        0.69           -10.3%       0.62            -9.1%       0.62
+>        -7.6%       0.63        reaim.child_systime
+>        0.62            -1.0%       0.61            +0.5%       0.62
+>        +1.9%       0.63        reaim.child_utime
+>       66870           -10.0%      60187            -7.6%      61787
+>        -5.9%      62947        reaim.jobs_per_min
 
-> The result was quite some list of merge conflicts, on top of a vendor
-> kernel, so I took your advise and switched to the latest and greatest
-> 5.7.3.
+There is an improvement but not at the same level as on my setup.
+I'm not sure with patch you tested here. Is it the last one that
+modify detach_tasks() or the previous one that modify
+post_init_entity_util_avg() ?
 
-\o/
+Could you also try the other one ? Both patches were improving results
+on y setup but the behavior doesn't seem to be the same on your setup.
 
-> Luckily, we need no sound (yet) and no video. :-)
 
-regards,
-Marc
-
--- 
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+>       16717           -10.0%      15046            -7.6%      15446
+>        -5.9%      15736        reaim.jobs_per_min_child
+>       97.84            -1.1%      96.75            -0.4%      97.43
+>        -0.4%      97.47        reaim.jti
+>       72000           -10.8%      64216            -8.3%      66000
+>        -5.7%      67885        reaim.max_jobs_per_min
+>        0.36           +10.6%       0.40            +7.8%       0.39
+>        +6.0%       0.38        reaim.parent_time
+>        1.58 =C2=B1  2%     +71.0%       2.70 =C2=B1  2%     +26.9%       =
+2.01 =C2=B1
+> 2%     +23.6%       1.95 =C2=B1  3%  reaim.std_dev_percent
+>        0.00 =C2=B1  5%    +110.4%       0.01 =C2=B1  3%     +48.8%       =
+0.01 =C2=B1
+> 7%     +43.2%       0.01 =C2=B1  5%  reaim.std_dev_time
+>       50800            -2.4%      49600            -1.6%      50000
+>        -0.8%      50400        reaim.workload
+>
+>
+> >>
+> >>
+...
+> >>>>>
+> >>>>> --
+> >>>>> Zhengjun Xing
+> >>>
+> >>> --
+> >>> Zhengjun Xing
+>
+> --
+> Zhengjun Xing
