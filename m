@@ -2,150 +2,128 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D62C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7993C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C10520739
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4FE82075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:00:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MUhjuTRE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kYwPKZdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730047AbgFRO6z (ORCPT
+        id S1730886AbgFRPAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:58:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59718 "EHLO
+        Thu, 18 Jun 2020 11:00:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgFRO6w (ORCPT
+        with ESMTP id S1726193AbgFRPAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:58:52 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 749B5C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:58:52 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id e1so6405096wrt.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:58:52 -0700 (PDT)
+        Thu, 18 Jun 2020 11:00:08 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3CFC06174E;
+        Thu, 18 Jun 2020 08:00:07 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id m81so7406487ioa.1;
+        Thu, 18 Jun 2020 08:00:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jD/vaqPgqn/GbyEshdpFayy0rmaV/B8hrtCZ/Jh2OJE=;
-        b=MUhjuTRE41q8DNA4MiAfGDVi5SKnOjfYcFcOhQx7Q0shrPeqQgpSkt8vNdagw81CtD
-         lWLMX4+/HZFFKq9CRKzRPyqosy7lw1AjTREEIydy8HM7KhD0t5cCYtapY8p+iKvwIrJU
-         7Y88sQstzp0ZvxbnwwQ/GnOgH5HrC0o3bQQGhF1y9V/l2jWwfjAyYqDJ0mEp/rMQv6Bv
-         4Ijzapji4+JZXd8P9bxQJK/BbyzgGnHZJ85AWAhCegMt6uaB13sZTFWoihMIAObxx9kA
-         VnN/1RVFtOzFZJfnVmAtV2Nbbt8eJXjLOLPUk1vH1u2XdGfLw7QjcUBdogC9RiXY3BIR
-         g9YA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NtwtfirPIaj3hQKqt5NnTqLzfoXadlYH6xaXhH3mB+s=;
+        b=kYwPKZdp0pHLg9nzSkXLUjXIWhhGSDK+lUsX3kvZKhpx/abFTtNYjkojW4sVVt7bHm
+         qZGTxARuFd3WI6EfU1eBN6+4gj/yCc7G3VU2n21gea6aS3fkUz/uMmbZ6zjhs6dF/ctG
+         mtQLDzrh6EKtHb9OSOEmMjo3N7fWi8hwmYyXXXcwlEWheXzJEY46FsRDyYJ/YXapbZEL
+         GAjWeoKd6sh4vm2KkDp99cfVll6l6Xz1jcMVSif5RsT91SxuUdRKKCZShkXiMxJfDPO2
+         mEQ03gbiIGbBmN1vxaEfCsHPJle351uahP3BtuY+Amj/uplhgSOrlPpU1WHGNLMkS4iC
+         lVIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jD/vaqPgqn/GbyEshdpFayy0rmaV/B8hrtCZ/Jh2OJE=;
-        b=FgQYa6ea5x+j1lPrr1GMbDvzMNoccMTEbjyXl5KPRXpfevabZ31iSvqj51DYvSUmgd
-         dlAvLe9itdKlKDVxfnwwynMfXPR9fyjciTjZVjpoViWmJ9ScyMGvlkcpsbrtXtqKLl+D
-         uTicvfF88hVCKlXuzSsFDljPdpiUW8rCkiZsDH2JGyEtY77tn4+geybFWYIdkBgnKnuS
-         BwIiOUuX+0lwjL+6tNeGYpIAA8kgBOdblIiP4XwkrD+ZmsudVtMUCs6ar0bfq+aDGXCT
-         VhCTUc9E7Zck25IBWCJPMrLFmEwZW3E/MjfEUyPJ6G3AeIt7v9vFyJhQm451SaCXsGyd
-         GSYA==
-X-Gm-Message-State: AOAM533aMNDRPC1wdHj/3p6EscLxYZFSIlJX2ye9J/0u/mUH+pJrTVz7
-        kPO67W1DK3nEwU7OarrOQ6U=
-X-Google-Smtp-Source: ABdhPJzOZoyx7rjEtPKa6qEeScd/wg3eiCkfIoiDdKF8rKK6pseRXTi7+uxRtJKxdSB6is1mRGCuOw==
-X-Received: by 2002:adf:e2c9:: with SMTP id d9mr4969310wrj.227.1592492331224;
-        Thu, 18 Jun 2020 07:58:51 -0700 (PDT)
-Received: from kedthinkpad.tpwlan.net ([213.197.144.54])
-        by smtp.gmail.com with ESMTPSA id e2sm1941346wrt.76.2020.06.18.07.58.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 07:58:50 -0700 (PDT)
-From:   Andrey Lebedev <andrey.lebedev@gmail.com>
-To:     Qiang Yu <yuq825@gmail.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     andrey@lebedev.lt, kernel test robot <lkp@intel.com>
-Subject: [PATCH] drm/lima: Expose job_hang_limit module parameter
-Date:   Thu, 18 Jun 2020 17:58:38 +0300
-Message-Id: <20200618145838.2956591-1-andrey.lebedev@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAKGbVbuV8meZji9PqFUwt4CpFEy6efpX63hJBgMY7fzAnZS4Rg@mail.gmail.com>
-References: <CAKGbVbuV8meZji9PqFUwt4CpFEy6efpX63hJBgMY7fzAnZS4Rg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NtwtfirPIaj3hQKqt5NnTqLzfoXadlYH6xaXhH3mB+s=;
+        b=E9oYBpHSZYmC7FLuwZtM18HBTCZPtsRMxCzP0mIHBegoGebObr7eH9A7y4vuzcy66h
+         Kd3F62IdMGfD/Q8vLsxuqYRk5AhEPIBg55HPyVBb0PGzoXl0igvA0SIPhQLYundiIMx+
+         tcgJqFJOaqh9yEL5uSqY55GT+USlIRYZVF/VfS9kNr13eJ53fAIBYIBO47RDw9NCtDJx
+         yhJfYZTsJH7BAFHsYN1ySSDYNAWrsh5qRnguXjI7Nx5PypdyoEyfXovnVqwprgoFdeZx
+         0vHgfWRD82wxHZsrQ8boAvZ7JBHCLsK2Y/qXb1qZH4ZkXPcZs3sXiK4s9cDt8Jl3NJdC
+         Apdw==
+X-Gm-Message-State: AOAM531PZUpGh13VrmFL1AJBCGva+2B1zX1VYE6NkKS9TH70KddBrTFW
+        sDtIVOtYHe2ZjdVKqjAWQ1PnUYsWmMEG/bDDECQ=
+X-Google-Smtp-Source: ABdhPJyxduBF4FPnbsePTb+IJMrnaO574t87lgH7MXGDrxKnm7Fm0uPL20a9JpNnhO5AEW9mefqTwucGCC8avIECgKo=
+X-Received: by 2002:a05:6602:2dd4:: with SMTP id l20mr5412675iow.13.1592492407237;
+ Thu, 18 Jun 2020 08:00:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200521095515.GK6462@dhcp22.suse.cz> <20200521163450.GV6462@dhcp22.suse.cz>
+ <CA+G9fYsdsgRmwLtSKJSzB1eWcUQ1z-_aaU+BNcQpker34XT6_w@mail.gmail.com>
+ <20200617135758.GA548179@chrisdown.name> <20200617141155.GQ9499@dhcp22.suse.cz>
+ <CA+G9fYu+FB1PE0AMmE-9MrHpayE9kChwTyc3zfM6V83uQ0zcQA@mail.gmail.com>
+ <20200617160624.GS9499@dhcp22.suse.cz> <CA+G9fYtCXrVGVtRTwxiqgfFNDDf_H4aNH=VpWLhsV4n_mCTLGg@mail.gmail.com>
+ <20200617210935.GA578452@chrisdown.name> <CALOAHbBp7Ytd-Hta9NH-_HJtVTAsR5Pw2RYrVScp7PPezCEv2w@mail.gmail.com>
+ <20200618123743.GA694719@chrisdown.name>
+In-Reply-To: <20200618123743.GA694719@chrisdown.name>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 18 Jun 2020 22:59:28 +0800
+Message-ID: <CALOAHbCPd407z45e809VE5c8vP6ewqwkDkY9nrMP5TyP5cjG+A@mail.gmail.com>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Lebedev <andrey@lebedev.lt>
+On Thu, Jun 18, 2020 at 8:37 PM Chris Down <chris@chrisdown.name> wrote:
+>
+> Yafang Shao writes:
+> >On Thu, Jun 18, 2020 at 5:09 AM Chris Down <chris@chrisdown.name> wrote:
+> >>
+> >> Naresh Kamboju writes:
+> >> >After this patch applied the reported issue got fixed.
+> >>
+> >> Great! Thank you Naresh and Michal for helping to get to the bottom of this :-)
+> >>
+> >> I'll send out a new version tomorrow with the fixes applied and both of you
+> >> credited in the changelog for the detection and fix.
+> >
+> >As we have already found that the usage around memory.{emin, elow} has
+> >many limitations, I think memory.{emin, elow} should be used for
+> >memcg-tree internally only, that means they can only be used to
+> >calculate the protection of a memcg in a specified memcg-tree but
+> >should not be exposed to other MM parts.
+>
+> I agree that the current semantics are mentally taxing and we should generally
+> avoid exposing the implementation details outside of memcg where possible. Do
+> you have a suggested rework? :-)
 
-Some pp or gp jobs can be successfully repeated even after they time outs.
-Introduce lima module parameter to specify number of times a job can hang
-before being dropped.
+Keeping the mem_cgroup_protected() as-is is my suggestion. Anyway I
+think it is bad to put memory.{emin, elow} here and there.
+If we don't have any better idea by now, just putting all the
+references of memory.{emin, elow}  into one
+wrapper(mem_cgroup_protected()) is the reasonable solution.
 
-Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
----
-
-Fixes for the embarrassing build error
-Reported-by: kernel test robot <lkp@intel.com>
-
- drivers/gpu/drm/lima/lima_drv.c   | 4 ++++
- drivers/gpu/drm/lima/lima_drv.h   | 1 +
- drivers/gpu/drm/lima/lima_sched.c | 5 +++--
- 3 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/lima/lima_drv.c b/drivers/gpu/drm/lima/lima_drv.c
-index a831565af813..2400b8d52d92 100644
---- a/drivers/gpu/drm/lima/lima_drv.c
-+++ b/drivers/gpu/drm/lima/lima_drv.c
-@@ -19,6 +19,7 @@
- int lima_sched_timeout_ms;
- uint lima_heap_init_nr_pages = 8;
- uint lima_max_error_tasks;
-+uint lima_job_hang_limit;
- 
- MODULE_PARM_DESC(sched_timeout_ms, "task run timeout in ms");
- module_param_named(sched_timeout_ms, lima_sched_timeout_ms, int, 0444);
-@@ -29,6 +30,9 @@ module_param_named(heap_init_nr_pages, lima_heap_init_nr_pages, uint, 0444);
- MODULE_PARM_DESC(max_error_tasks, "max number of error tasks to save");
- module_param_named(max_error_tasks, lima_max_error_tasks, uint, 0644);
- 
-+MODULE_PARM_DESC(job_hang_limit, "number of times to allow a job to hang before dropping it (default 0)");
-+module_param_named(job_hang_limit, lima_job_hang_limit, int, 0444);
-+
- static int lima_ioctl_get_param(struct drm_device *dev, void *data, struct drm_file *file)
- {
- 	struct drm_lima_get_param *args = data;
-diff --git a/drivers/gpu/drm/lima/lima_drv.h b/drivers/gpu/drm/lima/lima_drv.h
-index fdbd4077c768..c738d288547b 100644
---- a/drivers/gpu/drm/lima/lima_drv.h
-+++ b/drivers/gpu/drm/lima/lima_drv.h
-@@ -11,6 +11,7 @@
- extern int lima_sched_timeout_ms;
- extern uint lima_heap_init_nr_pages;
- extern uint lima_max_error_tasks;
-+extern uint lima_job_hang_limit;
- 
- struct lima_vm;
- struct lima_bo;
-diff --git a/drivers/gpu/drm/lima/lima_sched.c b/drivers/gpu/drm/lima/lima_sched.c
-index e6cefda00279..1602985dfa04 100644
---- a/drivers/gpu/drm/lima/lima_sched.c
-+++ b/drivers/gpu/drm/lima/lima_sched.c
-@@ -503,8 +503,9 @@ int lima_sched_pipe_init(struct lima_sched_pipe *pipe, const char *name)
- 
- 	INIT_WORK(&pipe->recover_work, lima_sched_recover_work);
- 
--	return drm_sched_init(&pipe->base, &lima_sched_ops, 1, 0,
--			      msecs_to_jiffies(timeout), name);
-+	return drm_sched_init(&pipe->base, &lima_sched_ops, 1,
-+			      lima_job_hang_limit, msecs_to_jiffies(timeout),
-+			      name);
- }
- 
- void lima_sched_pipe_fini(struct lima_sched_pipe *pipe)
 -- 
-2.25.1
-
+Thanks
+Yafang
