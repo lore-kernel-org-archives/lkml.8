@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B447C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F17C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5521E214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC1A20885
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447095;
-	bh=rg6dt3CgmhuAqP0vnDsrUS7uZ9EdNF3ayal5wE+ExhQ=;
+	s=default; t=1592447103;
+	bh=K+mrTajsndKPiC8wLfTz3WLdxQVTm05TBMz1SzUWW/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oYsV9KvaFctAGLu4yn28VvfIPG4BOr4/uGOkkF+AMalQ/oC89TvwRFmI1lvilFFLT
-	 My/+xdeGkD6gIDok8o9cJVweszInJxWXP+pnXXR8jTYkBYRgIILwDBRkNoHpcVsV8L
-	 2WR+sMTUtyvxsa73QRLyCAq8AJMvy892AVYYwzE0=
+	b=K2iVP2vvYu7Fn67/h1eWLR7g+RScdDqeqqptX6sCkhzuBAa9f9HwWsr26bT5IoDiN
+	 pb/NNXnwCpSWnZtgdgL+s2Wfy1QBcDvE07PzZAxRwLCZYFb86r9hR+7DhCeFt5Hwab
+	 S9cmBF9lQhdWSJAWtzBjgMpRlkh6qkIKa5GsAxEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbgFRCYk (ORCPT
+        id S1729258AbgFRCZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48816 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:25:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728878AbgFRBRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:38 -0400
+        id S1729796AbgFRBRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46CE7206F1;
-        Thu, 18 Jun 2020 01:17:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B34121D7E;
+        Thu, 18 Jun 2020 01:17:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443058;
-        bh=rg6dt3CgmhuAqP0vnDsrUS7uZ9EdNF3ayal5wE+ExhQ=;
+        s=default; t=1592443051;
+        bh=K+mrTajsndKPiC8wLfTz3WLdxQVTm05TBMz1SzUWW/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MKSWhK/jktlyFrX0JWHAn19Oquu0/KDMbSbB2bQO4uwYsy136Qsa/njabdAd4LKqI
-         4z1uxCByBKlh8/q8LmuAdybyLlwXu0sHmF8rFvfpYTzBMyivOXKkMB1W69xabAKk+4
-         Qab/ex5TWfjTr/5WQ2H/Z8uEn3aKkUruEN3aIyRc=
+        b=tx1NhyHl9ZmELZBb1ZlmCIPnTnonR/M6IP6EUZl14t2zT7AHl8weRskSxaSTf0qnE
+         c7S6l5KDRjvhMos+z897pkWtHsPY33O5jMZWNOCiBiTul3z5awIV7A/u2+MSOJPMro
+         BdrADHVHKGeKKm601OmL3cayFRGZB15RIipXDjo4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luo Jiaxing <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 049/266] scsi: hisi_sas: Do not reset phy timer to wait for stray phy up
-Date:   Wed, 17 Jun 2020 21:12:54 -0400
-Message-Id: <20200618011631.604574-49-sashal@kernel.org>
+Cc:     Emmanuel Nicolet <emmanuel.nicolet@gmail.com>,
+        Geoff Levand <geoff@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 044/266] ps3disk: use the default segment boundary
+Date:   Wed, 17 Jun 2020 21:12:49 -0400
+Message-Id: <20200618011631.604574-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,45 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo Jiaxing <luojiaxing@huawei.com>
+From: Emmanuel Nicolet <emmanuel.nicolet@gmail.com>
 
-[ Upstream commit e16b9ed61e078d836a0f24a82080cf29d7539c7e ]
+[ Upstream commit 720bc316690bd27dea9d71510b50f0cd698ffc32 ]
 
-We found out that after phy up, the hardware reports another oob interrupt
-but did not follow a phy up interrupt:
+Since commit dcebd755926b ("block: use bio_for_each_bvec() to compute
+multi-page bvec count"), the kernel will bug_on on the PS3 because
+bio_split() is called with sectors == 0:
 
-oob ready -> phy up -> DEV found -> oob read -> wait phy up -> timeout
+  kernel BUG at block/bio.c:1853!
+  Oops: Exception in kernel mode, sig: 5 [#1]
+  BE PAGE_SIZE=4K MMU=Hash PREEMPT SMP NR_CPUS=8 NUMA PS3
+  Modules linked in: firewire_sbp2 rtc_ps3(+) soundcore ps3_gelic(+) \
+  ps3rom(+) firewire_core ps3vram(+) usb_common crc_itu_t
+  CPU: 0 PID: 97 Comm: blkid Not tainted 5.3.0-rc4 #1
+  NIP:  c00000000027d0d0 LR: c00000000027d0b0 CTR: 0000000000000000
+  REGS: c00000000135ae90 TRAP: 0700   Not tainted  (5.3.0-rc4)
+  MSR:  8000000000028032 <SF,EE,IR,DR,RI>  CR: 44008240  XER: 20000000
+  IRQMASK: 0
+  GPR00: c000000000289368 c00000000135b120 c00000000084a500 c000000004ff8300
+  GPR04: 0000000000000c00 c000000004c905e0 c000000004c905e0 000000000000ffff
+  GPR08: 0000000000000000 0000000000000001 0000000000000000 000000000000ffff
+  GPR12: 0000000000000000 c0000000008ef000 000000000000003e 0000000000080001
+  GPR16: 0000000000000100 000000000000ffff 0000000000000000 0000000000000004
+  GPR20: c00000000062fd7e 0000000000000001 000000000000ffff 0000000000000080
+  GPR24: c000000000781788 c00000000135b350 0000000000000080 c000000004c905e0
+  GPR28: c00000000135b348 c000000004ff8300 0000000000000000 c000000004c90000
+  NIP [c00000000027d0d0] .bio_split+0x28/0xac
+  LR [c00000000027d0b0] .bio_split+0x8/0xac
+  Call Trace:
+  [c00000000135b120] [c00000000027d130] .bio_split+0x88/0xac (unreliable)
+  [c00000000135b1b0] [c000000000289368] .__blk_queue_split+0x11c/0x53c
+  [c00000000135b2d0] [c00000000028f614] .blk_mq_make_request+0x80/0x7d4
+  [c00000000135b3d0] [c000000000283a8c] .generic_make_request+0x118/0x294
+  [c00000000135b4b0] [c000000000283d34] .submit_bio+0x12c/0x174
+  [c00000000135b580] [c000000000205a44] .mpage_bio_submit+0x3c/0x4c
+  [c00000000135b600] [c000000000206184] .mpage_readpages+0xa4/0x184
+  [c00000000135b750] [c0000000001ff8fc] .blkdev_readpages+0x24/0x38
+  [c00000000135b7c0] [c0000000001589f0] .read_pages+0x6c/0x1a8
+  [c00000000135b8b0] [c000000000158c74] .__do_page_cache_readahead+0x118/0x184
+  [c00000000135b9b0] [c0000000001591a8] .force_page_cache_readahead+0xe4/0xe8
+  [c00000000135ba50] [c00000000014fc24] .generic_file_read_iter+0x1d8/0x830
+  [c00000000135bb50] [c0000000001ffadc] .blkdev_read_iter+0x40/0x5c
+  [c00000000135bbc0] [c0000000001b9e00] .new_sync_read+0x144/0x1a0
+  [c00000000135bcd0] [c0000000001bc454] .vfs_read+0xa0/0x124
+  [c00000000135bd70] [c0000000001bc7a4] .ksys_read+0x70/0xd8
+  [c00000000135be20] [c00000000000a524] system_call+0x5c/0x70
+  Instruction dump:
+  7fe3fb78 482e30dc 7c0802a6 482e3085 7c9e2378 f821ff71 7ca42b78 7d3e00d0
+  7c7d1b78 79290fe0 7cc53378 69290001 <0b090000> 81230028 7bca0020 7929ba62
+  [ end trace 313fec760f30aa1f ]---
 
-We run link reset when wait phy up timeout, and it send a normal disk into
-reset processing. So we made some circumvention action in the code, so that
-this abnormal oob interrupt will not start the timer to wait for phy up.
+The problem originates from setting the segment boundary of the
+request queue to -1UL. This makes get_max_segment_size() return zero
+when offset is zero, whatever the max segment size. The test with
+BLK_SEG_BOUNDARY_MASK fails and 'mask - (mask & offset) + 1' overflows
+to zero in the return statement.
 
-Link: https://lore.kernel.org/r/1589552025-165012-2-git-send-email-john.garry@huawei.com
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Not setting the segment boundary and using the default
+value (BLK_SEG_BOUNDARY_MASK) fixes the problem.
+
+Signed-off-by: Emmanuel Nicolet <emmanuel.nicolet@gmail.com>
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/060a416c43138f45105c0540eff1a45539f7e2fc.1589049250.git.geoff@infradead.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/block/ps3disk.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 6f4692f0d714..031aa4043c5e 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -904,8 +904,11 @@ void hisi_sas_phy_oob_ready(struct hisi_hba *hisi_hba, int phy_no)
- 	struct hisi_sas_phy *phy = &hisi_hba->phy[phy_no];
- 	struct device *dev = hisi_hba->dev;
+diff --git a/drivers/block/ps3disk.c b/drivers/block/ps3disk.c
+index c5c6487a19d5..7b55811c2a81 100644
+--- a/drivers/block/ps3disk.c
++++ b/drivers/block/ps3disk.c
+@@ -454,7 +454,6 @@ static int ps3disk_probe(struct ps3_system_bus_device *_dev)
+ 	queue->queuedata = dev;
  
-+	dev_dbg(dev, "phy%d OOB ready\n", phy_no);
-+	if (phy->phy_attached)
-+		return;
-+
- 	if (!timer_pending(&phy->timer)) {
--		dev_dbg(dev, "phy%d OOB ready\n", phy_no);
- 		phy->timer.expires = jiffies + HISI_SAS_WAIT_PHYUP_TIMEOUT * HZ;
- 		add_timer(&phy->timer);
- 	}
+ 	blk_queue_max_hw_sectors(queue, dev->bounce_size >> 9);
+-	blk_queue_segment_boundary(queue, -1UL);
+ 	blk_queue_dma_alignment(queue, dev->blk_size-1);
+ 	blk_queue_logical_block_size(queue, dev->blk_size);
+ 
 -- 
 2.25.1
 
