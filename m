@@ -2,124 +2,195 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8777FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52BEB2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA8620885
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:03:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EuLHMlaV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ORkvlLBg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731227AbgFRPDN (ORCPT
+        id S1731269AbgFRPDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:03:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60388 "EHLO
+        Thu, 18 Jun 2020 11:03:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgFRPDM (ORCPT
+        with ESMTP id S1731207AbgFRPDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:03:12 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E26C06174E;
-        Thu, 18 Jun 2020 08:03:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=UL+8ApV4cJJsaL9i1XR4k0qibz3XspT8vONGVk524kc=; b=EuLHMlaVNrGT+gpgg4ZOy214Lf
-        /NetdKt4msEGn/SdU6wS7Vb3Nicec9n/1E16Pv5CLgJpT25JAXyLZqTClcv5dthiCzHK32BiNFyNn
-        2Vtkj1cmYSbWiXKfh18xDTiF4w22UEYWsdQ5WG/abzsVteDtOAX8vWZ3bKmb0ydVHdoW/dmfLoAdv
-        rcWXcFdBrgdT+0Rnct9YP5xWZ5E6pNPsBKwkf9wU8u6uAxjlRbX/tFeF4hooENdTFNAX/QSEm8LMc
-        hZs29nl0IRtyQgR2KBWEayJ7IYD2dzdJAKDyw0r1yoEP6TVl666nT/5G8UpJw9LpuF0WelqGPXar4
-        ortJ5rhQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlw4L-0003On-LK; Thu, 18 Jun 2020 15:03:09 +0000
-Date:   Thu, 18 Jun 2020 08:03:09 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Andreas =?iso-8859-1?Q?Gr=FCnbacher?= 
-        <andreas.gruenbacher@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel <cluster-devel@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
-        linux-btrfs@vger.kernel.org,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>
-Subject: Re: [Cluster-devel] [PATCH v11 16/25] fs: Convert mpage_readpages to
- mpage_readahead
-Message-ID: <20200618150309.GP8681@bombadil.infradead.org>
-References: <20200414150233.24495-1-willy@infradead.org>
- <20200414150233.24495-17-willy@infradead.org>
- <CAHc6FU4m1M7Tv4scX0UxSiVBqkL=Vcw_z-R7SufL8k7Bw=qPOw@mail.gmail.com>
- <20200617003216.GC8681@bombadil.infradead.org>
- <CAHpGcMK6Yu0p-FO8CciiySqh+qcWLG-t3hEaUg-rqJnS=2uhqg@mail.gmail.com>
- <20200617022157.GF8681@bombadil.infradead.org>
- <CAHc6FU7NLRHKRJJ6c2kQT0ig8ed1n+3qR-YcSCWzXOeJCUsLbA@mail.gmail.com>
+        Thu, 18 Jun 2020 11:03:38 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F00C1C0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:03:37 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id y11so7635734ljm.9
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:03:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n7OlS+GwL++zlMgerOt6xFjvAHKRx4D54ivq6twtNuM=;
+        b=ORkvlLBgA1esosGkQurOfdfuJxZ0oPmeMhen/wNR1FzPkfy6vGdg7sWvoHcpsdWMaX
+         jcmbDInP1C1eDa0Yz4ZkIM3/TD9XzZDdtY8ZEoew7sVTTsP4mFHchNH9dfuI2rPyu9ZY
+         LiEEs8x0+h5BOSmQb/6QcRjNwq7HUp6A2a/hSt8H88+oVDAaKyZ645nQ7w9Olfr4Uxt/
+         ojF7/AFTOM9HL9G4fSQBZINpWagLIlc/OzmlfUc8ikGPtdBqCmhGLPt8ym4cBQ9vn40s
+         yNQD1DElZFIVv8VkRTZPuG89oo3pOA8AzQ0ew6quWVgEPlyHCec9SW78vEbQfLqAkzOf
+         FlEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n7OlS+GwL++zlMgerOt6xFjvAHKRx4D54ivq6twtNuM=;
+        b=Q57Yl3ERPH2LB3DgNq9KV4K5tJMuyWI/MRUlV8HvAeFhyGBmetTaFrWNPwQiYIXzcR
+         b3MyLphE7ODigSCa4jpQvDYmNsgw7D4s63N8x9SihsNszcSKpoZRplucw/NyWUQjcbUF
+         9pxbxYXecD02HgWRaqpoyig0JmqpF69c4ph5JRSjPU3zwY7PZqoeq2IH9X4o2ofYclJ6
+         2Rc/IMRfQ3qNbqklTcyJoAKYOrhPTE6J4oAL/tbX9zvfeRfmvaRjfIPi/LtoWKBVTmkR
+         IAxO2PelWrO/NS9F0rFYuWdoCkcmEyFAqmHz90lyRnDMzno3du8U+KYGzy86myrVwMU8
+         QRNQ==
+X-Gm-Message-State: AOAM532DOMlzU/vxFyUETd7aeM1fEgiafUIgUHsOOEVxT+aUoi3cKgYU
+        Q047QC1O/SGZ8e5HiXG5JETt/Uc1eIU4eYNeTr3zWA==
+X-Google-Smtp-Source: ABdhPJzxxMz2ip/Y2ppi+/Zj9M3CIDCys8ygeYZUmjcfeK8RW5W/JrTu/UQEH/73a4HCtAjAw7pksbTZY/UxwSH+914=
+X-Received: by 2002:a2e:541e:: with SMTP id i30mr2366630ljb.156.1592492616104;
+ Thu, 18 Jun 2020 08:03:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHc6FU7NLRHKRJJ6c2kQT0ig8ed1n+3qR-YcSCWzXOeJCUsLbA@mail.gmail.com>
+References: <20200614010755.9129-1-valentin.schneider@arm.com> <20200614010755.9129-2-valentin.schneider@arm.com>
+In-Reply-To: <20200614010755.9129-2-valentin.schneider@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 18 Jun 2020 17:03:24 +0200
+Message-ID: <CAKfTPtCyi9acak95_2_2uL3Cf0OMAbZhDav2LbPY+ULPrD7z4w@mail.gmail.com>
+Subject: Re: [PATCH 1/3] thermal/cpu-cooling, sched/core: Cleanup thermal
+ pressure definition
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 02:46:03PM +0200, Andreas Gruenbacher wrote:
-> On Wed, Jun 17, 2020 at 4:22 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > On Wed, Jun 17, 2020 at 02:57:14AM +0200, Andreas Grünbacher wrote:
-> > > Right, the approach from the following thread might fix this:
-> > >
-> > > https://lore.kernel.org/linux-fsdevel/20191122235324.17245-1-agruenba@redhat.com/T/#t
-> >
-> > In general, I think this is a sound approach.
-> >
-> > Specifically, I think FAULT_FLAG_CACHED can go away.  map_pages()
-> > will bring in the pages which are in the page cache, so when we get to
-> > gfs2_fault(), we know there's a reason to acquire the glock.
-> 
-> We'd still be grabbing a glock while holding a dependent page lock.
-> Another process could be holding the glock and could try to grab the
-> same page lock (i.e., a concurrent writer), leading to the same kind
-> of deadlock.
+On Sun, 14 Jun 2020 at 03:10, Valentin Schneider
+<valentin.schneider@arm.com> wrote:
+>
+> The following commit:
+>
+>   14533a16c46d ("thermal/cpu-cooling, sched/core: Move the arch_set_thermal_pressure() API to generic scheduler code")
+>
+> moved the definition of arch_set_thermal_pressure() to sched/core.c, but
+> kept its declaration in linux/arch_topology.h. When building e.g. an x86
+> kernel with CONFIG_SCHED_THERMAL_PRESSURE=y, cpufreq_cooling.c ends up
+> getting the declaration of arch_set_thermal_pressure() from
+> include/linux/arch_topology.h, which is somewhat awkward.
+>
+> On top of this, the public setter, arch_set_thermal_pressure(), is defined
+> unconditionally in sched/core.c while the public getter,
+> arch_scale_thermal_pressure(), is hardcoded to return 0 unless it has been
+> redefined by the architecture. arch_*() functions are meant to be defined
+> by architectures, so revert the aforementioned commit and re-implement it
+> in a way that keeps arch_set_thermal_pressure() architecture-definable.
+>
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> ---
+>  drivers/base/arch_topology.c      | 11 +++++++++++
+>  drivers/thermal/cpufreq_cooling.c |  5 +++++
+>  include/linux/arch_topology.h     |  3 ---
+>  kernel/sched/core.c               | 11 -----------
+>  4 files changed, 16 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> index 4d0a0038b476..d14cab7dfa3c 100644
+> --- a/drivers/base/arch_topology.c
+> +++ b/drivers/base/arch_topology.c
+> @@ -54,6 +54,17 @@ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
+>         per_cpu(cpu_scale, cpu) = capacity;
+>  }
+>
+> +DEFINE_PER_CPU(unsigned long, thermal_pressure);
+> +
+> +void arch_set_thermal_pressure(const struct cpumask *cpus,
+> +                              unsigned long th_pressure)
+> +{
+> +       int cpu;
+> +
+> +       for_each_cpu(cpu, cpus)
+> +               WRITE_ONCE(per_cpu(thermal_pressure, cpu), th_pressure);
+> +}
+> +
+>  static ssize_t cpu_capacity_show(struct device *dev,
+>                                  struct device_attribute *attr,
+>                                  char *buf)
+> diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+> index e297e135c031..a1efd379b683 100644
+> --- a/drivers/thermal/cpufreq_cooling.c
+> +++ b/drivers/thermal/cpufreq_cooling.c
+> @@ -417,6 +417,11 @@ static int cpufreq_get_cur_state(struct thermal_cooling_device *cdev,
+>         return 0;
+>  }
+>
+> +__weak void
+> +arch_set_thermal_pressure(const struct cpumask *cpus, unsigned long th_pressure)
+> +{
+> +}
 
-What I'm saying is that gfs2_fault should just be:
+Having this weak function declared in cpufreq_cooling is weird. This
+means that we will have to do so for each one that wants to use it.
 
-+static vm_fault_t gfs2_fault(struct vm_fault *vmf)
-+{
-+	struct inode *inode = file_inode(vmf->vma->vm_file);
-+	struct gfs2_inode *ip = GFS2_I(inode);
-+	struct gfs2_holder gh;
-+	vm_fault_t ret;
-+	int err;
-+
-+	gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
-+	err = gfs2_glock_nq(&gh);
-+	if (err) {
-+		ret = block_page_mkwrite_return(err);
-+		goto out_uninit;
-+	}
-+	ret = filemap_fault(vmf);
-+	gfs2_glock_dq(&gh);
-+out_uninit:
-+	gfs2_holder_uninit(&gh);
-+	return ret;
-+}
+Can't you declare an empty function in a common header file ?
 
-because by the time gfs2_fault() is called, map_pages() has already been
-called and has failed to insert the necessary page, so we should just
-acquire the glock now instead of trying again to look for the page in
-the page cache.
+> +
+>  /**
+>   * cpufreq_set_cur_state - callback function to set the current cooling state.
+>   * @cdev: thermal cooling device pointer.
+> diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
+> index 0566cb3314ef..81bd1c627195 100644
+> --- a/include/linux/arch_topology.h
+> +++ b/include/linux/arch_topology.h
+> @@ -39,9 +39,6 @@ static inline unsigned long topology_get_thermal_pressure(int cpu)
+>         return per_cpu(thermal_pressure, cpu);
+>  }
+>
+> -void arch_set_thermal_pressure(struct cpumask *cpus,
+> -                              unsigned long th_pressure);
+> -
+>  struct cpu_topology {
+>         int thread_id;
+>         int core_id;
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 43ba2d4a8eca..7861d21f3c2b 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3628,17 +3628,6 @@ unsigned long long task_sched_runtime(struct task_struct *p)
+>         return ns;
+>  }
+>
+> -DEFINE_PER_CPU(unsigned long, thermal_pressure);
+> -
+> -void arch_set_thermal_pressure(struct cpumask *cpus,
+> -                              unsigned long th_pressure)
+> -{
+> -       int cpu;
+> -
+> -       for_each_cpu(cpu, cpus)
+> -               WRITE_ONCE(per_cpu(thermal_pressure, cpu), th_pressure);
+> -}
+> -
+>  /*
+>   * This function gets called by the timer code, with HZ frequency.
+>   * We call it with interrupts disabled.
+> --
+> 2.27.0
+>
