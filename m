@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 990DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74F8C206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FD6206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447765;
-	bh=V6nyYULgZZml6G+d1KvZ4bzCOJ5Fayr6eS6vmE8rDBc=;
+	s=default; t=1592447768;
+	bh=Jiv2L8x1UrhUVZJ3+GJukZ7OLVFFYw+CmLuVM0LVPtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TP3mdqPL6J9lsKuVWK4QnouU9spfgJsETRIzwayimv/eQz4IEqR9BpexK651yOvyH
-	 fizNc1XiOPgTEwZRDC6ZgwqnsXfqfMDIAp2V/PI6FSyAq6GoZwngMfwblxYpZy6FXW
-	 aTUHI2HOtO2Z3j8RtfNMyDowzWjlv+Bfk2hDTyGI=
+	b=tTRahdIztany5KllhgrVOrlLbr4RRaIQxXJhd/FxEzPVEChvbLdFTKNvBKiR/aNLy
+	 F7tmF+50vS0RGW7InMtr8TdM07hH+sa7wEC/wc2BUfF2C4muxC5aej3/iOyaFdt2Qc
+	 nageHsCKSWksofyBEL5ZzuwZODbyoDJ0OhNJv5T4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbgFRCgD (ORCPT
+        id S1732519AbgFRCgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:36:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43596 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:36:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729270AbgFRBOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:14:03 -0400
+        id S1729267AbgFRBOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDF7D21D90;
-        Thu, 18 Jun 2020 01:14:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9459C21D7B;
+        Thu, 18 Jun 2020 01:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442843;
-        bh=V6nyYULgZZml6G+d1KvZ4bzCOJ5Fayr6eS6vmE8rDBc=;
+        s=default; t=1592442842;
+        bh=Jiv2L8x1UrhUVZJ3+GJukZ7OLVFFYw+CmLuVM0LVPtU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WZajRlBwNGC4vfvOXvPsUJv9bGkP2EuDGN/Ce0LIAQJdr+vSgln7lbCQDXxgUpvkL
-         2cmVBXnOHTfHt1QX51+wD+OY85I2Voo0sn9Nrb9WEMLntwP/6xm9ckXg6jPT6dJhvq
-         /PS/M7HFD0/qQLjh6RUwWjcCKbB0plFMPWRf8tZ4=
+        b=cQ7Fm1k+AKPzjqzKsfXRA7cfcueEbtCEuK59uPtZ+4l/30P8eveuEXf+IDSqKoKPM
+         x2QxmAGh1Q/MI95W/El+oEvZF4U17/A9AOyfO1vX96v/W2Ppo0+NOK5rBybYzq0uVr
+         PEa6sXK8pFEq549B50Yyq9ru9Y0WN/3IoHyA1rUA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+Cc:     Amelie Delaunay <amelie.delaunay@st.com>,
         Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 276/388] mfd: wcd934x: Drop kfree for memory allocated with devm_kzalloc
-Date:   Wed, 17 Jun 2020 21:06:13 -0400
-Message-Id: <20200618010805.600873-276-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 275/388] mfd: stmfx: Disable IRQ in suspend to avoid spurious interrupt
+Date:   Wed, 17 Jun 2020 21:06:12 -0400
+Message-Id: <20200618010805.600873-275-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,33 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Amelie Delaunay <amelie.delaunay@st.com>
 
-[ Upstream commit 652b7b6740eb52d98377a881c7730e36997f00ab ]
+[ Upstream commit 97eda5dcc2cde5dcc778bef7a9344db3b6bf8ef5 ]
 
-It's not necessary to free memory allocated with devm_kzalloc
-and using kfree leads to a double free.
+When STMFX supply is stopped, spurious interrupt can occur. To avoid that,
+disable the interrupt in suspend before disabling the regulator and
+re-enable it at the end of resume.
 
-Fixes: 6ac7e4d7ad70 ("mfd: wcd934x: Add support to wcd9340/wcd9341 codec")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/wcd934x.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/mfd/stmfx.c       | 6 ++++++
+ include/linux/mfd/stmfx.h | 1 +
+ 2 files changed, 7 insertions(+)
 
-diff --git a/drivers/mfd/wcd934x.c b/drivers/mfd/wcd934x.c
-index 90341f3c6810..da910302d51a 100644
---- a/drivers/mfd/wcd934x.c
-+++ b/drivers/mfd/wcd934x.c
-@@ -280,7 +280,6 @@ static void wcd934x_slim_remove(struct slim_device *sdev)
+diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
+index 1977fe95f876..711979afd90a 100644
+--- a/drivers/mfd/stmfx.c
++++ b/drivers/mfd/stmfx.c
+@@ -296,6 +296,8 @@ static int stmfx_irq_init(struct i2c_client *client)
+ 	if (ret)
+ 		goto irq_exit;
  
- 	regulator_bulk_disable(WCD934X_MAX_SUPPLY, ddata->supplies);
- 	mfd_remove_devices(&sdev->dev);
--	kfree(ddata);
++	stmfx->irq = client->irq;
++
+ 	return 0;
+ 
+ irq_exit:
+@@ -486,6 +488,8 @@ static int stmfx_suspend(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	disable_irq(stmfx->irq);
++
+ 	if (stmfx->vdd)
+ 		return regulator_disable(stmfx->vdd);
+ 
+@@ -529,6 +533,8 @@ static int stmfx_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	enable_irq(stmfx->irq);
++
+ 	return 0;
  }
- 
- static const struct slim_device_id wcd934x_slim_id[] = {
+ #endif
+diff --git a/include/linux/mfd/stmfx.h b/include/linux/mfd/stmfx.h
+index 3c67983678ec..744dce63946e 100644
+--- a/include/linux/mfd/stmfx.h
++++ b/include/linux/mfd/stmfx.h
+@@ -109,6 +109,7 @@ struct stmfx {
+ 	struct device *dev;
+ 	struct regmap *map;
+ 	struct regulator *vdd;
++	int irq;
+ 	struct irq_domain *irq_domain;
+ 	struct mutex lock; /* IRQ bus lock */
+ 	u8 irq_src;
 -- 
 2.25.1
 
