@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1F1F20853
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DA420853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446349;
-	bh=pa5xwxs/YMVeg48Xp1oAklH4xCcH4s/8Z/abaSwieRU=;
+	s=default; t=1592446358;
+	bh=FgPG6cCgUeE3avIJ+Y2VCR4P+1TbrZ2c2zsyKos1QuI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eUt7OH85bo3YiNcZxGPx4s26W9kTMvUEmu2srPn3tBftFAcr/O7YcRoM2mi6wWziB
-	 9QN+hEK6PFKsrysHuqXhN9eSp5ggrQv6x9tRUOpkonNZEGQjV+KrmCdmUuz6jVRQ9u
-	 O/mt7zMPrg2RgbY1zVc0iUUTD3n4ywCbgLoF5jeQ=
+	b=vvjeGKN+K5zLJT/PqNVuX7wQ1OayTITRqidujjLXu+1DC5KmdEgxzIGR8zOVzefvL
+	 mO/63/b+mylBS77IZuv4GoRFEEHQ8ODgMrlxAvKlPCG07tA1E0e9jJ7P96X6bktsXC
+	 lJEoRTsTyrEDwbRy3mRqvvV/1/G2WUDG646TnDH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgFRCM2 (ORCPT
+        id S1733122AbgFRCMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:12:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53788 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:12:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729148AbgFRBVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:20 -0400
+        id S1729842AbgFRBVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:21:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA773214DB;
-        Thu, 18 Jun 2020 01:21:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F3BC20776;
+        Thu, 18 Jun 2020 01:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443280;
-        bh=pa5xwxs/YMVeg48Xp1oAklH4xCcH4s/8Z/abaSwieRU=;
+        s=default; t=1592443279;
+        bh=FgPG6cCgUeE3avIJ+Y2VCR4P+1TbrZ2c2zsyKos1QuI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ub8SSKzs1CjhBG2BQLBlO1tKbwJJ40lC5yLytrFLAfaLoyFEI3zLfC4iVB0+95+e6
-         r1AWPdD/KCUGqRcOUXXT8aIQN1BsfQz8veIzSVTBv0V7n+0Q5Usum2mqqc+DhJyF5e
-         tPydOaMujpuLa+Fv3Tvybi0cd2VW22K1dBgAXYvE=
+        b=iwWtcj8xuw0FvPLBU+lMr11n85fLxTw1c/hjlPOF1YjLkColr6cEtQGshqzF6qNFF
+         EsMH8OFcI18dPgVTdrmLU4J13ZRVSjiKnNCyD7Zl95VYJ7/Qeskw6QjLf0tCGQdUK9
+         u7oQ+fD2XWWRdwFCbVbE2GGt7IDV6tNLvZynx1ss=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 224/266] pinctrl: freescale: imx: Use 'devm_of_iomap()' to avoid a resource leak in case of error in 'imx_pinctrl_probe()'
-Date:   Wed, 17 Jun 2020 21:15:49 -0400
-Message-Id: <20200618011631.604574-224-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 223/266] pinctrl: freescale: imx: Fix an error handling path in 'imx_pinctrl_probe()'
+Date:   Wed, 17 Jun 2020 21:15:48 -0400
+Message-Id: <20200618011631.604574-223-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -63,45 +63,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit ba403242615c2c99e27af7984b1650771a2cc2c9 ]
+[ Upstream commit 11d8da5cabf7c6c3263ba2cd9c00260395867048 ]
 
-Use 'devm_of_iomap()' instead 'of_iomap()' to avoid a resource leak in
-case of error.
+'pinctrl_unregister()' should not be called to undo
+'devm_pinctrl_register_and_init()', it is already handled by the framework.
 
-Update the error handling code accordingly.
+This simplifies the error handling paths of the probe function.
+The 'imx_free_resources()' can be removed as well.
 
-Fixes: 26d8cde5260b ("pinctrl: freescale: imx: add shared input select reg support")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: a51c158bf0f7 ("pinctrl: imx: use radix trees for groups and functions")
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200602200626.677981-1-christophe.jaillet@wanadoo.fr
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Link: https://lore.kernel.org/r/20200530204955.588962-1-christophe.jaillet@wanadoo.fr
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/pinctrl/freescale/pinctrl-imx.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index 1f81569c7ae3..cb7e0f08d2cf 100644
+index 9f42036c5fbb..1f81569c7ae3 100644
 --- a/drivers/pinctrl/freescale/pinctrl-imx.c
 +++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -824,12 +824,13 @@ int imx_pinctrl_probe(struct platform_device *pdev,
- 				return -EINVAL;
- 			}
+@@ -774,16 +774,6 @@ static int imx_pinctrl_probe_dt(struct platform_device *pdev,
+ 	return 0;
+ }
  
--			ipctl->input_sel_base = of_iomap(np, 0);
-+			ipctl->input_sel_base = devm_of_iomap(&pdev->dev, np,
-+							      0, NULL);
- 			of_node_put(np);
--			if (!ipctl->input_sel_base) {
-+			if (IS_ERR(ipctl->input_sel_base)) {
- 				dev_err(&pdev->dev,
- 					"iomuxc input select base address not found\n");
--				return -ENOMEM;
-+				return PTR_ERR(ipctl->input_sel_base);
- 			}
- 		}
+-/*
+- * imx_free_resources() - free memory used by this driver
+- * @info: info driver instance
+- */
+-static void imx_free_resources(struct imx_pinctrl *ipctl)
+-{
+-	if (ipctl->pctl)
+-		pinctrl_unregister(ipctl->pctl);
+-}
+-
+ int imx_pinctrl_probe(struct platform_device *pdev,
+ 		      const struct imx_pinctrl_soc_info *info)
+ {
+@@ -874,23 +864,18 @@ int imx_pinctrl_probe(struct platform_device *pdev,
+ 					     &ipctl->pctl);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "could not register IMX pinctrl driver\n");
+-		goto free;
++		return ret;
  	}
+ 
+ 	ret = imx_pinctrl_probe_dt(pdev, ipctl);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "fail to probe dt properties\n");
+-		goto free;
++		return ret;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "initialized IMX pinctrl driver\n");
+ 
+ 	return pinctrl_enable(ipctl->pctl);
+-
+-free:
+-	imx_free_resources(ipctl);
+-
+-	return ret;
+ }
+ 
+ static int __maybe_unused imx_pinctrl_suspend(struct device *dev)
 -- 
 2.25.1
 
