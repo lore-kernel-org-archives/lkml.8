@@ -2,80 +2,79 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50063C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD5F32186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F31820773
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:56:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iQ/jY6Bw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgFRGzK (ORCPT
+        id S1727949AbgFRG4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 02:55:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42147 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbgFRGzI (ORCPT
+        Thu, 18 Jun 2020 02:56:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbgFRG4h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 02:55:08 -0400
-Received: from [114.249.250.117] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1jloRy-00069K-97; Thu, 18 Jun 2020 06:55:03 +0000
-From:   Aaron Ma <aaron.ma@canonical.com>
-To:     kuba@kernel.org, jeffrey.t.kirsher@intel.com, davem@davemloft.net,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vitaly.lifshits@intel.com,
-        kai.heng.feng@canonical.com, sasha.neftin@intel.com
-Subject: [v4][PATCH] e1000e: continue to init phy even when failed to disable ULP
-Date:   Thu, 18 Jun 2020 14:54:53 +0800
-Message-Id: <20200618065453.12140-1-aaron.ma@canonical.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200616100512.22512-1-aaron.ma@canonical.com>
-References: <20200616100512.22512-1-aaron.ma@canonical.com>
+        Thu, 18 Jun 2020 02:56:37 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D6ACC06174E;
+        Wed, 17 Jun 2020 23:56:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uAvmk2CwDLs4X+Ko7ajFBaGyB0rcXPF4WnH3SQrYs4k=; b=iQ/jY6BwNU0GexOcII4Y8RmC90
+        vslaU7EwpUIeDbH4l3fPejGtKiiupUxIiUtFiXf9OKFRfNWnG9EfupRM5LYyTyoqkQ4NaCxf+rQEx
+        QpA0xyEbPpW6VGUiNbZPittAv+QRYNnNWsWAqedu0wTvaDrHGNzeST60Osvj66lkMXofncPReYaX4
+        xFEqPz0Pl/FlgUEfYqpEGhHy0/hcdSLaJ9QIprhDs1/QkI8aerds64dV+fhAfvor9e/DUmYIX86+S
+        TJC0Ps7C1qPcTVNwNM4UX+vYpk2ktc961oLqTiOI4ve7lfCJzRLxzGLqieBv7S/MYQVFHGZpIRreL
+        YlLoGcYw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jloTS-00012N-So; Thu, 18 Jun 2020 06:56:34 +0000
+Date:   Wed, 17 Jun 2020 23:56:34 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Kanchan Joshi <joshi.k@samsung.com>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bcrl@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aio@kvack.org, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org, selvakuma.s1@samsung.com,
+        nj.shetty@samsung.com, javier.gonz@samsung.com
+Subject: Re: [PATCH 0/3] zone-append support in aio and io-uring
+Message-ID: <20200618065634.GB24943@infradead.org>
+References: <CGME20200617172653epcas5p488de50090415eb802e62acc0e23d8812@epcas5p4.samsung.com>
+ <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After 'commit e086ba2fccda4 ("e1000e: disable s0ix entry and exit flows
- for ME systems")',
-ThinkPad P14s always failed to disable ULP by ME.
-'commit 0c80cdbf3320 ("e1000e: Warn if disabling ULP failed")'
-break out of init phy:
+On Wed, Jun 17, 2020 at 10:53:36PM +0530, Kanchan Joshi wrote:
+> This patchset enables issuing zone-append using aio and io-uring direct-io interface.
+> 
+> For aio, this introduces opcode IOCB_CMD_ZONE_APPEND. Application uses start LBA
+> of the zone to issue append. On completion 'res2' field is used to return
+> zone-relative offset.
+> 
+> For io-uring, this introduces three opcodes: IORING_OP_ZONE_APPEND/APPENDV/APPENDV_FIXED.
+> Since io_uring does not have aio-like res2, cqe->flags are repurposed to return zone-relative offset
 
-error log:
-[   42.364753] e1000e 0000:00:1f.6 enp0s31f6: Failed to disable ULP
-[   42.524626] e1000e 0000:00:1f.6 enp0s31f6: PHY Wakeup cause - Unicast Packet
-[   42.822476] e1000e 0000:00:1f.6 enp0s31f6: Hardware Error
+And what exactly are the semantics supposed to be?  Remember the
+unix file abstractions does not know about zones at all.
 
-When disable s0ix, E1000_FWSM_ULP_CFG_DONE will never be 1.
-If continue to init phy like before, it can work as before.
-iperf test result good too.
+I really don't think squeezing low-level not quite block storage
+protocol details into the Linux read/write path is a good idea.
 
-Fixes: 0c80cdbf3320 ("e1000e: Warn if disabling ULP failed")
-Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
----
- drivers/net/ethernet/intel/e1000e/ich8lan.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-index f999cca37a8a..be7475c5529d 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-@@ -303,7 +303,6 @@ static s32 e1000_init_phy_workarounds_pchlan(struct e1000_hw *hw)
- 	ret_val = e1000_disable_ulp_lpt_lp(hw, true);
- 	if (ret_val) {
- 		e_warn("Failed to disable ULP\n");
--		goto out;
- 	}
- 
- 	ret_val = hw->phy.ops.acquire(hw);
--- 
-2.26.2
-
+What could be a useful addition is a way for O_APPEND/RWF_APPEND writes
+to report where they actually wrote, as that comes close to Zone Append
+while still making sense at our usual abstraction level for file I/O.
