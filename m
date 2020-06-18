@@ -2,156 +2,205 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C58BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64C522082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 514B7207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:42:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yXxZCazH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VwLMLEBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730274AbgFRNlX (ORCPT
+        id S1730280AbgFRNl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:41:23 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51426 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727921AbgFRNlS (ORCPT
+        Thu, 18 Jun 2020 09:41:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26234 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727101AbgFRNly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:41:18 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05IDfBcT103253;
-        Thu, 18 Jun 2020 08:41:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592487671;
-        bh=ERMtClxbRNNwU0KyzUuGCxjmkXA6DigVdcnAOu6beUQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=yXxZCazHpogUs2wcqqEIg9WWNozXLJWaGVqhn7hxmVsZhTsIv7AkM+eL1EVMKtdLJ
-         erNc+c1LJ+7YIJm7yoQchUr9DKxePaNMxZQsFY8BEBOkk2vVBzqrzWQpbGmEc0e0iH
-         QXVC1NfgKLqjadRVPApTSMOUGoQp+W2hOGg+aEFY=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05IDfBKZ122464
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 18 Jun 2020 08:41:11 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 18
- Jun 2020 08:41:11 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 18 Jun 2020 08:41:11 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05IDfAQS120824;
-        Thu, 18 Jun 2020 08:41:10 -0500
-Subject: Re: [PATCH net-next v7 2/6] net: phy: Add a helper to return the
- index for of the internal delay
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200617182019.6790-1-dmurphy@ti.com>
- <20200617182019.6790-3-dmurphy@ti.com> <20200618015147.GH249144@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <a4ec4680-096f-2efa-0475-acf4b96e1017@ti.com>
-Date:   Thu, 18 Jun 2020 08:41:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 18 Jun 2020 09:41:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592487712;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5Cexa4tsvwTnBBGHx0OVpN/yf320flKSSjXgML68NX8=;
+        b=VwLMLEBfB1WXN8qBJQvFRkJ+hFb4TwYOqNXRfnwgPwDA/pufzfB5TD/WheDbBfkGaZDlJ1
+        2oZP/hxBYeVMQWT+LJsDL6KEjQdcWgzEJVO7PLrfLvHg4Im7h0lh0+CI8cj6nTPHnUDh3g
+        kX8za3lCJMzCtn/0EY8WhbhK/oO0x0w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-214-k6bxuqGrPWmC0i8HF5oCAg-1; Thu, 18 Jun 2020 09:41:48 -0400
+X-MC-Unique: k6bxuqGrPWmC0i8HF5oCAg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3938107ACF7;
+        Thu, 18 Jun 2020 13:41:46 +0000 (UTC)
+Received: from localhost (ovpn-12-22.pek2.redhat.com [10.72.12.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 961BB19C79;
+        Thu, 18 Jun 2020 13:41:45 +0000 (UTC)
+Date:   Thu, 18 Jun 2020 21:41:42 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Nitin Gupta <nigupta@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Nitin Gupta <ngupta@nitingupta.dev>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PROC SYSCTL" <linux-fsdevel@vger.kernel.org>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
+Subject: Re: [PATCH] mm: Use unsigned types for fragmentation score
+Message-ID: <20200618134142.GD3346@MiWiFi-R3L-srv>
+References: <20200618010319.13159-1-nigupta@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200618015147.GH249144@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618010319.13159-1-nigupta@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
+On 06/17/20 at 06:03pm, Nitin Gupta wrote:
+> Proactive compaction uses per-node/zone "fragmentation score" which
+> is always in range [0, 100], so use unsigned type of these scores
+> as well as for related constants.
+> 
+> Signed-off-by: Nitin Gupta <nigupta@nvidia.com>
+> ---
+>  include/linux/compaction.h |  4 ++--
+>  kernel/sysctl.c            |  2 +-
+>  mm/compaction.c            | 18 +++++++++---------
+>  mm/vmstat.c                |  2 +-
+>  4 files changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/include/linux/compaction.h b/include/linux/compaction.h
+> index 7a242d46454e..25a521d299c1 100644
+> --- a/include/linux/compaction.h
+> +++ b/include/linux/compaction.h
+> @@ -85,13 +85,13 @@ static inline unsigned long compact_gap(unsigned int order)
+>  
+>  #ifdef CONFIG_COMPACTION
+>  extern int sysctl_compact_memory;
+> -extern int sysctl_compaction_proactiveness;
+> +extern unsigned int sysctl_compaction_proactiveness;
+>  extern int sysctl_compaction_handler(struct ctl_table *table, int write,
+>  			void *buffer, size_t *length, loff_t *ppos);
+>  extern int sysctl_extfrag_threshold;
+>  extern int sysctl_compact_unevictable_allowed;
+>  
+> -extern int extfrag_for_order(struct zone *zone, unsigned int order);
+> +extern unsigned int extfrag_for_order(struct zone *zone, unsigned int order);
+>  extern int fragmentation_index(struct zone *zone, unsigned int order);
+>  extern enum compact_result try_to_compact_pages(gfp_t gfp_mask,
+>  		unsigned int order, unsigned int alloc_flags,
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 58b0a59c9769..40180cdde486 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -2833,7 +2833,7 @@ static struct ctl_table vm_table[] = {
+>  	{
+>  		.procname	= "compaction_proactiveness",
+>  		.data		= &sysctl_compaction_proactiveness,
+> -		.maxlen		= sizeof(int),
+> +		.maxlen		= sizeof(sysctl_compaction_proactiveness),
 
-On 6/17/20 8:51 PM, Andrew Lunn wrote:
-> On Wed, Jun 17, 2020 at 01:20:15PM -0500, Dan Murphy wrote:
->> Add a helper function that will return the index in the array for the
->> passed in internal delay value.  The helper requires the array, size and
->> delay value.
->>
->> The helper will then return the index for the exact match or return the
->> index for the index to the closest smaller value.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/net/phy/phy_device.c | 68 ++++++++++++++++++++++++++++++++++++
->>   include/linux/phy.h          |  4 +++
->>   2 files changed, 72 insertions(+)
->>
->> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
->> index 04946de74fa0..611d4e68e3c6 100644
->> --- a/drivers/net/phy/phy_device.c
->> +++ b/drivers/net/phy/phy_device.c
->> @@ -31,6 +31,7 @@
->>   #include <linux/mdio.h>
->>   #include <linux/io.h>
->>   #include <linux/uaccess.h>
->> +#include <linux/property.h>
->>   
->>   MODULE_DESCRIPTION("PHY library");
->>   MODULE_AUTHOR("Andy Fleming");
->> @@ -2657,6 +2658,73 @@ void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause)
->>   }
->>   EXPORT_SYMBOL(phy_get_pause);
->>   
->> +/**
->> + * phy_get_delay_index - returns the index of the internal delay
->> + * @phydev: phy_device struct
->> + * @dev: pointer to the devices device struct
->> + * @delay_values: array of delays the PHY supports
->> + * @size: the size of the delay array
->> + * @is_rx: boolean to indicate to get the rx internal delay
->> + *
->> + * Returns the index within the array of internal delay passed in.
->> + * Or if size == 0 then the delay read from the firmware is returned.
->> + * The array must be in ascending order.
->> + * Return errno if the delay is invalid or cannot be found.
->> + */
->> +s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
->> +			   const int *delay_values, int size, bool is_rx)
->> +{
->> +	int ret;
->> +	int i;
->> +	s32 delay;
->> +
->> +	if (is_rx)
->> +		ret = device_property_read_u32(dev, "rx-internal-delay-ps",
->> +					       &delay);
->> +	else
->> +		ret = device_property_read_u32(dev, "tx-internal-delay-ps",
->> +					       &delay);
->> +	if (ret) {
->> +		phydev_err(phydev, "internal delay not defined\n");
-> This is an optional property. So printing an error message seems heavy
-> handed.
+Patch looks good to me. Wondering why not using 'unsigned int' here,
+just curious.
 
-I will change this to phydev_info
+>  		.mode		= 0644,
+>  		.proc_handler	= proc_dointvec_minmax,
+>  		.extra1		= SYSCTL_ZERO,
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index ac2030814edb..45fd24a0ea0b 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -53,7 +53,7 @@ static inline void count_compact_events(enum vm_event_item item, long delta)
+>  /*
+>   * Fragmentation score check interval for proactive compaction purposes.
+>   */
+> -static const int HPAGE_FRAG_CHECK_INTERVAL_MSEC = 500;
+> +static const unsigned int HPAGE_FRAG_CHECK_INTERVAL_MSEC = 500;
+>  
+>  /*
+>   * Page order with-respect-to which proactive compaction
+> @@ -1890,7 +1890,7 @@ static bool kswapd_is_running(pg_data_t *pgdat)
+>   * ZONE_DMA32. For smaller zones, the score value remains close to zero,
+>   * and thus never exceeds the high threshold for proactive compaction.
+>   */
+> -static int fragmentation_score_zone(struct zone *zone)
+> +static unsigned int fragmentation_score_zone(struct zone *zone)
+>  {
+>  	unsigned long score;
+>  
+> @@ -1906,9 +1906,9 @@ static int fragmentation_score_zone(struct zone *zone)
+>   * the node's score falls below the low threshold, or one of the back-off
+>   * conditions is met.
+>   */
+> -static int fragmentation_score_node(pg_data_t *pgdat)
+> +static unsigned int fragmentation_score_node(pg_data_t *pgdat)
+>  {
+> -	unsigned long score = 0;
+> +	unsigned int score = 0;
+>  	int zoneid;
+>  
+>  	for (zoneid = 0; zoneid < MAX_NR_ZONES; zoneid++) {
+> @@ -1921,17 +1921,17 @@ static int fragmentation_score_node(pg_data_t *pgdat)
+>  	return score;
+>  }
+>  
+> -static int fragmentation_score_wmark(pg_data_t *pgdat, bool low)
+> +static unsigned int fragmentation_score_wmark(pg_data_t *pgdat, bool low)
+>  {
+> -	int wmark_low;
+> +	unsigned int wmark_low;
+>  
+>  	/*
+>  	 * Cap the low watermak to avoid excessive compaction
+>  	 * activity in case a user sets the proactivess tunable
+>  	 * close to 100 (maximum).
+>  	 */
+> -	wmark_low = max(100 - sysctl_compaction_proactiveness, 5);
+> -	return low ? wmark_low : min(wmark_low + 10, 100);
+> +	wmark_low = max(100U - sysctl_compaction_proactiveness, 5U);
+> +	return low ? wmark_low : min(wmark_low + 10, 100U);
+>  }
+>  
+>  static bool should_proactive_compact_node(pg_data_t *pgdat)
+> @@ -2604,7 +2604,7 @@ int sysctl_compact_memory;
+>   * aggressively the kernel should compact memory in the
+>   * background. It takes values in the range [0, 100].
+>   */
+> -int __read_mostly sysctl_compaction_proactiveness = 20;
+> +unsigned int __read_mostly sysctl_compaction_proactiveness = 20;
+>  
+>  /*
+>   * This is the entry point for compacting all nodes via
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index 3e7ba8bce2ba..b1de695b826d 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -1079,7 +1079,7 @@ static int __fragmentation_index(unsigned int order, struct contig_page_info *in
+>   * It is defined as the percentage of pages found in blocks of size
+>   * less than 1 << order. It returns values in range [0, 100].
+>   */
+> -int extfrag_for_order(struct zone *zone, unsigned int order)
+> +unsigned int extfrag_for_order(struct zone *zone, unsigned int order)
+>  {
+>  	struct contig_page_info info;
+>  
+> -- 
+> 2.27.0
+> 
+> 
 
-
-> Maybe it would be better to default to 0 if the property is not found,
-> and continue with the lookup in the table to find what value should be
-> written for a 0ps delay?
-
-If the property is not found what would we look up?  The property 
-missing to me indicates that the phy is not adding the delay for that path.
-
-If these properties are not present then the delay should not be set by 
-the device driver.
-
-This is why I return -EINVAL.  Maybe I should return -ENODATA instead.
-
-Dan
-
->
-> 	Andrew
