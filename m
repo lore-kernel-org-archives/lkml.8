@@ -6,43 +6,44 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD265C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0469C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83B9B206F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89BB8206F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:45:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BWE0KXVY"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CvHGAf1y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733142AbgFRBpO (ORCPT
+        id S1733149AbgFRBpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:45:14 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:27863 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733126AbgFRBpG (ORCPT
+        Wed, 17 Jun 2020 21:45:18 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:12250 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733132AbgFRBpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:45:06 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200618014502epoutp01ddfd72448015311ee18567fc002ab756~ZgAUeLn_r1482214822epoutp01D
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:45:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200618014502epoutp01ddfd72448015311ee18567fc002ab756~ZgAUeLn_r1482214822epoutp01D
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200618014503epoutp0285f3f44baf76dfeb76b60736ea32db56~ZgAU_dE0L1006610066epoutp02B
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:45:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200618014503epoutp0285f3f44baf76dfeb76b60736ea32db56~ZgAU_dE0L1006610066epoutp02B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592444702;
-        bh=Pannmd10RMEWppu+DWu4lQZprpbqd5OwcGCGr0quGWE=;
+        s=mail20170921; t=1592444703;
+        bh=LHnFRCa4HDOWm0RYymVWN7YfXGnU6fTOFZfK3I3tHJw=;
         h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=BWE0KXVY7ajZglAxOoQjjbPMRmOovLLAuVXp0Mop80YID1AI61+Tky3hhWIqlmZ2+
-         NU+WcYUhoYBSo9uIAkt10S2gD0Cq5/FDHTquAjBHmttISngmzM7P5BCw5ASFARYlVC
-         OMtW6sGLSFKfutogcUuxG1FYujGUz3ifciH/skcM=
-Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p3.samsung.com
+        b=CvHGAf1yR63wrrquyBdw2Lpy0+bi+SpSQ1HYg5ZS0b6T2BoMjNAfM1xbn+VSaxZki
+         vCMdtuGTpJzdLIQfQ6IrXQUZEwH4vLsLWFvjZ1+mwdWHWnEEZ2MpTHrqMLFWOCV1+K
+         VVs/vE5aLkZEPXl8yzjSdIqcNv5JwUOMSn+H8IzM=
+Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p4.samsung.com
         (KnoxPortal) with ESMTP id
-        20200618014502epcas1p3760deec044c13b085ad47409f1677dea~ZgAUFJIFB3136331363epcas1p3T;
+        20200618014502epcas1p456f39db093eac2a257a8b443772238d9~ZgAUS8Bj62175421754epcas1p4e;
         Thu, 18 Jun 2020 01:45:02 +0000 (GMT)
 Mime-Version: 1.0
-Subject: RE: [RFC PATCH v2 4/5] scsi: ufs: L2P map management for HPB read
+Subject: Re: [RFC PATCH v2 3/5] scsi: ufs: Introduce HPB module
 Reply-To: daejun7.park@samsung.com
 From:   Daejun Park <daejun7.park@samsung.com>
-To:     Avri Altman <Avri.Altman@wdc.com>,
+To:     Bean Huo <huobean@gmail.com>,
         Daejun Park <daejun7.park@samsung.com>,
+        Avri Altman <Avri.Altman@wdc.com>,
         ALIM AKHTAR <alim.akhtar@samsung.com>,
         "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
         "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
@@ -62,15 +63,15 @@ CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
         BoRam Shin <boram.shin@samsung.com>
 X-Priority: 3
 X-Content-Kind-Code: NORMAL
-In-Reply-To: <SN6PR04MB4640114902AEFE69CCC54C01FC9A0@SN6PR04MB4640.namprd04.prod.outlook.com>
+In-Reply-To: <3d5748ce4481c789000979f9831a5ae681cd9d34.camel@gmail.com>
 X-CPGS-Detection: blocking_info_exchange
 X-Drm-Type: N,general
 X-Msg-Generator: Mail
 X-Msg-Type: PERSONAL
 X-Reply-Demand: N
-Message-ID: <1210830415.21592444702291.JavaMail.epsvc@epcpadp1>
-Date:   Thu, 18 Jun 2020 10:03:45 +0900
-X-CMS-MailID: 20200618010345epcms2p65b2ea8678f720c38ef620bf2f4a86c22
+Message-ID: <717176949.41592444702525.JavaMail.epsvc@epcpadp1>
+Date:   Thu, 18 Jun 2020 10:06:04 +0900
+X-CMS-MailID: 20200618010604epcms2p324800aa16fc9de874116c27b00b07c54
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
@@ -78,36 +79,68 @@ X-CPGSPASS: Y
 X-CPGSPASS: Y
 X-Hop-Count: 3
 X-CMS-RootMailID: 20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210
-References: <SN6PR04MB4640114902AEFE69CCC54C01FC9A0@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <231786897.01592213402355.JavaMail.epsvc@epcpadp1>
+References: <3d5748ce4481c789000979f9831a5ae681cd9d34.camel@gmail.com>
+        <SN6PR04MB46405EC52240E00F5D634E2AFC9A0@SN6PR04MB4640.namprd04.prod.outlook.com>
         <231786897.01592212081335.JavaMail.epsvc@epcpadp2>
         <336371513.41592205783606.JavaMail.epsvc@epcpadp2>
         <231786897.01592205482200.JavaMail.epsvc@epcpadp2>
-        <231786897.01592214002170.JavaMail.epsvc@epcpadp1>
-        <CGME20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210@epcms2p6>
+        <231786897.01592213402355.JavaMail.epsvc@epcpadp1>
+        <231786897.01592395081831.JavaMail.epsvc@epcpadp2>
+        <CGME20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210@epcms2p3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +
-> > +static struct ufshpb_map_ctx *ufshpb_get_map_ctx(struct ufshpb_lu *hpb)
-> > +{
-> > +       struct ufshpb_map_ctx *mctx;
-> > +       int i, j;
-> > +
-> > +       mctx = mempool_alloc(ufshpb_drv.ufshpb_mctx_pool, GFP_KERNEL);
-> > +       if (!mctx)
-> > +               return NULL;
-> So you use ufshpb_host_map_kbytes as the min_nr in your mempool_create,
-> But you know that you need max_lru_active_cnt x srgns_per_rgn such mapping context elements.
-> So you are
-> a) failing to provide the slab allocator an information that you already have, and
-> b) selecting from a finite pool will assure that you'll never exceed max-active-regions,
->    even if some corner case fails your logic.
-It was intend to provide user-configurable pre-allocated memory to reduce
-latency due to memory allocation. The value of ufshpb_host_map_kbytes can
-be set to max_lru_active_cnt x srgns_per_rgn, if the user want to.
+> > > implemented
+> > > > as a module parameter, so that it can be configurable by the
+> > > > user.
+> > > > 
+> > > > To gurantee a minimum memory pool size of 4MB:
+> > > > $ insmod ufshpb.ko ufshpb_host_map_kbytes=4096
+> > > 
+> > > You are going through a lot of troubles to make it a loadable
+> > > module.
+> > > What are, in your opinion, the pros and cons of this design
+> > > decision?
+> > 
+> > In my opinion...
+> > 
+> > pros:
+> > 1. A user can unload an unnecessary module when there is an
+> > insufficient
+> > memory situation (HPB case).
+> > 2. Since each UFS vendor has a different way of implementing UFS
+> > features,
+> > it can be supported as a separate module. Otherwise, many quirks must
+> > be attached to module, which is not desirable way.
+> > 3. It is possible to distinguish parts that are not necessary for
+> > essential
+> > ufs operation.
+> > 4. It is advantageous to implement the latest functions according to
+> > the
+> > development speed of UFS.
+> > 
+> > cons:
+> > 1. It is difficult work to be implemented as a module.
+> > 2. Modifying "ufsfeature.c" is required to implement the feature that
+> > can
+> > not supported by the exsiting "ufsf_operation".
+> > 
+> > Thanks,
+> > Daejun
+> 
+> Dear Avri, Daejun, Bart
+> 
+> It is true that it is very difficult to make everyone happy.
+> We now have three HPB drivers in the patchwork, but I still didn't see
+> a final agreement. Please tell me which one do you want to focus on?
+The HPB driver has been greatly improved in the process of being applied to
+mobile devices since the release of the first HPB version in openMPDK. We
+want to contribute to the linux mainline with the knowledge obtained
+through the experience.
+I find it difficult to make everyone happy, but I think it is possible that
+everyone can accept the HPB driver through several revisions.
 
 Thanks,
 Daejun
