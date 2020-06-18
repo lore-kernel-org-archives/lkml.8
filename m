@@ -2,270 +2,128 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23818C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C826D2080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F237A2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:29:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Z/LjGSNC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731632AbgFRP3k (ORCPT
+        id S1731659AbgFRP3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:29:40 -0400
-Received: from mga04.intel.com ([192.55.52.120]:21448 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731538AbgFRP3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:29:12 -0400
-IronPort-SDR: Yu3qO9QDxHg+fEiXhK/04glx0s+hxcCnvfUByjg4tw3PteKfZxyhWZdzu77B+OmUKz+WfrvA3L
- lwK+WAA/ZoFg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="140137405"
-X-IronPort-AV: E=Sophos;i="5.75,251,1589266800"; 
-   d="scan'208";a="140137405"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 08:29:11 -0700
-IronPort-SDR: yaXZ8Ds5jX6zXxi4vApjtLcu+gbXVy+wQtptNDoOdpto5mcjIh/gWmkWLtie9PpfXaclQjeRMx
- TX496fqxBbcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,251,1589266800"; 
-   d="scan'208";a="450675758"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by orsmga005.jf.intel.com with ESMTP; 18 Jun 2020 08:29:09 -0700
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     broonie@kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trix@redhat.com, yilun.xu@intel.com, hao.wu@intel.com,
-        matthew.gerlach@linux.intel.com, russell.h.weight@intel.com
-Subject: [PATCH v2 4/6] spi: altera: use regmap-mmio instead of direct mmio register access
-Date:   Thu, 18 Jun 2020 23:25:08 +0800
-Message-Id: <1592493910-30473-2-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592493910-30473-1-git-send-email-yilun.xu@intel.com>
-References: <1592493910-30473-1-git-send-email-yilun.xu@intel.com>
+        Thu, 18 Jun 2020 11:29:54 -0400
+Received: from mail-eopbgr770119.outbound.protection.outlook.com ([40.107.77.119]:4740
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731634AbgFRP3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 11:29:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kkRypKB6kro3b6BgxefSRIvdo+ZiC42Y6SpdrODNizPuwlqcJWLo3C6whUQhAl/AwzFqrsHMg1v1wtZq+AQbaDltl9AiX4Ums7/NM4lpgTpe4FEC7UOgtfxyLyBbsW7D7fxitwV5b8jpW+2nWmJRV68Ikhe7485B0hP4XJy23GllRlUGSqooHml75OGriTZki505Kd8pKhScYqlpVVO/UCqa2N+3ifb3/Qtuc/lTMHqr/2qvD1XLZ34M5x0p3Xa94qfD2MvuCorcgPcpG8TyZ4xCigZqpzY/kjWk3ClTvNMuNa9tWwUsorpsEfesRgj1pZPqyCZsMZXm1miBqjmA/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DaFH/C6EUU/wUD2c1qkE1k1z3OLf44X07g0B6FlQ7JE=;
+ b=RzVpBkojxzNF6JfKz6p+SEfpNs5pt7yroBxPxT2W69zsSoD/h179LkAZnVVi0hhUvIxTJnUZfuuYgAYlSLqXsJQB934k+7beMiKDU0SF5ZaQ8QPhJHhw02HaJoxiw55nauQxrW7w7dkFdQfGQQv87fqNaYKFdaYIGBL2WHCXg576FgoKRQ9VsDW3D+foXCIWtFjfp7oxsqHixwSNehV2AdHNPyqBcCtTpuzsesEFytDA3gft/I4cYEhV6UYWvOz0kV4aVNB5b55F+hVewCqxuWBlea+zvpXs7mUJlvwxOkNHWbhD2RJsU5lOxqVX+33n8Sbtedd5mygN9HgQBAEpAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DaFH/C6EUU/wUD2c1qkE1k1z3OLf44X07g0B6FlQ7JE=;
+ b=Z/LjGSNC6grglNDdYwlYCHCfYnQNBWssaKf8RqlnnY5IVhr0zoiaxsNyuQZR8pN+z1eES805PR09V5Lt9XeQw8l74tOgf8evXdodG4sldiA4dBUlpmJO0lLv4uKECLmzQXxPIXztuA1ea1OtRmAYU9Hk+76QBZS9OEGDQ+ehYmw=
+Received: from DM5PR2101MB1047.namprd21.prod.outlook.com (2603:10b6:4:9e::16)
+ by DM6PR21MB1290.namprd21.prod.outlook.com (2603:10b6:5:170::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.12; Thu, 18 Jun
+ 2020 15:29:39 +0000
+Received: from DM5PR2101MB1047.namprd21.prod.outlook.com
+ ([fe80::9583:a05a:e040:2923]) by DM5PR2101MB1047.namprd21.prod.outlook.com
+ ([fe80::9583:a05a:e040:2923%7]) with mapi id 15.20.3131.008; Thu, 18 Jun 2020
+ 15:29:39 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 4/8] Drivers: hv: vmbus: Remove unnecessary channel->lock
+ critical sections (sc_list readers)
+Thread-Topic: [PATCH 4/8] Drivers: hv: vmbus: Remove unnecessary channel->lock
+ critical sections (sc_list readers)
+Thread-Index: AQHWRMcPN9oLSAEi5E+L17Xv7AjRlajegHmg
+Date:   Thu, 18 Jun 2020 15:29:39 +0000
+Message-ID: <DM5PR2101MB104702727705ED512CE747F9D79B0@DM5PR2101MB1047.namprd21.prod.outlook.com>
+References: <20200617164642.37393-1-parri.andrea@gmail.com>
+ <20200617164642.37393-5-parri.andrea@gmail.com>
+In-Reply-To: <20200617164642.37393-5-parri.andrea@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-18T15:29:37Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8e7b4c0a-3dcd-4c5c-bea9-e14cceb6e120;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 116835b8-24e6-4288-c423-08d8139c6a53
+x-ms-traffictypediagnostic: DM6PR21MB1290:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR21MB129075FF82E0C9614D66A027D79B0@DM6PR21MB1290.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-forefront-prvs: 0438F90F17
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NW5opoBbsSlVgz5KOrsoCXULqUG9yfJRGBNlh8J8rIbzTq0sbI4cUSAqdbGeIyvTJCfvpfzFN0TwFnUHC6xFZD8N6FahO/29A3n0p3VKQ9qr2cd6x01IWcEgVC48DSUsPNhX/WARqR0sbKFotl1DA09TASjNXxUDOm/U47tVeRMC26TiuUlIlC4ub4bOPUD9881o9GwNyJ0HsaumM6CHTR1fIOtrmXXhleYnlMdqXY//ICEHT/s19bwvfk3wsFcOGOoH5iDgKsdkCAt6kppVCt3L8tDrUtrAyVRZEILw2CWjx7+sLbBxHepQzxnkXaNjz45ikh86pk3V+nyLcUlEDQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR2101MB1047.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(396003)(136003)(366004)(2906002)(52536014)(5660300002)(33656002)(8936002)(4744005)(66556008)(54906003)(64756008)(66946007)(83380400001)(66446008)(66476007)(55016002)(76116006)(86362001)(110136005)(9686003)(6506007)(82960400001)(82950400001)(71200400001)(478600001)(186003)(4326008)(8990500004)(8676002)(316002)(7696005)(10290500003)(26005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: T7Vvv+0tmofdnzi5kMt52OrCkkU2VC9BShQAeLlp2DyJ0PwT30PrxRwfa6s6Zi2v5Ha9AXMx7EtG4liG9fp0pTzJbzZhA4I/4s7UHErSjFQcoA7PmAb8batmGfNSkNepS/e8znI089zER/tXg+OoOmO+PYNVjmheVFuK7J+p/xNkgcTApmy2DuFRMWyWSYgGDVmwWC4+2zN6DYJ5Sg9Jx32jI8uTa5Dnt04R9St9U64XbCczPnaNDwrr1N1sso6kUu7P79FKLsQiDXhRHD1o83h4mG7q0b9ykNm4E4pm1k25JmoSxr3u2KsUTbztya5bFXJ7CiykQ0wgYGWzMZ9XlrKJXpiaPZTMXtcNxbLsbaM+EozJmU4Ne+XJjEhcLTAHdn5SrgCsjh1noRo66HxuQUG4fvhMofsKCOxXQJlUk5JXevjtXC8ITCk4A43p+pmXGN3Al+VOkf07ZONHV7g/co1zZhhGq1sJwml7GyEZAvZq0wpWkmOno4z/gphsJigK
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR2101MB1047.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 116835b8-24e6-4288-c423-08d8139c6a53
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 15:29:39.0824
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nvoAW4fmyeBOHH+93YmnWoUtBnUO35XTJNHObHDkfBDhw9TWstmW4y9Q2TJs/zbv3SsFAIt8I64C9UKMg7t7Bn4puEGGF3b01fB+4KeubdE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1290
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for regmap. It makes preparation for supporting
-different ways to access the registers.
+From: Andrea Parri (Microsoft) <parri.andrea@gmail.com>  Sent: Wednesday, J=
+une 17, 2020 9:47 AM
+>=20
+> Additions/deletions to/from sc_list (as well as modifications of
+> target_cpu(s)) are protected by channel_mutex, which hv_synic_cleanup()
+> and vmbus_bus_suspend() own for the duration of the channel->lock
+> critical section in question.
+>=20
+> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> ---
+>  drivers/hv/hv.c        | 3 ---
+>  drivers/hv/vmbus_drv.c | 3 ---
+>  2 files changed, 6 deletions(-)
+>=20
 
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Signed-off-by: Wu Hao <hao.wu@intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Russ Weight <russell.h.weight@intel.com>
----
- drivers/spi/Kconfig      |  1 +
- drivers/spi/spi-altera.c | 91 ++++++++++++++++++++++++++++++++++++++----------
- 2 files changed, 73 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 8f1f8fc..6d79fc7 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -59,6 +59,7 @@ comment "SPI Master Controller Drivers"
- 
- config SPI_ALTERA
- 	tristate "Altera SPI Controller"
-+	select REGMAP_MMIO
- 	help
- 	  This is the driver for the Altera SPI Controller.
- 
-diff --git a/drivers/spi/spi-altera.c b/drivers/spi/spi-altera.c
-index aa9d1a2..b215bdf 100644
---- a/drivers/spi/spi-altera.c
-+++ b/drivers/spi/spi-altera.c
-@@ -44,7 +44,6 @@
- #define ALTERA_SPI_MAX_CS		32
- 
- struct altera_spi {
--	void __iomem *base;
- 	int irq;
- 	int len;
- 	int count;
-@@ -54,8 +53,43 @@ struct altera_spi {
- 	/* data buffers */
- 	const unsigned char *tx;
- 	unsigned char *rx;
-+
-+	struct regmap *regmap;
-+	struct device *dev;
-+};
-+
-+static const struct regmap_config spi_altera_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.fast_io = true,
- };
- 
-+static int altr_spi_writel(struct altera_spi *hw, unsigned int reg,
-+			   unsigned int val)
-+{
-+	int ret;
-+
-+	ret = regmap_write(hw->regmap, reg, val);
-+	if (ret)
-+		dev_err(hw->dev, "fail to write reg 0x%x val 0x%x: %d\n",
-+			reg, val, ret);
-+
-+	return ret;
-+}
-+
-+static int altr_spi_readl(struct altera_spi *hw, unsigned int reg,
-+			  unsigned int *val)
-+{
-+	int ret;
-+
-+	ret = regmap_read(hw->regmap, reg, val);
-+	if (ret)
-+		dev_err(hw->dev, "fail to read reg 0x%x: %d\n", reg, ret);
-+
-+	return ret;
-+}
-+
- static inline struct altera_spi *altera_spi_to_hw(struct spi_device *sdev)
- {
- 	return spi_master_get_devdata(sdev->master);
-@@ -67,12 +101,13 @@ static void altera_spi_set_cs(struct spi_device *spi, bool is_high)
- 
- 	if (is_high) {
- 		hw->imr &= ~ALTERA_SPI_CONTROL_SSO_MSK;
--		writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
--		writel(0, hw->base + ALTERA_SPI_SLAVE_SEL);
-+		altr_spi_writel(hw, ALTERA_SPI_CONTROL, hw->imr);
-+		altr_spi_writel(hw, ALTERA_SPI_SLAVE_SEL, 0);
- 	} else {
--		writel(BIT(spi->chip_select), hw->base + ALTERA_SPI_SLAVE_SEL);
-+		altr_spi_writel(hw, ALTERA_SPI_SLAVE_SEL,
-+				BIT(spi->chip_select));
- 		hw->imr |= ALTERA_SPI_CONTROL_SSO_MSK;
--		writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
-+		altr_spi_writel(hw, ALTERA_SPI_CONTROL, hw->imr);
- 	}
- }
- 
-@@ -99,14 +134,14 @@ static void altera_spi_tx_word(struct altera_spi *hw)
- 		}
- 	}
- 
--	writel(txd, hw->base + ALTERA_SPI_TXDATA);
-+	altr_spi_writel(hw, ALTERA_SPI_TXDATA, txd);
- }
- 
- static void altera_spi_rx_word(struct altera_spi *hw)
- {
- 	unsigned int rxd;
- 
--	rxd = readl(hw->base + ALTERA_SPI_RXDATA);
-+	altr_spi_readl(hw, ALTERA_SPI_RXDATA, &rxd);
- 	if (hw->rx) {
- 		switch (hw->bytes_per_word) {
- 		case 1:
-@@ -133,6 +168,7 @@ static int altera_spi_txrx(struct spi_master *master,
- 	struct spi_device *spi, struct spi_transfer *t)
- {
- 	struct altera_spi *hw = spi_master_get_devdata(master);
-+	u32 val;
- 
- 	hw->tx = t->tx_buf;
- 	hw->rx = t->rx_buf;
-@@ -143,7 +179,7 @@ static int altera_spi_txrx(struct spi_master *master,
- 	if (hw->irq >= 0) {
- 		/* enable receive interrupt */
- 		hw->imr |= ALTERA_SPI_CONTROL_IRRDY_MSK;
--		writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
-+		altr_spi_writel(hw, ALTERA_SPI_CONTROL, hw->imr);
- 
- 		/* send the first byte */
- 		altera_spi_tx_word(hw);
-@@ -151,9 +187,13 @@ static int altera_spi_txrx(struct spi_master *master,
- 		while (hw->count < hw->len) {
- 			altera_spi_tx_word(hw);
- 
--			while (!(readl(hw->base + ALTERA_SPI_STATUS) &
--				 ALTERA_SPI_STATUS_RRDY_MSK))
-+			for (;;) {
-+				altr_spi_readl(hw, ALTERA_SPI_STATUS, &val);
-+				if (val & ALTERA_SPI_STATUS_RRDY_MSK)
-+					break;
-+
- 				cpu_relax();
-+			}
- 
- 			altera_spi_rx_word(hw);
- 		}
-@@ -175,7 +215,7 @@ static irqreturn_t altera_spi_irq(int irq, void *dev)
- 	} else {
- 		/* disable receive interrupt */
- 		hw->imr &= ~ALTERA_SPI_CONTROL_IRRDY_MSK;
--		writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
-+		altr_spi_writel(hw, ALTERA_SPI_CONTROL, hw->imr);
- 
- 		spi_finalize_current_transfer(master);
- 	}
-@@ -188,7 +228,9 @@ static int altera_spi_probe(struct platform_device *pdev)
- 	struct altera_spi_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct altera_spi *hw;
- 	struct spi_master *master;
-+	void __iomem *res;
- 	int err = -ENODEV;
-+	u32 val;
- 	u16 i;
- 
- 	master = spi_alloc_master(&pdev->dev, sizeof(struct altera_spi));
-@@ -220,19 +262,30 @@ static int altera_spi_probe(struct platform_device *pdev)
- 	master->set_cs = altera_spi_set_cs;
- 
- 	hw = spi_master_get_devdata(master);
-+	hw->dev = &pdev->dev;
- 
- 	/* find and map our resources */
--	hw->base = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(hw->base)) {
--		err = PTR_ERR(hw->base);
-+	res = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(res)) {
-+		err = PTR_ERR(res);
- 		goto exit;
- 	}
-+
-+	hw->regmap = devm_regmap_init_mmio(&pdev->dev, res,
-+					   &spi_altera_config);
-+	if (IS_ERR(hw->regmap)) {
-+		dev_err(&pdev->dev, "regmap mmio init failed\n");
-+		err = PTR_ERR(hw->regmap);
-+		goto exit;
-+	}
-+
- 	/* program defaults into the registers */
- 	hw->imr = 0;		/* disable spi interrupts */
--	writel(hw->imr, hw->base + ALTERA_SPI_CONTROL);
--	writel(0, hw->base + ALTERA_SPI_STATUS);	/* clear status reg */
--	if (readl(hw->base + ALTERA_SPI_STATUS) & ALTERA_SPI_STATUS_RRDY_MSK)
--		readl(hw->base + ALTERA_SPI_RXDATA);	/* flush rxdata */
-+	altr_spi_writel(hw, ALTERA_SPI_CONTROL, hw->imr);
-+	altr_spi_writel(hw, ALTERA_SPI_STATUS, 0);	/* clear status reg */
-+	altr_spi_readl(hw, ALTERA_SPI_STATUS, &val);
-+	if (val & ALTERA_SPI_STATUS_RRDY_MSK)
-+		altr_spi_readl(hw, ALTERA_SPI_RXDATA, &val); /* flush rxdata */
- 	/* irq is optional */
- 	hw->irq = platform_get_irq(pdev, 0);
- 	if (hw->irq >= 0) {
-@@ -255,7 +308,7 @@ static int altera_spi_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	dev_info(&pdev->dev, "base %p, irq %d\n", hw->base, hw->irq);
-+	dev_info(&pdev->dev, "base %p, irq %d\n", res, hw->irq);
- 
- 	return 0;
- exit:
--- 
-2.7.4
-
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
