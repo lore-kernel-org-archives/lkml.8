@@ -2,117 +2,117 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 725F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E33A2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 030DF20578
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:35:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=adit-jv.com header.i=@adit-jv.com header.b="xrDC8ULP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DdyAOrKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgFRKfN (ORCPT
+        id S1728979AbgFRKfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 06:35:13 -0400
-Received: from ma-dnext03.denso.co.jp ([133.192.181.78]:44693 "EHLO
-        ma-dnext03.denso.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbgFRKfH (ORCPT
+        Thu, 18 Jun 2020 06:35:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbgFRKf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 06:35:07 -0400
-Received: from grdma01h.denso.co.jp (unknown [133.192.24.24])
-        by ma-dnext03.denso.co.jp (Postfix) with ESMTP id 7533F5D0473;
-        Thu, 18 Jun 2020 19:35:01 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=adit-jv.com;
-        s=jpadit-jvmail2011; t=1592476501;
-        bh=K0tPOIUp2y9bg5a2AL1dvczXgteN9sm026xR1Mrju64=;
-        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-         MIME-Version:Content-Type;
-        b=xrDC8ULPYfHPn3ma4NzxmDfVEw0MXzCxCfrAhJZ1AgU0t3rALzNcSlW22WYw1m/HY
-         qc3ywq+q3UcqZRLI3dhBP30oCzXcq5CDX/YByP9GqU3zNH86e7Aij6zwIpxlnWk9EX
-         xFsUzZbvTPc48+gvRzy1WtiGf1HmT+CCYFa4p7iLrQsJohFZvxy+nAdoGouGSz8g54
-         xqf2fSgJ/RQJzFaeqyv5LgEkZTlBRfS0ErK1l62V/Nzc834LgvER2LtiE8wpWyHsiZ
-         STJAnzoQcxC6VNZA9fLSZYDR8EVso7FiDOoZzgbgu4Kpz6HVr2NHPkF/tyqtCvnkZi
-         9XSBse7Z5ESMA==
-Received: by grdma01h.denso.co.jp (Postfix, from userid 0)
-        id 7274CC0BDAB; Thu, 18 Jun 2020 19:35:01 +0900 (JST)
-Received: from smtp1.denso.co.jp [133.192.24.88] 
-         by grdma01h. with ESMTP id VAA11611;
-         Thu, 18 Jun 2020 19:35:01 +0900
-Received: from ky0exch01.adit-jv.com ([10.71.113.8])
-        by smtp01.denso.co.jp (MOS 4.4.7-GA)
-        with ESMTP id GAZ77809;
-        Thu, 18 Jun 2020 19:35:00 +0900
-Received: from jp-u0004.adit-jv.com (10.71.112.120) by ky0exch01.adit-jv.com
- (10.71.113.8) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 18 Jun
- 2020 19:35:00 +0900
-From:   Suresh Udipi <sudipi@jp.adit-jv.com>
-To:     <mrodin@de.adit-jv.com>
-CC:     <akiyama@nds-osk.co.jp>, <efriedrich@de.adit-jv.com>,
-        <erosca@de.adit-jv.com>, <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <mchehab@kernel.org>, <michael@rodin.online>,
-        <niklas.soderlund@ragnatech.se>, <securitycheck@denso.co.jp>,
-        <sudipi@jp.adit-jv.com>
-Subject: [PATCH v8 3/3] media: rcar-csi2: Optimize the selection PHTW register
-Date:   Thu, 18 Jun 2020 19:34:32 +0900
-Message-ID: <1592476472-26235-3-git-send-email-sudipi@jp.adit-jv.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1592476472-26235-1-git-send-email-sudipi@jp.adit-jv.com>
-References: <20200617133705.GA88066@vmlxhi-121.adit-jv.com>
- <1592476472-26235-1-git-send-email-sudipi@jp.adit-jv.com>
+        Thu, 18 Jun 2020 06:35:26 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF205C06174E;
+        Thu, 18 Jun 2020 03:35:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tliSKQbk7IKkXD+3sv6W4IKOfskIhBhUzC3bD3Cn3Ec=; b=DdyAOrKFtQPhPLgqdSUGoR/Pkw
+        ETlLNIB3zwt3JUNas1N7hfkVOvAJg/+cvvcb7SvRYknq8Joove3g5DnH71qIUxZxP9EMUbsl5dWLC
+        zM8r0ceGwzdqHzE/ZwK7uhJpHEMtzt9maVhQr0ZG+jyTDPNqy3NzR85KqeP9psQKHWE7H3MpGKjzG
+        c6YNp6EtrIFK5c++jcfE8zJzmhEiH1XPjKAnPn8DknJi+BebmFwY5JubyGMmJkkOnrxEUmGRZfxMm
+        lfzK49VAnUaxJzqLimyEivJmt/MtqbBl719cwHo0UEHeF6kKbXhcGkWONwWXaV83lNP1BFM+cKNme
+        e/j7Fz5w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlrsy-00027C-M3; Thu, 18 Jun 2020 10:35:08 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 47CD230018A;
+        Thu, 18 Jun 2020 12:35:06 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 338BD20C227A0; Thu, 18 Jun 2020 12:35:06 +0200 (CEST)
+Date:   Thu, 18 Jun 2020 12:35:06 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 2/3] arm64: use PAGE_KERNEL_ROX directly in
+ alloc_insn_page
+Message-ID: <20200618103506.GH576905@hirez.programming.kicks-ass.net>
+References: <20200618064307.32739-1-hch@lst.de>
+ <20200618064307.32739-3-hch@lst.de>
+ <90234f58-e83a-7f20-62a7-80a4e81cde95@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.71.112.120]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <90234f58-e83a-7f20-62a7-80a4e81cde95@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PHTW register is selected based on default bit rate from Table[1].
-for the bit rates less than or equal to 250. Currently first
-value of default bit rate which is greater than or equal to
-the caculated mbps is selected.This selection can be further
-improved by selecting the default bit rate which is nearest to
-the calculated value.
+On Thu, Jun 18, 2020 at 10:55:58AM +0200, David Hildenbrand wrote:
+> On 18.06.20 08:43, Christoph Hellwig wrote:
+> > Use PAGE_KERNEL_ROX directly instead of allocating RWX and setting the
+> > page read-only just after the allocation.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  arch/arm64/kernel/probes/kprobes.c | 12 +++---------
+> >  1 file changed, 3 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+> > index d1c95dcf1d7833..cbe49cd117cfec 100644
+> > --- a/arch/arm64/kernel/probes/kprobes.c
+> > +++ b/arch/arm64/kernel/probes/kprobes.c
+> > @@ -120,15 +120,9 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
+> >  
+> >  void *alloc_insn_page(void)
+> >  {
+> > -	void *page;
+> > -
+> > -	page = vmalloc_exec(PAGE_SIZE);
+> > -	if (page) {
+> > -		set_memory_ro((unsigned long)page, 1);
+> > -		set_vm_flush_reset_perms(page);
+> > -	}
+> > -
+> > -	return page;
+> > +	return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
+> > +			GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
+> > +			NUMA_NO_NODE, __func__);
+> 
+> I do wonder if something like vmalloc_prot(size, prot) would make this
+> (and the other two users) easier to read.
+> 
+> So instead of ripping out vmalloc_exec(), converting it into
+> vmalloc_prot() instead.
+> 
+> Did you consider that?
 
-[1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.12]
-
-Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
-
-Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
----
- drivers/media/platform/rcar-vin/rcar-csi2.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-index 1184527..d7bf59f 100644
---- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-+++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-@@ -917,10 +917,18 @@ static int rcsi2_phtw_write_mbps(struct rcar_csi2 *priv, unsigned int mbps,
- 				 const struct rcsi2_mbps_reg *values, u16 code)
- {
- 	const struct rcsi2_mbps_reg *value;
-+	const struct rcsi2_mbps_reg *prev_value = NULL;
- 
--	for (value = values; value->mbps; value++)
-+	for (value = values; value->mbps; value++) {
- 		if (value->mbps >= mbps)
- 			break;
-+		prev_value = value;
-+	}
-+
-+	if (prev_value &&
-+	    ((mbps - prev_value->mbps) <= (value->mbps - mbps)))
-+		value = prev_value;
-+
- 
- 	if (!value->mbps) {
- 		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
--- 
-2.7.4
+For x86 Christoph did module_alloc_prot(), which is in his more
+extensive set of patches addressing this. I suspect that would be the
+right thing for ARM64 as well.
 
