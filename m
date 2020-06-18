@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B01C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C03BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45A7A2193E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 525122193E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442793;
-	bh=n77+mRGJzhZkF3sMpgr1Vq43gLpGDv+qKc9vyAuvuic=;
+	s=default; t=1592442795;
+	bh=nd3Q9O8wgiC7/4gHtMEUgLr+DTz8kVmOYU9qM77/DeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kVYJuY4BIG0DQDNSsCX0zU/sbZQ0fOq5BWH64YpcJplF6f36FmjOBhoMW3wcXvdP2
-	 kun3zxuEQy2we1a6lJV06czvuCyFG+fTWBF2wHgOcUf7R6KlLmkbJySf90iocY4YX7
-	 +stfHV1UbNRG/L82GyRjJV09+MmnG/3rs5TxIN+c=
+	b=RSk6fxGEEeQH2MY1ka9nH53W7LDRxbEn4mHU7+4+5t65Grx6PfhsAgDwWjP03bSBg
+	 YpQiTAG3o4Tml9fKd7rvB4Em2cT0kiXSbwEnt37dc5rCovDrOqYiwAi3uNLeXrLIQE
+	 IXfoFn2JSHzE9FczIbsuwTrutBpJY2t3ypFhUbcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729063AbgFRBNL (ORCPT
+        id S1728483AbgFRBNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:13:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40638 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:13:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728003AbgFRBML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:11 -0400
+        id S1728871AbgFRBMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EDC121974;
-        Thu, 18 Jun 2020 01:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F55C20EDD;
+        Thu, 18 Jun 2020 01:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442730;
-        bh=n77+mRGJzhZkF3sMpgr1Vq43gLpGDv+qKc9vyAuvuic=;
+        s=default; t=1592442732;
+        bh=nd3Q9O8wgiC7/4gHtMEUgLr+DTz8kVmOYU9qM77/DeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BBWMPVsHr1befN8TNPY2htXhwn39vqM1E8in6+14n/O7J62tMis8TlDOK63IkWzc3
-         M6U4VtpyoVw65dB4ouG9pqRClewh1mtf/o4KnuDbN0CjiaZDQ/c/35plLzoYlWoG4q
-         7JVzVMIe9cky9fMEJEtEIQA0ppV3fJ+mO8T4JxEQ=
+        b=hlA392vWciZNKg5D8uxXs5EA2E5r8zLmyhwgTNJ9GKnWVnBuwNhaStiGksFBZUJuU
+         lerr4ehVmcTByc5pJAWWZz7Mm3Ebu9u7H1SuB2Iy0e1+4KRJYG8WYViO41HO0hb9kD
+         QsuGMCu9g4K9BsqseQna5VfGQ7S61nvCKFKXYOIQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 186/388] scsi: target: loopback: Fix READ with data and sensebytes
-Date:   Wed, 17 Jun 2020 21:04:43 -0400
-Message-Id: <20200618010805.600873-186-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.7 188/388] f2fs: Fix wrong stub helper update_sit_info
+Date:   Wed, 17 Jun 2020 21:04:45 -0400
+Message-Id: <20200618010805.600873-188-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,103 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit c68a56736c129f5dd1632856956f9c3e04bae200 ]
+[ Upstream commit 48abe91ac1ad27cd5a5709f983dcf58f2b9a6b70 ]
 
-We use tcm_loop with tape emulations running on tcmu.
+update_sit_info should be f2fs_update_sit_info,
+otherwise build fails while no CONFIG_F2FS_STAT_FS.
 
-In case application reads a short tape block with a longer READ, or a long
-tape block with a short READ, according to SCC spec data has to be
-tranferred _and_ sensebytes with ILI set and information field containing
-the residual count. Similar problem also exists when using fixed block
-size in READ.
-
-Up to now tcm_loop is not prepared to handle sensebytes if input data is
-provided, as in tcm_loop_queue_data_in() it only sets SAM_STAT_GOOD and, if
-necessary, the residual count.
-
-To fix the bug, the same handling for sensebytes as present in
-tcm_loop_queue_status() must be done in tcm_loop_queue_data_in() also.
-
-After adding this handling, the two function now are nearly identical, so I
-created a single function with two wrappers.
-
-Link: https://lore.kernel.org/r/20200428182617.32726-1-bstroesser@ts.fujitsu.com
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: fc7100ea2a52 ("f2fs: Add f2fs stats to sysfs")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/loopback/tcm_loop.c | 36 +++++++++++++-----------------
- 1 file changed, 15 insertions(+), 21 deletions(-)
+ fs/f2fs/f2fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/target/loopback/tcm_loop.c b/drivers/target/loopback/tcm_loop.c
-index 3305b47fdf53..16d5a4e117a2 100644
---- a/drivers/target/loopback/tcm_loop.c
-+++ b/drivers/target/loopback/tcm_loop.c
-@@ -545,32 +545,15 @@ static int tcm_loop_write_pending(struct se_cmd *se_cmd)
- 	return 0;
- }
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index ba470d5687fe..1f8ae28d7ccf 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3655,7 +3655,7 @@ static inline int f2fs_build_stats(struct f2fs_sb_info *sbi) { return 0; }
+ static inline void f2fs_destroy_stats(struct f2fs_sb_info *sbi) { }
+ static inline void __init f2fs_create_root_stats(void) { }
+ static inline void f2fs_destroy_root_stats(void) { }
+-static inline void update_sit_info(struct f2fs_sb_info *sbi) {}
++static inline void f2fs_update_sit_info(struct f2fs_sb_info *sbi) {}
+ #endif
  
--static int tcm_loop_queue_data_in(struct se_cmd *se_cmd)
-+static int tcm_loop_queue_data_or_status(const char *func,
-+		struct se_cmd *se_cmd, u8 scsi_status)
- {
- 	struct tcm_loop_cmd *tl_cmd = container_of(se_cmd,
- 				struct tcm_loop_cmd, tl_se_cmd);
- 	struct scsi_cmnd *sc = tl_cmd->sc;
- 
- 	pr_debug("%s() called for scsi_cmnd: %p cdb: 0x%02x\n",
--		 __func__, sc, sc->cmnd[0]);
--
--	sc->result = SAM_STAT_GOOD;
--	set_host_byte(sc, DID_OK);
--	if ((se_cmd->se_cmd_flags & SCF_OVERFLOW_BIT) ||
--	    (se_cmd->se_cmd_flags & SCF_UNDERFLOW_BIT))
--		scsi_set_resid(sc, se_cmd->residual_count);
--	sc->scsi_done(sc);
--	return 0;
--}
--
--static int tcm_loop_queue_status(struct se_cmd *se_cmd)
--{
--	struct tcm_loop_cmd *tl_cmd = container_of(se_cmd,
--				struct tcm_loop_cmd, tl_se_cmd);
--	struct scsi_cmnd *sc = tl_cmd->sc;
--
--	pr_debug("%s() called for scsi_cmnd: %p cdb: 0x%02x\n",
--		 __func__, sc, sc->cmnd[0]);
-+		 func, sc, sc->cmnd[0]);
- 
- 	if (se_cmd->sense_buffer &&
- 	   ((se_cmd->se_cmd_flags & SCF_TRANSPORT_TASK_SENSE) ||
-@@ -581,7 +564,7 @@ static int tcm_loop_queue_status(struct se_cmd *se_cmd)
- 		sc->result = SAM_STAT_CHECK_CONDITION;
- 		set_driver_byte(sc, DRIVER_SENSE);
- 	} else
--		sc->result = se_cmd->scsi_status;
-+		sc->result = scsi_status;
- 
- 	set_host_byte(sc, DID_OK);
- 	if ((se_cmd->se_cmd_flags & SCF_OVERFLOW_BIT) ||
-@@ -591,6 +574,17 @@ static int tcm_loop_queue_status(struct se_cmd *se_cmd)
- 	return 0;
- }
- 
-+static int tcm_loop_queue_data_in(struct se_cmd *se_cmd)
-+{
-+	return tcm_loop_queue_data_or_status(__func__, se_cmd, SAM_STAT_GOOD);
-+}
-+
-+static int tcm_loop_queue_status(struct se_cmd *se_cmd)
-+{
-+	return tcm_loop_queue_data_or_status(__func__,
-+					     se_cmd, se_cmd->scsi_status);
-+}
-+
- static void tcm_loop_queue_tm_rsp(struct se_cmd *se_cmd)
- {
- 	struct tcm_loop_cmd *tl_cmd = container_of(se_cmd,
+ extern const struct file_operations f2fs_dir_operations;
 -- 
 2.25.1
 
