@@ -2,149 +2,101 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52249C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D042121534
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2239921534
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:29:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592447353;
+	bh=daUevcPQwSz8ypE0/GRlaqeC7kN8wLzXpFUXl6xgYxE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=idlB2RgNMpLgAggqyLt/QWF2VyMJkv2LknVrLwr+3dgNlpj1wZ6bO0wLPZuVUP9pq
+	 RoMxXz1x1msKCEgAaUq5LW3xeiYuV0wC+RrFqlQ7Z6v/uKXAbqQ/X2JQT+fIl7U6Ku
+	 /3ipwVDsxdBvpiCV0tdPg/IjLPqRh+5HkaZt7fKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387607AbgFRC3F (ORCPT
+        id S1731292AbgFRC3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:29:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:38588 "EHLO foss.arm.com"
+        Wed, 17 Jun 2020 22:29:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729562AbgFRBQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728628AbgFRBQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:16:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BB6C31B;
-        Wed, 17 Jun 2020 18:16:13 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.80.176])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3351C3F6CF;
-        Wed, 17 Jun 2020 18:16:02 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V3 (RESEND) 0/3] arm64: Enable vmemmap mapping from device memory
-Date:   Thu, 18 Jun 2020 06:45:27 +0530
-Message-Id: <1592442930-9380-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3145921D82;
+        Thu, 18 Jun 2020 01:16:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592442974;
+        bh=daUevcPQwSz8ypE0/GRlaqeC7kN8wLzXpFUXl6xgYxE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yXsyeDbfDPP2z3lrIkMJqmAOEHXmWAnHiNrd3VMV284yxd9zDKpPjNfYyZ73j277t
+         j4DZ+9XxzKXeEaoUdtQGCosjuuVOYeHjzqxkSbXBypQsF9fZNfgnLXOuB2LuWF2Uq5
+         O0A8BSJAoSmR+ZXTyz51SRRb2xn3aMWyqO5C/Rys=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tobias Klauser <tklauser@distanz.ch>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 377/388] tools, bpftool: Fix memory leak in codegen error cases
+Date:   Wed, 17 Jun 2020 21:07:54 -0400
+Message-Id: <20200618010805.600873-377-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series enables vmemmap backing memory allocation from device memory
-ranges on arm64. But before that, it enables vmemmap_populate_basepages()
-and vmemmap_alloc_block_buf() to accommodate struct vmem_altmap based
-alocation requests.
+From: Tobias Klauser <tklauser@distanz.ch>
 
-This series applies on 5.8-rc1.
+[ Upstream commit d4060ac969563113101c79433f2ae005feca1c29 ]
 
-Pending Question:
+Free the memory allocated for the template on error paths in function
+codegen.
 
-altmap_alloc_block_buf() does not have any other remaining users in the
-tree after this change. Should it be converted into a static function and
-it's declaration be dropped from the header (include/linux/mm.h). Avoided
-doing so because I was not sure if there are any off-tree users or not.
+Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200610130804.21423-1-tklauser@distanz.ch
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/bpf/bpftool/gen.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes in V3:
-
-- Dropped comment from free_hotplug_page_range() per Robin
-- Modified comment in unmap_hotplug_range() per Robin
-- Enabled altmap support in vmemmap_alloc_block_buf() per Robin
-
-Changes in V2: (https://lkml.org/lkml/2020/3/4/475)
-
-- Rebased on latest hot-remove series (v14) adding P4D page table support
-
-Changes in V1: (https://lkml.org/lkml/2020/1/23/12)
-
-- Added an WARN_ON() in unmap_hotplug_range() when altmap is
-  provided without the page table backing memory being freed
-
-Changes in RFC V2: (https://lkml.org/lkml/2019/10/21/11)
-
-- Changed the commit message on 1/2 patch per Will
-- Changed the commit message on 2/2 patch as well
-- Rebased on arm64 memory hot remove series (v10)
-
-RFC V1: (https://lkml.org/lkml/2019/6/28/32)
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-ia64@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
-Cc: x86@kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-
-Anshuman Khandual (3):
-  mm/sparsemem: Enable vmem_altmap support in vmemmap_populate_basepages()
-  mm/sparsemem: Enable vmem_altmap support in vmemmap_alloc_block_buf()
-  arm64/mm: Enable vmem_altmap support for vmemmap mappings
-
- arch/arm64/mm/mmu.c       | 59 ++++++++++++++++++++++++++-------------
- arch/ia64/mm/discontig.c  |  2 +-
- arch/powerpc/mm/init_64.c | 10 +++----
- arch/riscv/mm/init.c      |  2 +-
- arch/x86/mm/init_64.c     | 12 ++++----
- include/linux/mm.h        |  8 ++++--
- mm/sparse-vmemmap.c       | 38 ++++++++++++++++++++-----
- 7 files changed, 87 insertions(+), 44 deletions(-)
-
+diff --git a/tools/bpf/bpftool/gen.c b/tools/bpf/bpftool/gen.c
+index f8113b3646f5..f5960b48c861 100644
+--- a/tools/bpf/bpftool/gen.c
++++ b/tools/bpf/bpftool/gen.c
+@@ -225,6 +225,7 @@ static int codegen(const char *template, ...)
+ 		} else {
+ 			p_err("unrecognized character at pos %td in template '%s'",
+ 			      src - template - 1, template);
++			free(s);
+ 			return -EINVAL;
+ 		}
+ 	}
+@@ -235,6 +236,7 @@ static int codegen(const char *template, ...)
+ 			if (*src != '\t') {
+ 				p_err("not enough tabs at pos %td in template '%s'",
+ 				      src - template - 1, template);
++				free(s);
+ 				return -EINVAL;
+ 			}
+ 		}
 -- 
-2.20.1
+2.25.1
 
