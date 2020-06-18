@@ -2,124 +2,123 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEBEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA506C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C68820890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C954A20890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PLb5yOPF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JIpHXpZh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgFRVBz (ORCPT
+        id S1729255AbgFRVCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 17:01:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59394 "EHLO
+        Thu, 18 Jun 2020 17:02:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgFRVBz (ORCPT
+        with ESMTP id S1725829AbgFRVCR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 17:01:55 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A29BC06174E;
-        Thu, 18 Jun 2020 14:01:55 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id dr13so7903308ejc.3;
-        Thu, 18 Jun 2020 14:01:55 -0700 (PDT)
+        Thu, 18 Jun 2020 17:02:17 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B31C3C06174E;
+        Thu, 18 Jun 2020 14:02:16 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id a9so8984751ljn.6;
+        Thu, 18 Jun 2020 14:02:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/pSg+CjVVGDmkJgSAWGcUvsAuaB+HD/87Cz0ih1iEpU=;
-        b=PLb5yOPFdttKNB7R79USKjGUc6xJvIlhZqG+6dY5T4MJMkja97YVPqO+VSTT/MP9BC
-         VhKNgCL/UdQeqWQ44SWAUxDfJSr0Oxs6mPorLGZDnq4kdo2ExhUoMSBG3VN3AUlstCy7
-         mjhlDXSgDAZiv8qjLEcuOBxTeO2lZ4T+DUgGf3CmeTxaF87+K23NqjjR/JhyexUBycN7
-         C013wGARBTw1P0OoO36i1zedNrT8Jz5IGC1BJuzLM20q9H+Gp6tCPmKhxfLwQjGeh6gm
-         7Rh9cMIQZVKkbZHFnGg42SctEGeuL4SbcMi/gl+DX5ADL1/ocrDljJhq7BnwVmC/TXOI
-         6cuA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TMDMECxtDyrKw7UR9Mx7zsMc3I+ujgCjjWQyhNCKNAU=;
+        b=JIpHXpZh15j6uf54OZ0ZaYctdkQNVT6WZHwFCP1LiZwKNzvnBVF+8tjbMrEc88y5AQ
+         miDd3UrB7aKm6rDb7mO19hDBDXrpnwDSwdGMSDeRpxlVbgFdf0FL/pk21CFdgHsY17fk
+         xOby98ybU65IY5qMB4KNYVwds9cwYmD4q7ZK//AQy0FB5CFh6vn7EQaSUMrJQ3+Udn2X
+         3IOs1361+GsLreppwlLNHbaEXuSQdoKa2eJKSayOgkDmRixQYALgeX0rhdNZ878UQJ2l
+         9G0ZWePa4mdDWeXl3I863UtIrJQGwgKGjhg1IUnlN6vpzrn7PCISfSaJF9RVEfVdDu+a
+         AXCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/pSg+CjVVGDmkJgSAWGcUvsAuaB+HD/87Cz0ih1iEpU=;
-        b=ClPj4HiYlGMuWTBvsrLpx7zZfHbXBpJnZH9T2E80r8Ge31sKYMjeJHJ1POnPwmvXbR
-         fXJl2ZEGQ4t3XCxM2n8Po2osnkaz+lF/Ugiiq+sJhZ58cNvJ/wxvAeqNBxCRELxhr0ft
-         WcoomjedFgSMv2JshcAChcafEJL58uTKzPkS1Ahg0KplwEqP+kgPpF9bfo1cAB5NZqoe
-         fneLfTrIoVzw0ohzWP/eg5QC8KmBAdQUWG6k1icwhIZEn0ECTgd2fou33TJByqyX64Uv
-         Ku98f2t3Zv00NUMJJ9E1h2LCLA2znFPoR6drDpw89XjUzZC3EhcsxKKyzccFlgDjtuSB
-         p9IA==
-X-Gm-Message-State: AOAM533Qww6KVTkWFO5u1ZjFsqpUWu0/dUbfJIACZ2tQFk/fqtfUNN/v
-        cdth1Fy3o7EuFCtfogAdITsun5Y=
-X-Google-Smtp-Source: ABdhPJxFMaX1igYF/2oYZFm9JCYMhnUSwHbNoa+JbsF9ix71XlOeB9rMQ3F27PPCT+1Hr7sPKSN9ew==
-X-Received: by 2002:a17:906:4e59:: with SMTP id g25mr583619ejw.60.1592514113829;
-        Thu, 18 Jun 2020 14:01:53 -0700 (PDT)
-Received: from localhost.localdomain ([46.53.250.254])
-        by smtp.gmail.com with ESMTPSA id z15sm3133755eju.18.2020.06.18.14.01.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 14:01:53 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 00:01:51 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     'Matt Fleming' <matt@codeblueprint.co.uk>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>,
-        "Kumar, Venkataramanan" <Venkataramanan.Kumar@amd.com>,
-        Jan Kara <jack@suse.cz>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] x86/asm/64: Align start of __clear_user() loop to
- 16-bytes
-Message-ID: <20200618210151.GA2212102@localhost.localdomain>
-References: <20200618102002.30034-1-matt@codeblueprint.co.uk>
- <39f8304b75094f87a54ace7732708d30@AcuMS.aculab.com>
- <20200618131655.GA24607@localhost.localdomain>
- <20b0166e11f44bf491062838090b93be@AcuMS.aculab.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TMDMECxtDyrKw7UR9Mx7zsMc3I+ujgCjjWQyhNCKNAU=;
+        b=CbLPeiZ51L5Tbdh/AWkHZ7ZP2RurCufbVYAS0Ym08kjifyfPEOc1UasmO5Ijz8zLcc
+         +Tule4ebPWyy5KBsRKIKKzFDcZCmDYc8Z461NvWIaUAnrutU4ZaytREWfO7VhukfaOY+
+         hU1WlabcPt2g53ay56GzrjE/jAnotTUCfvmMuHL3KxEjuDEGakclhax2zsWC3XAHhFG3
+         Bp9YROBRGk2xq8H0OiijWgc8s7twW6naMiK0KqPtPslI29jLtBI3F/qzMt6VSJwMbvAi
+         kJjWpxzm+4VzjU1SfRBQVZvgRyOWmpV33OuJRDlvs6tOJ5HKpzgORd5O2NkVb0K6/Dqs
+         KFkg==
+X-Gm-Message-State: AOAM530ws0s5CeFbQ/7okqK+oYYwwT2kI5OiHNJgisLvkeVOEmMS6Qbr
+        ATt/gn0J8TEx/5ZOZH1nTNy/ackvSqbflUbdMuo=
+X-Google-Smtp-Source: ABdhPJxFENU0n/CIub2ELxobC9S6sSTeFivCPAONBxIvjJt9i55UJif8lUyl0SU+Y60it3IJHnYrMzgihE2p4fr35D0=
+X-Received: by 2002:a2e:974a:: with SMTP id f10mr128843ljj.283.1592514135166;
+ Thu, 18 Jun 2020 14:02:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20b0166e11f44bf491062838090b93be@AcuMS.aculab.com>
+References: <CAHo-OoyU5OHQuqpTEo-uAQcwcLpzkXezFY6Re-Hv6jGM9aSFSA@mail.gmail.com>
+ <20200618195956.73967-1-zenczykowski@gmail.com>
+In-Reply-To: <20200618195956.73967-1-zenczykowski@gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Thu, 18 Jun 2020 14:02:03 -0700
+Message-ID: <CAADnVQ+BqPeVqbgojN+nhYTE0nDcGF2-TfaeqyfPLOF-+DLn5Q@mail.gmail.com>
+Subject: Re: [PATCH] restore behaviour of CAP_SYS_ADMIN allowing the loading
+ of net bpf program
+To:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <zenczykowski@gmail.com>
+Cc:     =?UTF-8?Q?Maciej_=C5=BBenczykowski?= <maze@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Linux Network Development Mailing List 
+        <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 04:39:35PM +0000, David Laight wrote:
-> From: Alexey Dobriyan 
-> > Sent: 18 June 2020 14:17
-> ...
-> > > > diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
-> > > > index fff28c6f73a2..b0dfac3d3df7 100644
-> > > > --- a/arch/x86/lib/usercopy_64.c
-> > > > +++ b/arch/x86/lib/usercopy_64.c
-> > > > @@ -24,6 +24,7 @@ unsigned long __clear_user(void __user *addr, unsigned long size)
-> > > >  	asm volatile(
-> > > >  		"	testq  %[size8],%[size8]\n"
-> > > >  		"	jz     4f\n"
-> > > > +		"	.align 16\n"
-> > > >  		"0:	movq $0,(%[dst])\n"
-> > > >  		"	addq   $8,%[dst]\n"
-> > > >  		"	decl %%ecx ; jnz   0b\n"
-> > >
-> > > You can do better that that loop.
-> > > Change 'dst' to point to the end of the buffer, negate the count
-> > > and divide by 8 and you get:
-> > > 		"0:	movq $0,($[dst],%%ecx,8)\n"
-> > > 		"	add $1,%%ecx"
-> > > 		"	jnz 0b\n"
-> > > which might run at one iteration per clock especially on cpu that pair
-> > > the add and jnz into a single uop.
-> > > (You need to use add not inc.)
-> > 
-> > /dev/zero should probably use REP STOSB etc just like everything else.
-> 
-> Almost certainly it shouldn't, and neither should anything else.
-> Potentially it could use whatever memset() is patched to.
-> That MIGHT be 'rep stos' on some cpu variants, but in general
-> it is slow.
+On Thu, Jun 18, 2020 at 1:00 PM Maciej =C5=BBenczykowski
+<zenczykowski@gmail.com> wrote:
+>
+> From: Maciej =C5=BBenczykowski <maze@google.com>
+>
+> This is a 5.8-rc1 regression.
 
-Yes, that's what I meant: alternatives choosing REP variant.
-memset loops are so 21-st century.
+Please add full explanation here.
+
+Also use [PATCH bpf] in the subject for future submission.
+
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Fixes: 2c78ee898d8f ("bpf: Implement CAP_BPF")
+
+Reported-by: John
+is missing?
+
+> Signed-off-by: Maciej =C5=BBenczykowski <maze@google.com>
+> ---
+>  kernel/bpf/syscall.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index 8da159936bab..7d946435587d 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -2121,7 +2121,7 @@ static int bpf_prog_load(union bpf_attr *attr, unio=
+n bpf_attr __user *uattr)
+>             !bpf_capable())
+>                 return -EPERM;
+>
+> -       if (is_net_admin_prog_type(type) && !capable(CAP_NET_ADMIN))
+> +       if (is_net_admin_prog_type(type) && !capable(CAP_NET_ADMIN) && !c=
+apable(CAP_SYS_ADMIN))
+>                 return -EPERM;
+>         if (is_perfmon_prog_type(type) && !perfmon_capable())
+>                 return -EPERM;
+> --
+> 2.27.0.290.gba653c62da-goog
+>
