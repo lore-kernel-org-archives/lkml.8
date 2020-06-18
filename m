@@ -2,101 +2,108 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75ED6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 555ED20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 998DE208D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:55:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pRbcC693"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731297AbgFROzh (ORCPT
+        id S1731319AbgFROzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:55:37 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56208 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbgFROzf (ORCPT
+        Thu, 18 Jun 2020 10:55:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730881AbgFROzt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:55:35 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jlvwq-0003dk-LH; Thu, 18 Jun 2020 14:55:25 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     jikos@kernel.org, benjamin.tissoires@redhat.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        You-Sheng Yang <vicamo.yang@canonical.com>,
-        Daniel Playfair Cal <daniel.playfair.cal@gmail.com>,
-        HungNien Chen <hn.chen@weidahitech.com>,
-        Pavel Balan <admin@kryma.net>,
-        linux-input@vger.kernel.org (open list:HID CORE LAYER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3] HID: i2c-hid: Enable touchpad wakeup from Suspend-to-Idle
-Date:   Thu, 18 Jun 2020 22:55:13 +0800
-Message-Id: <20200618145515.5055-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 18 Jun 2020 10:55:49 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ED34C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:55:49 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c11so3643262lfh.8
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:55:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6dqnJj0lECjZQUIylFPZhd0nKb0VZ/tVZQGVsKEkM4E=;
+        b=pRbcC6935U5lV8EqLRLMS/rBbwozTHCWmNLsUUnX8q6t5IqwEyHjaTZrDJ03waT7ub
+         xkj7GxRjPPGqB+LL5DE8sScJV6/dWsNLm/LeyHNcdKWJsnd/aMgX4YUvN2APoxM8rLv4
+         W3EDRnWRrF8w4HYQrvhJsOT0M2xQR6rlZe7vsxXtNGk1uzOXOy/Qi0doKSMHR65WVJ5R
+         dMzX7bNeEBgH88Z29ngyXeBIAQGnpzimCXZmqPrCzXEsmy1VqTsmpqEql+6LZKWsWHUj
+         3drti1PdZ6eeLuiPZp7QFQb/eBSGy1BgpPjnbpbdxqcXxf+9xq0bOBs7u+O8j07mP4aB
+         DGjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6dqnJj0lECjZQUIylFPZhd0nKb0VZ/tVZQGVsKEkM4E=;
+        b=NWKET3AEOm7E1IWmRmwpoe2+qqH4vT6aQUX+bjm6g+9vZql6W/7q44LYOak7QJdMLz
+         p7Efo/25ww8Nr5inB/rW28dGsFLwjuXjT4RTJPEII106F5F6TaWArqYfJWV78nU9juYz
+         ag+Dvyu60+bqD9VTTN50SSE7cxW26sDNz2WXuEPjDqzGutIt1pu9xx2pucot2vy31Zd7
+         yPlsMma9db3ChQ48jUI/g2UorHkqtYU2fL/rHeJon3CmVc3fZT0IVifzmfGe9NeKLWzA
+         cfCT61MVXKCG0g4eLAID/eSFmiSWzygEL8zE18Uf6jecBEbWgYKMrrk0cfe60PRkNpGb
+         Zehg==
+X-Gm-Message-State: AOAM530+ztsDfDSf01rRKgP02f0nlyQE8TIpK1L1+UpvkuDFID3Igfyx
+        OE3WilToLFt2QyJWS1ibZbWEQKkReESna/n1aVEiag==
+X-Google-Smtp-Source: ABdhPJzfDtsd2nNokfLfe5eRCVq78SAuKBGFd2B0mMG2zNcO/senzmcip6cwovel39rl1gA+VUj6u/ad46PEd4u30+8=
+X-Received: by 2002:a19:11:: with SMTP id 17mr2620971lfa.125.1592492147402;
+ Thu, 18 Jun 2020 07:55:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200608230654.828134-1-guro@fb.com> <20200608230654.828134-6-guro@fb.com>
+In-Reply-To: <20200608230654.828134-6-guro@fb.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Thu, 18 Jun 2020 07:55:35 -0700
+Message-ID: <CALvZod4Jur7EFPPWzoBvQgF0m3hXyohBrBirEySWoPTV23rvUg@mail.gmail.com>
+Subject: Re: [PATCH v6 05/19] mm: memcontrol: decouple reference counting from
+ page accounting
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many laptops can be woken up from Suspend-to-Idle by touchpad. This is
-also the default behavior on other OSes.
+Not sure if my email went through, so, re-sending.
 
-So let's enable the wakeup support if the system defaults to
-Suspend-to-Idle.
+On Mon, Jun 8, 2020 at 4:07 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> From: Johannes Weiner <hannes@cmpxchg.org>
+>
+[...]
+> @@ -3003,13 +3004,16 @@ void __memcg_kmem_uncharge_page(struct page *page, int order)
+>   */
+>  void mem_cgroup_split_huge_fixup(struct page *head)
+>  {
+> +       struct mem_cgroup *memcg = head->mem_cgroup;
+>         int i;
+>
+>         if (mem_cgroup_disabled())
+>                 return;
+>
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v3:
- - Use device_init_wakeup().
- - Wording change.
+A memcg NULL check is needed here.
 
-v2:
- - Fix compile error when ACPI is not enabled.
- drivers/hid/i2c-hid/i2c-hid-core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index 294c84e136d7..dae1d072daf6 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -931,6 +931,12 @@ static void i2c_hid_acpi_fix_up_power(struct device *dev)
- 		acpi_device_fix_up_power(adev);
- }
- 
-+static void i2c_hid_acpi_enable_wakeup(struct device *dev)
-+{
-+	if (acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
-+		device_init_wakeup(dev, true);
-+}
-+
- static const struct acpi_device_id i2c_hid_acpi_match[] = {
- 	{"ACPI0C50", 0 },
- 	{"PNP0C50", 0 },
-@@ -945,6 +951,8 @@ static inline int i2c_hid_acpi_pdata(struct i2c_client *client,
- }
- 
- static inline void i2c_hid_acpi_fix_up_power(struct device *dev) {}
-+
-+static inline void i2c_hid_acpi_enable_wakeup(struct device *dev) {}
- #endif
- 
- #ifdef CONFIG_OF
-@@ -1072,6 +1080,8 @@ static int i2c_hid_probe(struct i2c_client *client,
- 
- 	i2c_hid_acpi_fix_up_power(&client->dev);
- 
-+	i2c_hid_acpi_enable_wakeup(&client->dev);
-+
- 	device_enable_async_suspend(&client->dev);
- 
- 	/* Make sure there is something at this address */
--- 
-2.17.1
-
+> -       for (i = 1; i < HPAGE_PMD_NR; i++)
+> -               head[i].mem_cgroup = head->mem_cgroup;
+> +       for (i = 1; i < HPAGE_PMD_NR; i++) {
+> +               css_get(&memcg->css);
+> +               head[i].mem_cgroup = memcg;
+> +       }
+>  }
+>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>
