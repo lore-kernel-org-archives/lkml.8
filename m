@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 378E5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A00C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B461206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E444206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448037;
-	bh=vBCBMzp/dJxu7P6BbPG/qZxbQff9ivykBWjmPDcspNE=;
+	s=default; t=1592448039;
+	bh=TNCde89qMsDt3lwOoVvwuyjPZiBciZnqF2mqdJ5bh8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l1Nr5F+QI6CU4ClunHDQtMRD1f4EI29YnobReGEQzqsE4UtCDq5K+6IXc4My5nZ2C
-	 zMsgHJvkOyjl3DYPL/GvOG25WwmN17L9RUpV/5Sl6/3Zr7gs8UkR5kRt2ck5ATBV2K
-	 M6z89wtCfW31QBoU9V1EJVA/8JWG0Ou/WpxXMKpY=
+	b=WGl2cnS3Gnw69hsxY0uiPfrKnp40gwsSYnSYHRKQD/y2aX5S7wFcbJ1AuJKqI6XHF
+	 CRQ3VQhKSdbu2T6LYCgeYs4kfDdMtfkJBFz/3r9lDG+O6b/6YXV2R9G/k522HyC+JE
+	 1WLeZod+xOcVn6ctW4rFBhzJuaLYqJS/GM2XSxB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbgFRBMj (ORCPT
+        id S2387829AbgFRCki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:12:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39814 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:40:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728783AbgFRBLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:45 -0400
+        id S1728328AbgFRBMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE0EE2193E;
-        Thu, 18 Jun 2020 01:11:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 268A021924;
+        Thu, 18 Jun 2020 01:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442704;
-        bh=vBCBMzp/dJxu7P6BbPG/qZxbQff9ivykBWjmPDcspNE=;
+        s=default; t=1592442758;
+        bh=TNCde89qMsDt3lwOoVvwuyjPZiBciZnqF2mqdJ5bh8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L+4460dC2NVk/0LwIaikLKDXVfmmIvISp3wx1yKLCWRgaX+fwqSUxPtgPo3R8Holt
-         WfssjV8JyyJ/bDHyLbFnOfHbP0+SsUYFUnsItjMTkyKozWEarfVOz8vZCAfR0fty09
-         WjmBeoyNOH8B/srJ8BzlozK/TCk4d9un4/V6C6ZM=
+        b=FWoWCqnvgk5jawV+64YU8C/00ihD3fN8AkWK750rSWNHFVXvgfAhpkGTAaRvT2mZB
+         k5Wqpz0Rh2S9RzSN034cA2B36dD9CeRYBFIGzjzIhkEIXi0lqbkp7EdlUcrMRR1e2o
+         Fp1PDErmtpo5sc0LFqG18mxTaZWguNtKnGu1JU+8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 166/388] HID: intel-ish-hid: avoid bogus uninitialized-variable warning
-Date:   Wed, 17 Jun 2020 21:04:23 -0400
-Message-Id: <20200618010805.600873-166-sashal@kernel.org>
+Cc:     Thomas Ebeling <penguins@bollie.de>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.7 209/388] ALSA: usb-audio: fixing upper volume limit for RME Babyface Pro routing crosspoints
+Date:   Wed, 17 Jun 2020 21:05:06 -0400
+Message-Id: <20200618010805.600873-209-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,54 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Thomas Ebeling <penguins@bollie.de>
 
-[ Upstream commit 0b66fb3e6b7a53688f8e20945ac78cd3d832c65f ]
+[ Upstream commit 47b4f5f5b65680fbef7a7a9a4796b35f38a6e43e ]
 
-Older compilers like gcc-4.8 don't see that the variable is
-initialized when it is used:
+In my initial patch, these were set too low.
 
-In file included from include/linux/compiler_types.h:68:0,
-                 from <command-line>:0:
-drivers/hid/intel-ish-hid/ishtp-fw-loader.c: In function 'load_fw_from_host':
-include/linux/compiler-gcc.h:75:45: warning: 'fw_info.ldr_capability.max_dma_buf_size' may be used uninitialized in this function [-Wmaybe-uninitialized]
- #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
-                                             ^
-drivers/hid/intel-ish-hid/ishtp-fw-loader.c:770:22: note: 'fw_info.ldr_capability.max_dma_buf_size' was declared here
-  struct shim_fw_info fw_info;
-                      ^
-
-Make sure to initialize it before returning an error from ish_query_loader_prop().
-
-Fixes: 91b228107da3 ("HID: intel-ish-hid: ISH firmware loader client driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 3e8f3bd04716 ("ALSA: usb-audio: RME Babyface Pro mixer patch")
+Signed-off-by: Thomas Ebeling <penguins@bollie.de>
+Link: https://lore.kernel.org/r/20200515114556.vtspnonzvp4xp44m@bollie.ca9.eu
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/intel-ish-hid/ishtp-fw-loader.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/usb/mixer_quirks.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-index aa2dbed30fc3..6cf59fd26ad7 100644
---- a/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-+++ b/drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-@@ -480,6 +480,7 @@ static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
- 			    sizeof(ldr_xfer_query_resp));
- 	if (rv < 0) {
- 		client_data->flag_retry = true;
-+		*fw_info = (struct shim_fw_info){};
- 		return rv;
- 	}
+diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
+index bdff8674942e..aad2683ff793 100644
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -2191,7 +2191,7 @@ static int snd_rme_controls_create(struct usb_mixer_interface *mixer)
+  * These devices exposes a couple of DSP functions via request to EP0.
+  * Switches are available via control registers, while routing is controlled
+  * by controlling the volume on each possible crossing point.
+- * Volume control is linear, from -inf (dec. 0) to +6dB (dec. 46341) with
++ * Volume control is linear, from -inf (dec. 0) to +6dB (dec. 65536) with
+  * 0dB being at dec. 32768.
+  */
+ enum {
+@@ -2220,7 +2220,7 @@ enum {
+ #define SND_BBFPRO_MIXER_VAL_MASK 0x3ffff
+ #define SND_BBFPRO_MIXER_VAL_SHIFT 9
+ #define SND_BBFPRO_MIXER_VAL_MIN 0 // -inf
+-#define SND_BBFPRO_MIXER_VAL_MAX 46341 // +6dB
++#define SND_BBFPRO_MIXER_VAL_MAX 65536 // +6dB
  
-@@ -489,6 +490,7 @@ static int ish_query_loader_prop(struct ishtp_cl_data *client_data,
- 			"data size %d is not equal to size of loader_xfer_query_response %zu\n",
- 			rv, sizeof(struct loader_xfer_query_response));
- 		client_data->flag_retry = true;
-+		*fw_info = (struct shim_fw_info){};
- 		return -EMSGSIZE;
- 	}
- 
+ #define SND_BBFPRO_USBREQ_CTL_REG1 0x10
+ #define SND_BBFPRO_USBREQ_CTL_REG2 0x17
 -- 
 2.25.1
 
