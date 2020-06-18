@@ -2,72 +2,158 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B55C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D119BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48EEE20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE83D20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:14:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/HO+Pxq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbgFRKMg (ORCPT
+        id S1728640AbgFRKOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 06:12:36 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47326 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgFRKMf (ORCPT
+        Thu, 18 Jun 2020 06:14:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728320AbgFRKN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 06:12:35 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jlrX3-0005iu-US; Thu, 18 Jun 2020 10:12:30 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: ccp: remove redundant assignment to variable ret
-Date:   Thu, 18 Jun 2020 11:12:29 +0100
-Message-Id: <20200618101229.11772-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0.rc0
+        Thu, 18 Jun 2020 06:13:57 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A638C06174E;
+        Thu, 18 Jun 2020 03:13:56 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id p5so5407825wrw.9;
+        Thu, 18 Jun 2020 03:13:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ofe7nJVAVWjLyJL8t4PpDn39yJzviAXAAMypfIFntOI=;
+        b=i/HO+PxqnWKAQSyq/Xh6rEdogjYLB+ReE6hg4iTtg3eCa7x3wzIKvlEqTQ9hdLfH9v
+         xUafRsV9lrYQms0zdNyXxpuSgJipptP2XkMvUrPDaw5nvtITN0kfz2ebwU2qdI7gnLv3
+         0T82dRVB40i35x+V0Uy/WtNdvYW7Mvryxyr0YjG6c0PmF2voxtlH2qVDTz2H6bsmR7/i
+         ubrjKECuSNy6KhyirtD+I8Fl0XOB2OVEJMHSCp/daA2VfeVx9btvf+CXrO9ugFLZoZpP
+         M1eHDAn46/56ucUewhRAKK9r0ZGtKauDAkXQyKNPEgEj+MT2OqPDwu2qyB1qi4rRDHjG
+         33Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ofe7nJVAVWjLyJL8t4PpDn39yJzviAXAAMypfIFntOI=;
+        b=rFxT26oydypQkzZoTaqkbBuHi5V/xdlh7W7jhNUoiDnvOzIqRXe2TJEEZfI9YyoGsc
+         V5ZrHN5DOtZrNkBPRE/MHoj59QsrdKVz1yJ+wrw//dovv2Wm/d020Z0NcPkrGQszY7iI
+         4tsm8D2mrbzZeRzf9MODX4QAgh3Evv7cKlkfiH+mTQiWeEJNmY9G81ee9NhtN9VxC3no
+         t4SQk3je3izfrkFVbiTH/cg2AdIOcMwt9iWadEmbngDJFkRqu+dsv0EtF/JvDZNkN0Z8
+         73fJYflejKuTa6kMucQOhCo9rww2HinYft7zgvsXbEWXHAebm6BLvBpM+CMZ3pbsKncN
+         FlAg==
+X-Gm-Message-State: AOAM5312BixJQtFCClwfIL7o1WNwIsd8AzNddacthf915gx6VwjaVRGr
+        WcY+A+Qdktja1FbelsKg0qMFLXK7Dqs=
+X-Google-Smtp-Source: ABdhPJwUJTp7kFoxbzS9NlyOX4LlbTCaL3vi3FLnL2azj38Ci4pZ9vsgReoYRfs98DH5tB2Oa6go0g==
+X-Received: by 2002:adf:9404:: with SMTP id 4mr3665859wrq.367.1592475235180;
+        Thu, 18 Jun 2020 03:13:55 -0700 (PDT)
+Received: from localhost ([213.191.183.145])
+        by smtp.gmail.com with ESMTPSA id e25sm3272396wrc.69.2020.06.18.03.13.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 03:13:54 -0700 (PDT)
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
+        Iskren Chernev <iskren.chernev@gmail.com>
+Subject: [PATCH v2 1/2] dt-bindings: power: supply: Document max17040 extensions
+Date:   Thu, 18 Jun 2020 13:13:39 +0300
+Message-Id: <20200618101340.2671020-1-iskren.chernev@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Maxim max17040 is a fuel gauge from a larger family utilising the Model
+Gauge technology. Document all different compatible strings that the
+max17040 driver recognizes.
 
-The variable ret is being assigned with a value that is never read
-and it is being updated later with a new value.  The assignment is
-redundant and can be removed.
+Some devices in the wild report double the capacity. The
+maxim,double-soc (from State-Of-Charge) property fixes that.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Complete device reset might lead to very inaccurate readings. Specify
+maxim,skip-reset to avoid that.
+
+To compensate for the battery chemistry and operating conditions the
+chips support a compensation value. Specify one or two byte compensation
+via the maxim,rcomp byte array.
+
+Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
 ---
- drivers/crypto/ccp/ccp-ops.c | 1 -
- 1 file changed, 1 deletion(-)
+v1: https://lkml.org/lkml/2020/6/8/682
 
-diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
-index 422193690fd4..d270aa792888 100644
---- a/drivers/crypto/ccp/ccp-ops.c
-+++ b/drivers/crypto/ccp/ccp-ops.c
-@@ -1308,7 +1308,6 @@ ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
- 			return -EINVAL;
- 	}
+Changes in v2:
+- add maxim,skip-reset
+- remove 2 byte rcomp from example, the specified compat string supports 1 byte
+  rcomp
+
+ .../power/supply/max17040_battery.txt         | 24 ++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+index 4e0186b8380fa..3ee91c295027f 100644
+--- a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+@@ -2,7 +2,9 @@ max17040_battery
+ ~~~~~~~~~~~~~~~~
  
--	ret = -EIO;
- 	/* Zero out all the fields of the command desc */
- 	memset(&op, 0, sizeof(op));
+ Required properties :
+- - compatible : "maxim,max17040" or "maxim,max77836-battery"
++ - compatible : "maxim,max17040", "maxim,max17041", "maxim,max17043",
++ 		"maxim,max17044", "maxim,max17048", "maxim,max17049",
++		"maxim,max17058", "maxim,max17059" or "maxim,max77836-battery"
+  - reg: i2c slave address
  
+ Optional properties :
+@@ -11,6 +13,18 @@ Optional properties :
+ 				generated. Can be configured from 1 up to 32
+ 				(%). If skipped the power up default value of
+ 				4 (%) will be used.
++- maxim,double-soc : 		Certain devices return double the capacity.
++				Specify this boolean property to divide the
++				reported value in 2 and thus normalize it.
++				SOC == State of Charge == Capacity.
++- maxim,skip-reset :		Do not reset device on driver initialization.
++				Some devices report extremely inaccurately after
++				a hard reset.
++- maxim,rcomp :			A value to compensate readings for various
++				battery chemistries and operating temperatures.
++				max17040,41 have 2 byte rcomp, default to
++				0x97 0x00. All other devices have one byte
++				rcomp, default to 0x97.
+ - interrupts : 			Interrupt line see Documentation/devicetree/
+ 				bindings/interrupt-controller/interrupts.txt
+ - wakeup-source :		This device has wakeup capabilities. Use this
+@@ -31,3 +45,11 @@ Example:
+ 		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+ 		wakeup-source;
+ 	};
++
++	battery-fuel-gauge@36 {
++		compatible = "maxim,max17048";
++		reg = <0x36>;
++		maxim,rcomp = /bits/ 8 <0x97>;
++		maxim,alert-low-soc-level = <10>;
++		maxim,double-soc;
++	};
+
+base-commit: 1713116fa907cc7290020f0d8632ec646d2936f8
 -- 
-2.27.0.rc0
+2.27.0
 
