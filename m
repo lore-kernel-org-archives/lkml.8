@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFCCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AADC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94B0821D82
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A28F21D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443043;
-	bh=gcYIdJSBndXo8ib41qkOp7IDNKCp6T94n1aw+8dxIIM=;
+	s=default; t=1592443050;
+	bh=WFhN86/8PgIVAw+/GByvJEeVx2pstmpPDYtGP6ft++4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D7Ay+CvCI5iXNEqyR+n7juxks8EAid9o8Y7F6AXbT8rUnXnZmDHcHALK0N0vqsHYQ
-	 +kBxa2u0TA8WSkF5KzOennGPm2aG6Hl0f6orvYXowlgEdLlL/+yWqxnXCQDim5VI8X
-	 mkYUMgKf4gHUHYNQgnIN9gGDQ0bGx7lrkk1NG+Xw=
+	b=0MDZOAnVKhwDnjE/slVe0R7ZCbaLexZFbyqjlkevfNsryR3kT6h8xqyyGEaoxwkf4
+	 Lb+HyCNmGO6tMUtYdDeY/YkP2KV9XyO6TQcPelSZSF0Oioddmk0R/imv0s7TfyDIqj
+	 +ZXEF2zSc1srflRBQflP+3qmjJJw4cYBKEeTcudM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgFRBRW (ORCPT
+        id S1729449AbgFRBR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:17:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44596 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:17:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729380AbgFRBOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:14:50 -0400
+        id S1729387AbgFRBOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0009B2193E;
-        Thu, 18 Jun 2020 01:14:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F54520EDD;
+        Thu, 18 Jun 2020 01:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442890;
-        bh=gcYIdJSBndXo8ib41qkOp7IDNKCp6T94n1aw+8dxIIM=;
+        s=default; t=1592442893;
+        bh=WFhN86/8PgIVAw+/GByvJEeVx2pstmpPDYtGP6ft++4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cHRfdvLqjyZsW6g99eM1+psSgkitdeKAGnxLTD8c6VwttLrH4Wy5Y9NyD+V0zNWaG
-         unnA3eH0b9PIQ56xZZrlLzNzVqIbOJrU2Wf4VyESzbpJU7DLkZwWAke5MMjaNtfOuh
-         l0KuCXWKWnMw+YSp3XHG+JniHPEL40vZDv1NYUH4=
+        b=aT14QmD7lNRKD7lFcF6CquDExA1aDyFNK3t2YiQ2UqntBlrtUxpJ3aTD5gnXqp3HN
+         YYF5EsA25DJKOegDUQTFWERCuBbQ8Jf6wF10nwAeDhTg8Bd1aWxNaNavq+cfq6SxsC
+         NSTlOmQPp4j0iZe197gK6RXeYXGjzbCzN9YldSuw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stafford Horne <shorne@gmail.com>, Sasha Levin <sashal@kernel.org>,
-        openrisc@lists.librecores.org
-Subject: [PATCH AUTOSEL 5.7 313/388] openrisc: Fix issue with argument clobbering for clone/fork
-Date:   Wed, 17 Jun 2020 21:06:50 -0400
-Message-Id: <20200618010805.600873-313-sashal@kernel.org>
+Cc:     Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 315/388] ceph: don't return -ESTALE if there's still an open file
+Date:   Wed, 17 Jun 2020 21:06:52 -0400
+Message-Id: <20200618010805.600873-315-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -58,46 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stafford Horne <shorne@gmail.com>
+From: Luis Henriques <lhenriques@suse.com>
 
-[ Upstream commit 6bd140e14d9aaa734ec37985b8b20a96c0ece948 ]
+[ Upstream commit 878dabb64117406abd40977b87544d05bb3031fc ]
 
-Working on the OpenRISC glibc port I found that sometimes clone was
-working strange.  That the tls data argument sent in r7 was always
-wrong.  Further investigation revealed that the arguments were getting
-clobbered in the entry code.  This patch removes the code that writes to
-the argument registers.  This was likely due to some old code hanging
-around.
+Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
+a file handle to dentry"), this fixes another corner case with
+name_to_handle_at/open_by_handle_at.  The issue has been detected by
+xfstest generic/467, when doing:
 
-This patch fixes this up for clone and fork.  This fork clobber is
-harmless but also useless so remove.
+ - name_to_handle_at("/cephfs/myfile")
+ - open("/cephfs/myfile")
+ - unlink("/cephfs/myfile")
+ - sync; sync;
+ - drop caches
+ - open_by_handle_at()
 
-Signed-off-by: Stafford Horne <shorne@gmail.com>
+The call to open_by_handle_at should not fail because the file hasn't been
+deleted yet (only unlinked) and we do have a valid handle to it.  -ESTALE
+shall be returned only if i_nlink is 0 *and* i_count is 1.
+
+This patch also makes sure we have LINK caps before checking i_nlink.
+
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Acked-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/openrisc/kernel/entry.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/ceph/export.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
-index e4a78571f883..c6481cfc5220 100644
---- a/arch/openrisc/kernel/entry.S
-+++ b/arch/openrisc/kernel/entry.S
-@@ -1166,13 +1166,13 @@ ENTRY(__sys_clone)
- 	l.movhi	r29,hi(sys_clone)
- 	l.ori	r29,r29,lo(sys_clone)
- 	l.j	_fork_save_extra_regs_and_call
--	 l.addi	r7,r1,0
-+	 l.nop
- 
- ENTRY(__sys_fork)
- 	l.movhi	r29,hi(sys_fork)
- 	l.ori	r29,r29,lo(sys_fork)
- 	l.j	_fork_save_extra_regs_and_call
--	 l.addi	r3,r1,0
-+	 l.nop
- 
- ENTRY(sys_rt_sigreturn)
- 	l.jal	_sys_rt_sigreturn
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index 79dc06881e78..e088843a7734 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -172,9 +172,16 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
+ static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
+ {
+ 	struct inode *inode = __lookup_inode(sb, ino);
++	int err;
++
+ 	if (IS_ERR(inode))
+ 		return ERR_CAST(inode);
+-	if (inode->i_nlink == 0) {
++	/* We need LINK caps to reliably check i_nlink */
++	err = ceph_do_getattr(inode, CEPH_CAP_LINK_SHARED, false);
++	if (err)
++		return ERR_PTR(err);
++	/* -ESTALE if inode as been unlinked and no file is open */
++	if ((inode->i_nlink == 0) && (atomic_read(&inode->i_count) == 1)) {
+ 		iput(inode);
+ 		return ERR_PTR(-ESTALE);
+ 	}
 -- 
 2.25.1
 
