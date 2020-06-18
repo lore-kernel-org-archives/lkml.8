@@ -2,62 +2,66 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEA0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C062C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B46420786
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2946620786
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:16:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TWiGtPnX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mNpP4m+M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731764AbgFRWQb (ORCPT
+        id S1731791AbgFRWQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:16:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42568 "EHLO
+        Thu, 18 Jun 2020 18:16:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729889AbgFRWQ1 (ORCPT
+        with ESMTP id S1731771AbgFRWQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 18:16:27 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9146C0613EE
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:16:27 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id b135so7863448yba.11
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:16:27 -0700 (PDT)
+        Thu, 18 Jun 2020 18:16:35 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E6BC0613EE
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:16:34 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id s90so7875789ybi.6
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:16:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=wMNnopaSonqA5zRbMSt0/GvIJJ9qEKFy+7LLVQ7GDPc=;
-        b=TWiGtPnX5kmaogbttxbe82Mz3iBJGTAqb1uzA2JhBks/9qVqXtvy6eP9BCuOE9vLL7
-         oaSpzJ0JpgG/ntxAtjY7ZBrUDpEjeiXNwVeWfbMwdVHHQXAidzuFxQyjqry053LHE81q
-         XbNHMPL/TK8hL+pGgcoHdlb/yEUstu+0Nr7yitO+JjIjD3KxzGUndBjNc3WdCiecCASY
-         /SycHzycdz9E+TOqt/aaxVgEXuVlq9cFuw4qe66sMNvRnI86gxrEassn7lQF1BqC/ioW
-         s3QMN3poclP1HYx1N75nZeLbEJMx/JCRMrdafr1bK0Z2FFYzkoGbNU0Z4Qusd5+IO19C
-         kevg==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=oQKKZ4WrQm+MQALLCvtvV2adeUnLqGSBm5iBOXJSAVI=;
+        b=mNpP4m+Mv8HzHDTcYjY8uHTBurHXJNuYeurpmiuQQs4iBkRkcT8Qi2EUCwfRgy6jpE
+         Ye6/iUbajeYyy+b0gJMqYWFhJHh3ZYRayGVlJhC6DRG17+kn+6NFbjJZEXkVs6qZLzhK
+         OiJ57JnbDkar5m32pfswnqjrBphU8d5LDG6OxYwIAznYmhWGr/iI7nacFfmRbble3/ik
+         cwuTY9FHheG5KbDkyKHxVmsEOep+ltNk+PYS7W7b+vnuzicJjl6FMMMNhNoLsSXUyiNK
+         jo3BcDzl7+FS4jD57iO1dajLmOCPUZ/Z7MJH1Ga3OeGwvdeNxdKZAWg+rjtxTjUcfNns
+         L0dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=wMNnopaSonqA5zRbMSt0/GvIJJ9qEKFy+7LLVQ7GDPc=;
-        b=eVvblSsNhd8gg45WiJIUg1dX31kGUdEio/1RYHnMqbcOINpePiL6y+4+Ar4JuZ0Uyy
-         XvqzXyDAGwe64yU2aZnEE/WGsR8zJIEIB02lGslTlCHh/nFkLBQhhp1EgMLeo4MEc1FK
-         UCYijOsaV1a5Js0RUGa45gzFmaVSjT/k5i59dtlhf3n6SxDSbnRveNvafT480RU06HTD
-         NDQGbWfbrDj62/NurPMEo+jhfV0rqnyzqS5+Rp92TmAY1SL5cH/wVbp/tKTcgf44CrrD
-         W/2Ya1ggtLh3l8E2khM56AUFYyMvqimdlglyXeTkc+NUKacCbmg7Iu1qRoxSEvBnB4BR
-         MURg==
-X-Gm-Message-State: AOAM533nlF5+q0Vh8if1waIlUQMGr4C+nQeE3OWWOIDGCN6+LbLg3XCJ
-        D7XQJ7STR+dxqMP/V8TXehsIpYI279Y=
-X-Google-Smtp-Source: ABdhPJzfrP9kOj0Vvbg+A1B4/d9Ko8ZRmuwbRcM5xJpeSqqp3FRN4zZsBDm7xxC8JhErvGzZlTHdV+isYgY=
-X-Received: by 2002:a25:3bca:: with SMTP id i193mr1220879yba.327.1592518586941;
- Thu, 18 Jun 2020 15:16:26 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 15:15:39 -0700
-Message-Id: <20200618221541.247643-1-korben@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=oQKKZ4WrQm+MQALLCvtvV2adeUnLqGSBm5iBOXJSAVI=;
+        b=XAb0M2YFkqLC7b5rk01bikvZVkUYibkz5M1G1EWf0fikv33CyycW3aCN8DKyyS8au6
+         Jx0A8fNdDe6KsFBJXwvkhvsiT1CgruA6VJWF+BzhgdJlB7v4kkm3C5WQ4L+Vpt37Gtn5
+         dw5Oup/fF9BflSI+HmLW07I+pd41Uz3+mIBMrPzdkC3CpYL3rkktoWefzteORTCEXvhU
+         MDwCoKbq+qjFw8nI6+FcSyu71MkVZ21kvoemGq10tqdGVT2SNXkpfIsRFmFhvdY48jyD
+         xBM1v90/W8U6CTfzHD9+N26DpYHS0Ah3yYIr0eQaDLAWhMjLAaqteVwsPiTX2pmZiSVx
+         AyJw==
+X-Gm-Message-State: AOAM532rIS7saLqgr9v+IbP6ZFbW6elK2p4heXIDt5glQCu1C25sJNF4
+        MREb2QSv47dUuknsxwJCNoRify0/VX4=
+X-Google-Smtp-Source: ABdhPJxFCAMKrzkjJhBReHmJfxLI1SRR8yckiGufUzfvAZxHTF1H6tNPjfPQb2xxacNMKdZysavpLZhrgDo=
+X-Received: by 2002:a25:908d:: with SMTP id t13mr1274201ybl.450.1592518593230;
+ Thu, 18 Jun 2020 15:16:33 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 15:15:40 -0700
+In-Reply-To: <20200618221541.247643-1-korben@google.com>
+Message-Id: <20200618221541.247643-2-korben@google.com>
 Mime-Version: 1.0
+References: <20200618221541.247643-1-korben@google.com>
 X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-Subject: [PATCH 0/2] force absolute timestamp trace option
+Subject: [PATCH 1/2] Add force-abs-timestamp trace option.
 From:   Korben Rusek <korben@google.com>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -79,27 +83,66 @@ and so it uses a delta of 0.
 Adds a new trace option: force-abs-timestamp. When this is on
 each event is proceeded by an absolute timestamp event.
 
-This follows from a discussion between jbehmer@google.com
-and Steven Rostedt found here:
+Reviewed-by: Peter Shier <pshier@google.com>
+Signed-off-by: Korben Rusek <korben@google.com>
+---
+ Documentation/trace/ftrace.rst | 5 +++++
+ kernel/trace/trace.c           | 4 ++++
+ kernel/trace/trace.h           | 1 +
+ 3 files changed, 10 insertions(+)
 
-https://lkml.org/lkml/2019/5/24/710
-
-Korben Rusek (2):
-  Add force-abs-timestamp trace option.
-  tests for absolute timestamp
-
- Documentation/trace/ftrace.rst                |   5 +
- kernel/trace/trace.c                          |   4 +
- kernel/trace/trace.h                          |   1 +
- tools/testing/selftests/Makefile              |   1 +
- tools/testing/selftests/timestamp/Makefile    |  25 +++
- tools/testing/selftests/timestamp/abs-test.sh | 156 ++++++++++++++
- .../selftests/timestamp/abs-timestamp.c       | 198 ++++++++++++++++++
- 7 files changed, 390 insertions(+)
- create mode 100644 tools/testing/selftests/timestamp/Makefile
- create mode 100644 tools/testing/selftests/timestamp/abs-test.sh
- create mode 100644 tools/testing/selftests/timestamp/abs-timestamp.c
-
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index 430a16283103..704264164ffd 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -1029,6 +1029,7 @@ To see what is available, simply cat the file::
+ 	irq-info
+ 	markers
+ 	noevent-fork
++	noforce-abs-timestamp
+ 	function-trace
+ 	nofunction-fork
+ 	nodisplay-graph
+@@ -1212,6 +1213,10 @@ Here are the available options:
+ 
+         This affects PIDs listed in set_event_notrace_pid as well.
+ 
++  force-abs-timestamp
++	When set, always use absolute timestamps rather than
++	defaulting to deltas.
++
+   function-trace
+ 	The latency tracers will enable function tracing
+ 	if this option is enabled (default it is). When
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index ec44b0e2a19c..8b5c4e998895 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4852,6 +4852,12 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+ 		trace_printk_control(enabled);
+ 	}
+ 
++	if (mask == TRACE_ITER_FORCE_ABS_TIMESTAMP) {
++		ring_buffer_set_time_stamp_abs(tr->array_buffer.buffer, enabled);
++#ifdef CONFIG_TRACER_MAX_TRACE
++		ring_buffer_set_time_stamp_abs(tr->max_buffer.buffer, enabled);
++#endif
++	}
+ 	return 0;
+ }
+ 
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index def769df5bf1..cb1ecc540494 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1330,6 +1330,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 		C(MARKERS,		"markers"),		\
+ 		C(EVENT_FORK,		"event-fork"),		\
+ 		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
++		C(FORCE_ABS_TIMESTAMP,	"force-abs-timestamp"),	\
+ 		FUNCTION_FLAGS					\
+ 		FGRAPH_FLAGS					\
+ 		STACK_FLAGS					\
 -- 
 2.27.0.290.gba653c62da-goog
 
