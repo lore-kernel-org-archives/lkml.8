@@ -2,254 +2,248 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE6AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51DA7206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF72206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:40:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H+f6yo9Q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iLkuI0Rx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgFRXif (ORCPT
+        id S1727094AbgFRXj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 19:38:35 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38478 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbgFRXif (ORCPT
+        Thu, 18 Jun 2020 19:39:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgFRXj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 19:38:35 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05INcSW1128862;
-        Thu, 18 Jun 2020 18:38:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592523508;
-        bh=MzUpIThf5U4J2pzJrAkKbp4u8EbOUdovbJTBZzFIHAU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=H+f6yo9Q2QksX8WlrhKBfb8N8HH9woszDYBDRt65Z2fBteCFXTWjYnMsW6ht6vFpa
-         VujSnQyan0KMZe/F9qjAajDoJkz4ZYnQa36JxO7loAXnsgx94UbKVkKSdcNiw7jdfK
-         tcvCWaCgrK0ApXvhbNkrzroO9kM8n0/JCMMdCxRE=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05INcSUf033006;
-        Thu, 18 Jun 2020 18:38:28 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 18
- Jun 2020 18:38:28 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 18 Jun 2020 18:38:28 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05INcR8S033240;
-        Thu, 18 Jun 2020 18:38:27 -0500
-Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
- support to lp55xx
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <robh@kernel.org>
-CC:     <kbuild-all@lists.01.org>, <devicetree@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200615201522.19677-12-dmurphy@ti.com>
- <202006180032.JW0i39C6%lkp@intel.com>
- <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
- <58ad7723-131f-6930-00d7-1144c993110c@gmail.com>
- <fc1ae702-0734-973d-9e3c-22b8f8d5c873@ti.com>
- <fc410dfb-70d1-1b8b-3b6d-0de1c6c84ec2@gmail.com>
- <56823113-4875-4813-8627-84b0d1792391@ti.com>
- <bd603f01-2c1b-6167-d88c-3895c1bfdf6c@gmail.com>
- <fad98aa3-cec6-3cde-951f-fa2b57c26d03@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <b0e74f9b-fe71-d051-16ea-3d48ccdf078d@ti.com>
-Date:   Thu, 18 Jun 2020 18:38:22 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 18 Jun 2020 19:39:58 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A38C06174E;
+        Thu, 18 Jun 2020 16:39:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=xVgYnEdgAFHTs+nHrdH7aFVHFB4jUEehtYybUXoVPqU=; b=iLkuI0Rx7uZO85pIBQkwO4+iZu
+        CQZXDISHNVl+UlKu3rV5wgTkQjLiJlGSnw2FDuPc3dlvD/zKhL4FGJ8K/GCRRvgQAgxsmRehLMfoE
+        pFIO6WhTlEjz80gqMCp2YQG4+E927DPahJRnKAABA7uYErFOV1OmZksCuacxTv4W9OPPAo/hMobku
+        Hs2azdhlElROexWFhUPOOkPItMFLtGms+Byyp6RQ8p7NT4yvlGsWxLVbA2BM4o1/NVG/Nxx/BVG8M
+        gtfID5qfAkBmNtNkny5xz7G5wRmpmGErQwQv18blehGCWXixSWlVX2Te16rm4ElTvtghAAtz+diey
+        TyMRC6bg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jm48U-0004EV-7i; Thu, 18 Jun 2020 23:39:58 +0000
+Date:   Thu, 18 Jun 2020 16:39:58 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Junxiao Bi <junxiao.bi@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Matthew Wilcox <matthew.wilcox@oracle.com>,
+        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
+        "joe.jin@oracle.com" <joe.jin@oracle.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: Re: severe proc dentry lock contention
+Message-ID: <20200618233958.GV8681@bombadil.infradead.org>
+References: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <fad98aa3-cec6-3cde-951f-fa2b57c26d03@gmail.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+On Thu, Jun 18, 2020 at 03:17:33PM -0700, Junxiao Bi wrote:
+> When debugging some performance issue, i found that thousands of threads
+> exit around same time could cause a severe spin lock contention on proc
+> dentry "/proc/$parent_process_pid/task/", that's because threads needs to
+> clean up their pid file from that dir when exit. Check the following
+> standalone test case that simulated the case and perf top result on v5.7
+> kernel. Any idea on how to fix this?
 
-On 6/18/20 6:26 PM, Jacek Anaszewski wrote:
-> On 6/19/20 12:09 AM, Jacek Anaszewski wrote:
->> Dan,
->>
->> On 6/18/20 11:44 PM, Dan Murphy wrote:
->>> Jacek
->>>
->>> On 6/18/20 4:21 PM, Jacek Anaszewski wrote:
->>>> Dan,
->>>>
->>>> On 6/18/20 12:33 AM, Dan Murphy wrote:
->>>>> Jacek
->>>>>
->>>>> On 6/17/20 4:41 PM, Jacek Anaszewski wrote:
->>>>>> Dan,
->>>>>>
->>>>>> On 6/17/20 9:22 PM, Dan Murphy wrote:
->>>>>>> Pavel/Jacek
->>>>>>>
->>>>>>> On 6/17/20 11:28 AM, kernel test robot wrote:
->>>>>>>> Hi Dan,
->>>>>>>>
->>>>>>>> I love your patch! Yet something to improve:
->>>>>>>>
->>>>>>>> [auto build test ERROR on pavel-linux-leds/for-next]
->>>>>>>> [cannot apply to j.anaszewski-leds/for-next]
->>>>>>>> [if your patch is applied to the wrong git tree, please drop us 
->>>>>>>> a note to help
->>>>>>>> improve the system. BTW, we also suggest to use '--base' option 
->>>>>>>> to specify the
->>>>>>>> base tree in git format-patch, please see 
->>>>>>>> https://stackoverflow.com/a/37406982]
->>>>>>>>
->>>>>>>> url: 
->>>>>>>> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217 
->>>>>>>>
->>>>>>>> base: 
->>>>>>>> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git 
->>>>>>>> for-next
->>>>>>>> config: ia64-randconfig-r015-20200617 (attached as .config)
->>>>>>>> compiler: ia64-linux-gcc (GCC) 9.3.0
->>>>>>>> reproduce (this is a W=1 build):
->>>>>>>>          wget 
->>>>>>>> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross 
->>>>>>>> -O ~/bin/make.cross
->>>>>>>>          chmod +x ~/bin/make.cross
->>>>>>>>          # save the attached .config to linux build tree
->>>>>>>>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 
->>>>>>>> make.cross ARCH=ia64
->>>>>>>>
->>>>>>>> If you fix the issue, kindly add following tag as appropriate
->>>>>>>> Reported-by: kernel test robot <lkp@intel.com>
->>>>>>>>
->>>>>>>> All errors (new ones prefixed by >>, old ones prefixed by <<):
->>>>>>>>
->>>>>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
->>>>>>>> `lp55xx_set_mc_brightness':
->>>>>>>>>> drivers/leds/leds-lp55xx-common.c:146: undefined reference to 
->>>>>>>>>> `led_mc_calc_color_components'
->>>>>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
->>>>>>>> `devm_led_classdev_multicolor_register':
->>>>>>>>>> include/linux/led-class-multicolor.h:74: undefined reference 
->>>>>>>>>> to `devm_led_classdev_multicolor_register_ext'
->>>>>>>> vim +146 drivers/leds/leds-lp55xx-common.c
->>>>>>>>
->>>>>>>>     138
->>>>>>>>     139    static int lp55xx_set_mc_brightness(struct 
->>>>>>>> led_classdev *cdev,
->>>>>>>>     140                        enum led_brightness brightness)
->>>>>>>>     141    {
->>>>>>>>     142        struct led_classdev_mc *mc_dev = 
->>>>>>>> lcdev_to_mccdev(cdev);
->>>>>>>>     143        struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
->>>>>>>>     144        struct lp55xx_device_config *cfg = led->chip->cfg;
->>>>>>>>     145
->>>>>>>>   > 146 led_mc_calc_color_components(&led->mc_cdev, brightness);
->>>>>>>>     147        return cfg->multicolor_brightness_fn(led);
->>>>>>>>     148
->>>>>>>
->>>>>>> Well this was a mess to figure out.
->>>>>>>
->>>>>>> The only fix I can figure out here is to remove the
->>>>>>>
->>>>>>>      depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
->>>>>>>
->>>>>>> from each child device and add
->>>>>>>
->>>>>>>      select LEDS_CLASS_MULTI_COLOR
->>>>>>>
->>>>>>> to the LP55XX_COMMON
->>>>>>>
->>>>>>> This way the Multi color framework will inherit the symbol that 
->>>>>>> was set by the COMMON flag which is inherited by majority from 
->>>>>>> the child flags.
->>>>>>
->>>>>> Did you try this?
->>>>>>
->>>>>> --- a/drivers/leds/Kconfig
->>>>>> +++ b/drivers/leds/Kconfig
->>>>>> @@ -398,6 +398,7 @@ config LEDS_LP50XX
->>>>>>  config LEDS_LP55XX_COMMON
->>>>>>         tristate "Common Driver for TI/National 
->>>>>> LP5521/5523/55231/5562/8501"
->>>>>>         depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || 
->>>>>> LEDS_LP8501
->>>>>> +       depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
->>>>>>         depends on OF
->>>>>>         select FW_LOADER
->>>>>>         select FW_LOADER_USER_HELPER
->>>>>>
->>>>>>
->>>>> Yes I did
->>>>>
->>>>> That gave unmet dependencies.
->>>>>
->>>>> WARNING: unmet direct dependencies detected for LEDS_LP55XX_COMMON
->>>>>    Depends on [m]: NEW_LEDS [=y] && (LEDS_LP5521 [=n] || 
->>>>> LEDS_LP5523 [=m] || LEDS_LP5562 [=y] || LEDS_LP8501 [=y]) && 
->>>>> (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m]) && 
->>>>> OF [=y]
->>>>>    Selected by [y]:
->>>>>    - LEDS_LP5562 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
->>>>>    - LEDS_LP8501 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
->>>>>    Selected by [m]:
->>>>>    - LEDS_LP5523 [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C 
->>>>> [=y] && (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m])
->>>>>
->>>>
->>>> When I was testing that yesterday I also had the same warning at some
->>>> point of testing different Kconfig setups, but with what I showed 
->>>> above
->>>> it ceased to appear. Now every time I am doing "make oldconfig" the
->>>> CONFIG_LEDS_LP55XX_COMMON=y entry gets changed to =m with the config
->>>> from the test bot.
->>>>
->>> That is not what I saw in my testing especially after doing a distclean
->>
->> Could you please give your exact steps after "make distclean" and
->> copying test bot config to the kernel root directory?
->>
->> Also, please share the toolchain you're using for tests.
->
-> Actually at this stage the toolchain is of lesser relevance.
->
-> I've tried once more and indeed the problem shows up.
->
-> It is caused by the driver entries doing
->
-> "select LEDS_LP55XX_COMMON".
->
-> Select sets config to "y" so it conflicts with
-> "depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR"
-> in the "config LEDS_LP55XX_COMMON".
->
-> Your proposed fix will block the possibility of building
-> LED_CLASS_MULTI_COLOR as a module when LP55XX drivers
-> are enabled so this is also not an option.
->
-> Solving this riddle will require some more thinking.
-> I haven't analyzed it in detail but maybe "imply" statement from
-> kconfig-language.rst could help somehow here.
->
-I tried imply on various applications.  Nothing solved it.
+Thanks, Junxiao.
 
-Like you said the child devices select the common and majority rules on 
-how the COMMON is built.
+We've looked at a few different ways of fixing this problem.
 
-The proposed fix will only block building the MC as a module if the 
-COMMON and children are modules.
+Even though the contention is within the dcache, it seems like a usecase
+that the dcache shouldn't be optimised for -- generally we do not have
+hundreds of CPUs removing dentries from a single directory in parallel.
 
-Dan
+We could fix this within procfs.  We don't have a great patch yet, but
+the current approach we're looking at allows only one thread at a time
+to call dput() on any /proc/*/task directory.
 
+We could also look at fixing this within the scheduler.  Only allowing
+one CPU to run the threads of an exiting process would fix this particular
+problem, but might have other consequences.
 
+I was hoping that 7bc3e6e55acf would fix this, but that patch is in 5.7,
+so that hope is ruled out.
+
+> 
+>    PerfTop:   48891 irqs/sec  kernel:95.6%  exact: 100.0% lost: 0/0 drop:
+> 0/0 [4000Hz cycles],  (all, 72 CPUs)
+> ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+> 
+> 
+>     66.10%  [kernel]                               [k]
+> native_queued_spin_lock_slowpath
+>      1.13%  [kernel]                               [k] _raw_spin_lock
+>      0.84%  [kernel]                               [k] clear_page_erms
+>      0.82%  [kernel]                               [k]
+> queued_write_lock_slowpath
+>      0.64%  [kernel]                               [k] proc_task_readdir
+>      0.61%  [kernel]                               [k]
+> find_idlest_group.isra.95
+>      0.61%  [kernel]                               [k]
+> syscall_return_via_sysret
+>      0.55%  [kernel]                               [k] entry_SYSCALL_64
+>      0.49%  [kernel]                               [k] memcpy_erms
+>      0.46%  [kernel]                               [k] update_cfs_group
+>      0.41%  [kernel]                               [k] get_pid_task
+>      0.39%  [kernel]                               [k]
+> _raw_spin_lock_irqsave
+>      0.37%  [kernel]                               [k]
+> __list_del_entry_valid
+>      0.34%  [kernel]                               [k]
+> get_page_from_freelist
+>      0.34%  [kernel]                               [k] __d_lookup
+>      0.32%  [kernel]                               [k] update_load_avg
+>      0.31%  libc-2.17.so                           [.] get_next_seq
+>      0.27%  [kernel]                               [k] avc_has_perm_noaudit
+>      0.26%  [kernel]                               [k] __sched_text_start
+>      0.25%  [kernel]                               [k]
+> selinux_inode_permission
+>      0.25%  [kernel]                               [k] __slab_free
+>      0.24%  [kernel]                               [k] detach_entity_cfs_rq
+>      0.23%  [kernel]                               [k] zap_pte_range
+>      0.22%  [kernel]                               [k]
+> _find_next_bit.constprop.1
+>      0.22%  libc-2.17.so                           [.] vfprintf
+>      0.20%  libc-2.17.so                           [.] _int_malloc
+>      0.19%  [kernel]                               [k] _raw_spin_lock_irq
+>      0.18%  [kernel]                               [k] rb_erase
+>      0.18%  [kernel]                               [k] pid_revalidate
+>      0.18%  [kernel]                               [k] lockref_get_not_dead
+>      0.18%  [kernel]                               [k]
+> __alloc_pages_nodemask
+>      0.17%  [kernel]                               [k] set_task_cpu
+>      0.17%  libc-2.17.so                           [.] __strcoll_l
+>      0.17%  [kernel]                               [k] do_syscall_64
+>      0.17%  [kernel]                               [k] __vmalloc_node_range
+>      0.17%  libc-2.17.so                           [.] _IO_vfscanf
+>      0.17%  [kernel]                               [k] refcount_dec_not_one
+>      0.15%  [kernel]                               [k] __task_pid_nr_ns
+>      0.15%  [kernel]                               [k]
+> native_irq_return_iret
+>      0.15%  [kernel]                               [k] free_pcppages_bulk
+>      0.14%  [kernel]                               [k] kmem_cache_alloc
+>      0.14%  [kernel]                               [k] link_path_walk
+>      0.14%  libc-2.17.so                           [.] _int_free
+>      0.14%  [kernel]                               [k]
+> __update_load_avg_cfs_rq
+>      0.14%  perf.5.7.0-master.20200601.ol7.x86_64  [.] 0x00000000000eac29
+>      0.13%  [kernel]                               [k] kmem_cache_free
+>      0.13%  [kernel]                               [k] number
+>      0.13%  [kernel]                               [k] memset_erms
+>      0.12%  [kernel]                               [k] proc_pid_status
+>      0.12%  [kernel]                               [k] __d_lookup_rcu
+> 
+> 
+> =========== runme.sh ==========
+> 
+> #!/bin/bash
+> 
+> threads=${1:-10000}
+> prog=proc_race
+> while [ 1 ]; do ./$prog $threads; done &
+> 
+> while [ 1 ]; do
+>     pid=`ps aux | grep $prog | grep -v grep| awk '{print $2}'`
+>     if [ -z $pid ]; then continue; fi
+>     threadnum=`ls -l /proc/$pid/task | wc -l`
+>     if [ $threadnum -gt $threads ]; then
+>         echo kill $pid
+>         kill -9 $pid
+>     fi
+> done
+> 
+> 
+> ===========proc_race.c=========
+> 
+> 
+> #include <pthread.h>
+> #include <string.h>
+> #include <stdio.h>
+> #include <stdlib.h>
+> #include <unistd.h>
+> #include <errno.h>
+> #include <ctype.h>
+> 
+> #define handle_error_en(en, msg) \
+>     do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
+> 
+> #define handle_error(msg) \
+>     do { perror(msg); exit(EXIT_FAILURE); } while (0)
+> 
+> struct thread_info {
+>     pthread_t thread_id;
+>     int       thread_num;
+> };
+> 
+> static void *child_thread()
+> {
+>     int i;
+> 
+>     while (1) { if (!(i++ % 1000000)) sleep(1);}
+>     return NULL;
+> }
+> 
+> int main(int argc, char *argv[])
+> {
+>     int s, tnum, opt, num_threads;
+>     struct thread_info *tinfo;
+>     void *res;
+> 
+>     if (argc == 2)
+>         num_threads = atoi(argv[1]);
+>     else
+>         num_threads = 10000;
+> 
+>     tinfo = calloc(num_threads, sizeof(struct thread_info));
+>     if (tinfo == NULL)
+>         handle_error("calloc");
+> 
+> 
+>     for (tnum = 0; tnum < num_threads; tnum++) {
+>         tinfo[tnum].thread_num = tnum + 1;
+> 
+>         s = pthread_create(&tinfo[tnum].thread_id, NULL,
+>                 &child_thread, NULL);
+>         if (s != 0)
+>             handle_error_en(s, "pthread_create");
+>     }
+> 
+>     for (tnum = 0; tnum < num_threads; tnum++) {
+>         s = pthread_join(tinfo[tnum].thread_id, &res);
+>         if (s != 0)
+>             handle_error_en(s, "pthread_join");
+> 
+>         free(res);
+>     }
+> 
+>     free(tinfo);
+>     exit(EXIT_SUCCESS);
+> }
+> 
+> ==========
+> 
+> Thanks,
+> 
+> Junxiao.
+> 
