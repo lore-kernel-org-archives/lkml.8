@@ -2,634 +2,307 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 321FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DBBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF94B2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:29:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JpV5iOwf"
+	by mail.kernel.org (Postfix) with ESMTP id D22512075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbgFRM3J (ORCPT
+        id S1729870AbgFRM3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:29:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729356AbgFRM0a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 08:26:30 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AC1FC061799
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 05:26:06 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id d128so5448239wmc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 05:26:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XcpRwaPArKDy0b6hHpLf47AlwwErC4+BE9dFfkHDgDI=;
-        b=JpV5iOwfBr/VBwM27HRqXEOzrqdmnVYl9BSZOWjgVjFGzkl5X2+NyRLXytUGifWc03
-         /RAj6gMZFBLmgySO+qG3NT4zGYgPWVE6K8rdwmL4G3ZikR5T46jz0e9mvcW6pKKW/bZi
-         pbiXgacKbIrhDQgWMqQPLJ/NJbPxq/E4J9y5Aq9Q6HBYzI3D2d+cw22T71h/HsV2fLvH
-         7l+SxdAxge6/ZjBsg4Sl56FHOFImlFo5y8RtaDQKbw2jqCwtikpR1V0ElPhrmnmQABhL
-         puyttSlaYS/6uuPPz9VWL5FVzKk8GfkpXqEPrAhTYfVgQ4MfufWGanifO1CbqNKb/d95
-         duWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XcpRwaPArKDy0b6hHpLf47AlwwErC4+BE9dFfkHDgDI=;
-        b=L1QZ9C7fORseno26zOlCsY62I/zjeZkujsTzgp3tr0i4nbxtpPfhnaJh9vHwzTLQK2
-         g+ThpKCI1fHwRc5ubuFpwnYsbsugXH0KqqDnvewNn5HyGYIf2RR+LOZJR1yDyT7W7/nr
-         D/DqefSdqgMeby9JLOFIzPEH9/p620En38wH3uNM7JYErFhTcbMnLj8k8wGdBkh584PI
-         sB3ZZ4NGEb+9ZRLGNjwN7CQjBpmbmgjN7nw1LMpS4g+RSwJ87gLPphtQfgvpzhWYkQE5
-         6CTYn7ZiKXKFTPVtowgzlS3nh+G6858q+XAcdzOMkF/8ahw3Iz/rnyNAXM6yRLdN3QPo
-         W2YA==
-X-Gm-Message-State: AOAM531Zbqmwq1Xhtb0MV1LJc3ozSHItdTsG645xmQmkydE8UugOwqo4
-        YbMioR9lEYoat7vKuGWA6y8YlA==
-X-Google-Smtp-Source: ABdhPJzcv2pZsYAYYYEjlBP982+H2ZdVWYFB3qnk6XLnTWSQfW8HkJBNDaHZcA3ZIw2yjUv5TunEwQ==
-X-Received: by 2002:a1c:7dd5:: with SMTP id y204mr3601055wmc.182.1592483164433;
-        Thu, 18 Jun 2020 05:26:04 -0700 (PDT)
-Received: from localhost ([2a01:4b00:8523:2d03:c1af:c724:158a:e200])
-        by smtp.gmail.com with ESMTPSA id d11sm3502535wrm.64.2020.06.18.05.26.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 05:26:03 -0700 (PDT)
-From:   David Brazdil <dbrazdil@google.com>
-To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, android-kvm@google.com,
-        kernel-team@android.com, David Brazdil <dbrazdil@google.com>
-Subject: [PATCH v3 09/15] arm64: kvm: Split hyp/debug-sr.c to VHE/nVHE
-Date:   Thu, 18 Jun 2020 13:25:31 +0100
-Message-Id: <20200618122537.9625-10-dbrazdil@google.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200618122537.9625-1-dbrazdil@google.com>
-References: <20200618122537.9625-1-dbrazdil@google.com>
+        Thu, 18 Jun 2020 08:29:24 -0400
+Received: from mga03.intel.com ([134.134.136.65]:58149 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729840AbgFRM3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 08:29:04 -0400
+IronPort-SDR: bLpYikYayENzivwLYrhbTlmUFAR2QUSQSv3uTTGAJY9T1pmBah8jpgA4a46LSPekieCy704Q5s
+ VdqWATc9zWOQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9655"; a="142498831"
+X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
+   d="scan'208";a="142498831"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 05:29:03 -0700
+IronPort-SDR: zWy8t80wDV3GuZ52l+NYpDNn/3ln0dvMXJ/H9oYoCF5qW3xuuq0EMo/imTeISD+XE2ObbLZB5A
+ WKm5dp7d7X8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
+   d="scan'208";a="317811874"
+Received: from gliakhov-mobl2.ger.corp.intel.com (HELO ubuntu) ([10.252.48.152])
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Jun 2020 05:28:58 -0700
+Date:   Thu, 18 Jun 2020 14:28:56 +0200
+From:   Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     David Stevens <stevensd@chromium.org>,
+        dri-devel@lists.freedesktop.org, virtio-dev@lists.oasis-open.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] virtio: add dma-buf support for exported objects
+Message-ID: <20200618122856.GC4189@ubuntu>
+References: <20200526105811.30784-1-stevensd@chromium.org>
+ <20200526105811.30784-2-stevensd@chromium.org>
+ <20200604145620-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604145620-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is part of a series which builds KVM's non-VHE hyp code separately
-from VHE and the rest of the kernel.
+Hi Michael,
 
-debug-sr.c contains KVM's code for context-switching debug registers, with some
-parts shared between VHE/nVHE. These common routines are moved to debug-sr.h,
-VHE-specific code is left in debug-sr.c and nVHE-specific code is moved to
-nvhe/debug-sr.c.
+On Thu, Jun 04, 2020 at 03:05:23PM -0400, Michael S. Tsirkin wrote:
+> On Tue, May 26, 2020 at 07:58:09PM +0900, David Stevens wrote:
+> > This change adds a new flavor of dma-bufs that can be used by virtio
+> > drivers to share exported objects. A virtio dma-buf can be queried by
+> > virtio drivers to obtain the UUID which identifies the underlying
+> > exported object.
+> > 
+> > Signed-off-by: David Stevens <stevensd@chromium.org>
+> 
+> Is this just for graphics? If yes I'd rather we put it in the graphics
+> driver. We can always move it later ...
 
-Functions are slightly refactored to move code hidden behind `has_vhe()` checks
-to the corresponding .c files.
+Wouldn't this be the API that audio virtualisation will have to use to share 
+buffers between the host and any guests?
 
-Signed-off-by: David Brazdil <dbrazdil@google.com>
----
- arch/arm64/kernel/image-vars.h     |   3 -
- arch/arm64/kvm/hyp/debug-sr.c      | 210 +----------------------------
- arch/arm64/kvm/hyp/debug-sr.h      | 172 +++++++++++++++++++++++
- arch/arm64/kvm/hyp/nvhe/Makefile   |   2 +-
- arch/arm64/kvm/hyp/nvhe/debug-sr.c |  77 +++++++++++
- 5 files changed, 256 insertions(+), 208 deletions(-)
- create mode 100644 arch/arm64/kvm/hyp/debug-sr.h
- create mode 100644 arch/arm64/kvm/hyp/nvhe/debug-sr.c
+Thanks
+Guennadi
 
-diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-index 855f9718d6d9..8096e6f1f2bf 100644
---- a/arch/arm64/kernel/image-vars.h
-+++ b/arch/arm64/kernel/image-vars.h
-@@ -61,8 +61,6 @@ __efistub__ctype		= _ctype;
-  * memory mappings.
-  */
- 
--__kvm_nvhe___debug_switch_to_guest = __debug_switch_to_guest;
--__kvm_nvhe___debug_switch_to_host = __debug_switch_to_host;
- __kvm_nvhe___fpsimd_restore_state = __fpsimd_restore_state;
- __kvm_nvhe___fpsimd_save_state = __fpsimd_save_state;
- __kvm_nvhe___guest_enter = __guest_enter;
-@@ -71,7 +69,6 @@ __kvm_nvhe___hyp_panic_string = __hyp_panic_string;
- __kvm_nvhe___hyp_stub_vectors = __hyp_stub_vectors;
- __kvm_nvhe___icache_flags = __icache_flags;
- __kvm_nvhe___kvm_enable_ssbs = __kvm_enable_ssbs;
--__kvm_nvhe___kvm_get_mdcr_el2 = __kvm_get_mdcr_el2;
- __kvm_nvhe___kvm_timer_set_cntvoff = __kvm_timer_set_cntvoff;
- __kvm_nvhe___sysreg32_restore_state = __sysreg32_restore_state;
- __kvm_nvhe___sysreg32_save_state = __sysreg32_save_state;
-diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
-index e95af204fec7..28c0a54cda2a 100644
---- a/arch/arm64/kvm/hyp/debug-sr.c
-+++ b/arch/arm64/kvm/hyp/debug-sr.c
-@@ -4,221 +4,23 @@
-  * Author: Marc Zyngier <marc.zyngier@arm.com>
-  */
- 
--#include <linux/compiler.h>
- #include <linux/kvm_host.h>
- 
--#include <asm/debug-monitors.h>
--#include <asm/kvm_asm.h>
- #include <asm/kvm_hyp.h>
--#include <asm/kvm_mmu.h>
- 
--#define read_debug(r,n)		read_sysreg(r##n##_el1)
--#define write_debug(v,r,n)	write_sysreg(v, r##n##_el1)
-+#include "debug-sr.h"
- 
--#define save_debug(ptr,reg,nr)						\
--	switch (nr) {							\
--	case 15:	ptr[15] = read_debug(reg, 15);			\
--			/* Fall through */				\
--	case 14:	ptr[14] = read_debug(reg, 14);			\
--			/* Fall through */				\
--	case 13:	ptr[13] = read_debug(reg, 13);			\
--			/* Fall through */				\
--	case 12:	ptr[12] = read_debug(reg, 12);			\
--			/* Fall through */				\
--	case 11:	ptr[11] = read_debug(reg, 11);			\
--			/* Fall through */				\
--	case 10:	ptr[10] = read_debug(reg, 10);			\
--			/* Fall through */				\
--	case 9:		ptr[9] = read_debug(reg, 9);			\
--			/* Fall through */				\
--	case 8:		ptr[8] = read_debug(reg, 8);			\
--			/* Fall through */				\
--	case 7:		ptr[7] = read_debug(reg, 7);			\
--			/* Fall through */				\
--	case 6:		ptr[6] = read_debug(reg, 6);			\
--			/* Fall through */				\
--	case 5:		ptr[5] = read_debug(reg, 5);			\
--			/* Fall through */				\
--	case 4:		ptr[4] = read_debug(reg, 4);			\
--			/* Fall through */				\
--	case 3:		ptr[3] = read_debug(reg, 3);			\
--			/* Fall through */				\
--	case 2:		ptr[2] = read_debug(reg, 2);			\
--			/* Fall through */				\
--	case 1:		ptr[1] = read_debug(reg, 1);			\
--			/* Fall through */				\
--	default:	ptr[0] = read_debug(reg, 0);			\
--	}
--
--#define restore_debug(ptr,reg,nr)					\
--	switch (nr) {							\
--	case 15:	write_debug(ptr[15], reg, 15);			\
--			/* Fall through */				\
--	case 14:	write_debug(ptr[14], reg, 14);			\
--			/* Fall through */				\
--	case 13:	write_debug(ptr[13], reg, 13);			\
--			/* Fall through */				\
--	case 12:	write_debug(ptr[12], reg, 12);			\
--			/* Fall through */				\
--	case 11:	write_debug(ptr[11], reg, 11);			\
--			/* Fall through */				\
--	case 10:	write_debug(ptr[10], reg, 10);			\
--			/* Fall through */				\
--	case 9:		write_debug(ptr[9], reg, 9);			\
--			/* Fall through */				\
--	case 8:		write_debug(ptr[8], reg, 8);			\
--			/* Fall through */				\
--	case 7:		write_debug(ptr[7], reg, 7);			\
--			/* Fall through */				\
--	case 6:		write_debug(ptr[6], reg, 6);			\
--			/* Fall through */				\
--	case 5:		write_debug(ptr[5], reg, 5);			\
--			/* Fall through */				\
--	case 4:		write_debug(ptr[4], reg, 4);			\
--			/* Fall through */				\
--	case 3:		write_debug(ptr[3], reg, 3);			\
--			/* Fall through */				\
--	case 2:		write_debug(ptr[2], reg, 2);			\
--			/* Fall through */				\
--	case 1:		write_debug(ptr[1], reg, 1);			\
--			/* Fall through */				\
--	default:	write_debug(ptr[0], reg, 0);			\
--	}
--
--static void __hyp_text __debug_save_spe_nvhe(u64 *pmscr_el1)
--{
--	u64 reg;
--
--	/* Clear pmscr in case of early return */
--	*pmscr_el1 = 0;
--
--	/* SPE present on this CPU? */
--	if (!cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
--						  ID_AA64DFR0_PMSVER_SHIFT))
--		return;
--
--	/* Yes; is it owned by EL3? */
--	reg = read_sysreg_s(SYS_PMBIDR_EL1);
--	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
--		return;
--
--	/* No; is the host actually using the thing? */
--	reg = read_sysreg_s(SYS_PMBLIMITR_EL1);
--	if (!(reg & BIT(SYS_PMBLIMITR_EL1_E_SHIFT)))
--		return;
--
--	/* Yes; save the control register and disable data generation */
--	*pmscr_el1 = read_sysreg_s(SYS_PMSCR_EL1);
--	write_sysreg_s(0, SYS_PMSCR_EL1);
--	isb();
--
--	/* Now drain all buffered data to memory */
--	psb_csync();
--	dsb(nsh);
--}
--
--static void __hyp_text __debug_restore_spe_nvhe(u64 pmscr_el1)
--{
--	if (!pmscr_el1)
--		return;
--
--	/* The host page table is installed, but not yet synchronised */
--	isb();
--
--	/* Re-enable data generation */
--	write_sysreg_s(pmscr_el1, SYS_PMSCR_EL1);
--}
--
--static void __hyp_text __debug_save_state(struct kvm_vcpu *vcpu,
--					  struct kvm_guest_debug_arch *dbg,
--					  struct kvm_cpu_context *ctxt)
--{
--	u64 aa64dfr0;
--	int brps, wrps;
--
--	aa64dfr0 = read_sysreg(id_aa64dfr0_el1);
--	brps = (aa64dfr0 >> 12) & 0xf;
--	wrps = (aa64dfr0 >> 20) & 0xf;
--
--	save_debug(dbg->dbg_bcr, dbgbcr, brps);
--	save_debug(dbg->dbg_bvr, dbgbvr, brps);
--	save_debug(dbg->dbg_wcr, dbgwcr, wrps);
--	save_debug(dbg->dbg_wvr, dbgwvr, wrps);
--
--	ctxt->sys_regs[MDCCINT_EL1] = read_sysreg(mdccint_el1);
--}
--
--static void __hyp_text __debug_restore_state(struct kvm_vcpu *vcpu,
--					     struct kvm_guest_debug_arch *dbg,
--					     struct kvm_cpu_context *ctxt)
-+void __debug_switch_to_guest(struct kvm_vcpu *vcpu)
- {
--	u64 aa64dfr0;
--	int brps, wrps;
--
--	aa64dfr0 = read_sysreg(id_aa64dfr0_el1);
--
--	brps = (aa64dfr0 >> 12) & 0xf;
--	wrps = (aa64dfr0 >> 20) & 0xf;
--
--	restore_debug(dbg->dbg_bcr, dbgbcr, brps);
--	restore_debug(dbg->dbg_bvr, dbgbvr, brps);
--	restore_debug(dbg->dbg_wcr, dbgwcr, wrps);
--	restore_debug(dbg->dbg_wvr, dbgwvr, wrps);
--
--	write_sysreg(ctxt->sys_regs[MDCCINT_EL1], mdccint_el1);
-+	__debug_switch_to_guest_common(vcpu);
- }
- 
--void __hyp_text __debug_switch_to_guest(struct kvm_vcpu *vcpu)
-+void __debug_switch_to_host(struct kvm_vcpu *vcpu)
- {
--	struct kvm_cpu_context *host_ctxt;
--	struct kvm_cpu_context *guest_ctxt;
--	struct kvm_guest_debug_arch *host_dbg;
--	struct kvm_guest_debug_arch *guest_dbg;
--
--	/*
--	 * Non-VHE: Disable and flush SPE data generation
--	 * VHE: The vcpu can run, but it can't hide.
--	 */
--	if (!has_vhe())
--		__debug_save_spe_nvhe(&vcpu->arch.host_debug_state.pmscr_el1);
--
--	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
--		return;
--
--	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
--	guest_ctxt = &vcpu->arch.ctxt;
--	host_dbg = &vcpu->arch.host_debug_state.regs;
--	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
--
--	__debug_save_state(vcpu, host_dbg, host_ctxt);
--	__debug_restore_state(vcpu, guest_dbg, guest_ctxt);
--}
--
--void __hyp_text __debug_switch_to_host(struct kvm_vcpu *vcpu)
--{
--	struct kvm_cpu_context *host_ctxt;
--	struct kvm_cpu_context *guest_ctxt;
--	struct kvm_guest_debug_arch *host_dbg;
--	struct kvm_guest_debug_arch *guest_dbg;
--
--	if (!has_vhe())
--		__debug_restore_spe_nvhe(vcpu->arch.host_debug_state.pmscr_el1);
--
--	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
--		return;
--
--	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
--	guest_ctxt = &vcpu->arch.ctxt;
--	host_dbg = &vcpu->arch.host_debug_state.regs;
--	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
--
--	__debug_save_state(vcpu, guest_dbg, guest_ctxt);
--	__debug_restore_state(vcpu, host_dbg, host_ctxt);
--
--	vcpu->arch.flags &= ~KVM_ARM64_DEBUG_DIRTY;
-+	__debug_switch_to_host_common(vcpu);
- }
- 
--u32 __hyp_text __kvm_get_mdcr_el2(void)
-+u32 __kvm_get_mdcr_el2(void)
- {
- 	return read_sysreg(mdcr_el2);
- }
-diff --git a/arch/arm64/kvm/hyp/debug-sr.h b/arch/arm64/kvm/hyp/debug-sr.h
-new file mode 100644
-index 000000000000..62b5deeb301d
---- /dev/null
-+++ b/arch/arm64/kvm/hyp/debug-sr.h
-@@ -0,0 +1,172 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2015 - ARM Ltd
-+ * Author: Marc Zyngier <marc.zyngier@arm.com>
-+ */
-+
-+#ifndef __ARM64_KVM_HYP_DEBUG_SR_H__
-+#define __ARM64_KVM_HYP_DEBUG_SR_H__
-+
-+#include <linux/compiler.h>
-+#include <linux/kvm_host.h>
-+
-+#include <asm/debug-monitors.h>
-+#include <asm/kvm_asm.h>
-+#include <asm/kvm_hyp.h>
-+#include <asm/kvm_mmu.h>
-+
-+#define read_debug(r,n)		read_sysreg(r##n##_el1)
-+#define write_debug(v,r,n)	write_sysreg(v, r##n##_el1)
-+
-+#define save_debug(ptr,reg,nr)						\
-+	switch (nr) {							\
-+	case 15:	ptr[15] = read_debug(reg, 15);			\
-+			/* Fall through */				\
-+	case 14:	ptr[14] = read_debug(reg, 14);			\
-+			/* Fall through */				\
-+	case 13:	ptr[13] = read_debug(reg, 13);			\
-+			/* Fall through */				\
-+	case 12:	ptr[12] = read_debug(reg, 12);			\
-+			/* Fall through */				\
-+	case 11:	ptr[11] = read_debug(reg, 11);			\
-+			/* Fall through */				\
-+	case 10:	ptr[10] = read_debug(reg, 10);			\
-+			/* Fall through */				\
-+	case 9:		ptr[9] = read_debug(reg, 9);			\
-+			/* Fall through */				\
-+	case 8:		ptr[8] = read_debug(reg, 8);			\
-+			/* Fall through */				\
-+	case 7:		ptr[7] = read_debug(reg, 7);			\
-+			/* Fall through */				\
-+	case 6:		ptr[6] = read_debug(reg, 6);			\
-+			/* Fall through */				\
-+	case 5:		ptr[5] = read_debug(reg, 5);			\
-+			/* Fall through */				\
-+	case 4:		ptr[4] = read_debug(reg, 4);			\
-+			/* Fall through */				\
-+	case 3:		ptr[3] = read_debug(reg, 3);			\
-+			/* Fall through */				\
-+	case 2:		ptr[2] = read_debug(reg, 2);			\
-+			/* Fall through */				\
-+	case 1:		ptr[1] = read_debug(reg, 1);			\
-+			/* Fall through */				\
-+	default:	ptr[0] = read_debug(reg, 0);			\
-+	}
-+
-+#define restore_debug(ptr,reg,nr)					\
-+	switch (nr) {							\
-+	case 15:	write_debug(ptr[15], reg, 15);			\
-+			/* Fall through */				\
-+	case 14:	write_debug(ptr[14], reg, 14);			\
-+			/* Fall through */				\
-+	case 13:	write_debug(ptr[13], reg, 13);			\
-+			/* Fall through */				\
-+	case 12:	write_debug(ptr[12], reg, 12);			\
-+			/* Fall through */				\
-+	case 11:	write_debug(ptr[11], reg, 11);			\
-+			/* Fall through */				\
-+	case 10:	write_debug(ptr[10], reg, 10);			\
-+			/* Fall through */				\
-+	case 9:		write_debug(ptr[9], reg, 9);			\
-+			/* Fall through */				\
-+	case 8:		write_debug(ptr[8], reg, 8);			\
-+			/* Fall through */				\
-+	case 7:		write_debug(ptr[7], reg, 7);			\
-+			/* Fall through */				\
-+	case 6:		write_debug(ptr[6], reg, 6);			\
-+			/* Fall through */				\
-+	case 5:		write_debug(ptr[5], reg, 5);			\
-+			/* Fall through */				\
-+	case 4:		write_debug(ptr[4], reg, 4);			\
-+			/* Fall through */				\
-+	case 3:		write_debug(ptr[3], reg, 3);			\
-+			/* Fall through */				\
-+	case 2:		write_debug(ptr[2], reg, 2);			\
-+			/* Fall through */				\
-+	case 1:		write_debug(ptr[1], reg, 1);			\
-+			/* Fall through */				\
-+	default:	write_debug(ptr[0], reg, 0);			\
-+	}
-+
-+static inline void __hyp_text
-+__debug_save_state(struct kvm_vcpu *vcpu, struct kvm_guest_debug_arch *dbg,
-+		   struct kvm_cpu_context *ctxt)
-+{
-+	u64 aa64dfr0;
-+	int brps, wrps;
-+
-+	aa64dfr0 = read_sysreg(id_aa64dfr0_el1);
-+	brps = (aa64dfr0 >> 12) & 0xf;
-+	wrps = (aa64dfr0 >> 20) & 0xf;
-+
-+	save_debug(dbg->dbg_bcr, dbgbcr, brps);
-+	save_debug(dbg->dbg_bvr, dbgbvr, brps);
-+	save_debug(dbg->dbg_wcr, dbgwcr, wrps);
-+	save_debug(dbg->dbg_wvr, dbgwvr, wrps);
-+
-+	ctxt->sys_regs[MDCCINT_EL1] = read_sysreg(mdccint_el1);
-+}
-+
-+static inline void __hyp_text
-+__debug_restore_state(struct kvm_vcpu *vcpu, struct kvm_guest_debug_arch *dbg,
-+		      struct kvm_cpu_context *ctxt)
-+{
-+	u64 aa64dfr0;
-+	int brps, wrps;
-+
-+	aa64dfr0 = read_sysreg(id_aa64dfr0_el1);
-+
-+	brps = (aa64dfr0 >> 12) & 0xf;
-+	wrps = (aa64dfr0 >> 20) & 0xf;
-+
-+	restore_debug(dbg->dbg_bcr, dbgbcr, brps);
-+	restore_debug(dbg->dbg_bvr, dbgbvr, brps);
-+	restore_debug(dbg->dbg_wcr, dbgwcr, wrps);
-+	restore_debug(dbg->dbg_wvr, dbgwvr, wrps);
-+
-+	write_sysreg(ctxt->sys_regs[MDCCINT_EL1], mdccint_el1);
-+}
-+
-+static inline void __hyp_text
-+__debug_switch_to_guest_common(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_cpu_context *host_ctxt;
-+	struct kvm_cpu_context *guest_ctxt;
-+	struct kvm_guest_debug_arch *host_dbg;
-+	struct kvm_guest_debug_arch *guest_dbg;
-+
-+	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
-+		return;
-+
-+	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
-+	guest_ctxt = &vcpu->arch.ctxt;
-+	host_dbg = &vcpu->arch.host_debug_state.regs;
-+	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
-+
-+	__debug_save_state(vcpu, host_dbg, host_ctxt);
-+	__debug_restore_state(vcpu, guest_dbg, guest_ctxt);
-+}
-+
-+static inline void __hyp_text
-+__debug_switch_to_host_common(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_cpu_context *host_ctxt;
-+	struct kvm_cpu_context *guest_ctxt;
-+	struct kvm_guest_debug_arch *host_dbg;
-+	struct kvm_guest_debug_arch *guest_dbg;
-+
-+	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
-+		return;
-+
-+	host_ctxt = &__hyp_this_cpu_ptr(kvm_host_data)->host_ctxt;
-+	guest_ctxt = &vcpu->arch.ctxt;
-+	host_dbg = &vcpu->arch.host_debug_state.regs;
-+	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
-+
-+	__debug_save_state(vcpu, guest_dbg, guest_ctxt);
-+	__debug_restore_state(vcpu, host_dbg, host_ctxt);
-+
-+	vcpu->arch.flags &= ~KVM_ARM64_DEBUG_DIRTY;
-+}
-+
-+#endif /* __ARM64_KVM_HYP_DEBUG_SR_H__ */
-diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
-index 336b1bf64ceb..95a06786bf26 100644
---- a/arch/arm64/kvm/hyp/nvhe/Makefile
-+++ b/arch/arm64/kvm/hyp/nvhe/Makefile
-@@ -7,7 +7,7 @@ asflags-y := -D__KVM_NVHE_HYPERVISOR__
- ccflags-y := -D__KVM_NVHE_HYPERVISOR__ -fno-stack-protector \
- 	     -DDISABLE_BRANCH_PROFILING $(DISABLE_STACKLEAK_PLUGIN)
- 
--obj-y := switch.o tlb.o hyp-init.o ../hyp-entry.o
-+obj-y := debug-sr.o switch.o tlb.o hyp-init.o ../hyp-entry.o
- 
- obj-y := $(patsubst %.o,%.hyp.o,$(obj-y))
- extra-y := $(patsubst %.hyp.o,%.hyp.tmp.o,$(obj-y))
-diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-new file mode 100644
-index 000000000000..b3752cfdcf3d
---- /dev/null
-+++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-@@ -0,0 +1,77 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2015 - ARM Ltd
-+ * Author: Marc Zyngier <marc.zyngier@arm.com>
-+ */
-+
-+#include <linux/compiler.h>
-+#include <linux/kvm_host.h>
-+
-+#include <asm/debug-monitors.h>
-+#include <asm/kvm_asm.h>
-+#include <asm/kvm_hyp.h>
-+#include <asm/kvm_mmu.h>
-+
-+#include "../debug-sr.h"
-+
-+static void __hyp_text __debug_save_spe(u64 *pmscr_el1)
-+{
-+	u64 reg;
-+
-+	/* Clear pmscr in case of early return */
-+	*pmscr_el1 = 0;
-+
-+	/* SPE present on this CPU? */
-+	if (!cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
-+						  ID_AA64DFR0_PMSVER_SHIFT))
-+		return;
-+
-+	/* Yes; is it owned by EL3? */
-+	reg = read_sysreg_s(SYS_PMBIDR_EL1);
-+	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
-+		return;
-+
-+	/* No; is the host actually using the thing? */
-+	reg = read_sysreg_s(SYS_PMBLIMITR_EL1);
-+	if (!(reg & BIT(SYS_PMBLIMITR_EL1_E_SHIFT)))
-+		return;
-+
-+	/* Yes; save the control register and disable data generation */
-+	*pmscr_el1 = read_sysreg_s(SYS_PMSCR_EL1);
-+	write_sysreg_s(0, SYS_PMSCR_EL1);
-+	isb();
-+
-+	/* Now drain all buffered data to memory */
-+	psb_csync();
-+	dsb(nsh);
-+}
-+
-+static void __hyp_text __debug_restore_spe(u64 pmscr_el1)
-+{
-+	if (!pmscr_el1)
-+		return;
-+
-+	/* The host page table is installed, but not yet synchronised */
-+	isb();
-+
-+	/* Re-enable data generation */
-+	write_sysreg_s(pmscr_el1, SYS_PMSCR_EL1);
-+}
-+
-+void __hyp_text __debug_switch_to_guest(struct kvm_vcpu *vcpu)
-+{
-+	/* Disable and flush SPE data generation */
-+	__debug_save_spe(&vcpu->arch.host_debug_state.pmscr_el1);
-+	__debug_switch_to_guest_common(vcpu);
-+}
-+
-+void __hyp_text __debug_switch_to_host(struct kvm_vcpu *vcpu)
-+{
-+	__debug_restore_spe(vcpu->arch.host_debug_state.pmscr_el1);
-+	__debug_switch_to_host_common(vcpu);
-+}
-+
-+u32 __hyp_text __kvm_get_mdcr_el2(void)
-+{
-+	return read_sysreg(mdcr_el2);
-+}
--- 
-2.27.0
-
+> > ---
+> >  drivers/virtio/Makefile         |  2 +-
+> >  drivers/virtio/virtio.c         |  6 +++
+> >  drivers/virtio/virtio_dma_buf.c | 89 +++++++++++++++++++++++++++++++++
+> >  include/linux/virtio.h          |  1 +
+> >  include/linux/virtio_dma_buf.h  | 58 +++++++++++++++++++++
+> >  5 files changed, 155 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/virtio/virtio_dma_buf.c
+> >  create mode 100644 include/linux/virtio_dma_buf.h
+> > 
+> > diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+> > index 29a1386ecc03..ecdae5b596de 100644
+> > --- a/drivers/virtio/Makefile
+> > +++ b/drivers/virtio/Makefile
+> > @@ -1,5 +1,5 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> > -obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o
+> > +obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o virtio_dma_buf.o
+> >  obj-$(CONFIG_VIRTIO_MMIO) += virtio_mmio.o
+> >  obj-$(CONFIG_VIRTIO_PCI) += virtio_pci.o
+> >  virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
+> > diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+> > index a977e32a88f2..5d46f0ded92d 100644
+> > --- a/drivers/virtio/virtio.c
+> > +++ b/drivers/virtio/virtio.c
+> > @@ -357,6 +357,12 @@ int register_virtio_device(struct virtio_device *dev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(register_virtio_device);
+> >  
+> > +bool is_virtio_device(struct device *dev)
+> > +{
+> > +	return dev->bus == &virtio_bus;
+> > +}
+> > +EXPORT_SYMBOL_GPL(is_virtio_device);
+> > +
+> >  void unregister_virtio_device(struct virtio_device *dev)
+> >  {
+> >  	int index = dev->index; /* save for after device release */
+> > diff --git a/drivers/virtio/virtio_dma_buf.c b/drivers/virtio/virtio_dma_buf.c
+> > new file mode 100644
+> > index 000000000000..23e3399b11ed
+> > --- /dev/null
+> > +++ b/drivers/virtio/virtio_dma_buf.c
+> > @@ -0,0 +1,89 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> > + * dma-bufs for virtio exported objects
+> > + *
+> > + * Copyright (C) 2020 Google, Inc.
+> > + */
+> > +
+> > +#include <linux/virtio_dma_buf.h>
+> > +
+> > +/**
+> > + * virtio_dma_buf_export - Creates a new dma-buf for a virtio exported object
+> > + *
+> > + * This wraps dma_buf_export() to allow virtio drivers to create a dma-buf
+> > + * for an virtio exported object that can be queried by other virtio drivers
+> > + * for the object's UUID.
+> > + */
+> > +struct dma_buf *virtio_dma_buf_export(
+> > +		const struct virtio_dma_buf_export_info *virtio_exp_info)
+> > +{
+> > +	struct dma_buf_export_info exp_info;
+> > +
+> > +	if (!virtio_exp_info->ops
+> > +		|| virtio_exp_info->ops->ops.attach != &virtio_dma_buf_attach
+> > +		|| !virtio_exp_info->ops->get_uuid) {
+> > +		return ERR_PTR(-EINVAL);
+> > +	}
+> > +
+> > +	exp_info.exp_name = virtio_exp_info->exp_name;
+> > +	exp_info.owner = virtio_exp_info->owner;
+> > +	exp_info.ops = &virtio_exp_info->ops->ops;
+> > +	exp_info.size = virtio_exp_info->size;
+> > +	exp_info.flags = virtio_exp_info->flags;
+> > +	exp_info.resv = virtio_exp_info->resv;
+> > +	exp_info.priv = virtio_exp_info->priv;
+> > +	BUILD_BUG_ON(sizeof(struct virtio_dma_buf_export_info)
+> > +		     != sizeof(struct dma_buf_export_info));
+> 
+> This is the only part that gives me pause. Why do we need this hack?
+> What's wrong with just using dma_buf_export_info directly,
+> and if you want the virtio ops, just using container_off?
+> 
+> 
+> 
+> > +
+> > +	return dma_buf_export(&exp_info);
+> > +}
+> > +EXPORT_SYMBOL(virtio_dma_buf_export);
+> > +
+> > +/**
+> > + * virtio_dma_buf_attach - mandatory attach callback for virtio dma-bufs
+> > + */
+> > +int virtio_dma_buf_attach(struct dma_buf *dma_buf,
+> > +			  struct dma_buf_attachment *attach)
+> > +{
+> > +	int ret;
+> > +	const struct virtio_dma_buf_ops *ops = container_of(
+> > +			dma_buf->ops, const struct virtio_dma_buf_ops, ops);
+> > +
+> > +	if (ops->device_attach) {
+> > +		ret = ops->device_attach(dma_buf, attach);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL(virtio_dma_buf_attach);
+> > +
+> > +/**
+> > + * is_virtio_dma_buf - returns true if the given dma-buf is a virtio dma-buf
+> > + * @dma_buf: buffer to query
+> > + */
+> > +bool is_virtio_dma_buf(struct dma_buf *dma_buf)
+> > +{
+> > +	return dma_buf->ops->attach == &virtio_dma_buf_attach;
+> > +}
+> > +EXPORT_SYMBOL(is_virtio_dma_buf);
+> > +
+> > +/**
+> > + * virtio_dma_buf_get_uuid - gets the uuid of the virtio dma-buf's exported object
+> > + * @dma_buf: [in] buffer to query
+> > + * @uuid: [out] the uuid
+> > + *
+> > + * Returns: 0 on success, negative on failure.
+> > + */
+> > +int virtio_dma_buf_get_uuid(struct dma_buf *dma_buf,
+> > +			    uuid_t *uuid)
+> > +{
+> > +	const struct virtio_dma_buf_ops *ops = container_of(
+> > +			dma_buf->ops, const struct virtio_dma_buf_ops, ops);
+> > +
+> > +	if (!is_virtio_dma_buf(dma_buf))
+> > +		return -EINVAL;
+> > +
+> > +	return ops->get_uuid(dma_buf, uuid);
+> > +}
+> > +EXPORT_SYMBOL(virtio_dma_buf_get_uuid);
+> > diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+> > index 15f906e4a748..9397e25616c4 100644
+> > --- a/include/linux/virtio.h
+> > +++ b/include/linux/virtio.h
+> > @@ -128,6 +128,7 @@ static inline struct virtio_device *dev_to_virtio(struct device *_dev)
+> >  void virtio_add_status(struct virtio_device *dev, unsigned int status);
+> >  int register_virtio_device(struct virtio_device *dev);
+> >  void unregister_virtio_device(struct virtio_device *dev);
+> > +bool is_virtio_device(struct device *dev);
+> >  
+> >  void virtio_break_device(struct virtio_device *dev);
+> >  
+> > diff --git a/include/linux/virtio_dma_buf.h b/include/linux/virtio_dma_buf.h
+> > new file mode 100644
+> > index 000000000000..29fee167afbd
+> > --- /dev/null
+> > +++ b/include/linux/virtio_dma_buf.h
+> > @@ -0,0 +1,58 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * dma-bufs for virtio exported objects
+> > + *
+> > + * Copyright (C) 2020 Google, Inc.
+> > + */
+> > +
+> > +#ifndef _LINUX_VIRTIO_DMA_BUF_H
+> > +#define _LINUX_VIRTIO_DMA_BUF_H
+> > +
+> > +#include <linux/dma-buf.h>
+> > +#include <linux/uuid.h>
+> > +#include <linux/virtio.h>
+> > +
+> > +/**
+> > + * struct virtio_dma_buf_ops - operations possible on exported object dma-buf
+> > + * @ops: the base dma_buf_ops. ops.attach MUST be virtio_dma_buf_attach.
+> > + * @device_attach: [optional] callback invoked by virtio_dma_buf_attach during
+> > + *		   all attach operations.
+> > + * @get_uid: [required] callback to get the uuid of the exported object.
+> > + */
+> > +struct virtio_dma_buf_ops {
+> > +	struct dma_buf_ops ops;
+> > +	int (*device_attach)(struct dma_buf *dma_buf,
+> > +			     struct dma_buf_attachment *attach);
+> > +	int (*get_uuid)(struct dma_buf *dma_buf, uuid_t *uuid);
+> > +};
+> > +
+> > +/**
+> > + * struct virtio_dma_buf_export_info - see struct dma_buf_export_info
+> > + */
+> > +struct virtio_dma_buf_export_info {
+> > +	const char *exp_name;
+> > +	struct module *owner;
+> > +	const struct virtio_dma_buf_ops *ops;
+> > +	size_t size;
+> > +	int flags;
+> > +	struct dma_resv *resv;
+> > +	void *priv;
+> > +};
+> > +
+> > +/**
+> > + * DEFINE_VIRTIO_DMA_BUF_EXPORT_INFO - helper macro for exporters
+> > + */
+> > +#define DEFINE_VIRTIO_DMA_BUF_EXPORT_INFO(name)	\
+> > +	struct virtio_dma_buf_export_info name = { \
+> > +		.exp_name = KBUILD_MODNAME, \
+> > +		.owner = THIS_MODULE }
+> > +
+> > +int virtio_dma_buf_attach(struct dma_buf *dma_buf,
+> > +			  struct dma_buf_attachment *attach);
+> > +
+> > +struct dma_buf *virtio_dma_buf_export(
+> > +		const struct virtio_dma_buf_export_info *virtio_exp_info);
+> > +bool is_virtio_dma_buf(struct dma_buf *dma_buf);
+> > +int virtio_dma_buf_get_uuid(struct dma_buf *dma_buf, uuid_t *uuid);
+> > +
+> > +#endif /* _LINUX_VIRTIO_DMA_BUF_H */
+> > -- 
+> > 2.27.0.rc0.183.gde8f92d652-goog
+> 
+> _______________________________________________
+> Virtualization mailing list
+> Virtualization@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/virtualization
