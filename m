@@ -2,54 +2,51 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28567C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5A6921D90
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F050921D82
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443449;
-	bh=d9AYsEQJGWrQPuhepMSkj3olfNftcEJXAwTAup6nUME=;
+	s=default; t=1592443451;
+	bh=ONEmYEljJZpjGVIxn03XJR/6nJJuzxf/9S++Fknaua0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yiowVSgYo6xENd7wUlSpz1mdppdGV4IYjQrtZF1JQOW6dIl0b+HlkoMNsiZtHZeNb
-	 8F5iSaxOJ65RNxWaSFeNfCJsczz14Lh8IKrzqzZINnE+xBGpDjGER/0dtYIehRjM0y
-	 Vb1Paq9wREL4PucFZWR2PIUH3tDa3hgqSlF/WEjA=
+	b=nzent/dlTpkWrYuTZL0JSnyFpY3jjt41jlA3W7J0SANUNHtRbRzQnLZZZq+y7+qKy
+	 RKzzI7uHoDTfpvSO60tIfPPPEHD6w71AzZb/rzmfVnwwZe1fGRFAyYSR+IdCP5SjNB
+	 ombBbTvUofBXBq2rRU4juYELeQk9EWzRhqmIH8gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731127AbgFRBYG (ORCPT
+        id S1731137AbgFRBYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:24:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53026 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:24:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730346AbgFRBUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:44 -0400
+        id S1730359AbgFRBUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0680206F1;
-        Thu, 18 Jun 2020 01:20:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6329B20FC3;
+        Thu, 18 Jun 2020 01:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443243;
-        bh=d9AYsEQJGWrQPuhepMSkj3olfNftcEJXAwTAup6nUME=;
+        s=default; t=1592443246;
+        bh=ONEmYEljJZpjGVIxn03XJR/6nJJuzxf/9S++Fknaua0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r5o+YL42aJiI0c+GLWsqC1ik/pfr1eBBCVEr6wrBFCxfivn2WFrs3T6y35nveRrOL
-         h95B0R1YMKQjd45SpTTG54q8ZlUTUCIJ4d+j7rIqvdgKc4Gof6UGq34KyWQE5nEQBn
-         ynfcP8XnnV974JzAj7cqQu+iSMSsy8mPYmI0lETQ=
+        b=R/OLOX1XYubv8NQ5ahZHiWxcbmr9AuSSHktWhYzMWrmTLhikQK7ul6ziUke0l5t63
+         SMJO7CfKzQ4z3hzMuxLJm28K7wo2Va2mqMYuO4AP7ySc95thRFZ0hZWdQvXJeFAhhe
+         6IcFjGEXuXT5GqTtbCYI3z8Q73Jmb5udKgedbycI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 194/266] scsi: ufs-qcom: Fix scheduling while atomic issue
-Date:   Wed, 17 Jun 2020 21:15:19 -0400
-Message-Id: <20200618011631.604574-194-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 196/266] KVM: PPC: Book3S: Fix some RCU-list locks
+Date:   Wed, 17 Jun 2020 21:15:21 -0400
+Message-Id: <20200618011631.604574-196-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -62,52 +59,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 3be60b564de49875e47974c37fabced893cd0931 ]
+[ Upstream commit ab8b65be183180c3eef405d449163964ecc4b571 ]
 
-ufs_qcom_dump_dbg_regs() uses usleep_range, a sleeping function, but can be
-called from atomic context in the following flow:
+It is unsafe to traverse kvm->arch.spapr_tce_tables and
+stt->iommu_tables without the RCU read lock held. Also, add
+cond_resched_rcu() in places with the RCU read lock held that could take
+a while to finish.
 
-ufshcd_intr -> ufshcd_sl_intr -> ufshcd_check_errors ->
-ufshcd_print_host_regs -> ufshcd_vops_dbg_register_dump ->
-ufs_qcom_dump_dbg_regs
+ arch/powerpc/kvm/book3s_64_vio.c:76 RCU-list traversed in non-reader section!!
 
-This causes a boot crash on the Lenovo Miix 630 when the interrupt is
-handled on the idle thread.
+ other info that might help us debug this:
 
-Fix the issue by switching to udelay().
+ rcu_scheduler_active = 2, debug_locks = 1
+ no locks held by qemu-kvm/4265.
 
-Link: https://lore.kernel.org/r/20200525204125.46171-1-jeffrey.l.hugo@gmail.com
-Fixes: 9c46b8676271 ("scsi: ufs-qcom: dump additional testbus registers")
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+ stack backtrace:
+ CPU: 96 PID: 4265 Comm: qemu-kvm Not tainted 5.7.0-rc4-next-20200508+ #2
+ Call Trace:
+ [c000201a8690f720] [c000000000715948] dump_stack+0xfc/0x174 (unreliable)
+ [c000201a8690f770] [c0000000001d9470] lockdep_rcu_suspicious+0x140/0x164
+ [c000201a8690f7f0] [c008000010b9fb48] kvm_spapr_tce_release_iommu_group+0x1f0/0x220 [kvm]
+ [c000201a8690f870] [c008000010b8462c] kvm_spapr_tce_release_vfio_group+0x54/0xb0 [kvm]
+ [c000201a8690f8a0] [c008000010b84710] kvm_vfio_destroy+0x88/0x140 [kvm]
+ [c000201a8690f8f0] [c008000010b7d488] kvm_put_kvm+0x370/0x600 [kvm]
+ [c000201a8690f990] [c008000010b7e3c0] kvm_vm_release+0x38/0x60 [kvm]
+ [c000201a8690f9c0] [c0000000005223f4] __fput+0x124/0x330
+ [c000201a8690fa20] [c000000000151cd8] task_work_run+0xb8/0x130
+ [c000201a8690fa70] [c0000000001197e8] do_exit+0x4e8/0xfa0
+ [c000201a8690fb70] [c00000000011a374] do_group_exit+0x64/0xd0
+ [c000201a8690fbb0] [c000000000132c90] get_signal+0x1f0/0x1200
+ [c000201a8690fcc0] [c000000000020690] do_notify_resume+0x130/0x3c0
+ [c000201a8690fda0] [c000000000038d64] syscall_exit_prepare+0x1a4/0x280
+ [c000201a8690fe20] [c00000000000c8f8] system_call_common+0xf8/0x278
+
+ ====
+ arch/powerpc/kvm/book3s_64_vio.c:368 RCU-list traversed in non-reader section!!
+
+ other info that might help us debug this:
+
+ rcu_scheduler_active = 2, debug_locks = 1
+ 2 locks held by qemu-kvm/4264:
+  #0: c000201ae2d000d8 (&vcpu->mutex){+.+.}-{3:3}, at: kvm_vcpu_ioctl+0xdc/0x950 [kvm]
+  #1: c000200c9ed0c468 (&kvm->srcu){....}-{0:0}, at: kvmppc_h_put_tce+0x88/0x340 [kvm]
+
+ ====
+ arch/powerpc/kvm/book3s_64_vio.c:108 RCU-list traversed in non-reader section!!
+
+ other info that might help us debug this:
+
+ rcu_scheduler_active = 2, debug_locks = 1
+ 1 lock held by qemu-kvm/4257:
+  #0: c000200b1b363a40 (&kv->lock){+.+.}-{3:3}, at: kvm_vfio_set_attr+0x598/0x6c0 [kvm]
+
+ ====
+ arch/powerpc/kvm/book3s_64_vio.c:146 RCU-list traversed in non-reader section!!
+
+ other info that might help us debug this:
+
+ rcu_scheduler_active = 2, debug_locks = 1
+ 1 lock held by qemu-kvm/4257:
+  #0: c000200b1b363a40 (&kv->lock){+.+.}-{3:3}, at: kvm_vfio_set_attr+0x598/0x6c0 [kvm]
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufs-qcom.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/kvm/book3s_64_vio.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 411ef60b2c14..c49e9f6c46f8 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -1546,11 +1546,11 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
+diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
+index 5834db0a54c6..03b947429e4d 100644
+--- a/arch/powerpc/kvm/book3s_64_vio.c
++++ b/arch/powerpc/kvm/book3s_64_vio.c
+@@ -74,6 +74,7 @@ extern void kvm_spapr_tce_release_iommu_group(struct kvm *kvm,
+ 	struct kvmppc_spapr_tce_iommu_table *stit, *tmp;
+ 	struct iommu_table_group *table_group = NULL;
  
- 	/* sleep a bit intermittently as we are dumping too much data */
- 	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
--	usleep_range(1000, 1100);
-+	udelay(1000);
- 	ufs_qcom_testbus_read(hba);
--	usleep_range(1000, 1100);
-+	udelay(1000);
- 	ufs_qcom_print_unipro_testbus(hba);
--	usleep_range(1000, 1100);
-+	udelay(1000);
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(stt, &kvm->arch.spapr_tce_tables, list) {
+ 
+ 		table_group = iommu_group_get_iommudata(grp);
+@@ -88,7 +89,9 @@ extern void kvm_spapr_tce_release_iommu_group(struct kvm *kvm,
+ 				kref_put(&stit->kref, kvm_spapr_tce_liobn_put);
+ 			}
+ 		}
++		cond_resched_rcu();
+ 	}
++	rcu_read_unlock();
  }
  
- /**
+ extern long kvm_spapr_tce_attach_iommu_group(struct kvm *kvm, int tablefd,
+@@ -106,12 +109,14 @@ extern long kvm_spapr_tce_attach_iommu_group(struct kvm *kvm, int tablefd,
+ 	if (!f.file)
+ 		return -EBADF;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(stt, &kvm->arch.spapr_tce_tables, list) {
+ 		if (stt == f.file->private_data) {
+ 			found = true;
+ 			break;
+ 		}
+ 	}
++	rcu_read_unlock();
+ 
+ 	fdput(f);
+ 
+@@ -144,6 +149,7 @@ extern long kvm_spapr_tce_attach_iommu_group(struct kvm *kvm, int tablefd,
+ 	if (!tbl)
+ 		return -EINVAL;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(stit, &stt->iommu_tables, next) {
+ 		if (tbl != stit->tbl)
+ 			continue;
+@@ -151,14 +157,17 @@ extern long kvm_spapr_tce_attach_iommu_group(struct kvm *kvm, int tablefd,
+ 		if (!kref_get_unless_zero(&stit->kref)) {
+ 			/* stit is being destroyed */
+ 			iommu_tce_table_put(tbl);
++			rcu_read_unlock();
+ 			return -ENOTTY;
+ 		}
+ 		/*
+ 		 * The table is already known to this KVM, we just increased
+ 		 * its KVM reference counter and can return.
+ 		 */
++		rcu_read_unlock();
+ 		return 0;
+ 	}
++	rcu_read_unlock();
+ 
+ 	stit = kzalloc(sizeof(*stit), GFP_KERNEL);
+ 	if (!stit) {
+@@ -364,18 +373,19 @@ static long kvmppc_tce_validate(struct kvmppc_spapr_tce_table *stt,
+ 	if (kvmppc_tce_to_ua(stt->kvm, tce, &ua))
+ 		return H_TOO_HARD;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(stit, &stt->iommu_tables, next) {
+ 		unsigned long hpa = 0;
+ 		struct mm_iommu_table_group_mem_t *mem;
+ 		long shift = stit->tbl->it_page_shift;
+ 
+ 		mem = mm_iommu_lookup(stt->kvm->mm, ua, 1ULL << shift);
+-		if (!mem)
+-			return H_TOO_HARD;
+-
+-		if (mm_iommu_ua_to_hpa(mem, ua, shift, &hpa))
++		if (!mem || mm_iommu_ua_to_hpa(mem, ua, shift, &hpa)) {
++			rcu_read_unlock();
+ 			return H_TOO_HARD;
++		}
+ 	}
++	rcu_read_unlock();
+ 
+ 	return H_SUCCESS;
+ }
 -- 
 2.25.1
 
