@@ -2,139 +2,126 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F503C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A645A20890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B09A208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:04:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZTh/FsJ"
+	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="2Gdw9yRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730805AbgFRUDn (ORCPT
+        id S1730902AbgFRUEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:03:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50362 "EHLO
+        Thu, 18 Jun 2020 16:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729580AbgFRUDl (ORCPT
+        with ESMTP id S1730108AbgFRUEc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:03:41 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 655DEC06174E;
-        Thu, 18 Jun 2020 13:03:41 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id n23so8790551ljh.7;
-        Thu, 18 Jun 2020 13:03:41 -0700 (PDT)
+        Thu, 18 Jun 2020 16:04:32 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3176C0613EF
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:04:32 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h5so7423337wrc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:04:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xY2HlaoZmjAUGYdihKpKBP2AgWF7hu3wdXSeYzOnmxw=;
-        b=aZTh/FsJiZ5SD2HR+wSHizlouOjCpprPqkaO6K7VCoUivCKDqeLnncjaUB1vZTOpgP
-         F2/DxicoJsbd3MQGD1l5dhb7Fxy4M6+G96bwagnKmLF8RhNq1Q7gPwmHNY38jxHchvM0
-         wMyDeLHWCmwQPTr8CN9pj99lDo1BU2EWpNvJua5F1KqY4XrFA6NY4fI4g8piLTmAekBN
-         +yMl6Nq2XiofgZ7cXsRtt6HEQ9szs9yvpBWI0G3l0Sh75qOA/Il1volU1dQOsKxnznyc
-         z6ye/WJBA8e+VpAVb0rcbuGPprWnxz42B2owD8QlMMnVnzD6khNCHCusmgaVGyFKq+qt
-         LGKA==
+        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=I1X5PgsyDNPZk5OWUMSkw5d9tqtI+lNZgxN4Rtom3J4=;
+        b=2Gdw9yRpfZxYdJPIxo9vBo6m73ZCsO3/13tXY2w0ZeHHFdt4gSwy/htURFqSmKf4WG
+         Vcu9QN/YTZ8yD20PpRBi2W1z9zQBycqw9+em7uYgosUj77O6ve0zOSJs284LnMXdtYhn
+         raSPvaaJmx6EOie8eiwOIaUwDTyRibfq+uyl0nMTuqAj04owC7YOwYJQGxu9i0SnmkzT
+         2VCWv0KyTnidlmyeG4wxlx3uYNHsIuFDXcCpRD0+tr2hg6Yjg8u33PjfrIqzNiZyCkoI
+         oX5Mi2IywJXrc9KfaI9U+c895gh2SuZBZcFsJfzIBvxwGQrR4BHtcFQVeNUFXa81ZQ34
+         hG4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xY2HlaoZmjAUGYdihKpKBP2AgWF7hu3wdXSeYzOnmxw=;
-        b=WED+xD0n5Q9F0+mwU0rrtIvMDsqeO14G+S4WZcPAukJqZnqoERHQhhaJA9zCPU+nbj
-         mXrjQJKJ5cjRzodzeAV0qANcUSLMmW0/MPZizOkjeTKYf24WBw2sNIzclsNryP8bMh9H
-         CWiXlIuvsQDv9dCTNJnLoqs8P/Xgezbpo3+gQQ3KzcVDezT95CAMRkrl15w5PEoKhv/b
-         clTkWnTXLwAiW69005G4tkfxOs7UN9j1Tt+0G4oQSo0WeFR9i7Pk4/r5Z/aqe5Pm0L4V
-         F0wws03dJAIgGNFGmF8xMkuDIVQSK1JA6yEvmABFmzAdiCQsw5uu8xkxZiQ2tK3+syDR
-         v/3A==
-X-Gm-Message-State: AOAM531cKW76FoF+FC/pP8sqTjp1zGqs0U3mOAXxsL4gxIPe4cUU7RTL
-        REOTGZ/llhv4IwStUYIBwLQ=
-X-Google-Smtp-Source: ABdhPJwvDka/mu2unJaC+48s8sys0a9/bvBa/N3yCvh4tyOHu1/jfxDrJbZyZcwjoCv4Fg8Uh45pXw==
-X-Received: by 2002:a2e:954c:: with SMTP id t12mr20653ljh.287.1592510619839;
-        Thu, 18 Jun 2020 13:03:39 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id s62sm472931lja.100.2020.06.18.13.03.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 13:03:36 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Thu, 18 Jun 2020 22:03:33 +0200
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
- ptrs
-Message-ID: <20200618200333.GA16976@pc636>
-References: <20200525214800.93072-1-urezki@gmail.com>
- <20200525214800.93072-10-urezki@gmail.com>
- <20200617234609.GA10087@paulmck-ThinkPad-P72>
- <20200618005214.GN8681@bombadil.infradead.org>
- <20200618173049.GB14613@pc636>
- <20200618173527.GR8681@bombadil.infradead.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=I1X5PgsyDNPZk5OWUMSkw5d9tqtI+lNZgxN4Rtom3J4=;
+        b=nR+OQm0vmJnWzpjFS31VLMtAFj+hLnT/O2eCyHIY/2tlpFgYv+vYXayp9G1R0RJ1aM
+         Szq2EMUa3G+Kjp7ZkPQfkY61q097alAwgAkY39QSbp7RMtpduzk54NSzVulY4Bw+z+/X
+         2jKcfSBviYjZjxxQFpx4Jqx2E0Sy2siAPQ4BNzEos1QJK9/T4w7X+RT9tXgUmNCQENay
+         X8NN/feqrQfnv4dEjqmEaW++UamqrPPd+yO5QctpfFL9ulQAnjqeueGoVLn1E9NmEkrS
+         MGRalqzbQ6Mkw5FQHYjOfoeuWp43Yml5vPAzhV5LyJHQ9IFWEJ3LB8dmHesAytoyUErP
+         kcUw==
+X-Gm-Message-State: AOAM530ph0kowbqctIofFTLPNvB3982NuHU/awPa7b6uthlL6hubOq2N
+        vKyJXvp+nPL8gCUVuCdOlqAg2A==
+X-Google-Smtp-Source: ABdhPJxevHzd88MB3BtvBcSHFDfduqy63NdjLXzwRNfLfbeBHu+X/bIxcZVe6+j+aB1WA/b3mWH6NQ==
+X-Received: by 2002:adf:fd81:: with SMTP id d1mr206028wrr.96.1592510670761;
+        Thu, 18 Jun 2020 13:04:30 -0700 (PDT)
+Received: from [10.0.0.6] (xb932c246.cust.hiper.dk. [185.50.194.70])
+        by smtp.gmail.com with ESMTPSA id e2sm2750197wrt.76.2020.06.18.13.04.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 13:04:30 -0700 (PDT)
+Subject: Re: [PATCH 0/3] zone-append support in aio and io-uring
+To:     Kanchan Joshi <joshi.k@samsung.com>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bcrl@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aio@kvack.org, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org, selvakuma.s1@samsung.com,
+        nj.shetty@samsung.com, javier.gonz@samsung.com,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Keith Busch <keith.busch@wdc.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <CGME20200617172653epcas5p488de50090415eb802e62acc0e23d8812@epcas5p4.samsung.com>
+ <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
+ <f503c488-fa00-4fe2-1ceb-7093ea429e45@lightnvm.io>
+ <20200618192153.GA4141485@test-zns>
+From:   =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>
+Message-ID: <12a630ce-599b-3877-8079-10b319b55d45@lightnvm.io>
+Date:   Thu, 18 Jun 2020 22:04:30 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618173527.GR8681@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200618192153.GA4141485@test-zns>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 10:35:27AM -0700, Matthew Wilcox wrote:
-> On Thu, Jun 18, 2020 at 07:30:49PM +0200, Uladzislau Rezki wrote:
-> > > I'd suggest:
-> > > 
-> > >  			rcu_lock_acquire(&rcu_callback_map);
-> > > 			trace_rcu_invoke_kfree_bulk_callback(rcu_state.name,
-> > > 				bkvhead[i]->nr_records, bkvhead[i]->records);
-> > >  			if (i == 0) {
-> > >  				kfree_bulk(bkvhead[i]->nr_records,
-> > >  					bkvhead[i]->records);
-> > >  			} else {
-> > >  				for (j = 0; j < bkvhead[i]->nr_records; j++) {
-> > >  					vfree(bkvhead[i]->records[j]);
-> > >  				}
-> > >  			}
-> > >  			rcu_lock_release(&rcu_callback_map);
-> > >
-> > There are two different trace functions, one for "bulk" tracing
-> > messages, and another one is per one call of kfree(), though we use 
-> > to indicate vfree() call.
-> > 
-> > Probably we can rename it to: trace_rcu_invoke_kvfree_callback();
-> > 
-> > What do you think?
-> 
-> Works for me!
-> 
-OK. I will send out the patch that will rename that trace function
-that makes clear that the pointer that is freed can belong to SLAB
-or vmalloc.
-
-> > > But I'd also suggest a vfree_bulk be added.  There are a few things
-> > > which would be better done in bulk as part of the vfree process
-> > > (we batch them up already, but i'm sure we could do better).
-> > 
-> > I was thinking to implement of vfree_bulk() API, but i guess it can
-> > be done as future work.
-> > 
-> > Does that sound good?
-> 
-> Yes, definitely a future piece of work.
+On 18/06/2020 21.21, Kanchan Joshi wrote:
+> On Thu, Jun 18, 2020 at 10:04:32AM +0200, Matias Bjørling wrote:
+>> On 17/06/2020 19.23, Kanchan Joshi wrote:
+>>> This patchset enables issuing zone-append using aio and io-uring 
+>>> direct-io interface.
+>>>
+>>> For aio, this introduces opcode IOCB_CMD_ZONE_APPEND. Application 
+>>> uses start LBA
+>>> of the zone to issue append. On completion 'res2' field is used to 
+>>> return
+>>> zone-relative offset.
+>>>
+>>> For io-uring, this introduces three opcodes: 
+>>> IORING_OP_ZONE_APPEND/APPENDV/APPENDV_FIXED.
+>>> Since io_uring does not have aio-like res2, cqe->flags are 
+>>> repurposed to return zone-relative offset
+>>
+>> Please provide a pointers to applications that are updated and ready 
+>> to take advantage of zone append.
+>>
+>> I do not believe it's beneficial at this point to change the libaio 
+>> API, applications that would want to use this API, should anyway 
+>> switch to use io_uring.
+>>
+>> Please also note that applications and libraries that want to take 
+>> advantage of zone append, can already use the zonefs file-system, as 
+>> it will use the zone append command when applicable.
 >
-You have already been doing it.
+> AFAIK, zonefs uses append while serving synchronous I/O. And append bio
+> is waited upon synchronously. That maybe serving some purpose I do
+> not know currently. But it seems applications using zonefs file
+> abstraction will get benefitted if they could use the append 
+> themselves to
+> carry the I/O, asynchronously.
+Yep, please see Christoph's comment regarding adding the support to zonefs.
 
-Thank you, Matthew :)
 
---
-Vlad Rezki
