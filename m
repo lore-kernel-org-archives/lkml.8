@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4342BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 197AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12DCA20720
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA32A20720
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447836;
-	bh=T6td+4xjECTmSXQaASCI8eGQ4IqtOOF1xI3Ve0AZX/g=;
+	s=default; t=1592447839;
+	bh=EIJbw7mKgkDtoV/1GnE7maH6brijqvufX+8YAgg0Br4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i68LfRZ+xKe0NPJgwYonr3/yQq82zriGmhnchjpUk3RC6ZaM4EpkPH0hAlrdtJf7x
-	 n3bKlPBh7hIXQkXtJBA3KHKDCQmtLwxES0Bu1vjQKaxQvxgDVV7+U/WUjRS2L2ja/U
-	 M5/aglhsOVKf1f3IlwwZMtnb5XUW50Ey2KCfoO1M=
+	b=CZYj/WEKJnErhLrws4V3HhyFaqWlctB05VBwe2636gNpZjEJGukhyCeLYx2bXE4dC
+	 Ib+8R18LGT9HQXOuehbvxaGKyhjuXGZ8bXapJkPkUT4zD+q7E+k0rsCqUp92g4kDAn
+	 m8Af7R9GLrPRW8kNX0Ti6LGG93ErYD88R1v+6vzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387744AbgFRChN (ORCPT
+        id S2387774AbgFRChS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:37:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43134 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:37:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbgFRBNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:45 -0400
+        id S1727111AbgFRBNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AA0921924;
-        Thu, 18 Jun 2020 01:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59C1B221EB;
+        Thu, 18 Jun 2020 01:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442825;
-        bh=T6td+4xjECTmSXQaASCI8eGQ4IqtOOF1xI3Ve0AZX/g=;
+        s=default; t=1592442824;
+        bh=EIJbw7mKgkDtoV/1GnE7maH6brijqvufX+8YAgg0Br4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Et5Dno8JgiHTUwnIkwG5mfgdRwXRl3ptqoGtJmp3eHsWSijHD/vmRk7rRIgZsAR7z
-         nWNeYqMa+tqBqPVfEDRkAthl2/3AR7jJ7TQar4WDseL/7OJzlQRaDqDYoyxXyoNjzu
-         SZ6Jb/tqm3dP8xLOW9IONk48Yl2m96ike1jx3+4A=
+        b=i6jneSvyEPsmasmNOgTiidalOKkMZp6rfkaokmUejmzlUDVJ5tAzRFS3CswAfPgZB
+         HMLAYB6EAi798jA9T0MjVEQPEwjV8KXn+XN30LeHEcxOZ4DLuP28g2KKL/C6yFr7l8
+         i2xJPPOHdWG+6Zi2WDCr68yvrqu1toCevEYOVTE0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 261/388] IB/cma: Fix ports memory leak in cma_configfs
-Date:   Wed, 17 Jun 2020 21:05:58 -0400
-Message-Id: <20200618010805.600873-261-sashal@kernel.org>
+Cc:     Jonathan Bakker <xc-racer2@live.ca>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 260/388] iio: light: gp2ap002: Take runtime PM reference on light read
+Date:   Wed, 17 Jun 2020 21:05:57 -0400
+Message-Id: <20200618010805.600873-260-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,52 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maor Gottlieb <maorg@mellanox.com>
+From: Jonathan Bakker <xc-racer2@live.ca>
 
-[ Upstream commit 63a3345c2d42a9b29e1ce2d3a4043689b3995cea ]
+[ Upstream commit f6dbf83c17cb223ceabd7c42d441414f3e0e8a86 ]
 
-The allocated ports structure in never freed. The free function should be
-called by release_cma_ports_group, but the group is never released since
-we don't remove its default group.
+The light sensor needs the regulators to be enabled which means
+the runtime PM needs to be on.  This only happened when the
+proximity part of the chip was enabled.
 
-Remove default groups when device group is deleted.
+As fallout from this change, only report changes to the prox
+state in the interrupt handler when it is explicitly enabled.
 
-Fixes: 045959db65c6 ("IB/cma: Add configfs for rdma_cm")
-Link: https://lore.kernel.org/r/20200521072650.567908-1-leon@kernel.org
-Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 97d642e23037 ("iio: light: Add a driver for Sharp GP2AP002x00F")
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma_configfs.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/iio/light/gp2ap002.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/core/cma_configfs.c b/drivers/infiniband/core/cma_configfs.c
-index c672a4978bfd..3c1e2ca564fe 100644
---- a/drivers/infiniband/core/cma_configfs.c
-+++ b/drivers/infiniband/core/cma_configfs.c
-@@ -322,8 +322,21 @@ static struct config_group *make_cma_dev(struct config_group *group,
- 	return ERR_PTR(err);
+diff --git a/drivers/iio/light/gp2ap002.c b/drivers/iio/light/gp2ap002.c
+index b7ef16b28280..7a2679bdc987 100644
+--- a/drivers/iio/light/gp2ap002.c
++++ b/drivers/iio/light/gp2ap002.c
+@@ -158,6 +158,9 @@ static irqreturn_t gp2ap002_prox_irq(int irq, void *d)
+ 	int val;
+ 	int ret;
+ 
++	if (!gp2ap002->enabled)
++		goto err_retrig;
++
+ 	ret = regmap_read(gp2ap002->map, GP2AP002_PROX, &val);
+ 	if (ret) {
+ 		dev_err(gp2ap002->dev, "error reading proximity\n");
+@@ -247,6 +250,8 @@ static int gp2ap002_read_raw(struct iio_dev *indio_dev,
+ 	struct gp2ap002 *gp2ap002 = iio_priv(indio_dev);
+ 	int ret;
+ 
++	pm_runtime_get_sync(gp2ap002->dev);
++
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+ 		switch (chan->type) {
+@@ -255,13 +260,21 @@ static int gp2ap002_read_raw(struct iio_dev *indio_dev,
+ 			if (ret < 0)
+ 				return ret;
+ 			*val = ret;
+-			return IIO_VAL_INT;
++			ret = IIO_VAL_INT;
++			goto out;
+ 		default:
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto out;
+ 		}
+ 	default:
+-		return -EINVAL;
++		ret = -EINVAL;
+ 	}
++
++out:
++	pm_runtime_mark_last_busy(gp2ap002->dev);
++	pm_runtime_put_autosuspend(gp2ap002->dev);
++
++	return ret;
  }
  
-+static void drop_cma_dev(struct config_group *cgroup, struct config_item *item)
-+{
-+	struct config_group *group =
-+		container_of(item, struct config_group, cg_item);
-+	struct cma_dev_group *cma_dev_group =
-+		container_of(group, struct cma_dev_group, device_group);
-+
-+	configfs_remove_default_groups(&cma_dev_group->ports_group);
-+	configfs_remove_default_groups(&cma_dev_group->device_group);
-+	config_item_put(item);
-+}
-+
- static struct configfs_group_operations cma_subsys_group_ops = {
- 	.make_group	= make_cma_dev,
-+	.drop_item	= drop_cma_dev,
- };
- 
- static const struct config_item_type cma_subsys_type = {
+ static int gp2ap002_init(struct gp2ap002 *gp2ap002)
 -- 
 2.25.1
 
