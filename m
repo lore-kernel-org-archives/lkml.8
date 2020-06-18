@@ -2,100 +2,85 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB65C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D182CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1B6320707
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:31:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="UxoWk3h3";
-	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="x8aZ/Cuc"
+	by mail.kernel.org (Postfix) with ESMTP id AAF9820707
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbgFRMb5 (ORCPT
+        id S1729386AbgFRMcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:31:57 -0400
-Received: from papylos.uuid.uk ([185.34.62.16]:39844 "EHLO papylos.uuid.uk"
+        Thu, 18 Jun 2020 08:32:45 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:53660 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726982AbgFRMb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 08:31:56 -0400
-X-Greylist: delayed 378 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Jun 2020 08:31:55 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=B+4Gs/0j/CESrZMyfibpjnqye8gtYFkuSwBCEo4B4VU=; b=UxoWk3h38JdZskTb8k+g1JvlSX
-        J5meE/UfbOPHdvXFp37nuu03bS2qMZvlCfKTubNavPntxMInBBDpGlIPj8dUY4cmIDi1swo1koauR
-        WNrHn7VZYfILoctfwqGfoEolGDj9BGipBbCSLbYZiqXNIIc0Zj3xPJXIrmRuAvYOg0PM0KmgWpuhP
-        0SVZLXWj/QaIB3kVDfpgP2WvC1sJyRfK7TwBauFz+C6XoB2C2dEhH/k7+EcTSP+q8tbaV3tpkTp3F
-        k+ZPRU7PxOaWQkJbtLZgXP06q+6RyK3hcStGxkT5U2cY2TWtACQq1A3BSWYe6Q75JFh2ra/zyfEIy
-        rngaYrCQ==;
-Received: by papylos.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <simon@octiron.net>)
-        id 1jltbe-0002ue-PS; Thu, 18 Jun 2020 13:25:29 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject;
-        bh=B+4Gs/0j/CESrZMyfibpjnqye8gtYFkuSwBCEo4B4VU=; b=x8aZ/CucIHuoSAuaPxrBMUKSLr
-        KJK8ZF8FACElj/AlLKrUtED2J1vemTCikrWSh5nFeyf/w7eK/i+WMGcflRSk+lHGQ/HMDG9inpQSR
-        i1SS25kjnbQutg8MG2eIZI6NPVJu/3pR2/mNWe6cYfrG2UgQ3biYMkgvzo4vq2FpSXzhUA1eSX3la
-        oRKtFhpHjFvr9kNkmn7ZOHharZILBuU7GfCnse+UrfxBj+Wpco/NBNSEAxTt3/FHk2QcTYbbu5XV5
-        TF4cVtmZFPK2Fjw9G2q1YRwN19VMFZ2B8Hd1TT7rDyJpOYLtd0vmy3Y2dCpjVBehw01Z20zo6b8P1
-        9zmrx4FA==;
-Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <simon@octiron.net>)
-        id 1jltba-0005r9-6N; Thu, 18 Jun 2020 13:25:18 +0100
-Subject: Re: [PATCH] scsi: sd: stop SSD (non-rotational) disks before reboot
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-scsi@vger.kernel.org, linux-doc@vger.kernel.org
-References: <499138c8-b6d5-ef4a-2780-4f750ed337d3@0882a8b5-c6c3-11e9-b005-00805fc181fe>
- <20200618072138.GA11778@infradead.org>
-From:   Simon Arlott <simon@octiron.net>
-Message-ID: <9877e7de-d573-694b-2b75-95192756684b@0882a8b5-c6c3-11e9-b005-00805fc181fe>
-Date:   Thu, 18 Jun 2020 13:25:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1727793AbgFRMco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 08:32:44 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jltiJ-00082t-U1; Thu, 18 Jun 2020 14:32:15 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     wu000273@umn.edu
+Cc:     kjlu@umn.edu, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Sugar Zhang <sugar.zhang@rock-chips.com>,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: rockchip: Fix a reference count leak.
+Date:   Thu, 18 Jun 2020 14:32:15 +0200
+Message-ID: <3050852.oyibrqGndV@diego>
+In-Reply-To: <20200613205158.27296-1-wu000273@umn.edu>
+References: <20200613205158.27296-1-wu000273@umn.edu>
 MIME-Version: 1.0
-In-Reply-To: <20200618072138.GA11778@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/06/2020 08:21, Christoph Hellwig wrote:
-> On Wed, Jun 17, 2020 at 07:49:57PM +0100, Simon Arlott wrote:
->> Avoiding a stop of the disk on a reboot is appropriate for HDDs because
->> they're likely to continue to be powered (and should not be told to spin
->> down only to spin up again) but the default behaviour for SSDs should
->> be changed to stop them before the reboot.
+Am Samstag, 13. Juni 2020, 22:51:58 CEST schrieb wu000273@umn.edu:
+> From: Qiushi Wu <wu000273@umn.edu>
 > 
-> I don't think that is true in general.  At least for most current server
-> class and older desktop and laptop class systems they use the same
-> format factors and enclosures, although they are slightly divering now.
+> Calling pm_runtime_get_sync increments the counter even in case of
+> failure, causing incorrect ref count if pm_runtime_put is not called in
+> error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
 > 
-> So I think this needs to be quirked based on the platform and/or
-> enclosure.
+> Fixes: fc05a5b22253 ("ASoC: rockchip: add support for pdm controller")
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
 
-Are you referring to the behaviour for handling HDDs or SSDs?
+somewhat unintuitive, but I checked __pm_runtime_resume for it, so
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-For HDDs, the default "1" option could mean "automatic" and apply to
-rotational disks when power loss is expected.
+> ---
+>  sound/soc/rockchip/rockchip_pdm.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/rockchip/rockchip_pdm.c b/sound/soc/rockchip/rockchip_pdm.c
+> index 7cd42fcfcf38..1707414cfa92 100644
+> --- a/sound/soc/rockchip/rockchip_pdm.c
+> +++ b/sound/soc/rockchip/rockchip_pdm.c
+> @@ -590,8 +590,10 @@ static int rockchip_pdm_resume(struct device *dev)
+>  	int ret;
+>  
+>  	ret = pm_runtime_get_sync(dev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		pm_runtime_put(dev);
+>  		return ret;
+> +	}
+>  
+>  	ret = regcache_sync(pdm->regmap);
+>  
+> 
 
-For SSDs, I don't think an extra stop should ever be an issue.
 
--- 
-Simon Arlott
+
+
