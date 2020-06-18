@@ -2,229 +2,196 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC32C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B3CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9D02207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE6EC207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:10:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OAzEHVHT"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kciM2KW1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbgFRMKG (ORCPT
+        id S1729450AbgFRMKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728017AbgFRMKD (ORCPT
+        Thu, 18 Jun 2020 08:10:17 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:19485 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728017AbgFRMKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 08:10:03 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E37C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 05:10:03 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d8so2347926plo.12
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 05:10:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iztBMkO0MIdNbziG/ColrBO0vKnggtXjd9prWLF/hFE=;
-        b=OAzEHVHTeoFB6/APjUG6jBWnOXYCjUiEWTF1wdLw3I31tMEUcpA7LkfggPeKLf0ubA
-         ZAYVyDqmnBw+LR/vojb+qSVb837MUEdsl7Wjw4M+8MSobcD2FMw7M5Dk7ARSjGnIW4Qy
-         lHEazWDrhesd8IUMrh48sbnnQjf8qvUY+oKLyvSXMoZx6jnaJT60VUFAC/A5CBbCgi/B
-         UIXb0q+Th3a0TudtlkptelX3vOGhJXbGujHSXbcI/JOEtnHe7I4S43AVJpc+1VNivSiU
-         5ypC1cwBcGWJhAZFNOm7gZvLGegwhysTJvq89hqRJiHZ+/lKrlfbASPO1YNAJIUovBA5
-         uqLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iztBMkO0MIdNbziG/ColrBO0vKnggtXjd9prWLF/hFE=;
-        b=lkJuTZMDJSn/AdGXLdRwc/lQNXibFSc6o6IjiUk8O6JHsHkZ1mjC36eNXbPdbe7E8d
-         dnjeigsiMo11jRoYl6+QdTXDn5R6v+NkuCwaBsPXgBu3jnhepyaUZrU0WNuEQXjWokmA
-         sCaVO3sQucVe/3li1Id/SMPKnbdlOxxQXkRY/BCMvjAAsFrAw1guvDu3bVM3IM8R6lNB
-         0KU3YcgdLqHZo8XQ1xCBIgfULZrDOuYgiBMeiCi/gaF3huTUrzCmJfAVaTPbyzWI8PEd
-         IIBaqnmEE0QR4j0FchzgyjtjuJVlq4PPO8FT3mddRq6Kny6vSTmtOVeExlPoKKp4DTOX
-         5+SA==
-X-Gm-Message-State: AOAM530rj565Ji2ah9JBneHN0dP2L5E0OLxgafnHRBKbktYaZKrFKo74
-        qfosP6A/iGacY7mLFhaV0Tu+j2aYrfs+mrlfK6jDKA==
-X-Google-Smtp-Source: ABdhPJzRg/UDhkKGHU2k26B36BCioXSf3zawc8raCfUXu2582ut7jqipv1yPCJ01EY9G6/xDS43SnAMK3psVwFvn5vI=
-X-Received: by 2002:a17:90b:1244:: with SMTP id gx4mr3905040pjb.136.1592482202661;
- Thu, 18 Jun 2020 05:10:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <0000000000006eca960599435e76@google.com>
-In-Reply-To: <0000000000006eca960599435e76@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 18 Jun 2020 14:09:51 +0200
-Message-ID: <CAAeHK+x4frtAkghA6EFLvLMRJMg7O+Bhn4Gut75CvL00OFZE2Q@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Write in hidinput_setkeycode
-To:     syzbot <syzbot+aed9115d05783f14777a@syzkaller.appspotmail.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 18 Jun 2020 08:10:13 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200618121009epoutp01c8b49ee963431738d3b0ab663ba5a19b~ZoiHCLzm_0822708227epoutp01W
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 12:10:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200618121009epoutp01c8b49ee963431738d3b0ab663ba5a19b~ZoiHCLzm_0822708227epoutp01W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592482209;
+        bh=vjuIqEJrow48HTftCC7QXvVlxYZ/RCtLUMgGhLL3EZk=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=kciM2KW1a5tljq97EUdfV57hSoHS+6PBTSlB2nqx4QG9OGRtW+EPdAfDBa+VEU1Tw
+         jIWVsq3cjwBgqeocfWOzoTU7EhwFISRhWMd11bkvfpcXjS12xbAXWFfUAK0+YWyhKg
+         YeDYl5tB9M58sZ9yHzIxQPfFjpD5n//jJocZFry4=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200618121008epcas1p4de6f2446f64408e1e85f9bcde75885b3~ZoiGvb5pv3178331783epcas1p48;
+        Thu, 18 Jun 2020 12:10:08 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.161]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 49ngjq6YPxzMqYkZ; Thu, 18 Jun
+        2020 12:10:07 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        76.CB.29173.F995BEE5; Thu, 18 Jun 2020 21:10:07 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200618121007epcas1p1aa0f24b361e0232913bf7477ee0a92c8~ZoiFefivc2444024440epcas1p1c;
+        Thu, 18 Jun 2020 12:10:07 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200618121007epsmtrp292f6ed3f2fa5db419dc7b79760a3daf3~ZoiFd3Syg3212132121epsmtrp2Z;
+        Thu, 18 Jun 2020 12:10:07 +0000 (GMT)
+X-AuditID: b6c32a37-9b7ff700000071f5-c7-5eeb599f7cf2
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9D.70.08382.F995BEE5; Thu, 18 Jun 2020 21:10:07 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.253.98.115]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200618121007epsmtip1f5eb374c3713eab1424c3a8d666be777~ZoiFTs-WY1697916979epsmtip1S;
+        Thu, 18 Jun 2020 12:10:07 +0000 (GMT)
+From:   Sungjong Seo <sj1557.seo@samsung.com>
+To:     namjae.jeon@samsung.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sungjong Seo <sj1557.seo@samsung.com>
+Subject: [PATCH] exfat: flush dirty metadata in fsync
+Date:   Thu, 18 Jun 2020 20:43:26 +0900
+Message-Id: <1592480606-14657-1-git-send-email-sj1557.seo@samsung.com>
+X-Mailer: git-send-email 1.9.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7bCmru78yNdxBk8/GFrs2XuSxeLyrjls
+        Fj+m11ts+XeE1YHFo2/LKkaPz5vkApiicmwyUhNTUosUUvOS81My89JtlbyD453jTc0MDHUN
+        LS3MlRTyEnNTbZVcfAJ03TJzgPYoKZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yVUgtScgoM
+        DQr0ihNzi0vz0vWS83OtDA0MjEyBKhNyMmZsO8BYsFa04vSZ7awNjLcEuxg5OCQETCR+NNZ3
+        MXJxCAnsYJSYsmc3WxcjJ5DziVFiwgEWCPsbo0TbhVgQG6T+zuorLBANexklPs79yAbhfGaU
+        mPFkLiNIFZuAtsTypmXMILaIgLTEpPnHmUBsZoEMiZtvjoPVCAuYSpy6shTMZhFQlVj9YivY
+        Nl4BN4nmUw9YILbJSZw8NpkVZIGEQDu7xKfZZ9ghznaR2LSgAKJGWOLV8S3sELaUxOd3e9kg
+        7HqJ3atOsUD0NjBKHHm0EGqoscT8loXMIHOYBTQl1u/ShwgrSuz8DXE/swCfxLuvPawQq3gl
+        OtqEIEpUJL5/2MkCs+rKj6tMECUeEv1HEyBhFSsxe+cblgmMsrMQ5i9gZFzFKJZaUJybnlps
+        WGCMHEObGMEJR8t8B+O0tx/0DjEycTAeYpTgYFYS4XX+/SJOiDclsbIqtSg/vqg0J7X4EKMp
+        MLgmMkuJJucDU15eSbyhqZGxsbGFiZm5mamxkjivr9WFOCGB9MSS1OzU1ILUIpg+Jg5OqQam
+        /fWKE67MlTy6pqSnLkdfYb6RxpLnST02i57/duwIy2/3Cutdul/k0I79uiJRfv/iDy6av5Pz
+        fJT91vNlJ38YrHvklv4+f+vRI2cvnX22MzJeXC79U1rDhqCqRe28G57p6fyKkfuvfPJkFjf3
+        KbsP+c71ndc5Oidl6QhOSj1V4/Zlm2nHC96gSdH9uWlHd7GdafCyenvwckVekfOUhyxPqmR0
+        GsO22us81vE6Yy9cmapqXShc4JG11KLmn9yt/5mVCZXt4V81Zhir205efan6hZ7M4nz9pUEz
+        2JJLzp75s2/TzxuL2TZsLXiu1hm0M/KgjpH7iuQlAg9E+Pgvbjg7x3p32WcWyTc//3ufTVus
+        xFKckWioxVxUnAgAy1Z+vcEDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLJMWRmVeSWpSXmKPExsWy7bCSnO78yNdxBtOvilrs2XuSxeLyrjls
+        Fj+m11ts+XeE1YHFo2/LKkaPz5vkApiiuGxSUnMyy1KL9O0SuDJmbDvAWLBWtOL0me2sDYy3
+        BLsYOTkkBEwk7qy+wtLFyMUhJLCbUWJXz0bGLkYOoISUxMF9mhCmsMThw8Ug5UICHxkluh47
+        g9hsAtoSy5uWMYPYIgLSEpPmH2cCsZkFsiRu3TrKAmILC5hKnLqylBHEZhFQlVj9YitYnFfA
+        TaL51AMWiBPkJE4em8w6gZFnASPDKkbJ1ILi3PTcYsMCw7zUcr3ixNzi0rx0veT83E2M4BDQ
+        0tzBuH3VB71DjEwcjIcYJTiYlUR4nX+/iBPiTUmsrEotyo8vKs1JLT7EKM3BoiTOe6NwYZyQ
+        QHpiSWp2ampBahFMlomDU6qBKa8tf+Wxwx7HrLfYMP0/4jonhG2z406591ZTpubJHv+c9Kzj
+        vOki5t/euSfmGaeeOHfIeINX2ZSSE79eH20SzzvB9IjzSLbkli+6yVXx1T99Xumyihs6Lumy
+        O1Z9Pyu5odI97s7aGUfLdIPTdHc6rf67RsV0s7Xj2T/+apFeU3VMPyx5fXam7e99Pis9da7/
+        mzfLfN/aZif1bRy88wwniMbtWmH6aIl/326J2++yfDqOHN0iLV/Ct/zuI5m58aWRSouaVuXW
+        O7pEzvohNXXJ3aInK3/czfKYXB7cZSt3s7dJcbf+qeL1Vd+PBRnXrZr5NXtK5broE34lv56c
+        4Tr1N5BhfaOi/cet8xjYrA+eL1BiKc5INNRiLipOBADj/w/OcAIAAA==
+X-CMS-MailID: 20200618121007epcas1p1aa0f24b361e0232913bf7477ee0a92c8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200618121007epcas1p1aa0f24b361e0232913bf7477ee0a92c8
+References: <CGME20200618121007epcas1p1aa0f24b361e0232913bf7477ee0a92c8@epcas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 12:05 PM syzbot
-<syzbot+aed9115d05783f14777a@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    1f22d15c usb: gadget: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13c9bb7ae00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8ccee2968018adcb
-> dashboard link: https://syzkaller.appspot.com/bug?extid=aed9115d05783f14777a
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13145c2ee00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17dca1eae00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+aed9115d05783f14777a@syzkaller.appspotmail.com
->
-> ==================================================================
-> BUG: KASAN: slab-out-of-bounds in clear_bit
-> include/asm-generic/bitops-instrumented.h:56 [inline]
-> BUG: KASAN: slab-out-of-bounds in hidinput_setkeycode+0x16e/0x390
-> drivers/hid/hid-input.c:165
-> Write of size 8 at addr ffff8881cf9649e8 by task syz-executor105/1717
->
-> CPU: 1 PID: 1717 Comm: syz-executor105 Not tainted 5.4.0-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xef/0x16e lib/dump_stack.c:118
->   print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
->   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
->   kasan_report+0xe/0x20 mm/kasan/common.c:638
->   check_memory_region_inline mm/kasan/generic.c:185 [inline]
->   check_memory_region+0x128/0x190 mm/kasan/generic.c:192
->   clear_bit include/asm-generic/bitops-instrumented.h:56 [inline]
->   hidinput_setkeycode+0x16e/0x390 drivers/hid/hid-input.c:165
->   input_set_keycode+0x104/0x320 drivers/input/input.c:935
->   evdev_handle_set_keycode_v2+0xc4/0x120 drivers/input/evdev.c:882
->   evdev_do_ioctl drivers/input/evdev.c:1150 [inline]
->   evdev_ioctl_handler+0xd49/0x19f0 drivers/input/evdev.c:1284
->   vfs_ioctl fs/ioctl.c:47 [inline]
->   file_ioctl fs/ioctl.c:539 [inline]
->   do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:726
->   ksys_ioctl+0x9b/0xc0 fs/ioctl.c:743
->   __do_sys_ioctl fs/ioctl.c:750 [inline]
->   __se_sys_ioctl fs/ioctl.c:748 [inline]
->   __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:748
->   do_syscall_64+0xb7/0x5b0 arch/x86/entry/common.c:294
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x446d59
-> Code: e8 2c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 1b d8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffd75eec118 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 00007ffd75eec120 RCX: 0000000000446d59
-> RDX: 0000000020000080 RSI: 0000000040284504 RDI: 0000000000000005
-> RBP: 0000000000000000 R08: 0000000000000000 R09: 00000000004029f0
-> R10: 00007ffd75eebc70 R11: 0000000000000246 R12: 0000000000404a00
-> R13: 0000000000404a90 R14: 0000000000000000 R15: 0000000000000000
->
-> Allocated by task 12:
->   save_stack+0x1b/0x80 mm/kasan/common.c:71
->   set_track mm/kasan/common.c:79 [inline]
->   __kasan_kmalloc mm/kasan/common.c:512 [inline]
->   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:485
->   kmalloc include/linux/slab.h:556 [inline]
->   kzalloc include/linux/slab.h:670 [inline]
->   input_allocate_device+0x3e/0x260 drivers/input/input.c:1810
->   hidinput_allocate drivers/hid/hid-input.c:1654 [inline]
->   hidinput_connect+0x3cab/0xdb90 drivers/hid/hid-input.c:1899
->   hid_connect+0x965/0xbb0 drivers/hid/hid-core.c:1923
->   hid_hw_start drivers/hid/hid-core.c:2027 [inline]
->   hid_hw_start+0xa2/0x130 drivers/hid/hid-core.c:2018
->   ms_probe+0x159/0x4d0 drivers/hid/hid-microsoft.c:394
->   hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2255
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
->   device_add+0x1480/0x1c20 drivers/base/core.c:2487
->   hid_add_device drivers/hid/hid-core.c:2411 [inline]
->   hid_add_device+0x33c/0x9a0 drivers/hid/hid-core.c:2360
->   usbhid_probe+0xa81/0xfa0 drivers/hid/usbhid/hid-core.c:1386
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
->   device_add+0x1480/0x1c20 drivers/base/core.c:2487
->   usb_set_configuration+0xe67/0x1740 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
->   device_add+0x1480/0x1c20 drivers/base/core.c:2487
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
->   hub_port_connect drivers/usb/core/hub.c:5184 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
->   port_event drivers/usb/core/hub.c:5470 [inline]
->   hub_event+0x1e59/0x3860 drivers/usb/core/hub.c:5552
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2264
->   process_scheduled_works kernel/workqueue.c:2326 [inline]
->   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2412
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> Freed by task 0:
-> (stack is not available)
->
-> The buggy address belongs to the object at ffff8881cf964000
->   which belongs to the cache kmalloc-2k of size 2048
-> The buggy address is located 488 bytes to the right of
->   2048-byte region [ffff8881cf964000, ffff8881cf964800)
-> The buggy address belongs to the page:
-> page:ffffea00073e5800 refcount:1 mapcount:0 mapping:ffff8881da40c000
-> index:0x0 compound_mapcount: 0
-> raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da40c000
-> raw: 0000000000000000 0000000000080008 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
->
-> Memory state around the buggy address:
->   ffff8881cf964880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->   ffff8881cf964900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> > ffff8881cf964980: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->                                                            ^
->   ffff8881cf964a00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->   ffff8881cf964a80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+generic_file_fsync() exfat used could not guarantee the consistency of
+a file because it has flushed not dirty metadata but only dirty data pages
+for a file.
 
-#syz dup: KASAN: global-out-of-bounds Write in kbd_event
+Instead of that, use exfat_file_fsync() for files and directories so that
+it guarantees to commit both the metadata and data pages for a file.
+
+Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+---
+ fs/exfat/dir.c      |  2 +-
+ fs/exfat/exfat_fs.h |  1 +
+ fs/exfat/file.c     | 19 ++++++++++++++++++-
+ 3 files changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index 02acbb6ddf02..b71c540d88f2 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -309,7 +309,7 @@ const struct file_operations exfat_dir_operations = {
+ 	.llseek		= generic_file_llseek,
+ 	.read		= generic_read_dir,
+ 	.iterate	= exfat_iterate,
+-	.fsync		= generic_file_fsync,
++	.fsync		= exfat_file_fsync,
+ };
+ 
+ int exfat_alloc_new_dir(struct inode *inode, struct exfat_chain *clu)
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index 84664024e51e..6ec253581b86 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -417,6 +417,7 @@ void exfat_truncate(struct inode *inode, loff_t size);
+ int exfat_setattr(struct dentry *dentry, struct iattr *attr);
+ int exfat_getattr(const struct path *path, struct kstat *stat,
+ 		unsigned int request_mask, unsigned int query_flags);
++int exfat_file_fsync(struct file *file, loff_t start, loff_t end, int datasync);
+ 
+ /* namei.c */
+ extern const struct dentry_operations exfat_dentry_ops;
+diff --git a/fs/exfat/file.c b/fs/exfat/file.c
+index fce03f318787..3b7fea465fd4 100644
+--- a/fs/exfat/file.c
++++ b/fs/exfat/file.c
+@@ -6,6 +6,7 @@
+ #include <linux/slab.h>
+ #include <linux/cred.h>
+ #include <linux/buffer_head.h>
++#include <linux/blkdev.h>
+ 
+ #include "exfat_raw.h"
+ #include "exfat_fs.h"
+@@ -346,12 +347,28 @@ int exfat_setattr(struct dentry *dentry, struct iattr *attr)
+ 	return error;
+ }
+ 
++int exfat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
++{
++	struct inode *inode = filp->f_mapping->host;
++	int err;
++
++	err = __generic_file_fsync(filp, start, end, datasync);
++	if (err)
++		return err;
++
++	err = sync_blockdev(inode->i_sb->s_bdev);
++	if (err)
++		return err;
++
++	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL);
++}
++
+ const struct file_operations exfat_file_operations = {
+ 	.llseek		= generic_file_llseek,
+ 	.read_iter	= generic_file_read_iter,
+ 	.write_iter	= generic_file_write_iter,
+ 	.mmap		= generic_file_mmap,
+-	.fsync		= generic_file_fsync,
++	.fsync		= exfat_file_fsync,
+ 	.splice_read	= generic_file_splice_read,
+ 	.splice_write	= iter_file_splice_write,
+ };
+-- 
+2.17.1
+
