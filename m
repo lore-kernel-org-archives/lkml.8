@@ -2,103 +2,112 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34615C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68387C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08EDC2168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:39:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cy+PtbEF"
+	by mail.kernel.org (Postfix) with ESMTP id 4C19121556
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgFRAj3 (ORCPT
+        id S1726919AbgFRAkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 20:39:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgFRAj3 (ORCPT
+        Wed, 17 Jun 2020 20:40:45 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:33172 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbgFRAkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 20:39:29 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA8AEC06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:39:28 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id q2so4009274qkb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:39:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=2rTi7sVYxh2vc2bTkTkIYUM2u0ppPplMS03UqDSUVng=;
-        b=Cy+PtbEF74jCpRkwlJPtIZiv1YjMuA9ctLDf2D6GRsI5hGPGgutVZxTMgGSGsehvvE
-         dtqOH28IEtBqoyIb/o0NDDH9loN8e6EfxKuQsbVh1Sv3b0nbVId+McCUno9PDJyb/CJF
-         UhwYdSxpYOJwMDkx6jo2IJFfj7te/4lfmPN21+ZGVwNRTn3Du292aD+5rYEBnDfcBtlM
-         euIaDf/J2aLKufk5ogY4w8W5a40upGww7+hGazur6S4snuxXHsXh4SrV2i4XnfeTWsI4
-         6tD1y1xDCut6nOJLL0rxwIe2MTfEK+5H9yq7R95pgEC4+cjFJ4LOknXc33UfkbzLVr6C
-         +DEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=2rTi7sVYxh2vc2bTkTkIYUM2u0ppPplMS03UqDSUVng=;
-        b=d0D3d85zOyXZiK/6WV9K+ZGrAbNDcxhiYtFqOPel1vmHEdaj8f6NCZowrvmsewORoU
-         TXh+KQWSqpL6N3mTYwcsOxbQlu0DngJGsb7bhfmmo/0bU5OoWFgatfcvuEusYfROG3rf
-         PuLWg17KmXhqE6FW3ac9kLfDuycXFZWhOQBsx5+JoeBZFhXo3riSJesEPJk8/2HEE4a7
-         As/TGO64a1H3+siW6//ma/SwvYpuF/Z5Q8Ixv2RG9PKwbEAA7mK1RECzv9aMjWIyUEqK
-         TW1U3r5C4tzvNuOmN43b2qDhMo8ADWVShuonILk7GoS5Uo6ZZtgPS+igPdKQCqIEaqyY
-         Iukg==
-X-Gm-Message-State: AOAM530OeF5tEm9Hgr1xiBpPd5GJHkNLnMlK4EnaVBBqsiiDtpVpvuDz
-        jnVjc7YIev4h/za3VO0VkIs=
-X-Google-Smtp-Source: ABdhPJxdV0ykrUh5oqjTY+50oYqRlJtDYcr0Bx93ANiw5+XULviU+C75bakCWcmACjAwiJMzUY/34g==
-X-Received: by 2002:a05:620a:23a:: with SMTP id u26mr1311929qkm.443.1592440767971;
-        Wed, 17 Jun 2020 17:39:27 -0700 (PDT)
-Received: from linux.home ([2604:2000:1344:41d:9c3:b47c:c995:4853])
-        by smtp.googlemail.com with ESMTPSA id p13sm1618060qtk.24.2020.06.17.17.39.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 17:39:27 -0700 (PDT)
-From:   Gaurav Singh <gaurav1086@gmail.com>
-To:     gaurav1086@gmail.com, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tommi Rantala <tommi.t.rantala@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
-Subject: [PATCH] [perf] Fix null pointer deference in nest_epollfd
-Date:   Wed, 17 Jun 2020 20:38:49 -0400
-Message-Id: <20200618003916.26644-1-gaurav1086@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 17 Jun 2020 20:40:45 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 2C6062073E;
+        Wed, 17 Jun 2020 20:40:40 -0400 (EDT)
+Date:   Thu, 18 Jun 2020 10:40:37 +1000 (AEST)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+cc:     Chris Boot <bootc@boo.tc>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux1394-devel@lists.sourceforge.net" 
+        <linux1394-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Nicholas Bellinger <nab@linux-iscsi.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>
+Subject: Re: [PATCH] scsi: target/sbp: remove firewire SBP target driver
+In-Reply-To: <yq1366ul8o4.fsf@ca-mkp.ca.oracle.com>
+Message-ID: <alpine.LNX.2.22.394.2006180953320.8@nippy.intranet>
+References: <01020172acd3d10f-3964f076-a820-43fc-9494-3f3946e9b7b5-000000@eu-west-1.amazonses.com>        <alpine.LNX.2.22.394.2006140934520.15@nippy.intranet>        <7ad14946-5c25-fc49-1e48-72d37a607832@boo.tc>        <alpine.LNX.2.22.394.2006150919110.8@nippy.intranet>
+        <8da0c285-d707-a3d2-063e-472af5cc560f@boo.tc>        <alpine.LNX.2.22.394.2006161929380.8@nippy.intranet>        <8cbab988-fba7-8e27-7faf-9f7aa36ca235@acm.org>        <SN4PR0401MB35982D889857E3C03E96E49D9B9D0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+        <1592321667.4394.5.camel@HansenPartnership.com>        <5e512185-45d1-61eb-9bec-91e9f9d53ea3@boo.tc> <yq1366ul8o4.fsf@ca-mkp.ca.oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a NULL check for worker before dereferencing.
+On Tue, 16 Jun 2020, Martin K. Petersen wrote:
 
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
----
- tools/perf/bench/epoll-wait.c | 3 +++
- 1 file changed, 3 insertions(+)
+> 
+> However, keeping code around is not free.
 
-diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
-index 75dca9773186..42983eb7f82e 100644
---- a/tools/perf/bench/epoll-wait.c
-+++ b/tools/perf/bench/epoll-wait.c
-@@ -239,6 +239,9 @@ static void *workerfn(void *arg)
- 
- static void nest_epollfd(struct worker *w)
- {
-+	if (!w)
-+		return;
-+
- 	unsigned int i;
- 	struct epoll_event ev;
- 	int efd = multiq ? w->epollfd : epollfd;
--- 
-2.17.1
+Right. And removing code isn't free either, if it forces people to find 
+workarounds.
 
+> Core interfaces change frequently.  Nobody enjoys having to tweak host 
+> templates for 50 devices they have never even heard about.
+
+And yet some people seem to enjoy writing patches that are as trivial as 
+they are invasive...
+
+You seem to be making an argument for more automation here, not an 
+argument for less code. Or is there some upper bound to the size of the 
+kernel, that might be lifted by adding maintainers? (Can you deliver a 
+better product by adding more developers to your project?)
+
+> Also, we now live in a reality where there is a constant barrage of 
+> build bots and code analyzers sending mail. So the effective cost of 
+> keeping code around in the tree is going up.
+
+But if maintenance cost rises due to good analysis, the value of the code 
+should rise too. So what's the problem? It seems to me that the real 
+problem is too many analyses that generate pedantic noise and no tangible 
+improvement in code quality or value.
+
+> I get a substantial amount of code analysis mail about drivers nobody 
+> have touched in a decade or more.
+> 
+
+When stable, mature code fails analysis, the analysis is also questionable 
+(in the absence of real examples).
+
+> Consequently, I am much more inclined to remove drivers than I have been 
+> in the past. But I am also very happy to bring them back if somebody 
+> uses them or - even better - are willing to step up and maintain them.
+> 
+
+You seem to be saying that 1) a driver should be removed when it no longer 
+meets the present threshold for code quality and 2) that a low quality 
+driver is eligible for re-addition because someone wants to use it.
+I don't think you can have it both ways.
+
+> I don't particularly like the notion of a driver being orphaned because 
+> all that really means is that the driver transitions from being (at 
+> least partially) somebody else's problem to being mine and mine alone.
+> 
+
+Yes it's your problem but only on a best-effort basis.
+
+Many issues detected by automatic analyzers can be fixed with automatic 
+code transformation tools. This kind of solution works tree-wide, so even 
+if some defect in your driver is "yours and yours alone", the solution 
+will probably come from others.
+
+This email, like yours, is just hand-waving. So feel free to ignore it or 
+(preferably) provide evidence of real defects.
