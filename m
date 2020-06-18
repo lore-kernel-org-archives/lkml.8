@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA01C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C4CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB7920776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114AE20776
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448478;
-	bh=8cYg6YWaQ92yyXv7/1wtOlTaxEGIiAIY8Tv1LNlbrn8=;
+	s=default; t=1592448483;
+	bh=1p00aoausvI7CY8T2tlD9dohrS4bq5WWZoQAj/k6VEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DsrYbT/wbMc8yiWlS2V+2xsvyvAWJEDNF0B1bXGSunQgbPGZfiKVUcYx3bXykFGRk
-	 +lBG/KajDuAESjI57HmoOUuKIQ0xXnlLH3TaZToFsLLp3NecEGHEys1X0h1R4j7q8B
-	 X9iRWjVm1JJ9WlED4yOtae6p98zUZ2Cxsojl7HDk=
+	b=mJPJ9GxmcSe0+Wad/d9SUe7tPmci9OkP1g7yIUG6HUnEtvUHhGo95RO+zdVd4AWBT
+	 bk05OR4HkFXOKGtayGv00msaDVR7dG9XDa3vV0UxNS+9GdU9H3JU3s/eSZDLrgaouO
+	 /iEkSQNnHYyYpq5YsyHqw91IesuioWqSWmPD5wSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgFRCr5 (ORCPT
+        id S1728420AbgFRBKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37210 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:10:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728426AbgFRBKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:12 -0400
+        id S1728384AbgFRBKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FEAB21D90;
-        Thu, 18 Jun 2020 01:10:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8087D21D7F;
+        Thu, 18 Jun 2020 01:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442612;
-        bh=8cYg6YWaQ92yyXv7/1wtOlTaxEGIiAIY8Tv1LNlbrn8=;
+        s=default; t=1592442604;
+        bh=1p00aoausvI7CY8T2tlD9dohrS4bq5WWZoQAj/k6VEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RJ3w3U6QqyAvhzqVcQgb4prhQqLwHiuYMVKqfir2OFf7LQHMDQi06jV7048n+D6U5
-         UF8zPqLYkAt/sF14VATYvtJ/0zuQ7wp9iuewYG4ecNwjY1Sq3uapL/aI72K1uFkCnT
-         lgsgVvpGW6r/8jAjCl2ILS/pKgDbHsp707JpNjaw=
+        b=VgZruJbuUf1v7aC5/in1H7GvAUil4+TwMhg9Aalc7yKAomlRqL4BC0uv5QLB/KI15
+         1wrcTyWzAin/gGk6ZMAc2AYZpNxAwVqJOVSCLLZclXK3dt3HxNph9hWT3LzIFm3+Xa
+         jyIcoWhwXPBSUYahiDmHsR82nc9hQEl0dv5z8rAU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        kernel test robot <lkp@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 093/388] net: mdiobus: Disable preemption upon u64_stats update
-Date:   Wed, 17 Jun 2020 21:03:10 -0400
-Message-Id: <20200618010805.600873-93-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 090/388] drm/nouveau: gr/gk20a: Use firmware version 0
+Date:   Wed, 17 Jun 2020 21:03:07 -0400
+Message-Id: <20200618010805.600873-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,48 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Ahmed S. Darwish" <a.darwish@linutronix.de>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit c7e261d81783387a0502878cd229327e7c54322e ]
+[ Upstream commit 21454fe697fde188ad6fb541f94b9838fa73ab38 ]
 
-The u64_stats mechanism uses sequence counters to protect against 64-bit
-values tearing on 32-bit architectures. Updating u64_stats is thus a
-sequence counter write side critical section where preemption must be
-disabled.
+Tegra firmware doesn't actually use any version numbers and passing -1
+causes the existing firmware binaries not to be found. Use version 0 to
+find the correct files.
 
-For mdiobus_stats_acct(), disable preemption upon the u64_stats update.
-It is called from process context through mdiobus_read() and
-mdiobus_write().
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: ef16dc278ec2 ("drm/nouveau/gr/gf100-: select implementation based on available FW")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/mdio_bus.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index 7a4eb3f2cb74..a1a4dee2a033 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -757,6 +757,7 @@ EXPORT_SYMBOL(mdiobus_scan);
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
+index 4209b24a46d7..bf6b65257852 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/gr/gk20a.c
+@@ -341,7 +341,7 @@ gk20a_gr_load(struct gf100_gr *gr, int ver, const struct gf100_gr_fwif *fwif)
  
- static void mdiobus_stats_acct(struct mdio_bus_stats *stats, bool op, int ret)
- {
-+	preempt_disable();
- 	u64_stats_update_begin(&stats->syncp);
+ static const struct gf100_gr_fwif
+ gk20a_gr_fwif[] = {
+-	{ -1, gk20a_gr_load, &gk20a_gr },
++	{ 0, gk20a_gr_load, &gk20a_gr },
+ 	{}
+ };
  
- 	u64_stats_inc(&stats->transfers);
-@@ -771,6 +772,7 @@ static void mdiobus_stats_acct(struct mdio_bus_stats *stats, bool op, int ret)
- 		u64_stats_inc(&stats->writes);
- out:
- 	u64_stats_update_end(&stats->syncp);
-+	preempt_enable();
- }
- 
- /**
 -- 
 2.25.1
 
