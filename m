@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE925C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC16E2067B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD36E20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445920;
-	bh=Y+FVK3XqVDpUBlVHDkpJylAgXIYqiz5DwJdh4HVr6Pg=;
+	s=default; t=1592445924;
+	bh=n77+mRGJzhZkF3sMpgr1Vq43gLpGDv+qKc9vyAuvuic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wpfaz4F0j7uT2axeA/MaFR7Vu43Xrhv6mBZ/Iz/vDNPP+e2H1qvNBTmm9IUxhMidE
-	 I+lOs5zFXt0qHegl4a0RceuNwOJtEaYvFLYjZGrfpZraWZX1IUvwmrZ/gEtKlOsKs8
-	 AqJfv9/p53KmlbU8tEC/mwnHOGY2rWt3JglAXApQ=
+	b=b5TS5zkCEl8aw0dFh2db3R5DoYntJ71GYy/slQvg4pi60kMlgjjTSYg3ltaW2OxDK
+	 ie7o0wSGbB5+jBWE8LPXxvTJFi908MECYgxzYb2jPfb+hoQ3HI5zA406/AuHCuMUaI
+	 LK1TqJnORhlm7mXZz2Cb3ukwJPNldkvQWICHeWQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731461AbgFRCFS (ORCPT
+        id S1730833AbgFRBWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:05:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730830AbgFRBWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:22:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729264AbgFRBT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E063F20663;
-        Thu, 18 Jun 2020 01:22:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 516E921D90;
+        Thu, 18 Jun 2020 01:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443366;
-        bh=Y+FVK3XqVDpUBlVHDkpJylAgXIYqiz5DwJdh4HVr6Pg=;
+        s=default; t=1592443167;
+        bh=n77+mRGJzhZkF3sMpgr1Vq43gLpGDv+qKc9vyAuvuic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=szqLUu2Rv6ZmJxy5pRh/1r16pFNG748aMENpMK+GBz4mQjWhP+4TM1zzHEWNs8bjL
-         xBYkc2UXNJZOGgXIEZOOo5XbcTDGPbtQ4LOvzYNpQtKZNCV6Gv3GNXs0zuaQ83rCuP
-         dZXn4fx0u4JNj1DbtmM1yGv8WwRsIR1HFxopuZ5Q=
+        b=HFDccdtRBKIB85YX4gj/2jByiku7BFBWG23ma49olDgRD017yWo4bOvTqGuhgSOfM
+         cWc71OduWIB+a/xCua82hmVp2JuZjoZD72CIGBVIhZQc6aEqcatR7mBU79MLNCo5MF
+         WTer5qTLriFBvpufHAs5VqN5vzrmYPt4A+/Ldfi0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 022/172] clk: samsung: Mark top ISP and CAM clocks on Exynos542x as critical
-Date:   Wed, 17 Jun 2020 21:19:48 -0400
-Message-Id: <20200618012218.607130-22-sashal@kernel.org>
+Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 132/266] scsi: target: loopback: Fix READ with data and sensebytes
+Date:   Wed, 17 Jun 2020 21:14:17 -0400
+Message-Id: <20200618011631.604574-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,90 +60,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit e47bd937e602bb4379546095d1bd0b9871fa60c2 ]
+[ Upstream commit c68a56736c129f5dd1632856956f9c3e04bae200 ]
 
-The TOP 'aclk*_isp', 'aclk550_cam', 'gscl_wa' and 'gscl_wb' clocks must
-be kept enabled all the time to allow proper access to power management
-control for the ISP and CAM power domains. The last two clocks, although
-related to GScaler device and GSCL power domain, provides also the
-I_WRAP_CLK signal to MIPI CSIS0/1 devices, which are a part of CAM power
-domain and are needed for proper power on/off sequence.
+We use tcm_loop with tape emulations running on tcmu.
 
-Currently there are no drivers for the devices, which are part of CAM and
-ISP power domains yet. This patch only fixes the race between disabling
-the unused power domains and disabling unused clocks, which randomly
-resulted in the following error during boot:
+In case application reads a short tape block with a longer READ, or a long
+tape block with a short READ, according to SCC spec data has to be
+tranferred _and_ sensebytes with ILI set and information field containing
+the residual count. Similar problem also exists when using fixed block
+size in READ.
 
-Power domain CAM disable failed
-Power domain ISP disable failed
+Up to now tcm_loop is not prepared to handle sensebytes if input data is
+provided, as in tcm_loop_queue_data_in() it only sets SAM_STAT_GOOD and, if
+necessary, the residual count.
 
-Fixes: 318fa46cc60d ("clk/samsung: exynos542x: mark some clocks as critical")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+To fix the bug, the same handling for sensebytes as present in
+tcm_loop_queue_status() must be done in tcm_loop_queue_data_in() also.
+
+After adding this handling, the two function now are nearly identical, so I
+created a single function with two wrappers.
+
+Link: https://lore.kernel.org/r/20200428182617.32726-1-bstroesser@ts.fujitsu.com
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5420.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/target/loopback/tcm_loop.c | 36 +++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 6473af8903c5..662bb441f139 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -597,7 +597,7 @@ static const struct samsung_div_clock exynos5800_div_clks[] __initconst = {
+diff --git a/drivers/target/loopback/tcm_loop.c b/drivers/target/loopback/tcm_loop.c
+index 3305b47fdf53..16d5a4e117a2 100644
+--- a/drivers/target/loopback/tcm_loop.c
++++ b/drivers/target/loopback/tcm_loop.c
+@@ -545,32 +545,15 @@ static int tcm_loop_write_pending(struct se_cmd *se_cmd)
+ 	return 0;
+ }
  
- static const struct samsung_gate_clock exynos5800_gate_clks[] __initconst = {
- 	GATE(CLK_ACLK550_CAM, "aclk550_cam", "mout_user_aclk550_cam",
--				GATE_BUS_TOP, 24, 0, 0),
-+				GATE_BUS_TOP, 24, CLK_IS_CRITICAL, 0),
- 	GATE(CLK_ACLK432_SCALER, "aclk432_scaler", "mout_user_aclk432_scaler",
- 				GATE_BUS_TOP, 27, CLK_IS_CRITICAL, 0),
- 	GATE(CLK_MAU_EPLL, "mau_epll", "mout_user_mau_epll",
-@@ -984,25 +984,25 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 	GATE(0, "aclk300_jpeg", "mout_user_aclk300_jpeg",
- 			GATE_BUS_TOP, 4, CLK_IGNORE_UNUSED, 0),
- 	GATE(0, "aclk333_432_isp0", "mout_user_aclk333_432_isp0",
--			GATE_BUS_TOP, 5, 0, 0),
-+			GATE_BUS_TOP, 5, CLK_IS_CRITICAL, 0),
- 	GATE(0, "aclk300_gscl", "mout_user_aclk300_gscl",
- 			GATE_BUS_TOP, 6, CLK_IS_CRITICAL, 0),
- 	GATE(0, "aclk333_432_gscl", "mout_user_aclk333_432_gscl",
- 			GATE_BUS_TOP, 7, CLK_IGNORE_UNUSED, 0),
- 	GATE(0, "aclk333_432_isp", "mout_user_aclk333_432_isp",
--			GATE_BUS_TOP, 8, 0, 0),
-+			GATE_BUS_TOP, 8, CLK_IS_CRITICAL, 0),
- 	GATE(CLK_PCLK66_GPIO, "pclk66_gpio", "mout_user_pclk66_gpio",
- 			GATE_BUS_TOP, 9, CLK_IGNORE_UNUSED, 0),
- 	GATE(0, "aclk66_psgen", "mout_user_aclk66_psgen",
- 			GATE_BUS_TOP, 10, CLK_IGNORE_UNUSED, 0),
- 	GATE(0, "aclk266_isp", "mout_user_aclk266_isp",
--			GATE_BUS_TOP, 13, 0, 0),
-+			GATE_BUS_TOP, 13, CLK_IS_CRITICAL, 0),
- 	GATE(0, "aclk166", "mout_user_aclk166",
- 			GATE_BUS_TOP, 14, CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_ACLK333, "aclk333", "mout_user_aclk333",
- 			GATE_BUS_TOP, 15, CLK_IS_CRITICAL, 0),
- 	GATE(0, "aclk400_isp", "mout_user_aclk400_isp",
--			GATE_BUS_TOP, 16, 0, 0),
-+			GATE_BUS_TOP, 16, CLK_IS_CRITICAL, 0),
- 	GATE(0, "aclk400_mscl", "mout_user_aclk400_mscl",
- 			GATE_BUS_TOP, 17, CLK_IS_CRITICAL, 0),
- 	GATE(0, "aclk200_disp1", "mout_user_aclk200_disp1",
-@@ -1208,8 +1208,10 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
- 			GATE_IP_GSCL1, 3, 0, 0),
- 	GATE(CLK_SMMU_FIMCL1, "smmu_fimcl1", "dout_gscl_blk_333",
- 			GATE_IP_GSCL1, 4, 0, 0),
--	GATE(CLK_GSCL_WA, "gscl_wa", "sclk_gscl_wa", GATE_IP_GSCL1, 12, 0, 0),
--	GATE(CLK_GSCL_WB, "gscl_wb", "sclk_gscl_wb", GATE_IP_GSCL1, 13, 0, 0),
-+	GATE(CLK_GSCL_WA, "gscl_wa", "sclk_gscl_wa", GATE_IP_GSCL1, 12,
-+			CLK_IS_CRITICAL, 0),
-+	GATE(CLK_GSCL_WB, "gscl_wb", "sclk_gscl_wb", GATE_IP_GSCL1, 13,
-+			CLK_IS_CRITICAL, 0),
- 	GATE(CLK_SMMU_FIMCL3, "smmu_fimcl3,", "dout_gscl_blk_333",
- 			GATE_IP_GSCL1, 16, 0, 0),
- 	GATE(CLK_FIMC_LITE3, "fimc_lite3", "aclk333_432_gscl",
+-static int tcm_loop_queue_data_in(struct se_cmd *se_cmd)
++static int tcm_loop_queue_data_or_status(const char *func,
++		struct se_cmd *se_cmd, u8 scsi_status)
+ {
+ 	struct tcm_loop_cmd *tl_cmd = container_of(se_cmd,
+ 				struct tcm_loop_cmd, tl_se_cmd);
+ 	struct scsi_cmnd *sc = tl_cmd->sc;
+ 
+ 	pr_debug("%s() called for scsi_cmnd: %p cdb: 0x%02x\n",
+-		 __func__, sc, sc->cmnd[0]);
+-
+-	sc->result = SAM_STAT_GOOD;
+-	set_host_byte(sc, DID_OK);
+-	if ((se_cmd->se_cmd_flags & SCF_OVERFLOW_BIT) ||
+-	    (se_cmd->se_cmd_flags & SCF_UNDERFLOW_BIT))
+-		scsi_set_resid(sc, se_cmd->residual_count);
+-	sc->scsi_done(sc);
+-	return 0;
+-}
+-
+-static int tcm_loop_queue_status(struct se_cmd *se_cmd)
+-{
+-	struct tcm_loop_cmd *tl_cmd = container_of(se_cmd,
+-				struct tcm_loop_cmd, tl_se_cmd);
+-	struct scsi_cmnd *sc = tl_cmd->sc;
+-
+-	pr_debug("%s() called for scsi_cmnd: %p cdb: 0x%02x\n",
+-		 __func__, sc, sc->cmnd[0]);
++		 func, sc, sc->cmnd[0]);
+ 
+ 	if (se_cmd->sense_buffer &&
+ 	   ((se_cmd->se_cmd_flags & SCF_TRANSPORT_TASK_SENSE) ||
+@@ -581,7 +564,7 @@ static int tcm_loop_queue_status(struct se_cmd *se_cmd)
+ 		sc->result = SAM_STAT_CHECK_CONDITION;
+ 		set_driver_byte(sc, DRIVER_SENSE);
+ 	} else
+-		sc->result = se_cmd->scsi_status;
++		sc->result = scsi_status;
+ 
+ 	set_host_byte(sc, DID_OK);
+ 	if ((se_cmd->se_cmd_flags & SCF_OVERFLOW_BIT) ||
+@@ -591,6 +574,17 @@ static int tcm_loop_queue_status(struct se_cmd *se_cmd)
+ 	return 0;
+ }
+ 
++static int tcm_loop_queue_data_in(struct se_cmd *se_cmd)
++{
++	return tcm_loop_queue_data_or_status(__func__, se_cmd, SAM_STAT_GOOD);
++}
++
++static int tcm_loop_queue_status(struct se_cmd *se_cmd)
++{
++	return tcm_loop_queue_data_or_status(__func__,
++					     se_cmd, se_cmd->scsi_status);
++}
++
+ static void tcm_loop_queue_tm_rsp(struct se_cmd *se_cmd)
+ {
+ 	struct tcm_loop_cmd *tl_cmd = container_of(se_cmd,
 -- 
 2.25.1
 
