@@ -2,94 +2,83 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF73C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED635C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC13E20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B043420739
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:18:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="frBBXjmK"
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="MLnc9/S4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730715AbgFROQv (ORCPT
+        id S1729753AbgFROST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:16:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730277AbgFROQu (ORCPT
+        Thu, 18 Jun 2020 10:18:19 -0400
+Received: from mail-m964.mail.126.com ([123.126.96.4]:49278 "EHLO
+        mail-m964.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727078AbgFROSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:16:50 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C9A4C06174E;
-        Thu, 18 Jun 2020 07:16:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=59v7DL+Q6M0O6agqJhZf72SPocZXRPqx3iv/O5eS9Zk=; b=frBBXjmKpVtAc+AqKk5DD8LQNU
-        wbXudAS7/WiZVQ1wkOg5A1ixxX85phlK37al49JjUr3uf6dYnpaQrHmHDThIfg/5T2KcquAjDchIJ
-        5tbQR1JRhwgA8oiv/tbO5pI+PrShy4gU8oT5ZvztmYtlogsPm4n6sNtO33CkT5OGOrwMhquvwhgeA
-        FC6kTYlBxc43qy5rcUEsh9gLh7ZLSPn2l/HnHnJePiJizDk7EPysFbh5hxYI8YP/llFbTe0uMMwzd
-        nXmSN6L/g4upY7k4bzc+G1g2Fnu3gFfd95Y4PN1fvigpZVS+rQYFnfavVmMWaToR0PCyznDj3IR8T
-        0pGOqomA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlvLQ-0002tV-UP; Thu, 18 Jun 2020 14:16:44 +0000
-Date:   Thu, 18 Jun 2020 07:16:44 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matias =?iso-8859-1?Q?Bj=F8rling?= <mb@lightnvm.io>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, bcrl@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-aio@kvack.org, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org, selvakuma.s1@samsung.com,
-        nj.shetty@samsung.com, javier.gonz@samsung.com,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Keith Busch <keith.busch@wdc.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 0/3] zone-append support in aio and io-uring
-Message-ID: <20200618141644.GB16866@infradead.org>
-References: <CGME20200617172653epcas5p488de50090415eb802e62acc0e23d8812@epcas5p4.samsung.com>
- <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
- <f503c488-fa00-4fe2-1ceb-7093ea429e45@lightnvm.io>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f503c488-fa00-4fe2-1ceb-7093ea429e45@lightnvm.io>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Thu, 18 Jun 2020 10:18:18 -0400
+X-Greylist: delayed 1849 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Jun 2020 10:18:16 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=dE/u/Olq00IitY+Hxe
+        hpcTZ9LTITxRuFXdDzNJlgZMU=; b=MLnc9/S4PnYP4jmWCYMN3uxxK+/xLKP2GX
+        kLHeK/H888C0chYzZP4d7SxJk1zrzJTKN/A8b+IFdy2H8K6Yxju0KIJFjThOCSK5
+        sWsk8Z4uoLc8TXdrLoh38C/7jp762t5ErjVnJk7KTpEJIwH4LpB7r5KFqCkK96Sz
+        eaV1q8Nng=
+Received: from zhixu-home.lan (unknown [114.249.228.138])
+        by smtp9 (Coremail) with SMTP id NeRpCgBnbwu2b+tekoqNSA--.114S2;
+        Thu, 18 Jun 2020 21:44:23 +0800 (CST)
+From:   Zhixu Zhao <zhixu001@126.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Rob Springer <rspringer@google.com>,
+        Todd Poynor <toddpoynor@google.com>,
+        Ben Chan <benchan@chromium.org>, Richard Yeh <rcy@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2] staging: gasket: core: Fix a coding style issue in gasket_core.c
+Date:   Thu, 18 Jun 2020 21:44:22 +0800
+Message-Id: <20200618134422.24278-1-zhixu001@126.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200617161127.32006-1-zhixu001@126.com>
+References: <20200617161127.32006-1-zhixu001@126.com>
+X-CM-TRANSID: NeRpCgBnbwu2b+tekoqNSA--.114S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZF4kuFy7tr1fGrW3AFyrWFg_yoW3AwbEkr
+        WxZrykG3Z8GasYyrWUCrsxJF9rCw1fJFnY93y5t34DG34kAwsxXws7Gr40krnxZ3Z7X3Zx
+        Z3sFvas7Jw12gjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUeLNVDUUUUU==
+X-Originating-IP: [114.249.228.138]
+X-CM-SenderInfo: x2kl53qqqrqiyswou0bp/1tbiuxdHfFpEA3VICwAAs8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 10:04:32AM +0200, Matias Bjørling wrote:
-> Please provide a pointers to applications that are updated and ready to take
-> advantage of zone append.
+At 2020-06-18 03:10:02, "Dan Carpenter" <dan.carpenter@oracle.com> wrote:
+>It would be better to do this in the declaration block so you can change
+>the earlier two uses in this function:
+>
+>+	struct gasket_bar_data *data = &gasket_dev->bar_data[bar_num];
+>-	ulong desc_bytes = driver_desc->bar_descriptions[bar_num].size;
+>+	ulong desc_bytes = data->size;
+>
+>...
+>
+>-	if (driver_desc->bar_descriptions[bar_num].type != PCI_BAR) {
+>+	if (data->type != PCI_BAR) {
 
-That is a pretty high bar for kernel APIs that we don't otherwise
-apply unless seriously in doubt.
+`struct gasket_bar_data *data` and `driver_desc->bar_descriptions[bar_num]`
+are not the same thing as I see it. Besides, `struct gasket_bar_data`
+doesn't have a `size` field (it does have a `length_bytes` field).
+So... did I miss anything?
 
-> I do not believe it's beneficial at this point to change the libaio API,
-> applications that would want to use this API, should anyway switch to use
-> io_uring.
+-- 
+Zhixu Zhao
+https://github.com/zhaozhixu
 
-I think that really depends on the amount of churn required.  We
-absolutely can expose things like small additional flags or simple
-new operations, as rewriting application to different APIs is not
-exactly trivial.  On the other hand we really shouldn't do huge
-additions to the machinery.
-
-> Please also note that applications and libraries that want to take advantage
-> of zone append, can already use the zonefs file-system, as it will use the
-> zone append command when applicable.
-
-Not really.  While we already use Zone Append in Zonefs for some cases,
-we can't fully take advantage of the scalability of Zone Append.  For
-that we'd need a way to return the file position where an O_APPEND
-write actually landed, as suggested in my earlier mail.  Which I think
-is a very useful addition, and Damien and I had looked into adding
-it both for zonefs and normal file systems, but didn't get around to
-doing the work yet.
