@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BADFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAEC9221ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E0320897
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443599;
-	bh=MISZoiCLDvcumQIPnbJkrwHKF0jEFowkhUBjeR/PLV4=;
+	s=default; t=1592443604;
+	bh=XnF1S5AmSKUTJeDRf4UQ+DVb5G6cIO/h/gaRe45+9Kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FEUGdr2QGM329mxGiJw6RQeoITK0pEberQ0XXZ8Y4BXg6GUR6Z2zWRbsLstHJ8+mH
-	 lquqvA6/tNeWx0thNgNhcDp+mNelVdGX7Hjm38C8EyR0O1ZSkoqU3u518mDc2G/Q0W
-	 nUzHJgZsrY5CzwODD4Atq+NwoKKTRz4i8cFF85H0=
+	b=REy/SgIhT8XtYizw8aQEWw+9BklumR908ET4MCqEi98N7aEvtXig/V+EE4n2rK1Q0
+	 imINuItJTSqrubPwSgsdKwV+4wzRGRQDdQKA2WEM16+nrl3mBRzuxVq0cT1O0TpDNK
+	 YEx9DttxL/5Rtn29dZiNL03D/vzp/bCM3KdbcLNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731706AbgFRB0h (ORCPT
+        id S1730418AbgFRB0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:26:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56948 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:26:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729850AbgFRBXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:23:23 -0400
+        id S1730973AbgFRBX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:23:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC00E21974;
-        Thu, 18 Jun 2020 01:23:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 790A1214DB;
+        Thu, 18 Jun 2020 01:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443403;
-        bh=MISZoiCLDvcumQIPnbJkrwHKF0jEFowkhUBjeR/PLV4=;
+        s=default; t=1592443406;
+        bh=XnF1S5AmSKUTJeDRf4UQ+DVb5G6cIO/h/gaRe45+9Kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JqgdKfC0JnwiV4b9p0K97i6YyWqoYel3vjvNFSkSW3+Br4bCUXjnV5M9MKgHdw37j
-         kLk5ugOZMrFs8+UjIBWTuB5qlfvq4CG9Y9oz1OXmJ4OKrpmbcuu9QJdAO+WcdH2pBE
-         rY/ZcSFRsXbsW3ew3BIIQCYNJDixUEGN9npixy/Q=
+        b=lZ6r2O0OHwPlPt/oztwuOioE7oH6jab+LVkA0LyxOg6WLpZG4qrMDvO9hwbRbSztw
+         v8b66FJqbC3OMz6OU15+MPGG/ME1TjFRyRIIjPvMHWBXDCUXTu0bG733OkT2MjPmDJ
+         memxv3ygDgvPQdVoJ9+cf1esx4AN8aEuQz9g1gRc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Simon Arlott <simon@octiron.net>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 048/172] scsi: sr: Fix sr_probe() missing deallocate of device minor
-Date:   Wed, 17 Jun 2020 21:20:14 -0400
-Message-Id: <20200618012218.607130-48-sashal@kernel.org>
+Cc:     John Johansen <john.johansen@canonical.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 050/172] apparmor: fix nnp subset test for unconfined
+Date:   Wed, 17 Jun 2020 21:20:16 -0400
+Message-Id: <20200618012218.607130-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -59,45 +59,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Arlott <simon@octiron.net>
+From: John Johansen <john.johansen@canonical.com>
 
-[ Upstream commit 6555781b3fdec5e94e6914511496144241df7dee ]
+[ Upstream commit 3ed4aaa94fc07db3cd0c91be95e3e1b9782a2710 ]
 
-If the cdrom fails to be registered then the device minor should be
-deallocated.
+The subset test is not taking into account the unconfined exception
+which will cause profile transitions in the stacked confinement
+case to fail when no_new_privs is applied.
 
-Link: https://lore.kernel.org/r/072dac4b-8402-4de8-36bd-47e7588969cd@0882a8b5-c6c3-11e9-b005-00805fc181fe
-Signed-off-by: Simon Arlott <simon@octiron.net>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This fixes a regression introduced in the fix for
+https://bugs.launchpad.net/bugs/1839037
+
+BugLink: https://bugs.launchpad.net/bugs/1844186
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sr.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ security/apparmor/domain.c        |  9 +++++----
+ security/apparmor/include/label.h |  1 +
+ security/apparmor/label.c         | 33 +++++++++++++++++++++++++++++++
+ 3 files changed, 39 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-index d0389b20574d..5be3d6b7991b 100644
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@ -748,7 +748,7 @@ static int sr_probe(struct device *dev)
- 	cd->cdi.disk = disk;
+diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
+index b9d5b3459705..13b33490e079 100644
+--- a/security/apparmor/domain.c
++++ b/security/apparmor/domain.c
+@@ -939,7 +939,8 @@ int apparmor_bprm_set_creds(struct linux_binprm *bprm)
+ 	 * aways results in a further reduction of permissions.
+ 	 */
+ 	if ((bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS) &&
+-	    !unconfined(label) && !aa_label_is_subset(new, ctx->nnp)) {
++	    !unconfined(label) &&
++	    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+ 		error = -EPERM;
+ 		info = "no new privs";
+ 		goto audit;
+@@ -1217,7 +1218,7 @@ int aa_change_hat(const char *hats[], int count, u64 token, int flags)
+ 		 * reduce restrictions.
+ 		 */
+ 		if (task_no_new_privs(current) && !unconfined(label) &&
+-		    !aa_label_is_subset(new, ctx->nnp)) {
++		    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+ 			/* not an apparmor denial per se, so don't log it */
+ 			AA_DEBUG("no_new_privs - change_hat denied");
+ 			error = -EPERM;
+@@ -1238,7 +1239,7 @@ int aa_change_hat(const char *hats[], int count, u64 token, int flags)
+ 		 * reduce restrictions.
+ 		 */
+ 		if (task_no_new_privs(current) && !unconfined(label) &&
+-		    !aa_label_is_subset(previous, ctx->nnp)) {
++		    !aa_label_is_unconfined_subset(previous, ctx->nnp)) {
+ 			/* not an apparmor denial per se, so don't log it */
+ 			AA_DEBUG("no_new_privs - change_hat denied");
+ 			error = -EPERM;
+@@ -1433,7 +1434,7 @@ int aa_change_profile(const char *fqname, int flags)
+ 		 * reduce restrictions.
+ 		 */
+ 		if (task_no_new_privs(current) && !unconfined(label) &&
+-		    !aa_label_is_subset(new, ctx->nnp)) {
++		    !aa_label_is_unconfined_subset(new, ctx->nnp)) {
+ 			/* not an apparmor denial per se, so don't log it */
+ 			AA_DEBUG("no_new_privs - change_hat denied");
+ 			error = -EPERM;
+diff --git a/security/apparmor/include/label.h b/security/apparmor/include/label.h
+index 7ce5fe73ae7f..cecbd3f5429c 100644
+--- a/security/apparmor/include/label.h
++++ b/security/apparmor/include/label.h
+@@ -285,6 +285,7 @@ bool aa_label_init(struct aa_label *label, int size, gfp_t gfp);
+ struct aa_label *aa_label_alloc(int size, struct aa_proxy *proxy, gfp_t gfp);
  
- 	if (register_cdrom(&cd->cdi))
--		goto fail_put;
-+		goto fail_minor;
+ bool aa_label_is_subset(struct aa_label *set, struct aa_label *sub);
++bool aa_label_is_unconfined_subset(struct aa_label *set, struct aa_label *sub);
+ struct aa_profile *__aa_label_next_not_in_set(struct label_it *I,
+ 					     struct aa_label *set,
+ 					     struct aa_label *sub);
+diff --git a/security/apparmor/label.c b/security/apparmor/label.c
+index 6e7aa2ef8ee0..6727e6fb69df 100644
+--- a/security/apparmor/label.c
++++ b/security/apparmor/label.c
+@@ -554,6 +554,39 @@ bool aa_label_is_subset(struct aa_label *set, struct aa_label *sub)
+ 	return __aa_label_next_not_in_set(&i, set, sub) == NULL;
+ }
  
- 	/*
- 	 * Initialize block layer runtime PM stuffs before the
-@@ -766,6 +766,10 @@ static int sr_probe(struct device *dev)
++/**
++ * aa_label_is_unconfined_subset - test if @sub is a subset of @set
++ * @set: label to test against
++ * @sub: label to test if is subset of @set
++ *
++ * This checks for subset but taking into account unconfined. IF
++ * @sub contains an unconfined profile that does not have a matching
++ * unconfined in @set then this will not cause the test to fail.
++ * Conversely we don't care about an unconfined in @set that is not in
++ * @sub
++ *
++ * Returns: true if @sub is special_subset of @set
++ *     else false
++ */
++bool aa_label_is_unconfined_subset(struct aa_label *set, struct aa_label *sub)
++{
++	struct label_it i = { };
++	struct aa_profile *p;
++
++	AA_BUG(!set);
++	AA_BUG(!sub);
++
++	if (sub == set)
++		return true;
++
++	do {
++		p = __aa_label_next_not_in_set(&i, set, sub);
++		if (p && !profile_unconfined(p))
++			break;
++	} while (p);
++
++	return p == NULL;
++}
  
- 	return 0;
  
-+fail_minor:
-+	spin_lock(&sr_index_lock);
-+	clear_bit(minor, sr_index_bits);
-+	spin_unlock(&sr_index_lock);
- fail_put:
- 	put_disk(disk);
- fail_free:
+ /**
 -- 
 2.25.1
 
