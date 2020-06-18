@@ -2,107 +2,230 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA89DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E8BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC3132083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592505430;
-	bh=Knz5GZwIrR2m3rJkhIEdASfCnCSkNHIP610FXM2qoNs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=blKFfXLXZknE6aTuLu9fTPsgALIDFXLBFfEJ3fu52pZkJdpdXNynQB0gxn6jCxekT
-	 Eil5IJnzWJt62qfzLkIe8vUjN/bEmo7iQT7TPPIbTHptxm4maNJPX4W4xpfumtcjz0
-	 lNSqqUt6RqOSNEUGhk78KQUAAd/tTcgb+jRwi4HA=
+	by mail.kernel.org (Postfix) with ESMTP id 73F8C208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:37:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NSVarNJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbgFRShJ (ORCPT
+        id S1730790AbgFRShh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 14:37:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgFRShH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 14:37:07 -0400
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A40B8208C3
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 18:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592505426;
-        bh=Knz5GZwIrR2m3rJkhIEdASfCnCSkNHIP610FXM2qoNs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wPW4GY5zOPz7yJL5L7HuzdkJsaiJSLmRDAgYqv+lax5ZiBG4034xzT9Yex3qsiY1k
-         joe1MsFiItJnnLNpQKMSPuTaitrUgrDngeLSs1PaEkyilFGM1O8TVm44XDqz5s/qJs
-         fumbkA91fwtSrUTGzHvA3orAbUpRLvroIIjlCU3I=
-Received: by mail-wm1-f41.google.com with SMTP id t194so6733566wmt.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 11:37:06 -0700 (PDT)
-X-Gm-Message-State: AOAM531HapEWjKsL6/wc1uIcWoW9wXsEc/drAbEECheHQSP1lBucpkH5
-        me2FvYEE//dvSN+JaJ3+WVwUkLR62Iyerp4ZC4geLg==
-X-Google-Smtp-Source: ABdhPJyNUbpWrJsnkXl6Eo+/ZBuC12pBSC8BrZof+nKJiNGZ22bGcbqtLmOGL5H/HKdIbSq7gXIIUgqnUBDDPD93kSA=
-X-Received: by 2002:a1c:80d4:: with SMTP id b203mr5383841wmd.138.1592505425251;
- Thu, 18 Jun 2020 11:37:05 -0700 (PDT)
+        Thu, 18 Jun 2020 14:37:37 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:21412 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728027AbgFRShe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 14:37:34 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200618183731epoutp041af840b8c28661afd077dec2bfd9128d~Zt0U_6lzt0888008880epoutp045
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 18:37:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200618183731epoutp041af840b8c28661afd077dec2bfd9128d~Zt0U_6lzt0888008880epoutp045
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1592505451;
+        bh=K04fZAG2yktTyADi5oC7xE22YZv49ewmuhJVMtxM5Pc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NSVarNJPX2Kv2hjAkYpHKkrwWFMmlSYbuJsZDdwG834nEZknNoOHV2AkeuNsrfNAv
+         sjghauKlwYOjdyZhshjBWrWXBblof/0G9NpBu8tl7BRHYKvBaR7MTsriCpZER4ubPP
+         l4SHFWo+gToZdiSFUbRrjzlXVjx6dJDzkg4neM/g=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200618183729epcas5p2f440c318c04e6c03ec7a637749609d42~Zt0Txma9v1141511415epcas5p2T;
+        Thu, 18 Jun 2020 18:37:29 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BE.B8.09475.964BBEE5; Fri, 19 Jun 2020 03:37:29 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200618183729epcas5p4a836264b54541560df639344b6200ed9~Zt0S3FU5f1185611856epcas5p4f;
+        Thu, 18 Jun 2020 18:37:29 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200618183728epsmtrp10373703db48f86d6b55818a4b8a6e55f~Zt0S2UxtO2407024070epsmtrp1L;
+        Thu, 18 Jun 2020 18:37:28 +0000 (GMT)
+X-AuditID: b6c32a4b-389ff70000002503-06-5eebb4695af4
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        94.5D.08382.864BBEE5; Fri, 19 Jun 2020 03:37:28 +0900 (KST)
+Received: from test-zns (unknown [107.110.206.5]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200618183727epsmtip19bb8dc634bf2bd1aa83fe31b1fcddcea~Zt0RFJDJL2914929149epsmtip1p;
+        Thu, 18 Jun 2020 18:37:26 +0000 (GMT)
+Date:   Fri, 19 Jun 2020 00:05:11 +0530
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
+        "nj.shetty@samsung.com" <nj.shetty@samsung.com>,
+        "javier.gonz@samsung.com" <javier.gonz@samsung.com>
+Subject: Re: [PATCH 1/3] fs,block: Introduce IOCB_ZONE_APPEND and direct-io
+ handling
+Message-ID: <20200618183511.GA4141250@test-zns>
 MIME-Version: 1.0
-References: <20200618144801.642309720@infradead.org> <70455B9B-0952-4E03-B2CE-EEAE1E110C5B@amacapital.net>
- <20200618155017.GK576905@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200618155017.GK576905@hirez.programming.kicks-ass.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 18 Jun 2020 11:36:53 -0700
-X-Gmail-Original-Message-ID: <CALCETrWvrmuuTqZzhGswsFSCWxO3tuVBiJ+M4a=Negqwo1dyNA@mail.gmail.com>
-Message-ID: <CALCETrWvrmuuTqZzhGswsFSCWxO3tuVBiJ+M4a=Negqwo1dyNA@mail.gmail.com>
-Subject: Re: [PATCH 1/7] x86/entry: Fix #UD vs WARN more
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Marco Elver <elver@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Matthew Helsley <mhelsley@vmware.com>,
-        Steven Rostedt <rostedt@goodmis.org>, jthierry@redhat.com,
-        Miroslav Benes <mbenes@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CY4PR04MB3751810405442801C115CAEBE79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNKsWRmVeSWpSXmKPExsWy7bCmhm7mltdxBgf+mlisvtvPZtH1bwuL
+        RWv7NyaLd63nWCwe3/nMbjFlWhOjxd5b2hZ79p5ksbi8aw6bxbbf85ktXv84yWZx/u9xVgce
+        j8tnSz02fZrE7tG3ZRWjx+dNch7tB7qZPDY9ecsUwBbFZZOSmpNZllqkb5fAlbFqm3TBZ7mK
+        TXOdGhgXSnYxcnJICJhIXDi8gLGLkYtDSGA3o8TzS3OYQBJCAp8YJVa+koBIfGOUOPj6HAtM
+        R//9eWwQib2MElfblzJDOM8YJeZsewlWxSKgKjFleStrFyMHB5uApsSFyaUgYREBLYll+96x
+        gtjMAmdZJJ79UAWxhQXCJCZvnALWyiugL/HlzzUmCFtQ4uTMJ2BxToFYia63i9hAbFEBZYkD
+        244zgeyVEFjJIfFy3zuo61wk5px9zQZhC0u8Or6FHcKWknjZ3wZlF0v8unOUGaK5g1HiesNM
+        qGZ7iYt7/jKBHM0skCGx/YQ6xKF8Er2/n4CFJQR4JTrahCCqFSXuTXrKCmGLSzycsQTK9pBY
+        +P8oNBQXMUlM7vOdwCg3C8k7sxAWzAJbYCXR+aGJFSIsLbH8HweEqSmxfpf+AkbWVYySqQXF
+        uempxaYFxnmp5XrFibnFpXnpesn5uZsYwelJy3sH46MHH/QOMTJxMB5ilOBgVhLhdf79Ik6I
+        NyWxsiq1KD++qDQntfgQozQHi5I4r9KPM3FCAumJJanZqakFqUUwWSYOTqkGpsf+eXdiF7x4
+        prD43Xk3td+HL2fuS5i0MCg8oO/FRIb5y1TU373/U3ehkSvTN0u6eqputrdj9YX5f2ZzHQio
+        fTOl8uyprfvsry6QfD0z9ZTQ+4MOJZtvsm0qeuT41PbzCo4jr4TlGJfm9spuK9uaNC/8UkQy
+        Q8NuhVrn1Uv3K3BM7ImcdCDr7pTIFSuvtCnP1ktil5ThrzSeUukZ1vX0b+DJN0+UeDuZ/5xj
+        4Xqswyy+9dE6vUMZSR7u9a4t/UKi1UmBLC9VHKpqLi5zfzM/XJq3YN0b1uCcLw/CBZ32Ve1X
+        /vzy4KzN8QlP9Bbv833l3bpcbGvguSs+ypeY2KadeqqXuvP/29/6qbY6Ic4v45RYijMSDbWY
+        i4oTAQFVHQW+AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJLMWRmVeSWpSXmKPExsWy7bCSnG7GltdxBi/+G1usvtvPZtH1bwuL
+        RWv7NyaLd63nWCwe3/nMbjFlWhOjxd5b2hZ79p5ksbi8aw6bxbbf85ktXv84yWZx/u9xVgce
+        j8tnSz02fZrE7tG3ZRWjx+dNch7tB7qZPDY9ecsUwBbFZZOSmpNZllqkb5fAldH19ilLwVKZ
+        iqMTShoY34p1MXJySAiYSPTfn8fWxcjFISSwm1Fi14rbzBAJcYnmaz/YIWxhiZX/nrNDFD1h
+        lLg/6xwbSIJFQFViyvJW1i5GDg42AU2JC5NLQcIiAloSy/a9YwWpZxa4yCIx+8hzJpCEsECY
+        xOSNU1hAbF4BfYkvf64xQQxdxCTR+GINE0RCUOLkzCdgRcwCZhLzNj9kBlnALCAtsfwfB0iY
+        UyBWouvtIrAbRAWUJQ5sO840gVFwFpLuWUi6ZyF0L2BkXsUomVpQnJueW2xYYJiXWq5XnJhb
+        XJqXrpecn7uJERw7Wpo7GLev+qB3iJGJg/EQowQHs5IIr/PvF3FCvCmJlVWpRfnxRaU5qcWH
+        GKU5WJTEeW8ULowTEkhPLEnNTk0tSC2CyTJxcEo1MJ1dmp7b7qQ1v4lhh27nsvAoW757i1vl
+        1V57i/RppR6dFczSVrksUXuWVPWi269C7v+P2HriaROjrWTiu/5z2+5oFNoGsLjMcL3kKlSy
+        jyPg8Jpdpwtc0rmMF3O167feyu47FH8qett+E4Euc6M/RtFu9pXbLWYzCbN8t15/rVRcRD65
+        +o2i38yz0fcaY2a9dmDfFbp4rsJSQdlbp4wd8h7Eb2HvUvIIFD1iG/bxgdf6gJkTRTi3rN80
+        7dO0lm06Uo1+K9c9vNtUPvtxsuDuIzyhZ9INrvtLXp4XF336md/SrWY10hbTj61m2TVJv8zA
+        610xn1r9ppafQm9YNZi8D+RsiZjz16Vt+T0Ty+OTlViKMxINtZiLihMBhbGQgwwDAAA=
+X-CMS-MailID: 20200618183729epcas5p4a836264b54541560df639344b6200ed9
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_7803b_"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200617172702epcas5p4dbf4729d31d9a85ab1d261d04f238e61
+References: <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
+        <CGME20200617172702epcas5p4dbf4729d31d9a85ab1d261d04f238e61@epcas5p4.samsung.com>
+        <1592414619-5646-2-git-send-email-joshi.k@samsung.com>
+        <CY4PR04MB3751810405442801C115CAEBE79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 8:50 AM Peter Zijlstra <peterz@infradead.org> wrote=
-:
->
-> On Thu, Jun 18, 2020 at 07:57:35AM -0700, Andy Lutomirski wrote:
-> >
-> >
-> > > On Jun 18, 2020, at 7:50 AM, Peter Zijlstra <peterz@infradead.org> wr=
-ote:
-> > >
-> > > =EF=BB=BFvmlinux.o: warning: objtool: exc_invalid_op()+0x47: call to =
-probe_kernel_read() leaves .noinstr.text section
-> > >
-> > > Since we use UD2 as a short-cut for 'CALL __WARN', treat it as such.
-> > > Have the bare exception handler do the report_bug() thing.
-> >
-> > I think you should consider inlining or noinstr-ifying report_bug()
-> > too if you want to make this more bulletproof. I admit the scenario
-> > where someone instruments it and it goes wrong is farfetched.
->
-> How far down that rabbit hole do we go? Because then we need to noinstr
-> printk, the console drivers, those will very quickly pull in lovely bits
-> like PCI, USB, DRM :/
->
-> At some point we have to just give up.
+------nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_7803b_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-I wasn't imagining going far down the rabbit hole at all -- I think
-that, at most, we should cover the path for when the fault wasn't a
-BUG/WARN in the first place.  I admit that, for #UD in particular,
-this isn't a big deal, but if it were a different vector, this could
-matter.
+On Thu, Jun 18, 2020 at 07:16:19AM +0000, Damien Le Moal wrote:
+>On 2020/06/18 2:27, Kanchan Joshi wrote:
+>> From: Selvakumar S <selvakuma.s1@samsung.com>
+>>
+>> Introduce IOCB_ZONE_APPEND flag, which is set in kiocb->ki_flags for
+>> zone-append. Direct I/O submission path uses this flag to send bio with
+>> append op. And completion path uses the same to return zone-relative
+>> offset to upper layer.
+>>
+>> Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>
+>> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+>> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
+>> ---
+>>  fs/block_dev.c     | 19 ++++++++++++++++++-
+>>  include/linux/fs.h |  1 +
+>>  2 files changed, 19 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/block_dev.c b/fs/block_dev.c
+>> index 47860e5..4c84b4d0 100644
+>> --- a/fs/block_dev.c
+>> +++ b/fs/block_dev.c
+>> @@ -185,6 +185,10 @@ static unsigned int dio_bio_write_op(struct kiocb *iocb)
+>>  	/* avoid the need for a I/O completion work item */
+>>  	if (iocb->ki_flags & IOCB_DSYNC)
+>>  		op |= REQ_FUA;
+>> +#ifdef CONFIG_BLK_DEV_ZONED
+>> +	if (iocb->ki_flags & IOCB_ZONE_APPEND)
+>> +		op |= REQ_OP_ZONE_APPEND | REQ_NOMERGE;
+>> +#endif
+>
+>No need for the #ifdef. And no need for the REQ_NOMERGE either since
+>REQ_OP_ZONE_APPEND requests are defined as not mergeable already.
+>
+>>  	return op;
+>>  }
+>>
+>> @@ -295,6 +299,14 @@ static int blkdev_iopoll(struct kiocb *kiocb, bool wait)
+>>  	return blk_poll(q, READ_ONCE(kiocb->ki_cookie), wait);
+>>  }
+>>
+>> +#ifdef CONFIG_BLK_DEV_ZONED
+>> +static inline long blkdev_bio_end_io_append(struct bio *bio)
+>> +{
+>> +	return (bio->bi_iter.bi_sector %
+>> +		blk_queue_zone_sectors(bio->bi_disk->queue)) << SECTOR_SHIFT;
+>
+>A zone size is at most 4G sectors as defined by the queue chunk_sectors limit
+>(unsigned int). It means that the return value here can overflow due to the
+>shift, at least on 32bits arch.
+>
+>And as Pavel already commented, zone sizes are power of 2 so you can use
+>bitmasks instead of costly divisions.
+>
+>> +}
+>> +#endif
+>> +
+>>  static void blkdev_bio_end_io(struct bio *bio)
+>>  {
+>>  	struct blkdev_dio *dio = bio->bi_private;
+>> @@ -307,15 +319,20 @@ static void blkdev_bio_end_io(struct bio *bio)
+>>  		if (!dio->is_sync) {
+>>  			struct kiocb *iocb = dio->iocb;
+>>  			ssize_t ret;
+>> +			long res = 0;
+>>
+>>  			if (likely(!dio->bio.bi_status)) {
+>>  				ret = dio->size;
+>>  				iocb->ki_pos += ret;
+>> +#ifdef CONFIG_BLK_DEV_ZONED
+>> +				if (iocb->ki_flags & IOCB_ZONE_APPEND)
+>> +					res = blkdev_bio_end_io_append(bio);
+>
+>overflow... And no need for the #ifdef.
+>
+>> +#endif
+>>  			} else {
+>>  				ret = blk_status_to_errno(dio->bio.bi_status);
+>>  			}
+>>
+>> -			dio->iocb->ki_complete(iocb, ret, 0);
+>> +			dio->iocb->ki_complete(iocb, ret, res);
+>
+>ki_complete interface also needs to be changed to have a 64bit last argument to
+>avoid overflow.
+>
+>And this all does not work anyway because __blkdev_direct_IO() and
+>__blkdev_direct_IO_simple() both call bio_iov_iter_get_pages() *before*
+>dio_bio_write_op() is called. This means that bio_iov_iter_get_pages() will not
+>see that it needs to get the pages for a zone append command and so will not
+>call __bio_iov_append_get_pages(). That leads to BIO split and potential
+>corruption of the user data as fragments of the kiocb may get reordered.
+>
+>There is a lot more to do to the block_dev direct IO code for this to work.
 
-I suppose report_bug() could be split into lookup_bug() and
-handle_bug(), and just lookup_bug() could be noinstr.
+Thanks a lot for the great review. Very helpful. We'll fix in V2. 
 
---Andy
+------nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_7803b_
+Content-Type: text/plain; charset="utf-8"
+
+
+------nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_7803b_--
