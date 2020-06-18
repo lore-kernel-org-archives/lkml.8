@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C664C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EADEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7741620853
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEEC820853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446447;
-	bh=vdJFMv8yHEs/2MvMI6fAtqmj1XRhq7UnKx2s5j72/GI=;
+	s=default; t=1592446458;
+	bh=GpvunDuCyN+uAbzmODZazPxAmI7eQ+annzL2oHwjoNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qlNPTLNOagF2rJ7EVQs6zYgKkLgQEM+vG6xT6Bg7LpOpEN7z0Psg9j93TbyThqcBW
-	 B9OcDorMRsCqwjVdudLGlH4Invrx06ydtiY3nrITJv7mcY0O17PZ1oE337IN106jhP
-	 l3EyjxWsheIiXYFx55D38wqhCZs463kY9gbc9zaI=
+	b=C7Pi5lzELglcNf9gg+zpQPY1vWtxU8GiqmA/+6ZVGKXmd0xrIQLSe2NHSaqU+APBC
+	 8/Sz6APg1Q4GNq1FK7f8PIbkpDxKwYBSTbOAresvd8LFUOiNW67V3DQGgl/YAi0UfO
+	 CG5fp11mCpy2BK+7AsU4PegQUkvKtqhnKdXFBYJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730404AbgFRBUy (ORCPT
+        id S1730597AbgFRCOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:20:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48902 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:14:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729807AbgFRBRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:42 -0400
+        id S1730392AbgFRBUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07DB3221F3;
-        Thu, 18 Jun 2020 01:17:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BD6920CC7;
+        Thu, 18 Jun 2020 01:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443061;
-        bh=vdJFMv8yHEs/2MvMI6fAtqmj1XRhq7UnKx2s5j72/GI=;
+        s=default; t=1592443251;
+        bh=GpvunDuCyN+uAbzmODZazPxAmI7eQ+annzL2oHwjoNo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2QJ7Pg2C5+LlSEEnS0YBZvGqQ5ujyDLi5fXebjV72O+pWPaio3+i9JhVJwbbpTkQD
-         idQgiQlEc7/F9e6lUk//1kI9/49MwE8VNcBTLytuHLdhBzrkGXuOX/eLTYGUsFQXPE
-         d1mY1sTfIhHA+HDXuCVQxF0/6oyRsdkMfg5z8jZk=
+        b=vgNjDsiXzunvkENClZPO3C4O9gjOLCaEw+NCWk68Zry6WU4tzp33NlOrykd5mFzUK
+         KFTwo9nCoRg6tjbsXQX3qAvS6mKcB23SFeb+pXWAEv2X9lpOmPv/CMksMjUmlFjT0p
+         vtZGjzn5qJucPtwwlkNioEIh59Be4jlRPof912JQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 052/266] gpio: dwapb: Call acpi_gpiochip_free_interrupts() on GPIO chip de-registration
-Date:   Wed, 17 Jun 2020 21:12:57 -0400
-Message-Id: <20200618011631.604574-52-sashal@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 200/266] /dev/mem: Revoke mappings when a driver claims the region
+Date:   Wed, 17 Jun 2020 21:15:25 -0400
+Message-Id: <20200618011631.604574-200-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,75 +64,261 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Dan Williams <dan.j.williams@intel.com>
 
-[ Upstream commit 494a94e38dcf62543a32a4424d646ff80b4b28bd ]
+[ Upstream commit 3234ac664a870e6ea69ae3a57d824cd7edbeacc5 ]
 
-Add missed acpi_gpiochip_free_interrupts() call when unregistering ports.
+Close the hole of holding a mapping over kernel driver takeover event of
+a given address range.
 
-While at it, drop extra check to call acpi_gpiochip_request_interrupts().
-There is no need to have an additional check to call
-acpi_gpiochip_request_interrupts(). Even without any interrupts available
-the registered ACPI Event handlers can be useful for debugging purposes.
+Commit 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
+introduced CONFIG_IO_STRICT_DEVMEM with the goal of protecting the
+kernel against scenarios where a /dev/mem user tramples memory that a
+kernel driver owns. However, this protection only prevents *new* read(),
+write() and mmap() requests. Established mappings prior to the driver
+calling request_mem_region() are left alone.
 
-Fixes: e6cb3486f5a1 ("gpio: dwapb: add gpio-signaled acpi event support")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Serge Semin <fancer.lancer@gmail.com>
-Acked-by: Serge Semin <fancer.lancer@gmail.com>
-Link: https://lore.kernel.org/r/20200519131233.59032-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Especially with persistent memory, and the core kernel metadata that is
+stored there, there are plentiful scenarios for a /dev/mem user to
+violate the expectations of the driver and cause amplified damage.
+
+Teach request_mem_region() to find and shoot down active /dev/mem
+mappings that it believes it has successfully claimed for the exclusive
+use of the driver. Effectively a driver call to request_mem_region()
+becomes a hole-punch on the /dev/mem device.
+
+The typical usage of unmap_mapping_range() is part of
+truncate_pagecache() to punch a hole in a file, but in this case the
+implementation is only doing the "first half" of a hole punch. Namely it
+is just evacuating current established mappings of the "hole", and it
+relies on the fact that /dev/mem establishes mappings in terms of
+absolute physical address offsets. Once existing mmap users are
+invalidated they can attempt to re-establish the mapping, or attempt to
+continue issuing read(2) / write(2) to the invalidated extent, but they
+will then be subject to the CONFIG_IO_STRICT_DEVMEM checking that can
+block those subsequent accesses.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/159009507306.847224.8502634072429766747.stgit@dwillia2-desk3.amr.corp.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-dwapb.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ drivers/char/mem.c         | 101 ++++++++++++++++++++++++++++++++++++-
+ include/linux/ioport.h     |   6 +++
+ include/uapi/linux/magic.h |   1 +
+ kernel/resource.c          |   5 ++
+ 4 files changed, 111 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 92e127e74813..02cf4c43a4c4 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -533,26 +533,33 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 		dwapb_configure_irqs(gpio, port, pp);
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index 43dd0891ca1e..31cae88a730b 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -31,11 +31,15 @@
+ #include <linux/uio.h>
+ #include <linux/uaccess.h>
+ #include <linux/security.h>
++#include <linux/pseudo_fs.h>
++#include <uapi/linux/magic.h>
++#include <linux/mount.h>
  
- 	err = gpiochip_add_data(&port->gc, port);
--	if (err)
-+	if (err) {
- 		dev_err(gpio->dev, "failed to register gpiochip for port%d\n",
- 			port->idx);
--	else
--		port->is_registered = true;
-+		return err;
+ #ifdef CONFIG_IA64
+ # include <linux/efi.h>
+ #endif
+ 
++#define DEVMEM_MINOR	1
+ #define DEVPORT_MINOR	4
+ 
+ static inline unsigned long size_inside_page(unsigned long start,
+@@ -805,12 +809,64 @@ static loff_t memory_lseek(struct file *file, loff_t offset, int orig)
+ 	return ret;
+ }
+ 
++static struct inode *devmem_inode;
++
++#ifdef CONFIG_IO_STRICT_DEVMEM
++void revoke_devmem(struct resource *res)
++{
++	struct inode *inode = READ_ONCE(devmem_inode);
++
++	/*
++	 * Check that the initialization has completed. Losing the race
++	 * is ok because it means drivers are claiming resources before
++	 * the fs_initcall level of init and prevent /dev/mem from
++	 * establishing mappings.
++	 */
++	if (!inode)
++		return;
++
++	/*
++	 * The expectation is that the driver has successfully marked
++	 * the resource busy by this point, so devmem_is_allowed()
++	 * should start returning false, however for performance this
++	 * does not iterate the entire resource range.
++	 */
++	if (devmem_is_allowed(PHYS_PFN(res->start)) &&
++	    devmem_is_allowed(PHYS_PFN(res->end))) {
++		/*
++		 * *cringe* iomem=relaxed says "go ahead, what's the
++		 * worst that can happen?"
++		 */
++		return;
 +	}
++
++	unmap_mapping_range(inode->i_mapping, res->start, resource_size(res), 1);
++}
++#endif
++
+ static int open_port(struct inode *inode, struct file *filp)
+ {
++	int rc;
++
+ 	if (!capable(CAP_SYS_RAWIO))
+ 		return -EPERM;
  
- 	/* Add GPIO-signaled ACPI event support */
--	if (pp->has_irq)
--		acpi_gpiochip_request_interrupts(&port->gc);
-+	acpi_gpiochip_request_interrupts(&port->gc);
- 
--	return err;
-+	port->is_registered = true;
+-	return security_locked_down(LOCKDOWN_DEV_MEM);
++	rc = security_locked_down(LOCKDOWN_DEV_MEM);
++	if (rc)
++		return rc;
++
++	if (iminor(inode) != DEVMEM_MINOR)
++		return 0;
++
++	/*
++	 * Use a unified address space to have a single point to manage
++	 * revocations when drivers want to take over a /dev/mem mapped
++	 * range.
++	 */
++	inode->i_mapping = devmem_inode->i_mapping;
++	filp->f_mapping = inode->i_mapping;
 +
 +	return 0;
  }
  
- static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
- {
- 	unsigned int m;
+ #define zero_lseek	null_lseek
+@@ -885,7 +941,7 @@ static const struct memdev {
+ 	fmode_t fmode;
+ } devlist[] = {
+ #ifdef CONFIG_DEVMEM
+-	 [1] = { "mem", 0, &mem_fops, FMODE_UNSIGNED_OFFSET },
++	 [DEVMEM_MINOR] = { "mem", 0, &mem_fops, FMODE_UNSIGNED_OFFSET },
+ #endif
+ #ifdef CONFIG_DEVKMEM
+ 	 [2] = { "kmem", 0, &kmem_fops, FMODE_UNSIGNED_OFFSET },
+@@ -939,6 +995,45 @@ static char *mem_devnode(struct device *dev, umode_t *mode)
  
--	for (m = 0; m < gpio->nr_ports; ++m)
--		if (gpio->ports[m].is_registered)
--			gpiochip_remove(&gpio->ports[m].gc);
-+	for (m = 0; m < gpio->nr_ports; ++m) {
-+		struct dwapb_gpio_port *port = &gpio->ports[m];
+ static struct class *mem_class;
+ 
++static int devmem_fs_init_fs_context(struct fs_context *fc)
++{
++	return init_pseudo(fc, DEVMEM_MAGIC) ? 0 : -ENOMEM;
++}
 +
-+		if (!port->is_registered)
-+			continue;
++static struct file_system_type devmem_fs_type = {
++	.name		= "devmem",
++	.owner		= THIS_MODULE,
++	.init_fs_context = devmem_fs_init_fs_context,
++	.kill_sb	= kill_anon_super,
++};
 +
-+		acpi_gpiochip_free_interrupts(&port->gc);
-+		gpiochip_remove(&port->gc);
++static int devmem_init_inode(void)
++{
++	static struct vfsmount *devmem_vfs_mount;
++	static int devmem_fs_cnt;
++	struct inode *inode;
++	int rc;
++
++	rc = simple_pin_fs(&devmem_fs_type, &devmem_vfs_mount, &devmem_fs_cnt);
++	if (rc < 0) {
++		pr_err("Cannot mount /dev/mem pseudo filesystem: %d\n", rc);
++		return rc;
 +	}
- }
++
++	inode = alloc_anon_inode(devmem_vfs_mount->mnt_sb);
++	if (IS_ERR(inode)) {
++		rc = PTR_ERR(inode);
++		pr_err("Cannot allocate inode for /dev/mem: %d\n", rc);
++		simple_release_fs(&devmem_vfs_mount, &devmem_fs_cnt);
++		return rc;
++	}
++
++	/* publish /dev/mem initialized */
++	WRITE_ONCE(devmem_inode, inode);
++
++	return 0;
++}
++
+ static int __init chr_dev_init(void)
+ {
+ 	int minor;
+@@ -960,6 +1055,8 @@ static int __init chr_dev_init(void)
+ 		 */
+ 		if ((minor == DEVPORT_MINOR) && !arch_has_dev_port())
+ 			continue;
++		if ((minor == DEVMEM_MINOR) && devmem_init_inode() != 0)
++			continue;
  
- static struct dwapb_platform_data *
+ 		device_create(mem_class, NULL, MKDEV(MEM_MAJOR, minor),
+ 			      NULL, devlist[minor].name);
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index 7bddddfc76d6..fdc201d61460 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -300,5 +300,11 @@ struct resource *devm_request_free_mem_region(struct device *dev,
+ struct resource *request_free_mem_region(struct resource *base,
+ 		unsigned long size, const char *name);
+ 
++#ifdef CONFIG_IO_STRICT_DEVMEM
++void revoke_devmem(struct resource *res);
++#else
++static inline void revoke_devmem(struct resource *res) { };
++#endif
++
+ #endif /* __ASSEMBLY__ */
+ #endif	/* _LINUX_IOPORT_H */
+diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
+index 903cc2d2750b..84ae605c0643 100644
+--- a/include/uapi/linux/magic.h
++++ b/include/uapi/linux/magic.h
+@@ -93,6 +93,7 @@
+ #define BALLOON_KVM_MAGIC	0x13661366
+ #define ZSMALLOC_MAGIC		0x58295829
+ #define DMA_BUF_MAGIC		0x444d4142	/* "DMAB" */
++#define DEVMEM_MAGIC		0x454d444d	/* "DMEM" */
+ #define Z3FOLD_MAGIC		0x33
+ 
+ #endif /* __LINUX_MAGIC_H__ */
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 76036a41143b..841737bbda9e 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -1126,6 +1126,7 @@ struct resource * __request_region(struct resource *parent,
+ {
+ 	DECLARE_WAITQUEUE(wait, current);
+ 	struct resource *res = alloc_resource(GFP_KERNEL);
++	struct resource *orig_parent = parent;
+ 
+ 	if (!res)
+ 		return NULL;
+@@ -1176,6 +1177,10 @@ struct resource * __request_region(struct resource *parent,
+ 		break;
+ 	}
+ 	write_unlock(&resource_lock);
++
++	if (res && orig_parent == &iomem_resource)
++		revoke_devmem(res);
++
+ 	return res;
+ }
+ EXPORT_SYMBOL(__request_region);
 -- 
 2.25.1
 
