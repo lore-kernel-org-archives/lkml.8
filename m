@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7CBC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53E8021D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A168A221EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442939;
-	bh=VpjP3jVq0bjugs/5RcsCzhqIYbReP3FGOMAIVXUiZK0=;
+	s=default; t=1592442942;
+	bh=Y+jEq1yhHR4AS49M3ETtytKwmvQKhGusQVIqWiHKyME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QHxQFNuwymUMpeH+U9fKkDjw4B13tAROwK/xdz2/CO1oxnXdAFtBsM0ifC2fXmuWR
-	 rx9NkbUx2h/ee4af4HL4ZsUvGiGqlbfmw6NXrDh9KiYXyO9WetWOsanLrvxIU6z0AR
-	 rxZ7BaZsrVmFZmpMkZtT4SLydaI03QpbZjGxNDE0=
+	b=ytGJNoCmgNwnNwrerc1nmF24Wf5D5l8IzF1okVgG/JiUGcWEkXKFUS9Ef09GwBd/H
+	 t7gvN7lWFat1dgLAp0N86Hx3THsJa3ezJ2nC7YxZxEwcNIAg6jM/k88S5eq/8W67UZ
+	 VOXN2Eyeq8C631FAsDBzXZLxNxBuCUByj38yu7Yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbgFRBPh (ORCPT
+        id S1729512AbgFRBPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:15:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43348 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:15:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729228AbgFRBNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:53 -0400
+        id S1727872AbgFRBN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BAE721974;
-        Thu, 18 Jun 2020 01:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1319C21974;
+        Thu, 18 Jun 2020 01:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442833;
-        bh=VpjP3jVq0bjugs/5RcsCzhqIYbReP3FGOMAIVXUiZK0=;
+        s=default; t=1592442838;
+        bh=Y+jEq1yhHR4AS49M3ETtytKwmvQKhGusQVIqWiHKyME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UdGDBCdU+5roVYEtWoBWWTGcWOa/u877v68Mw/353aanWIHLGujYooyP420lXHj0h
-         6zbJaOKpDdhQBxcJcsxQIllcemxv1g0Jq9Q9vFTVDuoHOPcOy2Rnq+MTelyBsR4zvP
-         QD5FH8VgFmXW3J8u9WvZoOgn0aQUoMHlOuR7OmrI=
+        b=S7uwXnjzmp+cEaKjfJShbXPI+QRzR8jupKyMuKLlMaXw+BWmNR3z68wNzMk5QeamR
+         H87JCN+qx9viZqWdxpqIexzKmrAI14k6Z3hNs8wYm45zJbI1nyRNJu9gDOxtNp7AWP
+         k3Q+MdYdevKjn2fGnFdPnbNhmRQtJRrIBpHjtDR0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 267/388] usb: gadget: fix potential double-free in m66592_probe.
-Date:   Wed, 17 Jun 2020 21:06:04 -0400
-Message-Id: <20200618010805.600873-267-sashal@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 272/388] x86/apic: Make TSC deadline timer detection message visible
+Date:   Wed, 17 Jun 2020 21:06:09 -0400
+Message-Id: <20200618010805.600873-272-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -58,36 +57,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit 44734a594196bf1d474212f38fe3a0d37a73278b ]
+[ Upstream commit de308d1815c9e8fe602a958c5c76142ff6501d75 ]
 
-m66592_free_request() is called under label "err_add_udc"
-and "clean_up", and m66592->ep0_req is not set to NULL after
-first free, leading to a double-free. Fix this issue by
-setting m66592->ep0_req to NULL after the first free.
+The commit
 
-Fixes: 0f91349b89f3 ("usb: gadget: convert all users to the new udc infrastructure")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+  c84cb3735fd5 ("x86/apic: Move TSC deadline timer debug printk")
+
+removed the message which said that the deadline timer was enabled.
+It added a pr_debug() message which is issued when deadline timer
+validation succeeds.
+
+Well, issued only when CONFIG_DYNAMIC_DEBUG is enabled - otherwise
+pr_debug() calls get optimized away if DEBUG is not defined in the
+compilation unit.
+
+Therefore, make the above message pr_info() so that it is visible in
+dmesg.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200525104218.27018-1-bp@alien8.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/m66592-udc.c | 2 +-
+ arch/x86/kernel/apic/apic.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/m66592-udc.c b/drivers/usb/gadget/udc/m66592-udc.c
-index 75d16a8902e6..931e6362a13d 100644
---- a/drivers/usb/gadget/udc/m66592-udc.c
-+++ b/drivers/usb/gadget/udc/m66592-udc.c
-@@ -1667,7 +1667,7 @@ static int m66592_probe(struct platform_device *pdev)
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index e53dda210cd7..21d2f1de1057 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -2093,7 +2093,7 @@ void __init init_apic_mappings(void)
+ 	unsigned int new_apicid;
  
- err_add_udc:
- 	m66592_free_request(&m66592->ep[0].ep, m66592->ep0_req);
--
-+	m66592->ep0_req = NULL;
- clean_up3:
- 	if (m66592->pdata->on_chip) {
- 		clk_disable(m66592->clk);
+ 	if (apic_validate_deadline_timer())
+-		pr_debug("TSC deadline timer available\n");
++		pr_info("TSC deadline timer available\n");
+ 
+ 	if (x2apic_mode) {
+ 		boot_cpu_physical_apicid = read_apic_id();
 -- 
 2.25.1
 
