@@ -2,137 +2,171 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A967C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2870C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53CC320773
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C5D2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:00:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="P7UkIEZc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BuEgVqa7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbgFRVyx (ORCPT
+        id S1731538AbgFRWA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 17:54:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39260 "EHLO
+        Thu, 18 Jun 2020 18:00:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727782AbgFRVyw (ORCPT
+        with ESMTP id S1729146AbgFRWAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 17:54:52 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3716C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 14:54:50 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id n9so3051948plk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 14:54:50 -0700 (PDT)
+        Thu, 18 Jun 2020 18:00:25 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 999B9C0613EF
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:00:25 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id v25so2526829uau.4
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QjYRXVnTKmSPy9nc0sAVhFym/Nqfv053XoZu76ot+xk=;
-        b=P7UkIEZcivpLDMraS1/PG5nWdM56WKKxREOxLKarqGPuWeD+mZ85UGS87OOrIuyLB+
-         ObBCCTCaFeunarMTOKv+lGii9cmEdl/U+eAzoMeXNHb4KgISuYXOQZ0xVjAK0Ji3lBl/
-         gwzrZHzHBMT5To5SezHRr4+CwmSkZkOizMEKKOSmVE8VSQWOZftiapgBsPC3lKJyL/xR
-         OGWH2xrMWt0AG04UK+XpJu/bA6ffx3EHrlg4YwWmfLvlZjp5Oxsa2przofJSHSUY72zY
-         DwqMtRUYdfusqcQJE2ShoWA/hMWZQZxcJ/APQ5uTseS/HvXiCkm5cpY9mdHzaLtoWTXj
-         JtmA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JJH2EhuV/l7lkkyLG+fPn9FLJNHdoBEceDl0Qlyep9Q=;
+        b=BuEgVqa7JJLH/NwKBu8Sw33xZRs5BjNpsUCbu53oaMGOfj8rIToOq03sVNfeMQ0eSN
+         XHqwE1QZaeylpeCgx8Azm6R9RJttc3GRF91SUFrc3gUIOTrNV+mYLkzqzbKNBpdFkvyw
+         eUrvad2APf3CIoCUdT6o0wTqhaxATvNBU0yoE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=QjYRXVnTKmSPy9nc0sAVhFym/Nqfv053XoZu76ot+xk=;
-        b=nJUnGU8q09beVzf81Uu4zZdzO3qs22z1sXAhQmBPLzsOVbNMySSy7FNiPOmZbvOjDl
-         DfyOrAKG6Ac2/W0HOYyoXEG045LAbIEbXhwPnxJAnxgBT2CeYm0sfweBp7Nq0ntAwqtg
-         cJrMReUE9THnO9ODPhRLQzC6/7xMFopVIoF1p8ll5i995w5ISZhWszteq5134XMoA4o2
-         YTwgaF6jl2+IdEyPAykcJLoGjP08sZuQuJH7nSZLnF0zchdOGsOwc+g7MPLNwvBRaFGe
-         SB2WUm0sid8jXdP7anjcsYpqyi3Bz1SfMeEzx/SOMrGyD4BWjkZo5NBhHV6ULKjW9rwq
-         sjvw==
-X-Gm-Message-State: AOAM533Q/2a6mRwwwEPDcGhsX7cSqJPtU+mikNaIim7QY0VY6prTx0Mo
-        544j+RLBRL96FDsYlTVBFNJ7Ig==
-X-Google-Smtp-Source: ABdhPJxY9ed/pKFl3Hlee+TLwGMO/5Z8Xdo7dUMFNr37yrdzofOr7hOzqOL2MDuCyOXZltNK/LaXRQ==
-X-Received: by 2002:a17:90b:110f:: with SMTP id gi15mr405888pjb.87.1592517290252;
-        Thu, 18 Jun 2020 14:54:50 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id z24sm3835604pfk.29.2020.06.18.14.54.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 14:54:49 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 14:54:49 -0700 (PDT)
-X-Google-Original-Date: Thu, 18 Jun 2020 14:54:44 PDT (-0700)
-Subject:     Re: [PATCH v2 0/8] Introduce sv48 support
-In-Reply-To: <20200603081104.14004-1-alex@ghiti.fr>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, zong.li@sifive.com,
-        anup@brainfault.org, Christoph Hellwig <hch@lst.de>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        alex@ghiti.fr
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     alex@ghiti.fr
-Message-ID: <mhng-63897bc8-faa3-405e-9192-3b29216484b9@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JJH2EhuV/l7lkkyLG+fPn9FLJNHdoBEceDl0Qlyep9Q=;
+        b=h7scSI/4is1qDb0E4Mo8wUUzoFeHNXioM3buK/CFTfJTVoCmh29fHMkiuMgnl6wIsY
+         jPWG0MxCAdeTq5R1YWkKSsU9IBM14HqxmOoeybR8og+906qGvRr1Hy0sDRzsAcKhQBXo
+         ZgYMJK4GSxqe2QqH9dduzt3qeOvHBAOZKd/8C22B8TtS0JMXy6Ei55WzhYx6cjnjxa9h
+         u/0rIZnLBoWBjHwXZySFKLoAII8+eBepBG/iRl9QPSmL5FuxvnethZLQTARSSHvo9n2S
+         BKz8URj0qdgp1qdR8LQEbuLQHBAYFzYtVNt+ddsxjG6nB6HWZ/Gc0JgKW08vUhv3XddU
+         dhJQ==
+X-Gm-Message-State: AOAM531E04mGOZBUQ4C4kmbp8a8E+3Bgf4ChLHCjgC5G3hzRtghI7NP2
+        8bzMKNT+VyCbT1CSYT3s+inaUcnL45M=
+X-Google-Smtp-Source: ABdhPJzWkug8GXhDdDgLjcgvdTm0VczlF4eYpZFtudE41AvuJiF50k2UP2CHkrt0OUidzJieIcJGoQ==
+X-Received: by 2002:a9f:21d5:: with SMTP id 79mr484576uac.54.1592517623410;
+        Thu, 18 Jun 2020 15:00:23 -0700 (PDT)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id b21sm342155uap.15.2020.06.18.15.00.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 15:00:22 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id r11so4463435vsj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:00:22 -0700 (PDT)
+X-Received: by 2002:a67:62c4:: with SMTP id w187mr3093005vsb.109.1592517622000;
+ Thu, 18 Jun 2020 15:00:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200618150626.237027-1-dianders@chromium.org>
+ <20200618080459.v4.5.Ib1e6855405fc9c99916ab7c7dee84d73a8bf3d68@changeid>
+ <159250352382.62212.8085892973272354046@swboyd.mtv.corp.google.com>
+ <CAD=FV=Xh3+cROZC8dCn99MLkngsyBcxq+Gv1CERayZXExwdygA@mail.gmail.com> <159251712230.62212.10744179843753723398@swboyd.mtv.corp.google.com>
+In-Reply-To: <159251712230.62212.10744179843753723398@swboyd.mtv.corp.google.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 18 Jun 2020 15:00:10 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=W1y4Z4T13i410zkb27mUxqn+rQE889=ckEEBhbPuci2w@mail.gmail.com>
+Message-ID: <CAD=FV=W1y4Z4T13i410zkb27mUxqn+rQE889=ckEEBhbPuci2w@mail.gmail.com>
+Subject: Re: [PATCH v4 5/5] spi: spi-geni-qcom: Don't keep a local state variable
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 03 Jun 2020 01:10:56 PDT (-0700), alex@ghiti.fr wrote:
-> This patchset implements sv48 support at runtime. The kernel will try to
-> boot with 4-level page table and will fallback to 3-level if the HW does not
-> support it.
->
-> The biggest advantage is that we only have one kernel for 64bit, which
-> is way easier to maintain.
->
-> Folding the 4th level into a 3-level page table has almost no cost at
-> runtime. But as mentioned Palmer, the relocatable code generated is less
-> performant.
->
-> At the moment, there is no way to build a 3-level page table non-relocatable
-> 64bit kernel. We agreed that distributions will use this runtime configuration
-> anyway, but Palmer proposed to introduce a new Kconfig, which I will do later
-> as sv48 support was asked for 5.8.
->
-> Finally, the user can now ask for sv39 explicitly by using the device-tree
-> which will reduce memory footprint and reduce the number of memory accesses
-> in case of TLB miss.
->
-> Changes in v2:
->   * Move variable declarations to pgtable.h in patch 5/7 as suggested by Anup
->   * Restore mmu-type properties in patch 6 as suggested by Anup
->   * Fix unused variable in patch 5 that was used in patch 6
->   * Fix SPARSEMEM build (patch 2 was modified so I dropped the Reviewed-by)
->   * Applied various Reviewed-by
->
-> Alexandre Ghiti (8):
->   riscv: Get rid of compile time logic with MAX_EARLY_MAPPING_SIZE
->   riscv: Allow to dynamically define VA_BITS
->   riscv: Simplify MAXPHYSMEM config
->   riscv: Prepare ptdump for vm layout dynamic addresses
->   riscv: Implement sv48 support
->   riscv: Allow user to downgrade to sv39 when hw supports sv48
->   riscv: Use pgtable_l4_enabled to output mmu type in cpuinfo
->   riscv: Explicit comment about user virtual address space size
->
->  arch/riscv/Kconfig                  |  34 ++---
->  arch/riscv/include/asm/csr.h        |   3 +-
->  arch/riscv/include/asm/fixmap.h     |   1 +
->  arch/riscv/include/asm/page.h       |  15 +++
->  arch/riscv/include/asm/pgalloc.h    |  36 ++++++
->  arch/riscv/include/asm/pgtable-64.h |  97 +++++++++++++-
->  arch/riscv/include/asm/pgtable.h    |  31 ++++-
->  arch/riscv/include/asm/sparsemem.h  |   6 +-
->  arch/riscv/kernel/cpu.c             |  23 ++--
->  arch/riscv/kernel/head.S            |   3 +-
->  arch/riscv/mm/context.c             |   2 +-
->  arch/riscv/mm/init.c                | 194 ++++++++++++++++++++++++----
->  arch/riscv/mm/ptdump.c              |  49 +++++--
->  13 files changed, 412 insertions(+), 82 deletions(-)
+Hi,
 
-Sorry I haven't had time to look at your patch sets for a bit, with the merge
-window everything got a bit busy.  I'm collecting the rc1 fixes now, as we have
-some major issues, but with any luck I'll have time to start looking at larger
-stuff for for-next next week.
+On Thu, Jun 18, 2020 at 2:52 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Doug Anderson (2020-06-18 13:09:47)
+> > On Thu, Jun 18, 2020 at 11:05 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > Quoting Douglas Anderson (2020-06-18 08:06:26)
+> > > > @@ -126,20 +120,23 @@ static void handle_fifo_timeout(struct spi_master *spi,
+> > > >         struct geni_se *se = &mas->se;
+> > > >
+> > > >         spin_lock_irq(&mas->lock);
+> > > > -       reinit_completion(&mas->xfer_done);
+> > > > -       mas->cur_mcmd = CMD_CANCEL;
+> > > > -       geni_se_cancel_m_cmd(se);
+> > > > +       reinit_completion(&mas->cancel_done);
+> > > >         writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
+> > > > +       mas->cur_xfer = NULL;
+> > >
+> > > BTW, is this necessary? It's subtlely placed here without a comment why.
+> >
+> > I believe so.  Now that we don't have the "cur_mcmd" we rely on
+> > cur_xfer being NULL to tell the difference between a "done" for chip
+> > select vs. a "done" for transfer.
+> >
+> > * When we start a transfer we set "cur_xfer" to a non-NULL pointer.
+> > When the transfer finishes we set it to NULL again.
+> >
+> > * When we start a chip select transfer we _don't_ explicitly set it to
+> > NULL because it should already be NULL.
+> >
+> > * When we are aborting a transfer we need to NULL so we can handle the
+> > chip select that will come next.
+> >
+> > I suppose it's possible that we could get by without without NULLing
+> > it because I believe when the "abort" IRQ finally fires then it will
+> > include a "DONE" and that would presumably NULL it out.  ...but I
+> > guess if both the cancel and abort timed out and no IRQ ever fired
+> > then nothing would have NULLed it and the next chip select would be
+> > confused.
+>
+> I was going to say that we should set it NULL when starting CS but that
+> is not as important as clearing it out when a cancel/abort is processing
+> so that a stale transfer isn't kept around.
+>
+> >
+> > Prior to getting rid of "cur_mcmd" this all wasn't needed because
+> > "cur_xfer" was only ever looked at if "cur_mcmd" was set to
+> > "CMD_XFER".
+> >
+> >
+> > One part of my change that is technically not related to the removal
+> > of "cur_mcmd" is the part where I do "mas->tx_rem_bytes =
+> > mas->rx_rem_bytes = 0;".  I can split that as a separate change if you
+> > want but it seemed fine to just clean up this extra bit of state here.
+> >
+>
+> How about a comment like this?
+>
+> -----8<----
+> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+> index d8f03ffb8594..670f83793aa4 100644
+> --- a/drivers/spi/spi-geni-qcom.c
+> +++ b/drivers/spi/spi-geni-qcom.c
+> @@ -121,6 +121,10 @@ static void handle_fifo_timeout(struct spi_master *spi,
+>         spin_lock_irq(&mas->lock);
+>         reinit_completion(&mas->cancel_done);
+>         writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
+> +       /*
+> +        * Make sure we don't finalize a spi transfer that timed out but
+> +        * came in while cancelling.
+> +        */
+>         mas->cur_xfer = NULL;
+>         mas->tx_rem_bytes = mas->rx_rem_bytes = 0;
+>         geni_se_cancel_m_cmd(se);
 
-Thanks!
+Sure.  It gets the point across, though
+spi_finalize_current_transfer() is actually pretty harmless if you
+call it while cancelling.  It just calls a completion.  I'd rather say
+something like "If we're here because the SPI controller was calling
+handle_err() then the transfer is done and we shouldn't hold onto it
+anymore".
+
+-Doug
