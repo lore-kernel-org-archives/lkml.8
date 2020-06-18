@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA549C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F0AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF2A92220B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1202220F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445699;
-	bh=aIu6WKywcY2fBDSizvJuVK46Mwibxi9VcQs36OCkW9Y=;
+	s=default; t=1592445701;
+	bh=kYM8IshYBvLgKdoY5hXB5ottarneM32mlxpl3zcp23o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z6qWPm95BzYlksWUrifuL+vlMspz4coDfWBEVQ0py5VqVUfifoxB83U5aOO8J6zfy
-	 +ZMlWGU4nn260UiLoYC5AiYaZrTXUt25S0WfIr/Z4wL59eH7tKBBxwFBixYKScKLSG
-	 BdxHyxsOFEXenTstL7sFhaouVi6qBYwBSwI4HrN4=
+	b=QFQpvE3o8wvsO3hpMehZVyFApiGuU5O53x9QGL6vn+TrCdkQmm1pMezWaIZ0NkYPJ
+	 CqLAoqztFnvkiBLwUFBDTGx1xA8YTGTbPp1LB6tIhhqnlXkpLonw3faoRQqReJi0Ti
+	 mRz+1pQlRpRBFURMSomrrPTXAT3DnXUNtP1F5XwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731150AbgFRCBg (ORCPT
+        id S2387485AbgFRCBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:01:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58338 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:01:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731124AbgFRBYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:24:06 -0400
+        id S1729801AbgFRBYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:24:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B02220776;
-        Thu, 18 Jun 2020 01:24:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 092DA21D90;
+        Thu, 18 Jun 2020 01:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443445;
-        bh=aIu6WKywcY2fBDSizvJuVK46Mwibxi9VcQs36OCkW9Y=;
+        s=default; t=1592443444;
+        bh=kYM8IshYBvLgKdoY5hXB5ottarneM32mlxpl3zcp23o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KI3c8+hDuMnX/KArXX53C91tEjlBwrp4hqi5KNknFfFgtwJ0wDCJPOkqN3GvZXsGo
-         9VCy1H4/nbdgZXAAaiR+8EY9T0nz9VHwdILC72s+4lC7DW+n0HSGAtlcrAFdWHrz0a
-         ConMFPiPQ/9tLsrCGEkX4nmFo4Xgyr+u8kl6kEB8=
+        b=Y7JLiadtV2NNgTaVlbIHX7FCqlmR+hh9NZO46hXaWDC5BJxsEqNYuG6IEuhFWA4AK
+         +ldFK8cyJggDrjfXpCfIfCE1Xkm8EpNO+8LJlCjKTqPeGCTPwnAsvwdzKWZnsFcPHs
+         03kC/DWIXPeXUWqa6gsqKvn1cea3f0OCBJyf6q9U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 082/172] power: supply: smb347-charger: IRQSTAT_D is volatile
-Date:   Wed, 17 Jun 2020 21:20:48 -0400
-Message-Id: <20200618012218.607130-82-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 081/172] power: supply: lp8788: Fix an error handling path in 'lp8788_charger_probe()'
+Date:   Wed, 17 Jun 2020 21:20:47 -0400
+Message-Id: <20200618012218.607130-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -60,36 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit c32ea07a30630ace950e07ffe7a18bdcc25898e1 ]
+[ Upstream commit 934ed3847a4ebc75b655659c4d2349ba4337941c ]
 
-Fix failure when USB cable is connected:
-smb347 2-006a: reading IRQSTAT_D failed
+In the probe function, in case of error, resources allocated in
+'lp8788_setup_adc_channel()' must be released.
 
-Fixes: 1502cfe19bac ("smb347-charger: Fix battery status reporting logic for charger faults")
+This can be achieved easily by using the devm_ variant of
+'iio_channel_get()'.
+This has the extra benefit to simplify the remove function and to axe the
+'lp8788_release_adc_channel()' function which is now useless.
 
-Tested-by: David Heidelberg <david@ixit.cz>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: David Heidelberg <david@ixit.cz>
+Fixes: 98a276649358 ("power_supply: Add new lp8788 charger driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/smb347-charger.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/power/supply/lp8788-charger.c | 18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/power/supply/smb347-charger.c b/drivers/power/supply/smb347-charger.c
-index 072c5189bd6d..0655dbdc7000 100644
---- a/drivers/power/supply/smb347-charger.c
-+++ b/drivers/power/supply/smb347-charger.c
-@@ -1141,6 +1141,7 @@ static bool smb347_volatile_reg(struct device *dev, unsigned int reg)
- 	switch (reg) {
- 	case IRQSTAT_A:
- 	case IRQSTAT_C:
-+	case IRQSTAT_D:
- 	case IRQSTAT_E:
- 	case IRQSTAT_F:
- 	case STAT_A:
+diff --git a/drivers/power/supply/lp8788-charger.c b/drivers/power/supply/lp8788-charger.c
+index 0f3432795f3c..b8f7dac7ac3f 100644
+--- a/drivers/power/supply/lp8788-charger.c
++++ b/drivers/power/supply/lp8788-charger.c
+@@ -600,27 +600,14 @@ static void lp8788_setup_adc_channel(struct device *dev,
+ 		return;
+ 
+ 	/* ADC channel for battery voltage */
+-	chan = iio_channel_get(dev, pdata->adc_vbatt);
++	chan = devm_iio_channel_get(dev, pdata->adc_vbatt);
+ 	pchg->chan[LP8788_VBATT] = IS_ERR(chan) ? NULL : chan;
+ 
+ 	/* ADC channel for battery temperature */
+-	chan = iio_channel_get(dev, pdata->adc_batt_temp);
++	chan = devm_iio_channel_get(dev, pdata->adc_batt_temp);
+ 	pchg->chan[LP8788_BATT_TEMP] = IS_ERR(chan) ? NULL : chan;
+ }
+ 
+-static void lp8788_release_adc_channel(struct lp8788_charger *pchg)
+-{
+-	int i;
+-
+-	for (i = 0; i < LP8788_NUM_CHG_ADC; i++) {
+-		if (!pchg->chan[i])
+-			continue;
+-
+-		iio_channel_release(pchg->chan[i]);
+-		pchg->chan[i] = NULL;
+-	}
+-}
+-
+ static ssize_t lp8788_show_charger_status(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
+@@ -747,7 +734,6 @@ static int lp8788_charger_remove(struct platform_device *pdev)
+ 	lp8788_irq_unregister(pdev, pchg);
+ 	sysfs_remove_group(&pdev->dev.kobj, &lp8788_attr_group);
+ 	lp8788_psy_unregister(pchg);
+-	lp8788_release_adc_channel(pchg);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
