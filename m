@@ -2,110 +2,115 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F77C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 751FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD8820890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E97420890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BLRIwPp4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fkY3wk1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgFRT4e (ORCPT
+        id S1730545AbgFRT50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 15:56:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbgFRT4d (ORCPT
+        Thu, 18 Jun 2020 15:57:26 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32206 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727844AbgFRT50 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 15:56:33 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DAFFC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 12:56:33 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x207so3294903pfc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 12:56:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6WxuJi3UfQEqC50/z7v1HAPWAobzlEVFkfWhBJ8zFb8=;
-        b=BLRIwPp48LTeq9dM8BwXEFv5h/k53jK72H77U2P6ZO0Z+qF0jqS9BYG2WOWGi2uLAP
-         TuUxSPxtQumf9pjuTW1EkIpK17VdeP8VSj7bgQ7xYLKugmWBM1Uaf8TG4Fpne5U6bQ10
-         4L4OW4EB3085D6soCS/bXnsER6BHuOq4aBaQo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6WxuJi3UfQEqC50/z7v1HAPWAobzlEVFkfWhBJ8zFb8=;
-        b=LaUboBFSy+4QbUm9JM/i7I86ErWm60UKfwx/GXDmo18RiC2/jB7MH+e9Z/adVoUCWD
-         dkqgCNEkYhYyw6AzQlCng++xJ53naph/9BeQ2eSldCxeCJy4iF0r8I7ROGbP8HqKw9Ka
-         rtoil8X/9k6GT+i61/XxDP881VYJTQwF4a1msZFLSvKNjdvpOfwYhuBnWrfoKAtvOdo/
-         /vYuJqOlSgbGAv1ld+116ENBgNtrUVJM70lP/WFiye5ERxZ0QJoPq282RwE+4gMBPFgf
-         zpmdDhxb83YBCI0IhpYI4Ro/B0rVQyQmAT34I3b0HPTb1YO6p4Z7LURHwtOtfSQaFKYu
-         1n3A==
-X-Gm-Message-State: AOAM533IHShLExQMRb/4qCKYtZBykbz7v6C/InlMd7va1ed8KEs0oBUE
-        pccVuVJ6V7P+xcbxaR7CAqXAHA==
-X-Google-Smtp-Source: ABdhPJxp3L2hsMhtTetcJVLB1ubkKk/0FvqLGsh2lPF4B0wBPnAb1y6cbMAMewS7FT35u7jNXr0hZw==
-X-Received: by 2002:a63:7d4e:: with SMTP id m14mr171075pgn.391.1592510193055;
-        Thu, 18 Jun 2020 12:56:33 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m16sm3593977pfh.187.2020.06.18.12.56.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 12:56:32 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 12:56:31 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        vinmenon@codeaurora.org, Matthew Garrett <mjg59@google.com>,
-        Roman Gushchin <guro@fb.com>, Jann Horn <jannh@google.com>,
-        Vijayanand Jitta <vjitta@codeaurora.org>
-Subject: Re: [PATCH 7/9] mm, slub: introduce kmem_cache_debug_flags()
-Message-ID: <202006181256.062C1F2@keescook>
-References: <20200610163135.17364-1-vbabka@suse.cz>
- <20200610163135.17364-8-vbabka@suse.cz>
- <949b90ed-e0f0-07d7-4d21-e30ec0958a7c@suse.cz>
+        Thu, 18 Jun 2020 15:57:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592510245;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6uhU1vYx1jeJPqDKTT2tgprjXa1p0qoF4btUD8t6CkI=;
+        b=fkY3wk1C319/JiTTjkBF9M9AF+YWMQ+/XsJrOj0IGm6iRB7h63z9zjolpB++osbvzWa5bH
+        +dM7qciDR13Uk9m8H3He5SYi7/ezgVGsEjpLDJRyHe+7fcQYreSGeQS/t7ynkDECOpp6VV
+        Cyj2FjLyS2785IsALfF5zXNsrb13S3g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-339-FqpFi6npO-ygI0rj1Xk_6A-1; Thu, 18 Jun 2020 15:57:22 -0400
+X-MC-Unique: FqpFi6npO-ygI0rj1Xk_6A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05F57107ACCD;
+        Thu, 18 Jun 2020 19:57:22 +0000 (UTC)
+Received: from gimli.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 838AB5BAC2;
+        Thu, 18 Jun 2020 19:57:18 +0000 (UTC)
+Subject: [PATCH] vfio: Cleanup allowed driver naming
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     alex.williamson@redhat.com
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        cohuck@redhat.com
+Date:   Thu, 18 Jun 2020 13:57:18 -0600
+Message-ID: <159251018108.23973.14170848139642305203.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <949b90ed-e0f0-07d7-4d21-e30ec0958a7c@suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 10:37:07AM +0200, Vlastimil Babka wrote:
-> On 6/10/20 6:31 PM, Vlastimil Babka wrote:
-> > There are few places that call kmem_cache_debug(s) (which tests if any of debug
-> > flags are enabled for a cache) immediatelly followed by a test for a specific
-> > flag. The compiler can probably eliminate the extra check, but we can make the
-> > code nicer by introducing kmem_cache_debug_flags() that works like
-> > kmem_cache_debug() (including the static key check) but tests for specifig
-> > flag(s). The next patches will add more users.
-> > 
-> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> 
-> Please add this fixup per reviews.
-> ----8<----
-> From 25793252a31a36f8d1d4ccf0f27ed3e43fba54d8 Mon Sep 17 00:00:00 2001
-> From: Vlastimil Babka <vbabka@suse.cz>
-> Date: Thu, 18 Jun 2020 10:34:53 +0200
-> Subject: [PATCH] mm, slub: introduce kmem_cache_debug_flags()-fix
-> 
-> Change return from int to bool, per Kees.
-> Add VM_WARN_ON_ONCE() for invalid flags, per Roman.
-> 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+No functional change, avoid non-inclusive naming schemes.
 
-Acked-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
+ drivers/vfio/vfio.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
--- 
-Kees Cook
+diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+index 580099afeaff..833da937b7fc 100644
+--- a/drivers/vfio/vfio.c
++++ b/drivers/vfio/vfio.c
+@@ -627,9 +627,9 @@ static struct vfio_device *vfio_group_get_device(struct vfio_group *group,
+  * that error notification via MSI can be affected for platforms that handle
+  * MSI within the same IOVA space as DMA.
+  */
+-static const char * const vfio_driver_whitelist[] = { "pci-stub" };
++static const char * const vfio_driver_allowed[] = { "pci-stub" };
+ 
+-static bool vfio_dev_whitelisted(struct device *dev, struct device_driver *drv)
++static bool vfio_dev_driver_allowed(struct device *dev, struct device_driver *drv)
+ {
+ 	if (dev_is_pci(dev)) {
+ 		struct pci_dev *pdev = to_pci_dev(dev);
+@@ -638,8 +638,8 @@ static bool vfio_dev_whitelisted(struct device *dev, struct device_driver *drv)
+ 			return true;
+ 	}
+ 
+-	return match_string(vfio_driver_whitelist,
+-			    ARRAY_SIZE(vfio_driver_whitelist),
++	return match_string(vfio_driver_allowed,
++			    ARRAY_SIZE(vfio_driver_allowed),
+ 			    drv->name) >= 0;
+ }
+ 
+@@ -648,7 +648,7 @@ static bool vfio_dev_whitelisted(struct device *dev, struct device_driver *drv)
+  * one of the following states:
+  *  - driver-less
+  *  - bound to a vfio driver
+- *  - bound to a whitelisted driver
++ *  - bound to an otherwise allowed driver
+  *  - a PCI interconnect device
+  *
+  * We use two methods to determine whether a device is bound to a vfio
+@@ -674,7 +674,7 @@ static int vfio_dev_viable(struct device *dev, void *data)
+ 	}
+ 	mutex_unlock(&group->unbound_lock);
+ 
+-	if (!ret || !drv || vfio_dev_whitelisted(dev, drv))
++	if (!ret || !drv || vfio_dev_driver_allowed(dev, drv))
+ 		return 0;
+ 
+ 	device = vfio_group_get_device(group, dev);
+
