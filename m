@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA33C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD34EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0914421927
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFB36214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443412;
-	bh=2ea4JsC+sY4iWnGh/32E3G6zl/4cxW/h4Nbqj6WnDJ8=;
+	s=default; t=1592443416;
+	bh=mCbbgWGeVvMa65WHyKq3eS1YWtGX2SAr1izSCqd49Co=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wa4aA+htFV2LMexTbXCIl/VFPPLKWBhxzupnO4SVU8t7UKtOtt9cYJRIBqsXpljIx
-	 wj3fMAB8+oQqtoHPhhnN4NJcfaQGW6bISYz1q75cWlBKj5TeabytyDg8T4cOMkbXNd
-	 NILnovMz/NK5eMXlVnip2Nex5AsVZv5CPY2O46yk=
+	b=EX0Xr17uTNmajG6buRd9zJNZrUxy5uTo3itQH962Y91OZLV7OQQ74yP2J2N9kU3wf
+	 F1VwYBXx0YVT982JcQDotJarRARvfP3V4tLIJ/GzQpGkDqYBl5eqbhf1Wy2m2LyIK1
+	 X8TefSTN1sEuYUGq09DqnEpCib47q66veFgOM8s8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730992AbgFRBXa (ORCPT
+        id S1731004AbgFRBXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:23:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52172 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:23:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgFRBUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:04 -0400
+        id S1730252AbgFRBUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AEBB21D80;
-        Thu, 18 Jun 2020 01:20:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C61E5221EB;
+        Thu, 18 Jun 2020 01:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443204;
-        bh=2ea4JsC+sY4iWnGh/32E3G6zl/4cxW/h4Nbqj6WnDJ8=;
+        s=default; t=1592443205;
+        bh=mCbbgWGeVvMa65WHyKq3eS1YWtGX2SAr1izSCqd49Co=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=COup8ectbCdJ5tGyCTpjCGUQwQRTVf00UABC1b+ZRp+pZrZjiCatl9OmevybFz6Au
-         v/9sDvjSEjdK1NA15l4h4iKmIMidf/ldYsAxqhOXrAxD17cotwEUONtPT0npH5IBTA
-         FVutV1PMfPxzs7LULxtBqw2C8P1L0WH/PovTdayI=
+        b=WAKz0eXCG8vrmrRdblaxOUoBBvEdOGBVaw+Z9eYkYaAKnOxV7eGZttO9PP5aALRg5
+         G+swXudV9bbYeVlayG/CG9dn0O9AfY8TfwDXUzCTGId3rc1Pr2+NSN1w0AqqCIZH6p
+         SP/Xj/E7Ff/YN3Ba5ajDWdUPsSBsBpBCz6FgbBtY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 162/266] ARM: dts: meson: Switch existing boards with RGMII PHY to "rgmii-id"
-Date:   Wed, 17 Jun 2020 21:14:47 -0400
-Message-Id: <20200618011631.604574-162-sashal@kernel.org>
+Cc:     Lijun Ou <oulijun@huawei.com>, Weihang Li <liweihang@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 163/266] RDMA/hns: Bugfix for querying qkey
+Date:   Wed, 17 Jun 2020 21:14:48 -0400
+Message-Id: <20200618011631.604574-163-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -61,70 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Lijun Ou <oulijun@huawei.com>
 
-[ Upstream commit 005231128e9e97461e81fa32421957a7664317ca ]
+[ Upstream commit 349be276509455ac2f19fa4051ed773082c6a27e ]
 
-Let the PHY generate the RX and TX delay on the Odroid-C1 and MXIII
-Plus.
+The qkey queried through the query ud qp verb is a fixed value and it
+should be read from qp context.
 
-Previously we did not know that these boards used an RX delay. We
-assumed that setting the TX delay on the MAC side It turns out that
-these boards also require an RX delay of 2ns (verified on Odroid-C1,
-but the u-boot code uses the same setup on both boards). Ethernet only
-worked because u-boot added this RX delay on the MAC side.
-
-The 4ns TX delay was also wrong and the result of using an unsupported
-RGMII TX clock divider setting. This has been fixed in the driver with
-commit bd6f48546b9cb7 ("net: stmmac: dwmac-meson8b: Fix the RGMII TX
-delay on Meson8b/8m2 SoCs").
-
-Switch to phy-mode "rgmii-id" to let the PHY side handle all the delays,
-(as recommended by the Ethernet maintainers anyways) to correctly
-describe the need for a 2ns RX as well as 2ns TX delay on these boards.
-This fixes the Ethernet performance on Odroid-C1 where there was a huge
-amount of packet loss when transmitting data due to the incorrect TX
-delay.
-
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Link: https://lore.kernel.org/r/20200512215148.540322-3-martin.blumenstingl@googlemail.com
+Fixes: 926a01dc000d ("RDMA/hns: Add QP operations support for hip08 SoC")
+Link: https://lore.kernel.org/r/1588931159-56875-2-git-send-email-liweihang@huawei.com
+Signed-off-by: Lijun Ou <oulijun@huawei.com>
+Signed-off-by: Weihang Li <liweihang@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson8b-odroidc1.dts    | 3 +--
- arch/arm/boot/dts/meson8m2-mxiii-plus.dts | 4 +---
- 2 files changed, 2 insertions(+), 5 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index a24eccc354b9..10f6d601eadb 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -202,9 +202,8 @@ &ethmac {
- 	pinctrl-0 = <&eth_rgmii_pins>;
- 	pinctrl-names = "default";
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 4540b00ccee9..9a8053bd01e2 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -4564,7 +4564,7 @@ static int hns_roce_v2_query_qp(struct ib_qp *ibqp, struct ib_qp_attr *qp_attr,
+ 	qp_attr->path_mig_state = IB_MIG_ARMED;
+ 	qp_attr->ah_attr.type   = RDMA_AH_ATTR_TYPE_ROCE;
+ 	if (hr_qp->ibqp.qp_type == IB_QPT_UD)
+-		qp_attr->qkey = V2_QKEY_VAL;
++		qp_attr->qkey = le32_to_cpu(context.qkey_xrcd);
  
--	phy-mode = "rgmii";
- 	phy-handle = <&eth_phy>;
--	amlogic,tx-delay-ns = <4>;
-+	phy-mode = "rgmii-id";
- 
- 	nvmem-cells = <&ethernet_mac_address>;
- 	nvmem-cell-names = "mac-address";
-diff --git a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
-index d54477b1001c..cc498191ddd1 100644
---- a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
-+++ b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
-@@ -69,9 +69,7 @@ &ethmac {
- 	pinctrl-names = "default";
- 
- 	phy-handle = <&eth_phy0>;
--	phy-mode = "rgmii";
--
--	amlogic,tx-delay-ns = <4>;
-+	phy-mode = "rgmii-id";
- 
- 	mdio {
- 		compatible = "snps,dwmac-mdio";
+ 	qp_attr->rq_psn = roce_get_field(context.byte_108_rx_reqepsn,
+ 					 V2_QPC_BYTE_108_RX_REQ_EPSN_M,
 -- 
 2.25.1
 
