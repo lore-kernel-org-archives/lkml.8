@@ -2,71 +2,94 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB02C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6540CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE5A217A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:49:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592466574;
-	bh=ibQowcpRzi2x8YPw80J2WJshf2seNC5tdBtJjm5PzI4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I1i/9Xm+eiEfStaTRNAsfyjs8oXnP4tsOauxds+BjRuYMLyh/TZpD+IflbQFgYCfz
-	 dEicFV9zzOc30ThdnmegN33CwtmJx8hGIAhM8S6nTKlAlzpz84mlyp8jcnwsXTY8ty
-	 /IA7BKQYdqiaGDiZ5n1IlBtFmorVQ1ELGjnrXkuw=
+	by mail.kernel.org (Postfix) with ESMTP id 2FCF120899
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:50:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S+sNhKyr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgFRHtc (ORCPT
+        id S1728225AbgFRHuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 03:49:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgFRHtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 03:49:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 18 Jun 2020 03:50:22 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59462 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726282AbgFRHuV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 03:50:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592466621;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=PDcgiaJNLiWYXI7v/eZt6zw/T0PDPCuZ8sjZurKJ94s=;
+        b=S+sNhKyrdQrWXH1W/PoKEUyNCXTEV7oqiVTK7sNmmbXEklIdW+wqEVmg8VI6WJ6z7y2iSj
+        X0YqmE/lkmvbcSATi5NACCFwnY0w9c+Fi0/ZOZYClFHgU21UhR2nwELkZaXTc/Drz6tgc9
+        H80kK2394XrTYOvTxABSeIkXy9Ib51U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-73-gLG1G5RDM5C1hDqEODsWjQ-1; Thu, 18 Jun 2020 03:50:17 -0400
+X-MC-Unique: gLG1G5RDM5C1hDqEODsWjQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A0C32166E;
-        Thu, 18 Jun 2020 07:49:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592466571;
-        bh=ibQowcpRzi2x8YPw80J2WJshf2seNC5tdBtJjm5PzI4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K8KN03xnv/ctc/iYQwbIHSiYIxPTFGKl+ydkKjqiJVpBfjSPxIvYyQ9GDvPcR2d55
-         0cwTariGM9z6Q1uhJ8I/ReYD3ZVcWydA6wM/FOH1viaLqYuw+t0tkEHXT+PxBBEUL1
-         3dCxg8ieQ/f4oUeL9I9WSPNfuUnUeABcPqXz/kRE=
-Date:   Thu, 18 Jun 2020 09:49:24 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tyler Shetrompf <tyler@shetrompf.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: comedi: comedi_fops: fixed a blank line coding
- style issue
-Message-ID: <20200618074924.GA187169@kroah.com>
-References: <20200610195923.GA12602@archlinux.localdomain>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8A601883607;
+        Thu, 18 Jun 2020 07:50:16 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ECD401C4;
+        Thu, 18 Jun 2020 07:50:15 +0000 (UTC)
+Subject: [PATCH net 0/3] rxrpc: Performance drop fix and other fixes
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 18 Jun 2020 08:50:15 +0100
+Message-ID: <159246661514.1229328.4419873299996950969.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.22
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610195923.GA12602@archlinux.localdomain>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 07:59:23PM +0000, Tyler Shetrompf wrote:
-> Fixed a coding style issue.
-> 
-> Signed-off-by: Tyler Shetrompf <tyler@shetrompf.com>
-> ---
->  drivers/staging/comedi/comedi_fops.c | 3 +++
->  1 file changed, 3 insertions(+)
 
-Someone else sent this same patch 5 days before you did:
-	https://lore.kernel.org/r/20200605032140.31287-1-kambojdivyansh2000@gmail.com
+Here are three fixes for rxrpc:
 
-Sorry,
+ (1) Fix a trace symbol mapping.  It doesn't seem to let you map to "".
 
-greg k-h
+ (2) Fix the handling of the remote receive window size when it increases
+     beyond the size we can support for our transmit window.
+
+ (3) Fix a performance drop caused by retransmitted packets being
+     accidentally marked as already ACK'd.
+
+The patches are tagged here:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+	rxrpc-fixes-20200618
+
+and can also be found on the following branch:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=rxrpc-fixes
+
+David
+---
+David Howells (1):
+      rxrpc: Fix afs large storage transmission performance drop
+
+
+ include/trace/events/rxrpc.h | 2 +-
+ net/rxrpc/call_event.c       | 2 +-
+ net/rxrpc/input.c            | 7 +++----
+ 3 files changed, 5 insertions(+), 6 deletions(-)
+
+
