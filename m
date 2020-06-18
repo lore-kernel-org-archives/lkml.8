@@ -2,137 +2,132 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7201C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB60A20773
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B7C206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:50:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tIRU1k1m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgFRKsW convert rfc822-to-8bit (ORCPT
+        id S1729317AbgFRKuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 06:48:22 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:25289 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726899AbgFRKsM (ORCPT
+        Thu, 18 Jun 2020 06:50:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgFRKuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 06:48:12 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-59-0qlN27EdMR2sxCfZfgQJ6g-1; Thu, 18 Jun 2020 11:48:06 +0100
-X-MC-Unique: 0qlN27EdMR2sxCfZfgQJ6g-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 18 Jun 2020 11:48:05 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 18 Jun 2020 11:48:05 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Matt Fleming' <matt@codeblueprint.co.uk>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     Alexey Dobriyan <adobriyan@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>,
-        "Kumar, Venkataramanan" <Venkataramanan.Kumar@amd.com>,
-        Jan Kara <jack@suse.cz>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] x86/asm/64: Align start of __clear_user() loop to
- 16-bytes
-Thread-Topic: [PATCH] x86/asm/64: Align start of __clear_user() loop to
- 16-bytes
-Thread-Index: AQHWRVoOsv5Rc5DeEUqSipuEjk3RuqjeLGsw
-Date:   Thu, 18 Jun 2020 10:48:05 +0000
-Message-ID: <39f8304b75094f87a54ace7732708d30@AcuMS.aculab.com>
-References: <20200618102002.30034-1-matt@codeblueprint.co.uk>
-In-Reply-To: <20200618102002.30034-1-matt@codeblueprint.co.uk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 18 Jun 2020 06:50:12 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B90A2C06174E;
+        Thu, 18 Jun 2020 03:50:11 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id e1so5553808wrt.5;
+        Thu, 18 Jun 2020 03:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rq2vtUmYaxK4oFT2JMWTlMByzPndGv5xo1xhKDsPblM=;
+        b=tIRU1k1mmbprjFBezRoJ/fRf6b4ii5Zvlsnfw1NYXXMVmQm4MXjoPLMQkSy9D1oWyU
+         COnpdWBxiA1BzcutzGTvVRN1Tz4Izy1pmKsev0pIwbF81DXfrGYLiZvlBOU8uS/1SBdK
+         wIdX/dgFCGW3al6nLuoYKTb8Qa/tH8GOYUXw945nfC7HvJEeHrU9H+3kfzuaV5SbJ6kq
+         NhZBOvH97jHYsQ3QVAwHyZz1RK52KR1+JgbYMA5qZ4i/w3fuyC+bIlftZl8ag6eJM2dk
+         X2d9D0A+v12N6ssf1BRC6dVsIekuehm0ncNsKB5A5BakdVfpqudtRYBmB5abLqdnYzX1
+         t2JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rq2vtUmYaxK4oFT2JMWTlMByzPndGv5xo1xhKDsPblM=;
+        b=SBJEZZnvCxNnlWkhtUNSLIZUKa6MJIUUAk0n485OYAt+lo+EJ8X/y5k85Iojns4NHl
+         efXxf/5DaGTZXBiJfsHF1tKa5eFnFv672XhMBtFugd2Bf6lSnEMXFsC5v/I96avNYKWa
+         8m0rmsSv3TmOmOzxIL+wbGCPRjG0ti5BUlMVwE2+VH2cnqgZOxZHze25Sg9U8CqzHzNT
+         fslekuPy/PDTMedo/hYTJgTo1BgXu4hdF4+GgK1U2n1Z8yaUo+Qi2QH6KD9XmwF88aKZ
+         GZKOnRn9IQ/7qZ9Z6p/1VMKQGA0hFGQSayDUJKlUtnzaHgnmPg81jv/r03OtScQpZK7n
+         fWcA==
+X-Gm-Message-State: AOAM532PC5FOXWPZcYiVrEEG10IpxGjlPeOmNPbH4qNI5Ns87jB1JM6q
+        szlz1NMK42WzsjeDpQz+Ylg=
+X-Google-Smtp-Source: ABdhPJzn6TiRD5IAKs0XCAIfaFPig7mPGXaimtb/vQ+Sfv8NqJIzzX/LezQJNXioqTqXrux5wOb1qA==
+X-Received: by 2002:adf:df91:: with SMTP id z17mr3835800wrl.273.1592477410465;
+        Thu, 18 Jun 2020 03:50:10 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id o10sm3073553wrj.37.2020.06.18.03.50.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 03:50:09 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 12:50:07 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jonathanh@nvidia.com,
+        frankc@nvidia.com, hverkuil@xs4all.nl, sakari.ailus@iki.fi,
+        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [RFC PATCH v1 10/18] dt-bindings: tegra: Document VI and CSI
+ port nodes
+Message-ID: <20200618105007.GA3663225@ulmo>
+References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
+ <1591768960-31648-11-git-send-email-skomatineni@nvidia.com>
+ <20200617221411.GB2923473@bogus>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+Content-Disposition: inline
+In-Reply-To: <20200617221411.GB2923473@bogus>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Fleming
-> Sent: 18 June 2020 11:20
-> x86 CPUs can suffer severe performance drops if a tight loop, such as
-> the ones in __clear_user(), straddles a 16-byte instruction fetch
-> window, or worse, a 64-byte cacheline. This issues was discovered in the
-> SUSE kernel with the following commit,
-> 
->   1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
-> 
-> which increased the code object size from 10 bytes to 15 bytes and
-> caused the 8-byte copy loop in __clear_user() to be split across a
-> 64-byte cacheline.
-> 
-> Aligning the start of the loop to 16-bytes makes this fit neatly inside
-> a single instruction fetch window again and restores the performance of
-> __clear_user() which is used heavily when reading from /dev/zero.
-> 
-> Here are some numbers from running libmicro's read_z* and pread_z*
-> microbenchmarks which read from /dev/zero:
-> 
->   Zen 1 (Naples)
-> 
->   libmicro-file
->                                         5.7.0-rc6              5.7.0-rc6              5.7.0-rc6
->                                                     revert-1153933703d9+               align16+
->   Time mean95-pread_z100k       9.9195 (   0.00%)      5.9856 (  39.66%)      5.9938 (  39.58%)
->   Time mean95-pread_z10k        1.1378 (   0.00%)      0.7450 (  34.52%)      0.7467 (  34.38%)
->   Time mean95-pread_z1k         0.2623 (   0.00%)      0.2251 (  14.18%)      0.2252 (  14.15%)
->   Time mean95-pread_zw100k      9.9974 (   0.00%)      6.0648 (  39.34%)      6.0756 (  39.23%)
->   Time mean95-read_z100k        9.8940 (   0.00%)      5.9885 (  39.47%)      5.9994 (  39.36%)
->   Time mean95-read_z10k         1.1394 (   0.00%)      0.7483 (  34.33%)      0.7482 (  34.33%)
-> 
-> Note that this doesn't affect Haswell or Broadwell microarchitectures
-> which seem to avoid the alignment issue by executing the loop straight
-> out of the Loop Stream Detector (verified using perf events).
 
-Which cpu was affected?
-At least one source (www.agner.org/optimize) implies that both ivy
-bridge and sandy bridge have uop caches that mean (If I've read it
-correctly) the loop shouldn't be affected by the alignment).
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
-> index fff28c6f73a2..b0dfac3d3df7 100644
-> --- a/arch/x86/lib/usercopy_64.c
-> +++ b/arch/x86/lib/usercopy_64.c
-> @@ -24,6 +24,7 @@ unsigned long __clear_user(void __user *addr, unsigned long size)
->  	asm volatile(
->  		"	testq  %[size8],%[size8]\n"
->  		"	jz     4f\n"
-> +		"	.align 16\n"
->  		"0:	movq $0,(%[dst])\n"
->  		"	addq   $8,%[dst]\n"
->  		"	decl %%ecx ; jnz   0b\n"
+On Wed, Jun 17, 2020 at 04:14:11PM -0600, Rob Herring wrote:
+> On Tue, Jun 09, 2020 at 11:02:32PM -0700, Sowjanya Komatineni wrote:
+> > This patch documents Tegra VI and CSI port and endpoint nodes along
+> > with the other required properties.
+> >=20
+> > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> > ---
+> >  .../display/tegra/nvidia,tegra20-host1x.txt        | 87 ++++++++++++++=
+++++++++
+> >  1 file changed, 87 insertions(+)
+>=20
+> This is getting converted to schema by Thierry.
 
-You can do better that that loop.
-Change 'dst' to point to the end of the buffer, negate the count
-and divide by 8 and you get:
-		"0:	movq $0,($[dst],%%ecx,8)\n"
-		"	add $1,%%ecx"
-		"	jnz 0b\n"
-which might run at one iteration per clock especially on cpu that pair
-the add and jnz into a single uop.
-(You need to use add not inc.)
+Yeah, once this has settled it probably makes sense for me to pick this
+up into the json-schema series on top of the initial conversion.
 
-	David
+Thierry
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7rRt0ACgkQ3SOs138+
+s6GjeQ//V5z5HHU3AGAEhkRvK5MxJwjbKjLteO/qr7SoHUcB0259EJUCo+M/Sj9r
+fhPbTuepd7NldeZBKTTHO+nwYVsl09ztvRAEdHHOZ9Nir6xToHYmr8i9t8bJH0Da
+Z1zueXUCBK+XWvodw0qzW6vLAZKAPgXk9ZyWXE2QcdiKTi/nq//ND3Wl2m1f8qdc
+IeoReqDLMJZEkig5HdDjkDcX0DnYhWaiN6TlYTN0gFt0P9n/3vrys6A3UnKQHcAt
+/vKgw5YKUfk4MHhKVZqWAeOVhRHxpef+2Q5atXqxWCwAQtcbrANXKA2UQMZ/fiux
+7xs8MhOOhkfVrH67N8qU/qzS00k8V+5CW1XVBfMQs2qfwRFSXlpBj5ONXPWLzbKs
+5/LXp/y+A+L0U7SykbfD8lT6SsCxabI5jF6jF/zlExc4gpqlL0gjVEaNpMcFje1/
+40ZwDxxQZHtSamkuOET5flEgDbe/uTc07Susmee5tBP3I91C7zikZZJvvKJ6sZnO
+HuQ3Yq67LFLl/q+pjyHPXoxx7+OsY1Z7Zm/3WWjfnprR+Y2IjUJ70nqxvlx/FZ03
+HrTf1iReuKRJMB1uDJT9YHxkAELACQql2hxCs1pa+X3GV/G5C0sMxN4rmmZQeQnm
+dzqM9ZVaXqmHopcGVfsAXF3/nyLKVPYVTdjngoP1fxcIqv9rEV4=
+=gbuv
+-----END PGP SIGNATURE-----
+
+--ew6BAiZeqk4r7MaW--
