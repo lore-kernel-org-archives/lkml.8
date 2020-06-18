@@ -2,129 +2,169 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A10DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F05BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8883B214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F527207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:13:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FsxI+Gez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731039AbgFRUMp (ORCPT
+        id S1731076AbgFRUNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:12:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5048 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728027AbgFRUMo (ORCPT
+        Thu, 18 Jun 2020 16:13:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726517AbgFRUNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:12:44 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05IK4KR0179981;
-        Thu, 18 Jun 2020 16:12:23 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31rb6a7jr6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jun 2020 16:12:22 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05IK5xcs185222;
-        Thu, 18 Jun 2020 16:12:22 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31rb6a7jqn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jun 2020 16:12:22 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05IKAngT004244;
-        Thu, 18 Jun 2020 20:12:21 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma04dal.us.ibm.com with ESMTP id 31rd958vsa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jun 2020 20:12:21 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05IKCKG048169234
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jun 2020 20:12:20 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40352AE05C;
-        Thu, 18 Jun 2020 20:12:20 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F2A8AE060;
-        Thu, 18 Jun 2020 20:12:19 +0000 (GMT)
-Received: from DESKTOP-AV6EVPG.localdomain (unknown [9.160.61.88])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Jun 2020 20:12:19 +0000 (GMT)
-From:   Maurizio Drocco <maurizio.drocco@ibm.com>
-To:     roberto.sassu@huawei.com
-Cc:     Silviu.Vlasceanu@huawei.com, dmitry.kasatkin@gmail.com,
-        jejb@linux.ibm.com, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, maurizio.drocco@ibm.com,
-        serge@hallyn.com, zohar@linux.ibm.com, mdrocco@linux.vnet.ibm.com
-Subject: [PATCH] ima_evm_utils: extended calc_bootaggr to PCRs 8 - 9
-Date:   Thu, 18 Jun 2020 16:11:26 -0400
-Message-Id: <20200618201126.2081-2-maurizio.drocco@ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200618201126.2081-1-maurizio.drocco@ibm.com>
-References: <b744c1b79ba14a17a786f5de04c1f3c4@huawei.com>
- <20200618201126.2081-1-maurizio.drocco@ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-18_15:2020-06-18,2020-06-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
- priorityscore=1501 mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015
- lowpriorityscore=0 spamscore=0 adultscore=0 mlxlogscore=937 phishscore=0
- impostorscore=0 suspectscore=1 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006180148
+        Thu, 18 Jun 2020 16:13:06 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5817FC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:13:06 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d10so1019953pls.5
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TXh+yh53BzWcVX/QSWd/KMGYLJEd9W2Aq0rZcysTQP4=;
+        b=FsxI+GezYcq5Or+8LsyorXmnP7DpX4UiDy+yK2n1mRa4jblk1OUuhBfwLlpOjHyQqp
+         C6V9+4Qv73F1H1QEepi3l+DsjRE/Yl2ZyJ+uOnEqfoaKaafcdPEUmhUCBv5W6FnPX6Jc
+         GM0vUU2Qj7gRcd5fGdIsu83QlptQgL4TRyn7A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TXh+yh53BzWcVX/QSWd/KMGYLJEd9W2Aq0rZcysTQP4=;
+        b=k9BFDlv4F6SjxrGRSGOhTaKIbteLL8AiNQIPrv3/LW0XRKdKt09XU1O/j6pk56ypu4
+         SxjK5gr8HAbMZ6NBy6W6AshpSzJcS+dFFvkbtDiOYy75Zatnbota8Q+r1jtFj0XC56Dr
+         4s2IVbV1T4Mlfd9PlKZdB5Fado/gCfhGZLPO2a5tEWwruLI4zwlhISj5DQ8SW7m3y4mq
+         e8z6cnLAjyMp3Vb1HdKyUXDH9nPCGgOejNRPBZXrnjIg9elTj9zv4fy2AjpCYvMvCxcu
+         lR58zyrYdBSc5HMJPruCjL43nzjRlvCIN78PJxIOFF+VOG5kcliAO+8P0OK9g1NY9S4D
+         hF4Q==
+X-Gm-Message-State: AOAM532S0JaYbKRmDxKv/hHVJxvpOPTZfpghZxQ7XF6CWz77N7AsjZ5u
+        rfe7tr+lS7/MlHXY9Y0/FDydTw==
+X-Google-Smtp-Source: ABdhPJz0/H6VhaSxaYiFoMobAEqIMKy6r+p/NJ3edVxjTSX7edMf4m0+dOSHEEOoExU9RsAPGvhS7A==
+X-Received: by 2002:a17:90a:f508:: with SMTP id cs8mr71173pjb.16.1592511185631;
+        Thu, 18 Jun 2020 13:13:05 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y136sm3759429pfg.55.2020.06.18.13.13.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 13:13:04 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 13:13:03 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Robert Sesek <rsesek@google.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v5 3/7] fs: Add fd_install_received() wrapper for
+ __fd_install_received()
+Message-ID: <202006181305.01F1B08@keescook>
+References: <20200617220327.3731559-1-keescook@chromium.org>
+ <20200617220327.3731559-4-keescook@chromium.org>
+ <20200618054918.GB18669@ircssh-2.c.rugged-nimbus-611.internal>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618054918.GB18669@ircssh-2.c.rugged-nimbus-611.internal>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maurizio <maurizio.drocco@ibm.com>
+On Thu, Jun 18, 2020 at 05:49:19AM +0000, Sargun Dhillon wrote:
+> On Wed, Jun 17, 2020 at 03:03:23PM -0700, Kees Cook wrote:
+> > [...]
+> >  static inline int fd_install_received_user(struct file *file, int __user *ufd,
+> >  					   unsigned int o_flags)
+> >  {
+> > +	if (ufd == NULL)
+> > +		return -EFAULT;
+> Isn't this *technically* a behvaiour change? Nonetheless, I think this is a much better
+> approach than forcing everyone to do null checking, and avoids at least one error case
+> where the kernel installs FDs for SCM_RIGHTS, and they're not actualy usable.
 
-If PCRs 8 - 9 are set (i.e. not all-zeros), cal_bootaggr should include
-them into the digest.
+So, the only behavior change I see is that the order of sanity checks is
+changed.
 
-Signed-off-by: Maurizio Drocco <maurizio.drocco@ibm.com>
----
- src/evmctl.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+The loop in scm_detach_fds() is:
 
-diff --git a/src/evmctl.c b/src/evmctl.c
-index 1d065ce..554571e 100644
---- a/src/evmctl.c
-+++ b/src/evmctl.c
-@@ -1930,6 +1930,18 @@ static void calc_bootaggr(struct tpm_bank_info *bank)
- 		}
- 	}
- 
-+	if (strcmp(bank->algo_name, "sha1") != 0) {
-+		for (i = 8; i < 10; i++) {
-+			if (memcmp(bank->pcr[i], zero, bank->digest_size) != 0) {
-+				err = EVP_DigestUpdate(pctx, bank->pcr[i], bank->digest_size);
-+				if (!err) {
-+					log_err("EVP_DigestUpdate() failed\n");
-+					return;
-+				}
-+			}
-+		}
-+	}
-+
- 	err = EVP_DigestFinal(pctx, bank->digest, &mdlen);
- 	if (!err) {
- 		log_err("EVP_DigestFinal() failed\n");
-@@ -1973,7 +1985,9 @@ static int append_bootaggr(char *bootaggr, struct tpm_bank_info *tpm_banks)
-  * The IMA measurement list boot_aggregate is the link between the preboot
-  * event log and the IMA measurement list.  Read and calculate all the
-  * possible per TPM bank boot_aggregate digests based on the existing
-- * PCRs 0 - 7 to validate against the IMA boot_aggregate record.
-+ * PCRs 0 - 9 to validate against the IMA boot_aggregate record. If PCRs
-+ * 8 - 9 are not set (i.e. all-zeros) or the digest algorithm is SHA1, only
-+ * PCRs 0 - 7 are considered.
-  */
- static int cmd_ima_bootaggr(struct command *cmd)
- {
+
+        for (i = 0; i < fdmax; i++) {
+                err = __scm_install_fd(scm->fp->fp[i], cmsg_data + i, o_flags);
+                if (err < 0)
+                        break;
+        }
+
+Before, __scm_install_fd() does:
+
+        error = security_file_receive(file);
+        if (error)
+                return error;
+
+        new_fd = get_unused_fd_flags(o_flags);
+        if (new_fd < 0)
+                return new_fd;
+
+        error = put_user(new_fd, ufd);
+        if (error) {
+                put_unused_fd(new_fd);
+                return error;
+        }
+	...
+
+After, fd_install_received_user() and __fd_install_received() does:
+
+        if (ufd == NULL)
+                return -EFAULT;
+	...
+        error = security_file_receive(file);
+        if (error)
+                return error;
+	...
+                new_fd = get_unused_fd_flags(o_flags);
+                if (new_fd < 0)
+                        return new_fd;
+	...
+                error = put_user(new_fd, ufd);
+                if (error) {
+                        put_unused_fd(new_fd);
+                        return error;
+                }
+
+i.e. if a caller attempts a receive that is rejected by LSM *and*
+includes a NULL userpointer destination, they will get an EFAULT now
+instead of an EPERM.
+
+I struggle to imagine a situation where this could possible matter
+(both fail, neither installs files). It is only the error code that
+is different. I am comfortable making this change and seeing if anyone
+screams. If they do, I can restore the v4 "ufd_required" way of doing it.
+
+> Reviewed-by: Sargun Dhillon <sargun@sargun.me>
+
+Thanks!
+
 -- 
-2.17.1
-
+Kees Cook
