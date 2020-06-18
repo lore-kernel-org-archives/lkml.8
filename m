@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF69C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A2EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3998821D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E46B20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443384;
-	bh=epVDX7L3/3DaVL7ReHH1IJLX2AWsztbICHorZIPG79o=;
+	s=default; t=1592443389;
+	bh=QzHsFMc7e1sAg3TGj2D+4DGxTg90cYJi1ce6cG/HcDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iMF1l6V+n8f2u8DB/SVmWKvkjLmRRDkSFkIVZTUSc5joPFNwTGVhi1b6ZycoGq6Gv
-	 0+Nqp/ovvnUc1lPlEFNJwWZEwDuV4sbCAwf9MEeqhKrpxurWZ+kmmVlFMC0tgHYiIx
-	 eTnmnrVtHg4XIgwamfaxL0D9Cs+MAARlA0/IYDtU=
+	b=tKPox6H/wyXzyaeL126JoCz2YqOUcVamJ+WVommR6Elv2xl5dpzY68XVanQVNCbh2
+	 CEOaVriE16qW/NoExQ8/a6x66QAN8kXnlKlrV9OvVix90zbGsl2FDdFTTII8zvi4GZ
+	 E92RFe1iJm9+eTVh9igj3rkV46W5tXbABcHUgmfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgFRBXB (ORCPT
+        id S1728412AbgFRBXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:23:01 -0400
+        Wed, 17 Jun 2020 21:23:07 -0400
 Received: from mail.kernel.org ([198.145.29.99]:51710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726931AbgFRBTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:19:46 -0400
+        id S1728937AbgFRBTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF903221EB;
-        Thu, 18 Jun 2020 01:19:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC18521D79;
+        Thu, 18 Jun 2020 01:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443184;
-        bh=epVDX7L3/3DaVL7ReHH1IJLX2AWsztbICHorZIPG79o=;
+        s=default; t=1592443191;
+        bh=QzHsFMc7e1sAg3TGj2D+4DGxTg90cYJi1ce6cG/HcDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O69yA09a9I+tEMWGt7OkMhCH5i2fspjicHqTva79do3f8O9s5JeoTn04se7MKzRXC
-         CYIbWITA40mnZB3Z3hoJ2RzH7Vr/lkY7HUREJWH+/gEWImYjk5YwZ1dnik8wRYNkMN
-         HXHCOraGK7Y988Ltkx6MOcjdCXfisbkhObwSzwYU=
+        b=sEDs2DFuIZiJ7pNmYMimagSHFaFAmDisGdjiqHIG8KxwzuvVK0K8X4cSnHjiVJbfH
+         ezYG9JG03+jvnmN5MTnLmTWdUd7/OjJvvRMJ5cl+aClVVNvgEh3TKD97OjeKbS9CGj
+         0OTJpd8mXVQtcxUuT9omWQxXoX9sjJCDBvaqUZ0U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cristian Klein <cristian.klein@elastisys.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 146/266] HID: Add quirks for Trust Panora Graphic Tablet
-Date:   Wed, 17 Jun 2020 21:14:31 -0400
-Message-Id: <20200618011631.604574-146-sashal@kernel.org>
+Cc:     Bharat Gooty <bharat.gooty@broadcom.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 152/266] drivers: phy: sr-usb: do not use internal fsm for USB2 phy init
+Date:   Wed, 17 Jun 2020 21:14:37 -0400
+Message-Id: <20200618011631.604574-152-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,73 +60,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Klein <cristian.klein@elastisys.com>
+From: Bharat Gooty <bharat.gooty@broadcom.com>
 
-[ Upstream commit fb68ada81e65d593b51544fa43c284322107a742 ]
+[ Upstream commit 6f0577d1411337a0d97d545abe4a784e9e611516 ]
 
-The Trust Panora Graphic Tablet has two interfaces. Interface zero reports pen
-movement, pen pressure and pen buttons. Interface one reports tablet buttons
-and tablet scroll. Both use the mouse protocol.
+During different reboot cycles, USB PHY PLL may not always lock
+during initialization and therefore can cause USB to be not usable.
 
-Without these quirks, libinput gets confused about what device it talks to.
+Hence do not use internal FSM programming sequence for the USB
+PHY initialization.
 
-For completeness, here is the usbhid-dump:
-
-```
-$ sudo usbhid-dump -d 145f:0212
-003:013:001:DESCRIPTOR         1588949402.559961
- 05 0D 09 01 A1 01 85 07 A1 02 09 00 75 08 95 07
- 81 02 C0 C0 09 0E A1 01 85 05 09 23 A1 02 09 52
- 09 53 25 0A 75 08 95 02 B1 02 C0 C0 05 0C 09 36
- A1 00 85 06 05 09 19 01 29 20 15 00 25 01 95 20
- 75 01 81 02 C0
-
-003:013:000:DESCRIPTOR         1588949402.563942
- 05 01 09 02 A1 01 85 08 09 01 A1 00 05 09 19 01
- 29 03 15 00 25 01 95 03 75 01 81 02 95 05 81 01
- 05 01 09 30 09 31 09 38 09 00 15 81 25 7F 75 08
- 95 04 81 06 C0 C0 05 01 09 02 A1 01 85 09 09 01
- A1 00 05 09 19 01 29 03 15 00 25 01 95 03 75 01
- 81 02 95 05 81 01 05 01 09 30 09 31 26 FF 7F 95
- 02 75 10 81 02 05 0D 09 30 26 FF 03 95 01 75 10
- 81 02 C0 C0 05 01 09 00 A1 01 85 04 A1 00 26 FF
- 00 09 00 75 08 95 07 B1 02 C0 C0
-```
-
-Signed-off-by: Cristian Klein <cristian.klein@elastisys.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 4dcddbb38b64 ("phy: sr-usb: Add Stingray USB PHY driver")
+Signed-off-by: Bharat Gooty <bharat.gooty@broadcom.com>
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Link: https://lore.kernel.org/r/20200513173947.10919-1-rayagonda.kokatanur@broadcom.com
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 3 +++
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/phy/broadcom/phy-bcm-sr-usb.c | 55 +--------------------------
+ 1 file changed, 2 insertions(+), 53 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 13b7222ef2c9..c552a6bc627e 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1147,6 +1147,9 @@
- #define USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8882	0x8882
- #define USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8883	0x8883
+diff --git a/drivers/phy/broadcom/phy-bcm-sr-usb.c b/drivers/phy/broadcom/phy-bcm-sr-usb.c
+index fe6c58910e4c..7c7862b4f41f 100644
+--- a/drivers/phy/broadcom/phy-bcm-sr-usb.c
++++ b/drivers/phy/broadcom/phy-bcm-sr-usb.c
+@@ -16,8 +16,6 @@ enum bcm_usb_phy_version {
+ };
  
-+#define USB_VENDOR_ID_TRUST             0x145f
-+#define USB_DEVICE_ID_TRUST_PANORA_TABLET   0x0212
-+
- #define USB_VENDOR_ID_TURBOX		0x062a
- #define USB_DEVICE_ID_TURBOX_KEYBOARD	0x0201
- #define USB_DEVICE_ID_ASUS_MD_5110	0x5110
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 90ec2390ef68..168fdaa1999f 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -168,6 +168,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOUCHPACK, USB_DEVICE_ID_TOUCHPACK_RTS), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TPV, USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8882), HID_QUIRK_NOGET },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TPV, USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8883), HID_QUIRK_NOGET },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_TRUST, USB_DEVICE_ID_TRUST_PANORA_TABLET), HID_QUIRK_MULTI_INPUT | HID_QUIRK_HIDINPUT_FORCE },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TURBOX, USB_DEVICE_ID_TURBOX_KEYBOARD), HID_QUIRK_NOGET },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_UCLOGIC, USB_DEVICE_ID_UCLOGIC_TABLET_KNA5), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_UCLOGIC, USB_DEVICE_ID_UCLOGIC_TABLET_TWA60), HID_QUIRK_MULTI_INPUT },
+ enum bcm_usb_phy_reg {
+-	PLL_NDIV_FRAC,
+-	PLL_NDIV_INT,
+ 	PLL_CTRL,
+ 	PHY_CTRL,
+ 	PHY_PLL_CTRL,
+@@ -31,18 +29,11 @@ static const u8 bcm_usb_combo_phy_ss[] = {
+ };
+ 
+ static const u8 bcm_usb_combo_phy_hs[] = {
+-	[PLL_NDIV_FRAC]	= 0x04,
+-	[PLL_NDIV_INT]	= 0x08,
+ 	[PLL_CTRL]	= 0x0c,
+ 	[PHY_CTRL]	= 0x10,
+ };
+ 
+-#define HSPLL_NDIV_INT_VAL	0x13
+-#define HSPLL_NDIV_FRAC_VAL	0x1005
+-
+ static const u8 bcm_usb_hs_phy[] = {
+-	[PLL_NDIV_FRAC]	= 0x0,
+-	[PLL_NDIV_INT]	= 0x4,
+ 	[PLL_CTRL]	= 0x8,
+ 	[PHY_CTRL]	= 0xc,
+ };
+@@ -52,7 +43,6 @@ enum pll_ctrl_bits {
+ 	SSPLL_SUSPEND_EN,
+ 	PLL_SEQ_START,
+ 	PLL_LOCK,
+-	PLL_PDIV,
+ };
+ 
+ static const u8 u3pll_ctrl[] = {
+@@ -66,29 +56,17 @@ static const u8 u3pll_ctrl[] = {
+ #define HSPLL_PDIV_VAL		0x1
+ 
+ static const u8 u2pll_ctrl[] = {
+-	[PLL_PDIV]	= 1,
+ 	[PLL_RESETB]	= 5,
+ 	[PLL_LOCK]	= 6,
+ };
+ 
+ enum bcm_usb_phy_ctrl_bits {
+ 	CORERDY,
+-	AFE_LDO_PWRDWNB,
+-	AFE_PLL_PWRDWNB,
+-	AFE_BG_PWRDWNB,
+-	PHY_ISO,
+ 	PHY_RESETB,
+ 	PHY_PCTL,
+ };
+ 
+ #define PHY_PCTL_MASK	0xffff
+-/*
+- * 0x0806 of PCTL_VAL has below bits set
+- * BIT-8 : refclk divider 1
+- * BIT-3:2: device mode; mode is not effect
+- * BIT-1: soft reset active low
+- */
+-#define HSPHY_PCTL_VAL	0x0806
+ #define SSPHY_PCTL_VAL	0x0006
+ 
+ static const u8 u3phy_ctrl[] = {
+@@ -98,10 +76,6 @@ static const u8 u3phy_ctrl[] = {
+ 
+ static const u8 u2phy_ctrl[] = {
+ 	[CORERDY]		= 0,
+-	[AFE_LDO_PWRDWNB]	= 1,
+-	[AFE_PLL_PWRDWNB]	= 2,
+-	[AFE_BG_PWRDWNB]	= 3,
+-	[PHY_ISO]		= 4,
+ 	[PHY_RESETB]		= 5,
+ 	[PHY_PCTL]		= 6,
+ };
+@@ -186,38 +160,13 @@ static int bcm_usb_hs_phy_init(struct bcm_usb_phy_cfg *phy_cfg)
+ 	int ret = 0;
+ 	void __iomem *regs = phy_cfg->regs;
+ 	const u8 *offset;
+-	u32 rd_data;
+ 
+ 	offset = phy_cfg->offset;
+ 
+-	writel(HSPLL_NDIV_INT_VAL, regs + offset[PLL_NDIV_INT]);
+-	writel(HSPLL_NDIV_FRAC_VAL, regs + offset[PLL_NDIV_FRAC]);
+-
+-	rd_data = readl(regs + offset[PLL_CTRL]);
+-	rd_data &= ~(HSPLL_PDIV_MASK << u2pll_ctrl[PLL_PDIV]);
+-	rd_data |= (HSPLL_PDIV_VAL << u2pll_ctrl[PLL_PDIV]);
+-	writel(rd_data, regs + offset[PLL_CTRL]);
+-
+-	/* Set Core Ready high */
+-	bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
+-			      BIT(u2phy_ctrl[CORERDY]));
+-
+-	/* Maximum timeout for Core Ready done */
+-	msleep(30);
+-
++	bcm_usb_reg32_clrbits(regs + offset[PLL_CTRL],
++			      BIT(u2pll_ctrl[PLL_RESETB]));
+ 	bcm_usb_reg32_setbits(regs + offset[PLL_CTRL],
+ 			      BIT(u2pll_ctrl[PLL_RESETB]));
+-	bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
+-			      BIT(u2phy_ctrl[PHY_RESETB]));
+-
+-
+-	rd_data = readl(regs + offset[PHY_CTRL]);
+-	rd_data &= ~(PHY_PCTL_MASK << u2phy_ctrl[PHY_PCTL]);
+-	rd_data |= (HSPHY_PCTL_VAL << u2phy_ctrl[PHY_PCTL]);
+-	writel(rd_data, regs + offset[PHY_CTRL]);
+-
+-	/* Maximum timeout for PLL reset done */
+-	msleep(30);
+ 
+ 	ret = bcm_usb_pll_lock_check(regs + offset[PLL_CTRL],
+ 				     BIT(u2pll_ctrl[PLL_LOCK]));
 -- 
 2.25.1
 
