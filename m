@@ -2,151 +2,90 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB6EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B27EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4672206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:40:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e31t8BkS"
+	by mail.kernel.org (Postfix) with ESMTP id 39969208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592498514;
+	bh=qGbdiznw/0aC0K+1zsrRCIwtUj08oKTbrBCFh6eOCx0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Co/pfAki4bhr6EOUJdns3oA/YTFEy4tQTScYLNcxFxIJgjI/jGtKgTRAt3Ty8Vx4i
+	 N30r6e/QgAoXGwQDt02oyv3lrZJgZ2/TQEweTpE5y2zUQ9y+zSVTOLB2aaCH/cMTDJ
+	 bLBPrTN0lDAESFHqWl5Ry8hQ0Je7w86yzYjPBnNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731984AbgFRQkg (ORCPT
+        id S1731998AbgFRQlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:40:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59579 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731959AbgFRQkb (ORCPT
+        Thu, 18 Jun 2020 12:41:52 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:42819 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728587AbgFRQlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:40:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592498429;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=K+ZmXo1VT3DgmlBxctO5wOawFr9Ym28t9PdelfkR48g=;
-        b=e31t8BkS6xSRALcGqv57e+ji295zDcSzyzbjhbqCPIya2fUZ79TtfL8Q09svKgs5aFv63r
-        w2G2eCWwvlV+m3QmvX9nS4hIZ67OOvmncXeTlp+hdk0c7J0f5qhYsbJ5KdB3cSRoyHzcHK
-        WEeRU0hMzJ37Biryh2RpuzvyJNnvKg0=
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com
- [209.85.161.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-230-Srafve5RNliKD506qAVihQ-1; Thu, 18 Jun 2020 12:40:28 -0400
-X-MC-Unique: Srafve5RNliKD506qAVihQ-1
-Received: by mail-oo1-f69.google.com with SMTP id n15so3003212oov.22
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 09:40:28 -0700 (PDT)
+        Thu, 18 Jun 2020 12:41:52 -0400
+Received: by mail-il1-f194.google.com with SMTP id j19so6380947ilk.9;
+        Thu, 18 Jun 2020 09:41:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=K+ZmXo1VT3DgmlBxctO5wOawFr9Ym28t9PdelfkR48g=;
-        b=Wyb2UOYw0Gpfoz6Wrdu9M3ybuIWisthzBgQFFFtIbO1x3hQRTtuKjymwfbsQ/u18rM
-         CuPYd/gREoVz+ms+ynOH3q4UxqFUXtRaWzX0MTA4j7UASfxzbQqVlbdYXhyewT0J7LqV
-         xJR7ZFDoVk6Ysm0k1sxYe2el3duQ2/Jt9KWnDiHh0J3CtaIpRyOu/20b9wDyTi2mDyt/
-         VgVftFEt2xv7f6SpDY0XDsXxKCL+nosOMH9bfBUJMz1/razS9s4weEVtKsY/MkOGmDl8
-         07MiDcZcpxq3ZukTTOCoCRjLezy6S5UOE3GQNaruwEN5eBUMdyPereEaNdCo7ekXpCid
-         /FyA==
-X-Gm-Message-State: AOAM531rpONw+V/vfEmauXLjP8QYTr+6lWX+ysVGy3Pf0/SF05IyO0vC
-        xP1uSwOSWBl0HpvPt0cvjo2D8kTvlIgpmd+pgcxnaX0dvkwJOZy/9gDm3DRhHJQccqLl8yAjoE9
-        gUP5NYHDBFrnTsdMbkh6g/DRMNxWYF/3svWnfrn8Q
-X-Received: by 2002:a05:6830:10c8:: with SMTP id z8mr4000193oto.95.1592498427404;
-        Thu, 18 Jun 2020 09:40:27 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzE8nhb2Q0d4GxQpaInRB14NGapvcWpYnTg96Ky3B2ltZU9DxgAABVkj/Ptn9PHhgl8mMoH1G9lpq5ufccfhow=
-X-Received: by 2002:a05:6830:10c8:: with SMTP id z8mr4000168oto.95.1592498427103;
- Thu, 18 Jun 2020 09:40:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fVuJAsw1olJOL1LysYgB0jXFgoOC6I7GuVE/JaxXuhE=;
+        b=gYrP7hk4aY6wgg782/avFsZlPV028A8HW6tUOidv8YWgMTLq1xx2FzAdTGuvjS8c7r
+         FdCdPNmvEy4kb70lchg0UfVGnfQtJOo2+6UDi7Ya7MCo4weXDbE8BeVyhxyUIlvjSzjf
+         h6mikpjvSUS2ow/Ms1xE8TjNtqVRdn4ngtkW49eW7DcsUZteU7YHVj0S5aDVFiT8WXtx
+         VcjHBKBH0etoImVwCg0SKhcTWoxz0fc6AMB5D/9/HzA+kZa6xfPQ6HbvBB87MYFFgxHo
+         llnwwk4a5SDlVknmfU5LG1xy0Z+5Z9wIqWiyrmsOiWBn6nrVbl7SkZYYpaWaFtsxr8E6
+         O55Q==
+X-Gm-Message-State: AOAM530r16jYEEfGfwcIKTpO6DrAzTlyGG2m4uNpqy4Z/EtD6s7te87v
+        Nx+qx6+HoCvCvfMyUAPgpQ==
+X-Google-Smtp-Source: ABdhPJw1uAYQlQaYW4i9ro0et3qdLVpy3ZMSLGoanLWJPOU7Ad6UZ4jxcldsw6DcwZ1gNBHNmCypxw==
+X-Received: by 2002:a05:6e02:13ee:: with SMTP id w14mr4659208ilj.190.1592498510970;
+        Thu, 18 Jun 2020 09:41:50 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id j80sm1811247ili.65.2020.06.18.09.41.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 09:41:50 -0700 (PDT)
+Received: (nullmailer pid 500124 invoked by uid 1000);
+        Thu, 18 Jun 2020 16:41:49 -0000
+Date:   Thu, 18 Jun 2020 10:41:49 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH 12/29] dt: update a reference for reneases pcar file
+ renamed to yaml
+Message-ID: <20200618164149.GA499887@bogus>
+References: <cover.1592203542.git.mchehab+huawei@kernel.org>
+ <72d7ec91a60e852d34f3e15bc5faef1f62a8260e.1592203542.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-References: <20200414150233.24495-1-willy@infradead.org> <20200414150233.24495-17-willy@infradead.org>
- <CAHc6FU4m1M7Tv4scX0UxSiVBqkL=Vcw_z-R7SufL8k7Bw=qPOw@mail.gmail.com>
- <20200617003216.GC8681@bombadil.infradead.org> <CAHpGcMK6Yu0p-FO8CciiySqh+qcWLG-t3hEaUg-rqJnS=2uhqg@mail.gmail.com>
- <20200617022157.GF8681@bombadil.infradead.org> <CAHc6FU7NLRHKRJJ6c2kQT0ig8ed1n+3qR-YcSCWzXOeJCUsLbA@mail.gmail.com>
- <20200618150309.GP8681@bombadil.infradead.org>
-In-Reply-To: <20200618150309.GP8681@bombadil.infradead.org>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Thu, 18 Jun 2020 18:40:15 +0200
-Message-ID: <CAHc6FU6TYTiQ0a0GkN1dhh3VeQKVKrL+eALvuYzZ8nq5jvNHjg@mail.gmail.com>
-Subject: Re: [Cluster-devel] [PATCH v11 16/25] fs: Convert mpage_readpages to mpage_readahead
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel <cluster-devel@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
-        linux-btrfs@vger.kernel.org,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <72d7ec91a60e852d34f3e15bc5faef1f62a8260e.1592203542.git.mchehab+huawei@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 5:03 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Thu, Jun 18, 2020 at 02:46:03PM +0200, Andreas Gruenbacher wrote:
-> > On Wed, Jun 17, 2020 at 4:22 AM Matthew Wilcox <willy@infradead.org> wr=
-ote:
-> > > On Wed, Jun 17, 2020 at 02:57:14AM +0200, Andreas Gr=C3=83=C2=BCnbach=
-er wrote:
-> > > > Right, the approach from the following thread might fix this:
-> > > >
-> > > > https://lore.kernel.org/linux-fsdevel/20191122235324.17245-1-agruen=
-ba@redhat.com/T/#t
-> > >
-> > > In general, I think this is a sound approach.
-> > >
-> > > Specifically, I think FAULT_FLAG_CACHED can go away.  map_pages()
-> > > will bring in the pages which are in the page cache, so when we get t=
-o
-> > > gfs2_fault(), we know there's a reason to acquire the glock.
-> >
-> > We'd still be grabbing a glock while holding a dependent page lock.
-> > Another process could be holding the glock and could try to grab the
-> > same page lock (i.e., a concurrent writer), leading to the same kind
-> > of deadlock.
->
-> What I'm saying is that gfs2_fault should just be:
->
-> +static vm_fault_t gfs2_fault(struct vm_fault *vmf)
-> +{
-> +       struct inode *inode =3D file_inode(vmf->vma->vm_file);
-> +       struct gfs2_inode *ip =3D GFS2_I(inode);
-> +       struct gfs2_holder gh;
-> +       vm_fault_t ret;
-> +       int err;
-> +
-> +       gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
-> +       err =3D gfs2_glock_nq(&gh);
-> +       if (err) {
-> +               ret =3D block_page_mkwrite_return(err);
-> +               goto out_uninit;
-> +       }
-> +       ret =3D filemap_fault(vmf);
-> +       gfs2_glock_dq(&gh);
-> +out_uninit:
-> +       gfs2_holder_uninit(&gh);
-> +       return ret;
-> +}
->
-> because by the time gfs2_fault() is called, map_pages() has already been
-> called and has failed to insert the necessary page, so we should just
-> acquire the glock now instead of trying again to look for the page in
-> the page cache.
+On Mon, 15 Jun 2020 08:46:51 +0200, Mauro Carvalho Chehab wrote:
+> This file was renamed, but its reference at pfc-pinctl.txt is
+> still pointing to the old file.
+> 
+> Fixes: 7f7d408e5a00 ("dt-bindings: gpio: rcar: Convert to json-schema")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  .../devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt         | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Okay, that's great.
-
-Thanks,
-Andreas
-
+Applied, thanks!
