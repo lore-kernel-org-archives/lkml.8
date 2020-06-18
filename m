@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CBDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB15C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE1D2221EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A0DA221EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443073;
-	bh=VhUP5N88YIUjI9qfkLVrMa+Aua/Ag0rIGQN16DXGFuk=;
+	s=default; t=1592443076;
+	bh=DdzfsFUTBuNCx27Rd/SiNHCfH/ifH2yDGhE13vpwydM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DU8/meNZLWylbPl0lhtqgiYxkK9LDxX8Ns5GgiC71MXmIUGU/GkkSKHs0v37wuIcN
-	 VWuGuXiwWLKxGqh3i1jHoF1InvLFGpZ/4FhVCzYQANYsEdTbXa2GJBjo+qBHCvsZur
-	 rQZIDAOpFi4DB7/xdktioHQSblOUlMQbBNeTDNSo=
+	b=y/ufWuSxNEW5FskHS2ucmPWbos0DZMTUhR2lBW9+aKGhktQAsm7FZyV262NXv99pK
+	 V+KAkWmMQbZPEQSukRG6Y9cDIqxlhj0dqxxgpYdluw+WuQDQ9tyYIhA9Drb9RUVYgE
+	 zMi0PWksyaRxwrsSCHG0xBFCrH+AlJe55WTlasTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbgFRBRw (ORCPT
+        id S1729840AbgFRBRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:17:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45026 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:17:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729425AbgFRBPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:03 -0400
+        id S1729432AbgFRBPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CA9E2193E;
-        Thu, 18 Jun 2020 01:15:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83DFA20EDD;
+        Thu, 18 Jun 2020 01:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442903;
-        bh=VhUP5N88YIUjI9qfkLVrMa+Aua/Ag0rIGQN16DXGFuk=;
+        s=default; t=1592442904;
+        bh=DdzfsFUTBuNCx27Rd/SiNHCfH/ifH2yDGhE13vpwydM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kJ3JO3qMY2Bo13/tdeaXNsHqoyGamxk4Ar8DzTf0P564z4jYmD9VQl2pNBdBUyLgV
-         4nH4TH2QmDRONqRdhU65Xtcojvv0zEXrT+Rm0oE6Ahi3piwGlFccFwMLeKxeQUy+7W
-         xpLP7cydzIr2C6HXNAyNqtw9IhF9yiTdUlL4ZQaY=
+        b=sRdrQw0HHzarDlyxwquBKjgiqKZ8TCBym7DQkUr1ioMz4RkmzzL66TOmT33i1Lyv1
+         vO6Zmf+enSGxKIrnthIqV8WfhTfLyEeav4TjSj6xMfFkTqYnpbvAstbFOfsiCuHBrj
+         SR7gNl+7Vc3+t+cUQQD48G1Gza9XzoyT+LhmY7HI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+Cc:     yu kuai <yukuai3@huawei.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 323/388] pinctrl: imxl: Fix an error handling path in 'imx1_pinctrl_core_probe()'
-Date:   Wed, 17 Jun 2020 21:07:00 -0400
-Message-Id: <20200618010805.600873-323-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 324/388] pinctrl: sirf: add missing put_device() call in sirfsoc_gpio_probe()
+Date:   Wed, 17 Jun 2020 21:07:01 -0400
+Message-Id: <20200618010805.600873-324-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,36 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit 9eb728321286c4b31e964d2377fca2368526d408 ]
+[ Upstream commit 66339f2fba3fa05b0507e1887e4c6abcfc6228a3 ]
 
-When 'pinctrl_register()' has been turned into 'devm_pinctrl_register()',
-an error handling path has not been updated.
+A coccicheck run provided information like the following:
 
-Axe a now unneeded 'pinctrl_unregister()'.
+drivers/pinctrl/sirf/pinctrl-sirf.c:798:2-8: ERROR: missing put_device;
+call of_find_device_by_node on line 792, but without a corresponding
+object release within this function.
 
-Fixes: e55e025d1687 ("pinctrl: imxl: Use devm_pinctrl_register() for pinctrl registration")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/20200530201952.585798-1-christophe.jaillet@wanadoo.fr
+Generated by: scripts/coccinelle/free/put_device.cocci
+
+Thus add a jump target to fix the exception handling for this
+function implementation.
+
+Fixes: 5130216265f6 ("PINCTRL: SiRF: add GPIO and GPIO irq support in CSR SiRFprimaII")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Link: https://lore.kernel.org/r/20200603013532.755220-1-yukuai3@huawei.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx1-core.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pinctrl/sirf/pinctrl-sirf.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-index c00d0022d311..421f7d1886e5 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-@@ -638,7 +638,6 @@ int imx1_pinctrl_core_probe(struct platform_device *pdev,
+diff --git a/drivers/pinctrl/sirf/pinctrl-sirf.c b/drivers/pinctrl/sirf/pinctrl-sirf.c
+index 1ebcb957c654..63a287d5795f 100644
+--- a/drivers/pinctrl/sirf/pinctrl-sirf.c
++++ b/drivers/pinctrl/sirf/pinctrl-sirf.c
+@@ -794,13 +794,17 @@ static int sirfsoc_gpio_probe(struct device_node *np)
+ 		return -ENODEV;
  
- 	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
- 	if (ret) {
--		pinctrl_unregister(ipctl->pctl);
- 		dev_err(&pdev->dev, "Failed to populate subdevices\n");
- 		return ret;
- 	}
+ 	sgpio = devm_kzalloc(&pdev->dev, sizeof(*sgpio), GFP_KERNEL);
+-	if (!sgpio)
+-		return -ENOMEM;
++	if (!sgpio) {
++		err = -ENOMEM;
++		goto out_put_device;
++	}
+ 	spin_lock_init(&sgpio->lock);
+ 
+ 	regs = of_iomap(np, 0);
+-	if (!regs)
+-		return -ENOMEM;
++	if (!regs) {
++		err = -ENOMEM;
++		goto out_put_device;
++	}
+ 
+ 	sgpio->chip.gc.request = sirfsoc_gpio_request;
+ 	sgpio->chip.gc.free = sirfsoc_gpio_free;
+@@ -824,8 +828,10 @@ static int sirfsoc_gpio_probe(struct device_node *np)
+ 	girq->parents = devm_kcalloc(&pdev->dev, SIRFSOC_GPIO_NO_OF_BANKS,
+ 				     sizeof(*girq->parents),
+ 				     GFP_KERNEL);
+-	if (!girq->parents)
+-		return -ENOMEM;
++	if (!girq->parents) {
++		err = -ENOMEM;
++		goto out_put_device;
++	}
+ 	for (i = 0; i < SIRFSOC_GPIO_NO_OF_BANKS; i++) {
+ 		bank = &sgpio->sgpio_bank[i];
+ 		spin_lock_init(&bank->lock);
+@@ -868,6 +874,8 @@ static int sirfsoc_gpio_probe(struct device_node *np)
+ 	gpiochip_remove(&sgpio->chip.gc);
+ out:
+ 	iounmap(regs);
++out_put_device:
++	put_device(&pdev->dev);
+ 	return err;
+ }
+ 
 -- 
 2.25.1
 
