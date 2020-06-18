@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6591C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B780FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB9F221E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3AC221E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442661;
-	bh=4c9S6FURyonScEFoga9oPeWRSMUvU8RRm/1RiPP9Ne8=;
+	s=default; t=1592442672;
+	bh=rGnkqzOklVdCYmtctnndT4Xj7oX+ndcWZlmsfC9t1nQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wnKeZEzcQ8MuNAHqhh79QU4UWx2i5I0LPHimqVjmF64E3hISWajFAKx5YJln9WHhN
-	 tcPGuXOEc8jd3jC8bsI7h1jonPklA7EgV8wxO0730/JSFMjfASwk+dbIfUJ8lmMqfB
-	 svnkacG5ugER8kWPjqiCnmylYkDj9QQ/XniBaghk=
+	b=Tclvv5j3NLi17ZH6/RwtYwqI1rnLuwobotxX7qeaqRU18weh5C6SGaLD3QonNgVIi
+	 GVLs1vSoJMYtIbKJrQhC4Gs0AplTvfFCUEs7KkEE5kwMKl8c49f2CxHyU0uGHq6e1T
+	 xDxemu/djB5ly3KNJ2NmnRcf6aZGyiElpfTSSOA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728694AbgFRBLA (ORCPT
+        id S1727853AbgFRBLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:11:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38588 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:11:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728677AbgFRBK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:57 -0400
+        id S1727809AbgFRBK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB7B920FC3;
-        Thu, 18 Jun 2020 01:10:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A996214DB;
+        Thu, 18 Jun 2020 01:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442656;
-        bh=4c9S6FURyonScEFoga9oPeWRSMUvU8RRm/1RiPP9Ne8=;
+        s=default; t=1592442659;
+        bh=rGnkqzOklVdCYmtctnndT4Xj7oX+ndcWZlmsfC9t1nQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E+lYJfrkwUteFnjeqU/ljtlEqVOw0oHjVUm8x2xOOolHKDQly+I8lZst8efelpXNe
-         oPcP67z2lYFcy8o2hejMCbFHn9Dx7xnA9gyPrKdTfN7tbNAjFZCh1pGbcaUuPKf2D7
-         qaeY2FC10dYv/fyelsl+eK9dWx4Ud6CFl1p851Ak=
+        b=XthIOUjfoIfJn6EEqPux7QG7JwkqZfGdn+/wGnDRJPEInZF/cWZDcQcTlF7bzDKUU
+         lxngtltCsXXcyha2RZ9bp/ztAhov6zmJqxEsKlcQ6x1qw+JvgUk01xemNosPy3SeD2
+         +LzRT9+0CI1BfwT+k36G5YrYU7olLOducGLhOQXM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        kbuild test robot <lkp@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 128/388] iio: buffer-dmaengine: use %zu specifier for sprintf(align)
-Date:   Wed, 17 Jun 2020 21:03:45 -0400
-Message-Id: <20200618010805.600873-128-sashal@kernel.org>
+Cc:     Wei Li <liwei391@huawei.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.7 130/388] ASoC: Fix wrong dependency of da7210 and wm8983
+Date:   Wed, 17 Jun 2020 21:03:47 -0400
+Message-Id: <20200618010805.600873-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,38 +58,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Wei Li <liwei391@huawei.com>
 
-[ Upstream commit 6eb3b8acfd079104571c207d4524743b6acc6550 ]
+[ Upstream commit c1c050ee74d67aeb879fd38e3a07139d7fdb79f4 ]
 
-The 'size_t' type behaves differently on 64-bit architectures, and causes
-compiler a warning of the sort "format '%u' expects argument of type
-'unsigned int', but argument 3 has type 'size_t {aka long unsigned int}'".
+As these two drivers support I2C and SPI, we should add the SND_SOC_I2C_AND_SPI
+dependency instead.
 
-This change adds the correct specifier for the 'align' field.
-
-Fixes: 4538c18568099 ("iio: buffer-dmaengine: Report buffer length requirements")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: ce0c97f8a2936 ("ASoC: Fix SND_SOC_ALL_CODECS imply SPI fallout")
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Link: https://lore.kernel.org/r/20200420202410.47327-3-liwei391@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/buffer/industrialio-buffer-dmaengine.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-index b129693af0fd..94da3b1ca3a2 100644
---- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-+++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-@@ -134,7 +134,7 @@ static ssize_t iio_dmaengine_buffer_get_length_align(struct device *dev,
- 	struct dmaengine_buffer *dmaengine_buffer =
- 		iio_buffer_to_dmaengine_buffer(indio_dev->buffer);
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index 8cdc68c141dc..7d2cbed55a9d 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -717,7 +717,7 @@ config SND_SOC_L3
  
--	return sprintf(buf, "%u\n", dmaengine_buffer->align);
-+	return sprintf(buf, "%zu\n", dmaengine_buffer->align);
- }
+ config SND_SOC_DA7210
+ 	tristate
+-	depends on I2C
++	depends on SND_SOC_I2C_AND_SPI
  
- static IIO_DEVICE_ATTR(length_align_bytes, 0444,
+ config SND_SOC_DA7213
+ 	tristate "Dialog DA7213 CODEC"
+@@ -1569,7 +1569,7 @@ config SND_SOC_WM8978
+ 
+ config SND_SOC_WM8983
+ 	tristate
+-	depends on I2C
++	depends on SND_SOC_I2C_AND_SPI
+ 
+ config SND_SOC_WM8985
+ 	tristate "Wolfson Microelectronics WM8985 and WM8758 codec driver"
 -- 
 2.25.1
 
