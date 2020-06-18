@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D35C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 000C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B23222240
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE1CD2223F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445559;
-	bh=Cub4vj9nLqVHK+vP9cLZf3O/SAGabxVQiO5LtqWPr3Q=;
+	s=default; t=1592445565;
+	bh=+oQMsV7gJQNLISPtRZwjamRghv+JL9im7YddGrtmLtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v1meLvP+NgzD0jFl34t/Hft+pmfCf5eC6FEopYBLTeJL+O+h+YTdlNpsRRXt6ISoR
-	 DjjWIF4yXIAcMPa0ba+ZXjITBlntm1Rw/Xoac8CchRFrOVzRtD2F6COBeCBcfuvvWr
-	 mV6OBAzk/hrX1xbBACb5xT1HOTOA5oC/Ir5wfzvw=
+	b=k1bo8oH3sI4gIv2B3qrlqQN8NIdHM4ZlX3DpPhmHKuzbgy7yjz6xAr4H7l6GnJj6t
+	 eZdI/SaBXjDzrQYf4U/vyOfAdvvETgTP8cQ0up6VD8syMWs43mwzvqyn5ABpHnhUq5
+	 2j6OIp1dVOAy9HMbM90+YjBl7KiU9oBQeWMUtpYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731261AbgFRBYl (ORCPT
+        id S1732032AbgFRB7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:24:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53846 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:59:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728340AbgFRBVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:23 -0400
+        id S1731257AbgFRBYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:24:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10C8B20CC7;
-        Thu, 18 Jun 2020 01:21:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2F8F221FB;
+        Thu, 18 Jun 2020 01:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443282;
-        bh=Cub4vj9nLqVHK+vP9cLZf3O/SAGabxVQiO5LtqWPr3Q=;
+        s=default; t=1592443479;
+        bh=+oQMsV7gJQNLISPtRZwjamRghv+JL9im7YddGrtmLtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C0pG6APArivPVS1UhMa9kylHSmrRtNWZuVYdwW927Evr9PoDOS4LcsiQeq4QtU+FO
-         2V2TGK8H4mZ5H/oQ4HwBPgS6Se2vveXFnuYkfp+4gADmRL9w8dBpXy1M5eQKMTVl9i
-         1+un2skuDuMYT2V3TCOGI+/C8zKGlbiSNpCuEMUA=
+        b=0zkdEt+1HTasbE4YspKB2hitStQhJ6HFDqGhu4wzSyLVkdxh2w1aRDjXXh3pQZwL/
+         CHYMNzooOiTSg/J7LUvrxttz96mJvKAYd9uxUQ4nlcV6M8/EcmWw8Z92ZQMja3qAQ7
+         Pjl6I/6i73IDdescJ2in/X1U++8fCLbYXwGYmkFw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Hersen Wu <hersenxs.wu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 226/266] drm/amd/display: Revalidate bandwidth before commiting DC updates
-Date:   Wed, 17 Jun 2020 21:15:51 -0400
-Message-Id: <20200618011631.604574-226-sashal@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 109/172] PCI: dwc: Fix inner MSI IRQ domain registration
+Date:   Wed, 17 Jun 2020 21:21:15 -0400
+Message-Id: <20200618012218.607130-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
-References: <20200618011631.604574-1-sashal@kernel.org>
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,59 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit a24eaa5c51255b344d5a321f1eeb3205f2775498 ]
+[ Upstream commit 0414b93e78d87ecc24ae1a7e61fe97deb29fa2f4 ]
 
-[Why]
-Whenever we switch between tiled formats without also switching pixel
-formats or doing anything else that recreates the DC plane state we
-can run into underflow or hangs since we're not updating the
-DML parameters before committing to the hardware.
+On a system that uses the internal DWC MSI widget, I get this
+warning from debugfs when CONFIG_GENERIC_IRQ_DEBUGFS is selected:
 
-[How]
-If the update type is FULL then call validate_bandwidth again to update
-the DML parmeters before committing the state.
+  debugfs: File ':soc:pcie@fc000000' in directory 'domains' already present!
 
-This is basically just a workaround and protective measure against
-update types being added DC where we could run into this issue in
-the future.
+This is due to the fact that the DWC MSI code tries to register two
+IRQ domains for the same firmware node, without telling the low
+level code how to distinguish them (by setting a bus token). This
+further confuses debugfs which tries to create corresponding
+files for each domain.
 
-We can only fully validate the state in advance before applying it to
-the hardware if we recreate all the plane and stream states since
-we can't modify what's currently in use.
+Fix it by tagging the inner domain as DOMAIN_BUS_NEXUS, which is
+the closest thing we have as to "generic MSI".
 
-The next step is to update DM to ensure that we're creating the plane
-and stream states for whatever could potentially be a full update in
-DC to pre-emptively recreate the state for DC global validation.
-
-The workaround can stay until this has been fixed in DM.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://lore.kernel.org/r/20200501113921.366597-1-maz@kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 2028dc017f7a..b95a58aa82d9 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -2230,6 +2230,12 @@ void dc_commit_updates_for_stream(struct dc *dc,
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 6d4ef0101ef6..be62f654c8eb 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -285,6 +285,8 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
+ 		return -ENOMEM;
+ 	}
  
- 	copy_stream_update_to_stream(dc, context, stream, stream_update);
- 
-+	if (!dc->res_pool->funcs->validate_bandwidth(dc, context, false)) {
-+		DC_ERROR("Mode validation failed for stream update!\n");
-+		dc_release_state(context);
-+		return;
-+	}
++	irq_domain_update_bus_token(pp->irq_domain, DOMAIN_BUS_NEXUS);
 +
- 	commit_planes_for_stream(
- 				dc,
- 				srf_updates,
+ 	pp->msi_domain = pci_msi_create_irq_domain(fwnode,
+ 						   &dw_pcie_msi_domain_info,
+ 						   pp->irq_domain);
 -- 
 2.25.1
 
