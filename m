@@ -2,131 +2,98 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FE2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C003EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 522B021534
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:29:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447360;
-	bh=wZAQsidRpruN3wZZ4eFfyqQT1wMLScdt0Bf/+b16xc0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g4kGErh5eaGgw1rNhnXmgPzPkZ7X87ITENx1Vq609Mx9LuRG87oRhD0E8mf6TYQXe
-	 Ce4OrlHh5kRzPO8m1UBg9n+rcG66iXU4LQKYIqlntu8rXrOh7AjEPuf4tj9j6IU0jG
-	 Fts683veioP59odRX7H5XeaNmrT8TwueV240B45k=
+	by mail.kernel.org (Postfix) with ESMTP id 9FEE221D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:29:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Wg8Mr9U9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbgFRC3T (ORCPT
+        id S2387668AbgFRC3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:29:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729236AbgFRBQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:16:13 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C536821D80;
-        Thu, 18 Jun 2020 01:16:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442972;
-        bh=wZAQsidRpruN3wZZ4eFfyqQT1wMLScdt0Bf/+b16xc0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gcgeq3upFyJHTbc8PNH8MoMgsD11JyHSgh4nAriS5/bpV9nLl07sFcIWk+rPdF1Qo
-         neTmB+KxNv819DU0+2fxbh/yUlrfwGNpXcT7Frpv4r4m46acTk+hcYlBHcAHVqHHHu
-         /NkE6WDwj0JWVweu+HsPKmgZ108IzyUUrAEWFVdE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YiFei Zhu <zhuyifei1999@gmail.com>,
-        YiFei Zhu <zhuyifei@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 376/388] net/filter: Permit reading NET in load_bytes_relative when MAC not set
-Date:   Wed, 17 Jun 2020 21:07:53 -0400
-Message-Id: <20200618010805.600873-376-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+        Wed, 17 Jun 2020 22:29:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728628AbgFRC3Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 22:29:16 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67A71C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 19:29:16 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id 97so3354732otg.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 19:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VIAbtmytWe4P0OjbpKgv5Ryn3X/VFHTsnPvYshe2qyk=;
+        b=Wg8Mr9U92fXHjjgnQ/HWv2MSYJV2hSDYM+VyVpA2AMG0EsZcBN1bdFwNfjKNqodVbv
+         kNDjVOAWSQ0NKnAc20FYVKiJZL6v6jDJJUvFq3C3faAk5bKYuypR+Z3YUAfDacTOidpw
+         WniKCkYahRbocMs47i4i25oGg3it2IBHQnSd2MyJndgpOKJw0iu4sEungNZ/wqFlN7y3
+         CzXlSo6jFNSp/+/zqO4SR6Q/1bO0PsQ+/bAntiRmnhgtt0nXbSIK5jfsWwtxNiW4ObWy
+         IwBatQVHAi+vh74ftWl8K6CnesDY9uLqfpg6SPq5tg8BX+4YutfcabW2Up+ozDPah6BX
+         7IiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VIAbtmytWe4P0OjbpKgv5Ryn3X/VFHTsnPvYshe2qyk=;
+        b=c0DzPTGTgx///ohuCvtpyhV9/Hz3REkwtrBiWJPAn0CWXPs3VOeprPkc2XctiBEv6e
+         w/xy8yuODe/grABXkt79ernmbRNcRZS5srPNxXFv++XBoxQKRfvS3zDzcmb4HNzaxkH3
+         QIHF5+mkNghMFI0t2zML/eKUa4MyL0ZzTyVq3R6HMui4GUXnMaYieJyZn+ZkWy0e1HUp
+         KjPLv2dTnHa9jAL+oGp8A0uk39jPK4OdFnwS/2P/IKcVZFGPrEhf/THHrOBEj7sKp7ao
+         zEIfA2iODhBPZaQwXKE/WelLBzHwjYe6v2y5oqnBqd07BzjCpPTaAzVYbnolVv5rZJ15
+         ybbw==
+X-Gm-Message-State: AOAM531AtCWo/HR5GtfoqlFNTpBVPg6mSWLr6MEOuZG/LJAN03gIFwmV
+        L0tXidHdKRGFcuLWPEKsTWTxAawH7DAyP7DSiO7L7A==
+X-Google-Smtp-Source: ABdhPJxDU1T28hAUkIcsmtrPI61nqUdQj6WFuskWwrVZFHaavRqvF0p9NTr7W4KrYrc7/rh6ZC8XiccaiFa2hgoVZBA=
+X-Received: by 2002:a05:6830:1e59:: with SMTP id e25mr1768564otj.127.1592447355825;
+ Wed, 17 Jun 2020 19:29:15 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200617203732.2076611-1-atish.patra@wdc.com> <CANN689EXQsH3C92fe=QHVEZasWmBiMXPoOB=bRLhK2CP-hdKqQ@mail.gmail.com>
+In-Reply-To: <CANN689EXQsH3C92fe=QHVEZasWmBiMXPoOB=bRLhK2CP-hdKqQ@mail.gmail.com>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Thu, 18 Jun 2020 10:29:04 +0800
+Message-ID: <CANXhq0qtxyx0+4+dVy3c3R2v5DSWaJsFwc7BcwSRGcufoL6eHA@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Acquire mmap lock before invoking walk_page_range
+To:     Michel Lespinasse <walken@google.com>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YiFei Zhu <zhuyifei1999@gmail.com>
+On Thu, Jun 18, 2020 at 8:01 AM Michel Lespinasse <walken@google.com> wrote:
+>
+> On Wed, Jun 17, 2020 at 1:38 PM Atish Patra <atish.patra@wdc.com> wrote:
+> > As per walk_page_range documentation, mmap lock should be acquired by the
+> > caller before invoking walk_page_range. mmap_assert_locked gets triggered
+> > without that. The details can be found here.
+> >
+> > http://lists.infradead.org/pipermail/linux-riscv/2020-June/010335.html
+> >
+> > Fixes: 395a21ff859c(riscv: add ARCH_HAS_SET_DIRECT_MAP support)
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>
+> Thanks for the fix.
+>
+> Reviewed-by: Michel Lespinasse <walken@google.com>
 
-[ Upstream commit 0f5d82f187e1beda3fe7295dfc500af266a5bd80 ]
+It also looks good to me. Thanks for the fix.
 
-Added a check in the switch case on start_header that checks for
-the existence of the header, and in the case that MAC is not set
-and the caller requests for MAC, -EFAULT. If the caller requests
-for NET then MAC's existence is completely ignored.
-
-There is no function to check NET header's existence and as far
-as cgroup_skb/egress is concerned it should always be set.
-
-Removed for ptr >= the start of header, considering offset is
-bounded unsigned and should always be true. len <= end - mac is
-redundant to ptr + len <= end.
-
-Fixes: 3eee1f75f2b9 ("bpf: fix bpf_skb_load_bytes_relative pkt length check")
-Signed-off-by: YiFei Zhu <zhuyifei@google.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Reviewed-by: Stanislav Fomichev <sdf@google.com>
-Link: https://lore.kernel.org/bpf/76bb820ddb6a95f59a772ecbd8c8a336f646b362.1591812755.git.zhuyifei@google.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/core/filter.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 5cc9276f1023..9080d01d9638 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -1766,25 +1766,27 @@ BPF_CALL_5(bpf_skb_load_bytes_relative, const struct sk_buff *, skb,
- 	   u32, offset, void *, to, u32, len, u32, start_header)
- {
- 	u8 *end = skb_tail_pointer(skb);
--	u8 *net = skb_network_header(skb);
--	u8 *mac = skb_mac_header(skb);
--	u8 *ptr;
-+	u8 *start, *ptr;
- 
--	if (unlikely(offset > 0xffff || len > (end - mac)))
-+	if (unlikely(offset > 0xffff))
- 		goto err_clear;
- 
- 	switch (start_header) {
- 	case BPF_HDR_START_MAC:
--		ptr = mac + offset;
-+		if (unlikely(!skb_mac_header_was_set(skb)))
-+			goto err_clear;
-+		start = skb_mac_header(skb);
- 		break;
- 	case BPF_HDR_START_NET:
--		ptr = net + offset;
-+		start = skb_network_header(skb);
- 		break;
- 	default:
- 		goto err_clear;
- 	}
- 
--	if (likely(ptr >= mac && ptr + len <= end)) {
-+	ptr = start + offset;
-+
-+	if (likely(ptr + len <= end)) {
- 		memcpy(to, ptr, len);
- 		return 0;
- 	}
--- 
-2.25.1
-
+Reviewed-by: Zong Li <zong.li@sifive.com>
