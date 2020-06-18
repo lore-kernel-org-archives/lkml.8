@@ -2,218 +2,109 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78395C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4809D208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985CD208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:29:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T6/H5JPI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730465AbgFRV3q (ORCPT
+        id S1730880AbgFRV3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 17:29:46 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:38974 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgFRV3p (ORCPT
+        Thu, 18 Jun 2020 17:29:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44380 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730486AbgFRV3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 17:29:45 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 318191C0C0D; Thu, 18 Jun 2020 23:29:43 +0200 (CEST)
-Date:   Thu, 18 Jun 2020 23:29:42 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org
-Subject: next-20200618: oops in eb_relocate_vma in Xorg process, making
- machine unusable
-Message-ID: <20200618212942.GA3831@amd>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Thu, 18 Jun 2020 17:29:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592515791;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=pSeBMkGoiWF7Uqz9mv4RyLPu5DAlwZeP6Lwc6V30QlY=;
+        b=T6/H5JPI+RFtoTvNxwr0BDLvUXRnxlwfkjEK5QHFjYTJY6B7xxHiZ5UMP29L0zYumeLSMA
+        j0Xf1bfgQpZNBCPdil1IksZfGR0PZS8hCZQ3BKYvY4gRXl7U3ZDkSFcNqUJhBbr2NFylDk
+        z5c3Avcx0R/cfYnvogsO+5nU3C508vI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-489-_HwV8PBmPmiEXunbTnrkpA-1; Thu, 18 Jun 2020 17:29:49 -0400
+X-MC-Unique: _HwV8PBmPmiEXunbTnrkpA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 971F78035DF;
+        Thu, 18 Jun 2020 21:29:48 +0000 (UTC)
+Received: from llong.com (ovpn-118-66.rdu2.redhat.com [10.10.118.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EE709100238D;
+        Thu, 18 Jun 2020 21:29:44 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michel Lespinasse <walken@google.com>
+Cc:     linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>
+Subject: [PATCH v2] sched, mm: Optimize current_gfp_context()
+Date:   Thu, 18 Jun 2020 17:29:36 -0400
+Message-Id: <20200618212936.9776-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The current_gfp_context() converts a number of PF_MEMALLOC_* per-process
+flags into the corresponding GFP_* flags for memory allocation. In
+that function, current->flags is accessed 3 times. That may lead to
+duplicated access of the same memory location.
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is not usually a problem with minimal debug config options on as the
+compiler can optimize away the duplicated memory accesses.  With most
+of the debug config options on, however, that may not be the case.
+For example, the x86-64 object size of the __need_fs_reclaim() in a
+debug kernel that calls current_gfp_context() was 309 bytes. With this
+patch applied, the object size is reduced to 202 bytes. This is a saving
+of 107 bytes and will probably be slightly faster too.
 
-Hi!
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ include/linux/sched/mm.h | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-On thinkpad X60 (x86-32): I got this: Had to reboot....
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index 480a4d1b7dd8..ff37cd8bbd82 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -181,18 +181,20 @@ static inline bool in_vfork(struct task_struct *tsk)
+  */
+ static inline gfp_t current_gfp_context(gfp_t flags)
+ {
+-	if (unlikely(current->flags &
++	unsigned int pflags = READ_ONCE(current->flags);
++
++	if (unlikely(pflags &
+ 		     (PF_MEMALLOC_NOIO | PF_MEMALLOC_NOFS | PF_MEMALLOC_NOCMA))) {
+ 		/*
+ 		 * NOIO implies both NOIO and NOFS and it is a weaker context
+ 		 * so always make sure it makes precedence
+ 		 */
+-		if (current->flags & PF_MEMALLOC_NOIO)
++		if (pflags & PF_MEMALLOC_NOIO)
+ 			flags &= ~(__GFP_IO | __GFP_FS);
+-		else if (current->flags & PF_MEMALLOC_NOFS)
++		else if (pflags & PF_MEMALLOC_NOFS)
+ 			flags &= ~__GFP_FS;
+ #ifdef CONFIG_CMA
+-		if (current->flags & PF_MEMALLOC_NOCMA)
++		if (pflags & PF_MEMALLOC_NOCMA)
+ 			flags &= ~__GFP_MOVABLE;
+ #endif
+ 	}
+-- 
+2.18.1
 
-Best regards,
-							Pavel
-
-Jun 18 23:16:28 amd kernel: BUG: unable to handle page fault for
-address: f8600000
-Jun 18 23:16:28 amd kernel: #PF: supervisor write access in kernel
-mode
-Jun 18 23:16:28 amd kernel: #PF: error_code(0x0002) - not-present page
-Jun 18 23:16:28 amd kernel: *pdpt =3D 00000000319d7001 *pde =3D
-0000000000000000
-Jun 18 23:16:28 amd kernel: Oops: 0002 [#1] PREEMPT SMP PTI
-Jun 18 23:16:28 amd kernel: CPU: 0 PID: 2951 Comm: Xorg Not tainted
-5.8.0-rc1-next-20200618+ #125
-Jun 18 23:16:28 amd kernel: Hardware name: LENOVO 17097HU/17097HU,
-BIOS 7BETD8WW (2.19 ) 03/31/2011
-Jun 18 23:16:28 amd kernel: EIP: eb_relocate_vma+0xdee/0xf50
-Jun 18 23:16:28 amd kernel: Code: 85 c0 fd ff ff ed ff ff ff c7 85 c4
-fd ff ff ff ff ff ff 8b 85 c0 fd ff ff e9 33 f7 ff ff 8d b6 00 00 00
-00 8b 85 d0 fd ff ff <c7> 03 01 00 40 10 89 43 04 8b 85 dc fd ff ff 89
-43 08 e9 2c f6 ff
-Jun 18 23:16:28 amd kernel: EAX: 003095c8 EBX: f8600000 ECX: 012c8000
-EDX: 00000000
-Jun 18 23:16:28 amd kernel: ESI: f1ad7cbc EDI: f1ad7b04 EBP: f1ad7c54
-ESP: f1ad79ec
-Jun 18 23:16:28 amd kernel: DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS:
-0068 EFLAGS: 00210246
-Jun 18 23:16:28 amd kernel: CR0: 80050033 CR2: f8600000 CR3: 31ada000
-CR4: 000006b0
-Jun 18 23:16:28 amd kernel: Call Trace:
-Jun 18 23:16:28 amd kernel: ? __lock_acquire.isra.0+0x223/0x500
-Jun 18 23:16:28 amd kernel: i915_gem_do_execbuffer+0x9a1/0x2a70
-Jun 18 23:16:28 amd kernel: ? intel_runtime_pm_put_unchecked+0xd/0x10
-Jun 18 23:16:28 amd kernel: ? i915_gem_gtt_pwrite_fast+0xf6/0x520
-Jun 18 23:16:28 amd kernel: ? __lock_acquire.isra.0+0x223/0x500
-Jun 18 23:16:28 amd kernel: ? cache_alloc_debugcheck_after+0x151/0x180
-Jun 18 23:16:28 amd kernel: ? kvmalloc_node+0x69/0x80
-Jun 18 23:16:28 amd kernel: ? __kmalloc+0x92/0x120
-Jun 18 23:16:28 amd kernel: ? kvmalloc_node+0x69/0x80
-Jun 18 23:16:28 amd kernel: i915_gem_execbuffer2_ioctl+0x1b9/0x3a0
-Jun 18 23:16:28 amd kernel: ? drm_dev_exit+0xb/0x40
-Jun 18 23:16:28 amd kernel: ? i915_gem_execbuffer_ioctl+0x2a0/0x2a0
-Jun 18 23:16:28 amd kernel: drm_ioctl_kernel+0x91/0xe0
-Jun 18 23:16:28 amd kernel: ? i915_gem_execbuffer_ioctl+0x2a0/0x2a0
-Jun 18 23:16:28 amd kernel: drm_ioctl+0x1fd/0x371
-Jun 18 23:16:28 amd kernel: ? i915_gem_execbuffer_ioctl+0x2a0/0x2a0
-Jun 18 23:16:28 amd kernel: ? posix_get_monotonic_timespec+0x1d/0x80
-Jun 18 23:16:28 amd kernel: ? drm_ioctl_kernel+0xe0/0xe0
-Jun 18 23:16:28 amd kernel: ksys_ioctl+0x143/0x7d0
-Jun 18 23:16:28 amd kernel: ? ktime_get_ts64+0x77/0x1d0
-Jun 18 23:16:28 amd kernel: ? _copy_to_user+0x21/0x30
-Jun 18 23:16:28 amd kernel: ? __prepare_exit_to_usermode+0xe5/0x110
-Jun 18 23:16:28 amd kernel: __ia32_sys_ioctl+0x10/0x12
-Jun 18 23:16:28 amd kernel: do_syscall_32_irqs_on+0x3a/0xf0
-Jun 18 23:16:28 amd kernel: do_int80_syscall_32+0x9/0x20
-Jun 18 23:16:28 amd kernel: entry_INT80_32+0x116/0x116
-Jun 18 23:16:28 amd kernel: EIP: 0xb7f1c092
-Jun 18 23:16:28 amd kernel: Code: Bad RIP value.
-Jun 18 23:16:28 amd kernel: EAX: ffffffda EBX: 0000000a ECX: c0406469
-EDX: bf97792c
-Jun 18 23:16:28 amd kernel: ESI: b730a000 EDI: c0406469 EBP: 0000000a
-ESP: bf9778a4
-Jun 18 23:16:28 amd kernel: DS: 007b ES: 007b FS: 0000 GS: 0033 SS:
-007b EFLAGS: 00200292
-Jun 18 23:16:28 amd kernel: ? asm_exc_nmi+0xcc/0x2bc
-Jun 18 23:16:28 amd kernel: Modules linked in:
-Jun 18 23:16:28 amd kernel: CR2: 00000000f8600000
-Jun 18 23:16:28 amd kernel: ---[ end trace 216ff69b99738a0d ]---
-Jun 18 23:16:28 amd kernel: EIP: eb_relocate_vma+0xdee/0xf50
-Jun 18 23:16:28 amd kernel: Code: 85 c0 fd ff ff ed ff ff ff c7 85 c4
-fd ff ff ff ff ff ff 8b 85 c0 fd ff ff e9 33 f7 ff ff 8d b6 00 00 00
-00 8b 85 d0 fd ff ff <c7> 03 01 00 40 10 89 43 04 8b 85 dc fd ff ff 89
-43 08 e9 2c f6 ff
-Jun 18 23:16:28 amd kernel: EAX: 003095c8 EBX: f8600000 ECX: 012c8000
-EDX: 00000000
-Jun 18 23:16:28 amd kernel: ESI: f1ad7cbc EDI: f1ad7b04 EBP: f1ad7c54
-ESP: f1ad79ec
-Jun 18 23:16:28 amd kernel: DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS:
-0068 EFLAGS: 00210246
-Jun 18 23:16:28 amd kernel: CR0: 80050033 CR2: f8600000 CR3: 31ada000
-CR4: 000006b0
-Jun 18 23:16:28 amd kernel: BUG: unable to handle page fault for
-address: f8602038
-Jun 18 23:16:28 amd kernel: #PF: supervisor write access in kernel
-mode
-Jun 18 23:16:28 amd kernel: #PF: error_code(0x0002) - not-present page
-Jun 18 23:16:28 amd kernel: *pdpt =3D 000000002e39f001 *pde =3D
-0000000000000000
-Jun 18 23:16:28 amd kernel: Oops: 0002 [#2] PREEMPT SMP PTI
-Jun 18 23:16:28 amd kernel: CPU: 0 PID: 2951 Comm: Xorg Tainted: G
-D           5.8.0-rc1-next-20200618+ #125
-Jun 18 23:16:28 amd kernel: Hardware name: LENOVO 17097HU/17097HU,
-BIOS 7BETD8WW (2.19 ) 03/31/2011
-Jun 18 23:16:28 amd kernel: EIP: n_tty_open+0x26/0x80
-Jun 18 23:16:28 amd kernel: Code: 00 00 00 90 55 89 e5 56 53 89 c3 b8
-f0 22 00 00 e8 0f 6a cb ff 85 c0 74 62 89 c6 a1 00 cd 25 c5 b9 c8 66
-6b c5 ba a9 3b 11 c5 <89> 46 38 8d 86 58 22 00 00 e8 9c 66 c0 ff 8d 86
-a4 22 00 00 b9 c0
-Jun 18 23:16:28 amd kernel: EAX: 00024042 EBX: f3e8dc00 ECX: c56b66c8
-EDX: c5113ba9
-Jun 18 23:16:28 amd kernel: ESI: f8602000 EDI: 00000000 EBP: f1ad7ee4
-ESP: f1ad7edc
-Jun 18 23:16:28 amd kernel: DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS:
-0068 EFLAGS: 00210286
-Jun 18 23:16:28 amd kernel: CR0: 80050033 CR2: f8602038 CR3: 2dd5c000
-CR4: 000006b0
-Jun 18 23:16:28 amd kernel: Call Trace:
-Jun 18 23:16:28 amd kernel: tty_ldisc_open.isra.0+0x23/0x40
-Jun 18 23:16:28 amd kernel: tty_ldisc_reinit+0x99/0xe0
-Jun 18 23:16:28 amd kernel: tty_ldisc_hangup+0xc4/0x1e0
-Jun 18 23:16:28 amd kernel: __tty_hangup.part.0+0x13f/0x250
-Jun 18 23:16:28 amd kernel: tty_vhangup_session+0x11/0x20
-Jun 18 23:16:28 amd kernel: disassociate_ctty.part.0+0x34/0x230
-Jun 18 23:16:28 amd kernel: disassociate_ctty+0x28/0x30
-Jun 18 23:16:28 amd kernel: do_exit+0x466/0x980
-Jun 18 23:16:28 amd kernel: ? __ia32_sys_ioctl+0x10/0x12
-Jun 18 23:16:28 amd kernel: ? do_syscall_32_irqs_on+0x3a/0xf0
-Jun 18 23:16:28 amd kernel: rewind_stack_do_exit+0x11/0x13
-Jun 18 23:16:28 amd kernel: EIP: 0xb7f1c092
-Jun 18 23:16:28 amd kernel: Code: Bad RIP value.
-Jun 18 23:16:28 amd kernel: EAX: ffffffda EBX: 0000000a ECX: c0406469
-EDX: bf97792c
-Jun 18 23:16:28 amd kernel: ESI: b730a000 EDI: c0406469 EBP: 0000000a
-ESP: bf9778a4
-Jun 18 23:16:28 amd kernel: DS: 007b ES: 007b FS: 0000 GS: 0033 SS:
-007b EFLAGS: 00200292
-Jun 18 23:16:28 amd kernel: ? asm_exc_nmi+0xcc/0x2bc
-Jun 18 23:16:28 amd kernel: Modules linked in:
-Jun 18 23:16:28 amd kernel: CR2: 00000000f8602038
-Jun 18 23:16:28 amd kernel: ---[ end trace 216ff69b99738a0e ]---
-Jun 18 23:16:28 amd kernel: EIP: eb_relocate_vma+0xdee/0xf50
-Jun 18 23:16:28 amd kernel: Code: 85 c0 fd ff ff ed ff ff ff c7 85 c4
-fd ff ff ff ff ff ff 8b 85 c0 fd ff ff e9 33 f7 ff ff 8d b6 00 00 00
-00 8b 85 d0 fd ff ff <c7> 03 01 00 40 10 89 43 04 8b 85 dc fd ff ff 89
-43 08 e9 2c f6 ff
-Jun 18 23:16:28 amd kernel: EAX: 003095c8 EBX: f8600000 ECX: 012c8000
-EDX: 00000000
-Jun 18 23:16:28 amd kernel: ESI: f1ad7cbc EDI: f1ad7b04 EBP: f1ad7c54
-ESP: f1ad79ec
-Jun 18 23:16:28 amd kernel: DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS:
-0068 EFLAGS: 00210246
-Jun 18 23:16:28 amd kernel: CR0: 80050033 CR2: f8602038 CR3: 2dd5c000
-CR4: 000006b0
-Jun 18 23:16:28 amd kernel: Fixing recursive fault but reboot is
-needed!
-Jun 18 23:16:38 amd systemd[1]: Starting Cleanup of Temporary
-Directories...
-Jun 18 23:16:39 amd systemd[1]: Started Cleanup of Temporary
-Directories.
-=20
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7r3MYACgkQMOfwapXb+vLVvACcCoiAKosiTOchKhhrgSGwP3wG
-5McAoJiG4iQp4+urMT9+dOVrdfxCl3Xi
-=fJ9e
------END PGP SIGNATURE-----
-
---LZvS9be/3tNcYl/X--
