@@ -2,263 +2,142 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B84C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0923C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5372071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 989A3207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:13:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A0dJZO/E"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ksbBZY96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731449AbgFRPLK (ORCPT
+        id S1728030AbgFRPN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:11:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33364 "EHLO
+        Thu, 18 Jun 2020 11:13:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731390AbgFRPKv (ORCPT
+        with ESMTP id S1726879AbgFRPN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:10:51 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E312C0613EE
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:10:50 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id b5so3029556pgm.8
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:10:50 -0700 (PDT)
+        Thu, 18 Jun 2020 11:13:57 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E17B8C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:13:56 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id q188so1241517ooq.4
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:13:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mqrLxsOH23jMmWDCAvD7Zv1dq0cfbx+EXnsz1QwYjMc=;
-        b=A0dJZO/ESj54vdLdSebDiEifYFwpT8y9FYfiJ68gcGnncK0ZwSwc2Fp9L8OPb4zYWK
-         bFhk9bA8NDMtJ+ia5MsjEl0ziE+CSA67JfvtFpFqCtRMDU4O4ySMjskZy7Yx1jrl8JI1
-         ua1bzHIZRI3BbrQm4RrtrYX1UuyuPolxSqg6A=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fO4GINLTqRPNQqITpuXVhFaUv7xlTQUTH2mrBTAzQv8=;
+        b=ksbBZY96J7SnvGtlTve3J3SqjR6CAXehOpIYzIb0OdARGchl6NKK4Xn+TdQ3i8Y/K5
+         xeMev+1/0WxRTSMPrqYppwHlLwHOpH+401TlWjVS5iyDj6WPNXYBcn0X1ONfNJshJ9gE
+         zQDMTlcEH/ByaIadS2y3fycvjMUczwll0Bw3NMMSkZ1wtk2UoxRYDBddROZ2hB+LOHf+
+         sjM/IcRhtoAd7dvpeRd0pFCFD34N5W48Ln3/2fTXwJl2HR5PNGaAxPsXQoCh0MmMDZX3
+         IeGmfqzrJW8uJ2FCJv0h3VQ2l50CItP9NsLuBExTaMHve67TjoLhRcBokk3rNwYOcymw
+         XxQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mqrLxsOH23jMmWDCAvD7Zv1dq0cfbx+EXnsz1QwYjMc=;
-        b=Lat+wu0kzJjqEY9/NNGjeL0tnLK5t8Z2F/jtZM19sezP43CSGi7Nji3uswKJoIOtxN
-         hRHQnVFtsGlDbdoFPDQdLDbkLC2fKL+AI5J2i/OsXozpCeOB8mkfXs8wzTXc4nfeivKv
-         J+kC6fLc+QN1sD/rPxxx6E1RMLeJBGw5qmzPUWyODLqzthI8hrnchaBroyVc14GJuIQQ
-         kle9cT5Ep+cKyRN+VgWj49P/2XSVmGLFaGUQ5cKtCzA17rCedqZqkpt/DlV+dNm0TVAl
-         uD8N4CfaHNoMj3Z61UkkNEReQtxlaibQSYbSPN0Adk7FUfJLVhl0gu2Tlpl5Zb6y1C89
-         1mkw==
-X-Gm-Message-State: AOAM531U4dPn04iImZkoWYAA6EHZU0i9J7hTRJuIDSC9zMFgIPyK0moH
-        AnmXTyMd0bgVqn2BY4UWD8yT+A==
-X-Google-Smtp-Source: ABdhPJxTAr3ojc6iO/37TWVVPwyClnlGU0LJ1oS7TjCQ42cOm3S3Sf7uNaBPLZG9lCJygBt9d+a58A==
-X-Received: by 2002:a63:80c8:: with SMTP id j191mr2254438pgd.38.1592493049531;
-        Thu, 18 Jun 2020 08:10:49 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id b14sm3171510pft.23.2020.06.18.08.10.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 08:10:49 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     swboyd@chromium.org, Alok Chauhan <alokc@codeaurora.org>,
-        skakit@codeaurora.org, Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dilip Kota <dkota@codeaurora.org>,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: [PATCH v4 2/5] spi: spi-geni-qcom: Mo' betta locking
-Date:   Thu, 18 Jun 2020 08:06:23 -0700
-Message-Id: <20200618080459.v4.2.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
-X-Mailer: git-send-email 2.27.0.290.gba653c62da-goog
-In-Reply-To: <20200618150626.237027-1-dianders@chromium.org>
-References: <20200618150626.237027-1-dianders@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fO4GINLTqRPNQqITpuXVhFaUv7xlTQUTH2mrBTAzQv8=;
+        b=mId9QxrnuxT/DSKiNONhLe+i3DgRJXR44ch21eiaAB+xNKPaHA6Z6tQbbjKkGG98Mo
+         EiQrYlmqP+JrvRhE07mJGDU5UZ6n+l/tqC4xMg7xyiicvFgieOFSXhWJ9w+Z3GmcdZPH
+         ccqR2G7TWk8z8xK/ZeE2YRrnAQiOh2BJG7mWBhGUYo6hHut0764nJrcgs3FwVwjNfQXH
+         /P1ndz4noXfUlnrqasnqTTVJ2cpB9kVgZz5ZPPIBIqsjoUazWL8ofExfkGYW1JgGK6ij
+         l6I3/4WlsnWmZDAJ+92EdmvA3P3BkQhvv32VwOcDM4Hgi2MvWnP0Brruor5cZ9k6sFoK
+         1K4A==
+X-Gm-Message-State: AOAM533S52HCgTBkX5vDvOlFQP+sK54RoxXK0PYIj2D3FE4pgu4btzbj
+        lXj8ul/tIDo8oSTiL8iBsNt9MUcV0l5vFry25Qput+j8WTqyfA==
+X-Google-Smtp-Source: ABdhPJzAGueKTJlAqRIBsUfbNxJ5G7F8FRnatiN+3y77dD4LLMFwCK9iKdDECNEX+Od8rxG2uNum7XzYeXZVuLEQH6Y=
+X-Received: by 2002:a05:6820:50a:: with SMTP id m10mr4543140ooj.54.1592493236068;
+ Thu, 18 Jun 2020 08:13:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200618144407.520952071@infradead.org> <20200618144801.760070502@infradead.org>
+In-Reply-To: <20200618144801.760070502@infradead.org>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 18 Jun 2020 17:13:45 +0200
+Message-ID: <CANpmjNMdrM7T-To0nqv5NGBWztD-Oq6uBy0Vbi9ejg0h3raWoQ@mail.gmail.com>
+Subject: Re: [PATCH 3/7] x86/entry: Fixup bad_iret vs noinstr
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, mhelsley@vmware.com,
+        Steven Rostedt <rostedt@goodmis.org>, jthierry@redhat.com,
+        mbenes@suse.cz
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If you added a bit of a delay (like a trace_printk) into the ISR for
-the spi-geni-qcom driver, you would suddenly start seeing some errors
-spit out.  The problem was that, though the ISR itself held a lock,
-other parts of the driver didn't always grab the lock.
+On Thu, 18 Jun 2020 at 16:50, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> vmlinux.o: warning: objtool: fixup_bad_iret()+0x8e: call to memcpy() leaves .noinstr.text section
+>
+> Worse, when KASAN there is no telling what memcpy() actually is. Force
+> the use of __memcpy() which is our assmebly implementation.
+>
+> Reported-by: Marco Elver <elver@google.com>
+> Suggested-by: Marco Elver <elver@google.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-One example race was this:
-  CPU0                                         CPU1
-  ----                                         ----
-  spi_geni_set_cs()
-   mas->cur_mcmd = CMD_CS;
-   geni_se_setup_m_cmd(...)
-   wait_for_completion_timeout(&xfer_done);
-                                              <INTERRUPT>
-                                               geni_spi_isr()
-                                                complete(&xfer_done);
-   <wakeup>
-   pm_runtime_put(mas->dev);
-  ... // back to SPI core
-  spi_geni_transfer_one()
-   setup_fifo_xfer()
-    mas->cur_mcmd = CMD_XFER;
-                                                mas->cur_cmd = CMD_NONE; // bad!
-                                                return IRQ_HANDLED;
+KASAN no longer crashes, although the stack size increase appears to
+be sufficient for the particular case I ran into.
 
-Let's fix this.  Before we start messing with hardware, we'll grab the
-lock to make sure that the IRQ handler from some previous command has
-really finished.  We don't need to hold the lock unless we're in a
-state where more interrupts can come in, but we at least need to make
-sure the previous IRQ is done.  This lock is used exclusively to
-prevent the IRQ handler and non-IRQ from stomping on each other.  The
-SPI core handles all other mutual exclusion.
+Tested-by: Marco Elver <elver@google.com>
 
-As part of this, we change the way that the IRQ handler detects
-spurious interrupts.  Previously we checked for our state variable
-being set to IRQ_NONE, but that was done outside the spinlock.  We
-could move it into the spinlock, but instead let's just change it to
-look for the lack of any IRQ status bits being set.  This can be done
-outside the lock--the hardware certainly isn't grabbing or looking at
-the spinlock when it updates its status register.
+Thanks!
 
-It's possible that this will fix real (but very rare) errors seen in
-the field that look like:
-  irq ...: nobody cared (try booting with the "irqpoll" option)
-
-NOTE: an alternate strategy considered here was to always make the
-complete() / spi_finalize_current_transfer() the very last thing in
-our IRQ handler.  With such a change you could consider that we could
-be "lockless".  In that case, though, we'd have to be very careful w/
-memory barriers so we made sure we didn't have any bugs with weakly
-ordered memory.  Using spinlocks makes the driver much easier to
-understand.
-
-Fixes: 561de45f72bd ("spi: spi-geni-qcom: Add SPI driver support for GENI based QUP")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v4:
-- Drop 'controller' in comment.
-- Use Stephen's diagram to explain the race better.
-
-Changes in v3:
-- Split out some lock cleanup to previous patch.
-- Don't need to read IRQ status register inside spinlock.
-- Don't check for state CMD_NONE; later patch is removing state var.
-- Don't hold the lock for all of setup_fifo_xfer().
-- Comment about why it's safe to Ack interrupts at the end.
-- Subject/desc changed since race is definitely there.
-
-Changes in v2:
-- Detect true spurious interrupt.
-- Still return IRQ_NONE for state machine mismatch, but print warn.
-
- drivers/spi/spi-geni-qcom.c | 45 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 42 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-index c7d2c7e45b3f..7d022ccb1b6c 100644
---- a/drivers/spi/spi-geni-qcom.c
-+++ b/drivers/spi/spi-geni-qcom.c
-@@ -151,16 +151,18 @@ static void spi_geni_set_cs(struct spi_device *slv, bool set_flag)
- 	struct geni_se *se = &mas->se;
- 	unsigned long time_left;
- 
--	reinit_completion(&mas->xfer_done);
- 	pm_runtime_get_sync(mas->dev);
- 	if (!(slv->mode & SPI_CS_HIGH))
- 		set_flag = !set_flag;
- 
-+	spin_lock_irq(&mas->lock);
-+	reinit_completion(&mas->xfer_done);
- 	mas->cur_mcmd = CMD_CS;
- 	if (set_flag)
- 		geni_se_setup_m_cmd(se, SPI_CS_ASSERT, 0);
- 	else
- 		geni_se_setup_m_cmd(se, SPI_CS_DEASSERT, 0);
-+	spin_unlock_irq(&mas->lock);
- 
- 	time_left = wait_for_completion_timeout(&mas->xfer_done, HZ);
- 	if (!time_left)
-@@ -307,6 +309,21 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
- 	u32 spi_tx_cfg, len;
- 	struct geni_se *se = &mas->se;
- 
-+	/*
-+	 * Ensure that our interrupt handler isn't still running from some
-+	 * prior command before we start messing with the hardware behind
-+	 * its back.  We don't need to _keep_ the lock here since we're only
-+	 * worried about racing with out interrupt handler.  The SPI core
-+	 * already handles making sure that we're not trying to do two
-+	 * transfers at once or setting a chip select and doing a transfer
-+	 * concurrently.
-+	 *
-+	 * NOTE: we actually _can't_ hold the lock here because possibly we
-+	 * might call clk_set_rate() which needs to be able to sleep.
-+	 */
-+	spin_lock_irq(&mas->lock);
-+	spin_unlock_irq(&mas->lock);
-+
- 	spi_tx_cfg = readl(se->base + SE_SPI_TRANS_CFG);
- 	if (xfer->bits_per_word != mas->cur_bits_per_word) {
- 		spi_setup_word_len(mas, mode, xfer->bits_per_word);
-@@ -367,6 +384,12 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
- 	}
- 	writel(spi_tx_cfg, se->base + SE_SPI_TRANS_CFG);
- 	mas->cur_mcmd = CMD_XFER;
-+
-+	/*
-+	 * Lock around right before we start the transfer since our
-+	 * interrupt could come in at any time now.
-+	 */
-+	spin_lock_irq(&mas->lock);
- 	geni_se_setup_m_cmd(se, m_cmd, FRAGMENTATION);
- 
- 	/*
-@@ -376,6 +399,7 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
- 	 */
- 	if (m_cmd & SPI_TX_ONLY)
- 		writel(mas->tx_wm, se->base + SE_GENI_TX_WATERMARK_REG);
-+	spin_unlock_irq(&mas->lock);
- }
- 
- static int spi_geni_transfer_one(struct spi_master *spi,
-@@ -478,11 +502,11 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 	struct geni_se *se = &mas->se;
- 	u32 m_irq;
- 
--	if (mas->cur_mcmd == CMD_NONE)
-+	m_irq = readl(se->base + SE_GENI_M_IRQ_STATUS);
-+	if (!m_irq)
- 		return IRQ_NONE;
- 
- 	spin_lock(&mas->lock);
--	m_irq = readl(se->base + SE_GENI_M_IRQ_STATUS);
- 
- 	if ((m_irq & M_RX_FIFO_WATERMARK_EN) || (m_irq & M_RX_FIFO_LAST_EN))
- 		geni_spi_handle_rx(mas);
-@@ -522,8 +546,23 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 		complete(&mas->xfer_done);
- 	}
- 
-+	/*
-+	 * It's safe or a good idea to Ack all of our our interrupts at the
-+	 * end of the function. Specifically:
-+	 * - M_CMD_DONE_EN / M_RX_FIFO_LAST_EN: Edge triggered interrupts and
-+	 *   clearing Acks. Clearing at the end relies on nobody else having
-+	 *   started a new transfer yet or else we could be clearing _their_
-+	 *   done bit, but everyone grabs the spinlock before starting a new
-+	 *   transfer.
-+	 * - M_RX_FIFO_WATERMARK_EN / M_TX_FIFO_WATERMARK_EN: These appear
-+	 *   to be "latched level" interrupts so it's important to clear them
-+	 *   _after_ you've handled the condition and always safe to do so
-+	 *   since they'll re-assert if they're still happening.
-+	 */
- 	writel(m_irq, se->base + SE_GENI_M_IRQ_CLEAR);
-+
- 	spin_unlock(&mas->lock);
-+
- 	return IRQ_HANDLED;
- }
- 
--- 
-2.27.0.290.gba653c62da-goog
-
+> ---
+>  arch/x86/kernel/traps.c  |    6 +++---
+>  arch/x86/lib/memcpy_64.S |    4 ++++
+>  2 files changed, 7 insertions(+), 3 deletions(-)
+>
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -685,13 +685,13 @@ struct bad_iret_stack *fixup_bad_iret(st
+>                 (struct bad_iret_stack *)__this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
+>
+>         /* Copy the IRET target to the temporary storage. */
+> -       memcpy(&tmp.regs.ip, (void *)s->regs.sp, 5*8);
+> +       __memcpy(&tmp.regs.ip, (void *)s->regs.sp, 5*8);
+>
+>         /* Copy the remainder of the stack from the current stack. */
+> -       memcpy(&tmp, s, offsetof(struct bad_iret_stack, regs.ip));
+> +       __memcpy(&tmp, s, offsetof(struct bad_iret_stack, regs.ip));
+>
+>         /* Update the entry stack */
+> -       memcpy(new_stack, &tmp, sizeof(tmp));
+> +       __memcpy(new_stack, &tmp, sizeof(tmp));
+>
+>         BUG_ON(!user_mode(&new_stack->regs));
+>         return new_stack;
+> --- a/arch/x86/lib/memcpy_64.S
+> +++ b/arch/x86/lib/memcpy_64.S
+> @@ -8,6 +8,8 @@
+>  #include <asm/alternative-asm.h>
+>  #include <asm/export.h>
+>
+> +.pushsection .noinstr.text, "ax"
+> +
+>  /*
+>   * We build a jump to memcpy_orig by default which gets NOPped out on
+>   * the majority of x86 CPUs which set REP_GOOD. In addition, CPUs which
+> @@ -184,6 +186,8 @@ SYM_FUNC_START_LOCAL(memcpy_orig)
+>         retq
+>  SYM_FUNC_END(memcpy_orig)
+>
+> +.popsection
+> +
+>  #ifndef CONFIG_UML
+>
+>  MCSAFE_TEST_CTL
+>
+>
