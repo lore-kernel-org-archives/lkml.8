@@ -2,85 +2,63 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E26C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA99C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7D4A2080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592483813;
-	bh=b3WSJ0JAtVfTd98/g8GA2SmVjw5DbbasFwVMJskruSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gg7LPonVkXjQPvL2ho4Gy2euR0rjgOQvWD335lzLGunrYGjnPASJIa1CvdEkELQiK
-	 GmTBtx8ci6q4uUgMNRLleh3fiNzEDt/1GVWyEZKRUCKtrMkh1Dfx3GwUkvxFZoCqXz
-	 HefVq85YcIVpaRaMwVxb98rcw+gMu5gneHz5kVN4=
+	by mail.kernel.org (Postfix) with ESMTP id 65BD32070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbgFRMgw (ORCPT
+        id S1729791AbgFRMhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:36:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52162 "EHLO mail.kernel.org"
+        Thu, 18 Jun 2020 08:37:16 -0400
+Received: from ozlabs.org ([203.11.71.1]:59723 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727976AbgFRMgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 08:36:50 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C526E2070A;
-        Thu, 18 Jun 2020 12:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592483809;
-        bh=b3WSJ0JAtVfTd98/g8GA2SmVjw5DbbasFwVMJskruSU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qNg/23UxRyx9h0EMSrojDoYVBTmp4sf/NZoOY2FUgMjvEtmuh32BvdUpIE1eiqUfx
-         RD5nh183tv62X3TszdvDdA4rNgKOmAzTgksevMi09HhEbuoTsqIGZzNJGvdIaf8Xwy
-         HT1Qq8ftvSQp83X6hZPS2oifPWR/dElHkGoF2wVA=
-Received: by pali.im (Postfix)
-        id 5A787791; Thu, 18 Jun 2020 14:36:47 +0200 (CEST)
-Date:   Thu, 18 Jun 2020 14:36:47 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] mwifiex: Firmware name for W8997 sdio wifi chip
-Message-ID: <20200618123647.axx7wtlclgs333k5@pali>
-References: <20200515132353.vfor7v4buzoddfmb@pali>
- <VI1PR04MB4366625917BB57695BE454448FBA0@VI1PR04MB4366.eurprd04.prod.outlook.com>
- <20200528103432.irmsaaz72x3xophg@pali>
- <VI1PR04MB4366409B8E293A265851DA948F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
- <20200529084630.j7rpdypt6vycsedh@pali>
- <VI1PR04MB4366DECFA1EB5C3D6AADB0818F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
- <20200529085536.zivf36mn2d6zx5ii@pali>
- <VI1PR04MB43663ACEAADB7ADD1EB7572D8F8F0@VI1PR04MB4366.eurprd04.prod.outlook.com>
- <20200529091211.vx2godj5zirsptam@pali>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200529091211.vx2godj5zirsptam@pali>
-User-Agent: NeoMutt/20180716
+        id S1727949AbgFRMhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 08:37:15 -0400
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 49nhK50SZcz9sTD; Thu, 18 Jun 2020 22:37:12 +1000 (AEST)
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+In-Reply-To: <cover.1592225557.git.christophe.leroy@csgroup.eu>
+References: <cover.1592225557.git.christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH 0/3] Fix build failure with v5.8-rc1
+Message-Id: <159248379779.3471720.9152671306932635297.b4-ty@ellerman.id.au>
+Date:   Thu, 18 Jun 2020 22:37:12 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 29 May 2020 11:12:11 Pali Rohár wrote:
-> On Friday 29 May 2020 09:11:08 Ganapathi Bhat wrote:
-> > Hi Pali,
-> >  
-> > > Hello Ganapathi! Seems that on both locations is older version of
-> > > sdsd8997_combo_v4.bin firmware, not the latest one. On both location is
-> > > available just version 16.68.1.p179. But we have newer version 16.68.1.p197.
-> > > Could you please recheck it?
-> > 
-> > p179 do have the fix but we will try to upstream p197 also soon.
+On Mon, 15 Jun 2020 12:57:55 +0000 (UTC), Christophe Leroy wrote:
+> Commit 2ab3a0a02905 ("READ_ONCE: Enforce atomicity for
+> {READ,WRITE}_ONCE() memory accesses") leads to following build
+> failure on powerpc 8xx.
 > 
-> Thank you!
+> To fix it, this small series introduces a new helper named ptep_get()
+> to replace the direct access with READ_ONCE(). This new helper
+> can be overriden by architectures.
+> 
+> [...]
 
-Hello Ganapathi! Do you have any updates about upstreaming new firmware version?
+Applied to powerpc/fixes.
+
+[1/3] mm/gup: Use huge_ptep_get() in gup_hugepte()
+      https://git.kernel.org/powerpc/c/01a80ec6495f9e43f61b3231f3b283ca050a800e
+[2/3] mm: Allow arches to provide ptep_get()
+      https://git.kernel.org/powerpc/c/f7583fd6bdcc4d0b43f68fb81ebfae9669ee9338
+[3/3] powerpc/8xx: Provide ptep_get() with 16k pages
+      https://git.kernel.org/powerpc/c/b55129f97aeefd265314e12d98935330e011a14a
+
+cheers
