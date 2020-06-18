@@ -2,107 +2,165 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C60C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B46C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5EB212CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7D7212CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:33:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbgFRHdL (ORCPT
+        id S1728171AbgFRHdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 03:33:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55794 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgFRHdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 03:33:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 543F8AC5E;
-        Thu, 18 Jun 2020 07:33:08 +0000 (UTC)
-Subject: Re: [PATCH v6 17/19] mm: memcg/slab: use a single set of kmem_caches
- for all allocations
-To:     Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <20200608230654.828134-1-guro@fb.com>
- <20200608230654.828134-18-guro@fb.com>
- <20200617163528.a4477749b172c387e01c3996@linux-foundation.org>
- <20200618003515.GB24694@carbon.DHCP.thefacebook.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <36879e8d-dca7-caf9-71d6-918474ace53e@suse.cz>
-Date:   Thu, 18 Jun 2020 09:33:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 18 Jun 2020 03:33:45 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:47028 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbgFRHdo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 03:33:44 -0400
+Received: by mail-lf1-f65.google.com with SMTP id m26so2848295lfo.13;
+        Thu, 18 Jun 2020 00:33:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=V2LuQUDFIIF5jl6wVGVy4hB7QYtw6Q/zQUKKaqApImE=;
+        b=l7AhaIAlb31RPWcK/9tcQ8cCMaCr/3LP5PBkT5uoCdpwUGNXsYGHLxL4V6kjtlFius
+         BegrRLPAGfK0LQqFWGIc6j3/lk4xbJ/hSiTlKHQzbCQ3uX+Og3+YdiQpVMj7yUoHm6ob
+         05L6JFD9YMCv7k2G7WUBZ3T6aDDSwL1nbPitw3U8Qu9ff3fQZv69b/XFBzNZPUGtBkfD
+         c7ERRjAioiCDwkX0xiWAUZ81dCkVkJchWHTbPAgjiigx5Qjqh8AXme+0i1BVQzP8Coep
+         pYS6ij0tOC9yYH9EK+QLm9gcO5LjaypngiAid4BG4+Cq5i47t7x2YVVrDDywJI/Vf/gF
+         CL4Q==
+X-Gm-Message-State: AOAM530oghh3svvxFpJTtD1uVs01DzPJpq1+o2zNOcy79Hi+nTQnB3tB
+        mDzGqnLj8gVIfBjdKVzzc1M=
+X-Google-Smtp-Source: ABdhPJzhQPwQhZT7ChJeJQe7xVV2nqchjeSaUQ5xsLwlnbL7h83g4iEGu5DcJ3yDKPIb2+wZBqaZmw==
+X-Received: by 2002:a19:8252:: with SMTP id e79mr1610797lfd.103.1592465621241;
+        Thu, 18 Jun 2020 00:33:41 -0700 (PDT)
+Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id u13sm453118ljo.75.2020.06.18.00.33.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 00:33:40 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 10:33:31 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-power@fi.rohmeurope.com, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: [PATCH v2] MAINTAINERS: Add entry for ROHM power management ICs
+Message-ID: <20200618073331.GA9403@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20200618003515.GB24694@carbon.DHCP.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/20 2:35 AM, Roman Gushchin wrote:
-> On Wed, Jun 17, 2020 at 04:35:28PM -0700, Andrew Morton wrote:
->> On Mon, 8 Jun 2020 16:06:52 -0700 Roman Gushchin <guro@fb.com> wrote:
->> 
->> > Instead of having two sets of kmem_caches: one for system-wide and
->> > non-accounted allocations and the second one shared by all accounted
->> > allocations, we can use just one.
->> > 
->> > The idea is simple: space for obj_cgroup metadata can be allocated
->> > on demand and filled only for accounted allocations.
->> > 
->> > It allows to remove a bunch of code which is required to handle
->> > kmem_cache clones for accounted allocations. There is no more need
->> > to create them, accumulate statistics, propagate attributes, etc.
->> > It's a quite significant simplification.
->> > 
->> > Also, because the total number of slab_caches is reduced almost twice
->> > (not all kmem_caches have a memcg clone), some additional memory
->> > savings are expected. On my devvm it additionally saves about 3.5%
->> > of slab memory.
->> > 
->> 
->> This ran afoul of Vlastimil's "mm, slab/slub: move and improve
->> cache_from_obj()"
->> (http://lkml.kernel.org/r/20200610163135.17364-10-vbabka@suse.cz).  I
->> resolved things as below.  Not too sure about slab.c's
->> cache_from_obj()...
-> 
-> It can actually be as simple as:
-> static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
-> {
-> 	return s;
-> }
-> 
-> But I wonder if we need it at all, or maybe we wanna rename it to
-> something like obj_check_kmem_cache(void *obj, struct kmem_cache *s),
-> because it has now only debug purposes.
-> 
-> Let me and Vlastimil figure it out and send a follow-up patch.
-> Your version is definitely correct.
+Add entry for maintaining power management IC drivers for ROHM
+BD71837, BD71847, BD71850, BD71828, BD71878, BD70528 and BD99954.
 
-Well, Kees wants to restore the common version of cache_from_obj() [1] for SLAB
-hardening.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-by: Sebastian Reichel <sre@kernel.org>
+---
+Morning Lee - could you take this in MFD? This is scattered all around
+different subsystems anyways... I guess crafting bunch of patches to
+each individual subsystems would just end up with lots of merge
+conflicts.
 
-To prevent all that back and forth churn entering git history, I think the best
-is for me to send a -fix to my patch that is functionally same while keeping the
-common function, and then this your patch should only have a minor conflict and
-Kees can rebase his patches on top to become much smaller?
+Changes from v1:
+- Dropped patch 2/2 (linear-ranges maintainer) which was already applied by Mark
+- Added shiny new ROHM linux-power list so that I am no longer the lonely
+  poor sod watching these at ROHM side :)
+- sort few files to alphabethical order as checkpatch now nagged about
+  that.
 
-[1] https://lore.kernel.org/linux-mm/20200617195349.3471794-1-keescook@chromium.org/
+v1 was here:
+https://lore.kernel.org/lkml/e11366fd280736844ae63791b6193bb84d6205bf.1589866138.git.matti.vaittinen@fi.rohmeurope.com/
 
-> Thanks!
-> 
 
+ MAINTAINERS | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 68f21d46614c..ce08617f63f5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14704,6 +14704,13 @@ L:	linux-serial@vger.kernel.org
+ S:	Odd Fixes
+ F:	drivers/tty/serial/rp2.*
+ 
++ROHM BD99954 CHARGER IC
++R:	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++L:	linux-power@fi.rohmeurope.com
++S:	Supported
++F:	drivers/power/supply/bd99954-charger.c
++F:	drivers/power/supply/bd99954-charger.h
++
+ ROHM BH1750 AMBIENT LIGHT SENSOR DRIVER
+ M:	Tomasz Duszynski <tduszyns@gmail.com>
+ S:	Maintained
+@@ -14721,6 +14728,31 @@ F:	drivers/mfd/bd9571mwv.c
+ F:	drivers/regulator/bd9571mwv-regulator.c
+ F:	include/linux/mfd/bd9571mwv.h
+ 
++ROHM POWER MANAGEMENT IC DEVICE DRIVERS
++R:	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++L:	linux-power@fi.rohmeurope.com
++S:	Supported
++F:	Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
++F:	Documentation/devicetree/bindings/regulator/rohm,bd70528-regulator.txt
++F:	drivers/clk/clk-bd718x7.c
++F:	drivers/gpio/gpio-bd70528.c
++F:	drivers/gpio/gpio-bd71828.c
++F:	drivers/mfd/rohm-bd70528.c
++F:	drivers/mfd/rohm-bd71828.c
++F:	drivers/mfd/rohm-bd718x7.c
++F:	drivers/power/supply/bd70528-charger.c
++F:	drivers/regulator/bd70528-regulator.c
++F:	drivers/regulator/bd71828-regulator.c
++F:	drivers/regulator/bd718x7-regulator.c
++F:	drivers/regulator/rohm-regulator.c
++F:	drivers/rtc/rtc-bd70528.c
++F:	drivers/watchdog/bd70528_wdt.c
++F:	include/linux/mfd/rohm-bd70528.h
++F:	include/linux/mfd/rohm-bd71828.h
++F:	include/linux/mfd/rohm-bd718x7.h
++F:	include/linux/mfd/rohm-generic.h
++F:	include/linux/mfd/rohm-shared.h
++
+ ROSE NETWORK LAYER
+ M:	Ralf Baechle <ralf@linux-mips.org>
+ L:	linux-hams@vger.kernel.org
+
+base-commit: b3a9e3b9622ae10064826dccb4f7a52bd88c7407
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
