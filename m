@@ -2,186 +2,240 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 04:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 04:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01455217A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 04:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A94C82186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 04:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iMYwwKsO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WO4NeEsL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbgFREr1 (ORCPT
+        id S1726942AbgFRE7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 00:47:27 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:45831 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725892AbgFREr0 (ORCPT
+        Thu, 18 Jun 2020 00:59:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgFRE7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 00:47:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592455644; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=EwcjcUA+ggEJzAp3ik6omINnV0u7GeQRPXUpLXx3O/8=; b=iMYwwKsOOjs97DRsiYqegW2rBjtEuEtAoB2vXIV7fza3FM6A8woibjP5G0Ej2pCqSvXg4QYn
- l7Vwsngy+H14cQmwd5/JfyEIgr92S91ou/9n67yGYJyxa3CYntwYtjRbDkRWR9CjbLT4z3E5
- JLSJnFyGzKK1Rii4klfdrtbz4CM=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
- 5eeaf1db117610c7ff4c6614 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 18 Jun 2020 04:47:23
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6412BC43387; Thu, 18 Jun 2020 04:47:23 +0000 (UTC)
-Received: from [192.168.1.101] (unknown [106.51.31.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 26F8FC433C8;
-        Thu, 18 Jun 2020 04:47:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 26F8FC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v6 0/6] DVFS for IO devices on sdm845 and sc7180
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Mark Brown <broonie@kernel.org>
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org, robdclark@gmail.com,
-        robdclark@chromium.org, stanimir.varbanov@linaro.org,
-        viresh.kumar@linaro.org, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
- <20200617221546.GC4525@google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <4f3d4c91-2a01-8ef5-1ad0-73ed354f930a@codeaurora.org>
-Date:   Thu, 18 Jun 2020 10:17:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 18 Jun 2020 00:59:47 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F532C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 21:59:45 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id d27so2671475lfq.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 21:59:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gC1sdqM+SlQgZ8LyixOr+vO5mqg+xhNICeiFoUUvAG4=;
+        b=WO4NeEsLfCzmMKr6ch5J0I4aGfwgHagG69EzZDcyDnb8/8rwBu0I5XtArZJzEy/gRV
+         nkisyDrAgKN68Jz9d7TKiBb1uN8OsJ7/Z4feeIhF4H1DH+BQbyOuycVPT74IflAddk3J
+         5GEThXg6dD+Kp4ULNVl/2BNiVXwFgo0ywa9IANBwdLsgx8cnt/JOrfN++rYE9gITaLKv
+         IP/aJGxC8hxKrIUNhySUNx+h1lcigRCTdHQRyAIAWjAED3VW1TcWRd71obap64J6TrbN
+         36E21i+Ui4F16AKNRDzDWWmffpIM9ykIfkl3KTLXN31C3jpUXehXiFp9fV+LE5/yqRrW
+         Sbvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gC1sdqM+SlQgZ8LyixOr+vO5mqg+xhNICeiFoUUvAG4=;
+        b=d9GggavLTLiMeOsOoujAc2eiCGZMih+aOEL2GcMrtyT9RrAbhrzAIQj77T8gL2Q3Ua
+         FdNXbgzbdSnMAsksWjUUdHkYTVp33FFFrDbIkhKxbudaXf45yEOLXia7NeC/4WBUZeJh
+         HEyf5xII/p7C0xFTiGsJ9B0WSUAcZ3UfQaKfjJjCdDZ18KSnJX3RmaDwFCVj4BKPYZCZ
+         yfdsVUJ9gOIrU8dcbbuD4gqV/c5dhQhkwR+eHhvJ+v8TOWD8lemhfQ+tLYFS1t7kW/fq
+         c/mHY0oRCWqGANDGaC90jRT5qRKzsLqgqQYw6OWXAMiW5S1KotztpqyVEXfemokqlv7L
+         oJxA==
+X-Gm-Message-State: AOAM531rz/1mBIzHGKRkYgy+g77PVbYxJeVHhCTq+4URIGNF9t3bTu5T
+        f9Su7FCplws9bN5RNqLdN4Mcua1eqakeZ7KxkIKUFw==
+X-Google-Smtp-Source: ABdhPJwNxlV/8q83DlZe+hudR1A3bgiAsS/XhkJ5ubd7vbS7vxryM21PGYmc/sIcjJtGmOk3gjw6H9yZ/M1SqCfAnK8=
+X-Received: by 2002:a19:6c5:: with SMTP id 188mr1271905lfg.15.1592456383931;
+ Wed, 17 Jun 2020 21:59:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200617221546.GC4525@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200604175851.758-1-maxim.uvarov@linaro.org> <20200604175851.758-2-maxim.uvarov@linaro.org>
+ <CAFA6WYNVk1RcaqnL0FGyYkB+hGkgyqeOMsSKyySL=zfCdNUZXA@mail.gmail.com> <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org>
+In-Reply-To: <b9960a51-7e00-4992-eed5-bd43e7f27b43@forissier.org>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Thu, 18 Jun 2020 10:29:31 +0530
+Message-ID: <CAFA6WYM6XBduokYOdnWD6m+To=6k2SMbXU=HzK_Enk9h-s7VBQ@mail.gmail.com>
+Subject: Re: [Tee-dev] [PATCHv8 1/3] optee: use uuid for sysfs driver entry
+To:     Jerome Forissier <jerome@forissier.org>
+Cc:     Maxim Uvarov <maxim.uvarov@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Arnd Bergmann <arnd@linaro.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Matthias, thanks for summarizing this.
+Hi Jerome,
 
-On 6/18/2020 3:45 AM, Matthias Kaehlcke wrote:
-> What is the plan for landing these, it seems not all must/should
-> go through the QCOM tree.
-> 
-> My guesses:
-> 
-> tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
-> spi: spi-geni-qcom: Use OPP API to set clk/perf state
->    QCOM tree due to shared dependency on change in include/linux/qcom-geni-se.h
+On Wed, 17 Jun 2020 at 20:46, Jerome Forissier <jerome@forissier.org> wrote:
+>
+>
+>
+> On 6/17/20 3:58 PM, Sumit Garg wrote:
+> > Hi Maxim,
+> >
+> > On Thu, 4 Jun 2020 at 23:28, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+> >>
+> >> With the evolving use-cases for TEE bus, now it's required to support
+> >> multi-stage enumeration process. But using a simple index doesn't
+> >> suffice this requirement and instead leads to duplicate sysfs entries.
+> >> So instead switch to use more informative device UUID for sysfs entry
+> >> like:
+> >> /sys/bus/tee/devices/optee-ta-<uuid>
+> >>
+> >> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> >> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+> >> ---
+> >>  Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
+> >>  MAINTAINERS                                       | 1 +
+> >>  drivers/tee/optee/device.c                        | 9 ++++++---
+> >>  3 files changed, 15 insertions(+), 3 deletions(-)
+> >>  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+> >>
+> >> diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> >> new file mode 100644
+> >> index 000000000000..0ae04ae5374a
+> >> --- /dev/null
+> >> +++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> >> @@ -0,0 +1,8 @@
+> >> +What:          /sys/bus/tee/devices/optee-ta-<uuid>/
+> >> +Date:           May 2020
+> >> +KernelVersion   5.7
+> >> +Contact:        tee-dev@lists.linaro.org
+> >> +Description:
+> >> +               OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
+> >> +               matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
+> >> +               are free to create needed API under optee-ta-<uuid> directory.
+> >> diff --git a/MAINTAINERS b/MAINTAINERS
+> >> index ecc0749810b0..6717afef2de3 100644
+> >> --- a/MAINTAINERS
+> >> +++ b/MAINTAINERS
+> >> @@ -12516,6 +12516,7 @@ OP-TEE DRIVER
+> >>  M:     Jens Wiklander <jens.wiklander@linaro.org>
+> >>  L:     tee-dev@lists.linaro.org
+> >>  S:     Maintained
+> >> +F:     Documentation/ABI/testing/sysfs-bus-optee-devices
+> >>  F:     drivers/tee/optee/
+> >>
+> >>  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
+> >> diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
+> >> index e3a148521ec1..23d264c8146e 100644
+> >> --- a/drivers/tee/optee/device.c
+> >> +++ b/drivers/tee/optee/device.c
+> >> @@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
+> >>         return 0;
+> >>  }
+> >>
+> >> -static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+> >> +static int optee_register_device(const uuid_t *device_uuid)
+> >>  {
+> >>         struct tee_client_device *optee_device = NULL;
+> >>         int rc;
+> >> @@ -75,7 +75,10 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+> >>                 return -ENOMEM;
+> >>
+> >>         optee_device->dev.bus = &tee_bus_type;
+> >> -       dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
+> >> +       if (dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid)) {
+> >
+> > You should be using format specifier as: "%pUb" instead of "%pUl" as
+> > UUID representation for TAs is in big endian format. See below:
+>
+> Where does device_uuid come from? If it comes directly from OP-TEE, then
+> it should be a pointer to the following struct:
+>
+> typedef struct
+> {
+>         uint32_t timeLow;
+>         uint16_t timeMid;
+>         uint16_t timeHiAndVersion;
+>         uint8_t clockSeqAndNode[8];
+> } TEE_UUID;
+>
+> (GlobalPlatform TEE Internal Core API spec v1.2.1 section 3.2.4)
+>
+> - The spec does not mandate any particular endianness and simply warns
+> about possible issues if secure and non-secure worlds differ in endianness.
+> - OP-TEE uses %pUl assuming that host order is little endian (that is
+> true for the Arm platforms that run OP-TEE currently). By the same logic
+> %pUl should be fine in the kernel.
+> - On the other hand, the UUID in a Trusted App header is always encoded
+> big endian by the Python script that signs and optionally encrypts the
+> TA. This should not have any visible impact on UUIDs exchanged between
+> the secure and non-secure world though.
+>
+> So I am wondering why you had to use %pUb. There must be some
+> inconsistency somewhere :-/
 
-That's correct, Bjorn/Andy, can these be pulled in now for 5.9?
-They have acks from Greg for serial and Mark for the spi patch.
-  
-> drm/msm/dpu: Use OPP API to set clk/perf state
-> drm/msm: dsi: Use OPP API to set clk/perf state
->    drm/msm tree
+Yes there is. Linux stores UUID in big endian format (16 byte octets)
+and OP-TEE stores UUID in little endian format (in form of struct you
+referenced above).
 
-Correct, the dsi patch is still not reviewed by Rob, so once that's done,
-I am guessing Rob would pull both of these.
+And format conversion APIs [1] in OP-TEE OS are used while passing
+UUID among Linux and OP-TEE.
 
-> 
-> media: venus: core: Add support for opp tables/perf voting
->    venus tree
+So we need to use %pUb in case of Linux and %pUl in case of OP-TEE.
 
-correct, this is pending review/ack from Stan.
+[1] https://github.com/OP-TEE/optee_os/blob/master/core/tee/uuid.c
 
-> 
-> spi: spi-qcom-qspi: Use OPP API to set clk/perf state
->    SPI tree
+-Sumit
 
-Right, Mark has this acked, I am guessing he will pull this in at
-some point.
-
-thanks,
-Rajendra
-
-> 
-> 
-> Does this make sense or are there any dependencies I'm missing?
-> 
-> Thanks
-> 
-> Matthias
-> 
-> On Mon, Jun 15, 2020 at 05:32:38PM +0530, Rajendra Nayak wrote:
->> Changes in v6:
->> 1. rebased on 5.8-rc1, no functional change.
->>
->> Changes in v5:
->> 1. Opp cleanup path fixed up across drivers
->>
->> Changes in v4:
->> 1. Fixed all review feedback on v3
->> 2. Dropped the dts patches, will post as a seperate series once
->> driver changes are reviewed and merged.
->> The driver changes without DT updates to include OPP tables will
->> have zero functional change.
->> 3. Dropped the mmc/sdhc patch, which is a standalone patch. will
->> repost if needed seperately.
->>
->> Changes in v3:
->> 1. Added better error handling for dev_pm_opp_of_add_table()
->> 2. Some minor changes and fixes in 'PATCH 12/17' as compared to v2
->> 3. Dropped the mmc patch picked up by Ulf [2]
->>
->> Changes in v2:
->> 1. Added error handling for dev_pm_opp_set_clkname()
->> and dev_pm_opp_of_add_table()
->> 2. Used dev_pm_opp_put_clkname() in the cleanup path
->> 3. Dropped the OPP patch pulled in by Viresh [1]
->> 4. Dropped the UFS patches since they had some major rework
->> needed because of changes that were merged in the merge window
->> and I don't have a UFS device currently to validate the changes.
->>
->> We have had support added in the OPP core for a while now to support
->> DVFS for IO devices, and this series uses that infrastructure to
->> add DVFS support for various IO devices in sdm845 and sc7180 SoCs.
->>
->> [1] https://lkml.org/lkml/2020/4/14/98
->> [2] https://lore.kernel.org/patchwork/patch/1226381/
->>
->> Rajendra Nayak (6):
->>    tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
->>    spi: spi-geni-qcom: Use OPP API to set clk/perf state
->>    drm/msm/dpu: Use OPP API to set clk/perf state
->>    drm/msm: dsi: Use OPP API to set clk/perf state
->>    media: venus: core: Add support for opp tables/perf voting
->>    spi: spi-qcom-qspi: Use OPP API to set clk/perf state
->>
->>   drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  |  3 +-
->>   drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        | 26 +++++++++++-
->>   drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |  4 ++
->>   drivers/gpu/drm/msm/dsi/dsi.h                  |  2 +
->>   drivers/gpu/drm/msm/dsi/dsi_cfg.c              |  4 +-
->>   drivers/gpu/drm/msm/dsi/dsi_host.c             | 58 ++++++++++++++++++++++++++
->>   drivers/media/platform/qcom/venus/core.c       | 43 ++++++++++++++++---
->>   drivers/media/platform/qcom/venus/core.h       |  5 +++
->>   drivers/media/platform/qcom/venus/pm_helpers.c | 54 ++++++++++++++++++++++--
->>   drivers/spi/spi-geni-qcom.c                    | 26 ++++++++++--
->>   drivers/spi/spi-qcom-qspi.c                    | 28 ++++++++++++-
->>   drivers/tty/serial/qcom_geni_serial.c          | 34 ++++++++++++---
->>   include/linux/qcom-geni-se.h                   |  4 ++
->>   13 files changed, 268 insertions(+), 23 deletions(-)
->>
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
->>
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+>
+> --
+> Jerome
+>
+> >
+> > # ls /sys/bus/tee/devices/
+> > optee-ta-405b6ad9-e5c3-e321-8794-1002a5d5c61b
+> > optee-ta-71d950bc-c9d4-c442-82cb-343fb7f37896
+> > optee-ta-e70f4af0-5d1f-9b4b-abf7-619b85b4ce8c
+> >
+> > While UUID for fTPM TA is in big endian format:
+> > bc50d971-d4c9-42c4-82cb-343fb7f37896
+> >
+> > Sorry that I missed it during review and noticed this while testing.
+> >
+> > With the above fix included, I tested this series using fTPM early TA
+> > on Qemu for aarch64 and used basic random number generation test using
+> > tpm2-tools. So feel free to add:
+> >
+> > Tested-by: Sumit Garg <sumit.garg@linaro.org>
+> >
+> > -Sumit
+> >
+> >> +               kfree(optee_device);
+> >> +               return -ENOMEM;
+> >> +       }
+> >>         uuid_copy(&optee_device->id.uuid, device_uuid);
+> >>
+> >>         rc = device_register(&optee_device->dev);
+> >> @@ -144,7 +147,7 @@ int optee_enumerate_devices(void)
+> >>         num_devices = shm_size / sizeof(uuid_t);
+> >>
+> >>         for (idx = 0; idx < num_devices; idx++) {
+> >> -               rc = optee_register_device(&device_uuid[idx], idx);
+> >> +               rc = optee_register_device(&device_uuid[idx]);
+> >>                 if (rc)
+> >>                         goto out_shm;
+> >>         }
+> >> --
+> >> 2.17.1
+> >>
+> > _______________________________________________
+> > Tee-dev mailing list
+> > Tee-dev@lists.linaro.org
+> > https://lists.linaro.org/mailman/listinfo/tee-dev
+> >
