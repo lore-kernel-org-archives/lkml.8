@@ -2,110 +2,149 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 04:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C58EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 04:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9905E217A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 04:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F83721534
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 04:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgFREER (ORCPT
+        id S1726896AbgFREOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 00:04:17 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:55264 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgFREEN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 00:04:13 -0400
-Received: by mail-il1-f198.google.com with SMTP id y16so3133020ilm.21
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 21:04:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=rTEVJVzhYF0+asDXTaiqCwuTOUiOzz8nPDu9h9e0Uw0=;
-        b=bKvy5mGCWYMloNu3H/HuZMsaMiAPNOshNDXsDMVlKn1zatzPcgu0UFxwI0F6CRvZmQ
-         xaqmd0FqI7nKMLDA77pl+ydJc5LBCf5AJCQA0++0uLnKqwcOnX3+czSn9RAgyfrKC2Fq
-         hwOJkmEtb6SWZDi/+D8ToFfJsqwPOg5OWfhqNS4ahY74YOGkaROigMwwg+dzNRyZnupo
-         y+io4mNTSrE6kfV4HcCAPwf7VxKvF1TY+a00uckt1TjcxPAmSD+AhS8gkGPnoSjx6RZ3
-         Kl8sqO5vCKfh7BUni6na3QLsPLzXvJeZ+RHhkE1supwWDEV3iB8h9PPckhl6ZidUcvbz
-         +HOQ==
-X-Gm-Message-State: AOAM530syhQ/DzmtOy29+4ijr4uATmPaGyN6xtBEDx1X7XsOKCh8IYY2
-        PoE0sYtbgNNvziZ8IQmqfZNQb4NNXXhm1D26a+LMhKeb+DNG
-X-Google-Smtp-Source: ABdhPJzjMT+p4vZMWKN/uSdJKfqwwpC0gk8pe+u64+iDYWQHU5ayTgv6UccLWL/l+v6SDo9JcYQM7nS8kKdyQ7I5H7ALjgErTwbM
+        Thu, 18 Jun 2020 00:14:40 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52342 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725892AbgFREOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 00:14:40 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6D0869EA1F87D160B4FF;
+        Thu, 18 Jun 2020 12:14:37 +0800 (CST)
+Received: from [10.173.221.230] (10.173.221.230) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 18 Jun 2020 12:13:50 +0800
+Subject: Re: [PATCH 00/12] KVM: arm64: Support stage2 hardware DBM
+To:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>
+References: <20200616093553.27512-1-zhukeqian1@huawei.com>
+CC:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        <liangpeng10@huawei.com>, <zhengxiang9@huawei.com>,
+        <wanghaibin.wang@huawei.com>
+From:   zhukeqian <zhukeqian1@huawei.com>
+Message-ID: <f480d0dc-aaf8-c915-409c-d0f56812a49f@huawei.com>
+Date:   Thu, 18 Jun 2020 12:13:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:d09:: with SMTP id g9mr2342684ilj.300.1592453052295;
- Wed, 17 Jun 2020 21:04:12 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 21:04:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000080f43805a853de9a@google.com>
-Subject: memory leak in macvlan_hash_add_source
-From:   syzbot <syzbot+62100d232f618b7da606@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200616093553.27512-1-zhukeqian1@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.230]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-syzbot found the following crash on:
+On 2020/6/16 17:35, Keqian Zhu wrote:
+> This patch series add support for stage2 hardware DBM, and it is only
+> used for dirty log for now.
+> 
+> It works well under some migration test cases, including VM with 4K
+> pages or 2M THP. I checked the SHA256 hash digest of all memory and
+> they keep same for source VM and destination VM, which means no dirty
+> pages is missed under hardware DBM.
+> 
+> Some key points:
+> 
+> 1. Only support hardware updates of dirty status for PTEs. PMDs and PUDs
+>    are not involved for now.
+> 
+> 2. About *performance*: In RFC patch, I have mentioned that for every 64GB
+>    memory, KVM consumes about 40ms to scan all PTEs to collect dirty log.
+>    
+>    Initially, I plan to solve this problem using parallel CPUs. However
+>    I faced two problems.
+> 
+>    The first is bottleneck of memory bandwith. Single thread will occupy
+>    bandwidth about 500GB/s, we can support about 4 parallel threads at
+>    most, so the ideal speedup ratio is low.
+Aha, I make it wrong here. I test it again, and find that speedup ratio can
+be about 23x when I use 32 CPUs to scan PTs (takes about 5ms when scanning PTs
+of 200GB RAM).
 
-HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11fbb456100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9a1aa05456dfd557
-dashboard link: https://syzkaller.appspot.com/bug?extid=62100d232f618b7da606
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=163092a9100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12caed7a100000
+> 
+>    The second is huge impact on other CPUs. To scan PTs quickly, I use
+>    smp_call_function_many, which is based on IPI, to dispatch workload
+>    on other CPUs. Though it can complete work in time, the interrupt is
+>    disabled during scaning PTs, which has huge impact on other CPUs.
+I think we can divide scanning workload into smaller ones, which can disable
+and enable interrupts periodly.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+62100d232f618b7da606@syzkaller.appspotmail.com
+> 
+>    Now, I make hardware dirty log can be dynamic enabled and disabled.
+>    Userspace can enable it before VM migration and disable it when
+>    remaining dirty pages is little. Thus VM downtime is not affected. 
+BTW, we can reserve this interface for userspace if CPU computing resources
+are not enough.
 
-BUG: memory leak
-unreferenced object 0xffff888115ac4080 (size 64):
-  comm "syz-executor882", pid 6646, jiffies 4294954688 (age 14.840s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 20 ee 41 15 81 88 ff ff  ........ .A.....
-    00 09 92 15 81 88 ff ff aa aa aa aa aa 23 00 00  .............#..
-  backtrace:
-    [<00000000fe90004e>] kmalloc include/linux/slab.h:555 [inline]
-    [<00000000fe90004e>] macvlan_hash_add_source+0x52/0xe0 drivers/net/macvlan.c:161
-    [<000000005aee7a07>] macvlan_changelink_sources+0x8a/0x1f0 drivers/net/macvlan.c:1355
-    [<00000000e0e074d6>] macvlan_common_newlink+0x21a/0x570 drivers/net/macvlan.c:1463
-    [<00000000c89166a4>] __rtnl_newlink+0x843/0xb10 net/core/rtnetlink.c:3340
-    [<000000009677515c>] rtnl_newlink+0x49/0x70 net/core/rtnetlink.c:3398
-    [<00000000fab710c9>] rtnetlink_rcv_msg+0x173/0x4b0 net/core/rtnetlink.c:5461
-    [<00000000d3f45a45>] netlink_rcv_skb+0x5a/0x180 net/netlink/af_netlink.c:2469
-    [<00000000b9db6049>] netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-    [<00000000b9db6049>] netlink_unicast+0x20a/0x2f0 net/netlink/af_netlink.c:1329
-    [<000000006a00463c>] netlink_sendmsg+0x2b5/0x560 net/netlink/af_netlink.c:1918
-    [<00000000a31e18a9>] sock_sendmsg_nosec net/socket.c:652 [inline]
-    [<00000000a31e18a9>] sock_sendmsg+0x4c/0x60 net/socket.c:672
-    [<000000000ca330a5>] ____sys_sendmsg+0x118/0x2f0 net/socket.c:2352
-    [<000000006a5fc310>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2406
-    [<000000004d3b2570>] __sys_sendmmsg+0xda/0x230 net/socket.c:2496
-    [<00000000a524412c>] __do_sys_sendmmsg net/socket.c:2525 [inline]
-    [<00000000a524412c>] __se_sys_sendmmsg net/socket.c:2522 [inline]
-    [<00000000a524412c>] __x64_sys_sendmmsg+0x24/0x30 net/socket.c:2522
-    [<00000000333adef2>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
-    [<00000000df7893d8>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Thanks,
+Keqian
+> 
+> 
+> 3. About correctness: Only add DBM bit when PTE is already writable, so
+>    we still have readonly PTE and some mechanisms which rely on readonly
+>    PTs are not broken.
+> 
+> 4. About PTs modification races: There are two kinds of PTs modification.
+>    
+>    The first is adding or clearing specific bit, such as AF or RW. All
+>    these operations have been converted to be atomic, avoid covering
+>    dirty status set by hardware.
+>    
+>    The second is replacement, such as PTEs unmapping or changement. All
+>    these operations will invoke kvm_set_pte finally. kvm_set_pte have
+>    been converted to be atomic and we save the dirty status to underlying
+>    bitmap if dirty status is coverred.
+> 
+> 
+> Keqian Zhu (12):
+>   KVM: arm64: Add some basic functions to support hw DBM
+>   KVM: arm64: Modify stage2 young mechanism to support hw DBM
+>   KVM: arm64: Report hardware dirty status of stage2 PTE if coverred
+>   KVM: arm64: Support clear DBM bit for PTEs
+>   KVM: arm64: Add KVM_CAP_ARM_HW_DIRTY_LOG capability
+>   KVM: arm64: Set DBM bit of PTEs during write protecting
+>   KVM: arm64: Scan PTEs to sync dirty log
+>   KVM: Omit dirty log sync in log clear if initially all set
+>   KVM: arm64: Steply write protect page table by mask bit
+>   KVM: arm64: Save stage2 PTE dirty status if it is coverred
+>   KVM: arm64: Support disable hw dirty log after enable
+>   KVM: arm64: Enable stage2 hardware DBM
+> 
+>  arch/arm64/include/asm/kvm_host.h |  11 +
+>  arch/arm64/include/asm/kvm_mmu.h  |  56 +++-
+>  arch/arm64/include/asm/sysreg.h   |   2 +
+>  arch/arm64/kvm/arm.c              |  22 +-
+>  arch/arm64/kvm/mmu.c              | 411 ++++++++++++++++++++++++++++--
+>  arch/arm64/kvm/reset.c            |  14 +-
+>  include/uapi/linux/kvm.h          |   1 +
+>  tools/include/uapi/linux/kvm.h    |   1 +
+>  virt/kvm/kvm_main.c               |   7 +-
+>  9 files changed, 499 insertions(+), 26 deletions(-)
+> 
