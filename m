@@ -2,158 +2,127 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F77C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A497FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C983921548
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E19521548
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:51:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rohmsemiconductoreurope.onmicrosoft.com header.i=@rohmsemiconductoreurope.onmicrosoft.com header.b="lScC9Atp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729292AbgFRJvk (ORCPT
+        id S1729322AbgFRJvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 05:51:40 -0400
-Received: from smtp4-g21.free.fr ([212.27.42.4]:51292 "EHLO smtp4-g21.free.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729060AbgFRJvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 05:51:40 -0400
-Received: from [192.168.1.91] (unknown [77.207.133.132])
-        (Authenticated sender: marc.w.gonzalez)
-        by smtp4-g21.free.fr (Postfix) with ESMTPSA id B434C19F5B2;
-        Thu, 18 Jun 2020 11:50:54 +0200 (CEST)
-Subject: Re: [RFC 4/4] media: dvb_frontend: disable zigzag mode if not
- possible
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>
-Cc:     Brad Love <brad@nextdimension.cc>, Sean Young <sean@mess.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <cover.1592419750.git.mchehab+huawei@kernel.org>
- <974065921c41fa0c97700196de1d921c95fafaaf.1592419750.git.mchehab+huawei@kernel.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <20bb2501-8307-185e-ebec-a83488353a0b@free.fr>
-Date:   Thu, 18 Jun 2020 11:50:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <974065921c41fa0c97700196de1d921c95fafaaf.1592419750.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Thu, 18 Jun 2020 05:51:47 -0400
+Received: from mail-db8eur05on2083.outbound.protection.outlook.com ([40.107.20.83]:43617
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729060AbgFRJvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 05:51:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UVaGjuwvKzzkc7H7coRjiV9rP6vHgzXjHpwa+wsxkowwdBsWJt7f1g0QDh6T+lBVacBwr+WfuNcX1H514pcz5melt9p/RNR/hw8VjJYtvBAfUEKQsCfMTUPgibQV3Ngr2UyxVQMsOVwoMLloOcXoZ89C5G4rMLzpfDCH26iCpjP/AChLa08OjENDgguH+wFzrqhPKI+uJvD+vh8nlnIlbd2EcVpJT0mN9N8HhaKoChrmok+iccSVRfZA9iRpN0rVX+PHGfFGeetKo9j8rn9tIjBkTNtBalsLxFj+1L+lw3jvA/rEsmSnEFWSciHAus+4yd7t9zMbqThBEl6Wqdhd9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CR/FsfpBP+eZ4NXwBmOqZSdme6qd+i3dDZTwvy/nYAE=;
+ b=S4+ab2/S5qK4VvTYXueEINUOW6Q/hbf91jPif9HobdQ+/o6/hhndIQy/UmxBk+/aY7FFD6kbqqYxE7OKPFUGtdEcIv+vU8002fl/csKroT2oImh/yBc0hSo+vDcob3ORFIAkbqurOJcLbrok2UitqbSyPRmCNAXMyD6ZODt8/QRez4KtHvNvQeJQjNOyZpp5IxWFDHhShE9AdMwZ7MRmdAeH5Y5eU3BTsIvtd3wXcOahGWd989kqD8AbfncFQobHgjBRx2MGayqyMTCOKHRySBrUfZiD3RRF5jg+TYN6JjGLMhUpahinZys6f+jIQyjpLG2MUtmxNRmHGA1nf84iEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fi.rohmeurope.com; dmarc=pass action=none
+ header.from=fi.rohmeurope.com; dkim=pass header.d=fi.rohmeurope.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=rohmsemiconductoreurope.onmicrosoft.com;
+ s=selector1-rohmsemiconductoreurope-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CR/FsfpBP+eZ4NXwBmOqZSdme6qd+i3dDZTwvy/nYAE=;
+ b=lScC9AtpGRliMOVezxatk1uCyKhcSmdTPoDkIYTdgrT6nA5SWtptBcEqWzl7Kr5sicf2WLpQeqGXcfbLCJhiEvNHYwFt6QaC46nc0eKwujpRh5n+JXyQz1Gjm2dQKhkx3NAE5AYyDKIam6zXnp38vDPlNqGikrHk5fJett0V5ys=
+Received: from DB6PR03MB3032.eurprd03.prod.outlook.com (2603:10a6:6:38::32) by
+ DB6PR03MB2869.eurprd03.prod.outlook.com (2603:10a6:6:34::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3088.18; Thu, 18 Jun 2020 09:51:38 +0000
+Received: from DB6PR03MB3032.eurprd03.prod.outlook.com
+ ([fe80::945f:bfb0:7d94:2865]) by DB6PR03MB3032.eurprd03.prod.outlook.com
+ ([fe80::945f:bfb0:7d94:2865%6]) with mapi id 15.20.3109.021; Thu, 18 Jun 2020
+ 09:51:38 +0000
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        linux-power <linux-power@fi.rohmeurope.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v2] MAINTAINERS: Add entry for ROHM power management ICs
+Thread-Topic: [PATCH v2] MAINTAINERS: Add entry for ROHM power management ICs
+Thread-Index: AQHWRULLCylAWLl8vUS+dOeTyuJSw6jeBRIAgAAchYA=
+Date:   Thu, 18 Jun 2020 09:51:38 +0000
+Message-ID: <989997fc90b9e90b17f3a9f2bf600595bd6ee3cf.camel@fi.rohmeurope.com>
+References: <20200618073331.GA9403@localhost.localdomain>
+         <20200618080932.GZ2608702@dell>
+In-Reply-To: <20200618080932.GZ2608702@dell>
+Reply-To: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Accept-Language: fi-FI, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none
+ header.from=fi.rohmeurope.com;
+x-originating-ip: [213.255.186.46]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b353fb32-335d-4a0e-430f-08d8136d3230
+x-ms-traffictypediagnostic: DB6PR03MB2869:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR03MB2869A9A1DE9A26DF202135C7AD9B0@DB6PR03MB2869.eurprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2803;
+x-forefront-prvs: 0438F90F17
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: z3tt0kiQtTpbhpNUIe33ykTQoAHDYddHicvlVCC4pLFdZu1WwX/d1pAQBPrq50SpKgeCNf7xSC+DwiBl9ouZ+sORpkCIEEvzyXXAloGj4edpe4Go4HiZeu+NVKjNIOkXWGLziZIgapamLbChiXdVA+xXoLrRd8fOvWTp+JXvwZtT1PhWLDNjkQzQ4Zrs+lIJNsBt6bbsBSve1BDnjY+5/24b5ci31ML3cOAUSKzv5Q76Vqm5ajw8jKb9XQ1wBdlxYTIxQ++KVU588XRu4+XD7VZRRMph7U/SxPYdWZVPGRurK2XzWAe+ZxiH1Z+mp3c89azZZiJV6x9yekYE8uFj2w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR03MB3032.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(396003)(39850400004)(136003)(346002)(366004)(6506007)(316002)(2906002)(64756008)(66476007)(91956017)(66946007)(6916009)(76116006)(66446008)(66556008)(26005)(3450700001)(6486002)(4326008)(186003)(86362001)(2616005)(6512007)(478600001)(5660300002)(4744005)(8676002)(54906003)(7416002)(71200400001)(8936002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: pzDFKP6s8m9mWhySlk66l13LHlU8Bzo13j2d82oIY75AjXipcHP0aEFmX6wAcXAYNWxsAFsE8u4YgHxrgrzPQMqbscAV5QEcHAEyhljlu0/ty6V143L9FrXsN6hnBECC2oXINou4R1JvoqeqFcWYDDqnOBo5AO1XBvh2zPc/7yZU9IwFdoLuZ4aEzta9c/nXn3J8R3+GXuIPAj7dJfDCm1O/j7XuY2lkBg8Wjrx6hzCHfT+UGGmHWwCRIkMmPVRl+Sfkr/XTiQRVdctcggn0beI+dzzwXtQUuYXt287M9ZyVOvJ7wxTrI4lB25frE5bTSB6jGlKNsSgHgcWYYca0rt+3wUCSVAMRRVPorItMraZsK9838ks1yRY/La6Tx7NRnjBHZtkBdNwtZdBXlROpRgyEK7rYNPUveeasUmhSlFn8g7d2IfGHyMbpNcutbJh8UtkQuwn/cPpQJhKS8wgPreWxr+YkJbpSpIoeOpc3SSnoVVsVkCwZECqv4PTQ9l8b
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <73E5041237464244A5307169A4A1FCFD@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: fi.rohmeurope.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b353fb32-335d-4a0e-430f-08d8136d3230
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 09:51:38.5083
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 94f2c475-a538-4112-b5dd-63f17273d67a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SkHC1/Vf5wQgXE8+XabdB1wBlypH2cllEz3YMdiBFSZo5vEaGjZFmJ6Fl8KnNXUd0WraMLhWR6ODRkchMTl5v8nUxsnFEn0Mfn8cPGKMV8uOc4EbZok6nsmkediDP/wu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR03MB2869
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/06/2020 20:52, Mauro Carvalho Chehab wrote:
-
-> For the zigzag to work, the core needs to have a frequency
-> shift. Without that, the zigzag code will just try re-tuning
-> several times at the very same frequency, with seems wrong.
-
-s/with/which
-
-Suggest: "the core requires a frequency shift value"
-
-> So, add a warning when this happens, and fall back to the
-> single-shot mode.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  drivers/media/dvb-core/dvb_frontend.c | 141 +++++++++++++++-----------
->  1 file changed, 79 insertions(+), 62 deletions(-)
-
-It's hard to discern in the diff what is just white-space adjustment
-from one less tab, and what is new code that requires more scrutiny.
-I'll try applying the patch, and then diff -w.
-Yes, that's much better.
-
-> diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-> index ed85dc2a9183..cb577924121e 100644
-> --- a/drivers/media/dvb-core/dvb_frontend.c
-> +++ b/drivers/media/dvb-core/dvb_frontend.c
-> @@ -642,6 +642,9 @@ static void dvb_frontend_wakeup(struct dvb_frontend *fe)
->  	wake_up_interruptible(&fepriv->wait_queue);
->  }
->  
-> +static u32 dvb_frontend_get_stepsize(struct dvb_frontend *fe);
-> +static void prepare_tuning_algo_parameters(struct dvb_frontend *fe);
-> +
->  static int dvb_frontend_thread(void *data)
->  {
->  	struct dvb_frontend *fe = data;
-> @@ -696,78 +699,92 @@ static int dvb_frontend_thread(void *data)
->  			fepriv->reinitialise = 0;
->  		}
->  
-> -		/* do an iteration of the tuning loop */
-> -		if (fe->ops.get_frontend_algo) {
-> +		if (fe->ops.get_frontend_algo)
->  			algo = fe->ops.get_frontend_algo(fe);
-> -			switch (algo) {
-> -			case DVBFE_ALGO_HW:
-> -				dev_dbg(fe->dvb->device, "%s: Frontend ALGO = DVBFE_ALGO_HW\n", __func__);
-> +		else
-> +			algo = DVBFE_ALGO_SW;
->  
-> -				if (fepriv->state & FESTATE_RETUNE) {
-> -					dev_dbg(fe->dvb->device, "%s: Retune requested, FESTATE_RETUNE\n", __func__);
-> -					re_tune = true;
-> -					fepriv->state = FESTATE_TUNED;
-> -				} else {
-> -					re_tune = false;
-> -				}
-> +		/* do an iteration of the tuning loop */
-> +		switch (algo) {
-> +		case DVBFE_ALGO_SW:
-> +			prepare_tuning_algo_parameters(fe);
->  
-> -				if (fe->ops.tune)
-> -					fe->ops.tune(fe, re_tune, fepriv->tune_mode_flags, &fepriv->delay, &s);
-> -
-> -				if (s != fepriv->status && !(fepriv->tune_mode_flags & FE_TUNE_MODE_ONESHOT)) {
-> -					dev_dbg(fe->dvb->device, "%s: state changed, adding current state\n", __func__);
-> -					dvb_frontend_add_event(fe, s);
-> -					fepriv->status = s;
-> -				}
-> -				break;
-> -			case DVBFE_ALGO_SW:
-> +			if (fepriv->max_drift) {
->  				dev_dbg(fe->dvb->device, "%s: Frontend ALGO = DVBFE_ALGO_SW\n", __func__);
->  				dvb_frontend_swzigzag(fe);
->  				break;
-> -			case DVBFE_ALGO_CUSTOM:
-> -				dev_dbg(fe->dvb->device, "%s: Frontend ALGO = DVBFE_ALGO_CUSTOM, state=%d\n", __func__, fepriv->state);
-> -				if (fepriv->state & FESTATE_RETUNE) {
-> -					dev_dbg(fe->dvb->device, "%s: Retune requested, FESTAT_RETUNE\n", __func__);
-> -					fepriv->state = FESTATE_TUNED;
-> +			}
-> +
-> +			/*
-> +			 * See prepare_tuning_algo_parameters():
-> +			 *   - Some standards may not use zigzag.
-> +			 */
-> +			if (!dvb_frontend_get_stepsize(fe))
-> +				dev_warn(fe->dvb->device,
-> +					"disabling sigzag, as frontend doesn't set frequency step size\n");
-
-s/sigzag/zigzag
-
-I don't understand why you're calling dvb_frontend_get_stepsize() again?
-prepare_tuning_algo_parameters() already tried its best to set fepriv->step_size
-
-Why not just:
-
-	if (fepriv->max_drift)
-		do the zigzag
-	else
-		warn that zigzag is disabled
-
-> +
-> +			/* fall through */
-
-Why would you want to fall through from DVBFE_ALGO_SW to DVBFE_ALGO_HW?
-I think this changes the behavior before the patch.
+DQpPbiBUaHUsIDIwMjAtMDYtMTggYXQgMDk6MDkgKzAxMDAsIExlZSBKb25lcyB3cm90ZToNCj4g
+T24gVGh1LCAxOCBKdW4gMjAyMCwgTWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0KPiANCj4gPiBBZGQg
+ZW50cnkgZm9yIG1haW50YWluaW5nIHBvd2VyIG1hbmFnZW1lbnQgSUMgZHJpdmVycyBmb3IgUk9I
+TQ0KPiA+IEJENzE4MzcsIEJENzE4NDcsIEJENzE4NTAsIEJENzE4MjgsIEJENzE4NzgsIEJENzA1
+MjggYW5kIEJEOTk5NTQuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTWF0dGkgVmFpdHRpbmVu
+IDxtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+DQo+ID4gQWNrZWQtYnk6IFNlYmFz
+dGlhbiBSZWljaGVsIDxzcmVAa2VybmVsLm9yZz4NCj4gPiAtLS0NCj4gPiBNb3JuaW5nIExlZSAt
+IGNvdWxkIHlvdSB0YWtlIHRoaXMgaW4gTUZEPyBUaGlzIGlzIHNjYXR0ZXJlZCBhbGwNCj4gPiBh
+cm91bmQNCj4gPiBkaWZmZXJlbnQgc3Vic3lzdGVtcyBhbnl3YXlzLi4uIEkgZ3Vlc3MgY3JhZnRp
+bmcgYnVuY2ggb2YgcGF0Y2hlcw0KPiA+IHRvDQo+ID4gZWFjaCBpbmRpdmlkdWFsIHN1YnN5c3Rl
+bXMgd291bGQganVzdCBlbmQgdXAgd2l0aCBsb3RzIG9mIG1lcmdlDQo+ID4gY29uZmxpY3RzLg0K
+PiANCj4gWWVzLCBubyBwcm9ibGVtLiAgTGV0J3MgbGV0IGl0IHNpdCBhcm91bmQgZm9yIGEgd2Vl
+ayBvciBzby4gIElmIGl0DQo+IGRvZXNuJ3QgZ2FpbiBhbnkgbmVnYXRpdmUgYXR0ZW50aW9uLCBJ
+J2xsIGFwcGx5IGl0Lg0KDQpUaGFua3MhDQoNCi0tTWF0dGkNCg==
