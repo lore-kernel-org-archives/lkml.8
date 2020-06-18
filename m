@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8790C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F603207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A72207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446833;
-	bh=XxGlDRotiiRAzgFAJ+3G9S76XZdUjrH/KH36vDL+ZJM=;
+	s=default; t=1592446839;
+	bh=10sXDbedggxckhqYcZsB+MHV9CqU9ANcMhYsBRC6/bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OEEXySNk1B31E42MWbzOUmmCfdkM7vTFs8X1EhDrgSqW0Me5TOyxXDK0CUI813uVf
-	 SEV6KRf/5C7rpcUBW28wI1UfYSegZ6hnYs+YiUMaJjOUfPvH7GXEWOsg1F/dyuYCaE
-	 Bsm/z2OSpvWMvfUYnVchqpBhktYswwfQeEHJA7Dg=
+	b=V4c9bLSPIWHgVU7U0g8oejdBkzbgyo2qTqJ//BAubMycDG2aaIxHGu4rGPUly0vbX
+	 6o3r+MwAWtmkY+Wvxm6z4KsGKdouhO0lB/MlAj+bynkJoJ+a3tS37tEWQgn0/S39TR
+	 mo9sU9kHToHOhDmLbiDoDTGNUsEol8/hYxvsg1Y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387573AbgFRCUc (ORCPT
+        id S1732392AbgFRCUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:20:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50500 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:20:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730048AbgFRBS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:18:58 -0400
+        id S1728431AbgFRBSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:18:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88F0C21D80;
-        Thu, 18 Jun 2020 01:18:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD19421D7E;
+        Thu, 18 Jun 2020 01:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443137;
-        bh=XxGlDRotiiRAzgFAJ+3G9S76XZdUjrH/KH36vDL+ZJM=;
+        s=default; t=1592443134;
+        bh=10sXDbedggxckhqYcZsB+MHV9CqU9ANcMhYsBRC6/bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m54HLpST6SZLwnoXSpzNow/5N/bJjuFZpHrnIDSQr18F/TitbFVd0nIcmgOiAcgVu
-         xmXFxvRkirMZHgZxTUxFpduxks39HgM2fGfpxMBEsjgxM/8tDPfOqvmIL4X2UZnAd+
-         9kLJGIstDiRDpMhWRrg99F6o2SFB1E627NDLtSUY=
+        b=Io7Ab+5pCsdrMKf4vxDrJYYreuijBsPjSc17TLhfPItIFK+QbHx/YmR8HFZcmTJba
+         qmn8TluUVlkCPSvDeS0WszUooPE4EEND7FkPQELsm5pHDGbkU3PizayevLodCXVmMB
+         1or6i32HHl/acI94hjHMQ5KHA7V5n73oRUb313Bg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 108/266] clk: meson: meson8b: Fix the polarity of the RESET_N lines
-Date:   Wed, 17 Jun 2020 21:13:53 -0400
-Message-Id: <20200618011631.604574-108-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 106/266] slimbus: ngd: get drvdata from correct device
+Date:   Wed, 17 Jun 2020 21:13:51 -0400
+Message-Id: <20200618011631.604574-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -61,165 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 0d3051c790ed2ef6bd91b92b07220313f06b95b3 ]
+[ Upstream commit b58c663059b484f7ff547d076a34cf6d7a302e56 ]
 
-CLKC_RESET_VID_DIVIDER_CNTL_RESET_N_POST and
-CLKC_RESET_VID_DIVIDER_CNTL_RESET_N_PRE are active low. This means:
-- asserting them requires setting the register value to 0
-- de-asserting them requires setting the register value to 1
+Get drvdata directly from parent instead of ngd dev, as ngd
+dev can probe defer and previously set drvdata will become null.
 
-Set the register value accordingly for these two reset lines by setting
-the inverted the register value compared to all other reset lines.
-
-Fixes: 189621726bc2f6 ("clk: meson: meson8b: register the built-in reset controller")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200417184127.1319871-3-martin.blumenstingl@googlemail.com
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20200417093618.7929-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/meson8b.c | 79 ++++++++++++++++++++++++++-----------
- 1 file changed, 56 insertions(+), 23 deletions(-)
+ drivers/slimbus/qcom-ngd-ctrl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index ab0b56daec54..52337a100a90 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -3491,54 +3491,87 @@ static struct clk_regmap *const meson8b_clk_regmaps[] = {
- static const struct meson8b_clk_reset_line {
- 	u32 reg;
- 	u8 bit_idx;
-+	bool active_low;
- } meson8b_clk_reset_bits[] = {
- 	[CLKC_RESET_L2_CACHE_SOFT_RESET] = {
--		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 30
-+		.reg = HHI_SYS_CPU_CLK_CNTL0,
-+		.bit_idx = 30,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_AXI_64_TO_128_BRIDGE_A5_SOFT_RESET] = {
--		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 29
-+		.reg = HHI_SYS_CPU_CLK_CNTL0,
-+		.bit_idx = 29,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_SCU_SOFT_RESET] = {
--		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 28
-+		.reg = HHI_SYS_CPU_CLK_CNTL0,
-+		.bit_idx = 28,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_CPU3_SOFT_RESET] = {
--		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 27
-+		.reg = HHI_SYS_CPU_CLK_CNTL0,
-+		.bit_idx = 27,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_CPU2_SOFT_RESET] = {
--		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 26
-+		.reg = HHI_SYS_CPU_CLK_CNTL0,
-+		.bit_idx = 26,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_CPU1_SOFT_RESET] = {
--		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 25
-+		.reg = HHI_SYS_CPU_CLK_CNTL0,
-+		.bit_idx = 25,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_CPU0_SOFT_RESET] = {
--		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 24
-+		.reg = HHI_SYS_CPU_CLK_CNTL0,
-+		.bit_idx = 24,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_A5_GLOBAL_RESET] = {
--		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 18
-+		.reg = HHI_SYS_CPU_CLK_CNTL0,
-+		.bit_idx = 18,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_A5_AXI_SOFT_RESET] = {
--		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 17
-+		.reg = HHI_SYS_CPU_CLK_CNTL0,
-+		.bit_idx = 17,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_A5_ABP_SOFT_RESET] = {
--		.reg = HHI_SYS_CPU_CLK_CNTL0, .bit_idx = 16
-+		.reg = HHI_SYS_CPU_CLK_CNTL0,
-+		.bit_idx = 16,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_AXI_64_TO_128_BRIDGE_MMC_SOFT_RESET] = {
--		.reg = HHI_SYS_CPU_CLK_CNTL1, .bit_idx = 30
-+		.reg = HHI_SYS_CPU_CLK_CNTL1,
-+		.bit_idx = 30,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_VID_CLK_CNTL_SOFT_RESET] = {
--		.reg = HHI_VID_CLK_CNTL, .bit_idx = 15
-+		.reg = HHI_VID_CLK_CNTL,
-+		.bit_idx = 15,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_VID_DIVIDER_CNTL_SOFT_RESET_POST] = {
--		.reg = HHI_VID_DIVIDER_CNTL, .bit_idx = 7
-+		.reg = HHI_VID_DIVIDER_CNTL,
-+		.bit_idx = 7,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_VID_DIVIDER_CNTL_SOFT_RESET_PRE] = {
--		.reg = HHI_VID_DIVIDER_CNTL, .bit_idx = 3
-+		.reg = HHI_VID_DIVIDER_CNTL,
-+		.bit_idx = 3,
-+		.active_low = false,
- 	},
- 	[CLKC_RESET_VID_DIVIDER_CNTL_RESET_N_POST] = {
--		.reg = HHI_VID_DIVIDER_CNTL, .bit_idx = 1
-+		.reg = HHI_VID_DIVIDER_CNTL,
-+		.bit_idx = 1,
-+		.active_low = true,
- 	},
- 	[CLKC_RESET_VID_DIVIDER_CNTL_RESET_N_PRE] = {
--		.reg = HHI_VID_DIVIDER_CNTL, .bit_idx = 0
-+		.reg = HHI_VID_DIVIDER_CNTL,
-+		.bit_idx = 0,
-+		.active_low = true,
- 	},
- };
+diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
+index 29fbab55c3b3..01a17d84b606 100644
+--- a/drivers/slimbus/qcom-ngd-ctrl.c
++++ b/drivers/slimbus/qcom-ngd-ctrl.c
+@@ -1354,7 +1354,6 @@ static int of_qcom_slim_ngd_register(struct device *parent,
+ 		ngd->pdev->driver_override = QCOM_SLIM_NGD_DRV_NAME;
+ 		ngd->pdev->dev.of_node = node;
+ 		ctrl->ngd = ngd;
+-		platform_set_drvdata(ngd->pdev, ctrl);
  
-@@ -3547,22 +3580,22 @@ static int meson8b_clk_reset_update(struct reset_controller_dev *rcdev,
+ 		platform_device_add(ngd->pdev);
+ 		ngd->base = ctrl->base + ngd->id * data->offset +
+@@ -1369,12 +1368,13 @@ static int of_qcom_slim_ngd_register(struct device *parent,
+ 
+ static int qcom_slim_ngd_probe(struct platform_device *pdev)
  {
- 	struct meson8b_clk_reset *meson8b_clk_reset =
- 		container_of(rcdev, struct meson8b_clk_reset, reset);
--	unsigned long flags;
- 	const struct meson8b_clk_reset_line *reset;
-+	unsigned int value = 0;
-+	unsigned long flags;
+-	struct qcom_slim_ngd_ctrl *ctrl = platform_get_drvdata(pdev);
+ 	struct device *dev = &pdev->dev;
++	struct qcom_slim_ngd_ctrl *ctrl = dev_get_drvdata(dev->parent);
+ 	int ret;
  
- 	if (id >= ARRAY_SIZE(meson8b_clk_reset_bits))
- 		return -EINVAL;
+ 	ctrl->ctrl.dev = dev;
  
- 	reset = &meson8b_clk_reset_bits[id];
- 
-+	if (assert != reset->active_low)
-+		value = BIT(reset->bit_idx);
-+
- 	spin_lock_irqsave(&meson_clk_lock, flags);
- 
--	if (assert)
--		regmap_update_bits(meson8b_clk_reset->regmap, reset->reg,
--				   BIT(reset->bit_idx), BIT(reset->bit_idx));
--	else
--		regmap_update_bits(meson8b_clk_reset->regmap, reset->reg,
--				   BIT(reset->bit_idx), 0);
-+	regmap_update_bits(meson8b_clk_reset->regmap, reset->reg,
-+			   BIT(reset->bit_idx), value);
- 
- 	spin_unlock_irqrestore(&meson_clk_lock, flags);
- 
++	platform_set_drvdata(pdev, ctrl);
+ 	pm_runtime_use_autosuspend(dev);
+ 	pm_runtime_set_autosuspend_delay(dev, QCOM_SLIM_NGD_AUTOSUSPEND);
+ 	pm_runtime_set_suspended(dev);
 -- 
 2.25.1
 
