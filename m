@@ -7,51 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB14C2220B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69C652220B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445897;
-	bh=D3F8OeDLQgHlOhxrNCZPhck53CQnJDDLhPaT7YaAwrI=;
+	s=default; t=1592445902;
+	bh=ptpv6AaHe3Ar61d8PWH8ycxxaQqCbcDaY5LkOUNJEmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ms2J0MGKec3DQ/g2Eq4BBcE8+De/Gc/F5wkBKfauXFm3pOEji03Ow91ZJI9+Rlr1b
-	 VnfpHxepje3xM+nqrpl+EFEbrNAj912qxYROW0/37dOjgBFmYZBKBnxOROBuhiRleB
-	 EELlnT+s68iUj7e6T2uOq3SvqGEOFHm/OCFtnCsA=
+	b=w/oWSAzaGagUK5RFxssMZsZivJbJiibBWCDJlprxnNrGOOZugsElsi3SFZPBagAVu
+	 O8hhzAtVvH3SVWUzYDgy7uvXHLO6S8PJxzYE59/EeEkEbSB11SvYcfstmECfOTmZGx
+	 sL0aGrIc+MyUwQ6Kq8NvGoHtcBsY6Y6WSHlyV2Sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730862AbgFRBWy (ORCPT
+        id S1730882AbgFRCFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:22:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51496 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:05:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730171AbgFRBTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:19:36 -0400
+        id S1730367AbgFRBWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:22:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E4B721D82;
-        Thu, 18 Jun 2020 01:19:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44B9B20663;
+        Thu, 18 Jun 2020 01:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443176;
-        bh=D3F8OeDLQgHlOhxrNCZPhck53CQnJDDLhPaT7YaAwrI=;
+        s=default; t=1592443373;
+        bh=ptpv6AaHe3Ar61d8PWH8ycxxaQqCbcDaY5LkOUNJEmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jt1z6W3NKL6r9rZm+gr49xjheiU6h9EBhLITwgZy4ASDYsj2Ju5XhzHhL+bLX0wO5
-         yaOX2GzaPn42WSurpyaUpgbLGVtoU+gfKmSajh0vqrGT9FfKoaToyokurogrgMltJl
-         Ryauz2W+E3dqiJdXSWYU0P8UOx5FK1JMTz38AyLU=
+        b=tvsEWH/GXosw17DHT7zf6Rt6Gd2qjIh8yvLXdn+HOBiyZylzr8V3e7PmFIeMUk4mb
+         hxQI+4XZ9O/8I3rQaNFhabFk46B0qTwKxVu9JBPq2LkebuUwn1+T6v9+Sa4SPOkW0S
+         ojnejE6wheRLsoRNVqRjeqVA9NoAxNvIzPx+fEfM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 139/266] USB: ohci-sm501: fix error return code in ohci_hcd_sm501_drv_probe()
-Date:   Wed, 17 Jun 2020 21:14:24 -0400
-Message-Id: <20200618011631.604574-139-sashal@kernel.org>
+Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 026/172] PCI: aardvark: Don't blindly enable ASPM L0s and don't write to read-only register
+Date:   Wed, 17 Jun 2020 21:19:52 -0400
+Message-Id: <20200618012218.607130-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
-References: <20200618011631.604574-1-sashal@kernel.org>
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,41 +64,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Pali Rohár <pali@kernel.org>
 
-[ Upstream commit b919e077cccfbb77beb98809568b2fb0b4d113ec ]
+[ Upstream commit 90c6cb4a355e7befcb557d217d1d8b8bd5875a05 ]
 
-Fix to return a negative error code from the error handling
-case instead of 0, as done elsewhere in this function.
+Trying to change Link Status register does not have any effect as this
+is a read-only register. Trying to overwrite bits for Negotiated Link
+Width does not make sense.
 
-Fixes: 7d9e6f5aebe8 ("usb: host: ohci-sm501: init genalloc for local memory")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20200506135625.106910-1-weiyongjun1@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In future proper change of link width can be done via Lane Count Select
+bits in PCIe Control 0 register.
+
+Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
+Control register is wrong. There should be at least some detection if
+endpoint supports L0s as isn't mandatory.
+
+Moreover ASPM Control bits in Link Control register are controlled by
+pcie/aspm.c code which sets it according to system ASPM settings,
+immediately after aardvark driver probes. So setting these bits by
+aardvark driver has no long running effect.
+
+Remove code which touches ASPM L0s bits from this driver and let
+kernel's ASPM implementation to set ASPM state properly.
+
+Some users are reporting issues that this code is problematic for some
+Intel wifi cards and removing it fixes them, see e.g.:
+https://bugzilla.kernel.org/show_bug.cgi?id=196339
+
+If problems with Intel wifi cards occur even after this commit, then
+pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
+for affected problematic cards.
+
+Link: https://lore.kernel.org/r/20200430080625.26070-3-pali@kernel.org
+Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ohci-sm501.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/usb/host/ohci-sm501.c b/drivers/usb/host/ohci-sm501.c
-index c158cda9e4b9..cff965240327 100644
---- a/drivers/usb/host/ohci-sm501.c
-+++ b/drivers/usb/host/ohci-sm501.c
-@@ -157,9 +157,10 @@ static int ohci_hcd_sm501_drv_probe(struct platform_device *pdev)
- 	 * the call to usb_hcd_setup_local_mem() below does just that.
- 	 */
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 6b4555ff2548..0235b6e7dcd1 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -321,10 +321,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
  
--	if (usb_hcd_setup_local_mem(hcd, mem->start,
--				    mem->start - mem->parent->start,
--				    resource_size(mem)) < 0)
-+	retval = usb_hcd_setup_local_mem(hcd, mem->start,
-+					 mem->start - mem->parent->start,
-+					 resource_size(mem));
-+	if (retval < 0)
- 		goto err5;
- 	retval = usb_add_hcd(hcd, irq, IRQF_SHARED);
- 	if (retval)
+ 	advk_pcie_wait_for_link(pcie);
+ 
+-	reg = PCIE_CORE_LINK_L0S_ENTRY |
+-		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
+-	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+-
+ 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
+ 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
+ 		PCIE_CORE_CMD_IO_ACCESS_EN |
 -- 
 2.25.1
 
