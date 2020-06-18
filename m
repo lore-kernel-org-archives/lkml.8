@@ -2,157 +2,152 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F387C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0312080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:53:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fODOZVVA"
+	by mail.kernel.org (Postfix) with ESMTP id 00AF3206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592488571;
+	bh=38uTI+xDeYQSW97XKhSMUz9+QFd9HVuzaBbis5yErKU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=eLp+eGlifbZ1IKQM+8yEvAmm0A+H9CMfmZIdQ6V56vu957by45XYiLXx3tXBPeh8f
+	 E50213jxIGR3X3XDyjOQeWnqy8HEKxIUZ7ymuW8KAXJj/Zc+y5Tib48v5FHgE/Munl
+	 e+7/nJSRUKpYvhUX4C8KZ7KbQM3Z1PSMsRbisGkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730745AbgFRNxf (ORCPT
+        id S1727070AbgFRN4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730518AbgFRNw6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:52:58 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3EC6C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 06:52:57 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id s1so7375944ljo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 06:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9P1JCHrt7FUW+xiuM5vRud2sFx/m9qpZviiIZWSxrs0=;
-        b=fODOZVVAnIrwoUAGSdktk0kNRi39TD3Lykb/NupWJ2fkCd44VpIcQ3OX6t7gFZc8bv
-         9mkwvZ5UOQt9GsXUcQhK6Anuggx62lhuOCS4LMARk8o5hYREwyQChzBoKG5ohuca9Gfu
-         0sHcIPcV4k7pQCIDqLEHPkYlOEwxMVR1KnC383+RumsOcY/yRwcIItVdUkaCX5aCKSKS
-         in5FTKhUADwrQfDy3FcD2qcW0tqfRCF+uOMSo3RTkuBuXIEcvA/dK+1IoJetlpLm6366
-         MB9g77DSsG5kxYlIlToWw7tpxgjTC4LI7hOqg9DEd8mg2oTmInUJOdeVoFF0U+PXVKcR
-         FbDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=9P1JCHrt7FUW+xiuM5vRud2sFx/m9qpZviiIZWSxrs0=;
-        b=LgFIruJWcVrh5Uoy2xi0Ad5rEYwvtIIlyQDCiQCn9Q0HUdlqfLpzEUOjcmVelD9TSw
-         P98xgxfoiLlvNR45KSaMnemNJVnF4DL+b0FlzRql/I/xX/J00xOqG3DeDB2d369HdjcA
-         pEPenN2I4yjgzLKQzw9qE3kQJT4cz9xWrWxUuMC9kAG5xVMA9X8z11c6kEOeHCIEvbC+
-         y/A63Dg0nVNXnBXwbHceZQMvdDvOc6BzdJIAG5pE6ghM21g8Roqbp8l8T3dTeNuGGzYj
-         7KXPPjpjota8CS3eTBemIn2x/JuKzJLgRiL+1HMyL36d728JQ3cMR8ZLmi4UJRSFdbHZ
-         tcMQ==
-X-Gm-Message-State: AOAM533IPP43uqVB+RMVdFnzxoJAdLXOpJ/MVU+pB7EqwnSNAEfVsujd
-        Pz/QDPUScs5lcQOqnxfus+Q5iFsswNE=
-X-Google-Smtp-Source: ABdhPJyCXiCIvGCC262AeAojPgSkk69Vv7ksw/of2eKCXEYedcwranKM17EXQYCe8ycY+gsWuOgfHQ==
-X-Received: by 2002:a05:651c:108:: with SMTP id a8mr2424578ljb.326.1592488375701;
-        Thu, 18 Jun 2020 06:52:55 -0700 (PDT)
-Received: from maximlap.d-systems.local ([185.75.190.112])
-        by smtp.gmail.com with ESMTPSA id f2sm768324lfc.11.2020.06.18.06.52.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 06:52:55 -0700 (PDT)
-From:   Maxim Uvarov <maxim.uvarov@linaro.org>
-To:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
-Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
-        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
-        linux-integrity@vger.kernel.org, arnd@linaro.org,
-        sumit.garg@linaro.org, Maxim Uvarov <maxim.uvarov@linaro.org>
-Subject: [PATCHv9 1/3] optee: use uuid for sysfs driver entry
-Date:   Thu, 18 Jun 2020 16:52:49 +0300
-Message-Id: <20200618135251.5761-2-maxim.uvarov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200618135251.5761-1-maxim.uvarov@linaro.org>
-References: <20200618135251.5761-1-maxim.uvarov@linaro.org>
+        Thu, 18 Jun 2020 09:56:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgFRN4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 09:56:08 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A04F2067D;
+        Thu, 18 Jun 2020 13:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592488567;
+        bh=38uTI+xDeYQSW97XKhSMUz9+QFd9HVuzaBbis5yErKU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YPZjSjtERAxYgBaBSWo7w0avxyOP7zmc//M5M0t9E7FUKRYHLCcrlYWqIRCnQuXEM
+         vo+5484GeMNW6lr0aQ21UAgHD8wNUlzf+KktxYkQcckDn53lfQs9zSXQcivpVlOQmZ
+         X4ULRP8t3sodH6Dw9LU0IT641NJ+FR5Ap2qIVr0w=
+Date:   Thu, 18 Jun 2020 22:56:02 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Ming Lei <tom.leiming@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-block <linux-block@vger.kernel.org>
+Subject: Re: kprobe: __blkdev_put probe is missed
+Message-Id: <20200618225602.3f2cca3f0ed48427fc0a483b@kernel.org>
+In-Reply-To: <20200618125438.GA191266@T590>
+References: <CACVXFVO5saamQXs0naLamTKJfXZMW+p446weeqJK=9+V34UM0g@mail.gmail.com>
+        <20200618125438.GA191266@T590>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the evolving use-cases for TEE bus, now it's required to support
-multi-stage enumeration process. But using a simple index doesn't
-suffice this requirement and instead leads to duplicate sysfs entries.
-So instead switch to use more informative device UUID for sysfs entry
-like:
-/sys/bus/tee/devices/optee-ta-<uuid>
+Hi Ming,
 
-Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Tested-by: Sumit Garg <sumit.garg@linaro.org>
----
- Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
- MAINTAINERS                                       | 1 +
- drivers/tee/optee/device.c                        | 9 ++++++---
- 3 files changed, 15 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+On Thu, 18 Jun 2020 20:54:38 +0800
+Ming Lei <ming.lei@redhat.com> wrote:
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
-new file mode 100644
-index 000000000000..0f58701367b6
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
-@@ -0,0 +1,8 @@
-+What:		/sys/bus/tee/devices/optee-ta-<uuid>/
-+Date:           May 2020
-+KernelVersion   5.8
-+Contact:        op-tee@lists.trustedfirmware.org
-+Description:
-+		OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
-+		matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
-+		are free to create needed API under optee-ta-<uuid> directory.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 301330e02bca..b9536cb5b8b9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12697,6 +12697,7 @@ OP-TEE DRIVER
- M:	Jens Wiklander <jens.wiklander@linaro.org>
- L:	tee-dev@lists.linaro.org
- S:	Maintained
-+F:	Documentation/ABI/testing/sysfs-bus-optee-devices
- F:	drivers/tee/optee/
- 
- OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
-diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
-index e3a148521ec1..e91b7db5f49e 100644
---- a/drivers/tee/optee/device.c
-+++ b/drivers/tee/optee/device.c
-@@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
- 	return 0;
- }
- 
--static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
-+static int optee_register_device(const uuid_t *device_uuid)
- {
- 	struct tee_client_device *optee_device = NULL;
- 	int rc;
-@@ -75,7 +75,10 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
- 		return -ENOMEM;
- 
- 	optee_device->dev.bus = &tee_bus_type;
--	dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
-+	if (dev_set_name(&optee_device->dev, "optee-ta-%pUb", device_uuid)) {
-+		kfree(optee_device);
-+		return -ENOMEM;
-+	}
- 	uuid_copy(&optee_device->id.uuid, device_uuid);
- 
- 	rc = device_register(&optee_device->dev);
-@@ -144,7 +147,7 @@ int optee_enumerate_devices(void)
- 	num_devices = shm_size / sizeof(uuid_t);
- 
- 	for (idx = 0; idx < num_devices; idx++) {
--		rc = optee_register_device(&device_uuid[idx], idx);
-+		rc = optee_register_device(&device_uuid[idx]);
- 		if (rc)
- 			goto out_shm;
- 	}
+> On Wed, Jun 17, 2020 at 06:30:39PM +0800, Ming Lei wrote:
+> > Hello Guys,
+> > 
+> > I found probe on __blkdev_put is missed, which can be observed
+> > via bcc/perf reliably:
+> > 
+> > 1) start trace
+> > - perf probe __blkdev_put
+> > - perf trace -a  -e probe:__blkdev_put
+
+Could you dump the kprobe_event as below?
+
+# cat /sys/kernel/tracing/kprobe_events
+
+
+> > 
+> > or
+> > 
+> > /usr/share/bcc/tools/stackcount __blkdev_put
+> > 
+> > 2) run the following command:
+> > blockdev --getbsz /dev/sda1
+
+And dump the kprobe profile?
+
+# cat /sys/kernel/tracing/kprobe_profile
+
+> > 
+> > 3) 'perf trace'  or stackcount just  dumps one trace event, and it
+> > should have been two
+> > __blkdev_put() traces, since one __blkdev_put() is called for
+> > partition(/dev/sda1),
+> > and another is for disk(/dev/sda). If trace_printk() is added in __blkdev_put(),
+> > two events will be captured from ftrace.
+> > 
+> 
+> The issue can be shown by loading a kprobe module which registers on
+> __blkdev_put(), just by replacing _do_fork with __blkdev_put on
+> samples/kprobes/kprobe_example.c.
+
+Could you tell me what kernel are you using?
+
+I'm using 5.4 on ubuntu and can not reproduce it with kprobe_event.
+
+root@devnote2:/sys/kernel/tracing# uname -a
+Linux devnote2 5.4.0-37-generic #41-Ubuntu SMP Wed Jun 3 18:57:02 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+root@devnote2:/sys/kernel/tracing# echo p __blkdev_put > kprobe_events 
+root@devnote2:/sys/kernel/tracing# echo 1 > events/kprobes/p___blkdev_put_0/enable 
+root@devnote2:/sys/kernel/tracing# cat trace
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 0/0   #P:8
+#
+#                              _-----=> irqs-off
+#                             / _----=> need-resched
+#                            | / _---=> hardirq/softirq
+#                            || / _--=> preempt-depth
+#                            ||| /     delay
+#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+#              | |       |   ||||       |         |
+root@devnote2:/sys/kernel/tracing# blockdev --getbsz /dev/nvme0n1
+4096
+root@devnote2:/sys/kernel/tracing# cat trace
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 1/1   #P:8
+#
+#                              _-----=> irqs-off
+#                             / _----=> need-resched
+#                            | / _---=> hardirq/softirq
+#                            || / _--=> preempt-depth
+#                            ||| /     delay
+#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
+#              | |       |   ||||       |         |
+           <...>-111740 [002] .... 301734.476991: p___blkdev_put_0: (__blkdev_put+0x0/0x1e0)
+
+Hmm, maybe some issue in the latest kernel...?
+
+
+Thank you,
+
 -- 
-2.17.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
