@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7573AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE555C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABE7221FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A358922228
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445425;
-	bh=EQOKxm6aV10YMCrUx58JzOqXwaMehrIdJyBLmmicb8M=;
+	s=default; t=1592445431;
+	bh=jWFs75JOAHtYfaPlA8GfTgBuVl9fnOFUDvX/2L3M4yU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EGgWUSJWQdYRXV/rIaeCAPFP6w56ToZpATp1wDExMPf8BFowQSkbqqgULWKxxzoXU
-	 qzRWqGVaFbdKhUAJWKCqrDzOquhAvcxBD8iM7UyDefNpxFqfa97UmQgJTjii2GyxDt
-	 zqHq+Vq1Vnl4SlVcNe1CJPXwMxgyq5gioyuL4SWY=
+	b=FBPfBV029CP4W/OFq4jnZfMta7cRBQ00PRJdywuNgSXFT0PcspOvM+/5h4+WWSXoa
+	 urqBILP42LLuD26e0EwEmkC3JAIbt0nNNpSWmt+mjOXL2qqzu3slVHjQYeikrZNyMo
+	 CCj/GqXZAgv/PEn80B2RNkS/Ymn9S4RW7GWKqxU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731378AbgFRBZN (ORCPT
+        id S1730301AbgFRB5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:25:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54988 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:57:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730654AbgFRBWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:08 -0400
+        id S1731376AbgFRBZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C637320B1F;
-        Thu, 18 Jun 2020 01:22:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 916F621974;
+        Thu, 18 Jun 2020 01:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443327;
-        bh=EQOKxm6aV10YMCrUx58JzOqXwaMehrIdJyBLmmicb8M=;
+        s=default; t=1592443513;
+        bh=jWFs75JOAHtYfaPlA8GfTgBuVl9fnOFUDvX/2L3M4yU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEJKEpLG851D8+phUgnCAExQ5bJS7fRIkI+qrlY6h85lQ7m9eySUa7rOjgrIuqUuF
-         EgrmmKhgk9LrYIRS/tzwfXDHGSnh4UeNsVmJChhC6fNQ4iAbvrN0n3yF4sD8wNUyui
-         yciEHJ3BQpmwAWSsCll36tPNCo9KoY77ZNljsyC8=
+        b=dvi/q1gLBi/rcJtyWNFnpvGqLlG0SmFr9Dp7/kOoXY9LiYsP16LqMQ4iy97/htbhp
+         iVK7w3wpPQtHovxpUK6qMrkKk5UDOFKSOtz5+SQoOnulDfGCp/NHA4sa1ugBxAqACG
+         9ntZSu1ZDEFuOj7w4hmlzYkjQy6YeBZfloHgyE0Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 260/266] x86/idt: Keep spurious entries unset in system_vectors
-Date:   Wed, 17 Jun 2020 21:16:25 -0400
-Message-Id: <20200618011631.604574-260-sashal@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.19 137/172] gfs2: Allow lock_nolock mount to specify jid=X
+Date:   Wed, 17 Jun 2020 21:21:43 -0400
+Message-Id: <20200618012218.607130-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
-References: <20200618011631.604574-1-sashal@kernel.org>
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,50 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 1f1fbc70c10e81f70e9fbe2102d439c883269811 ]
+[ Upstream commit ea22eee4e6027d8927099de344f7fff43c507ef9 ]
 
-With commit dc20b2d52653 ("x86/idt: Move interrupt gate initialization to
-IDT code") non assigned system vectors are also marked as used in
-'used_vectors' (now 'system_vectors') bitmap. This makes checks in
-arch_show_interrupts() whether a particular system vector is allocated to
-always pass and e.g. 'Hyper-V reenlightenment interrupts' entry always
-shows up in /proc/interrupts.
+Before this patch, a simple typo accidentally added \n to the jid=
+string for lock_nolock mounts. This made it impossible to mount a
+gfs2 file system with a journal other than journal0. Thus:
 
-Another side effect of having all unassigned system vectors marked as used
-is that irq_matrix_debug_show() will wrongly count them among 'System'
-vectors.
+mount -tgfs2 -o hostdata="jid=1" <device> <mount pt>
 
-As it is now ensured that alloc_intr_gate() is not called after init, it is
-possible to leave unused entries in 'system_vectors' unset to fix these
-issues.
+Resulted in:
+mount: wrong fs type, bad option, bad superblock on <device>
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200428093824.1451532-4-vkuznets@redhat.com
+In most cases this is not a problem. However, for debugging and
+testing purposes we sometimes want to test the integrity of other
+journals. This patch removes the unnecessary \n and thus allows
+lock_nolock users to specify an alternate journal.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/idt.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/gfs2/ops_fstype.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index 87ef69a72c52..7bb4c3cbf4dc 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -318,7 +318,11 @@ void __init idt_setup_apic_and_irq_gates(void)
+diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
+index b041cb8ae383..ed77b10bdfb5 100644
+--- a/fs/gfs2/ops_fstype.c
++++ b/fs/gfs2/ops_fstype.c
+@@ -903,7 +903,7 @@ static int init_per_node(struct gfs2_sbd *sdp, int undo)
+ }
  
- #ifdef CONFIG_X86_LOCAL_APIC
- 	for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
--		set_bit(i, system_vectors);
-+		/*
-+		 * Don't set the non assigned system vectors in the
-+		 * system_vectors bitmap. Otherwise they show up in
-+		 * /proc/interrupts.
-+		 */
- 		entry = spurious_entries_start + 8 * (i - FIRST_SYSTEM_VECTOR);
- 		set_intr_gate(i, entry);
- 	}
+ static const match_table_t nolock_tokens = {
+-	{ Opt_jid, "jid=%d\n", },
++	{ Opt_jid, "jid=%d", },
+ 	{ Opt_err, NULL },
+ };
+ 
 -- 
 2.25.1
 
