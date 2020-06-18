@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04991C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAA0920885
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ECD220885
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446969;
-	bh=pfZB5y3kDygxLOky68VuEsp/A3ZbZCf+SZE2za9Qu4o=;
+	s=default; t=1592446977;
+	bh=ygnmffc6E/5pFy7Ll49LQ6rLAHAwoxGSATRztms2DHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cizeLfPjOEsfM5ZaQZlWcSjsvysBR3126Qov2+pGDVn2Lgk3qz6vOMy4E8E2KrZjg
-	 FY+bEYb/s7c5C7kILTCrSdFS9XkuNKaJI/88+J1TyKYaBByvuig8MiJWp9riNZTE8q
-	 cntIGCoBSNDJnZUomf6v3r9RIjJAvtm0KtigPM6c=
+	b=DZo39PZjgoRBkRVemM7XIFDjfi7FCigjt1xWcjlu8w7BwecIDkXeeA568gb9JnGwy
+	 4zsi9mrcB9TyDpdf3ziJvax/5b5+bxEeMHuXGmFBoXQg0fucqoqu2IV6zk1kCi8Q4V
+	 0UWuaVF3bZsWp7yf5JLN9Quqvx46Tl9oTnDzPbwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731601AbgFRCWr (ORCPT
+        id S1731613AbgFRCW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:22:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49742 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:22:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728643AbgFRBSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:18:22 -0400
+        id S1729895AbgFRBSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:18:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B08E021D79;
-        Thu, 18 Jun 2020 01:18:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94E0C21D90;
+        Thu, 18 Jun 2020 01:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443101;
-        bh=pfZB5y3kDygxLOky68VuEsp/A3ZbZCf+SZE2za9Qu4o=;
+        s=default; t=1592443095;
+        bh=ygnmffc6E/5pFy7Ll49LQ6rLAHAwoxGSATRztms2DHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U5Ljdyi1H7Oz3jdpn+71M0wSxLIIi8kjNgONCCzTEOP1w/3VqwPTtq/lfKVFLW3cW
-         vm/iyfNJa7o+NLRCiV43s2306VWpG4Ku8SXJyvwIlPH6idVZ/OebWoG/XyzjM7rnQk
-         xIsp46C6hoO/3A7LJZcfK/RHq/Lmh4EMWlHBXa1w=
+        b=ICHAhX+xNbkPLyRjUKXhs3l9ZLxLxTS+Z48m5/aRhni7rDgPnRZ3IjP2JpzVdwVTC
+         G3RyXyrye983kf2x4tQI0c6gV9V3FjPtz0p9iQW7S0Wld+E04KyGfgvzCaHZX/i5qF
+         EGsQw7XhzQ7R2JcdVZ9moHwBorsdYMK/xTdT+W08=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Sitnicki <jakub@cloudflare.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 080/266] bpf, sockhash: Fix memory leak when unlinking sockets in sock_hash_free
-Date:   Wed, 17 Jun 2020 21:13:25 -0400
-Message-Id: <20200618011631.604574-80-sashal@kernel.org>
+Cc:     John Johansen <john.johansen@canonical.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 075/266] apparmor: fix introspection of of task mode for unconfined tasks
+Date:   Wed, 17 Jun 2020 21:13:20 -0400
+Message-Id: <20200618011631.604574-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -61,53 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Sitnicki <jakub@cloudflare.com>
+From: John Johansen <john.johansen@canonical.com>
 
-[ Upstream commit 33a7c831565c43a7ee2f38c7df4c4a40e1dfdfed ]
+[ Upstream commit dd2569fbb053719f7df7ef8fdbb45cf47156a701 ]
 
-When sockhash gets destroyed while sockets are still linked to it, we will
-walk the bucket lists and delete the links. However, we are not freeing the
-list elements after processing them, leaking the memory.
+Fix two issues with introspecting the task mode.
 
-The leak can be triggered by close()'ing a sockhash map when it still
-contains sockets, and observed with kmemleak:
+1. If a task is attached to a unconfined profile that is not the
+   ns->unconfined profile then. Mode the mode is always reported
+   as -
 
-  unreferenced object 0xffff888116e86f00 (size 64):
-    comm "race_sock_unlin", pid 223, jiffies 4294731063 (age 217.404s)
-    hex dump (first 32 bytes):
-      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-      81 de e8 41 00 00 00 00 c0 69 2f 15 81 88 ff ff  ...A.....i/.....
-    backtrace:
-      [<00000000dd089ebb>] sock_hash_update_common+0x4ca/0x760
-      [<00000000b8219bd5>] sock_hash_update_elem+0x1d2/0x200
-      [<000000005e2c23de>] __do_sys_bpf+0x2046/0x2990
-      [<00000000d0084618>] do_syscall_64+0xad/0x9a0
-      [<000000000d96f263>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
+      $ ps -Z
+      LABEL                               PID TTY          TIME CMD
+      unconfined                         1287 pts/0    00:00:01 bash
+      test (-)                           1892 pts/0    00:00:00 ps
 
-Fix it by freeing the list element when we're done with it.
+   instead of the correct value of (unconfined) as shown below
 
-Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
-Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20200607205229.2389672-2-jakub@cloudflare.com
+      $ ps -Z
+      LABEL                               PID TTY          TIME CMD
+      unconfined                         2483 pts/0    00:00:01 bash
+      test (unconfined)                  3591 pts/0    00:00:00 ps
+
+2. if a task is confined by a stack of profiles that are unconfined
+   the output of label mode is again the incorrect value of (-) like
+   above, instead of (unconfined). This is because the visibile
+   profile count increment is skipped by the special casing of
+   unconfined.
+
+Fixes: f1bd904175e8 ("apparmor: add the base fns() for domain labels")
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/sock_map.c | 1 +
- 1 file changed, 1 insertion(+)
+ security/apparmor/label.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-index 8291568b707f..ba65c608c228 100644
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -879,6 +879,7 @@ static void sock_hash_free(struct bpf_map *map)
- 			sock_map_unref(elem->sk, elem);
- 			rcu_read_unlock();
- 			release_sock(elem->sk);
-+			sock_hash_free_elem(htab, elem);
- 		}
- 	}
+diff --git a/security/apparmor/label.c b/security/apparmor/label.c
+index 470693239e64..6c3acae701ef 100644
+--- a/security/apparmor/label.c
++++ b/security/apparmor/label.c
+@@ -1531,13 +1531,13 @@ static const char *label_modename(struct aa_ns *ns, struct aa_label *label,
  
+ 	label_for_each(i, label, profile) {
+ 		if (aa_ns_visible(ns, profile->ns, flags & FLAG_VIEW_SUBNS)) {
+-			if (profile->mode == APPARMOR_UNCONFINED)
++			count++;
++			if (profile == profile->ns->unconfined)
+ 				/* special case unconfined so stacks with
+ 				 * unconfined don't report as mixed. ie.
+ 				 * profile_foo//&:ns1:unconfined (mixed)
+ 				 */
+ 				continue;
+-			count++;
+ 			if (mode == -1)
+ 				mode = profile->mode;
+ 			else if (mode != profile->mode)
 -- 
 2.25.1
 
