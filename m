@@ -7,47 +7,44 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043E0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E14702073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9037B207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730624AbgFRNvW (ORCPT
+        id S1730584AbgFRNvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:51:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49180 "EHLO
+        Thu, 18 Jun 2020 09:51:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730566AbgFRNvG (ORCPT
+        with ESMTP id S1730228AbgFRNvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:51:06 -0400
+        Thu, 18 Jun 2020 09:51:02 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 726F5C0613ED;
-        Thu, 18 Jun 2020 06:51:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A42CCC0613ED;
+        Thu, 18 Jun 2020 06:51:01 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jluwR-0002iZ-Up; Thu, 18 Jun 2020 15:50:56 +0200
+        id 1jluwU-0002k1-2n; Thu, 18 Jun 2020 15:50:58 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3C11D1C0087;
-        Thu, 18 Jun 2020 15:50:55 +0200 (CEST)
-Date:   Thu, 18 Jun 2020 13:50:54 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 39A5D1C06E5;
+        Thu, 18 Jun 2020 15:50:57 +0200 (CEST)
+Date:   Thu, 18 Jun 2020 13:50:57 -0000
 From:   "tip-bot2 for Chang S. Bae" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fsgsbase] selftests/x86/fsgsbase: Test ptracer-induced GS
- base write with FSGSBASE
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
+Subject: [tip: x86/fsgsbase] x86/entry/64: Switch CR3 before SWAPGS in paranoid entry
+Cc:     "Chang S. Bae" <chang.seok.bae@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86 <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200528201402.1708239-17-sashal@kernel.org>
-References: <20200528201402.1708239-17-sashal@kernel.org>
+In-Reply-To: <1557309753-24073-11-git-send-email-chang.seok.bae@intel.com>
+References: <1557309753-24073-11-git-send-email-chang.seok.bae@intel.com>
 MIME-Version: 1.0
-Message-ID: <159248825497.16989.5412219618320805456.tip-bot2@tip-bot2>
+Message-ID: <159248825700.16989.16902415408601692499.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,64 +60,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/fsgsbase branch of tip:
 
-Commit-ID:     5e7ec8578fa3dada50c50f5b234fa8d154b76349
-Gitweb:        https://git.kernel.org/tip/5e7ec8578fa3dada50c50f5b234fa8d154b76349
+Commit-ID:     96b2371413e8f636a5f25c42a933af21c35a2a41
+Gitweb:        https://git.kernel.org/tip/96b2371413e8f636a5f25c42a933af21c35a2a41
 Author:        Chang S. Bae <chang.seok.bae@intel.com>
-AuthorDate:    Thu, 28 May 2020 16:14:02 -04:00
+AuthorDate:    Thu, 28 May 2020 16:13:55 -04:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 18 Jun 2020 15:47:07 +02:00
+CommitterDate: Thu, 18 Jun 2020 15:47:03 +02:00
 
-selftests/x86/fsgsbase: Test ptracer-induced GS base write with FSGSBASE
+x86/entry/64: Switch CR3 before SWAPGS in paranoid entry
 
-This validates that GS selector and base are independently preserved in
-ptrace commands.
+When FSGSBASE is enabled, the GSBASE handling in paranoid entry will need
+to retrieve the kernel GSBASE which requires that the kernel page table is
+active.
 
-Suggested-by: Andy Lutomirski <luto@kernel.org>
+As the CR3 switch to the kernel page tables (PTI is active) does not depend
+on kernel GSBASE, move the CR3 switch in front of the GSBASE handling.
+
+Comment the EBX content while at it.
+
+No functional change.
+
+[ tglx: Rewrote changelog and comments ]
+
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20200528201402.1708239-17-sashal@kernel.org
+Link: https://lkml.kernel.org/r/1557309753-24073-11-git-send-email-chang.seok.bae@intel.com
+Link: https://lkml.kernel.org/r/20200528201402.1708239-10-sashal@kernel.org
 
 
 ---
- tools/testing/selftests/x86/fsgsbase.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/x86/entry/entry_64.S | 32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
-index 950a48b..9a43498 100644
---- a/tools/testing/selftests/x86/fsgsbase.c
-+++ b/tools/testing/selftests/x86/fsgsbase.c
-@@ -465,7 +465,7 @@ static void test_ptrace_write_gsbase(void)
- 	wait(&status);
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index d2a00c9..04d1eea 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -807,13 +807,6 @@ SYM_CODE_START_LOCAL(paranoid_entry)
+ 	cld
+ 	PUSH_AND_CLEAR_REGS save_ret=1
+ 	ENCODE_FRAME_POINTER 8
+-	movl	$1, %ebx
+-	movl	$MSR_GS_BASE, %ecx
+-	rdmsr
+-	testl	%edx, %edx
+-	js	1f				/* negative -> in kernel */
+-	SWAPGS
+-	xorl	%ebx, %ebx
  
- 	if (WSTOPSIG(status) == SIGTRAP) {
--		unsigned long gs;
-+		unsigned long gs, base;
- 		unsigned long gs_offset = USER_REGS_OFFSET(gs);
- 		unsigned long base_offset = USER_REGS_OFFSET(gs_base);
+ 1:
+ 	/*
+@@ -825,9 +818,29 @@ SYM_CODE_START_LOCAL(paranoid_entry)
+ 	 * This is also why CS (stashed in the "iret frame" by the
+ 	 * hardware at entry) can not be used: this may be a return
+ 	 * to kernel code, but with a user CR3 value.
++	 *
++	 * Switching CR3 does not depend on kernel GSBASE so it can
++	 * be done before switching to the kernel GSBASE. This is
++	 * required for FSGSBASE because the kernel GSBASE has to
++	 * be retrieved from a kernel internal table.
+ 	 */
+ 	SAVE_AND_SWITCH_TO_KERNEL_CR3 scratch_reg=%rax save_reg=%r14
  
-@@ -481,6 +481,7 @@ static void test_ptrace_write_gsbase(void)
- 			err(1, "PTRACE_POKEUSER");
++	/* EBX = 1 -> kernel GSBASE active, no restore required */
++	movl	$1, %ebx
++	/*
++	 * The kernel-enforced convention is a negative GSBASE indicates
++	 * a kernel value. No SWAPGS needed on entry and exit.
++	 */
++	movl	$MSR_GS_BASE, %ecx
++	rdmsr
++	testl	%edx, %edx
++	jns	.Lparanoid_entry_swapgs
++	ret
++
++.Lparanoid_entry_swapgs:
++	SWAPGS
++
+ 	/*
+ 	 * The above SAVE_AND_SWITCH_TO_KERNEL_CR3 macro doesn't do an
+ 	 * unconditional CR3 write, even in the PTI case.  So do an lfence
+@@ -835,6 +848,8 @@ SYM_CODE_START_LOCAL(paranoid_entry)
+ 	 */
+ 	FENCE_SWAPGS_KERNEL_ENTRY
  
- 		gs = ptrace(PTRACE_PEEKUSER, child, gs_offset, NULL);
-+		base = ptrace(PTRACE_PEEKUSER, child, base_offset, NULL);
++	/* EBX = 0 -> SWAPGS required on exit */
++	xorl	%ebx, %ebx
+ 	ret
+ SYM_CODE_END(paranoid_entry)
  
- 		/*
- 		 * In a non-FSGSBASE system, the nonzero selector will load
-@@ -501,8 +502,14 @@ static void test_ptrace_write_gsbase(void)
- 			 */
- 			if (gs == 0)
- 				printf("\tNote: this is expected behavior on older kernels.\n");
-+		} else if (have_fsgsbase && (base != 0xFF)) {
-+			nerrs++;
-+			printf("[FAIL]\tGSBASE changed to %lx\n", base);
- 		} else {
--			printf("[OK]\tGS remained 0x%hx\n", *shared_scratch);
-+			printf("[OK]\tGS remained 0x%hx", *shared_scratch);
-+			if (have_fsgsbase)
-+				printf(" and GSBASE changed to 0xFF");
-+			printf("\n");
- 		}
- 	}
- 
+@@ -852,7 +867,8 @@ SYM_CODE_END(paranoid_entry)
+  */
+ SYM_CODE_START_LOCAL(paranoid_exit)
+ 	UNWIND_HINT_REGS
+-	testl	%ebx, %ebx			/* swapgs needed? */
++	/* If EBX is 0, SWAPGS is required */
++	testl	%ebx, %ebx
+ 	jnz	.Lparanoid_exit_no_swapgs
+ 	/* Always restore stashed CR3 value (see paranoid_entry) */
+ 	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
