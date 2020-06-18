@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD78C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65011C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEA5021D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3EF21974
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447779;
-	bh=/wUskEBPkDlGuTw0FJYcgRRsQyOeMwrGcwZ4cte4Wio=;
+	s=default; t=1592447785;
+	bh=r+sGKsCZdJ6ItZ8zWIiODoB6JpSbLYt8qmx53pm6jdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WFHYSfOVIF+a4Bpge/aeNWKfhIzPVlkGdue9Z5BpHnRbt2c9a8S1gW6Hua5OR3TQa
-	 ofwecQ2lHmT2gf9mB6tZ7wfxfR3H7TEKgoHOTdtPCap5BqFuuhmjFz3q9hdhDBTHNq
-	 wyf8lYgdM141ZJY4Tg6+sZ94uWnegtDfVRKFG1YI=
+	b=Wv8D7pZOQdq1o89GKxGvAqq0e/2q1BQ3SJUwwt/phhmH9WPf3umoKiT2U/56tVVcQ
+	 1+AUsEzlIU1Z7wqw+d3UX+CxJqklnZwyvK7HacdOo8B7vbs4K26S03cOj/dwgXQmWE
+	 o/FTsA8rnUpnjriyazqXZKY4dDlJyakgqpdzjxoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgFRBN7 (ORCPT
+        id S2387752AbgFRCgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:13:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41656 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:36:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728995AbgFRBMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:50 -0400
+        id S1728079AbgFRBN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22A3321924;
-        Thu, 18 Jun 2020 01:12:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB436221F1;
+        Thu, 18 Jun 2020 01:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442769;
-        bh=/wUskEBPkDlGuTw0FJYcgRRsQyOeMwrGcwZ4cte4Wio=;
+        s=default; t=1592442837;
+        bh=r+sGKsCZdJ6ItZ8zWIiODoB6JpSbLYt8qmx53pm6jdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c+hCTKDGJxy9oH0L/DBpdkf3BsnF9vUfgayR6mawzI+17hZ38ECHlvcyzZwcyEGAc
-         dphGmdWmCfcdINv5UQznF2umiOJBaullXBymIooZXzvAy5przLiRbyjCArG/ofRWZt
-         +6A4Wgy7JE3mcwM6ulwTl/FHuDVlb8cSrNWmd1qw=
+        b=fbfnFGRP0qn5v+2EEER51ha004HaA8Eqg0X+VJCWtYFkJldX+01Vj7hlg+u9wqjNG
+         BeqnrlOnKk5uS+3+hMlVJ76qfiLs/0NbjdQMmY8qQTqX1//xPbAJ81O6te5VQGW3J8
+         MlLx7FKijU3dvpw0zba4lm8CgLwficXsd++G1Oow=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Rander Wang <rander.wang@intel.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Shuming Fan <shumingf@realtek.com>,
-        Jack Yu <jack.yu@realtek.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 217/388] ASoC: codecs: rt*-sdw: fix memory leak in set_sdw_stream()
-Date:   Wed, 17 Jun 2020 21:05:14 -0400
-Message-Id: <20200618010805.600873-217-sashal@kernel.org>
+Cc:     Potnuri Bharat Teja <bharat@chelsio.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 271/388] RDMA/iw_cxgb4: cleanup device debugfs entries on ULD remove
+Date:   Wed, 17 Jun 2020 21:06:08 -0400
+Message-Id: <20200618010805.600873-271-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -63,106 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Potnuri Bharat Teja <bharat@chelsio.com>
 
-[ Upstream commit 07b542fe831cbefce163ad1b3aa7292c8a6332b8 ]
+[ Upstream commit 49ea0c036ede81f126f1a9389d377999fdf5c5a1 ]
 
-Now that the sdw_stream is allocated in machine driver,
-set_sdw_stream() is also called with a NULL argument during the
-dailink shutdown.
+Remove device specific debugfs entries immediately if LLD detaches a
+particular ULD device in case of fatal PCI errors.
 
-In this case, the drivers should not allocate any memory, and just
-return.
-
-Detected with KASAN/kmemleak.
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Reviewed-by: Rander Wang <rander.wang@intel.com>
-Cc: Oder Chiou <oder_chiou@realtek.com>
-Cc: Shuming Fan <shumingf@realtek.com>
-Cc: Jack Yu <jack.yu@realtek.com>
-Link: https://lore.kernel.org/r/20200515211531.11416-3-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20200524190814.17599-1-bharat@chelsio.com
+Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt1308-sdw.c | 3 +++
- sound/soc/codecs/rt5682.c     | 3 +++
- sound/soc/codecs/rt700.c      | 3 +++
- sound/soc/codecs/rt711.c      | 3 +++
- sound/soc/codecs/rt715.c      | 3 +++
- 5 files changed, 15 insertions(+)
+ drivers/infiniband/hw/cxgb4/device.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/rt1308-sdw.c b/sound/soc/codecs/rt1308-sdw.c
-index a5a7e46de246..a7f45191364d 100644
---- a/sound/soc/codecs/rt1308-sdw.c
-+++ b/sound/soc/codecs/rt1308-sdw.c
-@@ -482,6 +482,9 @@ static int rt1308_set_sdw_stream(struct snd_soc_dai *dai, void *sdw_stream,
+diff --git a/drivers/infiniband/hw/cxgb4/device.c b/drivers/infiniband/hw/cxgb4/device.c
+index 599340c1f0b8..541dbcf22d0e 100644
+--- a/drivers/infiniband/hw/cxgb4/device.c
++++ b/drivers/infiniband/hw/cxgb4/device.c
+@@ -953,6 +953,7 @@ void c4iw_dealloc(struct uld_ctx *ctx)
+ static void c4iw_remove(struct uld_ctx *ctx)
  {
- 	struct sdw_stream_data *stream;
- 
-+	if (!sdw_stream)
-+		return 0;
-+
- 	stream = kzalloc(sizeof(*stream), GFP_KERNEL);
- 	if (!stream)
- 		return -ENOMEM;
-diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
-index d36f560ad7a8..c4892af14850 100644
---- a/sound/soc/codecs/rt5682.c
-+++ b/sound/soc/codecs/rt5682.c
-@@ -2958,6 +2958,9 @@ static int rt5682_set_sdw_stream(struct snd_soc_dai *dai, void *sdw_stream,
- {
- 	struct sdw_stream_data *stream;
- 
-+	if (!sdw_stream)
-+		return 0;
-+
- 	stream = kzalloc(sizeof(*stream), GFP_KERNEL);
- 	if (!stream)
- 		return -ENOMEM;
-diff --git a/sound/soc/codecs/rt700.c b/sound/soc/codecs/rt700.c
-index ff68f0e4f629..687ac2153666 100644
---- a/sound/soc/codecs/rt700.c
-+++ b/sound/soc/codecs/rt700.c
-@@ -860,6 +860,9 @@ static int rt700_set_sdw_stream(struct snd_soc_dai *dai, void *sdw_stream,
- {
- 	struct sdw_stream_data *stream;
- 
-+	if (!sdw_stream)
-+		return 0;
-+
- 	stream = kzalloc(sizeof(*stream), GFP_KERNEL);
- 	if (!stream)
- 		return -ENOMEM;
-diff --git a/sound/soc/codecs/rt711.c b/sound/soc/codecs/rt711.c
-index 2daed7692a3b..65b59dbfb43c 100644
---- a/sound/soc/codecs/rt711.c
-+++ b/sound/soc/codecs/rt711.c
-@@ -906,6 +906,9 @@ static int rt711_set_sdw_stream(struct snd_soc_dai *dai, void *sdw_stream,
- {
- 	struct sdw_stream_data *stream;
- 
-+	if (!sdw_stream)
-+		return 0;
-+
- 	stream = kzalloc(sizeof(*stream), GFP_KERNEL);
- 	if (!stream)
- 		return -ENOMEM;
-diff --git a/sound/soc/codecs/rt715.c b/sound/soc/codecs/rt715.c
-index 2cbc57b16b13..099c8bd20006 100644
---- a/sound/soc/codecs/rt715.c
-+++ b/sound/soc/codecs/rt715.c
-@@ -530,6 +530,9 @@ static int rt715_set_sdw_stream(struct snd_soc_dai *dai, void *sdw_stream,
- 
- 	struct sdw_stream_data *stream;
- 
-+	if (!sdw_stream)
-+		return 0;
-+
- 	stream = kzalloc(sizeof(*stream), GFP_KERNEL);
- 	if (!stream)
- 		return -ENOMEM;
+ 	pr_debug("c4iw_dev %p\n", ctx->dev);
++	debugfs_remove_recursive(ctx->dev->debugfs_root);
+ 	c4iw_unregister_device(ctx->dev);
+ 	c4iw_dealloc(ctx);
+ }
 -- 
 2.25.1
 
