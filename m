@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA475C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7434C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF8DB20890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C7220890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731338AbgFRUjb (ORCPT
+        id S1732341AbgFRUmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:39:31 -0400
+        Thu, 18 Jun 2020 16:42:14 -0400
 Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:48844 "EHLO
         EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730895AbgFRUjI (ORCPT
+        by vger.kernel.org with ESMTP id S1731337AbgFRUjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:39:08 -0400
+        Thu, 18 Jun 2020 16:39:31 -0400
 Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
  EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Thu, 18 Jun 2020 13:38:59 -0700
+ 15.0.1156.6; Thu, 18 Jun 2020 13:39:22 -0700
 Received: from sc9-mailhost2.vmware.com (unknown [10.129.221.29])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 83FB5B2659;
-        Thu, 18 Jun 2020 16:39:02 -0400 (EDT)
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 4CFFBB265A;
+        Thu, 18 Jun 2020 16:39:25 -0400 (EDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -34,9 +34,9 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Julien Thierry <jthierry@redhat.com>,
         Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH v5 05/51] objtool: recordmcount: Search for __mcount_loc before walking the sections
-Date:   Thu, 18 Jun 2020 13:37:51 -0700
-Message-ID: <99f8b7e372de14f3a046a2b47ff39a7615c78098.1592510545.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH v5 33/51] objtool: mcount: Remove wrapper for ELF relocation type
+Date:   Thu, 18 Jun 2020 13:38:19 -0700
+Message-ID: <2dc80025d1c8c251f65c18c29393ea70d2e344d9.1592510545.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1592510545.git.mhelsley@vmware.com>
 References: <cover.1592510545.git.mhelsley@vmware.com>
@@ -50,102 +50,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-recordmcount iterates over the sections in the order they're
-listed in the ELF file and checks whether the section name
-indicates it's of interest. Objtool's elf code works differently
- -- it scans the elf file and builds up data structures
-representing the headers, sections, etc. and then supplies
-functions to search these structures. Both walk the elf file
-in order, however objtool uses more memory to enable faster
-searches it needs for other tools such as the reliable backtrace
-support offered by the ORC unwinder.
-
-Rather than walk the section table a second time in the recordmcount
-code, we use objtool's elf code to search for the section
-recordmcount is interested in. This also simplifies flow and means
-we can easily check for already-processed object files before we
-do any of the more complex things recordmcount does.
-
-This also allows us to remove the already_has_rel_mcount string
-pointer trick.
+Remove the last uses of the Elf_Rela wrapper by passing the
+size of the relocations we're dealing with as a parameter.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/recordmcount.c |  4 ----
- tools/objtool/recordmcount.h | 17 +++--------------
- 2 files changed, 3 insertions(+), 18 deletions(-)
+ tools/objtool/recordmcount.c | 4 ++--
+ tools/objtool/recordmcount.h | 7 ++-----
+ 2 files changed, 4 insertions(+), 7 deletions(-)
 
 diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-index b2c606eb269b..f585bf7f45f5 100644
+index b9f15fc1f40e..6db035252b6c 100644
 --- a/tools/objtool/recordmcount.c
 +++ b/tools/objtool/recordmcount.c
-@@ -208,8 +208,6 @@ static void *mmap_file(char const *fname)
- 	} else
- 		mmap_failed = 0;
- out:
--	elf_close(lf);
--	lf = NULL;
- 	fd_map = -1;
- 
- 	file_end = file_map + sb.st_size;
-@@ -424,8 +422,6 @@ static int is_mcounted_section_name(char const *const txtname)
- 		strcmp(".cpuidle.text", txtname) == 0;
- }
- 
--static char const *already_has_rel_mcount = "success"; /* our work here is done! */
--
- /* 32 bit and 64 bit are very similar */
- #include "recordmcount.h"
- #define RECORD_MCOUNT_64
+@@ -575,7 +575,7 @@ static int do_file(char const *const fname)
+ 			is_fake_mcount = MIPS_is_fake_mcount;
+ 		}
+ 		loc_size = 4;
+-		rc = do32(reltype);
++		rc = do32(reltype, sizeof(Elf32_Rela));
+ 		break;
+ 	case ELFCLASS64: {
+ 		if (lf->ehdr.e_ehsize != sizeof(Elf64_Ehdr)
+@@ -593,7 +593,7 @@ static int do_file(char const *const fname)
+ 			is_fake_mcount = MIPS_is_fake_mcount;
+ 		}
+ 		loc_size = 8;
+-		rc = do64(reltype);
++		rc = do64(reltype, sizeof(Elf64_Rela));
+ 		break;
+ 	}
+ 	}  /* end switch */
 diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index f9b19524da11..a96ffcef515a 100644
+index 2dd303d51b78..07fc93917736 100644
 --- a/tools/objtool/recordmcount.h
 +++ b/tools/objtool/recordmcount.h
-@@ -554,11 +554,6 @@ static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
- 	Elf_Shdr const *const txthdr = &shdr0[w(relhdr->sh_info)];
- 	char const *const txtname = &shstrtab[w(txthdr->sh_name)];
+@@ -18,18 +18,15 @@
+  * Copyright 2010 Steven Rostedt <srostedt@redhat.com>, Red Hat Inc.
+  */
+ #undef do_func
+-#undef Elf_Rela
  
--	if (strcmp("__mcount_loc", txtname) == 0) {
--		fprintf(stderr, "warning: __mcount_loc already exists: %s\n",
--			fname);
--		return already_has_rel_mcount;
--	}
- 	if (w(txthdr->sh_type) != SHT_PROGBITS ||
- 	    !(_w(txthdr->sh_flags) & SHF_EXECINSTR))
- 		return NULL;
-@@ -587,10 +582,6 @@ static unsigned tot_relsize(Elf_Shdr const *const shdr0,
+ #ifdef RECORD_MCOUNT_64
+ # define do_func		do64
+-# define Elf_Rela		Elf64_Rela
+ #else
+ # define do_func		do32
+-# define Elf_Rela		Elf32_Rela
+ #endif
  
- 	for (; nhdr; --nhdr, ++shdrp) {
- 		txtname = has_rel_mcount(shdrp, shdr0, shstrtab, fname);
--		if (txtname == already_has_rel_mcount) {
--			totrelsz = 0;
--			break;
--		}
- 		if (txtname && is_mcounted_section_name(txtname))
- 			totrelsz += _w(shdrp->sh_size);
+ /* Overall supervision for Elf32 ET_REL file. */
+-static int do_func(unsigned const reltype)
++static int do_func(unsigned const reltype, size_t rela_size)
+ {
+ 	/* Upper bound on space: assume all relevant relocs are for mcount. */
+ 	unsigned       totrelsz;
+@@ -68,7 +65,7 @@ static int do_func(unsigned const reltype)
+ 		return -1;
  	}
-@@ -628,6 +619,9 @@ static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
  
- 	int result = 0;
+-	is_rela = (sizeof(Elf_Rela) == rel_entsize);
++	is_rela = (rela_size == rel_entsize);
  
-+	if (find_section_by_name(lf, "__mcount_loc") != NULL)
-+		return 0;
-+
- 	totrelsz = tot_relsize(shdr0, nhdr, shstrtab, fname);
- 	if (totrelsz == 0)
- 		return 0;
-@@ -649,11 +643,6 @@ static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
- 	for (relhdr = shdr0, k = nhdr; k; --k, ++relhdr) {
- 		char const *const txtname = has_rel_mcount(relhdr, shdr0,
- 			shstrtab, fname);
--		if (txtname == already_has_rel_mcount) {
--			result = 0;
--			file_updated = 0;
--			goto out; /* Nothing to be done; don't append! */
--		}
- 		if (txtname && is_mcounted_section_name(txtname)) {
- 			unsigned int recsym;
- 			uint_t recval = 0;
+ 	/* add section: __mcount_loc */
+ 	mlocs = elf_create_section(lf, mc_name, sizeof(*mloc0), 0);
 -- 
 2.20.1
 
