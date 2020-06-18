@@ -2,83 +2,132 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED635C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1415CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B043420739
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:18:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="MLnc9/S4"
+	by mail.kernel.org (Postfix) with ESMTP id EADF820739
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:18:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgFROST (ORCPT
+        id S1730602AbgFROSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 18 Jun 2020 10:18:23 -0400
+Received: from mga03.intel.com ([134.134.136.65]:3868 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728340AbgFROST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Jun 2020 10:18:19 -0400
-Received: from mail-m964.mail.126.com ([123.126.96.4]:49278 "EHLO
-        mail-m964.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727078AbgFROSS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:18:18 -0400
-X-Greylist: delayed 1849 seconds by postgrey-1.27 at vger.kernel.org; Thu, 18 Jun 2020 10:18:16 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=dE/u/Olq00IitY+Hxe
-        hpcTZ9LTITxRuFXdDzNJlgZMU=; b=MLnc9/S4PnYP4jmWCYMN3uxxK+/xLKP2GX
-        kLHeK/H888C0chYzZP4d7SxJk1zrzJTKN/A8b+IFdy2H8K6Yxju0KIJFjThOCSK5
-        sWsk8Z4uoLc8TXdrLoh38C/7jp762t5ErjVnJk7KTpEJIwH4LpB7r5KFqCkK96Sz
-        eaV1q8Nng=
-Received: from zhixu-home.lan (unknown [114.249.228.138])
-        by smtp9 (Coremail) with SMTP id NeRpCgBnbwu2b+tekoqNSA--.114S2;
-        Thu, 18 Jun 2020 21:44:23 +0800 (CST)
-From:   Zhixu Zhao <zhixu001@126.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Rob Springer <rspringer@google.com>,
-        Todd Poynor <toddpoynor@google.com>,
-        Ben Chan <benchan@chromium.org>, Richard Yeh <rcy@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2] staging: gasket: core: Fix a coding style issue in gasket_core.c
-Date:   Thu, 18 Jun 2020 21:44:22 +0800
-Message-Id: <20200618134422.24278-1-zhixu001@126.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200617161127.32006-1-zhixu001@126.com>
-References: <20200617161127.32006-1-zhixu001@126.com>
-X-CM-TRANSID: NeRpCgBnbwu2b+tekoqNSA--.114S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZF4kuFy7tr1fGrW3AFyrWFg_yoW3AwbEkr
-        WxZrykG3Z8GasYyrWUCrsxJF9rCw1fJFnY93y5t34DG34kAwsxXws7Gr40krnxZ3Z7X3Zx
-        Z3sFvas7Jw12gjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUeLNVDUUUUU==
-X-Originating-IP: [114.249.228.138]
-X-CM-SenderInfo: x2kl53qqqrqiyswou0bp/1tbiuxdHfFpEA3VICwAAs8
+IronPort-SDR: 1PoJ4qzKIM8deSZtzmTrO0NTUE7emF8vNCevOnRf4qn7R+IOOOpojqrMMOSWNmw81JtPypTKWu
+ HvCrsL363k6Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9655"; a="142528941"
+X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
+   d="scan'208";a="142528941"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 07:18:18 -0700
+IronPort-SDR: Z3EwOfLlV2OW9hD3bZAORhaaaJXjZT3oK6CMXq2HjaoC/5xRKHBH8qvIpgsk9o744/qlyJ7jWT
+ RvboVXVkhOdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
+   d="scan'208";a="277637357"
+Received: from ryanr2x-mobl1.amr.corp.intel.com (HELO [10.255.0.133]) ([10.255.0.133])
+  by orsmga006.jf.intel.com with ESMTP; 18 Jun 2020 07:18:10 -0700
+Subject: Re: [PATCH 2/4] KVM: x86: Introduce paravirt feature CR0/CR4 pinning
+To:     John Andersen <john.s.andersen@intel.com>, corbet@lwn.net,
+        pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, shuah@kernel.org,
+        sean.j.christopherson@intel.com, liran.alon@oracle.com,
+        drjones@redhat.com, rick.p.edgecombe@intel.com,
+        kristen@linux.intel.com
+Cc:     vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, mchehab+huawei@kernel.org,
+        gregkh@linuxfoundation.org, paulmck@kernel.org,
+        pawan.kumar.gupta@linux.intel.com, jgross@suse.com,
+        mike.kravetz@oracle.com, oneukum@suse.com, luto@kernel.org,
+        peterz@infradead.org, fenghua.yu@intel.com,
+        reinette.chatre@intel.com, vineela.tummalapalli@intel.com,
+        dave.hansen@linux.intel.com, arjan@linux.intel.com,
+        caoj.fnst@cn.fujitsu.com, bhe@redhat.com, nivedita@alum.mit.edu,
+        keescook@chromium.org, dan.j.williams@intel.com,
+        eric.auger@redhat.com, aaronlewis@google.com, peterx@redhat.com,
+        makarandsonare@google.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+References: <20200617190757.27081-1-john.s.andersen@intel.com>
+ <20200617190757.27081-3-john.s.andersen@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <0fa9682e-59d4-75f7-366f-103d6b8e71b8@intel.com>
+Date:   Thu, 18 Jun 2020 07:18:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200617190757.27081-3-john.s.andersen@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At 2020-06-18 03:10:02, "Dan Carpenter" <dan.carpenter@oracle.com> wrote:
->It would be better to do this in the declaration block so you can change
->the earlier two uses in this function:
->
->+	struct gasket_bar_data *data = &gasket_dev->bar_data[bar_num];
->-	ulong desc_bytes = driver_desc->bar_descriptions[bar_num].size;
->+	ulong desc_bytes = data->size;
->
->...
->
->-	if (driver_desc->bar_descriptions[bar_num].type != PCI_BAR) {
->+	if (data->type != PCI_BAR) {
+On 6/17/20 12:07 PM, John Andersen wrote:
+> +#define KVM_CR0_PIN_ALLOWED	(X86_CR0_WP)
+> +#define KVM_CR4_PIN_ALLOWED	(X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP)
 
-`struct gasket_bar_data *data` and `driver_desc->bar_descriptions[bar_num]`
-are not the same thing as I see it. Besides, `struct gasket_bar_data`
-doesn't have a `size` field (it does have a `length_bytes` field).
-So... did I miss anything?
+Why *is* there an allowed set?  Why don't we just allow everything?
 
--- 
-Zhixu Zhao
-https://github.com/zhaozhixu
+Shouldn't we also pin any unknown bits?  The CR4.FSGSBASE bit is an
+example of something that showed up CPUs without Linux knowing about it.
+ If set, it causes problems.  This set couldn't have helped FSGSBASE
+because it is not in the allowed set.
 
+Let's say Intel loses its marbles and adds a CR4 bit that lets userspace
+write to kernel memory.  Linux won't set it, but an attacker would go
+after it, first thing.
