@@ -2,112 +2,185 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B0BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B602204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64ED2204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:06:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uKqv+S2F"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CdiXaLl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731332AbgFRPGO (ORCPT
+        id S1731367AbgFRPG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:06:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730950AbgFRPGM (ORCPT
+        Thu, 18 Jun 2020 11:06:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20441 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731055AbgFRPG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:06:12 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 877AEC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:06:12 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id n6so4796602otl.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:06:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l2w5iTdi6pjAzijl7Bc7YhZ6+y+qiHcAmJvuLO19co4=;
-        b=uKqv+S2FuImmiuJOy8hZFJRZW0IbmUHdc3pzKLWsElMRzEIfB8Dmat6FhfQHbQDXMV
-         zaNY62+U/oXQonZrN9Y9e20vfNRQuYJEKPpMiTvoBq7VCTtoebGjebK0ZDeH4W55Wmd2
-         sZ40DQcu7wpBiE+ejR8UN/nlwkzMkpv3AuXt0DcSuQQ9nq3xfgnS018C9wdO8vkmT39c
-         1a9Hp0pZZi0h+cmXA1W/NhPASOUS8kRtKWetnoLN2fqtGigyg3O9qb/hw8D1XkBWtyvC
-         BswPOGNAU2Sy5tWTbp28S0VaW7wlKuN1h2Tz+FYM45G4KATczAU5h4YNKFuRehHgdEWo
-         e7yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l2w5iTdi6pjAzijl7Bc7YhZ6+y+qiHcAmJvuLO19co4=;
-        b=biGD3XBYzjusR4fd3dRl9djWLSCuE3hRilLXmQemEnRhaltQhR453yx3x2qHZimyHs
-         8zpOzo24x70BER1yscRxzi8TDYjSGvnyu4/1uampTq9YBgr80soGLqUfb790unZySdrF
-         BRzoZwjyI8uO09uXlW3rU1l+uutsCoKK3QIKIRcVdbz02BCvyCg9gaeOEDoSXAHD6FmH
-         sv0av2Uunlvx0sDze/utuooKoC5+CR/62DdLMQM2/gqyQt6ANebJ+Y5eStkmk0bNv55o
-         jQkThaDZCqISW4Q9IuLxfziBSZi+45kitnuUUHNdqtEsFUuZVVtXNQCd6FFgLqGIirut
-         WlOA==
-X-Gm-Message-State: AOAM531cls2y2CABEhWZWuF56Vjzg207Ufq/CZDap0b+j6bVkRUgRBLh
-        sa7PMTaXGIfo2lJwTNQkOIyBWF+rqRzR4s1EjtlIpQ==
-X-Google-Smtp-Source: ABdhPJzFPc1NdRB73G1tM7LvNF+rN3FrlkyYZp5Y/15SFFi5XKr8i7Hp6GOLUfOfs2/lOt5NXmv2FO+R/e84mctWF9M=
-X-Received: by 2002:a9d:58c9:: with SMTP id s9mr4074802oth.233.1592492771742;
- Thu, 18 Jun 2020 08:06:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200618144407.520952071@infradead.org> <20200618144801.819246178@infradead.org>
-In-Reply-To: <20200618144801.819246178@infradead.org>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 18 Jun 2020 17:06:00 +0200
-Message-ID: <CANpmjNNpnW2AyzKOQ8tuXvhs04Kugjuj0y+j4wMxA7YfDyOwxg@mail.gmail.com>
-Subject: Re: [PATCH 4/7] x86/entry: Increase entry_stack size to a full page
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Mark Rutland <mark.rutland@arm.com>, mhelsley@vmware.com,
-        Steven Rostedt <rostedt@goodmis.org>, jthierry@redhat.com,
-        mbenes@suse.cz, Andy Lutomirski <luto@amacapital.net>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 18 Jun 2020 11:06:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592492784;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=B3hPwQ1JMj6rF/e1bp2vt0LwdeFLVi97mXNQvAPwIN0=;
+        b=CdiXaLl35EMwGxpmgFloM7Q9Dtm9Yn9Xrqb9cCBSU2SrrQA4/N2axFfG0mh00THKMI8SOo
+        7CkKOY/nkZ4CETYUH5yyKx7nrO81wWagz6AKoR8tNjnoe2XX6vTpC4JJQBMheYG1YaFgGl
+        9N3NO1oYoU+EYgy7D6JAqhMuGK7sDf4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-160-xk1ufODnM2SCYbVy4w6MZg-1; Thu, 18 Jun 2020 11:06:22 -0400
+X-MC-Unique: xk1ufODnM2SCYbVy4w6MZg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7111D19200CE;
+        Thu, 18 Jun 2020 15:06:21 +0000 (UTC)
+Received: from llong.com (ovpn-118-66.rdu2.redhat.com [10.10.118.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C03505DA33;
+        Thu, 18 Jun 2020 15:06:07 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v3] xfs: Fix false positive lockdep warning with sb_internal & fs_reclaim
+Date:   Thu, 18 Jun 2020 11:05:57 -0400
+Message-Id: <20200618150557.23741-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jun 2020 at 16:50, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Marco crashed in bad_iret with a Clang11/KCSAN build due to
-> overflowing the stack. Now that we run C code on it, expand it to a
-> full page.
->
-> Suggested-by: Andy Lutomirski <luto@amacapital.net>
-> Reported-by: Marco Elver <elver@google.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Depending on the workloads, the following circular locking dependency
+warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
+lock) may show up:
 
-This fixes the unpredictable crashes.
+======================================================
+WARNING: possible circular locking dependency detected
+5.0.0-rc1+ #60 Tainted: G        W
+------------------------------------------------------
+fsfreeze/4346 is trying to acquire lock:
+0000000026f1d784 (fs_reclaim){+.+.}, at:
+fs_reclaim_acquire.part.19+0x5/0x30
 
-Tested-by: Marco Elver <elver@google.com>
+but task is already holding lock:
+0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
 
-Thanks!
+which lock already depends on the new lock.
+  :
+ Possible unsafe locking scenario:
 
+       CPU0                    CPU1
+       ----                    ----
+  lock(sb_internal);
+                               lock(fs_reclaim);
+                               lock(sb_internal);
+  lock(fs_reclaim);
 
-> ---
->  arch/x86/include/asm/processor.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> --- a/arch/x86/include/asm/processor.h
-> +++ b/arch/x86/include/asm/processor.h
-> @@ -370,7 +370,7 @@ struct x86_hw_tss {
->  #define IO_BITMAP_OFFSET_INVALID       (__KERNEL_TSS_LIMIT + 1)
->
->  struct entry_stack {
-> -       unsigned long           words[64];
-> +       char    stack[PAGE_SIZE];
->  };
->
->  struct entry_stack_page {
->
->
+ *** DEADLOCK ***
+
+4 locks held by fsfreeze/4346:
+ #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
+ #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
+ #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
+ #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+
+stack backtrace:
+Call Trace:
+ dump_stack+0xe0/0x19a
+ print_circular_bug.isra.10.cold.34+0x2f4/0x435
+ check_prev_add.constprop.19+0xca1/0x15f0
+ validate_chain.isra.14+0x11af/0x3b50
+ __lock_acquire+0x728/0x1200
+ lock_acquire+0x269/0x5a0
+ fs_reclaim_acquire.part.19+0x29/0x30
+ fs_reclaim_acquire+0x19/0x20
+ kmem_cache_alloc+0x3e/0x3f0
+ kmem_zone_alloc+0x79/0x150
+ xfs_trans_alloc+0xfa/0x9d0
+ xfs_sync_sb+0x86/0x170
+ xfs_log_sbcount+0x10f/0x140
+ xfs_quiesce_attr+0x134/0x270
+ xfs_fs_freeze+0x4a/0x70
+ freeze_super+0x1af/0x290
+ do_vfs_ioctl+0xedc/0x16c0
+ ksys_ioctl+0x41/0x80
+ __x64_sys_ioctl+0x73/0xa9
+ do_syscall_64+0x18f/0xd23
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+This is a false positive as all the dirty pages are flushed out before
+the filesystem can be frozen.
+
+One way to avoid this splat is to add GFP_NOFS to the affected allocation
+calls. This is what PF_MEMALLOC_NOFS per-process flag is for. This does
+reduce the potential source of memory where reclaim can be done. This
+shouldn't really matter unless the system is really running out of
+memory.  In that particular case, the filesystem freeze operation may
+fail while it was succeeding previously.
+
+Without this patch, the command sequence below will show that the lock
+dependency chain sb_internal -> fs_reclaim exists.
+
+ # fsfreeze -f /home
+ # fsfreeze --unfreeze /home
+ # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
+
+After applying the patch, such sb_internal -> fs_reclaim lock dependency
+chain can no longer be found. Because of that, the locking dependency
+warning will not be shown.
+
+Suggested-by: Dave Chinner <david@fromorbit.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ fs/xfs/xfs_super.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 379cbff438bc..6a95c82f2f1b 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -913,11 +913,33 @@ xfs_fs_freeze(
+ 	struct super_block	*sb)
+ {
+ 	struct xfs_mount	*mp = XFS_M(sb);
++	unsigned long pflags;
++	int ret;
+ 
++	/*
++	 * A fs_reclaim pseudo lock is added to check for potential deadlock
++	 * condition with fs reclaim. The following lockdep splat was hit
++	 * occasionally. This is actually a false positive as the allocation
++	 * is being done only after the frozen filesystem is no longer dirty.
++	 * One way to avoid this splat is to add GFP_NOFS to the affected
++	 * allocation calls. This is what PF_MEMALLOC_NOFS is for.
++	 *
++	 *       CPU0                    CPU1
++	 *       ----                    ----
++	 *  lock(sb_internal);
++	 *                               lock(fs_reclaim);
++	 *                               lock(sb_internal);
++	 *  lock(fs_reclaim);
++	 *
++	 *  *** DEADLOCK ***
++	 */
++	current_set_flags_nested(&pflags, PF_MEMALLOC_NOFS);
+ 	xfs_stop_block_reaping(mp);
+ 	xfs_save_resvblks(mp);
+ 	xfs_quiesce_attr(mp);
+-	return xfs_sync_sb(mp, true);
++	ret = xfs_sync_sb(mp, true);
++	current_restore_flags_nested(&pflags, PF_MEMALLOC_NOFS);
++	return ret;
+ }
+ 
+ STATIC int
+-- 
+2.18.1
+
