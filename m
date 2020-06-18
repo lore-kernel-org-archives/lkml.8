@@ -2,132 +2,211 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6170C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87183C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCE9B21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6224A21548
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:39:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MHeeNIj+"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HrFXgaGS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbgFRJev (ORCPT
+        id S1729179AbgFRJjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 05:34:51 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:44297 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728568AbgFRJeu (ORCPT
+        Thu, 18 Jun 2020 05:39:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728568AbgFRJjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 05:34:50 -0400
-X-UUID: 855350d237af447598937a20df6f1057-20200618
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=fazQeAs8inAvGwYcQXqBGXqOlhYwCeTQdth0t/3tLpc=;
-        b=MHeeNIj++emO1PxnCKYQiheDFmpZ4QBACfg0h4/OsDUonE38uDizhI+ibfWfeYHrZWzdKmqjA4pspetmXciZRh0aMpC3nZVDYa6Z/T8lj5eJdfJoht83VIS8lU3VV4mz8emEXDFGXanQq7R5q4LS8CnMUfrDFmNHFsNV7hCie9k=;
-X-UUID: 855350d237af447598937a20df6f1057-20200618
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1739908511; Thu, 18 Jun 2020 17:34:39 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 18 Jun
- 2020 17:34:36 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 18 Jun 2020 17:34:33 +0800
-Message-ID: <1592472725.20080.12.camel@mhfsdcap03>
-Subject: Re: [PATCH v4 06/17] media: mtk-jpeg: Get rid of
- mtk_smi_larb_get/put
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>
-CC:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        "Evan Green" <evgreen@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Tomasz Figa" <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <youlin.pei@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "Matthias Kaehlcke" <mka@chromium.org>, <anan.sun@mediatek.com>,
-        <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
-        <ming-fan.chen@mediatek.com>, <eizan@chromium.org>,
-        <acourbot@chromium.org>, Rick Chang <rick.chang@mediatek.com>,
-        <xia.jiang@mediatek.com>
-Date:   Thu, 18 Jun 2020 17:32:05 +0800
-In-Reply-To: <1590826218-23653-7-git-send-email-yong.wu@mediatek.com>
-References: <1590826218-23653-1-git-send-email-yong.wu@mediatek.com>
-         <1590826218-23653-7-git-send-email-yong.wu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 18 Jun 2020 05:39:17 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10004C0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 02:39:17 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x6so5294324wrm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 02:39:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Y0bpfyCrWt4zdb6/EXasOU3eozhBYxN9FnwzUj24PuQ=;
+        b=HrFXgaGS7FFW9ZOTUWlteIRaEZJwVITr5ZAu2e5bdEoy147Js7Q5r2LGOa4voki6g8
+         HkoaScEFNyzMmgarJOTQIWYtKS2qHA8iuwffCBbKyjMEU/xsL66QRzxXXiTTxYxun0OF
+         O1qgqkUB5Futt/bNmPzw94+KN/bBBXSFNzt5WTx9JX2P5LjOGiKaToAJT4rD/uMd4Pj7
+         YZQlvsFNqR7PgKAv1NA1KA7XZCIa0H2iU4Oqj4ajoneQMHMFUkjYTM/47M1vR1tWh0C+
+         vcNilQK19bPM6sz20IYs5wp/LjD7xhS9wqZXFwsgP0M67BqdGJsduLgNZAnvFB0Rk41f
+         D6AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Y0bpfyCrWt4zdb6/EXasOU3eozhBYxN9FnwzUj24PuQ=;
+        b=NdGzl+nz6rkmX8AND2ESzwqfOSv0sL/jaPSsgQRTsP/eh0k69bABBRyE7Hl8zttOm1
+         Ysh9/c68cg4gAHbzNuSyk5cTqhQhp7MXtHyrpd6k5sgxk9476jtQAb2MAahj7tu6whzc
+         qBlMWXFaWqsAoRfgPiJKE0g3VK8Wqk/0F1u5mUQSbKDIjlr+bKd0FlIOH3WyBWrlosKL
+         OumPGNhpZcHrkI8Opv5ls9gMhEk/qTGWTtfItQ8TYHstNfCKujQ8JGzz7gPc9Ay6MSAf
+         VqV39vdtfQ4EtCJyRcZCGF772W/P/FjPvubP1ZPJ+0QT95uWv9UFyxCGZohZSRuyMx/s
+         xqYQ==
+X-Gm-Message-State: AOAM530hvNC5iKJHXmAF2seGjJo6avJrlUSZvS+1v6iMIsAbjj8u4sda
+        6E5eYU2zgSjOIDmuZVwwAA0O+9YVzQ2KbA==
+X-Google-Smtp-Source: ABdhPJyny8MDP2sg5Mtlq0GbaCcSgZBavlAzzJe7n1sbnDyHK+gk5UBc1SkF5CD/s9Dt8tirFraflQ==
+X-Received: by 2002:adf:db47:: with SMTP id f7mr3801168wrj.101.1592473154635;
+        Thu, 18 Jun 2020 02:39:14 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:9902:c1f0:76c7:9dbc? ([2a01:e35:2ec0:82b0:9902:c1f0:76c7:9dbc])
+        by smtp.gmail.com with ESMTPSA id d11sm2912413wrm.64.2020.06.18.02.39.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 02:39:13 -0700 (PDT)
+Subject: Re: [PATCH v3 0/5] mfd: Add support for Khadas Microcontroller
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     khilman@baylibre.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200608091739.2368-1-narmstrong@baylibre.com>
+ <20200618081957.GD2608702@dell>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <0421002f-5e09-b292-9066-310bd6a5ead8@baylibre.com>
+Date:   Thu, 18 Jun 2020 11:39:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: EAA0222707355DB3D9C41720DD63D68CCECEA4A8CC20861737BF3012552CC6C52000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200618081957.GD2608702@dell>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KyBSaWNrDQoNCk9uIFNhdCwgMjAyMC0wNS0zMCBhdCAxNjoxMCArMDgwMCwgWW9uZyBXdSB3cm90
-ZToNCj4gTWVkaWFUZWsgSU9NTVUgaGFzIGFscmVhZHkgYWRkZWQgZGV2aWNlX2xpbmsgYmV0d2Vl
-biB0aGUgY29uc3VtZXINCj4gYW5kIHNtaS1sYXJiIGRldmljZS4gSWYgdGhlIGpwZyBkZXZpY2Ug
-Y2FsbCB0aGUgcG1fcnVudGltZV9nZXRfc3luYywNCj4gdGhlIHNtaS1sYXJiJ3MgcG1fcnVudGlt
-ZV9nZXRfc3luYyBhbHNvIGJlIGNhbGxlZCBhdXRvbWF0aWNhbGx5Lg0KPiANCj4gQ0M6IFJpY2sg
-Q2hhbmcgPHJpY2suY2hhbmdAbWVkaWF0ZWsuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBZb25nIFd1
-IDx5b25nLnd1QG1lZGlhdGVrLmNvbT4NCj4gUmV2aWV3ZWQtYnk6IEV2YW4gR3JlZW4gPGV2Z3Jl
-ZW5AY2hyb21pdW0ub3JnPg0KPiAtLS0NCj4gIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpw
-ZWcvbXRrX2pwZWdfY29yZS5jIHwgMjIgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgZHJpdmVy
-cy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmggfCAgMiAtLQ0KPiAgMiBm
-aWxlcyBjaGFuZ2VkLCAyNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYyBiL2RyaXZlcnMvbWVkaWEv
-cGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jDQo+IGluZGV4IGY4MmE4MWEuLjIxZmJh
-NmYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pw
-ZWdfY29yZS5jDQo+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pw
-ZWdfY29yZS5jDQo+IEBAIC0yMSw3ICsyMSw2IEBADQo+ICAjaW5jbHVkZSA8bWVkaWEvdjRsMi1p
-b2N0bC5oPg0KPiAgI2luY2x1ZGUgPG1lZGlhL3ZpZGVvYnVmMi1jb3JlLmg+DQo+ICAjaW5jbHVk
-ZSA8bWVkaWEvdmlkZW9idWYyLWRtYS1jb250aWcuaD4NCj4gLSNpbmNsdWRlIDxzb2MvbWVkaWF0
-ZWsvc21pLmg+DQo+ICANCj4gICNpbmNsdWRlICJtdGtfanBlZ19ody5oIg0KPiAgI2luY2x1ZGUg
-Im10a19qcGVnX2NvcmUuaCINCj4gQEAgLTg5MywxMSArODkyLDYgQEAgc3RhdGljIGludCBtdGtf
-anBlZ19xdWV1ZV9pbml0KHZvaWQgKnByaXYsIHN0cnVjdCB2YjJfcXVldWUgKnNyY192cSwNCj4g
-IA0KPiAgc3RhdGljIHZvaWQgbXRrX2pwZWdfY2xrX29uKHN0cnVjdCBtdGtfanBlZ19kZXYgKmpw
-ZWcpDQo+ICB7DQo+IC0JaW50IHJldDsNCj4gLQ0KPiAtCXJldCA9IG10a19zbWlfbGFyYl9nZXQo
-anBlZy0+bGFyYik7DQo+IC0JaWYgKHJldCkNCj4gLQkJZGV2X2VycihqcGVnLT5kZXYsICJtdGtf
-c21pX2xhcmJfZ2V0IGxhcmJ2ZGVjIGZhaWwgJWRcbiIsIHJldCk7DQo+ICAJY2xrX3ByZXBhcmVf
-ZW5hYmxlKGpwZWctPmNsa19qZGVjX3NtaSk7DQo+ICAJY2xrX3ByZXBhcmVfZW5hYmxlKGpwZWct
-PmNsa19qZGVjKTsNCj4gIH0NCj4gQEAgLTkwNiw3ICs5MDAsNiBAQCBzdGF0aWMgdm9pZCBtdGtf
-anBlZ19jbGtfb2ZmKHN0cnVjdCBtdGtfanBlZ19kZXYgKmpwZWcpDQo+ICB7DQo+ICAJY2xrX2Rp
-c2FibGVfdW5wcmVwYXJlKGpwZWctPmNsa19qZGVjKTsNCj4gIAljbGtfZGlzYWJsZV91bnByZXBh
-cmUoanBlZy0+Y2xrX2pkZWNfc21pKTsNCj4gLQltdGtfc21pX2xhcmJfcHV0KGpwZWctPmxhcmIp
-Ow0KPiAgfQ0KPiAgDQo+ICBzdGF0aWMgaXJxcmV0dXJuX3QgbXRrX2pwZWdfZGVjX2lycShpbnQg
-aXJxLCB2b2lkICpwcml2KQ0KPiBAQCAtMTA1MSwyMSArMTA0NCw2IEBAIHN0YXRpYyBpbnQgbXRr
-X2pwZWdfcmVsZWFzZShzdHJ1Y3QgZmlsZSAqZmlsZSkNCj4gIA0KPiAgc3RhdGljIGludCBtdGtf
-anBlZ19jbGtfaW5pdChzdHJ1Y3QgbXRrX2pwZWdfZGV2ICpqcGVnKQ0KPiAgew0KPiAtCXN0cnVj
-dCBkZXZpY2Vfbm9kZSAqbm9kZTsNCj4gLQlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2Ow0K
-PiAtDQo+IC0Jbm9kZSA9IG9mX3BhcnNlX3BoYW5kbGUoanBlZy0+ZGV2LT5vZl9ub2RlLCAibWVk
-aWF0ZWssbGFyYiIsIDApOw0KPiAtCWlmICghbm9kZSkNCj4gLQkJcmV0dXJuIC1FSU5WQUw7DQo+
-IC0JcGRldiA9IG9mX2ZpbmRfZGV2aWNlX2J5X25vZGUobm9kZSk7DQo+IC0JaWYgKFdBUk5fT04o
-IXBkZXYpKSB7DQo+IC0JCW9mX25vZGVfcHV0KG5vZGUpOw0KPiAtCQlyZXR1cm4gLUVJTlZBTDsN
-Cj4gLQl9DQo+IC0Jb2Zfbm9kZV9wdXQobm9kZSk7DQo+IC0NCj4gLQlqcGVnLT5sYXJiID0gJnBk
-ZXYtPmRldjsNCj4gLQ0KPiAgCWpwZWctPmNsa19qZGVjID0gZGV2bV9jbGtfZ2V0KGpwZWctPmRl
-diwgImpwZ2RlYyIpOw0KPiAgCWlmIChJU19FUlIoanBlZy0+Y2xrX2pkZWMpKQ0KPiAgCQlyZXR1
-cm4gUFRSX0VSUihqcGVnLT5jbGtfamRlYyk7DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlh
-L3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuaCBiL2RyaXZlcnMvbWVkaWEvcGxhdGZv
-cm0vbXRrLWpwZWcvbXRrX2pwZWdfY29yZS5oDQo+IGluZGV4IDk5OWJkMTQuLjg1Nzk0OTQgMTAw
-NjQ0DQo+IC0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29y
-ZS5oDQo+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29y
-ZS5oDQo+IEBAIC00Nyw3ICs0Nyw2IEBAIGVudW0gbXRrX2pwZWdfY3R4X3N0YXRlIHsNCj4gICAq
-IEBkZWNfcmVnX2Jhc2U6CUpQRUcgcmVnaXN0ZXJzIG1hcHBpbmcNCj4gICAqIEBjbGtfamRlYzoJ
-CUpQRUcgaHcgd29ya2luZyBjbG9jaw0KPiAgICogQGNsa19qZGVjX3NtaToJSlBFRyBTTUkgYnVz
-IGNsb2NrDQo+IC0gKiBAbGFyYjoJCVNNSSBkZXZpY2UNCj4gICAqLw0KPiAgc3RydWN0IG10a19q
-cGVnX2RldiB7DQo+ICAJc3RydWN0IG11dGV4CQlsb2NrOw0KPiBAQCAtNjEsNyArNjAsNiBAQCBz
-dHJ1Y3QgbXRrX2pwZWdfZGV2IHsNCj4gIAl2b2lkIF9faW9tZW0JCSpkZWNfcmVnX2Jhc2U7DQo+
-ICAJc3RydWN0IGNsawkJKmNsa19qZGVjOw0KPiAgCXN0cnVjdCBjbGsJCSpjbGtfamRlY19zbWk7
-DQo+IC0Jc3RydWN0IGRldmljZQkJKmxhcmI7DQo+ICB9Ow0KPiAgDQo+ICAvKioNCg0K
+Hi,
+
+On 18/06/2020 10:19, Lee Jones wrote:
+> On Mon, 08 Jun 2020, Neil Armstrong wrote:
+> 
+>> The new Khadas VIM2, VIM3 and Edge boards embeds an on-board microcontroller
+>> connected via I2C.
+>>
+>> This Microcontroller is present on the Khadas VIM1, VIM2, VIM3 and Edge
+>> boards.
+>>
+>> It has multiple boot control features like password check, power-on
+>> options, power-off control and system FAN control on recent boards.
+>>
+>> Thie serie adds :
+>> - the bindings
+>> - the MFD driver
+>> - the Thermal Cooling cell driver
+>> - updates MAINTAINERS
+>> - add support into the Khadas VIM3/VIM3L DT
+>>
+>> Changes since v2 at [3]:
+>> - Removed NVMEM driver for separate submission
+>> - fixed MFD driver, header and Kconfig
+>> - fixed Thermal Kconfig
+>> - fixed MAINTAINERS files and path
+>>
+>> Changes since RFC v1 at [2]:
+>> - moved hwmon driver to thermal-only
+>> - moved the SM1 thermal nodes in a separate serie
+>> - added the bindings review tag from rob
+>>
+>> [1] http://lore.kernel.org/r/20200512093916.19676-1-narmstrong@baylibre.com
+>> [2] http://lore.kernel.org/r/20200421080102.22796-1-narmstrong@baylibre.com
+>> [3] http://lore.kernel.org/r/20200512132613.31507-1-narmstrong@baylibre.com
+>>
+>> Neil Armstrong (5):
+>>   dt-bindings: mfd: add Khadas Microcontroller bindings
+>>   mfd: add support for the Khadas System control Microcontroller
+>>   thermal: add support for the MCU controlled FAN on Khadas boards
+>>   MAINTAINERS: add myself as maintainer for Khadas MCU drivers
+>>   arm64: dts: meson-khadas-vim3: add Khadas MCU nodes
+> 
+> I'm a bit concerned by the missing patches from my inbox.
+
+Oops sorry, I'll resend the full serie with you in CC
+
+> 
+> Looks like you omitted to send me patch 3 and 5.
+> 
+> Hopefully the Thermal patch doesn't depend on the MFD one!
+
+It does ! It includes the include/linux/mfd/khadas-mcu.h file
+
+Amit reviewed the thermal patches already.
+
+Neil
+
+> 
+>>  .../devicetree/bindings/mfd/khadas,mcu.yaml   |  44 +++++
+>>  MAINTAINERS                                   |   9 +
+>>  .../boot/dts/amlogic/meson-khadas-vim3.dtsi   |  23 +++
+>>  drivers/mfd/Kconfig                           |  21 +++
+>>  drivers/mfd/Makefile                          |   1 +
+>>  drivers/mfd/khadas-mcu.c                      | 142 ++++++++++++++
+>>  drivers/thermal/Kconfig                       |  11 ++
+>>  drivers/thermal/Makefile                      |   1 +
+>>  drivers/thermal/khadas_mcu_fan.c              | 174 ++++++++++++++++++
+>>  include/linux/mfd/khadas-mcu.h                |  91 +++++++++
+>>  10 files changed, 517 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/khadas,mcu.yaml
+>>  create mode 100644 drivers/mfd/khadas-mcu.c
+>>  create mode 100644 drivers/thermal/khadas_mcu_fan.c
+>>  create mode 100644 include/linux/mfd/khadas-mcu.h
+>>
+> 
 
