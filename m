@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 951B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A42621974
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D5421D82
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443258;
-	bh=HFcuNX+faoaTX2GQ5GoMYIAdRLwuZgOaKcgrxIXVxi4=;
+	s=default; t=1592443259;
+	bh=Z/WbnyE4ZXlpudncQs5OzvRsFKu8fkgoznjwuRiGmao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KP47+2DhdO8eat38IzaN+t6R5QtTG6Ty1uNsr7vvuef4APZpPHa7g1EmGZKc/4lSj
-	 mdR3lvSUIRABaLl57SBrap7ewaS+/s/XLDajP2uDQJ0hFTNOB4v1HcfISmiUVFiCfn
-	 tnctGyENrjWyOo5C9HdRjyr6D5NSSmCiR+fnHZfs=
+	b=zgfjXSNFjm6PVVjou80Vlwagd5TgoEHLiD9/9b40Whskfvjg8mE12ovKdkN7tjicw
+	 mHlxnPt0BhhxhRF6L3I/kL3lKu9zsbZId8bw+YGX0u/8NwEQlBwJ0DJssjKqsZtxyD
+	 aRPowIjZpx/pFee7aPnw35Px5ezOcu8TgGUnS/hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbgFRBU4 (ORCPT
+        id S1730428AbgFRBU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:20:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48840 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:20:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729184AbgFRBRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:39 -0400
+        id S1729818AbgFRBRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 832E921D79;
-        Thu, 18 Jun 2020 01:17:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBAB8206F1;
+        Thu, 18 Jun 2020 01:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443059;
-        bh=HFcuNX+faoaTX2GQ5GoMYIAdRLwuZgOaKcgrxIXVxi4=;
+        s=default; t=1592443066;
+        bh=Z/WbnyE4ZXlpudncQs5OzvRsFKu8fkgoznjwuRiGmao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SRRid2ki8u5re/yt21fryN5RV+DrqCIU7J6BIlBsoxgoOty5obWMiXqTTRa9JrFhz
-         j2VvXVpSa89Nb7NWW9n/Q+H0AFTA4fEWCDk+GMudtdTIbovzWd/LhEf91ZqkWbBt/S
-         XKYyFgUrpd/1Wr0Z6zoD9JKXZC4HSSTysXxyUJzQ=
+        b=WIvLRAcx+GgjQClulg/2+c247y0zwuk4thSiOuO6HgJv2p9tVI6wMrZNIxdqSoXVx
+         ugqi7BMS0kSX5sOYgfxO0Llg7LcFnkSAi8c300SJLlJe8cySiipnqt6C+wdi3eIzQ9
+         bH/5ovRW4JcY8T+1M4HqibSxf/CvQgddhDi71F8k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Derrick <jonathan.derrick@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 050/266] PCI: pci-bridge-emul: Fix PCIe bit conflicts
-Date:   Wed, 17 Jun 2020 21:12:55 -0400
-Message-Id: <20200618011631.604574-50-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 056/266] scsi: cxgb3i: Fix some leaks in init_act_open()
+Date:   Wed, 17 Jun 2020 21:13:01 -0400
+Message-Id: <20200618011631.604574-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,53 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit c88d19181771bd189147681ef38fc1533ebeff4c ]
+[ Upstream commit b6170a49c59c27a10efed26c5a2969403e69aaba ]
 
-This patch fixes two bit conflicts in the pci-bridge-emul driver:
+There wasn't any clean up done if cxgb3_alloc_atid() failed and also the
+original code didn't release "csk->l2t".
 
-1. Bit 3 of Device Status (19 of Device Control) is marked as both
-   Write-1-to-Clear and Read-Only. It should be Write-1-to-Clear.
-   The Read-Only and Reserved bitmasks are shifted by 1 bit due to this
-   error.
-
-2. Bit 12 of Slot Control is marked as both Read-Write and Reserved.
-   It should be Read-Write.
-
-Link: https://lore.kernel.org/r/20200511162117.6674-2-jonathan.derrick@intel.com
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20200521121221.GA247492@mwanda
+Fixes: 6f7efaabefeb ("[SCSI] cxgb3i: change cxgb3i to use libcxgbi")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci-bridge-emul.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/cxgbi/cxgb3i/cxgb3i.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-index 5fd90105510d..d3b6b9a05618 100644
---- a/drivers/pci/pci-bridge-emul.c
-+++ b/drivers/pci/pci-bridge-emul.c
-@@ -195,8 +195,8 @@ static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
- 		 * RO, the rest is reserved
- 		 */
- 		.w1c = GENMASK(19, 16),
--		.ro = GENMASK(20, 19),
--		.rsvd = GENMASK(31, 21),
-+		.ro = GENMASK(21, 20),
-+		.rsvd = GENMASK(31, 22),
- 	},
+diff --git a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
+index 524cdbcd29aa..ec7d01f6e2d5 100644
+--- a/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
++++ b/drivers/scsi/cxgbi/cxgb3i/cxgb3i.c
+@@ -959,6 +959,7 @@ static int init_act_open(struct cxgbi_sock *csk)
+ 	struct net_device *ndev = cdev->ports[csk->port_id];
+ 	struct cxgbi_hba *chba = cdev->hbas[csk->port_id];
+ 	struct sk_buff *skb = NULL;
++	int ret;
  
- 	[PCI_EXP_LNKCAP / 4] = {
-@@ -236,7 +236,7 @@ static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
- 			PCI_EXP_SLTSTA_CC | PCI_EXP_SLTSTA_DLLSC) << 16,
- 		.ro = (PCI_EXP_SLTSTA_MRLSS | PCI_EXP_SLTSTA_PDS |
- 		       PCI_EXP_SLTSTA_EIS) << 16,
--		.rsvd = GENMASK(15, 12) | (GENMASK(15, 9) << 16),
-+		.rsvd = GENMASK(15, 13) | (GENMASK(15, 9) << 16),
- 	},
+ 	log_debug(1 << CXGBI_DBG_TOE | 1 << CXGBI_DBG_SOCK,
+ 		"csk 0x%p,%u,0x%lx.\n", csk, csk->state, csk->flags);
+@@ -979,16 +980,16 @@ static int init_act_open(struct cxgbi_sock *csk)
+ 	csk->atid = cxgb3_alloc_atid(t3dev, &t3_client, csk);
+ 	if (csk->atid < 0) {
+ 		pr_err("NO atid available.\n");
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto put_sock;
+ 	}
+ 	cxgbi_sock_set_flag(csk, CTPF_HAS_ATID);
+ 	cxgbi_sock_get(csk);
  
- 	[PCI_EXP_RTCTL / 4] = {
+ 	skb = alloc_wr(sizeof(struct cpl_act_open_req), 0, GFP_KERNEL);
+ 	if (!skb) {
+-		cxgb3_free_atid(t3dev, csk->atid);
+-		cxgbi_sock_put(csk);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto free_atid;
+ 	}
+ 	skb->sk = (struct sock *)csk;
+ 	set_arp_failure_handler(skb, act_open_arp_failure);
+@@ -1010,6 +1011,15 @@ static int init_act_open(struct cxgbi_sock *csk)
+ 	cxgbi_sock_set_state(csk, CTP_ACTIVE_OPEN);
+ 	send_act_open_req(csk, skb, csk->l2t);
+ 	return 0;
++
++free_atid:
++	cxgb3_free_atid(t3dev, csk->atid);
++put_sock:
++	cxgbi_sock_put(csk);
++	l2t_release(t3dev, csk->l2t);
++	csk->l2t = NULL;
++
++	return ret;
+ }
+ 
+ cxgb3_cpl_handler_func cxgb3i_cpl_handlers[NUM_CPL_CMDS] = {
 -- 
 2.25.1
 
