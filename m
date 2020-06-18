@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E40C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D35C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B20A72223F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B23222240
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445556;
-	bh=dQi9xb866+G9XUycgfZuHfAeROYZU8W+1f9SlK2CqwA=;
+	s=default; t=1592445559;
+	bh=Cub4vj9nLqVHK+vP9cLZf3O/SAGabxVQiO5LtqWPr3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qO1gbDp/K7LmnhuofnvIQqA+jM8j/ckZuoTnjG5V8j383AbayX/IKBtynedgBevEx
-	 NYQHcTX17OHma6Zgt7y16FH6S/+UjTaOsGCOOt2en14VbeT8/fzSM9TReQx3ANV2J9
-	 mbmimTTdcQXcuP/hhpcn1iZ9mxeVwQDZnX1HlRek=
+	b=v1meLvP+NgzD0jFl34t/Hft+pmfCf5eC6FEopYBLTeJL+O+h+YTdlNpsRRXt6ISoR
+	 DjjWIF4yXIAcMPa0ba+ZXjITBlntm1Rw/Xoac8CchRFrOVzRtD2F6COBeCBcfuvvWr
+	 mV6OBAzk/hrX1xbBACb5xT1HOTOA5oC/Ir5wfzvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731408AbgFRB7P (ORCPT
+        id S1731261AbgFRBYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:59:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59400 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:24:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731266AbgFRBYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:24:42 -0400
+        id S1728340AbgFRBVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:21:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5368620B1F;
-        Thu, 18 Jun 2020 01:24:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10C8B20CC7;
+        Thu, 18 Jun 2020 01:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443482;
-        bh=dQi9xb866+G9XUycgfZuHfAeROYZU8W+1f9SlK2CqwA=;
+        s=default; t=1592443282;
+        bh=Cub4vj9nLqVHK+vP9cLZf3O/SAGabxVQiO5LtqWPr3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z6LIe/OfXcRPJq7gXh5TW48QywcR1INr3F7KNuHUDT/TeEk64nV1+N9QbXmfXatNo
-         nzSwTG2qFAnHhT7FrnQdbUGcy8KNVQRcPfMqeVfiIFtnuQJhw+LBnb2R4tbvmEntgC
-         nZ9/2VRr/idZd3qVyQ502ENFt+gky8q4IV2sADSw=
+        b=C0pG6APArivPVS1UhMa9kylHSmrRtNWZuVYdwW927Evr9PoDOS4LcsiQeq4QtU+FO
+         2V2TGK8H4mZ5H/oQ4HwBPgS6Se2vveXFnuYkfp+4gADmRL9w8dBpXy1M5eQKMTVl9i
+         1+un2skuDuMYT2V3TCOGI+/C8zKGlbiSNpCuEMUA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 111/172] watchdog: da9062: No need to ping manually before setting timeout
-Date:   Wed, 17 Jun 2020 21:21:17 -0400
-Message-Id: <20200618012218.607130-111-sashal@kernel.org>
+Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 226/266] drm/amd/display: Revalidate bandwidth before commiting DC updates
+Date:   Wed, 17 Jun 2020 21:15:51 -0400
+Message-Id: <20200618011631.604574-226-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,47 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Riedmueller <s.riedmueller@phytec.de>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-[ Upstream commit a0948ddba65f4f6d3cfb5e2b84685485d0452966 ]
+[ Upstream commit a24eaa5c51255b344d5a321f1eeb3205f2775498 ]
 
-There is actually no need to ping the watchdog before disabling it
-during timeout change. Disabling the watchdog already takes care of
-resetting the counter.
+[Why]
+Whenever we switch between tiled formats without also switching pixel
+formats or doing anything else that recreates the DC plane state we
+can run into underflow or hangs since we're not updating the
+DML parameters before committing to the hardware.
 
-This fixes an issue during boot when the userspace watchdog handler takes
-over and the watchdog is already running. Opening the watchdog in this case
-leads to the first ping and directly after that without the required
-heartbeat delay a second ping issued by the set_timeout call. Due to the
-missing delay this resulted in a reset.
+[How]
+If the update type is FULL then call validate_bandwidth again to update
+the DML parmeters before committing the state.
 
-Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Link: https://lore.kernel.org/r/20200403130728.39260-3-s.riedmueller@phytec.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+This is basically just a workaround and protective measure against
+update types being added DC where we could run into this issue in
+the future.
+
+We can only fully validate the state in advance before applying it to
+the hardware if we recreate all the plane and stream states since
+we can't modify what's currently in use.
+
+The next step is to update DM to ensure that we're creating the plane
+and stream states for whatever could potentially be a full update in
+DC to pre-emptively recreate the state for DC global validation.
+
+The workaround can stay until this has been fixed in DM.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/da9062_wdt.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index 7f0a8e635286..132d45d003ce 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -60,11 +60,6 @@ static int da9062_wdt_update_timeout_register(struct da9062_watchdog *wdt,
- 					      unsigned int regval)
- {
- 	struct da9062 *chip = wdt->hw;
--	int ret;
--
--	ret = da9062_reset_watchdog_timer(wdt);
--	if (ret)
--		return ret;
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 2028dc017f7a..b95a58aa82d9 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -2230,6 +2230,12 @@ void dc_commit_updates_for_stream(struct dc *dc,
  
- 	regmap_update_bits(chip->regmap,
- 				  DA9062AA_CONTROL_D,
+ 	copy_stream_update_to_stream(dc, context, stream, stream_update);
+ 
++	if (!dc->res_pool->funcs->validate_bandwidth(dc, context, false)) {
++		DC_ERROR("Mode validation failed for stream update!\n");
++		dc_release_state(context);
++		return;
++	}
++
+ 	commit_planes_for_stream(
+ 				dc,
+ 				srf_updates,
 -- 
 2.25.1
 
