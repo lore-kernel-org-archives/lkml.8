@@ -2,118 +2,199 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71656C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48B5720776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:26:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YroBNmuZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5AE76208D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732190AbgFRR0B (ORCPT
+        id S1732199AbgFRR1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:26:01 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55726 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732173AbgFRR0A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 13:26:00 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05IH2XcT014920;
-        Thu, 18 Jun 2020 19:25:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=9JidG9SI0t24FUmVLA0cuOTFSYM8EHYtOdUK2GCQGQo=;
- b=YroBNmuZuxNVyqP6rkpu+5jD9Co2S3KWWRo+cn/EfBpiGn9fs279erCoa7AOd3A12jDG
- yypWkHkxM6/7CtIHmIs5Zg14Yrqej1idio8agYHjut2aEXKbm/gwmKhm1OOqLjw0WXMV
- r8qLQsCUs9boQJdVz0e2lz4oYVOVrf1iKVhv0LiKKA58OFmtzeKjIINd+/N8IOjfR3mg
- R/RkFUSqeuyqSVsyeJUDo/11dRrCqJAMjJjT/q3xnoAfLtfJr5fGyuWb7SdHRajR4C6x
- +7TvTsuydOYY/DY6wmW0FN1FiPUk9EUkDaYY1vCvzYpwDRsSyxDfckRAnUmls0qzYCoy dw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31q64ccbrs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Jun 2020 19:25:43 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 50B0310002A;
-        Thu, 18 Jun 2020 19:25:42 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 36FFC2D6955;
-        Thu, 18 Jun 2020 19:25:42 +0200 (CEST)
-Received: from localhost (10.75.127.45) by SFHDAG6NODE3.st.com (10.75.127.18)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jun 2020 19:25:41
- +0200
-From:   <patrice.chotard@st.com>
-List-Id: <soc.lore.kernel.org>
-To:     Russell King <linux@armlinux.org.uk>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <soc@kernel.org>
-CC:     <patrice.chotard@st.com>, Alain Volmat <alain.volmat@st.com>
-Subject: [PATCH] Revert "ARM: sti: Implement dummy L2 cache's write_sec"
-Date:   Thu, 18 Jun 2020 19:24:56 +0200
-Message-ID: <20200618172456.29475-1-patrice.chotard@st.com>
+        Thu, 18 Jun 2020 13:27:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:55808 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732087AbgFRR1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 13:27:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3D8C31B;
+        Thu, 18 Jun 2020 10:27:11 -0700 (PDT)
+Received: from e120937-lin.home (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F1A93F6CF;
+        Thu, 18 Jun 2020 10:27:10 -0700 (PDT)
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
+        james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
+        cristian.marussi@arm.com, dave.martin@arm.com
+Subject: [PATCH v9 0/9] SCMI Notifications Core Support
+Date:   Thu, 18 Jun 2020 18:26:23 +0100
+Message-Id: <20200618172632.42842-1-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG6NODE3.st.com
- (10.75.127.18)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-18_14:2020-06-18,2020-06-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+Hi all,
 
-This reverts commit 7b8e0188fa717cd9abc4fb52587445b421835c2a.
+this series wants to introduce SCMI Notification Support, built on top of
+the standard Kernel notification chain subsystem.
 
-Initially, STiH410-B2260 was supposed to be secured, that's why
-l2c_write_sec was stubbed to avoid secure register access from
-non secure world.
+At initialization time each SCMI Protocol takes care to register with the
+new SCMI notification core the set of its own events which it intends to
+support.
 
-But by default, STiH410-B2260 is running in non secure mode,
-so L2 cache register accesses are authorized, l2c_write_sec stub
-is not needed.
+Using the API exposed via scmi_handle.notify_ops a Kernel user can register
+its own notifier_t callback (via a notifier_block as usual) against any
+registered event as identified by the tuple:
 
-With this patch, L2 cache is configured and performance are enhanced.
+		(proto_id, event_id, src_id)
 
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-Cc: Alain Volmat <alain.volmat@st.com>
----
- arch/arm/mach-sti/board-dt.c | 9 ---------
- 1 file changed, 9 deletions(-)
+where src_id represents a generic source identifier which is protocol
+dependent like domain_id, performance_id, sensor_id and so forth.
+(users can anyway do NOT provide any src_id, and subscribe instead to ALL
+ the existing (if any) src_id sources for that proto_id/evt_id combination)
 
-diff --git a/arch/arm/mach-sti/board-dt.c b/arch/arm/mach-sti/board-dt.c
-index dcb98937fcf5..ffecbf29646f 100644
---- a/arch/arm/mach-sti/board-dt.c
-+++ b/arch/arm/mach-sti/board-dt.c
-@@ -20,14 +20,6 @@ static const char *const stih41x_dt_match[] __initconst = {
- 	NULL
- };
- 
--static void sti_l2_write_sec(unsigned long val, unsigned reg)
--{
--	/*
--	 * We can't write to secure registers as we are in non-secure
--	 * mode, until we have some SMI service available.
--	 */
--}
--
- DT_MACHINE_START(STM, "STi SoC with Flattened Device Tree")
- 	.dt_compat	= stih41x_dt_match,
- 	.l2c_aux_val	= L2C_AUX_CTRL_SHARED_OVERRIDE |
-@@ -36,5 +28,4 @@ DT_MACHINE_START(STM, "STi SoC with Flattened Device Tree")
- 			  L2C_AUX_CTRL_WAY_SIZE(4),
- 	.l2c_aux_mask	= 0xc0000fff,
- 	.smp		= smp_ops(sti_smp_ops),
--	.l2c_write_sec	= sti_l2_write_sec,
- MACHINE_END
+Each of the above tuple-specified eventis will be served on its own
+dedicated blocking notification chain, dynamically allocated on-demand when
+at least one user has shown interest on that event.
+
+Upon a notification delivery all the users' registered notifier_t callbacks
+will be in turn invoked and fed with the event_id as @action param and a
+generated custom per-event struct _report as @data param.
+(as in include/linux/scmi_protocol.h)
+
+The final step of notification delivery via users' callback invocation is
+instead delegated to a pool of deferred workers (Kernel cmwq): each
+SCMI protocol has its own dedicated worker and dedicated queue to push
+events from the rx ISR to the worker.
+
+Based on scmi-next/for-next/scmi 5.8 [1], on top of:
+
+commit 5a897e3ab429 ("firmware: arm_scmi: fix psci dependency")
+
+This series has been tested on JUNO with an experimental firmware only
+supporting Perf Notifications.
+
+
+Thanks
+
+Cristian
+
+----
+v8 --> v9:
+- rebased on top of scmi-next 5.8
+- moved some pr_info() to dev_dbg()
+- moved around some macros definitions (using FIELD_PREPARE properly)
+- introduced some meaningful define
+- shrunk hashtables' sizes
+- shortened the naming of some massively long data struct
+
+v7 --> v8:
+- removed unneeded initialized/enabled atomics, added proper barriers
+- added a few comments about queueing work item and kfifos
+
+v6 --> v7:
+- rebased on top of scmi-next 5.7, dropped the initial 4 patches
+  since now already queued on base scmi-next [1]
+- fixed some events' proto initialization
+- removed some notify_enabled explicit methods exposed in some protocol_ops
+  since not supposed to be used directly when using this notification
+  framework (and of no other known use)
+- exposing SCMI_EVENT_ enums in scmi_protocol.h
+- added agent_id field in RESET_ISSUED payload as per reviewed SCMI spec
+- removed POWER_STATE_CHANGE_REQUESTED pre-notification definition and
+  handling as per reviewedSCMI spec
+- fixed report.timestamp field type
+
+v5 --> v6:
+- added handle argument to fill_custom_report() helper
+
+v4 --> v5:
+- fixed kernel-doc
+- added proper barriers around registered protocols and events
+  initialization
+- reviewed queues allocation using devm_add_action_or_reset
+- reviewed REVT_NOTIFY_ENABLE macro
+
+v3 --> v4:
+- dropped RFC tag
+- avoid one unneeded evt payload memcpy on the ISR RC code path by
+  redesigning dispatcher to handle partial queue-reads (in_flight events,
+  only header)
+- fixed the initialization issue exposed by late SCMI modules loading by
+  reviewing the init process to support possible late events registrations
+  by protocols and early callbacks registrations by users (pending)
+- cleanup/simplification of exit path: SCMI protocols are generally never
+  de-initialized after the initial device creation, so do not deinit
+  notification core either (we do halt the delivery, stop the wq and empty
+  the queues though)
+- reduced contention on regustered_events_handler to the minimum during
+  delivery by splitting the common registered_events_handlers hashtable
+  into a number of per-protocol tables
+- converted registered_protocols and registered_events hastable to
+  fixed size arrays: simpler and lockless in our usage scenario
+
+v2 --> v3:
+- added platform instance awareness to the notification core: a
+  notification instance is created for each known handle
+- reviewed notification core initialization and shutdown process
+- removed generic non-handle-rooted registration API
+- added WQ_SYSFS flag to workqueue instance
+
+v1 --> v2:
+- dropped anti-tampering patch
+- rebased on top of scmi-for-next-5.6, which includes Viresh series that
+  make SCMI core independent of transport (5c8a47a5a91d)
+- add a few new SCMI transport methods on top of Viresh patch to address
+  needs of SCMI Notifications
+- reviewed/renamed scmi_handle_xfer_delayed_resp()
+- split main SCMI Notification core patch (~1k lines) into three chunks:
+  protocol-registration / callbacks-registration / dispatch-and-delivery
+- removed awkward usage of IDR maps in favour of pure hashtables
+- added enable/disable refcounting in notification core (was broken in v1)
+- removed per-protocol candidate API: a single generic API is now proposed
+  instead of scmi_register_<proto>_event_notifier(evt_id, *src_id, *nb)
+- added handle->notify_ops as an alternative notification API
+  for scmi_driver
+- moved ALL_SRCIDs enabled handling from protocol code to core code
+- reviewed protocol registration/unregistration logic to use devres
+- reviewed cleanup phase on shutdown
+- fixed  ERROR: reference preceded by free as reported by kbuild test robot
+
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git
+
+
+Cristian Marussi (9):
+  firmware: arm_scmi: Add notification protocol-registration
+  firmware: arm_scmi: Add notification callbacks-registration
+  firmware: arm_scmi: Add notification dispatch and delivery
+  firmware: arm_scmi: Enable notification core
+  firmware: arm_scmi: Add Power notifications support
+  firmware: arm_scmi: Add Perf notifications support
+  firmware: arm_scmi: Add Sensor notifications support
+  firmware: arm_scmi: Add Reset notifications support
+  firmware: arm_scmi: Add Base notifications support
+
+ drivers/firmware/arm_scmi/Makefile  |    2 +-
+ drivers/firmware/arm_scmi/base.c    |  109 +-
+ drivers/firmware/arm_scmi/common.h  |    4 +
+ drivers/firmware/arm_scmi/driver.c  |   10 +
+ drivers/firmware/arm_scmi/notify.c  | 1497 +++++++++++++++++++++++++++
+ drivers/firmware/arm_scmi/notify.h  |   67 ++
+ drivers/firmware/arm_scmi/perf.c    |  139 ++-
+ drivers/firmware/arm_scmi/power.c   |   92 +-
+ drivers/firmware/arm_scmi/reset.c   |   96 +-
+ drivers/firmware/arm_scmi/sensors.c |   69 +-
+ include/linux/scmi_protocol.h       |  108 +-
+ 11 files changed, 2163 insertions(+), 30 deletions(-)
+ create mode 100644 drivers/firmware/arm_scmi/notify.c
+ create mode 100644 drivers/firmware/arm_scmi/notify.h
+
 -- 
 2.17.1
 
