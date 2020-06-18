@@ -2,118 +2,100 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ABBC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5D02207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:15:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qtMsv7Aw"
+	by mail.kernel.org (Postfix) with ESMTP id B1255206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592493348;
+	bh=OtEMXKIbYfiMajFJJ9GfH0wz9lo2cLUIGUNmkke2Bgw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0Wlb+U38975zYA76yd7yX30ugJ1U7LzR1eDSi780wa45RGZmNTc6KBCIHnbfDBKHm
+	 TyLTQhj77rGAW5ekVkq+iuYjV+E75YAL7M66eUy/2p/28cPvp0YPtan/6XKwtEOorl
+	 XBuJCK5DByDeBMADF1Xuxy9TyOxBy4pH0mhiphZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbgFRPPm (ORCPT
+        id S1731104AbgFRPPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:15:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbgFRPPl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:15:41 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F75C06174E;
-        Thu, 18 Jun 2020 08:15:41 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id q11so6476931wrp.3;
-        Thu, 18 Jun 2020 08:15:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hzlvT3gaSlLbN4f2sLYshLtTaNcAUW9eRJsVAjGv5Ko=;
-        b=qtMsv7AwvP28H04YkN6EWvksFGG0W2yZaMKLxPJQnvzfC1QQON8ZhE78yHS6xPa5XO
-         LuiCJ2qpgqvmf7JWSmKmcLlvT7gbb8MNVZ/YDM2iaZ33v2R6E7nQUsOJfPs5r2/er912
-         jET4OpIXCXlSDDLNklSrG+fTsA7WWKpAqytffIVZxEGG/s/hALY1Ff+5ZbazpmvDUdDa
-         FHHjlmjUR9YhqlQQX+vVZWEjoVcE4rYIGTRG3JaK1ci4Xp9ZPfxugrCG/b7uPn2VzEfP
-         PclGgDIyESG5oFxxhN+omK4rA0i7kxs3fnCpe8cVZTjOm68UKcE8YUVyKdNjBCs3LwYy
-         CrHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hzlvT3gaSlLbN4f2sLYshLtTaNcAUW9eRJsVAjGv5Ko=;
-        b=KdZoaISSQGFW7mES1d3Kdzb6bUbeM0aBPrreqYT8WrNt1O/bGKBxPE/OGsY9pEakzW
-         OhPyUO0oscsaTYI1dzCGBGpD/ie3cM0mzw1xQokkf1xd0BVxoP89opaoxOgvgnTzH3dJ
-         718DRCnzyPllw8aqDcBfghIvNRmvyMLGxE8tzulRxFgLZXKY41u8i5tpzXtSlht/YTZk
-         9UeeGh+ei5Zrs7cpIeyiF/jnhDdTnyHg70z6J/t5kF7BdGkhxvBxATSEwqdZX0AHWc+b
-         MH7G9HiIF4PRSPWRDPZ+W5GC6cC6Q0Q27P4ZF7GIqdWi+pvu0P7yQKBCiUutTlqR7Thp
-         sY9w==
-X-Gm-Message-State: AOAM532RqoOyO9Ou6/3k5WSLxNJzQsPhLRB10HLzNrN8LlKMV3SNOfhl
-        OVkHu1M/uWJgitl5g81gKIXZjq0Afr/XgdSKdzA=
-X-Google-Smtp-Source: ABdhPJzZdbx39Ada+O27jmlcsTDezs3Ch1jm0rrsMzDul8XqjyMgpuRoP5sfTmlIH1uh8tBxx7i44dGJ+BtI4f4Dxj8=
-X-Received: by 2002:adf:f7ce:: with SMTP id a14mr5073030wrq.362.1592493340203;
- Thu, 18 Jun 2020 08:15:40 -0700 (PDT)
+        Thu, 18 Jun 2020 11:15:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726879AbgFRPPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 11:15:43 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D8E6206F7;
+        Thu, 18 Jun 2020 15:15:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592493343;
+        bh=OtEMXKIbYfiMajFJJ9GfH0wz9lo2cLUIGUNmkke2Bgw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NffDdFvZnHR5CP/UhgpzK8VlGPWmPWdOYfrsJLPDmxJEzxn06fo1OupBF04msNFAT
+         Oo1S0Rey0WnSdOzbNnJb8YpbhXUdm81PtBwdPsgZ/WWD1loeJkJmMjyRqq9Iz7SGs7
+         2AXBQM7FDxP9tw/8d1TlRoDXsSX5Yt3AMjuY2Sq0=
+Date:   Thu, 18 Jun 2020 16:15:40 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     swboyd@chromium.org, Alok Chauhan <alokc@codeaurora.org>,
+        skakit@codeaurora.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] spi: spi-geni-qcom: No need for irqsave variant
+ of spinlock calls
+Message-ID: <20200618151540.GL5789@sirena.org.uk>
+References: <20200618150626.237027-1-dianders@chromium.org>
+ <20200618080459.v4.1.Ic50cccdf27d42420a63485082f8b5bf86ed1a2b6@changeid>
 MIME-Version: 1.0
-References: <20200618102622.12256-1-colin.king@canonical.com>
-In-Reply-To: <20200618102622.12256-1-colin.king@canonical.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 18 Jun 2020 11:15:29 -0400
-Message-ID: <CADnq5_OeVaKbr46WDQ0GcnLd1CE2EbwmRxyVOVqJcqwkJN5qNg@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu: remove redundant initialization of variable ret
-To:     Colin King <colin.king@canonical.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="z9sQuz+HmDh2hVO4"
+Content-Disposition: inline
+In-Reply-To: <20200618080459.v4.1.Ic50cccdf27d42420a63485082f8b5bf86ed1a2b6@changeid>
+X-Cookie: Androphobia:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 6:26 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The variable ret is being initialized with a value that is never read
-> and it is being updated later with a new value.  The initialization is
-> redundant and can be removed.
->
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Applied.  thanks!
+--z9sQuz+HmDh2hVO4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Alex
+On Thu, Jun 18, 2020 at 08:06:22AM -0700, Douglas Anderson wrote:
+> The driver locks its locks in two places.
+>=20
+> In the first usage of the lock the function doing the locking already
+> has a sleeping call and thus we know we can't be called from interrupt
+> context.  That means we can use the "spin_lock_irq" variant of the
+> function.
 
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-> index b2cdc8a1268f..58b76d3d7365 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-> @@ -1609,7 +1609,7 @@ static ssize_t amdgpu_set_pp_power_profile_mode(struct device *dev,
->                 const char *buf,
->                 size_t count)
->  {
-> -       int ret = 0xff;
-> +       int ret;
->         struct drm_device *ddev = dev_get_drvdata(dev);
->         struct amdgpu_device *adev = ddev->dev_private;
->         uint32_t parameter_size = 0;
-> --
-> 2.27.0.rc0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Please do not submit new versions of already applied patches, please
+submit incremental updates to the existing code.  Modifying existing
+commits creates problems for other users building on top of those
+commits so it's best practice to only change pubished git commits if
+absolutely essential.
+
+--z9sQuz+HmDh2hVO4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7rhRwACgkQJNaLcl1U
+h9APzgf/VJoyNmJCoE/DF9WSzCtICt9DfHIZDE3SmkAD1NVeab83t23C8ryMJGnZ
+0bBf5ZxYJkc0COQSCu3WtBUTTzttHCvrg9XbdogG9EaDhJy+D4do1LwgSKegyR5o
+Wl/UW8hDGrZ8dTRwpe5JatiEhXvCqQwfpyK3j0I7v8J9BG8aix+stZogRryb/fVa
+Dek1aYxAE9IFtKe9KREaih9FiqNiSLNU+XrI7gV3FZRvpH7LafJ7Zok4JSIf71KU
+IedwPcxmqkLacJ+MkXDZ5uEaRqfXjAVOfq8tfTduJ/+BWNV43puEjVWCttFI69F1
+rfTESrTGfoDqUQEvRy9IvxFo7hZyFQ==
+=7ipB
+-----END PGP SIGNATURE-----
+
+--z9sQuz+HmDh2hVO4--
