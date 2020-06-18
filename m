@@ -2,86 +2,92 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD98FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88514214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:00:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592438452;
-	bh=O0Ojn64QE9TAUNMg1Czyk7vrOv6xiPBYlaWVb0X35x8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dLMyVYo159MOszMK80Sz2dHpEJWjUnW80P3ABJp3HVDf9pgmnN4CtehmUO50lnefY
-	 KdtR0HuIbOu3vke/INzP1Aq75bJTaur39iqf6y1RxM9Q4MRXaqIQ8xbdK0BSXsDkSu
-	 SBI8c1LrCP2MSyNheomF6CP/Uui4YqXkujjmsqZk=
+	by mail.kernel.org (Postfix) with ESMTP id 9046121556
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:01:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WHR7pvxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgFRAAv (ORCPT
+        id S1727053AbgFRABn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 20:00:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbgFRAAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 20:00:51 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 515B820B1F;
-        Thu, 18 Jun 2020 00:00:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592438450;
-        bh=O0Ojn64QE9TAUNMg1Czyk7vrOv6xiPBYlaWVb0X35x8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gntkbq/YBvvPhhPey0eMwmZnvFqAA0xmCm33NsY2GTKj8dJSY1qe2aD0wauUxNDFa
-         A3SoEyYovNwwrk0zB7RyggJLgYgL3F7NZ3BXDno9GM7tPtHMTiHCdwmXQccU6fl3Nd
-         br1RA6J8hvuQNwKsAK1zy7WXq97Uw8aosdT2/WpY=
-Date:   Wed, 17 Jun 2020 17:00:48 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: Re: [PATCH net-next v7 6/6] net: phy: DP83822: Add ability to
- advertise Fiber connection
-Message-ID: <20200617170048.3501848a@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <20200617182019.6790-7-dmurphy@ti.com>
-References: <20200617182019.6790-1-dmurphy@ti.com>
-        <20200617182019.6790-7-dmurphy@ti.com>
+        Wed, 17 Jun 2020 20:01:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbgFRABm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 20:01:42 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B70D0C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:01:42 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id t9so2160638ybk.9
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:01:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m7UPz9IB0wuR+ULFqjoeOn81m+kFdV9mf/EYc+fuqGI=;
+        b=WHR7pvxYT/fclLn788v5XuVsyL1vB6rW1eD7ALXv19rL+XV6ejoQgIYAg1oSVDAmfB
+         Jjri8MNNMAw3CHDnX8Dzet/q7pZhC2vVE+AszMyOe1nEqNfjfqR08U9DGr051iERPBur
+         sDes9x877Ax5T5f5+CtTenbkmhI9UoN2LLcVK5OJzqgs2KtIOX9J6Hpmcxyp0/esnfN9
+         mDYDVIidYIt/rE5F7vNl58cHbPqtTaShAYq+tCwdVfjIN9pFCsDkKnhE0OneFCkGbR+D
+         gkMlf0D/pf8EfDvl45r4xM9u/k0w4wa/guPU0aXvDh+tSfeTQiJ5AXR8wPxKXfXHn4nW
+         /ohg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m7UPz9IB0wuR+ULFqjoeOn81m+kFdV9mf/EYc+fuqGI=;
+        b=ZvYNxuhXVyY7Tw2cTT6nx5WKd7nu5R7+FwWV1EB8Ou9GIiU9o7s1idx/eyeJ66ecir
+         wALd/mLCPDyv5+Lc87e4onZvczPTZ96+YIOWeO367SBrBs3eBWlUeT1p5ftWDG4UJEJ7
+         5ykgP/lalhr1BnUt3N/Taf8UInH89q59IawSFsKJp8HUuPRkB4AuUdxwcFXNkJZO0H5H
+         eJ1VxlQe4TEZGPt9MIiHUPNfYffAoiU1+tRXrwbdB9dPRfeRmhPMDOxexhCEGdYaw0gK
+         SLYluOEQFSBEjFLgLv6OKmgWY4+6GGLWwGiiwgKG5RfxuyBZ/jOqzbIXX5ZTbs8aDFVG
+         iWcg==
+X-Gm-Message-State: AOAM5331IUEdq+gAY93GUlWTwsB2ytb/763OXi5P8yMI6w3xRksfSvK5
+        mv2BEn+2Ov/JFj/D5iwPVhMzbq5ljueWdTrV5kfRlgy/
+X-Google-Smtp-Source: ABdhPJxx2Psv8jjW1S0mhJDxqQoTkh7WJXb/f7KtAQbV8jWCveufSRp7uVjuXyd6/Tn3clPASVryOBL/Qi6oVXFmiIc=
+X-Received: by 2002:a5b:cc9:: with SMTP id e9mr2244637ybr.287.1592438501718;
+ Wed, 17 Jun 2020 17:01:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200617203732.2076611-1-atish.patra@wdc.com>
+In-Reply-To: <20200617203732.2076611-1-atish.patra@wdc.com>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Wed, 17 Jun 2020 17:01:28 -0700
+Message-ID: <CANN689EXQsH3C92fe=QHVEZasWmBiMXPoOB=bRLhK2CP-hdKqQ@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Acquire mmap lock before invoking walk_page_range
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Zong Li <zong.li@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 13:20:19 -0500 Dan Murphy wrote:
-> +static int dp83822_config_init(struct phy_device *phydev)
-> +{
-> +	struct dp83822_private *dp83822 = phydev->priv;
-> +	int rgmii_delay;
-> +	int err = 0;
-> +
-> +	if (phy_interface_is_rgmii(phydev)) {
-> +		if (dp83822->rx_int_delay)
-> +			rgmii_delay = DP83822_RX_CLK_SHIFT;
-> +
-> +		if (dp83822->tx_int_delay)
-> +			rgmii_delay |= DP83822_TX_CLK_SHIFT;
-> +
-> +		if (rgmii_delay)
-> +			err = phy_set_bits_mmd(phydev, DP83822_DEVADDR,
-> +					       MII_DP83822_RCSR, rgmii_delay);
-> +	}
-> +
-> +	return dp8382x_disable_wol(phydev);
-> +}
+On Wed, Jun 17, 2020 at 1:38 PM Atish Patra <atish.patra@wdc.com> wrote:
+> As per walk_page_range documentation, mmap lock should be acquired by the
+> caller before invoking walk_page_range. mmap_assert_locked gets triggered
+> without that. The details can be found here.
+>
+> http://lists.infradead.org/pipermail/linux-riscv/2020-June/010335.html
+>
+> Fixes: 395a21ff859c(riscv: add ARCH_HAS_SET_DIRECT_MAP support)
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
 
+Thanks for the fix.
 
-drivers/net/phy/dp83822.c: In function dp83822_config_init:
-drivers/net/phy/dp83822.c:282:6: warning: variable err set but not used [-Wunused-but-set-variable]
-  282 |  int err = 0;
-      |      ^~~
+Reviewed-by: Michel Lespinasse <walken@google.com>
