@@ -2,138 +2,106 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D78C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBB92222A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JWoa4vD5"
+	by mail.kernel.org (Postfix) with ESMTP id 13E952222C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592445220;
+	bh=zBzG+XQLAb/qyuKQzJ5OOYujuxtJFnwnJn8P+8Fyby0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eqBDxbAzMhqDOeeYGGYu+3RPBtke9i9CXDewtGrodyTcSUORYsRdxR9cNn8YX92Zh
+	 tBQibm3B/cN5IhT5yn4tDvxWFGfF7BaJ9saPSwp83uVkjS+Kioz7pxojGwlEtmpJ3l
+	 8hU2yGqpMqknKufzvmUTNVm/AmMACelUdA7/kFz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733207AbgFRBx3 (ORCPT
+        id S1733181AbgFRBxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:53:29 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36250 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730913AbgFRB0R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:53:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731637AbgFRB0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:26:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592443576;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2XjA8FU67I5A0k2SpuvQQRfjiKYOCajyJbpRDZTCuUQ=;
-        b=JWoa4vD54GP5k7FLgrWzwojzgcUsQ4qQ2F6eKPOsTpVnNDgyBVx3yRv7J+gpfdaqr0S6sq
-        FUVN6AHu2Nws4QKfQKxWD2OGRHTqcav49FX3Rb/PAesUOv34VlhKR5VTQOjomIpIjbUWug
-        nMgLxOmhl7EDxJmlOfk6MzhnYx88nP0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-284-Ztw866pgPtud6cyLII22fA-1; Wed, 17 Jun 2020 21:26:14 -0400
-X-MC-Unique: Ztw866pgPtud6cyLII22fA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2685A1800D42;
-        Thu, 18 Jun 2020 01:26:13 +0000 (UTC)
-Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C12107CACC;
-        Thu, 18 Jun 2020 01:26:12 +0000 (UTC)
-Date:   Wed, 17 Jun 2020 19:26:12 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, kvm@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 120/172] vfio/pci: fix memory leaks of
- eventfd ctx
-Message-ID: <20200617192612.17188760@x1.home>
-In-Reply-To: <20200618012218.607130-120-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
-        <20200618012218.607130-120-sashal@kernel.org>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CB052088E;
+        Thu, 18 Jun 2020 01:26:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592443577;
+        bh=zBzG+XQLAb/qyuKQzJ5OOYujuxtJFnwnJn8P+8Fyby0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DYzqLJvoa/GoeuUAzWUQxp0JkurlxjUlTMTh8l5LnEUwdF089xiPvY/L7Qa2VLSGg
+         AN/gqQZXsKOaggIxxpuoCWzLzeBCa1BMbkqJMrFzLvSmOXDug8B5IKQqJ5/2HKwj7E
+         DC3T/GVKlXCbiv9tpetAFa8hW9FroT/m7WKC2S34=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Hillf Danton <hdanton@sina.com>,
+        syzbot+bfdd4a2f07be52351350@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 013/108] Smack: slab-out-of-bounds in vsscanf
+Date:   Wed, 17 Jun 2020 21:24:25 -0400
+Message-Id: <20200618012600.608744-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Jun 2020 21:21:26 -0400
-Sasha Levin <sashal@kernel.org> wrote:
+From: Casey Schaufler <casey@schaufler-ca.com>
 
-> From: Qian Cai <cai@lca.pw>
-> 
-> [ Upstream commit 1518ac272e789cae8c555d69951b032a275b7602 ]
-> 
-> Finished a qemu-kvm (-device vfio-pci,host=0001:01:00.0) triggers a few
-> memory leaks after a while because vfio_pci_set_ctx_trigger_single()
-> calls eventfd_ctx_fdget() without the matching eventfd_ctx_put() later.
-> Fix it by calling eventfd_ctx_put() for those memory in
-> vfio_pci_release() before vfio_device_release().
-> 
-> unreferenced object 0xebff008981cc2b00 (size 128):
->   comm "qemu-kvm", pid 4043, jiffies 4294994816 (age 9796.310s)
->   hex dump (first 32 bytes):
->     01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
->     ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
->   backtrace:
->     [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
->     [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
->     [<000000005fcec025>] do_eventfd+0x54/0x1ac
->     [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
->     [<00000000b819758c>] do_el0_svc+0x128/0x1dc
->     [<00000000b244e810>] el0_sync_handler+0xd0/0x268
->     [<00000000d495ef94>] el0_sync+0x164/0x180
-> unreferenced object 0x29ff008981cc4180 (size 128):
->   comm "qemu-kvm", pid 4043, jiffies 4294994818 (age 9796.290s)
->   hex dump (first 32 bytes):
->     01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
->     ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
->   backtrace:
->     [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
->     [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
->     [<000000005fcec025>] do_eventfd+0x54/0x1ac
->     [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
->     [<00000000b819758c>] do_el0_svc+0x128/0x1dc
->     [<00000000b244e810>] el0_sync_handler+0xd0/0x268
->     [<00000000d495ef94>] el0_sync+0x164/0x180
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/vfio/pci/vfio_pci.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index 66783a37f450..36b2ea920bc9 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -407,6 +407,10 @@ static void vfio_pci_release(void *device_data)
->  	if (!(--vdev->refcnt)) {
->  		vfio_spapr_pci_eeh_release(vdev->pdev);
->  		vfio_pci_disable(vdev);
-> +		if (vdev->err_trigger)
-> +			eventfd_ctx_put(vdev->err_trigger);
-> +		if (vdev->req_trigger)
-> +			eventfd_ctx_put(vdev->req_trigger);
->  	}
->  
->  	mutex_unlock(&driver_lock);
+[ Upstream commit 84e99e58e8d1e26f04c097f4266e431a33987f36 ]
 
-This has a fix pending, I'd suggest not picking it on its own:
+Add barrier to soob. Return -EOVERFLOW if the buffer
+is exceeded.
 
-https://lore.kernel.org/kvm/20200616085052.sahrunsesjyjeyf2@beryllium.lan/
-https://lore.kernel.org/kvm/159234276956.31057.6902954364435481688.stgit@gimli.home/
+Suggested-by: Hillf Danton <hdanton@sina.com>
+Reported-by: syzbot+bfdd4a2f07be52351350@syzkaller.appspotmail.com
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ security/smack/smackfs.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Thanks,
-Alex
+diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
+index f6482e53d55a..371ae368da35 100644
+--- a/security/smack/smackfs.c
++++ b/security/smack/smackfs.c
+@@ -906,11 +906,21 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
+ 	else
+ 		rule += strlen(skp->smk_known) + 1;
+ 
++	if (rule > data + count) {
++		rc = -EOVERFLOW;
++		goto out;
++	}
++
+ 	ret = sscanf(rule, "%d", &maplevel);
+ 	if (ret != 1 || maplevel > SMACK_CIPSO_MAXLEVEL)
+ 		goto out;
+ 
+ 	rule += SMK_DIGITLEN;
++	if (rule > data + count) {
++		rc = -EOVERFLOW;
++		goto out;
++	}
++
+ 	ret = sscanf(rule, "%d", &catlen);
+ 	if (ret != 1 || catlen > SMACK_CIPSO_MAXCATNUM)
+ 		goto out;
+-- 
+2.25.1
 
