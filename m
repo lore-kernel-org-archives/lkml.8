@@ -2,76 +2,116 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBDEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B65DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 374FD20890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E14B20890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:44:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592505843;
+	bh=SR+PPjmE9DM08vviTSyFbQrZbYV9DqU7oSCtpC7iyOM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0IgrfRY/ozERrqhwqiYS46m4P3zlIi8Pd+Etc33fUhZvV69uJn/YHJ30wfJeK9o+N
+	 ydo11JYeZYZT35TjofP9t3VuQjONj+Ij69baN046l6dKAcwak4I6sDkdAVlCHgebIx
+	 lyrpKu3NsLQxx7WXU0a4lFxal5RkFRZ5+v6BVpjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgFRSmo (ORCPT
+        id S1728825AbgFRSoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 14:42:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726981AbgFRSmo (ORCPT
+        Thu, 18 Jun 2020 14:44:02 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43060 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbgFRSoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 14:42:44 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12453C06174E;
-        Thu, 18 Jun 2020 11:42:43 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jlzUm-0000dc-OJ; Thu, 18 Jun 2020 20:42:40 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 27E02101482; Thu, 18 Jun 2020 20:42:40 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     20181129133119.29387-1-linus.walleij@linaro.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Thu, 18 Jun 2020 14:44:00 -0400
+Received: by mail-io1-f67.google.com with SMTP id u13so8253746iol.10;
+        Thu, 18 Jun 2020 11:44:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1vREzKpcIygrAgwVxWDb2r+RtLDy7uNgi3cJTsF7w2Y=;
+        b=hlxXri0zkSGLn6nYW5vEFoxnZgp8OA0NJBAYtkTlGmDLcosCxbnpWWwlCumu2cDTZ5
+         4E2lvcndS2DGYcOGF0HZodfRx8S09E6fDgYFx/dQUfcBA/iYZKhDq+ZGycrs7KtXJcPD
+         BOoLT8MBH8qFRnJqlyMN2xxLEuDZkcC59lYFnVBWwUl5w9NlCtQyiJYwMM7qYgwOUeFE
+         EdDK/D9faEC0LDYcMKEjJeeldYlpCgtJtLVoo8ZX0ka6KpqhhVo7gnK0xD9MQ5zexaDO
+         1s/3WkHjX8POr+No5p7MwY8YybIAYRrbRu5xUlR+LNoiHCrfUA6pEhHh6TUs9X5VCkRg
+         NMwA==
+X-Gm-Message-State: AOAM530L/iVZBta1DKpzygHRrQgNRQTlBjeDZhKlzKDFhCjwYw6ygepP
+        /JXAqllKA265lhzzraT8Uw==
+X-Google-Smtp-Source: ABdhPJz/7ZuPaPILN8nabg+jPHzHv7LO5oCxGOsFtnQucTdEFHAzxyKy2khDTOZeA/Wwj49OhDuXrA==
+X-Received: by 2002:a02:950a:: with SMTP id y10mr29198jah.42.1592505839753;
+        Thu, 18 Jun 2020 11:43:59 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id v18sm1961927ilk.6.2020.06.18.11.43.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 11:43:59 -0700 (PDT)
+Received: (nullmailer pid 690740 invoked by uid 1000);
+        Thu, 18 Jun 2020 18:43:57 -0000
+Date:   Thu, 18 Jun 2020 12:43:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, dhavalp@codeaurora.org,
+        mkurumel@codeaurora.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH] irq: Request and release resources for chained IRQs
-In-Reply-To: <TZHZBQ.SOVDZ4DJB30O1@ixit.cz>
-References: <TZHZBQ.SOVDZ4DJB30O1@ixit.cz>
-Date:   Thu, 18 Jun 2020 20:42:40 +0200
-Message-ID: <87tuz8b4gv.fsf@nanos.tec.linutronix.de>
+        sparate@codeaurora.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org,
+        linux-kernel@vger.kernel.org, mturney@codeaurora.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Ravi Kumar Bokka <rbokka@codeaurora.org>,
+        saiprakash.ranjan@codeaurora.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] dt-bindings: nvmem: qfprom: Convert to yaml
+Message-ID: <20200618184357.GA689384@bogus>
+References: <20200617145116.247432-1-dianders@chromium.org>
+ <20200617074930.v3.1.Iea2704ec2cb40c00eca47781c310a6330ac5dd41@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617074930.v3.1.Iea2704ec2cb40c00eca47781c310a6330ac5dd41@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Heidelberg <david@ixit.cz> writes:
-> is there chance to get this patch included or could be this issue 
-> solved with different approach?
+On Wed, 17 Jun 2020 07:51:13 -0700, Douglas Anderson wrote:
+> From: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> 
+> This switches the bindings over from txt to yaml.
+> 
+> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+> Changes in v3:
+> - Split conversion to yaml into separate patch new in v3.
+> - Use 'const' for compatible instead of a 1-entry enum.
+> - Changed filename to match compatible string.
+> - Add #address-cells and #size-cells to list of properties.
+> - Fixed up example.
+> 
+>  .../bindings/nvmem/qcom,qfprom.yaml           | 45 +++++++++++++++++++
+>  .../devicetree/bindings/nvmem/qfprom.txt      | 35 ---------------
+>  2 files changed, 45 insertions(+), 35 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/nvmem/qfprom.txt
+> 
 
-Included into what? This patch is incorrect as I pointed out in review
-here:
 
-  https://lore.kernel.org/lkml/alpine.DEB.2.21.1812071143480.14498@nanos.tec.linutronix.de/
+My bot found errors running 'make dt_binding_check' on your patch:
 
-So why are you even asking?
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/qcom,qfprom.example.dt.yaml: example-0: efuse@784000:reg:0: [0, 7880704, 0, 2303] is too long
 
-I recommended to switch this away from chained handler and then the
-whole story ended with this mail:
 
-  https://lore.kernel.org/lkml/alpine.DEB.2.21.1812071404140.14498@nanos.tec.linutronix.de/
+See https://patchwork.ozlabs.org/patch/1311254
 
-I have no idea how the GPIO people solved that problem, but certainly
-not by applying this.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
-Thanks,
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-        tglx
+Please check and re-submit.
+
