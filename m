@@ -2,110 +2,136 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D088221F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944EC221F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:52:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592445123;
+	bh=9FwDKn0Pk472PixKulouDu0tIeqqcbmBGsF1GD227xQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pyTABxKGb3FTC2u/f7Asl0pR9rvaBXkWXou8tSTJciYzQOQ0hCkgJqqjRQtQ2M81Z
+	 YQr8qK9cjNTA8HgqPISJ286OW7/CdzAjAVk82/Zpp1uIXB97MN/ahpJzrEInF5K3yZ
+	 xbWh0RefGSideq9W6N68nU7OFNYFM7zGunMRbyE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733180AbgFRBv4 (ORCPT
+        id S1727968AbgFRB0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:51:56 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45682 "EHLO vps0.lunn.ch"
+        Wed, 17 Jun 2020 21:26:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732198AbgFRBvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:51:53 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jljiV-0013N7-K9; Thu, 18 Jun 2020 03:51:47 +0200
-Date:   Thu, 18 Jun 2020 03:51:47 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        robh@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v7 2/6] net: phy: Add a helper to return the
- index for of the internal delay
-Message-ID: <20200618015147.GH249144@lunn.ch>
-References: <20200617182019.6790-1-dmurphy@ti.com>
- <20200617182019.6790-3-dmurphy@ti.com>
+        id S1730507AbgFRBXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:23:30 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE28D221EF;
+        Thu, 18 Jun 2020 01:23:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592443409;
+        bh=9FwDKn0Pk472PixKulouDu0tIeqqcbmBGsF1GD227xQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jZGFZ/Azo2KSLQo2c7Q3LIAn7W7RbLeCY860d++AHrTUgwtBE9VB0YCgHBh5/MGf1
+         ZUNG3mtHdrpqdyy8gpFTlyxWYPOD81zHdLfPFPHOCkvRGP1kzdsojeTegYWNzHZ9+l
+         L804cN5gN45ME5ukiXeNjfF/cd9ecIXrAkdYP6MM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Aiman Najjar <aiman.najjar@hurranet.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.19 053/172] staging: rtl8712: fix multiline derefernce warnings
+Date:   Wed, 17 Jun 2020 21:20:19 -0400
+Message-Id: <20200618012218.607130-53-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617182019.6790-3-dmurphy@ti.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 01:20:15PM -0500, Dan Murphy wrote:
-> Add a helper function that will return the index in the array for the
-> passed in internal delay value.  The helper requires the array, size and
-> delay value.
-> 
-> The helper will then return the index for the exact match or return the
-> index for the index to the closest smaller value.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  drivers/net/phy/phy_device.c | 68 ++++++++++++++++++++++++++++++++++++
->  include/linux/phy.h          |  4 +++
->  2 files changed, 72 insertions(+)
-> 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 04946de74fa0..611d4e68e3c6 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -31,6 +31,7 @@
->  #include <linux/mdio.h>
->  #include <linux/io.h>
->  #include <linux/uaccess.h>
-> +#include <linux/property.h>
->  
->  MODULE_DESCRIPTION("PHY library");
->  MODULE_AUTHOR("Andy Fleming");
-> @@ -2657,6 +2658,73 @@ void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause)
->  }
->  EXPORT_SYMBOL(phy_get_pause);
->  
-> +/**
-> + * phy_get_delay_index - returns the index of the internal delay
-> + * @phydev: phy_device struct
-> + * @dev: pointer to the devices device struct
-> + * @delay_values: array of delays the PHY supports
-> + * @size: the size of the delay array
-> + * @is_rx: boolean to indicate to get the rx internal delay
-> + *
-> + * Returns the index within the array of internal delay passed in.
-> + * Or if size == 0 then the delay read from the firmware is returned.
-> + * The array must be in ascending order.
-> + * Return errno if the delay is invalid or cannot be found.
-> + */
-> +s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
-> +			   const int *delay_values, int size, bool is_rx)
-> +{
-> +	int ret;
-> +	int i;
-> +	s32 delay;
-> +
-> +	if (is_rx)
-> +		ret = device_property_read_u32(dev, "rx-internal-delay-ps",
-> +					       &delay);
-> +	else
-> +		ret = device_property_read_u32(dev, "tx-internal-delay-ps",
-> +					       &delay);
-> +	if (ret) {
-> +		phydev_err(phydev, "internal delay not defined\n");
+From: Aiman Najjar <aiman.najjar@hurranet.com>
 
-This is an optional property. So printing an error message seems heavy
-handed.
+[ Upstream commit 269da10b1477c31c660288633c8d613e421b131f ]
 
-Maybe it would be better to default to 0 if the property is not found,
-and continue with the lookup in the table to find what value should be
-written for a 0ps delay?
+This patch fixes remaining checkpatch warnings
+in rtl871x_xmit.c:
 
-	Andrew
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->PrivacyKeyIndex'
+636: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:636:
++					      (u8)psecuritypriv->
++					      PrivacyKeyIndex);
+
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
+643: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:643:
++						   (u8)psecuritypriv->
++						   XGrpKeyid);
+
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
+652: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:652:
++						   (u8)psecuritypriv->
++						   XGrpKeyid);
+
+Signed-off-by: Aiman Najjar <aiman.najjar@hurranet.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/98805a72b92e9bbf933e05b827d27944663b7bc1.1585508171.git.aiman.najjar@hurranet.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/staging/rtl8712/rtl871x_xmit.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
+index a8ae14ce6613..95d5c050a894 100644
+--- a/drivers/staging/rtl8712/rtl871x_xmit.c
++++ b/drivers/staging/rtl8712/rtl871x_xmit.c
+@@ -601,7 +601,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
+ 	addr_t addr;
+ 	u8 *pframe, *mem_start, *ptxdesc;
+ 	struct sta_info		*psta;
+-	struct security_priv	*psecuritypriv = &padapter->securitypriv;
++	struct security_priv	*psecpriv = &padapter->securitypriv;
+ 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
+ 	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
+ 	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
+@@ -644,15 +644,13 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
+ 				case _WEP40_:
+ 				case _WEP104_:
+ 					WEP_IV(pattrib->iv, psta->txpn,
+-					       (u8)psecuritypriv->
+-					       PrivacyKeyIndex);
++					       (u8)psecpriv->PrivacyKeyIndex);
+ 					break;
+ 				case _TKIP_:
+ 					if (bmcst)
+ 						TKIP_IV(pattrib->iv,
+ 						    psta->txpn,
+-						    (u8)psecuritypriv->
+-						    XGrpKeyid);
++						    (u8)psecpriv->XGrpKeyid);
+ 					else
+ 						TKIP_IV(pattrib->iv, psta->txpn,
+ 							0);
+@@ -660,8 +658,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
+ 				case _AES_:
+ 					if (bmcst)
+ 						AES_IV(pattrib->iv, psta->txpn,
+-						    (u8)psecuritypriv->
+-						    XGrpKeyid);
++						    (u8)psecpriv->XGrpKeyid);
+ 					else
+ 						AES_IV(pattrib->iv, psta->txpn,
+ 						       0);
+-- 
+2.25.1
+
