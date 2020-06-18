@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42D9022208
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFBCB221FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444513;
-	bh=bhWI4KqoyEablLasAkA2NaIXdSSmV56ucblPw/5zqLc=;
+	s=default; t=1592444516;
+	bh=UGhfDyzH5DKoRcZ9PfBcUbV7VLVNuUQ36yNDMsI1WJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0oxef2PMup5gYIcY64PfjFq22XFYAZyWWMPk2T3PJMXhp9LSMYrvdLOuVbz3lIit4
-	 tO3JiZDC7jvyEFReyEAE2OhmqHQ63c6USnRQmliCfjRBPUdvmZw3x61gszO1Driq9q
-	 nYBZeotNker/Dnqy6L7AiKFyGS8nDVgBpbN+Tzwo=
+	b=XWQTAPK2Ga2LdeRPeGIzwFe7zu6Anb/XfHWRYpRpdGCAm9oRIr1EnGPnTsEgD6Qwf
+	 TMj1VfpSE0Paof5/wGoRTpw0rx56MwTrRRGvtqVCmIu2ILg3j2/0Cojx462LiNz9MQ
+	 DpuY6S7koaW5zy3Ll/Y5UCfmY7j3sIRzrYyVkDa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbgFRB3f (ORCPT
+        id S1732316AbgFRB3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:29:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33892 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:29:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731034AbgFRB00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:26:26 -0400
+        id S1731014AbgFRB0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:26:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0DBC2088E;
-        Thu, 18 Jun 2020 01:26:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B183D20B1F;
+        Thu, 18 Jun 2020 01:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443585;
-        bh=bhWI4KqoyEablLasAkA2NaIXdSSmV56ucblPw/5zqLc=;
+        s=default; t=1592443584;
+        bh=UGhfDyzH5DKoRcZ9PfBcUbV7VLVNuUQ36yNDMsI1WJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wGGE25+6OIaRka4SMetWEpS6ji2W3Ht+7i+a+Ob9bOve5fdCuZngSeNLJa81J9C16
-         EMmcuVb1STdbl92fr27hUWuPoeeqlkKHhWhZq+JEY8/VWPuaHP6MY2uno9AovszUbm
-         Stq69PyN82d22REQG/q/vMGV2QZl94E0cTUcYWW8=
+        b=JSIp9F9yX/43dwq5ycPHSiONKYpHN2LzEU+k5Du3/AuRytDHCZL+DJ45jKk9uJpUs
+         rqBE/2VtxXZqHBK831c+n77cgEi39RvvCIm0gNGs4G4Jq6+ABXkSE6wN1SGGeEcmoX
+         Y3uZZ1lvYcVX7tj1uNKOsuKO4Z0pJO8agLZbd/Hk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 020/108] PCI: aardvark: Don't blindly enable ASPM L0s and don't write to read-only register
-Date:   Wed, 17 Jun 2020 21:24:32 -0400
-Message-Id: <20200618012600.608744-20-sashal@kernel.org>
+Cc:     Martin Wilck <mwilck@suse.com>, Hannes Reinecke <hare@suse.de>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.14 019/108] dm mpath: switch paths in dm_blk_ioctl() code path
+Date:   Wed, 17 Jun 2020 21:24:31 -0400
+Message-Id: <20200618012600.608744-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,63 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+From: Martin Wilck <mwilck@suse.com>
 
-[ Upstream commit 90c6cb4a355e7befcb557d217d1d8b8bd5875a05 ]
+[ Upstream commit 2361ae595352dec015d14292f1b539242d8446d6 ]
 
-Trying to change Link Status register does not have any effect as this
-is a read-only register. Trying to overwrite bits for Negotiated Link
-Width does not make sense.
+SCSI LUN passthrough code such as qemu's "scsi-block" device model
+pass every IO to the host via SG_IO ioctls. Currently, dm-multipath
+calls choose_pgpath() only in the block IO code path, not in the ioctl
+code path (unless current_pgpath is NULL). This has the effect that no
+path switching and thus no load balancing is done for SCSI-passthrough
+IO, unless the active path fails.
 
-In future proper change of link width can be done via Lane Count Select
-bits in PCIe Control 0 register.
+Fix this by using the same logic in multipath_prepare_ioctl() as in
+multipath_clone_and_map().
 
-Trying to unconditionally enable ASPM L0s via ASPM Control bits in Link
-Control register is wrong. There should be at least some detection if
-endpoint supports L0s as isn't mandatory.
+Note: The allegedly best path selection algorithm, service-time,
+still wouldn't work perfectly, because the io size of the current
+request is always set to 0. Changing that for the IO passthrough
+case would require the ioctl cmd and arg to be passed to dm's
+prepare_ioctl() method.
 
-Moreover ASPM Control bits in Link Control register are controlled by
-pcie/aspm.c code which sets it according to system ASPM settings,
-immediately after aardvark driver probes. So setting these bits by
-aardvark driver has no long running effect.
-
-Remove code which touches ASPM L0s bits from this driver and let
-kernel's ASPM implementation to set ASPM state properly.
-
-Some users are reporting issues that this code is problematic for some
-Intel wifi cards and removing it fixes them, see e.g.:
-https://bugzilla.kernel.org/show_bug.cgi?id=196339
-
-If problems with Intel wifi cards occur even after this commit, then
-pcie/aspm.c code could be modified / hooked to not enable ASPM L0s state
-for affected problematic cards.
-
-Link: https://lore.kernel.org/r/20200430080625.26070-3-pali@kernel.org
-Tested-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pci-aardvark.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/md/dm-mpath.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/host/pci-aardvark.c b/drivers/pci/host/pci-aardvark.c
-index 5f3048e75bec..c1db09fbbe04 100644
---- a/drivers/pci/host/pci-aardvark.c
-+++ b/drivers/pci/host/pci-aardvark.c
-@@ -365,10 +365,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+diff --git a/drivers/md/dm-mpath.c b/drivers/md/dm-mpath.c
+index 8b7328666eaa..7c60aace8d25 100644
+--- a/drivers/md/dm-mpath.c
++++ b/drivers/md/dm-mpath.c
+@@ -1815,7 +1815,7 @@ static int multipath_prepare_ioctl(struct dm_target *ti,
+ 	int r;
  
- 	advk_pcie_wait_for_link(pcie);
+ 	current_pgpath = READ_ONCE(m->current_pgpath);
+-	if (!current_pgpath)
++	if (!current_pgpath || !test_bit(MPATHF_QUEUE_IO, &m->flags))
+ 		current_pgpath = choose_pgpath(m, 0);
  
--	reg = PCIE_CORE_LINK_L0S_ENTRY |
--		(1 << PCIE_CORE_LINK_WIDTH_SHIFT);
--	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
--
- 	reg = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
- 	reg |= PCIE_CORE_CMD_MEM_ACCESS_EN |
- 		PCIE_CORE_CMD_IO_ACCESS_EN |
+ 	if (current_pgpath) {
 -- 
 2.25.1
 
