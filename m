@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11105C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E9BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDBC821D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01063221ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444369;
-	bh=jv+js8+opeJ5YoDFZIKWgYWMSWoNNt7fCTBc5d79PNY=;
+	s=default; t=1592444379;
+	bh=t64D7sJ3wTIQsMyN+SB5ccQgLbMrFILoX30G8lnC7nQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u1dd/i3O8m1OCaclv5Zwzge8h4MZFm86xVplBYgRVnebQq+IlyqfzoJzVzP+FSf11
-	 6Q4Kb7EPAACrFxA81Nm96ei87TBHz59zL7dPRvK+8jv5MbvDhotMotpf5MtrAOM3jO
-	 /3Sv7YJIFuCC3FsNNEtNtsVoQupgTZeVaBfZO/O8=
+	b=v/HNmcTkld2v7nF8/Nkp6Ul/QcPKCbG/7ywHeoK6CdbM2SEy5YywYlEGGZ5TjV2XV
+	 rn5Jnpnjvhn23sdYsLwePIw4Wy6rYx7gXk0Bop7dPuJGeRh0+tt+9cupvVKAX/2A3O
+	 hgK/cGaHmHdk8LQjYzv1mFkzQ3kYx3FgQ5JOBL4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgFRBjZ (ORCPT
+        id S1732456AbgFRBjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:39:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40314 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:39:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732498AbgFRBaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:30:20 -0400
+        id S1731220AbgFRBaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:30:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E67F206E2;
-        Thu, 18 Jun 2020 01:30:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C508206E2;
+        Thu, 18 Jun 2020 01:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443820;
-        bh=jv+js8+opeJ5YoDFZIKWgYWMSWoNNt7fCTBc5d79PNY=;
+        s=default; t=1592443816;
+        bh=t64D7sJ3wTIQsMyN+SB5ccQgLbMrFILoX30G8lnC7nQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ypV/wqiOBt6Pp4Cm3oSJLlJtoXzTC558PaAOTr62tDAsbFkcFKH5SSc9uYV6Z/SmJ
-         4Of7q+NHQicG9JT0srmDcnUwerhclhBH8pxCxZuhKpkaKLwK+rLXynONXTcuKUQEt1
-         2+qR3v4fAi9X/wkLMieWtdpZUbzh75SrF+XeIS34=
+        b=v+hAGHqmwRoF5GwvG+blhGofVXgZmpBGcIIEeh/nKEKqCS2KFjQIp3gMK5fPjxPKb
+         CEl9/AQPg+GVXKiJJYS2bPq0qV8l1w9x3laGp9G6VDwNNzS80VHJwzdI/hzJcsJG57
+         nHw5CZYu5pRavn9d6U59xkJGVIe5WHm5cKqe1t1A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
-Subject: [PATCH AUTOSEL 4.4 12/60] mfd: wm8994: Fix driver operation if loaded as modules
-Date:   Wed, 17 Jun 2020 21:29:16 -0400
-Message-Id: <20200618013004.610532-12-sashal@kernel.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 09/60] usblp: poison URBs upon disconnect
+Date:   Wed, 17 Jun 2020 21:29:13 -0400
+Message-Id: <20200618013004.610532-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
 References: <20200618013004.610532-1-sashal@kernel.org>
@@ -60,36 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit d4f9b5428b53dd67f49ee8deed8d4366ed6b1933 ]
+[ Upstream commit 296a193b06120aa6ae7cf5c0d7b5e5b55968026e ]
 
-WM8994 chip has built-in regulators, which might be used for chip
-operation. They are controlled by a separate wm8994-regulator driver,
-which should be loaded before this driver calls regulator_get(), because
-that driver also provides consumer-supply mapping for the them. If that
-driver is not yet loaded, regulator core substitute them with dummy
-regulator, what breaks chip operation, because the built-in regulators are
-never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
-"pre" dependency to "wm8994_regulator" module.
+syzkaller reported an URB that should have been killed to be active.
+We do not understand it, but this should fix the issue if it is real.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20200507085806.5793-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/wm8994-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/class/usblp.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
-index 7eec619a6023..3d1457189fa2 100644
---- a/drivers/mfd/wm8994-core.c
-+++ b/drivers/mfd/wm8994-core.c
-@@ -690,3 +690,4 @@ module_i2c_driver(wm8994_i2c_driver);
- MODULE_DESCRIPTION("Core support for the WM8994 audio CODEC");
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
-+MODULE_SOFTDEP("pre: wm8994_regulator");
+diff --git a/drivers/usb/class/usblp.c b/drivers/usb/class/usblp.c
+index 07c3c3449147..c578d64edc15 100644
+--- a/drivers/usb/class/usblp.c
++++ b/drivers/usb/class/usblp.c
+@@ -481,7 +481,8 @@ static int usblp_release(struct inode *inode, struct file *file)
+ 	usb_autopm_put_interface(usblp->intf);
+ 
+ 	if (!usblp->present)		/* finish cleanup from disconnect */
+-		usblp_cleanup(usblp);
++		usblp_cleanup(usblp);	/* any URBs must be dead */
++
+ 	mutex_unlock(&usblp_mutex);
+ 	return 0;
+ }
+@@ -1397,9 +1398,11 @@ static void usblp_disconnect(struct usb_interface *intf)
+ 
+ 	usblp_unlink_urbs(usblp);
+ 	mutex_unlock(&usblp->mut);
++	usb_poison_anchored_urbs(&usblp->urbs);
+ 
+ 	if (!usblp->used)
+ 		usblp_cleanup(usblp);
++
+ 	mutex_unlock(&usblp_mutex);
+ }
+ 
 -- 
 2.25.1
 
