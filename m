@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7425BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEA4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C05422210
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1813322200
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:29:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443764;
-	bh=Dwsp6Z4kPZv3ymP53cYNbkg+qUMWFYj7QbpPlxBj5Cs=;
+	s=default; t=1592443772;
+	bh=wDsFaTxUuJ733c0iNF01nYkx6YWOhcUVC0uy3kXoRyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OB+YnOMlYp3mtlHJPEzbjwjDrD078H+2AKBiOxgDSmzZcXG77DkeA5o57WmpjMuOz
-	 8qsLd9nHHhZ7zAxgbt+u7SLtIggmk+0Jss0oDpespSCfglzyaCo5rMBNKsWJx37DQS
-	 Rht7xjfOqUy42b/jTcWmtkqePYi0KKxUjWNEHAAo=
+	b=uS5z/eaCk0Y2CI2LxwkQcOkn3K8C3GRQfUTRLY6JCkRYz3teFX63SWS6n8u4mRvRC
+	 +ofieEjrLOBFahsN0s5bCxTX01h6wTM9OwEFLTbsvtZwVaxZGI1LMJ131aq9xkU8oy
+	 PGlS/1oOVQ8VEXcm5rf1o/41guy34/hKoMTL7RAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732287AbgFRB3W (ORCPT
+        id S1731469AbgFRB3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:29:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33814 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:29:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731645AbgFRB0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:26:20 -0400
+        id S1731660AbgFRB0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:26:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1520520897;
-        Thu, 18 Jun 2020 01:26:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F8FD221F3;
+        Thu, 18 Jun 2020 01:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443579;
-        bh=Dwsp6Z4kPZv3ymP53cYNbkg+qUMWFYj7QbpPlxBj5Cs=;
+        s=default; t=1592443583;
+        bh=wDsFaTxUuJ733c0iNF01nYkx6YWOhcUVC0uy3kXoRyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DVSFdpsrGQnsuVPGigG79qGSjuch6QV8VvrBjfXwFOom3iqVVgB/GQ9JNz0ibs/hf
-         xDSQ8/Un7s2TwYXXvTlZ5mSTCV72lxXcFuIczNQvIJoe/Sz7i5AUnJen+KFKhIVqaR
-         V48Z7GaqHgo6VypVP1i6yZeh46b/n2m09wPqbm3A=
+        b=S84QBQfQLrUBZ/74QzFDrmx/X9sT0nYbPl0+iSpaD/5lUvuty+Z8xc/TPhSLi3CiJ
+         sXuxF4sM9w7S8AKVoSbpTtwcvQRUiY4G5IcSee4wNAtfTA34ttR+y8FB3Q9Mgeh+Mx
+         xPXfYM1tx9afT/fyUiRmwsRBFNFsnfcy+nFg3cIc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Klinger <ak@it-klinger.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 015/108] iio: bmp280: fix compensation of humidity
-Date:   Wed, 17 Jun 2020 21:24:27 -0400
-Message-Id: <20200618012600.608744-15-sashal@kernel.org>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 018/108] usblp: poison URBs upon disconnect
+Date:   Wed, 17 Jun 2020 21:24:30 -0400
+Message-Id: <20200618012600.608744-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -59,47 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Klinger <ak@it-klinger.de>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit dee2dabc0e4115b80945fe2c91603e634f4b4686 ]
+[ Upstream commit 296a193b06120aa6ae7cf5c0d7b5e5b55968026e ]
 
-Limit the output of humidity compensation to the range between 0 and 100
-percent.
+syzkaller reported an URB that should have been killed to be active.
+We do not understand it, but this should fix the issue if it is real.
 
-Depending on the calibration parameters of the individual sensor it
-happens, that a humidity above 100 percent or below 0 percent is
-calculated, which don't make sense in terms of relative humidity.
-
-Add a clamp to the compensation formula as described in the datasheet of
-the sensor in chapter 4.2.3.
-
-Although this clamp is documented, it was never in the driver of the
-kernel.
-
-It depends on the circumstances (calibration parameters, temperature,
-humidity) if one can see a value above 100 percent without the clamp.
-The writer of this patch was working with this type of sensor without
-noting this error. So it seems to be a rare event when this bug occures.
-
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20200507085806.5793-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/pressure/bmp280-core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/class/usblp.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-index 3204dff34e0a..ae415b4e381a 100644
---- a/drivers/iio/pressure/bmp280-core.c
-+++ b/drivers/iio/pressure/bmp280-core.c
-@@ -182,6 +182,8 @@ static u32 bmp280_compensate_humidity(struct bmp280_data *data,
- 		+ (s32)2097152) * H2 + 8192) >> 14);
- 	var -= ((((var >> 15) * (var >> 15)) >> 7) * (s32)H1) >> 4;
+diff --git a/drivers/usb/class/usblp.c b/drivers/usb/class/usblp.c
+index 5e456a83779d..b0471ce34011 100644
+--- a/drivers/usb/class/usblp.c
++++ b/drivers/usb/class/usblp.c
+@@ -481,7 +481,8 @@ static int usblp_release(struct inode *inode, struct file *file)
+ 	usb_autopm_put_interface(usblp->intf);
  
-+	var = clamp_val(var, 0, 419430400);
+ 	if (!usblp->present)		/* finish cleanup from disconnect */
+-		usblp_cleanup(usblp);
++		usblp_cleanup(usblp);	/* any URBs must be dead */
 +
- 	return var >> 12;
- };
+ 	mutex_unlock(&usblp_mutex);
+ 	return 0;
+ }
+@@ -1388,9 +1389,11 @@ static void usblp_disconnect(struct usb_interface *intf)
+ 
+ 	usblp_unlink_urbs(usblp);
+ 	mutex_unlock(&usblp->mut);
++	usb_poison_anchored_urbs(&usblp->urbs);
+ 
+ 	if (!usblp->used)
+ 		usblp_cleanup(usblp);
++
+ 	mutex_unlock(&usblp_mutex);
+ }
  
 -- 
 2.25.1
