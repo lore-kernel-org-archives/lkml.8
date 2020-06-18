@@ -2,56 +2,53 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1729AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E62D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E380620720
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B4F206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447642;
-	bh=vSojhG1AN4ckLxkTtROHJIcQA7FMxsskMNKPJIPkq80=;
+	s=default; t=1592447646;
+	bh=WIOl06bZZpaOxOAx2cufPtKtF9JXqxkQhq5wtIEVqNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pTeYDHcQ9vZSAxn08Q0C8l9FQlMMeFzwTo7B1eiLKPCL3wZ6IXkBbz+8WQtcW2EP7
-	 jhHkSHqXkTZihKAW1R8egqL8VcmP4ethlaooGi4nys2td0xtXLHXIoZDZYLODafIf7
-	 PtC8QoKYW0DpZJfI92gdZBS61HAmbA7wWbZMfToo=
+	b=beVd9JmjL7BscZLrlBVcQmQ2QjLeoaFNWA0ob5OjRlR6aYh8cTPLGoIpstLtqd3ie
+	 yYOLOPJoVnQf7IT9U//ttrdkuPy5d2XTZSJgjIhtJYRaIVbSeVGgEVIW/yYCT3A0Y2
+	 ycjQFjjIx8lat1BFFEHvC7j1CCUxB2r91tr3VKMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729335AbgFRBOf (ORCPT
+        id S1729956AbgFRCeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:14:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42258 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:34:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729068AbgFRBNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:14 -0400
+        id S1729336AbgFRBOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB89E21924;
-        Thu, 18 Jun 2020 01:13:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E196421D7B;
+        Thu, 18 Jun 2020 01:14:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442792;
-        bh=vSojhG1AN4ckLxkTtROHJIcQA7FMxsskMNKPJIPkq80=;
+        s=default; t=1592442875;
+        bh=WIOl06bZZpaOxOAx2cufPtKtF9JXqxkQhq5wtIEVqNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qxXjB2l330OUQsOPx5V5nQpeCwRsXB3rWMwZh9goYAmJKIxHlOsargGhAxIcATot5
-         83/ay1tTEJ4gjpfc1oIbmzr9k7i+CicU62m9bG6BzeCtBQJKkh2i5JTZv8kBBz6FPU
-         cW0waF8y5bT9cKcz8ZPq0ekYRblIp72lVb59Lzko=
+        b=kIReAiWj6IZINZHeN4qKp6fbpAUAj2T85JHOxaI79aFXDSrgHXu/fBso5uzwjR9s1
+         bLCr2Z+fIMvRGAz297Ygc8eB44uPDLfqmWYkSlrCEAzd9pONweGcH3ljFl3LyiTvVk
+         QHbmQLt+CogZ6jlAq0GS54tPaCyCxZ1UpCkNyrYM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 235/388] coresight: Fix support for sparsely populated ports
-Date:   Wed, 17 Jun 2020 21:05:32 -0400
-Message-Id: <20200618010805.600873-235-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        kbuild test robot <lkp@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 301/388] input: i8042 - Remove special PowerPC handling
+Date:   Wed, 17 Jun 2020 21:06:38 -0400
+Message-Id: <20200618010805.600873-301-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -64,342 +61,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit d375b356e687f2eefb51ddc3f1f2414cfa498f86 ]
+[ Upstream commit e4f4ffa8a98c24a4ab482669b1e2b4cfce3f52f4 ]
 
-On some systems the firmware may not describe all the ports
-connected to a component (e.g, for security reasons). This
-could be especially problematic for "funnels" where we could
-end up in modifying memory beyond the allocated space for
-refcounts.
+This causes a build error with CONFIG_WALNUT because kb_cs and kb_data
+were removed in commit 917f0af9e5a9 ("powerpc: Remove arch/ppc and
+include/asm-ppc").
 
-e.g, for a funnel with input ports listed 0, 3, 5, nr_inport = 3.
-However the we could access refcnts[5] while checking for
-references, like :
+ld.lld: error: undefined symbol: kb_cs
+> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
+> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
+> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
+> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
+> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
+> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
 
- [  526.110401] ==================================================================
- [  526.117988] BUG: KASAN: slab-out-of-bounds in funnel_enable+0x54/0x1b0
- [  526.124706] Read of size 4 at addr ffffff8135f9549c by task bash/1114
- [  526.131324]
- [  526.132886] CPU: 3 PID: 1114 Comm: bash Tainted: G S                5.4.25 #232
- [  526.140397] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
- [  526.147113] Call trace:
- [  526.149653]  dump_backtrace+0x0/0x188
- [  526.153431]  show_stack+0x20/0x2c
- [  526.156852]  dump_stack+0xdc/0x144
- [  526.160370]  print_address_description+0x3c/0x494
- [  526.165211]  __kasan_report+0x144/0x168
- [  526.169170]  kasan_report+0x10/0x18
- [  526.172769]  check_memory_region+0x1a4/0x1b4
- [  526.177164]  __kasan_check_read+0x18/0x24
- [  526.181292]  funnel_enable+0x54/0x1b0
- [  526.185072]  coresight_enable_path+0x104/0x198
- [  526.189649]  coresight_enable+0x118/0x26c
+ld.lld: error: undefined symbol: kb_data
+> referenced by i8042.c:309 (drivers/input/serio/i8042.c:309)
+> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
+> referenced by i8042-ppcio.h:33 (drivers/input/serio/i8042-ppcio.h:33)
+> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
+> referenced by i8042.c:319 (drivers/input/serio/i8042.c:319)
+> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
+> referenced 15 more times
 
-  ...
+Presumably since nobody has noticed this for the last 12 years, there is
+not anyone actually trying to use this driver so we can just remove this
+special walnut code and use the generic header so it builds for all
+configurations.
 
- [  526.237782] Allocated by task 280:
- [  526.241298]  __kasan_kmalloc+0xf0/0x1ac
- [  526.245249]  kasan_kmalloc+0xc/0x14
- [  526.248849]  __kmalloc+0x28c/0x3b4
- [  526.252361]  coresight_register+0x88/0x250
- [  526.256587]  funnel_probe+0x15c/0x228
- [  526.260365]  dynamic_funnel_probe+0x20/0x2c
- [  526.264679]  amba_probe+0xbc/0x158
- [  526.268193]  really_probe+0x144/0x408
- [  526.271970]  driver_probe_device+0x70/0x140
-
- ...
-
- [  526.316810]
- [  526.318364] Freed by task 0:
- [  526.321344] (stack is not available)
- [  526.325024]
- [  526.326580] The buggy address belongs to the object at ffffff8135f95480
- [  526.326580]  which belongs to the cache kmalloc-128 of size 128
- [  526.339439] The buggy address is located 28 bytes inside of
- [  526.339439]  128-byte region [ffffff8135f95480, ffffff8135f95500)
- [  526.351399] The buggy address belongs to the page:
- [  526.356342] page:ffffffff04b7e500 refcount:1 mapcount:0 mapping:ffffff814b00c380 index:0x0 compound_mapcount: 0
- [  526.366711] flags: 0x4000000000010200(slab|head)
- [  526.371475] raw: 4000000000010200 ffffffff05034008 ffffffff0501eb08 ffffff814b00c380
- [  526.379435] raw: 0000000000000000 0000000000190019 00000001ffffffff 0000000000000000
- [  526.387393] page dumped because: kasan: bad access detected
- [  526.393128]
- [  526.394681] Memory state around the buggy address:
- [  526.399619]  ffffff8135f95380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.407046]  ffffff8135f95400: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.414473] >ffffff8135f95480: 04 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.421900]                             ^
- [  526.426029]  ffffff8135f95500: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.433456]  ffffff8135f95580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- [  526.440883] ==================================================================
-
-To keep the code simple, we now track the maximum number of
-possible input/output connections to/from this component
-@ nr_inport and nr_outport in platform_data, respectively.
-Thus the output connections could be sparse and code is
-adjusted to skip the unspecified connections.
-
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Tested-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20200518180242.7916-13-mathieu.poirier@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 917f0af9e5a9 ("powerpc: Remove arch/ppc and include/asm-ppc")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://lore.kernel.org/r/20200518181043.3363953-1-natechancellor@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../hwtracing/coresight/coresight-platform.c  | 85 +++++++++++++------
- drivers/hwtracing/coresight/coresight.c       |  7 +-
- include/linux/coresight.h                     | 10 ++-
- 3 files changed, 72 insertions(+), 30 deletions(-)
+ drivers/input/serio/i8042-ppcio.h | 57 -------------------------------
+ drivers/input/serio/i8042.h       |  2 --
+ 2 files changed, 59 deletions(-)
+ delete mode 100644 drivers/input/serio/i8042-ppcio.h
 
-diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-index 43418a2126ff..471f34e40c74 100644
---- a/drivers/hwtracing/coresight/coresight-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -87,6 +87,7 @@ static void of_coresight_get_ports_legacy(const struct device_node *node,
- 					  int *nr_inport, int *nr_outport)
- {
- 	struct device_node *ep = NULL;
-+	struct of_endpoint endpoint;
- 	int in = 0, out = 0;
- 
- 	do {
-@@ -94,10 +95,16 @@ static void of_coresight_get_ports_legacy(const struct device_node *node,
- 		if (!ep)
- 			break;
- 
--		if (of_coresight_legacy_ep_is_input(ep))
--			in++;
--		else
--			out++;
-+		if (of_graph_parse_endpoint(ep, &endpoint))
-+			continue;
-+
-+		if (of_coresight_legacy_ep_is_input(ep)) {
-+			in = (endpoint.port + 1 > in) ?
-+				endpoint.port + 1 : in;
-+		} else {
-+			out = (endpoint.port + 1) > out ?
-+				endpoint.port + 1 : out;
-+		}
- 
- 	} while (ep);
- 
-@@ -137,9 +144,16 @@ of_coresight_count_ports(struct device_node *port_parent)
- {
- 	int i = 0;
- 	struct device_node *ep = NULL;
-+	struct of_endpoint endpoint;
-+
-+	while ((ep = of_graph_get_next_endpoint(port_parent, ep))) {
-+		/* Defer error handling to parsing */
-+		if (of_graph_parse_endpoint(ep, &endpoint))
-+			continue;
-+		if (endpoint.port + 1 > i)
-+			i = endpoint.port + 1;
-+	}
- 
--	while ((ep = of_graph_get_next_endpoint(port_parent, ep)))
--		i++;
- 	return i;
- }
- 
-@@ -191,14 +205,12 @@ static int of_coresight_get_cpu(struct device *dev)
-  * Parses the local port, remote device name and the remote port.
-  *
-  * Returns :
-- *	 1	- If the parsing is successful and a connection record
-- *		  was created for an output connection.
-  *	 0	- If the parsing completed without any fatal errors.
-  *	-Errno	- Fatal error, abort the scanning.
-  */
- static int of_coresight_parse_endpoint(struct device *dev,
- 				       struct device_node *ep,
--				       struct coresight_connection *conn)
-+				       struct coresight_platform_data *pdata)
- {
- 	int ret = 0;
- 	struct of_endpoint endpoint, rendpoint;
-@@ -206,6 +218,7 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 	struct device_node *rep = NULL;
- 	struct device *rdev = NULL;
- 	struct fwnode_handle *rdev_fwnode;
-+	struct coresight_connection *conn;
- 
- 	do {
- 		/* Parse the local port details */
-@@ -232,6 +245,13 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 			break;
- 		}
- 
-+		conn = &pdata->conns[endpoint.port];
-+		if (conn->child_fwnode) {
-+			dev_warn(dev, "Duplicate output port %d\n",
-+				 endpoint.port);
-+			ret = -EINVAL;
-+			break;
-+		}
- 		conn->outport = endpoint.port;
- 		/*
- 		 * Hold the refcount to the target device. This could be
-@@ -244,7 +264,6 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 		conn->child_fwnode = fwnode_handle_get(rdev_fwnode);
- 		conn->child_port = rendpoint.port;
- 		/* Connection record updated */
--		ret = 1;
- 	} while (0);
- 
- 	of_node_put(rparent);
-@@ -258,7 +277,6 @@ static int of_get_coresight_platform_data(struct device *dev,
- 					  struct coresight_platform_data *pdata)
- {
- 	int ret = 0;
--	struct coresight_connection *conn;
- 	struct device_node *ep = NULL;
- 	const struct device_node *parent = NULL;
- 	bool legacy_binding = false;
-@@ -287,8 +305,6 @@ static int of_get_coresight_platform_data(struct device *dev,
- 		dev_warn_once(dev, "Uses obsolete Coresight DT bindings\n");
- 	}
- 
--	conn = pdata->conns;
+diff --git a/drivers/input/serio/i8042-ppcio.h b/drivers/input/serio/i8042-ppcio.h
+deleted file mode 100644
+index 391f94d9e47d..000000000000
+--- a/drivers/input/serio/i8042-ppcio.h
++++ /dev/null
+@@ -1,57 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-#ifndef _I8042_PPCIO_H
+-#define _I8042_PPCIO_H
 -
- 	/* Iterate through each output port to discover topology */
- 	while ((ep = of_graph_get_next_endpoint(parent, ep))) {
- 		/*
-@@ -300,15 +316,9 @@ static int of_get_coresight_platform_data(struct device *dev,
- 		if (legacy_binding && of_coresight_legacy_ep_is_input(ep))
- 			continue;
- 
--		ret = of_coresight_parse_endpoint(dev, ep, conn);
--		switch (ret) {
--		case 1:
--			conn++;		/* Fall through */
--		case 0:
--			break;
--		default:
-+		ret = of_coresight_parse_endpoint(dev, ep, pdata);
-+		if (ret)
- 			return ret;
--		}
- 	}
- 
- 	return 0;
-@@ -647,6 +657,16 @@ static int acpi_coresight_parse_link(struct acpi_device *adev,
- 		 *    coresight_remove_match().
- 		 */
- 		conn->child_fwnode = fwnode_handle_get(&r_adev->fwnode);
-+	} else if (dir == ACPI_CORESIGHT_LINK_SLAVE) {
-+		/*
-+		 * We are only interested in the port number
-+		 * for the input ports at this component.
-+		 * Store the port number in child_port.
-+		 */
-+		conn->child_port = fields[0].integer.value;
-+	} else {
-+		/* Invalid direction */
-+		return -EINVAL;
- 	}
- 
- 	return dir;
-@@ -692,10 +712,20 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
- 			return dir;
- 
- 		if (dir == ACPI_CORESIGHT_LINK_MASTER) {
--			pdata->nr_outport++;
-+			if (ptr->outport > pdata->nr_outport)
-+				pdata->nr_outport = ptr->outport;
- 			ptr++;
- 		} else {
--			pdata->nr_inport++;
-+			WARN_ON(pdata->nr_inport == ptr->child_port);
-+			/*
-+			 * We do not track input port connections for a device.
-+			 * However we need the highest port number described,
-+			 * which can be recorded now and reuse this connection
-+			 * record for an output connection. Hence, do not move
-+			 * the ptr for input connections
-+			 */
-+			if (ptr->child_port > pdata->nr_inport)
-+				pdata->nr_inport = ptr->child_port;
- 		}
- 	}
- 
-@@ -704,8 +734,13 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
- 		return rc;
- 
- 	/* Copy the connection information to the final location */
--	for (i = 0; i < pdata->nr_outport; i++)
--		pdata->conns[i] = conns[i];
-+	for (i = 0; conns + i < ptr; i++) {
-+		int port = conns[i].outport;
-+
-+		/* Duplicate output port */
-+		WARN_ON(pdata->conns[port].child_fwnode);
-+		pdata->conns[port] = conns[i];
-+	}
- 
- 	devm_kfree(&adev->dev, conns);
- 	return 0;
-diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index c71553c09f8e..8f5e62f02444 100644
---- a/drivers/hwtracing/coresight/coresight.c
-+++ b/drivers/hwtracing/coresight/coresight.c
-@@ -1053,6 +1053,9 @@ static int coresight_orphan_match(struct device *dev, void *data)
- 	for (i = 0; i < i_csdev->pdata->nr_outport; i++) {
- 		conn = &i_csdev->pdata->conns[i];
- 
-+		/* Skip the port if FW doesn't describe it */
-+		if (!conn->child_fwnode)
-+			continue;
- 		/* We have found at least one orphan connection */
- 		if (conn->child_dev == NULL) {
- 			/* Does it match this newly added device? */
-@@ -1091,6 +1094,8 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
- 	for (i = 0; i < csdev->pdata->nr_outport; i++) {
- 		struct coresight_connection *conn = &csdev->pdata->conns[i];
- 
-+		if (!conn->child_fwnode)
-+			continue;
- 		conn->child_dev =
- 			coresight_find_csdev_by_fwnode(conn->child_fwnode);
- 		if (!conn->child_dev)
-@@ -1118,7 +1123,7 @@ static int coresight_remove_match(struct device *dev, void *data)
- 	for (i = 0; i < iterator->pdata->nr_outport; i++) {
- 		conn = &iterator->pdata->conns[i];
- 
--		if (conn->child_dev == NULL)
-+		if (conn->child_dev == NULL || conn->child_fwnode == NULL)
- 			continue;
- 
- 		if (csdev->dev.fwnode == conn->child_fwnode) {
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 193cc9dbf448..09f0565a5de3 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -100,10 +100,12 @@ union coresight_dev_subtype {
- };
- 
- /**
-- * struct coresight_platform_data - data harvested from the DT specification
-- * @nr_inport:	number of input ports for this component.
-- * @nr_outport:	number of output ports for this component.
-- * @conns:	Array of nr_outport connections from this component
-+ * struct coresight_platform_data - data harvested from the firmware
-+ * specification.
-+ *
-+ * @nr_inport:	Number of elements for the input connections.
-+ * @nr_outport:	Number of elements for the output connections.
-+ * @conns:	Sparse array of nr_outport connections from this component.
-  */
- struct coresight_platform_data {
- 	int nr_inport;
+-
+-#if defined(CONFIG_WALNUT)
+-
+-#define I8042_KBD_IRQ 25
+-#define I8042_AUX_IRQ 26
+-
+-#define I8042_KBD_PHYS_DESC "walnutps2/serio0"
+-#define I8042_AUX_PHYS_DESC "walnutps2/serio1"
+-#define I8042_MUX_PHYS_DESC "walnutps2/serio%d"
+-
+-extern void *kb_cs;
+-extern void *kb_data;
+-
+-#define I8042_COMMAND_REG (*(int *)kb_cs)
+-#define I8042_DATA_REG (*(int *)kb_data)
+-
+-static inline int i8042_read_data(void)
+-{
+-	return readb(kb_data);
+-}
+-
+-static inline int i8042_read_status(void)
+-{
+-	return readb(kb_cs);
+-}
+-
+-static inline void i8042_write_data(int val)
+-{
+-	writeb(val, kb_data);
+-}
+-
+-static inline void i8042_write_command(int val)
+-{
+-	writeb(val, kb_cs);
+-}
+-
+-static inline int i8042_platform_init(void)
+-{
+-	i8042_reset = I8042_RESET_ALWAYS;
+-	return 0;
+-}
+-
+-static inline void i8042_platform_exit(void)
+-{
+-}
+-
+-#else
+-
+-#include "i8042-io.h"
+-
+-#endif
+-
+-#endif /* _I8042_PPCIO_H */
+diff --git a/drivers/input/serio/i8042.h b/drivers/input/serio/i8042.h
+index 38dc27ad3c18..eb376700dfff 100644
+--- a/drivers/input/serio/i8042.h
++++ b/drivers/input/serio/i8042.h
+@@ -17,8 +17,6 @@
+ #include "i8042-ip22io.h"
+ #elif defined(CONFIG_SNI_RM)
+ #include "i8042-snirm.h"
+-#elif defined(CONFIG_PPC)
+-#include "i8042-ppcio.h"
+ #elif defined(CONFIG_SPARC)
+ #include "i8042-sparcio.h"
+ #elif defined(CONFIG_X86) || defined(CONFIG_IA64)
 -- 
 2.25.1
 
