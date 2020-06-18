@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C3EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA087C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9D7208D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B992D2088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446791;
-	bh=7j13jfJAS5TmqGJhiUKQwtVBulobDufXNR5FSmvh8BY=;
+	s=default; t=1592446799;
+	bh=6u+e7ldCO7IESsKjBJ9w1J54TJ1gKUGwjSBt67RxAro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LT4aF3ooUrZpHd+triEU6srlC8SbKEdzc9oEJz6g26dZsKXs1JlXCt16p5Xzkqw6D
-	 DH9RjZI/gp+csaYaNSNHAXUF7aswBAMHsScGhaht6n9DY5QbQbNo9DA4jz8gO2HXSj
-	 7jzDrSCxlVeuEBrXziRsarJ+3Jag0CmwUvg0QV3M=
+	b=yGA6GlNuYteGHhSpZM/4PMjJm0K5+ELNFhcoMqyrOaMLz5dRWptNaZu2stgDzdgfU
+	 Rda9ehCIkCytTi9DELmkXfc4bd2kZnUMnj6MlW+9+8VqB4/sbj5YQfQrZHUHT5FKxp
+	 EhCDkfFxLSElTTMBduqGm+4/BtODgNGYGKubjOOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbgFRCTt (ORCPT
+        id S1730472AbgFRCT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:19:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50676 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:19:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729371AbgFRBTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:19:09 -0400
+        id S1729736AbgFRBTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EBE021D79;
-        Thu, 18 Jun 2020 01:19:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBB6621D94;
+        Thu, 18 Jun 2020 01:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443148;
-        bh=7j13jfJAS5TmqGJhiUKQwtVBulobDufXNR5FSmvh8BY=;
+        s=default; t=1592443147;
+        bh=6u+e7ldCO7IESsKjBJ9w1J54TJ1gKUGwjSBt67RxAro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N4qqGlxhQC0b9nXAq7lNvz1VkNirp8mKrLDX4mXSlOidfcIM8DygmT3iX7lFtTOrl
-         v4AgxDuW2QuX6CEP1FKz7+YElzRovKXuQisM6BqogB2qTI1OZJJu7TpyOZ2qSyYOON
-         FZ7Q9jFMjuIixPAhii1CL30KyONubJ44KKTLM6fI=
+        b=CqNzFUiM5sFGlVjwt8nYZTZLNQBCemAz4/fVErWmCvyEl57nKyINgZE6zP+AvFd7c
+         DUSYthks7o58h9lAOAjufZAYz8w9lu9VULZrkOmZRxvw4fN59lNztPqBLONFuVvG9F
+         FIDmAPrmcKU/oOFxLwmMMWyYzvR3NCemtF0NsBis=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
         Thinh Nguyen <thinhn@synopsys.com>,
         Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 117/266] usb: dwc3: gadget: Properly handle failed kick_transfer
-Date:   Wed, 17 Jun 2020 21:14:02 -0400
-Message-Id: <20200618011631.604574-117-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 116/266] usb: dwc3: gadget: Properly handle ClearFeature(halt)
+Date:   Wed, 17 Jun 2020 21:14:01 -0400
+Message-Id: <20200618011631.604574-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -62,64 +62,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-[ Upstream commit 8d99087c2db863c5fa3a4a1f3cb82b3a493705ca ]
+[ Upstream commit cb11ea56f37a36288cdd0a4799a983ee3aa437dd ]
 
-If dwc3 fails to issue START_TRANSFER/UPDATE_TRANSFER command, then we
-should properly end an active transfer and give back all the started
-requests. However if it's for an isoc endpoint, the failure maybe due to
-bus-expiry status. In this case, don't give back the requests and wait
-for the next retry.
+DWC3 must not issue CLEAR_STALL command to control endpoints. The
+controller automatically clears the STALL when it receives the SETUP
+token. Also, when the driver receives ClearFeature(halt_ep), DWC3 must
+stop any active transfer from the endpoint and give back all the
+requests to the function drivers.
 
 Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
 Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/usb/dwc3/gadget.c | 36 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 05180a09e70d..17340864a540 100644
+index c30c5b1c478c..05180a09e70d 100644
 --- a/drivers/usb/dwc3/gadget.c
 +++ b/drivers/usb/dwc3/gadget.c
-@@ -1217,6 +1217,8 @@ static void dwc3_prepare_trbs(struct dwc3_ep *dep)
- 	}
- }
- 
-+static void dwc3_gadget_ep_cleanup_cancelled_requests(struct dwc3_ep *dep);
-+
- static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
+@@ -1505,6 +1505,10 @@ static void dwc3_gadget_ep_skip_trbs(struct dwc3_ep *dep, struct dwc3_request *r
  {
- 	struct dwc3_gadget_ep_cmd_params params;
-@@ -1256,14 +1258,20 @@ static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
+ 	int i;
  
- 	ret = dwc3_send_gadget_ep_cmd(dep, cmd, &params);
- 	if (ret < 0) {
--		/*
--		 * FIXME we need to iterate over the list of requests
--		 * here and stop, unmap, free and del each of the linked
--		 * requests instead of what we do now.
--		 */
--		if (req->trb)
--			memset(req->trb, 0, sizeof(struct dwc3_trb));
--		dwc3_gadget_del_and_unmap_request(dep, req, ret);
-+		struct dwc3_request *tmp;
++	/* If req->trb is not set, then the request has not started */
++	if (!req->trb)
++		return;
 +
-+		if (ret == -EAGAIN)
+ 	/*
+ 	 * If request was already started, this means we had to
+ 	 * stop the transfer. With that we also need to ignore
+@@ -1595,6 +1599,8 @@ int __dwc3_gadget_ep_set_halt(struct dwc3_ep *dep, int value, int protocol)
+ {
+ 	struct dwc3_gadget_ep_cmd_params	params;
+ 	struct dwc3				*dwc = dep->dwc;
++	struct dwc3_request			*req;
++	struct dwc3_request			*tmp;
+ 	int					ret;
+ 
+ 	if (usb_endpoint_xfer_isoc(dep->endpoint.desc)) {
+@@ -1631,13 +1637,37 @@ int __dwc3_gadget_ep_set_halt(struct dwc3_ep *dep, int value, int protocol)
+ 		else
+ 			dep->flags |= DWC3_EP_STALL;
+ 	} else {
++		/*
++		 * Don't issue CLEAR_STALL command to control endpoints. The
++		 * controller automatically clears the STALL when it receives
++		 * the SETUP token.
++		 */
++		if (dep->number <= 1) {
++			dep->flags &= ~(DWC3_EP_STALL | DWC3_EP_WEDGE);
++			return 0;
++		}
+ 
+ 		ret = dwc3_send_clear_stall_ep_cmd(dep);
+-		if (ret)
++		if (ret) {
+ 			dev_err(dwc->dev, "failed to clear STALL on %s\n",
+ 					dep->name);
+-		else
+-			dep->flags &= ~(DWC3_EP_STALL | DWC3_EP_WEDGE);
 +			return ret;
++		}
++
++		dep->flags &= ~(DWC3_EP_STALL | DWC3_EP_WEDGE);
 +
 +		dwc3_stop_active_transfer(dep, true, true);
 +
 +		list_for_each_entry_safe(req, tmp, &dep->started_list, list)
 +			dwc3_gadget_move_cancelled_request(req);
 +
-+		/* If ep isn't started, then there's no end transfer pending */
-+		if (!(dep->flags & DWC3_EP_END_TRANSFER_PENDING))
-+			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
++		list_for_each_entry_safe(req, tmp, &dep->pending_list, list)
++			dwc3_gadget_move_cancelled_request(req);
 +
- 		return ret;
++		if (!(dep->flags & DWC3_EP_END_TRANSFER_PENDING)) {
++			dep->flags &= ~DWC3_EP_DELAY_START;
++			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
++		}
  	}
  
+ 	return ret;
 -- 
 2.25.1
 
