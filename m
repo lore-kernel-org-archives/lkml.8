@@ -2,108 +2,232 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2244AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A370C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F11972080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8E82080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:34:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592498085;
+	bh=eVyEMYcH3w0tu/t9tmx43Zd823558bcJbUdQrBCBp4c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dqQr3MHiMP7PBSckvyZY2GzXJLidVISVH0kSNonAYlkTWLLHBnFrJ61mGy6+iQOWf
+	 yU4qCz/RVaAND9GTUehfL/9Vit+ztYdKScwtr4hJbku0QpBK1FExYN4ZFVxgtxFUco
+	 4fM8Jlozudw6Vj0/ibXwU71+Ee3OiF1VQG/mi9Z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730726AbgFRQdX (ORCPT
+        id S1728629AbgFRQen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:33:23 -0400
-Received: from mailout2n.rrzn.uni-hannover.de ([130.75.2.113]:46099 "EHLO
-        mailout2n.rrzn.uni-hannover.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728523AbgFRQdU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:33:20 -0400
-Received: from lab-pc01.sra.uni-hannover.de (lab.sra.uni-hannover.de [130.75.33.87])
+        Thu, 18 Jun 2020 12:34:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727114AbgFRQem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 12:34:42 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mailout2n.rrzn.uni-hannover.de (Postfix) with ESMTPSA id E65551F4CB;
-        Thu, 18 Jun 2020 18:33:14 +0200 (CEST)
-From:   Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
-To:     mhiramat@kernel.org
-Cc:     linux-kernel@i4.cs.fau.de, linux-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, maximilian.werner96@gmail.com,
-        mingo@redhat.com, rostedt@goodmis.org,
-        sascha.ortmann@stud.uni-hannover.de
-Subject: [PATCH v2] tracing/boottime: Fix kprobe multiple events
-Date:   Thu, 18 Jun 2020 18:33:01 +0200
-Message-Id: <20200618163301.25854-1-sascha.ortmann@stud.uni-hannover.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200618105051.ce01a84a13bbf67b816c1363@kernel.org>
-References: <20200618105051.ce01a84a13bbf67b816c1363@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id F3A5F2080D;
+        Thu, 18 Jun 2020 16:34:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592498082;
+        bh=eVyEMYcH3w0tu/t9tmx43Zd823558bcJbUdQrBCBp4c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HvgtGquIIepvj2gQkKFmCpbCeAgAeeIo7rCFhFWj26c+6IajL8BvAWaMt/UCkLjBj
+         Vtdzg6b/vnsNPFtyukEyPsuxiiDQ5nOPcGjyj1C4NTiv/RWhz9FGbzBk2HXK3F60XQ
+         aftQCISswXvKXTI+OuS8zmbSzVxSrPM211c2bCl0=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jlxUu-004EIo-A4; Thu, 18 Jun 2020 17:34:40 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 18 Jun 2020 17:34:40 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     David Brazdil <dbrazdil@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, android-kvm@google.com,
+        kernel-team@android.com
+Subject: Re: [PATCH v3 03/15] arm64: kvm: Add build rules for separate nVHE
+ object files
+In-Reply-To: <20200618122537.9625-4-dbrazdil@google.com>
+References: <20200618122537.9625-1-dbrazdil@google.com>
+ <20200618122537.9625-4-dbrazdil@google.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <09976ea31931481f4e00d627dc5e06fe@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: dbrazdil@google.com, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, android-kvm@google.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix boottime kprobe events to report and abort after each failure when
-adding probes.
+Hi David,
 
-As an example, when we try to set multiprobe kprobe events in
-bootconfig like this:
+On 2020-06-18 13:25, David Brazdil wrote:
+> Add new folder arch/arm64/kvm/hyp/nvhe and a Makefile for building code 
+> that
+> runs in EL2 under nVHE KVM.
+> 
+> Compile each source file into a `.hyp.tmp.o` object first, then prefix 
+> all
+> its symbols with "__kvm_nvhe_" using `objcopy` and produce a `.hyp.o`.
+> Suffixes were chosen so that it would be possible for VHE and nVHE to 
+> share
+> some source files, but compiled with different CFLAGS. nVHE build rules 
+> add
+> -D__KVM_NVHE_HYPERVISOR__.
+> 
+> The nVHE ELF symbol prefix is added to kallsyms.c as ignored. EL2-only 
+> symbols
+> will never appear in EL1 stack traces.
+> 
+> Signed-off-by: David Brazdil <dbrazdil@google.com>
+> ---
+>  arch/arm64/kernel/image-vars.h   | 12 +++++++++++
+>  arch/arm64/kvm/hyp/Makefile      |  2 +-
+>  arch/arm64/kvm/hyp/nvhe/Makefile | 35 ++++++++++++++++++++++++++++++++
+>  scripts/kallsyms.c               |  1 +
+>  4 files changed, 49 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/kvm/hyp/nvhe/Makefile
+> 
+> diff --git a/arch/arm64/kernel/image-vars.h 
+> b/arch/arm64/kernel/image-vars.h
+> index be0a63ffed23..f32b406e90c0 100644
+> --- a/arch/arm64/kernel/image-vars.h
+> +++ b/arch/arm64/kernel/image-vars.h
+> @@ -51,4 +51,16 @@ __efistub__ctype		= _ctype;
+> 
+>  #endif
+> 
+> +#ifdef CONFIG_KVM
+> +
+> +/*
+> + * KVM nVHE code has its own symbol namespace prefixed by __kvm_nvhe_, 
+> to
+> + * isolate it from the kernel proper. The following symbols are 
+> legally
+> + * accessed by it, therefore provide aliases to make them linkable.
+> + * Do not include symbols which may not be safely accessed under 
+> hypervisor
+> + * memory mappings.
+> + */
+> +
+> +#endif /* CONFIG_KVM */
+> +
+>  #endif /* __ARM64_KERNEL_IMAGE_VARS_H */
+> diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
+> index 5d8357ddc234..5f4f217532e0 100644
+> --- a/arch/arm64/kvm/hyp/Makefile
+> +++ b/arch/arm64/kvm/hyp/Makefile
+> @@ -6,7 +6,7 @@
+>  ccflags-y += -fno-stack-protector -DDISABLE_BRANCH_PROFILING \
+>  		$(DISABLE_STACKLEAK_PLUGIN)
+> 
+> -obj-$(CONFIG_KVM) += hyp.o
+> +obj-$(CONFIG_KVM) += hyp.o nvhe/
+>  obj-$(CONFIG_KVM_INDIRECT_VECTORS) += smccc_wa.o
+> 
+>  hyp-y := vgic-v3-sr.o timer-sr.o aarch32.o vgic-v2-cpuif-proxy.o 
+> sysreg-sr.o \
+> diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile 
+> b/arch/arm64/kvm/hyp/nvhe/Makefile
+> new file mode 100644
+> index 000000000000..7d64235dba62
+> --- /dev/null
+> +++ b/arch/arm64/kvm/hyp/nvhe/Makefile
+> @@ -0,0 +1,35 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile for Kernel-based Virtual Machine module, HYP/nVHE part
+> +#
+> +
+> +asflags-y := -D__KVM_NVHE_HYPERVISOR__
+> +ccflags-y := -D__KVM_NVHE_HYPERVISOR__ -fno-stack-protector \
+> +	     -DDISABLE_BRANCH_PROFILING $(DISABLE_STACKLEAK_PLUGIN)
+> +
+> +obj-y :=
+> +
+> +obj-y := $(patsubst %.o,%.hyp.o,$(obj-y))
+> +extra-y := $(patsubst %.hyp.o,%.hyp.tmp.o,$(obj-y))
+> +
+> +$(obj)/%.hyp.tmp.o: $(src)/%.c FORCE
+> +	$(call if_changed_rule,cc_o_c)
+> +$(obj)/%.hyp.tmp.o: $(src)/%.S FORCE
+> +	$(call if_changed_rule,as_o_S)
+> +$(obj)/%.hyp.o: $(obj)/%.hyp.tmp.o FORCE
+> +	$(call if_changed,hypcopy)
+> +
+> +quiet_cmd_hypcopy = HYPCOPY $@
+> +      cmd_hypcopy = $(OBJCOPY) --prefix-symbols=__kvm_nvhe_ $< $@
+> +
+> +# KVM nVHE code is run at a different exception code with a different 
+> map, so
+> +# compiler instrumentation that inserts callbacks or checks into the 
+> code may
+> +# cause crashes. Just disable it.
+> +GCOV_PROFILE	:= n
+> +KASAN_SANITIZE	:= n
+> +UBSAN_SANITIZE	:= n
+> +KCOV_INSTRUMENT	:= n
+> +
+> +# Skip objtool checking for this directory because nVHE code is 
+> compiled with
+> +# non-standard build rules.
+> +OBJECT_FILES_NON_STANDARD := y
+> diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+> index 6dc3078649fa..0096cd965332 100644
+> --- a/scripts/kallsyms.c
+> +++ b/scripts/kallsyms.c
+> @@ -109,6 +109,7 @@ static bool is_ignored_symbol(const char *name, 
+> char type)
+>  		".LASANPC",		/* s390 kasan local symbols */
+>  		"__crc_",		/* modversions */
+>  		"__efistub_",		/* arm64 EFI stub namespace */
+> +		"__kvm_nvhe_",		/* arm64 non-VHE KVM namespace */
+>  		NULL
+>  	};
 
-ftrace.event.kprobes.vfsevents {
-        probes = "vfs_read $arg1 $arg2,,
-                 !error! not reported;?", // leads to error
-                 "vfs_write $arg1 $arg2"
-}
+I guess that one of the first use of this __KVM_NVHE_HYPERVISOR__
+flag could be the has_vhe() predicate: if you're running the nVHE
+code, you are *guaranteed* not to use VHE at all.
 
-This will not work as expected. After 
-commit da0f1f4167e3af69e ("tracing/boottime: Fix kprobe event API usage"), 
-the function trace_boot_add_kprobe_event will not produce any error 
-message when adding a probe fails at kprobe_event_gen_cmd_start. 
-Furthermore, we continue to add probes when kprobe_event_gen_cmd_end fails
-(and kprobe_event_gen_cmd_start did not fail). In this case the function 
-even returns successfully when the last call to kprobe_event_gen_cmd_end
-is successful.
+Something like:
 
-The behaviour of reporting and aborting after failures is not
-consistent.
+diff --git a/arch/arm64/include/asm/virt.h 
+b/arch/arm64/include/asm/virt.h
+index 5051b388c654..b2cb8fce43dd 100644
+--- a/arch/arm64/include/asm/virt.h
++++ b/arch/arm64/include/asm/virt.h
+@@ -85,10 +85,8 @@ static inline bool is_kernel_in_hyp_mode(void)
 
-The function trace_boot_add_kprobe_event now reports each failure and
-stops adding probes immediately.
+  static __always_inline bool has_vhe(void)
+  {
+-	if (cpus_have_final_cap(ARM64_HAS_VIRT_HOST_EXTN))
+-		return true;
+-
+-	return false;
++	return (__is_defined(__KVM_NVHE_HYPERVISOR__) &&
++		cpus_have_final_cap(ARM64_HAS_VIRT_HOST_EXTN));
+  }
 
-Cc: linux-kernel@i4.cs.fau.de
-Co-developed-by: Maximilian Werner <maximilian.werner96@gmail.com>
-Signed-off-by: Maximilian Werner <maximilian.werner96@gmail.com>
-Signed-off-by: Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
----
- kernel/trace/trace_boot.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+  #endif /* __ASSEMBLY__ */
 
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index 9de29bb45a27..be893eb22071 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -101,12 +101,16 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
- 		kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
- 
- 		ret = kprobe_event_gen_cmd_start(&cmd, event, val);
--		if (ret)
-+		if (ret) {
-+			pr_err("Failed to generate probe: %s\n", buf);
- 			break;
-+		}
- 
- 		ret = kprobe_event_gen_cmd_end(&cmd);
--		if (ret)
-+		if (ret) {
- 			pr_err("Failed to add probe: %s\n", buf);
-+			break;
-+		}
- 	}
- 
- 	return ret;
+Thanks,
+
+         M.
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
