@@ -2,73 +2,84 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E958C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35EC9207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038E2207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbgFRTIO (ORCPT
+        id S1730280AbgFRTI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 15:08:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbgFRTIM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 15:08:12 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F4BC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 12:08:12 -0700 (PDT)
-Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jlztS-000137-R3; Thu, 18 Jun 2020 21:08:10 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH] sched/core: Remove mmdrop() definition
-Date:   Thu, 18 Jun 2020 21:08:10 +0200
-Message-Id: <20200618190810.790211-1-bigeasy@linutronix.de>
-X-Mailer: git-send-email 2.27.0
+        Thu, 18 Jun 2020 15:08:28 -0400
+Received: from nautica.notk.org ([91.121.71.147]:34180 "EHLO nautica.notk.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728071AbgFRTI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 15:08:27 -0400
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id EA9E8C01C; Thu, 18 Jun 2020 21:08:22 +0200 (CEST)
+Date:   Thu, 18 Jun 2020 21:08:07 +0200
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Cc:     ericvh@gmail.com, lucho@ionkov.net, davem@davemloft.net,
+        kuba@kernel.org, v9fs-developer@lists.sourceforge.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/9p: Fix sparse rcu warnings in client.c
+Message-ID: <20200618190807.GA20699@nautica>
+References: <20200618183310.5352-1-alexander.kapshuk@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200618183310.5352-1-alexander.kapshuk@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit
-   bf2c59fce4074 ("sched/core: Fix illegal RCU from offline CPUs")
+Alexander Kapshuk wrote on Thu, Jun 18, 2020:
+> Address sparse nonderef rcu warnings:
+> net/9p/client.c:790:17: warning: incorrect type in argument 1 (different address spaces)
+> net/9p/client.c:790:17:    expected struct spinlock [usertype] *lock
+> net/9p/client.c:790:17:    got struct spinlock [noderef] <asn:4> *
+> net/9p/client.c:792:48: warning: incorrect type in argument 1 (different address spaces)
+> net/9p/client.c:792:48:    expected struct spinlock [usertype] *lock
+> net/9p/client.c:792:48:    got struct spinlock [noderef] <asn:4> *
+> net/9p/client.c:872:17: warning: incorrect type in argument 1 (different address spaces)
+> net/9p/client.c:872:17:    expected struct spinlock [usertype] *lock
+> net/9p/client.c:872:17:    got struct spinlock [noderef] <asn:4> *
+> net/9p/client.c:874:48: warning: incorrect type in argument 1 (different address spaces)
+> net/9p/client.c:874:48:    expected struct spinlock [usertype] *lock
+> net/9p/client.c:874:48:    got struct spinlock [noderef] <asn:4> *
+> 
+> Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
 
-introduced a definition for mmdrop() but a a few lines above there is
-already mmdrop() defined as static inline.
+Thanks for this patch.
+From what I can see, there are tons of other parts of the code doing the
+same noderef access pattern to access current->sighand->siglock and I
+don't see much doing that.
+A couple of users justify this by saying SLAB_TYPESAFE_BY_RCU ensures
+we'll always get a usable lock which won't be reinitialized however we
+access it... It's a bit dubious we'll get the same lock than unlock to
+me, so I agree to some change though.
 
-Remove the newly introduced mmdrop() definition.
+After a second look I think we should use something like the following:
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- include/linux/sched/mm.h | 2 --
- 1 file changed, 2 deletions(-)
+if (!lock_task_sighand(current, &flags))
+	warn & skip (or some error, we'd null deref if this happened currently);
+recalc_sigpending();
+unlock_task_sighand(current, &flags);
 
-diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-index 480a4d1b7dd8d..a98604ea76f10 100644
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -49,8 +49,6 @@ static inline void mmdrop(struct mm_struct *mm)
- 		__mmdrop(mm);
- }
-=20
--void mmdrop(struct mm_struct *mm);
--
- /*
-  * This has to be called after a get_task_mm()/mmget_not_zero()
-  * followed by taking the mmap_lock for writing before modifying the
---=20
-2.27.0
+As you can see, the rcu_read_lock() isn't kept until the unlock so I'm
+not sure it will be enough to please sparse, but I've convinced myself
+current->sighand cannot change while we hold the lock and there just are
+too many such patterns in the kernel.
 
+Please let me know if I missed something or if there is an ongoing
+effort to change how this works; I'll wait for a v2.
+
+-- 
+Dominique
