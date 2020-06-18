@@ -2,161 +2,118 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2163DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 695B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05F4621924
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462CC20FC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:42:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LvLtQrHK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgFRGg7 (ORCPT
+        id S1727853AbgFRGm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 02:36:59 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6360 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726952AbgFRGg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 02:36:59 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7EA343DA2EC6CFCA4384;
-        Thu, 18 Jun 2020 14:36:40 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 18 Jun 2020 14:36:32 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 3/5] f2fs: shrink node_write lock coverage
-Date:   Thu, 18 Jun 2020 14:36:23 +0800
-Message-ID: <20200618063625.110273-3-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
-In-Reply-To: <20200618063625.110273-1-yuchao0@huawei.com>
-References: <20200618063625.110273-1-yuchao0@huawei.com>
+        Thu, 18 Jun 2020 02:42:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbgFRGmz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 02:42:55 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39CEC0613EF
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 23:42:54 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id c21so2797650lfb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 23:42:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K6hCnmc25bPhM8Zds15z3T5k2ctR9P+E0kmH5eedao4=;
+        b=LvLtQrHK+FRlk5/sD/8n+NvY5OlKXKDXtDGMvGAWEV8LStu+H5SMcJeof/D1Bi311E
+         iG2SVk2aU8L6UtTvMM8QqgfobAoSZA/4MszA+QHc6H9+WyoduT5HIfL3NiYOClb4mgyQ
+         sWSi05++HNZSaCzaYuMbRzFE/0UM0074HyCLCvUzrlUKp9M2DFy94o8jLGFyaPfQRSRB
+         vUi6H6KpwDixktHDOVJdezLiS2MP8TfPZ1UtIASSqww607WvpGLOrH5fk+dmANcJlVEi
+         LblDqZh3z5oDKbVxry/Q7EUNdmW19cHib1w0FFgAFPAmFzAtBbVtvd2OsQMdNed0x+IO
+         CTaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K6hCnmc25bPhM8Zds15z3T5k2ctR9P+E0kmH5eedao4=;
+        b=i0pU3R8eM8kTlk8isXpS01Tp5plO/eECvuoq9k7lNynpMV9nNhhQ7vtjqwObuBSy7j
+         aigZ5K8pikiipU6HQLJB9xQ+Ji1yAMvTqeNzdWWiJDvpywq0G20fKGzAxueNcitKYX2T
+         dNQZYM+U3uICKKtw5RqVjQUYt8x9ZDgfddlny584DxZFXVnRVSqJv0zmTUyfFbW+rne+
+         LosQduXL+WbMWXEAxsKbelODOsgp07ZccD2OYXj4eOIjCh1q+4fqUtgaQ+MrOXNM82lx
+         q3PYPMLEKshkWnBZGHPloq97jAJfdppOML6zfR4oUjNw+GCdY/rC7ZAFwX4+8c9Zowpy
+         rsQg==
+X-Gm-Message-State: AOAM53011HcZJlMdNbdcEJdF3/NDLJhXDQ3v3ANVzYI9VCDFI9yo/tJK
+        okNJLSJNBm+BCySisCQbHdWAVLMbZduAaig784T0HA==
+X-Google-Smtp-Source: ABdhPJx4QxcHzkbgPAk3c9tXd5/s0nYZNRG6j8i+HfERTJzJ+F0FGPMbAipjRTc9ukWM5DOXoFi2vtfz2V+2oSbLHwA=
+X-Received: by 2002:ac2:41d4:: with SMTP id d20mr1489555lfi.204.1592462573264;
+ Wed, 17 Jun 2020 23:42:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+References: <1591107505-6030-1-git-send-email-sumit.garg@linaro.org>
+ <1591107505-6030-2-git-send-email-sumit.garg@linaro.org> <20200615182457.GB5416@linux.intel.com>
+ <CAFA6WYNEnXm5FOGHGAg4XB-+GXD=C+YMh+6t976=pStU0WshAA@mail.gmail.com> <20200617231429.GD62794@linux.intel.com>
+In-Reply-To: <20200617231429.GD62794@linux.intel.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Thu, 18 Jun 2020 12:12:41 +0530
+Message-ID: <CAFA6WYOdtwnewqY0ASnMf7fyw3s_hQx0+oWJRhT3CpkkkxYpDA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] KEYS: trusted: Add generic trusted keys framework
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Markus Wamser <Markus.Wamser@mixed-mode.de>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        op-tee@lists.trustedfirmware.org,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Luke Hinds <lhinds@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- to avoid race between checkpoint and quota file writeback, it
-just needs to hold read lock of node_write in writeback path.
-- node_write lock has covered all LFS data write paths, it's not
-necessary, we only need to hold node_write lock at write path of
-quota file.
+On Thu, 18 Jun 2020 at 04:44, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Tue, Jun 16, 2020 at 07:02:37PM +0530, Sumit Garg wrote:
+> > + Luke
+> >
+> > Hi Jarkko,
+> >
+> > Prior to addressing your comments below which seems to show your
+> > preference for compile time selection of trust source (TPM or TEE), I
+> > would just like to hear the reasons for this preference especially if
+> > it makes distro vendor's life difficult [1] to make opinionated
+> > selection which could rather be achieved dynamically based on platform
+> > capability.
+> >
+> > [1] https://lkml.org/lkml/2020/6/3/405
+> >
+> > -Sumit
+>
+> Hmm... I do get the distribution kernel point. OK, lets revert to
+> dynamic then. Thanks for the remark.
+>
+> /Jarkko
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/compress.c | 18 +++++++++++++++---
- fs/f2fs/data.c     | 12 ++++++++++++
- fs/f2fs/segment.c  | 11 -----------
- 3 files changed, 27 insertions(+), 14 deletions(-)
+Thanks, will revert to dynamic mode in v6.
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 36b51795b0c3..3ff6c0305ec6 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -1096,8 +1096,16 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
- 	loff_t psize;
- 	int i, err;
- 
--	if (!IS_NOQUOTA(inode) && !f2fs_trylock_op(sbi))
-+	if (IS_NOQUOTA(inode)) {
-+		/*
-+		 * We need to wait for node_write to avoid block allocation during
-+		 * checkpoint. This can only happen to quota writes which can cause
-+		 * the below discard race condition.
-+		 */
-+		down_read(&sbi->node_write);
-+	} else if (!f2fs_trylock_op(sbi)) {
- 		return -EAGAIN;
-+	}
- 
- 	set_new_dnode(&dn, cc->inode, NULL, NULL, 0);
- 
-@@ -1203,7 +1211,9 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
- 		set_inode_flag(inode, FI_FIRST_BLOCK_WRITTEN);
- 
- 	f2fs_put_dnode(&dn);
--	if (!IS_NOQUOTA(inode))
-+	if (IS_NOQUOTA(inode))
-+		up_read(&sbi->node_write);
-+	else
- 		f2fs_unlock_op(sbi);
- 
- 	spin_lock(&fi->i_size_lock);
-@@ -1230,7 +1240,9 @@ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
- out_put_dnode:
- 	f2fs_put_dnode(&dn);
- out_unlock_op:
--	if (!IS_NOQUOTA(inode))
-+	if (IS_NOQUOTA(inode))
-+		up_read(&sbi->node_write);
-+	else
- 		f2fs_unlock_op(sbi);
- 	return -EAGAIN;
- }
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index c78ce08f6400..cbdf062d3562 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2719,8 +2719,20 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
- 
- 	/* Dentry/quota blocks are controlled by checkpoint */
- 	if (S_ISDIR(inode->i_mode) || IS_NOQUOTA(inode)) {
-+		/*
-+		 * We need to wait for node_write to avoid block allocation during
-+		 * checkpoint. This can only happen to quota writes which can cause
-+		 * the below discard race condition.
-+		 */
-+		if (IS_NOQUOTA(inode))
-+			down_read(&sbi->node_write);
-+
- 		fio.need_lock = LOCK_DONE;
- 		err = f2fs_do_write_data_page(&fio);
-+
-+		if (IS_NOQUOTA(inode))
-+			up_read(&sbi->node_write);
-+
- 		goto done;
- 	}
- 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 5b2a6f865a6d..cb861ed98ee3 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3107,14 +3107,6 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 		type = CURSEG_COLD_DATA;
- 	}
- 
--	/*
--	 * We need to wait for node_write to avoid block allocation during
--	 * checkpoint. This can only happen to quota writes which can cause
--	 * the below discard race condition.
--	 */
--	if (IS_DATASEG(type))
--		down_write(&sbi->node_write);
--
- 	down_read(&SM_I(sbi)->curseg_lock);
- 
- 	mutex_lock(&curseg->curseg_mutex);
-@@ -3180,9 +3172,6 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 
- 	up_read(&SM_I(sbi)->curseg_lock);
- 
--	if (IS_DATASEG(type))
--		up_write(&sbi->node_write);
--
- 	if (put_pin_sem)
- 		up_read(&sbi->pin_sem);
- }
--- 
-2.18.0.rc1
-
+-Sumit
