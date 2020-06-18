@@ -2,52 +2,51 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C152C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 112DC2224E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 615272222C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443888;
-	bh=t64D7sJ3wTIQsMyN+SB5ccQgLbMrFILoX30G8lnC7nQ=;
+	s=default; t=1592443891;
+	bh=JhiNskNvgTi/rnnAYFmjMfjZC1q7ong5a4d9tPQF0dw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FfZfjXN7tt0xDjFLSySLkvJnQjnMWHTIE5ZT7O+cDDjp8Pm22RYzvc/Sw7N003KFC
-	 l+iSIH3J7bN/kNa2I25kAnwfKvpWUAETsqKob7Vtl0vNvxxy//fv8K2biGt+V5Yac+
-	 v2ky2cdHVxbbtbdh7X51KsMglVnluHgdMkcpbnD4=
+	b=xr2QTuXfAOH8NNPqrGzmBf2MQSNTQSmQ7ZKv1RsS7vO4/FTyhVTYgniEClDPLs4D1
+	 OoANT3WTdnj+PXWD91+rI/FCWPg6I+pw+gOMRnqSN74lH2iBlTG3BHfD+3FY1U1faz
+	 szbrOJbDW4fkpEeTs/9geU7cxEZ+yRHhwS2DsmBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732789AbgFRBb1 (ORCPT
+        id S1732090AbgFRBb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:31:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37454 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:31:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732121AbgFRB2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:28:37 -0400
+        id S1731439AbgFRB2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:28:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71D7E221FC;
-        Thu, 18 Jun 2020 01:28:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67D4A221FC;
+        Thu, 18 Jun 2020 01:28:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443717;
-        bh=t64D7sJ3wTIQsMyN+SB5ccQgLbMrFILoX30G8lnC7nQ=;
+        s=default; t=1592443721;
+        bh=JhiNskNvgTi/rnnAYFmjMfjZC1q7ong5a4d9tPQF0dw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XFJ+bgLpSHSUwKrcFS3Chi8Ms6N5KXJpv1C4vo77MxPtjt88uT6m2O9iqhdlz4yvG
-         HWcV7qnOMgpcmmAqltzK2JnOCPOpWgmFxAWdatoXFSs07FcM5hKL4woPQXH4xlp1p7
-         52FyEh+arhmGXiE9bFAAmBGSTCyDhlkj+S0zjM4U=
+        b=KJ+2B+dZ7anExdsgAUvtbi5nLAI7lxDW2gnzssmzY5PpbQsby7MalVjU767tatFeY
+         GaC7RggyzpGG2VpytCEZgUWZNOx8BkxGsSJ7KzTEMyPCSJKbiMuhIhJWm3O4rnsIWS
+         0dt/46qCow/rCwHHxT/1ZDLcG75IWDsMaqaTy4ow=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/80] usblp: poison URBs upon disconnect
-Date:   Wed, 17 Jun 2020 21:27:13 -0400
-Message-Id: <20200618012819.609778-14-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 17/80] vfio/pci: fix memory leaks in alloc_perm_bits()
+Date:   Wed, 17 Jun 2020 21:27:16 -0400
+Message-Id: <20200618012819.609778-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
 References: <20200618012819.609778-1-sashal@kernel.org>
@@ -60,48 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 296a193b06120aa6ae7cf5c0d7b5e5b55968026e ]
+[ Upstream commit 3e63b94b6274324ff2e7d8615df31586de827c4e ]
 
-syzkaller reported an URB that should have been killed to be active.
-We do not understand it, but this should fix the issue if it is real.
+vfio_pci_disable() calls vfio_config_free() but forgets to call
+free_perm_bits() resulting in memory leaks,
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-by: syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20200507085806.5793-1-oneukum@suse.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+unreferenced object 0xc000000c4db2dee0 (size 16):
+  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
+  hex dump (first 16 bytes):
+    00 00 ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
+  backtrace:
+    [<00000000a6a4552d>] alloc_perm_bits+0x58/0xe0 [vfio_pci]
+    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
+    init_pci_cap_msi_perm at drivers/vfio/pci/vfio_pci_config.c:1125
+    (inlined by) vfio_msi_cap_len at drivers/vfio/pci/vfio_pci_config.c:1180
+    (inlined by) vfio_cap_len at drivers/vfio/pci/vfio_pci_config.c:1241
+    (inlined by) vfio_cap_init at drivers/vfio/pci/vfio_pci_config.c:1468
+    (inlined by) vfio_config_init at drivers/vfio/pci/vfio_pci_config.c:1707
+    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
+    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
+    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
+    [<000000006577923d>] sys_ioctl+0x28/0x40
+    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
+    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
+unreferenced object 0xc000000c4db2e330 (size 16):
+  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
+  hex dump (first 16 bytes):
+    00 ff ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
+  backtrace:
+    [<000000004c71914f>] alloc_perm_bits+0x44/0xe0 [vfio_pci]
+    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
+    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
+    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
+    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
+    [<000000006577923d>] sys_ioctl+0x28/0x40
+    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
+    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
+
+Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
+Signed-off-by: Qian Cai <cai@lca.pw>
+[aw: rolled in follow-up patch]
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/class/usblp.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/vfio/pci/vfio_pci_config.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/class/usblp.c b/drivers/usb/class/usblp.c
-index 07c3c3449147..c578d64edc15 100644
---- a/drivers/usb/class/usblp.c
-+++ b/drivers/usb/class/usblp.c
-@@ -481,7 +481,8 @@ static int usblp_release(struct inode *inode, struct file *file)
- 	usb_autopm_put_interface(usblp->intf);
- 
- 	if (!usblp->present)		/* finish cleanup from disconnect */
--		usblp_cleanup(usblp);
-+		usblp_cleanup(usblp);	/* any URBs must be dead */
-+
- 	mutex_unlock(&usblp_mutex);
- 	return 0;
- }
-@@ -1397,9 +1398,11 @@ static void usblp_disconnect(struct usb_interface *intf)
- 
- 	usblp_unlink_urbs(usblp);
- 	mutex_unlock(&usblp->mut);
-+	usb_poison_anchored_urbs(&usblp->urbs);
- 
- 	if (!usblp->used)
- 		usblp_cleanup(usblp);
-+
- 	mutex_unlock(&usblp_mutex);
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index 84905d074c4f..608b94a0ee0e 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -1729,8 +1729,11 @@ void vfio_config_free(struct vfio_pci_device *vdev)
+ 	vdev->vconfig = NULL;
+ 	kfree(vdev->pci_config_map);
+ 	vdev->pci_config_map = NULL;
+-	kfree(vdev->msi_perm);
+-	vdev->msi_perm = NULL;
++	if (vdev->msi_perm) {
++		free_perm_bits(vdev->msi_perm);
++		kfree(vdev->msi_perm);
++		vdev->msi_perm = NULL;
++	}
  }
  
+ /*
 -- 
 2.25.1
 
