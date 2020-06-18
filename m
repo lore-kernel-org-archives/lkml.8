@@ -2,316 +2,112 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C88BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4BFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31982206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F72207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:31:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="n9nUMKbZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jUQk5nqz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731241AbgFRUab (ORCPT
+        id S1729920AbgFRUbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:30:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54462 "EHLO
+        Thu, 18 Jun 2020 16:31:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729326AbgFRUaK (ORCPT
+        with ESMTP id S1727074AbgFRUbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:30:10 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF729C061795
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:30:09 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id i16so5553660qtr.7
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:30:09 -0700 (PDT)
+        Thu, 18 Jun 2020 16:31:35 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BF21C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:31:35 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l24so3445353pgb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:31:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=n/RQBZIfLfkPA1F9dvaxuurpmXI5VeeQwSsHL0IE+EQ=;
-        b=n9nUMKbZTc0bcoyBUQkboyXlrXcJ5Oq95ai+o6Mku6y074LpoPW7DUzYlk5oDHPyVS
-         sSAU1sQMpf3NvTiSKTxq079w+XwGKgFFAiSUnatfCotU6qDUlj+accIVsbRZjksi+/Kn
-         HR7AhQHj9pZf/AQr7lklYyEEFwL366A0dADUE=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2vYguTxknGE8Dx16795P40n1hyMI+4rqo7SoKdZ0n4M=;
+        b=jUQk5nqzrPWoyZry6OFj3XXe2iWiykd0oEPPhNsYguTw0jHnq0ttSeXC05Jbcj+aKH
+         i2w49bRIQ5UXe4x22BDcgWgjawQPc1s94rGXML4EP3kzY94O7KzGbJmSf8A849v/UXa2
+         oRf+0BFrbHWIBtEoBJdAikbWPgiYzu90FKcXuNY+ZRcgFcx+Wm8Nv9EGxMtm1b0LKXn3
+         G5kB8nhaWvIOWj9+7918MeRleRN0sfuG6FyMC3ZIONGqNxWyBXVUr67HqJ+qoafWkLB7
+         hCFfMmFjlUt/CmROnI8YhwVwYsILkkIJmZo5/IDHjO4Rsp9jrOOJozHQ13XkS+gRKeeM
+         4BAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=n/RQBZIfLfkPA1F9dvaxuurpmXI5VeeQwSsHL0IE+EQ=;
-        b=IM5l7OZD+H8jrCtjoZ2eFQ7nfaCqx4Ov9PkugC0z4bI8PP431u6B3gJ5vQujg/lLXW
-         H820fWhJoGEM5PXq8tD4THRHuC0aXzvQ8cNIGZhk+gv+WgQQcbNjND/Ne66eedH3mbwV
-         rUTNwt1RJjTry8jLxnDS1esBR7/uV34hGqJQyYjy0fqYA+WRJ5O57rtEni/oylDvsCQz
-         5Y69By88mUD/PnEf2oxuBgSihOXw0inF4s/GY1iBsMMDMplbk1kI+VkbShdn117GgbyO
-         fZSkL1x32i6srPM7PCR9UPBY0RoxCS+aQqWOe+ISq1T01RNebWiR+WYdRWWZJymR1wnO
-         3gMA==
-X-Gm-Message-State: AOAM531KS0klbB3/XdPFCh44AWnnTwIIA60wKWk2swp66rYiHqE6DftP
-        loRn361RzUgp0ZuQKOPBobvvqLSRuoA=
-X-Google-Smtp-Source: ABdhPJxVIw+9MedPn+0uHFOu0+u8AfUubjtJZreMuMIkgxa1KMo+DtpK5ZQpomh8wgOn/JAl+aUhYA==
-X-Received: by 2002:aed:2084:: with SMTP id 4mr4944qtb.43.1592512207480;
-        Thu, 18 Jun 2020 13:30:07 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id v3sm4027503qkh.130.2020.06.18.13.30.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 13:30:07 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: [PATCH 4/7] rcu/trace: Print negative GP numbers correctly
-Date:   Thu, 18 Jun 2020 16:29:52 -0400
-Message-Id: <20200618202955.4024-4-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-In-Reply-To: <20200618202955.4024-1-joel@joelfernandes.org>
-References: <20200618202955.4024-1-joel@joelfernandes.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2vYguTxknGE8Dx16795P40n1hyMI+4rqo7SoKdZ0n4M=;
+        b=Xxr4zQwhMevbAjYDekthene5Ij0Q8apx7ZmDoup8B9rYL9iPnSUDV6jPwe5/G98j8D
+         Zeu8SOo+kI6g8IRfh3dBnTqOJBFZT4tFgxPnSspCBAlAEWxHIJDvZyMezgaW+WqwOE9D
+         knq9lzYX/ycscC5DNDhLf1EJ6xG4lm6DhRux1CzFvN7sMS5DXRQ20YO91oKIbqVCmq+O
+         l5NtV/ShV3s0VJmgr3lFlp4A5fEEggOOKSFplmi1StHmIz62jbZQ4FHJslhgsKifuU1S
+         Hq709TQYfuHH/y8DHEEk/AdOno0pXkqXS3RUvEFkISB8mpyklwO1wTe0baLBxWnxxCms
+         060A==
+X-Gm-Message-State: AOAM532HJrbckqDG8C5ByxwSBGW5HWFZhMVdWEthH1VG1IEDZuTbdodA
+        KisczUn4+A2PsQGeLSrU7KGwbwa5Tsrac+x+tExrLA==
+X-Google-Smtp-Source: ABdhPJyg7+/EsMv/uILhnCx33cvfvyj/A5rdmlcYEhM69bT4X7pfCnqfldKiOJpntTlq+2IKO59hml9kLz5hSl5KpGY=
+X-Received: by 2002:aa7:868f:: with SMTP id d15mr5402182pfo.166.1592512294729;
+ Thu, 18 Jun 2020 13:31:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200618123912.64762-1-vitor@massaru.org>
+In-Reply-To: <20200618123912.64762-1-vitor@massaru.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 18 Jun 2020 13:31:23 -0700
+Message-ID: <CAFd5g47tWA=yqa2zN8f6d=dKDhutU_Dr3JLjAdu8+wRFq9iOyg@mail.gmail.com>
+Subject: Re: [PATCH v2] kunit: fix KconfigParseError handling CC_VERSION_TEXT
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     KUnit Development <kunit-dev@googlegroups.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GP numbers start from -300 and gp_seq numbers start of -1200 (for a
-shift of 2). These negative numbers are printed as unsigned long which
-not only takes up more text space, but is rather confusing to the reader
-as they have to constantly expend energy to truncate the number. Just
-print the negative numbering directly.
+On Thu, Jun 18, 2020 at 5:39 AM Vitor Massaru Iha <vitor@massaru.org> wrote:
+>
+> Commit 8b59cd81dc5 ("kbuild: ensure full rebuild when the compiler
+> is updated") added the environment variable CC_VERSION_TEXT,
+> parse_from_string() doesn't expect a string in value field and this
+> causes the failure below:
+>
+> [iha@bbking linux]$ tools/testing/kunit/kunit.py run --timeout=60
+> [00:20:12] Configuring KUnit Kernel ...
+> Generating .config ...
+> Traceback (most recent call last):
+>   File "tools/testing/kunit/kunit.py", line 347, in <module>
+>     main(sys.argv[1:])
+>   File "tools/testing/kunit/kunit.py", line 257, in main
+>     result = run_tests(linux, request)
+>   File "tools/testing/kunit/kunit.py", line 134, in run_tests
+>     config_result = config_tests(linux, config_request)
+>   File "tools/testing/kunit/kunit.py", line 64, in config_tests
+>     success = linux.build_reconfig(request.build_dir, request.make_options)
+>   File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py", line 161, in build_reconfig
+>     return self.build_config(build_dir, make_options)
+>   File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py", line 145, in build_config
+>     return self.validate_config(build_dir)
+>   File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py", line 124, in validate_config
+>     validated_kconfig.read_from_file(kconfig_path)
+>   File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_config.py", line 89, in read_from_file
+>     self.parse_from_string(f.read())
+>   File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_config.py", line 85, in parse_from_string
+>     raise KconfigParseError('Failed to parse: ' + line)
+> kunit_config.KconfigParseError: Failed to parse: CONFIG_CC_VERSION_TEXT="gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)"
 
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- include/trace/events/rcu.h | 62 ++++++++++++++++++++------------------
- 1 file changed, 32 insertions(+), 30 deletions(-)
+I am pretty there is already a fix out for this issue:
 
-diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
-index cb5363564f7ed..bc24862790623 100644
---- a/include/trace/events/rcu.h
-+++ b/include/trace/events/rcu.h
-@@ -76,18 +76,18 @@ TRACE_EVENT_RCU(rcu_grace_period,
- 	TP_STRUCT__entry(
- 		__field(const char *, rcuname)
- 		__field(const char *, gp_seq_src)
--		__field(unsigned long, gp_seq)
-+		__field(long, gp_seq)
- 		__field(const char *, gpevent)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->rcuname = rcuname;
- 		__entry->gp_seq_src = gp_seq_src;
--		__entry->gp_seq = gp_seq;
-+		__entry->gp_seq = (long)gp_seq;
- 		__entry->gpevent = gpevent;
- 	),
- 
--	TP_printk("%s %s_gp_seq=%lu %s",
-+	TP_printk("%s %s_gp_seq=%ld %s",
- 		  __entry->rcuname, __entry->gp_seq_src,
- 		  __entry->gp_seq, __entry->gpevent)
- );
-@@ -118,8 +118,8 @@ TRACE_EVENT_RCU(rcu_future_grace_period,
- 
- 	TP_STRUCT__entry(
- 		__field(const char *, rcuname)
--		__field(unsigned long, gp_seq)
--		__field(unsigned long, gp_seq_req)
-+		__field(long, gp_seq)
-+		__field(long, gp_seq_req)
- 		__field(u8, level)
- 		__field(int, grplo)
- 		__field(int, grphi)
-@@ -128,16 +128,16 @@ TRACE_EVENT_RCU(rcu_future_grace_period,
- 
- 	TP_fast_assign(
- 		__entry->rcuname = rcuname;
--		__entry->gp_seq = gp_seq;
--		__entry->gp_seq_req = gp_seq_req;
-+		__entry->gp_seq = (long)gp_seq;
-+		__entry->gp_seq_req = (long)gp_seq_req;
- 		__entry->level = level;
- 		__entry->grplo = grplo;
- 		__entry->grphi = grphi;
- 		__entry->gpevent = gpevent;
- 	),
- 
--	TP_printk("%s %lu %lu %u %d %d %s",
--		  __entry->rcuname, __entry->gp_seq, __entry->gp_seq_req, __entry->level,
-+	TP_printk("%s %ld %ld %u %d %d %s",
-+		  __entry->rcuname, (long)__entry->gp_seq, (long)__entry->gp_seq_req, __entry->level,
- 		  __entry->grplo, __entry->grphi, __entry->gpevent)
- );
- 
-@@ -157,7 +157,7 @@ TRACE_EVENT_RCU(rcu_grace_period_init,
- 
- 	TP_STRUCT__entry(
- 		__field(const char *, rcuname)
--		__field(unsigned long, gp_seq)
-+		__field(long, gp_seq)
- 		__field(u8, level)
- 		__field(int, grplo)
- 		__field(int, grphi)
-@@ -166,14 +166,14 @@ TRACE_EVENT_RCU(rcu_grace_period_init,
- 
- 	TP_fast_assign(
- 		__entry->rcuname = rcuname;
--		__entry->gp_seq = gp_seq;
-+		__entry->gp_seq = (long)gp_seq;
- 		__entry->level = level;
- 		__entry->grplo = grplo;
- 		__entry->grphi = grphi;
- 		__entry->qsmask = qsmask;
- 	),
- 
--	TP_printk("%s %lu %u %d %d %lx",
-+	TP_printk("%s %ld %u %d %d %lx",
- 		  __entry->rcuname, __entry->gp_seq, __entry->level,
- 		  __entry->grplo, __entry->grphi, __entry->qsmask)
- );
-@@ -201,17 +201,17 @@ TRACE_EVENT_RCU(rcu_exp_grace_period,
- 
- 	TP_STRUCT__entry(
- 		__field(const char *, rcuname)
--		__field(unsigned long, gpseq)
-+		__field(long, gpseq)
- 		__field(const char *, gpevent)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->rcuname = rcuname;
--		__entry->gpseq = gpseq;
-+		__entry->gpseq = (long)gpseq;
- 		__entry->gpevent = gpevent;
- 	),
- 
--	TP_printk("%s %lu %s",
-+	TP_printk("%s %ld %s",
- 		  __entry->rcuname, __entry->gpseq, __entry->gpevent)
- );
- 
-@@ -320,17 +320,17 @@ TRACE_EVENT_RCU(rcu_preempt_task,
- 
- 	TP_STRUCT__entry(
- 		__field(const char *, rcuname)
--		__field(unsigned long, gp_seq)
-+		__field(long, gp_seq)
- 		__field(int, pid)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->rcuname = rcuname;
--		__entry->gp_seq = gp_seq;
-+		__entry->gp_seq = (long)gp_seq;
- 		__entry->pid = pid;
- 	),
- 
--	TP_printk("%s %lu %d",
-+	TP_printk("%s %ld %d",
- 		  __entry->rcuname, __entry->gp_seq, __entry->pid)
- );
- 
-@@ -347,17 +347,17 @@ TRACE_EVENT_RCU(rcu_unlock_preempted_task,
- 
- 	TP_STRUCT__entry(
- 		__field(const char *, rcuname)
--		__field(unsigned long, gp_seq)
-+		__field(long, gp_seq)
- 		__field(int, pid)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->rcuname = rcuname;
--		__entry->gp_seq = gp_seq;
-+		__entry->gp_seq = (long)gp_seq;
- 		__entry->pid = pid;
- 	),
- 
--	TP_printk("%s %lu %d", __entry->rcuname, __entry->gp_seq, __entry->pid)
-+	TP_printk("%s %ld %d", __entry->rcuname, __entry->gp_seq, __entry->pid)
- );
- 
- /*
-@@ -378,7 +378,7 @@ TRACE_EVENT_RCU(rcu_quiescent_state_report,
- 
- 	TP_STRUCT__entry(
- 		__field(const char *, rcuname)
--		__field(unsigned long, gp_seq)
-+		__field(long, gp_seq)
- 		__field(unsigned long, mask)
- 		__field(unsigned long, qsmask)
- 		__field(u8, level)
-@@ -389,7 +389,7 @@ TRACE_EVENT_RCU(rcu_quiescent_state_report,
- 
- 	TP_fast_assign(
- 		__entry->rcuname = rcuname;
--		__entry->gp_seq = gp_seq;
-+		__entry->gp_seq = (long)gp_seq;
- 		__entry->mask = mask;
- 		__entry->qsmask = qsmask;
- 		__entry->level = level;
-@@ -398,7 +398,7 @@ TRACE_EVENT_RCU(rcu_quiescent_state_report,
- 		__entry->gp_tasks = gp_tasks;
- 	),
- 
--	TP_printk("%s %lu %lx>%lx %u %d %d %u",
-+	TP_printk("%s %ld %lx>%lx %u %d %d %u",
- 		  __entry->rcuname, __entry->gp_seq,
- 		  __entry->mask, __entry->qsmask, __entry->level,
- 		  __entry->grplo, __entry->grphi, __entry->gp_tasks)
-@@ -419,19 +419,19 @@ TRACE_EVENT_RCU(rcu_fqs,
- 
- 	TP_STRUCT__entry(
- 		__field(const char *, rcuname)
--		__field(unsigned long, gp_seq)
-+		__field(long, gp_seq)
- 		__field(int, cpu)
- 		__field(const char *, qsevent)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->rcuname = rcuname;
--		__entry->gp_seq = gp_seq;
-+		__entry->gp_seq = (long)gp_seq;
- 		__entry->cpu = cpu;
- 		__entry->qsevent = qsevent;
- 	),
- 
--	TP_printk("%s %lu %d %s",
-+	TP_printk("%s %ld %d %s",
- 		  __entry->rcuname, __entry->gp_seq,
- 		  __entry->cpu, __entry->qsevent)
- );
-@@ -520,17 +520,19 @@ TRACE_EVENT_RCU(rcu_segcb,
- 		TP_STRUCT__entry(
- 			__field(const char *, ctx)
- 			__array(int, cb_count, 4)
--			__array(unsigned long, gp_seq, 4)
-+			__array(long, gp_seq, 4)
- 		),
- 
- 		TP_fast_assign(
-+			int i;
- 			__entry->ctx = ctx;
- 			memcpy(__entry->cb_count, cb_count, 4 * sizeof(int));
--			memcpy(__entry->gp_seq, gp_seq, 4 * sizeof(unsigned long));
-+			for (i = 0; i < 4; i++)
-+				__entry->gp_seq[i] = (long)(gp_seq[i]);
- 		),
- 
- 		TP_printk("%s cb_count: (DONE=%d, WAIT=%d, NEXT_READY=%d, NEXT=%d) "
--			  "gp_seq: (DONE=%lu, WAIT=%lu, NEXT_READY=%lu, NEXT=%lu)", __entry->ctx,
-+			  "gp_seq: (DONE=%ld, WAIT=%ld, NEXT_READY=%ld, NEXT=%ld)", __entry->ctx,
- 			  __entry->cb_count[0], __entry->cb_count[1], __entry->cb_count[2], __entry->cb_count[3],
- 			  __entry->gp_seq[0], __entry->gp_seq[1], __entry->gp_seq[2], __entry->gp_seq[3])
- 
--- 
-2.27.0.111.gc72c7da667-goog
+https://patchwork.kernel.org/patch/11592313/
 
+Can you confirm?
