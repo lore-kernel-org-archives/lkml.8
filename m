@@ -2,59 +2,51 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFA1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F852C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B45F622211
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1321522200
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443718;
-	bh=eJRf/DLe3SoTgQ+rYReWSmo1n75LlOi6Lxrz7lpF1ys=;
+	s=default; t=1592443721;
+	bh=tvf461QU4qSDSewaiVERpyvLNPJAQm/81XFIeHSppLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JygGDHsuKRSjBO6R74I+dv+YAvO9EB4ZwqYfvsSgg/NJ0Z18wMIMoUzMgLZXq/Qcj
-	 MYSPFowxYv/Ci7pt/tdNijxG19EIK7cPfSm6qi/U6MT+8G1vrO7BTpH1BA3pfIAu0Z
-	 HME7pi//4PEqum2jCi5ql2gghCKlU9OJ9bFICrko=
+	b=H5Hgv+hsEcoiACLmoZicVbCd8ccIcqOFMzV4M7YIz1FxTTcnClIAKq+vLFusCfTro
+	 Gul6/ARaitXGKdR1hpDKsH/YfWFAj0SMOoYVB8cKPC8h0ae2Kz5LI60Oqedp5iELaP
+	 VezL4b5KXsaKzn1kx25JmxF/IcG9lV+WLSdDbeYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732122AbgFRB2h (ORCPT
+        id S1732134AbgFRB2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:28:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:28:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731425AbgFRBZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:27 -0400
+        id S1731439AbgFRBZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4081A21D80;
-        Thu, 18 Jun 2020 01:25:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 645002088E;
+        Thu, 18 Jun 2020 01:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443526;
-        bh=eJRf/DLe3SoTgQ+rYReWSmo1n75LlOi6Lxrz7lpF1ys=;
+        s=default; t=1592443532;
+        bh=tvf461QU4qSDSewaiVERpyvLNPJAQm/81XFIeHSppLM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KjK2k22eDeYleSwU1eJTbLGEJssaI3w/nA8H23KHgyk+U34A1LzflHDlURdBUgGFT
-         3YuV6WcKKoPjjb7mgvCcipERRz4xNgvtwkdyxxkALtMS1ofiOILT229mTZYIRLIWfR
-         vcqPRb1ja0vv0Rx9LfNPzIJ6bEfWG9w2tFxf+/Uk=
+        b=SBZgZw3avSzMGjCcSLw84X3P5aHwnSFSs6qZkmpaP+T4IP5rhBBO8pxe/5DBWTPGZ
+         Wxv7Rcp/R8A6CWxv+GkLCJLCFGx5yLMu5NvomiNS9BsqLjR6pnyX2H5Dfd8OdpPLgF
+         lVoi0U6BFhK/K5Z2X0orzfu6TRXAyCazeV0AkF1c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Jeremy Fitzhardinge <jeremy@goop.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 147/172] elfnote: mark all .note sections SHF_ALLOC
-Date:   Wed, 17 Jun 2020 21:21:53 -0400
-Message-Id: <20200618012218.607130-147-sashal@kernel.org>
+Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 151/172] blktrace: fix endianness for blk_log_remap()
+Date:   Wed, 17 Jun 2020 21:21:57 -0400
+Message-Id: <20200618012218.607130-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -67,59 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 
-[ Upstream commit 51da9dfb7f20911ae4e79e9b412a9c2d4c373d4b ]
+[ Upstream commit 5aec598c456fe3c1b71a1202cbb42bdc2a643277 ]
 
-ELFNOTE_START allows callers to specify flags for .pushsection assembler
-directives.  All callsites but ELF_NOTE use "a" for SHF_ALLOC.  For vdso's
-that explicitly use ELF_NOTE_START and BUILD_SALT, the same section is
-specified twice after preprocessing, once with "a" flag, once without.
-Example:
+The function blk_log_remap() can be simplified by removing the
+call to get_pdu_remap() that copies the values into extra variable to
+print the data, which also fixes the endiannness warning reported by
+sparse.
 
-.pushsection .note.Linux, "a", @note ;
-.pushsection .note.Linux, "", @note ;
-
-While GNU as allows this ordering, it warns for the opposite ordering,
-making these directives position dependent.  We'd prefer not to precisely
-match this behavior in Clang's integrated assembler.  Instead, the non
-__ASSEMBLY__ definition of ELF_NOTE uses
-__attribute__((section(".note.Linux"))) which is created with SHF_ALLOC,
-so let's make the __ASSEMBLY__ definition of ELF_NOTE consistent with C
-and just always use "a" flag.
-
-This allows Clang to assemble a working mainline (5.6) kernel via:
-$ make CC=clang AS=clang
-
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Fangrui Song <maskray@google.com>
-Cc: Jeremy Fitzhardinge <jeremy@goop.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/913
-Link: http://lkml.kernel.org/r/20200325231250.99205-1-ndesaulniers@google.com
-Debugged-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/elfnote.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/blktrace.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/elfnote.h b/include/linux/elfnote.h
-index f236f5b931b2..7fdd7f355b52 100644
---- a/include/linux/elfnote.h
-+++ b/include/linux/elfnote.h
-@@ -54,7 +54,7 @@
- .popsection				;
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 42027cf4ea91..b7e1e09a0bef 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -1271,17 +1271,6 @@ static __u64 get_pdu_int(const struct trace_entry *ent, bool has_cg)
+ 	return be64_to_cpu(*val);
+ }
  
- #define ELFNOTE(name, type, desc)		\
--	ELFNOTE_START(name, type, "")		\
-+	ELFNOTE_START(name, type, "a")		\
- 		desc			;	\
- 	ELFNOTE_END
+-static void get_pdu_remap(const struct trace_entry *ent,
+-			  struct blk_io_trace_remap *r, bool has_cg)
+-{
+-	const struct blk_io_trace_remap *__r = pdu_start(ent, has_cg);
+-	__u64 sector_from = __r->sector_from;
+-
+-	r->device_from = be32_to_cpu(__r->device_from);
+-	r->device_to   = be32_to_cpu(__r->device_to);
+-	r->sector_from = be64_to_cpu(sector_from);
+-}
+-
+ typedef void (blk_log_action_t) (struct trace_iterator *iter, const char *act,
+ 	bool has_cg);
  
+@@ -1407,13 +1396,13 @@ static void blk_log_with_error(struct trace_seq *s,
+ 
+ static void blk_log_remap(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
+ {
+-	struct blk_io_trace_remap r = { .device_from = 0, };
++	const struct blk_io_trace_remap *__r = pdu_start(ent, has_cg);
+ 
+-	get_pdu_remap(ent, &r, has_cg);
+ 	trace_seq_printf(s, "%llu + %u <- (%d,%d) %llu\n",
+ 			 t_sector(ent), t_sec(ent),
+-			 MAJOR(r.device_from), MINOR(r.device_from),
+-			 (unsigned long long)r.sector_from);
++			 MAJOR(be32_to_cpu(__r->device_from)),
++			 MINOR(be32_to_cpu(__r->device_from)),
++			 be64_to_cpu(__r->sector_from));
+ }
+ 
+ static void blk_log_plug(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
 -- 
 2.25.1
 
