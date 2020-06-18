@@ -2,118 +2,98 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E488AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 462CC20FC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BADF120FC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:43:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LvLtQrHK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LoixPRyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgFRGm5 (ORCPT
+        id S1728003AbgFRGn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 02:42:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39602 "EHLO
+        Thu, 18 Jun 2020 02:43:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbgFRGmz (ORCPT
+        with ESMTP id S1727109AbgFRGnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 02:42:55 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39CEC0613EF
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 23:42:54 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id c21so2797650lfb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 23:42:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K6hCnmc25bPhM8Zds15z3T5k2ctR9P+E0kmH5eedao4=;
-        b=LvLtQrHK+FRlk5/sD/8n+NvY5OlKXKDXtDGMvGAWEV8LStu+H5SMcJeof/D1Bi311E
-         iG2SVk2aU8L6UtTvMM8QqgfobAoSZA/4MszA+QHc6H9+WyoduT5HIfL3NiYOClb4mgyQ
-         sWSi05++HNZSaCzaYuMbRzFE/0UM0074HyCLCvUzrlUKp9M2DFy94o8jLGFyaPfQRSRB
-         vUi6H6KpwDixktHDOVJdezLiS2MP8TfPZ1UtIASSqww607WvpGLOrH5fk+dmANcJlVEi
-         LblDqZh3z5oDKbVxry/Q7EUNdmW19cHib1w0FFgAFPAmFzAtBbVtvd2OsQMdNed0x+IO
-         CTaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K6hCnmc25bPhM8Zds15z3T5k2ctR9P+E0kmH5eedao4=;
-        b=i0pU3R8eM8kTlk8isXpS01Tp5plO/eECvuoq9k7lNynpMV9nNhhQ7vtjqwObuBSy7j
-         aigZ5K8pikiipU6HQLJB9xQ+Ji1yAMvTqeNzdWWiJDvpywq0G20fKGzAxueNcitKYX2T
-         dNQZYM+U3uICKKtw5RqVjQUYt8x9ZDgfddlny584DxZFXVnRVSqJv0zmTUyfFbW+rne+
-         LosQduXL+WbMWXEAxsKbelODOsgp07ZccD2OYXj4eOIjCh1q+4fqUtgaQ+MrOXNM82lx
-         q3PYPMLEKshkWnBZGHPloq97jAJfdppOML6zfR4oUjNw+GCdY/rC7ZAFwX4+8c9Zowpy
-         rsQg==
-X-Gm-Message-State: AOAM53011HcZJlMdNbdcEJdF3/NDLJhXDQ3v3ANVzYI9VCDFI9yo/tJK
-        okNJLSJNBm+BCySisCQbHdWAVLMbZduAaig784T0HA==
-X-Google-Smtp-Source: ABdhPJx4QxcHzkbgPAk3c9tXd5/s0nYZNRG6j8i+HfERTJzJ+F0FGPMbAipjRTc9ukWM5DOXoFi2vtfz2V+2oSbLHwA=
-X-Received: by 2002:ac2:41d4:: with SMTP id d20mr1489555lfi.204.1592462573264;
- Wed, 17 Jun 2020 23:42:53 -0700 (PDT)
+        Thu, 18 Jun 2020 02:43:24 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BABC061755;
+        Wed, 17 Jun 2020 23:43:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=rJN0H8/0nC5UPhILL9WR0pQNIdABbC5dw/uf3CUdzm0=; b=LoixPRySLyqh/93G323y4koNbl
+        fTkZcMyqx2tSrkPmAVyEZ62A8S63jBcuLr27BTsixPvJJFeAOULv7jF7FQ0GNnjWYNEYtHD7wntD3
+        aot98lYYu7v/oXbrS7LQeGdy2MeIT+B88XPW85A9pARg9OUG9HHApN226yfKWYOtwx1XaZkYTPNZ/
+        az5JzzYCjeCLjJ7pED3fwRNAIkR1fuZcEw7Yr2nPb6jeUOoGALZ07RabxXG2d3XeA8948BEOBmry1
+        1XXzKETKhPSL7NcRzjooA9Bcp6f+dORA7YRNAMN3F2UlTHz+PpL3ZBf53cibppF6wjymS3FyWjfc1
+        ShgbsCoA==;
+Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jloGb-000803-Rs; Thu, 18 Jun 2020 06:43:18 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [PATCH 2/3] arm64: use PAGE_KERNEL_ROX directly in alloc_insn_page
+Date:   Thu, 18 Jun 2020 08:43:06 +0200
+Message-Id: <20200618064307.32739-3-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200618064307.32739-1-hch@lst.de>
+References: <20200618064307.32739-1-hch@lst.de>
 MIME-Version: 1.0
-References: <1591107505-6030-1-git-send-email-sumit.garg@linaro.org>
- <1591107505-6030-2-git-send-email-sumit.garg@linaro.org> <20200615182457.GB5416@linux.intel.com>
- <CAFA6WYNEnXm5FOGHGAg4XB-+GXD=C+YMh+6t976=pStU0WshAA@mail.gmail.com> <20200617231429.GD62794@linux.intel.com>
-In-Reply-To: <20200617231429.GD62794@linux.intel.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Thu, 18 Jun 2020 12:12:41 +0530
-Message-ID: <CAFA6WYOdtwnewqY0ASnMf7fyw3s_hQx0+oWJRhT3CpkkkxYpDA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/4] KEYS: trusted: Add generic trusted keys framework
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Markus Wamser <Markus.Wamser@mixed-mode.de>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        op-tee@lists.trustedfirmware.org,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Luke Hinds <lhinds@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jun 2020 at 04:44, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Tue, Jun 16, 2020 at 07:02:37PM +0530, Sumit Garg wrote:
-> > + Luke
-> >
-> > Hi Jarkko,
-> >
-> > Prior to addressing your comments below which seems to show your
-> > preference for compile time selection of trust source (TPM or TEE), I
-> > would just like to hear the reasons for this preference especially if
-> > it makes distro vendor's life difficult [1] to make opinionated
-> > selection which could rather be achieved dynamically based on platform
-> > capability.
-> >
-> > [1] https://lkml.org/lkml/2020/6/3/405
-> >
-> > -Sumit
->
-> Hmm... I do get the distribution kernel point. OK, lets revert to
-> dynamic then. Thanks for the remark.
->
-> /Jarkko
+Use PAGE_KERNEL_ROX directly instead of allocating RWX and setting the
+page read-only just after the allocation.
 
-Thanks, will revert to dynamic mode in v6.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/arm64/kernel/probes/kprobes.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
--Sumit
+diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+index d1c95dcf1d7833..cbe49cd117cfec 100644
+--- a/arch/arm64/kernel/probes/kprobes.c
++++ b/arch/arm64/kernel/probes/kprobes.c
+@@ -120,15 +120,9 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
+ 
+ void *alloc_insn_page(void)
+ {
+-	void *page;
+-
+-	page = vmalloc_exec(PAGE_SIZE);
+-	if (page) {
+-		set_memory_ro((unsigned long)page, 1);
+-		set_vm_flush_reset_perms(page);
+-	}
+-
+-	return page;
++	return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
++			GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
++			NUMA_NO_NODE, __func__);
+ }
+ 
+ /* arm kprobe: install breakpoint in text */
+-- 
+2.26.2
+
