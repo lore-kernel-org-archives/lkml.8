@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD36C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE9D721974
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A42621974
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443247;
-	bh=f+TFBHjvg1aZ9AskKDipNue4l9sLDewX4dGhaH9jGPo=;
+	s=default; t=1592443258;
+	bh=HFcuNX+faoaTX2GQ5GoMYIAdRLwuZgOaKcgrxIXVxi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dcXZY1X8FOTrc11KUdcJ8JfY6WnxMzwQaiyx7MC3TZoe8dDoFsvi/y2YuWl2sg1wW
-	 ZDHgSu6d6IBwd53n7heGebI3+zznkJDuOI16UwFbO9x4MxXrl9HdaqUuAqBSV7ZuL1
-	 d+ZwiolzJfTZ+7PC8enitqPnWa7YuSCPD8RuIKh0=
+	b=KP47+2DhdO8eat38IzaN+t6R5QtTG6Ty1uNsr7vvuef4APZpPHa7g1EmGZKc/4lSj
+	 mdR3lvSUIRABaLl57SBrap7ewaS+/s/XLDajP2uDQJ0hFTNOB4v1HcfISmiUVFiCfn
+	 tnctGyENrjWyOo5C9HdRjyr6D5NSSmCiR+fnHZfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbgFRBUo (ORCPT
+        id S1729813AbgFRBU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48502 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:20:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729782AbgFRBRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:21 -0400
+        id S1729184AbgFRBRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EE9721D7E;
-        Thu, 18 Jun 2020 01:17:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 832E921D79;
+        Thu, 18 Jun 2020 01:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443040;
-        bh=f+TFBHjvg1aZ9AskKDipNue4l9sLDewX4dGhaH9jGPo=;
+        s=default; t=1592443059;
+        bh=HFcuNX+faoaTX2GQ5GoMYIAdRLwuZgOaKcgrxIXVxi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gAmS7WcNueaAWUxEeCEEQuLOx1iDVqai7VQeLzaDWN+v/OS9ZAI23GI09T1nEZ51F
-         YJCfPDeCdnI+RDqvjuSkMjR1gHXEF/RR+sVW+DLWUmeasdVXcTpBHoHvGdRrGQVuIT
-         HDrg0QWPzcVQwSsfqvnD22ALluzn+Kwe3RQlTd+E=
+        b=SRRid2ki8u5re/yt21fryN5RV+DrqCIU7J6BIlBsoxgoOty5obWMiXqTTRa9JrFhz
+         j2VvXVpSa89Nb7NWW9n/Q+H0AFTA4fEWCDk+GMudtdTIbovzWd/LhEf91ZqkWbBt/S
+         XKYyFgUrpd/1Wr0Z6zoD9JKXZC4HSSTysXxyUJzQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 036/266] arm64: dts: armada-3720-turris-mox: forbid SDR104 on SDIO for FCC purposes
-Date:   Wed, 17 Jun 2020 21:12:41 -0400
-Message-Id: <20200618011631.604574-36-sashal@kernel.org>
+Cc:     Jon Derrick <jonathan.derrick@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 050/266] PCI: pci-bridge-emul: Fix PCIe bit conflicts
+Date:   Wed, 17 Jun 2020 21:12:55 -0400
+Message-Id: <20200618011631.604574-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,36 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Behún <marek.behun@nic.cz>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-[ Upstream commit 7a2c36b039d2343cc29fec6102da839477b8dc60 ]
+[ Upstream commit c88d19181771bd189147681ef38fc1533ebeff4c ]
 
-Use sdhci-caps-mask to forbid SDR104 mode on the SDIO capable SDHCI
-controller. Without this the device cannot pass electromagnetic
-interference certifications.
+This patch fixes two bit conflicts in the pci-bridge-emul driver:
 
-Fixes: 7109d817db2e ("arm64: dts: marvell: add DTS for Turris Mox")
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+1. Bit 3 of Device Status (19 of Device Control) is marked as both
+   Write-1-to-Clear and Read-Only. It should be Write-1-to-Clear.
+   The Read-Only and Reserved bitmasks are shifted by 1 bit due to this
+   error.
+
+2. Bit 12 of Slot Control is marked as both Read-Write and Reserved.
+   It should be Read-Write.
+
+Link: https://lore.kernel.org/r/20200511162117.6674-2-jonathan.derrick@intel.com
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/pci-bridge-emul.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-index 5f350cc71a2f..01f66056d7d5 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-@@ -171,6 +171,8 @@ &sdhci1 {
- 	marvell,pad-type = "sd";
- 	vqmmc-supply = <&vsdio_reg>;
- 	mmc-pwrseq = <&sdhci1_pwrseq>;
-+	/* forbid SDR104 for FCC purposes */
-+	sdhci-caps-mask = <0x2 0x0>;
- 	status = "okay";
- };
+diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
+index 5fd90105510d..d3b6b9a05618 100644
+--- a/drivers/pci/pci-bridge-emul.c
++++ b/drivers/pci/pci-bridge-emul.c
+@@ -195,8 +195,8 @@ static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
+ 		 * RO, the rest is reserved
+ 		 */
+ 		.w1c = GENMASK(19, 16),
+-		.ro = GENMASK(20, 19),
+-		.rsvd = GENMASK(31, 21),
++		.ro = GENMASK(21, 20),
++		.rsvd = GENMASK(31, 22),
+ 	},
  
+ 	[PCI_EXP_LNKCAP / 4] = {
+@@ -236,7 +236,7 @@ static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
+ 			PCI_EXP_SLTSTA_CC | PCI_EXP_SLTSTA_DLLSC) << 16,
+ 		.ro = (PCI_EXP_SLTSTA_MRLSS | PCI_EXP_SLTSTA_PDS |
+ 		       PCI_EXP_SLTSTA_EIS) << 16,
+-		.rsvd = GENMASK(15, 12) | (GENMASK(15, 9) << 16),
++		.rsvd = GENMASK(15, 13) | (GENMASK(15, 9) << 16),
+ 	},
+ 
+ 	[PCI_EXP_RTCTL / 4] = {
 -- 
 2.25.1
 
