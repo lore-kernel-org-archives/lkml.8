@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE6BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76194C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31151221FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523F2221ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443650;
-	bh=4ywg7c0rNAEOpMZA9GvBOulJBUAdreL/gLXUUPsQwYg=;
+	s=default; t=1592443656;
+	bh=oq/DsUALhIA05AGoLNyEKpPJakIe/EDZ+jPq6W8p37k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LWKrlOUiFlrzDri36Lpovpr/3L+IGVIPKz24HaAKqlGd/C/ZUrl7qufu9GHTvzgnl
-	 y+U63ybrub59rkpjgB5cF37Xzs+8fG2cm+Nf4zWXnCSOtQSEVwYE9ErtaHesW0Wjjz
-	 J+RDeObTcnoVPrJaAfjpOOGiqcEAKFEoCHRQh4+s=
+	b=w2bI9ID8ml7yC6gkYxO/dzd5ijKxsYCv1GHvwtrVkPgymDZoJEletS+dyIvs2Scyv
+	 0eMw34ZownZ8+E2z1yMqtIqgTk1Evu2Q0dCFrtfClMKf/GFvU2pH2Acm14uofSjc1E
+	 A2k5srw+1IZRM70r9iE5TMG6iANEvRSRirW5lc30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731871AbgFRB13 (ORCPT
+        id S1731889AbgFRB1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:27:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58188 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:27:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731111AbgFRBYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:24:00 -0400
+        id S1731145AbgFRBYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:24:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33D7920776;
-        Thu, 18 Jun 2020 01:23:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22DE020CC7;
+        Thu, 18 Jun 2020 01:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443439;
-        bh=4ywg7c0rNAEOpMZA9GvBOulJBUAdreL/gLXUUPsQwYg=;
+        s=default; t=1592443453;
+        bh=oq/DsUALhIA05AGoLNyEKpPJakIe/EDZ+jPq6W8p37k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sdgo3i1VK9yPSm5w3QxxXPmN6WHxg1v5sWEAHcquYHye+E4QlkIFAYx0wCWl9IlWK
-         6yTLN/7+sE0JGnBtx9oeOtACwF/qdAX4lW5PjpJ4gxC3tYv2FaBzxmxt4B+lajQE23
-         3AX0Ru/VcculdTADM/xOuxBUlZu5w/C8acTxFRa4=
+        b=tl7dm9k3Sc9mJhOjF50++slIBhiizzKv4cSnNPNEWi1ftBywwsUFsrhhxODCqme2n
+         IzckZiKfCdPpkgjXhgCHMk2EDXxzj3fJ6DfIEyUxZEh44PiDp4R/efVCFzawrJskoj
+         2rCmbQ8DbihqqLtcfZcWAxuzucV9loCKKzDTcs+o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 077/172] drivers: base: Fix NULL pointer exception in __platform_driver_probe() if a driver developer is foolish
-Date:   Wed, 17 Jun 2020 21:20:43 -0400
-Message-Id: <20200618012218.607130-77-sashal@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 088/172] powerpc/64: Don't initialise init_task->thread.regs
+Date:   Wed, 17 Jun 2020 21:20:54 -0400
+Message-Id: <20200618012218.607130-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -60,82 +59,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 388bcc6ecc609fca1b4920de7dc3806c98ec535e ]
+[ Upstream commit 7ffa8b7dc11752827329e4e84a574ea6aaf24716 ]
 
-If platform bus driver registration is failed then, accessing
-platform bus spin lock (&drv->driver.bus->p->klist_drivers.k_lock)
-in __platform_driver_probe() without verifying the return value
-__platform_driver_register() can lead to NULL pointer exception.
+Aneesh increased the size of struct pt_regs by 16 bytes and started
+seeing this WARN_ON:
 
-So check the return value before attempting the spin lock.
+  smp: Bringing up secondary CPUs ...
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 0 at arch/powerpc/kernel/process.c:455 giveup_all+0xb4/0x110
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc2-gcc-8.2.0-1.g8f6a41f-default+ #318
+  NIP:  c00000000001a2b4 LR: c00000000001a29c CTR: c0000000031d0000
+  REGS: c0000000026d3980 TRAP: 0700   Not tainted  (5.7.0-rc2-gcc-8.2.0-1.g8f6a41f-default+)
+  MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 48048224  XER: 00000000
+  CFAR: c000000000019cc8 IRQMASK: 1
+  GPR00: c00000000001a264 c0000000026d3c20 c0000000026d7200 800000000280b033
+  GPR04: 0000000000000001 0000000000000000 0000000000000077 30206d7372203164
+  GPR08: 0000000000002000 0000000002002000 800000000280b033 3230303030303030
+  GPR12: 0000000000008800 c0000000031d0000 0000000000800050 0000000002000066
+  GPR16: 000000000309a1a0 000000000309a4b0 000000000309a2d8 000000000309a890
+  GPR20: 00000000030d0098 c00000000264da40 00000000fd620000 c0000000ff798080
+  GPR24: c00000000264edf0 c0000001007469f0 00000000fd620000 c0000000020e5e90
+  GPR28: c00000000264edf0 c00000000264d200 000000001db60000 c00000000264d200
+  NIP [c00000000001a2b4] giveup_all+0xb4/0x110
+  LR [c00000000001a29c] giveup_all+0x9c/0x110
+  Call Trace:
+  [c0000000026d3c20] [c00000000001a264] giveup_all+0x64/0x110 (unreliable)
+  [c0000000026d3c90] [c00000000001ae34] __switch_to+0x104/0x480
+  [c0000000026d3cf0] [c000000000e0b8a0] __schedule+0x320/0x970
+  [c0000000026d3dd0] [c000000000e0c518] schedule_idle+0x38/0x70
+  [c0000000026d3df0] [c00000000019c7c8] do_idle+0x248/0x3f0
+  [c0000000026d3e70] [c00000000019cbb8] cpu_startup_entry+0x38/0x40
+  [c0000000026d3ea0] [c000000000011bb0] rest_init+0xe0/0xf8
+  [c0000000026d3ed0] [c000000002004820] start_kernel+0x990/0x9e0
+  [c0000000026d3f90] [c00000000000c49c] start_here_common+0x1c/0x400
 
-One such example is below:
+Which was unexpected. The warning is checking the thread.regs->msr
+value of the task we are switching from:
 
-For a custom usecase, I have intentionally failed the platform bus
-registration and I expected all the platform device/driver
-registrations to fail gracefully. But I came across this panic
-issue.
+  usermsr = tsk->thread.regs->msr;
+  ...
+  WARN_ON((usermsr & MSR_VSX) && !((usermsr & MSR_FP) && (usermsr & MSR_VEC)));
 
-[    1.331067] BUG: kernel NULL pointer dereference, address: 00000000000000c8
-[    1.331118] #PF: supervisor write access in kernel mode
-[    1.331163] #PF: error_code(0x0002) - not-present page
-[    1.331208] PGD 0 P4D 0
-[    1.331233] Oops: 0002 [#1] PREEMPT SMP
-[    1.331268] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-00049-g670d35fb0144 #165
-[    1.331341] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-[    1.331406] RIP: 0010:_raw_spin_lock+0x15/0x30
-[    1.331588] RSP: 0000:ffffc9000001be70 EFLAGS: 00010246
-[    1.331632] RAX: 0000000000000000 RBX: 00000000000000c8 RCX: 0000000000000001
-[    1.331696] RDX: 0000000000000001 RSI: 0000000000000092 RDI: 0000000000000000
-[    1.331754] RBP: 00000000ffffffed R08: 0000000000000501 R09: 0000000000000001
-[    1.331817] R10: ffff88817abcc520 R11: 0000000000000670 R12: 00000000ffffffed
-[    1.331881] R13: ffffffff82dbc268 R14: ffffffff832f070a R15: 0000000000000000
-[    1.331945] FS:  0000000000000000(0000) GS:ffff88817bd80000(0000) knlGS:0000000000000000
-[    1.332008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.332062] CR2: 00000000000000c8 CR3: 000000000681e001 CR4: 00000000003606e0
-[    1.332126] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    1.332189] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    1.332252] Call Trace:
-[    1.332281]  __platform_driver_probe+0x92/0xee
-[    1.332323]  ? rtc_dev_init+0x2b/0x2b
-[    1.332358]  cmos_init+0x37/0x67
-[    1.332396]  do_one_initcall+0x7d/0x168
-[    1.332428]  kernel_init_freeable+0x16c/0x1c9
-[    1.332473]  ? rest_init+0xc0/0xc0
-[    1.332508]  kernel_init+0x5/0x100
-[    1.332543]  ret_from_fork+0x1f/0x30
-[    1.332579] CR2: 00000000000000c8
-[    1.332616] ---[ end trace 3bd87f12e9010b87 ]---
-[    1.333549] note: swapper/0[1] exited with preempt_count 1
-[    1.333592] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-[    1.333736] Kernel Offset: disabled
+ie. if MSR_VSX is set then both of MSR_FP and MSR_VEC are also set.
 
-Note, this can only be triggered if a driver errors out from this call,
-which should never happen.  If it does, the driver needs to be fixed.
+Dumping tsk->thread.regs->msr we see that it's: 0x1db60000
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Link: https://lore.kernel.org/r/20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Which is not a normal looking MSR, in fact the only valid bit is
+MSR_VSX, all the other bits are reserved in the current definition of
+the MSR.
+
+We can see from the oops that it was swapper/0 that we were switching
+from when we hit the warning, ie. init_task. So its thread.regs points
+to the base (high addresses) in init_stack.
+
+Dumping the content of init_task->thread.regs, with the members of
+pt_regs annotated (the 16 bytes larger version), we see:
+
+  0000000000000000 c000000002780080    gpr[0]     gpr[1]
+  0000000000000000 c000000002666008    gpr[2]     gpr[3]
+  c0000000026d3ed0 0000000000000078    gpr[4]     gpr[5]
+  c000000000011b68 c000000002780080    gpr[6]     gpr[7]
+  0000000000000000 0000000000000000    gpr[8]     gpr[9]
+  c0000000026d3f90 0000800000002200    gpr[10]    gpr[11]
+  c000000002004820 c0000000026d7200    gpr[12]    gpr[13]
+  000000001db60000 c0000000010aabe8    gpr[14]    gpr[15]
+  c0000000010aabe8 c0000000010aabe8    gpr[16]    gpr[17]
+  c00000000294d598 0000000000000000    gpr[18]    gpr[19]
+  0000000000000000 0000000000001ff8    gpr[20]    gpr[21]
+  0000000000000000 c00000000206d608    gpr[22]    gpr[23]
+  c00000000278e0cc 0000000000000000    gpr[24]    gpr[25]
+  000000002fff0000 c000000000000000    gpr[26]    gpr[27]
+  0000000002000000 0000000000000028    gpr[28]    gpr[29]
+  000000001db60000 0000000004750000    gpr[30]    gpr[31]
+  0000000002000000 000000001db60000    nip        msr
+  0000000000000000 0000000000000000    orig_r3    ctr
+  c00000000000c49c 0000000000000000    link       xer
+  0000000000000000 0000000000000000    ccr        softe
+  0000000000000000 0000000000000000    trap       dar
+  0000000000000000 0000000000000000    dsisr      result
+  0000000000000000 0000000000000000    ppr        kuap
+  0000000000000000 0000000000000000    pad[2]     pad[3]
+
+This looks suspiciously like stack frames, not a pt_regs. If we look
+closely we can see return addresses from the stack trace above,
+c000000002004820 (start_kernel) and c00000000000c49c (start_here_common).
+
+init_task->thread.regs is setup at build time in processor.h:
+
+  #define INIT_THREAD  { \
+  	.ksp = INIT_SP, \
+  	.regs = (struct pt_regs *)INIT_SP - 1, /* XXX bogus, I think */ \
+
+The early boot code where we setup the initial stack is:
+
+  LOAD_REG_ADDR(r3,init_thread_union)
+
+  /* set up a stack pointer */
+  LOAD_REG_IMMEDIATE(r1,THREAD_SIZE)
+  add	r1,r3,r1
+  li	r0,0
+  stdu	r0,-STACK_FRAME_OVERHEAD(r1)
+
+Which creates a stack frame of size 112 bytes (STACK_FRAME_OVERHEAD).
+Which is far too small to contain a pt_regs.
+
+So the result is init_task->thread.regs is pointing at some stack
+frames on the init stack, not at a pt_regs.
+
+We have gotten away with this for so long because with pt_regs at its
+current size the MSR happens to point into the first frame, at a
+location that is not written to by the early asm. With the 16 byte
+expansion the MSR falls into the second frame, which is used by the
+compiler, and collides with a saved register that tends to be
+non-zero.
+
+As far as I can see this has been wrong since the original merge of
+64-bit ppc support, back in 2002.
+
+Conceptually swapper should have no regs, it never entered from
+userspace, and in fact that's what we do on 32-bit. It's also
+presumably what the "bogus" comment is referring to.
+
+So I think the right fix is to just not-initialise regs at all. I'm
+slightly worried this will break some code that isn't prepared for a
+NULL regs, but we'll have to see.
+
+Remove the comment in head_64.S which refers to us setting up the
+regs (even though we never did), and is otherwise not really accurate
+any more.
+
+Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200428123130.73078-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/include/asm/processor.h | 1 -
+ arch/powerpc/kernel/head_64.S        | 9 +--------
+ 2 files changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index d1f901b58f75..349c2754eed7 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -700,6 +700,8 @@ int __init_or_module __platform_driver_probe(struct platform_driver *drv,
- 	/* temporary section violation during probe() */
- 	drv->probe = probe;
- 	retval = code = __platform_driver_register(drv, module);
-+	if (retval)
-+		return retval;
+diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+index 52fadded5c1e..45bbcffcb7b6 100644
+--- a/arch/powerpc/include/asm/processor.h
++++ b/arch/powerpc/include/asm/processor.h
+@@ -386,7 +386,6 @@ struct thread_struct {
+ #else
+ #define INIT_THREAD  { \
+ 	.ksp = INIT_SP, \
+-	.regs = (struct pt_regs *)INIT_SP - 1, /* XXX bogus, I think */ \
+ 	.addr_limit = KERNEL_DS, \
+ 	.fpexc_mode = 0, \
+ 	.ppr = INIT_PPR, \
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index 3fb564f3e887..389da790c129 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -950,15 +950,8 @@ start_here_multiplatform:
+ 	std	r0,0(r4)
+ #endif
  
- 	/*
- 	 * Fixup that section violation, being paranoid about code scanning
+-	/* The following gets the stack set up with the regs */
+-	/* pointing to the real addr of the kernel stack.  This is   */
+-	/* all done to support the C function call below which sets  */
+-	/* up the htab.  This is done because we have relocated the  */
+-	/* kernel but are still running in real mode. */
+-
+-	LOAD_REG_ADDR(r3,init_thread_union)
+-
+ 	/* set up a stack pointer */
++	LOAD_REG_ADDR(r3,init_thread_union)
+ 	LOAD_REG_IMMEDIATE(r1,THREAD_SIZE)
+ 	add	r1,r3,r1
+ 	li	r0,0
 -- 
 2.25.1
 
