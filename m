@@ -2,114 +2,99 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E640C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3E32220B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:04:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="c0vH8Aue"
+	by mail.kernel.org (Postfix) with ESMTP id BB14C2220B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592445897;
+	bh=D3F8OeDLQgHlOhxrNCZPhck53CQnJDDLhPaT7YaAwrI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ms2J0MGKec3DQ/g2Eq4BBcE8+De/Gc/F5wkBKfauXFm3pOEji03Ow91ZJI9+Rlr1b
+	 VnfpHxepje3xM+nqrpl+EFEbrNAj912qxYROW0/37dOjgBFmYZBKBnxOROBuhiRleB
+	 EELlnT+s68iUj7e6T2uOq3SvqGEOFHm/OCFtnCsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730876AbgFRBW4 (ORCPT
+        id S1730862AbgFRBWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:22:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730169AbgFRBTg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:22:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730171AbgFRBTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:19:36 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31D2C06174E;
-        Wed, 17 Jun 2020 18:19:34 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49nPH35hR4z9sVj;
-        Thu, 18 Jun 2020 11:19:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1592443169;
-        bh=K1ERJwulQQ71ZmizNv3o80BKfdJjcI6S5OFHSql3lK4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=c0vH8AueyiwakeVIA+q9EvgLvoFGAklJYJa6D8cd23Kvh1KPcxjxkXxi7lQUf+JDF
-         gSuGYQIGdx41HAsr4qUMp49BgSUjPXqRs92UdJLRQaqEjgvG3+T7W5cZSeZC2lCD7l
-         H1NFppLprzKSB+8k99ZQJ//fKpJW/N/wQ1EwVnaeL8NjC0rdWsjFLr3SXJb0Lcf99l
-         QBKgZavxYAoSIDkGD4IjwsymPUCXEhYbEOruaQ8Kh0yWpvaIENF+MBPygS1Hes9+GJ
-         l5qLwH3HQTrXkmD+QSVBeo2S/OmevG2Jn0qTSXPCnIzjMLXgjyUM8v60iIpdP1qfQ5
-         9ZDiPGKWSLB4g==
-Date:   Thu, 18 Jun 2020 11:19:25 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, peterz@infradead.org,
-        jroedel@suse.de, Andy Lutomirski <luto@kernel.org>,
-        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        manvanth@linux.vnet.ibm.com, linux-next@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, hch@lst.de,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] mm: Move p?d_alloc_track to separate header file
-Message-ID: <20200618111925.28100ec9@canb.auug.org.au>
-In-Reply-To: <20200609120533.25867-1-joro@8bytes.org>
-References: <20200609120533.25867-1-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E4B721D82;
+        Thu, 18 Jun 2020 01:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592443176;
+        bh=D3F8OeDLQgHlOhxrNCZPhck53CQnJDDLhPaT7YaAwrI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Jt1z6W3NKL6r9rZm+gr49xjheiU6h9EBhLITwgZy4ASDYsj2Ju5XhzHhL+bLX0wO5
+         yaOX2GzaPn42WSurpyaUpgbLGVtoU+gfKmSajh0vqrGT9FfKoaToyokurogrgMltJl
+         Ryauz2W+E3dqiJdXSWYU0P8UOx5FK1JMTz38AyLU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 139/266] USB: ohci-sm501: fix error return code in ohci_hcd_sm501_drv_probe()
+Date:   Wed, 17 Jun 2020 21:14:24 -0400
+Message-Id: <20200618011631.604574-139-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/YCi/Nnb9cueQmER4WWU5i5W";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/YCi/Nnb9cueQmER4WWU5i5W
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-Hi Joerg,
+[ Upstream commit b919e077cccfbb77beb98809568b2fb0b4d113ec ]
 
-Sorry for the late reply.
+Fix to return a negative error code from the error handling
+case instead of 0, as done elsewhere in this function.
 
-On Tue,  9 Jun 2020 14:05:33 +0200 Joerg Roedel <joro@8bytes.org> wrote:
->
-> diff --git a/include/linux/pgalloc-track.h b/include/linux/pgalloc-track.h
-> new file mode 100644
-> index 000000000000..1dcc865029a2
-> --- /dev/null
-> +++ b/include/linux/pgalloc-track.h
-> @@ -0,0 +1,51 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_PGALLLC_TRACK_H
-> +#define _LINUX_PGALLLC_TRACK_H
-> +
+Fixes: 7d9e6f5aebe8 ("usb: host: ohci-sm501: init genalloc for local memory")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/20200506135625.106910-1-weiyongjun1@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/host/ohci-sm501.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Maybe this could have a comment that it should always be included after
-mm.h or we could add enough to make it standalone (even just an include
-of mm.h would probably be enough).
+diff --git a/drivers/usb/host/ohci-sm501.c b/drivers/usb/host/ohci-sm501.c
+index c158cda9e4b9..cff965240327 100644
+--- a/drivers/usb/host/ohci-sm501.c
++++ b/drivers/usb/host/ohci-sm501.c
+@@ -157,9 +157,10 @@ static int ohci_hcd_sm501_drv_probe(struct platform_device *pdev)
+ 	 * the call to usb_hcd_setup_local_mem() below does just that.
+ 	 */
+ 
+-	if (usb_hcd_setup_local_mem(hcd, mem->start,
+-				    mem->start - mem->parent->start,
+-				    resource_size(mem)) < 0)
++	retval = usb_hcd_setup_local_mem(hcd, mem->start,
++					 mem->start - mem->parent->start,
++					 resource_size(mem));
++	if (retval < 0)
+ 		goto err5;
+ 	retval = usb_add_hcd(hcd, irq, IRQF_SHARED);
+ 	if (retval)
+-- 
+2.25.1
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/YCi/Nnb9cueQmER4WWU5i5W
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7qwR0ACgkQAVBC80lX
-0GysAwf/ZNngUfjr8j+WzPw9diANohv/lSl2wn69fUe4dvCuORBkF0ItPZodhAX1
-8MaSeeYqtRt3Vh0xFgsA/rW4DxOxSQN87G1QBgSCA2BFkNs/sxDhMTs0CJmZR52y
-LtRaXmfro+7Z9Th1DBKbJA5Waw0Cw90U5muGvb/FFmjvKKGOX52g7lb8RWyeoNe0
-FcngH+KvpNBenHro9/87VSadAb5Ch7IoTx1x0eFF0oDtEBe8tOs/ZpLfTUKnql04
-FqVy/p1HMv0vNZyc4hFukB1IcPeCSK/YXKHleZ0nIWQ/Qeo6lwlEzboK3ixEBt5B
-4YrmmUYfdVq6Mk2Bhnp4uBIO8aYmMw==
-=bxHw
------END PGP SIGNATURE-----
-
---Sig_/YCi/Nnb9cueQmER4WWU5i5W--
