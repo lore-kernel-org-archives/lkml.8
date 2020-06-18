@@ -2,66 +2,62 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87561C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C80C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 384DB206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA81206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:22:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q9gbLL//"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="guONlS+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731985AbgFRWWh (ORCPT
+        id S1731953AbgFRWWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:22:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730675AbgFRWWg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Jun 2020 18:22:36 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9923C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:22:35 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id r17so7818982ybj.22
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:22:35 -0700 (PDT)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728071AbgFRWWf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 18:22:35 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB45C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:22:34 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id l26so5563544qtr.14
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:22:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=3MZdcCykMwWnK0BxBmt3N3tTNousNSQdALOju1F1UPQ=;
-        b=Q9gbLL//f2leIdb6oX1Uk45ZdzgdV7Js4XTShMu2Fo3+OhVPgHgYt7vEDogQL0oRiw
-         gbCresEv94cEvN8a/A8mgt08aZud7aUe3AZGmzWwLPsraYellEWLDUGybwj25pjl0k7l
-         /xubIHe4ClAIipO7HkurCxuem+IFCZAo9Cu0Nr20sLn+duDBGJRJR7e7yPam2i4eGF23
-         yRW6PL8kkhHUnFtwfVEHKvNZq3UZj20hdPvWrjMbL0R734OhykCUn4QixtmISEv8BZYO
-         Iw4l0Rfm8D7rFB2G4iWit8NAqfX0w14mIWLpjUY+sDJ+V7UlhwN2gNZ6KCwjUWidZWv5
-         Avbg==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Ij26VoyzhYGvLjAG21TvPgeZf+MNFhcxJkH7FR67BL4=;
+        b=guONlS+zDvIwKKVsdiiPKNH7/eiTgu2dN+5fua4h7UfSizaHOrh8PHvEFcbioXU0UE
+         s48UzvSNhVC6diNscyJjApImeqZRrbqiKamhkJipt5yFN2Kn8NDTYNWwObqjqxlh3tAw
+         QHa0E/9PRSzQDQYhqBbFLle/SXijKCDIA0zzWc3XHyAGq5qVvT8cyZ0rGKKypA+/bQDO
+         hUAa51FtVs70IN0xsiqETb3j9NfIC6deYVTKb2RtekE4VwtYibPz8Tj4lR6ck1pfQIv8
+         RtW2uLTOACEyOBvfTQJF4CqCiSIEJlTMR1AUn9awEU+Ez1WvYKQHHOuW7rpaY6v8UDGD
+         9ZSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=3MZdcCykMwWnK0BxBmt3N3tTNousNSQdALOju1F1UPQ=;
-        b=CKzh9UNUDFhXrm/DXeYl+frEQD019SwlAoYWtNdo9BKR12F1UQqTWNWl63wWxPSahY
-         i9PLmMaHG5yLQpIdl6nwwUoxHrmDDzIq8BPMzGHdXn6lwuSuVI1b8dlTOjdPEYF500/r
-         dFA3WYf696K1A4QSJ7m8qcnvi3te9qYxKam41aOQ5jUonwu75IX1QCsR6hAXulkRc2pQ
-         9jL5MDwa54s4FHu6RY9mSylsOvc44gpAyg0zIPkYK0Qp7U3aJqJDlvNv57qFEkCgb9SU
-         PfjatVNbxWEodUi5fDpHr9hJomU/5E9s7cbBv0gls+gh/HRf9K/2jcJzCJXA3MXDCZap
-         DpkQ==
-X-Gm-Message-State: AOAM532tv4VQ7i255ZXdO7Z7FgrhkR3e8Pul9bdUWakSw7FvsKtez2XI
-        yo/3ffWF3ZX4mGQTy7GKXO80hW7hYob1DbQD1bpB
-X-Google-Smtp-Source: ABdhPJya+lBPqBvwGWianvSG12HjgCWTtawv9wtoYlbW7bcVZ6jKQy6mSClzEEv0Ln2KN+C0msmb/YFoaUq/GH8BBpy7
-X-Received: by 2002:a25:2fc5:: with SMTP id v188mr1355190ybv.130.1592518954973;
- Thu, 18 Jun 2020 15:22:34 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 15:22:25 -0700
-In-Reply-To: <20200618222225.102337-1-axelrasmussen@google.com>
-Message-Id: <20200618222225.102337-2-axelrasmussen@google.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Ij26VoyzhYGvLjAG21TvPgeZf+MNFhcxJkH7FR67BL4=;
+        b=rvKjFQxCtRl2TuRu2Vm929EnYC0LMPNyn0nomGPChuw4eJINcDexrBLdHd+qAt7hJg
+         ksGmBbQbkNGEqJZp6pryxdSGH5VtZS/JAByEw6+I/3wCekaF21qbQvgfphxNjO5VF0OE
+         VzbTxw+TY2h3+TVNhhrKcgZP7bsHhwhq4hetuZVLeyzybQyp8TUkEvndA9ndLbX/Zz98
+         Jv49C+CPh3ETSrCMsUFRWdXzovBqEvpbSWdMHM2lESRZXyNfkf7Nv59Dp41RukxqvR4G
+         J8zLc1OZaAKKnUb9EQ8RG/9rKQlCHxDLM5Uux+ftymp6sW4KSvrXxu5pzCy0yUkDSW6g
+         Ufzw==
+X-Gm-Message-State: AOAM531+zm65M4JYy7LqNntuHM7TWk2zpnYVL878YJuKa1Z63hwu6/Oe
+        GhA9LgCzMbSctARjcSBBRbLCnb0xrfGAgwQ3SbpN
+X-Google-Smtp-Source: ABdhPJz8sjdhRA7XEQ+5GTNRGsSav0+5iQXsihIkL9r3Dui8VuzBELYDV00aZJCPsZUBQ3sWLkOwIlnWDqJfmRIMVRsS
+X-Received: by 2002:a0c:e385:: with SMTP id a5mr6091856qvl.218.1592518953173;
+ Thu, 18 Jun 2020 15:22:33 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 15:22:24 -0700
+Message-Id: <20200618222225.102337-1-axelrasmussen@google.com>
 Mime-Version: 1.0
-References: <20200618222225.102337-1-axelrasmussen@google.com>
 X-Mailer: git-send-email 2.27.0.111.gc72c7da667-goog
-Subject: [RFC PATCH v3 1/1] mmap_lock: add tracepoints around mmap_lock acquisition
+Subject: [RFC PATCH v3 0/1] Add rwsem "contended hook" API and mmap_lock histograms
 From:   Axel Rasmussen <axelrasmussen@google.com>
 To:     Michel Lespinasse <walken@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -77,50 +73,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The goal is to be able to collect a latency histogram for contended
-mmap_lock acquisitions. This will be used to diagnose slowness observed
-in production workloads, as well as to measure the effect of upcoming
-mmap_lock optimizations like maple trees and range-based locks. The
-"start_locking" and "lock_released" tracepoints can be used to find out
-which process / call stack was waiting on / holding the lock.
+The overall goal of this patch is to add tracepoints around mmap_lock
+acquisition. This will let us collect latency histograms, so we can see
+how long we block for in the contended case. Our goal is to collect this
+data across all of production at Google, so low overhead is critical.
 
-The use of tracepoints with histogram triggers for this purpose was
-recommended here: https://marc.info/?l=linux-mm&m=159076475528369&w=2
+I'm sending this RFC for feedback on the changes to rwsem.{h,c} and
+lockdep.h in particular. I'll describe reasoning for the down_write case,
+for brevity.
 
-A new Kconfig is added, because this change requires uninlining some
-functions, adding branches, etc., even if the tracepoints aren't enabled
-at runtime.
+We want to measure the time lock acquisition takes. Naively, this is:
 
-The semantics of the "acquire_returned" tracepoint are as follows:
+u64 start = sched_clock();
+down_write(/* ... */);
+trace(sched_clock() - start);
 
-- We leverage a new "contended hook" rwsem API so "_trylock" variants
-  are called first, and only in the contended case is the trace event
-  triggered. This eliminates overhead for the "common" uncontended case.
+My measurements show that this adds ~5-6% overhead to building a kernel on
+a test machine [1]. This level of overhead is unacceptably high.
 
-- "acquire_returned" is triggered even if acquisition fails (e.g. in the
-  case of killable acquires). This is so we can see how long we waited,
-  even if we didn't get the lock in the end. Whether or not the
-  acquisition succeeded is an event parameter.
+My measurements show that only instrumenting the contended case lowers
+overhead to < 1%. Naively, we can instrument only the contended case like
+this:
 
-- The path of the memcg to which the mm_struct belongs is reported in
-  the event, so we can have per-memcg historams. But, note that the
-  stats are *not* hierarchical; if consumers want a histogram for a
-  memcg *and all of its children*, the consumer will need to add up the
-  separate per-memcg stats itself. This is to avoid paying the cost of
-  traversing a series of memcgs *at record time* (more overhead).
+if (!down_write_trylock(/* ... */))
+	/* Time and call down_write as before. */
 
-- Bucketing based upon the duration (bucket_{lower,upper}) is done in
-  the kernel, as histogram triggers don't have an API to configure such
-  a thing at runtime.
+However, in the case where `_trylock` succeeds, we have lost the lockdep
+annotations (e.g. around ordering) `down_write` would normally include.
+(Granted, we don't run with lockdep in production, but debug builds do.)
 
-Signed-off-by: Axel Rasmussen <axelrasmussen@google.com>
----
+Assuming we need lower overhead, we aren't okay with losing lock
+annotations, and we reject various alternatives to this patch:
 
-Changes since v2:
-- Switched to TRACE_EVENT hist triggers instead of a new hist library.
-- Reduced inlining, as it increased code size with no performance gain.
-- Stopped instrumenting the uncontended case, to reduce overhead. Added
-  additional rwsem.h API surface in order to be able to do this.
+- Making rwsem.c's __down_write and __down_write_trylock public, so
+  mmap_lock.c could construct its own version of LOCK_CONTENDED with
+  tracepoint calls.
+- Having mmap_lock.c reach into rwsem.c's internals with "extern" forward
+  declarations for these functions (and removing "static inline").
+- Somehow adding the instrumentation directly to rwsem.c (either affecting
+  all locks, or polluting it some other way).
+
+The remaining alternative, I think, is what this patch proposes: add API
+surface to rwsem.h which allows callers to provide instrumentation
+callbacks which are invoked in the contended case.
+
+
+
+[1]: For measuring the overhead of the instrumentation, I've been timing a
+defconfig kernel build. The numbers above come from a KVM instance with
+4 CPUs + 32G RAM, running 5.8-rc1 with this patch applied and a histogram
+trigger configured for the acquire_returned tracepoint. My test script is
+simple:
+
+for (( i=0; i<5; ++i)); do
+        make mrproper > /dev/null || exit 1
+        make defconfig > /dev/null || exit 1
+        sync || exit 1
+        echo 3 > /proc/sys/vm/drop_caches || exit 1
+        /usr/bin/time make -j5 > /dev/null
+done
+
+The numbers I'm giving above are computed as:
+(avg of 5 runs with this hist trigger enabled) / (avg on 5.8-rc1).
+
+Axel Rasmussen (1):
+  mmap_lock: add tracepoints around mmap_lock acquisition
 
  include/linux/lockdep.h          |  47 ++++++
  include/linux/mmap_lock.h        |  27 ++-
@@ -134,672 +151,6 @@ Changes since v2:
  create mode 100644 include/trace/events/mmap_lock.h
  create mode 100644 mm/mmap_lock.c
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 8fce5c98a4b0..6de91046437c 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -590,6 +590,17 @@ do {								\
- 	lock_acquired(&(_lock)->dep_map, _RET_IP_);			\
- } while (0)
-
-+#define LOCK_CONTENDED_HOOK(_lock, try, lock, pre, post, arg)	\
-+do {								\
-+	if (!try(_lock)) {					\
-+		lock_contended(&(_lock)->dep_map, _RET_IP_);	\
-+		pre(arg);					\
-+		lock(_lock);					\
-+		post(arg);					\
-+	}							\
-+	lock_acquired(&(_lock)->dep_map, _RET_IP_);		\
-+} while (0)
-+
- #define LOCK_CONTENDED_RETURN(_lock, try, lock)			\
- ({								\
- 	int ____err = 0;					\
-@@ -602,6 +613,21 @@ do {								\
- 	____err;						\
- })
-
-+#define LOCK_CONTENDED_HOOK_RETURN(				\
-+	_lock, try, lock, pre, post, arg)			\
-+({								\
-+	int ____err = 0;					\
-+	if (!try(_lock)) {					\
-+		lock_contended(&(_lock)->dep_map, _RET_IP_);	\
-+		pre(arg);					\
-+		____err = lock(_lock);				\
-+		post(arg, ____err);				\
-+	}							\
-+	if (!____err)						\
-+		lock_acquired(&(_lock)->dep_map, _RET_IP_);	\
-+	____err;						\
-+})
-+
- #else /* CONFIG_LOCK_STAT */
-
- #define lock_contended(lockdep_map, ip) do {} while (0)
-@@ -610,9 +636,30 @@ do {								\
- #define LOCK_CONTENDED(_lock, try, lock) \
- 	lock(_lock)
-
-+#define LOCK_CONTENDED_HOOK(_lock, try, lock, pre, post, arg)	\
-+do {								\
-+	if (!try(_lock)) {					\
-+		pre(arg);					\
-+		lock(_lock);					\
-+		post(arg);					\
-+	}							\
-+} while (0)
-+
- #define LOCK_CONTENDED_RETURN(_lock, try, lock) \
- 	lock(_lock)
-
-+#define LOCK_CONTENDED_HOOK_RETURN(				\
-+	_lock, try, lock, pre, post, arg)			\
-+({								\
-+	int ____err = 0;					\
-+	if (!try(_lock)) {					\
-+		pre(arg);					\
-+		____err = lock(_lock);				\
-+		post(arg, ____err);				\
-+	}							\
-+	____err;						\
-+})
-+
- #endif /* CONFIG_LOCK_STAT */
-
- #ifdef CONFIG_LOCKDEP
-diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-index 0707671851a8..1f61f1eac319 100644
---- a/include/linux/mmap_lock.h
-+++ b/include/linux/mmap_lock.h
-@@ -1,11 +1,34 @@
- #ifndef _LINUX_MMAP_LOCK_H
- #define _LINUX_MMAP_LOCK_H
-
-+#include <linux/mm_types.h>
- #include <linux/mmdebug.h>
-+#include <linux/rwsem.h>
-+#include <linux/types.h>
-
- #define MMAP_LOCK_INITIALIZER(name) \
- 	.mmap_lock = __RWSEM_INITIALIZER((name).mmap_lock),
-
-+#ifdef CONFIG_MMAP_LOCK_TRACEPOINTS
-+
-+void mmap_init_lock(struct mm_struct *mm);
-+void mmap_write_lock(struct mm_struct *mm);
-+void mmap_write_lock_nested(struct mm_struct *mm, int subclass);
-+int mmap_write_lock_killable(struct mm_struct *mm);
-+bool mmap_write_trylock(struct mm_struct *mm);
-+void mmap_write_unlock(struct mm_struct *mm);
-+void mmap_write_downgrade(struct mm_struct *mm);
-+void mmap_read_lock(struct mm_struct *mm);
-+int mmap_read_lock_killable(struct mm_struct *mm);
-+bool mmap_read_trylock(struct mm_struct *mm);
-+void mmap_read_unlock(struct mm_struct *mm);
-+bool mmap_read_trylock_non_owner(struct mm_struct *mm);
-+void mmap_read_unlock_non_owner(struct mm_struct *mm);
-+void mmap_assert_locked(struct mm_struct *mm);
-+void mmap_assert_write_locked(struct mm_struct *mm);
-+
-+#else /* !CONFIG_MMAP_LOCK_TRACEPOINTS */
-+
- static inline void mmap_init_lock(struct mm_struct *mm)
- {
- 	init_rwsem(&mm->mmap_lock);
-@@ -63,7 +86,7 @@ static inline void mmap_read_unlock(struct mm_struct *mm)
-
- static inline bool mmap_read_trylock_non_owner(struct mm_struct *mm)
- {
--	if (down_read_trylock(&mm->mmap_lock)) {
-+	if (mmap_read_trylock(mm)) {
- 		rwsem_release(&mm->mmap_lock.dep_map, _RET_IP_);
- 		return true;
- 	}
-@@ -87,4 +110,6 @@ static inline void mmap_assert_write_locked(struct mm_struct *mm)
- 	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_lock), mm);
- }
-
-+#endif /* CONFIG_MMAP_LOCK_TRACEPOINTS */
-+
- #endif /* _LINUX_MMAP_LOCK_H */
-diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
-index 7e5b2a4eb560..3304a35da4c0 100644
---- a/include/linux/rwsem.h
-+++ b/include/linux/rwsem.h
-@@ -123,7 +123,13 @@ static inline int rwsem_is_contended(struct rw_semaphore *sem)
-  * lock for reading
-  */
- extern void down_read(struct rw_semaphore *sem);
-+extern void down_read_contended_hook(struct rw_semaphore *sem,
-+				     void (*pre)(void *), void (*post)(void *),
-+				     void *arg);
- extern int __must_check down_read_killable(struct rw_semaphore *sem);
-+extern int __must_check
-+down_read_killable_contended_hook(struct rw_semaphore *sem, void (*pre)(void *),
-+				  void (*post)(void *, int), void *arg);
-
- /*
-  * trylock for reading -- returns 1 if successful, 0 if contention
-@@ -134,7 +140,13 @@ extern int down_read_trylock(struct rw_semaphore *sem);
-  * lock for writing
-  */
- extern void down_write(struct rw_semaphore *sem);
-+extern void down_write_contended_hook(struct rw_semaphore *sem,
-+				      void (*pre)(void *), void (*post)(void *),
-+				      void *arg);
- extern int __must_check down_write_killable(struct rw_semaphore *sem);
-+extern int __must_check down_write_killable_contended_hook(
-+	struct rw_semaphore *sem, void (*pre)(void *),
-+	void (*post)(void *, int), void *arg);
-
- /*
-  * trylock for writing -- returns 1 if successful, 0 if contention
-diff --git a/include/trace/events/mmap_lock.h b/include/trace/events/mmap_lock.h
-new file mode 100644
-index 000000000000..d1d4c83b848e
---- /dev/null
-+++ b/include/trace/events/mmap_lock.h
-@@ -0,0 +1,76 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM mmap_lock
-+
-+#if !defined(_TRACE_MMAP_LOCK_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_MMAP_LOCK_H
-+
-+#include <linux/tracepoint.h>
-+#include <linux/types.h>
-+
-+struct mm_struct;
-+
-+DECLARE_EVENT_CLASS(
-+	mmap_lock_template,
-+
-+	TP_PROTO(struct mm_struct *mm, const char *memcg_path, u64 duration,
-+		 bool success, u64 bucket_lower, u64 bucket_upper),
-+
-+	TP_ARGS(mm, memcg_path, duration, success, bucket_lower, bucket_upper),
-+
-+	TP_STRUCT__entry(
-+		__field(struct mm_struct *, mm)
-+		__string(memcg_path, memcg_path)
-+		__field(u64, duration)
-+		__field(bool, success)
-+		__field(u64, bucket_lower)
-+		__field(u64, bucket_upper)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->mm = mm;
-+		__assign_str(memcg_path, memcg_path);
-+		__entry->duration = duration;
-+		__entry->success = success;
-+		__entry->bucket_lower = bucket_lower;
-+		__entry->bucket_upper = bucket_upper;
-+	),
-+
-+	TP_printk(
-+		"mm=%p memcg_path=%s duration=%llu success=%s bucket=[%llu, %llu]\n",
-+		__entry->mm,
-+		__get_str(memcg_path),
-+		__entry->duration,
-+		__entry->success ? "true" : "false",
-+		__entry->bucket_lower,
-+		__entry->bucket_upper)
-+	);
-+
-+DEFINE_EVENT(mmap_lock_template, mmap_lock_start_locking,
-+
-+	TP_PROTO(struct mm_struct *mm, const char *memcg_path, u64 duration,
-+		 bool success, u64 bucket_lower, u64 bucket_upper),
-+
-+	TP_ARGS(mm, memcg_path, duration, success, bucket_lower, bucket_upper)
-+);
-+
-+DEFINE_EVENT(mmap_lock_template, mmap_lock_acquire_returned,
-+
-+	TP_PROTO(struct mm_struct *mm, const char *memcg_path, u64 duration,
-+		 bool success, u64 bucket_lower, u64 bucket_upper),
-+
-+	TP_ARGS(mm, memcg_path, duration, success, bucket_lower, bucket_upper)
-+);
-+
-+DEFINE_EVENT(mmap_lock_template, mmap_lock_released,
-+
-+	TP_PROTO(struct mm_struct *mm, const char *memcg_path, u64 duration,
-+		 bool success, u64 bucket_lower, u64 bucket_upper),
-+
-+	TP_ARGS(mm, memcg_path, duration, success, bucket_lower, bucket_upper)
-+);
-+
-+#endif /* _TRACE_MMAP_LOCK_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index f11b9bd3431d..6aabea1cbc5d 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -1495,6 +1495,20 @@ void __sched down_read(struct rw_semaphore *sem)
- }
- EXPORT_SYMBOL(down_read);
-
-+/*
-+ * lock for reading
-+ */
-+void __sched down_read_contended_hook(struct rw_semaphore *sem,
-+				      void (*pre)(void *),
-+				      void (*post)(void *), void *arg)
-+{
-+	might_sleep();
-+	rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
-+	LOCK_CONTENDED_HOOK(sem, __down_read_trylock, __down_read, pre, post,
-+			    arg);
-+}
-+EXPORT_SYMBOL(down_read_contended_hook);
-+
- int __sched down_read_killable(struct rw_semaphore *sem)
- {
- 	might_sleep();
-@@ -1509,6 +1523,24 @@ int __sched down_read_killable(struct rw_semaphore *sem)
- }
- EXPORT_SYMBOL(down_read_killable);
-
-+int __sched down_read_killable_contended_hook(struct rw_semaphore *sem,
-+					      void (*pre)(void *),
-+					      void (*post)(void *, int),
-+					      void *arg)
-+{
-+	might_sleep();
-+	rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
-+
-+	if (LOCK_CONTENDED_HOOK_RETURN(sem, __down_read_trylock,
-+				       __down_read_killable, pre, post, arg)) {
-+		rwsem_release(&sem->dep_map, _RET_IP_);
-+		return -EINTR;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(down_read_killable_contended_hook);
-+
- /*
-  * trylock for reading -- returns 1 if successful, 0 if contention
-  */
-@@ -1533,6 +1565,20 @@ void __sched down_write(struct rw_semaphore *sem)
- }
- EXPORT_SYMBOL(down_write);
-
-+/*
-+ * lock for writing
-+ */
-+void __sched down_write_contended_hook(struct rw_semaphore *sem,
-+				       void (*pre)(void *),
-+				       void (*post)(void *), void *arg)
-+{
-+	might_sleep();
-+	rwsem_acquire(&sem->dep_map, 0, 0, _RET_IP_);
-+	LOCK_CONTENDED_HOOK(sem, __down_write_trylock, __down_write, pre, post,
-+			    arg);
-+}
-+EXPORT_SYMBOL(down_write_contended_hook);
-+
- /*
-  * lock for writing
-  */
-@@ -1551,6 +1597,24 @@ int __sched down_write_killable(struct rw_semaphore *sem)
- }
- EXPORT_SYMBOL(down_write_killable);
-
-+int __sched down_write_killable_contended_hook(struct rw_semaphore *sem,
-+					       void (*pre)(void *),
-+					       void (*post)(void *, int),
-+					       void *arg)
-+{
-+	might_sleep();
-+	rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
-+
-+	if (LOCK_CONTENDED_HOOK_RETURN(sem, __down_write_trylock,
-+				       __down_write_killable, pre, post, arg)) {
-+		rwsem_release(&sem->dep_map, _RET_IP_);
-+		return -EINTR;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(down_write_killable_contended_hook);
-+
- /*
-  * trylock for writing -- returns 1 if successful, 0 if contention
-  */
-diff --git a/mm/Kconfig b/mm/Kconfig
-index f2104cc0d35c..a88b44ff46e2 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -822,6 +822,25 @@ config DEVICE_PRIVATE
- config FRAME_VECTOR
- 	bool
-
-+config MMAP_LOCK_TRACEPOINTS
-+	bool "mmap_lock tracepoints"
-+	select HISTOGRAM
-+	select HIST_TRIGGERS
-+	default n
-+
-+	help
-+	  Enable kernel tracepoints around mmap_lock acquisition. These can be
-+	  enabled / disabled at runtime, although note there is a small amount
-+	  of overhead even before the tracepoints are runtime-enabled. When
-+	  histogram triggers are configured at runtime, less than 1% overhead
-+	  is added to typical workloads.
-+
-+	  This option selects CONFIG_HIST_TRIGGERS, since one of the main
-+	  purposes of this feature is to allow lock acquisition latency
-+	  histograms to be collected.
-+
-+	  If unsure, say "N".
-+
- config ARCH_USES_HIGH_VMA_FLAGS
- 	bool
- config ARCH_HAS_PKEYS
-diff --git a/mm/Makefile b/mm/Makefile
-index 6e9d46b2efc9..14860f7b9984 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -121,3 +121,4 @@ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
- obj-$(CONFIG_MAPPING_DIRTY_HELPERS) += mapping_dirty_helpers.o
- obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
- obj-$(CONFIG_PAGE_REPORTING) += page_reporting.o
-+obj-$(CONFIG_MMAP_LOCK_TRACEPOINTS) += mmap_lock.o
-diff --git a/mm/mmap_lock.c b/mm/mmap_lock.c
-new file mode 100644
-index 000000000000..d0734d6325ea
---- /dev/null
-+++ b/mm/mmap_lock.c
-@@ -0,0 +1,281 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/mmap_lock.h>
-+
-+#include <linux/cgroup.h>
-+#include <linux/kernel.h>
-+#include <linux/memcontrol.h>
-+#include <linux/mmap_lock.h>
-+#include <linux/percpu.h>
-+#include <linux/smp.h>
-+#include <linux/trace_events.h>
-+#include <linux/sched/clock.h>
-+
-+static const u64 mmap_lock_buckets[] = {
-+	250,		/* 250 ns */
-+	375,		/* 375 ns */
-+	500,		/* 500 ns */
-+	1000,		/* 1 us */
-+	10000,		/* 10 us */
-+	100000,		/* 100 us */
-+	500000,		/* 500 us */
-+	1000000,	/* 1 ms */
-+	5000000,	/* 5 ms */
-+	10000000,	/* 10 ms */
-+	50000000,	/* 50 ms */
-+	100000000,	/* 100 ms */
-+	500000000,	/* 500 ms */
-+	1000000000,	/* 1 s */
-+	5000000000UL,	/* 5 s */
-+	10000000000UL,	/* 10 s */
-+	~0		/* > 10s */
-+};
-+
-+static int find_bucket(u64 duration)
-+{
-+	int i, lower, upper;
-+
-+	lower = 0;
-+	upper = ARRAY_SIZE(mmap_lock_buckets) - 1;
-+	while (lower < upper) {
-+		/* Can't realistically overflow, number of buckets < 2**63. */
-+		i = (lower + upper) / 2;
-+		if (duration <= mmap_lock_buckets[i])
-+			upper = i;
-+		else
-+			lower = i + 1;
-+	}
-+	return upper;
-+}
-+
-+#ifdef CONFIG_MEMCG
-+
-+DEFINE_PER_CPU(char[MAX_FILTER_STR_VAL], trace_memcg_path);
-+
-+/*
-+ * Write the given mm_struct's memcg path to a percpu buffer, and return a
-+ * pointer to it. If the path cannot be determined, the buffer will contain the
-+ * empty string.
-+ *
-+ * Note: buffers are allocated per-cpu to avoid locking, so preemption must be
-+ * disabled by the caller before calling us, and re-enabled only after the
-+ * caller is done with the pointer.
-+ */
-+static const char *get_mm_memcg_path(struct mm_struct *mm)
-+{
-+	struct mem_cgroup *memcg = get_mem_cgroup_from_mm(mm);
-+
-+	if (memcg != NULL && likely(memcg->css.cgroup != NULL)) {
-+		char *buf = this_cpu_ptr(trace_memcg_path);
-+
-+		cgroup_path(memcg->css.cgroup, buf, MAX_FILTER_STR_VAL);
-+		return buf;
-+	}
-+	return "";
-+}
-+
-+#define TRACE_MMAP_LOCK_EVENT(type, mm, ...)                                   \
-+	do {                                                                   \
-+		if (trace_mmap_lock_##type##_enabled()) {                      \
-+			get_cpu();                                             \
-+			trace_mmap_lock_##type(mm, get_mm_memcg_path(mm),      \
-+					       ##__VA_ARGS__);                 \
-+			put_cpu();                                             \
-+		}                                                              \
-+	} while (0)
-+
-+#else /* CONFIG_MEMCG */
-+
-+#define TRACE_MMAP_LOCK_EVENT(type, mm, ...)                                   \
-+	trace_mmap_lock_##type(mm, "", ##__VA_ARGS__)
-+
-+#endif /* CONFIG_MEMCG */
-+
-+/*
-+ * Trace calls must be in a separate file, as otherwise there's a cirtuclar
-+ * dependency between linux/mmap_lock.h and trace/events/mmap_lock.h.
-+ */
-+
-+static void trace_start_locking(struct mm_struct *mm)
-+{
-+	TRACE_MMAP_LOCK_EVENT(start_locking, mm, 0, true, 0,
-+			      mmap_lock_buckets[0]);
-+}
-+
-+static void trace_acquire_returned(struct mm_struct *mm, u64 start_time_ns,
-+				   bool success)
-+{
-+	u64 duration = sched_clock() - start_time_ns;
-+	int i = find_bucket(duration);
-+
-+	TRACE_MMAP_LOCK_EVENT(acquire_returned, mm, duration, success,
-+			      i > 0 ? mmap_lock_buckets[i - 1] + 1 : 0,
-+			      mmap_lock_buckets[i]);
-+}
-+
-+static void trace_released(struct mm_struct *mm)
-+{
-+	TRACE_MMAP_LOCK_EVENT(released, mm, 0, true, 0, mmap_lock_buckets[0]);
-+}
-+
-+struct trace_context {
-+	struct mm_struct *mm;
-+	u64 start_time_ns;
-+};
-+
-+static inline void trace_pre(void *c)
-+{
-+	((struct trace_context *) c)->start_time_ns = sched_clock();
-+}
-+
-+static void trace_post_return(void *c, int ret)
-+{
-+	struct trace_context *context = (struct trace_context *)c;
-+
-+	trace_acquire_returned(context->mm, context->start_time_ns, ret == 0);
-+}
-+
-+static inline void trace_post(void *c)
-+{
-+	trace_post_return(c, 0);
-+}
-+
-+static inline bool trylock_impl(struct mm_struct *mm,
-+				int (*trylock)(struct rw_semaphore *))
-+{
-+	trace_start_locking(mm);
-+	return trylock(&mm->mmap_lock) != 0;
-+}
-+
-+static inline void lock_impl(struct mm_struct *mm,
-+			     void (*lock)(struct rw_semaphore *,
-+					  void (*)(void *), void (*)(void *),
-+					  void *))
-+{
-+	struct trace_context context = { .mm = mm, .start_time_ns = 0 };
-+
-+	trace_start_locking(mm);
-+	lock(&mm->mmap_lock, trace_pre, trace_post, &context);
-+}
-+
-+static inline int lock_return_impl(struct mm_struct *mm,
-+				   int (*lock)(struct rw_semaphore *,
-+					       void (*)(void *),
-+					       void (*)(void *, int), void *))
-+{
-+	struct trace_context context = { .mm = mm, .start_time_ns = 0 };
-+
-+	trace_start_locking(mm);
-+	return lock(&mm->mmap_lock, trace_pre, trace_post_return, &context);
-+}
-+
-+void mmap_init_lock(struct mm_struct *mm)
-+{
-+	init_rwsem(&mm->mmap_lock);
-+}
-+EXPORT_SYMBOL_GPL(mmap_init_lock);
-+
-+void mmap_write_lock(struct mm_struct *mm)
-+{
-+	lock_impl(mm, down_write_contended_hook);
-+}
-+EXPORT_SYMBOL_GPL(mmap_write_lock);
-+
-+void mmap_write_lock_nested(struct mm_struct *mm, int subclass)
-+{
-+	/*
-+	 * Unlike other functions, we don't need the contended hook API here.
-+	 * This is because we don't care about breaking out the {un,}contended
-+	 * cases.
-+	 *
-+	 * This function is only called once on fork (nowhere else), so 1)
-+	 * performance isn't as important, and 2) we expect to never experience
-+	 * contention.
-+	 */
-+	u64 start_time_ns = sched_clock();
-+
-+	down_write_nested(&mm->mmap_lock, subclass);
-+	trace_acquire_returned(mm, start_time_ns, true);
-+}
-+EXPORT_SYMBOL_GPL(mmap_write_lock_nested);
-+
-+int mmap_write_lock_killable(struct mm_struct *mm)
-+{
-+	return lock_return_impl(mm, down_write_killable_contended_hook);
-+}
-+EXPORT_SYMBOL_GPL(mmap_write_lock_killable);
-+
-+bool mmap_write_trylock(struct mm_struct *mm)
-+{
-+	return trylock_impl(mm, down_write_trylock);
-+}
-+EXPORT_SYMBOL_GPL(mmap_write_trylock);
-+
-+void mmap_write_unlock(struct mm_struct *mm)
-+{
-+	up_write(&mm->mmap_lock);
-+	trace_released(mm);
-+}
-+EXPORT_SYMBOL_GPL(mmap_write_unlock);
-+
-+void mmap_write_downgrade(struct mm_struct *mm)
-+{
-+	downgrade_write(&mm->mmap_lock);
-+}
-+EXPORT_SYMBOL_GPL(mmap_write_downgrade);
-+
-+void mmap_read_lock(struct mm_struct *mm)
-+{
-+	lock_impl(mm, down_read_contended_hook);
-+}
-+EXPORT_SYMBOL_GPL(mmap_read_lock);
-+
-+int mmap_read_lock_killable(struct mm_struct *mm)
-+{
-+	return lock_return_impl(mm, down_read_killable_contended_hook);
-+}
-+EXPORT_SYMBOL_GPL(mmap_read_lock_killable);
-+
-+bool mmap_read_trylock(struct mm_struct *mm)
-+{
-+	return trylock_impl(mm, down_read_trylock);
-+}
-+EXPORT_SYMBOL_GPL(mmap_read_trylock);
-+
-+void mmap_read_unlock(struct mm_struct *mm)
-+{
-+	up_read(&mm->mmap_lock);
-+	trace_released(mm);
-+}
-+EXPORT_SYMBOL_GPL(mmap_read_unlock);
-+
-+bool mmap_read_trylock_non_owner(struct mm_struct *mm)
-+{
-+	if (trylock_impl(mm, down_read_trylock)) {
-+		rwsem_release(&mm->mmap_lock.dep_map, _RET_IP_);
-+		return true;
-+	}
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(mmap_read_trylock_non_owner);
-+
-+void mmap_read_unlock_non_owner(struct mm_struct *mm)
-+{
-+	up_read_non_owner(&mm->mmap_lock);
-+	trace_released(mm);
-+}
-+EXPORT_SYMBOL_GPL(mmap_read_unlock_non_owner);
-+
-+void mmap_assert_locked(struct mm_struct *mm)
-+{
-+	lockdep_assert_held(&mm->mmap_lock);
-+	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_lock), mm);
-+}
-+EXPORT_SYMBOL_GPL(mmap_assert_locked);
-+
-+void mmap_assert_write_locked(struct mm_struct *mm)
-+{
-+	lockdep_assert_held_write(&mm->mmap_lock);
-+	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_lock), mm);
-+}
-+EXPORT_SYMBOL_GPL(mmap_assert_write_locked);
 --
 2.27.0.111.gc72c7da667-goog
 
