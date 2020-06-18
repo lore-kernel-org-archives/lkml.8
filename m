@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A60C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 734A221534
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD1521927
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448136;
-	bh=NznlWfKmX/UWHufbw5kvuUbn4Bkrlk5WDFiJ3oJ4Oiw=;
+	s=default; t=1592448140;
+	bh=3i9CW9vR+vvaNTTVUkiKlJA0CPyN9WMXuwYIQbi6hqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Au6Lzsj2dVwybAU0en8KmcD1gKEAobFKsUKlvqloV0/Awkc9R+X3hG66yWmwWHL4E
-	 yfxRK1+HxcteUCayaTEwXByhx1jKcxZKGXpaOrqwzk6RYdhF0UVH3878TC9OycVVsO
-	 SqkXY0QUhiqnOaoLAA+ETYNtPSJUB74Axwmj7vJc=
+	b=EGYj5hTbCjEth740zZGUNCPz2iFxzttQvHByQflukGZZlRLGNt6GKb9Db50NPliGT
+	 tR4VFCcqxtkv5RBRIQRYZ7IHJRiF3EVGmXI0dBSsI2Uo65+t7PBDiDGNYFFXMBoMqP
+	 6rR9d9P1Cviwa9xlMYYa1Yto8rWCjTEsgBlHcZlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387807AbgFRCmN (ORCPT
+        id S1728854AbgFRBMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:42:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40602 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:12:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728861AbgFRBMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:09 -0400
+        id S1728018AbgFRBL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3495D20EDD;
-        Thu, 18 Jun 2020 01:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54E6620CC7;
+        Thu, 18 Jun 2020 01:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442729;
-        bh=NznlWfKmX/UWHufbw5kvuUbn4Bkrlk5WDFiJ3oJ4Oiw=;
+        s=default; t=1592442687;
+        bh=3i9CW9vR+vvaNTTVUkiKlJA0CPyN9WMXuwYIQbi6hqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GhFk5Dw0u3OhnRJAuo5JKURn61Kt0+tpOt2QLMPMBbWiG3RRl5st+Kdh7HFLw+/YP
-         BdrCVxuSfYsoWZz4kGel5cB4+Gi+JxIZs/9P+ZuX/MUFxwdm1V12mgdcQvUc0OuvxD
-         dD2f1eWzi8k7hg7TvbAkSG2+x3AyYtIQCEF4lBVg=
+        b=UaHqaSGKuMBNSO4GVdz+Dg6V22FOVcHsEnveuLNmMydlIsEWdmyIMB4ETRnq4XW9L
+         42uobZyg0uN/OtzNQgaw1Iy2kR04RR4mfKJxmRD506vWcX7RMcph/k24YSn3WluH0B
+         WKY36q+uPO1xAOnqYghKMPLRxr74VcuzZVvwrBDc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Loic Poulain <loic.poulain@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 185/388] arm64: dts: msm8996: Fix CSI IRQ types
-Date:   Wed, 17 Jun 2020 21:04:42 -0400
-Message-Id: <20200618010805.600873-185-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 153/388] clk: meson: meson8b: Fix the vclk_div{1, 2, 4, 6, 12}_en gate bits
+Date:   Wed, 17 Jun 2020 21:04:10 -0400
+Message-Id: <20200618010805.600873-153-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,53 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 4a4a26317ec8aba575f6b85789a42639937bc1a4 ]
+[ Upstream commit 8bb629cfb28f4dad9d47f69249366e50ae5edc25 ]
 
-Each IRQ_TYPE_NONE interrupt causes a warning at boot.
-Fix that by defining an appropriate type.
+The DIV{1,2,4,6,12}_EN bits are actually located in HHI_VID_CLK_CNTL
+register:
+- HHI_VID_CLK_CNTL[0] = DIV1_EN
+- HHI_VID_CLK_CNTL[1] = DIV2_EN
+- HHI_VID_CLK_CNTL[2] = DIV4_EN
+- HHI_VID_CLK_CNTL[3] = DIV6_EN
+- HHI_VID_CLK_CNTL[4] = DIV12_EN
 
-Fixes: e0531312e78f ("arm64: dts: qcom: msm8996: Add CAMSS support")
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Link: https://lore.kernel.org/r/1587470425-13726-1-git-send-email-loic.poulain@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Update the bits accordingly so we will enable the bits in the correct
+register once we switch these clocks to be mutable.
+
+Fixes: 6cb57c678bb70e ("clk: meson: meson8b: add the read-only video clock trees")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20200417184127.1319871-4-martin.blumenstingl@googlemail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/clk/meson/meson8b.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 98634d5c4440..d22c364b520a 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -989,16 +989,16 @@ camss: camss@a00000 {
- 				"csi_clk_mux",
- 				"vfe0",
- 				"vfe1";
--			interrupts = <GIC_SPI 78 0>,
--				<GIC_SPI 79 0>,
--				<GIC_SPI 80 0>,
--				<GIC_SPI 296 0>,
--				<GIC_SPI 297 0>,
--				<GIC_SPI 298 0>,
--				<GIC_SPI 299 0>,
--				<GIC_SPI 309 0>,
--				<GIC_SPI 314 0>,
--				<GIC_SPI 315 0>;
-+			interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 79 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 80 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 296 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 297 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 298 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 299 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 309 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 314 IRQ_TYPE_EDGE_RISING>,
-+				<GIC_SPI 315 IRQ_TYPE_EDGE_RISING>;
- 			interrupt-names = "csiphy0",
- 				"csiphy1",
- 				"csiphy2",
+diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+index ecd78cdca8ce..5f375799ce46 100644
+--- a/drivers/clk/meson/meson8b.c
++++ b/drivers/clk/meson/meson8b.c
+@@ -1213,7 +1213,7 @@ static struct clk_regmap meson8b_vclk_in_en = {
+ 
+ static struct clk_regmap meson8b_vclk_div1_gate = {
+ 	.data = &(struct clk_regmap_gate_data){
+-		.offset = HHI_VID_CLK_DIV,
++		.offset = HHI_VID_CLK_CNTL,
+ 		.bit_idx = 0,
+ 	},
+ 	.hw.init = &(struct clk_init_data){
+@@ -1243,7 +1243,7 @@ static struct clk_fixed_factor meson8b_vclk_div2_div = {
+ 
+ static struct clk_regmap meson8b_vclk_div2_div_gate = {
+ 	.data = &(struct clk_regmap_gate_data){
+-		.offset = HHI_VID_CLK_DIV,
++		.offset = HHI_VID_CLK_CNTL,
+ 		.bit_idx = 1,
+ 	},
+ 	.hw.init = &(struct clk_init_data){
+@@ -1273,7 +1273,7 @@ static struct clk_fixed_factor meson8b_vclk_div4_div = {
+ 
+ static struct clk_regmap meson8b_vclk_div4_div_gate = {
+ 	.data = &(struct clk_regmap_gate_data){
+-		.offset = HHI_VID_CLK_DIV,
++		.offset = HHI_VID_CLK_CNTL,
+ 		.bit_idx = 2,
+ 	},
+ 	.hw.init = &(struct clk_init_data){
+@@ -1303,7 +1303,7 @@ static struct clk_fixed_factor meson8b_vclk_div6_div = {
+ 
+ static struct clk_regmap meson8b_vclk_div6_div_gate = {
+ 	.data = &(struct clk_regmap_gate_data){
+-		.offset = HHI_VID_CLK_DIV,
++		.offset = HHI_VID_CLK_CNTL,
+ 		.bit_idx = 3,
+ 	},
+ 	.hw.init = &(struct clk_init_data){
+@@ -1333,7 +1333,7 @@ static struct clk_fixed_factor meson8b_vclk_div12_div = {
+ 
+ static struct clk_regmap meson8b_vclk_div12_div_gate = {
+ 	.data = &(struct clk_regmap_gate_data){
+-		.offset = HHI_VID_CLK_DIV,
++		.offset = HHI_VID_CLK_CNTL,
+ 		.bit_idx = 4,
+ 	},
+ 	.hw.init = &(struct clk_init_data){
 -- 
 2.25.1
 
