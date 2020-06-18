@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 559E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31568C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 337AD2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A632083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448721;
-	bh=FswHuYxu6DWVPksDcw0Gd/5+qzNNCvjR4o8+UIvMPlQ=;
+	s=default; t=1592448730;
+	bh=2RWuC1I4HdtIrFZE3PM5UhPef8qY+Xc5s/9pa45NXFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ytvq7FwT6KrSRvR3muIYnjxkOIr9tguRs8uSRE2LYwXumECcunVSfKYfj+izfGhZx
-	 HISkiW83wwtsyw1nyRNZyKItWNUvfFuLF1X78/uE+GW2TcAoSOdqC5yLefqVwWOSgQ
-	 APr/CpyqlAqsHtgaCyxZNu0eEtmI7j51wCdXXbfU=
+	b=Bmvjar3wcqGfKaRyDTrdBwTMLvp6ZZKvdmGGbPAD+QuWm4QmmkMZ3gOQWD2GS8217
+	 p9xVH4ljJTbFW1UwlUBbNEYHv3mS/EeAHozaEQ8RLjqy5b0qO/AIAxLHKvgj5ouiEi
+	 NIIUqkiA7tT7Mcu05dYV/4nXQ1JFCxgJMp2qSdfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgFRBIq (ORCPT
+        id S1728165AbgFRCwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:08:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34430 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:52:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727813AbgFRBIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:08:35 -0400
+        id S1727868AbgFRBIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:08:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43B502193E;
-        Thu, 18 Jun 2020 01:08:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98C2121D79;
+        Thu, 18 Jun 2020 01:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442515;
-        bh=FswHuYxu6DWVPksDcw0Gd/5+qzNNCvjR4o8+UIvMPlQ=;
+        s=default; t=1592442521;
+        bh=2RWuC1I4HdtIrFZE3PM5UhPef8qY+Xc5s/9pa45NXFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ScALaiQJqeOC++HsvzKtzfXnskEwgj7GWMSuDPZ41estDhmYTsSFoS2n7z1P/QzzS
-         j/oIgQcjzS0RrHYilPrO4VJ764Jy1QzF1nlahSZ5LX2V7Uk+DJZW4LYvx5Y4avSDA4
-         pHfCaELYpK0luOl2Jfwy5FxzEqR7UvRKGcq+LosU=
+        b=Gu3uFGdw0FRW05niVqK1zPhO0/v2Zyy65RqjEpeKQWLaH4mLaOwhT8iBDWcI1dpYY
+         zBPRMusA+wbXSEmbyLIAU4GiujqF8X/iH7Oj/041IX4yGwT3mRelwFV5qDRAPjBRET
+         WQco4+TSf+MWmerwwx7SiAWxGFdNZiBK1nn3gl7U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 021/388] arm64: dts: meson-gxbb-kii-pro: fix board compatible
-Date:   Wed, 17 Jun 2020 21:01:58 -0400
-Message-Id: <20200618010805.600873-21-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.7 026/388] ALSA: isa/wavefront: prevent out of bounds write in ioctl
+Date:   Wed, 17 Jun 2020 21:02:03 -0400
+Message-Id: <20200618010805.600873-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,36 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit d120b5f98031eefc22164ae8c6ea3711e7a04c19 ]
+[ Upstream commit 7f0d5053c5a9d23fe5c2d337495a9d79038d267b ]
 
-Remove the uneeded "amlogic,p201", "amlogic,s905" in the board compatible list.
+The "header->number" comes from the ioctl and it needs to be clamped to
+prevent out of bounds writes.
 
-It fixes:
-meson-gxbb-kii-pro.dt.yaml: /: compatible: ['videostrong,kii-pro', 'amlogic,p201', 'amlogic,s905', 'amlogic,meson-gxbb'] is not valid under any of the given schemas
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Link: https://lore.kernel.org/r/20200326165958.19274-5-narmstrong@baylibre.com
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200501094011.GA960082@mwanda
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/isa/wavefront/wavefront_synth.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
-index 6c9cc45fb417..e8394a8269ee 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts
-@@ -11,7 +11,7 @@
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/leds/common.h>
- / {
--	compatible = "videostrong,kii-pro", "amlogic,p201", "amlogic,s905", "amlogic,meson-gxbb";
-+	compatible = "videostrong,kii-pro", "amlogic,meson-gxbb";
- 	model = "Videostrong KII Pro";
+diff --git a/sound/isa/wavefront/wavefront_synth.c b/sound/isa/wavefront/wavefront_synth.c
+index c5b1d5900eed..d6420d224d09 100644
+--- a/sound/isa/wavefront/wavefront_synth.c
++++ b/sound/isa/wavefront/wavefront_synth.c
+@@ -1171,7 +1171,10 @@ wavefront_send_alias (snd_wavefront_t *dev, wavefront_patch_info *header)
+ 				      "alias for %d\n",
+ 				      header->number,
+ 				      header->hdr.a.OriginalSample);
+-    
++
++	if (header->number >= WF_MAX_SAMPLE)
++		return -EINVAL;
++
+ 	munge_int32 (header->number, &alias_hdr[0], 2);
+ 	munge_int32 (header->hdr.a.OriginalSample, &alias_hdr[2], 2);
+ 	munge_int32 (*((unsigned int *)&header->hdr.a.sampleStartOffset),
+@@ -1202,6 +1205,9 @@ wavefront_send_multisample (snd_wavefront_t *dev, wavefront_patch_info *header)
+ 	int num_samples;
+ 	unsigned char *msample_hdr;
  
- 	leds {
++	if (header->number >= WF_MAX_SAMPLE)
++		return -EINVAL;
++
+ 	msample_hdr = kmalloc(WF_MSAMPLE_BYTES, GFP_KERNEL);
+ 	if (! msample_hdr)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
