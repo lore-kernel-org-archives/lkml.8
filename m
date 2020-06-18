@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD338C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ADDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8301020776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A18D20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443352;
-	bh=tXZguFDtMNtJqm3M9bfTwLckJP+68oggVDjUs9RehoA=;
+	s=default; t=1592443360;
+	bh=COgDednjpZf6sWQLysDO7YXN00Jr1Nsdc0UeTybDPpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=olhusq6DPZJ9yD69jTdn8eJVLucmybXLj8W7h8BQhltqxoo+4emribhMJD1wtbIpD
-	 /UGKOuS4wFvAk6o+Bc1eftwOxWo7bHhNPa98MY3sBVkzkj6zQHnz61+e2lbxwfFIgQ
-	 4gehpSPga8XD9WmTvZdPKt7qqYDnFXNlc3+H9FGc=
+	b=J4NZqOy7O63nCh7ChfR/81vZWdCmNKtHd/zFM1TLUYYoeZsa5CURBiGisaj1nLWrT
+	 uOez2j2JYugHIdZWYGz5lxJszNz58DhpiqZdVri23Li1kbe1aTPgR/dn8le1Ed6UQ0
+	 +tveXx6IuEX6ogSC4Pvdvd329GmgaeV2jIIRoqic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbgFRBWb (ORCPT
+        id S1730806AbgFRBWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:22:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50912 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:22:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729740AbgFRBTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:19:11 -0400
+        id S1730098AbgFRBTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BAD221D90;
-        Thu, 18 Jun 2020 01:19:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E569321D94;
+        Thu, 18 Jun 2020 01:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443151;
-        bh=tXZguFDtMNtJqm3M9bfTwLckJP+68oggVDjUs9RehoA=;
+        s=default; t=1592443158;
+        bh=COgDednjpZf6sWQLysDO7YXN00Jr1Nsdc0UeTybDPpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hu8wbbD1ONcjaDunbL1pXAFR5efvZsUyYJaqAhtBK8W90iKze4VDgwdAjuFNACvKr
-         xuO/+R+SHfCuyVUkD9+gIFC4qJ9PEi2AZjyw3m0JUfLIOKW9GMhfbuJKkSDiYiLZE/
-         O/JJuFQb4jOBSUyK2LzfCEgOoXFKoXo0Hjkn2sS4=
+        b=zc2pwAGP/aVaUx5TWjPqShfOb9JZHdHQYKoSerFsGC754tnCyxoK1xIyTuNzqZw+X
+         V1iJ7Ni2e7+fYPmxEXXmjLdQmp0sZ4ennYhITeE4cOeHphzT0aw5Qn9i1pBIam+bSR
+         2fme7Svm2Grpr+1msvbDF0o0MyfI7v/GDP3lmQus=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matej Dujava <mdujava@kocurkovo.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.4 119/266] staging: sm750fb: add missing case while setting FB_VISUAL
-Date:   Wed, 17 Jun 2020 21:14:04 -0400
-Message-Id: <20200618011631.604574-119-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 125/266] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
+Date:   Wed, 17 Jun 2020 21:14:10 -0400
+Message-Id: <20200618011631.604574-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,34 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matej Dujava <mdujava@kocurkovo.cz>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit fa90133377f4a7f15a937df6ad55133bb57c5665 ]
+[ Upstream commit 66ff14e59e8a30690755b08bc3042359703fb07a ]
 
-Switch statement does not contain all cases: 8, 16, 24, 32.
-This patch will add missing one (24)
+7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
+Linux to enable ASPM, but for some undocumented reason, it didn't enable
+ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
 
-Fixes: 81dee67e215b ("staging: sm750fb: add sm750 to staging")
-Signed-off-by: Matej Dujava <mdujava@kocurkovo.cz>
-Link: https://lore.kernel.org/r/1588277366-19354-2-git-send-email-mdujava@kocurkovo.cz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Remove this exclusion so we can enable ASPM on these links.
+
+The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
+PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
+Intel SoC to enter deeper Package C-states, which is a significant power
+savings.
+
+[bhelgaas: commit log]
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/sm750fb/sm750.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/pcie/aspm.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-index 59568d18ce23..5b72aa81d94c 100644
---- a/drivers/staging/sm750fb/sm750.c
-+++ b/drivers/staging/sm750fb/sm750.c
-@@ -898,6 +898,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
- 		fix->visual = FB_VISUAL_PSEUDOCOLOR;
- 		break;
- 	case 16:
-+	case 24:
- 	case 32:
- 		fix->visual = FB_VISUAL_TRUECOLOR;
- 		break;
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 5a1bbf2cb7e9..4a0ec34062d6 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -628,16 +628,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 
+ 	/* Setup initial capable state. Will be updated later */
+ 	link->aspm_capable = link->aspm_support;
+-	/*
+-	 * If the downstream component has pci bridge function, don't
+-	 * do ASPM for now.
+-	 */
+-	list_for_each_entry(child, &linkbus->devices, bus_list) {
+-		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
+-			link->aspm_disable = ASPM_STATE_ALL;
+-			break;
+-		}
+-	}
+ 
+ 	/* Get and check endpoint acceptable latencies */
+ 	list_for_each_entry(child, &linkbus->devices, bus_list) {
 -- 
 2.25.1
 
