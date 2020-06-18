@@ -2,254 +2,286 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EDAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5384CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6181D20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:17:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HM6VqxOV"
+	by mail.kernel.org (Postfix) with ESMTP id 26D62207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:19:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592518745;
+	bh=U/QUkoOn/pyP5SQXuofgXXOImfceFqDRB/qQNb1G9Yo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=WD+CkIHn+29pbKW9yX76TWYQLLdRFJfxzaKIGsXi/F8zJ/KG/dK2codivfxPjX1s9
+	 PYCJUJrefZzHS+YWMPG4sR4yv+lETl09IhrGoRX963LTo7C3VrSkKzEHUaWC2QrQJD
+	 PnQnNzGZHCy3BkbqSWvd5Wd0fMFmyS0jmEYZ5MZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731960AbgFRWRl (ORCPT
+        id S1731822AbgFRWTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:17:41 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55716 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731935AbgFRWRj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 18:17:39 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05IM840c009933;
-        Thu, 18 Jun 2020 22:17:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : from :
- subject : message-id : date : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=47dOQpqiKGfsW/QjCgUZPqBcNDXW/hGNuK+7RNWRugA=;
- b=HM6VqxOV6rTi6psG2HNf3jHycDosE7YJ23H5fzAFhzPiecRw+bSSdRS2HKfVN1UUvqGt
- 9hyw+kTAAuLUbvXsv3FkiWEpJMvpwQ7LrmMmbuRdrAsFVQCqCyjC+4ixVTkRIjfMG6as
- XWX9AQZ0YKejPtF2851ciuYhMV15dxnA1kn6N1Vr06M9zGFurdAro5LH+4nMe52nv1cZ
- 1uWRw9NxgP9sO741AZ1VMhd/GWP/ipK+Qmh7yGNIKmpmJlkK6nicDbt6li6UNg0LUC+p
- pkYxQOkbR8xontB6d2+fA/3BqnlzMo5Pi1RlMnID5tSksqGUaNHGxrzUqXLeTZ+7Mj7s pg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 31q6603r9f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 18 Jun 2020 22:17:36 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05IMDnHP041001;
-        Thu, 18 Jun 2020 22:17:36 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 31q661hyy4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jun 2020 22:17:36 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05IMHZ7u022436;
-        Thu, 18 Jun 2020 22:17:35 GMT
-Received: from dhcp-10-159-251-35.vpn.oracle.com (/10.159.251.35)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 18 Jun 2020 15:17:35 -0700
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     adobriyan@gmail.com, Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Srinivas Eeda <SRINIVAS.EEDA@oracle.com>,
-        "joe.jin@oracle.com" <joe.jin@oracle.com>
-From:   Junxiao Bi <junxiao.bi@oracle.com>
-Subject: severe proc dentry lock contention
-Message-ID: <54091fc0-ca46-2186-97a8-d1f3c4f3877b@oracle.com>
-Date:   Thu, 18 Jun 2020 15:17:33 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Thu, 18 Jun 2020 18:19:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50990 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731232AbgFRWTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 18:19:02 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF42420786;
+        Thu, 18 Jun 2020 22:19:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592518741;
+        bh=U/QUkoOn/pyP5SQXuofgXXOImfceFqDRB/qQNb1G9Yo=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=fVAk1pJt3YIB9pTNUtFdLjkXRT1oQ23FHtJu0ezTTAsiueLaR1XHsUYZ3VAY8t6DV
+         gAyUyiTaqjybXqNyvG1djCsRiBW6+lATJNmLFEj4Fyh/wCfireAv1qIYznw66ztUYk
+         o8zlQJI3mUTMdrveS05fGzznPwhpXFJg17arfXi8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 9257B352264E; Thu, 18 Jun 2020 15:19:01 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 15:19:01 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Subject: Re: [PATCH 3/7] rcu/trace: Add name of the source for gp_seq
+Message-ID: <20200618221901.GZ2723@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200618202955.4024-1-joel@joelfernandes.org>
+ <20200618202955.4024-3-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9656 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- phishscore=0 bulkscore=0 malwarescore=0 mlxscore=0 adultscore=0
- suspectscore=13 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006180169
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9656 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- spamscore=0 clxscore=1011 mlxlogscore=999 suspectscore=13 impostorscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006180168
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618202955.4024-3-joel@joelfernandes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Jun 18, 2020 at 04:29:51PM -0400, Joel Fernandes (Google) wrote:
+> The gp_seq value can come from either of rdp, rsp or rnp.
+> 
+> Only the rsp is the global source of truth (most accurate GP info). The
+> rnp can be off by ~1 and the rdp can be off by way more. Add some more
+> context to traces to clarify where it comes from.
 
-When debugging some performance issue, i found that thousands of threads 
-exit around same time could cause a severe spin lock contention on proc 
-dentry "/proc/$parent_process_pid/task/", that's because threads needs 
-to clean up their pid file from that dir when exit. Check the following 
-standalone test case that simulated the case and perf top result on v5.7 
-kernel. Any idea on how to fix this?
+This would be better done in scripting that processes the trace messages.
+I must pass on this one.
 
+For future reference, the TPS() around strings is not optional.  Without
+it, trace messages from crash dumps are garbled, if I remember correctly.
 
-    PerfTop:   48891 irqs/sec  kernel:95.6%  exact: 100.0% lost: 0/0 
-drop: 0/0 [4000Hz cycles],  (all, 72 CPUs)
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+							Thanx, Paul
 
-
-     66.10%  [kernel]                               [k] 
-native_queued_spin_lock_slowpath
-      1.13%  [kernel]                               [k] _raw_spin_lock
-      0.84%  [kernel]                               [k] clear_page_erms
-      0.82%  [kernel]                               [k] 
-queued_write_lock_slowpath
-      0.64%  [kernel]                               [k] proc_task_readdir
-      0.61%  [kernel]                               [k] 
-find_idlest_group.isra.95
-      0.61%  [kernel]                               [k] 
-syscall_return_via_sysret
-      0.55%  [kernel]                               [k] entry_SYSCALL_64
-      0.49%  [kernel]                               [k] memcpy_erms
-      0.46%  [kernel]                               [k] update_cfs_group
-      0.41%  [kernel]                               [k] get_pid_task
-      0.39%  [kernel]                               [k] 
-_raw_spin_lock_irqsave
-      0.37%  [kernel]                               [k] 
-__list_del_entry_valid
-      0.34%  [kernel]                               [k] 
-get_page_from_freelist
-      0.34%  [kernel]                               [k] __d_lookup
-      0.32%  [kernel]                               [k] update_load_avg
-      0.31%  libc-2.17.so                           [.] get_next_seq
-      0.27%  [kernel]                               [k] avc_has_perm_noaudit
-      0.26%  [kernel]                               [k] __sched_text_start
-      0.25%  [kernel]                               [k] 
-selinux_inode_permission
-      0.25%  [kernel]                               [k] __slab_free
-      0.24%  [kernel]                               [k] detach_entity_cfs_rq
-      0.23%  [kernel]                               [k] zap_pte_range
-      0.22%  [kernel]                               [k] 
-_find_next_bit.constprop.1
-      0.22%  libc-2.17.so                           [.] vfprintf
-      0.20%  libc-2.17.so                           [.] _int_malloc
-      0.19%  [kernel]                               [k] _raw_spin_lock_irq
-      0.18%  [kernel]                               [k] rb_erase
-      0.18%  [kernel]                               [k] pid_revalidate
-      0.18%  [kernel]                               [k] lockref_get_not_dead
-      0.18%  [kernel]                               [k] 
-__alloc_pages_nodemask
-      0.17%  [kernel]                               [k] set_task_cpu
-      0.17%  libc-2.17.so                           [.] __strcoll_l
-      0.17%  [kernel]                               [k] do_syscall_64
-      0.17%  [kernel]                               [k] __vmalloc_node_range
-      0.17%  libc-2.17.so                           [.] _IO_vfscanf
-      0.17%  [kernel]                               [k] refcount_dec_not_one
-      0.15%  [kernel]                               [k] __task_pid_nr_ns
-      0.15%  [kernel]                               [k] 
-native_irq_return_iret
-      0.15%  [kernel]                               [k] free_pcppages_bulk
-      0.14%  [kernel]                               [k] kmem_cache_alloc
-      0.14%  [kernel]                               [k] link_path_walk
-      0.14%  libc-2.17.so                           [.] _int_free
-      0.14%  [kernel]                               [k] 
-__update_load_avg_cfs_rq
-      0.14%  perf.5.7.0-master.20200601.ol7.x86_64  [.] 0x00000000000eac29
-      0.13%  [kernel]                               [k] kmem_cache_free
-      0.13%  [kernel]                               [k] number
-      0.13%  [kernel]                               [k] memset_erms
-      0.12%  [kernel]                               [k] proc_pid_status
-      0.12%  [kernel]                               [k] __d_lookup_rcu
-
-
-=========== runme.sh ==========
-
-#!/bin/bash
-
-threads=${1:-10000}
-prog=proc_race
-while [ 1 ]; do ./$prog $threads; done &
-
-while [ 1 ]; do
-     pid=`ps aux | grep $prog | grep -v grep| awk '{print $2}'`
-     if [ -z $pid ]; then continue; fi
-     threadnum=`ls -l /proc/$pid/task | wc -l`
-     if [ $threadnum -gt $threads ]; then
-         echo kill $pid
-         kill -9 $pid
-     fi
-done
-
-
-===========proc_race.c=========
-
-
-#include <pthread.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <ctype.h>
-
-#define handle_error_en(en, msg) \
-     do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
-
-#define handle_error(msg) \
-     do { perror(msg); exit(EXIT_FAILURE); } while (0)
-
-struct thread_info {
-     pthread_t thread_id;
-     int       thread_num;
-};
-
-static void *child_thread()
-{
-     int i;
-
-     while (1) { if (!(i++ % 1000000)) sleep(1);}
-     return NULL;
-}
-
-int main(int argc, char *argv[])
-{
-     int s, tnum, opt, num_threads;
-     struct thread_info *tinfo;
-     void *res;
-
-     if (argc == 2)
-         num_threads = atoi(argv[1]);
-     else
-         num_threads = 10000;
-
-     tinfo = calloc(num_threads, sizeof(struct thread_info));
-     if (tinfo == NULL)
-         handle_error("calloc");
-
-
-     for (tnum = 0; tnum < num_threads; tnum++) {
-         tinfo[tnum].thread_num = tnum + 1;
-
-         s = pthread_create(&tinfo[tnum].thread_id, NULL,
-                 &child_thread, NULL);
-         if (s != 0)
-             handle_error_en(s, "pthread_create");
-     }
-
-     for (tnum = 0; tnum < num_threads; tnum++) {
-         s = pthread_join(tinfo[tnum].thread_id, &res);
-         if (s != 0)
-             handle_error_en(s, "pthread_join");
-
-         free(res);
-     }
-
-     free(tinfo);
-     exit(EXIT_SUCCESS);
-}
-
-==========
-
-Thanks,
-
-Junxiao.
-
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  include/trace/events/rcu.h | 12 ++++++++----
+>  kernel/rcu/tree.c          | 32 ++++++++++++++++----------------
+>  kernel/rcu/tree_plugin.h   |  2 +-
+>  3 files changed, 25 insertions(+), 21 deletions(-)
+> 
+> diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+> index a6d49864dcc27..cb5363564f7ed 100644
+> --- a/include/trace/events/rcu.h
+> +++ b/include/trace/events/rcu.h
+> @@ -68,24 +68,28 @@ TRACE_EVENT(rcu_utilization,
+>   */
+>  TRACE_EVENT_RCU(rcu_grace_period,
+>  
+> -	TP_PROTO(const char *rcuname, unsigned long gp_seq, const char *gpevent),
+> +	TP_PROTO(const char *rcuname, const char *gp_seq_src,
+> +		unsigned long gp_seq, const char *gpevent),
+>  
+> -	TP_ARGS(rcuname, gp_seq, gpevent),
+> +	TP_ARGS(rcuname, gp_seq_src, gp_seq, gpevent),
+>  
+>  	TP_STRUCT__entry(
+>  		__field(const char *, rcuname)
+> +		__field(const char *, gp_seq_src)
+>  		__field(unsigned long, gp_seq)
+>  		__field(const char *, gpevent)
+>  	),
+>  
+>  	TP_fast_assign(
+>  		__entry->rcuname = rcuname;
+> +		__entry->gp_seq_src = gp_seq_src;
+>  		__entry->gp_seq = gp_seq;
+>  		__entry->gpevent = gpevent;
+>  	),
+>  
+> -	TP_printk("%s %lu %s",
+> -		  __entry->rcuname, __entry->gp_seq, __entry->gpevent)
+> +	TP_printk("%s %s_gp_seq=%lu %s",
+> +		  __entry->rcuname, __entry->gp_seq_src,
+> +		  __entry->gp_seq, __entry->gpevent)
+>  );
+>  
+>  /*
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index c61af6a33fbfd..81df1b837dd9d 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -1334,7 +1334,7 @@ static bool rcu_start_this_gp(struct rcu_node *rnp_start, struct rcu_data *rdp,
+>  		trace_rcu_this_gp(rnp, rdp, gp_seq_req, TPS("NoGPkthread"));
+>  		goto unlock_out;
+>  	}
+> -	trace_rcu_grace_period(rcu_state.name, data_race(rcu_state.gp_seq), TPS("newreq"));
+> +	trace_rcu_grace_period(rcu_state.name, "rsp", data_race(rcu_state.gp_seq), TPS("newreq"));
+>  	ret = true;  /* Caller must wake GP kthread. */
+>  unlock_out:
+>  	/* Push furthest requested GP to leaf node and rcu_data structure. */
+> @@ -1437,9 +1437,9 @@ static bool rcu_accelerate_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
+>  
+>  	/* Trace depending on how much we were able to accelerate. */
+>  	if (rcu_segcblist_restempty(&rdp->cblist, RCU_WAIT_TAIL))
+> -		trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("AccWaitCB"));
+> +		trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("AccWaitCB"));
+>  	else
+> -		trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("AccReadyCB"));
+> +		trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("AccReadyCB"));
+>  
+>  	/* Count CBs for tracing. */
+>  	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
+> @@ -1543,7 +1543,7 @@ static bool __note_gp_changes(struct rcu_node *rnp, struct rcu_data *rdp)
+>  		if (!offloaded)
+>  			ret = rcu_advance_cbs(rnp, rdp); /* Advance CBs. */
+>  		rdp->core_needs_qs = false;
+> -		trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("cpuend"));
+> +		trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("cpuend"));
+>  	} else {
+>  		if (!offloaded)
+>  			ret = rcu_accelerate_cbs(rnp, rdp); /* Recent CBs. */
+> @@ -1559,7 +1559,7 @@ static bool __note_gp_changes(struct rcu_node *rnp, struct rcu_data *rdp)
+>  		 * set up to detect a quiescent state, otherwise don't
+>  		 * go looking for one.
+>  		 */
+> -		trace_rcu_grace_period(rcu_state.name, rnp->gp_seq, TPS("cpustart"));
+> +		trace_rcu_grace_period(rcu_state.name, "rnp", rnp->gp_seq, TPS("cpustart"));
+>  		need_qs = !!(rnp->qsmask & rdp->grpmask);
+>  		rdp->cpu_no_qs.b.norm = need_qs;
+>  		rdp->core_needs_qs = need_qs;
+> @@ -1660,7 +1660,7 @@ static bool rcu_gp_init(void)
+>  	/* Record GP times before starting GP, hence rcu_seq_start(). */
+>  	rcu_seq_start(&rcu_state.gp_seq);
+>  	ASSERT_EXCLUSIVE_WRITER(rcu_state.gp_seq);
+> -	trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq, TPS("start"));
+> +	trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq, TPS("start"));
+>  	raw_spin_unlock_irq_rcu_node(rnp);
+>  
+>  	/*
+> @@ -1828,7 +1828,7 @@ static void rcu_gp_fqs_loop(void)
+>  			WRITE_ONCE(rcu_state.jiffies_kick_kthreads,
+>  				   jiffies + (j ? 3 * j : 2));
+>  		}
+> -		trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+> +		trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq,
+>  				       TPS("fqswait"));
+>  		rcu_state.gp_state = RCU_GP_WAIT_FQS;
+>  		ret = swait_event_idle_timeout_exclusive(
+> @@ -1843,7 +1843,7 @@ static void rcu_gp_fqs_loop(void)
+>  		/* If time for quiescent-state forcing, do it. */
+>  		if (!time_after(rcu_state.jiffies_force_qs, jiffies) ||
+>  		    (gf & RCU_GP_FLAG_FQS)) {
+> -			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+> +			trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq,
+>  					       TPS("fqsstart"));
+>  			rcu_gp_fqs(first_gp_fqs);
+>  			gf = 0;
+> @@ -1851,7 +1851,7 @@ static void rcu_gp_fqs_loop(void)
+>  				first_gp_fqs = false;
+>  				gf = rcu_state.cbovld ? RCU_GP_FLAG_OVLD : 0;
+>  			}
+> -			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+> +			trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq,
+>  					       TPS("fqsend"));
+>  			cond_resched_tasks_rcu_qs();
+>  			WRITE_ONCE(rcu_state.gp_activity, jiffies);
+> @@ -1862,7 +1862,7 @@ static void rcu_gp_fqs_loop(void)
+>  			cond_resched_tasks_rcu_qs();
+>  			WRITE_ONCE(rcu_state.gp_activity, jiffies);
+>  			WARN_ON(signal_pending(current));
+> -			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+> +			trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq,
+>  					       TPS("fqswaitsig"));
+>  			ret = 1; /* Keep old FQS timing. */
+>  			j = jiffies;
+> @@ -1945,7 +1945,7 @@ static void rcu_gp_cleanup(void)
+>  	raw_spin_lock_irq_rcu_node(rnp); /* GP before ->gp_seq update. */
+>  
+>  	/* Declare grace period done, trace first to use old GP number. */
+> -	trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq, TPS("end"));
+> +	trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq, TPS("end"));
+>  	rcu_seq_end(&rcu_state.gp_seq);
+>  	ASSERT_EXCLUSIVE_WRITER(rcu_state.gp_seq);
+>  	rcu_state.gp_state = RCU_GP_IDLE;
+> @@ -1962,7 +1962,7 @@ static void rcu_gp_cleanup(void)
+>  	if ((offloaded || !rcu_accelerate_cbs(rnp, rdp)) && needgp) {
+>  		WRITE_ONCE(rcu_state.gp_flags, RCU_GP_FLAG_INIT);
+>  		WRITE_ONCE(rcu_state.gp_req_activity, jiffies);
+> -		trace_rcu_grace_period(rcu_state.name,
+> +		trace_rcu_grace_period(rcu_state.name, "rsp",
+>  				       rcu_state.gp_seq,
+>  				       TPS("newreq"));
+>  	} else {
+> @@ -1982,7 +1982,7 @@ static int __noreturn rcu_gp_kthread(void *unused)
+>  
+>  		/* Handle grace-period start. */
+>  		for (;;) {
+> -			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+> +			trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq,
+>  					       TPS("reqwait"));
+>  			rcu_state.gp_state = RCU_GP_WAIT_GPS;
+>  			swait_event_idle_exclusive(rcu_state.gp_wq,
+> @@ -1996,7 +1996,7 @@ static int __noreturn rcu_gp_kthread(void *unused)
+>  			cond_resched_tasks_rcu_qs();
+>  			WRITE_ONCE(rcu_state.gp_activity, jiffies);
+>  			WARN_ON(signal_pending(current));
+> -			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+> +			trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq,
+>  					       TPS("reqwaitsig"));
+>  		}
+>  
+> @@ -2240,7 +2240,7 @@ int rcutree_dying_cpu(unsigned int cpu)
+>  		return 0;
+>  
+>  	blkd = !!(rnp->qsmask & rdp->grpmask);
+> -	trace_rcu_grace_period(rcu_state.name, READ_ONCE(rnp->gp_seq),
+> +	trace_rcu_grace_period(rcu_state.name, "rsp", READ_ONCE(rnp->gp_seq),
+>  			       blkd ? TPS("cpuofl") : TPS("cpuofl-bgp"));
+>  	return 0;
+>  }
+> @@ -3733,7 +3733,7 @@ int rcutree_prepare_cpu(unsigned int cpu)
+>  	rdp->core_needs_qs = false;
+>  	rdp->rcu_iw_pending = false;
+>  	rdp->rcu_iw_gp_seq = rdp->gp_seq - 1;
+> -	trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("cpuonl"));
+> +	trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("cpuonl"));
+>  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+>  	rcu_prepare_kthreads(cpu);
+>  	rcu_spawn_cpu_nocb_kthread(cpu);
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index 982fc5be52698..32f761cf16c33 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -262,7 +262,7 @@ static void rcu_qs(void)
+>  {
+>  	RCU_LOCKDEP_WARN(preemptible(), "rcu_qs() invoked with preemption enabled!!!\n");
+>  	if (__this_cpu_read(rcu_data.cpu_no_qs.s)) {
+> -		trace_rcu_grace_period(TPS("rcu_preempt"),
+> +		trace_rcu_grace_period(TPS("rcu_preempt"), "rdp",
+>  				       __this_cpu_read(rcu_data.gp_seq),
+>  				       TPS("cpuqs"));
+>  		__this_cpu_write(rcu_data.cpu_no_qs.b.norm, false);
+> -- 
+> 2.27.0.111.gc72c7da667-goog
+> 
