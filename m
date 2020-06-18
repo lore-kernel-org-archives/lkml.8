@@ -2,30 +2,30 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1029C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B734D20890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E82220890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731801AbgFRUkB (ORCPT
+        id S1731834AbgFRUkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:40:01 -0400
+        Thu, 18 Jun 2020 16:40:05 -0400
 Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:4267 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731201AbgFRUjT (ORCPT
+        by vger.kernel.org with ESMTP id S1731276AbgFRUjU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:39:19 -0400
+        Thu, 18 Jun 2020 16:39:20 -0400
 Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Thu, 18 Jun 2020 13:39:14 -0700
+ 15.0.1156.6; Thu, 18 Jun 2020 13:39:15 -0700
 Received: from sc9-mailhost2.vmware.com (unknown [10.129.221.29])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id A7AD4B2656;
-        Thu, 18 Jun 2020 16:39:17 -0400 (EDT)
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 7B390B2656;
+        Thu, 18 Jun 2020 16:39:18 -0400 (EDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -34,9 +34,9 @@ CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Julien Thierry <jthierry@redhat.com>,
         Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH v5 24/51] objtool: mcount: Only keep ELF file size
-Date:   Thu, 18 Jun 2020 13:38:10 -0700
-Message-ID: <7b8b10fd9af71b621e784e82b8d9575d12047879.1592510545.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH v5 25/51] objtool: mcount: Use ELF header from objtool
+Date:   Thu, 18 Jun 2020 13:38:11 -0700
+Message-ID: <c0d4f6eca3fbbdd47f72fc859f17265a4f425128.1592510545.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1592510545.git.mhelsley@vmware.com>
 References: <cover.1592510545.git.mhelsley@vmware.com>
@@ -50,63 +50,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we're no longer writing to the ELF file mapping and we're
-not appending to it we don't need to keep more information from the
-stat structure. At the same time we can give the smaller global
-variable a better name.
+The ELF header is the very first structure in an ELF file.
+Rather than cast it from the file mapping we use the ELF
+header extracted via objtool's ELF code.
+
+This is the last usage of the open-coded mapping of the ELF
+file which we will remove in a later step.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/recordmcount.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/objtool/recordmcount.c | 37 +++++++++++++++++-------------------
+ 1 file changed, 17 insertions(+), 20 deletions(-)
 
 diff --git a/tools/objtool/recordmcount.c b/tools/objtool/recordmcount.c
-index 29f299e5bb52..aa35173de3d9 100644
+index aa35173de3d9..f8699e52e7e5 100644
 --- a/tools/objtool/recordmcount.c
 +++ b/tools/objtool/recordmcount.c
-@@ -48,17 +48,17 @@
- static int fd_map;	/* File descriptor for file being modified. */
- static int mmap_failed; /* Boolean flag. */
- static char gpfx;	/* prefix for global symbol name (sometimes '_') */
--static struct stat sb;	/* Remember .st_size, etc. */
- static const char *altmcount;	/* alternate mcount symbol name */
- extern int warn_on_notrace_sect; /* warn when section has mcount not being recorded */
- static void *file_map;	/* pointer of the mapped file */
-+static size_t file_map_size; /* original ELF file size */
- 
- static struct elf *lf;
- 
- static void mmap_cleanup(void)
+@@ -525,21 +525,19 @@ static void MIPS64_r_info(Elf64_Rel *const rp, unsigned sym, unsigned type)
+ static int do_file(char const *const fname)
  {
- 	if (!mmap_failed)
--		munmap(file_map, sb.st_size);
-+		munmap(file_map, file_map_size);
- 	else
- 		free(file_map);
- 	file_map = NULL;
-@@ -93,11 +93,13 @@ static void * umalloc(size_t size)
-  */
- static void *mmap_file(char const *fname)
- {
-+	struct stat sb;
-+
- 	/* Avoid problems if early cleanup() */
- 	fd_map = -1;
- 	mmap_failed = 1;
- 	file_map = NULL;
--	sb.st_size = 0;
-+	file_map_size = 0;
+ 	unsigned int reltype = 0;
+-	Elf32_Ehdr *ehdr;
+ 	int rc = -1;
  
- 	lf = elf_open_read(fname, O_RDWR);
- 	if (!lf) {
-@@ -129,6 +131,7 @@ static void *mmap_file(char const *fname)
+-	ehdr = mmap_file(fname);
+-	if (!ehdr)
++	if (!mmap_file(fname))
+ 		goto out;
+ 
+ 	w = w4nat;
+ 	w2 = w2nat;
+ 	w8 = w8nat;
+-	switch (ehdr->e_ident[EI_DATA]) {
++	switch (lf->ehdr.e_ident[EI_DATA]) {
+ 		static unsigned int const endian = 1;
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
+-			ehdr->e_ident[EI_DATA], fname);
++			lf->ehdr.e_ident[EI_DATA], fname);
+ 		goto out;
+ 	case ELFDATA2LSB:
+ 		if (*(unsigned char const *)&endian != 1) {
+@@ -568,18 +566,18 @@ static int do_file(char const *const fname)
+ 		push_bl_mcount_thumb = push_bl_mcount_thumb_be;
+ 		break;
+ 	}  /* end switch */
+-	if (memcmp(ELFMAG, ehdr->e_ident, SELFMAG) != 0 ||
+-	    w2(ehdr->e_type) != ET_REL ||
+-	    ehdr->e_ident[EI_VERSION] != EV_CURRENT) {
++	if (memcmp(ELFMAG, lf->ehdr.e_ident, SELFMAG) != 0 ||
++	    lf->ehdr.e_type != ET_REL ||
++	    lf->ehdr.e_ident[EI_VERSION] != EV_CURRENT) {
+ 		fprintf(stderr, "unrecognized ET_REL file %s\n", fname);
+ 		goto out;
+ 	}
+ 
+ 	gpfx = '_';
+-	switch (w2(ehdr->e_machine)) {
++	switch (lf->ehdr.e_machine) {
+ 	default:
+ 		fprintf(stderr, "unrecognized e_machine %u %s\n",
+-			w2(ehdr->e_machine), fname);
++			lf->ehdr.e_machine, fname);
+ 		goto out;
+ 	case EM_386:
+ 		reltype = R_386_32;
+@@ -620,37 +618,36 @@ static int do_file(char const *const fname)
+ 		break;
+ 	}  /* end switch */
+ 
+-	switch (ehdr->e_ident[EI_CLASS]) {
++	switch (lf->ehdr.e_ident[EI_CLASS]) {
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF class %d %s\n",
+-			ehdr->e_ident[EI_CLASS], fname);
++			lf->ehdr.e_ident[EI_CLASS], fname);
+ 		goto out;
+ 	case ELFCLASS32:
+-		if (w2(ehdr->e_ehsize) != sizeof(Elf32_Ehdr)
+-		||  w2(ehdr->e_shentsize) != sizeof(Elf32_Shdr)) {
++		if (lf->ehdr.e_ehsize != sizeof(Elf32_Ehdr)
++		||  lf->ehdr.e_shentsize != sizeof(Elf32_Shdr)) {
+ 			fprintf(stderr,
+ 				"unrecognized ET_REL file: %s\n", fname);
+ 			goto out;
  		}
- 	} else
- 		mmap_failed = 0;
-+	file_map_size = sb.st_size;
- out:
- 	fd_map = -1;
- 
+-		if (w2(ehdr->e_machine) == EM_MIPS) {
++		if (lf->ehdr.e_machine == EM_MIPS) {
+ 			reltype = R_MIPS_32;
+ 			is_fake_mcount = MIPS_is_fake_mcount;
+ 		}
+ 		rc = do32(reltype);
+ 		break;
+ 	case ELFCLASS64: {
+-		Elf64_Ehdr *const ghdr = (Elf64_Ehdr *)ehdr;
+-		if (w2(ghdr->e_ehsize) != sizeof(Elf64_Ehdr)
+-		||  w2(ghdr->e_shentsize) != sizeof(Elf64_Shdr)) {
++		if (lf->ehdr.e_ehsize != sizeof(Elf64_Ehdr)
++		||  lf->ehdr.e_shentsize != sizeof(Elf64_Shdr)) {
+ 			fprintf(stderr,
+ 				"unrecognized ET_REL file: %s\n", fname);
+ 			goto out;
+ 		}
+-		if (w2(ghdr->e_machine) == EM_S390) {
++		if (lf->ehdr.e_machine == EM_S390) {
+ 			reltype = R_390_64;
+ 			mcount_adjust_64 = -14;
+ 		}
+-		if (w2(ghdr->e_machine) == EM_MIPS) {
++		if (lf->ehdr.e_machine == EM_MIPS) {
+ 			reltype = R_MIPS_64;
+ 			Elf64_r_info = MIPS64_r_info;
+ 			is_fake_mcount = MIPS_is_fake_mcount;
 -- 
 2.20.1
 
