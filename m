@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FCCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D25AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCB3F21D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116B420663
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443344;
-	bh=Zemdb6Gh2fXWhmsy+EqLLEiMhrL7ra6MUS3oNMd/tFg=;
+	s=default; t=1592443351;
+	bh=EvwO6JCvwjH0ii7c8P2k9TCjFrLWsFBoTY+wiB+vL34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wYzplUPAyhN3fNUclxVY/4KJFmERxi+xcO2TgPNKcyTkguXt4MLHQRaGziZ1l6Z8/
-	 t1OjfZk6J0JyWY9V4x6+pyBoHzv598pEctt/cq/51ohmoyyYBZ4inQtFIFKU0Ae6JE
-	 TJOg3o80ivdVKCAEsPx/5soGtMBYpbFEecOQusnQ=
+	b=dcOH83Rqg8mr4kaNJg/X2yJpz7CjTSD/BsHDERhihJybY25W/ZM0ezdtBQ5qfM9sD
+	 4hidbE8prUIX+qYscAjb69rkoYbbH33u3K0OgVXr84ixos0rfVkrRbAqutQigPmRGp
+	 1P0+e4aRBVv+R+wNY/wBHkRxVl0A36Jc4VZ9Ko/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730284AbgFRBWX (ORCPT
+        id S1729909AbgFRBW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:22:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50440 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:22:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729683AbgFRBS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:18:56 -0400
+        id S1730065AbgFRBTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2010E21D82;
-        Thu, 18 Jun 2020 01:18:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78DE321D80;
+        Thu, 18 Jun 2020 01:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443136;
-        bh=Zemdb6Gh2fXWhmsy+EqLLEiMhrL7ra6MUS3oNMd/tFg=;
+        s=default; t=1592443141;
+        bh=EvwO6JCvwjH0ii7c8P2k9TCjFrLWsFBoTY+wiB+vL34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wW9R581mLc0DMX2tpetIRPlyU+oOJChb4KY0JP8o34n7le3BOUPpzAZzcVjFg0BB2
-         3pyDyU/SLIlvXyazAgRRgmbbrJCbnw07GPHB/8898g4ae/Xrh+EEmxZmLNkJZfx4C9
-         UlpQo0L3G23CCQfjVtBhR4y8frqseGE7fF8aLCLk=
+        b=smoQjOzW2LiqJhngY6QBYojmCA0m531EgvFft0s9TCHHdvBRMiqfIVk++oz74d4I1
+         X/RGlCRy3IGTK2adGwltPd8mD8cryvZ+IE6+vxbmQGFJmki5EyXq1uv3zmcsk5Ne9c
+         6vV7+qzbSCQQwfwUwY7XgUqBNHTSPkNmPwXDrFkQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 107/266] clk: meson: meson8b: Fix the first parent of vid_pll_in_sel
-Date:   Wed, 17 Jun 2020 21:13:52 -0400
-Message-Id: <20200618011631.604574-107-sashal@kernel.org>
+Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 111/266] thermal/drivers/ti-soc-thermal: Avoid dereferencing ERR_PTR
+Date:   Wed, 17 Jun 2020 21:13:56 -0400
+Message-Id: <20200618011631.604574-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -62,46 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-[ Upstream commit da1978ac3d6cf278dedf5edbf350445a0fff2f08 ]
+[ Upstream commit 7440f518dad9d861d76c64956641eeddd3586f75 ]
 
-Use hdmi_pll_lvds_out as parent of the vid_pll_in_sel clock. It's not
-easy to see that the vendor kernel does the same, but it actually does.
-meson_clk_pll_ops in mainline still cannot fully recalculate all rates
-from the HDMI PLL registers because some register bits (at the time of
-writing it's unknown which bits are used for this) double the HDMI PLL
-output rate (compared to simply considering M, N and FRAC) for some (but
-not all) PLL settings.
+On error the function ti_bandgap_get_sensor_data() returns the error
+code in ERR_PTR() but we only checked if the return value is NULL or
+not. And, so we can dereference an error code inside ERR_PTR.
+While at it, convert a check to IS_ERR_OR_NULL.
 
-Update the vid_pll_in_sel parent so our clock calculation works for
-simple clock settings like the CVBS output (where no rate doubling is
-going on). The PLL ops need to be fixed later on for more complex clock
-settings (all HDMI rates).
-
-Fixes: 6cb57c678bb70 ("clk: meson: meson8b: add the read-only video clock trees")
-Suggested-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200417184127.1319871-2-martin.blumenstingl@googlemail.com
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200424161944.6044-1-sudipm.mukherjee@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/meson8b.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index 8856ce476ccf..ab0b56daec54 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -1071,7 +1071,7 @@ static struct clk_regmap meson8b_vid_pll_in_sel = {
- 		 * Meson8m2: vid2_pll
- 		 */
- 		.parent_hws = (const struct clk_hw *[]) {
--			&meson8b_hdmi_pll_dco.hw
-+			&meson8b_hdmi_pll_lvds_out.hw
- 		},
- 		.num_parents = 1,
- 		.flags = CLK_SET_RATE_PARENT,
+diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+index d3e959d01606..85776db4bf34 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
++++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+@@ -169,7 +169,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
+ 
+ 	data = ti_bandgap_get_sensor_data(bgp, id);
+ 
+-	if (!data || IS_ERR(data))
++	if (!IS_ERR_OR_NULL(data))
+ 		data = ti_thermal_build_data(bgp, id);
+ 
+ 	if (!data)
+@@ -196,7 +196,7 @@ int ti_thermal_remove_sensor(struct ti_bandgap *bgp, int id)
+ 
+ 	data = ti_bandgap_get_sensor_data(bgp, id);
+ 
+-	if (data && data->ti_thermal) {
++	if (!IS_ERR_OR_NULL(data) && data->ti_thermal) {
+ 		if (data->our_zone)
+ 			thermal_zone_device_unregister(data->ti_thermal);
+ 	}
+@@ -262,7 +262,7 @@ int ti_thermal_unregister_cpu_cooling(struct ti_bandgap *bgp, int id)
+ 
+ 	data = ti_bandgap_get_sensor_data(bgp, id);
+ 
+-	if (data) {
++	if (!IS_ERR_OR_NULL(data)) {
+ 		cpufreq_cooling_unregister(data->cool_dev);
+ 		if (data->policy)
+ 			cpufreq_cpu_put(data->policy);
 -- 
 2.25.1
 
