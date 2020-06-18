@@ -2,130 +2,100 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF75C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6A720890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8994020890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:37:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="yR3Onkl6"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="obxACDEx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729943AbgFRUg5 (ORCPT
+        id S1730165AbgFRUh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:36:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55518 "EHLO
+        Thu, 18 Jun 2020 16:37:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgFRUgy (ORCPT
+        with ESMTP id S1726220AbgFRUh1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:36:54 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23EC7C0613EE
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:36:54 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id fc4so3454253qvb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:36:54 -0700 (PDT)
+        Thu, 18 Jun 2020 16:37:27 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BAA8C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:37:27 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id 35so2957401ple.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:37:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=ZYzhuBZS9rkuOZVHOQsEAGRBl1qfIjePfyvKHgBh4OM=;
-        b=yR3Onkl6GAedASEnIYKoSQdDDq55u7rSUAdcrerC2I36aFDVFgdQNmz+YntLg/KJqk
-         guHQb1gluVExpam6Acdgf6Zzo7DPus6FRSprCfROwH6+xLA+pSrEYCmdv1dHMVHst9nm
-         PI0y26KMs8Ab1SbheWZRB02JwyM6R8RIE7QdZw/rsNEd8PqSKCBl9Qe90ETW0a580PJE
-         /DSgLzBToRolw9uCRUEEhrLWhcHxQQNNsS4mbJuLERBZ6bmlRxeJyXllNzXe2383JmbC
-         Kl8C53X0TypFOppXtnFMHzl5uMN4/Wd9Ojoqmpkg6T8UaEy++Eph5rDTwIBANMfJxOcA
-         Ti7g==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4QQIkRmgHybrTXF8+aaUZbCjNfbygj8GTcvHDxd6YbQ=;
+        b=obxACDExqgeubHQInpfsuwNWX7WTaRZj65frJajCO4yTeyAVpyKn5JKbMYAAM8DzDs
+         tnt9EQdb2nB1YGxgCobU2a6+yS10AMnN/1l9kbUMKJXMltpbB8dM4V+VaVi/yJpv4t5Q
+         f5Q31aCmm+mMkH9G99cOjZbXxdlElGVFZd1wo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=ZYzhuBZS9rkuOZVHOQsEAGRBl1qfIjePfyvKHgBh4OM=;
-        b=EakMSx4Okup/A4J8ozeO/pDGtjGHbvuJC1zMBcuELvqwiqJClnYbLMKrYXyQfFVUtM
-         mwQCD6n6UHqF7hWoAWcmzj2HG5jgF0+PqvRgULRL8PsoexUtLsgywg5INEDdftsZ52ee
-         mBPb0+1e0RuyunvXEleFgvI+vv60HCwtieuhfMY4N1YdHvYLImRHbRbVlqK4bHOP+J3C
-         uuvhbw8QaALCxXFuK/c96iIQYF7M57E0sf2NTK/sLivl7K/JtabL22/m97QUekcZ4b6F
-         uyGtzJDEn+LDKQ3ILmpwdTqyejwIj7tUNA9fbDCZVKwOHtvvqKbtBuAoo32T4EPESb5F
-         PoPg==
-X-Gm-Message-State: AOAM530cIOXvWLZvsTQHQyOoFD7jTVCN8+Um60RN7nndAe6mXGRtBwzT
-        9mlehp91GBKLtoWZy6jPpoYCxA==
-X-Google-Smtp-Source: ABdhPJxuN5Wtev05q/gcl9cRRq8T1PFeCRU+R/qg0zNZaGaNLs6k5uX3I52sJpgcqJKmEN5eaWp+bw==
-X-Received: by 2002:a05:6214:1925:: with SMTP id es5mr5692284qvb.165.1592512613158;
-        Thu, 18 Jun 2020 13:36:53 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id k26sm4684548qtk.55.2020.06.18.13.36.51
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4QQIkRmgHybrTXF8+aaUZbCjNfbygj8GTcvHDxd6YbQ=;
+        b=QsRQe49e7ptl6+m2fvSg0huGSKFcRZaoxtxqZIjr6YMduDTMK30A149XVs3FEUb728
+         XuIGOgkeK8ME3U8bRA/qbuEKfnyAJmg3LeSuMfM80Wx6QcQ4WFsKjw5vndNGMQK5GpyC
+         vv4qswZX9sR/cYQsJPzUHpi+ytxJbgpszQ2mG585ok1nFJhrdcH0PEW3at2yk9Wbt+5G
+         B0/mFz6iKGONJj2LYufrMO89dXVq0PcTuRHxZv8gxSotQZLj7bdg8OJz+JZgrQSNfJjS
+         V8VQoljElu5qFuCnH/2HXWR1VxJRH/nNObe81OIL+uyLziqyzatBqeCX5U4uw1qLHZ1m
+         tXiA==
+X-Gm-Message-State: AOAM531Qk8vvbpyZMbnLIKtAFBqYRkP1fMzR9pMZwAUf9PfG7cmKg7SH
+        DlPFAbXUIGB7UKOqw6bz3c2otQ==
+X-Google-Smtp-Source: ABdhPJxf7G59fWv+NZ1bb0k077huOL3svybUSmYEErVS77eiTZSFYthPGZHLN/HYueGaIhq3lFXpwA==
+X-Received: by 2002:a17:902:d697:: with SMTP id v23mr5432017ply.323.1592512646691;
+        Thu, 18 Jun 2020 13:37:26 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p30sm3871433pfq.59.2020.06.18.13.37.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 13:36:52 -0700 (PDT)
-Message-ID: <5d00735a16728de5547c87e2cf4c29c23a1f0720.camel@massaru.org>
-Subject: Re: [PATCH] kunit: fix KconfigParseError by ignoring CC_VERSION_TEXT
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     KUnit Development <kunit-dev@googlegroups.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Date:   Thu, 18 Jun 2020 17:36:50 -0300
-In-Reply-To: <CAFd5g45AB8K-p78GRmauRPbkXLU572D2tuMTc0pumL+EgDA52Q@mail.gmail.com>
-References: <20200618035736.245566-1-vitor@massaru.org>
-         <CAFd5g45AB8K-p78GRmauRPbkXLU572D2tuMTc0pumL+EgDA52Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Thu, 18 Jun 2020 13:37:25 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 13:37:24 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>,
+        Christoph Lameter <cl@linux.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, vinmenon@codeaurora.org,
+        Matthew Garrett <mjg59@google.com>,
+        Jann Horn <jannh@google.com>,
+        Vijayanand Jitta <vjitta@codeaurora.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm: Expand CONFIG_SLAB_FREELIST_HARDENED to include
+ SLAB and SLOB
+Message-ID: <202006181330.2FDF47E03D@keescook>
+References: <20200617195349.3471794-1-keescook@chromium.org>
+ <20200617195349.3471794-2-keescook@chromium.org>
+ <20200617200151.GM8681@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617200151.GM8681@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-18 at 13:29 -0700, Brendan Higgins wrote:
-> On Wed, Jun 17, 2020 at 8:57 PM Vitor Massaru Iha <vitor@massaru.org>
-> wrote:
-> > Commit 8b59cd81dc5 ("kbuild: ensure full rebuild when the compiler
-> > is updated") added the environment variable CC_VERSION_TEXT,
-> > parse_from_string() doesn't expect a string and this causes the
-> > failure below:
-> > 
-> > [iha@bbking linux]$ tools/testing/kunit/kunit.py run --timeout=60
-> > [00:20:12] Configuring KUnit Kernel ...
-> > Generating .config ...
-> > Traceback (most recent call last):
-> >   File "tools/testing/kunit/kunit.py", line 347, in <module>
-> >     main(sys.argv[1:])
-> >   File "tools/testing/kunit/kunit.py", line 257, in main
-> >     result = run_tests(linux, request)
-> >   File "tools/testing/kunit/kunit.py", line 134, in run_tests
-> >     config_result = config_tests(linux, config_request)
-> >   File "tools/testing/kunit/kunit.py", line 64, in config_tests
-> >     success = linux.build_reconfig(request.build_dir,
-> > request.make_options)
-> >   File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py",
-> > line 161, in build_reconfig
-> >     return self.build_config(build_dir, make_options)
-> >   File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py",
-> > line 145, in build_config
-> >     return self.validate_config(build_dir)
-> >   File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py",
-> > line 124, in validate_config
-> >     validated_kconfig.read_from_file(kconfig_path)
-> >   File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_config.py",
-> > line 89, in read_from_file
-> >     self.parse_from_string(f.read())
-> >   File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_config.py",
-> > line 85, in parse_from_string
-> >     raise KconfigParseError('Failed to parse: ' + line)
-> > kunit_config.KconfigParseError: Failed to parse:
-> > CONFIG_CC_VERSION_TEXT="gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-
-> > 1)"
+On Wed, Jun 17, 2020 at 01:01:51PM -0700, Matthew Wilcox wrote:
+> On Wed, Jun 17, 2020 at 12:53:48PM -0700, Kees Cook wrote:
+> > Include SLAB and SLOB caches when performing kmem_cache pointer
 > 
-> I am pretty there is already a fix out for this issue:
-> 
-> https://patchwork.kernel.org/patch/11592313/
-> 
-> Can you confirm?
+> ... SLOB?  Really?  Objects from different kmem caches are mixed together
+> on the same page with SLOB (at least last time I looked).  So how does
+> this work?
 
-Sure, thanks!
+Hmm. I'm not sure. I can't even boot a SLOB kernel these days (even
+without these patches). But, pages are shared between kmem caches on
+SLOB, then I certainly can't add this check for it. :) I'll adjust this
+patch.
 
+-- 
+Kees Cook
