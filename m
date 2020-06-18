@@ -2,142 +2,285 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE71C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48C7B20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:59:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ce2KN786"
+	by mail.kernel.org (Postfix) with ESMTP id E59C920FC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592449306;
+	bh=D+RIBaE1e99GexBp+YDaMWHaXlTMDUSMPXDMbSLsLhU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=nLUlfLZ5zofiy96qW7MZPbuPtlzhb7VgZa1k/prZcJrX1sMfE9/CtShNzUZbYWIEW
+	 UxLkXuIR+XinhJR6VtC06Z//nZ6E/vR1XmsxQwOQcnALAJB1SP4rTPXwO9415QHqnq
+	 9AxZMKNKEgkoldRQgTI3SGw+2Vzzd4Eyns1BDZ/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgFRC7a (ORCPT
+        id S1727821AbgFRDBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:59:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbgFRC72 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 22:59:28 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75975C06174E;
-        Wed, 17 Jun 2020 19:59:28 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r18so2231659pgk.11;
-        Wed, 17 Jun 2020 19:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=c+XBBSUJkbuSD8EzkachzbNQFLmI3baAWx8Tvz5SX9A=;
-        b=ce2KN786GgRadse5m9yAoPlwSIL8pcph73/I//OEEO+UR3c+knDGQIQwQEMWusaoxR
-         c7pEFVCQBTemK2twFjbMAprzclbJfSXlvxSwZEDK4NJZbg4jFJzsidCoszJm1akXutOb
-         rBeEVOVOQRD8f6GCeckk6oBAjBoZwbCRaB99odubFDPTUCGyqe/N/9ls/xI2juTMYmth
-         R+yaoAX6CqZQuUpynGvQ0vfBb4G7TFvCQGydsdX/oML2LpmHd6zFr82rEBqNOzbBhiZa
-         AmwIQHb0fcd6R+jRtfplgvhLANX2HEniV8Nl6XyjIqgSE4/CqjpI5+DO9ALOVronKyJh
-         SOjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=c+XBBSUJkbuSD8EzkachzbNQFLmI3baAWx8Tvz5SX9A=;
-        b=nlawB26dnHh8vgP3ywCP5tCNYY83JN5bqmeTudA1nEwUPS1MIyvu69BQPhANhFGxV7
-         6iikmWkHeMA6OoPJgnznR90YU1KBSIOrXbWB14YDXX0OeP7JwiuqfTNzJwWjPPHF0/3z
-         0nPqZCp+CLYjVDSOoImT9nnGzyh6lNWv+urywyLIGcIQ8tE5xl8zbV3vuG8B0TwBo6Wg
-         tH1rHgNUQzfW+G5kxPfJ07J0mb9dktfNIElRwB90tzFkl1gOWUNoZ3J2Q02hbgMxHR1A
-         PKHIylFdf6VmwgIjpxVbm243tKVoMgepkp4j1bTaMSZpSvkAD8s/9Y97noINQBHPzWNF
-         7mVg==
-X-Gm-Message-State: AOAM531fx4Dtwca95lJMwcwQSZ38/wvCeAh9L20vgEyPh5wsQx7QIJR6
-        NHWGxCzHO2NFEZ44VTaFH9rUyv+UMBeKP86e
-X-Google-Smtp-Source: ABdhPJxvua+/GIpND09OviVKdksZLCWgeWga/Ef+nBwx2A0d5tunbidPFHBYJKkdl+DxEaSXQcryAA==
-X-Received: by 2002:a62:3582:: with SMTP id c124mr1694339pfa.298.1592449167930;
-        Wed, 17 Jun 2020 19:59:27 -0700 (PDT)
-Received: from home-desktop ([114.204.138.55])
-        by smtp.gmail.com with ESMTPSA id j184sm1094045pfg.131.2020.06.17.19.59.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Jun 2020 19:59:27 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 11:59:22 +0900
-From:   Hyeonki Hong <hhk7734@gmail.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>, khilman@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH] [v2] pinctrl: meson: fix drive strength register and bit
- calculation
-Message-ID: <20200618025916.GA19368@home-desktop>
+        Wed, 17 Jun 2020 23:01:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726952AbgFRDBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 23:01:44 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3240208C7;
+        Thu, 18 Jun 2020 03:01:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592449303;
+        bh=D+RIBaE1e99GexBp+YDaMWHaXlTMDUSMPXDMbSLsLhU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rvspTLk/7iukyPQFUzJrN85r6rr4OtLWCMuGAvhlQQgoCThyT5PA5LDTn4FYkkLfF
+         Dhz/y4545V7+UmxzWJxFbRbIXf8ZXXZwvcNKQgfAZ/6UR5RD69gDLOBtFHpP48Gblt
+         Kn4t75RU6lP8zLcyLuU06yvIETn4t/g8p0HJDz1I=
+Date:   Wed, 17 Jun 2020 22:01:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 09/12] PCI: brcmstb: Set internal memory viewport sizes
+Message-ID: <20200618030141.GA2041805@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CA+-6iNx1j5uK=nL-H32qthxEwZe+KOxtqCG4TPJxD+WdzMQFrA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a GPIO bank has greater than 16 pins, PAD_DS_REG is split into two
-or more registers. However, when register and bit were calculated, the
-first register defined in the bank was used, and the bit was calculated
-based on the first pin. This causes problems in setting the driving
-strength.
+On Wed, Jun 17, 2020 at 01:28:12PM -0400, Jim Quinlan wrote:
+> Hello Bjorn,
+> 
+> On Tue, Jun 16, 2020 at 6:05 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Tue, Jun 16, 2020 at 04:55:16PM -0400, Jim Quinlan wrote:
+> > > BrcmSTB PCIe controllers are intimately connected to the memory
+> > > controller(s) on the SOC.  There is a "viewport" for each memory controller
+> > > that allows inbound accesses to CPU memory.  Each viewport's size must be
+> > > set to a power of two, and that size must be equal to or larger than the
+> > > amount of memory each controller supports.
+> >
+> > This describes some requirements, but doesn't actually say what this
+> > patch *does*.
+> >
+> > I *think* it reads the viewport sizes from the "brcm,scb-sizes" DT
+> > property instead of computing something from "dma-ranges".  Looks like
+> > it also adds support for SCB1 and SCB2.
+> >
+> > Those seem interesting, but don't really come through in the subject
+> > or even the commit log.
+> >
+> > If I understand correctly, this is all for DMA ("inbound accesses to
+> > CPU memory").  I think it would be worth mentioning "DMA", since
+> > that's the common term for this.
+> 
+> 
+> I have changed the commit message to the text below.  Please let me
+> know if it requires more work
+> Thanks, Jim
+> 
+> PCI: brcmstb: Set internal memory DMA viewport sizes
 
-The following method was used to solve this problem:
-A bit is calculated first using predefined strides. Then, If the bit is
-32 or more, the register is changed by the quotient of the bit divided
-by 32. And the bit is set to the remainder.
+Did you not set the viewport sizes before?
 
-Signed-off-by: Hyeonki Hong <hhk7734@gmail.com>
----
- drivers/pinctrl/meson/pinctrl-meson.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+> BrcmSTB PCIe controllers are intimately connected to the memory
+> controller(s) on the SOC.  There is a "viewport" for each memory controller
+> that allows inbound DMA acceses to CPU memory.  Each viewport's size must
+> be set to a power of two, and that size must be equal to or larger than the
+> amount of memory each controller supports.  Unfortunately the viewport
+> sizes cannot be ascertained from the "dma-ranges" property so they have
+> their own property, "brcm,scb-sizes".
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-index bbc919bef2bf..bf116c2e45c0 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -56,6 +56,10 @@
- #include "../pinctrl-utils.h"
- #include "pinctrl-meson.h"
- 
-+static const unsigned int meson_bit_strides[] = {
-+	1, 1, 1, 1, 1, 2, 1
-+};
-+
- /**
-  * meson_get_bank() - find the bank containing a given pin
-  *
-@@ -96,8 +100,9 @@ static void meson_calc_reg_and_bit(struct meson_bank *bank, unsigned int pin,
- {
- 	struct meson_reg_desc *desc = &bank->regs[reg_type];
- 
--	*reg = desc->reg * 4;
--	*bit = desc->bit + pin - bank->first;
-+	*bit = (desc->bit + pin - bank->first) * meson_bit_strides[reg_type];
-+	*reg = (desc->reg + (*bit / 32)) * 4;
-+	*bit &= 0x1f;
- }
- 
- static int meson_get_groups_count(struct pinctrl_dev *pcdev)
-@@ -314,7 +319,6 @@ static int meson_pinconf_set_drive_strength(struct meson_pinctrl *pc,
- 		return ret;
- 
- 	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
--	bit = bit << 1;
- 
- 	if (drive_strength_ua <= 500) {
- 		ds_val = MESON_PINCONF_DRV_500UA;
-@@ -441,7 +445,6 @@ static int meson_pinconf_get_drive_strength(struct meson_pinctrl *pc,
- 		return ret;
- 
- 	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
--	bit = bit << 1;
- 
- 	ret = regmap_read(pc->reg_ds, reg, &val);
- 	if (ret)
--- 
-2.17.1
+s/inbound DMA acceses to CPU memory/DMA/
 
+"Accesses" is redundant since the "A" in "DMA" stands for "access".
+I'm not sure "inbound" adds anything and might confuse since DMA may
+be either a read or write of CPU memory.
+
+I assume *all* drivers need to know the address and size of regions in
+"dma-ranges".  Is there something special about this device that means
+it needs something different?
+
+I guess it's the base/extension split?  That couldn't be described as
+two separate DMA ranges?
+
+Could/should the new property have a name somehow related to
+"dma-ranges"?
+
+Should "dma-ranges" be documented in
+Documentation/devicetree/bindings/pci/pci.txt instead of the
+individual device bindings?
+
+> There may be one to three memory controllers; they are indicated by the
+> term SCBi.  Each controller has a base region and an optional extension
+> region.  In physical memory, the base and extension regions are not
+> adjacent, but in PCIe-space they are.  Further, the 1-3 viewports are also
+> adjacent in PCIe-space.
+> 
+> The SCB settings work in conjunction with the "dma-ranges' offsets to
+> enable non-identity mappings between system memory and PCIe space.
+
+s/ranges'/ranges"/ (mismatched quotes)
+
+This describes the hardware, but still doesn't actually say what this
+patch *does*.
+
+If I'm a user, why do I want this patch?  Does it fix something that
+didn't work before?  Does it increase the amount of DMA-able memory?
+
+What does this mean in terms of backwards compatibility with old DTs?
+Does this work with old DTs that don't have "brcm,scb-sizes"?  Maybe
+this is all related to specific devices that weren't supported before,
+so there *are* no old DTs for them?  I can't tell from the binding
+update or the patch that this is related to specific devices.
+
+> > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> > > ---
+> > >  drivers/pci/controller/pcie-brcmstb.c | 68 ++++++++++++++++++++-------
+> > >  1 file changed, 50 insertions(+), 18 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > > index 9189406fd35c..39f77709c6a2 100644
+> > > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > > @@ -57,6 +57,8 @@
+> > >  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK     0x300000
+> > >  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128              0x0
+> > >  #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK          0xf8000000
+> > > +#define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK          0x07c00000
+> > > +#define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK          0x0000001f
+> > >
+> > >  #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO             0x400c
+> > >  #define PCIE_MEM_WIN0_LO(win)        \
+> > > @@ -154,6 +156,7 @@
+> > >  #define SSC_STATUS_OFFSET            0x1
+> > >  #define SSC_STATUS_SSC_MASK          0x400
+> > >  #define SSC_STATUS_PLL_LOCK_MASK     0x800
+> > > +#define PCIE_BRCM_MAX_MEMC           3
+> > >
+> > >  #define IDX_ADDR(pcie)                       (pcie->reg_offsets[EXT_CFG_INDEX])
+> > >  #define DATA_ADDR(pcie)                      (pcie->reg_offsets[EXT_CFG_DATA])
+> > > @@ -260,6 +263,8 @@ struct brcm_pcie {
+> > >       const int               *reg_field_info;
+> > >       enum pcie_type          type;
+> > >       struct reset_control    *rescal;
+> > > +     int                     num_memc;
+> > > +     u64                     memc_size[PCIE_BRCM_MAX_MEMC];
+> > >  };
+> > >
+> > >  /*
+> > > @@ -715,22 +720,44 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+> > >                                                       u64 *rc_bar2_offset)
+> > >  {
+> > >       struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+> > > -     struct device *dev = pcie->dev;
+> > >       struct resource_entry *entry;
+> > > +     struct device *dev = pcie->dev;
+> > > +     u64 lowest_pcie_addr = ~(u64)0;
+> > > +     int ret, i = 0;
+> > > +     u64 size = 0;
+> > >
+> > > -     entry = resource_list_first_type(&bridge->dma_ranges, IORESOURCE_MEM);
+> > > -     if (!entry)
+> > > -             return -ENODEV;
+> > > +     resource_list_for_each_entry(entry, &bridge->dma_ranges) {
+> > > +             u64 pcie_beg = entry->res->start - entry->offset;
+> > >
+> > > +             size += entry->res->end - entry->res->start + 1;
+> > > +             if (pcie_beg < lowest_pcie_addr)
+> > > +                     lowest_pcie_addr = pcie_beg;
+> > > +     }
+> > >
+> > > -     /*
+> > > -      * The controller expects the inbound window offset to be calculated as
+> > > -      * the difference between PCIe's address space and CPU's. The offset
+> > > -      * provided by the firmware is calculated the opposite way, so we
+> > > -      * negate it.
+> > > -      */
+> > > -     *rc_bar2_offset = -entry->offset;
+> > > -     *rc_bar2_size = 1ULL << fls64(entry->res->end - entry->res->start);
+> > > +     if (lowest_pcie_addr == ~(u64)0) {
+> > > +             dev_err(dev, "DT node has no dma-ranges\n");
+> > > +             return -EINVAL;
+> > > +     }
+> > > +
+> > > +     ret = of_property_read_variable_u64_array(pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
+> > > +                                               PCIE_BRCM_MAX_MEMC);
+> > > +
+> > > +     if (ret <= 0) {
+> > > +             /* Make an educated guess */
+> > > +             pcie->num_memc = 1;
+> > > +             pcie->memc_size[0] = 1 << fls64(size - 1);
+> > > +     } else {
+> > > +             pcie->num_memc = ret;
+> > > +     }
+> > > +
+> > > +     /* Each memc is viewed through a "port" that is a power of 2 */
+> > > +     for (i = 0, size = 0; i < pcie->num_memc; i++)
+> > > +             size += pcie->memc_size[i];
+> > > +
+> > > +     /* System memory starts at this address in PCIe-space */
+> > > +     *rc_bar2_offset = lowest_pcie_addr;
+> > > +     /* The sum of all memc views must also be a power of 2 */
+> > > +     *rc_bar2_size = 1ULL << fls64(size - 1);
+> > >
+> > >       /*
+> > >        * We validate the inbound memory view even though we should trust
+> > > @@ -782,12 +809,11 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> > >       void __iomem *base = pcie->base;
+> > >       struct device *dev = pcie->dev;
+> > >       struct resource_entry *entry;
+> > > -     unsigned int scb_size_val;
+> > >       bool ssc_good = false;
+> > >       struct resource *res;
+> > >       int num_out_wins = 0;
+> > >       u16 nlw, cls, lnksta;
+> > > -     int i, ret;
+> > > +     int i, ret, memc;
+> > >       u32 tmp, aspm_support;
+> > >
+> > >       /* Reset the bridge */
+> > > @@ -824,11 +850,17 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> > >       writel(upper_32_bits(rc_bar2_offset),
+> > >              base + PCIE_MISC_RC_BAR2_CONFIG_HI);
+> > >
+> > > -     scb_size_val = rc_bar2_size ?
+> > > -                    ilog2(rc_bar2_size) - 15 : 0xf; /* 0xf is 1GB */
+> > >       tmp = readl(base + PCIE_MISC_MISC_CTRL);
+> > > -     u32p_replace_bits(&tmp, scb_size_val,
+> > > -                       PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
+> > > +     for (memc = 0; memc < pcie->num_memc; memc++) {
+> > > +             u32 scb_size_val = ilog2(pcie->memc_size[memc]) - 15;
+> > > +
+> > > +             if (memc == 0)
+> > > +                     u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
+> > > +             else if (memc == 1)
+> > > +                     u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK);
+> > > +             else if (memc == 2)
+> > > +                     u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK);
+> > > +     }
+> > >       writel(tmp, base + PCIE_MISC_MISC_CTRL);
+> > >
+> > >       /*
+> > > --
+> > > 2.17.1
+> > >
