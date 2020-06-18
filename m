@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569BAC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C18C20884
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DBEB20853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446466;
-	bh=p1QxLNtIiF1Wd6fV8oE0kvXASll9STFxqv84ZPOaiNY=;
+	s=default; t=1592446467;
+	bh=7tbR37TlDsxb2DvWezaDQ8YEVSOAqo98BHGh0rZj/rE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gIsGvAvArFKmEXVLJ6qaD8H2ya5yfeEcbIC1J3KdW+nSsN55TenRprHZYXsCyj6Yt
-	 95GKYxrkYZT09oBRUJV8Yu6bowFYFez4An/NajSe4UIfkCjmfZiEloE9IS93CLLvel
-	 0QnVCC+Ac95A8Ko14q/8PAnpoKKGNe4stCSQXM3Q=
+	b=xmJcfL3x/MAVjNfdpE2zFSm9OhA2BwUQ4i3t898Aq0HDfGV+etBeNXDomMpJ1KCgJ
+	 7kDhfC1TFUMzB2xgyqxxGkydNtN9NqAkkLWZUut5wqmxQ/n3PwZNnKOP0qjIkPdyKT
+	 ZunuW2HLbJymYPEudzh+i6QvdT7rRsCQPP9W9PeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730527AbgFRCOX (ORCPT
+        id S1730388AbgFRBUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:14:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53162 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730379AbgFRBUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:20:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729501AbgFRBRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0B9021D80;
-        Thu, 18 Jun 2020 01:20:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C068B21D94;
+        Thu, 18 Jun 2020 01:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443250;
-        bh=p1QxLNtIiF1Wd6fV8oE0kvXASll9STFxqv84ZPOaiNY=;
+        s=default; t=1592443060;
+        bh=7tbR37TlDsxb2DvWezaDQ8YEVSOAqo98BHGh0rZj/rE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lqDt3RbiHV38RhGzp1J/y2fNFPiT2fV9TiSmnxltWWEw7UGAFKGYvaejecGyTs+bn
-         IOKVKT3Eu6pmfQgf/v/5Ytpnxmy+AbBxxJUabutXRAHKpejon+M0bbKvHVvM3TYmJX
-         FwzehTmQSBSuh/uvfU/+c5HLx+/J/+ste7bpN22o=
+        b=Wd0AsE7A8ZKtL5f4VjZ2suFMfTbs2XikzAM67/25OI4CL3vHioR9ooZ+7pggxdCCj
+         t2T2c40F4LxdPD9WVt1aC8BgX50b4IjgqjZPvM082Cm6SrMLYGLB4AYoE5cQL8OjOg
+         zLsTBLrrPxZOk9gX6Nx9r2QJ2bih1U+1EkeRW8k0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 199/266] misc: xilinx-sdfec: improve get_user_pages_fast() error handling
-Date:   Wed, 17 Jun 2020 21:15:24 -0400
-Message-Id: <20200618011631.604574-199-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH AUTOSEL 5.4 051/266] m68k/PCI: Fix a memory leak in an error handling path
+Date:   Wed, 17 Jun 2020 21:12:56 -0400
+Message-Id: <20200618011631.604574-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -64,95 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 57343d51613227373759f5b0f2eede257fd4b82e ]
+[ Upstream commit c3f4ec050f56eeab7c1f290321f9b762c95bd332 ]
 
-This fixes the case of get_user_pages_fast() returning a -errno.
-The result needs to be stored in a signed integer. And for safe
-signed/unsigned comparisons, it's best to keep everything signed.
-And get_user_pages_fast() also expects a signed value for number
-of pages to pin.
+If 'ioremap' fails, we must free 'bridge', as done in other error handling
+path bellow.
 
-Therefore, change most relevant variables, from u32 to int. Leave
-"n" unsigned, for convenience in checking for overflow. And provide
-a WARN_ON_ONCE() and early return, if overflow occurs.
-
-Also, as long as we're tidying up: rename the page array from page,
-to pages, in order to match the conventions used in most other call
-sites.
-
-Fixes: 20ec628e8007e ("misc: xilinx_sdfec: Add ability to configure LDPC")
-Cc: Derek Kiernan <derek.kiernan@xilinx.com>
-Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Link: https://lore.kernel.org/r/20200527012628.1100649-2-jhubbard@nvidia.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 19cc4c843f40 ("m68k/PCI: Replace pci_fixup_irqs() call with host bridge IRQ mapping hooks")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/xilinx_sdfec.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ arch/m68k/coldfire/pci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index 48ba7e02bed7..d4c14b617201 100644
---- a/drivers/misc/xilinx_sdfec.c
-+++ b/drivers/misc/xilinx_sdfec.c
-@@ -602,10 +602,10 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
- 			      const u32 depth)
- {
- 	u32 reg = 0;
--	u32 res;
--	u32 n, i;
-+	int res, i, nr_pages;
-+	u32 n;
- 	u32 *addr = NULL;
--	struct page *page[MAX_NUM_PAGES];
-+	struct page *pages[MAX_NUM_PAGES];
+diff --git a/arch/m68k/coldfire/pci.c b/arch/m68k/coldfire/pci.c
+index 62b0eb6cf69a..84eab0f5e00a 100644
+--- a/arch/m68k/coldfire/pci.c
++++ b/arch/m68k/coldfire/pci.c
+@@ -216,8 +216,10 @@ static int __init mcf_pci_init(void)
  
- 	/*
- 	 * Writes that go beyond the length of
-@@ -622,15 +622,22 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
- 	if ((len * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE)
- 		n += 1;
+ 	/* Keep a virtual mapping to IO/config space active */
+ 	iospace = (unsigned long) ioremap(PCI_IO_PA, PCI_IO_SIZE);
+-	if (iospace == 0)
++	if (iospace == 0) {
++		pci_free_host_bridge(bridge);
+ 		return -ENODEV;
++	}
+ 	pr_info("Coldfire: PCI IO/config window mapped to 0x%x\n",
+ 		(u32) iospace);
  
--	res = get_user_pages_fast((unsigned long)src_ptr, n, 0, page);
--	if (res < n) {
--		for (i = 0; i < res; i++)
--			put_page(page[i]);
-+	if (WARN_ON_ONCE(n > INT_MAX))
-+		return -EINVAL;
-+
-+	nr_pages = n;
-+
-+	res = get_user_pages_fast((unsigned long)src_ptr, nr_pages, 0, pages);
-+	if (res < nr_pages) {
-+		if (res > 0) {
-+			for (i = 0; i < res; i++)
-+				put_page(pages[i]);
-+		}
- 		return -EINVAL;
- 	}
- 
--	for (i = 0; i < n; i++) {
--		addr = kmap(page[i]);
-+	for (i = 0; i < nr_pages; i++) {
-+		addr = kmap(pages[i]);
- 		do {
- 			xsdfec_regwrite(xsdfec,
- 					base_addr + ((offset + reg) *
-@@ -639,7 +646,7 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
- 			reg++;
- 		} while ((reg < len) &&
- 			 ((reg * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE));
--		put_page(page[i]);
-+		put_page(pages[i]);
- 	}
- 	return reg;
- }
 -- 
 2.25.1
 
