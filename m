@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F32C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47A0A2192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D1D2192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447263;
-	bh=4119TfJh7HOmQEmTcbn7FL6rRL/Yia1MnYpYqTvsjbU=;
+	s=default; t=1592447267;
+	bh=1TLicUZauJHHS4QjENC7dQsJoviJc/aajGrqaoOUPoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wo2HCCxvd4EgofcJiUJHzmqR8YnSSzzDIdi4cG9qOcxWab0vz6eWjQS5pXQ7P5Dr9
-	 PXNQHRqjtJ89T18ZupUEBVIW5FTZ+/5be0pQ5Tqjh7A+Rs7Wify9JMps3VN5NtHUZ+
-	 7pWOucOtZIoHSAm80QtCxDZs7IQ4hW2cioq4onaQ=
+	b=oaoV8XJ3psBlE+I0/OVKcGYsHmTHMmtFNEUUYC1uoC3vOGaqBk0iT6lCMgAkJNIn3
+	 P0j8taIvQRp4HZU0+0AOTzky41Ppkb4n8/ElpFPZYqszL01TTVPCmu6NyDtOHl2+AT
+	 m/jaYNJOx9vmI/vlmm+yuFELNYLNABDgBXWU4xUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgFRBQj (ORCPT
+        id S1730119AbgFRC1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:16:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44010 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:27:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbgFRBOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:14:20 -0400
+        id S1727942AbgFRBQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:16:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70B6221D7B;
-        Thu, 18 Jun 2020 01:14:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9F2C221EB;
+        Thu, 18 Jun 2020 01:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442860;
-        bh=4119TfJh7HOmQEmTcbn7FL6rRL/Yia1MnYpYqTvsjbU=;
+        s=default; t=1592442998;
+        bh=1TLicUZauJHHS4QjENC7dQsJoviJc/aajGrqaoOUPoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j+sgS5CZBC137IMf7BZfUXsoqLcBQX8N6OBBbrhIO5WX+iaf2yDU3lrp+QE+5fRL5
-         ZSsZhszA/F0ObWRgMAEDKMTl3thOxqMe3Pp03l7zswhs0hJQUNj+0XZKpHkLVLwB7B
-         UlcXZv4J1SvE3WlZ+LhdzDeFZPQuF/6pA/v76Vns=
+        b=VzPLrvNfCVF9z/B3zRKxRuvQbTQElO5BrZ77TcOETvCzdIwyV63aCVtH9jVEo6CCb
+         ZVj5MMTnVsSb2w2BWVLKAxjyXh+8O1y1rWsfP+mv7GfAbWszneL451yKXYgvU0Zsgq
+         0Nr1jJ4+aP4nhru4DMBWzbqXPWih5bG20qyYurCM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laurent Dufour <ldufour@linux.ibm.com>, Greg Kurz <groug@kaod.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 289/388] KVM: PPC: Book3S HV: Relax check on H_SVM_INIT_ABORT
-Date:   Wed, 17 Jun 2020 21:06:26 -0400
-Message-Id: <20200618010805.600873-289-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 005/266] ASoC: SOF: imx8: Fix randbuild error
+Date:   Wed, 17 Jun 2020 21:12:10 -0400
+Message-Id: <20200618011631.604574-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,55 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Dufour <ldufour@linux.ibm.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit e3326ae3d59e443a379367c6936941d6ab55d316 ]
+[ Upstream commit fe17e6cdc0fefca96ba9659be4b2b07487cbf0c5 ]
 
-The commit 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_*
-Hcalls") added checks of secure bit of SRR1 to filter out the Hcall
-reserved to the Ultravisor.
+when do randconfig like this:
+CONFIG_SND_SOC_SOF_IMX8_SUPPORT=y
+CONFIG_SND_SOC_SOF_IMX8=y
+CONFIG_SND_SOC_SOF_OF=y
+CONFIG_IMX_DSP=m
+CONFIG_IMX_SCU=y
 
-However, the Hcall H_SVM_INIT_ABORT is made by the Ultravisor passing the
-context of the VM calling UV_ESM. This allows the Hypervisor to return to
-the guest without going through the Ultravisor. Thus the Secure bit of SRR1
-is not set in that particular case.
+there is a link error:
 
-In the case a regular VM is calling H_SVM_INIT_ABORT, this hcall will be
-filtered out in kvmppc_h_svm_init_abort() because kvm->arch.secure_guest is
-not set in that case.
+sound/soc/sof/imx/imx8.o: In function 'imx8_send_msg':
+imx8.c:(.text+0x380): undefined reference to 'imx_dsp_ring_doorbell'
 
-Fixes: 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_* Hcalls")
-Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-Reviewed-by: Greg Kurz <groug@kaod.org>
-Reviewed-by: Ram Pai <linuxram@us.ibm.com>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Select IMX_DSP in SND_SOC_SOF_IMX8_SUPPORT to fix this
+
+Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF dependency")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20200409071832.2039-2-daniel.baluta@oss.nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_hv.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ sound/soc/sof/imx/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 93493f0cbfe8..ee581cde4878 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -1099,9 +1099,14 @@ int kvmppc_pseries_do_hcall(struct kvm_vcpu *vcpu)
- 			ret = kvmppc_h_svm_init_done(vcpu->kvm);
- 		break;
- 	case H_SVM_INIT_ABORT:
--		ret = H_UNSUPPORTED;
--		if (kvmppc_get_srr1(vcpu) & MSR_S)
--			ret = kvmppc_h_svm_init_abort(vcpu->kvm);
-+		/*
-+		 * Even if that call is made by the Ultravisor, the SSR1 value
-+		 * is the guest context one, with the secure bit clear as it has
-+		 * not yet been secured. So we can't check it here.
-+		 * Instead the kvm->arch.secure_guest flag is checked inside
-+		 * kvmppc_h_svm_init_abort().
-+		 */
-+		ret = kvmppc_h_svm_init_abort(vcpu->kvm);
- 		break;
- 
- 	default:
+diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+index 71f318bc2c74..b4f0426685c4 100644
+--- a/sound/soc/sof/imx/Kconfig
++++ b/sound/soc/sof/imx/Kconfig
+@@ -14,7 +14,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
+ config SND_SOC_SOF_IMX8_SUPPORT
+ 	bool "SOF support for i.MX8"
+ 	depends on IMX_SCU
+-	depends on IMX_DSP
++	select IMX_DSP
+ 	help
+           This adds support for Sound Open Firmware for NXP i.MX8 platforms
+           Say Y if you have such a device.
 -- 
 2.25.1
 
