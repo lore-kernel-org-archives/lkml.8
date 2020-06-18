@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD55C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8261821D90
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DDFB21D90
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442631;
-	bh=DTCgtkWUhkeyQkENmpKt7QMNjpcD8gw5ONKHWXYAk/E=;
+	s=default; t=1592442635;
+	bh=P0+2fHaETgW6NNS4KKLoREqjNyFC9AlfVEZ+UAGUoTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bFiUSztrvJbcCclZ1KZHxZrdQ3TAQJUs1fsaVKesv98VGnmLAORpZrNFBnjMozM+n
-	 D4OYR5gY9hEah6yOHLZUqXt7BjtpzhKv30QA21oi3s6X8VqiNx3zDKBAWBw+TBw+ok
-	 /seOgKdjdpud8DlXTuX7xSZ0LCRz5urtRXvY/6uY=
+	b=eRlEqywd6hlED58ieGIlVWSN/YiTq+jOJ6WdaHQ8LT6H0pXdjfvT8xTuM6W1+p619
+	 VRDV5y6HtgcuY0jQbEHXmmwkgpS+BXTWqnbjT09AEUcNeSyx/DfEAe4Q22cW4IMieW
+	 eaZ22oRN54gdyVPTjqBRziyy6c+Qdh/WX6hdKq6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbgFRBKa (ORCPT
+        id S1728535AbgFRBKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:10:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37604 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:10:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbgFRBK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:28 -0400
+        id S1726966AbgFRBKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A3E121D7B;
-        Thu, 18 Jun 2020 01:10:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC462214DB;
+        Thu, 18 Jun 2020 01:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442628;
-        bh=DTCgtkWUhkeyQkENmpKt7QMNjpcD8gw5ONKHWXYAk/E=;
+        s=default; t=1592442630;
+        bh=P0+2fHaETgW6NNS4KKLoREqjNyFC9AlfVEZ+UAGUoTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T0/H4FCjgHIlXLAXgxztUHlZqGzHXLMG0v7UXN5QMQ5GgWrpEvyCO/siUzlsl6oed
-         C9Oi8gMcvsOCfdtyxeIsh/1ruErEMOMJO0nZ1IYGzykkv7a+8FtWP2zoVYAOtP1V/j
-         4RCbn9CmpFlNnWD8xMU4xhfi9jR6hDL8KuS2Z9T0=
+        b=OHESbSgnlfk1+h8Ucy7wFADdGfJDZp5eOJzdP31WjzUfLpZe+l1ep7LLgBptYPBLg
+         u+k7ed7DCPu3HB7HyCKMlCVa5rQvAmHMCzkcBfZmi6UB1Et+loFBAFfWaKt8k5B2bN
+         330Z07vLB/r7eKMu8j9R7CC7aib4lsjLp4uLnvoo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Simon Arlott <simon@octiron.net>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 106/388] scsi: sr: Fix sr_probe() missing deallocate of device minor
-Date:   Wed, 17 Jun 2020 21:03:23 -0400
-Message-Id: <20200618010805.600873-106-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 108/388] media: s5p-mfc: Properly handle dma_parms for the allocated devices
+Date:   Wed, 17 Jun 2020 21:03:25 -0400
+Message-Id: <20200618010805.600873-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,45 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Arlott <simon@octiron.net>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 6555781b3fdec5e94e6914511496144241df7dee ]
+[ Upstream commit cc8c0363ddce6308168d8223378ca884c213f280 ]
 
-If the cdrom fails to be registered then the device minor should be
-deallocated.
+Commit 9495b7e92f71 ("driver core: platform: Initialize dma_parms for
+platform devices") in v5.7-rc5 added allocation of dma_parms structure to
+all platform devices. Then vb2_dma_contig_set_max_seg_size() have been
+changed not to allocate dma_parms structure and rely on the one allocated
+by the device core. Lets allocate the needed structure also for the
+devices created for the 2 MFC device memory ports.
 
-Link: https://lore.kernel.org/r/072dac4b-8402-4de8-36bd-47e7588969cd@0882a8b5-c6c3-11e9-b005-00805fc181fe
-Signed-off-by: Simon Arlott <simon@octiron.net>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 9495b7e92f71 ("driver core: platform: Initialize dma_parms for platform devices")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sr.c | 6 +++++-
+ drivers/media/platform/s5p-mfc/s5p_mfc.c | 6 +++++-
  1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-index 8d062d4f3ce0..1e13c6a0f0ca 100644
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@ -797,7 +797,7 @@ static int sr_probe(struct device *dev)
- 	cd->cdi.disk = disk;
- 
- 	if (register_cdrom(&cd->cdi))
--		goto fail_put;
-+		goto fail_minor;
+diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc.c b/drivers/media/platform/s5p-mfc/s5p_mfc.c
+index 5c2a23b953a4..eba2b9f040df 100644
+--- a/drivers/media/platform/s5p-mfc/s5p_mfc.c
++++ b/drivers/media/platform/s5p-mfc/s5p_mfc.c
+@@ -1089,6 +1089,10 @@ static struct device *s5p_mfc_alloc_memdev(struct device *dev,
+ 	child->coherent_dma_mask = dev->coherent_dma_mask;
+ 	child->dma_mask = dev->dma_mask;
+ 	child->release = s5p_mfc_memdev_release;
++	child->dma_parms = devm_kzalloc(dev, sizeof(*child->dma_parms),
++					GFP_KERNEL);
++	if (!child->dma_parms)
++		goto err;
  
  	/*
- 	 * Initialize block layer runtime PM stuffs before the
-@@ -815,6 +815,10 @@ static int sr_probe(struct device *dev)
- 
- 	return 0;
- 
-+fail_minor:
-+	spin_lock(&sr_index_lock);
-+	clear_bit(minor, sr_index_bits);
-+	spin_unlock(&sr_index_lock);
- fail_put:
- 	put_disk(disk);
- 	mutex_destroy(&cd->lock);
+ 	 * The memdevs are not proper OF platform devices, so in order for them
+@@ -1104,7 +1108,7 @@ static struct device *s5p_mfc_alloc_memdev(struct device *dev,
+ 			return child;
+ 		device_del(child);
+ 	}
+-
++err:
+ 	put_device(child);
+ 	return NULL;
+ }
 -- 
 2.25.1
 
