@@ -4,62 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0328AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD6052083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7578420776
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448677;
-	bh=mJwDThznqFqYuVdPQYXqiTJAdQqBcPNpMgkMU+wC5+8=;
+	s=default; t=1592448691;
+	bh=OIkYKz3Teuu888niQkYcJHwn7SaAQqASF6j8tkUdRrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S29SfCze7pHSe1ihXZ8BnxGCh0OkUSrpMpIn40dJID23funN1DKq7Chmzo8Cs5ZKa
-	 Z9fC4O9wyiNu7bL/oMAxyb8lr3QEM0RXp6ZUFPSDZkJ3mPG0b5tfqz6RJPcrXD4j8J
-	 Ef+THG0KMBP3hXrHwYmjL3ue95y9pgQo0rEh6BWY=
+	b=bWooobb7LToS/bH4KQIDmX6TlfsESUT5GOa6Po0J/Dv+vkmqoT1Cnxm87MwHk9yrB
+	 RFenA0SNZrozzw6FKXunBXSGjOjlgAs/bacXjBTvezNIODn3DqyqcsH/CcxzSYtYOT
+	 jLyVNcxcE4Rr9UkTzNHOD4UenD3sJ1muUDqPvXzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgFRCvR (ORCPT
+        id S1727989AbgFRBI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:51:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35138 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:08:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbgFRBJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:09:05 -0400
+        id S1727911AbgFRBIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:08:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 426A021D6C;
-        Thu, 18 Jun 2020 01:09:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEBE021D7A;
+        Thu, 18 Jun 2020 01:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442544;
-        bh=mJwDThznqFqYuVdPQYXqiTJAdQqBcPNpMgkMU+wC5+8=;
+        s=default; t=1592442527;
+        bh=OIkYKz3Teuu888niQkYcJHwn7SaAQqASF6j8tkUdRrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fSd7QNjMPDeFi3LsPdBP2gxPl/l2RsFX2psqjD0lOyTQm9yPfPd09GaySURCx1MnQ
-         082C3VaVpiOOjLCk5TBR1KUWGrmHTkr1IEsjGmKa0QCqs3gXY4jBwsY2NYv70/geB7
-         ReJb/vZ//RKIkdAPBJDPEw36STGDuXCLukGmqyxA=
+        b=ORZCshixEbxl+1pA6bA58N5Nda1/zN1MXq1YtQwP4/8FNM9FC8/tJb+EC3HQcSVYB
+         Sub/QzcR+dzp44uWho/ajWMionBagu0+grJzwEwhx8mixRQoBzs/GERWOM+TqrxYO5
+         60SwCaBNW2ceT0rhKiquF5ZiFn+TjQvZT1cWVWNE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Long Cheng <long.cheng@mediatek.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 043/388] serial: 8250: Fix max baud limit in generic 8250 port
-Date:   Wed, 17 Jun 2020 21:02:20 -0400
-Message-Id: <20200618010805.600873-43-sashal@kernel.org>
+Cc:     Jim Quinlan <jquinlan@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 031/388] PCI: brcmstb: Fix window register offset from 4 to 8
+Date:   Wed, 17 Jun 2020 21:02:08 -0400
+Message-Id: <20200618010805.600873-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -72,79 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Jim Quinlan <jquinlan@broadcom.com>
 
-[ Upstream commit 7b668c064ec33f3d687c3a413d05e355172e6c92 ]
+[ Upstream commit 077a4fa92a615a4d0f86eae68d777b9dd5e5a95b ]
 
-Standard 8250 UART ports are designed in a way so they can communicate
-with baud rates up to 1/16 of a reference frequency. It's expected from
-most of the currently supported UART controllers. That's why the former
-version of serial8250_get_baud_rate() method called uart_get_baud_rate()
-with min and max baud rates passed as (port->uartclk / 16 / UART_DIV_MAX)
-and ((port->uartclk + tolerance) / 16) respectively. Doing otherwise, like
-it was suggested in commit ("serial: 8250_mtk: support big baud rate."),
-caused acceptance of bauds, which was higher than the normal UART
-controllers actually supported. As a result if some user-space program
-requested to set a baud greater than (uartclk / 16) it would have been
-permitted without truncation, but then serial8250_get_divisor(baud)
-(which calls uart_get_divisor() to get the reference clock divisor) would
-have returned a zero divisor. Setting zero divisor will cause an
-unpredictable effect varying from chip to chip. In case of DW APB UART the
-communications just stop.
+The outbound memory window registers were being referenced
+with an incorrect stride offset.  This probably wasn't noticed
+previously as there was likely only one such window employed.
 
-Lets fix this problem by getting back the limitation of (uartclk +
-tolerance) / 16 maximum baud supported by the generic 8250 port. Mediatek
-8250 UART ports driver developer shouldn't have touched it in the first
-place  notably seeing he already provided a custom version of set_termios()
-callback in that glue-driver which took into account the extended baud
-rate values and accordingly updated the standard and vendor-specific
-divisor latch registers anyway.
-
-Fixes: 81bb549fdf14 ("serial: 8250_mtk: support big baud rate.")
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Long Cheng <long.cheng@mediatek.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
-Link: https://lore.kernel.org/r/20200506233136.11842-2-Sergey.Semin@baikalelectronics.ru
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200507201544.43432-3-james.quinlan@broadcom.com
+Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host controller driver")
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_port.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pcie-brcmstb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index f77bf820b7a3..4d83c85a7389 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -2615,6 +2615,8 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
- 					     struct ktermios *termios,
- 					     struct ktermios *old)
- {
-+	unsigned int tolerance = port->uartclk / 100;
-+
- 	/*
- 	 * Ask the core to calculate the divisor for us.
- 	 * Allow 1% tolerance at the upper limit so uart clks marginally
-@@ -2623,7 +2625,7 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
- 	 */
- 	return uart_get_baud_rate(port, termios, old,
- 				  port->uartclk / 16 / UART_DIV_MAX,
--				  port->uartclk);
-+				  (port->uartclk + tolerance) / 16);
- }
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 6d79d14527a6..c9ecc4d639c1 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -54,11 +54,11 @@
  
- void
+ #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO		0x400c
+ #define PCIE_MEM_WIN0_LO(win)	\
+-		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO + ((win) * 4)
++		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO + ((win) * 8)
+ 
+ #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI		0x4010
+ #define PCIE_MEM_WIN0_HI(win)	\
+-		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + ((win) * 4)
++		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + ((win) * 8)
+ 
+ #define PCIE_MISC_RC_BAR1_CONFIG_LO			0x402c
+ #define  PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK		0x1f
 -- 
 2.25.1
 
