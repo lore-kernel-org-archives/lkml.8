@@ -2,67 +2,56 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF70C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29260C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB43620885
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F5F21532
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447006;
-	bh=AiQgvc3iTsXpKFLgHM8VmdFtVAO76hfay4A/RQCe6u4=;
+	s=default; t=1592447010;
+	bh=21amvfPGX3hDybz2dRXi+ckX1IpZeShBQQLLp7v3wQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MOHHpVyhVEIsJiUyo1GIMOshVSspVaZjZwI+lid4/h/B4RXh5hWBI4DJwgP9Ds2ja
-	 65aRXrYULsT3r9z1+YDIRlsy/U0fLBjcafWgc04QoIeJgKGvB9wGYkBWv+kyrl37iC
-	 2S7fzn84SZzEuV5kNGQLG1idaBujxKgJiuWs9V/w=
+	b=vz6gsDfy5sgxN4Fxg5yMbvLlbUZBXFEJEViLUm27tpccY04hapqzyhYYBBLMj5jLv
+	 fhbbZ7fcNZoqpSWnkgkmg/Iu5R+BhPv390HXV8PpHSuaJsRHKb2irxrbm86GlC5g29
+	 YmdJd7xXQ3cJrOuwD6zRgYCE63UOkjmbjuaObJd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732280AbgFRCXZ (ORCPT
+        id S1729159AbgFRBSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728129AbgFRBSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:18:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729444AbgFRBPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96672221EB;
-        Thu, 18 Jun 2020 01:18:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7BD4221ED;
+        Thu, 18 Jun 2020 01:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443082;
-        bh=AiQgvc3iTsXpKFLgHM8VmdFtVAO76hfay4A/RQCe6u4=;
+        s=default; t=1592442910;
+        bh=21amvfPGX3hDybz2dRXi+ckX1IpZeShBQQLLp7v3wQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G36D2MEqcA9zQgs3YryT5fhBdjc1gDgKU4y6S968n2pgxuB185wySU+gKPTKapC2D
-         b3JWI6NoWN7gqyu60a43/tZrcHH4rrGATjmZG3GxRAspQUujgI9LGpLWtZAMNUYGy5
-         rEFNssV8ojW+y/J0c/B5+aqzSQLt1ffQ4tE/PYgg=
+        b=DnVJ46bFKVS9PRyMS+MKqgFFv5Rw74IdNnUMm10xMfvfX5WC9QrMGTwvNjMFnbDhK
+         smKe97Zets8J4ysvnBx51cu+8G+XqeenZNAFgoFXBdjOb/O6dqYAt7D1/TqbtbA+i9
+         ZnyaGJ5TOmosZ91oytSH6P2AEzud+yqOTSDM22mI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Vinod Koul <vkoul@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        alsa-devel@alsa-project.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 067/266] ASoC: qcom: q6asm-dai: kCFI fix
-Date:   Wed, 17 Jun 2020 21:13:12 -0400
-Message-Id: <20200618011631.604574-67-sashal@kernel.org>
+Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 329/388] drm/amd/display: Revalidate bandwidth before commiting DC updates
+Date:   Wed, 17 Jun 2020 21:07:06 -0400
+Message-Id: <20200618010805.600873-329-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
-References: <20200618011631.604574-1-sashal@kernel.org>
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -72,109 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Stultz <john.stultz@linaro.org>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-[ Upstream commit a6b675a89e51a1cdad0481b809b7840d3f86e4b5 ]
+[ Upstream commit a24eaa5c51255b344d5a321f1eeb3205f2775498 ]
 
-Fixes the following kCFI crash seen on db845c, caused
-by the function prototypes not matching the callback
-function prototype.
+[Why]
+Whenever we switch between tiled formats without also switching pixel
+formats or doing anything else that recreates the DC plane state we
+can run into underflow or hangs since we're not updating the
+DML parameters before committing to the hardware.
 
-[   82.585661] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000001
-[   82.595387] Mem abort info:
-[   82.599463]   ESR = 0x96000005
-[   82.602658]   EC = 0x25: DABT (current EL), IL = 32 bits
-[   82.608177]   SET = 0, FnV = 0
-[   82.611829]   EA = 0, S1PTW = 0
-[   82.615369] Data abort info:
-[   82.618751]   ISV = 0, ISS = 0x00000005
-[   82.622641]   CM = 0, WnR = 0
-[   82.625774] user pgtable: 4k pages, 39-bit VAs, pgdp=0000000174259000
-[   82.632292] [0000000000000001] pgd=0000000000000000, pud=0000000000000000
-[   82.639167] Internal error: Oops: 96000005 [#1] PREEMPT SMP
-[   82.644795] Modules linked in: hci_uart btqca xhci_plat_hcd xhci_pci_renesas xhci_pci xhci_hcd wcn36xx wcnss_ctrl wcd934x vctrl_regulator ufs_qcom syscon_reboot_e
-[   82.644927]  qcom_apcs_ipc_mailbox q6asm_dai q6routing q6asm q6afe_dai q6adm q6afe q6core q6dsp_common pm8941_pwrkey pm8916_wdt platform_mhu pinctrl_spmi_mpp pine
-[   82.812982] CPU: 3 PID: 240 Comm: kworker/u16:4 Tainted: G        W         5.6.0-rc7-mainline-00960-g0c34353d11b9-dirty #1
-[   82.824201] Hardware name: Thundercomm Dragonboard 845c (DT)
-[   82.829937] Workqueue: qcom_apr_rx apr_rxwq [apr]
-[   82.834698] pstate: 80c00005 (Nzcv daif +PAN +UAO)
-[   82.839553] pc : __cfi_check_fail+0x4/0x1c [q6asm_dai]
-[   82.844754] lr : __cfi_check+0x3a8/0x3b0 [q6asm_dai]
-[   82.849767] sp : ffffffc0105f3c20
-[   82.853123] x29: ffffffc0105f3c30 x28: 0000000000000020
-[   82.858489] x27: ffffff80f4588400 x26: ffffff80f458ec94
-[   82.863854] x25: ffffff80f458ece8 x24: ffffffe3670c7000
-[   82.869220] x23: ffffff8094bb7b34 x22: ffffffe367137000
-[   82.874585] x21: bd07909b332eada6 x20: 0000000000000001
-[   82.879950] x19: ffffffe36713863c x18: ffffff80f8df4430
-[   82.885316] x17: 0000000000000001 x16: ffffffe39d15e660
-[   82.890681] x15: 0000000000000001 x14: 0000000000000027
-[   82.896047] x13: 0000000000000000 x12: ffffffe39e6465a0
-[   82.901413] x11: 0000000000000051 x10: 000000000000ffff
-[   82.906779] x9 : 000ffffffe366c19 x8 : c3c5f18762d1ceef
-[   82.912145] x7 : 0000000000000000 x6 : ffffffc010877698
-[   82.917511] x5 : ffffffc0105f3c00 x4 : 0000000000000000
-[   82.922877] x3 : 0000000000000000 x2 : 0000000000000001
-[   82.928243] x1 : ffffffe36713863c x0 : 0000000000000001
-[   82.933610] Call trace:
-[   82.936099]  __cfi_check_fail+0x4/0x1c [q6asm_dai]
-[   82.940955]  q6asm_srvc_callback+0x22c/0x618 [q6asm]
-[   82.945973]  apr_rxwq+0x1a8/0x27c [apr]
-[   82.949861]  process_one_work+0x2e8/0x54c
-[   82.953919]  worker_thread+0x27c/0x4d4
-[   82.957715]  kthread+0x144/0x154
-[   82.960985]  ret_from_fork+0x10/0x18
-[   82.964603] Code: a8c37bfd f85f8e5e d65f03c0 b40000a0 (39400008)
-[   82.970762] ---[ end trace 410accb839617143 ]---
-[   82.975429] Kernel panic - not syncing: Fatal exception
+[How]
+If the update type is FULL then call validate_bandwidth again to update
+the DML parmeters before committing the state.
 
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Patrick Lai <plai@codeaurora.org>
-Cc: Banajit Goswami <bgoswami@codeaurora.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Stephan Gerhold <stephan@gerhold.net>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Alistair Delva <adelva@google.com>
-Cc: Amit Pundir <amit.pundir@linaro.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: alsa-devel@alsa-project.org
-Link: https://lore.kernel.org/r/20200529213823.98812-1-john.stultz@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This is basically just a workaround and protective measure against
+update types being added DC where we could run into this issue in
+the future.
+
+We can only fully validate the state in advance before applying it to
+the hardware if we recreate all the plane and stream states since
+we can't modify what's currently in use.
+
+The next step is to update DM to ensure that we're creating the plane
+and stream states for whatever could potentially be a full update in
+DC to pre-emptively recreate the state for DC global validation.
+
+The workaround can stay until this has been fixed in DM.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/qdsp6/q6asm-dai.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/core/dc.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-index 548eb4fa2da6..9f0ffdcef637 100644
---- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-@@ -171,7 +171,7 @@ static const struct snd_compr_codec_caps q6asm_compr_caps = {
- };
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 47431ca6986d..4a619328101c 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -2517,6 +2517,12 @@ void dc_commit_updates_for_stream(struct dc *dc,
  
- static void event_handler(uint32_t opcode, uint32_t token,
--			  uint32_t *payload, void *priv)
-+			  void *payload, void *priv)
- {
- 	struct q6asm_dai_rtd *prtd = priv;
- 	struct snd_pcm_substream *substream = prtd->substream;
-@@ -494,7 +494,7 @@ static struct snd_pcm_ops q6asm_dai_ops = {
- };
+ 	copy_stream_update_to_stream(dc, context, stream, stream_update);
  
- static void compress_event_handler(uint32_t opcode, uint32_t token,
--				   uint32_t *payload, void *priv)
-+				   void *payload, void *priv)
- {
- 	struct q6asm_dai_rtd *prtd = priv;
- 	struct snd_compr_stream *substream = prtd->cstream;
++	if (!dc->res_pool->funcs->validate_bandwidth(dc, context, false)) {
++		DC_ERROR("Mode validation failed for stream update!\n");
++		dc_release_state(context);
++		return;
++	}
++
+ 	commit_planes_for_stream(
+ 				dc,
+ 				srf_updates,
 -- 
 2.25.1
 
