@@ -2,106 +2,103 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC79C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12D7920885
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF5D20885
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:57:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592477853;
+	bh=vY2sHSYgz3FSMcrfG9KrkW9kDXXo8NuTjtpQOy2E/lU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TYv1H25pbPUJIXoBTGizpF4/ZnBvgSRpAwU+/RHoy2iz7NwE+plNtxVTPz7Yr1ODB
+	 wBdstsHTgt4s9TUo3t2wOhBaHuo6aGAeKxc9XjwRhevGXwejyE6ocHOpQU0DQWjeqf
+	 snqznucDsvocjY4vwzig4tXr+o2Sft5a59NzqjIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgFRK5N (ORCPT
+        id S1729131AbgFRK5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 06:57:13 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:41896 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727037AbgFRK5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 06:57:12 -0400
-Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_2p4SOteeDZGAA--.8839S2;
-        Thu, 18 Jun 2020 18:56:57 +0800 (CST)
-From:   Bibo Mao <maobibo@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Silsby <dansilsby@gmail.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] MIPS: Do not flush tlb when setting pmd entry
-Date:   Thu, 18 Jun 2020 18:56:55 +0800
-Message-Id: <1592477815-836-1-git-send-email-maobibo@loongson.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: AQAAf9Dx_2p4SOteeDZGAA--.8839S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uFykXr17tF1fAw4xWFyxGrg_yoW8XF47pr
-        srC3Wvqr45Z348tryruryvgr1ayF4ktFW5KF1UAa45X3W5WF1kKF93J34UJF18XrWfC395
-        WF4YqFy5JrWxA37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyab7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I
-        3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
-        WUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
-        k0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-        Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8IzuJUUUUU==
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+        Thu, 18 Jun 2020 06:57:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727805AbgFRK5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 06:57:25 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 365632085B;
+        Thu, 18 Jun 2020 10:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592477844;
+        bh=vY2sHSYgz3FSMcrfG9KrkW9kDXXo8NuTjtpQOy2E/lU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hG3hPcg1C8sz2kAMaDAVmjGxfJ54TyooiyfBeTKxdTtslrW228ozcyIgBnZ6XLaSX
+         A4wJXR8wKV47rxN0Fgyz+fIuqydSZMcXM2xat4fEJ+jNjzq1KbqrIKLOSpgpvRuQ/1
+         6MGpBbPkMZnN9J3urbv1bFZtfrvHjGPznDLmeMfw=
+Date:   Thu, 18 Jun 2020 11:57:22 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Dan Murphy <dmurphy@ti.com>, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] dt-bindings: tas2562: Add firmware support for
+ tas2563
+Message-ID: <20200618105722.GA5789@sirena.org.uk>
+References: <20200609172841.22541-2-dmurphy@ti.com>
+ <20200609173143.GN4583@sirena.org.uk>
+ <bb7cff87-f814-1b37-c9eb-e68919e3c077@ti.com>
+ <20200609175852.GQ4583@sirena.org.uk>
+ <414a2d73-6d09-1e76-59c8-4943c0e8f720@ti.com>
+ <20200609184734.GS4583@sirena.org.uk>
+ <014b85b5-677b-569a-4eb2-74526d3f00bc@ti.com>
+ <20200610102920.GC5005@sirena.org.uk>
+ <84a6dd5f-cc3e-adb4-ae94-b4fe389adfd9@ti.com>
+ <20200617220459.GA2884884@bogus>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
+Content-Disposition: inline
+In-Reply-To: <20200617220459.GA2884884@bogus>
+X-Cookie: Androphobia:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function set_pmd_at is to set pmd entry, if tlb entry need to
-be flushed, there exists pmdp_huge_clear_flush alike function
-before set_pmd_at is called. So it is not necessary to call
-flush_tlb_all in this function.
 
-In these scenarios, tlb for the pmd range needs to be flushed:
-1. privilege degrade such as wrprotect is set on the pmd entry
-2. pmd entry is cleared
-3. there is exception if set_pmd_at is issued by dup_mmap, since
-flush_tlb_mm is called for parent process, it is not necessary
-to flush tlb in function copy_huge_pmd.
+--RnlQjJ0d97Da+TV1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
-v2:
-- add the same operation on mips32 system
-- update changelog description
----
- arch/mips/mm/pgtable-32.c | 1 -
- arch/mips/mm/pgtable-64.c | 1 -
- 2 files changed, 2 deletions(-)
+On Wed, Jun 17, 2020 at 04:04:59PM -0600, Rob Herring wrote:
 
-diff --git a/arch/mips/mm/pgtable-32.c b/arch/mips/mm/pgtable-32.c
-index bd4b065..61891af 100644
---- a/arch/mips/mm/pgtable-32.c
-+++ b/arch/mips/mm/pgtable-32.c
-@@ -45,7 +45,6 @@ void set_pmd_at(struct mm_struct *mm, unsigned long addr,
- 		pmd_t *pmdp, pmd_t pmd)
- {
- 	*pmdp = pmd;
--	flush_tlb_all();
- }
- #endif /* defined(CONFIG_TRANSPARENT_HUGEPAGE) */
- 
-diff --git a/arch/mips/mm/pgtable-64.c b/arch/mips/mm/pgtable-64.c
-index 183ff9f..7536f78 100644
---- a/arch/mips/mm/pgtable-64.c
-+++ b/arch/mips/mm/pgtable-64.c
-@@ -100,7 +100,6 @@ void set_pmd_at(struct mm_struct *mm, unsigned long addr,
- 		pmd_t *pmdp, pmd_t pmd)
- {
- 	*pmdp = pmd;
--	flush_tlb_all();
- }
- 
- void __init pagetable_init(void)
--- 
-1.8.3.1
+> Given bus numbering may not be constant, that seems like not the best=20
+> way to match up devices. I'd assume that userspace needs some way to=20
+> identify which instance is which already, so maybe there's other data=20
+> you can use already.
 
+There isn't really, you're putting stuff in the DT for that - usually as
+part of the card binding.  I guess we could use that string rather than
+the dev_name().
+
+--RnlQjJ0d97Da+TV1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7rSJEACgkQJNaLcl1U
+h9AibAf/ZmP/R1X+W0rdK+oILKnjLxOdozk0Sprm6q6LHFutWUM6iachMjh1+7jW
+N/B9nHZSkHAjtocF5Xlfzt/K1jS/mNa4c0DVBmnBALam88CbZshWAG7lwMZhkf40
+DgLtkfZfyNCxFgd5/bTBcOZXnxLcWm1YHj45Pv/iOHtEhRDJ3UNmE5jry4DwjwSV
+YVl4a1Jjaoth+Xgy3THO6M8DAv5PXlHT3ysJSOLY4rkrXlqQPdu8ylpqe8tymPng
+Jv2FZWels3v9S+wWYj3OPbs2TkiTQE+Y34YaaxkTtz3FA4YktesN3F9mGUjE81jW
+yEMbgNDVy1xaeFNm7q9geJCHfGdyvQ==
+=DzpG
+-----END PGP SIGNATURE-----
+
+--RnlQjJ0d97Da+TV1--
