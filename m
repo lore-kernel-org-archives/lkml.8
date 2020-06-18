@@ -2,279 +2,100 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1280AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B52C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1A86206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C870206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:50:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="sVKi219s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbgFRKuZ (ORCPT
+        id S1729401AbgFRKud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 06:50:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:47904 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729369AbgFRKuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 06:50:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 143BE31B;
-        Thu, 18 Jun 2020 03:50:23 -0700 (PDT)
-Received: from [192.168.0.110] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23EE53F71F;
-        Thu, 18 Jun 2020 03:50:21 -0700 (PDT)
-Subject: Re: [PATCH v5 2/7] arm64: perf: Avoid PMXEV* indirection
-To:     Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     mark.rutland@arm.com, Julien Thierry <julien.thierry@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, maz@kernel.org,
-        Jiri Olsa <jolsa@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, catalin.marinas@arm.com,
-        Namhyung Kim <namhyung@kernel.org>, will@kernel.org,
-        Julien Thierry <julien.thierry.kdev@gmail.com>
-References: <20200617113851.607706-1-alexandru.elisei@arm.com>
- <20200617113851.607706-3-alexandru.elisei@arm.com>
- <159242468708.62212.1739215996563155762@swboyd.mtv.corp.google.com>
-From:   Alexandru Elisei <alexandru.elisei@arm.com>
-Message-ID: <bca9a873-3e69-f68d-2266-5f82704580d1@arm.com>
-Date:   Thu, 18 Jun 2020 11:51:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <159242468708.62212.1739215996563155762@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Thu, 18 Jun 2020 06:50:33 -0400
+Received: from mail-eopbgr40122.outbound.protection.outlook.com ([40.107.4.122]:8274
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729369AbgFRKu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 06:50:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CiOO6RCKBRHRxhkav3huqhhn5lzq/460cV2tWFl+09RijCAr7wUXaIFQQ5DpnuObmXyK14Ktpt4cI/A4XF9soKTODIvvrTdswVg54pDsE8F0ARgI92wQNp94McXFloJODiXSJBnwds0w8Kos8apj5YXAdZ3maDEBhQk00bWSXOJyVZl+gN5WKBTSkmulE8g7AwJrcnc+xEGveOUO9Zrjma/UbkgjPMQTzdbRnViNbDTF8t1xS2QoKrgnD0j1HAsRiv6SnLQBK5ldlUFGpy5WDhckItdz3TE4IuYoDQixTJ8yRXp6bBeVC3rghRzsrRY4rZKb4rL0rPpAvI4Uk6s//g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OOejePt4Sc2sFSR1LK5bw19sJBRUK1XBZGj5naBPXHY=;
+ b=EylqDagpAHtuT/wlFWGx34a/KhRBZwk4nA+hHfGJPBcaI56T9horuqJrewOx/BW8N9Q89o6wLsCbmvtJVOMgHM0o9LpNSQKTZfTat5LCVoTfVOYlOun12xApse9YxCr11L/kQAY9qSHFkiIOEsNatGyip56J83qww+nXr0pVsImJH1IZobMKPwOuLkVVlHB+BwXnZZ48UC1MEHuPLftG20kaVN1ol8aEc0+9AHQ14YX9/0CLNKbAQwJXZbOjwPnm1wXzvRao7Jjks8ju1JW6HigzNQKp5MJHYkU21+CY+duKLPqlmTzDnLnzyvwkDx20iEGXOSnFfzD4uQfnw02fyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OOejePt4Sc2sFSR1LK5bw19sJBRUK1XBZGj5naBPXHY=;
+ b=sVKi219sr7tU2LdzaWrEgQ8wqucQlgImWRo24fmE3Xqadr4C/zCQJ7JTRFr3sAD3twtwBE3abxSVYw3PSBO96Ww2ZXepQsToQOky1xOTzUq8s0XOZMNBqB/QF34uOtCJP9RaramZpVkkym67cUt1+PKRjn3hxzPzZyAwBiV972w=
+Received: from AM0PR02MB5523.eurprd02.prod.outlook.com (2603:10a6:208:15e::24)
+ by AM0PR02MB5842.eurprd02.prod.outlook.com (2603:10a6:208:180::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Thu, 18 Jun
+ 2020 10:50:26 +0000
+Received: from AM0PR02MB5523.eurprd02.prod.outlook.com
+ ([fe80::ec0b:a8c:1064:db6e]) by AM0PR02MB5523.eurprd02.prod.outlook.com
+ ([fe80::ec0b:a8c:1064:db6e%7]) with mapi id 15.20.3109.021; Thu, 18 Jun 2020
+ 10:50:26 +0000
+From:   Omer Shpigelman <oshpigelman@habana.ai>
+To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        SW_Drivers <SW_Drivers@habana.ai>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: RE: [PATCH 1/7] habanalabs: remove rate limiters from GAUDI
+Thread-Topic: [PATCH 1/7] habanalabs: remove rate limiters from GAUDI
+Thread-Index: AQHWQ6VEmi2GdLeJAkmWPUysCkeIhKjeNG4w
+Date:   Thu, 18 Jun 2020 10:50:26 +0000
+Message-ID: <AM0PR02MB5523360A3D19F8EFD846C4A1B89B0@AM0PR02MB5523.eurprd02.prod.outlook.com>
+References: <20200616061327.12006-1-oded.gabbay@gmail.com>
+In-Reply-To: <20200616061327.12006-1-oded.gabbay@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=habana.ai;
+x-originating-ip: [5.102.253.147]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1820977f-0d54-43f1-61b4-08d8137568e5
+x-ms-traffictypediagnostic: AM0PR02MB5842:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR02MB584260CF033E56F9143DCB2CB89B0@AM0PR02MB5842.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2043;
+x-forefront-prvs: 0438F90F17
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wFvHM9dcfe07fHYfAEcodI4sa7BkjeSCLOnmLMXe9ztn4OPeCPR6qrv9hZuZ1OXB9C2rqgvCZOWXU5C5YmFLSq/M2qJZXwUpA8f0cXAjfv5TvdfazW/t+sR9SD5uPht2XbmcEloHiVmw+88scm9CrG+cnaY6T0hoofCBPlmF5n3bAv4HDxMGnGOC+iGBn+2qA6jUJmgvi0w/Wdo0/fEO2YDgor63Aa1fGcgi0/I3zxigiQ9So5ox8AiKKPA9qL7l2SXOZW0JkdkixVQqPsdEPqWlYOfhlLfS+NPe8iYe/G8el36URkge1iifyWGX6/eW+75fv5BptUPtyJwdMZkYCw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR02MB5523.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(136003)(346002)(39850400004)(396003)(26005)(2906002)(558084003)(76116006)(4326008)(9686003)(5660300002)(66946007)(7696005)(55016002)(186003)(110136005)(64756008)(33656002)(66446008)(66476007)(66556008)(316002)(71200400001)(83380400001)(478600001)(6506007)(52536014)(6636002)(8936002)(8676002)(86362001)(53546011);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: DxQMCRCfP1y8b1n5y2FCHjpuibo3cSqGJXe31XWLR6ZcQUD6Yi1IxBeO9GCoaUrq36aGK9PaQYKBK0jg3SAYrY01OuMlpBf3j1l4Y6xW0Dbe6P9wHJ/4mjQBzaAolb3S2B2+ONQw9QzTLB2z0LQvDujYe9pNI7A0uatcjKf/vD5KV+ojfrR90KRFKeFnJvtqIUM1iBKMoJwSVCYqRKiFleEq/doWZGNLuh5bEHKNCgGzrIR3ggDTe7FLlLptkDbCJPLZ78JM+S2GQ6QK+v9C5vjaVZprHETHcrhTIr8yhbpfKsPfMszax2x8/7RuGvUZf0bbTO8cmsSQcMngmvAk1h5+v5GdGL1osYLfMni7z9KTer1AI9BUShLR+xridWGmOPpP5vUPo84gcOlIexTAVIG/R5YtFmAeRAiGQIrQiGOSeiRVSsperBzW2FtLBi1SkzmhYPfRgJ7SowFAG0Xt5rOIFGV3iHc0wU7jnyD+dIQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1820977f-0d54-43f1-61b4-08d8137568e5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 10:50:26.4410
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: u2rNx9ENW7FSM59Lelh9glh06h/qmWiQECRCJ1QuiWRQ93r/t2Su2/TvBZTLeT15ww/5NifrRmpEreWYOQYObQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR02MB5842
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On 6/17/20 9:11 PM, Stephen Boyd wrote:
-> Quoting Alexandru Elisei (2020-06-17 04:38:46)
->> From: Mark Rutland <mark.rutland@arm.com>
->>
->> Currently we access the counter registers and their respective type
->> registers indirectly. This requires us to write to PMSELR, issue an ISB,
->> then access the relevant PMXEV* registers.
->>
->> This is unfortunate, because:
->>
->> * Under virtualization, accessing one registers requires two traps to
-> one register? Not plural presumably.
-
-That's another typo, will fix it.
-
->
->>   the hypervisor, even though we could access the register directly with
->>   a single trap.
->>
->> * We have to issue an ISB which we could otherwise avoid the cost of.
->>
->> * When we use NMIs, the NMI handler will have to save/restore the select
->>   register in case the code it preempted was attempting to access a
->>   counter or its type register.
->>
->> We can avoid these issues by directly accessing the relevant registers.
->> This patch adds helpers to do so.
->>
->> In armv8pmu_enable_event() we still need the ISB to prevent the PE from
->> reordering the write to PMINTENSET_EL1 register. If the interrupt is
->> enabled before we disable the counter and the new event is configured,
->> we might get an interrupt triggered by the previously programmed event
->> overflowing, but which we wrongly attribute to the event that we are
->> enabling.
->>
->> In the process, remove the comment that refers to the ARMv7 PMU.
->>
->> Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
->> Cc: Will Deacon <will.deacon@arm.com>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
->> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->> Cc: Jiri Olsa <jolsa@redhat.com>
->> Cc: Namhyung Kim <namhyung@kernel.org>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
->> [Julien T.: Don't inline read/write functions to avoid big code-size
->>         increase, remove unused read_pmevtypern function,
->>         fix counter index issue.]
->> Signed-off-by: Julien Thierry <julien.thierry@arm.com>
->> [Removed comment, removed trailing semicolons in macros, added ISB]
->> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
->> ---
->>  arch/arm64/kernel/perf_event.c | 95 +++++++++++++++++++++++++++++-----
->>  1 file changed, 81 insertions(+), 14 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
->> index ee180b2a5b39..e95b5ca70a53 100644
->> --- a/arch/arm64/kernel/perf_event.c
->> +++ b/arch/arm64/kernel/perf_event.c
->> @@ -323,6 +323,73 @@ static inline bool armv8pmu_event_is_chained(struct perf_event *event)
->>  #define        ARMV8_IDX_TO_COUNTER(x) \
->>         (((x) - ARMV8_IDX_COUNTER0) & ARMV8_PMU_COUNTER_MASK)
->>  
->> +/*
->> + * This code is really good
->> + */
-> Superb!
-
-Exactly! I thought so too, that's why I kept the comment.
-
->
->> +
->> +#define PMEVN_CASE(n, case_macro) \
->> +       case n: case_macro(n); break
->> +
->> +#define PMEVN_SWITCH(x, case_macro)                            \
->> +       do {                                                    \
->> +               switch (x) {                                    \
->> +               PMEVN_CASE(0,  case_macro);                     \
->> +               PMEVN_CASE(1,  case_macro);                     \
->> +               PMEVN_CASE(2,  case_macro);                     \
->> +               PMEVN_CASE(3,  case_macro);                     \
->> +               PMEVN_CASE(4,  case_macro);                     \
->> +               PMEVN_CASE(5,  case_macro);                     \
->> +               PMEVN_CASE(6,  case_macro);                     \
->> +               PMEVN_CASE(7,  case_macro);                     \
->> +               PMEVN_CASE(8,  case_macro);                     \
->> +               PMEVN_CASE(9,  case_macro);                     \
->> +               PMEVN_CASE(10, case_macro);                     \
->> +               PMEVN_CASE(11, case_macro);                     \
->> +               PMEVN_CASE(12, case_macro);                     \
->> +               PMEVN_CASE(13, case_macro);                     \
->> +               PMEVN_CASE(14, case_macro);                     \
->> +               PMEVN_CASE(15, case_macro);                     \
->> +               PMEVN_CASE(16, case_macro);                     \
->> +               PMEVN_CASE(17, case_macro);                     \
->> +               PMEVN_CASE(18, case_macro);                     \
->> +               PMEVN_CASE(19, case_macro);                     \
->> +               PMEVN_CASE(20, case_macro);                     \
->> +               PMEVN_CASE(21, case_macro);                     \
->> +               PMEVN_CASE(22, case_macro);                     \
->> +               PMEVN_CASE(23, case_macro);                     \
->> +               PMEVN_CASE(24, case_macro);                     \
->> +               PMEVN_CASE(25, case_macro);                     \
->> +               PMEVN_CASE(26, case_macro);                     \
->> +               PMEVN_CASE(27, case_macro);                     \
->> +               PMEVN_CASE(28, case_macro);                     \
->> +               PMEVN_CASE(29, case_macro);                     \
->> +               PMEVN_CASE(30, case_macro);                     \
->> +               default: WARN(1, "Invalid PMEV* index");        \
-> Missing newline on that WARN message?
-
-Indeed, will add it.
-
->
->> +               }                                               \
->> +       } while (0)
->> +
->> +#define RETURN_READ_PMEVCNTRN(n) \
->> +       return read_sysreg(pmevcntr##n##_el0)
->> +static unsigned long read_pmevcntrn(int n)
->> +{
->> +       PMEVN_SWITCH(n, RETURN_READ_PMEVCNTRN);
->> +       return 0;
->> +}
->> +
->> +#define WRITE_PMEVCNTRN(n) \
->> +       write_sysreg(val, pmevcntr##n##_el0)
->> +static void write_pmevcntrn(int n, unsigned long val)
->> +{
->> +       PMEVN_SWITCH(n, WRITE_PMEVCNTRN);
->> +}
->> +
->> +#define WRITE_PMEVTYPERN(n) \
->> +       write_sysreg(val, pmevtyper##n##_el0)
->> +static void write_pmevtypern(int n, unsigned long val)
->> +{
->> +       PMEVN_SWITCH(n, WRITE_PMEVTYPERN);
->> +}
->> +
->>  static inline u32 armv8pmu_pmcr_read(void)
->>  {
->>         return read_sysreg(pmcr_el0);
->> @@ -351,17 +418,11 @@ static inline int armv8pmu_counter_has_overflowed(u32 pmnc, int idx)
->>         return pmnc & BIT(ARMV8_IDX_TO_COUNTER(idx));
->>  }
->>  
->> -static inline void armv8pmu_select_counter(int idx)
->> +static inline u32 armv8pmu_read_evcntr(int idx)
->>  {
->>         u32 counter = ARMV8_IDX_TO_COUNTER(idx);
->> -       write_sysreg(counter, pmselr_el0);
->> -       isb();
->> -}
->>  
->> -static inline u64 armv8pmu_read_evcntr(int idx)
->> -{
->> -       armv8pmu_select_counter(idx);
->> -       return read_sysreg(pmxevcntr_el0);
->> +       return read_pmevcntrn(counter);
->>  }
->>  
->>  static inline u64 armv8pmu_read_hw_counter(struct perf_event *event)
->> @@ -433,8 +494,9 @@ static u64 armv8pmu_read_counter(struct perf_event *event)
->>  
->>  static inline void armv8pmu_write_evcntr(int idx, u64 value)
->>  {
->> -       armv8pmu_select_counter(idx);
->> -       write_sysreg(value, pmxevcntr_el0);
->> +       u32 counter = ARMV8_IDX_TO_COUNTER(idx);
-> Might be a good idea to make ARMV8_IDX_TO_COUNTER a static inline
-> function that has a return type of u32. I had to go check the code to
-> make sure it wasn't something larger.
-
-Architecturally, there are at most 32 counter registers, which would fit in an s8,
-so I don't think type checking would really help us here.
-
->
->> +
->> +       write_pmevcntrn(counter, value);
->>  }
->>  
->>  static inline void armv8pmu_write_hw_counter(struct perf_event *event,
->> @@ -469,9 +531,10 @@ static void armv8pmu_write_counter(struct perf_event *event, u64 value)
->>  
->>  static inline void armv8pmu_write_evtype(int idx, u32 val)
->>  {
->> -       armv8pmu_select_counter(idx);
->> +       u32 counter = ARMV8_IDX_TO_COUNTER(idx);
->> +
->>         val &= ARMV8_PMU_EVTYPE_MASK;
->> -       write_sysreg(val, pmxevtyper_el0);
->> +       write_pmevtypern(counter, val);
->>  }
->>  
->>  static inline void armv8pmu_write_event_type(struct perf_event *event)
->> @@ -491,7 +554,10 @@ static inline void armv8pmu_write_event_type(struct perf_event *event)
->>                 armv8pmu_write_evtype(idx - 1, hwc->config_base);
->>                 armv8pmu_write_evtype(idx, chain_evt);
->>         } else {
->> -               armv8pmu_write_evtype(idx, hwc->config_base);
->> +               if (idx == ARMV8_IDX_CYCLE_COUNTER)
->> +                       write_sysreg(hwc->config_base, pmccfiltr_el0);
->> +               else
->> +                       armv8pmu_write_evtype(idx, hwc->config_base);
->>         }
->>  }
->>  
->> @@ -595,9 +661,10 @@ static void armv8pmu_enable_event(struct perf_event *event)
->>          * Disable counter
->>          */
->>         armv8pmu_disable_event_counter(event);
->> +       isb();
-> Same comment about uncommented isb().
-
-Will add a comment explaining the ISB.
-
-Thanks,
-Alex
+T24gVHVlLCBKdW4gMTYsIDIwMjAgYXQgOToxMyBBTSwgT2RlZCBHYWJiYXkgPG9kZWQuZ2FiYmF5
+QGdtYWlsLmNvbT4gd3JvdGU6DQo+IFdlIG5vIGxvbmdlciBuZWVkIHRvIGluaXRpYWxpemUgdGhl
+IHJhdGUgbGltaXRlcnMgaW4gR0FVREkgQTEuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBPZGVkIEdh
+YmJheSA8b2RlZC5nYWJiYXlAZ21haWwuY29tPg0KDQpSZXZpZXdlZC1ieTogT21lciBTaHBpZ2Vs
+bWFuIDxvc2hwaWdlbG1hbkBoYWJhbmEuYWk+DQo=
