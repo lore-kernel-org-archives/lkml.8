@@ -2,128 +2,206 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B93C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B779208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:29:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="cObS6mFQ"
+	by mail.kernel.org (Postfix) with ESMTP id 715DC2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731569AbgFRP3P (ORCPT
+        id S1731587AbgFRP3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:29:15 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:15756 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731535AbgFRP3H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:29:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1592494147; x=1624030147;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zm+f5NC0s8tHPMJu0+UciLLciIrxqv4wIAMMNwcR3sg=;
-  b=cObS6mFQIB5fnu+VmA+7kBOJbvYVjHNv87W+mLMf3KQh0x7cimW75OyY
-   LcaGJlfxN93v9VgAxkYrpTtFcrO7J5e+n4szh1Xh27XH4fw/Iwt1IdmIL
-   R/1uyufmZJUXv4/Nl9qomST0/DUDnLSG3uX0xz3MTGLaeQ/v1mp0GIL7d
-   6P36RdXQvl6nBlCnSeSCBdeTfSerhzi8WxxPoArLMkouhacNodrZAslex
-   ZxeX3NGyOiloEwVKRYeCr2IvD9pTMXPoCemmWnUNJNnR2RKzl/33PklJp
-   8BcdRH+pU0h0KEwb/TCMOAt6wVh70Mj/mtGEho9SGYGnF9hRK7cl+mXbj
-   w==;
-IronPort-SDR: BBpKP0k80BnzTU0KNlP6t6swWUaLBzHXrPQ8Ly60CEey804TPvXbbsK0m9ZcnqXXTXx822ANG2
- uTjRRrwsDJ9VfbqeLQKzOHZnHHGzijHMuUujh2w0D0ixwz1XliJhUfghlM28+0Iqf8gNGTADoI
- bOzRHkPl+n1YoaZnqRUXMMfXQYqhVJJz3zn9GTz29hdb3KKVxH5wg/1d64f0eYJIYaOjqVpaMQ
- 3pvBw6dGw7pVNd4i5lXU9OiJwxG3/1yI/9RsYapsRpqt0ZS/gONstlQ6mOcGYUxQ7Kcms8rDfj
- 26g=
+        Thu, 18 Jun 2020 11:29:17 -0400
+Received: from mga04.intel.com ([192.55.52.120]:21448 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731568AbgFRP3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 11:29:16 -0400
+IronPort-SDR: yziVTMYYgDV7WOK8PP/t1f/CWD35EjH55BmqwEjnHFFafLp6tfYrKVY4nAAeWqyxKEZBiSb9ad
+ 8aiHHXwoPHsA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="140137418"
 X-IronPort-AV: E=Sophos;i="5.75,251,1589266800"; 
-   d="scan'208";a="16258207"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Jun 2020 08:29:06 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 18 Jun 2020 08:29:05 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Thu, 18 Jun 2020 08:28:46 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <robh+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        "Codrin Ciubotariu" <codrin.ciubotariu@microchip.com>
-Subject: [PATCH v2] ARM: dts: at91: sama5d2_xplained: Remove pdmic node
-Date:   Thu, 18 Jun 2020 18:28:45 +0300
-Message-ID: <20200618152845.682723-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+   d="scan'208";a="140137418"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 08:29:15 -0700
+IronPort-SDR: /j25VtdqKr9HjD9Kb3ZGlij9jaikyhgogQRFc/TFPU1We4SuMZDR72YtpAP9wgtL+eHB/DD5RH
+ r43VYWCtz3/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,251,1589266800"; 
+   d="scan'208";a="450675781"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by orsmga005.jf.intel.com with ESMTP; 18 Jun 2020 08:29:12 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     broonie@kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     trix@redhat.com, yilun.xu@intel.com, hao.wu@intel.com,
+        matthew.gerlach@linux.intel.com, russell.h.weight@intel.com
+Subject: [PATCH v2 5/6] spi: altera: support indirect access to the registers
+Date:   Thu, 18 Jun 2020 23:25:09 +0800
+Message-Id: <1592493910-30473-3-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1592493910-30473-1-git-send-email-yilun.xu@intel.com>
+References: <1592493910-30473-1-git-send-email-yilun.xu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PDMIC needs PDM microphones to work. sama5d2 xplained doesn't have
-such microphones, so there is no reason to enable PDMIC and take the
-pins since there is no-one using them.
+This patch adds support for indirect access to the registers via parent
+regmap.
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+The use case is, the spi master is a sub device of a Multifunction
+device, which is connected to host by some indirect bus. To support this
+device type, a new platform_device_id is introduced, and the driver tries
+to get parent regmap for register accessing like many MFD sub device
+drivers do.
+
+Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Signed-off-by: Wu Hao <hao.wu@intel.com>
+Signed-off-by: Russ Weight <russell.h.weight@intel.com>
 ---
+ drivers/spi/spi-altera.c | 62 ++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 47 insertions(+), 15 deletions(-)
 
-Changes in v2:
- - rebased on top of at91-dt;
- - added more details in the commit description;
- - changed subject from:
-  "[PATCH 3/3] Revert "ARM: at91/dt: sama5d2 Xplained: add pdmic node""
-to
-  "[PATCH v2] ARM: dts: at91: sama5d2_xplained: Remove pdmic node"
-
-
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 16 ----------------
- 1 file changed, 16 deletions(-)
-
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index 0e17df568d0b..058fae1b4a76 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -168,16 +168,6 @@ timer1: timer@1 {
- 				};
- 			};
+diff --git a/drivers/spi/spi-altera.c b/drivers/spi/spi-altera.c
+index b215bdf..4f7717f 100644
+--- a/drivers/spi/spi-altera.c
++++ b/drivers/spi/spi-altera.c
+@@ -43,6 +43,11 @@
  
--			pdmic@f8018000 {
--				pinctrl-names = "default";
--				pinctrl-0 = <&pinctrl_pdmic_default>;
--				atmel,model = "PDMIC @ sama5d2_xplained";
--				atmel,mic-min-freq = <1000000>;
--				atmel,mic-max-freq = <3246000>;
--				atmel,mic-offset = <0x0>;
--				status = "okay";
--			};
--
- 			uart1: serial@f8020000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_uart1_default>;
-@@ -599,12 +589,6 @@ pinctrl_macb0_phy_irq: macb0_phy_irq {
- 					bias-disable;
- 				};
+ #define ALTERA_SPI_MAX_CS		32
  
--				pinctrl_pdmic_default: pdmic_default {
--					pinmux = <PIN_PB26__PDMIC_DAT>,
--						<PIN_PB27__PDMIC_CLK>;
--					bias-disable;
--				};
--
- 				pinctrl_qspi0_default: qspi0_default {
- 					sck_cs {
- 						pinmux = <PIN_PA22__QSPI0_SCK>,
++enum altera_spi_type {
++	ALTERA_SPI_TYPE_UNKNOWN,
++	ALTERA_SPI_TYPE_SUBDEV,
++};
++
+ struct altera_spi {
+ 	int irq;
+ 	int len;
+@@ -55,6 +60,7 @@ struct altera_spi {
+ 	unsigned char *rx;
+ 
+ 	struct regmap *regmap;
++	u32 regoff;
+ 	struct device *dev;
+ };
+ 
+@@ -70,7 +76,7 @@ static int altr_spi_writel(struct altera_spi *hw, unsigned int reg,
+ {
+ 	int ret;
+ 
+-	ret = regmap_write(hw->regmap, reg, val);
++	ret = regmap_write(hw->regmap, hw->regoff + reg, val);
+ 	if (ret)
+ 		dev_err(hw->dev, "fail to write reg 0x%x val 0x%x: %d\n",
+ 			reg, val, ret);
+@@ -83,7 +89,7 @@ static int altr_spi_readl(struct altera_spi *hw, unsigned int reg,
+ {
+ 	int ret;
+ 
+-	ret = regmap_read(hw->regmap, reg, val);
++	ret = regmap_read(hw->regmap, hw->regoff + reg, val);
+ 	if (ret)
+ 		dev_err(hw->dev, "fail to read reg 0x%x: %d\n", reg, ret);
+ 
+@@ -225,10 +231,11 @@ static irqreturn_t altera_spi_irq(int irq, void *dev)
+ 
+ static int altera_spi_probe(struct platform_device *pdev)
+ {
++	const struct platform_device_id *platid = platform_get_device_id(pdev);
+ 	struct altera_spi_platform_data *pdata = dev_get_platdata(&pdev->dev);
++	enum altera_spi_type type = ALTERA_SPI_TYPE_UNKNOWN;
+ 	struct altera_spi *hw;
+ 	struct spi_master *master;
+-	void __iomem *res;
+ 	int err = -ENODEV;
+ 	u32 val;
+ 	u16 i;
+@@ -264,19 +271,38 @@ static int altera_spi_probe(struct platform_device *pdev)
+ 	hw = spi_master_get_devdata(master);
+ 	hw->dev = &pdev->dev;
+ 
++	if (platid)
++		type = platid->driver_data;
++
+ 	/* find and map our resources */
+-	res = devm_platform_ioremap_resource(pdev, 0);
+-	if (IS_ERR(res)) {
+-		err = PTR_ERR(res);
+-		goto exit;
+-	}
++	if (type == ALTERA_SPI_TYPE_SUBDEV) {
++		struct resource *regoff;
+ 
+-	hw->regmap = devm_regmap_init_mmio(&pdev->dev, res,
+-					   &spi_altera_config);
+-	if (IS_ERR(hw->regmap)) {
+-		dev_err(&pdev->dev, "regmap mmio init failed\n");
+-		err = PTR_ERR(hw->regmap);
+-		goto exit;
++		hw->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++		if (!hw->regmap) {
++			dev_err(&pdev->dev, "get regmap failed\n");
++			goto exit;
++		}
++
++		regoff = platform_get_resource(pdev, IORESOURCE_REG, 0);
++		if (regoff)
++			hw->regoff = regoff->start;
++	} else {
++		void __iomem *res;
++
++		res = devm_platform_ioremap_resource(pdev, 0);
++		if (IS_ERR(res)) {
++			err = PTR_ERR(res);
++			goto exit;
++		}
++
++		hw->regmap = devm_regmap_init_mmio(&pdev->dev, res,
++						   &spi_altera_config);
++		if (IS_ERR(hw->regmap)) {
++			dev_err(&pdev->dev, "regmap mmio init failed\n");
++			err = PTR_ERR(hw->regmap);
++			goto exit;
++		}
+ 	}
+ 
+ 	/* program defaults into the registers */
+@@ -308,7 +334,7 @@ static int altera_spi_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	dev_info(&pdev->dev, "base %p, irq %d\n", res, hw->irq);
++	dev_info(&pdev->dev, "regoff %u, irq %d\n", hw->regoff, hw->irq);
+ 
+ 	return 0;
+ exit:
+@@ -325,6 +351,11 @@ static const struct of_device_id altera_spi_match[] = {
+ MODULE_DEVICE_TABLE(of, altera_spi_match);
+ #endif /* CONFIG_OF */
+ 
++static const struct platform_device_id altera_spi_ids[] = {
++	{ "subdev_spi_altera", ALTERA_SPI_TYPE_SUBDEV },
++	{ }
++};
++
+ static struct platform_driver altera_spi_driver = {
+ 	.probe = altera_spi_probe,
+ 	.driver = {
+@@ -332,6 +363,7 @@ static struct platform_driver altera_spi_driver = {
+ 		.pm = NULL,
+ 		.of_match_table = of_match_ptr(altera_spi_match),
+ 	},
++	.id_table	= altera_spi_ids,
+ };
+ module_platform_driver(altera_spi_driver);
+ 
 -- 
-2.25.1
+2.7.4
 
