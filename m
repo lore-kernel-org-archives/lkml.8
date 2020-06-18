@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F72C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12514C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D607521D7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58BB21D7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442497;
-	bh=qRlnQf7Xk6zFl0P86w1ugikUm53gsBx3fulqKArAxqQ=;
+	s=default; t=1592442499;
+	bh=pvXFFlikRX1sr0H7u04Pi2QjezLjA5EYEWdtSY9EDks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TAibw7slqXu4CcK9Px8+SVcL5UUHRSIw00P2FWMiK/Xy7vr3KJsTdYYNBAbK8Lm6p
-	 Q6XKhQXiDduTZa3f6FNQ3pzVLtRtk758w2aVkPCqYUaGQLgPHKtpbN63OlIcQbE1mJ
-	 WuVVoYrBv0j19vtVxiDgwnJIA8v7LvwgRmaqbYd0=
+	b=ylgjSfyMzbxJsb3XK5hgFVjeQIY/lbwibUXpSMM8GpxYBkHbwNCgfAA8XylIs/uTB
+	 rBYzFMeWExed5Do9JpvF4tz25qiGSR2ZWV5vNewmIKD1l20CdEkdpNRk3uEr0VKBqa
+	 watWJotqqdUIXBJcLkQlkkrMjXCxp9A0KlPhBDNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgFRBIO (ORCPT
+        id S1727114AbgFRBIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33708 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:08:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727021AbgFRBIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726986AbgFRBIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:08:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A20BB2193E;
-        Thu, 18 Jun 2020 01:08:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD35621D7B;
+        Thu, 18 Jun 2020 01:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442491;
-        bh=qRlnQf7Xk6zFl0P86w1ugikUm53gsBx3fulqKArAxqQ=;
+        s=default; t=1592442492;
+        bh=pvXFFlikRX1sr0H7u04Pi2QjezLjA5EYEWdtSY9EDks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iSriZMCBjGO9zQBeug8ur8PelRkcQF4JzdOgjKiGNzqHeBiRoiZAoi4As5c/Dzz/Q
-         zLeUgFgN4lkXsvvHWA/k38BdCl+M2Bwu6Y75y0H3wjpBkybKbC6qQa8/X4Pt2NnBNo
-         YVKxVHoxeAsheeTYn6Y/aYhSleG7dUHL1oMKUiEg=
+        b=MnJTmIZWeMZk1tYbtjRiCc4iC1FDfRsOyhoZn4OJXKgcI7D8fZ91lC901QYWE/My+
+         saGoRCFV3hcNy53YpPjC4IALdZUnMypHmqgby+Le/waop6xm4KZV0Nzm+XohFL8Ehu
+         ToX5dZcFOrQu6taC2zAg1vGtKR7XXEKEKputDraY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 004/388] ASoC: tegra: tegra_wm8903: Support nvidia, headset property
-Date:   Wed, 17 Jun 2020 21:01:41 -0400
-Message-Id: <20200618010805.600873-4-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 005/388] rtc: rc5t619: Fix an ERR_PTR vs NULL check
+Date:   Wed, 17 Jun 2020 21:01:42 -0400
+Message-Id: <20200618010805.600873-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,51 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 3ef9d5073b552d56bd6daf2af1e89b7e8d4df183 ]
+[ Upstream commit 11ddbdfb68e4f9791e4bd4f8d7c87d3f19670967 ]
 
-The microphone-jack state needs to be masked in a case of a 4-pin jack
-when microphone and ground pins are shorted. Presence of nvidia,headset
-tells that WM8903 CODEC driver should mask microphone's status if short
-circuit is detected, i.e headphones are inserted.
+The devm_kzalloc() function returns NULL on error, it doesn't return
+error pointers so this check doesn't work.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Link: https://lore.kernel.org/r/20200330204011.18465-3-digetx@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 540d1e15393d ("rtc: rc5t619: Add Ricoh RC5T619 RTC driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200407092852.GI68494@mwanda
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/tegra/tegra_wm8903.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-rc5t619.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/tegra/tegra_wm8903.c b/sound/soc/tegra/tegra_wm8903.c
-index 9b5651502f12..3aca354f9e08 100644
---- a/sound/soc/tegra/tegra_wm8903.c
-+++ b/sound/soc/tegra/tegra_wm8903.c
-@@ -177,6 +177,7 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
- 	struct snd_soc_component *component = codec_dai->component;
- 	struct snd_soc_card *card = rtd->card;
- 	struct tegra_wm8903 *machine = snd_soc_card_get_drvdata(card);
-+	int shrt = 0;
+diff --git a/drivers/rtc/rtc-rc5t619.c b/drivers/rtc/rtc-rc5t619.c
+index 24e386ecbc7e..dd1a20977478 100644
+--- a/drivers/rtc/rtc-rc5t619.c
++++ b/drivers/rtc/rtc-rc5t619.c
+@@ -356,10 +356,8 @@ static int rc5t619_rtc_probe(struct platform_device *pdev)
+ 	int err;
  
- 	if (gpio_is_valid(machine->gpio_hp_det)) {
- 		tegra_wm8903_hp_jack_gpio.gpio = machine->gpio_hp_det;
-@@ -189,12 +190,15 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
- 					&tegra_wm8903_hp_jack_gpio);
- 	}
+ 	rtc = devm_kzalloc(dev, sizeof(*rtc), GFP_KERNEL);
+-	if (IS_ERR(rtc)) {
+-		err = PTR_ERR(rtc);
++	if (!rtc)
+ 		return -ENOMEM;
+-	}
  
-+	if (of_property_read_bool(card->dev->of_node, "nvidia,headset"))
-+		shrt = SND_JACK_MICROPHONE;
-+
- 	snd_soc_card_jack_new(rtd->card, "Mic Jack", SND_JACK_MICROPHONE,
- 			      &tegra_wm8903_mic_jack,
- 			      tegra_wm8903_mic_jack_pins,
- 			      ARRAY_SIZE(tegra_wm8903_mic_jack_pins));
- 	wm8903_mic_detect(component, &tegra_wm8903_mic_jack, SND_JACK_MICROPHONE,
--				0);
-+				shrt);
- 
- 	snd_soc_dapm_force_enable_pin(&card->dapm, "MICBIAS");
+ 	rtc->rn5t618 = rn5t618;
  
 -- 
 2.25.1
