@@ -2,168 +2,185 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F977C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C398C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 788932083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:27:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eHOmkiRH"
+	by mail.kernel.org (Postfix) with ESMTP id 627D3207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730111AbgFRN1r (ORCPT
+        id S1730186AbgFRN2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:27:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgFRN1q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:27:46 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76372C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 06:27:45 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r7so6085567wro.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 06:27:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xGuWagvHkR5CzPo1CRVJNp1xS36Ei3NsxHAn9Qc6w5w=;
-        b=eHOmkiRHxbMLhRbAL0KHWuGUzadE+ZgogzWzMmhkx3LAIVM+AXis6XYnZre3Uf+LcZ
-         QcWObIqEjvqx+6h83uCPq0nc79JdbpZgk0BHcDcpG+E3iKwwlH1lKCkh4AVAq5OX7ZJM
-         8iD+ylvAc9hq2oAEXs/7ReqValj4Eln1UiErT4wuC0bHEWGlRs04Ikl13lbvbresYEts
-         sKL+f4yHgN9AxRNv3fvPk1mnR5fNh9J20SxzOEXZSIZibA+ZNLSAponUFnymjtFdhwNb
-         E6YZYUXWbu/YthMC0laqhe7S9VHJ8wZjpyfd6SICISVTMTvJ8F1lk5BP8uDbeR9peZQ9
-         CFdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xGuWagvHkR5CzPo1CRVJNp1xS36Ei3NsxHAn9Qc6w5w=;
-        b=e7r+C2ST9nuMS6KSz70Miwdrg1ACJ0+th7hWbNcObQPpj9IGkEcKOBM/CK+wmgRlIm
-         5SjO4lBW/itSsoGz6TnZcdxX3Vb3BIhjD2bNoOrSNRjryp6F1l2J70pYj9WHYW/6GwC0
-         BlhoACuU7jqVymjIJASobi84Bq5R+VLaiK51rFeD36NElZjOt2PWiBmWM8QiO79Lvt6p
-         NFu5Sv5sgARi6TQEKcfknxFDVfGpAvjAYGJGrFQ4jR7wGSe3n79QlgT9padVFTXGNCuO
-         5zWkKRiTi3Gv191Vrh0yRdqHiPXgZg3r+XlYWplWizoslJ+smHVdiKLSlHzzKHkDKFO4
-         CEAg==
-X-Gm-Message-State: AOAM533B/uQ5kngU0ol6dETKMWggVX33DtVKcYC76M0pdWQ+rIC+MCp1
-        ofG9U4M5WPZF+TCIZhpwsstebA==
-X-Google-Smtp-Source: ABdhPJwppCorQbCpUQGKifbVA2gARZbO1wdWdyRTreqjCiFRT7SQ5iqEUtlUzbrx4RUAnkHkA5UfPA==
-X-Received: by 2002:a5d:61c6:: with SMTP id q6mr4518545wrv.282.1592486864043;
-        Thu, 18 Jun 2020 06:27:44 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:9902:c1f0:76c7:9dbc])
-        by smtp.gmail.com with ESMTPSA id a16sm3562843wrx.8.2020.06.18.06.27.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 06:27:43 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH] arm64: dts: meson-gxl-s805x: reduce initial Mali450 core frequency
-Date:   Thu, 18 Jun 2020 15:27:37 +0200
-Message-Id: <20200618132737.14243-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
+        Thu, 18 Jun 2020 09:28:30 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:46684 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726940AbgFRN22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 09:28:28 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jluac-0017L3-KI; Thu, 18 Jun 2020 15:28:22 +0200
+Date:   Thu, 18 Jun 2020 15:28:22 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     davem@davemloft.net, kuba@kernel.org, robh+dt@kernel.org,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH v5 3/3] net: phy: mscc: handle the clkout control on some
+ phy variants
+Message-ID: <20200618132822.GN249144@lunn.ch>
+References: <20200618121139.1703762-1-heiko@sntech.de>
+ <20200618121139.1703762-4-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618121139.1703762-4-heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When starting at 744MHz, the Mali 450 core crashes on S805X based boards:
- lima d00c0000.gpu: IRQ ppmmu3 not found
- lima d00c0000.gpu: IRQ ppmmu4 not found
- lima d00c0000.gpu: IRQ ppmmu5 not found
- lima d00c0000.gpu: IRQ ppmmu6 not found
- lima d00c0000.gpu: IRQ ppmmu7 not found
- Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP
- Modules linked in:
- CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.2+ #492
- Hardware name: Libre Computer AML-S805X-AC (DT)
- pstate: 40000005 (nZcv daif -PAN -UAO)
- pc : lima_gp_init+0x28/0x188
- ...
- Call trace:
-  lima_gp_init+0x28/0x188
-  lima_device_init+0x334/0x534
-  lima_pdev_probe+0xa4/0xe4
- ...
- Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+On Thu, Jun 18, 2020 at 02:11:39PM +0200, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> 
+> At least VSC8530/8531/8540/8541 contain a clock output that can emit
+> a predefined rate of 25, 50 or 125MHz.
+> 
+> This may then feed back into the network interface as source clock.
+> So expose a clock-provider from the phy using the common clock framework
+> to allow setting the rate.
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+>  drivers/net/phy/mscc/mscc.h      |  13 +++
+>  drivers/net/phy/mscc/mscc_main.c | 182 +++++++++++++++++++++++++++++--
+>  2 files changed, 187 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
+> index fbcee5fce7b2..94883dab5cc1 100644
+> --- a/drivers/net/phy/mscc/mscc.h
+> +++ b/drivers/net/phy/mscc/mscc.h
+> @@ -218,6 +218,13 @@ enum rgmii_clock_delay {
+>  #define INT_MEM_DATA_M			  0x00ff
+>  #define INT_MEM_DATA(x)			  (INT_MEM_DATA_M & (x))
+>  
+> +#define MSCC_CLKOUT_CNTL		  13
+> +#define CLKOUT_ENABLE			  BIT(15)
+> +#define CLKOUT_FREQ_MASK		  GENMASK(14, 13)
+> +#define CLKOUT_FREQ_25M			  (0x0 << 13)
+> +#define CLKOUT_FREQ_50M			  (0x1 << 13)
+> +#define CLKOUT_FREQ_125M		  (0x2 << 13)
+> +
+>  #define MSCC_PHY_PROC_CMD		  18
+>  #define PROC_CMD_NCOMPLETED		  0x8000
+>  #define PROC_CMD_FAILED			  0x4000
+> @@ -360,6 +367,12 @@ struct vsc8531_private {
+>  	 */
+>  	unsigned int base_addr;
+>  
+> +#ifdef CONFIG_COMMON_CLK
+> +	struct clk_hw clkout_hw;
+> +#endif
+> +	u32 clkout_rate;
+> +	int clkout_enabled;
+> +
+>  #if IS_ENABLED(CONFIG_MACSEC)
+>  	/* MACsec fields:
+>  	 * - One SecY per device (enforced at the s/w implementation level)
+> diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
+> index 5d2777522fb4..727a9dd58403 100644
+> --- a/drivers/net/phy/mscc/mscc_main.c
+> +++ b/drivers/net/phy/mscc/mscc_main.c
+> @@ -7,6 +7,7 @@
+>   * Copyright (c) 2016 Microsemi Corporation
+>   */
+>  
+> +#include <linux/clk-provider.h>
+>  #include <linux/firmware.h>
+>  #include <linux/jiffies.h>
+>  #include <linux/kernel.h>
+> @@ -431,7 +432,6 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
+>  
+>  	return led_mode;
+>  }
+> -
+>  #else
+>  static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+>  {
+> @@ -1508,6 +1508,43 @@ static int vsc85xx_config_init(struct phy_device *phydev)
+>  	return 0;
+>  }
+>  
+> +static int vsc8531_config_init(struct phy_device *phydev)
+> +{
+> +	struct vsc8531_private *vsc8531 = phydev->priv;
+> +	u16 val;
+> +	int rc;
+> +
+> +	rc = vsc85xx_config_init(phydev);
+> +	if (rc)
+> +		return rc;
+> +
+> +#ifdef CONFIG_COMMON_CLK
+> +	switch (vsc8531->clkout_rate) {
+> +	case 25000000:
+> +		val = CLKOUT_FREQ_25M;
+> +		break;
+> +	case 50000000:
+> +		val = CLKOUT_FREQ_50M;
+> +		break;
+> +	case 125000000:
+> +		val = CLKOUT_FREQ_125M;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (vsc8531->clkout_enabled)
+> +		val |= CLKOUT_ENABLE;
+> +
+> +	rc = phy_write_paged(phydev, MSCC_PHY_PAGE_EXTENDED_GPIO,
+> +			     MSCC_CLKOUT_CNTL, val);
+> +	if (rc)
+> +		return rc;
+> +#endif
+> +
+> +	return 0;
+> +}
+> +
 
-Reverting to a safer 666Mhz frequency on the S805X that doesn't use the
-GP0 PLL makes it more stable.
+> +static int vsc8531_clkout_prepare(struct clk_hw *hw)
+> +{
+> +	struct vsc8531_private *vsc8531 = clkout_hw_to_vsc8531(hw);
+> +
+> +	vsc8531->clkout_enabled = true;
+> +	return 0;
+> +}
+> +
+> +static void vsc8531_clkout_unprepare(struct clk_hw *hw)
+> +{
+> +	struct vsc8531_private *vsc8531 = clkout_hw_to_vsc8531(hw);
+> +
+> +	vsc8531->clkout_enabled = false;
+> +}
+> +
 
-Fixes: fd47716479f5 ("ARM64: dts: add S805X based P241 board")
-Fixes: 0449b8e371ac ("arm64: dts: meson: add libretech aml-s805x-ac board")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../amlogic/meson-gxl-s805x-libretech-ac.dts  |  2 +-
- .../boot/dts/amlogic/meson-gxl-s805x-p241.dts |  2 +-
- .../boot/dts/amlogic/meson-gxl-s805x.dtsi     | 24 +++++++++++++++++++
- 3 files changed, 26 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s805x.dtsi
+> +static const struct clk_ops vsc8531_clkout_ops = {
+> +	.prepare = vsc8531_clkout_prepare,
+> +	.unprepare = vsc8531_clkout_unprepare,
+> +	.is_prepared = vsc8531_clkout_is_prepared,
+> +	.recalc_rate = vsc8531_clkout_recalc_rate,
+> +	.round_rate = vsc8531_clkout_round_rate,
+> +	.set_rate = vsc8531_clkout_set_rate,
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
-index 6a226faab183..9e43f4dca90d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
-@@ -10,7 +10,7 @@
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/sound/meson-aiu.h>
- 
--#include "meson-gxl-s905x.dtsi"
-+#include "meson-gxl-s805x.dtsi"
- 
- / {
- 	compatible = "libretech,aml-s805x-ac", "amlogic,s805x",
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-p241.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-p241.dts
-index 867e30f1d62b..eb7f5a3fefd4 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-p241.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-p241.dts
-@@ -9,7 +9,7 @@
- 
- #include <dt-bindings/input/input.h>
- 
--#include "meson-gxl-s905x.dtsi"
-+#include "meson-gxl-s805x.dtsi"
- 
- / {
- 	compatible = "amlogic,p241", "amlogic,s805x", "amlogic,meson-gxl";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s805x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s805x.dtsi
-new file mode 100644
-index 000000000000..f9d705648426
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s805x.dtsi
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2020 BayLibre SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+#include "meson-gxl-s905x.dtsi"
-+
-+/ {
-+	compatible = "amlogic,s805x", "amlogic,meson-gxl";
-+};
-+
-+/* The S805X Package doesn't seem to handle the 744MHz OPP correctly */
-+&mali {
-+	assigned-clocks = <&clkc CLKID_MALI_0_SEL>,
-+			  <&clkc CLKID_MALI_0>,
-+			  <&clkc CLKID_MALI>; /* Glitch free mux */
-+	assigned-clock-parents = <&clkc CLKID_FCLK_DIV3>,
-+				 <0>, /* Do Nothing */
-+				 <&clkc CLKID_MALI_0>;
-+	assigned-clock-rates = <0>, /* Do Nothing */
-+			       <666666666>,
-+			       <0>; /* Do Nothing */
-+};
--- 
-2.22.0
+I'm not sure this is the expected behaviour. The clk itself should
+only start ticking when the enable callback is called. But this code
+will enable the clock when config_init() is called. I think you should
+implement the enable and disable methods.
 
+	  Andrew
