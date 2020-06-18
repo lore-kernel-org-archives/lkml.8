@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C45C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E13C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37BD021927
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31BC21534
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448185;
-	bh=mrZanQqxYIkssk95rfUSgIXPFQ0iY4bPahgIafhud7o=;
+	s=default; t=1592448187;
+	bh=tXZguFDtMNtJqm3M9bfTwLckJP+68oggVDjUs9RehoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NCHqKuPDyZNU7lqkMkoGeSyhqp7EeV2KGa7zH1bd65f1zbWQ8fryftjtua0Y8OqPE
-	 hJlHEhELuFZupomUsRXmkaTOPLuY5hMozM/eFYoWhHmnTEWjP2eXyStyIwLBhJ4r2B
-	 7feavABL+favI0rgIrFLdcEKScySQjvME/5fxU3M=
+	b=BayjeU0PVLj/1qUO4xKOVTMGuDVwoCNA5ORuA8aQk84y/z/ktROiGyOvyk7aop9Dd
+	 wvWdLvtIuIWxYUFAFVYx+GDwkEf4lTQn5KD7I1F29O423hTq5Twz1/fntCn/iX4GhA
+	 2SsgnOChlfgTV+baNeJJayR5y/oHsVCkXb8lf+7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387663AbgFRCnA (ORCPT
+        id S1728821AbgFRCm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:43:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39918 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:42:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728795AbgFRBLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:49 -0400
+        id S1728802AbgFRBLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6681221EA;
-        Thu, 18 Jun 2020 01:11:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6613021974;
+        Thu, 18 Jun 2020 01:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442708;
-        bh=mrZanQqxYIkssk95rfUSgIXPFQ0iY4bPahgIafhud7o=;
+        s=default; t=1592442711;
+        bh=tXZguFDtMNtJqm3M9bfTwLckJP+68oggVDjUs9RehoA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LBBam0pL4kPrtQMHDdusiBu5BfHLjg+KA/vjD2kpQgh2a8+RdXu56ADf4LqgXFCfT
-         dyo4KyfJZId2t4e85vy+O8B3wIw2RzpucnCbIsxnoMfV0xiy8VAEFQbQ8UEpOzoPEh
-         rDIBJrDElJBcIZC8pwCQ754vSTgRHGJ1VwMZ9/BM=
+        b=E/xBmkX8lgGJH6ECqJnnT64IrHI8qV/pUlg0PLHIMvqM+TrpjiYk1ClP4IqDylMuU
+         cpI7brpOCvGlyeX5lG36xrzmVEmCXozUEdbUBTzkr7ImmRA3HS2XwKtI2bm7VB7ylR
+         NZjgZ10npJlP9wQywcXAMdCgbHZvO17s3DFxYtYM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 169/388] usb: dwc3: gadget: Properly handle failed kick_transfer
-Date:   Wed, 17 Jun 2020 21:04:26 -0400
-Message-Id: <20200618010805.600873-169-sashal@kernel.org>
+Cc:     Matej Dujava <mdujava@kocurkovo.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.7 171/388] staging: sm750fb: add missing case while setting FB_VISUAL
+Date:   Wed, 17 Jun 2020 21:04:28 -0400
+Message-Id: <20200618010805.600873-171-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,66 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Matej Dujava <mdujava@kocurkovo.cz>
 
-[ Upstream commit 8d99087c2db863c5fa3a4a1f3cb82b3a493705ca ]
+[ Upstream commit fa90133377f4a7f15a937df6ad55133bb57c5665 ]
 
-If dwc3 fails to issue START_TRANSFER/UPDATE_TRANSFER command, then we
-should properly end an active transfer and give back all the started
-requests. However if it's for an isoc endpoint, the failure maybe due to
-bus-expiry status. In this case, don't give back the requests and wait
-for the next retry.
+Switch statement does not contain all cases: 8, 16, 24, 32.
+This patch will add missing one (24)
 
-Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: 81dee67e215b ("staging: sm750fb: add sm750 to staging")
+Signed-off-by: Matej Dujava <mdujava@kocurkovo.cz>
+Link: https://lore.kernel.org/r/1588277366-19354-2-git-send-email-mdujava@kocurkovo.cz
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/staging/sm750fb/sm750.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index ab6562c5b927..de3b92680935 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1220,6 +1220,8 @@ static void dwc3_prepare_trbs(struct dwc3_ep *dep)
- 	}
- }
- 
-+static void dwc3_gadget_ep_cleanup_cancelled_requests(struct dwc3_ep *dep);
-+
- static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
- {
- 	struct dwc3_gadget_ep_cmd_params params;
-@@ -1259,14 +1261,20 @@ static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
- 
- 	ret = dwc3_send_gadget_ep_cmd(dep, cmd, &params);
- 	if (ret < 0) {
--		/*
--		 * FIXME we need to iterate over the list of requests
--		 * here and stop, unmap, free and del each of the linked
--		 * requests instead of what we do now.
--		 */
--		if (req->trb)
--			memset(req->trb, 0, sizeof(struct dwc3_trb));
--		dwc3_gadget_del_and_unmap_request(dep, req, ret);
-+		struct dwc3_request *tmp;
-+
-+		if (ret == -EAGAIN)
-+			return ret;
-+
-+		dwc3_stop_active_transfer(dep, true, true);
-+
-+		list_for_each_entry_safe(req, tmp, &dep->started_list, list)
-+			dwc3_gadget_move_cancelled_request(req);
-+
-+		/* If ep isn't started, then there's no end transfer pending */
-+		if (!(dep->flags & DWC3_EP_END_TRANSFER_PENDING))
-+			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
-+
- 		return ret;
- 	}
- 
+diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
+index 59568d18ce23..5b72aa81d94c 100644
+--- a/drivers/staging/sm750fb/sm750.c
++++ b/drivers/staging/sm750fb/sm750.c
+@@ -898,6 +898,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
+ 		fix->visual = FB_VISUAL_PSEUDOCOLOR;
+ 		break;
+ 	case 16:
++	case 24:
+ 	case 32:
+ 		fix->visual = FB_VISUAL_TRUECOLOR;
+ 		break;
 -- 
 2.25.1
 
