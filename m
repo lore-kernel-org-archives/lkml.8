@@ -2,155 +2,206 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCC0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF99EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 233B920720
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC3621534
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592447987;
+	bh=QzHsFMc7e1sAg3TGj2D+4DGxTg90cYJi1ce6cG/HcDY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ygO/bjYQUKRZ5/9f7STJLqOyIkuOKuvDipvmcjCctJoTxODE6T0Bol5UZ2mLFvrIh
+	 0g1hBxEUS599ThnF2h6lzvxQA1qFrAIk6YGOaweGcoYGJ26t6h6XlZ9vSXPwBt9qve
+	 1BPHQ5SxAM1ahLT7oMTgBZz++jGi6vtvigpE+Kpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731212AbgFRCjk (ORCPT
+        id S1732293AbgFRCjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:39:40 -0400
-Received: from mail.wingtech.com ([180.166.216.14]:54487 "EHLO
-        mail.wingtech.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726945AbgFRCjg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 22:39:36 -0400
-Received: from mx.wingtech.com ([192.168.2.43])
-        by mail.wingtech.com  with SMTP id 05I2dTn2019918-05I2dTn3019918
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:39:29 +0800
-Received: from 192.168.51.143 (HELO ZHAOWUYUN); Thu, 18 Jun 2020 10:39:26 +0800
-From:   "Zac" <zhaowuyun@wingtech.com>
-To:     "'Chao Yu'" <yuchao0@huawei.com>, <jaegeuk@kernel.org>
-Cc:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <1592384659-20203-1-git-send-email-zhaowuyun@wingtech.com> <86069ba3-cba3-7bc9-c90b-e931abd0dde5@huawei.com>
-In-Reply-To: <86069ba3-cba3-7bc9-c90b-e931abd0dde5@huawei.com>
-Subject: =?gb2312?B?u9i4tDogW1BBVENIXSBmMmZzOiBmaXggYSByYWNlIGNvbmRpdGlvbg==?=
-        =?gb2312?B?IGJldHdlZW4gZjJmc193cml0ZV9lbmRfaW8gYW5kIGYyZnNfZGVsXw==?=
-        =?gb2312?B?ZnN5bmNfbm9kZV9lbnRyeQ==?=
-Date:   Thu, 18 Jun 2020 10:39:28 +0800
-Message-ID: <000001d64519$b05a1180$110e3480$@wingtech.com>
+        Wed, 17 Jun 2020 22:39:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728051AbgFRBM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:58 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B43C8214DB;
+        Thu, 18 Jun 2020 01:12:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592442778;
+        bh=QzHsFMc7e1sAg3TGj2D+4DGxTg90cYJi1ce6cG/HcDY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WEAKdeDvC6VfbF2KaH5xqS1cIIWVq5MKAEWURbodcwLtrCFT0IcKXjSue3C75AX3s
+         uMnoT6iwmm8JlgHXl3oOS28rS4nu2sd4J7exiYgdzPJSdou1HDdd/EU+gZHxA883MF
+         aaUAebt15C5JzFVdjqyJp/1UXgHtA3MJcplD3g0Y=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bharat Gooty <bharat.gooty@broadcom.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 224/388] drivers: phy: sr-usb: do not use internal fsm for USB2 phy init
+Date:   Wed, 17 Jun 2020 21:05:21 -0400
+Message-Id: <20200618010805.600873-224-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="gb2312"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJusS8b7G89rONhvQTSKQ9/POQtRgGSiybFp6A8L1A=
-Content-Language: zh-cn
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bharat Gooty <bharat.gooty@broadcom.com>
 
-> On 2020/6/17 17:04, zhaowuyun@wingtech.com wrote:
-> > From: Wuyun Zhao <zhaowuyun@wingtech.com>
-> >
-> > Under some condition, the __write_node_page will submit a page which is
-> not
-> > f2fs_in_warm_node_list and will not call f2fs_add_fsync_node_entry.
-> > f2fs_gc continue to run to invoke f2fs_iget -> do_read_inode to read the
-> same node page
-> > and set code node, which make f2fs_in_warm_node_list become true,
-> > that will cause f2fs_bug_on in f2fs_del_fsync_node_entry when
-> f2fs_write_end_io called.
-> Could you please add below race condition description into commit
-> message?
-> 
-> - f2fs_write_end_io
-> 					- f2fs_iget
-> 					 - do_read_inode
-> 					  - set_cold_node
-> 					  recover cold node flag
->  - f2fs_in_warm_node_list
->   - is_cold_node
->   if node is cold, assume we have added
->   node to fsync_node_list during writepages()
->  - f2fs_del_fsync_node_entry
->   - f2fs_bug_on() due to node page
->   is not in fsync_node_list
+[ Upstream commit 6f0577d1411337a0d97d545abe4a784e9e611516 ]
 
-Ok, will add the commit message.
+During different reboot cycles, USB PHY PLL may not always lock
+during initialization and therefore can cause USB to be not usable.
 
-> BTW, I'm curious about why we can lose cold flag for non-dir inode?
-> any clue to reproduce this bug (I mean losing cold flag)?
+Hence do not use internal FSM programming sequence for the USB
+PHY initialization.
 
-it's a f2fs image with 25600MB
-flash this image to device
-the device will resize it according to the userdata partition size which is
-about 94GB
-the device mount the f2fs partition
-then hit this f2fs_bug_on
+Fixes: 4dcddbb38b64 ("phy: sr-usb: Add Stingray USB PHY driver")
+Signed-off-by: Bharat Gooty <bharat.gooty@broadcom.com>
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Link: https://lore.kernel.org/r/20200513173947.10919-1-rayagonda.kokatanur@broadcom.com
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/phy/broadcom/phy-bcm-sr-usb.c | 55 +--------------------------
+ 1 file changed, 2 insertions(+), 53 deletions(-)
 
-seems that the cold flag is not been set when mkfs
-
-I think the issue is that
-
-1. the node page in the storage is without cold bit
-2. f2fs_disable_checkpoint -> f2fs_gc -> f2fs_get_node_page, this page won't
-be set cold flag
-3. f2fs_move_node_page -> __write_node_page to write this page
-4. f2fs_gc -> f2fs_iget -> do_read_inode to read this page and set cold flag
-
-> >
-> > [   34.966133] Call trace:
-> > [   34.969902]  f2fs_del_fsync_node_entry+0x100/0x108
-> > [   34.976071]  f2fs_write_end_io+0x1e0/0x288
-> > [   34.981539]  bio_endio+0x248/0x270
-> > [   34.986289]  blk_update_request+0x2b0/0x4d8
-> > [   34.991841]  scsi_end_request+0x40/0x440
-> > [   34.997126]  scsi_io_completion+0xa4/0x748
-> > [   35.002593]  scsi_finish_command+0xdc/0x110
-> > [   35.008143]  scsi_softirq_done+0x118/0x150
-> > [   35.013610]  blk_done_softirq+0x8c/0xe8
-> > [   35.018811]  __do_softirq+0x2e8/0x578
-> > [   35.023828]  irq_exit+0xfc/0x120
-> > [   35.028398]  handle_IPI+0x1d8/0x330
-> > [   35.033233]  gic_handle_irq+0x110/0x1d4
-> > [   35.038433]  el1_irq+0xb4/0x130
-> > [   35.042917]  kmem_cache_alloc+0x3f0/0x418
-> > [   35.048288]  radix_tree_node_alloc+0x50/0xf8
-> > [   35.053933]  __radix_tree_create+0xf8/0x188
-> > [   35.059484]  __radix_tree_insert+0x3c/0x128
-> > [   35.065035]  add_gc_inode+0x90/0x118
-> > [   35.069967]  f2fs_gc+0x1b80/0x2d70
-> > [   35.074718]  f2fs_disable_checkpoint+0x94/0x1d0
-> > [   35.080621]  f2fs_fill_super+0x10c4/0x1b88
-> > [   35.086088]  mount_bdev+0x194/0x1e0
-> > [   35.090923]  f2fs_mount+0x40/0x50
-> > [   35.095589]  mount_fs+0xb4/0x190
-> > [   35.100159]  vfs_kern_mount+0x80/0x1d8
-> > [   35.105260]  do_mount+0x478/0xf18
-> > [   35.109926]  ksys_mount+0x90/0xd0
-> > [   35.114592]  __arm64_sys_mount+0x24/0x38
-> >
-> > Signed-off-by: Wuyun Zhao <zhaowuyun@wingtech.com>
-> 
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> 
-> Thanks,
-> 
-> > ---
-> >  fs/f2fs/inode.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> > index be6ac33..0df5c8c 100644
-> > --- a/fs/f2fs/inode.c
-> > +++ b/fs/f2fs/inode.c
-> > @@ -402,6 +402,7 @@ static int do_read_inode(struct inode *inode)
-> >
-> >  	/* try to recover cold bit for non-dir inode */
-> >  	if (!S_ISDIR(inode->i_mode) && !is_cold_node(node_page)) {
-> > +		f2fs_wait_on_page_writeback(node_page, NODE, true, true);
-> >  		set_cold_node(node_page, false);
-> >  		set_page_dirty(node_page);
-> >  	}
-> >
+diff --git a/drivers/phy/broadcom/phy-bcm-sr-usb.c b/drivers/phy/broadcom/phy-bcm-sr-usb.c
+index fe6c58910e4c..7c7862b4f41f 100644
+--- a/drivers/phy/broadcom/phy-bcm-sr-usb.c
++++ b/drivers/phy/broadcom/phy-bcm-sr-usb.c
+@@ -16,8 +16,6 @@ enum bcm_usb_phy_version {
+ };
+ 
+ enum bcm_usb_phy_reg {
+-	PLL_NDIV_FRAC,
+-	PLL_NDIV_INT,
+ 	PLL_CTRL,
+ 	PHY_CTRL,
+ 	PHY_PLL_CTRL,
+@@ -31,18 +29,11 @@ static const u8 bcm_usb_combo_phy_ss[] = {
+ };
+ 
+ static const u8 bcm_usb_combo_phy_hs[] = {
+-	[PLL_NDIV_FRAC]	= 0x04,
+-	[PLL_NDIV_INT]	= 0x08,
+ 	[PLL_CTRL]	= 0x0c,
+ 	[PHY_CTRL]	= 0x10,
+ };
+ 
+-#define HSPLL_NDIV_INT_VAL	0x13
+-#define HSPLL_NDIV_FRAC_VAL	0x1005
+-
+ static const u8 bcm_usb_hs_phy[] = {
+-	[PLL_NDIV_FRAC]	= 0x0,
+-	[PLL_NDIV_INT]	= 0x4,
+ 	[PLL_CTRL]	= 0x8,
+ 	[PHY_CTRL]	= 0xc,
+ };
+@@ -52,7 +43,6 @@ enum pll_ctrl_bits {
+ 	SSPLL_SUSPEND_EN,
+ 	PLL_SEQ_START,
+ 	PLL_LOCK,
+-	PLL_PDIV,
+ };
+ 
+ static const u8 u3pll_ctrl[] = {
+@@ -66,29 +56,17 @@ static const u8 u3pll_ctrl[] = {
+ #define HSPLL_PDIV_VAL		0x1
+ 
+ static const u8 u2pll_ctrl[] = {
+-	[PLL_PDIV]	= 1,
+ 	[PLL_RESETB]	= 5,
+ 	[PLL_LOCK]	= 6,
+ };
+ 
+ enum bcm_usb_phy_ctrl_bits {
+ 	CORERDY,
+-	AFE_LDO_PWRDWNB,
+-	AFE_PLL_PWRDWNB,
+-	AFE_BG_PWRDWNB,
+-	PHY_ISO,
+ 	PHY_RESETB,
+ 	PHY_PCTL,
+ };
+ 
+ #define PHY_PCTL_MASK	0xffff
+-/*
+- * 0x0806 of PCTL_VAL has below bits set
+- * BIT-8 : refclk divider 1
+- * BIT-3:2: device mode; mode is not effect
+- * BIT-1: soft reset active low
+- */
+-#define HSPHY_PCTL_VAL	0x0806
+ #define SSPHY_PCTL_VAL	0x0006
+ 
+ static const u8 u3phy_ctrl[] = {
+@@ -98,10 +76,6 @@ static const u8 u3phy_ctrl[] = {
+ 
+ static const u8 u2phy_ctrl[] = {
+ 	[CORERDY]		= 0,
+-	[AFE_LDO_PWRDWNB]	= 1,
+-	[AFE_PLL_PWRDWNB]	= 2,
+-	[AFE_BG_PWRDWNB]	= 3,
+-	[PHY_ISO]		= 4,
+ 	[PHY_RESETB]		= 5,
+ 	[PHY_PCTL]		= 6,
+ };
+@@ -186,38 +160,13 @@ static int bcm_usb_hs_phy_init(struct bcm_usb_phy_cfg *phy_cfg)
+ 	int ret = 0;
+ 	void __iomem *regs = phy_cfg->regs;
+ 	const u8 *offset;
+-	u32 rd_data;
+ 
+ 	offset = phy_cfg->offset;
+ 
+-	writel(HSPLL_NDIV_INT_VAL, regs + offset[PLL_NDIV_INT]);
+-	writel(HSPLL_NDIV_FRAC_VAL, regs + offset[PLL_NDIV_FRAC]);
+-
+-	rd_data = readl(regs + offset[PLL_CTRL]);
+-	rd_data &= ~(HSPLL_PDIV_MASK << u2pll_ctrl[PLL_PDIV]);
+-	rd_data |= (HSPLL_PDIV_VAL << u2pll_ctrl[PLL_PDIV]);
+-	writel(rd_data, regs + offset[PLL_CTRL]);
+-
+-	/* Set Core Ready high */
+-	bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
+-			      BIT(u2phy_ctrl[CORERDY]));
+-
+-	/* Maximum timeout for Core Ready done */
+-	msleep(30);
+-
++	bcm_usb_reg32_clrbits(regs + offset[PLL_CTRL],
++			      BIT(u2pll_ctrl[PLL_RESETB]));
+ 	bcm_usb_reg32_setbits(regs + offset[PLL_CTRL],
+ 			      BIT(u2pll_ctrl[PLL_RESETB]));
+-	bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
+-			      BIT(u2phy_ctrl[PHY_RESETB]));
+-
+-
+-	rd_data = readl(regs + offset[PHY_CTRL]);
+-	rd_data &= ~(PHY_PCTL_MASK << u2phy_ctrl[PHY_PCTL]);
+-	rd_data |= (HSPHY_PCTL_VAL << u2phy_ctrl[PHY_PCTL]);
+-	writel(rd_data, regs + offset[PHY_CTRL]);
+-
+-	/* Maximum timeout for PLL reset done */
+-	msleep(30);
+ 
+ 	ret = bcm_usb_pll_lock_check(regs + offset[PLL_CTRL],
+ 				     BIT(u2pll_ctrl[PLL_LOCK]));
+-- 
+2.25.1
 
