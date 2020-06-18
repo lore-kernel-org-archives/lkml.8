@@ -2,107 +2,230 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D188C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF65C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71B2920776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DFEB208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjGtbt9Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCBDo7px"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731626AbgFRWFV (ORCPT
+        id S1731664AbgFRWJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:05:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40866 "EHLO
+        Thu, 18 Jun 2020 18:09:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729796AbgFRWFT (ORCPT
+        with ESMTP id S1727827AbgFRWJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 18:05:19 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F21F3C06174E;
-        Thu, 18 Jun 2020 15:05:17 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k2so3193768pjs.2;
-        Thu, 18 Jun 2020 15:05:17 -0700 (PDT)
+        Thu, 18 Jun 2020 18:09:16 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F6BEC06174E;
+        Thu, 18 Jun 2020 15:09:16 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id n24so8092494ejd.0;
+        Thu, 18 Jun 2020 15:09:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DFuspUBCAWSfBUM7wRuDqizerOunF3nyVfYMWAoB1Xs=;
-        b=GjGtbt9QqhdRWSt3FcrN78a+L3SHC7LX0DBNavohIshzAV2OHy3+0MM/pYHX/38FNA
-         e2vPso9zBRbVRuyAlJZWeR0PsFXKtRrFTbyy4W4NxYU8AjOH1l5de+yZg2uA/v7L0Zlm
-         AOd8sjwNbVJAKiaPDMub3MtZ2i8rUAyT27qt4oXkGEjOdZQArug5CykTOpYWiD7oqOXU
-         H+arEG5mMRyBtMIj7NBfoj9yXIlbv8To1pb8kxBNxkH6v8DZzJmhL0AkTP2gJCFvuQQq
-         u05bvhp3V8luYWKfKEQ+A0P4WxSjlfl7hkNVsUedQ4dVl1NyiWtKUT2aMOXRBQS8KKAN
-         F1ig==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ntjOPxpOr0fkDu+VLYNC66SPAXYocHE8OegUSm/oe8Y=;
+        b=eCBDo7pxBFIK8E6E/Jkm+SYzueB+dzJMgyH6wWfrWLfsG2FwLYAtH0ilxxcoVDSPdv
+         +COjYLfqyB7BXwki+Z6KHXRUELK8xPMe5Ji3bUIH8qoP1kN8fDVnGXwOk8vEEWOYKSKW
+         bSKLycqd8OUf3Ill2p1/ix2K0QIw/dmeUeRhVvD+0JYp052XJL6BPf2Aems2gIiYD3QW
+         tgCetDWmEiljOJ74lz9DOzALfrK5tPFVyiWhMIlRSSdKHF+OnJnb8hnloi37tLCkmuRk
+         SxtSmkpCXCTMyp//+a8X8+DCqpybJF3EwhwNym1tHhvfktGezTrqZIJJh3ySUvQrphrq
+         umfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DFuspUBCAWSfBUM7wRuDqizerOunF3nyVfYMWAoB1Xs=;
-        b=nmwMOWAlHHdhpefMZU1RDRf8KBJW1gm9GJ6LJoxkwKJjTBmwrGgwKlNq5eYYFEzm2r
-         pg/Jhz5YKXogS2v/RVWxFhST7YniHn5oFmAOvXNCZoswZ1UyqMiSSkgKZ/YiAGHQE7HK
-         fmtVJHCgnEeRL/v/e6V3iS7N9YIlh+1gQ3mdEXoGD7vMDQahg98sDzLy8C89mqSlRZ4N
-         3DWrmDD7jN1qJUu+lUx49Ki0Fb8lFHlRKvPoqeEA6yXOVdqlIipQrteIlzzSUfcFSYOX
-         aMTmlT1ziAXoNJZBmoSUWagqnD6h4cwnxsGC2JOcMavpXdYDEXE8DKP+jx1F3K1qMEeR
-         0ldg==
-X-Gm-Message-State: AOAM530Gammn2Ho3N6+6cmWCKeS6fuGPuUl5An5YkU6FpAjyJGOzB8io
-        EpYtqvqJxnYpKZF0vGLsFSc=
-X-Google-Smtp-Source: ABdhPJz0a7CgPcnqPMHYsXarirAvcaspBT3OSoe0R1KuP1eYrpJDTy8RtpiAEign488GX9+rwiHsAA==
-X-Received: by 2002:a17:902:6a89:: with SMTP id n9mr5289437plk.337.1592517917384;
-        Thu, 18 Jun 2020 15:05:17 -0700 (PDT)
-Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
-        by smtp.gmail.com with ESMTPSA id k18sm3765999pfp.208.2020.06.18.15.05.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 15:05:16 -0700 (PDT)
-From:   rentao.bupt@gmail.com
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, taoren@fb.com
-Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH net-next] of: mdio: preserve phy dev_flags in of_phy_connect()
-Date:   Thu, 18 Jun 2020 15:04:44 -0700
-Message-Id: <20200618220444.5064-1-rentao.bupt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ntjOPxpOr0fkDu+VLYNC66SPAXYocHE8OegUSm/oe8Y=;
+        b=qLZ9HMY2CitaKXoEJnixccS+GOYns2QZAWIHTzlyEdcCpdM9T05S+eVRkvkVEvZ60r
+         /XoPqpspRNiVLIaVak+rkKl/l0EKSfELXTg0k+x96eeetZwb/Biy14l9+OLzV4axtrDx
+         XrFfGEARnE5IWHJZlW2Te0r1j6bpC7Vpk36Ob4cqMevhy4Xi8DSH5rvjTCUeCYp7sKg4
+         Th6NN5GT+Be7oWvT2diR7zAqy6ry2kyNDXRON6bjytC4yFepmNd6SwTpg4yt5eTXP+vu
+         Nw0dZFs5akZWAaDNEQwAhQCwVUU4frfxV2VOVgwpSQDaXtjBfPGRQMchhWrHMA1t+W+C
+         hHLg==
+X-Gm-Message-State: AOAM530Bw09bUDPr/Dbhz2gjHeFgp6V5wXRGT3Nji5TQxN826UcF77FJ
+        ec+otXcRgsXqAQIork+B8nIvHLxv
+X-Google-Smtp-Source: ABdhPJyZgo40VWDBKp1cYeVkpXv4v3GZUzkAG6GzwK9HNTtxi4GEivwow8gJ2kXFUcFAvzNvqy6MEw==
+X-Received: by 2002:a17:906:cd03:: with SMTP id oz3mr791251ejb.391.1592518154347;
+        Thu, 18 Jun 2020 15:09:14 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:d835:117d:5af6:d9c? ([2a01:110f:b59:fd00:d835:117d:5af6:d9c])
+        by smtp.gmail.com with ESMTPSA id b11sm3203237eju.91.2020.06.18.15.09.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 15:09:13 -0700 (PDT)
+Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
+ support to lp55xx
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz, robh@kernel.org
+Cc:     kbuild-all@lists.01.org, devicetree@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200615201522.19677-12-dmurphy@ti.com>
+ <202006180032.JW0i39C6%lkp@intel.com>
+ <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
+ <58ad7723-131f-6930-00d7-1144c993110c@gmail.com>
+ <fc1ae702-0734-973d-9e3c-22b8f8d5c873@ti.com>
+ <fc410dfb-70d1-1b8b-3b6d-0de1c6c84ec2@gmail.com>
+ <56823113-4875-4813-8627-84b0d1792391@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <bd603f01-2c1b-6167-d88c-3895c1bfdf6c@gmail.com>
+Date:   Fri, 19 Jun 2020 00:09:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <56823113-4875-4813-8627-84b0d1792391@ti.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tao Ren <rentao.bupt@gmail.com>
+Dan,
 
-Replace assignment "=" with OR "|=" for "phy->dev_flags" so "dev_flags"
-configured in phy probe() function can be preserved.
+On 6/18/20 11:44 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 6/18/20 4:21 PM, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> On 6/18/20 12:33 AM, Dan Murphy wrote:
+>>> Jacek
+>>>
+>>> On 6/17/20 4:41 PM, Jacek Anaszewski wrote:
+>>>> Dan,
+>>>>
+>>>> On 6/17/20 9:22 PM, Dan Murphy wrote:
+>>>>> Pavel/Jacek
+>>>>>
+>>>>> On 6/17/20 11:28 AM, kernel test robot wrote:
+>>>>>> Hi Dan,
+>>>>>>
+>>>>>> I love your patch! Yet something to improve:
+>>>>>>
+>>>>>> [auto build test ERROR on pavel-linux-leds/for-next]
+>>>>>> [cannot apply to j.anaszewski-leds/for-next]
+>>>>>> [if your patch is applied to the wrong git tree, please drop us a 
+>>>>>> note to help
+>>>>>> improve the system. BTW, we also suggest to use '--base' option to 
+>>>>>> specify the
+>>>>>> base tree in git format-patch, please see 
+>>>>>> https://stackoverflow.com/a/37406982]
+>>>>>>
+>>>>>> url: 
+>>>>>> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217 
+>>>>>>
+>>>>>> base: 
+>>>>>> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git 
+>>>>>> for-next
+>>>>>> config: ia64-randconfig-r015-20200617 (attached as .config)
+>>>>>> compiler: ia64-linux-gcc (GCC) 9.3.0
+>>>>>> reproduce (this is a W=1 build):
+>>>>>>          wget 
+>>>>>> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross 
+>>>>>> -O ~/bin/make.cross
+>>>>>>          chmod +x ~/bin/make.cross
+>>>>>>          # save the attached .config to linux build tree
+>>>>>>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 
+>>>>>> make.cross ARCH=ia64
+>>>>>>
+>>>>>> If you fix the issue, kindly add following tag as appropriate
+>>>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>>>>
+>>>>>> All errors (new ones prefixed by >>, old ones prefixed by <<):
+>>>>>>
+>>>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
+>>>>>> `lp55xx_set_mc_brightness':
+>>>>>>>> drivers/leds/leds-lp55xx-common.c:146: undefined reference to 
+>>>>>>>> `led_mc_calc_color_components'
+>>>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
+>>>>>> `devm_led_classdev_multicolor_register':
+>>>>>>>> include/linux/led-class-multicolor.h:74: undefined reference to 
+>>>>>>>> `devm_led_classdev_multicolor_register_ext'
+>>>>>> vim +146 drivers/leds/leds-lp55xx-common.c
+>>>>>>
+>>>>>>     138
+>>>>>>     139    static int lp55xx_set_mc_brightness(struct led_classdev 
+>>>>>> *cdev,
+>>>>>>     140                        enum led_brightness brightness)
+>>>>>>     141    {
+>>>>>>     142        struct led_classdev_mc *mc_dev = 
+>>>>>> lcdev_to_mccdev(cdev);
+>>>>>>     143        struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
+>>>>>>     144        struct lp55xx_device_config *cfg = led->chip->cfg;
+>>>>>>     145
+>>>>>>   > 146 led_mc_calc_color_components(&led->mc_cdev, brightness);
+>>>>>>     147        return cfg->multicolor_brightness_fn(led);
+>>>>>>     148
+>>>>>
+>>>>> Well this was a mess to figure out.
+>>>>>
+>>>>> The only fix I can figure out here is to remove the
+>>>>>
+>>>>>      depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+>>>>>
+>>>>> from each child device and add
+>>>>>
+>>>>>      select LEDS_CLASS_MULTI_COLOR
+>>>>>
+>>>>> to the LP55XX_COMMON
+>>>>>
+>>>>> This way the Multi color framework will inherit the symbol that was 
+>>>>> set by the COMMON flag which is inherited by majority from the 
+>>>>> child flags.
+>>>>
+>>>> Did you try this?
+>>>>
+>>>> --- a/drivers/leds/Kconfig
+>>>> +++ b/drivers/leds/Kconfig
+>>>> @@ -398,6 +398,7 @@ config LEDS_LP50XX
+>>>>  config LEDS_LP55XX_COMMON
+>>>>         tristate "Common Driver for TI/National 
+>>>> LP5521/5523/55231/5562/8501"
+>>>>         depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || 
+>>>> LEDS_LP8501
+>>>> +       depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+>>>>         depends on OF
+>>>>         select FW_LOADER
+>>>>         select FW_LOADER_USER_HELPER
+>>>>
+>>>>
+>>> Yes I did
+>>>
+>>> That gave unmet dependencies.
+>>>
+>>> WARNING: unmet direct dependencies detected for LEDS_LP55XX_COMMON
+>>>    Depends on [m]: NEW_LEDS [=y] && (LEDS_LP5521 [=n] || LEDS_LP5523 
+>>> [=m] || LEDS_LP5562 [=y] || LEDS_LP8501 [=y]) && 
+>>> (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m]) && OF [=y]
+>>>    Selected by [y]:
+>>>    - LEDS_LP5562 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
+>>>    - LEDS_LP8501 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
+>>>    Selected by [m]:
+>>>    - LEDS_LP5523 [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y] 
+>>> && (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m])
+>>>
+>>
+>> When I was testing that yesterday I also had the same warning at some
+>> point of testing different Kconfig setups, but with what I showed above
+>> it ceased to appear. Now every time I am doing "make oldconfig" the
+>> CONFIG_LEDS_LP55XX_COMMON=y entry gets changed to =m with the config
+>> from the test bot.
+>>
+> That is not what I saw in my testing especially after doing a distclean
 
-The idea is similar to commit e7312efbd5de ("net: phy: modify assignment
-to OR for dev_flags in phy_attach_direct").
+Could you please give your exact steps after "make distclean" and
+copying test bot config to the kernel root directory?
 
-Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
----
- drivers/of/of_mdio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Also, please share the toolchain you're using for tests.
 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index a04afe79529c..f5c46c72f4d3 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -380,7 +380,7 @@ struct phy_device *of_phy_connect(struct net_device *dev,
- 	if (!phy)
- 		return NULL;
- 
--	phy->dev_flags = flags;
-+	phy->dev_flags |= flags;
- 
- 	ret = phy_connect_direct(dev, phy, hndlr, iface);
- 
 -- 
-2.17.1
-
+Best regards,
+Jacek Anaszewski
