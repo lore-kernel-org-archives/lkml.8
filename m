@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AD4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A89AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A3F21D94
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050F020CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445013;
-	bh=yrsb5sDyQK0/tXeTGDfxt669NSiTccbeU4EEGkjL5ew=;
+	s=default; t=1592445016;
+	bh=QT5kBwObbP0AysuMQaQSlKSxGx98OZTWvIlaNIx3f6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RiSnVmlV60hlhlZHRJIIhMXYOiPG8caj6I2gO2Uk3KHcVsFT+98TKlHiIeDG2gzF2
-	 MqKgWkKdHsaKuAqD6s5jaVXnUtCn6iPbFrBogFw6wvFDXDn/aHi5TQldT3lIFCsHVq
-	 BAkpO4cZz/44TBxPJ/DNcWqi/ItrnfWXMCW+q0e4=
+	b=HKv5dTJqBybFMHJ2oxkF56CW3BLNk9seLXuH7qcPnuV64SoRv3ntWUZjcaSXj+3G4
+	 us6k2iTD3rYJeIdtOf1iI2DYSGqMwYFUrDuWBYM5EjmTmHS5o8tgqvbMEjot9og3Eg
+	 +ZBEpeJYqcmJ0yOrEqfFouA+pyHQh6tRLl1EOfI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbgFRB11 (ORCPT
+        id S1731707AbgFRBuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:27:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58076 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:50:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731107AbgFRBX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:23:57 -0400
+        id S1731107AbgFRB12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C6A220776;
-        Thu, 18 Jun 2020 01:23:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A53CD221ED;
+        Thu, 18 Jun 2020 01:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443437;
-        bh=yrsb5sDyQK0/tXeTGDfxt669NSiTccbeU4EEGkjL5ew=;
+        s=default; t=1592443647;
+        bh=QT5kBwObbP0AysuMQaQSlKSxGx98OZTWvIlaNIx3f6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BAu+w4Y69gXuWqXjp+lJZIkyYgptS/YW/62c8ltI7qAzt5KXERWG25M2FnbFrPEqd
-         JTY5tsdHySd3bXJcUu1vIEamWQNNRevtB1A9uCmp/KhcFUNx1oIo04U98935jxU9be
-         LNNVSpKCQzL+t4w5hDvJ37Sq6dh2LWlvjk1EMnHQ=
+        b=KdaqPsC6BX2yxK0tI5VsfsvvqEjYs6Uun/UlsK2AWui3Wj1GXkzLHfFHw8tzPuA7N
+         CQtHqfJvVDefhEfx02c4WSid6wsNH5qBnB0lLUXckwfgomNECBwjzDzLpqP9BsVlTZ
+         M9OwZWItuBB4q5MNxoH7WqlRs2upVidlqGnsaKek=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 075/172] i2c: pxa: fix i2c_pxa_scream_blue_murder() debug output
-Date:   Wed, 17 Jun 2020 21:20:41 -0400
-Message-Id: <20200618012218.607130-75-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 068/108] powerpc/64s/pgtable: fix an undefined behaviour
+Date:   Wed, 17 Jun 2020 21:25:20 -0400
+Message-Id: <20200618012600.608744-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,52 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 88b73ee7ca4c90baf136ed5a8377fc5a9b73ac08 ]
+[ Upstream commit c2e929b18cea6cbf71364f22d742d9aad7f4677a ]
 
-The IRQ log output is supposed to appear on a single line.  However,
-commit 3a2dc1677b60 ("i2c: pxa: Update debug function to dump more info
-on error") resulted in it being printed one-entry-per-line, which is
-excessively long.
+Booting a power9 server with hash MMU could trigger an undefined
+behaviour because pud_offset(p4d, 0) will do,
 
-Fixing this is not a trivial matter; using pr_cont() doesn't work as
-the previous dev_dbg() may not have been compiled in, or may be
-dynamic.
+0 >> (PAGE_SHIFT:16 + PTE_INDEX_SIZE:8 + H_PMD_INDEX_SIZE:10)
 
-Since the rest of this function output is at error level, and is also
-debug output, promote this to error level as well to avoid this
-problem.
+Fix it by converting pud_index() and friends to static inline
+functions.
 
-Reduce the number of always zero prefix digits to save screen real-
-estate.
+UBSAN: shift-out-of-bounds in arch/powerpc/mm/ptdump/ptdump.c:282:15
+shift exponent 34 is too large for 32-bit type 'int'
+CPU: 6 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4-next-20200303+ #13
+Call Trace:
+dump_stack+0xf4/0x164 (unreliable)
+ubsan_epilogue+0x18/0x78
+__ubsan_handle_shift_out_of_bounds+0x160/0x21c
+walk_pagetables+0x2cc/0x700
+walk_pud at arch/powerpc/mm/ptdump/ptdump.c:282
+(inlined by) walk_pagetables at arch/powerpc/mm/ptdump/ptdump.c:311
+ptdump_check_wx+0x8c/0xf0
+mark_rodata_ro+0x48/0x80
+kernel_init+0x74/0x194
+ret_from_kernel_thread+0x5c/0x74
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Link: https://lore.kernel.org/r/20200306044852.3236-1-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pxa.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/powerpc/include/asm/book3s/64/pgtable.h | 23 ++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index 7248ba6763e4..c10ae4778d35 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -315,11 +315,10 @@ static void i2c_pxa_scream_blue_murder(struct pxa_i2c *i2c, const char *why)
- 	dev_err(dev, "IBMR: %08x IDBR: %08x ICR: %08x ISR: %08x\n",
- 		readl(_IBMR(i2c)), readl(_IDBR(i2c)), readl(_ICR(i2c)),
- 		readl(_ISR(i2c)));
--	dev_dbg(dev, "log: ");
-+	dev_err(dev, "log:");
- 	for (i = 0; i < i2c->irqlogidx; i++)
--		pr_debug("[%08x:%08x] ", i2c->isrlog[i], i2c->icrlog[i]);
--
--	pr_debug("\n");
-+		pr_cont(" [%03x:%05x]", i2c->isrlog[i], i2c->icrlog[i]);
-+	pr_cont("\n");
- }
+diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+index bcb79a96a6c8..618ee2c0ed53 100644
+--- a/arch/powerpc/include/asm/book3s/64/pgtable.h
++++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+@@ -898,10 +898,25 @@ extern struct page *pgd_page(pgd_t pgd);
+ #define pud_page_vaddr(pud)	__va(pud_val(pud) & ~PUD_MASKED_BITS)
+ #define pgd_page_vaddr(pgd)	__va(pgd_val(pgd) & ~PGD_MASKED_BITS)
  
- #else /* ifdef DEBUG */
+-#define pgd_index(address) (((address) >> (PGDIR_SHIFT)) & (PTRS_PER_PGD - 1))
+-#define pud_index(address) (((address) >> (PUD_SHIFT)) & (PTRS_PER_PUD - 1))
+-#define pmd_index(address) (((address) >> (PMD_SHIFT)) & (PTRS_PER_PMD - 1))
+-#define pte_index(address) (((address) >> (PAGE_SHIFT)) & (PTRS_PER_PTE - 1))
++static inline unsigned long pgd_index(unsigned long address)
++{
++	return (address >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1);
++}
++
++static inline unsigned long pud_index(unsigned long address)
++{
++	return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
++}
++
++static inline unsigned long pmd_index(unsigned long address)
++{
++	return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
++}
++
++static inline unsigned long pte_index(unsigned long address)
++{
++	return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
++}
+ 
+ /*
+  * Find an entry in a page-table-directory.  We combine the address region
 -- 
 2.25.1
 
