@@ -2,285 +2,167 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE71C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90250C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E59C920FC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:01:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592449306;
-	bh=D+RIBaE1e99GexBp+YDaMWHaXlTMDUSMPXDMbSLsLhU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=nLUlfLZ5zofiy96qW7MZPbuPtlzhb7VgZa1k/prZcJrX1sMfE9/CtShNzUZbYWIEW
-	 UxLkXuIR+XinhJR6VtC06Z//nZ6E/vR1XmsxQwOQcnALAJB1SP4rTPXwO9415QHqnq
-	 9AxZMKNKEgkoldRQgTI3SGw+2Vzzd4Eyns1BDZ/A=
+	by mail.kernel.org (Postfix) with ESMTP id 7408C20FC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgFRDBp (ORCPT
+        id S1727865AbgFRDHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 23:01:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 23:07:09 -0400
+Received: from mga07.intel.com ([134.134.136.100]:19387 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbgFRDBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 23:01:44 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3240208C7;
-        Thu, 18 Jun 2020 03:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592449303;
-        bh=D+RIBaE1e99GexBp+YDaMWHaXlTMDUSMPXDMbSLsLhU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=rvspTLk/7iukyPQFUzJrN85r6rr4OtLWCMuGAvhlQQgoCThyT5PA5LDTn4FYkkLfF
-         Dhz/y4545V7+UmxzWJxFbRbIXf8ZXXZwvcNKQgfAZ/6UR5RD69gDLOBtFHpP48Gblt
-         Kn4t75RU6lP8zLcyLuU06yvIETn4t/g8p0HJDz1I=
-Date:   Wed, 17 Jun 2020 22:01:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 09/12] PCI: brcmstb: Set internal memory viewport sizes
-Message-ID: <20200618030141.GA2041805@bjorn-Precision-5520>
+        id S1726952AbgFRDHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 23:07:08 -0400
+IronPort-SDR: VDKY6ZvZC6EuG4anh4PWq+reCUNfkLF6qIngsB5f7YjifS5N1yqUndvK20tf7SxMyKAqzorAQw
+ Gxm9S5taryGA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 20:07:07 -0700
+IronPort-SDR: omqf5jP+gzHdsQ+cfLrJV73HNmWcO1y5bx/ra1ZPRsYLlX7xa4eSdAG+5JMS4RTADwA6ArsxY3
+ GA4mkQcIDAEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,524,1583222400"; 
+   d="scan'208";a="317708291"
+Received: from lkp-server02.sh.intel.com (HELO 5ce11009e457) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Jun 2020 20:07:06 -0700
+Received: from kbuild by 5ce11009e457 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jlktN-000020-Je; Thu, 18 Jun 2020 03:07:05 +0000
+Date:   Thu, 18 Jun 2020 11:06:20 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/misc] BUILD SUCCESS
+ 5603119e48d0fee163a827c2342b372f1a0e913c
+Message-ID: <5eeada2c.EP2oYy75q8cN/jVu%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+-6iNx1j5uK=nL-H32qthxEwZe+KOxtqCG4TPJxD+WdzMQFrA@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 01:28:12PM -0400, Jim Quinlan wrote:
-> Hello Bjorn,
-> 
-> On Tue, Jun 16, 2020 at 6:05 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Tue, Jun 16, 2020 at 04:55:16PM -0400, Jim Quinlan wrote:
-> > > BrcmSTB PCIe controllers are intimately connected to the memory
-> > > controller(s) on the SOC.  There is a "viewport" for each memory controller
-> > > that allows inbound accesses to CPU memory.  Each viewport's size must be
-> > > set to a power of two, and that size must be equal to or larger than the
-> > > amount of memory each controller supports.
-> >
-> > This describes some requirements, but doesn't actually say what this
-> > patch *does*.
-> >
-> > I *think* it reads the viewport sizes from the "brcm,scb-sizes" DT
-> > property instead of computing something from "dma-ranges".  Looks like
-> > it also adds support for SCB1 and SCB2.
-> >
-> > Those seem interesting, but don't really come through in the subject
-> > or even the commit log.
-> >
-> > If I understand correctly, this is all for DMA ("inbound accesses to
-> > CPU memory").  I think it would be worth mentioning "DMA", since
-> > that's the common term for this.
-> 
-> 
-> I have changed the commit message to the text below.  Please let me
-> know if it requires more work
-> Thanks, Jim
-> 
-> PCI: brcmstb: Set internal memory DMA viewport sizes
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/misc
+branch HEAD: 5603119e48d0fee163a827c2342b372f1a0e913c  x86/msr: Filter MSR writes
 
-Did you not set the viewport sizes before?
+elapsed time: 720m
 
-> BrcmSTB PCIe controllers are intimately connected to the memory
-> controller(s) on the SOC.  There is a "viewport" for each memory controller
-> that allows inbound DMA acceses to CPU memory.  Each viewport's size must
-> be set to a power of two, and that size must be equal to or larger than the
-> amount of memory each controller supports.  Unfortunately the viewport
-> sizes cannot be ascertained from the "dma-ranges" property so they have
-> their own property, "brcm,scb-sizes".
+configs tested: 100
+configs skipped: 93
 
-s/inbound DMA acceses to CPU memory/DMA/
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-"Accesses" is redundant since the "A" in "DMA" stands for "access".
-I'm not sure "inbound" adds anything and might confuse since DMA may
-be either a read or write of CPU memory.
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+c6x                              alldefconfig
+xtensa                              defconfig
+riscv                          rv32_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20200617
+i386                 randconfig-a002-20200617
+i386                 randconfig-a001-20200617
+i386                 randconfig-a004-20200617
+i386                 randconfig-a005-20200617
+i386                 randconfig-a003-20200617
+x86_64               randconfig-a015-20200617
+x86_64               randconfig-a011-20200617
+x86_64               randconfig-a016-20200617
+x86_64               randconfig-a014-20200617
+x86_64               randconfig-a012-20200617
+x86_64               randconfig-a013-20200617
+i386                 randconfig-a015-20200617
+i386                 randconfig-a011-20200617
+i386                 randconfig-a014-20200617
+i386                 randconfig-a016-20200617
+i386                 randconfig-a013-20200617
+i386                 randconfig-a012-20200617
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
 
-I assume *all* drivers need to know the address and size of regions in
-"dma-ranges".  Is there something special about this device that means
-it needs something different?
-
-I guess it's the base/extension split?  That couldn't be described as
-two separate DMA ranges?
-
-Could/should the new property have a name somehow related to
-"dma-ranges"?
-
-Should "dma-ranges" be documented in
-Documentation/devicetree/bindings/pci/pci.txt instead of the
-individual device bindings?
-
-> There may be one to three memory controllers; they are indicated by the
-> term SCBi.  Each controller has a base region and an optional extension
-> region.  In physical memory, the base and extension regions are not
-> adjacent, but in PCIe-space they are.  Further, the 1-3 viewports are also
-> adjacent in PCIe-space.
-> 
-> The SCB settings work in conjunction with the "dma-ranges' offsets to
-> enable non-identity mappings between system memory and PCIe space.
-
-s/ranges'/ranges"/ (mismatched quotes)
-
-This describes the hardware, but still doesn't actually say what this
-patch *does*.
-
-If I'm a user, why do I want this patch?  Does it fix something that
-didn't work before?  Does it increase the amount of DMA-able memory?
-
-What does this mean in terms of backwards compatibility with old DTs?
-Does this work with old DTs that don't have "brcm,scb-sizes"?  Maybe
-this is all related to specific devices that weren't supported before,
-so there *are* no old DTs for them?  I can't tell from the binding
-update or the patch that this is related to specific devices.
-
-> > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> > > ---
-> > >  drivers/pci/controller/pcie-brcmstb.c | 68 ++++++++++++++++++++-------
-> > >  1 file changed, 50 insertions(+), 18 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> > > index 9189406fd35c..39f77709c6a2 100644
-> > > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > > @@ -57,6 +57,8 @@
-> > >  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK     0x300000
-> > >  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128              0x0
-> > >  #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK          0xf8000000
-> > > +#define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK          0x07c00000
-> > > +#define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK          0x0000001f
-> > >
-> > >  #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO             0x400c
-> > >  #define PCIE_MEM_WIN0_LO(win)        \
-> > > @@ -154,6 +156,7 @@
-> > >  #define SSC_STATUS_OFFSET            0x1
-> > >  #define SSC_STATUS_SSC_MASK          0x400
-> > >  #define SSC_STATUS_PLL_LOCK_MASK     0x800
-> > > +#define PCIE_BRCM_MAX_MEMC           3
-> > >
-> > >  #define IDX_ADDR(pcie)                       (pcie->reg_offsets[EXT_CFG_INDEX])
-> > >  #define DATA_ADDR(pcie)                      (pcie->reg_offsets[EXT_CFG_DATA])
-> > > @@ -260,6 +263,8 @@ struct brcm_pcie {
-> > >       const int               *reg_field_info;
-> > >       enum pcie_type          type;
-> > >       struct reset_control    *rescal;
-> > > +     int                     num_memc;
-> > > +     u64                     memc_size[PCIE_BRCM_MAX_MEMC];
-> > >  };
-> > >
-> > >  /*
-> > > @@ -715,22 +720,44 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
-> > >                                                       u64 *rc_bar2_offset)
-> > >  {
-> > >       struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> > > -     struct device *dev = pcie->dev;
-> > >       struct resource_entry *entry;
-> > > +     struct device *dev = pcie->dev;
-> > > +     u64 lowest_pcie_addr = ~(u64)0;
-> > > +     int ret, i = 0;
-> > > +     u64 size = 0;
-> > >
-> > > -     entry = resource_list_first_type(&bridge->dma_ranges, IORESOURCE_MEM);
-> > > -     if (!entry)
-> > > -             return -ENODEV;
-> > > +     resource_list_for_each_entry(entry, &bridge->dma_ranges) {
-> > > +             u64 pcie_beg = entry->res->start - entry->offset;
-> > >
-> > > +             size += entry->res->end - entry->res->start + 1;
-> > > +             if (pcie_beg < lowest_pcie_addr)
-> > > +                     lowest_pcie_addr = pcie_beg;
-> > > +     }
-> > >
-> > > -     /*
-> > > -      * The controller expects the inbound window offset to be calculated as
-> > > -      * the difference between PCIe's address space and CPU's. The offset
-> > > -      * provided by the firmware is calculated the opposite way, so we
-> > > -      * negate it.
-> > > -      */
-> > > -     *rc_bar2_offset = -entry->offset;
-> > > -     *rc_bar2_size = 1ULL << fls64(entry->res->end - entry->res->start);
-> > > +     if (lowest_pcie_addr == ~(u64)0) {
-> > > +             dev_err(dev, "DT node has no dma-ranges\n");
-> > > +             return -EINVAL;
-> > > +     }
-> > > +
-> > > +     ret = of_property_read_variable_u64_array(pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
-> > > +                                               PCIE_BRCM_MAX_MEMC);
-> > > +
-> > > +     if (ret <= 0) {
-> > > +             /* Make an educated guess */
-> > > +             pcie->num_memc = 1;
-> > > +             pcie->memc_size[0] = 1 << fls64(size - 1);
-> > > +     } else {
-> > > +             pcie->num_memc = ret;
-> > > +     }
-> > > +
-> > > +     /* Each memc is viewed through a "port" that is a power of 2 */
-> > > +     for (i = 0, size = 0; i < pcie->num_memc; i++)
-> > > +             size += pcie->memc_size[i];
-> > > +
-> > > +     /* System memory starts at this address in PCIe-space */
-> > > +     *rc_bar2_offset = lowest_pcie_addr;
-> > > +     /* The sum of all memc views must also be a power of 2 */
-> > > +     *rc_bar2_size = 1ULL << fls64(size - 1);
-> > >
-> > >       /*
-> > >        * We validate the inbound memory view even though we should trust
-> > > @@ -782,12 +809,11 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
-> > >       void __iomem *base = pcie->base;
-> > >       struct device *dev = pcie->dev;
-> > >       struct resource_entry *entry;
-> > > -     unsigned int scb_size_val;
-> > >       bool ssc_good = false;
-> > >       struct resource *res;
-> > >       int num_out_wins = 0;
-> > >       u16 nlw, cls, lnksta;
-> > > -     int i, ret;
-> > > +     int i, ret, memc;
-> > >       u32 tmp, aspm_support;
-> > >
-> > >       /* Reset the bridge */
-> > > @@ -824,11 +850,17 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
-> > >       writel(upper_32_bits(rc_bar2_offset),
-> > >              base + PCIE_MISC_RC_BAR2_CONFIG_HI);
-> > >
-> > > -     scb_size_val = rc_bar2_size ?
-> > > -                    ilog2(rc_bar2_size) - 15 : 0xf; /* 0xf is 1GB */
-> > >       tmp = readl(base + PCIE_MISC_MISC_CTRL);
-> > > -     u32p_replace_bits(&tmp, scb_size_val,
-> > > -                       PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
-> > > +     for (memc = 0; memc < pcie->num_memc; memc++) {
-> > > +             u32 scb_size_val = ilog2(pcie->memc_size[memc]) - 15;
-> > > +
-> > > +             if (memc == 0)
-> > > +                     u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
-> > > +             else if (memc == 1)
-> > > +                     u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK);
-> > > +             else if (memc == 2)
-> > > +                     u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK);
-> > > +     }
-> > >       writel(tmp, base + PCIE_MISC_MISC_CTRL);
-> > >
-> > >       /*
-> > > --
-> > > 2.17.1
-> > >
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
