@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D406C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A784DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F42021974
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7694F22209
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444827;
-	bh=WWjhVMfWAJDBpqfzVCsKyPFfmNAuZNLUns5DSJPuq3I=;
+	s=default; t=1592444829;
+	bh=iLpKnNLcCmnU67a1CwsUEPaUwcpiD+DGwyuTxy6efnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VH1LxCUmIwcisnEqGwQvB/BqIE6K69bb2JoFMYX8qg0KL34WjJBhpUJBxvyGZkv+X
-	 5Ok9sPZ1ixOoeHnO617c+x5dKJbwJAG+LTo1YFqTHmssOO3vc8ARfsNRC/+pZH2sT2
-	 l0/E/Y10BtcwM8J9+XJkHn/bKLZG+Uc2jV5sgqo4=
+	b=ejBR/2xLmCU+IcFGG+Hjalil59MccN7vPygBRaFO2cC6nZaQB19vZCliN7rtCLoNu
+	 uqCpz9PViB0FA1ATuHmiyMRSD3DL9g3J08Oi3bMYj6VC/ipZGvbjbiht7qNOzT1X3B
+	 4t96WT5NzU+IGqet9luswtDE5FNNzeFo2oFGB3Lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732064AbgFRB2S (ORCPT
+        id S1732344AbgFRBrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:28:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59672 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:47:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731302AbgFRBYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:24:54 -0400
+        id S1731022AbgFRB2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:28:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BD0220776;
-        Thu, 18 Jun 2020 01:24:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44EB7221FC;
+        Thu, 18 Jun 2020 01:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443494;
-        bh=WWjhVMfWAJDBpqfzVCsKyPFfmNAuZNLUns5DSJPuq3I=;
+        s=default; t=1592443698;
+        bh=iLpKnNLcCmnU67a1CwsUEPaUwcpiD+DGwyuTxy6efnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0HOp1KPCVvw89ldIeCK897HfLKX8uawMYJEvbPMROc5F2imWpP//pVARgn8FnIKKD
-         mbkjmNWRco8u0tcbHIt7xCc2mIjpEtVM3dcFsuPKxpqcoEx7NfgHE7FGZs/FxXiLRq
-         4JYhbvgePzlZYBdbHRPYgiXPxxaUehmOOlSu3zjo=
+        b=cJrx2lGhakmgPHu9BfdcghawyHZqlwrppIDiAKahkEH1STXNJVMb7wg+1y8myIys7
+         CsNbsCDOaUf2xlMT8zRHewich27udM7g3VNREbWQFDFGsL0ya5jgLw1mi5DGuxafj8
+         hladq8s+GZXxbSCpfL0kFsy5up+p+9gLDhD1DiEQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Mike Christie <mchristi@redhat.com>,
-        David Disseldorp <ddiss@suse.de>,
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 121/172] scsi: target: tcmu: Fix a use after free in tcmu_check_expired_queue_cmd()
-Date:   Wed, 17 Jun 2020 21:21:27 -0400
-Message-Id: <20200618012218.607130-121-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 108/108] scsi: acornscsi: Fix an error handling path in acornscsi_probe()
+Date:   Wed, 17 Jun 2020 21:26:00 -0400
+Message-Id: <20200618012600.608744-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,45 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 9d7464b18892332e35ff37f0b024429a1a9835e6 ]
+[ Upstream commit 42c76c9848e13dbe0538d7ae0147a269dfa859cb ]
 
-The pr_debug() dereferences "cmd" after we already freed it by calling
-tcmu_free_cmd(cmd).  The debug printk needs to be done earlier.
+'ret' is known to be 0 at this point.  Explicitly return -ENOMEM if one of
+the 'ecardm_iomap()' calls fail.
 
-Link: https://lore.kernel.org/r/20200523101129.GB98132@mwanda
-Fixes: 61fb24822166 ("scsi: target: tcmu: Userspace must not complete queued commands")
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Reviewed-by: David Disseldorp <ddiss@suse.de>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200530081622.577888-1-christophe.jaillet@wanadoo.fr
+Fixes: e95a1b656a98 ("[ARM] rpc: acornscsi: update to new style ecard driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_user.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/arm/acornscsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index ac523f247a9c..8da89925a874 100644
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -1303,13 +1303,13 @@ static void tcmu_check_expired_queue_cmd(struct tcmu_cmd *cmd)
- 	if (!time_after(jiffies, cmd->deadline))
- 		return;
+diff --git a/drivers/scsi/arm/acornscsi.c b/drivers/scsi/arm/acornscsi.c
+index 421fe869a11e..ef9d907f2df5 100644
+--- a/drivers/scsi/arm/acornscsi.c
++++ b/drivers/scsi/arm/acornscsi.c
+@@ -2914,8 +2914,10 @@ static int acornscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
  
-+	pr_debug("Timing out queued cmd %p on dev %s.\n",
-+		  cmd, cmd->tcmu_dev->name);
-+
- 	list_del_init(&cmd->queue_entry);
- 	se_cmd = cmd->se_cmd;
- 	tcmu_free_cmd(cmd);
+ 	ashost->base = ecardm_iomap(ec, ECARD_RES_MEMC, 0, 0);
+ 	ashost->fast = ecardm_iomap(ec, ECARD_RES_IOCFAST, 0, 0);
+-	if (!ashost->base || !ashost->fast)
++	if (!ashost->base || !ashost->fast) {
++		ret = -ENOMEM;
+ 		goto out_put;
++	}
  
--	pr_debug("Timing out queued cmd %p on dev %s.\n",
--		  cmd, cmd->tcmu_dev->name);
--
- 	target_complete_cmd(se_cmd, SAM_STAT_TASK_SET_FULL);
- }
- 
+ 	host->irq = ec->irq;
+ 	ashost->host = host;
 -- 
 2.25.1
 
