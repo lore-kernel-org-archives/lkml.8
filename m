@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE3AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDE362224B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C42722260
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444065;
-	bh=+zLQ9jbSByylk5F+uOyvcL0PwIRJajAFhyFm6yZW03w=;
+	s=default; t=1592444069;
+	bh=V3xSI5/zZpF0MVwHKDI/qCulDykZwcknnUze45wcd+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wTQYVUxWVwJxuLBm/gVqqsw0AsusSUiW4XJgwXx0NHhcJPvRt3hPVQalOB/oly/tj
-	 BXldeU1mgRmXH+LRPnkM/dvUXNQWr3nmls5skvqjYobodbVFgvaXSVdMB5fJCLAiBH
-	 ozdn/5N1imS1eBYUvHof1dqS1thaxDL3HskG7waw=
+	b=vKmLHKzjFPXnSuaz8nlXQ8MuXnQUPMMQejbSkXp34TKMQJzYuX9cbg4NLr0lazkrc
+	 sYHheRjX5kgPN+RBl9nY4WU6Mu/aUwawyh0PvhImsxVaJlCItsaq4EogYAnRhrojhj
+	 ddCNNHWZ6lfk9fpbi57duHRIFaQLvrM0WTDMd4qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733031AbgFRBeC (ORCPT
+        id S1732635AbgFRBeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:34:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41854 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:34:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730864AbgFRBbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:31:14 -0400
+        id S1731647AbgFRBbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:31:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6C382224B;
-        Thu, 18 Jun 2020 01:31:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D5CA22257;
+        Thu, 18 Jun 2020 01:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443874;
-        bh=+zLQ9jbSByylk5F+uOyvcL0PwIRJajAFhyFm6yZW03w=;
+        s=default; t=1592443872;
+        bh=V3xSI5/zZpF0MVwHKDI/qCulDykZwcknnUze45wcd+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fVrRTy2EF5JTv66C3odJckqIW2FuKTVOe8/mAOQHhkzb7npOT2lEkLeTKhI0yCcnh
-         KiA2aoeQU1ni67YZxkc2eAD2lWJ/mfrXy5esOmoaadyJM5ck4SMHB83kGTKnN6V1v6
-         tMI+4Wypn0Rz3Za3oTfeL3AuAHTVYCOsqrDLj5s4=
+        b=Z1qVjGZkYCfcOGkB1VhzIwAO6AuMSJuFUiFCIUxVlh6u3iOE8RJ0h5jDkkdsMZyyP
+         Eqw87AyFMcD505rzal/FWVUuKMuHJUmmQrYNZu0oZuThyFrqplzxbNWqjga5Ds8DAV
+         MgRaN68Idb+DSrTX4noFj4Q1aZaJ7RUB+7R99b60=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.4 54/60] gfs2: Allow lock_nolock mount to specify jid=X
-Date:   Wed, 17 Jun 2020 21:29:58 -0400
-Message-Id: <20200618013004.610532-54-sashal@kernel.org>
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.4 52/60] ASoC: fsl_asrc_dma: Fix dma_chan leak when config DMA channel failed
+Date:   Wed, 17 Jun 2020 21:29:56 -0400
+Message-Id: <20200618013004.610532-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
 References: <20200618013004.610532-1-sashal@kernel.org>
@@ -59,43 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit ea22eee4e6027d8927099de344f7fff43c507ef9 ]
+[ Upstream commit 36124fb19f1ae68a500cd76a76d40c6e81bee346 ]
 
-Before this patch, a simple typo accidentally added \n to the jid=
-string for lock_nolock mounts. This made it impossible to mount a
-gfs2 file system with a journal other than journal0. Thus:
+fsl_asrc_dma_hw_params() invokes dma_request_channel() or
+fsl_asrc_get_dma_channel(), which returns a reference of the specified
+dma_chan object to "pair->dma_chan[dir]" with increased refcnt.
 
-mount -tgfs2 -o hostdata="jid=1" <device> <mount pt>
+The reference counting issue happens in one exception handling path of
+fsl_asrc_dma_hw_params(). When config DMA channel failed for Back-End,
+the function forgets to decrease the refcnt increased by
+dma_request_channel() or fsl_asrc_get_dma_channel(), causing a refcnt
+leak.
 
-Resulted in:
-mount: wrong fs type, bad option, bad superblock on <device>
+Fix this issue by calling dma_release_channel() when config DMA channel
+failed.
 
-In most cases this is not a problem. However, for debugging and
-testing purposes we sometimes want to test the integrity of other
-journals. This patch removes the unnecessary \n and thus allows
-lock_nolock users to specify an alternate journal.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Link: https://lore.kernel.org/r/1590415966-52416-1-git-send-email-xiyuyang19@fudan.edu.cn
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/ops_fstype.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/fsl/fsl_asrc_dma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index de7143e2b361..b7b43d00cc6d 100644
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@ -916,7 +916,7 @@ static int init_per_node(struct gfs2_sbd *sdp, int undo)
- }
- 
- static const match_table_t nolock_tokens = {
--	{ Opt_jid, "jid=%d\n", },
-+	{ Opt_jid, "jid=%d", },
- 	{ Opt_err, NULL },
- };
+diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
+index ffc000bc1f15..56a873ba08e4 100644
+--- a/sound/soc/fsl/fsl_asrc_dma.c
++++ b/sound/soc/fsl/fsl_asrc_dma.c
+@@ -243,6 +243,7 @@ static int fsl_asrc_dma_hw_params(struct snd_pcm_substream *substream,
+ 	ret = dmaengine_slave_config(pair->dma_chan[dir], &config_be);
+ 	if (ret) {
+ 		dev_err(dev, "failed to config DMA channel for Back-End\n");
++		dma_release_channel(pair->dma_chan[dir]);
+ 		return ret;
+ 	}
  
 -- 
 2.25.1
