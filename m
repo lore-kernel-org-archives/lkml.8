@@ -2,76 +2,120 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA72C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA38FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22C552100A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 943092100A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:29:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DYrOt0uK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgFRG32 (ORCPT
+        id S1727841AbgFRG3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 02:29:28 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6280 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725898AbgFRG32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 02:29:28 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 828E08A575EC6339027F;
-        Thu, 18 Jun 2020 14:29:25 +0800 (CST)
-Received: from huawei.com (10.67.174.156) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Thu, 18 Jun 2020
- 14:29:14 +0800
-From:   Chen Tao <chentao107@huawei.com>
-To:     <robdclark@gmail.com>, <sean@poorly.run>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>
-CC:     <ddavenport@chromium.org>, <zhengbin13@huawei.com>,
-        <gregkh@linuxfoundation.org>, <sam@ravnborg.org>,
-        <kalyan_t@codeaurora.org>, <jcrouse@codeaurora.org>,
-        <skolluku@codeaurora.org>, <ryadav@codeaurora.org>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <chentao107@huawei.com>
-Subject: [RESEND PATCH] drm/msm/dpu: fix error return code in dpu_encoder_init
-Date:   Thu, 18 Jun 2020 14:28:03 +0800
-Message-ID: <20200618062803.152097-1-chentao107@huawei.com>
-X-Mailer: git-send-email 2.22.0
+        Thu, 18 Jun 2020 02:29:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725898AbgFRG3x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 02:29:53 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53B5FC06174E;
+        Wed, 17 Jun 2020 23:29:53 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id n2so2007880pld.13;
+        Wed, 17 Jun 2020 23:29:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KQ2KXadNszv6SfxDIzV7J9NVKQv2wwsb+/cXUurR5GM=;
+        b=DYrOt0uKM0IHriWam8HTNRN9UuM6nX+aOJ8xmUqqK/Op1aQNYNm2ZeJ3VvPooSUriO
+         C/GJJiDHNTciGVGXltJwSMuV7sGFD7zKdMshcUDaCL5Jxx1B1XKAzz7wFUqB3eyWkoIA
+         GArMFuV0upHXRjKwDFMMaBPOgjWGZJjuuHAaSpeTBaozQcKBdpHnFedPqmmvBSxRq3ZW
+         7GKwcrBWCkDdMbQ8xqFFkCJRodgU+LzjDJX3LycC2jgp9TYrFgNtPkhh07JGQ0gnt5Vv
+         65/psM96IaS9ZIFmD47TUTvtJwR3vSuvfjWW2Ig6lDlKQE2tC9+nmMpggtiIFC9noOBt
+         /0mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KQ2KXadNszv6SfxDIzV7J9NVKQv2wwsb+/cXUurR5GM=;
+        b=jBny377DkbgrJVJ9Y7t58uOZCZYqPvygDtj37G3Ej5GOhqp5nXxUtY6E55uXpXthkV
+         JsVgAlVxcQKJlrkH9E5OQw+8vwxpaH8EmEIxogpWUJiOKXM2YV/bOkf0Z1TzALRLxT+L
+         erk9PShgatKiqtTukNxCE5AiSD1U6/MktFNFz/2ZRJBh02gaGfvvojx8xxg4g3OF36nY
+         N1XnC6UyDd0/zrf59VxriUznnfL6/Cs2cOXaCAfqo5bsCzRYMToghg0x01ur5J7kYGmS
+         bVYBRNW2PDfyjmMSleqN5yi8ZThkeIZODLFLfpgHllz+vC9Pxg2ZS4C78J0jPx4SWcO+
+         K8vg==
+X-Gm-Message-State: AOAM531GcjgNf2TlwoTHZxjmDnutM6Dclt2S4HiuW7ovrwhenhRUq3aE
+        Wq1Fc1Z0hP4Hx4xgTlI0R5Q=
+X-Google-Smtp-Source: ABdhPJzhNgB6nIJWV0vcJORiKu8vr3ckXLQInfPzfhQgk1wdu0Eh6YueIIVSZd/ictQ9XnPqUdWCLA==
+X-Received: by 2002:a17:90a:c7d0:: with SMTP id gf16mr2601883pjb.151.1592461792912;
+        Wed, 17 Jun 2020 23:29:52 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id oc6sm1426356pjb.43.2020.06.17.23.29.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Jun 2020 23:29:51 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 14:27:37 +0800
+From:   Geliang Tang <geliangtang@gmail.com>
+To:     Matthieu Baerts <matthieu.baerts@tessares.net>
+Cc:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        mptcp@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 0/3] add MP_PRIO, MP_FAIL and MP_FASTCLOSE
+ suboptions handling
+Message-ID: <20200618062737.GA21303@OptiPlex>
+References: <cover.1592289629.git.geliangtang@gmail.com>
+ <04ae76d9-231a-de8e-ad33-1e4e80bb314c@tessares.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.156]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <04ae76d9-231a-de8e-ad33-1e4e80bb314c@tessares.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix to return negative error code -ENOMEM with the use of
-ERR_PTR from dpu_encoder_init.
+On Tue, Jun 16, 2020 at 05:18:56PM +0200, Matthieu Baerts wrote:
+> Hi Geliang
+> 
+> On 16/06/2020 08:47, Geliang Tang wrote:
+> > Add handling for sending and receiving the MP_PRIO, MP_FAIL, and
+> > MP_FASTCLOSE suboptions.
+> 
+> Thank you for the patches!
+> 
+> Unfortunately, I don't think it would be wise to accept them now: for the
+> moment, these suboptions are ignored at the reception. If we accept them and
+> change some variables like you did, we would need to make sure the kernel is
+> still acting correctly. In other words, we would need tests:
+> * For MP_PRIO, there are still quite some works to do regarding the
+> scheduling of the packets between the different MPTCP subflows to do before
+> supporting this.
+> * For MP_FAIL, we should forward the info to the path manager.
+> * For MP_FASTCLOSE, we should close connections and ACK this.
+> 
+> Also, net-next is closed for the moment:
+> http://vger.kernel.org/~davem/net-next.html
+> 
+> I would suggest you to discuss about that on MPTCP mailing list. We also
+> have meetings every Thursday. New devs are always welcome to contribute to
+> new features and bug-fixes!
+> 
 
-Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-Signed-off-by: Chen Tao <chentao107@huawei.com>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Matt,
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index a1b79ee2bd9d..a2f6b688a976 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -2173,7 +2173,7 @@ struct drm_encoder *dpu_encoder_init(struct drm_device *dev,
- 
- 	dpu_enc = devm_kzalloc(dev->dev, sizeof(*dpu_enc), GFP_KERNEL);
- 	if (!dpu_enc)
--		return ERR_PTR(ENOMEM);
-+		return ERR_PTR(-ENOMEM);
- 
- 	rc = drm_encoder_init(dev, &dpu_enc->base, &dpu_encoder_funcs,
- 			drm_enc_mode, NULL);
--- 
-2.22.0
+Thanks for your reply. I will do these tests and improve my patches.
 
+-Geliang
+
+> Cheers,
+> Matt
+> -- 
+> Tessares | Belgium | Hybrid Access Solutions
+> www.tessares.net
