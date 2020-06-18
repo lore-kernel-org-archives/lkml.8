@@ -2,192 +2,123 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953F0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D22720884
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FB1021974
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:23:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="TUG/9Nqb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgFRJU7 (ORCPT
+        id S1729101AbgFRJXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 05:20:59 -0400
-Received: from smtp4-g21.free.fr ([212.27.42.4]:17268 "EHLO smtp4-g21.free.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728343AbgFRJU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 05:20:58 -0400
-Received: from [192.168.1.91] (unknown [77.207.133.132])
-        (Authenticated sender: marc.w.gonzalez)
-        by smtp4-g21.free.fr (Postfix) with ESMTPSA id 664CE19F5AB;
-        Thu, 18 Jun 2020 11:20:12 +0200 (CEST)
-Subject: Re: [RFC 3/4] media: dvb_frontend: move algo-specific settings to a
- function
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>
-Cc:     Brad Love <brad@nextdimension.cc>, Sean Young <sean@mess.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <cover.1592419750.git.mchehab+huawei@kernel.org>
- <daa69edd80e7fcf979062273f3067cb7b5573d52.1592419750.git.mchehab+huawei@kernel.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <8956d79a-cc5a-b744-3e21-25e9b4267dea@free.fr>
-Date:   Thu, 18 Jun 2020 11:20:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <daa69edd80e7fcf979062273f3067cb7b5573d52.1592419750.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 18 Jun 2020 05:23:22 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:47492 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729023AbgFRJXV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 05:23:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1592472201; x=1624008201;
+  h=from:to:cc:subject:date:message-id:in-reply-to;
+  bh=FrQFWi/xY34CO1aXWXmdnkW19MrSY+JhOMiMHLm7T+s=;
+  b=TUG/9NqbRMFwKlSmGeqQVp3K2F9ohQgW4U9TbzQI/uL6l1Q/NWuxKRad
+   J9MVEH7PTzQM3gHKPQrhMSBl4YLifqsyjJIcUPCn2txmLWKhneCciuRQw
+   Qvpt+jc/ex+ByDvd9GRAPefc4LNgWt22q64itkCBMoZqPTMtoPhZe7gGQ
+   Y=;
+IronPort-SDR: 3luC+foP3FAHkqHBVGpAbflh+Fhxy3xXWOoEx/AnfvPeb0zPbKm0C8zlJBhWMTia+K8OdqjEuM
+ QmiwPjg/YZCA==
+X-IronPort-AV: E=Sophos;i="5.73,526,1583193600"; 
+   d="scan'208";a="38333624"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 18 Jun 2020 09:23:17 +0000
+Received: from uc85b765ebdd8595b4b67.ant.amazon.com (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70])
+        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id 57FDB1A09AC;
+        Thu, 18 Jun 2020 09:23:13 +0000 (UTC)
+Received: from uc85b765ebdd8595b4b67.ant.amazon.com (localhost [127.0.0.1])
+        by uc85b765ebdd8595b4b67.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id 05I9NAhx022461;
+        Thu, 18 Jun 2020 11:23:10 +0200
+Received: (from foersleo@localhost)
+        by uc85b765ebdd8595b4b67.ant.amazon.com (8.15.2/8.15.2/Submit) id 05I9N6KK022447;
+        Thu, 18 Jun 2020 11:23:06 +0200
+From:   Leonard Foerster <foersleo@amazon.com>
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
+        Jonathan.Cameron@Huawei.com, aarcange@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, amit@kernel.org,
+        benh@kernel.crashing.org, brendan.d.gregg@gmail.com,
+        brendanhiggins@google.com, cai@lca.pw, colin.king@canonical.com,
+        corbet@lwn.net, dwmw@amazon.com, foersleo@amazon.de,
+        irogers@google.com, jolsa@redhat.com, kirill@shutemov.name,
+        mark.rutland@arm.com, mgorman@suse.de, minchan@kernel.org,
+        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
+        rdunlap@infradead.org, riel@surriel.com, rientjes@google.com,
+        rostedt@goodmis.org, sblbir@amazon.com, shakeelb@google.com,
+        shuah@kernel.org, sj38.park@gmail.com, snu@amazon.de,
+        vbabka@suse.cz, vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
+        ying.huang@intel.com, david@redhat.com, linux-damon@amazon.com,
+        linux-mm@kvack.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v16 03/14] mm/damon: Implement region based sampling
+Date:   Thu, 18 Jun 2020 11:23:03 +0200
+Message-Id: <1592472183-22394-1-git-send-email-foersleo@amazon.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20200615161927.12637-4-sjpark@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/06/2020 20:52, Mauro Carvalho Chehab wrote:
+On 2020-06-15T18:19:16+02:00 SeongJae Park <sjpark@amazon.com> wrote:
 
-> As we're planning to call this code on a separate place, let's
-
-s/on/from/
-Suggest: "to call this code from somewhere else"
-
-> fist move it to a different function.
-
-s/fist/first
-Suggest: "first move it to its own function"
-
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  drivers/media/dvb-core/dvb_frontend.c | 90 +++++++++++++++------------
->  1 file changed, 49 insertions(+), 41 deletions(-)
+> From: SeongJae Park <sjpark@amazon.de>
 > 
-> diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-> index 06ea30a689d7..ed85dc2a9183 100644
-> --- a/drivers/media/dvb-core/dvb_frontend.c
-> +++ b/drivers/media/dvb-core/dvb_frontend.c
-> @@ -1790,6 +1790,54 @@ static int dvbv3_set_delivery_system(struct dvb_frontend *fe)
->  	return emulate_delivery_system(fe, delsys);
->  }
->  
-> +static void prepare_tuning_algo_parameters(struct dvb_frontend *fe)
-> +{
-> +	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
-> +	struct dvb_frontend_private *fepriv = fe->frontend_priv;
-> +	struct dvb_frontend_tune_settings fetunesettings;
+> This commit implements DAMON's target address space independent high
+> level logics for basic access check and region based sampling.  The
+> target address space specific logics for the monitoring target address
+> regions construction and the access check are required, though.  The
+> following commits will provide reference implementations of those for
+> the general virtual address spaces and the physical address space.
+> Users can implement and use their own versions for their specific use
+> cases, though.
+> 
+> Basic Access Check
+> ------------------
+> 
+> DAMON basically reports what pages are how frequently accessed.  The
+> frequency is not an absolute number of accesses, but a ratio.
+> 
+> For this, DAMON first calls target monitoring construction callback
+> (``init_target_regions``), and then the access check callbacks, which is
+> assumed to check the access to each page and aggregates the number of
+> observed accesses of each page, for every ``sampling interval``.
+> Finally, DAMON resets the aggregated count per ``aggregation interval``.
+> 
+> This is thus similar to the common periodic access checks based
+> monitoring mechanisms but provides the access frequency.  The overhead
+> will increase as the size of the target process grows.
+> 
+> Region Based Sampling
+> ---------------------
+> 
+> To avoid the unbounded increase of the overhead, DAMON groups a number
+> of adjacent pages that assumed to have same access frequencies into a
+> region.  As long as the assumption (pages in a region have same access
+> frequencies) is kept, only one page in the region is required to be
+> checked.  Therefore, the monitoring overhead is controllable by setting
+> the number of regions.
+> 
+> Nonetheless, this scheme cannot preserve the quality of the output if
+> the assumption is not kept.  Following commit will introduce how we can
+> make the guarantee with some sort of best effort.
+> 
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> ---
 
-Suggest: fetunesettings = { 0 };
-then we can remove the memset() below.
-
-> +
-> +	/* get frontend-specific tuning settings */
-> +	memset(&fetunesettings, 0, sizeof(struct dvb_frontend_tune_settings));
-> +	if (fe->ops.get_tune_settings && (fe->ops.get_tune_settings(fe, &fetunesettings) == 0)) {
-> +		fepriv->min_delay = (fetunesettings.min_delay_ms * HZ) / 1000;
-> +		fepriv->max_drift = fetunesettings.max_drift;
-> +		fepriv->step_size = fetunesettings.step_size;
-> +	} else {
-> +		/* default values */
-> +		switch (c->delivery_system) {
-> +		case SYS_DVBS:
-> +		case SYS_DVBS2:
-> +		case SYS_ISDBS:
-> +		case SYS_TURBO:
-> +		case SYS_DVBC_ANNEX_A:
-> +		case SYS_DVBC_ANNEX_C:
-> +			fepriv->min_delay = HZ / 20;
-> +			fepriv->step_size = c->symbol_rate / 16000;
-> +			fepriv->max_drift = c->symbol_rate / 2000;
-> +			break;
-> +		case SYS_DVBT:
-> +		case SYS_DVBT2:
-> +		case SYS_ISDBT:
-> +		case SYS_DTMB:
-> +			fepriv->min_delay = HZ / 20;
-> +			fepriv->step_size = dvb_frontend_get_stepsize(fe) * 2;
-> +			fepriv->max_drift = (dvb_frontend_get_stepsize(fe) * 2) + 1;
-> +			break;
-> +		default:
-> +			/*
-> +			 * FIXME: This sounds wrong! if freqency_stepsize is
-> +			 * defined by the frontend, why not use it???
-> +			 */
-> +			fepriv->min_delay = HZ / 20;
-> +			fepriv->step_size = 0; /* no zigzag */
-> +			fepriv->max_drift = 0;
-> +			break;
-> +		}
-> +	}
-> +	if (dvb_override_tune_delay > 0)
-> +		fepriv->min_delay = (dvb_override_tune_delay * HZ) / 1000;
-> +}
-> +
->  /**
->   * dtv_property_process_set -  Sets a single DTV property
->   * @fe:		Pointer to &struct dvb_frontend
-> @@ -2182,7 +2230,6 @@ static int dtv_set_frontend(struct dvb_frontend *fe)
->  {
->  	struct dvb_frontend_private *fepriv = fe->frontend_priv;
->  	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
-> -	struct dvb_frontend_tune_settings fetunesettings;
->  	u32 rolloff = 0;
->  
->  	if (dvb_frontend_check_parameters(fe) < 0)
-> @@ -2260,46 +2307,7 @@ static int dtv_set_frontend(struct dvb_frontend *fe)
->  	if (c->hierarchy == HIERARCHY_NONE && c->code_rate_LP == FEC_NONE)
->  		c->code_rate_LP = FEC_AUTO;
->  
-> -	/* get frontend-specific tuning settings */
-> -	memset(&fetunesettings, 0, sizeof(struct dvb_frontend_tune_settings));
-> -	if (fe->ops.get_tune_settings && (fe->ops.get_tune_settings(fe, &fetunesettings) == 0)) {
-> -		fepriv->min_delay = (fetunesettings.min_delay_ms * HZ) / 1000;
-> -		fepriv->max_drift = fetunesettings.max_drift;
-> -		fepriv->step_size = fetunesettings.step_size;
-> -	} else {
-> -		/* default values */
-> -		switch (c->delivery_system) {
-> -		case SYS_DVBS:
-> -		case SYS_DVBS2:
-> -		case SYS_ISDBS:
-> -		case SYS_TURBO:
-> -		case SYS_DVBC_ANNEX_A:
-> -		case SYS_DVBC_ANNEX_C:
-> -			fepriv->min_delay = HZ / 20;
-> -			fepriv->step_size = c->symbol_rate / 16000;
-> -			fepriv->max_drift = c->symbol_rate / 2000;
-> -			break;
-> -		case SYS_DVBT:
-> -		case SYS_DVBT2:
-> -		case SYS_ISDBT:
-> -		case SYS_DTMB:
-> -			fepriv->min_delay = HZ / 20;
-> -			fepriv->step_size = dvb_frontend_get_stepsize(fe) * 2;
-> -			fepriv->max_drift = (dvb_frontend_get_stepsize(fe) * 2) + 1;
-> -			break;
-
-As an aside, I find it confusing that there are 3 sources for the stepsize.
-1) fe->ops.get_tune_settings().step_size
-2) fe->ops.info.frequency_stepsize_hz
-3) fe->ops.tuner_ops.info.frequency_step_hz
-
-> -		default:
-> -			/*
-> -			 * FIXME: This sounds wrong! if freqency_stepsize is
-> -			 * defined by the frontend, why not use it???
-> -			 */
-> -			fepriv->min_delay = HZ / 20;
-> -			fepriv->step_size = 0; /* no zigzag */
-> -			fepriv->max_drift = 0;
-> -			break;
-> -		}
-> -	}
-> -	if (dvb_override_tune_delay > 0)
-> -		fepriv->min_delay = (dvb_override_tune_delay * HZ) / 1000;
-> +	prepare_tuning_algo_parameters(fe);
-
-LGTM
-
-Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Reviewed-by: Leonard Foerster <foersleo@amazon.de>
