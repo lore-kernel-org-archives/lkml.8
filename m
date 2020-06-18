@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1261C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F86C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD1FE21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16DB2193E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446098;
-	bh=LhWCgqMpOimMUIh/VYqwEEVS7oF4YKfUj2TxcSiqHWQ=;
+	s=default; t=1592446107;
+	bh=CYKwsNRlklR9n7s608J5ivmyKmhR5uw4tV/vcJUoaPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AifOI9oKE5drumPK13mLNm0Kj+PeFZTpI4sKQQnVhNcZuO04TLreW3DzpIzBl6uAS
-	 SkpCcoedtSU9T9stnLWdTa3Hp/AXYU6VqHg6P6T2TQsLmkZrWPjYQJYOy/YFAqNd/t
-	 t0MO//mi9E58OeawANEi8sBCfUt78GAwNusWCiNc=
+	b=YLAeyL+6qgZPbozYY3Mq3+/ZdzkiMc7bDYrjH0Q7+HHxpHkgm8kJDydc1ggn1n2/E
+	 rix7rnGkMuGL5weoRYf5AI9IcfmPuKeGkvQrNL/fQ+iz1YLSSnSl6k4vopTwqrixIV
+	 vg6nEiPX1dlFqGDv8wtWVTLaAfeR4EVLRVblkdxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733120AbgFRCIQ (ORCPT
+        id S1733290AbgFRCI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:08:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54862 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:08:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730643AbgFRBWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:04 -0400
+        id S1730634AbgFRBWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:22:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9F5020CC7;
-        Thu, 18 Jun 2020 01:22:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EABF621D82;
+        Thu, 18 Jun 2020 01:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443323;
-        bh=LhWCgqMpOimMUIh/VYqwEEVS7oF4YKfUj2TxcSiqHWQ=;
+        s=default; t=1592443320;
+        bh=CYKwsNRlklR9n7s608J5ivmyKmhR5uw4tV/vcJUoaPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vv4ml2OiS98z7H+EwL31LByglnuzuCWN2DkWo2HfCuraNAKAslKQCAP9cVJcUSnXT
-         evrKSuRXXjCLeuQGRQCZnO4z8utkziWYMntXT2yxBdCnAeilpnOQRdjXkR2yxeqENj
-         y+T2rsjpTiHTzIyvtxKO2RfEWDE1Q5N1MkMwv1Hc=
+        b=j0MItbTM20M6Et9TPE37PD5d7QDeLhJLiDveUaCfgexLVnQzmP0Xum/O/2smNp/f6
+         OE7TG3Zmu1AA6u/TPKCpKMzgxN8O9o48vD/t5p48sZXLvli6B+DV01xIIrNnq3txpW
+         A30j44HWeUaZXO/6o1YTulygpvFj18p4wBCkqZGg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 257/266] drm/sun4i: hdmi ddc clk: Fix size of m divider
-Date:   Wed, 17 Jun 2020 21:16:22 -0400
-Message-Id: <20200618011631.604574-257-sashal@kernel.org>
+Cc:     Jakub Sitnicki <jakub@cloudflare.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 255/266] bpf, sockhash: Synchronize delete from bucket list on map free
+Date:   Wed, 17 Jun 2020 21:16:20 -0400
+Message-Id: <20200618011631.604574-255-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -62,49 +62,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-[ Upstream commit 54e1e06bcf1cf6e7ac3f86daa5f7454add24b494 ]
+[ Upstream commit 75e68e5bf2c7fa9d3e874099139df03d5952a3e1 ]
 
-m divider in DDC clock register is 4 bits wide. Fix that.
+We can end up modifying the sockhash bucket list from two CPUs when a
+sockhash is being destroyed (sock_hash_free) on one CPU, while a socket
+that is in the sockhash is unlinking itself from it on another CPU
+it (sock_hash_delete_from_link).
 
-Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200413095457.1176754-1-jernej.skrabec@siol.net
+This results in accessing a list element that is in an undefined state as
+reported by KASAN:
+
+| ==================================================================
+| BUG: KASAN: wild-memory-access in sock_hash_free+0x13c/0x280
+| Write of size 8 at addr dead000000000122 by task kworker/2:1/95
+|
+| CPU: 2 PID: 95 Comm: kworker/2:1 Not tainted 5.7.0-rc7-02961-ge22c35ab0038-dirty #691
+| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+| Workqueue: events bpf_map_free_deferred
+| Call Trace:
+|  dump_stack+0x97/0xe0
+|  ? sock_hash_free+0x13c/0x280
+|  __kasan_report.cold+0x5/0x40
+|  ? mark_lock+0xbc1/0xc00
+|  ? sock_hash_free+0x13c/0x280
+|  kasan_report+0x38/0x50
+|  ? sock_hash_free+0x152/0x280
+|  sock_hash_free+0x13c/0x280
+|  bpf_map_free_deferred+0xb2/0xd0
+|  ? bpf_map_charge_finish+0x50/0x50
+|  ? rcu_read_lock_sched_held+0x81/0xb0
+|  ? rcu_read_lock_bh_held+0x90/0x90
+|  process_one_work+0x59a/0xac0
+|  ? lock_release+0x3b0/0x3b0
+|  ? pwq_dec_nr_in_flight+0x110/0x110
+|  ? rwlock_bug.part.0+0x60/0x60
+|  worker_thread+0x7a/0x680
+|  ? _raw_spin_unlock_irqrestore+0x4c/0x60
+|  kthread+0x1cc/0x220
+|  ? process_one_work+0xac0/0xac0
+|  ? kthread_create_on_node+0xa0/0xa0
+|  ret_from_fork+0x24/0x30
+| ==================================================================
+
+Fix it by reintroducing spin-lock protected critical section around the
+code that removes the elements from the bucket on sockhash free.
+
+To do that we also need to defer processing of removed elements, until out
+of atomic context so that we can unlink the socket from the map when
+holding the sock lock.
+
+Fixes: 90db6d772f74 ("bpf, sockmap: Remove bucket->lock from sock_{hash|map}_free")
+Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Link: https://lore.kernel.org/bpf/20200607205229.2389672-3-jakub@cloudflare.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi.h         | 2 +-
- drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ net/core/sock_map.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-index 7ad3f06c127e..00ca35f07ba5 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-@@ -148,7 +148,7 @@
- #define SUN4I_HDMI_DDC_CMD_IMPLICIT_WRITE	3
- 
- #define SUN4I_HDMI_DDC_CLK_REG		0x528
--#define SUN4I_HDMI_DDC_CLK_M(m)			(((m) & 0x7) << 3)
-+#define SUN4I_HDMI_DDC_CLK_M(m)			(((m) & 0xf) << 3)
- #define SUN4I_HDMI_DDC_CLK_N(n)			((n) & 0x7)
- 
- #define SUN4I_HDMI_DDC_LINE_CTRL_REG	0x540
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-index 2ff780114106..12430b9d4e93 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-@@ -33,7 +33,7 @@ static unsigned long sun4i_ddc_calc_divider(unsigned long rate,
- 	unsigned long best_rate = 0;
- 	u8 best_m = 0, best_n = 0, _m, _n;
- 
--	for (_m = 0; _m < 8; _m++) {
-+	for (_m = 0; _m < 16; _m++) {
- 		for (_n = 0; _n < 8; _n++) {
- 			unsigned long tmp_rate;
- 
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index ba65c608c228..b22e9f119180 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -861,6 +861,7 @@ static void sock_hash_free(struct bpf_map *map)
+ {
+ 	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
+ 	struct bpf_htab_bucket *bucket;
++	struct hlist_head unlink_list;
+ 	struct bpf_htab_elem *elem;
+ 	struct hlist_node *node;
+ 	int i;
+@@ -872,13 +873,31 @@ static void sock_hash_free(struct bpf_map *map)
+ 	synchronize_rcu();
+ 	for (i = 0; i < htab->buckets_num; i++) {
+ 		bucket = sock_hash_select_bucket(htab, i);
+-		hlist_for_each_entry_safe(elem, node, &bucket->head, node) {
+-			hlist_del_rcu(&elem->node);
++
++		/* We are racing with sock_hash_delete_from_link to
++		 * enter the spin-lock critical section. Every socket on
++		 * the list is still linked to sockhash. Since link
++		 * exists, psock exists and holds a ref to socket. That
++		 * lets us to grab a socket ref too.
++		 */
++		raw_spin_lock_bh(&bucket->lock);
++		hlist_for_each_entry(elem, &bucket->head, node)
++			sock_hold(elem->sk);
++		hlist_move_list(&bucket->head, &unlink_list);
++		raw_spin_unlock_bh(&bucket->lock);
++
++		/* Process removed entries out of atomic context to
++		 * block for socket lock before deleting the psock's
++		 * link to sockhash.
++		 */
++		hlist_for_each_entry_safe(elem, node, &unlink_list, node) {
++			hlist_del(&elem->node);
+ 			lock_sock(elem->sk);
+ 			rcu_read_lock();
+ 			sock_map_unref(elem->sk, elem);
+ 			rcu_read_unlock();
+ 			release_sock(elem->sk);
++			sock_put(elem->sk);
+ 			sock_hash_free_elem(htab, elem);
+ 		}
+ 	}
 -- 
 2.25.1
 
