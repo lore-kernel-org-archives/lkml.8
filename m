@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870E7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF4620897
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E1AC2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444842;
-	bh=WJhUlbUTIN1K73n4tY0V57/KVBPeXnvmTmlAw1UHdiw=;
+	s=default; t=1592444851;
+	bh=Fh3l6Co060xtOLUSOhxLI5YMyHj64IyT1hO8obagLKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sk6iDwejhb7AWtoJhyVzPgv7KtVFvrHB+f+pMeUWdP9MTAmkGqJd++L1nXVyx1xX/
-	 xvTGh8UV8h+9Ue6kIoSuLjhYneMt2VwHEj60EyJ9bUaF/Duu+QO+J4ZZR8dkc9a4rR
-	 Li29mCAUP4k/rS8rDyvgX+svHHuKiwC8X0d63dfc=
+	b=zi7O0wB9OIONUclTo/10Rr3mVH4a0gUUZeYRw8sHFJzPCsekGe857COklhCHVQu7c
+	 C8oyywhKlQ/qRwMK/7oH+HuUhYkuN9RNYY2AkvTPzi45S/UtpTi9HPgDnkkg/OQ0xV
+	 JmAaY6IJ7OmIKJxqmC5TFYW0uWvnJ9kLDQXn26t8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732374AbgFRBrT (ORCPT
+        id S1732303AbgFRBr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:47:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36776 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:47:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732051AbgFRB2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:28:15 -0400
+        id S1732044AbgFRB2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:28:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83721221F3;
-        Thu, 18 Jun 2020 01:28:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4274F22200;
+        Thu, 18 Jun 2020 01:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443694;
-        bh=WJhUlbUTIN1K73n4tY0V57/KVBPeXnvmTmlAw1UHdiw=;
+        s=default; t=1592443691;
+        bh=Fh3l6Co060xtOLUSOhxLI5YMyHj64IyT1hO8obagLKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JNyvPbHXxkChM2UkctyvAHhKRQT68s/jzIHHd7rjpTkIN1eJBPFif8sY90Q1sZAT/
-         NGTjcqwE9yqGEmUrGVCWqW5/SKV1pSlYnO9bAnqEIgaAqkEc2oT88IWq2aROLK76GG
-         LuZBdmT6dblUp+fOJ34IdBDZqEyMZbAAioA313FE=
+        b=oYNRGbppiuQ02NIZYFVBNBojXu7IBGIgwb8H430TMgNMsaNY26QruJufvHS7Z+slK
+         x65dHg/vIEuksVWywrfRkNXZqcDdVsyHHp/btnJUYuZR5RrbIWf3ev0qz7o9N4eUo5
+         gHVAXw/wCxG+D30U0g/KasYxdcBjgBqH/4s/arLM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     tannerlove <tannerlove@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 105/108] selftests/net: in timestamping, strncpy needs to preserve null byte
-Date:   Wed, 17 Jun 2020 21:25:57 -0400
-Message-Id: <20200618012600.608744-105-sashal@kernel.org>
+Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 103/108] blktrace: fix endianness for blk_log_remap()
+Date:   Wed, 17 Jun 2020 21:25:55 -0400
+Message-Id: <20200618012600.608744-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,63 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: tannerlove <tannerlove@google.com>
+From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 
-[ Upstream commit 8027bc0307ce59759b90679fa5d8b22949586d20 ]
+[ Upstream commit 5aec598c456fe3c1b71a1202cbb42bdc2a643277 ]
 
-If user passed an interface option longer than 15 characters, then
-device.ifr_name and hwtstamp.ifr_name became non-null-terminated
-strings. The compiler warned about this:
+The function blk_log_remap() can be simplified by removing the
+call to get_pdu_remap() that copies the values into extra variable to
+print the data, which also fixes the endiannness warning reported by
+sparse.
 
-timestamping.c:353:2: warning: ‘strncpy’ specified bound 16 equals \
-destination size [-Wstringop-truncation]
-  353 |  strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
-
-Fixes: cb9eff097831 ("net: new user space API for time stamping of incoming and outgoing packets")
-Signed-off-by: Tanner Love <tannerlove@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/networking/timestamping/timestamping.c   | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ kernel/trace/blktrace.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
-diff --git a/tools/testing/selftests/networking/timestamping/timestamping.c b/tools/testing/selftests/networking/timestamping/timestamping.c
-index 5cdfd743447b..900ed4b47899 100644
---- a/tools/testing/selftests/networking/timestamping/timestamping.c
-+++ b/tools/testing/selftests/networking/timestamping/timestamping.c
-@@ -332,10 +332,16 @@ int main(int argc, char **argv)
- 	int val;
- 	socklen_t len;
- 	struct timeval next;
-+	size_t if_len;
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index be97e0b4ae7d..304a164f5e7e 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -1289,17 +1289,6 @@ static __u64 get_pdu_int(const struct trace_entry *ent, bool has_cg)
+ 	return be64_to_cpu(*val);
+ }
  
- 	if (argc < 2)
- 		usage(0);
- 	interface = argv[1];
-+	if_len = strlen(interface);
-+	if (if_len >= IFNAMSIZ) {
-+		printf("interface name exceeds IFNAMSIZ\n");
-+		exit(1);
-+	}
+-static void get_pdu_remap(const struct trace_entry *ent,
+-			  struct blk_io_trace_remap *r, bool has_cg)
+-{
+-	const struct blk_io_trace_remap *__r = pdu_start(ent, has_cg);
+-	__u64 sector_from = __r->sector_from;
+-
+-	r->device_from = be32_to_cpu(__r->device_from);
+-	r->device_to   = be32_to_cpu(__r->device_to);
+-	r->sector_from = be64_to_cpu(sector_from);
+-}
+-
+ typedef void (blk_log_action_t) (struct trace_iterator *iter, const char *act,
+ 	bool has_cg);
  
- 	for (i = 2; i < argc; i++) {
- 		if (!strcasecmp(argv[i], "SO_TIMESTAMP"))
-@@ -369,12 +375,12 @@ int main(int argc, char **argv)
- 		bail("socket");
+@@ -1425,13 +1414,13 @@ static void blk_log_with_error(struct trace_seq *s,
  
- 	memset(&device, 0, sizeof(device));
--	strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
-+	memcpy(device.ifr_name, interface, if_len + 1);
- 	if (ioctl(sock, SIOCGIFADDR, &device) < 0)
- 		bail("getting interface IP address");
+ static void blk_log_remap(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
+ {
+-	struct blk_io_trace_remap r = { .device_from = 0, };
++	const struct blk_io_trace_remap *__r = pdu_start(ent, has_cg);
  
- 	memset(&hwtstamp, 0, sizeof(hwtstamp));
--	strncpy(hwtstamp.ifr_name, interface, sizeof(hwtstamp.ifr_name));
-+	memcpy(hwtstamp.ifr_name, interface, if_len + 1);
- 	hwtstamp.ifr_data = (void *)&hwconfig;
- 	memset(&hwconfig, 0, sizeof(hwconfig));
- 	hwconfig.tx_type =
+-	get_pdu_remap(ent, &r, has_cg);
+ 	trace_seq_printf(s, "%llu + %u <- (%d,%d) %llu\n",
+ 			 t_sector(ent), t_sec(ent),
+-			 MAJOR(r.device_from), MINOR(r.device_from),
+-			 (unsigned long long)r.sector_from);
++			 MAJOR(be32_to_cpu(__r->device_from)),
++			 MINOR(be32_to_cpu(__r->device_from)),
++			 be64_to_cpu(__r->sector_from));
+ }
+ 
+ static void blk_log_plug(struct trace_seq *s, const struct trace_entry *ent, bool has_cg)
 -- 
 2.25.1
 
