@@ -2,145 +2,209 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B31C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 770C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11460208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5CC20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:44:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="V8mp4jvy"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hCDyykgv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731189AbgFRVn0 (ORCPT
+        id S1731286AbgFRVo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 17:43:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37482 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgFRVnW (ORCPT
+        Thu, 18 Jun 2020 17:44:29 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53486 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725982AbgFRVo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 17:43:22 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D854C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 14:43:22 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x207so3436304pfc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 14:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MCieKSv/d/exPmPAc7GwarGBCkAH7xKxzBmQYr15/Mk=;
-        b=V8mp4jvyFG4zJvLAWNOdhumVntlmDxZZq/AwM7zrUUDHvFbBYuqdahXr5Xl5RsZWNP
-         McQV2xYz0a9JAYqNmaocKtBwdWZkbyzhiJcDskBhX1oigc/Nhe124z2aEuZFPanpjJvo
-         uN/PbKkX7EYUYrXf3KbIFgnd7EyavDQFCPgFNgavAaRi/qGhjqXqN7hJoWpGRlXqzyWe
-         52Rrov6055Z9UJFAQ4uk9ABRJ3YtRHTx3rduIoJ13/F3hBTUWLrXQObKwlHcKW0yopVu
-         lG2tCyXQxN6KrrnIfNPF/0HpuVO/XRBsRHl5G21GqkCraQ0fxibpGPWsR3P/0f4QNC21
-         gY5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=MCieKSv/d/exPmPAc7GwarGBCkAH7xKxzBmQYr15/Mk=;
-        b=qPjSDOgfokI46W9RuhB1czCnIgDkpja4Z5nUg18II1bP0bS+m+gHyWitiooRX2tT27
-         W58kVIn5nqSPgrP3xD99YqJ1raqkv36QTGR47TKMP02QFVddNikVk3Kl98Y5sUsFN9Gf
-         PWPqk/w95Pd1vrKZSLkSWAvpHhTaKU3XqV3uH2W+VeNaKldtmYM4JcsUszKsN71fExP5
-         ebKxQAl54rYQ7UcKZuHJFqIdgFBHtbC+YRuPjqih+8qWad7kmfks6QGw52oDyl7mz0yk
-         XwRnIWYz4k/ZQuhcev3ASNM4imVJl36V3JXOGHaIOWMg+FZm4OSUIrWi1kvZv0/U1KdV
-         oLzw==
-X-Gm-Message-State: AOAM533ZC/UuZNoORqY0ZIF5LqaGcs7EO5/UibvjCZHmhki5Cp+RE98o
-        +VaZ2gyJSUXBe8tN5+Ik23+0OQ==
-X-Google-Smtp-Source: ABdhPJwweIQW+LbWu+cyDIJEt3TduPx5LkFVOSuIXAzVaGFHv07HldXcFv0276BewwTjHxXw6vfmvw==
-X-Received: by 2002:aa7:9abc:: with SMTP id x28mr5293452pfi.39.1592516601272;
-        Thu, 18 Jun 2020 14:43:21 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id 130sm3695771pfw.176.2020.06.18.14.43.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 14:43:20 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 14:43:20 -0700 (PDT)
-X-Google-Original-Date: Thu, 18 Jun 2020 14:43:16 PDT (-0700)
-Subject:     Re: [PATCH] riscv/atomic: Fix sign extension for RV64I
-In-Reply-To: <20200611183235.37508-1-nhuck@google.com>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, nhuck@google.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     nhuck@google.com
-Message-ID: <mhng-daf9e66b-0b4a-42ee-92ef-e2a08101a362@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 18 Jun 2020 17:44:29 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05ILiLG6099619;
+        Thu, 18 Jun 2020 16:44:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592516661;
+        bh=NtFYYf22CUq2Y656mDj/xXRVHdSM/x6MXTmqwdRqKiA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=hCDyykgvkONfsqJ83Szw/CKpRVlltRvLNr/9xu/2Lo+BE+7qaOUG9dx/Uh26jPoNo
+         P0RJtVeJTaTfgSW5P5VYQFaioZ3hx43bcKnzBED35gOPsdx/LBi/d/jQ60aaRxYJmC
+         TX7paIFNPQqofAS0MCn1NumoQcVz42AC+ljlJObM=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05ILiL17051337
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 18 Jun 2020 16:44:21 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 18
+ Jun 2020 16:44:21 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 18 Jun 2020 16:44:20 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05ILiKqL096589;
+        Thu, 18 Jun 2020 16:44:20 -0500
+Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
+ support to lp55xx
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <robh@kernel.org>
+CC:     <kbuild-all@lists.01.org>, <devicetree@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200615201522.19677-12-dmurphy@ti.com>
+ <202006180032.JW0i39C6%lkp@intel.com>
+ <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
+ <58ad7723-131f-6930-00d7-1144c993110c@gmail.com>
+ <fc1ae702-0734-973d-9e3c-22b8f8d5c873@ti.com>
+ <fc410dfb-70d1-1b8b-3b6d-0de1c6c84ec2@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <56823113-4875-4813-8627-84b0d1792391@ti.com>
+Date:   Thu, 18 Jun 2020 16:44:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <fc410dfb-70d1-1b8b-3b6d-0de1c6c84ec2@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Jun 2020 11:32:35 PDT (-0700), nhuck@google.com wrote:
-> The argument passed to cmpxchg is not guaranteed to be sign
-> extended, but lr.w sign extends on RV64I. This makes cmpxchg
-> fail on clang built kernels when __old is negative.
->
-> To fix this, we just cast __old to long which sign extends on
-> RV64I. With this fix, clang built RISC-V kernels now boot.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/867
-> Cc: clang-built-linux@googlegroups.com
-> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> ---
->  arch/riscv/include/asm/cmpxchg.h | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-> index d969bab4a26b..262e5bbb2776 100644
-> --- a/arch/riscv/include/asm/cmpxchg.h
-> +++ b/arch/riscv/include/asm/cmpxchg.h
-> @@ -179,7 +179,7 @@
->  			"	bnez %1, 0b\n"				\
->  			"1:\n"						\
->  			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
-> -			: "rJ" (__old), "rJ" (__new)			\
-> +			: "rJ" ((long)__old), "rJ" (__new)		\
->  			: "memory");					\
->  		break;							\
->  	case 8:								\
-> @@ -224,7 +224,7 @@
->  			RISCV_ACQUIRE_BARRIER				\
->  			"1:\n"						\
->  			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
-> -			: "rJ" (__old), "rJ" (__new)			\
-> +			: "rJ" ((long)__old), "rJ" (__new)		\
->  			: "memory");					\
->  		break;							\
->  	case 8:								\
-> @@ -270,7 +270,7 @@
->  			"	bnez %1, 0b\n"				\
->  			"1:\n"						\
->  			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
-> -			: "rJ" (__old), "rJ" (__new)			\
-> +			: "rJ" ((long)__old), "rJ" (__new)		\
->  			: "memory");					\
->  		break;							\
->  	case 8:								\
-> @@ -316,7 +316,7 @@
->  			"	fence rw, rw\n"				\
->  			"1:\n"						\
->  			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
-> -			: "rJ" (__old), "rJ" (__new)			\
-> +			: "rJ" ((long)__old), "rJ" (__new)		\
->  			: "memory");					\
->  		break;							\
->  	case 8:								\
+Jacek
 
-So we talked about this earlier, but just so everyone's one the same page: I
-think this should be a compiler bug, but the spec doesn't define any of this
-stuff well enough that it actually is.  I'm sort of inclined to make it a
-compiler bug, but I'm not sure if that's still possible and it requires a lot
-more work.  I'm writing up a bigger email, but it's been floating around for a
-few days and I don't want to delay this on sorting out what our inline assembly
-actually does.
+On 6/18/20 4:21 PM, Jacek Anaszewski wrote:
+> Dan,
+>
+> On 6/18/20 12:33 AM, Dan Murphy wrote:
+>> Jacek
+>>
+>> On 6/17/20 4:41 PM, Jacek Anaszewski wrote:
+>>> Dan,
+>>>
+>>> On 6/17/20 9:22 PM, Dan Murphy wrote:
+>>>> Pavel/Jacek
+>>>>
+>>>> On 6/17/20 11:28 AM, kernel test robot wrote:
+>>>>> Hi Dan,
+>>>>>
+>>>>> I love your patch! Yet something to improve:
+>>>>>
+>>>>> [auto build test ERROR on pavel-linux-leds/for-next]
+>>>>> [cannot apply to j.anaszewski-leds/for-next]
+>>>>> [if your patch is applied to the wrong git tree, please drop us a 
+>>>>> note to help
+>>>>> improve the system. BTW, we also suggest to use '--base' option to 
+>>>>> specify the
+>>>>> base tree in git format-patch, please see 
+>>>>> https://stackoverflow.com/a/37406982]
+>>>>>
+>>>>> url: 
+>>>>> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217 
+>>>>>
+>>>>> base: 
+>>>>> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git 
+>>>>> for-next
+>>>>> config: ia64-randconfig-r015-20200617 (attached as .config)
+>>>>> compiler: ia64-linux-gcc (GCC) 9.3.0
+>>>>> reproduce (this is a W=1 build):
+>>>>>          wget 
+>>>>> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross 
+>>>>> -O ~/bin/make.cross
+>>>>>          chmod +x ~/bin/make.cross
+>>>>>          # save the attached .config to linux build tree
+>>>>>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 
+>>>>> make.cross ARCH=ia64
+>>>>>
+>>>>> If you fix the issue, kindly add following tag as appropriate
+>>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>>>
+>>>>> All errors (new ones prefixed by >>, old ones prefixed by <<):
+>>>>>
+>>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
+>>>>> `lp55xx_set_mc_brightness':
+>>>>>>> drivers/leds/leds-lp55xx-common.c:146: undefined reference to 
+>>>>>>> `led_mc_calc_color_components'
+>>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
+>>>>> `devm_led_classdev_multicolor_register':
+>>>>>>> include/linux/led-class-multicolor.h:74: undefined reference to 
+>>>>>>> `devm_led_classdev_multicolor_register_ext'
+>>>>> vim +146 drivers/leds/leds-lp55xx-common.c
+>>>>>
+>>>>>     138
+>>>>>     139    static int lp55xx_set_mc_brightness(struct led_classdev 
+>>>>> *cdev,
+>>>>>     140                        enum led_brightness brightness)
+>>>>>     141    {
+>>>>>     142        struct led_classdev_mc *mc_dev = 
+>>>>> lcdev_to_mccdev(cdev);
+>>>>>     143        struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
+>>>>>     144        struct lp55xx_device_config *cfg = led->chip->cfg;
+>>>>>     145
+>>>>>   > 146 led_mc_calc_color_components(&led->mc_cdev, brightness);
+>>>>>     147        return cfg->multicolor_brightness_fn(led);
+>>>>>     148
+>>>>
+>>>> Well this was a mess to figure out.
+>>>>
+>>>> The only fix I can figure out here is to remove the
+>>>>
+>>>>      depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+>>>>
+>>>> from each child device and add
+>>>>
+>>>>      select LEDS_CLASS_MULTI_COLOR
+>>>>
+>>>> to the LP55XX_COMMON
+>>>>
+>>>> This way the Multi color framework will inherit the symbol that was 
+>>>> set by the COMMON flag which is inherited by majority from the 
+>>>> child flags.
+>>>
+>>> Did you try this?
+>>>
+>>> --- a/drivers/leds/Kconfig
+>>> +++ b/drivers/leds/Kconfig
+>>> @@ -398,6 +398,7 @@ config LEDS_LP50XX
+>>>  config LEDS_LP55XX_COMMON
+>>>         tristate "Common Driver for TI/National 
+>>> LP5521/5523/55231/5562/8501"
+>>>         depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || 
+>>> LEDS_LP8501
+>>> +       depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+>>>         depends on OF
+>>>         select FW_LOADER
+>>>         select FW_LOADER_USER_HELPER
+>>>
+>>>
+>> Yes I did
+>>
+>> That gave unmet dependencies.
+>>
+>> WARNING: unmet direct dependencies detected for LEDS_LP55XX_COMMON
+>>    Depends on [m]: NEW_LEDS [=y] && (LEDS_LP5521 [=n] || LEDS_LP5523 
+>> [=m] || LEDS_LP5562 [=y] || LEDS_LP8501 [=y]) && 
+>> (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m]) && OF [=y]
+>>    Selected by [y]:
+>>    - LEDS_LP5562 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
+>>    - LEDS_LP8501 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
+>>    Selected by [m]:
+>>    - LEDS_LP5523 [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y] 
+>> && (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m])
+>>
+>
+> When I was testing that yesterday I also had the same warning at some
+> point of testing different Kconfig setups, but with what I showed above
+> it ceased to appear. Now every time I am doing "make oldconfig" the
+> CONFIG_LEDS_LP55XX_COMMON=y entry gets changed to =m with the config
+> from the test bot.
+>
+That is not what I saw in my testing especially after doing a distclean
 
-I've put this on fixes.
+Dan
 
-Thanks!
