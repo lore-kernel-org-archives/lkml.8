@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96433C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2482AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBCC20853
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD9E20853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446381;
-	bh=cFKRK0P75KlGm5ylZxFgc3LvzLFkmNDFhzOnV5ssDNM=;
+	s=default; t=1592446385;
+	bh=gcYIdJSBndXo8ib41qkOp7IDNKCp6T94n1aw+8dxIIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sObd2fC/ak/jafOwtGXlRsZI3/5a0Rqv/Vn/4NgnyDrJhflpmPbW0UdsIAKaIujWc
-	 uJs9QqqzLJL4iojKHTWF99tk+PsoOx+XPcuil1FvI0PZk6SuJkRPx7f+gM2z/FEUGX
-	 XT2i8PEur3iMiRa0d7Qv5KbCU2I7pGv2ezFRFIiY=
+	b=Q+3OnVcVPgiQP7o5Ye1tt5hpN1+4mrud7JEnD9S4c+giPeodiHHbGYT5YEQ1tyhvA
+	 KCltcLbtDva6iqrsE/k8AN7ZHtoDAqvIkHhlDOiWaHaEwBd9HwIvAqSuvyVp8q1QwR
+	 p2IczjMWatDqnVsrwKMDvjtAdfc5Gp3hdAliR5s4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733311AbgFRCNA (ORCPT
+        id S2387468AbgFRCNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53506 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:13:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730456AbgFRBVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:13 -0400
+        id S1729411AbgFRBVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:21:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A54721D90;
-        Thu, 18 Jun 2020 01:21:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B7CE20776;
+        Thu, 18 Jun 2020 01:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443273;
-        bh=cFKRK0P75KlGm5ylZxFgc3LvzLFkmNDFhzOnV5ssDNM=;
+        s=default; t=1592443268;
+        bh=gcYIdJSBndXo8ib41qkOp7IDNKCp6T94n1aw+8dxIIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JSQAvn+was5fzwUv1g9pfMzwgtnNPig1aPM/eaK2nGArPvxUpu8pDVjj0UR4fpoZK
-         byFgJJt7FNGMevuw3iN6ikUcnjs6A8+B2Hd0fSJmWqBPTAmhKpku3RutfGG5Am+CbN
-         JbhrsKZtjRnUbEuPJmup3yV8FA81aAE2GPDJVMOE=
+        b=BoN2KpAvGSJw8WGp4UGyp/FvDPvv+Mz30sqwWUlzK+SD0IxpKy4USlWZB0ot6GAy/
+         l1Cs5ciagwGxP9+pPXQgp83Eo88LYHKgAr5EqKd0cshdiN9ll9ZARvbISRGiaC1V+5
+         Ra1/JDmeKvf6XgJQU2xbPnu53wQUJPleHu09CzgQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.4 218/266] gfs2: Allow lock_nolock mount to specify jid=X
-Date:   Wed, 17 Jun 2020 21:15:43 -0400
-Message-Id: <20200618011631.604574-218-sashal@kernel.org>
+Cc:     Stafford Horne <shorne@gmail.com>, Sasha Levin <sashal@kernel.org>,
+        openrisc@lists.librecores.org
+Subject: [PATCH AUTOSEL 5.4 214/266] openrisc: Fix issue with argument clobbering for clone/fork
+Date:   Wed, 17 Jun 2020 21:15:39 -0400
+Message-Id: <20200618011631.604574-214-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,44 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Stafford Horne <shorne@gmail.com>
 
-[ Upstream commit ea22eee4e6027d8927099de344f7fff43c507ef9 ]
+[ Upstream commit 6bd140e14d9aaa734ec37985b8b20a96c0ece948 ]
 
-Before this patch, a simple typo accidentally added \n to the jid=
-string for lock_nolock mounts. This made it impossible to mount a
-gfs2 file system with a journal other than journal0. Thus:
+Working on the OpenRISC glibc port I found that sometimes clone was
+working strange.  That the tls data argument sent in r7 was always
+wrong.  Further investigation revealed that the arguments were getting
+clobbered in the entry code.  This patch removes the code that writes to
+the argument registers.  This was likely due to some old code hanging
+around.
 
-mount -tgfs2 -o hostdata="jid=1" <device> <mount pt>
+This patch fixes this up for clone and fork.  This fork clobber is
+harmless but also useless so remove.
 
-Resulted in:
-mount: wrong fs type, bad option, bad superblock on <device>
-
-In most cases this is not a problem. However, for debugging and
-testing purposes we sometimes want to test the integrity of other
-journals. This patch removes the unnecessary \n and thus allows
-lock_nolock users to specify an alternate journal.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/ops_fstype.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/openrisc/kernel/entry.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index 18daf494abab..c26c864590cc 100644
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@ -911,7 +911,7 @@ static int init_per_node(struct gfs2_sbd *sdp, int undo)
- }
+diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
+index e4a78571f883..c6481cfc5220 100644
+--- a/arch/openrisc/kernel/entry.S
++++ b/arch/openrisc/kernel/entry.S
+@@ -1166,13 +1166,13 @@ ENTRY(__sys_clone)
+ 	l.movhi	r29,hi(sys_clone)
+ 	l.ori	r29,r29,lo(sys_clone)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r7,r1,0
++	 l.nop
  
- static const match_table_t nolock_tokens = {
--	{ Opt_jid, "jid=%d\n", },
-+	{ Opt_jid, "jid=%d", },
- 	{ Opt_err, NULL },
- };
+ ENTRY(__sys_fork)
+ 	l.movhi	r29,hi(sys_fork)
+ 	l.ori	r29,r29,lo(sys_fork)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r3,r1,0
++	 l.nop
  
+ ENTRY(sys_rt_sigreturn)
+ 	l.jal	_sys_rt_sigreturn
 -- 
 2.25.1
 
