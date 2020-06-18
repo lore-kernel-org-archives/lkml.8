@@ -2,160 +2,306 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEDCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 05:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0972B21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 05:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5650821852
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:04:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fj6w7VsM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I4ZOINg4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgFRF6R (ORCPT
+        id S1727079AbgFRGEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 01:58:17 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59272 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727820AbgFRF6N (ORCPT
+        Thu, 18 Jun 2020 02:04:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgFRGEs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 01:58:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592459892;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ANjSp1CGZSsGz6Jj2Dxzgjt9bQwE2jGuP+C3WvRPMLM=;
-        b=Fj6w7VsMc59MDUPU25ttlQmH2YlukYnEptnLpiPnZIcHO++fSqaTKB1YjaSZTdy0OEYo9o
-        dq23E+McKG8tRlKgugc1vzKyFKe8kyRIiOiyRHv7x9pFqithseUJqGKRcvv0JxEHDsDoOX
-        izRk+4O1dsTu2QcVst0bHufAXSLoehk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-435-0C2VkjGMNAGvyv09pK32Kg-1; Thu, 18 Jun 2020 01:58:10 -0400
-X-MC-Unique: 0C2VkjGMNAGvyv09pK32Kg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C712107ACCD;
-        Thu, 18 Jun 2020 05:58:08 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-219.pek2.redhat.com [10.72.13.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E96815C1D6;
-        Thu, 18 Jun 2020 05:58:02 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     rob.miller@broadcom.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-Subject: [PATCH RFC 5/5] vdpasim: support batch updating
-Date:   Thu, 18 Jun 2020 13:56:26 +0800
-Message-Id: <20200618055626.25660-6-jasowang@redhat.com>
-In-Reply-To: <20200618055626.25660-1-jasowang@redhat.com>
-References: <20200618055626.25660-1-jasowang@redhat.com>
+        Thu, 18 Jun 2020 02:04:48 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78228C06174E;
+        Wed, 17 Jun 2020 23:04:48 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id g7so3606615oti.13;
+        Wed, 17 Jun 2020 23:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=PFBRcisrxcdT2GNCJlysWqIQRHhxPyF35WC7Sw0CFJ4=;
+        b=I4ZOINg4XbtlGzruPpeQe/WtahFpxH4V8rBhuNfNLg4ImYByAgkUuh/6hW/nzFeS/g
+         bqJiOR81BuYZEnW1GqB5Gsfk7nIsO4o4x7GeopHDcs6az/PbX55yYyy9lsHsk7etLMH3
+         IpwFw2pyX04Hcuq5WUfsOO9eO9mDiUCYka6CnQp0plqN7sJqPAOIi/FVp23OWT8nLTYY
+         9Kxxx5p7xf7PGeEtL7pKhVM8++m/p2nVTUS3XtECQU8J/Ju7y3d36XngL5vu/376QgE4
+         BLXSv9dktv76xM+d0US0dPMlCXmGX/n5UY++TLW9Qodty+qkwJ1SoeFLu8ory/2rw1wq
+         LtbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=PFBRcisrxcdT2GNCJlysWqIQRHhxPyF35WC7Sw0CFJ4=;
+        b=j1Ykln55k3O709QlW5Bl2xkJIPDSRXWwVqH5cnEjCmHpwH4aTYYFqcgGRzrKobNyyQ
+         TO12BZJ4A1FfkRh47cU3jifFeP5o43RMJCxMdIKdg37E1TTT0bFD+e1sJlqcsZIemBj1
+         nWvdtOudyGqCVjxmmPJOOv/TDDzEraibB84+ip/PNa+dFyOPtqjH0AsfPwB3UU20fTSG
+         RmKlpD/7ZopqwkwNzif4JnJm7Z0l+qOU62KqH47e4GpKfRWpS0KBsGgEcqmFK38qo1kZ
+         kgYa+yWu1aFpEdOMXx4ID9qSwh5rbJh+9Jx/dMWW87C8u1z7SJgrilv8ETGvee0eOITc
+         15NA==
+X-Gm-Message-State: AOAM533aV6Nc6xnUznvu0qToWDismkE8ZvALabcgGtyVtphoEpbd/WvT
+        ymnhiY4EP8/5yTrYVkEVrNM=
+X-Google-Smtp-Source: ABdhPJyQdLghNKc2N+kWtm6ifgnu53yuZbVj2st7hdzPhwjqqiPl03QN2viAKNcayk34jWdzRbF0Uw==
+X-Received: by 2002:a9d:a14:: with SMTP id 20mr2263456otg.292.1592460287636;
+        Wed, 17 Jun 2020 23:04:47 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id n9sm504136oom.45.2020.06.17.23.04.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 23:04:46 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 23:04:45 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     containers@lists.linux-foundation.org, keescook@chromium.org,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, christian.brauner@ubuntu.com,
+        cyphar@cyphar.com, jannh@google.com, jeffv@google.com,
+        palmer@google.com, rsesek@google.com, tycho@tycho.ws,
+        Matt Denton <mpdenton@google.com>,
+        Kees Cook <keescook@google.com>
+Subject: Re: [PATCH v3] seccomp: Add find_notification helper
+Message-ID: <20200618060445.GA3230200@ubuntu-n2-xlarge-x86>
+References: <20200601112532.150158-1-sargun@sargun.me>
+ <20200617200844.GA12976@Ryzen-9-3900X.localdomain>
+ <20200618054413.GA18669@ircssh-2.c.rugged-nimbus-611.internal>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200618054413.GA18669@ircssh-2.c.rugged-nimbus-611.internal>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vDPA simulator support both set_map() and dma_map()/dma_unmap()
-operations. But vhost-vdpa can only use one of them. So this patch
-introduce a module parameter (batch_mapping) that let vpda_sim to
-support only one of those dma operations. The batched mapping via
-set_map() is enabled by default.
+On Thu, Jun 18, 2020 at 05:44:14AM +0000, Sargun Dhillon wrote:
+> On Wed, Jun 17, 2020 at 01:08:44PM -0700, Nathan Chancellor wrote:
+> > On Mon, Jun 01, 2020 at 04:25:32AM -0700, Sargun Dhillon wrote:
+> > > This adds a helper which can iterate through a seccomp_filter to
+> > > find a notification matching an ID. It removes several replicated
+> > > chunks of code.
+> > >=20
+> > > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> > > Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > > Reviewed-by: Tycho Andersen <tycho@tycho.ws>
+> > > Cc: Matt Denton <mpdenton@google.com>
+> > > Cc: Kees Cook <keescook@google.com>,
+> > > Cc: Jann Horn <jannh@google.com>,
+> > > Cc: Robert Sesek <rsesek@google.com>,
+> > > Cc: Chris Palmer <palmer@google.com>
+> > > Cc: Christian Brauner <christian.brauner@ubuntu.com>
+> > > Cc: Tycho Andersen <tycho@tycho.ws>
+> > > ---
+> > >  kernel/seccomp.c | 55 ++++++++++++++++++++++++----------------------=
+--
+> > >  1 file changed, 28 insertions(+), 27 deletions(-)
+> > >=20
+> > > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> > > index 55a6184f5990..cc6b47173a95 100644
+> > > --- a/kernel/seccomp.c
+> > > +++ b/kernel/seccomp.c
+> > > @@ -41,6 +41,7 @@
+> > >  #include <linux/tracehook.h>
+> > >  #include <linux/uaccess.h>
+> > >  #include <linux/anon_inodes.h>
+> > > +#include <linux/lockdep.h>
+> > > =20
+> > >  enum notify_state {
+> > >  	SECCOMP_NOTIFY_INIT,
+> > > @@ -1021,10 +1022,27 @@ static int seccomp_notify_release(struct inod=
+e *inode, struct file *file)
+> > >  	return 0;
+> > >  }
+> > > =20
+> > > +/* must be called with notif_lock held */
+> > > +static inline struct seccomp_knotif *
+> > > +find_notification(struct seccomp_filter *filter, u64 id)
+> > > +{
+> > > +	struct seccomp_knotif *cur;
+> > > +
+> > > +	lockdep_assert_held(&filter->notify_lock);
+> > > +
+> > > +	list_for_each_entry(cur, &filter->notif->notifications, list) {
+> > > +		if (cur->id =3D=3D id)
+> > > +			return cur;
+> > > +	}
+> > > +
+> > > +	return NULL;
+> > > +}
+> > > +
+> > > +
+> > >  static long seccomp_notify_recv(struct seccomp_filter *filter,
+> > >  				void __user *buf)
+> > >  {
+> > > -	struct seccomp_knotif *knotif =3D NULL, *cur;
+> > > +	struct seccomp_knotif *knotif, *cur;
+> > >  	struct seccomp_notif unotif;
+> > >  	ssize_t ret;
+> > > =20
+> > > @@ -1078,15 +1096,8 @@ static long seccomp_notify_recv(struct seccomp=
+_filter *filter,
+> > >  		 * may have died when we released the lock, so we need to make
+> > >  		 * sure it's still around.
+> > >  		 */
+> > > -		knotif =3D NULL;
+> > >  		mutex_lock(&filter->notify_lock);
+> > > -		list_for_each_entry(cur, &filter->notif->notifications, list) {
+> > > -			if (cur->id =3D=3D unotif.id) {
+> > > -				knotif =3D cur;
+> > > -				break;
+> > > -			}
+> > > -		}
+> > > -
+> > > +		knotif =3D find_notification(filter, unotif.id);
+> > >  		if (knotif) {
+> > >  			knotif->state =3D SECCOMP_NOTIFY_INIT;
+> > >  			up(&filter->notif->request);
+> > > @@ -1101,7 +1112,7 @@ static long seccomp_notify_send(struct seccomp_=
+filter *filter,
+> > >  				void __user *buf)
+> > >  {
+> > >  	struct seccomp_notif_resp resp =3D {};
+> > > -	struct seccomp_knotif *knotif =3D NULL, *cur;
+> > > +	struct seccomp_knotif *knotif;
+> > >  	long ret;
+> > > =20
+> > >  	if (copy_from_user(&resp, buf, sizeof(resp)))
+> > > @@ -1118,13 +1129,7 @@ static long seccomp_notify_send(struct seccomp=
+_filter *filter,
+> > >  	if (ret < 0)
+> > >  		return ret;
+> > > =20
+> > > -	list_for_each_entry(cur, &filter->notif->notifications, list) {
+> > > -		if (cur->id =3D=3D resp.id) {
+> > > -			knotif =3D cur;
+> > > -			break;
+> > > -		}
+> > > -	}
+> > > -
+> > > +	knotif =3D find_notification(filter, resp.id);
+> > >  	if (!knotif) {
+> > >  		ret =3D -ENOENT;
+> > >  		goto out;
+> > > @@ -1150,7 +1155,7 @@ static long seccomp_notify_send(struct seccomp_=
+filter *filter,
+> > >  static long seccomp_notify_id_valid(struct seccomp_filter *filter,
+> > >  				    void __user *buf)
+> > >  {
+> > > -	struct seccomp_knotif *knotif =3D NULL;
+> >=20
+> > I don't know that this should have been removed, clang now warns:
+> >=20
+> > kernel/seccomp.c:1063:2: warning: variable 'knotif' is used uninitializ=
+ed whenever 'for' loop exits because its condition is false [-Wsometimes-un=
+initialized]
+> >         list_for_each_entry(cur, &filter->notif->notifications, list) {
+> >         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > include/linux/list.h:602:7: note: expanded from macro 'list_for_each_en=
+try'
+> >              &pos->member !=3D (head);                                 =
+   \
+> >              ^~~~~~~~~~~~~~~~~~~~~~
+> > kernel/seccomp.c:1075:7: note: uninitialized use occurs here
+> >         if (!knotif) {
+> >              ^~~~~~
+> > kernel/seccomp.c:1063:2: note: remove the condition if it is always true
+> >         list_for_each_entry(cur, &filter->notif->notifications, list) {
+> >         ^
+> > include/linux/list.h:602:7: note: expanded from macro 'list_for_each_en=
+try'
+> >              &pos->member !=3D (head);                                 =
+   \
+> >              ^
+> > kernel/seccomp.c:1045:31: note: initialize the variable 'knotif' to sil=
+ence this warning
+> >         struct seccomp_knotif *knotif, *cur;
+> >                                      ^
+> >                                       =3D NULL
+> > 1 warning generated.
+> >=20
+> I'm curious as to how you got clang to generate this warning. I'm running=
+ with clang 10, and
+> upon running with V=3D1, and adding -Wsometimes-uninitialized, I'm not se=
+eing this warning.
+> The following is the command called:
+> /usr/bin/clang-10 -Wp,-MD,kernel/.seccomp.o.d  -nostdinc -isystem /usr/li=
+b/llvm-10/lib/clang/10.0.0/include -I./arch/x86/include -I./arch/x86/includ=
+e/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/gen=
+erated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/=
+linux/kconfig.h -include ./include/linux/compiler_types.h -D__KERNEL__ -Qun=
+used-arguments -Wsometimes-uninitialized -Wall -Wundef -Werror=3Dstrict-pro=
+totypes -Wno-trigraphs -fno-strict-aliasing -fno-common -fshort-wchar -fno-=
+PIE -Werror=3Dimplicit-function-declaration -Werror=3Dimplicit-int -Wno-for=
+mat-security -std=3Dgnu89 -no-integrated-as -Werror=3Dunknown-warning-optio=
+n -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx -m64 -mno-80387 -mstack-a=
+lignment=3D8 -mtune=3Dgeneric -mno-red-zone -mcmodel=3Dkernel -DCONFIG_X86_=
+X32_ABI -Wno-sign-compare -fno-asynchronous-unwind-tables -mretpoline-exter=
+nal-thunk -fno-delete-null-pointer-checks -Wno-address-of-packed-member -O2=
+ -Wframe-larger-than=3D1024 -fstack-protector -Wno-format-invalid-specifier=
+ -Wno-gnu -mno-global-merge -Wno-unused-const-variable -g -pg -mfentry -DCC=
+_USING_FENTRY -Wdeclaration-after-statement -Wvla -Wno-pointer-sign -Wno-ar=
+ray-bounds -fno-strict-overflow -fno-merge-all-constants -fno-stack-check -=
+Werror=3Ddate-time -Werror=3Dincompatible-pointer-types -fmacro-prefix-map=
+=3D./=3D -fcf-protection=3Dnone -Wno-initializer-overrides -Wno-format -Wno=
+-sign-compare -Wno-format-zero-length -Wno-tautological-constant-out-of-ran=
+ge-compare    -DKBUILD_MODFILE=3D'"kernel/seccomp"' -DKBUILD_BASENAME=3D'"s=
+eccomp"' -DKBUILD_MODNAME=3D'"seccomp"' -c -o kernel/seccomp.o kernel/secco=
+mp.c
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 40 +++++++++++++++++++++++++++++---
- 1 file changed, 37 insertions(+), 3 deletions(-)
+I saw it on a variety of configs but the one that is probably the
+easiest to reproduce with is arm32 defconfig:
 
-diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-index c7334cc65bb2..a7a0962ed8a8 100644
---- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-+++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-@@ -33,6 +33,10 @@
- #define DRV_DESC     "vDPA Device Simulator"
- #define DRV_LICENSE  "GPL v2"
- 
-+static int batch_mapping = 1;
-+module_param(batch_mapping, int, 0444);
-+MODULE_PARM_DESC(batch_mapping, "Batched mapping 1 -Enable; 0 - Disable");
-+
- struct vdpasim_virtqueue {
- 	struct vringh vring;
- 	struct vringh_kiov iov;
-@@ -303,16 +307,22 @@ static const struct dma_map_ops vdpasim_dma_ops = {
- };
- 
- static const struct vdpa_config_ops vdpasim_net_config_ops;
-+static const struct vdpa_config_ops vdpasim_net_batch_config_ops;
- 
- static struct vdpasim *vdpasim_create(void)
- {
-+	const struct vdpa_config_ops *ops;
- 	struct virtio_net_config *config;
- 	struct vdpasim *vdpasim;
- 	struct device *dev;
- 	int ret = -ENOMEM;
- 
--	vdpasim = vdpa_alloc_device(struct vdpasim, vdpa, NULL,
--				    &vdpasim_net_config_ops);
-+	if (batch_mapping)
-+		ops = &vdpasim_net_batch_config_ops;
-+	else
-+		ops = &vdpasim_net_config_ops;
-+
-+	vdpasim = vdpa_alloc_device(struct vdpasim, vdpa, NULL, ops);
- 	if (!vdpasim)
- 		goto err_alloc;
- 
-@@ -597,12 +607,36 @@ static const struct vdpa_config_ops vdpasim_net_config_ops = {
- 	.get_config             = vdpasim_get_config,
- 	.set_config             = vdpasim_set_config,
- 	.get_generation         = vdpasim_get_generation,
--	.set_map                = vdpasim_set_map,
- 	.dma_map                = vdpasim_dma_map,
- 	.dma_unmap              = vdpasim_dma_unmap,
- 	.free                   = vdpasim_free,
- };
- 
-+static const struct vdpa_config_ops vdpasim_net_batch_config_ops = {
-+	.set_vq_address         = vdpasim_set_vq_address,
-+	.set_vq_num             = vdpasim_set_vq_num,
-+	.kick_vq                = vdpasim_kick_vq,
-+	.set_vq_cb              = vdpasim_set_vq_cb,
-+	.set_vq_ready           = vdpasim_set_vq_ready,
-+	.get_vq_ready           = vdpasim_get_vq_ready,
-+	.set_vq_state           = vdpasim_set_vq_state,
-+	.get_vq_state           = vdpasim_get_vq_state,
-+	.get_vq_align           = vdpasim_get_vq_align,
-+	.get_features           = vdpasim_get_features,
-+	.set_features           = vdpasim_set_features,
-+	.set_config_cb          = vdpasim_set_config_cb,
-+	.get_vq_num_max         = vdpasim_get_vq_num_max,
-+	.get_device_id          = vdpasim_get_device_id,
-+	.get_vendor_id          = vdpasim_get_vendor_id,
-+	.get_status             = vdpasim_get_status,
-+	.set_status             = vdpasim_set_status,
-+	.get_config             = vdpasim_get_config,
-+	.set_config             = vdpasim_set_config,
-+	.get_generation         = vdpasim_get_generation,
-+	.set_map                = vdpasim_set_map,
-+	.free                   = vdpasim_free,
-+};
-+
- static int __init vdpasim_dev_init(void)
- {
- 	vdpasim_dev = vdpasim_create();
--- 
-2.20.1
+$ curl -LSs https://lore.kernel.org/lkml/20200601112532.150158-1-sargun@sar=
+gun.me/raw | git am
 
+$ make -skj"$(nproc)" ARCH=3Darm CROSS_COMPILE=3Darm-linux-gnueabi- LLVM=3D=
+1 O=3Dout/arm distclean defconfig kernel/seccomp.o
+
+Cheers,
+Nathan
+
+> > > +	struct seccomp_knotif *knotif;
+> > >  	u64 id;
+> > >  	long ret;
+> > > =20
+> > > @@ -1161,16 +1166,12 @@ static long seccomp_notify_id_valid(struct se=
+ccomp_filter *filter,
+> > >  	if (ret < 0)
+> > >  		return ret;
+> > > =20
+> > > -	ret =3D -ENOENT;
+> > > -	list_for_each_entry(knotif, &filter->notif->notifications, list) {
+> > > -		if (knotif->id =3D=3D id) {
+> > > -			if (knotif->state =3D=3D SECCOMP_NOTIFY_SENT)
+> > > -				ret =3D 0;
+> > > -			goto out;
+> > > -		}
+> > > -	}
+> > > +	knotif =3D find_notification(filter, id);
+> > > +	if (knotif && knotif->state =3D=3D SECCOMP_NOTIFY_SENT)
+> > > +		ret =3D 0;
+> > > +	else
+> > > +		ret =3D -ENOENT;
+> > > =20
+> > > -out:
+> > >  	mutex_unlock(&filter->notify_lock);
+> > >  	return ret;
+> > >  }
+> > > --=20
+> > > 2.25.1
+> > >=20
+> >=20
+> > Cheers,
+> > Nathan
