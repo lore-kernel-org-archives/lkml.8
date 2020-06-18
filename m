@@ -2,298 +2,135 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CBAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D030BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32D6B2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B01C5207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592490403;
-	bh=RfCpj70wXI2H0YJBuISPDerhZ2pbuQhTR9ylvQ9xuZY=;
+	s=default; t=1592490590;
+	bh=3OO4kEs57sfNjzQq7iy84oQLGMRCkyvOCnFELjitwc4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LEGKXcsJAHABqaeyZJ3zJMAReGbKQgkxWGI70GCmVNYa4pqTQPnCdQNpKwGqYWnKe
-	 4vp3S8xbFTRtZm5yGaBHVWv3RLM/cGNB47NAKaAUM8GkLoZlrDIhfHzrTNqFGxOvxj
-	 WD5Mxgjgwmr9GRmb4zpivjyFQdjYV67zTqnmmEfM=
+	b=HIA7A74aOpWCHIO9ZwQfUpVcAMQ7psNPxqa7dFbqycWxcU08w2s2DE9d/n/PxZ/HI
+	 m+xuCWwlpOWCl0yWTZmEk8osaNBXpIfSSb69F2q8sZ+NpiEfZM9iLpwwH3Z6JEWSDR
+	 Gus1157n0rAzEJY/qRVfcXrnZwsqqzGn0272yN/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730609AbgFRO0l (ORCPT
+        id S1729844AbgFRO3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:26:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49604 "EHLO mail.kernel.org"
+        Thu, 18 Jun 2020 10:29:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbgFRO0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:26:39 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        id S1726905AbgFRO3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 10:29:45 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EF942082F;
-        Thu, 18 Jun 2020 14:26:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0C70207E8;
+        Thu, 18 Jun 2020 14:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592490398;
-        bh=RfCpj70wXI2H0YJBuISPDerhZ2pbuQhTR9ylvQ9xuZY=;
+        s=default; t=1592490584;
+        bh=3OO4kEs57sfNjzQq7iy84oQLGMRCkyvOCnFELjitwc4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OsuEKpVofBTTpU57C5jGiD843tvrNAGotQsHLY9j55sC9/5zJ0ol1HXDDk3H1zv7U
-         UymVsNupZQLSQ/J7QtpZ+btwH/V59dRWiDxcna3RjHmyOmWZNqIEc5/AokJn5Pw716
-         hkfcyTQOnKi9/eXYReF/4lAFNXasRCr1Lcjxpmno=
-Date:   Thu, 18 Jun 2020 22:26:33 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
-        David Jander <david@protonic.nl>, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v8 2/5] ARM: dts: add Protonic WD2 board
-Message-ID: <20200618142632.GB464@dragon>
-References: <20200520154116.12909-1-o.rempel@pengutronix.de>
- <20200520154116.12909-3-o.rempel@pengutronix.de>
+        b=yOGTyQZOeF3MreSMzsPgPbZLSkqgahgCBlwYFNIo1+IfNVR/j5HUQf3D6q9UUwZ2F
+         TaWa3A6AdQE8H12eN+fJiEi6BldZIt4aGEPbVbjNGD/odz8DK5A3IdjJNw/5mRhRl6
+         4v2SZZtTzg3QkOEU+dUmO6UV4hAKfnbjrLZyNLvo=
+Date:   Thu, 18 Jun 2020 10:29:43 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, kvm@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.7 280/388] vfio/pci: fix memory leaks of
+ eventfd ctx
+Message-ID: <20200618142943.GS1931@sasha-vm>
+References: <20200618010805.600873-1-sashal@kernel.org>
+ <20200618010805.600873-280-sashal@kernel.org>
+ <20200617192501.2310afe6@x1.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200520154116.12909-3-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200617192501.2310afe6@x1.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 05:41:13PM +0200, Oleksij Rempel wrote:
-> Add support for the Protonic WD2 board, which is an internal development
-> platform for low-cost agricultural Virtual Terminals based on COTS tablets
-> and web applications.
-> It inherits from the PRTI6Q base class.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: David Jander <david@protonic.nl>
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  arch/arm/boot/dts/Makefile         |   1 +
->  arch/arm/boot/dts/imx6q-prtwd2.dts | 188 +++++++++++++++++++++++++++++
->  2 files changed, 189 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6q-prtwd2.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 206a36a50575e..8ce744f1cbfc9 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -539,6 +539,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
->  	imx6q-pico-pi.dtb \
->  	imx6q-pistachio.dtb \
->  	imx6q-prti6q.dtb \
-> +	imx6q-prtwd2.dtb \
->  	imx6q-rex-pro.dtb \
->  	imx6q-sabreauto.dtb \
->  	imx6q-sabrelite.dtb \
-> diff --git a/arch/arm/boot/dts/imx6q-prtwd2.dts b/arch/arm/boot/dts/imx6q-prtwd2.dts
-> new file mode 100644
-> index 0000000000000..fd9f457a273e2
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6q-prtwd2.dts
-> @@ -0,0 +1,188 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (c) 2018 Protonic Holland
-> + */
-> +
-> +/dts-v1/;
-> +#include "imx6q.dtsi"
-> +#include "imx6qdl-prti6q.dtsi"
-> +#include <dt-bindings/leds/common.h>
-> +
-> +/ {
-> +	model = "Protonic WD2 board";
-> +	compatible = "prt,prtwd2", "fsl,imx6q";
-> +
-> +	memory@10000000 {
-> +		device_type = "memory";
-> +		reg = <0x10000000 0x20000000>;
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x20000000>;
-> +	};
-> +
-> +	usdhc2_wifi_pwrseq: usdhc2_wifi_pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_wifi_npd>;
-> +		reset-gpios = <&gpio6 10 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	/* PRTWD2 rev 1 bitbang I2C for Ethernet Switch */
-> +	i2c@4 {
-> +		compatible = "i2c-gpio";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_i2c4>;
-> +		sda-gpios = <&gpio1 22 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-> +		scl-gpios = <&gpio1 31 GPIO_ACTIVE_HIGH>;
-> +		i2c-gpio,delay-us = <20>;	/* ~10 kHz */
-> +		i2c-gpio,scl-output-only;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +	};
-> +};
-> +
-> +&can1 {
-> +	pinctrl-0 = <&pinctrl_can1 &pinctrl_can1phy>;
-> +};
-> +
-> +&fec {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_enet>;
-> +	phy-mode = "rmii";
-> +	clocks = <&clks IMX6QDL_CLK_ENET>,
-> +		 <&clks IMX6QDL_CLK_ENET>;
-> +	clock-names = "ipg", "ahb";
-> +	status = "okay";
-> +
-> +	fixed-link {
-> +		speed = <100>;
-> +		pause;
-> +		full-duplex;
-> +	};
-> +};
-> +
-> +&i2c3 {
-> +	adc@49 {
-> +		compatible = "ti,ads1015";
-> +		reg = <0x49>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		/* V in */
-> +		channel@4 {
-> +			reg = <4>;
-> +			ti,gain = <1>;
-> +			ti,datarate = <3>;
-> +		};
-> +
-> +		/* I charge */
-> +		channel@5 {
-> +			reg = <5>;
-> +			ti,gain = <1>;
-> +			ti,datarate = <3>;
-> +		};
-> +
-> +		/* V bus  */
-> +		channel@6 {
-> +			reg = <6>;
-> +			ti,gain = <1>;
-> +			ti,datarate = <3>;
-> +		};
-> +
-> +		/* nc */
-> +		channel@7 {
-> +			reg = <7>;
-> +			ti,gain = <1>;
-> +			ti,datarate = <3>;
-> +		};
-> +	};
-> +};
-> +
-> +&usdhc2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usdhc2>;
-> +	non-removable;
-> +	no-1-8-v;
-> +	non-removable;
+On Wed, Jun 17, 2020 at 07:25:01PM -0600, Alex Williamson wrote:
+>On Wed, 17 Jun 2020 21:06:17 -0400
+>Sasha Levin <sashal@kernel.org> wrote:
+>
+>> From: Qian Cai <cai@lca.pw>
+>>
+>> [ Upstream commit 1518ac272e789cae8c555d69951b032a275b7602 ]
+>>
+>> Finished a qemu-kvm (-device vfio-pci,host=0001:01:00.0) triggers a few
+>> memory leaks after a while because vfio_pci_set_ctx_trigger_single()
+>> calls eventfd_ctx_fdget() without the matching eventfd_ctx_put() later.
+>> Fix it by calling eventfd_ctx_put() for those memory in
+>> vfio_pci_release() before vfio_device_release().
+>>
+>> unreferenced object 0xebff008981cc2b00 (size 128):
+>>   comm "qemu-kvm", pid 4043, jiffies 4294994816 (age 9796.310s)
+>>   hex dump (first 32 bytes):
+>>     01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+>>     ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+>>   backtrace:
+>>     [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+>>     [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+>>     [<000000005fcec025>] do_eventfd+0x54/0x1ac
+>>     [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+>>     [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+>>     [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+>>     [<00000000d495ef94>] el0_sync+0x164/0x180
+>> unreferenced object 0x29ff008981cc4180 (size 128):
+>>   comm "qemu-kvm", pid 4043, jiffies 4294994818 (age 9796.290s)
+>>   hex dump (first 32 bytes):
+>>     01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+>>     ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+>>   backtrace:
+>>     [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+>>     [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+>>     [<000000005fcec025>] do_eventfd+0x54/0x1ac
+>>     [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+>>     [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+>>     [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+>>     [<00000000d495ef94>] el0_sync+0x164/0x180
+>>
+>> Signed-off-by: Qian Cai <cai@lca.pw>
+>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  drivers/vfio/pci/vfio_pci.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+>> index 6c6b37b5c04e..080e6608f297 100644
+>> --- a/drivers/vfio/pci/vfio_pci.c
+>> +++ b/drivers/vfio/pci/vfio_pci.c
+>> @@ -519,6 +519,10 @@ static void vfio_pci_release(void *device_data)
+>>  		vfio_pci_vf_token_user_add(vdev, -1);
+>>  		vfio_spapr_pci_eeh_release(vdev->pdev);
+>>  		vfio_pci_disable(vdev);
+>> +		if (vdev->err_trigger)
+>> +			eventfd_ctx_put(vdev->err_trigger);
+>> +		if (vdev->req_trigger)
+>> +			eventfd_ctx_put(vdev->req_trigger);
+>>  	}
+>>
+>>  	mutex_unlock(&vdev->reflck->lock);
+>
+>
+>This has a fix pending, I'd suggest not picking it on its own:
+>
+>https://lore.kernel.org/kvm/20200616085052.sahrunsesjyjeyf2@beryllium.lan/
+>https://lore.kernel.org/kvm/159234276956.31057.6902954364435481688.stgit@gimli.home/
 
-Duplicated one.
+Thanks! I'll hold off on this until the fix is in too.
 
-> +	mmc-pwrseq = <&usdhc2_wifi_pwrseq>;
-> +	pm-ignore-notify;
-
-I cannot find this property in bindings doc.
-
-Shawn
-
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	status = "okay";
-> +
-> +	wifi@1 {
-> +		compatible = "brcm,bcm4329-fmac";
-> +		reg = <1>;
-> +	};
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usb_eth_chg>;
-> +
-> +	pinctrl_can1phy: can1phy {
-> +		fsl,pins = <
-> +			/* CAN1_SR */
-> +			MX6QDL_PAD_KEY_COL3__GPIO4_IO12	0x13070
-> +		>;
-> +	};
-> +
-> +	pinctrl_enet: enetgrp {
-> +		fsl,pins = <
-> +			/* MX6QDL_ENET_PINGRP4 */
-> +			MX6QDL_PAD_ENET_RXD0__ENET_RX_DATA0	0x1b0b0
-> +			MX6QDL_PAD_ENET_RXD1__ENET_RX_DATA1	0x1b0b0
-> +			MX6QDL_PAD_ENET_RX_ER__ENET_RX_ER	0x130b0
-> +			MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN	0x1b0b0
-> +			MX6QDL_PAD_ENET_TXD0__ENET_TX_DATA0	0x1b0b0
-> +			MX6QDL_PAD_ENET_TXD1__ENET_TX_DATA1	0x1b0b0
-> +			MX6QDL_PAD_ENET_CRS_DV__ENET_RX_EN	0x1b0b0
-> +
-> +			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x1b0b0
-> +			/* Phy reset */
-> +			MX6QDL_PAD_CSI0_DAT4__GPIO5_IO22	0x1b0b0
-> +			/* nINTRP */
-> +			MX6QDL_PAD_CSI0_DAT5__GPIO5_IO23	0x1b0b0
-> +
-> +			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x10030
-> +			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x10030
-> +		>;
-> +	};
-> +
-> +	pinctrl_i2c4: i2c4grp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_ENET_MDIO__GPIO1_IO22	0x1f8b0
-> +			MX6QDL_PAD_ENET_MDC__GPIO1_IO31		0x1f8b0
-> +		>;
-> +	};
-> +
-> +	pinctrl_usb_eth_chg: usbethchggrp {
-> +		fsl,pins = <
-> +			/* USB charging control */
-> +			MX6QDL_PAD_NANDF_CS0__GPIO6_IO11	0x130b0
-> +			MX6QDL_PAD_NANDF_CS1__GPIO6_IO14	0x130b0
-> +			MX6QDL_PAD_NANDF_CS2__GPIO6_IO15	0x130b0
-> +			MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x130b0
-> +			>;
-> +	};
-> +
-> +	pinctrl_usdhc2: usdhc2grp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x170b9
-> +			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x100b9
-> +			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x170b9
-> +			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x170b9
-> +			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x170b9
-> +			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x170b9
-> +		>;
-> +	};
-> +
-> +	pinctrl_wifi_npd: wifinpd {
-> +		fsl,pins = <
-> +			/* WL_REG_ON */
-> +			MX6QDL_PAD_NANDF_RB0__GPIO6_IO10	0x13069
-> +		>;
-> +	};
-> +};
-> -- 
-> 2.26.2
-> 
+-- 
+Thanks,
+Sasha
