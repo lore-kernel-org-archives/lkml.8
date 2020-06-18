@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0848CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B98C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD2F6221F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F17921D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443503;
-	bh=fRJr5fVL5L7Zuj+WHeDCA1DctKkE3yAr46wUDtyQi5Y=;
+	s=default; t=1592443506;
+	bh=7NhwcdDfywdzC2pMc3Q/Qd6LhyK7bB2fcHfFzOdxuzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a6zoSfAeB8QJWVl+sIW5BVQT2Lb63d2IyysIiCeqbaUqaTfliWNlU4x4OnVtVs7QX
-	 qfw36G+1qI82yYi9ae309UiqfwNhrqStAiRKoTDh+Div3LwWD/KLxRP9piZ1S9Z6Nc
-	 +Af/Ici/UpVcjqxPeCMcUh0ZhNU6VNftqGLYKntE=
+	b=Tf0aLJFix6rbQP3vDBWFp7gVVmkg85iD8NkhJpdbxtQcGofC1lGKD5klVopEkI1lU
+	 za2k4PyDn4uQiAGSJdVkVrU2a8JLsZz+Wfjwv2US+78eMbLidFNh7Ei3SYwsOEYpd1
+	 jc2hdu/MRswEMcVg+2nhuZw+ylP0r/FbJAY4ygr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731338AbgFRBZC (ORCPT
+        id S1731348AbgFRBZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:25:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54486 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:25:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729932AbgFRBVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:48 -0400
+        id S1727995AbgFRBV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:21:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07F1C20B1F;
-        Thu, 18 Jun 2020 01:21:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F90220FC3;
+        Thu, 18 Jun 2020 01:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443308;
-        bh=fRJr5fVL5L7Zuj+WHeDCA1DctKkE3yAr46wUDtyQi5Y=;
+        s=default; t=1592443315;
+        bh=7NhwcdDfywdzC2pMc3Q/Qd6LhyK7bB2fcHfFzOdxuzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ansA6M/V2neGduXpjaTx9x4UZ2bwnoWGR8jcPW4swsHz5aSnUAC9ElCzistYI79XT
-         xHLpdLt5rmPMmaxw7ezN/kQmf6gte5dsCcsVHqL0MDy0nFGOsnis2OyP9iKWgiYyeN
-         momBj4kW2J5qRkoz04VFQzMSU0kZ644dJnj8nBxs=
+        b=GaBLFUnOgbBMGZCFeazOeb52CrF/nlofHNMgp03Axgm/199ioX15X9gw3qjovbbun
+         sVx6AWjsc+VW4YYIW2UsQ/R/blxGwaFEQ+vY39zDQJcUmuNuRQWpfJrGuAmrV0jbbA
+         skR5ZcvLNN/KLhc7UnS6Tgj4h4GJ5DfudFR4EV5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 246/266] drivers/perf: hisi: Fix wrong value for all counters enable
-Date:   Wed, 17 Jun 2020 21:16:11 -0400
-Message-Id: <20200618011631.604574-246-sashal@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@gmail.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 251/266] ASoC: SOF: nocodec: conditionally set dpcm_capture/dpcm_playback flags
+Date:   Wed, 17 Jun 2020 21:16:16 -0400
+Message-Id: <20200618011631.604574-251-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,39 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shaokun Zhang <zhangshaokun@hisilicon.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 961abd78adcb4c72c343fcd9f9dc5e2ebbe9b448 ]
+[ Upstream commit ba4e5abc6c4e173af7c941c03c067263b686665d ]
 
-In L3C uncore PMU drivers, bit16 is used to control all counters enable &
-disable. Wrong value is given in the driver and its default value is 1'b1,
-it can work because each PMU counter has its own control bits too.
-Let's fix the wrong value.
+With additional checks on dailinks, we see errors such as
 
-Fixes: 2940bc433370 ("perf: hisi: Add support for HiSilicon SoC L3C PMU driver")
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Link: https://lore.kernel.org/r/1591350221-32275-1-git-send-email-zhangshaokun@hisilicon.com
-Signed-off-by: Will Deacon <will@kernel.org>
+[ 3.000418] sof-nocodec sof-nocodec: CPU DAI DMIC01 Pin for rtd
+NoCodec-6 does not support playback
+
+It's not clear why we set the dpcm_playback and dpcm_capture flags
+unconditionally, add a check on number of channels for each direction
+to avoid invalid configurations.
+
+Fixes: 8017b8fd37bf5e ('ASoC: SOF: Add Nocodec machine driver support')
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Reviewed-by: Daniel Baluta <daniel.baluta@gmail.com>
+Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Link: https://lore.kernel.org/r/20200608194415.4663-5-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sof/nocodec.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-index 078b8dc57250..c5b0950c2a7a 100644
---- a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-@@ -35,7 +35,7 @@
- /* L3C has 8-counters */
- #define L3C_NR_COUNTERS		0x8
+diff --git a/sound/soc/sof/nocodec.c b/sound/soc/sof/nocodec.c
+index 3d128e5a132c..ea0fe9a09f3f 100644
+--- a/sound/soc/sof/nocodec.c
++++ b/sound/soc/sof/nocodec.c
+@@ -52,8 +52,10 @@ static int sof_nocodec_bes_setup(struct device *dev,
+ 		links[i].platforms->name = dev_name(dev);
+ 		links[i].codecs->dai_name = "snd-soc-dummy-dai";
+ 		links[i].codecs->name = "snd-soc-dummy";
+-		links[i].dpcm_playback = 1;
+-		links[i].dpcm_capture = 1;
++		if (ops->drv[i].playback.channels_min)
++			links[i].dpcm_playback = 1;
++		if (ops->drv[i].capture.channels_min)
++			links[i].dpcm_capture = 1;
+ 	}
  
--#define L3C_PERF_CTRL_EN	0x20000
-+#define L3C_PERF_CTRL_EN	0x10000
- #define L3C_EVTYPE_NONE		0xff
- 
- /*
+ 	card->dai_link = links;
 -- 
 2.25.1
 
