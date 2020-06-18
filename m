@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60363C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FD5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32EA322211
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B8022208
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443736;
-	bh=WGZwiMzYf/e6Tb5AesdZUfqhXFw8hyI1+EO6ZLgw6SA=;
+	s=default; t=1592443741;
+	bh=kdeBSY1UQnQcLc3FNUD5cVVOyGyzCfr9P780dxsXKuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aUxNFg43cWhESJNcw8pIGRbGquRlv8Rt0XklhiKcE44kKwUhbqR3yVuOkDp19d/W3
-	 EEI6HeZxOMu9lPtOoBd/6dk707OdN/rtupJ6gvXHuX8d81BuknGSzFZARw20HR6P+B
-	 avhLK4XR0ucxdT6gCYC7eq/SZXj4mIpxu37KYSp0=
+	b=iYY4HdjG0q8sDzG70SA4vyOy/lFipNeIRdaP1KljbeE8TyasbpNxUSQ9aK3UITR7A
+	 YybRXtnvFdRF6RQeh7rkm9wELopmzdavhbK8TFpNa+MoDEqjKETjmcG5d/FrjJyeUa
+	 tO09G4bM6ticBk9OC0whYQfUPznWjMOr8nYNH4O8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732181AbgFRB2x (ORCPT
+        id S1732212AbgFRB3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:28:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32814 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:29:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731489AbgFRBZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:45 -0400
+        id S1729472AbgFRBZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 402E820897;
-        Thu, 18 Jun 2020 01:25:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A69B20897;
+        Thu, 18 Jun 2020 01:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443544;
-        bh=WGZwiMzYf/e6Tb5AesdZUfqhXFw8hyI1+EO6ZLgw6SA=;
+        s=default; t=1592443557;
+        bh=kdeBSY1UQnQcLc3FNUD5cVVOyGyzCfr9P780dxsXKuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sISIyPdNkIL2MJH7gRdeQGqOhLvEA4T4y3N/sYCDFunTYWQZeE3fekcax14lQyPSH
-         y2X3J43fu31YDwOikFyPwu/c+yY/R/OB3uwp73GhcehYi3DtKj37salCLAaM0Gf2uY
-         KNUEyP2fVCrvZxidUB0w4HFlHH7G9IETZ/bHE2X4=
+        b=PHFF1SfDSY1OlCZ0ZjgLf69QQcnPzZdHNGAeJvGwsYKwXU8YhLIMl3r7ZmmOCVfPj
+         1W55eOSz8ZSAlnNQQyQbjlk+9TZoyqNmtjvIqisEyezjQsdymZUwekPRKJHm10iiLj
+         2vZJCIkY8Z3eOQRGWsyIV5V5Xxo13y7Em5ok0JfI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 161/172] drivers/perf: hisi: Fix wrong value for all counters enable
-Date:   Wed, 17 Jun 2020 21:22:07 -0400
-Message-Id: <20200618012218.607130-161-sashal@kernel.org>
+Cc:     YiFei Zhu <zhuyifei1999@gmail.com>,
+        YiFei Zhu <zhuyifei@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 171/172] net/filter: Permit reading NET in load_bytes_relative when MAC not set
+Date:   Wed, 17 Jun 2020 21:22:17 -0400
+Message-Id: <20200618012218.607130-171-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -60,39 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shaokun Zhang <zhangshaokun@hisilicon.com>
+From: YiFei Zhu <zhuyifei1999@gmail.com>
 
-[ Upstream commit 961abd78adcb4c72c343fcd9f9dc5e2ebbe9b448 ]
+[ Upstream commit 0f5d82f187e1beda3fe7295dfc500af266a5bd80 ]
 
-In L3C uncore PMU drivers, bit16 is used to control all counters enable &
-disable. Wrong value is given in the driver and its default value is 1'b1,
-it can work because each PMU counter has its own control bits too.
-Let's fix the wrong value.
+Added a check in the switch case on start_header that checks for
+the existence of the header, and in the case that MAC is not set
+and the caller requests for MAC, -EFAULT. If the caller requests
+for NET then MAC's existence is completely ignored.
 
-Fixes: 2940bc433370 ("perf: hisi: Add support for HiSilicon SoC L3C PMU driver")
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Link: https://lore.kernel.org/r/1591350221-32275-1-git-send-email-zhangshaokun@hisilicon.com
-Signed-off-by: Will Deacon <will@kernel.org>
+There is no function to check NET header's existence and as far
+as cgroup_skb/egress is concerned it should always be set.
+
+Removed for ptr >= the start of header, considering offset is
+bounded unsigned and should always be true. len <= end - mac is
+redundant to ptr + len <= end.
+
+Fixes: 3eee1f75f2b9 ("bpf: fix bpf_skb_load_bytes_relative pkt length check")
+Signed-off-by: YiFei Zhu <zhuyifei@google.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Stanislav Fomichev <sdf@google.com>
+Link: https://lore.kernel.org/bpf/76bb820ddb6a95f59a772ecbd8c8a336f646b362.1591812755.git.zhuyifei@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/filter.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-index 0bde5d919b2e..4aff69cbb903 100644
---- a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
-@@ -38,7 +38,7 @@
- /* L3C has 8-counters */
- #define L3C_NR_COUNTERS		0x8
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 40b3af05c883..b5521b60a2d4 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -1730,25 +1730,27 @@ BPF_CALL_5(bpf_skb_load_bytes_relative, const struct sk_buff *, skb,
+ 	   u32, offset, void *, to, u32, len, u32, start_header)
+ {
+ 	u8 *end = skb_tail_pointer(skb);
+-	u8 *net = skb_network_header(skb);
+-	u8 *mac = skb_mac_header(skb);
+-	u8 *ptr;
++	u8 *start, *ptr;
  
--#define L3C_PERF_CTRL_EN	0x20000
-+#define L3C_PERF_CTRL_EN	0x10000
- #define L3C_EVTYPE_NONE		0xff
+-	if (unlikely(offset > 0xffff || len > (end - mac)))
++	if (unlikely(offset > 0xffff))
+ 		goto err_clear;
  
- /*
+ 	switch (start_header) {
+ 	case BPF_HDR_START_MAC:
+-		ptr = mac + offset;
++		if (unlikely(!skb_mac_header_was_set(skb)))
++			goto err_clear;
++		start = skb_mac_header(skb);
+ 		break;
+ 	case BPF_HDR_START_NET:
+-		ptr = net + offset;
++		start = skb_network_header(skb);
+ 		break;
+ 	default:
+ 		goto err_clear;
+ 	}
+ 
+-	if (likely(ptr >= mac && ptr + len <= end)) {
++	ptr = start + offset;
++
++	if (likely(ptr + len <= end)) {
+ 		memcpy(to, ptr, len);
+ 		return 0;
+ 	}
 -- 
 2.25.1
 
