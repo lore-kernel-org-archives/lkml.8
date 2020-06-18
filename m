@@ -2,114 +2,128 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27714C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48659C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0156D20732
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F5B208B3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:53:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="YgO6FGYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731610AbgFRPw7 (ORCPT
+        id S1731635AbgFRPxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:52:59 -0400
-Received: from mga14.intel.com ([192.55.52.115]:58067 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727911AbgFRPw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:52:58 -0400
-IronPort-SDR: zz43w2BAAasn4uYs6kw3LtkM3X323TZTDNMMY35jUR2bO0DDhj5n4j/NuluZmxsdce64e6hqCN
- ReScRyT47BAg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="141701484"
+        Thu, 18 Jun 2020 11:53:07 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:65016 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729225AbgFRPxF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 11:53:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1592495585; x=1624031585;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=hTn4UBObJuaxDPv1HSr82vcMXBIjmYhw0RP1gEzZsnc=;
+  b=YgO6FGYx0wBzSS1rjXTEEIA68pjV6Cctay+HqsJaabVVUY7CKhJf84uW
+   jj3Xj7c35voRXqoB73rtIK906Oj+a/9iDaLyiETSfNhnLXoKQ4j7uYvrB
+   Ai9aYMjHP3Nv3JQcy3bkQuK50CaD6ZwnN6T4ZFm4h9dsvD/DEnTAHXzMc
+   OIu61ibUsmjW11nDRXB7RukqLbUySuY6rS6+4dua0Qni/sVTn8H9NOoQN
+   F/uLogmjMn2BSorc58x/eGlimvJ0mOKAXGaHhQEY0jU1agNJndqG+77Qq
+   56x6f4Y33pJehm3JY1AEmTvzJwHi6qmvJgZ4AEabcj9ICbFaiUOgxMp/c
+   g==;
+IronPort-SDR: XqZnv9pYBjMo8pNxkr9b5+VLjc4j16JDdC2Nla8S1JUE+141D1NfX+Vd5jANp7Eg2jgstZSqir
+ j66huWWf7UhI7RpLfNHc3wChi35xBW+9QACem71qP8uNDMuIU4rCKp4oSn1smymtdbKLbpk1Bn
+ fTbPyD4rbD2LoEMSBHHo3eWy5zHW0GNOMQJt4gAa84h5kILQO268CAEx8/NJNe3nANCuvvweZs
+ dll0ixJicb4b2nNu/wmWveT4Gm/X6+y/GioaAaCJpI2mi3flJCDCbmKU0ogufG84ggpFj3MvQO
+ KkQ=
 X-IronPort-AV: E=Sophos;i="5.75,251,1589266800"; 
-   d="scan'208";a="141701484"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 08:52:56 -0700
-IronPort-SDR: Rz7wj+h3c6y5PnE7mt0HLs+WCimZP8shyO9jjYR92TH5XPP+l4Rs1D7su9MB1R/gF705XCWoaj
- /weqIcFrTVQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,251,1589266800"; 
-   d="scan'208";a="277665815"
-Received: from otcsectest.jf.intel.com (HELO 258ff54ff3c0) ([10.54.30.81])
-  by orsmga006.jf.intel.com with ESMTP; 18 Jun 2020 08:52:56 -0700
-Date:   Thu, 18 Jun 2020 15:49:32 +0000
-From:   "Andersen, John" <john.s.andersen@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     corbet@lwn.net, pbonzini@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        shuah@kernel.org, sean.j.christopherson@intel.com,
-        liran.alon@oracle.com, drjones@redhat.com,
-        rick.p.edgecombe@intel.com, kristen@linux.intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, mchehab+huawei@kernel.org,
-        gregkh@linuxfoundation.org, paulmck@kernel.org,
-        pawan.kumar.gupta@linux.intel.com, jgross@suse.com,
-        mike.kravetz@oracle.com, oneukum@suse.com, luto@kernel.org,
-        peterz@infradead.org, fenghua.yu@intel.com,
-        reinette.chatre@intel.com, vineela.tummalapalli@intel.com,
-        dave.hansen@linux.intel.com, arjan@linux.intel.com,
-        caoj.fnst@cn.fujitsu.com, bhe@redhat.com, nivedita@alum.mit.edu,
-        keescook@chromium.org, dan.j.williams@intel.com,
-        eric.auger@redhat.com, aaronlewis@google.com, peterx@redhat.com,
-        makarandsonare@google.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH 4/4] X86: Use KVM CR pin MSRs
-Message-ID: <20200618154931.GD23@258ff54ff3c0>
-References: <20200617190757.27081-1-john.s.andersen@intel.com>
- <20200617190757.27081-5-john.s.andersen@intel.com>
- <b5d791f9-1708-9715-e03d-4618d1b27d05@intel.com>
- <20200618152649.GC23@258ff54ff3c0>
- <5706af0c-e426-91bc-4c38-d1203cf1b3b7@intel.com>
+   d="scan'208";a="78976284"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Jun 2020 08:53:04 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 18 Jun 2020 08:52:58 -0700
+Received: from [10.171.246.49] (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Thu, 18 Jun 2020 08:52:55 -0700
+Subject: Re: [PATCH v2] net: macb: undo operations in case of failure
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <linux@armlinux.org.uk>
+CC:     <antoine.tenart@bootlin.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1592469460-17825-1-git-send-email-claudiu.beznea@microchip.com>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+Message-ID: <e1f5e65a-c670-f178-dcda-a630db424215@microchip.com>
+Date:   Thu, 18 Jun 2020 17:53:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5706af0c-e426-91bc-4c38-d1203cf1b3b7@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1592469460-17825-1-git-send-email-claudiu.beznea@microchip.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 08:38:06AM -0700, Dave Hansen wrote:
-> On 6/18/20 8:26 AM, Andersen, John wrote:
-> > On Thu, Jun 18, 2020 at 07:41:04AM -0700, Dave Hansen wrote:
-> >>> +config PARAVIRT_CR_PIN
-> >>> +       bool "Paravirtual bit pinning for CR0 and CR4"
-> >>> +       depends on KVM_GUEST
-> >>> +       help
-> >>> +         Select this option to have the virtualised guest request that the
-> >>> +         hypervisor disallow it from disabling protections set in control
-> >>> +         registers. The hypervisor will prevent exploits from disabling
-> >>> +         features such as SMEP, SMAP, UMIP, and WP.
-> >>
-> >> I'm confused.  Does this add support for ""Paravirtual bit pinning", or
-> >> actually tell the guest to request pinning by default?
-> >>
-> >> It says "Select this option to have the virtualised guest request...",
-> >> which makes it sound like it affects the default rather than the
-> >> availability of the option.
-> > 
-> > How about this
-> > 
-> > Select this option to request protection of SMEP, SMAP, UMIP, and WP
-> > control register bits when running paravirtualized under KVM. Protection will
-> > be active provided the feature is available host side and kexec is disabled via
-> > kconfig or the command line for the guest requesting protection.
+On 18/06/2020 at 10:37, Claudiu Beznea wrote:
+> Undo previously done operation in case macb_phylink_connect()
+> fails. Since macb_reset_hw() is the 1st undo operation the
+> napi_exit label was renamed to reset_hw.
 > 
-> It still isn't very clear to me.
-> 
-> Let's pull the config option out of this patch.  Enable the feature by
-> default and do the command-line processing in this patch.
-> 
-> If you still think a Kconfig option is helpful, add it in a separate
-> patch calling out the deficiencies with the boot-time options.
+> Fixes: 7897b071ac3b ("net: macb: convert to phylink")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-That's right we're going to pull it out anyway and just disable if the
-disable_pv_cr_pin command line option is set. Oops. That solves that.
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Thanks Claudiu.
 
-Thank you very much for your review Dave
+Regards,
+   Nicolas
+
+> ---
+> 
+> Changes in v2:
+> - corrected fixes SHA1
+> 
+>   drivers/net/ethernet/cadence/macb_main.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+> index 67933079aeea..257c4920cb88 100644
+> --- a/drivers/net/ethernet/cadence/macb_main.c
+> +++ b/drivers/net/ethernet/cadence/macb_main.c
+> @@ -2558,7 +2558,7 @@ static int macb_open(struct net_device *dev)
+>   
+>   	err = macb_phylink_connect(bp);
+>   	if (err)
+> -		goto napi_exit;
+> +		goto reset_hw;
+>   
+>   	netif_tx_start_all_queues(dev);
+>   
+> @@ -2567,9 +2567,11 @@ static int macb_open(struct net_device *dev)
+>   
+>   	return 0;
+>   
+> -napi_exit:
+> +reset_hw:
+> +	macb_reset_hw(bp);
+>   	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue)
+>   		napi_disable(&queue->napi);
+> +	macb_free_consistent(bp);
+>   pm_exit:
+>   	pm_runtime_put_sync(&bp->pdev->dev);
+>   	return err;
+> 
+
+
+-- 
+Nicolas Ferre
