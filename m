@@ -2,185 +2,164 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64ED2204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F39E2080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:08:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CdiXaLl3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwErFNYj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731367AbgFRPG3 (ORCPT
+        id S1731314AbgFRPIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:06:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20441 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731055AbgFRPG0 (ORCPT
+        Thu, 18 Jun 2020 11:08:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbgFRPIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:06:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592492784;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=B3hPwQ1JMj6rF/e1bp2vt0LwdeFLVi97mXNQvAPwIN0=;
-        b=CdiXaLl35EMwGxpmgFloM7Q9Dtm9Yn9Xrqb9cCBSU2SrrQA4/N2axFfG0mh00THKMI8SOo
-        7CkKOY/nkZ4CETYUH5yyKx7nrO81wWagz6AKoR8tNjnoe2XX6vTpC4JJQBMheYG1YaFgGl
-        9N3NO1oYoU+EYgy7D6JAqhMuGK7sDf4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-160-xk1ufODnM2SCYbVy4w6MZg-1; Thu, 18 Jun 2020 11:06:22 -0400
-X-MC-Unique: xk1ufODnM2SCYbVy4w6MZg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7111D19200CE;
-        Thu, 18 Jun 2020 15:06:21 +0000 (UTC)
-Received: from llong.com (ovpn-118-66.rdu2.redhat.com [10.10.118.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C03505DA33;
-        Thu, 18 Jun 2020 15:06:07 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dave Chinner <david@fromorbit.com>, Qian Cai <cai@lca.pw>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v3] xfs: Fix false positive lockdep warning with sb_internal & fs_reclaim
-Date:   Thu, 18 Jun 2020 11:05:57 -0400
-Message-Id: <20200618150557.23741-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Thu, 18 Jun 2020 11:08:45 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 006FCC06174E;
+        Thu, 18 Jun 2020 08:08:43 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id m2so2807527pjv.2;
+        Thu, 18 Jun 2020 08:08:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Uz50xEzOGukPJL2T8FGXWSOAM4ralSHvFnEldUgfbS4=;
+        b=mwErFNYjou9o7fMW/VDgLs+pA24zJAtlFHZ4nK65wWXDVmw7FIual2UZ+eMy7f/lQP
+         ooHFfRNuDu6Fxnn5sEF6aHvFTjTXXiHl+d2kkMpwUQsxEOrvFzF/LQQvLEkXFTZcoak7
+         e9nxh+wP3vMSkxJRXxw9g95TSb8cpsBgB/aGMkwmD8tkwuHKpRUxUOBvcKyqubZQblzc
+         aqOgl7oN2nybuvqcNVapIet/cFjppj48YVJnibvA7jOokU4rTU755vFT8qIyCqT3Mt+s
+         uMOlC+PeZCFExwrlLATpm2Bl1VkgdZDtiWeOrurqKGf0voxuFQEp7OdNZEOjjtbVuogW
+         Xpzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Uz50xEzOGukPJL2T8FGXWSOAM4ralSHvFnEldUgfbS4=;
+        b=rYufioUCzfaeVyGAllTv1u2inX/gMBClCHB2IJONpY/m0CIbVjmiAPVrlM4nXu4S4b
+         RxC7P8iPHWdp83AgfAjPvu/2LsBkiMARYcV30uph3rEmXX3WTgrZ57F8bN3xqrm78KEs
+         DXyEjVf3UfSWA+9ikKla3bjerU1nByKAtmKKnbiS0bT+eZv8sPz6erePx2mjVXFTjDet
+         M0lmbYPNGVnS2RBHxpD3jMiwOGWfdOkSJh8m1uZ/iqBGjBnxv15G7cJmjjv9Wnlp/AUj
+         9AO27sgZ60K059BqJ1VGSLuvZlXEIxNq+S03MD7dT+Not2aOOtak7fDlVYhkJG2v60Vt
+         uhxA==
+X-Gm-Message-State: AOAM532nhNoyoVQSX/nWWzcvyBfBRnMguPa0bnWhYTTnze8GIdUzZjkN
+        Oan09eISyr89w0YfKihUgII=
+X-Google-Smtp-Source: ABdhPJyCxws7l7NtktmAvHTvzvQ4w8U5UdQG7aMGHhpEkSEEQpa6v4utPNOe2eVHjRmVGVGXHqYFIw==
+X-Received: by 2002:a17:902:26f:: with SMTP id 102mr3979508plc.226.1592492923453;
+        Thu, 18 Jun 2020 08:08:43 -0700 (PDT)
+Received: from localhost ([144.34.193.30])
+        by smtp.gmail.com with ESMTPSA id q13sm3432257pfk.8.2020.06.18.08.08.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 18 Jun 2020 08:08:42 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 23:08:32 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kevin Groeneveld <kgroeneveld@gmail.com>
+Subject: Re: [PATCH net v1] net: phy: smsc: fix printing too many logs
+Message-ID: <20200618150832.GA25889@nuc8i5>
+References: <20200617153340.17371-1-zhengdejin5@gmail.com>
+ <20200617161925.GE205574@lunn.ch>
+ <20200617175039.GA18631@nuc8i5>
+ <20200617184334.GA240559@lunn.ch>
+ <20200617202450.GX1551@shell.armlinux.org.uk>
+ <20200617213642.GE240559@lunn.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617213642.GE240559@lunn.ch>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Depending on the workloads, the following circular locking dependency
-warning between sb_internal (a percpu rwsem) and fs_reclaim (a pseudo
-lock) may show up:
+On Wed, Jun 17, 2020 at 11:36:42PM +0200, Andrew Lunn wrote:
+> On Wed, Jun 17, 2020 at 09:24:50PM +0100, Russell King - ARM Linux admin wrote:
+> > On Wed, Jun 17, 2020 at 08:43:34PM +0200, Andrew Lunn wrote:
+> > > You have explained what the change does. But not why it is
+> > > needed. What exactly is happening. To me, the key thing is
+> > > understanding why we get -110, and why it is not an actual error we
+> > > should be reporting as an error. That is what needs explaining.
+> > 
+> > The patch author really ought to be explaining this... but let me
+> > have a go.  It's worth pointing out that the comments in the file
+> > aren't good English either, so don't really describe what is going
+> > on.
+> > 
+> > When this PHY is in EDPD mode, it doesn't always detect a connected
+> > cable.  The workaround for it involves, when the link is down, and
+> > at each read_status() call:
+> > 
+> > - disable EDPD mode, forcing the PHY out of low-power mode
+> > - waiting 640ms to see if we have any energy detected from the media
+> > - re-enable entry to EDPD mode
+> > 
+> > This is presumably enough to allow the PHY to notice that a cable is
+> > connected, and resume normal operations to negotiate with the partner.
+> > 
+> > The problem is that when no media is detected, the 640ms wait times
+> > out (as it should, we don't want to wait forever) and the kernel
+> > prints a warning.
+> 
+> Hi Russell
+> 
+> Yes, that is what i was thinking. 
+> 
+> There probably should be a comment added just to prevent somebody
+> swapping it back to phy_read_poll_timeout(). It is not clear that
+> -ETIMEOUT is expected under some conditions.
+> 
+> 	  Andrew
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.0.0-rc1+ #60 Tainted: G        W
-------------------------------------------------------
-fsfreeze/4346 is trying to acquire lock:
-0000000026f1d784 (fs_reclaim){+.+.}, at:
-fs_reclaim_acquire.part.19+0x5/0x30
+Hi Andrew and Russell,
 
-but task is already holding lock:
-0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+First of all, thanks very much for your comment!
 
-which lock already depends on the new lock.
-  :
- Possible unsafe locking scenario:
+I did not understand Andrew's comments correctly in the previous email,
+sorry for my bad English. I found something in the commit 776829de90c597
+("net: phy: workaround for buggy cable detection by LAN8700 after cable
+plugging") about why it is not an actual error when get a timeout error
+in this driver. the commit's link is here:
 
-       CPU0                    CPU1
-       ----                    ----
-  lock(sb_internal);
-                               lock(fs_reclaim);
-                               lock(sb_internal);
-  lock(fs_reclaim);
+https://lore.kernel.org/patchwork/patch/590285/
 
- *** DEADLOCK ***
+As Russell said, it just for fix a hardware bug on LAN8700 device by wait
+640ms, so it should not as an actual error when got timeout.
 
-4 locks held by fsfreeze/4346:
- #0: 00000000b478ef56 (sb_writers#8){++++}, at: percpu_down_write+0xb4/0x650
- #1: 000000001ec487a9 (&type->s_umount_key#28){++++}, at: freeze_super+0xda/0x290
- #2: 000000003edbd5a0 (sb_pagefaults){++++}, at: percpu_down_write+0xb4/0x650
- #3: 0000000072bfc54b (sb_internal){++++}, at: percpu_down_write+0xb4/0x650
+The following is my understanding:
 
-stack backtrace:
-Call Trace:
- dump_stack+0xe0/0x19a
- print_circular_bug.isra.10.cold.34+0x2f4/0x435
- check_prev_add.constprop.19+0xca1/0x15f0
- validate_chain.isra.14+0x11af/0x3b50
- __lock_acquire+0x728/0x1200
- lock_acquire+0x269/0x5a0
- fs_reclaim_acquire.part.19+0x29/0x30
- fs_reclaim_acquire+0x19/0x20
- kmem_cache_alloc+0x3e/0x3f0
- kmem_zone_alloc+0x79/0x150
- xfs_trans_alloc+0xfa/0x9d0
- xfs_sync_sb+0x86/0x170
- xfs_log_sbcount+0x10f/0x140
- xfs_quiesce_attr+0x134/0x270
- xfs_fs_freeze+0x4a/0x70
- freeze_super+0x1af/0x290
- do_vfs_ioctl+0xedc/0x16c0
- ksys_ioctl+0x41/0x80
- __x64_sys_ioctl+0x73/0xa9
- do_syscall_64+0x18f/0xd23
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+It leads to unstable detection of plugging in Ethernet cable when LAN87xx
+is in Energy Detect Power-Down mode. Because the ENERGYON bit is not set.
 
-This is a false positive as all the dirty pages are flushed out before
-the filesystem can be frozen.
+For fix this issue, it will disables Energy Detect Power-Down mode and
+check ENERGYON bit to waiting for response on link pulses to detect
+presence of plugged Ethernet cable in the 640ms. if got the ENERGYON bit
+is set, I guess the cable plug-in event was detected and will report an
+interrupt after exit lan87xx_read_status() funtion, if the ENERGYON bit
+is not set, the plug-in event was not detected. after that, entry Energy
+Detect Power-Down mode again.
 
-One way to avoid this splat is to add GFP_NOFS to the affected allocation
-calls. This is what PF_MEMALLOC_NOFS per-process flag is for. This does
-reduce the potential source of memory where reclaim can be done. This
-shouldn't really matter unless the system is really running out of
-memory.  In that particular case, the filesystem freeze operation may
-fail while it was succeeding previously.
+it will re-call lan87xx_read_status() funtion by interrupt when got the
+ENERGYON bit is set. and check link status again. then, It will get a
+stable link status for LAN87xx device.
 
-Without this patch, the command sequence below will show that the lock
-dependency chain sb_internal -> fs_reclaim exists.
+So the timeout for wait 640ms should not as an actual error.
 
- # fsfreeze -f /home
- # fsfreeze --unfreeze /home
- # grep -i fs_reclaim -C 3 /proc/lockdep_chains | grep -C 5 sb_internal
+Thanks!
 
-After applying the patch, such sb_internal -> fs_reclaim lock dependency
-chain can no longer be found. Because of that, the locking dependency
-warning will not be shown.
+Dejin
 
-Suggested-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- fs/xfs/xfs_super.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 379cbff438bc..6a95c82f2f1b 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -913,11 +913,33 @@ xfs_fs_freeze(
- 	struct super_block	*sb)
- {
- 	struct xfs_mount	*mp = XFS_M(sb);
-+	unsigned long pflags;
-+	int ret;
- 
-+	/*
-+	 * A fs_reclaim pseudo lock is added to check for potential deadlock
-+	 * condition with fs reclaim. The following lockdep splat was hit
-+	 * occasionally. This is actually a false positive as the allocation
-+	 * is being done only after the frozen filesystem is no longer dirty.
-+	 * One way to avoid this splat is to add GFP_NOFS to the affected
-+	 * allocation calls. This is what PF_MEMALLOC_NOFS is for.
-+	 *
-+	 *       CPU0                    CPU1
-+	 *       ----                    ----
-+	 *  lock(sb_internal);
-+	 *                               lock(fs_reclaim);
-+	 *                               lock(sb_internal);
-+	 *  lock(fs_reclaim);
-+	 *
-+	 *  *** DEADLOCK ***
-+	 */
-+	current_set_flags_nested(&pflags, PF_MEMALLOC_NOFS);
- 	xfs_stop_block_reaping(mp);
- 	xfs_save_resvblks(mp);
- 	xfs_quiesce_attr(mp);
--	return xfs_sync_sb(mp, true);
-+	ret = xfs_sync_sb(mp, true);
-+	current_restore_flags_nested(&pflags, PF_MEMALLOC_NOFS);
-+	return ret;
- }
- 
- STATIC int
--- 
-2.18.1
 
