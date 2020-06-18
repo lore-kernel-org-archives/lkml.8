@@ -2,180 +2,230 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5735C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76895207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:52:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ca2O/NfS"
+	by mail.kernel.org (Postfix) with ESMTP id 45FBD207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729328AbgFRUwB (ORCPT
+        id S1727793AbgFRU5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:52:01 -0400
-Received: from mout.gmx.net ([212.227.15.15]:42295 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727092AbgFRUv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:51:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1592513502;
-        bh=dAh/4XFnuCUZkG3McHXtZt1y3vLAuRwTuz7aNgGjgDk=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=ca2O/NfSaWRL7gU05aaFJwXPHSqQ1k5miQ8OYz1FMq+owQEMvZDm8ixOogA40db7z
-         qt/b8np34UeOPHe9Ak22mKA2Tkraoe4De4AK0s088PJ7I1tgrRXevxBa66DRf+c+kq
-         jr05KpcS2q/fnDC5OJJ10j/DNSSdehtVyT6abKww=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.20.60] ([92.116.168.63]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MiaY9-1jHLWD0dSp-00fgx2; Thu, 18
- Jun 2020 22:51:42 +0200
-Subject: Re: rename probe_kernel_* and probe_user_*
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Tony Luck <tony.luck@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-References: <20200617073755.8068-1-hch@lst.de>
- <CAHk-=wjpnu=882iD9ck9Ywt6R1LYX_Hv-oS7dBMsWZwDRGZ5jA@mail.gmail.com>
-From:   Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- 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
- c2TFWAS8k6RLkk41ZUU8ENX8+qZx/Q==
-Message-ID: <7b3da127-6101-045e-9a8a-4d46198c1190@gmx.de>
-Date:   Thu, 18 Jun 2020 22:51:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 18 Jun 2020 16:57:18 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:48657 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgFRU5Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 16:57:16 -0400
+Received: by mail-il1-f199.google.com with SMTP id o4so4906510ilc.15
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:57:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=d4+iWLaVlBy8wzsOcjuAnUFW5E1j1kRl6+gfWh8J8Hk=;
+        b=orfigv+bw2OXHcNgNuCbau+PiExjhyzuD2EIef62rE4XAhvgm9S43XOd4ONWTfLQkZ
+         rXqMHL7FAwkdJtaQQsOAfSPqSQGl/133Ei8KUVQ4nWv1BeB46n+ZWp7JeQnl/2wd9/fR
+         2gd98UD6DU9BGWSAH2bDDwKlN6V0rJrC7Tu8hN7wAbSB5Qbz/Byh68xNKVEJSXKg+dDm
+         cYD+/6oyMoburLd+5fdrvwpcJGU9G6gQb1NT05G78WdTDwcwqu83m8T8PrUhj3/5WRDx
+         1xX4rFf4k1+fWdUV4gzTGZtrhIr2tT7sCV8tJCMDkqD1oMXj0nnSNiubjDH1DjR1Bj25
+         RXBg==
+X-Gm-Message-State: AOAM531bFmgQvkuXtzba4kRpAaP/rBDd75DuEHM1epS3T/3Mpva7/2dM
+        +3tusM1vGfgP038A6wP6oDeawMd3Xlez0LaW6+MC/netVDSP
+X-Google-Smtp-Source: ABdhPJw4eac/XW53i+LMcaWE0Cd57xbpVKEng30kzh0FAwfMuCudWPv9v27oel9I+xEKgTlPlw44nRgE126xXcQ2DL0zIGQmWBcK
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjpnu=882iD9ck9Ywt6R1LYX_Hv-oS7dBMsWZwDRGZ5jA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:kiUDgX8PfCD306rR7Gaqh2uWshvEfL76iLet0Tg6znsoXqYfMqk
- LaKEc4PF/5JXUQGcHKSIlNrQTzmGO75SBwDLrwu8GlfUiMoBk9sHzbLNxT8Tv32EfCizcu3
- gwvB2aUSBTJW0hjGLXrS78XRQ4LkVtKViqRm950xpw1D0wcCRYmYL7k0/sdRJZvPtMYvt2v
- jB3Km407Oxinsh4DCJ5bA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6n+cOUXpzPI=:m/AZK6KLhJ7uQy0czU5UkZ
- 0xDxL0Uf9VUuAm+l69Dp6E3V4E0rlYWre9EV2HZadIskwpndyznnQoe5UrMgC5tQVf1/FqaO1
- wJXuQ6Zyyjyv/6s8CsxGYnh7ucFJBwvCaEapX0ASLEUvXfq6K18Y4v33njC28/mzeqQgEPxTw
- 7QXFIFy3QRi+HfGzrD9LjYAJZSR0A3WR+4eZmjMbl+NTcyOGQ6mzI/h0A+iokm2fk+sTxy1on
- 5JgeyTEVpBeU4BgArfkDTDJQQvs+PrhlxYq2sxZ9+WzblSY6EH+xgzNhz3eXS+97Cxe7p2QSt
- 0m4ig4HYihKibHEtZ8iHD83FFIUL9uISlT3wwIDw99Kpt2lbUs0j4JOBXjmjXyzavjs5e83Vl
- jHkEhXoK9dHiK+TOuKA2oBPFoKb9VsG930/x1Pbs0L1dkgtiqQ11su6l2EgTUic2RIRPOJxJJ
- 4U6PXmqfSUJJr69lYZQs4gxB6rDlb128ptg/gAAEFEFG7tStOvMkaxxDM/RuCeeoHdgRtRhuU
- AQG3xn0ywVj2C5lKOD2kNeOVUG9no397RWj7pT/st9taXoy8bxRyOPf48PuPycCwxQcjhGZaQ
- rC6Uf1GSLkxw6dB0kC18X3dM3BTrN6+AHjgybmHNFOCxgHaSzM27RsnLd1xPgyyr8DvUjohtt
- iNI6daSKCUV31hzRKAdNtUSsqJDmsWa+EI6t9wPYavmkyrh079whGeGiksprLVJmCGzPZGpiQ
- xyGuxTHIzj76SMwibDyqX8X/RUyucEjCIWjAp/Q0d7G/f2Io7ee5+RVvcBjxVLV8S5Oc7Fshw
- 3etbYet7x6LKExWQz0qDM2ZFYXaHuZyiP/OztO4UBhsZAEdBupMVMspRPQ0+cUrY2kVsEt52l
- X9GlkV9auOtb1FctFMg2g+roK2y4muR4glhqcaCZg3ZBSoRrQgh8K0NNQIRBRLmxDkNzP69Fj
- aXmRndU/7F+byAQY17h8ib76QGSxyL3HXFCoKL1KA6fVpEUUFNIknWjO0gscdh8ISAYByhh+b
- QE/ekzixgSP6f0HqzkIjTyQQGeV/Lul1DSLW8LbZWLCalzwK+C6IB4WDmW5JRQth1fh0qImel
- cNK3ewvG7f4ElYKXXTWT/9yWEKXxUHAlB9enjK/RHcEacV7vl0ELZRKTlpsslZnIXUuGc1PWO
- 1vqULklzTHKIUL6CRCQxpfexA/TwBI3zP01zD6xbwZu7Okfesv1yWG/yqpOOmu9Y8gBqw=
+X-Received: by 2002:a05:6602:15ca:: with SMTP id f10mr682018iow.52.1592513834771;
+ Thu, 18 Jun 2020 13:57:14 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 13:57:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006bf03c05a86205bb@google.com>
+Subject: INFO: trying to register non-static key in ath9k_htc_rxep
+From:   syzbot <syzbot+4d2d56175b934b9a7bf9@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
+        davem@davemloft.net, kuba@kernel.org, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.06.20 21:48, Linus Torvalds wrote:
-> [ Explicitly added architecture lists and developers to the cc to make
-> this more visible ]
->
-> On Wed, Jun 17, 2020 at 12:38 AM Christoph Hellwig <hch@lst.de> wrote:
->>
->> Andrew and I decided to drop the patches implementing your suggested
->> rename of the probe_kernel_* and probe_user_* helpers from -mm as there
->> were way to many conflicts.  After -rc1 might be a good time for this a=
-s
->> all the conflicts are resolved now.
->
-> So I've merged this renaming now, together with my changes to make
-> 'get_kernel_nofault()' look and act a lot more like 'get_user()'.
->
-> It just felt wrong (and potentially dangerous) to me to have a
-> 'get_kernel_nofault()' naming that implied semantics that we're all
-> familiar with from 'get_user()', but acting very differently.
->
-> But part of the fixups I made for the type checking are for
-> architectures where I didn't even compile-test the end result. I
-> looked at every case individually, and the patch looks sane, but I
-> could have screwed something up.
->
-> Basically, 'get_kernel_nofault()' doesn't do the same automagic type
-> munging from the pointer to the target that 'get_user()' does, but at
-> least now it checks that the types are superficially compatible.
-> There should be build failures if they aren't, but I hopefully fixed
-> everything up properly for all architectures.
->
-> This email is partly to ask people to double-check, but partly just as
-> a heads-up so that _if_ I screwed something up, you'll have the
-> background and it won't take you by surprise.
+Hello,
 
-Linus. thanks for the heads-up!
-With your change it compiles cleanly on 32- and 64-bit parisc.
+syzbot found the following crash on:
 
-Helge
+HEAD commit:    b791d1bd Merge tag 'locking-kcsan-2020-06-11' of git://git..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+console output: https://syzkaller.appspot.com/x/log.txt?x=1522cc25100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=16c2467d4b6dbee2
+dashboard link: https://syzkaller.appspot.com/bug?extid=4d2d56175b934b9a7bf9
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4d2d56175b934b9a7bf9@syzkaller.appspotmail.com
+
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 355 Comm: syz-executor.2 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xf6/0x16e lib/dump_stack.c:118
+ assign_lock_key kernel/locking/lockdep.c:894 [inline]
+ register_lock_class+0x1442/0x17e0 kernel/locking/lockdep.c:1206
+ __lock_acquire+0x101/0x6270 kernel/locking/lockdep.c:4259
+ lock_acquire+0x18b/0x7c0 kernel/locking/lockdep.c:4959
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x32/0x50 kernel/locking/spinlock.c:159
+ ath9k_htc_rxep+0x31/0x210 drivers/net/wireless/ath/ath9k/htc_drv_txrx.c:1128
+ ath9k_htc_rx_msg+0x2d9/0xb00 drivers/net/wireless/ath/ath9k/htc_hst.c:459
+ ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:638 [inline]
+ ath9k_hif_usb_rx_cb+0xc76/0x1050 drivers/net/wireless/ath/ath9k/hif_usb.c:671
+ __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+ dummy_timer+0x125e/0x32b4 drivers/usb/gadget/udc/dummy_hcd.c:1967
+ call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0x5e5/0x14c0 kernel/time/timer.c:1786
+ __do_softirq+0x21e/0x996 kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0x178/0x1a0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+ smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1107
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+ </IRQ>
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
+RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0x3b/0x40 kernel/locking/spinlock.c:191
+Code: e8 1a 69 8d fb 48 89 ef e8 42 5d 8e fb f6 c7 02 75 11 53 9d e8 26 e6 ab fb 65 ff 0d 57 e4 68 7a 5b 5d c3 e8 e7 de ab fb 53 9d <eb> ed 0f 1f 00 55 48 89 fd 65 ff 05 3d e4 68 7a 45 31 c9 41 b8 01
+RSP: 0018:ffff8881ae06fba0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000000 RBX: 0000000000000246 RCX: 1ffffffff0fd4d4a
+RDX: 1ffff11039bbe747 RSI: 0000000000000000 RDI: ffff8881cddf3a38
+RBP: ffff8881db228400 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffff8881db228480 R14: ffff8881ae06fdf8 R15: ffff8881db228400
+ unlock_hrtimer_base kernel/time/hrtimer.c:898 [inline]
+ hrtimer_start_range_ns+0x5cd/0xb50 kernel/time/hrtimer.c:1136
+ hrtimer_start_expires include/linux/hrtimer.h:435 [inline]
+ hrtimer_sleeper_start_expires kernel/time/hrtimer.c:1800 [inline]
+ do_nanosleep+0x1b9/0x650 kernel/time/hrtimer.c:1876
+ hrtimer_nanosleep+0x1df/0x3a0 kernel/time/hrtimer.c:1932
+ __do_sys_nanosleep kernel/time/hrtimer.c:1966 [inline]
+ __se_sys_nanosleep kernel/time/hrtimer.c:1953 [inline]
+ __x64_sys_nanosleep+0x1dc/0x260 kernel/time/hrtimer.c:1953
+ do_syscall_64+0xb6/0x5a0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45af70
+Code: Bad RIP value.
+RSP: 002b:00007fff27bba8e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000023
+RAX: ffffffffffffffda RBX: 000000000009722e RCX: 000000000045af70
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007fff27bba8f0
+RBP: 00000000000001de R08: 0000000000000001 R09: 0000000001410940
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fff27bba940 R14: 000000000009722e R15: 00007fff27bba950
+BUG: unable to handle page fault for address: ffffffffffffffc8
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 7026067 P4D 7026067 PUD 7028067 PMD 0 
+Oops: 0000 [#1] SMP KASAN
+CPU: 0 PID: 355 Comm: syz-executor.2 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:ath9k_htc_rxep+0xb5/0x210 drivers/net/wireless/ath/ath9k/htc_drv_txrx.c:1130
+Code: 8b 43 38 48 8d 58 c8 49 39 c4 0f 84 ee 00 00 00 e8 90 fd 61 fe 48 89 d8 48 c1 e8 03 0f b6 04 28 84 c0 74 06 0f 8e 0a 01 00 00 <44> 0f b6 3b 31 ff 44 89 fe e8 cd fe 61 fe 45 84 ff 75 a8 e8 63 fd
+RSP: 0018:ffff8881db209870 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffffffffffffc8 RCX: ffffc900004a7000
+RDX: 0000000000040000 RSI: ffffffff82ddb320 RDI: ffff8881db2097e0
+RBP: dffffc0000000000 R08: 0000000000000004 R09: ffffed103b6412fd
+R10: 0000000000000003 R11: ffffed103b6412fc R12: ffff8881ac34b4d8
+R13: ffff8881ac34b0a0 R14: ffff8881ac34b4e8 R15: ffffed10392efc10
+FS:  0000000001410940(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffc8 CR3: 00000001ae02b000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ ath9k_htc_rx_msg+0x2d9/0xb00 drivers/net/wireless/ath/ath9k/htc_hst.c:459
+ ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:638 [inline]
+ ath9k_hif_usb_rx_cb+0xc76/0x1050 drivers/net/wireless/ath/ath9k/hif_usb.c:671
+ __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+ dummy_timer+0x125e/0x32b4 drivers/usb/gadget/udc/dummy_hcd.c:1967
+ call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0x5e5/0x14c0 kernel/time/timer.c:1786
+ __do_softirq+0x21e/0x996 kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0x178/0x1a0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+ smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1107
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+ </IRQ>
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
+RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0x3b/0x40 kernel/locking/spinlock.c:191
+Code: e8 1a 69 8d fb 48 89 ef e8 42 5d 8e fb f6 c7 02 75 11 53 9d e8 26 e6 ab fb 65 ff 0d 57 e4 68 7a 5b 5d c3 e8 e7 de ab fb 53 9d <eb> ed 0f 1f 00 55 48 89 fd 65 ff 05 3d e4 68 7a 45 31 c9 41 b8 01
+RSP: 0018:ffff8881ae06fba0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000000 RBX: 0000000000000246 RCX: 1ffffffff0fd4d4a
+RDX: 1ffff11039bbe747 RSI: 0000000000000000 RDI: ffff8881cddf3a38
+RBP: ffff8881db228400 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffff8881db228480 R14: ffff8881ae06fdf8 R15: ffff8881db228400
+ unlock_hrtimer_base kernel/time/hrtimer.c:898 [inline]
+ hrtimer_start_range_ns+0x5cd/0xb50 kernel/time/hrtimer.c:1136
+ hrtimer_start_expires include/linux/hrtimer.h:435 [inline]
+ hrtimer_sleeper_start_expires kernel/time/hrtimer.c:1800 [inline]
+ do_nanosleep+0x1b9/0x650 kernel/time/hrtimer.c:1876
+ hrtimer_nanosleep+0x1df/0x3a0 kernel/time/hrtimer.c:1932
+ __do_sys_nanosleep kernel/time/hrtimer.c:1966 [inline]
+ __se_sys_nanosleep kernel/time/hrtimer.c:1953 [inline]
+ __x64_sys_nanosleep+0x1dc/0x260 kernel/time/hrtimer.c:1953
+ do_syscall_64+0xb6/0x5a0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45af70
+Code: Bad RIP value.
+RSP: 002b:00007fff27bba8e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000023
+RAX: ffffffffffffffda RBX: 000000000009722e RCX: 000000000045af70
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007fff27bba8f0
+RBP: 00000000000001de R08: 0000000000000001 R09: 0000000001410940
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fff27bba940 R14: 000000000009722e R15: 00007fff27bba950
+Modules linked in:
+CR2: ffffffffffffffc8
+---[ end trace 4488f3a2c836a427 ]---
+RIP: 0010:ath9k_htc_rxep+0xb5/0x210 drivers/net/wireless/ath/ath9k/htc_drv_txrx.c:1130
+Code: 8b 43 38 48 8d 58 c8 49 39 c4 0f 84 ee 00 00 00 e8 90 fd 61 fe 48 89 d8 48 c1 e8 03 0f b6 04 28 84 c0 74 06 0f 8e 0a 01 00 00 <44> 0f b6 3b 31 ff 44 89 fe e8 cd fe 61 fe 45 84 ff 75 a8 e8 63 fd
+RSP: 0018:ffff8881db209870 EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffffffffffffc8 RCX: ffffc900004a7000
+RDX: 0000000000040000 RSI: ffffffff82ddb320 RDI: ffff8881db2097e0
+RBP: dffffc0000000000 R08: 0000000000000004 R09: ffffed103b6412fd
+R10: 0000000000000003 R11: ffffed103b6412fc R12: ffff8881ac34b4d8
+R13: ffff8881ac34b0a0 R14: ffff8881ac34b4e8 R15: ffffed10392efc10
+FS:  0000000001410940(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffc8 CR3: 00000001ae02b000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
