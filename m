@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2935C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87B7E20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8505521D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444119;
-	bh=09rvWbk8Ky7fR1yr6TY6KKhEpOIbZH4kf4XvocKd1Mg=;
+	s=default; t=1592444121;
+	bh=sqWnOC4iuxz3jVIZiiWhLO+J25Ey9FgoqbsPuaGI4b4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uVm3lTeafDtDwsd10AmTInEatdG6M8rF2+/0Kt+1XPj+eJaIcM1dGh/s9TNzWc+v8
-	 Si4N0/OvPwSqT5uCNKn2rSbXbEtFXKB6E5K0k7njRsei/D+OxRbtzm1VFCNHq3yxiw
-	 wEpTlgnx3aGPU8XLXVtFxBn40HtL65Rxu88vohvA=
+	b=Q30ISA19D9gPc6u/PLFb93esj1i7WAMU6IE8POTkbPjuu5VOhDtJy2+Gb4tfzccao
+	 KtsYIfTIfQMQVJzhFA+1/Jyx/ELHkUkON5mWnw1i9UIPsWQez6NVA4HGgqgoIKu52i
+	 1/eFVYjeFpQm4EEYylvEi68H8soPpwpW/CyazLuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732833AbgFRBbt (ORCPT
+        id S1732824AbgFRBbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:31:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38628 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:31:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732276AbgFRB3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:19 -0400
+        id S1732267AbgFRB3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:29:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D4BA22228;
-        Thu, 18 Jun 2020 01:29:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81FE122209;
+        Thu, 18 Jun 2020 01:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443758;
-        bh=09rvWbk8Ky7fR1yr6TY6KKhEpOIbZH4kf4XvocKd1Mg=;
+        s=default; t=1592443756;
+        bh=sqWnOC4iuxz3jVIZiiWhLO+J25Ey9FgoqbsPuaGI4b4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZhQATq2BZ3emqNDAGASfAbV4LztzT8HeDuYDNZQf9+Q/ZdCXQj80yuAPE64z76pIw
-         f6CDCqRcejAXPKkfYYnIHEG/tkdcqaNmz1PnRS20cjJYfRDpAYHDAub27X+7DGgAJx
-         359kU3FiBl7BT3vK06bdUrktFs9aAHQpnQF5xPZY=
+        b=XU5Py8DlrCn18DDKj+ew6iZ0vleoA02+p0tLidr8ynnWQ5QnXJAfqj/CtlR7lAn/Z
+         kwOL5OToLre8tx9g4b0z0dkvKT/arXNCnighQGXg+k+8dyvlnl7mmaRmZksSRtkPd5
+         DDX2C4M0U3/GobJRKgXJa3Z5BBM0pkFO3dPjXj6U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 45/80] tty: n_gsm: Fix SOF skipping
-Date:   Wed, 17 Jun 2020 21:27:44 -0400
-Message-Id: <20200618012819.609778-45-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        clang-built-linux@googlegroups.com,
+        David Teigland <teigland@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.9 43/80] dlm: remove BUG() before panic()
+Date:   Wed, 17 Jun 2020 21:27:42 -0400
+Message-Id: <20200618012819.609778-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
 References: <20200618012819.609778-1-sashal@kernel.org>
@@ -59,56 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 84d6f81c1fb58b56eba81ff0a36cf31946064b40 ]
+[ Upstream commit fe204591cc9480347af7d2d6029b24a62e449486 ]
 
-For at least some modems like the TELIT LE910, skipping SOF makes
-transfers blocking indefinitely after a short amount of data
-transferred.
+Building a kernel with clang sometimes fails with an objtool error in dlm:
 
-Given the small improvement provided by skipping the SOF (just one
-byte on about 100 bytes), it seems better to completely remove this
-"feature" than make it optional.
+fs/dlm/lock.o: warning: objtool: revert_lock_pc()+0xbd: can't find jump dest instruction at .text+0xd7fc
 
-Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20200512115323.1447922-3-gregory.clement@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The problem is that BUG() never returns and the compiler knows
+that anything after it is unreachable, however the panic still
+emits some code that does not get fully eliminated.
+
+Having both BUG() and panic() is really pointless as the BUG()
+kills the current process and the subsequent panic() never hits.
+In most cases, we probably don't really want either and should
+replace the DLM_ASSERT() statements with WARN_ON(), as has
+been done for some of them.
+
+Remove the BUG() here so the user at least sees the panic message
+and we can reliably build randconfig kernels.
+
+Fixes: e7fd41792fc0 ("[DLM] The core of the DLM for GFS2/CLVM")
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/n_gsm.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ fs/dlm/dlm_internal.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index 9e9016e67843..d5efacd27b15 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -685,7 +685,6 @@ static void gsm_data_kick(struct gsm_mux *gsm)
- {
- 	struct gsm_msg *msg, *nmsg;
- 	int len;
--	int skip_sof = 0;
- 
- 	list_for_each_entry_safe(msg, nmsg, &gsm->tx_list, list) {
- 		if (gsm->constipated && msg->addr)
-@@ -707,15 +706,10 @@ static void gsm_data_kick(struct gsm_mux *gsm)
- 			print_hex_dump_bytes("gsm_data_kick: ",
- 					     DUMP_PREFIX_OFFSET,
- 					     gsm->txframe, len);
--
--		if (gsm->output(gsm, gsm->txframe + skip_sof,
--						len - skip_sof) < 0)
-+		if (gsm->output(gsm, gsm->txframe, len) < 0)
- 			break;
- 		/* FIXME: Can eliminate one SOF in many more cases */
- 		gsm->tx_bytes -= msg->len;
--		/* For a burst of frames skip the extra SOF within the
--		   burst */
--		skip_sof = 1;
- 
- 		list_del(&msg->list);
- 		kfree(msg);
+diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
+index 216b61604ef9..c211156aabe2 100644
+--- a/fs/dlm/dlm_internal.h
++++ b/fs/dlm/dlm_internal.h
+@@ -100,7 +100,6 @@ do { \
+                __LINE__, __FILE__, #x, jiffies); \
+     {do} \
+     printk("\n"); \
+-    BUG(); \
+     panic("DLM:  Record message above and reboot.\n"); \
+   } \
+ }
 -- 
 2.25.1
 
