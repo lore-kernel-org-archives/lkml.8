@@ -2,171 +2,130 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB74FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51447C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98FC0207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A913207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 19:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L4it2v0+"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="GnSGVZ7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgFRS7W (ORCPT
+        id S1729230AbgFRTA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 14:59:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgFRS7U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 14:59:20 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0E22C0613ED
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 11:59:20 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id b16so3187610pfi.13
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 11:59:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RRvnn8Ty+J9ub0ve3U5qnJId2gPE+UnHi9QjuB+a3bk=;
-        b=L4it2v0+jYIWtjtIU214aSZCTKymyjr06cEV2JW+C2tIA5O4sm3lhnsGQWQHlFZTWO
-         Yir/6c9W37u6Hpel/cIyXg1hhFjbTGnS+EqW/oCI1BdEgbh8voShcNvC/3PVIG3Tv8E1
-         gOFeDwv+OA5S6Xn/9tzja0s3260x01qBU/A3s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RRvnn8Ty+J9ub0ve3U5qnJId2gPE+UnHi9QjuB+a3bk=;
-        b=ifHr3yXu39Ue09sXvsWk77SoM0gyOZIx0VPRzIeGzN+nzssvNSuQmfwbm39qqVNWWX
-         Cy6LcMJFISl2yBT6I1Lb0Yw39Zrhu09XWgRm/Vo5A/6Iaj6uu6vw3Ex48ZxoBISTRUJD
-         RjyoxqmgEgwyPBQEAnWH/4azr0FJNlgBsDuKB7mZX/ULFCwQ/NusWiM02uH6zyeh/yqb
-         BhkxlWJ8ivublhCN3O2OpRuQUDy19TC4pxVQvinHGJUOJch3l9+7oXASa46B8U5vwoUc
-         jqIz2EBX9FMnZAAYlSec0ewuAvgoQHZtV4cdvLLSJeXBU0feXEJXHI5hxQcysVnJg/YL
-         5Ldw==
-X-Gm-Message-State: AOAM5327FAMWPnNwwwtD66sXqFT4SmNA5GvJwcTDX9kSM/bIVXQF1JTH
-        OPxDi4mxabu8S/hG3X9Xp/gWcCUUCRU=
-X-Google-Smtp-Source: ABdhPJzBi1TYAB9JtNn9rVlZhSSeLNic/mp1y3SuZM3ZOZR6SAmerOHr5vQdEZy+m1Sa+pNGKHnnAw==
-X-Received: by 2002:a62:52d6:: with SMTP id g205mr4931409pfb.78.1592506759889;
-        Thu, 18 Jun 2020 11:59:19 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id a3sm3618635pfi.77.2020.06.18.11.59.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 11:59:19 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 11:59:18 -0700
-From:   Prashant Malani <pmalani@chromium.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>
-Subject: Re: [PATCH 1/2] dt-bindings: chrome: Add cros-ec-typec mux props
-Message-ID: <20200618185918.GB255826@google.com>
-References: <CAL_JsqJ2pbh5BbjGd9eEiD6-sV94=omk6o+mLXjCYiVnUOtO=g@mail.gmail.com>
- <CACeCKadiiokPdPB2Q5WBQFrPuxjpm3TiDgaaerncVR_Z7Z0nvg@mail.gmail.com>
- <CAL_Jsq+MM3-ugLvSGc_wc6RvHVyxyDUD0DkvwQaQJMYCCFpfHg@mail.gmail.com>
- <20200609235740.GA154315@google.com>
- <20200610153356.GC3213128@kuha.fi.intel.com>
- <CAL_JsqKsObFhC+J6gK2EDXdpBLO6t+rswXDipnjt4uMr2Qx2zg@mail.gmail.com>
- <CACeCKadq6tuqzR_6DuiZeL+=aOMb05EWd4o0sNyGOcZJ=dYx8g@mail.gmail.com>
- <CAL_JsqJQb5P26JC-KqkeHoWxAb63N+_XRK==b-WWJ+pYpdHO8Q@mail.gmail.com>
- <CACeCKacUa1-ttBmKS_Q_xZCsArgGWkB4s9eG0c5Lc5RHa1W35Q@mail.gmail.com>
- <20200615132207.GG3213128@kuha.fi.intel.com>
+        Thu, 18 Jun 2020 15:00:56 -0400
+Received: from mout.web.de ([212.227.15.14]:46495 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726882AbgFRTAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 15:00:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1592506838;
+        bh=2ktWjX+z4AuhVxP3y0/uIcFy2A6HcWihvn1RCfDK71o=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=GnSGVZ7DQ1cAas+OHmT66mS1RjNYWbBqoZECyCCgOu4yJ4F1RYKUWAhLPWQ6oI3M7
+         X23ExQ1eiMklaDJLK4vbXmlajXQDY56pc1PD/nalEBuTJMNseUcdy0gZs8Sld19vn0
+         yCqJ29zk7gxKn7Qg7+9zDg6O8nYXavmKBZjpmRNo=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.102.18]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N2BMA-1ikdxY0VIM-013aEj; Thu, 18
+ Jun 2020 21:00:38 +0200
+To:     Zheng Bin <zhengbin13@huawei.com>, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michael Braun <michael-dev@fami-braun.de>,
+        Yi Zhang <yi.zhang@huawei.com>
+Subject: Re: [PATCH] macvlan: Fix memory leak in macvlan_changelink_sources()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <5e4396d5-7e89-da5b-f9a3-b995d0f0a7c3@web.de>
+Date:   Thu, 18 Jun 2020 21:00:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615132207.GG3213128@kuha.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:4ieuEG8s9pM727CybJ6ILngZ81nBYhJ3PMBrsaUwsI6ydYBPEru
+ 92bZiAAR74P3JKbs5X+hzHwAYtiVJvEzkCDV8PIBWkU0MAyQvhAdgDK3y5X/IDNAo0EiIJ0
+ cLCLIEAnRbYxbpLtXDveio/UNCYLp7DCltLcCsZznWMsOW8jmsXMoZSZJrvktDqQ4PMZdid
+ eGX6QecfufG8aOsNKeFNA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OFOq0rR8Fwo=:x0NJX2K39x7xFZ3Ax4Mumo
+ PxoDeCiFmFzSKjywIYWf7L98qb7KQpLkUd9eV/ghdsD1Srv+KBirKyYRLhrrcJGHfrzj79mjJ
+ j7Cp8Uent3zFbfDc3/dIpiPKNPXWif/Pngc9bvFZwPT210oTVoO+zGGhU9hHO28RBYl8zGrvx
+ X7zeVZmDtPBYbPLG98Z176sXoMj/TUcgEoyLGYhHUTkwkqRdNV1ptJwwTFvFeDaHlpR78n91p
+ +kp/8ayWWe4juYQuPxeU/3VvCYu1VoWW0u/Kz8+RN32y/A3VgCayZXyk0I13SKOV3tUVhXERS
+ MzUDKlHnkuEVfUTZwKHMtPLQfT/L5Y+LzHDc3R975aivSlIoNjpip43/nXbbHF/oD/33bYO6M
+ 5rYKZS44ytP19BD2rjlKW9Z8e7awKcLSPtjGZwS1qgbB6vkPNzkYGQsPcReL6YL5J2fF0f5Op
+ 3An/erWNtVtrF4i8zuw7Ad6sP0ZZRtbahlEKE01sY6Vao6KLv5Uq5ykH3iWpym1dwGvjz1JKR
+ bN0/LeETF8nSfDfM5pUYs3d6/vAJfLJXKHsOszfecOv5ReFV5revsZBSJ8Wa0UgEEU6r1cS+P
+ TtPr5HSmeHPS+ypYw9KtCwNa/V5EYsVi3PafNKUGIIsphKRta/ji66QDABLmOshuLlOwYVGHo
+ L5I3nCpg68kjN9nti3TDPGn3njlDXXVh0LCHao3auDcxSFyCwPn8LtiwpizDmJmTqJcu6yzjj
+ qtjLXM17hQL20UbQugt1ymnPEVWlu4KLxQ8jwEondlSKRTSLHp8yuKuziIFqFon56uB5wnglT
+ GpHuTnu60kDIBR7e/lolZ7tfYwJQCSc4+hDWOgh7VtLiSIbpRKVJMcQ/ArMbaStAx+1LZY4pC
+ 5VGIV+sueFPi6zZabv37EOlzZC3kdxhy7Hrsfb66ot6dtVzgaDcQ+1zjMJp0374/6R97jXXPw
+ 8RQ8+saYeevjyHbP2/wcuoT9OqyqYjsjHau7AOxfkMu4N5A4Y/uBR0j5zkniNdNi06ltkifYd
+ rtEZ3iaWw6xNpnFUv+BncKkGgk/jw41kp7FkMXLmwMrZOvrG+GP4/0lHNRNc6P0KETbOhTq6A
+ f3PKuxNF2KMUB4PALuvGWyJrzbKo3iArWANSgOAqQK9q8Ayht+64DiiPq9BugJtGWCTWLzm6u
+ kdgyITDOYUB+kpDUw8dHXMAl2PIEbvfW0MnMOXiIgdoE6J0QwRJENmW3A0Yqp+dgiIXWAOYDn
+ ZHmoZg32dbXCe5moq
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heikki and Rob,
+>     -->If fail, need to free previous malloc memory
 
-(trimming text):
-On Mon, Jun 15, 2020 at 04:22:07PM +0300, Heikki Krogerus wrote:
-> On Fri, Jun 12, 2020 at 10:34:06AM -0700, Prashant Malani wrote:
-> > Hi Rob,
-> > > Yes, but let's stop calling it a mux. It's a "USB Type C signal routing blob".
-> > 
-> > Ack.
-> > 
-> > Let's go with "-switch" ? That's what the connector class uses and it
-> > conveys the meaning (unless that is a reserved keyword in DT).
-> 
-> Just as a clarification here, we should not be even talking about
-> signal routing here. We are talking about functions that an external
-> components perform from the connector's perspective. It depends on the
-> platform does that function require changing the routing of the lines
-> from the connector. For example, data role swapping does not require
-> muxing on platforms that have single dual-role USB controller, but
-> platforms that have separate IPs for the USB host and USB device
-> controllers will need a mux.
-> 
-> Note, that it is even possible that switching from USB to DisplayPort
-> mode does not require any pin reconfiguration from the mux, even if
-> the platform has one, because the PHY can be shared between USB3 and
-> DP. Then the PHY just needs to be told that it is now in DP mode when
-> DP alt mode is entered instead of the mux.
-> 
-> > > > Would this block the addition of the "*-switch" properties? IIUC the
-> > > > two are related but not dependent on each other.
-> > > >
-> > > > The *-switch properties are phandles which the Type C connector class
-> > > > framework expects (and uses to get handles to those switches).
-> > > > These would point to the "mux" or "group of mux" abstractions as noted earlier.
-> > >
-> > > You don't need them though. Walk the graph. You get the connector
-> > > port@1 remote endpoint and then get its parent.
-> > >
-> > 
-> > I see; would it be something along the lines of this? (DT example
-> > follows; search for "example_end" to jump to bottom):
-> 
-> I just realized that you have in practice placed the mux-agent into
-> the graph below, right? That we can not do, because it is not
-> physically connected to the connector.
+I suggest to improve this change description.
+How does the proposed addition of the function call =E2=80=9Cmacvlan_flush=
+_sources=E2=80=9D
+fit to this information?
 
-Is this a requirement? I read through the graph.txt file [1] and I couldn't
-find anything stating that a physical connection between two devices was
-required (but I may be misinterpreting that document)
-
-[1]:
-https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/graph.txt
-
-> 
-> > <example_start>
-> > 
-> > <example_end>
-> > 
-> > Would this be conformant to OF graph and usb-connector bindings
-> > requirements? We'll certainly send out a format PATCH/RFC series for
-> > this, but I was hoping to gauge whether we're thinking along the right lines.
-> > 
-> > So, in effect this would mean:
-> > - New bindings(and compatible strings) to be added for:
-> >   typec-{orientation,data-role,mode}-switch.
-> > - Handling in Type C connector class to parse switches from OF graph.
-> > - Handling in Type C connector class for distinct switches for port@1
-> >   (SS lines) and port@2 (SBU lines).
-> > 
-> > The only thing I'm confused about is how we can define these switch
-> > remote-endpoint bindings in usb-connector.yaml; the port can have an
-> > remote-endpoint, but can we specify what the parent of the remote-endpoint
-> > should have as a compatible string? Or do we not need to?
-> 
-> thanks,
-> 
-> -- 
-> heikki
-
-Best regards,
-
--Prashant
+Regards,
+Markus
