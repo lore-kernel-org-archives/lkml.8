@@ -2,58 +2,324 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE24C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97DF5214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 452F020888
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:46:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="veVE78EJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731204AbgFROqU (ORCPT
+        id S1731194AbgFROqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:46:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44340 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730858AbgFROqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:46:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B6909ACF9;
-        Thu, 18 Jun 2020 14:46:15 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 2BCF1DA703; Thu, 18 Jun 2020 16:46:06 +0200 (CEST)
-Date:   Thu, 18 Jun 2020 16:46:05 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Boris Burkov <boris@bur.io>
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH v2 btrfs/for-next] btrfs: fix fatal extent_buffer
- readahead vs releasepage race
-Message-ID: <20200618144605.GW27795@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Boris Burkov <boris@bur.io>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-References: <CAL3q7H4GqjcesWir69PULr4a9rSi2cVQ366y5bAEU23wS6xJkA@mail.gmail.com>
- <20200617183519.152946-1-boris@bur.io>
+        Thu, 18 Jun 2020 10:46:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730948AbgFROoG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 10:44:06 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 869BDC0613F0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:44:05 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id z63so2895888pfb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:44:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references:reply-to
+         :mime-version:content-transfer-encoding;
+        bh=tVJM5ezTdcIMG+aKDW1osETe1l5d87INy1YG0FUdQcM=;
+        b=veVE78EJYXVACUi1db6AgzNJIzh1hHgYOEDwJ41A29iyHkJ0tRhmtt2MLXV57P+t9T
+         huAegqWFdBcpK4nimSirWfSC0b9sPD6lnc/YrwOmnptgxWF7i9cd+CEONozpAruie+nd
+         wPqh4hcqGMRiDgDp72UNJ9uJRJ3Tm6xYgQAXv7jwxFhQBMol00k7MbnVC0E69rPw6FIM
+         7UKG7C5tnxjAntploc2dKWqJuB+isxJpInUjNRMdqtbp8QrgmRcJRGjgnIdC2OqwERSf
+         xgxD3JLAUc+AU3m+cc8OrVO8os02InMtoRgHoCVgMKC/eW5Z+iV6e3xMpQFkEs3n9M84
+         vhKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:reply-to:mime-version:content-transfer-encoding;
+        bh=tVJM5ezTdcIMG+aKDW1osETe1l5d87INy1YG0FUdQcM=;
+        b=XqrvXuRTw4ytl0BlBMzKc9lmG0HVvME6DVHbhWS/LeTAAUPL0ewcGMAc4YJEKngClj
+         1Ua6yHoQm6AjODuHB83T7yfWL+8AWh+ppvnFz98V9MRnyEckKGwS8qIQt5F+oz5OgTG0
+         v0FGzuqPx3Mmn16bCTc8SE1dJplbwYiSXBARSplxSQZNzOpIQpOYKjAKPDF0Y9hpYjX5
+         9NA+IxdglTI8QCW8pLgK2F/IwfKmyTB3LSWQKwRAZLexjIx9kdY0kj0Thabg0lSO7UeC
+         dOPQnBN1IDFegRfhD0lhmWwgR9ieOz9hL24zIZHYYuVYY7TqnvuA2sBtcqj11ZEL3QO9
+         u0SA==
+X-Gm-Message-State: AOAM533dgwjDMxkQNpVW65uRXbrtRPhIHVCQn8XOtIufmHN+QLtYn4aJ
+        V+hdbfvbTXMPV1qLfKq/joED7w==
+X-Google-Smtp-Source: ABdhPJybozkuJOyPuS+aF/bntPw1nY8EdCmOZ0hRiMVA9zO7UZT6xbjz8eMsCaZwMXp2bvsabGcJ4A==
+X-Received: by 2002:aa7:9537:: with SMTP id c23mr3848900pfp.149.1592491444963;
+        Thu, 18 Jun 2020 07:44:04 -0700 (PDT)
+Received: from x1.localdomain ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id g9sm3127197pfm.151.2020.06.18.07.44.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 07:44:04 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     io-uring@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 04/15] io_uring: re-issue block requests that failed because of resources
+Date:   Thu, 18 Jun 2020 08:43:44 -0600
+Message-Id: <20200618144355.17324-5-axboe@kernel.dk>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200618144355.17324-1-axboe@kernel.dk>
+References: <20200618144355.17324-1-axboe@kernel.dk>
+Reply-To: "[PATCHSET v7 0/15]"@vger.kernel.org, Add@vger.kernel.org,
+          support@vger.kernel.org, for@vger.kernel.org,
+          async@vger.kernel.org, buffered@vger.kernel.org,
+          reads@vger.kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617183519.152946-1-boris@bur.io>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 11:35:19AM -0700, Boris Burkov wrote:
-[...]
+Mark the plug with nowait == true, which will cause requests to avoid
+blocking on request allocation. If they do, we catch them and reissue
+them from a task_work based handler.
 
-> Signed-off-by: Boris Burkov <boris@bur.io>
+Normally we can catch -EAGAIN directly, but the hard case is for split
+requests. As an example, the application issues a 512KB request. The
+block core will split this into 128KB if that's the max size for the
+device. The first request issues just fine, but we run into -EAGAIN for
+some latter splits for the same request. As the bio is split, we don't
+get to see the -EAGAIN until one of the actual reads complete, and hence
+we cannot handle it inline as part of submission.
 
-Added to misc-next, thanks.
+This does potentially cause re-reads of parts of the range, as the whole
+request is reissued. There's currently no better way to handle this.
+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+---
+ fs/io_uring.c | 148 ++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 124 insertions(+), 24 deletions(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 2e257c5a1866..40413fb9d07b 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -900,6 +900,13 @@ static int io_file_get(struct io_submit_state *state, struct io_kiocb *req,
+ static void __io_queue_sqe(struct io_kiocb *req,
+ 			   const struct io_uring_sqe *sqe);
+ 
++static ssize_t io_import_iovec(int rw, struct io_kiocb *req,
++			       struct iovec **iovec, struct iov_iter *iter,
++			       bool needs_lock);
++static int io_setup_async_rw(struct io_kiocb *req, ssize_t io_size,
++			     struct iovec *iovec, struct iovec *fast_iov,
++			     struct iov_iter *iter);
++
+ static struct kmem_cache *req_cachep;
+ 
+ static const struct file_operations io_uring_fops;
+@@ -1978,12 +1985,115 @@ static void io_complete_rw_common(struct kiocb *kiocb, long res)
+ 	__io_cqring_add_event(req, res, cflags);
+ }
+ 
++static void io_sq_thread_drop_mm(struct io_ring_ctx *ctx)
++{
++	struct mm_struct *mm = current->mm;
++
++	if (mm) {
++		kthread_unuse_mm(mm);
++		mmput(mm);
++	}
++}
++
++static int io_sq_thread_acquire_mm(struct io_ring_ctx *ctx,
++				   struct io_kiocb *req)
++{
++	if (io_op_defs[req->opcode].needs_mm && !current->mm) {
++		if (unlikely(!mmget_not_zero(ctx->sqo_mm)))
++			return -EFAULT;
++		kthread_use_mm(ctx->sqo_mm);
++	}
++
++	return 0;
++}
++
++#ifdef CONFIG_BLOCK
++static bool io_resubmit_prep(struct io_kiocb *req, int error)
++{
++	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
++	ssize_t ret = -ECANCELED;
++	struct iov_iter iter;
++	int rw;
++
++	if (error) {
++		ret = error;
++		goto end_req;
++	}
++
++	switch (req->opcode) {
++	case IORING_OP_READV:
++	case IORING_OP_READ_FIXED:
++	case IORING_OP_READ:
++		rw = READ;
++		break;
++	case IORING_OP_WRITEV:
++	case IORING_OP_WRITE_FIXED:
++	case IORING_OP_WRITE:
++		rw = WRITE;
++		break;
++	default:
++		printk_once(KERN_WARNING "io_uring: bad opcode in resubmit %d\n",
++				req->opcode);
++		goto end_req;
++	}
++
++	ret = io_import_iovec(rw, req, &iovec, &iter, false);
++	if (ret < 0)
++		goto end_req;
++	ret = io_setup_async_rw(req, ret, iovec, inline_vecs, &iter);
++	if (!ret)
++		return true;
++	kfree(iovec);
++end_req:
++	io_cqring_add_event(req, ret);
++	req_set_fail_links(req);
++	io_put_req(req);
++	return false;
++}
++
++static void io_rw_resubmit(struct callback_head *cb)
++{
++	struct io_kiocb *req = container_of(cb, struct io_kiocb, task_work);
++	struct io_ring_ctx *ctx = req->ctx;
++	int err;
++
++	__set_current_state(TASK_RUNNING);
++
++	err = io_sq_thread_acquire_mm(ctx, req);
++
++	if (io_resubmit_prep(req, err)) {
++		refcount_inc(&req->refs);
++		io_queue_async_work(req);
++	}
++}
++#endif
++
++static bool io_rw_reissue(struct io_kiocb *req, long res)
++{
++#ifdef CONFIG_BLOCK
++	struct task_struct *tsk;
++	int ret;
++
++	if ((res != -EAGAIN && res != -EOPNOTSUPP) || io_wq_current_is_worker())
++		return false;
++
++	tsk = req->task;
++	init_task_work(&req->task_work, io_rw_resubmit);
++	ret = task_work_add(tsk, &req->task_work, true);
++	if (!ret)
++		return true;
++#endif
++	return false;
++}
++
+ static void io_complete_rw(struct kiocb *kiocb, long res, long res2)
+ {
+ 	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw.kiocb);
+ 
+-	io_complete_rw_common(kiocb, res);
+-	io_put_req(req);
++	if (!io_rw_reissue(req, res)) {
++		io_complete_rw_common(kiocb, res);
++		io_put_req(req);
++	}
+ }
+ 
+ static void io_complete_rw_iopoll(struct kiocb *kiocb, long res, long res2)
+@@ -2169,6 +2279,9 @@ static int io_prep_rw(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ 	if (kiocb->ki_flags & IOCB_NOWAIT)
+ 		req->flags |= REQ_F_NOWAIT;
+ 
++	if (kiocb->ki_flags & IOCB_DIRECT)
++		io_get_req_task(req);
++
+ 	if (force_nonblock)
+ 		kiocb->ki_flags |= IOCB_NOWAIT;
+ 
+@@ -2668,6 +2781,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+ 	iov_count = iov_iter_count(&iter);
+ 	ret = rw_verify_area(READ, req->file, &kiocb->ki_pos, iov_count);
+ 	if (!ret) {
++		unsigned long nr_segs = iter.nr_segs;
+ 		ssize_t ret2 = 0;
+ 
+ 		if (req->file->f_op->read_iter)
+@@ -2679,6 +2793,8 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+ 		if (!force_nonblock || (ret2 != -EAGAIN && ret2 != -EIO)) {
+ 			kiocb_done(kiocb, ret2);
+ 		} else {
++			iter.count = iov_count;
++			iter.nr_segs = nr_segs;
+ copy_iov:
+ 			ret = io_setup_async_rw(req, io_size, iovec,
+ 						inline_vecs, &iter);
+@@ -2765,6 +2881,7 @@ static int io_write(struct io_kiocb *req, bool force_nonblock)
+ 	iov_count = iov_iter_count(&iter);
+ 	ret = rw_verify_area(WRITE, req->file, &kiocb->ki_pos, iov_count);
+ 	if (!ret) {
++		unsigned long nr_segs = iter.nr_segs;
+ 		ssize_t ret2;
+ 
+ 		/*
+@@ -2802,6 +2919,8 @@ static int io_write(struct io_kiocb *req, bool force_nonblock)
+ 		if (!force_nonblock || ret2 != -EAGAIN) {
+ 			kiocb_done(kiocb, ret2);
+ 		} else {
++			iter.count = iov_count;
++			iter.nr_segs = nr_segs;
+ copy_iov:
+ 			ret = io_setup_async_rw(req, io_size, iovec,
+ 						inline_vecs, &iter);
+@@ -4282,28 +4401,6 @@ static void io_async_queue_proc(struct file *file, struct wait_queue_head *head,
+ 	__io_queue_proc(&pt->req->apoll->poll, pt, head);
+ }
+ 
+-static void io_sq_thread_drop_mm(struct io_ring_ctx *ctx)
+-{
+-	struct mm_struct *mm = current->mm;
+-
+-	if (mm) {
+-		kthread_unuse_mm(mm);
+-		mmput(mm);
+-	}
+-}
+-
+-static int io_sq_thread_acquire_mm(struct io_ring_ctx *ctx,
+-				   struct io_kiocb *req)
+-{
+-	if (io_op_defs[req->opcode].needs_mm && !current->mm) {
+-		if (unlikely(!mmget_not_zero(ctx->sqo_mm)))
+-			return -EFAULT;
+-		kthread_use_mm(ctx->sqo_mm);
+-	}
+-
+-	return 0;
+-}
+-
+ static void io_async_task_func(struct callback_head *cb)
+ {
+ 	struct io_kiocb *req = container_of(cb, struct io_kiocb, task_work);
+@@ -5814,6 +5911,9 @@ static void io_submit_state_start(struct io_submit_state *state,
+ 				  unsigned int max_ios)
+ {
+ 	blk_start_plug(&state->plug);
++#ifdef CONFIG_BLOCK
++	state->plug.nowait = true;
++#endif
+ 	state->free_reqs = 0;
+ 	state->file = NULL;
+ 	state->ios_left = max_ios;
+-- 
+2.27.0
+
