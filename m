@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A5CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D157F2193E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE602193E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442756;
-	bh=civejUupUvfmmfhwDBpeah7dotAHq5OcLCZlFNcAbfU=;
+	s=default; t=1592442766;
+	bh=9sRImwLUILDBVo3xfu7Unnjo4AuQtoYKJtYxBbp5riY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dEmY4ufutsGt8ojhofCXq7tcD448hfFbSXj0p1rsf65Tdpljx9HFtVekAv5Z8/jod
-	 887hihv/gtE4vFPjjCyuOngG+zdQ6fLltrltRN1NalCSSNRf8wYy/U4iemacxlmAdx
-	 Z8Znt/M7/vVTn1+Gdrxk5IKxviSnNLmhP5YLiraI=
+	b=mn5qwoLvTetcDHyfR+PHZCuojW6lTFp1vW4tktxGtJ3a4eGvpJ4vQJRGDa+dK68tA
+	 XEPFEPopb/SPhEtu3lgEXcnURrCxfHewNyi2EnFJ8PDd4/BA7kyeiqDTOUMLewBTZu
+	 RX1EagWOzVqIH281PukK2hJ/yHRsUEOYW4p+fS5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgFRBMf (ORCPT
+        id S1728980AbgFRBMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:12:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39790 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:12:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728778AbgFRBLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:44 -0400
+        id S1728810AbgFRBLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D44E214DB;
-        Thu, 18 Jun 2020 01:11:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E292214DB;
+        Thu, 18 Jun 2020 01:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442703;
-        bh=civejUupUvfmmfhwDBpeah7dotAHq5OcLCZlFNcAbfU=;
+        s=default; t=1592442714;
+        bh=9sRImwLUILDBVo3xfu7Unnjo4AuQtoYKJtYxBbp5riY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PxasFqCcmzPxPRt2rIv4OreBP0Em0gy0MaU1cbWe0VVAeEXs9qu2CivN4pmXhhDO+
-         KvYOgYluTRF00HdpHBCKuYGlVKjYIbhtJjZQray7Vr2/xbvB0jqr5xfqqIJI/ErBlr
-         fb+b0xOu18nN7SU6UZkZUpKuskHVuVzpuTwYpt3M=
+        b=pmc5tDEBMbCkwU1m8qokdvD67dvYhGuTlyqB+rtVpeUQrc2m5lM/4Rl08rc209JgK
+         oTOgM40Nk69rfMBNvXWk3/8GIVlaWf2cPcvHYUUs6ZsROb7gDmNr+xbF8X5DWViibg
+         gANNNudfxZ9zkHskmSWVUdZPb1slstlcMsqwk44w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 165/388] ARM: dts: aspeed: Change KCS nodes to v2 binding
-Date:   Wed, 17 Jun 2020 21:04:22 -0400
-Message-Id: <20200618010805.600873-165-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 174/388] i2c: pxa: fix i2c_pxa_scream_blue_murder() debug output
+Date:   Wed, 17 Jun 2020 21:04:31 -0400
+Message-Id: <20200618010805.600873-174-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,145 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit fa4c8ec6feaa3237f5d44cb8c6d0aa0dff6e1bcc ]
+[ Upstream commit 88b73ee7ca4c90baf136ed5a8377fc5a9b73ac08 ]
 
-Fixes the following warnings for both g5 and g6 SoCs:
+The IRQ log output is supposed to appear on a single line.  However,
+commit 3a2dc1677b60 ("i2c: pxa: Update debug function to dump more info
+on error") resulted in it being printed one-entry-per-line, which is
+excessively long.
 
-    arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning
-    (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: node
-    has a unit name, but no reg property
+Fixing this is not a trivial matter; using pr_cont() doesn't work as
+the previous dev_dbg() may not have been compiled in, or may be
+dynamic.
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Since the rest of this function output is at error level, and is also
+debug output, promote this to error level as well to avoid this
+problem.
+
+Reduce the number of always zero prefix digits to save screen real-
+estate.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../dts/aspeed-bmc-facebook-tiogapass.dts     |  4 ++--
- arch/arm/boot/dts/aspeed-g5.dtsi              | 24 +++++++++----------
- arch/arm/boot/dts/aspeed-g6.dtsi              | 23 +++++++++---------
- 3 files changed, 26 insertions(+), 25 deletions(-)
+ drivers/i2c/busses/i2c-pxa.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-index 5d7cbd9164d4..669980c690f9 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-@@ -112,13 +112,13 @@ &uart5 {
- &kcs2 {
- 	// BMC KCS channel 2
- 	status = "okay";
--	kcs_addr = <0xca8>;
-+	aspeed,lpc-io-reg = <0xca8>;
- };
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index 30a6e07212a4..f537a37ac1d5 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -311,11 +311,10 @@ static void i2c_pxa_scream_blue_murder(struct pxa_i2c *i2c, const char *why)
+ 	dev_err(dev, "IBMR: %08x IDBR: %08x ICR: %08x ISR: %08x\n",
+ 		readl(_IBMR(i2c)), readl(_IDBR(i2c)), readl(_ICR(i2c)),
+ 		readl(_ISR(i2c)));
+-	dev_dbg(dev, "log: ");
++	dev_err(dev, "log:");
+ 	for (i = 0; i < i2c->irqlogidx; i++)
+-		pr_debug("[%08x:%08x] ", i2c->isrlog[i], i2c->icrlog[i]);
+-
+-	pr_debug("\n");
++		pr_cont(" [%03x:%05x]", i2c->isrlog[i], i2c->icrlog[i]);
++	pr_cont("\n");
+ }
  
- &kcs3 {
- 	// BMC KCS channel 3
- 	status = "okay";
--	kcs_addr = <0xca2>;
-+	aspeed,lpc-io-reg = <0xca2>;
- };
- 
- &mac0 {
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index f12ec04d3cbc..bc92d3db7b78 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -426,22 +426,22 @@ lpc_bmc: lpc-bmc@0 {
- 					#size-cells = <1>;
- 					ranges = <0x0 0x0 0x80>;
- 
--					kcs1: kcs1@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs1: kcs@24 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <1>;
- 						status = "disabled";
- 					};
--					kcs2: kcs2@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs2: kcs@28 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <2>;
- 						status = "disabled";
- 					};
--					kcs3: kcs3@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs3: kcs@2c {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <3>;
- 						status = "disabled";
- 					};
- 				};
-@@ -455,10 +455,10 @@ lpc_host: lpc-host@80 {
- 					#size-cells = <1>;
- 					ranges = <0x0 0x80 0x1e0>;
- 
--					kcs4: kcs4@0 {
--						compatible = "aspeed,ast2500-kcs-bmc";
-+					kcs4: kcs@94 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
- 						interrupts = <8>;
--						kcs_chan = <4>;
- 						status = "disabled";
- 					};
- 
-diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
-index fd0e483737a0..a2d2ac720a51 100644
---- a/arch/arm/boot/dts/aspeed-g6.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g6.dtsi
-@@ -435,22 +435,23 @@ lpc_bmc: lpc-bmc@0 {
- 					#size-cells = <1>;
- 					ranges = <0x0 0x0 0x80>;
- 
--					kcs1: kcs1@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs1: kcs@24 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
- 						interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
- 						kcs_chan = <1>;
- 						status = "disabled";
- 					};
--					kcs2: kcs2@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs2: kcs@28 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
- 						interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
--						kcs_chan = <2>;
- 						status = "disabled";
- 					};
--					kcs3: kcs3@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs3: kcs@2c {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
- 						interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
--						kcs_chan = <3>;
- 						status = "disabled";
- 					};
- 				};
-@@ -464,10 +465,10 @@ lpc_host: lpc-host@80 {
- 					#size-cells = <1>;
- 					ranges = <0x0 0x80 0x1e0>;
- 
--					kcs4: kcs4@0 {
--						compatible = "aspeed,ast2600-kcs-bmc";
-+					kcs4: kcs@94 {
-+						compatible = "aspeed,ast2500-kcs-bmc-v2";
-+						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
- 						interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
--						kcs_chan = <4>;
- 						status = "disabled";
- 					};
- 
+ #else /* ifdef DEBUG */
 -- 
 2.25.1
 
