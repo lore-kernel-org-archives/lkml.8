@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D474AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8450C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8586221ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8DC4221FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444322;
-	bh=UF0UMiNSTGEXiaBD/hxRUN255P/xQxc7ApPL6vwrafk=;
+	s=default; t=1592444329;
+	bh=aIu6WKywcY2fBDSizvJuVK46Mwibxi9VcQs36OCkW9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DP/ZYh36AWqi45DO/SMhSID31/5PCGmk6TrR2Ivu11jMH0TPN1OXzNGxVDIYoosWa
-	 N2A5PQgPL8tDeqC0oO8kEm/1xa8HmObZABwe6eltcvH0AOwrERf2E+j/K9PUcvWUoa
-	 nwqZxxDywXZZagvmUfT9eq05+8EDdmwd0NlqHrEY=
+	b=2ffaHv2+3WO7cjvIe9nWzWA1/9hu0g1t/U3owreSZhFqOGcx1JFV/AfXzt2g1XXJw
+	 x6Az969lf0MHT69KMwcat1RV3yPVwt2UVlK4144cpHiewVrKVA5ncRMymCF2x2+p+y
+	 dvUG+OwY1TmwCYqtHwelJhAt42tU3rD5yRQHjg1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732776AbgFRBil (ORCPT
+        id S1731483AbgFRBaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:38:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40484 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:30:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732539AbgFRBa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:30:29 -0400
+        id S1731791AbgFRB1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C07920FC3;
-        Thu, 18 Jun 2020 01:30:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDAFA20897;
+        Thu, 18 Jun 2020 01:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443829;
-        bh=UF0UMiNSTGEXiaBD/hxRUN255P/xQxc7ApPL6vwrafk=;
+        s=default; t=1592443628;
+        bh=aIu6WKywcY2fBDSizvJuVK46Mwibxi9VcQs36OCkW9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=goCfsHEagFxp1pbxuW+OnWSSInUo9a2H4bhEU555PiHYm/ddmKtKI2fMpd5HH+pPh
-         0YwQYOtr0RgzLMsP7dOGseShJC78v+Vn+1Qca0nhK3oKWNQ9+thCFXDTyEmegE2fsV
-         7XxsU6nM2/t39drzKq9a2Jto9Y6w+IJQVaLaDQhE=
+        b=VAUaZ9M47Q/zQ3O0SRhW9/rb34E6CIlRhKSa2CNQZj0qV/tGqm3/xFB18tpEr+ob4
+         O/DQypGFVL57/3GRnnl917ggPVP4W88m7ZZxYtLkrWLWW6yr4P8ffOrN1zeT9vjqrK
+         SCQTp9MjcC8PnVyWxGIeTP9XKEbd4C1OWOVsuUjc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hams@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 17/60] yam: fix possible memory leak in yam_init_driver
-Date:   Wed, 17 Jun 2020 21:29:21 -0400
-Message-Id: <20200618013004.610532-17-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 053/108] power: supply: smb347-charger: IRQSTAT_D is volatile
+Date:   Wed, 17 Jun 2020 21:25:05 -0400
+Message-Id: <20200618012600.608744-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
-References: <20200618013004.610532-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,34 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 98749b7188affbf2900c2aab704a8853901d1139 ]
+[ Upstream commit c32ea07a30630ace950e07ffe7a18bdcc25898e1 ]
 
-If register_netdev(dev) fails, free_netdev(dev) needs
-to be called, otherwise a memory leak will occur.
+Fix failure when USB cable is connected:
+smb347 2-006a: reading IRQSTAT_D failed
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1502cfe19bac ("smb347-charger: Fix battery status reporting logic for charger faults")
+
+Tested-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hamradio/yam.c | 1 +
+ drivers/power/supply/smb347-charger.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/hamradio/yam.c b/drivers/net/hamradio/yam.c
-index 1a4729c36aa4..623e4225e7c8 100644
---- a/drivers/net/hamradio/yam.c
-+++ b/drivers/net/hamradio/yam.c
-@@ -1160,6 +1160,7 @@ static int __init yam_init_driver(void)
- 		err = register_netdev(dev);
- 		if (err) {
- 			printk(KERN_WARNING "yam: cannot register net device %s\n", dev->name);
-+			free_netdev(dev);
- 			goto error;
- 		}
- 		yam_devs[i] = dev;
+diff --git a/drivers/power/supply/smb347-charger.c b/drivers/power/supply/smb347-charger.c
+index 072c5189bd6d..0655dbdc7000 100644
+--- a/drivers/power/supply/smb347-charger.c
++++ b/drivers/power/supply/smb347-charger.c
+@@ -1141,6 +1141,7 @@ static bool smb347_volatile_reg(struct device *dev, unsigned int reg)
+ 	switch (reg) {
+ 	case IRQSTAT_A:
+ 	case IRQSTAT_C:
++	case IRQSTAT_D:
+ 	case IRQSTAT_E:
+ 	case IRQSTAT_F:
+ 	case STAT_A:
 -- 
 2.25.1
 
