@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59F72221E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 419AC221FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444292;
-	bh=kxG45STq5CMYA1inuAgbobc/i/Q6V2Gzuxo39Hd6l2I=;
+	s=default; t=1592444296;
+	bh=SKGdyvdYEo5KOQKMYtFl1cGwRKjegXn7ZE3svyTwsRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pNsWYppDqU/EKCzN36vZgzGLpTPsyRdvP6FAa3UdGfjGq4hvMeUce1DmiObLqi85d
-	 0xfSRBgYmHoMiSWhwkRDk5ZJy2LxqvYqvbLbxVegrOitDAD8ekh+P+mbtofl2gdmVE
-	 8y3hf8SdULAoZ5JOvRr/V5a0wQNz46O2YKffmWbo=
+	b=N6qEpXLTE6mHlv8ZcI3w2UMh0Bh8akF3Afmc5zReYbmbOXhTr7eovCnhpfOD9Q7hV
+	 AP6PNqN8he1aLF7xQ80VtpeJVRL6bkBCo+w8+BxdSaCaffd5a1/GSRajJqKdZV0Xml
+	 9Wlm+lVxIxWXC6CnlC5Q4sar9xV3labP4661pRfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733048AbgFRBiK (ORCPT
+        id S1731892AbgFRBad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:38:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40672 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:30:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732562AbgFRBaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:30:35 -0400
+        id S1731811AbgFRB1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BEA421D82;
-        Thu, 18 Jun 2020 01:30:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E1E920776;
+        Thu, 18 Jun 2020 01:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443835;
-        bh=kxG45STq5CMYA1inuAgbobc/i/Q6V2Gzuxo39Hd6l2I=;
+        s=default; t=1592443631;
+        bh=SKGdyvdYEo5KOQKMYtFl1cGwRKjegXn7ZE3svyTwsRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RRRdi+lOBNXN7slNO+iksN+PfYfpQ740uZ/IbVJb/eaQfSU1rUP2tC2VTr6Wryl7N
-         IO7N+FVM7hpxeu22UOY8D2PBRoF9LtsW1rjgVr4bG+djVt53MkUkTwg9CN2qgXqXQF
-         qlkMeP+ztmv7UDhsJ4SBTr0PB+2uIDycMP3iTItQ=
+        b=daTcDu4hIS0nZLW1nECBS21d95UaY4xgd7Ureg5qsAvhbWHEco710DOwrpPuRBoZl
+         suoUWbJLLrH8kbg494aNeJrNDvg8efl70NOYZMptvBAwfd7GNCK9gBnSGrqaceqOlb
+         TYLJr90C7jjjONERgWHj0e4bdLHtFqCD9g+kznJU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aiman Najjar <aiman.najjar@hurranet.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.4 22/60] staging: rtl8712: fix multiline derefernce warnings
-Date:   Wed, 17 Jun 2020 21:29:26 -0400
-Message-Id: <20200618013004.610532-22-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        clang-built-linux@googlegroups.com,
+        David Teigland <teigland@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.14 055/108] dlm: remove BUG() before panic()
+Date:   Wed, 17 Jun 2020 21:25:07 -0400
+Message-Id: <20200618012600.608744-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
-References: <20200618013004.610532-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,78 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aiman Najjar <aiman.najjar@hurranet.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 269da10b1477c31c660288633c8d613e421b131f ]
+[ Upstream commit fe204591cc9480347af7d2d6029b24a62e449486 ]
 
-This patch fixes remaining checkpatch warnings
-in rtl871x_xmit.c:
+Building a kernel with clang sometimes fails with an objtool error in dlm:
 
-WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->PrivacyKeyIndex'
-636: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:636:
-+					      (u8)psecuritypriv->
-+					      PrivacyKeyIndex);
+fs/dlm/lock.o: warning: objtool: revert_lock_pc()+0xbd: can't find jump dest instruction at .text+0xd7fc
 
-WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
-643: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:643:
-+						   (u8)psecuritypriv->
-+						   XGrpKeyid);
+The problem is that BUG() never returns and the compiler knows
+that anything after it is unreachable, however the panic still
+emits some code that does not get fully eliminated.
 
-WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
-652: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:652:
-+						   (u8)psecuritypriv->
-+						   XGrpKeyid);
+Having both BUG() and panic() is really pointless as the BUG()
+kills the current process and the subsequent panic() never hits.
+In most cases, we probably don't really want either and should
+replace the DLM_ASSERT() statements with WARN_ON(), as has
+been done for some of them.
 
-Signed-off-by: Aiman Najjar <aiman.najjar@hurranet.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/98805a72b92e9bbf933e05b827d27944663b7bc1.1585508171.git.aiman.najjar@hurranet.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Remove the BUG() here so the user at least sees the panic message
+and we can reliably build randconfig kernels.
+
+Fixes: e7fd41792fc0 ("[DLM] The core of the DLM for GFS2/CLVM")
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8712/rtl871x_xmit.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ fs/dlm/dlm_internal.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
-index d3ad89c7b8af..f82bbbe82244 100644
---- a/drivers/staging/rtl8712/rtl871x_xmit.c
-+++ b/drivers/staging/rtl8712/rtl871x_xmit.c
-@@ -593,7 +593,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
- 	addr_t addr;
- 	u8 *pframe, *mem_start, *ptxdesc;
- 	struct sta_info		*psta;
--	struct security_priv	*psecuritypriv = &padapter->securitypriv;
-+	struct security_priv	*psecpriv = &padapter->securitypriv;
- 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
- 	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
- 	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
-@@ -636,15 +636,13 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
- 				case _WEP40_:
- 				case _WEP104_:
- 					WEP_IV(pattrib->iv, psta->txpn,
--					       (u8)psecuritypriv->
--					       PrivacyKeyIndex);
-+					       (u8)psecpriv->PrivacyKeyIndex);
- 					break;
- 				case _TKIP_:
- 					if (bmcst)
- 						TKIP_IV(pattrib->iv,
- 						    psta->txpn,
--						    (u8)psecuritypriv->
--						    XGrpKeyid);
-+						    (u8)psecpriv->XGrpKeyid);
- 					else
- 						TKIP_IV(pattrib->iv, psta->txpn,
- 							0);
-@@ -652,8 +650,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
- 				case _AES_:
- 					if (bmcst)
- 						AES_IV(pattrib->iv, psta->txpn,
--						    (u8)psecuritypriv->
--						    XGrpKeyid);
-+						    (u8)psecpriv->XGrpKeyid);
- 					else
- 						AES_IV(pattrib->iv, psta->txpn,
- 						       0);
+diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
+index 748e8d59e611..cb287df13a7a 100644
+--- a/fs/dlm/dlm_internal.h
++++ b/fs/dlm/dlm_internal.h
+@@ -99,7 +99,6 @@ do { \
+                __LINE__, __FILE__, #x, jiffies); \
+     {do} \
+     printk("\n"); \
+-    BUG(); \
+     panic("DLM:  Record message above and reboot.\n"); \
+   } \
+ }
 -- 
 2.25.1
 
