@@ -2,187 +2,304 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD92C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8D7207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 729FC207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:46:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FkPuKCoo"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="CK60Grkl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729544AbgFRLot (ORCPT
+        id S1728247AbgFRLqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 07:44:49 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:41898 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727784AbgFRLor (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 07:44:47 -0400
-X-UUID: 9c9b049400d841fca593a6b01f6269dc-20200618
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=bPuvJFwQK1+UUwK7qWYiuSt1c5UvVj+Vy18oTLOPX74=;
-        b=FkPuKCooyoDAOyg2wthMVb6yX42MHyUe5cqMn4pQ9vpSTTBP9W4fhB4H9sA0yAq1FhomfngG0+VuEVOyq6N4Tjylh3iN+1DlnBEolplWnIKGaHLYxEo88qNnvdW1sBTiZLRgyFwST4MulAhJJCr6vnqH/EHXJOrYHGSJVif+ZaI=;
-X-UUID: 9c9b049400d841fca593a6b01f6269dc-20200618
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <chao.hao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 815373956; Thu, 18 Jun 2020 19:44:43 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 18 Jun 2020 19:44:39 +0800
-Received: from [10.15.20.246] (10.15.20.246) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 18 Jun 2020 19:44:38 +0800
-Message-ID: <1592480656.12647.2.camel@mbjsdccf07>
-Subject: Re: [PATCH v4 5/7] iommu/mediatek: Add sub_comm id in translation
- fault
-From:   chao hao <Chao.Hao@mediatek.com>
-To:     Yong Wu <yong.wu@mediatek.com>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        FY Yang <fy.yang@mediatek.com>
-Date:   Thu, 18 Jun 2020 19:44:16 +0800
-In-Reply-To: <1592392265.20080.11.camel@mhfsdcap03>
-References: <20200617030029.4082-1-chao.hao@mediatek.com>
-         <20200617030029.4082-6-chao.hao@mediatek.com>
-         <4418c5a7-3f17-9d00-43b2-4ffc5d458116@gmail.com>
-         <1592392265.20080.11.camel@mhfsdcap03>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 18 Jun 2020 07:46:20 -0400
+Received: from mga06.intel.com ([134.134.136.31]:56483 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726946AbgFRLqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 07:46:18 -0400
+IronPort-SDR: 99y4AMArUCCbu34YxXFh7DeCXTb5yIJJpkD/qJnEClTnrA4kbC0kaLZQ3kqzSYHMRIAoqU/Q2o
+ iU4i+eLOQiMA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9655"; a="204034544"
+X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
+   d="scan'208";a="204034544"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 04:46:16 -0700
+IronPort-SDR: skJ/m7HCEEOJpJDHueF17lGDMtd/CqH1rHAXjEcf/s8tVYVUmPBoMZy/lfhi4wWArcimEU00Gk
+ WLVkB4pPBO9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
+   d="scan'208";a="477168236"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by fmsmga006.fm.intel.com with ESMTP; 18 Jun 2020 04:46:16 -0700
+Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 18 Jun 2020 04:46:16 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ FMSMSX154.amr.corp.intel.com (10.18.116.70) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 18 Jun 2020 04:46:15 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 18 Jun 2020 04:46:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S7Bnwp3CMLslNqZb/leek6Zx67D+CJkiWsNnCmD/7WgrrH2a754WcIsi7rrWmwjZSQb+NGNCC45sP5gdIf56zSgZBL7Xrq1PvSwBz21cOdi/o5scwUjyVmaAuJd3mdck6omiGu4HJ3JvbDC2bVDH3lLgnANJSsBxsDECeJIz1aKpZZa8wfip5llJfknJzd1Fl+b7fDmcqvCOY9p5IiezB2N676QtGHMt0yVP7xxk5zuBZDYIqKL/KpXsMH/qVmBxpf8Igx3epoHTLo8SuHyb9BMTM2WkNzcW8Z0liHl8y/P2iGyKywrUg397gOJVowkI5FdT7cIfQjiIAAGxs8n3yA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5ol9zyn9oa9grmPjVICjgwEjvWL/ohYiZouqtGV1UmI=;
+ b=NXnuHFb2O//zk5BESGQND8wff1cPgH5NM2x+VWRfghUR6IsYvEGIwCIuPZCCk/DZNgIhQiU+XJHth4mLBdzgwUAIKiIQRhrMZs4krejcsGBIZ4KnRlYtu4L7N3ZljgAVMCpJujsleMloIkYQZcb+uR1ru5h6WntzCGhkmS9RpdJ44jESg0YotTFznQXFB85oUcmpdcJWLC+ExfFEeOoPYc5ioZu58LOph90C2F0YNUMwWxfw8DTS0y4bCeg5IUHNdDzQA0vMaoeVcDGkzYGkZf3dikILvbJW6OwppaFXE4TxrIFHV3daaekSwPmyyylpRSSXvfwWQCtuV6iICrSRKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5ol9zyn9oa9grmPjVICjgwEjvWL/ohYiZouqtGV1UmI=;
+ b=CK60GrklKgsLzy+Ot4SIDD9aPHBMhZOUk4rvN1mT/f2jMfqqjFfgO0B6pl3P/BC4AMYu+8fV3Gz2xKcbF77+rccTbid9BLh0bAdlxj1AO/Pg7cmWCDeZ/aJntnke2zYLbAZLSiHeKd+CcDWzTZx7xalUSisLtLHXLhmBSNBrIlQ=
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
+ DM5PR1101MB2108.namprd11.prod.outlook.com (2603:10b6:4:53::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3109.23; Thu, 18 Jun 2020 11:46:14 +0000
+Received: from DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::2c3d:98d9:4e81:c86c]) by DM5PR11MB1435.namprd11.prod.outlook.com
+ ([fe80::2c3d:98d9:4e81:c86c%6]) with mapi id 15.20.3109.023; Thu, 18 Jun 2020
+ 11:46:14 +0000
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>
+Subject: RE: [PATCH v2 02/15] iommu: Report domain nesting info
+Thread-Topic: [PATCH v2 02/15] iommu: Report domain nesting info
+Thread-Index: AQHWP+lAvgybSaO2NECN4P16s7e2zKjc6kyAgAFaSXA=
+Date:   Thu, 18 Jun 2020 11:46:14 +0000
+Message-ID: <DM5PR11MB143583396465E5DEFF8BA8CDC39B0@DM5PR11MB1435.namprd11.prod.outlook.com>
+References: <1591877734-66527-1-git-send-email-yi.l.liu@intel.com>
+ <1591877734-66527-3-git-send-email-yi.l.liu@intel.com>
+ <20200617143909.GA886590@myrica>
+In-Reply-To: <20200617143909.GA886590@myrica>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+authentication-results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.217]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f0d44784-4e10-4ec2-7294-08d8137d34ac
+x-ms-traffictypediagnostic: DM5PR1101MB2108:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR1101MB2108AC57E7CA7EB1601768DBC39B0@DM5PR1101MB2108.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0438F90F17
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: KtsLESTArB/qOy0K5OMCWSdlXSlrPsUyKXOtmeBmYN3RBqOBGrLUxLmLLr0aeLXwf5gaD54GYOrPrdj4P1IhEXQEcOD/JtyRccmHcOpBRhJ1+1s6/keNQrO6AIYbkhnDOQbIRrKYT8aYmgRoWjZjMGbkxCDOd6T6pKQp0s/LyiCn5vMu/31OAd9U8RLxmAexFA3MQKy0B5PhLDExTJe+SCPCxF9ypV1jZJTVTqFly49Shqg6mcgBDDyNA6R9Xb/2J2Ajorb4GgDGk23/84Xdbh1G3fhpSnuspLlDwUttygNJyLiOKrSCBdE9B7lek2ZK90Qmg5lUVuJXqhe1dxQu5A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(39860400002)(396003)(366004)(5660300002)(52536014)(6506007)(478600001)(86362001)(8936002)(4326008)(186003)(26005)(71200400001)(83380400001)(7696005)(33656002)(7416002)(54906003)(316002)(2906002)(55016002)(6916009)(9686003)(66476007)(66556008)(64756008)(66446008)(76116006)(66946007)(8676002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 3YLUHKosrlkGtpx5GI5Yk3CSTowreJFJGNbAAfN1rVMaAIX6Y/wd0mlVHaQWnLS+HY89tFzxaMYcmgPMJEtpahNa2P7hQDcjtF68LEasbX20o4rs2XMANlk0mK1n/rO/dI7JgMSg3lXYjIss2pNVOJBxZh3urQXMO/4rS1CHoYG3+9bSzmt+mUs3TCb+qLa9erY0NFTFcfDZXNU6x05jPf3N0sKCduBh/i0eaznRfBHfh5B8CVlfwPSw1SGQzS5e79Zdd43ed/ELVqQCy1+VuNn15Hf+YoiI8lZT8zw35T+p9zB64JUo/hNncW3+ycGtzruxdj/+9nzXR/zDxQPoVMqdynakwgw9ifXbXE3WMzdvhbrVRal9f2cg4ETGX62vch8XfUMt0gpBHWuS7kmugh5ADY+yWvuuB60zEJdvGmJSGX/NIlhtvFBA99lpxltqLcW+BDJatWtimKRwXO/v8F6qQyWWrvOSpASwiLx9ZqQtLeGL0dtVbuBSrIwB3Iib
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0d44784-4e10-4ec2-7294-08d8137d34ac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 11:46:14.5852
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9BUmJTMLylUgoozkzduI8YivJzT2ev7eVNDBRBkrD4YA1Xt/2BwytlVSlqNKrigGWFrQchPBj/I0BOIAbNwvbw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2108
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA2LTE3IGF0IDE5OjExICswODAwLCBZb25nIFd1IHdyb3RlOg0KPiBIaSBN
-YXR0aGlhcywNCj4gDQo+IFRoYW5rcyB2ZXJ5IG11Y2ggZm9yIHlvdXIgcmV2aWV3Lg0KPiANCj4g
-T24gV2VkLCAyMDIwLTA2LTE3IGF0IDExOjE3ICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiA+IA0KPiA+IE9uIDE3LzA2LzIwMjAgMDU6MDAsIENoYW8gSGFvIHdyb3RlOg0KPiA+ID4g
-VGhlIG1heCBsYXJiIG51bWJlciB0aGF0IGEgaW9tbXUgSFcgc3VwcG9ydCBpcyA4KGxhcmIwfmxh
-cmI3IGluIHRoZSBiZWxvdw0KPiA+ID4gZGlhZ3JhbSkuDQo+ID4gPiBJZiB0aGUgbGFyYidzIG51
-bWJlciBpcyBvdmVyIDgsIHdlIHVzZSBhIHN1Yl9jb21tb24gZm9yIG1lcmdpbmcNCj4gPiA+IHNl
-dmVyYWwgbGFyYnMgaW50byBvbmUgbGFyYi4gQXQgdGhpcyBjYXNlLCB3ZSB3aWxsIGV4dGVuZCBs
-YXJiX2lkOg0KPiA+ID4gYml0WzExOjldIG1lYW5zIGNvbW1vbi1pZDsNCj4gPiA+IGJpdFs4Ojdd
-IG1lYW5zIHN1YmNvbW1vbi1pZDsNCj4gPiA+IEZyb20gdGhlc2UgdHdvIHZhcmlhYmxlLCB3ZSBj
-b3VsZCBnZXQgdGhlIHJlYWwgbGFyYiBudW1iZXIgd2hlbg0KPiA+ID4gdHJhbnNsYXRpb24gZmF1
-bHQgaGFwcGVuLg0KPiA+ID4gVGhlIGRpYWdyYW0gaXMgYXMgYmVsb3c6DQo+ID4gPiAJCSBFTUkN
-Cj4gPiA+IAkJICB8DQo+ID4gPiAJCUlPTU1VDQo+ID4gPiAJCSAgfA0KPiA+ID4gICAgICAgICAg
-ICAtLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gCSAgIHwgICAgICAgICAgICAgICB8DQo+ID4gPiAJ
-Y29tbW9uMSAgIAljb21tb24wDQo+ID4gPiAJICAgfAkJICAgfA0KPiA+ID4gCSAgIC0tLS0tLS0t
-LS0tLS0tLS0tDQo+ID4gPiAJCSAgfA0KPiA+ID4gICAgICAgICAgICAgIHNtaSBjb21tb24NCj4g
-PiA+IAkJICB8DQo+ID4gPiAgIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
-PiA+ID4gICB8ICAgICAgIHwgICAgICAgfCAgICAgICB8ICAgICB8ICAgIHwNCj4gPiA+ICAzJ2Qw
-ICAgIDMnZDEgICAgMydkMiAgICAzJ2QzICAuLi4gIDMnZDcgICA8LWNvbW1vbl9pZChtYXggaXMg
-OCkNCj4gPiA+ICAgfCAgICAgICB8ICAgICAgIHwgICAgICAgfCAgICAgfCAgICB8DQo+ID4gPiBM
-YXJiMCAgIExhcmIxICAgICB8ICAgICBMYXJiMyAgLi4uIExhcmI3DQo+ID4gPiAJCSAgfA0KPiA+
-ID4gCSAgICBzbWkgc3ViIGNvbW1vbg0KPiA+ID4gCQkgIHwNCj4gPiA+ICAgICAgLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0NCj4gPiA+ICAgICAgfCAgICAgICAgfCAgICAgICB8ICAgICAgIHwN
-Cj4gPiA+ICAgICAyJ2QwICAgICAyJ2QxICAgIDInZDIgICAgMidkMyAgIDwtc3ViX2NvbW1vbl9p
-ZChtYXggaXMgNCkNCj4gPiA+ICAgICAgfCAgICAgICAgfCAgICAgICB8ICAgICAgIHwNCj4gPiA+
-ICAgIExhcmI4ICAgIExhcmI5ICAgTGFyYjEwICBMYXJiMTENCj4gPiA+IA0KPiA+ID4gSW4gdGhp
-cyBwYXRjaCB3ZSBleHRlcm4gbGFyYl9yZW1hcFtdIHRvIGxhcmJfcmVtYXBbOF1bNF0gZm9yIHRo
-aXMuDQo+ID4gDQo+ID4gZXh0ZXJuIC0+IGV4dGVuZA0KPiA+IA0KPiA+ID4gbGFyYl9yZW1hcFt4
-XVt5XTogeCBtZWFuIGNvbW1vbi1pZCBhYm92ZSwgeSBtZWFucyBzdWJjb21tb25faWQgYWJvdmUu
-DQo+ID4gDQo+ID4gbWVhbiAtPiBtZWFucw0KPiA+IA0KPiA+ID4gDQo+ID4gPiBXZSBjYW4gYWxz
-byBkaXN0aW5ndWlzaCBpZiB0aGUgTTRVIEhXIGhhcyBzdWJfY29tbW9uIGJ5IGhhc19zdWJfY29t
-bQ0KPiA+ID4gcHJvcGVydHkuDQo+ID4gPiANCj4gPiA+IFNpZ25lZC1vZmYtYnk6IENoYW8gSGFv
-IDxjaGFvLmhhb0BtZWRpYXRlay5jb20+DQo+ID4gPiBSZXZpZXdlZC1ieTogWW9uZyBXdSA8eW9u
-Zy53dUBtZWRpYXRlay5jb20+DQo+ID4gPiAtLS0NCj4gPiA+ICBkcml2ZXJzL2lvbW11L210a19p
-b21tdS5jIHwgMjAgKysrKysrKysrKysrKy0tLS0tLS0NCj4gPiA+ICBkcml2ZXJzL2lvbW11L210
-a19pb21tdS5oIHwgIDMgKystDQo+ID4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAxNSBpbnNlcnRpb25z
-KCspLCA4IGRlbGV0aW9ucygtKQ0KPiA+ID4gDQo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9p
-b21tdS9tdGtfaW9tbXUuYyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMNCj4gPiA+IGluZGV4
-IGYyMzkxOWZlYmE0ZS4uYTY4N2U4ZGIwZTUxIDEwMDY0NA0KPiA+ID4gLS0tIGEvZHJpdmVycy9p
-b21tdS9tdGtfaW9tbXUuYw0KPiA+ID4gKysrIGIvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYw0K
-PiA+ID4gQEAgLTkxLDYgKzkxLDggQEANCj4gPiA+ICAjZGVmaW5lIFJFR19NTVUxX0lOVkxEX1BB
-CQkJMHgxNDgNCj4gPiA+ICAjZGVmaW5lIFJFR19NTVUwX0lOVF9JRAkJCQkweDE1MA0KPiA+ID4g
-ICNkZWZpbmUgUkVHX01NVTFfSU5UX0lECQkJCTB4MTU0DQo+ID4gPiArI2RlZmluZSBGX01NVV9J
-TlRfSURfQ09NTV9JRChhKQkJCSgoKGEpID4+IDkpICYgMHg3KQ0KPiA+ID4gKyNkZWZpbmUgRl9N
-TVVfSU5UX0lEX1NVQl9DT01NX0lEKGEpCQkoKChhKSA+PiA3KSAmIDB4MykNCj4gPiA+ICAjZGVm
-aW5lIEZfTU1VX0lOVF9JRF9MQVJCX0lEKGEpCQkJKCgoYSkgPj4gNykgJiAweDcpDQo+ID4gPiAg
-I2RlZmluZSBGX01NVV9JTlRfSURfUE9SVF9JRChhKQkJCSgoKGEpID4+IDIpICYgMHgxZikNCj4g
-PiA+ICANCj4gPiA+IEBAIC0yMjksNyArMjMxLDcgQEAgc3RhdGljIGlycXJldHVybl90IG10a19p
-b21tdV9pc3IoaW50IGlycSwgdm9pZCAqZGV2X2lkKQ0KPiA+ID4gIAlzdHJ1Y3QgbXRrX2lvbW11
-X2RhdGEgKmRhdGEgPSBkZXZfaWQ7DQo+ID4gPiAgCXN0cnVjdCBtdGtfaW9tbXVfZG9tYWluICpk
-b20gPSBkYXRhLT5tNHVfZG9tOw0KPiA+ID4gIAl1MzIgaW50X3N0YXRlLCByZWd2YWwsIGZhdWx0
-X2lvdmEsIGZhdWx0X3BhOw0KPiA+ID4gLQl1bnNpZ25lZCBpbnQgZmF1bHRfbGFyYiwgZmF1bHRf
-cG9ydDsNCj4gPiA+ICsJdW5zaWduZWQgaW50IGZhdWx0X2xhcmIsIGZhdWx0X3BvcnQsIHN1Yl9j
-b21tID0gMDsNCj4gPiA+ICAJYm9vbCBsYXllciwgd3JpdGU7DQo+ID4gPiAgDQo+ID4gPiAgCS8q
-IFJlYWQgZXJyb3IgaW5mbyBmcm9tIHJlZ2lzdGVycyAqLw0KPiA+ID4gQEAgLTI0NSwxMCArMjQ3
-LDE0IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBtdGtfaW9tbXVfaXNyKGludCBpcnEsIHZvaWQgKmRl
-dl9pZCkNCj4gPiA+ICAJfQ0KPiA+ID4gIAlsYXllciA9IGZhdWx0X2lvdmEgJiBGX01NVV9GQVVM
-VF9WQV9MQVlFUl9CSVQ7DQo+ID4gPiAgCXdyaXRlID0gZmF1bHRfaW92YSAmIEZfTU1VX0ZBVUxU
-X1ZBX1dSSVRFX0JJVDsNCj4gPiA+IC0JZmF1bHRfbGFyYiA9IEZfTU1VX0lOVF9JRF9MQVJCX0lE
-KHJlZ3ZhbCk7DQo+ID4gPiAgCWZhdWx0X3BvcnQgPSBGX01NVV9JTlRfSURfUE9SVF9JRChyZWd2
-YWwpOw0KPiA+ID4gLQ0KPiA+ID4gLQlmYXVsdF9sYXJiID0gZGF0YS0+cGxhdF9kYXRhLT5sYXJi
-aWRfcmVtYXBbZmF1bHRfbGFyYl07DQo+ID4gPiArCWlmIChkYXRhLT5wbGF0X2RhdGEtPmhhc19z
-dWJfY29tbSkgew0KPiA+ID4gKwkJZmF1bHRfbGFyYiA9IEZfTU1VX0lOVF9JRF9DT01NX0lEKHJl
-Z3ZhbCk7DQo+ID4gPiArCQlzdWJfY29tbSA9IEZfTU1VX0lOVF9JRF9TVUJfQ09NTV9JRChyZWd2
-YWwpOw0KPiA+ID4gKwl9IGVsc2Ugew0KPiA+ID4gKwkJZmF1bHRfbGFyYiA9IEZfTU1VX0lOVF9J
-RF9MQVJCX0lEKHJlZ3ZhbCk7DQo+ID4gPiArCX0NCj4gPiA+ICsJZmF1bHRfbGFyYiA9IGRhdGEt
-PnBsYXRfZGF0YS0+bGFyYmlkX3JlbWFwW2ZhdWx0X2xhcmJdW3N1Yl9jb21tXTsNCj4gPiA+ICAN
-Cj4gPiA+ICAJaWYgKHJlcG9ydF9pb21tdV9mYXVsdCgmZG9tLT5kb21haW4sIGRhdGEtPmRldiwg
-ZmF1bHRfaW92YSwNCj4gPiA+ICAJCQkgICAgICAgd3JpdGUgPyBJT01NVV9GQVVMVF9XUklURSA6
-IElPTU1VX0ZBVUxUX1JFQUQpKSB7DQo+ID4gPiBAQCAtNzc4LDcgKzc4NCw3IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBtdDI3MTJfZGF0YSA9IHsNCj4gPiA+ICAJ
-Lmhhc19iY2xrICAgICAgID0gdHJ1ZSwNCj4gPiA+ICAJLmhhc192bGRfcGFfcm5nID0gdHJ1ZSwN
-Cj4gPiA+ICAJLmludl9zZWxfcmVnICAgID0gUkVHX01NVV9JTlZfU0VMX0dFTjEsDQo+ID4gPiAt
-CS5sYXJiaWRfcmVtYXAgICA9IHswLCAxLCAyLCAzLCA0LCA1LCA2LCA3LCA4LCA5fSwNCj4gPiA+
-ICsJLmxhcmJpZF9yZW1hcCAgID0ge3swfSwgezF9LCB7Mn0sIHszfSwgezR9LCB7NX0sIHs2fSwg
-ezd9fSwNCj4gPiA+ICB9Ow0KPiA+ID4gIA0KPiA+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRr
-X2lvbW11X3BsYXRfZGF0YSBtdDgxNzNfZGF0YSA9IHsNCj4gPiA+IEBAIC03ODcsMTQgKzc5Mywx
-NCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEgbXQ4MTczX2RhdGEg
-PSB7DQo+ID4gPiAgCS5oYXNfYmNsayAgICAgPSB0cnVlLA0KPiA+ID4gIAkucmVzZXRfYXhpICAg
-ID0gdHJ1ZSwNCj4gPiA+ICAJLmludl9zZWxfcmVnICA9IFJFR19NTVVfSU5WX1NFTF9HRU4xLA0K
-PiA+ID4gLQkubGFyYmlkX3JlbWFwID0gezAsIDEsIDIsIDMsIDQsIDV9LCAvKiBMaW5lYXIgbWFw
-cGluZy4gKi8NCj4gPiA+ICsJLmxhcmJpZF9yZW1hcCA9IHt7MH0sIHsxfSwgezJ9LCB7M30sIHs0
-fSwgezV9fSwgLyogTGluZWFyIG1hcHBpbmcuICovDQo+ID4gPiAgfTsNCj4gPiA+ICANCj4gPiA+
-ICBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEgbXQ4MTgzX2RhdGEgPSB7
-DQo+ID4gPiAgCS5tNHVfcGxhdCAgICAgPSBNNFVfTVQ4MTgzLA0KPiA+ID4gIAkucmVzZXRfYXhp
-ICAgID0gdHJ1ZSwNCj4gPiA+ICAJLmludl9zZWxfcmVnICA9IFJFR19NTVVfSU5WX1NFTF9HRU4x
-LA0KPiA+ID4gLQkubGFyYmlkX3JlbWFwID0gezAsIDQsIDUsIDYsIDcsIDIsIDMsIDF9LA0KPiA+
-ID4gKwkubGFyYmlkX3JlbWFwID0ge3swfSwgezR9LCB7NX0sIHs2fSwgezd9LCB7Mn0sIHszfSwg
-ezF9fSwNCj4gPiA+ICB9Ow0KPiA+ID4gIA0KPiA+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2Zf
-ZGV2aWNlX2lkIG10a19pb21tdV9vZl9pZHNbXSA9IHsNCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL2lvbW11L210a19pb21tdS5oIGIvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaA0KPiA+ID4g
-aW5kZXggYWZkN2EyZGU1YzFlLi5kNTFmZjk5YzJjNzEgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2
-ZXJzL2lvbW11L210a19pb21tdS5oDQo+ID4gPiArKysgYi9kcml2ZXJzL2lvbW11L210a19pb21t
-dS5oDQo+ID4gPiBAQCAtNDEsMTAgKzQxLDExIEBAIHN0cnVjdCBtdGtfaW9tbXVfcGxhdF9kYXRh
-IHsNCj4gPiA+ICAJLyogSFcgd2lsbCB1c2UgdGhlIEVNSSBjbG9jayBpZiB0aGVyZSBpc24ndCB0
-aGUgImJjbGsiLiAqLw0KPiA+ID4gIAlib29sICAgICAgICAgICAgICAgIGhhc19iY2xrOw0KPiA+
-ID4gIAlib29sCQkgICAgaGFzX21pc2NfY3RybDsNCj4gPiA+ICsJYm9vbAkJICAgIGhhc19zdWJf
-Y29tbTsNCj4gPiA+ICAJYm9vbCAgICAgICAgICAgICAgICBoYXNfdmxkX3BhX3JuZzsNCj4gPiA+
-ICAJYm9vbCAgICAgICAgICAgICAgICByZXNldF9heGk7DQo+ID4gPiAgCXUzMiAgICAgICAgICAg
-ICAgICAgaW52X3NlbF9yZWc7DQo+ID4gPiAtCXVuc2lnbmVkIGNoYXIgICAgICAgbGFyYmlkX3Jl
-bWFwW01US19MQVJCX05SX01BWF07DQo+ID4gPiArCXVuc2lnbmVkIGNoYXIgICAgICAgbGFyYmlk
-X3JlbWFwWzhdWzRdOw0KPiA+IA0KPiA+IE1US19MQVJCX05SX01BWCBpcyAxNiwgd2h5IGRvIHlv
-dSBkZWNyZWFzZSBpdCB0byA4Pw0KPiANCj4gRnJvbSB0aGUgZGlhZ3JhbSBhYm92ZSwgdGhlIG1h
-eCBudW1iZXIgb2YgdGhlIGxhcmJzIHRoYXQgY291bGQgY29ubmVjdGVkDQo+IHdpdGggYSBJT01N
-VSBIVyBpcyA4LiB0aHVzLCA4IGlzIHJpZ2h0IGhlcmUgZm9yIGVhY2ggYSBJT01NVSBIVy4NCj4g
-DQo+IGFzIEkgY29tbWVudGVkIHdoZW4gdjMuIG10MjcxMiBoYXZlIHRoZSBsYXJicyBvdmVyIDgg
-c2luY2UgaXQgaGFzIDINCj4gSU9NTVUgSFdlcy4NCj4gDQo+IGFuZCBNVEtfTEFSQl9OUl9NQVgg
-bWVhbnMgdGhlIG1heCBsYXJicyBudW1iZXIgdGhhdCB0aGlzIFNvQyBzdXBwb3J0Lg0KPiBLZWVw
-IGl0cyB2YWx1ZSBhcyBpcy4NCj4gDQo+IA0KPiA+IFNob3VsZCB3ZSB1c2UgYSBkZWZpbmUgZm9y
-IHRoZSBzdWJjb21tb24gYXMgd2VsbD8NCj4gPiANCj4gPiBSZWdhcmRzLA0KPiA+IE1hdHRoaWFz
-DQo+ID4NCg0KSGkgTWF0dGhpYXMgYW5kIHlvbmcsDQpUaGFua3MgdmVyeSBtdWNoIGZvciB5b3Vy
-IHJldmlldy4NCkhXIGRpYWdyYW0gaXMgYXMgYmVsb3ZlIGFuZCB3aGV0aGVyIHdlIG5lZWQgdG8g
-dXNlIG1hY3JvIGRlZmluaXRpb25zIHRvDQpzaG93IGl0LCBtYXliZSBtb3JlIGNsZWFyZXI/IGxp
-a2UgdGhpczoNCiANCiNkZWZpbmUgTEFSQl9DT01NT05fTUFYICAgICAgICAgICAgIDgNCiNkZWZp
-bmUgTEFSQl9TVUJfQ09NTU9OX01BWCAgICAgICAgIDQNCnVuc2lnbmVkIGNoYXIgICAgbGFyYmlk
-X3JlbWFwW0xBUkJfQ09NTU9OX01BWF1bTEFSQl9TVUJfQ09NTU9OX01BWF07DQoNCj4gIA0KPiA+
-ID4gIH07DQo+ID4gPiAgDQo+ID4gPiAgc3RydWN0IG10a19pb21tdV9kb21haW47DQo+ID4gPiAN
-Cj4gDQo+IA0KDQo=
+Hi Jean,
 
+> From: Jean-Philippe Brucker < jean-philippe@linaro.org>
+> Sent: Wednesday, June 17, 2020 10:39 PM
+>=20
+> [+ Will and Robin]
+>=20
+> Hi Yi,
+>=20
+> On Thu, Jun 11, 2020 at 05:15:21AM -0700, Liu Yi L wrote:
+> > IOMMUs that support nesting translation needs report the capability
+> > info to userspace, e.g. the format of first level/stage paging structur=
+es.
+> >
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Eric Auger <eric.auger@redhat.com>
+> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > Cc: Joerg Roedel <joro@8bytes.org>
+> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> > @Jean, Eric: as nesting was introduced for ARM, but looks like no
+> > actual user of it. right? So I'm wondering if we can reuse
+> > DOMAIN_ATTR_NESTING to retrieve nesting info? how about your opinions?
+>=20
+> Sure, I think we could rework the getters for DOMAIN_ATTR_NESTING since t=
+hey
+> aren't used, but we do need to keep the setters as is.
+>=20
+> Before attaching a domain, VFIO sets DOMAIN_ATTR_NESTING if userspace
+> requested a VFIO_TYPE1_NESTING_IOMMU container. This is necessary for the
+> SMMU driver to know how to attach later, but at that point we don't know =
+whether
+> the SMMU does support nesting (since the domain isn't attached to any end=
+point).
+> During attach, the SMMU driver adapts to the SMMU's capabilities, and may=
+ well
+> fallback to one stage if the SMMU doesn't support nesting.
+
+got you. so even VFIO sets DOMAIN_ATTR_NESTING successfully, it doesn't mea=
+n
+the nesting will be used. yeah, it's a little bit different with VT-d side.=
+ intel iommu
+driver will fail ATT_NESTING setting if it found not all iommu units in the=
+ system
+are nesting capable.
+
+> VFIO should check after attaching that the nesting attribute held, by cal=
+ling
+> iommu_domain_get_attr(NESTING). At the moment it does not, and since your
+> 03/15 patch does that with additional info, I agree with reusing
+> DOMAIN_ATTR_NESTING instead of adding DOMAIN_ATTR_NESTING_INFO.
+>
+> However it requires changing the get_attr(NESTING) implementations in bot=
+h SMMU
+> drivers as a precursor of this series, to avoid breaking
+> VFIO_TYPE1_NESTING_IOMMU on Arm. Since we haven't yet defined the
+> nesting_info structs for SMMUv2 and v3, I suppose we could return an empt=
+y struct
+> iommu_nesting_info for now?
+
+got you. I think it works. So far, I didn't see any getter for ATTR_NESTING=
+, once
+SMMU drivers return empty struct iommu_nesting_info, VFIO won't fail. will
+do it when switching to reuse ATTR_NESTING for getting nesting info.
+
+> >
+> >  include/linux/iommu.h      |  1 +
+> >  include/uapi/linux/iommu.h | 34 ++++++++++++++++++++++++++++++++++
+> >  2 files changed, 35 insertions(+)
+> >
+> > diff --git a/include/linux/iommu.h b/include/linux/iommu.h index
+> > 78a26ae..f6e4b49 100644
+> > --- a/include/linux/iommu.h
+> > +++ b/include/linux/iommu.h
+> > @@ -126,6 +126,7 @@ enum iommu_attr {
+> >  	DOMAIN_ATTR_FSL_PAMUV1,
+> >  	DOMAIN_ATTR_NESTING,	/* two stages of translation */
+> >  	DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
+> > +	DOMAIN_ATTR_NESTING_INFO,
+> >  	DOMAIN_ATTR_MAX,
+> >  };
+> >
+> > diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> > index 303f148..02eac73 100644
+> > --- a/include/uapi/linux/iommu.h
+> > +++ b/include/uapi/linux/iommu.h
+> > @@ -332,4 +332,38 @@ struct iommu_gpasid_bind_data {
+> >  	};
+> >  };
+> >
+> > +struct iommu_nesting_info {
+> > +	__u32	size;
+> > +	__u32	format;
+>=20
+> What goes into format? And flags? This structure needs some documentation=
+.
+
+format will be the same with the definition of @format in iommu_gpasid_bind=
+_data.
+flags is reserved for future extension. will add description in next versio=
+n. :-)
+
+struct iommu_gpasid_bind_data {
+        __u32 argsz;
+#define IOMMU_GPASID_BIND_VERSION_1     1
+        __u32 version;
+#define IOMMU_PASID_FORMAT_INTEL_VTD    1
+        __u32 format;
+#define IOMMU_SVA_GPASID_VAL    (1 << 0) /* guest PASID valid */
+        __u64 flags;
+        __u64 gpgd;
+        __u64 hpasid;
+        __u64 gpasid;
+        __u32 addr_width;
+        __u8  padding[12];
+        /* Vendor specific data */
+        union {
+                struct iommu_gpasid_bind_data_vtd vtd;
+        } vendor;
+};
+
+Regards,
+Yi Liu
+
+> Thanks,
+> Jean
+>=20
+> > +	__u32	features;
+> > +#define IOMMU_NESTING_FEAT_SYSWIDE_PASID	(1 << 0)
+> > +#define IOMMU_NESTING_FEAT_BIND_PGTBL		(1 << 1)
+> > +#define IOMMU_NESTING_FEAT_CACHE_INVLD		(1 << 2)
+> > +	__u32	flags;
+> > +	__u8	data[];
+> > +};
+> > +
+> > +/*
+> > + * @flags:	VT-d specific flags. Currently reserved for future
+> > + *		extension.
+> > + * @addr_width:	The output addr width of first level/stage translation
+> > + * @pasid_bits:	Maximum supported PASID bits, 0 represents no PASID
+> > + *		support.
+> > + * @cap_reg:	Describe basic capabilities as defined in VT-d capability
+> > + *		register.
+> > + * @cap_mask:	Mark valid capability bits in @cap_reg.
+> > + * @ecap_reg:	Describe the extended capabilities as defined in VT-d
+> > + *		extended capability register.
+> > + * @ecap_mask:	Mark the valid capability bits in @ecap_reg.
+> > + */
+> > +struct iommu_nesting_info_vtd {
+> > +	__u32	flags;
+> > +	__u16	addr_width;
+> > +	__u16	pasid_bits;
+> > +	__u64	cap_reg;
+> > +	__u64	cap_mask;
+> > +	__u64	ecap_reg;
+> > +	__u64	ecap_mask;
+> > +};
+> > +
+> >  #endif /* _UAPI_IOMMU_H */
+> > --
+> > 2.7.4
+> >
