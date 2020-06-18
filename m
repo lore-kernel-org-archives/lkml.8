@@ -2,120 +2,94 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF73C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1263720739
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC13E20739
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:16:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="frBBXjmK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbgFROOq (ORCPT
+        id S1730715AbgFROQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:14:46 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6284 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730596AbgFROOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:14:44 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 00BEE1C7614B9EE3D7A1;
-        Thu, 18 Jun 2020 22:14:38 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 18 Jun 2020 22:14:29 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <arnd@arndb.de>, <borntraeger@de.ibm.com>,
-        <catalin.marinas@arm.com>, <christian@brauner.io>,
-        <cyphar@cyphar.com>, <dhowells@redhat.com>,
-        <ebiederm@xmission.com>, <fenghua.yu@intel.com>,
-        <geert@linux-m68k.org>, <gor@linux.ibm.com>,
-        <heiko.carstens@de.ibm.com>, <ink@jurassic.park.msu.ru>,
-        <jolsa@redhat.com>, <linux@armlinux.org.uk>, <lkp@intel.com>,
-        <mark.rutland@arm.com>, <mattst88@gmail.com>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <monstr@monstr.eu>, <namhyung@kernel.org>,
-        <nixiaoming@huawei.com>, <peterz@infradead.org>, <rth@twiddle.net>,
-        <sargun@sargun.me>, <sfr@canb.auug.org.au>, <tony.luck@intel.com>,
-        <will@kernel.org>, <akpm@linux-foundation.org>
-CC:     <alex.huangjianhui@huawei.com>, <zhongjubin@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>, <kbuild-all@lists.01.org>,
-        <linux-mm@kvack.org>
-Subject: [PATCH v2] s390: fix build error for sys_call_table_emu
-Date:   Thu, 18 Jun 2020 22:14:26 +0800
-Message-ID: <20200618141426.16884-1-nixiaoming@huawei.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 18 Jun 2020 10:16:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730277AbgFROQu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 10:16:50 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C9A4C06174E;
+        Thu, 18 Jun 2020 07:16:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=59v7DL+Q6M0O6agqJhZf72SPocZXRPqx3iv/O5eS9Zk=; b=frBBXjmKpVtAc+AqKk5DD8LQNU
+        wbXudAS7/WiZVQ1wkOg5A1ixxX85phlK37al49JjUr3uf6dYnpaQrHmHDThIfg/5T2KcquAjDchIJ
+        5tbQR1JRhwgA8oiv/tbO5pI+PrShy4gU8oT5ZvztmYtlogsPm4n6sNtO33CkT5OGOrwMhquvwhgeA
+        FC6kTYlBxc43qy5rcUEsh9gLh7ZLSPn2l/HnHnJePiJizDk7EPysFbh5hxYI8YP/llFbTe0uMMwzd
+        nXmSN6L/g4upY7k4bzc+G1g2Fnu3gFfd95Y4PN1fvigpZVS+rQYFnfavVmMWaToR0PCyznDj3IR8T
+        0pGOqomA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlvLQ-0002tV-UP; Thu, 18 Jun 2020 14:16:44 +0000
+Date:   Thu, 18 Jun 2020 07:16:44 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matias =?iso-8859-1?Q?Bj=F8rling?= <mb@lightnvm.io>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, bcrl@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aio@kvack.org, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org, selvakuma.s1@samsung.com,
+        nj.shetty@samsung.com, javier.gonz@samsung.com,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Keith Busch <keith.busch@wdc.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 0/3] zone-append support in aio and io-uring
+Message-ID: <20200618141644.GB16866@infradead.org>
+References: <CGME20200617172653epcas5p488de50090415eb802e62acc0e23d8812@epcas5p4.samsung.com>
+ <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
+ <f503c488-fa00-4fe2-1ceb-7093ea429e45@lightnvm.io>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f503c488-fa00-4fe2-1ceb-7093ea429e45@lightnvm.io>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Build error on s390:
-	arch/s390/kernel/entry.o: in function `sys_call_table_emu':
-	>> (.rodata+0x1288): undefined reference to `__s390_'
+On Thu, Jun 18, 2020 at 10:04:32AM +0200, Matias Bjørling wrote:
+> Please provide a pointers to applications that are updated and ready to take
+> advantage of zone append.
 
-In commit ("All arch: remove system call sys_sysctl")
- 148  common	fdatasync		sys_fdatasync			sys_fdatasync
--149  common	_sysctl			sys_sysctl			compat_sys_sysctl
-+149  common	_sysctl			sys_ni_syscall
- 150  common	mlock			sys_mlock			sys_mlock
+That is a pretty high bar for kernel APIs that we don't otherwise
+apply unless seriously in doubt.
 
-After the patch is integrated, there is a format error in the generated
-arch/s390/include/generated/asm/syscall_table.h:
-	SYSCALL(sys_fdatasync, sys_fdatasync)
-	SYSCALL(sys_ni_syscall,) /* cause build error */
-	SYSCALL(sys_mlock,sys_mlock)
+> I do not believe it's beneficial at this point to change the libaio API,
+> applications that would want to use this API, should anyway switch to use
+> io_uring.
 
-According to the guidance of Heiko Carstens, use "-" to fill the empty system call
- Similarly, modify tools/perf/arch/s390/entry/syscalls/syscall.tbl.
+I think that really depends on the amount of churn required.  We
+absolutely can expose things like small additional flags or simple
+new operations, as rewriting application to different APIs is not
+exactly trivial.  On the other hand we really shouldn't do huge
+additions to the machinery.
 
-Fixes: ("All arch: remove system call sys_sysctl")
-Fixes: https://lore.kernel.org/linuxppc-dev/20200616030734.87257-1-nixiaoming@huawei.com/
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+> Please also note that applications and libraries that want to take advantage
+> of zone append, can already use the zonefs file-system, as it will use the
+> zone append command when applicable.
 
-changes in v2:
-	use "-" to fill the empty system call
-
-v1: https://lore.kernel.org/lkml/20200618110320.104013-1-nixiaoming@huawei.com/
----
- arch/s390/kernel/syscalls/syscall.tbl           | 2 +-
- tools/perf/arch/s390/entry/syscalls/syscall.tbl | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index f17aaf6fe5de..04c34c2ed916 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -138,7 +138,7 @@
- 146  common	writev			sys_writev			compat_sys_writev
- 147  common	getsid			sys_getsid			sys_getsid
- 148  common	fdatasync		sys_fdatasync			sys_fdatasync
--149  common	_sysctl			sys_ni_syscall
-+149  common	_sysctl			-				-
- 150  common	mlock			sys_mlock			sys_mlock
- 151  common	munlock			sys_munlock			sys_munlock
- 152  common	mlockall		sys_mlockall			sys_mlockall
-diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-index 0193f9b98753..29144b79a49d 100644
---- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-@@ -138,7 +138,7 @@
- 146  common	writev			sys_writev			compat_sys_writev
- 147  common	getsid			sys_getsid			sys_getsid
- 148  common	fdatasync		sys_fdatasync			sys_fdatasync
--149  common	_sysctl			sys_ni_syscall
-+149  common	_sysctl			-				-
- 150  common	mlock			sys_mlock			compat_sys_mlock
- 151  common	munlock			sys_munlock			compat_sys_munlock
- 152  common	mlockall		sys_mlockall			sys_mlockall
--- 
-2.27.0
-
+Not really.  While we already use Zone Append in Zonefs for some cases,
+we can't fully take advantage of the scalability of Zone Append.  For
+that we'd need a way to return the file position where an O_APPEND
+write actually landed, as suggested in my earlier mail.  Which I think
+is a very useful addition, and Damien and I had looked into adding
+it both for zonefs and normal file systems, but didn't get around to
+doing the work yet.
