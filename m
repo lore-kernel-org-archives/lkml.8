@@ -2,54 +2,56 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61601C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E5CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36DAF221FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47ACA221E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444444;
-	bh=MISZoiCLDvcumQIPnbJkrwHKF0jEFowkhUBjeR/PLV4=;
+	s=default; t=1592444447;
+	bh=gptiCFKoNcpcdJisJy4sVa7k8UEqSsEbi0RmQr6nB2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HCN31OXuFTaWkWkdbY16H4lBh6sEgCduHRmWdAOBGnyiHYV0ejKnuJLdsZfpzAPBt
-	 aANUGvgSbxkk9SpjTMjZ6QFtPJxjcOv/JYEBptbXdElm7BH/U8CK8IRCO3eVBoTnCx
-	 /BTgOaehF5lWAbiUpGJxAuYiwZ+Bp0zZoWNejefc=
+	b=qw7XQBwDkp+IU06COSXytp4LWESTp/gbhj4zGLY1WmF+k/BKz6uR4j2tK2svGhVTH
+	 3KLpNJGIiUxHnwygb7mFuowmRtMjHX3Qj1k1iOAfc6EEwPNxIYgPuYn7hd+WxwWX49
+	 16qA2zUH0rD+P3AjhlauFdWIglslyYkMMUbMm16s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732417AbgFRB34 (ORCPT
+        id S1733084AbgFRBkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:29:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34496 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:40:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731729AbgFRB0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:26:47 -0400
+        id S1732411AbgFRB34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:29:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FC4F2088E;
-        Thu, 18 Jun 2020 01:26:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C110222229;
+        Thu, 18 Jun 2020 01:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443606;
-        bh=MISZoiCLDvcumQIPnbJkrwHKF0jEFowkhUBjeR/PLV4=;
+        s=default; t=1592443795;
+        bh=gptiCFKoNcpcdJisJy4sVa7k8UEqSsEbi0RmQr6nB2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K8adrJTaWfuMq9WYNODMzEJU7bMKF54TWMFKftSutXhDLEOJTtdOiWvuijKvs4mW6
-         RbckkbnMeBKDZILO6ekEcmnQL4baQrpuxya9kvqt9cfz+Vw6fzcRRrChBShI/hmyVi
-         T1WTx5DB4vfuJV/i690/8hBelqobEEl+KBwCjW6Y=
+        b=tONA603P7CaoBWHEI3KUyxAJ3mjK6lhqqCbfZr5koHvoyRuwJJ/DvwVuv2/3hJVHy
+         y1lRkiEzlKVRR1o9ES9ywTlGP9oLVOk1sLQ9Z49YEtQU4IBuCh3ofEwKSd/v9ll5Df
+         GrR8x+CwCINtothjlOJyJoJIATm5UVWasVPUdQ8A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Simon Arlott <simon@octiron.net>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 035/108] scsi: sr: Fix sr_probe() missing deallocate of device minor
-Date:   Wed, 17 Jun 2020 21:24:47 -0400
-Message-Id: <20200618012600.608744-35-sashal@kernel.org>
+Cc:     Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 75/80] lib/zlib: remove outdated and incorrect pre-increment optimization
+Date:   Wed, 17 Jun 2020 21:28:14 -0400
+Message-Id: <20200618012819.609778-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
-References: <20200618012600.608744-1-sashal@kernel.org>
+In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
+References: <20200618012819.609778-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,45 +61,277 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Arlott <simon@octiron.net>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit 6555781b3fdec5e94e6914511496144241df7dee ]
+[ Upstream commit acaab7335bd6f0c0b54ce3a00bd7f18222ce0f5f ]
 
-If the cdrom fails to be registered then the device minor should be
-deallocated.
+The zlib inflate code has an old micro-optimization based on the
+assumption that for pre-increment memory accesses, the compiler will
+generate code that fits better into the processor's pipeline than what
+would be generated for post-increment memory accesses.
 
-Link: https://lore.kernel.org/r/072dac4b-8402-4de8-36bd-47e7588969cd@0882a8b5-c6c3-11e9-b005-00805fc181fe
-Signed-off-by: Simon Arlott <simon@octiron.net>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This optimization was already removed in upstream zlib in 2016:
+https://github.com/madler/zlib/commit/9aaec95e8211
+
+This optimization causes UB according to C99, which says in section 6.5.6
+"Additive operators": "If both the pointer operand and the result point to
+elements of the same array object, or one past the last element of the
+array object, the evaluation shall not produce an overflow; otherwise, the
+behavior is undefined".
+
+This UB is not only a theoretical concern, but can also cause trouble for
+future work on compiler-based sanitizers.
+
+According to the zlib commit, this optimization also is not optimal
+anymore with modern compilers.
+
+Replace uses of OFF, PUP and UP_UNALIGNED with their definitions in the
+POSTINC case, and remove the macro definitions, just like in the upstream
+patch.
+
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Link: http://lkml.kernel.org/r/20200507123112.252723-1-jannh@google.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sr.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ lib/zlib_inflate/inffast.c | 91 +++++++++++++++-----------------------
+ 1 file changed, 35 insertions(+), 56 deletions(-)
 
-diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-index d0389b20574d..5be3d6b7991b 100644
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@ -748,7 +748,7 @@ static int sr_probe(struct device *dev)
- 	cd->cdi.disk = disk;
+diff --git a/lib/zlib_inflate/inffast.c b/lib/zlib_inflate/inffast.c
+index 2c13ecc5bb2c..ed1f3df27260 100644
+--- a/lib/zlib_inflate/inffast.c
++++ b/lib/zlib_inflate/inffast.c
+@@ -10,17 +10,6 @@
  
- 	if (register_cdrom(&cd->cdi))
--		goto fail_put;
-+		goto fail_minor;
+ #ifndef ASMINF
  
- 	/*
- 	 * Initialize block layer runtime PM stuffs before the
-@@ -766,6 +766,10 @@ static int sr_probe(struct device *dev)
+-/* Allow machine dependent optimization for post-increment or pre-increment.
+-   Based on testing to date,
+-   Pre-increment preferred for:
+-   - PowerPC G3 (Adler)
+-   - MIPS R5000 (Randers-Pehrson)
+-   Post-increment preferred for:
+-   - none
+-   No measurable difference:
+-   - Pentium III (Anderson)
+-   - M68060 (Nikl)
+- */
+ union uu {
+ 	unsigned short us;
+ 	unsigned char b[2];
+@@ -38,16 +27,6 @@ get_unaligned16(const unsigned short *p)
+ 	return mm.us;
+ }
  
- 	return 0;
+-#ifdef POSTINC
+-#  define OFF 0
+-#  define PUP(a) *(a)++
+-#  define UP_UNALIGNED(a) get_unaligned16((a)++)
+-#else
+-#  define OFF 1
+-#  define PUP(a) *++(a)
+-#  define UP_UNALIGNED(a) get_unaligned16(++(a))
+-#endif
+-
+ /*
+    Decode literal, length, and distance codes and write out the resulting
+    literal and match bytes until either not enough input or output is
+@@ -115,9 +94,9 @@ void inflate_fast(z_streamp strm, unsigned start)
  
-+fail_minor:
-+	spin_lock(&sr_index_lock);
-+	clear_bit(minor, sr_index_bits);
-+	spin_unlock(&sr_index_lock);
- fail_put:
- 	put_disk(disk);
- fail_free:
+     /* copy state to local variables */
+     state = (struct inflate_state *)strm->state;
+-    in = strm->next_in - OFF;
++    in = strm->next_in;
+     last = in + (strm->avail_in - 5);
+-    out = strm->next_out - OFF;
++    out = strm->next_out;
+     beg = out - (start - strm->avail_out);
+     end = out + (strm->avail_out - 257);
+ #ifdef INFLATE_STRICT
+@@ -138,9 +117,9 @@ void inflate_fast(z_streamp strm, unsigned start)
+        input data or output space */
+     do {
+         if (bits < 15) {
+-            hold += (unsigned long)(PUP(in)) << bits;
++            hold += (unsigned long)(*in++) << bits;
+             bits += 8;
+-            hold += (unsigned long)(PUP(in)) << bits;
++            hold += (unsigned long)(*in++) << bits;
+             bits += 8;
+         }
+         this = lcode[hold & lmask];
+@@ -150,14 +129,14 @@ void inflate_fast(z_streamp strm, unsigned start)
+         bits -= op;
+         op = (unsigned)(this.op);
+         if (op == 0) {                          /* literal */
+-            PUP(out) = (unsigned char)(this.val);
++            *out++ = (unsigned char)(this.val);
+         }
+         else if (op & 16) {                     /* length base */
+             len = (unsigned)(this.val);
+             op &= 15;                           /* number of extra bits */
+             if (op) {
+                 if (bits < op) {
+-                    hold += (unsigned long)(PUP(in)) << bits;
++                    hold += (unsigned long)(*in++) << bits;
+                     bits += 8;
+                 }
+                 len += (unsigned)hold & ((1U << op) - 1);
+@@ -165,9 +144,9 @@ void inflate_fast(z_streamp strm, unsigned start)
+                 bits -= op;
+             }
+             if (bits < 15) {
+-                hold += (unsigned long)(PUP(in)) << bits;
++                hold += (unsigned long)(*in++) << bits;
+                 bits += 8;
+-                hold += (unsigned long)(PUP(in)) << bits;
++                hold += (unsigned long)(*in++) << bits;
+                 bits += 8;
+             }
+             this = dcode[hold & dmask];
+@@ -180,10 +159,10 @@ void inflate_fast(z_streamp strm, unsigned start)
+                 dist = (unsigned)(this.val);
+                 op &= 15;                       /* number of extra bits */
+                 if (bits < op) {
+-                    hold += (unsigned long)(PUP(in)) << bits;
++                    hold += (unsigned long)(*in++) << bits;
+                     bits += 8;
+                     if (bits < op) {
+-                        hold += (unsigned long)(PUP(in)) << bits;
++                        hold += (unsigned long)(*in++) << bits;
+                         bits += 8;
+                     }
+                 }
+@@ -205,13 +184,13 @@ void inflate_fast(z_streamp strm, unsigned start)
+                         state->mode = BAD;
+                         break;
+                     }
+-                    from = window - OFF;
++                    from = window;
+                     if (write == 0) {           /* very common case */
+                         from += wsize - op;
+                         if (op < len) {         /* some from window */
+                             len -= op;
+                             do {
+-                                PUP(out) = PUP(from);
++                                *out++ = *from++;
+                             } while (--op);
+                             from = out - dist;  /* rest from output */
+                         }
+@@ -222,14 +201,14 @@ void inflate_fast(z_streamp strm, unsigned start)
+                         if (op < len) {         /* some from end of window */
+                             len -= op;
+                             do {
+-                                PUP(out) = PUP(from);
++                                *out++ = *from++;
+                             } while (--op);
+-                            from = window - OFF;
++                            from = window;
+                             if (write < len) {  /* some from start of window */
+                                 op = write;
+                                 len -= op;
+                                 do {
+-                                    PUP(out) = PUP(from);
++                                    *out++ = *from++;
+                                 } while (--op);
+                                 from = out - dist;      /* rest from output */
+                             }
+@@ -240,21 +219,21 @@ void inflate_fast(z_streamp strm, unsigned start)
+                         if (op < len) {         /* some from window */
+                             len -= op;
+                             do {
+-                                PUP(out) = PUP(from);
++                                *out++ = *from++;
+                             } while (--op);
+                             from = out - dist;  /* rest from output */
+                         }
+                     }
+                     while (len > 2) {
+-                        PUP(out) = PUP(from);
+-                        PUP(out) = PUP(from);
+-                        PUP(out) = PUP(from);
++                        *out++ = *from++;
++                        *out++ = *from++;
++                        *out++ = *from++;
+                         len -= 3;
+                     }
+                     if (len) {
+-                        PUP(out) = PUP(from);
++                        *out++ = *from++;
+                         if (len > 1)
+-                            PUP(out) = PUP(from);
++                            *out++ = *from++;
+                     }
+                 }
+                 else {
+@@ -264,29 +243,29 @@ void inflate_fast(z_streamp strm, unsigned start)
+                     from = out - dist;          /* copy direct from output */
+ 		    /* minimum length is three */
+ 		    /* Align out addr */
+-		    if (!((long)(out - 1 + OFF) & 1)) {
+-			PUP(out) = PUP(from);
++		    if (!((long)(out - 1) & 1)) {
++			*out++ = *from++;
+ 			len--;
+ 		    }
+-		    sout = (unsigned short *)(out - OFF);
++		    sout = (unsigned short *)(out);
+ 		    if (dist > 2) {
+ 			unsigned short *sfrom;
+ 
+-			sfrom = (unsigned short *)(from - OFF);
++			sfrom = (unsigned short *)(from);
+ 			loops = len >> 1;
+ 			do
+ #ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+-			    PUP(sout) = PUP(sfrom);
++			    *sout++ = *sfrom++;
+ #else
+-			    PUP(sout) = UP_UNALIGNED(sfrom);
++			    *sout++ = get_unaligned16(sfrom++);
+ #endif
+ 			while (--loops);
+-			out = (unsigned char *)sout + OFF;
+-			from = (unsigned char *)sfrom + OFF;
++			out = (unsigned char *)sout;
++			from = (unsigned char *)sfrom;
+ 		    } else { /* dist == 1 or dist == 2 */
+ 			unsigned short pat16;
+ 
+-			pat16 = *(sout-1+OFF);
++			pat16 = *(sout-1);
+ 			if (dist == 1) {
+ 				union uu mm;
+ 				/* copy one char pattern to both bytes */
+@@ -296,12 +275,12 @@ void inflate_fast(z_streamp strm, unsigned start)
+ 			}
+ 			loops = len >> 1;
+ 			do
+-			    PUP(sout) = pat16;
++			    *sout++ = pat16;
+ 			while (--loops);
+-			out = (unsigned char *)sout + OFF;
++			out = (unsigned char *)sout;
+ 		    }
+ 		    if (len & 1)
+-			PUP(out) = PUP(from);
++			*out++ = *from++;
+                 }
+             }
+             else if ((op & 64) == 0) {          /* 2nd level distance code */
+@@ -336,8 +315,8 @@ void inflate_fast(z_streamp strm, unsigned start)
+     hold &= (1U << bits) - 1;
+ 
+     /* update state and return */
+-    strm->next_in = in + OFF;
+-    strm->next_out = out + OFF;
++    strm->next_in = in;
++    strm->next_out = out;
+     strm->avail_in = (unsigned)(in < last ? 5 + (last - in) : 5 - (in - last));
+     strm->avail_out = (unsigned)(out < end ?
+                                  257 + (end - out) : 257 - (out - end));
 -- 
 2.25.1
 
