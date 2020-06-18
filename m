@@ -2,187 +2,337 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C10BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75D2F21852
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:07:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iGrcbBhG"
+	by mail.kernel.org (Postfix) with ESMTP id 2D9EA21852
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:09:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728411AbgFRIHP (ORCPT
+        id S1728212AbgFRIIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:07:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728212AbgFRIFx (ORCPT
+        Thu, 18 Jun 2020 04:08:39 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57218 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728348AbgFRIGE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:05:53 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A83B6C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:05:52 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g10so4238820wmh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:05:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=J2P4KBeBVJFsQpvXTMn3UFoEhQaQEz0OzmITSUrph+k=;
-        b=iGrcbBhGhHQ7Yp78sT9XYD5gnQb8zLcNX2E++DMQRtVSdZkuOMhsCY7eHb++j+NZ+M
-         43bP8ooOmivRJ0UJeVjOVRE8kqwGUcBw9gW6Ci1SHMNd0e+OqcA9i5iVfiYNZL5SI9ia
-         Dao0bP4oX/prcLfy7RvPGRL28+H7pOrPHCWd2inm6dcMpR1Kg9b8kuxkGOmy8xjjTo4d
-         zmidEuvhhMtAngCXZvFOVqG3wH0aOYB17UvWmii4XwaAQdjWbBwYHYzsWIbCpDjaPtrv
-         C4hO+m1Dd8EYX+SNuVc0PYfRE6CV8fjlWAPZy6UuL6YznVBThIfEDG9GHwbIOyoOXoUM
-         h2dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=J2P4KBeBVJFsQpvXTMn3UFoEhQaQEz0OzmITSUrph+k=;
-        b=eBj1ZEU7u1/arHTsIvuZoFnWNRhjXRMhzwc2b97SM1pvPMS36YhxFsePj7gRLUqOF8
-         f3miMckuguKP029BjG0sKgtedSBg0f3Va51RhYj3tIFXZM/ek/9eod0c5Qun9Mtd0L7e
-         hgOx+azOXnJp1M0lkvxr1gd8XB6RiWuzIdFfONnnUGF13vP6MGiZDJBcvskdgCImSZ16
-         EM6D8f7lZBQDYj8Ht17mRe7NatGXfIg0SiRmegAP/KPSSYqieIU5BZmvLvnVQEGvS4Rq
-         PtktjP+/eg3yC53yip9gfDqLPNtVzrPyPcBd+3P3zRyDZM6xEw0Qu6HbECEqRQ3uQvdA
-         rmyQ==
-X-Gm-Message-State: AOAM530O//kribHriD8TYfPmZmSXGAYbWp8KvF1uAR8DwoO1t8yG/Xzd
-        93X0A1JgO8kndiTN5ma2z67br3gJGUGMBw==
-X-Google-Smtp-Source: ABdhPJyKF2YVQ2af0HBuvWK8IKhsQTdcg0atn/l8fDapEmRF0oEenQ6aEEYol/gk/64PsK9g5fH8Ew==
-X-Received: by 2002:a1c:60d6:: with SMTP id u205mr2847110wmb.163.1592467550784;
-        Thu, 18 Jun 2020 01:05:50 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:9902:c1f0:76c7:9dbc? ([2a01:e35:2ec0:82b0:9902:c1f0:76c7:9dbc])
-        by smtp.gmail.com with ESMTPSA id c16sm2530606wml.45.2020.06.18.01.05.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 01:05:50 -0700 (PDT)
-Subject: Re: [PATCH v2 1/4] drm/bridge: ti-sn65dsi86: Don't compile GPIO bits
- if not CONFIG_OF_GPIO
-To:     Doug Anderson <dianders@chromium.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sean Paul <seanpaul@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
-        kernel test robot <lkp@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200612123003.v2.1.Ibe95d8f3daef01e5c57d4c8c398f04d6a839492c@changeid>
- <CAD=FV=W6d-Asap63+MDga26k2krfNOZ4ftcM1HPp3T0oXWdA0A@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <cc184761-eb91-402f-c2df-c55d25274b66@baylibre.com>
-Date:   Thu, 18 Jun 2020 10:05:48 +0200
+        Thu, 18 Jun 2020 04:06:04 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05I84GQo094657;
+        Thu, 18 Jun 2020 04:05:26 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31r1qbcnx4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 04:05:26 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05I84Tsu095683;
+        Thu, 18 Jun 2020 04:05:26 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31r1qbcnwa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 04:05:25 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05I84kMX000783;
+        Thu, 18 Jun 2020 08:05:23 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma02fra.de.ibm.com with ESMTP id 31r0dvr499-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 08:05:23 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05I85KSa50659410
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jun 2020 08:05:20 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F2316A405C;
+        Thu, 18 Jun 2020 08:05:19 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3C8E3A405F;
+        Thu, 18 Jun 2020 08:05:19 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.12.179])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Jun 2020 08:05:19 +0000 (GMT)
+Subject: Re: [PATCH v2 02/12] ocxl: Change type of pasid to unsigned int
+To:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        amd-gfx <amd-gfx@lists.freedesktop.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+References: <1592008893-9388-1-git-send-email-fenghua.yu@intel.com>
+ <1592008893-9388-3-git-send-email-fenghua.yu@intel.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Message-ID: <972dc2cb-9643-53af-b11d-ebb56d96053d@linux.ibm.com>
+Date:   Thu, 18 Jun 2020 10:05:19 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=W6d-Asap63+MDga26k2krfNOZ4ftcM1HPp3T0oXWdA0A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1592008893-9388-3-git-send-email-fenghua.yu@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-18_04:2020-06-17,2020-06-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ cotscore=-2147483648 mlxscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
+ phishscore=0 priorityscore=1501 clxscore=1011 mlxlogscore=999
+ impostorscore=0 adultscore=0 suspectscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006180057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
 
-On 15/06/2020 16:36, Doug Anderson wrote:
-> Hi,
+
+Le 13/06/2020 à 02:41, Fenghua Yu a écrit :
+> PASID is defined as "int" although it's a 20-bit value and shouldn't be
+> negative int. To be consistent with type defined in iommu, define PASID
+> as "unsigned int".
+
+
+It looks like this patch was considered because of the use of 'pasid' in 
+variable or function names. The ocxl driver only makes sense on powerpc 
+and shouldn't compile on anything else, so it's probably useless in the 
+context of that series.
+The pasid here is defined by the opencapi specification 
+(https://opencapi.org), it is borrowed from the PCI world and you could 
+argue it could be an unsigned int. But then I think the patch doesn't go 
+far enough. But considering it's not used on x86, I think this patch can 
+be dropped.
+
+   Fred
+
+
+
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> ---
+> v2:
+> - Create this new patch to define PASID as "unsigned int" consistently in
+>    ocxl (Thomas)
 > 
-> On Fri, Jun 12, 2020 at 12:31 PM Douglas Anderson <dianders@chromium.org> wrote:
->>
->> The kernel test robot noted that if "OF" is defined (which is needed
->> to select DRM_TI_SN65DSI86 at all) but not OF_GPIO that we'd get
->> compile failures because some of the members that we access in "struct
->> gpio_chip" are only defined "#if defined(CONFIG_OF_GPIO)".
->>
->> All the GPIO bits in the driver are all nicely separated out.  We'll
->> guard them with the same "#if defined" that the header has and add a
->> little stub function if OF_GPIO is not defined.
->>
->> Fixes: 27ed2b3f22ed ("drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux")
->> Reported-by: kernel test robot <lkp@intel.com>
->> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
->> ---
->>
->> Changes in v2: None
->>
->>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
+>   drivers/misc/ocxl/config.c        |  3 ++-
+>   drivers/misc/ocxl/link.c          |  6 +++---
+>   drivers/misc/ocxl/ocxl_internal.h |  6 +++---
+>   drivers/misc/ocxl/pasid.c         |  2 +-
+>   drivers/misc/ocxl/trace.h         | 20 ++++++++++----------
+>   include/misc/ocxl.h               |  6 +++---
+>   6 files changed, 22 insertions(+), 21 deletions(-)
 > 
-> The kernel test robot gave me another yell over the weekend.  I think
-> the whole series is ready to land, but if nothing else could at least
-> patch #1 land to fix the build error so the robot is happy?
-
-I'm pushing the serie to drm-misc-next
-
-Neil
-
+> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
+> index c8e19bfb5ef9..22d034caed3d 100644
+> --- a/drivers/misc/ocxl/config.c
+> +++ b/drivers/misc/ocxl/config.c
+> @@ -806,7 +806,8 @@ int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec)
+>   }
+>   EXPORT_SYMBOL_GPL(ocxl_config_set_TL);
+>   
+> -int ocxl_config_terminate_pasid(struct pci_dev *dev, int afu_control, int pasid)
+> +int ocxl_config_terminate_pasid(struct pci_dev *dev, int afu_control,
+> +				unsigned int pasid)
+>   {
+>   	u32 val;
+>   	unsigned long timeout;
+> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
+> index 58d111afd9f6..931f6ae022db 100644
+> --- a/drivers/misc/ocxl/link.c
+> +++ b/drivers/misc/ocxl/link.c
+> @@ -492,7 +492,7 @@ static u64 calculate_cfg_state(bool kernel)
+>   	return state;
+>   }
+>   
+> -int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+> +int ocxl_link_add_pe(void *link_handle, unsigned int pasid, u32 pidr, u32 tidr,
+>   		u64 amr, struct mm_struct *mm,
+>   		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
+>   		void *xsl_err_data)
+> @@ -572,7 +572,7 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>   }
+>   EXPORT_SYMBOL_GPL(ocxl_link_add_pe);
+>   
+> -int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
+> +int ocxl_link_update_pe(void *link_handle, unsigned int pasid, __u16 tid)
+>   {
+>   	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   	struct spa *spa = link->spa;
+> @@ -608,7 +608,7 @@ int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid)
+>   	return rc;
+>   }
+>   
+> -int ocxl_link_remove_pe(void *link_handle, int pasid)
+> +int ocxl_link_remove_pe(void *link_handle, unsigned int pasid)
+>   {
+>   	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>   	struct spa *spa = link->spa;
+> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
+> index 345bf843a38e..3ca982ba7472 100644
+> --- a/drivers/misc/ocxl/ocxl_internal.h
+> +++ b/drivers/misc/ocxl/ocxl_internal.h
+> @@ -41,7 +41,7 @@ struct ocxl_afu {
+>   	struct ocxl_afu_config config;
+>   	int pasid_base;
+>   	int pasid_count; /* opened contexts */
+> -	int pasid_max; /* maximum number of contexts */
+> +	unsigned int pasid_max; /* maximum number of contexts */
+>   	int actag_base;
+>   	int actag_enabled;
+>   	struct mutex contexts_lock;
+> @@ -69,7 +69,7 @@ struct ocxl_xsl_error {
+>   
+>   struct ocxl_context {
+>   	struct ocxl_afu *afu;
+> -	int pasid;
+> +	unsigned int pasid;
+>   	struct mutex status_mutex;
+>   	enum ocxl_context_status status;
+>   	struct address_space *mapping;
+> @@ -128,7 +128,7 @@ int ocxl_config_check_afu_index(struct pci_dev *dev,
+>    * pasid: the PASID for the AFU context
+>    * tid: the new thread id for the process element
+>    */
+> -int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
+> +int ocxl_link_update_pe(void *link_handle, unsigned int pasid, __u16 tid);
+>   
+>   int ocxl_context_mmap(struct ocxl_context *ctx,
+>   			struct vm_area_struct *vma);
+> diff --git a/drivers/misc/ocxl/pasid.c b/drivers/misc/ocxl/pasid.c
+> index d14cb56e6920..a151fc8f0bec 100644
+> --- a/drivers/misc/ocxl/pasid.c
+> +++ b/drivers/misc/ocxl/pasid.c
+> @@ -80,7 +80,7 @@ static void range_free(struct list_head *head, u32 start, u32 size,
+>   
+>   int ocxl_pasid_afu_alloc(struct ocxl_fn *fn, u32 size)
+>   {
+> -	int max_pasid;
+> +	unsigned int max_pasid;
+>   
+>   	if (fn->config.max_pasid_log < 0)
+>   		return -ENOSPC;
+> diff --git a/drivers/misc/ocxl/trace.h b/drivers/misc/ocxl/trace.h
+> index 17e21cb2addd..019e2fc63b1d 100644
+> --- a/drivers/misc/ocxl/trace.h
+> +++ b/drivers/misc/ocxl/trace.h
+> @@ -9,13 +9,13 @@
+>   #include <linux/tracepoint.h>
+>   
+>   DECLARE_EVENT_CLASS(ocxl_context,
+> -	TP_PROTO(pid_t pid, void *spa, int pasid, u32 pidr, u32 tidr),
+> +	TP_PROTO(pid_t pid, void *spa, unsigned int pasid, u32 pidr, u32 tidr),
+>   	TP_ARGS(pid, spa, pasid, pidr, tidr),
+>   
+>   	TP_STRUCT__entry(
+>   		__field(pid_t, pid)
+>   		__field(void*, spa)
+> -		__field(int, pasid)
+> +		__field(unsigned int, pasid)
+>   		__field(u32, pidr)
+>   		__field(u32, tidr)
+>   	),
+> @@ -38,21 +38,21 @@ DECLARE_EVENT_CLASS(ocxl_context,
+>   );
+>   
+>   DEFINE_EVENT(ocxl_context, ocxl_context_add,
+> -	TP_PROTO(pid_t pid, void *spa, int pasid, u32 pidr, u32 tidr),
+> +	TP_PROTO(pid_t pid, void *spa, unsigned int pasid, u32 pidr, u32 tidr),
+>   	TP_ARGS(pid, spa, pasid, pidr, tidr)
+>   );
+>   
+>   DEFINE_EVENT(ocxl_context, ocxl_context_remove,
+> -	TP_PROTO(pid_t pid, void *spa, int pasid, u32 pidr, u32 tidr),
+> +	TP_PROTO(pid_t pid, void *spa, unsigned int pasid, u32 pidr, u32 tidr),
+>   	TP_ARGS(pid, spa, pasid, pidr, tidr)
+>   );
+>   
+>   TRACE_EVENT(ocxl_terminate_pasid,
+> -	TP_PROTO(int pasid, int rc),
+> +	TP_PROTO(unsigned int pasid, int rc),
+>   	TP_ARGS(pasid, rc),
+>   
+>   	TP_STRUCT__entry(
+> -		__field(int, pasid)
+> +		__field(unsigned int, pasid)
+>   		__field(int, rc)
+>   	),
+>   
+> @@ -107,11 +107,11 @@ DEFINE_EVENT(ocxl_fault_handler, ocxl_fault_ack,
+>   );
+>   
+>   TRACE_EVENT(ocxl_afu_irq_alloc,
+> -	TP_PROTO(int pasid, int irq_id, unsigned int virq, int hw_irq),
+> +	TP_PROTO(unsigned int pasid, int irq_id, unsigned int virq, int hw_irq),
+>   	TP_ARGS(pasid, irq_id, virq, hw_irq),
+>   
+>   	TP_STRUCT__entry(
+> -		__field(int, pasid)
+> +		__field(unsigned int, pasid)
+>   		__field(int, irq_id)
+>   		__field(unsigned int, virq)
+>   		__field(int, hw_irq)
+> @@ -133,11 +133,11 @@ TRACE_EVENT(ocxl_afu_irq_alloc,
+>   );
+>   
+>   TRACE_EVENT(ocxl_afu_irq_free,
+> -	TP_PROTO(int pasid, int irq_id),
+> +	TP_PROTO(unsigned int pasid, int irq_id),
+>   	TP_ARGS(pasid, irq_id),
+>   
+>   	TP_STRUCT__entry(
+> -		__field(int, pasid)
+> +		__field(unsigned int, pasid)
+>   		__field(int, irq_id)
+>   	),
+>   
+> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
+> index 06dd5839e438..5eca04c8da97 100644
+> --- a/include/misc/ocxl.h
+> +++ b/include/misc/ocxl.h
+> @@ -429,7 +429,7 @@ int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
+>    * desired AFU. It can be found in the AFU configuration
+>    */
+>   int ocxl_config_terminate_pasid(struct pci_dev *dev,
+> -				int afu_control_offset, int pasid);
+> +				int afu_control_offset, unsigned int pasid);
+>   
+>   /*
+>    * Read the configuration space of a function and fill in a
+> @@ -466,7 +466,7 @@ void ocxl_link_release(struct pci_dev *dev, void *link_handle);
+>    * 'xsl_err_data' is an argument passed to the above callback, if
+>    * defined
+>    */
+> -int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+> +int ocxl_link_add_pe(void *link_handle, unsigned int pasid, u32 pidr, u32 tidr,
+>   		u64 amr, struct mm_struct *mm,
+>   		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
+>   		void *xsl_err_data);
+> @@ -474,7 +474,7 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>   /*
+>    * Remove a Process Element from the Shared Process Area for a link
+>    */
+> -int ocxl_link_remove_pe(void *link_handle, int pasid);
+> +int ocxl_link_remove_pe(void *link_handle, unsigned int pasid);
+>   
+>   /*
+>    * Allocate an AFU interrupt associated to the link.
 > 
-> -Doug
-> 
-
