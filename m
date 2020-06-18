@@ -2,508 +2,240 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E61EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2361B208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:24:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592511893;
-	bh=BoSpF+BNztwbWQvThaasVBO21UOJF5rXkvw97UOF/T0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=T23N4xdf3SGu5ZSevMnpZrx+d5N89BLiN0kF7+P45LTJx472VNKs4qJmnXHo5QtMr
-	 SCEJWdb7h526sYQa0JHMZduy2VnbozH7nHCUiJDnfK3oGqRWlnITG/xItQQ99NWZDx
-	 vK+A5IvY4hLEN3PuqJ9ePkKpyFLRys6bfqzqF2aI=
+	by mail.kernel.org (Postfix) with ESMTP id B26BC207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:28:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ljl0z/8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgFRUYv (ORCPT
+        id S1729211AbgFRU2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:24:51 -0400
-Received: from mail-io1-f50.google.com ([209.85.166.50]:39712 "EHLO
-        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbgFRUYu (ORCPT
+        Thu, 18 Jun 2020 16:28:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728850AbgFRU2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:24:50 -0400
-Received: by mail-io1-f50.google.com with SMTP id f23so3371154iof.6;
-        Thu, 18 Jun 2020 13:24:49 -0700 (PDT)
+        Thu, 18 Jun 2020 16:28:07 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7617FC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:28:07 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a127so3311002pfa.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PaDljQV4s0tsDjPd4KRhxqE94dP0XcNjhHGBsncvb84=;
+        b=ljl0z/8F2OVrnZUPdzWXGnwnJYsUO5294WxIFZQvJlpyY0GKeKofK9oNAEXcgtMRGA
+         Nkf+/zDMpmfMiEIWBzkJTZoGlDymxzpGxxQYzXAY4DSSud1ZlzwVGzg9uqRG8g806HMt
+         4peYsIrDXi+XxUlErKoZtMpWXpRKrnDELE1mTYTLs71gnsI/Ypv3NLmf9cVKXUc5xqvf
+         ZdECCeJNJs1ui/uOMge6bPexYw6wQly3rceKwKGmcIBzGB3Th8z1POylkBoduS8U2qn/
+         B8d6MsdUXhc/x0LqmVUINBT8hChYQkfL/wgcNfvzypNIGZPtkvLL/OOzTRJ+cmfT+Gse
+         diuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=BQnT5OKkj6SNPDoc6XTrAFVTcb6kZvGTv+b4qeGWTA8=;
-        b=cM+BF4YrMgyYnQn/RkMQOEbdl4zIy9YZcBaI9bn4Ww5p+otWQc16LvBXwN0/99MpOA
-         wDUlc4yeiSjj6j17xpdJQyk55GKCrbUA4u6iKOPHW5pgdIYFYcbcpk1C85XuB9brvxwG
-         4UN+OjUa5gcV/LuYTZnEi8ZPjQdd3+G9G2m+P906ObgC3ngdA9IpY37FxYRUdaJ0Mrrd
-         yMUpbdIrm52aGoJDxS2bbopqiYHRaYe8KkoEGz9tuTkEs2U75d3mvv43HQl0fOFth3Ga
-         df48cwfQMaZheyrhjCx7IEAGqjCXpoPZTXh3vR1vqLDRYW90DXb6cZql4x9SUF2wOdNA
-         yPGA==
-X-Gm-Message-State: AOAM531/AxpSKf7ZJjsmkG+AHAiAsokbE4bTF9ULha24mhwraSh1WowA
-        LUav80EikbdrdnRLptGDRm+zBqPFWw==
-X-Google-Smtp-Source: ABdhPJxjVmn1Amd/qpU8XZEpGV2Q4LTbsgEGH05SIW4SFBzA3+bLZwxVI/7E1PntDfc8G/7DNyCJiA==
-X-Received: by 2002:a6b:6818:: with SMTP id d24mr497066ioc.57.1592511888947;
-        Thu, 18 Jun 2020 13:24:48 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.253])
-        by smtp.googlemail.com with ESMTPSA id c62sm2123127ill.62.2020.06.18.13.24.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 13:24:48 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH] dt-bindings: display: Convert connectors to DT schema
-Date:   Thu, 18 Jun 2020 14:24:47 -0600
-Message-Id: <20200618202447.872851-1-robh@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PaDljQV4s0tsDjPd4KRhxqE94dP0XcNjhHGBsncvb84=;
+        b=e3r6VZqdI42tGQwr2peQDB64zFkJ+LbBHvrWxlMybe2YEFwC0IiRGvISIxQmUjn1Bz
+         e7wTEzYeHZ2hHqBF+GGcLeiNnU2NTqAqSxHycqitVUFVFTdih2BKPHCrJ8wF6WZ861SQ
+         2kwrnYkjT+Q5naUGwA5Di5VwoRp//SP8RIJpR9QjIQK50zHSzLotISlP6v/PJgj2ESbN
+         1+sGTuEt/3k9KZL833wdkALFErIHCfL7+SQCANKiJlosXzQ3cZZPaAQhwRS+MZW+UDDE
+         9UhOpTOG26ZvL2x8R6xk+wjJdVsS5x4M/ImSvVFrjzBdNDdpFPdrHHZzrArIL9pByHtb
+         JD0A==
+X-Gm-Message-State: AOAM532kDmePcJ4e/8rq488uwNWPLOTIw38Z0hEcbfpAoeAD3bcD9npS
+        w2qoDGjNqJ3b8/ZWGVjBpXVLfR9SCuVol6aZkARdbQ==
+X-Google-Smtp-Source: ABdhPJyciZVCGHv5u4C8M75wPUGUizqVIkwf99p0oMyeVXwQcr3tTyYvoRLJDywFWzCaKer6yfA4tXu6GuaLkqIuvds=
+X-Received: by 2002:a63:4c08:: with SMTP id z8mr254875pga.201.1592512086573;
+ Thu, 18 Jun 2020 13:28:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200611215501.213058-1-vitor@massaru.org> <202006121403.CF8D57C@keescook>
+ <CABVgOSnofuJQ_fiCL-8KdKezg3Hnqk3A+X509c4YP_toKeBVBg@mail.gmail.com>
+ <202006141005.BA19A9D3@keescook> <CABVgOSkPYBL8Qy9Fsr0owNhh2=tXZmdwCsWhnq+PshJLr06YKA@mail.gmail.com>
+ <alpine.LRH.2.21.2006160956170.16027@localhost> <CABVgOS=-AHNABkAVV7p=pq67hwoVcXXJSEPvxNbp90Eh_RaxBg@mail.gmail.com>
+In-Reply-To: <CABVgOS=-AHNABkAVV7p=pq67hwoVcXXJSEPvxNbp90Eh_RaxBg@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 18 Jun 2020 13:27:55 -0700
+Message-ID: <CAFd5g44kZe7h+qKHmx029Qj15FdqxsFRFD3TEx_iEhPEt0jJmA@mail.gmail.com>
+Subject: Re: common KUnit Kconfig and file naming (was: Re: [PATCH] lib:
+ kunit_test_overflow: add KUnit test of check_*_overflow functions)
+To:     David Gow <davidgow@google.com>
+Cc:     Alan Maguire <alan.maguire@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Vitor Massaru Iha <vitor@massaru.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the analog TV, DVI, HDMI, and VGA connector bindings to DT schema
-format.
+On Tue, Jun 16, 2020 at 9:21 PM David Gow <davidgow@google.com> wrote:
+>
+> On Tue, Jun 16, 2020 at 5:40 PM Alan Maguire <alan.maguire@oracle.com> wrote:
+> >
+> > On Tue, 16 Jun 2020, David Gow wrote:
+> >
+> > > CONFIG_PM_QOS_KUNIT_TESTOn Mon, Jun 15, 2020 at 1:48 AM Kees Cook
+> > > <keescook@chromium.org> wrote:
+> > > >
+> > > > On Sat, Jun 13, 2020 at 02:51:17PM +0800, David Gow wrote:
+> > > > > Yeah, _KUNIT_TEST was what we've sort-of implicitly decided on for
+> > > > > config names, but the documentation does need to happen.
+> > > >
+> > > > That works for me. It still feels redundant, but all I really want is a
+> > > > standard name. :)
+> > > >
+> > > > > We haven't put as much thought into standardising the filenames much, though.
+> > > >
+> > > > I actually find this to be much more important because it is more
+> > > > end-user-facing (i.e. in module naming, in build logs, in scripts, on
+> > > > filesystem, etc -- CONFIG is basically only present during kernel build).
+> > > > Trying to do any sorting or greping really needs a way to find all the
+> > > > kunit pieces.
+> > > >
+> > >
+> > > Certainly this is more of an issue now we support building KUnit tests
+> > > as modules, rather than having them always be built-in.
+> > >
+> > > Having some halfway consistent config-name <-> filename <-> test suite
+> > > name could be useful down the line, too. Unfortunately, not
+> > > necessarily a 1:1 mapping, e.g.:
+> > > - CONFIG_KUNIT_TEST compiles both kunit-test.c and string-stream-test.c
+> > > - kunit-test.c has several test suites within it:
+> > > kunit-try-catch-test, kunit-resource-test & kunit-log-test.
+> > > - CONFIG_EXT4_KUNIT_TESTS currently only builds ext4-inode-test.c, but
+> > > as the plural name suggests, might build others later.
+> > > - CONFIG_SECURITY_APPARMOR_KUNIT_TEST doesn't actually have its own
+> > > source file: the test is built into policy_unpack.c
+> > > - &cetera
+> > >
+> > > Indeed, this made me quickly look up the names of suites, and there
+> > > are a few inconsistencies there:
+> > > - most have "-test" as a suffix
+> > > - some have "_test" as a suffix
+> > > - some have no suffix
+> > >
+> > > (I'm inclined to say that these don't need a suffix at all.)
+> > >
+> >
+> > A good convention for module names - which I _think_ is along the lines
+> > of what Kees is suggesting - might be something like
+> >
+> > <subsystem>[_<optional_test-area>]_kunit.ko
+> >
+> > So for example
+> >
+> > kunit_test -> test_kunit.ko
+> > string_stream_test.ko -> test_string_stream_kunit.ko
+> > kunit_example_test -> example_kunit.ko
+> > ext4_inode_test.ko -> ext4_inode_kunit.ko
+> >
+> > For the kunit selftests, "selftest_" might be a better name
+> > than "test_", as the latter might encourage people to reintroduce
+> > a redundant "test" into their module name.
+> >
+>
+> I quite like the idea of having the deeper "subsystem:suite:test"
+> hierarchy here. "selftest" possibly would be a bit confusing against
+> kselftest for the KUnit tests -- personally I'd probably go with
+> "kunit", even if that introduces a redundant-looking kunit into the
+> module name.
 
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-I put myself as maintainer, but would be happy if someone else was like 
-one of the Cc'ed people.
+Ditto. My first reaction was that it would create too much nesting and
+subsystems are a poorly defined notion in the Linux kernel; however,
+after thinking about it some, I think we are already doing what you
+are proposing with namespacing in identifier names. It makes sense to
+reflect that in test organization and reporting.
 
- .../display/connector/analog-tv-connector.txt | 31 --------
- .../connector/analog-tv-connector.yaml        | 47 ++++++++++++
- .../display/connector/dvi-connector.txt       | 36 ---------
- .../display/connector/dvi-connector.yaml      | 75 +++++++++++++++++++
- .../display/connector/hdmi-connector.txt      | 31 --------
- .../display/connector/hdmi-connector.yaml     | 63 ++++++++++++++++
- .../display/connector/vga-connector.txt       | 36 ---------
- .../display/connector/vga-connector.yaml      | 42 +++++++++++
- 8 files changed, 227 insertions(+), 134 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
- create mode 100644 Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
- delete mode 100644 Documentation/devicetree/bindings/display/connector/dvi-connector.txt
- create mode 100644 Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
- delete mode 100644 Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
- create mode 100644 Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml
- delete mode 100644 Documentation/devicetree/bindings/display/connector/vga-connector.txt
- create mode 100644 Documentation/devicetree/bindings/display/connector/vga-connector.yaml
+> So, this could look something like:
+> - Kconfig name: CONFIG_<subsystem>_<suite>_KUNIT_TEST, or very
+> possibly CONFIG_<subsystem>_KUNIT_TEST(S?) -- we already have
+> something like that for the ext4 tests.
 
-diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-deleted file mode 100644
-index 883bcb2604c7..000000000000
---- a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt
-+++ /dev/null
-@@ -1,31 +0,0 @@
--Analog TV Connector
--===================
--
--Required properties:
--- compatible: "composite-video-connector" or "svideo-connector"
--
--Optional properties:
--- label: a symbolic name for the connector
--- sdtv-standards: limit the supported TV standards on a connector to the given
--                  ones. If not specified all TV standards are allowed.
--                  Possible TV standards are defined in
--                  include/dt-bindings/display/sdtv-standards.h.
--
--Required nodes:
--- Video port for TV input
--
--Example
---------
--#include <dt-bindings/display/sdtv-standards.h>
--
--tv: connector {
--	compatible = "composite-video-connector";
--	label = "tv";
--	sdtv-standards = <(SDTV_STD_PAL | SDTV_STD_NTSC)>;
--
--	port {
--		tv_connector_in: endpoint {
--			remote-endpoint = <&venc_out>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
-new file mode 100644
-index 000000000000..d9ac42cb7e04
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/connector/analog-tv-connector.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/connector/analog-tv-connector.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog TV Connector
-+
-+maintainers:
-+  - Rob Herring <robh@kernel.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - composite-video-connector
-+      - svideo-connector
-+
-+  label: true
-+
-+  sdtv-standards:
-+    description: Limit the supported TV standards on a connector to the given
-+      ones. If not specified all TV standards are allowed. Possible TV
-+      standards are defined in include/dt-bindings/display/sdtv-standards.h.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  port:
-+    description: Connection to controller providing analog TV signals
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/display/sdtv-standards.h>
-+
-+    connector {
-+      compatible = "composite-video-connector";
-+      label = "tv";
-+      sdtv-standards = <(SDTV_STD_PAL | SDTV_STD_NTSC)>;
-+
-+      port {
-+        tv_connector_in: endpoint {
-+          remote-endpoint = <&venc_out>;
-+        };
-+      };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/display/connector/dvi-connector.txt b/Documentation/devicetree/bindings/display/connector/dvi-connector.txt
-deleted file mode 100644
-index 207e42e9eba0..000000000000
---- a/Documentation/devicetree/bindings/display/connector/dvi-connector.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--DVI Connector
--==============
--
--Required properties:
--- compatible: "dvi-connector"
--
--Optional properties:
--- label: a symbolic name for the connector
--- ddc-i2c-bus: phandle to the i2c bus that is connected to DVI DDC
--- analog: the connector has DVI analog pins
--- digital: the connector has DVI digital pins
--- dual-link: the connector has pins for DVI dual-link
--- hpd-gpios: HPD GPIO number
--
--Required nodes:
--- Video port for DVI input
--
--Note: One (or both) of 'analog' or 'digital' must be set.
--
--Example
---------
--
--dvi0: connector@0 {
--	compatible = "dvi-connector";
--	label = "dvi";
--
--	digital;
--
--	ddc-i2c-bus = <&i2c3>;
--
--	port {
--		dvi_connector_in: endpoint {
--			remote-endpoint = <&tfp410_out>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml b/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
-new file mode 100644
-index 000000000000..aaf61bce64ca
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/connector/dvi-connector.yaml
-@@ -0,0 +1,75 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/connector/dvi-connector.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DVI Connector
-+
-+maintainers:
-+  - Rob Herring <robh@kernel.org>
-+
-+properties:
-+  compatible:
-+    const: dvi-connector
-+
-+  type:
-+    description: The HDMI connector type
-+    enum:
-+      - a   # Standard full size
-+      - b   # Never deployed?
-+      - c   # Mini
-+      - d   # Micro
-+      - e   # automotive
-+
-+  label: true
-+
-+  hpd-gpios:
-+    description: A GPIO line connected to HPD
-+    maxItems: 1
-+
-+  ddc-i2c-bus:
-+    description: phandle link to the I2C controller used for DDC EDID probing
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  analog:
-+    type: boolean
-+    description: the connector has DVI analog pins
-+
-+  digital:
-+    type: boolean
-+    description: the connector has DVI digital pins
-+
-+  dual-link:
-+    type: boolean
-+    description: the connector has pins for DVI dual-link
-+
-+  port:
-+    description: Connection to controller providing DVI signals
-+
-+anyOf:
-+  - required:
-+      - analog
-+  - required:
-+      - digital
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    connector {
-+      compatible = "dvi-connector";
-+      label = "dvi";
-+
-+      digital;
-+
-+      ddc-i2c-bus = <&i2c3>;
-+
-+      port {
-+        dvi_connector_in: endpoint {
-+          remote-endpoint = <&tfp410_out>;
-+        };
-+      };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt b/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-deleted file mode 100644
-index aeb07c4bd703..000000000000
---- a/Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
-+++ /dev/null
-@@ -1,31 +0,0 @@
--HDMI Connector
--==============
--
--Required properties:
--- compatible: "hdmi-connector"
--- type: the HDMI connector type: "a", "b", "c", "d" or "e"
--
--Optional properties:
--- label: a symbolic name for the connector
--- hpd-gpios: HPD GPIO number
--- ddc-i2c-bus: phandle link to the I2C controller used for DDC EDID probing
--- ddc-en-gpios: signal to enable DDC bus
--
--Required nodes:
--- Video port for HDMI input
--
--Example
---------
--
--hdmi0: connector@1 {
--	compatible = "hdmi-connector";
--	label = "hdmi";
--
--	type = "a";
--
--	port {
--		hdmi_connector_in: endpoint {
--			remote-endpoint = <&tpd12s015_out>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml b/Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml
-new file mode 100644
-index 000000000000..57f0193a12e7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/connector/hdmi-connector.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/connector/hdmi-connector.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HDMI Connector
-+
-+maintainers:
-+  - Rob Herring <robh@kernel.org>
-+
-+properties:
-+  compatible:
-+    const: hdmi-connector
-+
-+  type:
-+    description: The HDMI connector type
-+    enum:
-+      - a   # Standard full size
-+      - b   # Never deployed?
-+      - c   # Mini
-+      - d   # Micro
-+      - e   # automotive
-+
-+  label: true
-+
-+  hpd-gpios:
-+    description: A GPIO line connected to HPD
-+    maxItems: 1
-+
-+  ddc-i2c-bus:
-+    description: phandle link to the I2C controller used for DDC EDID probing
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  ddc-en-gpios:
-+    description: GPIO signal to enable DDC bus
-+    maxItems: 1
-+
-+  port:
-+    description: Connection to controller providing HDMI signals
-+
-+required:
-+  - compatible
-+  - type
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    connector {
-+      compatible = "hdmi-connector";
-+      label = "hdmi";
-+
-+      type = "a";
-+
-+      port {
-+        hdmi_connector_in: endpoint {
-+          remote-endpoint = <&tpd12s015_out>;
-+        };
-+      };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/display/connector/vga-connector.txt b/Documentation/devicetree/bindings/display/connector/vga-connector.txt
-deleted file mode 100644
-index c727f298e7ad..000000000000
---- a/Documentation/devicetree/bindings/display/connector/vga-connector.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--VGA Connector
--=============
--
--Required properties:
--
--- compatible: "vga-connector"
--
--Optional properties:
--
--- label: a symbolic name for the connector corresponding to a hardware label
--- ddc-i2c-bus: phandle to the I2C bus that is connected to VGA DDC
--
--Required nodes:
--
--The VGA connector internal connections are modeled using the OF graph bindings
--specified in Documentation/devicetree/bindings/graph.txt.
--
--The VGA connector has a single port that must be connected to a video source
--port.
--
--
--Example
---------
--
--vga0: connector@0 {
--	compatible = "vga-connector";
--	label = "vga";
--
--	ddc-i2c-bus = <&i2c3>;
--
--	port {
--		vga_connector_in: endpoint {
--			remote-endpoint = <&adv7123_out>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/connector/vga-connector.yaml b/Documentation/devicetree/bindings/display/connector/vga-connector.yaml
-new file mode 100644
-index 000000000000..cc1245f471bc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/connector/vga-connector.yaml
-@@ -0,0 +1,42 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/connector/vga-connector.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: VGA Connector
-+
-+maintainers:
-+  - Rob Herring <robh@kernel.org>
-+
-+properties:
-+  compatible:
-+    const: vga-connector
-+
-+  label: true
-+
-+  ddc-i2c-bus:
-+    description: phandle link to the I2C controller used for DDC EDID probing
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  port:
-+    description: Connection to controller providing VGA signals
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    connector {
-+      compatible = "vga-connector";
-+      label = "vga";
-+
-+      ddc-i2c-bus = <&i2c3>;
-+
-+      port {
-+        vga_connector_in: endpoint {
-+          remote-endpoint = <&adv7123_out>;
-+        };
-+      };
-+    };
-+
-+...
--- 
-2.25.1
+I think the biggest question there is whether we go with the every
+suite gets its own config approach or all suites in a subsystem are
+turned on by a single config. I don't think there are enough examples
+to determine what the community would prefer, and I can see advantages
+and disadvantages to both.
 
+> - Source filename: <suite>_kunit.c within a subsystem directory. (We
+> probably don't need to enforce suites being in separate files, but
+> whatever file does contain the tests should at least end "kunit.c")
+
+I am cool with changing *-test.c to *-kunit.c. The *-test.c was a hold
+over from when everything was prefixed TEST_* instead of KUNIT_* (back
+in the early days of the RFC). I never liked naming everything KUNIT_*
+or -kunit- whatever; it felt kind of egotistical to me (there was also
+always a part of me that hoped I would come up with a better name than
+KUnit, but that ship sailed a long time ago). However, purely
+logically speaking, I think naming all KUnit tests *-kunit.c makes
+more sense than anything else.
+
+One question: the AppArmor KUnit tests are #included into another .c
+file when the tests are selected. Should tests #included in this
+manner be -kunit.h or should all tests be -kunit.c?
+
+> - Module filename: <subsystem>_<suite>_kunit.ko, or
+> <subsystem>_kunit.ko if all suites are built into the same module (or
+> there's just one suite for the whole subsystem)
+> - Suite name: Either <subsystem>_<suite> or have a separate subsystem
+> field in kunit_suite. If there's only one suite for the subsystem, set
+> suite==subsystem
+
+No strong feelings here.
+
+> - Test names: Personally, I'd kind-of like to not prefix these at all,
+> as they're already part of the suite. If we do want to, though, prefix
+> them with <subsystem> and <suite>.
+
+Eh, I did that to remain consistent with the kernel naming
+conventions, but I think those have diverged too. If maintainers are
+cool with it, I agree that the prefixes are redundant on tests and
+generally way too long.
+
+> > > Within test suites, we're also largely prefixing all of the tests with
+> > > a suite name (even if it's not actually the specified suite name). For
+> > > example, CONFIG_PM_QOS_KUNIT_TEST builds
+> > > drivers/base/power/qos-test.c which contains a suite called
+> > > "qos-kunit-test", with tests prefixed "freq_qos_test_". Some of this
+> > > clearly comes down to wanting to namespace things a bit more
+> > > ("qos-test" as a name could refer to a few things, I imagine), but
+> > > specifying how to do so consistently could help.
+> > >
+> >
+> > Could we add some definitions to help standardize this?
+> > For example, adding a "subsystem" field to "struct kunit_suite"?
+> >
+> > So for the ext4 tests the "subsystem" would be "ext4" and the
+> > name "inode" would specify the test area within that subsystem.
+> > For the KUnit selftests, the subsystem would be "test"/"selftest".
+> > Logging could utilize the subsystem definition to allow test
+> > writers to use less redundant test names too.  For example
+> > the suite name logged could be constructed from the
+> > subsystem + area values associated with the kunit_suite,
+> > and individual test names could be shown as the
+> > suite area + test_name.
+>
+> As above, I quite like this. If we were really brave, we could
+> actually nest the results into subsystem:area/suite:test using the TAP
+> subtests stuff. Generating the longer suite name may be easier on
+> people manually reading large test logs, though, as they wouldn't have
+> to scroll quite as far to determine what subsystem they're in. (Again,
+> something that could be solved with tooling, and probably less of a
+> problem for people accessing results through debugfs.)
+
+SGTM
