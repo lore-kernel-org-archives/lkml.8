@@ -2,180 +2,153 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA26DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7FA20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:51:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yiTy7Kej"
+	by mail.kernel.org (Postfix) with ESMTP id B4D3620739
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730934AbgFROvX (ORCPT
+        id S1731276AbgFROve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:51:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731147AbgFROvC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:51:02 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D7AC061794
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:51:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=LlO2L2kUQGE6/JpAU+yId4GuI9JpU81K+hK06JLWY8o=; b=yiTy7KejA5PJLEgSdr6gtegcsA
-        g+iZdhiJWbFpolplz1sFRgMDjyjmdT8sqZSeqDSDsAgv73TTtQyut2qGOOFVACkCsivRVdGgKZgQn
-        qBv3tAlBqOgqGYncUmxFP6J5Sp/HulV7z5QdllEY1Nh0uJuOhETPBwKFWH+4edwO+9VzuLbQ3cb9A
-        nDN3X6j4CE7Y4YmPtUtgU6RtmJwQeyrSkSHi8U7jfR0sU3I9EMbaHh7HOPYr/6nESafTf2ThnWtaI
-        ucXlUS8+nna0bFgSr54q33rHu2d4uItm6Zu7wPeTDQ709MXBxxKGrRrW6USg1QvlPfdRVcYPQtNzL
-        KORzg/ng==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlvsB-0006Hq-GA; Thu, 18 Jun 2020 14:50:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 68DA130775A;
-        Thu, 18 Jun 2020 16:50:32 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 350442146C406; Thu, 18 Jun 2020 16:50:32 +0200 (CEST)
-Message-ID: <20200618144801.995733773@infradead.org>
-User-Agent: quilt/0.66
-Date:   Thu, 18 Jun 2020 16:44:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, dvyukov@google.com,
-        elver@google.com, andreyknvl@google.com, mark.rutland@arm.com,
-        mhelsley@vmware.com, rostedt@goodmis.org, jthierry@redhat.com,
-        mbenes@suse.cz, peterz@infradead.org
-Subject: [PATCH 7/7] objtool: Fix noinstr vs KCOV
-References: <20200618144407.520952071@infradead.org>
+        Thu, 18 Jun 2020 10:51:34 -0400
+Received: from mga01.intel.com ([192.55.52.88]:45806 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731167AbgFROvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 10:51:32 -0400
+IronPort-SDR: +ta8xaTHcE4av6OKCeAmV2OapdGU75SHALJFiFJmmiHm3iFNUkG+D6zE+6MpecPi01dLIi72LN
+ soFqa5By9rKg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9655"; a="160692239"
+X-IronPort-AV: E=Sophos;i="5.75,251,1589266800"; 
+   d="scan'208";a="160692239"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 07:51:16 -0700
+IronPort-SDR: dO6AxF1y1cue5QV4nymJ0uWPGEs0nyFjFXHsHvaW0nkWys+iOMeUQXJrBUjzLn9mrlk9W7e/+l
+ 06Mfn4RWrhEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,526,1589266800"; 
+   d="scan'208";a="277645745"
+Received: from mcrum-mobl1.amr.corp.intel.com (HELO [10.255.0.127]) ([10.255.0.127])
+  by orsmga006.jf.intel.com with ESMTP; 18 Jun 2020 07:51:10 -0700
+Subject: Re: [PATCH 2/4] KVM: x86: Introduce paravirt feature CR0/CR4 pinning
+To:     "Andersen, John" <john.s.andersen@intel.com>
+Cc:     corbet@lwn.net, pbonzini@redhat.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        shuah@kernel.org, sean.j.christopherson@intel.com,
+        liran.alon@oracle.com, drjones@redhat.com,
+        rick.p.edgecombe@intel.com, kristen@linux.intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, mchehab+huawei@kernel.org,
+        gregkh@linuxfoundation.org, paulmck@kernel.org,
+        pawan.kumar.gupta@linux.intel.com, jgross@suse.com,
+        mike.kravetz@oracle.com, oneukum@suse.com, luto@kernel.org,
+        peterz@infradead.org, fenghua.yu@intel.com,
+        reinette.chatre@intel.com, vineela.tummalapalli@intel.com,
+        dave.hansen@linux.intel.com, arjan@linux.intel.com,
+        caoj.fnst@cn.fujitsu.com, bhe@redhat.com, nivedita@alum.mit.edu,
+        keescook@chromium.org, dan.j.williams@intel.com,
+        eric.auger@redhat.com, aaronlewis@google.com, peterx@redhat.com,
+        makarandsonare@google.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+References: <20200617190757.27081-1-john.s.andersen@intel.com>
+ <20200617190757.27081-3-john.s.andersen@intel.com>
+ <0fa9682e-59d4-75f7-366f-103d6b8e71b8@intel.com>
+ <20200618144314.GB23@258ff54ff3c0>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <124a59a3-a603-701b-e3bb-61e83d70b20d@intel.com>
+Date:   Thu, 18 Jun 2020 07:51:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200618144314.GB23@258ff54ff3c0>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since many compilers cannot disable KCOV with a function attribute,
-help it to NOP out any __sanitizer_cov_*() calls injected in noinstr
-code.
+On 6/18/20 7:43 AM, Andersen, John wrote:
+> On Thu, Jun 18, 2020 at 07:18:09AM -0700, Dave Hansen wrote:
+>> On 6/17/20 12:07 PM, John Andersen wrote:
+>>> +#define KVM_CR0_PIN_ALLOWED	(X86_CR0_WP)
+>>> +#define KVM_CR4_PIN_ALLOWED	(X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP)
+>>
+>> Why *is* there an allowed set?  Why don't we just allow everything?
+>>
+>> Shouldn't we also pin any unknown bits?  The CR4.FSGSBASE bit is an
+>> example of something that showed up CPUs without Linux knowing about it.
+>>  If set, it causes problems.  This set couldn't have helped FSGSBASE
+>> because it is not in the allowed set.
+>>
+>> Let's say Intel loses its marbles and adds a CR4 bit that lets userspace
+>> write to kernel memory.  Linux won't set it, but an attacker would go
+>> after it, first thing.
+> 
+> The allowed set came about because there were comments from internal review
+> where it was said that allowing the guest to pin TS and MP adds unnecessary
+> complexity.
 
-This turns:
+That would have been a great design point to include in the changelog.
+ Could you make sure it shows up in future versions.
 
-12:   e8 00 00 00 00          callq  17 <lockdep_hardirqs_on+0x17>
-		13: R_X86_64_PLT32      __sanitizer_cov_trace_pc-0x4
+> Also because KVM always intercepts these bits via the CR0/4_GUEST_HOST_MASK. If
+> we allow setting of any bits, then we have to add some infrastructure for
+> modifying the mask when pinned bits are updated. I have a patch for that if we
+> want to go that route, but it doesn't account for the added complexity
+> mentioned above.
 
-into:
-
-12:   0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
-		13: R_X86_64_NONE      __sanitizer_cov_trace_pc-0x4
-
-Just like recordmcount does.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Dmitry Vyukov <dvyukov@google.com>
----
- arch/x86/Kconfig                          |    2 +-
- tools/objtool/arch.h                      |    2 ++
- tools/objtool/arch/x86/decode.c           |   18 ++++++++++++++++++
- tools/objtool/arch/x86/include/arch_elf.h |    6 ++++++
- tools/objtool/check.c                     |   19 +++++++++++++++++++
- 5 files changed, 46 insertions(+), 1 deletion(-)
-
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -67,7 +67,7 @@ config X86
- 	select ARCH_HAS_FILTER_PGPROT
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_GCOV_PROFILE_ALL
--	select ARCH_HAS_KCOV			if X86_64
-+	select ARCH_HAS_KCOV			if X86_64 && STACK_VALIDATION
- 	select ARCH_HAS_MEM_ENCRYPT
- 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
- 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
---- a/tools/objtool/arch.h
-+++ b/tools/objtool/arch.h
-@@ -84,4 +84,6 @@ unsigned long arch_jump_destination(stru
- 
- unsigned long arch_dest_reloc_offset(int addend);
- 
-+const char *arch_nop_insn(int len);
-+
- #endif /* _ARCH_H */
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -565,3 +565,21 @@ void arch_initial_func_cfi_state(struct
- 	state->regs[16].base = CFI_CFA;
- 	state->regs[16].offset = -8;
- }
-+
-+const char *arch_nop_insn(int len)
-+{
-+	static const char nops[5][5] = {
-+		/* 1 */ { 0x90 },
-+		/* 2 */ { 0x66, 0x90 },
-+		/* 3 */ { 0x0f, 0x1f, 0x00 },
-+		/* 4 */ { 0x0f, 0x1f, 0x40, 0x00 },
-+		/* 5 */ { 0x0f, 0x1f, 0x44, 0x00, 0x00 },
-+	};
-+
-+	if (len < 1 || len > 5) {
-+		WARN("invalid NOP size: %d\n", len);
-+		return NULL;
-+	}
-+
-+	return nops[len-1];
-+}
---- /dev/null
-+++ b/tools/objtool/arch/x86/include/arch_elf.h
-@@ -0,0 +1,6 @@
-+#ifndef _OBJTOOL_ARCH_ELF
-+#define _OBJTOOL_ARCH_ELF
-+
-+#define R_NONE R_X86_64_NONE
-+
-+#endif /* _OBJTOOL_ARCH_ELF */
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -12,6 +12,7 @@
- #include "check.h"
- #include "special.h"
- #include "warn.h"
-+#include "arch_elf.h"
- 
- #include <linux/hashtable.h>
- #include <linux/kernel.h>
-@@ -766,6 +767,24 @@ static int add_call_destinations(struct
- 			insn->call_dest = reloc->sym;
- 
- 		/*
-+		 * Many compilers cannot disable KCOV with a function attribute
-+		 * so they need a little help, NOP out any KCOV calls from noinstr
-+		 * text.
-+		 */
-+		if (insn->sec->noinstr &&
-+		    !strncmp(insn->call_dest->name, "__sanitizer_cov_", 16)) {
-+			if (reloc) {
-+				reloc->type = R_NONE;
-+				elf_write_reloc(file->elf, reloc);
-+			}
-+
-+			elf_write_insn(file->elf, insn->sec,
-+				       insn->offset, insn->len,
-+				       arch_nop_insn(insn->len));
-+			insn->type = INSN_NOP;
-+		}
-+
-+		/*
- 		 * Whatever stack impact regular CALLs have, should be undone
- 		 * by the RETURN of the called function.
- 		 *
-
-
+Well, we have a current, known issue (FSGSBASE) which shows how dealing
+with guest-unknown bits is required.  To me, that overrules complexity
+arguments to a large degree.
