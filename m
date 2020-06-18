@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E234FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F348B22202
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5ACA21D7F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443661;
-	bh=/1Wn2oDkvoSs0umI9QOna5G4NVtlHTUEes0RmrJM/6Q=;
+	s=default; t=1592443665;
+	bh=CCU6RsdEuc7ATExJHevX6rxXxURwrNZzuNfZq/Ayhhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KNh50rdBiN1h4VDFvFlE8vKR1mZhpcygONKLGhAbzkg9eNQmJ2+2y/Xk1bHXLAbk2
-	 T6cN+pwo5cussAcM7RQiLrigXNs7roOPvLELQJNdze2aOa9UMvZutNX37ENmR+fXdU
-	 JO1sXLdTIRIlP4t8/zaB9GEdykDtc32zbzHgOKaA=
+	b=W/K/lC9qZkJCbAdXdeNio9MEpk5GKdbREy2P1qSYve1JkYHJRV2uQN75pU3Q5KK7p
+	 Ukl7S8TXNFJBHXzA0FQeXdlm5WVG45tJTuHtTZ5wYe/D/gA0Fdmrv3RBZ248AJRnpx
+	 sEmgPqjGWi6PvpNwyVXYR1URrmL06lVWHuV+HZWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731902AbgFRB1i (ORCPT
+        id S1731926AbgFRB1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:27:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58746 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:27:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731160AbgFRBYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:24:18 -0400
+        id S1731181AbgFRBYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:24:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89EFF21D90;
-        Thu, 18 Jun 2020 01:24:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C87AD20776;
+        Thu, 18 Jun 2020 01:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443457;
-        bh=/1Wn2oDkvoSs0umI9QOna5G4NVtlHTUEes0RmrJM/6Q=;
+        s=default; t=1592443464;
+        bh=CCU6RsdEuc7ATExJHevX6rxXxURwrNZzuNfZq/Ayhhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fV3Vc0WoRWB45Vm8m57xp1DMKlazk2JRyHt6zXr/YOIJhR2rDJ+ka9GDpDv7mbCoV
-         AAWqQ0r4X7ZZXnf8tXVzvO1MEyI+UaFiz02NLBJPCNK4WPoCORocOusUL01XDE8o+g
-         CDbWHSjbzjMi4NTVFtS0kjWydQ0aL8HG+pEPJI+I=
+        b=Qx5+qQbAi4m7O8YuGChuUl7PJv56Jpnae5lrbMTaBpIoYq6nGtWGxmvH+LsueEqtn
+         G8lGIvGJ8PfU/itsPqFipYPbC8f/Ryu10H71fRBrX7DG7ltQaoyjYlbv9HCa94tg8e
+         OZ9FkDfFXJqVcGQ/frTg8i5p5GK0fe02MgJnW9nw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cristian Klein <cristian.klein@elastisys.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 091/172] HID: Add quirks for Trust Panora Graphic Tablet
-Date:   Wed, 17 Jun 2020 21:20:57 -0400
-Message-Id: <20200618012218.607130-91-sashal@kernel.org>
+Cc:     Roy Spliet <nouveau@spliet.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 097/172] drm/msm/mdp5: Fix mdp5_init error path for failed mdp5_kms allocation
+Date:   Wed, 17 Jun 2020 21:21:03 -0400
+Message-Id: <20200618012218.607130-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -59,73 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Klein <cristian.klein@elastisys.com>
+From: Roy Spliet <nouveau@spliet.org>
 
-[ Upstream commit fb68ada81e65d593b51544fa43c284322107a742 ]
+[ Upstream commit e4337877c5d578722c0716f131fb774522013cf5 ]
 
-The Trust Panora Graphic Tablet has two interfaces. Interface zero reports pen
-movement, pen pressure and pen buttons. Interface one reports tablet buttons
-and tablet scroll. Both use the mouse protocol.
+When allocation for mdp5_kms fails, calling mdp5_destroy() leads to undefined
+behaviour, likely a nullptr exception or use-after-free troubles.
 
-Without these quirks, libinput gets confused about what device it talks to.
-
-For completeness, here is the usbhid-dump:
-
-```
-$ sudo usbhid-dump -d 145f:0212
-003:013:001:DESCRIPTOR         1588949402.559961
- 05 0D 09 01 A1 01 85 07 A1 02 09 00 75 08 95 07
- 81 02 C0 C0 09 0E A1 01 85 05 09 23 A1 02 09 52
- 09 53 25 0A 75 08 95 02 B1 02 C0 C0 05 0C 09 36
- A1 00 85 06 05 09 19 01 29 20 15 00 25 01 95 20
- 75 01 81 02 C0
-
-003:013:000:DESCRIPTOR         1588949402.563942
- 05 01 09 02 A1 01 85 08 09 01 A1 00 05 09 19 01
- 29 03 15 00 25 01 95 03 75 01 81 02 95 05 81 01
- 05 01 09 30 09 31 09 38 09 00 15 81 25 7F 75 08
- 95 04 81 06 C0 C0 05 01 09 02 A1 01 85 09 09 01
- A1 00 05 09 19 01 29 03 15 00 25 01 95 03 75 01
- 81 02 95 05 81 01 05 01 09 30 09 31 26 FF 7F 95
- 02 75 10 81 02 05 0D 09 30 26 FF 03 95 01 75 10
- 81 02 C0 C0 05 01 09 00 A1 01 85 04 A1 00 26 FF
- 00 09 00 75 08 95 07 B1 02 C0 C0
-```
-
-Signed-off-by: Cristian Klein <cristian.klein@elastisys.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Roy Spliet <nouveau@spliet.org>
+Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 3 +++
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index c1fed1aaecdf..f8026c71e2e4 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1121,6 +1121,9 @@
- #define USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8882	0x8882
- #define USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8883	0x8883
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+index bddd625ab91b..25691b7cece1 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+@@ -1021,7 +1021,8 @@ static int mdp5_init(struct platform_device *pdev, struct drm_device *dev)
  
-+#define USB_VENDOR_ID_TRUST             0x145f
-+#define USB_DEVICE_ID_TRUST_PANORA_TABLET   0x0212
-+
- #define USB_VENDOR_ID_TURBOX		0x062a
- #define USB_DEVICE_ID_TURBOX_KEYBOARD	0x0201
- #define USB_DEVICE_ID_ASUS_MD_5110	0x5110
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index e5beee3e8582..f4bab7004aff 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -168,6 +168,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOUCHPACK, USB_DEVICE_ID_TOUCHPACK_RTS), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TPV, USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8882), HID_QUIRK_NOGET },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TPV, USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8883), HID_QUIRK_NOGET },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_TRUST, USB_DEVICE_ID_TRUST_PANORA_TABLET), HID_QUIRK_MULTI_INPUT | HID_QUIRK_HIDINPUT_FORCE },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TURBOX, USB_DEVICE_ID_TURBOX_KEYBOARD), HID_QUIRK_NOGET },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_UCLOGIC, USB_DEVICE_ID_UCLOGIC_TABLET_KNA5), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_UCLOGIC, USB_DEVICE_ID_UCLOGIC_TABLET_TWA60), HID_QUIRK_MULTI_INPUT },
+ 	return 0;
+ fail:
+-	mdp5_destroy(pdev);
++	if (mdp5_kms)
++		mdp5_destroy(pdev);
+ 	return ret;
+ }
+ 
 -- 
 2.25.1
 
