@@ -2,124 +2,182 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F10C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8770C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7796F207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA20208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:33:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="K2P6nRQL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m8WGi2kU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbgFRSck (ORCPT
+        id S1729704AbgFRSdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 14:32:40 -0400
-Received: from mail-eopbgr700132.outbound.protection.outlook.com ([40.107.70.132]:53089
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728230AbgFRScj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 14:32:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=btIhQUO8Q+1XnBywgC23o8sNu0taiEmLAn/aSQKhf4ZlQ4gAiIb+TnaDPubpBqYjWhtOBzOexOFKO4aGO1b+ItUiBrUxpikqTKBZ2NzUn03EoGpBaDygfa3QDYBuV9S7x1l6sLfkipuztWEX4maUkX9ZP1bRi42M+Ou/ER5tqyC8qIAXiwS0oh93Bc3qO+KRKGaHHM7Rfr+KyqFYNVZyn5VWetRR7PULsmaXgcKvuFSyNDH5Z0YfRpdSU1ioQCeCzsJ8ZNRViyau/PKGLIwkKLtBFwcJ8d432WwKfYuuoozqxm63/gatwjqszobsl7bDrQjrWJkZu9gVGjcdiup0ng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XeuL+zJ8uFlLrVw1Fa3TpIv1mNe+8w3CV53c7xjgbA8=;
- b=YYHxblJP/zQoLWFo4fU7Oz8g4cE+Xi1zdILcf2il2gQte+JVN0idduomOT+VBAgooEL4LQ7QHTLJp6yUAr3GeRTOXtiv7AxvzioeHahwkHApGDaWIFu1yyRtJWop/Zu9Wty1peP3tTh5/t7lLLnonanifNIrGCeR77PVUH5QyP6jviOrkARkTk42cSEVWy+2WVIOFtB803QOCXM/TqfCysXYCiF8NsD6FJMHhhJ3uF8csnwoZE8SwbNKMWoPlupLS1c7nh0s7bSBqILrvWpuknVL52w97++huEXG2JWCQ7xLN5jPlUmpXLhtJsVAU3TQCQp9p7mNjfi2LmIn8DBgwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XeuL+zJ8uFlLrVw1Fa3TpIv1mNe+8w3CV53c7xjgbA8=;
- b=K2P6nRQLP5y7ALKmT0orX2e9nuH3lbYQF8BoUqPTnneTI015gb7Tyf3Clk9YUpNRhWVd5OOkBK9gsRytmERgkYcMJH/wJjs4lAxs8QW4oWPEk3vIKjvRHKCXtYW5x8ndVq9oBG6DcNm0mZGZpB0lH5uEWGCX0mTJuFL9YwsVKeo=
-Received: from DM5PR2101MB1047.namprd21.prod.outlook.com (2603:10b6:4:9e::16)
- by DM5PR21MB1781.namprd21.prod.outlook.com (2603:10b6:4:9e::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.9; Thu, 18 Jun
- 2020 18:32:37 +0000
-Received: from DM5PR2101MB1047.namprd21.prod.outlook.com
- ([fe80::9583:a05a:e040:2923]) by DM5PR2101MB1047.namprd21.prod.outlook.com
- ([fe80::9583:a05a:e040:2923%7]) with mapi id 15.20.3131.008; Thu, 18 Jun 2020
- 18:32:36 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 6/8] Drivers: hv: vmbus: Remove unnecessary channel->lock
- critical sections (sc_list updaters)
-Thread-Topic: [PATCH 6/8] Drivers: hv: vmbus: Remove unnecessary channel->lock
- critical sections (sc_list updaters)
-Thread-Index: AQHWRMcSkHo30a6xC0+ZcdM3SAEVHqjes8FQ
-Date:   Thu, 18 Jun 2020 18:32:36 +0000
-Message-ID: <DM5PR2101MB104704A675F4EF0B52D97B58D79B0@DM5PR2101MB1047.namprd21.prod.outlook.com>
-References: <20200617164642.37393-1-parri.andrea@gmail.com>
- <20200617164642.37393-7-parri.andrea@gmail.com>
-In-Reply-To: <20200617164642.37393-7-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-18T18:32:35Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a0146b20-bbb7-4d56-8d83-b82021a046f8;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0aca69a1-84c4-495c-9ca3-08d813b5f990
-x-ms-traffictypediagnostic: DM5PR21MB1781:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR21MB1781BE335B1E7A98EA77C6EBD79B0@DM5PR21MB1781.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1051;
-x-forefront-prvs: 0438F90F17
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NPjEKQf4/wgLA1de5iPg3zj0Xg1mym6PcE2I0e7mpuuRstSiAN3weLpEhfveZaFqOKmI7a8xoVBFIOZRtvNPZfl325eqIGf3dbWdiX5S2DBt74AAO+QcWOYLsP1FZ01Lb7yZMOqfTPk0RiSt/7HgtgDkbViTaj9VpUJbM2+HOqHUSEIpcbJXeEaCp6Kkq1FmcqNShWJOH6+4VLacWmsyGbkwAMhu7pyWveEnH0fmRhTD0xrwS1Sp4yy3Ag1HEh3VgUPL2pqyRJuItYohaLMpXpt5gJ4/La1HdNrOMeYAf0FOdp7U8PJQT/g5Irz2I3Xgr3hocUQvrrwuDpgmaQ2hkw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR2101MB1047.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(396003)(39860400002)(136003)(5660300002)(26005)(6506007)(52536014)(86362001)(10290500003)(8936002)(4744005)(316002)(15650500001)(7696005)(186003)(110136005)(54906003)(2906002)(33656002)(8990500004)(4326008)(478600001)(71200400001)(82960400001)(64756008)(82950400001)(66476007)(9686003)(8676002)(66946007)(66556008)(66446008)(55016002)(83380400001)(76116006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: NaYDfc9sy2WLWX4Hka1yNZ3Hw1DuZXJzKEI/N+rjGLoWANdI5MxThkP/VFNuXrQKPZyH4rOBtF9+9IABc6PVi/5jsUu1GwS7MQN0TcL3Ey51VXBc4JjP5i5Rb/fFIKryzYzecDGTKF0J21BzgIJoNEB8hKYQCgt4kRdFAhZoLydJXbAqz0yBjUmEZeQt706br6rKp6lzyMm+xdwyoGctc1R/N8n+n7GkeEFiNV7//hi4qS6VID7sAGoN8PpHJ4Ahfx1TtjkX6q1XLodWo4tM3v5Uz3BePWnNbcISIntQKBAcwGgDYZYFfQUigBI19LC8MHZ0jukwYNsakbkiboBILOFrFDd3Ud8KAS7kl+qtHTCuxleToKA/Ww/t1JCz/Xvv8Hwwh1igM/hLoYZNnyEBE+XtozaPSNcjQB5r/30iYcP+UDYeZPcHQjgVEf8W3FhjIYxWiKh5YOmwx7VBknEq++CH/7bCLrPDfEIxJvmUFeQAe+7ltjFr1pZofv5wQK+Z
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 18 Jun 2020 14:33:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbgFRSdL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 14:33:11 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53426C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 11:33:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=aVLm8R+Q91+8RmIp//VNNtXJYZuPXUFZIZifzMG6rG0=; b=m8WGi2kU1DEDwDunDM6TNESyDX
+        d+hJpplcx22KNNFGei81awuCCPTrAIQKLBuTAS8LOjo3z3aO5F6d/5k9TbA2DnSVZp5EtCrie7Fov
+        KmwLFtB7vadvukNaLzgoSGM6STPSbtKH2NfA86ZrgV8wmMqOkgp5Ts1FmKkBnW5UMq5HIuCrmip3A
+        jK5A4PbuXlY8pyXbvkVt5ogvG1WFtQL4lu69g1G2XlSIbMmS7rcFmrGzjXeommzDRigHDSheXfaJm
+        G78pTZ8AYQR7C5Fvp0AjeIXyhV0Qxo09yy7QDft+lGSMyNaHpela5TzfNuC3Vh9o5BljdLCtLrz1M
+        ozAtU5rA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlzLV-0005rw-Dl; Thu, 18 Jun 2020 18:33:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E007B303CE9;
+        Thu, 18 Jun 2020 20:33:02 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D093D2128846A; Thu, 18 Jun 2020 20:33:02 +0200 (CEST)
+Date:   Thu, 18 Jun 2020 20:33:02 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Tejun Heo <tj@kernel.org>, Andrii Nakryiko <andriin@fb.com>,
+        Francis Ricci <fjricci@fb.com>
+Subject: Re: WARNING with LBR + precise_ip=2 + bpf_get_stackid()
+Message-ID: <20200618183302.GN576905@hirez.programming.kicks-ass.net>
+References: <ED7B9430-6489-4260-B3C5-9CFA2E3AA87A@fb.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR2101MB1047.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0aca69a1-84c4-495c-9ca3-08d813b5f990
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 18:32:36.8919
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eQOyZe0Ydqik2r33bsI3eE8A8JpDV8b/DBd0/2x9TOTv/W/5DmvaIaDT7JA7ClCwFWV+RC+FInP/6f4Eku3wWTymHVE0Jp1DxbNMgoR/yVY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB1781
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ED7B9430-6489-4260-B3C5-9CFA2E3AA87A@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri (Microsoft) <parri.andrea@gmail.com>  Sent: Wednesday, J=
-une 17, 2020 9:47 AM
->=20
-> None of the readers/updaters of sc_list rely on channel->lock for
-> synchronization.
->=20
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> ---
->  drivers/hv/channel_mgmt.c | 25 ++++++-------------------
->  1 file changed, 6 insertions(+), 19 deletions(-)
+On Thu, Jun 18, 2020 at 05:25:24PM +0000, Song Liu wrote:
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> PID: 80430  TASK: ffff888d92c62a80  CPU: 24  COMMAND: "25_scheduler"
+> #0 [fffffe00004cfd88] machine_kexec at ffffffff8104a646
+> #1 [fffffe00004cfdd8] __crash_kexec at ffffffff8114a82f
+> #2 [fffffe00004cfea0] panic at ffffffff810ba99c
+> #3 [fffffe00004cff20] df_debug at ffffffff8104e21d
+> #4 [fffffe00004cff30] do_double_fault at ffffffff8101c9b4
+> #5 [fffffe00004cff50] double_fault at ffffffff81c00b3e
+> [exception RIP: vsnprintf+14]
+> RIP: ffffffff81a3ee6e  RSP: fffffe00004d0ff8  RFLAGS: 00010082
+> RAX: fffffe00004d1070  RBX: fffffe00004d1101  RCX: fffffe00004d1050
+> RDX: ffffffff822c42f5  RSI: 000000007fffffff  RDI: fffffe00004d111a
+> RBP: fffffe00004d10a0   R8: 0000000000000067   R9: ffffffff82209d05
+> R10: ffffffff822a5fd0  R11: ffffffff822a6358  R12: 0000000000000019
+> R13: 0000000000000001  R14: 0000000000000019  R15: ffffffff822b5fd6
+> ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+> --- <DOUBLEFAULT exception stack> ---
+> #6 [fffffe00004d0ff8] vsnprintf at ffffffff81a3ee6e
+> bt: cannot transition from exception stack to current process stack:
+> exception stack pointer: fffffe00004cfd88
+> process stack pointer: fffffe00004d1048
+> current stack base: ffffc900241a0000
+> 
+> 0xfffffe00004d1040 kallsyms_token_index
+> 0xfffffe00004d1048 sprintf
+> 0xfffffe00004d1078 kallsyms_lookup
+> 0xfffffe00004d1098 kallsyms_names
+> 0xfffffe00004d10a8 __sprint_symbol
+> 0xfffffe00004d10d8 textbuf.47672
+> 0xfffffe00004d10e0 always_kmsg_dump
+> 0xfffffe00004d10f8 symbol_string
+> 0xfffffe00004d11c0 textbuf.47672
+> 0xfffffe00004d11e8 textbuf.47672
+> 0xfffffe00004d11f8 textbuf.47672
+> 0xfffffe00004d1200 always_kmsg_dump
+> 0xfffffe00004d1210 kallsyms_token_index
+> 0xfffffe00004d1218 vsnprintf
+> 0xfffffe00004d1220 textbuf.47672
+> 0xfffffe00004d1258 kallsyms_token_index
+> 0xfffffe00004d1270 vscnprintf
+> 0xfffffe00004d1280 vprintk_store
+> 0xfffffe00004d1290 wake_up_klogd
+> 0xfffffe00004d12b0 kallsyms_token_index
+> 0xfffffe00004d12c8 vprintk_emit
+> 0xfffffe00004d1300 entry_SYSCALL_64
+> 0xfffffe00004d1318 vprintk_deferred
+> 0xfffffe00004d1328 printk_deferred
+> 0xfffffe00004d1360 entry_SYSCALL_64
+> 0xfffffe00004d1380 __start_orc_unwind
+> 0xfffffe00004d1388 unwind_next_frame.cold.7
+> 0xfffffe00004d13c8 perf_callchain_kernel
+> 0xfffffe00004d1418 entry_SYSCALL_64
+> 0xfffffe00004d1450 get_perf_callchain
+> 0xfffffe00004d14b0 bpf_get_stack
+
+This, this is where it gets buggerd. This is a BPF problem, not a perf
+problem.
+
+You'll note that if you ask perf for a PERF_SAMPLE_CALLCHAIN we'll do
+that early in setup_pebs_fixed_sample_data().
+
+> 0xfffffe00004d1730 bpf_overflow_handler
+> 0xfffffe00004d1788 __perf_event_overflow
+> 0xfffffe00004d17a0 x86_pmu
+> 0xfffffe00004d17b8 __intel_pmu_pebs_event
+> 0xfffffe00004d17e0 setup_pebs_fixed_sample_data
+> 0xfffffe00004d1890 entry_SYSCALL_64
+> 0xfffffe00004d1ab8 intel_pmu_drain_pebs_nhm
+> 0xfffffe00004d1ac0 setup_pebs_fixed_sample_data
+> 0xfffffe00004d1bb8 handle_pmi_common
+> 0xfffffe00004d1d00 insn_get_sib.part.5
+> 0xfffffe00004d1d10 insn_get_displacement.part.6
+> 0xfffffe00004d1d20 insn_get_immediate.part.7
+> 0xfffffe00004d1d38 __set_pte_vaddr
+> 0xfffffe00004d1d78 __native_set_fixmap
+> 0xfffffe00004d1d80 ghes_copy_tofrom_phys
+> 0xfffffe00004d1e08 intel_pmu_handle_irq
+> 0xfffffe00004d1e48 perf_event_nmi_handler
+> 0xfffffe00004d1e50 perf_event_nmi_handler_na.47078
+> 0xfffffe00004d1e58 nmi_reason_lock
+> 0xfffffe00004d1e60 nmi_handle
+> 0xfffffe00004d1e70 nmi_desc
+> 0xfffffe00004d1e90 nmi_reason_lock
+> 0xfffffe00004d1eb8 default_do_nmi
+> 0xfffffe00004d1ed8 do_nmi
+> 0xfffffe00004d1ef0 nmi
+> 0xfffffe00004d1f78 entry_SYSCALL_64
+> 0xfffffe00004d1fa0 entry_SYSCALL_64
+> 0xfffffe00004d1fd8 entry_SYSCALL_64
+> 
+> The kernel is running the normal NMI path and triggers the above mentioned warnings, 
+> which calls into string formatting path for the warning messages. 
+
+> However, NMIs run 
+> off of its dedicated exception stack which is 4k in size, which is too small for the 
+> full string formatting path to run,
+
+Say what ?! Has printk() grown into such a freakish monster that it
+cannot run on 4k stacks anymore?
+
+I suppose that KSYM_SYMBOL_LEN on-stack buffer in symbol_string()
+doesn't help.
+
+> We noticed that this only happens with precise_ip >= 2. This is caused by 
+> setup_pebs_fixed_sample_data() using pens->real_ip:
+> 
+> 	set_linear_ip(regs, pebs->real_ip);
+> 
+> For our use case, we do need precise_ip=2. So we would like suggestions to fix the
+> warning and/or to avoid double fault. 
+
+It all works as advertised. The BPF program is broken for calling
+bpf_get_stack() on a PEBS event.
