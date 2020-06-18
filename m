@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3519C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE06C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92CA521D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54CCE214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447229;
-	bh=cz/GRFPBLgvpIiNPMxzph2rnnxVKOvaZBXFGZLk7SnY=;
+	s=default; t=1592447239;
+	bh=t32yjB2TpLN1r28meG1mSbZ0wZv5Q6aRzPklQgdrAlU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CVZGguStvKyWs2tHWT6ygPIoYytVaDkFPmtKVigmFWn5iC4G9eLnLhvcbe+dOJa9m
-	 87WkJDRgdDrwgTLeXaW2aXFUGmZgsWndXzDyQabgcGEYM+M7X+48lC4xv2Gc9RuWb+
-	 fb4vNeIAyq1SkB0dG0U2zleU1KSWkeof3rjuvo18=
+	b=HKYoW4N8XVX1ex64j35whM7rDz3KwCdUGODPWkdMPibAJ9I7XXPGYXcOLhchrEc8x
+	 kkuLnlUdaLuxI5U9vacHh2oAbhBeFv2Pv8GxgZUrxp+820VGQPWz1aUji0OhgGzwRI
+	 03hxnusFab+ajuX2oPqovSQ4bQdjqdkdho9uIuV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbgFRC1D (ORCPT
+        id S1729030AbgFRC1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:27:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47910 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:27:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729685AbgFRBQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:16:54 -0400
+        id S1728124AbgFRBQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:16:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA408221F9;
-        Thu, 18 Jun 2020 01:16:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D02B221ED;
+        Thu, 18 Jun 2020 01:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443013;
-        bh=cz/GRFPBLgvpIiNPMxzph2rnnxVKOvaZBXFGZLk7SnY=;
+        s=default; t=1592443010;
+        bh=t32yjB2TpLN1r28meG1mSbZ0wZv5Q6aRzPklQgdrAlU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YzTKhwbhEzSK08pO0BuYmqNYQ2ZhqvMXfS1Kl7xKz6OdAzWYcDsCCdrx/aLc5GAfc
-         zCYnR4tZu+dh6hcFisjGb3+g8a91iyr+gUcNBQaYsrJ/Rxzai1RJQequv47E7apjOT
-         UwalOsJ3oteGaPVY7Yw+UMBD+HHMQntqwK1esVCA=
+        b=JT0XRErpDSnNdNjPcLG749wXthqBX4y8zDORyOITbjbwtCChx+KKFD+AzjYgj9/Ek
+         EPhzlZE3GKAbPNNdSSwfYz0yB1PhEfc2DKEkR8pI/hAQcS++K/cQX9XAXvIyK2bGQf
+         dlfhM3He4QnzLzBNKh75wI+PuGSCJ9NfM5z0trLw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Daniel Wagner <dwagner@suse.de>,
-        Hannes Reinecke <hare@suse.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 016/266] scsi: core: free sgtables in case command setup fails
-Date:   Wed, 17 Jun 2020 21:12:21 -0400
-Message-Id: <20200618011631.604574-16-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 014/266] ARM: integrator: Add some Kconfig selections
+Date:   Wed, 17 Jun 2020 21:12:19 -0400
+Message-Id: <20200618011631.604574-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -62,93 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 20a66f2bf280277ab5bb22e27445153b4eb0ac88 ]
+[ Upstream commit d2854bbe5f5c4b4bec8061caf4f2e603d8819446 ]
 
-In case scsi_setup_fs_cmnd() fails we're not freeing the sgtables allocated
-by scsi_init_io(), thus we leak the allocated memory.
+The CMA and DMA_CMA Kconfig options need to be selected
+by the Integrator in order to produce boot console on some
+Integrator systems.
 
-Free the sgtables allocated by scsi_init_io() in case scsi_setup_fs_cmnd()
-fails.
+The REGULATOR and REGULATOR_FIXED_VOLTAGE need to be
+selected in order to boot the system from an external
+MMC card when using MMCI/PL181 from the device tree
+probe path.
 
-Technically scsi_setup_scsi_cmnd() does not suffer from this problem as it
-can only fail if scsi_init_io() fails, so it does not have sgtables
-allocated. But to maintain symmetry and as a measure of defensive
-programming, free the sgtables on scsi_setup_scsi_cmnd() failure as well.
-scsi_mq_free_sgtables() has safeguards against double-freeing of memory so
-this is safe to do.
+Select these things directly from the Kconfig so we are
+sure to be able to bring the systems up with console
+from any device tree.
 
-While we're at it, rename scsi_mq_free_sgtables() to scsi_free_sgtables().
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205595
-Link: https://lore.kernel.org/r/20200428104605.8143-2-johannes.thumshirn@wdc.com
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_lib.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ arch/arm/mach-integrator/Kconfig | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 91c007d26c1e..206c9f53e9e7 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -551,7 +551,7 @@ static void scsi_uninit_cmd(struct scsi_cmnd *cmd)
- 	}
- }
+diff --git a/arch/arm/mach-integrator/Kconfig b/arch/arm/mach-integrator/Kconfig
+index 982eabc36163..2406cab73835 100644
+--- a/arch/arm/mach-integrator/Kconfig
++++ b/arch/arm/mach-integrator/Kconfig
+@@ -4,6 +4,8 @@ menuconfig ARCH_INTEGRATOR
+ 	depends on ARCH_MULTI_V4T || ARCH_MULTI_V5 || ARCH_MULTI_V6
+ 	select ARM_AMBA
+ 	select COMMON_CLK_VERSATILE
++	select CMA
++	select DMA_CMA
+ 	select HAVE_TCM
+ 	select ICST
+ 	select MFD_SYSCON
+@@ -35,14 +37,13 @@ config INTEGRATOR_IMPD1
+ 	select ARM_VIC
+ 	select GPIO_PL061
+ 	select GPIOLIB
++	select REGULATOR
++	select REGULATOR_FIXED_VOLTAGE
+ 	help
+ 	  The IM-PD1 is an add-on logic module for the Integrator which
+ 	  allows ARM(R) Ltd PrimeCells to be developed and evaluated.
+ 	  The IM-PD1 can be found on the Integrator/PP2 platform.
  
--static void scsi_mq_free_sgtables(struct scsi_cmnd *cmd)
-+static void scsi_free_sgtables(struct scsi_cmnd *cmd)
- {
- 	if (cmd->sdb.table.nents)
- 		sg_free_table_chained(&cmd->sdb.table,
-@@ -563,7 +563,7 @@ static void scsi_mq_free_sgtables(struct scsi_cmnd *cmd)
- 
- static void scsi_mq_uninit_cmd(struct scsi_cmnd *cmd)
- {
--	scsi_mq_free_sgtables(cmd);
-+	scsi_free_sgtables(cmd);
- 	scsi_uninit_cmd(cmd);
- 	scsi_del_cmd_from_list(cmd);
- }
-@@ -1063,7 +1063,7 @@ blk_status_t scsi_init_io(struct scsi_cmnd *cmd)
- 
- 	return BLK_STS_OK;
- out_free_sgtables:
--	scsi_mq_free_sgtables(cmd);
-+	scsi_free_sgtables(cmd);
- 	return ret;
- }
- EXPORT_SYMBOL(scsi_init_io);
-@@ -1214,6 +1214,7 @@ static blk_status_t scsi_setup_cmnd(struct scsi_device *sdev,
- 		struct request *req)
- {
- 	struct scsi_cmnd *cmd = blk_mq_rq_to_pdu(req);
-+	blk_status_t ret;
- 
- 	if (!blk_rq_bytes(req))
- 		cmd->sc_data_direction = DMA_NONE;
-@@ -1223,9 +1224,14 @@ static blk_status_t scsi_setup_cmnd(struct scsi_device *sdev,
- 		cmd->sc_data_direction = DMA_FROM_DEVICE;
- 
- 	if (blk_rq_is_scsi(req))
--		return scsi_setup_scsi_cmnd(sdev, req);
-+		ret = scsi_setup_scsi_cmnd(sdev, req);
- 	else
--		return scsi_setup_fs_cmnd(sdev, req);
-+		ret = scsi_setup_fs_cmnd(sdev, req);
-+
-+	if (ret != BLK_STS_OK)
-+		scsi_free_sgtables(cmd);
-+
-+	return ret;
- }
- 
- static blk_status_t
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called impd1.
+-
+ config INTEGRATOR_CM7TDMI
+ 	bool "Integrator/CM7TDMI core module"
+ 	depends on ARCH_INTEGRATOR_AP
 -- 
 2.25.1
 
