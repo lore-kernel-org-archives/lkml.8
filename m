@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD1EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 874CE206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F952206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447484;
-	bh=VgIIpDrAuDELIijnCUKjW6fNEXXyd3TAfiapNDQUyuo=;
+	s=default; t=1592447490;
+	bh=PGIajTLNvn1TlSKGVmd+/Ro+viHxJzQ4+cuGN8MOxDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gjsEmxVb6tSsVDhmQeYMNpUpDf8GC0LW6EJ23XHEFIEWXtkyeuxrh/4EfGJ4DLVU9
-	 8Hd4PoiBKidEoCCudN7SbT8WQhz898B7GEqyDWP0zOAYE1lm9isIJHQwwslhSZMbi+
-	 1PMdwKqSKXwLcCu2jrL+xG781J7Qxj/7Ja6FiyFY=
+	b=0f2E7ABWVjUupfTY0SpntSc8U22DBrGNHrPPNky6WyjSrN1jVPJfcIYGa70cUjXnL
+	 h4Nvswa35jqnEXgUFbRKnAVMcqqzrSigDXuCJ0qjGXYBAM7YwHE9jFRWqDDFdJ0Xw7
+	 1h8qQ/5wF96zM99lT4hYXlN9Y3tDg0Wq/JE8HrRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729483AbgFRCbX (ORCPT
+        id S1728397AbgFRBP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:31:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45628 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:15:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729485AbgFRBPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:32 -0400
+        id S1729174AbgFRBNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35C7521D7D;
-        Thu, 18 Jun 2020 01:15:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6502F221EB;
+        Thu, 18 Jun 2020 01:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442932;
-        bh=VgIIpDrAuDELIijnCUKjW6fNEXXyd3TAfiapNDQUyuo=;
+        s=default; t=1592442820;
+        bh=PGIajTLNvn1TlSKGVmd+/Ro+viHxJzQ4+cuGN8MOxDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VTpn3whzooc8Y4FNfmN6HIAKK/jGql/15xjQF6SboDu+Od7z5bigCaKxEq5vXETdT
-         Ea5YgaJrM7q68T8HKf3mfc+PNcFFa/9htkC8XjZW228xTnjQWeipPGOyExwHYSoPmr
-         RtS52kL4+3ktlP4hC2mpsYwXunpA3XqsERagLSDY=
+        b=fgmk6Tp5AmLgFnz+Vty6rmPTMvmLI+g0bKagi+CeTJc21J75LlUSdR6pzYG4GH/f1
+         k3LMYjVgajENzu2r97jv2qFDOpz2pxmlKd5M2ceTKHdhcbiwLFMRKGxniW3DaZCeKM
+         Cb2VYR+qVFZAuXp+Ye7CnwrTg+R05PE8YbguMVWM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Murphy <dmurphy@ti.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 345/388] net: marvell: Fix OF_MDIO config check
-Date:   Wed, 17 Jun 2020 21:07:22 -0400
-Message-Id: <20200618010805.600873-345-sashal@kernel.org>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 257/388] PCI: dwc: pci-dra7xx: Use devm_platform_ioremap_resource_byname()
+Date:   Wed, 17 Jun 2020 21:05:54 -0400
+Message-Id: <20200618010805.600873-257-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,36 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Murphy <dmurphy@ti.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 5cd119d9a05f1c1a08778a7305b4ca0f16bc1e20 ]
+[ Upstream commit c8a119779f5609de8dcd98630f71cc7f1b2e4e8c ]
 
-When CONFIG_OF_MDIO is set to be a module the code block is not
-compiled. Use the IS_ENABLED macro that checks for both built in as
-well as module.
+platform_get_resource() may fail and return NULL, so we had better
+check its return value to avoid a NULL pointer dereference a bit later
+in the code. Fix it to use devm_platform_ioremap_resource_byname()
+instead of calling platform_get_resource_byname() and devm_ioremap().
 
-Fixes: cf41a51db8985 ("of/phylib: Use device tree properties to initialize Marvell PHYs.")
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/r/20200429015027.134485-1-weiyongjun1@huawei.com
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/marvell.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pci-dra7xx.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-index 7fc8e10c5f33..a435f7352cfb 100644
---- a/drivers/net/phy/marvell.c
-+++ b/drivers/net/phy/marvell.c
-@@ -337,7 +337,7 @@ static int m88e1101_config_aneg(struct phy_device *phydev)
- 	return marvell_config_aneg(phydev);
- }
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index 3b0e58f2de58..6184ebc9392d 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -840,7 +840,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ 	struct phy **phy;
+ 	struct device_link **link;
+ 	void __iomem *base;
+-	struct resource *res;
+ 	struct dw_pcie *pci;
+ 	struct dra7xx_pcie *dra7xx;
+ 	struct device *dev = &pdev->dev;
+@@ -877,10 +876,9 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ 		return irq;
+ 	}
  
--#ifdef CONFIG_OF_MDIO
-+#if IS_ENABLED(CONFIG_OF_MDIO)
- /* Set and/or override some configuration registers based on the
-  * marvell,reg-init property stored in the of_node for the phydev.
-  *
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ti_conf");
+-	base = devm_ioremap(dev, res->start, resource_size(res));
+-	if (!base)
+-		return -ENOMEM;
++	base = devm_platform_ioremap_resource_byname(pdev, "ti_conf");
++	if (IS_ERR(base))
++		return PTR_ERR(base);
+ 
+ 	phy_count = of_property_count_strings(np, "phy-names");
+ 	if (phy_count < 0) {
 -- 
 2.25.1
 
