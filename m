@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A03A221F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6912220A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445089;
-	bh=eBj2SV0H+lxZ+/rvct+DDT8Lrvn4UMAZ59kaoPGgF3M=;
+	s=default; t=1592445094;
+	bh=wWuPo0w7JN995RnTAfmwiDMPwvHmPWsNeb9cArEjR28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TfvZGXD/GToFB0NAoWqZEKQS1N9tSs5J+CSz3EJXz4c+CHp4BNCownyzW2qeVdDZ6
-	 SPv7kk5DyfPAd8T+geLNFQs8qa/5nX1+57idYNwccfQmmwPDDrF6tmdu2zNZCW/Vq4
-	 gKwCKSEqpZhTSu/QiQEZUjxiY4hHPmKxjiKUI1VQ=
+	b=bKl1EuD5AyJ3DPyMEeohpxyhw03H1OLH0UNPbRSZ3NN85bZGuy+2Vjgtu4AO0ahUX
+	 b5FDUByhqtChasqvUP52wAEYoIHwUQmZIFFzfLc+AoKVeM4I/F/KMUQ6Pp732hAZds
+	 4l+4S+77BiO1/jMDxTbG7cvDeOTvt2CBDM5mOEBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732887AbgFRBv1 (ORCPT
+        id S1733055AbgFRBvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:51:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34940 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:51:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731770AbgFRB1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:04 -0400
+        id S1729791AbgFRB1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2750520897;
-        Thu, 18 Jun 2020 01:27:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A430121D7F;
+        Thu, 18 Jun 2020 01:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443623;
-        bh=eBj2SV0H+lxZ+/rvct+DDT8Lrvn4UMAZ59kaoPGgF3M=;
+        s=default; t=1592443621;
+        bh=wWuPo0w7JN995RnTAfmwiDMPwvHmPWsNeb9cArEjR28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V5YZimYVeGHeths5P+UmTekGGKer1YhprGfMpkPNyfy5MtXk7Yma2acGDHKqTvS7d
-         KfsyKcDBKZfTe+D1fE6SDF/cBXOHnENFrV8pKWUhR30KtxD6Mv1tmu4NF5X3kR/5mf
-         uYZBdPl20mUsf9EmLg1fJFvS0q80/SLyUHdEZmeg=
+        b=zEpQfU2iGpR16q/UX9/NPbWULkrYz+Yaj/jzJEsTOWQl9qTCMpoNJkNb/y8wq8Nrm
+         tvu1St69XvIOljTiq7m0gY7///jJEnMhmLWP9lphM5hyR4YlPupk8QJWQhXPvvG2Qj
+         +DPyBsz1xEmRiToIZmX3pec6mJevCzBuKEKHPYV4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 049/108] PCI: rcar: Fix incorrect programming of OB windows
-Date:   Wed, 17 Jun 2020 21:25:01 -0400
-Message-Id: <20200618012600.608744-49-sashal@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 047/108] serial: amba-pl011: Make sure we initialize the port.lock spinlock
+Date:   Wed, 17 Jun 2020 21:24:59 -0400
+Message-Id: <20200618012600.608744-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -60,72 +63,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Murray <andrew.murray@arm.com>
+From: John Stultz <john.stultz@linaro.org>
 
-[ Upstream commit 2b9f217433e31d125fb697ca7974d3de3ecc3e92 ]
+[ Upstream commit 8508f4cba308f785b2fd4b8c38849c117b407297 ]
 
-The outbound windows (PCIEPAUR(x), PCIEPALR(x)) describe a mapping between
-a CPU address (which is determined by the window number 'x') and a
-programmed PCI address - Thus allowing the controller to translate CPU
-accesses into PCI accesses.
+Valentine reported seeing:
 
-However the existing code incorrectly writes the CPU address - lets fix
-this by writing the PCI address instead.
+[    3.626638] INFO: trying to register non-static key.
+[    3.626639] the code is fine but needs lockdep annotation.
+[    3.626640] turning off the locking correctness validator.
+[    3.626644] CPU: 7 PID: 51 Comm: kworker/7:1 Not tainted 5.7.0-rc2-00115-g8c2e9790f196 #116
+[    3.626646] Hardware name: HiKey960 (DT)
+[    3.626656] Workqueue: events deferred_probe_work_func
+[    3.632476] sd 0:0:0:0: [sda] Optimal transfer size 8192 bytes not a multiple of physical block size (16384 bytes)
+[    3.640220] Call trace:
+[    3.640225]  dump_backtrace+0x0/0x1b8
+[    3.640227]  show_stack+0x20/0x30
+[    3.640230]  dump_stack+0xec/0x158
+[    3.640234]  register_lock_class+0x598/0x5c0
+[    3.640235]  __lock_acquire+0x80/0x16c0
+[    3.640236]  lock_acquire+0xf4/0x4a0
+[    3.640241]  _raw_spin_lock_irqsave+0x70/0xa8
+[    3.640245]  uart_add_one_port+0x388/0x4b8
+[    3.640248]  pl011_register_port+0x70/0xf0
+[    3.640250]  pl011_probe+0x184/0x1b8
+[    3.640254]  amba_probe+0xdc/0x180
+[    3.640256]  really_probe+0xe0/0x338
+[    3.640257]  driver_probe_device+0x60/0xf8
+[    3.640259]  __device_attach_driver+0x8c/0xd0
+[    3.640260]  bus_for_each_drv+0x84/0xd8
+[    3.640261]  __device_attach+0xe4/0x140
+[    3.640263]  device_initial_probe+0x1c/0x28
+[    3.640265]  bus_probe_device+0xa4/0xb0
+[    3.640266]  deferred_probe_work_func+0x7c/0xb8
+[    3.640269]  process_one_work+0x2c0/0x768
+[    3.640271]  worker_thread+0x4c/0x498
+[    3.640272]  kthread+0x14c/0x158
+[    3.640275]  ret_from_fork+0x10/0x1c
 
-For memory transactions, existing DT users describe a 1:1 identity mapping
-and thus this change should have no effect. However the same isn't true for
-I/O.
+Which seems to be due to the fact that after allocating the uap
+structure, nothing initializes the spinlock.
 
-Link: https://lore.kernel.org/r/20191004132941.6660-1-andrew.murray@arm.com
-Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
-Tested-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Its a little confusing, as uart_port_spin_lock_init() is one
+place where the lock is supposed to be initialized, but it has
+an exception for the case where the port is a console.
+
+This makes it seem like a deeper fix is needed to properly
+register the console, but I'm not sure what that entails, and
+Andy suggested that this approach is less invasive.
+
+Thus, this patch resolves the issue by initializing the spinlock
+in the driver, and resolves the resulting warning.
+
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: linux-serial@vger.kernel.org
+Reported-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Reviewed-and-tested-by: Valentin Schneider <valentin.schneider@arm.com>
+Link: https://lore.kernel.org/r/20200428184050.6501-1-john.stultz@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pcie-rcar.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/tty/serial/amba-pl011.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
-index 2b0a1f3b8265..0077afca2493 100644
---- a/drivers/pci/host/pcie-rcar.c
-+++ b/drivers/pci/host/pcie-rcar.c
-@@ -328,11 +328,12 @@ static struct pci_ops rcar_pcie_ops = {
- };
+diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+index 637f72fb6427..e55b55633721 100644
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -2605,6 +2605,7 @@ static int pl011_setup_port(struct device *dev, struct uart_amba_port *uap,
+ 	uap->port.fifosize = uap->fifosize;
+ 	uap->port.flags = UPF_BOOT_AUTOCONF;
+ 	uap->port.line = index;
++	spin_lock_init(&uap->port.lock);
  
- static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
--				   struct resource *res)
-+				   struct resource_entry *window)
- {
- 	/* Setup PCIe address space mappings for each resource */
- 	resource_size_t size;
- 	resource_size_t res_start;
-+	struct resource *res = window->res;
- 	u32 mask;
+ 	amba_ports[index] = uap;
  
- 	rcar_pci_write_reg(pcie, 0x00000000, PCIEPTCTLR(win));
-@@ -346,9 +347,9 @@ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
- 	rcar_pci_write_reg(pcie, mask << 7, PCIEPAMR(win));
- 
- 	if (res->flags & IORESOURCE_IO)
--		res_start = pci_pio_to_address(res->start);
-+		res_start = pci_pio_to_address(res->start) - window->offset;
- 	else
--		res_start = res->start;
-+		res_start = res->start - window->offset;
- 
- 	rcar_pci_write_reg(pcie, upper_32_bits(res_start), PCIEPAUR(win));
- 	rcar_pci_write_reg(pcie, lower_32_bits(res_start) & ~0x7F,
-@@ -377,7 +378,7 @@ static int rcar_pcie_setup(struct list_head *resource, struct rcar_pcie *pci)
- 		switch (resource_type(res)) {
- 		case IORESOURCE_IO:
- 		case IORESOURCE_MEM:
--			rcar_pcie_setup_window(i, pci, res);
-+			rcar_pcie_setup_window(i, pci, win);
- 			i++;
- 			break;
- 		case IORESOURCE_BUS:
 -- 
 2.25.1
 
