@@ -2,245 +2,113 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA3592080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53777207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ulPrDM6Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730483AbgFRNww (ORCPT
+        id S1730499AbgFRNxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:52:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54724 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730205AbgFRNwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:52:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9FFD5AB98;
-        Thu, 18 Jun 2020 13:52:33 +0000 (UTC)
-Subject: Re: [PATCH v2] drm/hisilicon: Code refactoring for hibmc_drv_vdac
-To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
-        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
-        alexander.deucher@amd.com, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
-        linux-kernel@vger.kernel.org
-Cc:     linuxarm@huawei.com
-References: <1586586315-12764-1-git-send-email-tiantao6@hisilicon.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <21d9f165-3fe9-d0cb-35ce-c91889e7e0dd@suse.de>
-Date:   Thu, 18 Jun 2020 15:52:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 18 Jun 2020 09:53:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730502AbgFRNw4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 09:52:56 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75267C0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 06:52:56 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q19so7357016lji.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 06:52:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qj3LT34tWN51iOOJ4mJdNrdJmQibtyKe/xjeI2mJQFQ=;
+        b=ulPrDM6YGm23/CCKuij/YFME1OgWjz12T6he4JmOYnNTklxP5k0EmK7cZUyaC8YxAq
+         6TdEyDL8Zl9bypcF0DRwnjAHwopEollw/H01rMgntDUrVjSJx/qn3QNhKz3G21klYbc/
+         eXbBH48QAoP4DCvhacxL2wrSU1HLQxd8auFqTIiYBTackiw9ZW7XsvbIS1kGLFpFqRAN
+         6MpjGkyG3MwxuWuURobYFu6lYztOye341rdgyq4i9GcxQEdv8Rf+OxrYDP+ZIIDPIlz0
+         w1l/c2bSUQ0kH46r7qElgSjh89MhYQhQlF0y1MR6SCQeOe8YmIfHeerIb4dNTROeVIeY
+         EMjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qj3LT34tWN51iOOJ4mJdNrdJmQibtyKe/xjeI2mJQFQ=;
+        b=sX66HEwMk/wwGgk1ItaWSJ6fg+MUuL9gMz2s8hjidTL4I6YG3IHTpc3FrLRD/zM59V
+         SVuxioOPbGg8+5vsz2w1Oeh3OMQ6isJDHrBFQSpsGXnk6odeSQJ1qipAnslAyVxTC/fn
+         KcwdHYP42ej1+R3ZHEOQ/WnpT5TO6XFwmyqq8Zp8G5tOvdOsEaMg4AYKNgzMUjyrLkr5
+         hdjDyos0Q/j7jPXBzIk1kg/ZiP6o0tFDa1cnh77tejuxaSJZQGO0JAn0US4JuTa7tA1+
+         0biGx0m0g4fPd8loKsdkeFMt110f3DNJRqBDsRl7kdsAH2qGLsAJlUGQxD09NoF9L8v3
+         qvIg==
+X-Gm-Message-State: AOAM530382aAzV6USTozTNcS7VyVQ3cCPdSsJixhjEH2x+NjddflegKf
+        pbBv/aSz0n3XgxMMqlDpiUsqvwK795E=
+X-Google-Smtp-Source: ABdhPJwaMJiel+UnL81pH7RKKu0ZzlHkyaNhB0u/XhfY7cznaMGmnZfRuXmOYmLSbjrorIzuICtysQ==
+X-Received: by 2002:a2e:b0c3:: with SMTP id g3mr2326087ljl.31.1592488374584;
+        Thu, 18 Jun 2020 06:52:54 -0700 (PDT)
+Received: from maximlap.d-systems.local ([185.75.190.112])
+        by smtp.gmail.com with ESMTPSA id f2sm768324lfc.11.2020.06.18.06.52.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 06:52:54 -0700 (PDT)
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+To:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
+Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
+        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
+        linux-integrity@vger.kernel.org, arnd@linaro.org,
+        sumit.garg@linaro.org, Maxim Uvarov <maxim.uvarov@linaro.org>
+Subject: [PATCHv9 0/3] optee: register drivers on optee bus
+Date:   Thu, 18 Jun 2020 16:52:48 +0300
+Message-Id: <20200618135251.5761-1-maxim.uvarov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <1586586315-12764-1-git-send-email-tiantao6@hisilicon.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="bMq42WMT5VsIyVKShMmg9UM3yjBKvRebk"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---bMq42WMT5VsIyVKShMmg9UM3yjBKvRebk
-Content-Type: multipart/mixed; boundary="eShotCSXpdcfDQZHiqDDGiBqtaP8lv2Qy";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
- airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
- alexander.deucher@amd.com, tglx@linutronix.de,
- dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
- linux-kernel@vger.kernel.org
-Cc: linuxarm@huawei.com
-Message-ID: <21d9f165-3fe9-d0cb-35ce-c91889e7e0dd@suse.de>
-Subject: Re: [PATCH v2] drm/hisilicon: Code refactoring for hibmc_drv_vdac
-References: <1586586315-12764-1-git-send-email-tiantao6@hisilicon.com>
-In-Reply-To: <1586586315-12764-1-git-send-email-tiantao6@hisilicon.com>
+v9: - new mailing list in Docs, update kernel version (Jens Wiklander)
+    - use Big Endian format to print UUID (Sumit Garg)
+v8: - fix v7 check.
+v7: - check return value of dev_set_name() (Jarkko Sakkinen)
+v6: - description, comments, patches reorder and destroy workqueue (Sumit Garg)
+v5: - removed pr_err and fix typos in description (Jarkko Sakkinen)
+    - added missed kfree in optee_open()
+v4: - sysfs entry is optee-ta-uuid (Jerome Forissier, Sumit Garg)
+    - added Documentation/ABI/testing/sysfs-bus-optee-devices (Greg Kroah-Hartman)
+v3: - support tee-suppicant restart (Jens Wiklander)
+    - description and comments (Jarkko Sakkinen)
+    - do not name optee drivers by index in sysfs (Sumit Garg)
+v2: - write TEE with capital letters.
+    - declare __optee_enumerate_device() as static.
 
---eShotCSXpdcfDQZHiqDDGiBqtaP8lv2Qy
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Maxim Uvarov (3):
+  optee: use uuid for sysfs driver entry
+  optee: enable support for multi-stage bus enumeration
+  tpm_ftpm_tee: register driver on TEE bus
+Maxim Uvarov (3):
+  optee: use uuid for sysfs driver entry
+  optee: enable support for multi-stage bus enumeration
+  tpm_ftpm_tee: register driver on TEE bus
 
-Hi,
+ .../ABI/testing/sysfs-bus-optee-devices       |  8 +++
+ MAINTAINERS                                   |  1 +
+ drivers/char/tpm/tpm_ftpm_tee.c               | 70 ++++++++++++++++---
+ drivers/tee/optee/core.c                      | 27 ++++++-
+ drivers/tee/optee/device.c                    | 38 +++++-----
+ drivers/tee/optee/optee_private.h             | 10 ++-
+ 6 files changed, 119 insertions(+), 35 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
 
-sorry for letting these patches sit around for so long. I'd say that if
-you waited for a week or two without further responses, it's ok to ping
-people.
+-- 
+2.17.1
 
-Am 11.04.20 um 08:25 schrieb Tian Tao:
-> code refactoring for hibmc_drv_vdac.c, no actual function changes.
->=20
-> v2:
-> remove the debug message.
->=20
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
-> Reviewed-by: Joe Perches <joe@perches.com>
-> ---
->  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c | 50 +++++++---------=
---------
->  1 file changed, 14 insertions(+), 36 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c b/drivers=
-/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
-> index 678ac2e..077b7996 100644
-> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
-> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
-> @@ -52,32 +52,6 @@ static const struct drm_connector_funcs hibmc_connec=
-tor_funcs =3D {
->  	.atomic_destroy_state =3D drm_atomic_helper_connector_destroy_state,
->  };
-> =20
-> -static struct drm_connector *
-> -hibmc_connector_init(struct hibmc_drm_private *priv)
-> -{
-> -	struct drm_device *dev =3D priv->dev;
-> -	struct drm_connector *connector;
-> -	int ret;
-> -
-> -	connector =3D devm_kzalloc(dev->dev, sizeof(*connector), GFP_KERNEL);=
-
-> -	if (!connector) {
-> -		DRM_ERROR("failed to alloc memory when init connector\n");
-> -		return ERR_PTR(-ENOMEM);
-> -	}
-> -
-> -	ret =3D drm_connector_init(dev, connector,
-> -				 &hibmc_connector_funcs,
-> -				 DRM_MODE_CONNECTOR_VGA);
-> -	if (ret) {
-> -		DRM_ERROR("failed to init connector: %d\n", ret);
-> -		return ERR_PTR(ret);
-> -	}
-> -	drm_connector_helper_add(connector,
-> -				 &hibmc_connector_helper_funcs);
-> -
-> -	return connector;
-> -}
-> -
->  static void hibmc_encoder_mode_set(struct drm_encoder *encoder,
->  				   struct drm_display_mode *mode,
->  				   struct drm_display_mode *adj_mode)
-> @@ -109,18 +83,9 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv)=
-
->  	struct drm_connector *connector;
->  	int ret;
-> =20
-> -	connector =3D hibmc_connector_init(priv);
-> -	if (IS_ERR(connector)) {
-> -		DRM_ERROR("failed to create connector: %ld\n",
-> -			  PTR_ERR(connector));
-> -		return PTR_ERR(connector);
-> -	}
-> -
->  	encoder =3D devm_kzalloc(dev->dev, sizeof(*encoder), GFP_KERNEL);
-> -	if (!encoder) {
-> -		DRM_ERROR("failed to alloc memory when init encoder\n");
-> +	if (!encoder)
->  		return -ENOMEM;
-> -	}
-> =20
->  	encoder->possible_crtcs =3D 0x1;
->  	ret =3D drm_encoder_init(dev, encoder, &hibmc_encoder_funcs,
-> @@ -131,6 +96,19 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv)=
-
->  	}
-> =20
->  	drm_encoder_helper_add(encoder, &hibmc_encoder_helper_funcs);
-> +
-> +	connector =3D devm_kzalloc(dev->dev, sizeof(*connector), GFP_KERNEL);=
-
-
-Overall, the patch seems correct, expect for this line. DRM data
-structures should now be allocated with drmm_kzalloc() in drm_managed.h.
-It was added recently.
-
-With devm_kzalloc(), the memory will be released when the HW device goes
-away. If userspace still holds a reference, the driver can segfault.
-Using drmm_kzalloc() delays the release until the memory is really unused=
-=2E
-
-However, hibmc's modesetting pipeline appears to be always the same. I
-think you should consider embedding connector and encoder (and crtc) in
-struct hibmc_drm_private. Would make the code simpler and more robust.
-
-Best regards
-Thomas
-
-
-
-> +	if (!connector)
-> +		return -ENOMEM;
-> +
-> +	ret =3D drm_connector_init(dev, connector, &hibmc_connector_funcs,
-> +				 DRM_MODE_CONNECTOR_VGA);
-> +	if (ret) {
-> +		DRM_ERROR("failed to init connector: %d\n", ret);
-> +		return ret;
-> +	}
-> +	drm_connector_helper_add(connector, &hibmc_connector_helper_funcs);
-> +
->  	drm_connector_attach_encoder(connector, encoder);
-> =20
->  	return 0;
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---eShotCSXpdcfDQZHiqDDGiBqtaP8lv2Qy--
-
---bMq42WMT5VsIyVKShMmg9UM3yjBKvRebk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl7rcZ0ACgkQaA3BHVML
-eiP9QggAptYdaNLZREzAwQ3D109OpCD7FmzN610r8cAnUtL3w2FycjP1iGWhO4UY
-NmdwmKhgVXeQnCp0jrjcZL75cAGgCZA4XRvOrqWES5yoFaMJ3U9ziZ3+nb1e/gUy
-okypHn07qNZjdnksbSKgko4u04aS6KLOgskSZubTHlZeKgPbjkw9UnJIaLMXnNHX
-XNI4pRuB5oRkuply7DqzXmKlLu4J8n/s7J2y1mlXLFaQFhOM4Hlb/4XI1g1R2XyX
-NU4IDle8BPpCt5LajQZctcYz8SyNVIbeCOTIZ9LouohgjzJoa7VFPO1j2AJLi9dr
-jDD6ODlT8W8/uOlYsrhidr1dEu67WQ==
-=ZHIf
------END PGP SIGNATURE-----
-
---bMq42WMT5VsIyVKShMmg9UM3yjBKvRebk--
