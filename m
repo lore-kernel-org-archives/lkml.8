@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDDAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7D1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D3242223F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C97EA2223F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445604;
-	bh=WFhN86/8PgIVAw+/GByvJEeVx2pstmpPDYtGP6ft++4=;
+	s=default; t=1592445608;
+	bh=EKeksiiM1R55g1die0bzLlbZJEqA+dSzeDYYUkrVQR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wlxa5MMaRsy25G/YVszrrLTqjqLi0cs61sGUGtlcV7VRKu45iVoX5bUSJxVTnGtOG
-	 T6Z2+IdQzDeHnHkAKYplA4gPWHg/TuB4MoqnH2uS3cxxdquPksDgYx3qreI18XkvZz
-	 3sZfsVi7kuwneoTf4D4aHCTR5N4tROJU7nCNd/Z0=
+	b=J3dMnZRZ3Hqj6vnp9rTvqlopBpoAaF86+cyDh3xaXTK8A9d9VY9v2LQztjHDuZ/nL
+	 sztIjRG/aoJfSkeWfEuH02Dq4RmF6wSkq74CY80IVfU8Pl4cB7O54nVNr6eIG9o3p7
+	 t3CCff6dFMs7WWZZ96z5fjviFw6ql7AwKdEsw+cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731210AbgFRBY2 (ORCPT
+        id S1731195AbgFRBY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:24:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:24:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729734AbgFRBVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:12 -0400
+        id S1730442AbgFRBVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:21:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7623214DB;
-        Thu, 18 Jun 2020 01:21:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D741220776;
+        Thu, 18 Jun 2020 01:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443270;
-        bh=WFhN86/8PgIVAw+/GByvJEeVx2pstmpPDYtGP6ft++4=;
+        s=default; t=1592443263;
+        bh=EKeksiiM1R55g1die0bzLlbZJEqA+dSzeDYYUkrVQR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L480iq4Qyq3l+fk06aSRUDNESa8Ce0ilsjEr+lI2qstVz+1+ACafi+Br7v4un05fc
-         jWfpUmnjA/dte9l1BpO5aQzVinczKYDRVEDy9LdMmnX6un8IXT1KWTtcLdfr/cKkci
-         KOBvxjhPxyrBraNTsUAEP1FHZO0JRHxJcwhW//7s=
+        b=yKyFvDNzIzEFqMQyiP+FutTE7XWkXb4mpyc+hdTIisTXGtu4vU0pPBbpgIlceRtQ+
+         vVL8F0FLBocYtr5RC6+Nwfb833tkvcgzVL+bDReMpuD5htvVCHBr2idQleUZBHTc1y
+         LWevChedDQNTkHJkAESboUO+MUy6C381Cgyg9NV0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 216/266] ceph: don't return -ESTALE if there's still an open file
-Date:   Wed, 17 Jun 2020 21:15:41 -0400
-Message-Id: <20200618011631.604574-216-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Cornelia Huck <cohuck@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 210/266] vfio/mdev: Fix reference count leak in add_mdev_supported_type
+Date:   Wed, 17 Jun 2020 21:15:35 -0400
+Message-Id: <20200618011631.604574-210-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -61,59 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <lhenriques@suse.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 878dabb64117406abd40977b87544d05bb3031fc ]
+[ Upstream commit aa8ba13cae3134b8ef1c1b6879f66372531da738 ]
 
-Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
-a file handle to dentry"), this fixes another corner case with
-name_to_handle_at/open_by_handle_at.  The issue has been detected by
-xfstest generic/467, when doing:
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object. Thus,
+replace kfree() by kobject_put() to fix this issue. Previous
+commit "b8eb718348b8" fixed a similar problem.
 
- - name_to_handle_at("/cephfs/myfile")
- - open("/cephfs/myfile")
- - unlink("/cephfs/myfile")
- - sync; sync;
- - drop caches
- - open_by_handle_at()
-
-The call to open_by_handle_at should not fail because the file hasn't been
-deleted yet (only unlinked) and we do have a valid handle to it.  -ESTALE
-shall be returned only if i_nlink is 0 *and* i_count is 1.
-
-This patch also makes sure we have LINK caps before checking i_nlink.
-
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Acked-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/export.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/vfio/mdev/mdev_sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ceph/export.c b/fs/ceph/export.c
-index 79dc06881e78..e088843a7734 100644
---- a/fs/ceph/export.c
-+++ b/fs/ceph/export.c
-@@ -172,9 +172,16 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
- static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
- {
- 	struct inode *inode = __lookup_inode(sb, ino);
-+	int err;
-+
- 	if (IS_ERR(inode))
- 		return ERR_CAST(inode);
--	if (inode->i_nlink == 0) {
-+	/* We need LINK caps to reliably check i_nlink */
-+	err = ceph_do_getattr(inode, CEPH_CAP_LINK_SHARED, false);
-+	if (err)
-+		return ERR_PTR(err);
-+	/* -ESTALE if inode as been unlinked and no file is open */
-+	if ((inode->i_nlink == 0) && (atomic_read(&inode->i_count) == 1)) {
- 		iput(inode);
- 		return ERR_PTR(-ESTALE);
+diff --git a/drivers/vfio/mdev/mdev_sysfs.c b/drivers/vfio/mdev/mdev_sysfs.c
+index 7570c7602ab4..f32c582611eb 100644
+--- a/drivers/vfio/mdev/mdev_sysfs.c
++++ b/drivers/vfio/mdev/mdev_sysfs.c
+@@ -110,7 +110,7 @@ static struct mdev_type *add_mdev_supported_type(struct mdev_parent *parent,
+ 				   "%s-%s", dev_driver_string(parent->dev),
+ 				   group->name);
+ 	if (ret) {
+-		kfree(type);
++		kobject_put(&type->kobj);
+ 		return ERR_PTR(ret);
  	}
+ 
 -- 
 2.25.1
 
