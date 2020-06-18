@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6E32070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BFB521D7B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444854;
-	bh=IGcZDGzQwT8lDapCx09AldDJfWfNz+Syf1bWHEnISck=;
+	s=default; t=1592444857;
+	bh=mFoaddF+m9JiGC5ftJhBtqlH9k/GWcHFK59nfe0L50s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IKK7HFXCL+Qs/Tyeeambk1bgeG7rEO1jOZjzzoj8+dZFQOydTXRwZ0Kv3TKfURXet
-	 PBgL8v/s1Wj24Qb4QGCEGxaQqhZXXJz2i1Sybg935M2MDW2+oldusr6/6KOv0q3Bpy
-	 c/inJ+/TY08KdIP7tj5BokbVlWYLSLH6HW0O2rGk=
+	b=CH5+4oAODC9rxCK2cE4zARDK1qC49Njur0lphnYKC7lwFh4ucs2SNbV7TXyrch1U1
+	 yf+exwD9+2BqA4mMSjW1xjer7K83PoLwyH9tjxXty5R+hf3bsyH38b9UpSTO5L6k7t
+	 Hpcub3eDnP4qPH4HuGH1+5gH/GlYQiEkZd4DyDa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733097AbgFRBrd (ORCPT
+        id S1733113AbgFRBrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:47:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36770 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:47:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732049AbgFRB2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:28:13 -0400
+        id S1730276AbgFRB2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:28:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DDCD2220B;
-        Thu, 18 Jun 2020 01:28:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09C4922203;
+        Thu, 18 Jun 2020 01:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443693;
-        bh=IGcZDGzQwT8lDapCx09AldDJfWfNz+Syf1bWHEnISck=;
+        s=default; t=1592443689;
+        bh=mFoaddF+m9JiGC5ftJhBtqlH9k/GWcHFK59nfe0L50s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BdYpaK9QdpiC/mfXVaO/Xz01dCESmLDua47YylgMA4xPTQNT9T93rR9o03L39RkF/
-         bmgmV9fUnb4kAs69N9PNUniO+N5RDSXiF4SgEPl5hG3s90Xd12/nNaYyTjpnbg7rnW
-         CpR3tFj2Ngaj7NRE3SOu8suPpd9C+ZmkUpoCXM98=
+        b=BuDnO718t1NBLRSQfGb64S+rSDKT1q3OjvUby/TVMWyL9YHbZprZE1fo8mgEFYZdd
+         JnIjV43w2lu0Jqlf9ZKK0Nc5KrPj6aKehbI2vdhQLFShuPYXJ9d0//+C7/cfpE6fru
+         mZA7nlwzxVI73QievjQ/fxEN2TRRWWNZiB7ySi00=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.14 104/108] gfs2: fix use-after-free on transaction ail lists
-Date:   Wed, 17 Jun 2020 21:25:56 -0400
-Message-Id: <20200618012600.608744-104-sashal@kernel.org>
+Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 101/108] blktrace: use errno instead of bi_status
+Date:   Wed, 17 Jun 2020 21:25:53 -0400
+Message-Id: <20200618012600.608744-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -59,77 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 
-[ Upstream commit 83d060ca8d90fa1e3feac227f995c013100862d3 ]
+[ Upstream commit 48bc3cd3e07a1486f45d9971c75d6090976c3b1b ]
 
-Before this patch, transactions could be merged into the system
-transaction by function gfs2_merge_trans(), but the transaction ail
-lists were never merged. Because the ail flushing mechanism can run
-separately, bd elements can be attached to the transaction's buffer
-list during the transaction (trans_add_meta, etc) but quickly moved
-to its ail lists. Later, in function gfs2_trans_end, the transaction
-can be freed (by gfs2_trans_end) while it still has bd elements
-queued to its ail lists, which can cause it to either lose track of
-the bd elements altogether (memory leak) or worse, reference the bd
-elements after the parent transaction has been freed.
+In blk_add_trace_spliti() blk_add_trace_bio_remap() use
+blk_status_to_errno() to pass the error instead of pasing the bi_status.
+This fixes the sparse warning.
 
-Although I've not seen any serious consequences, the problem becomes
-apparent with the previous patch's addition of:
-
-	gfs2_assert_warn(sdp, list_empty(&tr->tr_ail1_list));
-
-to function gfs2_trans_free().
-
-This patch adds logic into gfs2_merge_trans() to move the merged
-transaction's ail lists to the sdp transaction. This prevents the
-use-after-free. To do this properly, we need to hold the ail lock,
-so we pass sdp into the function instead of the transaction itself.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/log.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ kernel/trace/blktrace.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index a3208511f35a..f30418911e1b 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -804,8 +804,10 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl,
-  * @new: New transaction to be merged
-  */
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index a60c09e0bda8..30a98156f474 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -1022,8 +1022,10 @@ static void blk_add_trace_split(void *ignore,
  
--static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
-+static void gfs2_merge_trans(struct gfs2_sbd *sdp, struct gfs2_trans *new)
- {
-+	struct gfs2_trans *old = sdp->sd_log_tr;
-+
- 	WARN_ON_ONCE(!test_bit(TR_ATTACHED, &old->tr_flags));
- 
- 	old->tr_num_buf_new	+= new->tr_num_buf_new;
-@@ -817,6 +819,11 @@ static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
- 
- 	list_splice_tail_init(&new->tr_databuf, &old->tr_databuf);
- 	list_splice_tail_init(&new->tr_buf, &old->tr_buf);
-+
-+	spin_lock(&sdp->sd_ail_lock);
-+	list_splice_tail_init(&new->tr_ail1_list, &old->tr_ail1_list);
-+	list_splice_tail_init(&new->tr_ail2_list, &old->tr_ail2_list);
-+	spin_unlock(&sdp->sd_ail_lock);
+ 		__blk_add_trace(bt, bio->bi_iter.bi_sector,
+ 				bio->bi_iter.bi_size, bio_op(bio), bio->bi_opf,
+-				BLK_TA_SPLIT, bio->bi_status, sizeof(rpdu),
+-				&rpdu, blk_trace_bio_get_cgid(q, bio));
++				BLK_TA_SPLIT,
++				blk_status_to_errno(bio->bi_status),
++				sizeof(rpdu), &rpdu,
++				blk_trace_bio_get_cgid(q, bio));
+ 	}
+ 	rcu_read_unlock();
  }
+@@ -1060,7 +1062,8 @@ static void blk_add_trace_bio_remap(void *ignore,
+ 	r.sector_from = cpu_to_be64(from);
  
- static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
-@@ -828,7 +835,7 @@ static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
- 	gfs2_log_lock(sdp);
- 
- 	if (sdp->sd_log_tr) {
--		gfs2_merge_trans(sdp->sd_log_tr, tr);
-+		gfs2_merge_trans(sdp, tr);
- 	} else if (tr->tr_num_buf_new || tr->tr_num_databuf_new) {
- 		gfs2_assert_withdraw(sdp, test_bit(TR_ALLOCED, &tr->tr_flags));
- 		sdp->sd_log_tr = tr;
+ 	__blk_add_trace(bt, bio->bi_iter.bi_sector, bio->bi_iter.bi_size,
+-			bio_op(bio), bio->bi_opf, BLK_TA_REMAP, bio->bi_status,
++			bio_op(bio), bio->bi_opf, BLK_TA_REMAP,
++			blk_status_to_errno(bio->bi_status),
+ 			sizeof(r), &r, blk_trace_bio_get_cgid(q, bio));
+ 	rcu_read_unlock();
+ }
 -- 
 2.25.1
 
