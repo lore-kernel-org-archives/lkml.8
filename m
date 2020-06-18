@@ -2,80 +2,99 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5037BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F3CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24BDD20FC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B924020897
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:51:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aXoNO5iH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgFRGp0 (ORCPT
+        id S1727874AbgFRGvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 02:45:26 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42035 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgFRGp0 (ORCPT
+        Thu, 18 Jun 2020 02:51:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbgFRGvM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 02:45:26 -0400
-Received: from [114.249.250.117] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <aaron.ma@canonical.com>)
-        id 1jloIW-0005Hw-Hd; Thu, 18 Jun 2020 06:45:17 +0000
-From:   Aaron Ma <aaron.ma@canonical.com>
-To:     kuba@kernel.org, jeffrey.t.kirsher@intel.com, davem@davemloft.net,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vitaly.lifshits@intel.com,
-        kai.heng.feng@canonical.com, sasha.neftin@intel.com
-Subject: [v3][PATCH] e1000e: continue to init phy even when failed to disable ULP
-Date:   Thu, 18 Jun 2020 14:45:04 +0800
-Message-Id: <20200618064504.11588-1-aaron.ma@canonical.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200616100512.22512-1-aaron.ma@canonical.com>
-References: <20200616100512.22512-1-aaron.ma@canonical.com>
+        Thu, 18 Jun 2020 02:51:12 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9312C06174E
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 23:51:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6FGRqWtgXD15Eh22+O8zWbquO7KKkqTc+lfdYmXTOtc=; b=aXoNO5iH7w+O2Ud+POcHyxjJJv
+        dZVED8sEXW6C6VUJA7gBX1MEh/uBmcHhgt/GsBoyIxenBaNTfVxgiXmD8I0JMVFiR0cjGUPGhNOdc
+        07UCtPoH4uv0BfxLpmAjblCRUfqefEVw8JgsXfoHY5AXLauaPpQv/ROZ1HydNmdKXLj6zg2TnsrAM
+        +RZ6UlYFJADK0l99TtjGWeV0tyjS4mIn/uFcvxKM4GK1ePzIuiYvugoJc2VhUuDTwAdy1rAhNDIRQ
+        yQiByWNU3po9QvECdfZfbajoS0a7H8uONOewkAlLkqQ4M93M90dPiHB3otgzbutzPJICHfnC/upBg
+        ptJniOSg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jloOC-0006Rf-0S; Thu, 18 Jun 2020 06:51:08 +0000
+Date:   Wed, 17 Jun 2020 23:51:07 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, mingo@kernel.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, paulmck@kernel.org, frederic@kernel.org,
+        tsbogend@alpha.franken.de, axboe@kernel.dk, rjw@rjwysocki.net,
+        daniel.lezcano@linaro.org, dchickles@marvell.com,
+        davem@davemloft.net, kuba@kernel.org, daniel.thompson@linaro.org,
+        gerald.schaefer@de.ibm.com
+Subject: Re: [PATCH 6/6] smp: Cleanup smp_call_function*()
+Message-ID: <20200618065107.GA4406@infradead.org>
+References: <20200615125654.678940605@infradead.org>
+ <20200615131143.434079683@infradead.org>
+ <20200617082349.GA19894@infradead.org>
+ <20200617110401.GG2531@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617110401.GG2531@hirez.programming.kicks-ass.net>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit: e086ba2fccda4 ("e1000e: disable s0ix entry and exit flows
- for ME systems").
-ThinkPad P14s always failed to disable ULP by ME.
-commit: 0c80cdbf3320 ("e1000e: Warn if disabling ULP failed")
-break out of init phy:
+On Wed, Jun 17, 2020 at 01:04:01PM +0200, Peter Zijlstra wrote:
+> On Wed, Jun 17, 2020 at 01:23:49AM -0700, Christoph Hellwig wrote:
+> 
+> > > @@ -178,9 +178,7 @@ static void zpci_handle_fallback_irq(voi
+> > >  		if (atomic_inc_return(&cpu_data->scheduled) > 1)
+> > >  			continue;
+> > >  
+> > > -		cpu_data->csd.func = zpci_handle_remote_irq;
+> > > -		cpu_data->csd.info = &cpu_data->scheduled;
+> > > -		cpu_data->csd.flags = 0;
+> > > +		cpu_data->csd = CSD_INIT(zpci_handle_remote_irq, &cpu_data->scheduled);
+> > 
+> > This looks weird.  I'd much rather see an initialization ala INIT_WORK:
+> > 
+> > 		INIT_CSD(&cpu_data->csd, zpci_handle_remote_irq,
+> > 			 &cpu_data->scheduled);
+> 
+> 
+> like so then?
 
-error log:
-[   42.364753] e1000e 0000:00:1f.6 enp0s31f6: Failed to disable ULP
-[   42.524626] e1000e 0000:00:1f.6 enp0s31f6: PHY Wakeup cause - Unicast Packet
-[   42.822476] e1000e 0000:00:1f.6 enp0s31f6: Hardware Error
+Much better.  Although if we touch all the callers we might as well
+pass the csd as the argument to the callback, as with that we can
+pretty trivially remove the private data field later.
 
-When disable s0ix, E1000_FWSM_ULP_CFG_DONE will never be 1.
-If continue to init phy like before, it can work as before.
-iperf test result good too.
+Btw, it seems the callers that don't have the CSD embedded into the
+containing structure seems to be of these two kinds:
 
-Fixes: 0c80cdbf3320 ("e1000e: Warn if disabling ULP failed")
-Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
----
- drivers/net/ethernet/intel/e1000e/ich8lan.c | 1 -
- 1 file changed, 1 deletion(-)
+ - reimplementing on_each_cpumask (mostly because they can be called
+   from irq context)
+ - reimplenenting smp_call_function_single because they want
+   to sleep instead of busy wait
 
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-index f999cca37a8a..be7475c5529d 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-@@ -303,7 +303,6 @@ static s32 e1000_init_phy_workarounds_pchlan(struct e1000_hw *hw)
- 	ret_val = e1000_disable_ulp_lpt_lp(hw, true);
- 	if (ret_val) {
- 		e_warn("Failed to disable ULP\n");
--		goto out;
- 	}
- 
- 	ret_val = hw->phy.ops.acquire(hw);
--- 
-2.26.2
-
+I wonder if those would be useful primitives for smp.c..
