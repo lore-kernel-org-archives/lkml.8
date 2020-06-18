@@ -2,119 +2,137 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61263C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36376C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35EAA20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C6D20739
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZRw1G/g"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZHO6wpiR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730674AbgFROLX (ORCPT
+        id S1730687AbgFROL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:11:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52324 "EHLO
+        Thu, 18 Jun 2020 10:11:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730457AbgFROLV (ORCPT
+        with ESMTP id S1730277AbgFROLs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:11:21 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E662C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:11:20 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id k11so6559870ejr.9
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:11:20 -0700 (PDT)
+        Thu, 18 Jun 2020 10:11:48 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4405CC0613EE
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:11:48 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y13so3556176lfe.9
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:11:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Yg54d7njUgJIr5/oOvMr1TqPWbfMjWXQqQsrZ0cQ9xU=;
-        b=dZRw1G/ge2Pyp9lVS/oz979LwAUvoLOJ+pApWvx33HkscEqwAb2sNzUKblOK9Vii/F
-         uhfq8K5TkiJ2Vdy7Jr/w7B2vrb4rG2AwreV0WjERod7fGSuJD3bGPZ5oZyJb6gJL0/si
-         Ab653+fNBhymx/gp+e0qwRvfxxEYRFfVXeEMEfy89SMtqwR1whJI0k3vbOV1HTeL+uU8
-         h9bPwab6FXSn8XuvIMDKqSQY4Hfk025/nkLhf4pniJuzwscrGO0p5ej5GB/dJLT8PQBz
-         zMJxFzhRzBmZQbIlqJ7xhd2jnNDA51uXoXd03SRBqOIOgVWZewxb677lwV5U381/TTaU
-         piZw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p5Y6VzjE46+NhDt4mg2S5o4yQ1/eLUcB29QBrcYK8BY=;
+        b=ZHO6wpiR6gUAr5OGQL9Lcu20ukX5A8y/2szri0NCuxCituzyRMXuO27B9wEQfv/wQ5
+         7y3MVf0+4hgPlF8bXFksP8xwoZ/vdomiLdQCze5oKFf1FVpZjnqtLbAF90IwWaEjJXG/
+         EpRVw459oeG5ruYEteC2Hn9T3jUj4kAClnKwWVevZ84vGeUPcRYvg9I1AHJdTqokRt4m
+         f6FsQmiMzanQ1mLDBRXYEX7MDQp15PeiDU3j7ZC7gsS6F8uYpQRyaYITm+DkUwUXCiUi
+         V4DqGZdQUqb/MK6hJwnEqnj9NkzUXPW7bCYIBL1CBG2GkbeibvP2ImUPFA3HzMyvlCcC
+         US4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Yg54d7njUgJIr5/oOvMr1TqPWbfMjWXQqQsrZ0cQ9xU=;
-        b=ByYbkzKKDwlE/UjpWavV/DfQdOz3aLJrqvNjizR7mqNprlLXkFjGoCL1cuZjKJSzfY
-         BeQ0h3snL7bcC7Cxwn8vNAsRgZYsENshDU9O2F7X/pfaorwvjE9TtzBTISwt59YufJEa
-         Md7ngDMXSGUztpHbhO9y5FGTVPPti81NWUQ1aQykvZDYf8pZy/yrBUmFGjWMii+aoQD/
-         fJqvRDQbFmIsNTJFVQ3Wwm+HqN2Qm9LYOR/DwMmpMkMeTrBdNCcji8H+nxCuK5/w3rQ1
-         aHmsz3dclLckuCZnVhoGaUdH68oU2oDeeNTEV5wCrPmwzYU1aGZjR2/oHdkxf9EMlWKU
-         fz1Q==
-X-Gm-Message-State: AOAM532M+MbRk6WJ/UegbZTM840ucEtsKVMXlEyreohbf2Uq0HjJTItK
-        7OqCqYclP0OOzZbh7ZCkR2Gx42kVD9XSv3H7
-X-Google-Smtp-Source: ABdhPJwhOyw2Vz5MOw49Q+Yb8S5U1I4OIIY0lq3QDOnO+74vPUmR9VwzOhoPR84HycniT3kgPo1blQ==
-X-Received: by 2002:a17:906:cede:: with SMTP id si30mr4271836ejb.315.1592489478817;
-        Thu, 18 Jun 2020 07:11:18 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:908:d70:b300:c943:7d59:8784:d6c9])
-        by smtp.googlemail.com with ESMTPSA id y26sm2167230edv.91.2020.06.18.07.11.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 07:11:18 -0700 (PDT)
-From:   Shihab Rashed <shihab.rashed97@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Shihab Rashed <shihab.rashed97@gmail.com>
-Subject: [PATCH] staging: rtl8723bs: os_dep: ioctl_cfg80211: fixed code styl issues
-Date:   Thu, 18 Jun 2020 16:10:02 +0200
-Message-Id: <20200618141002.18895-1-shihab.rashed97@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p5Y6VzjE46+NhDt4mg2S5o4yQ1/eLUcB29QBrcYK8BY=;
+        b=IHLbf7wdSAe3+qy3i0NGTXITbHErPoVyFUw9toRjo/vYM9X1Po2k9pIFW21hLePXN/
+         zIqGkaqA/SXqGDRObiTO/HGQOofvlTMxXtNunSwLgFP04yWlvK76yU7gRIiOXbsZnHy8
+         koEuqCxlnc8ZXU813xKgLrMXSjMbMjDr4ocKqu8vyps+kGL29QB2RnaBAkQmG2SyZxmm
+         9PQqgOX5qU21yyYyRFOoDkJiN3ckZCh37MNAcpqiaYje6l9rCgxXWQzFlGDJD8o4HEpl
+         9Atpc6wIAnRqrTSfO+MVIVSs0u/+Ww/ASMVeOJ0o52LnP8bTDH44tC9Qi3pjwmYlkIIl
+         0cQA==
+X-Gm-Message-State: AOAM530zCQPgB5leOuv28KabfjcoRi1ncwlNKhPwFKM8QU1u2gSdQLg+
+        WGye8dkS77c2mbmbpFM/E/TEjcbL3ay384XAvptEUQ==
+X-Google-Smtp-Source: ABdhPJy7kZ8D6qE5luLc9Fgfu8aDqrqhxjP3QuwJ2YEmh29DYhfXstHRsj34nRVydo3qZV0fE4Ml//GGY0Ob3NcQ6KU=
+X-Received: by 2002:a19:be4b:: with SMTP id o72mr1872950lff.141.1592489506308;
+ Thu, 18 Jun 2020 07:11:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200618134825.487467-1-areber@redhat.com> <20200618134825.487467-4-areber@redhat.com>
+In-Reply-To: <20200618134825.487467-4-areber@redhat.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 18 Jun 2020 16:11:19 +0200
+Message-ID: <CAG48ez1ocnFNSPdVDaVtB2-S+B4uBeLTLaekCYq=m1DuMyA-CA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] prctl: Allow ptrace capable processes to change exe_fd
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
+        =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+        Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Eric Paris <eparis@parisplace.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed two brace coding style issues and one comment style issue found by
-checkpatch.
+On Thu, Jun 18, 2020 at 3:50 PM Adrian Reber <areber@redhat.com> wrote:
+> The current process is authorized to change its /proc/self/exe link via
+> two policies:
+> 1) The current user can do checkpoint/restore In other words is
+>    CAP_SYS_ADMIN or CAP_CHECKPOINT_RESTORE capable.
+> 2) The current user can use ptrace.
+>
+> With access to ptrace facilities, a process can do the following: fork a
+> child, execve() the target executable, and have the child use ptrace()
+> to replace the memory content of the current process. This technique
+> makes it possible to masquerade an arbitrary program as any executable,
+> even setuid ones.
+>
+> This commit also changes the permission error code from -EINVAL to
+> -EPERM for consistency with the rest of the prctl() syscall when
+> checking capabilities.
+[...]
+> diff --git a/kernel/sys.c b/kernel/sys.c
+[...]
+> @@ -2007,12 +2007,23 @@ static int prctl_set_mm_map(int opt, const void __user *addr, unsigned long data
+>
+>         if (prctl_map.exe_fd != (u32)-1) {
+>                 /*
+> -                * Make sure the caller has the rights to
+> -                * change /proc/pid/exe link: only local sys admin should
+> -                * be allowed to.
+> +                * The current process is authorized to change its
+> +                * /proc/self/exe link via two policies:
+> +                * 1) The current user can do checkpoint/restore
+> +                *    In other words is CAP_SYS_ADMIN or
+> +                *    CAP_CHECKPOINT_RESTORE capable.
+> +                * 2) The current user can use ptrace.
+> +                *
+> +                * With access to ptrace facilities, a process can do the
+> +                * following: fork a child, execve() the target executable,
+> +                * and have the child use ptrace() to replace the memory
+> +                * content of the current process. This technique makes it
+> +                * possible to masquerade an arbitrary program as the target
+> +                * executable, even if it is setuid.
 
-Signed-off-by: Shihab Rashed <shihab.rashed97@gmail.com>
----
- drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-index 2fb80b6eb51d..3b06b60cdfd1 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-@@ -117,15 +117,12 @@ static struct ieee80211_supported_band *rtw_spt_band_alloc(
- 	struct ieee80211_supported_band *spt_band = NULL;
- 	int n_channels, n_bitrates;
- 
--	if (band == NL80211_BAND_2GHZ)
--	{
-+	if (band == NL80211_BAND_2GHZ)	{
- 		n_channels = RTW_2G_CHANNELS_NUM;
- 		n_bitrates = RTW_G_RATES_NUM;
--	}
--	else
--	{
-+	} else	{
- 		goto exit;
--	}
-+		}
- 
- 	spt_band = rtw_zmalloc(sizeof(struct ieee80211_supported_band) +
- 			       sizeof(struct ieee80211_channel) * n_channels +
-@@ -203,8 +200,10 @@ rtw_cfg80211_default_mgmt_stypes[NUM_NL80211_IFTYPES] = {
- 
- static int rtw_ieee80211_channel_to_frequency(int chan, int band)
- {
--	/* see 802.11 17.3.8.3.2 and Annex J
--	* there are overlapping channel numbers in 5GHz and 2GHz bands */
-+	/*
-+	 * see 802.11 17.3.8.3.2 and Annex J
-+	 * there are overlapping channel numbers in 5GHz and 2GHz bands
-+	 */
- 	if (band == NL80211_BAND_2GHZ) {
- 		if (chan == 14)
- 			return 2484;
--- 
-2.17.1
-
+(That is not necessarily true in the presence of LSMs like SELinux:
+You'd have to be able to FILE__EXECUTE_NO_TRANS the target executable
+according to the system's security policy.)
