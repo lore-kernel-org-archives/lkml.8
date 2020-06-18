@@ -2,82 +2,155 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F9EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F21C20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60ACA2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgFRQIz (ORCPT
+        id S1732047AbgFRQKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:08:55 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2341 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726981AbgFRQIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:08:53 -0400
-Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id CC8A146B4B7DEC2B92DF;
-        Thu, 18 Jun 2020 17:08:51 +0100 (IST)
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Thu, 18 Jun 2020 17:08:51 +0100
-Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
- by fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Thu, 18 Jun 2020 18:08:50 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     <zohar@linux.ibm.com>, <mjg59@google.com>
-CC:     <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH 11/11] ima: Remove semicolon at the end of ima_get_binary_runtime_size()
-Date:   Thu, 18 Jun 2020 18:06:36 +0200
-Message-ID: <20200618160636.2012-1-roberto.sassu@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200618160329.1263-2-roberto.sassu@huawei.com>
-References: <20200618160329.1263-2-roberto.sassu@huawei.com>
+        Thu, 18 Jun 2020 12:10:45 -0400
+Received: from david.siemens.de ([192.35.17.14]:36485 "EHLO david.siemens.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732004AbgFRQKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 12:10:40 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id 05IG9r1B018927
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jun 2020 18:09:54 +0200
+Received: from [167.87.74.25] ([167.87.74.25])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 05IG9p9m011107;
+        Thu, 18 Jun 2020 18:09:51 +0200
+Subject: Re: [PATCHv4 1/4] dt-bindings: watchdog: Add support for TI K3 RTI
+ watchdog
+To:     Tero Kristo <t-kristo@ti.com>, wim@linux-watchdog.org,
+        linux@roeck-us.net, linux-watchdog@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        devicetree@vger.kernel.org
+References: <20200312095808.19907-1-t-kristo@ti.com>
+ <20200312095808.19907-2-t-kristo@ti.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <d576a40f-46fb-7ad9-7bfe-11891f9867a6@siemens.com>
+Date:   Thu, 18 Jun 2020 18:09:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.204.65.160]
-X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
- fraeml714-chm.china.huawei.com (10.206.15.33)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200312095808.19907-2-t-kristo@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch removes the unnecessary semicolon at the end of
-ima_get_binary_runtime_size().
+On 12.03.20 10:58, Tero Kristo wrote:
+> TI K3 SoCs contain an RTI (Real Time Interrupt) module which can be
+> used to implement a windowed watchdog functionality. Windowed watchdog
+> will generate an error if it is petted outside the time window, either
+> too early or too late.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+> v4:
+>   * changed license to dual
+>   * added documentation for missing properties
+>   * added ref to watchdog.yaml
+>   * renamed main_rti0 to watchdog0 in example
+> 
+>  .../bindings/watchdog/ti,rti-wdt.yaml         | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+> new file mode 100644
+> index 000000000000..e83026fef2e9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/ti,rti-wdt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments K3 SoC Watchdog Timer
+> +
+> +maintainers:
+> +  - Tero Kristo <t-kristo@ti.com>
+> +
+> +description:
+> +  The TI K3 SoC watchdog timer is implemented via the RTI (Real Time
+> +  Interrupt) IP module. This timer adds a support for windowed watchdog
+> +  mode, which will signal an error if it is pinged outside the watchdog
+> +  time window, meaning either too early or too late. The error signal
+> +  generated can be routed to either interrupt a safety controller or
+> +  to directly reset the SoC.
+> +
+> +allOf:
+> +  - $ref: "watchdog.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,j7-rti-wdt
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  assigned-clocks:
+> +    maxItems: 1
+> +
+> +  assigned-clocks-parents:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - power-domains
+> +
+> +examples:
+> +  - |
+> +    /*
+> +     * RTI WDT in main domain on J721e SoC. Assigned clocks are used to
+> +     * select the source clock for the watchdog, forcing it to tick with
+> +     * a 32kHz clock in this case.
+> +     */
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +
+> +    watchdog0: rti@2200000 {
+> +        compatible = "ti,rti-wdt";
 
-Cc: stable@vger.kernel.org
-Fixes: d158847ae89a2 ("ima: maintain memory size needed for serializing the measurement list")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
----
- security/integrity/ima/ima_queue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+At some stage, you changed the compatible string to something
+J721e-specific. This one wasn't updated.
 
-diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-index fb4ec270f620..c096ef8945c7 100644
---- a/security/integrity/ima/ima_queue.c
-+++ b/security/integrity/ima/ima_queue.c
-@@ -133,7 +133,7 @@ unsigned long ima_get_binary_runtime_size(void)
- 		return ULONG_MAX;
- 	else
- 		return binary_runtime_size + sizeof(struct ima_kexec_hdr);
--};
-+}
- 
- static int ima_pcr_extend(struct tpm_digest *digests_arg, int pcr)
- {
+> +        reg = <0x0 0x2200000 0x0 0x100>;
+> +        clocks = <&k3_clks 252 1>;
+> +        power-domains = <&k3_pds 252 TI_SCI_PD_EXCLUSIVE>;
+> +        assigned-clocks = <&k3_clks 252 1>;
+> +        assigned-clock-parents = <&k3_clks 252 5>;
+> +    };
+> 
+
+And where is the binding for the AM65x? I know that PG1 has nice
+erratum, but I would expect PG2 to be fine and register-wise compatible, no?
+
+Jan
+
 -- 
-2.17.1
-
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
