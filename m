@@ -2,127 +2,107 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07582C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64664C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBA26208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592503042;
-	bh=CpFWwPudG4VycBDt9MHz0afTFmGzYGQJeQyidiFbwYs=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=iBjmBchdyBaSZCubKgIqd+4B/OX7IrnL8PDOW7S18JgbWwn0gWlEV7HuZKZYX5iWj
-	 IeoGbOBrvwebxsY/3Ym81rh2wXdb80W7RLro/SbceQK3e2Th30IyqKhOIqcwstgoKq
-	 tK57dkbMM+tSVP632/MNL0ufRzaK6hzfOlC5pglw=
+	by mail.kernel.org (Postfix) with ESMTP id 3FFCB207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgFRR5V (ORCPT
+        id S1729414AbgFRR5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:57:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34428 "EHLO mail.kernel.org"
+        Thu, 18 Jun 2020 13:57:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728198AbgFRR5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 13:57:20 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1729255AbgFRR5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 13:57:41 -0400
+Received: from home.goodmis.org (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33C6620734;
-        Thu, 18 Jun 2020 17:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592503040;
-        bh=CpFWwPudG4VycBDt9MHz0afTFmGzYGQJeQyidiFbwYs=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=0DoXDyQAFSO+Ybw3F297GmKIj0ze8moUADsxYo/i5hyigIMYA14F8u0iRPJX1xyFV
-         mnGcnaVHDXnobaD3k540slOUnK1d89LPoVmU/04UASXSNgXJilT/bmZ4vHjSH5psPj
-         mXCZwTnOR2HEQl/UlYjIaXWleUuHqz8AqdbPBXMc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 0309B35229B4; Thu, 18 Jun 2020 10:57:20 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 10:57:19 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
- ptrs
-Message-ID: <20200618175719.GT2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200525214800.93072-1-urezki@gmail.com>
- <20200525214800.93072-10-urezki@gmail.com>
- <20200617234609.GA10087@paulmck-ThinkPad-P72>
- <20200618005214.GN8681@bombadil.infradead.org>
- <20200618031823.GQ2723@paulmck-ThinkPad-P72>
- <20200618173520.GC14613@pc636>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E2F020734;
+        Thu, 18 Jun 2020 17:57:40 +0000 (UTC)
+Date:   Thu, 18 Jun 2020 13:57:33 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
+        frederic@kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        cai@lca.pw, mgorman@techsingularity.net
+Subject: Re: [RFC][PATCH 7/7] sched: Replace rq::wake_list
+Message-ID: <20200618175733.GA26895@home.goodmis.org>
+References: <20200526161057.531933155@infradead.org>
+ <20200526161908.129371594@infradead.org>
+ <20200604141837.GA179816@roeck-us.net>
+ <20200605002433.GA148196@sol.localdomain>
+ <20200605074154.GB2750@hirez.programming.kicks-ass.net>
+ <20200605161532.GD1373@sol.localdomain>
+ <53318971-561c-b445-0408-530b3d3ba44e@roeck-us.net>
+ <20200609202134.GA1105@sol.localdomain>
+ <20200609212509.GA239889@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200618173520.GC14613@pc636>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200609212509.GA239889@roeck-us.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 07:35:20PM +0200, Uladzislau Rezki wrote:
-> > > 
-> > > I don't think that replacing direct function calls with indirect function
-> > > calls is a great suggestion with the current state of play around branch
-> > > prediction.
-> > > 
-> > > I'd suggest:
-> > > 
-> > >  			rcu_lock_acquire(&rcu_callback_map);
-> > > 			trace_rcu_invoke_kfree_bulk_callback(rcu_state.name,
-> > > 				bkvhead[i]->nr_records, bkvhead[i]->records);
-> > >  			if (i == 0) {
-> > >  				kfree_bulk(bkvhead[i]->nr_records,
-> > >  					bkvhead[i]->records);
-> > >  			} else {
-> > >  				for (j = 0; j < bkvhead[i]->nr_records; j++) {
-> > >  					vfree(bkvhead[i]->records[j]);
-> > >  				}
-> > >  			}
-> > >  			rcu_lock_release(&rcu_callback_map);
-> > > 
-> > > But I'd also suggest a vfree_bulk be added.  There are a few things
-> > > which would be better done in bulk as part of the vfree process
-> > > (we batch them up already, but i'm sure we could do better).
+On Tue, Jun 09, 2020 at 02:25:09PM -0700, Guenter Roeck wrote:
 > > 
-> > I suspect that he would like to keep the tracing.
+> > Still occurring on Linus' tree.  This needs to be fixed.  (And not by removing
+> > support for randstruct; that's not a "fix"...)
 > > 
-> > It might be worth trying the branches, given that they would be constant
-> > and indexed by "i".  The compiler might well remove the indirection.
-> > 
-> > The compiler guys brag about doing so, which of course might or might
-> > not have any correlation to a given compiler actually doing so.  :-/
-> > 
-> > Having a vfree_bulk() might well be useful, but I would feel more
-> > confidence in that if there were other callers of kfree_bulk().
-> >
-> Hmm... I think replacing that with vfree_bulk() is a good idea though.
+> 
+> How about the hack below ?
 
-In other words, get rid of kfree_bulk() in favor of vfree_bulk()?
+My test suite failed due to this bug (on my allmodconfig test).
 
-> > But again, either way, future work as far as this series is concerned.
-> > 
-> What do you mean: is concerned?
+Your hack appears to fix it. I've applied it to my "fixes" patches applied to
+my test suite before building my kernels.
 
-Apologies for the strange English.  How about this?
+Thanks!
 
-"This series is OK as is.  Any comments above did not prevent me from
-taking these patches, but instead discuss possible future work."
+-- Steve
 
-> We are planning to implement kfree_rcu() to be integrated directly into
-> SLAB: SLAB, SLUB, SLOB. So, there are plenty of future work :)
 
-And I am glad that this is still the goal.  ;-)
-
-							Thanx, Paul
+> 
+> Guenter
+> 
+> ---
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index c5d96e3e7fff..df1cbb04f9b3 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -629,6 +629,15 @@ struct wake_q_node {
+>  	struct wake_q_node *next;
+>  };
+>  
+> +/*
+> + * Hack around assumption that wake_entry_type follows wake_entry even with
+> + * CONFIG_GCC_PLUGIN_RANDSTRUCT=y.
+> + */
+> +struct _wake_entry {
+> +	struct llist_node	wake_entry;
+> +	unsigned int		wake_entry_type;
+> +};
+> +
+>  struct task_struct {
+>  #ifdef CONFIG_THREAD_INFO_IN_TASK
+>  	/*
+> @@ -653,8 +662,9 @@ struct task_struct {
+>  	unsigned int			ptrace;
+>  
+>  #ifdef CONFIG_SMP
+> -	struct llist_node		wake_entry;
+> -	unsigned int			wake_entry_type;
+> +	struct _wake_entry		_we;
+> +#define wake_entry		_we.wake_entry
+> +#define wake_entry_type		_we.wake_entry_type
+>  	int				on_cpu;
+>  #ifdef CONFIG_THREAD_INFO_IN_TASK
+>  	/* Current CPU: */
