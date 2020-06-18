@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B53BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 254EA207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20CF2207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444010;
-	bh=E5EFm55ZnNsfeIRxr5naeScJyOcG1xSOr9Zt7HyEghY=;
+	s=default; t=1592444015;
+	bh=pavhGKGyWx6CGwzqnnEJzC1BuJLEq611bP7n5T+QGDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jwrEJzR7Or+0t6bAUwPYVaCOTZvwzIhFJOWcUhk7xnP7DZspUziU+4DOqw8+gjszi
-	 wcZBcUNVmKlk+qZ5EbnxZJiSnMeLssPqF1f6Cz/Mmmn7Imrj9TRAHCckAITB5e+r8Y
-	 +74j6bNWbHib2phhtmlN8NaIUkzqeJLyo37Qs9f8=
+	b=t8QipojvGTZ9pLwnRKnfj8CIsbWEnTA674HxoBCVZr1dgpKqCI1o9/TFrzzbQK1VR
+	 nUKXzWKQIM36lRxDADsrANBBsNmyVuZDoc4BQPGFBrkx+3sTtH3Sr3BCCPx8qpSLPo
+	 f2yxOmIioQATfmfSMjFzobHDYbdaIYIVkC+9rS9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732098AbgFRBd2 (ORCPT
+        id S1732533AbgFRBdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:33:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40972 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:33:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731836AbgFRBao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:30:44 -0400
+        id S1732616AbgFRBar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:30:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C34122242;
-        Thu, 18 Jun 2020 01:30:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FF1D2224E;
+        Thu, 18 Jun 2020 01:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443844;
-        bh=E5EFm55ZnNsfeIRxr5naeScJyOcG1xSOr9Zt7HyEghY=;
+        s=default; t=1592443846;
+        bh=pavhGKGyWx6CGwzqnnEJzC1BuJLEq611bP7n5T+QGDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JJbYYkWVP8ifh4pxfQ12wpfRtt1bP9bNp0BNz4VuDVpA2tkZXkPZq6Iu6yXV+9vlu
-         kAsjEOhmKGUxMEcZQM/De453yBnJE/yRQOzuxQA7jhIyqqNBTCC+VkfvaCJWPzkKVb
-         Nqg8xHlfYd/CgXetdouNqIx9rvNnwWzb0QBmDkuw=
+        b=eHta+rBmeh5YD2/P9OLCkwUvriMd09snb804UVLTg7msI28JNHRaHmOhdQI9uLLZ+
+         Mt/XRfYsjfLIKiaa36Y4Jwm3PHlcNpcFzwM4RrHiBh2vP0p7iqQhfuGrQzkmcFOW8W
+         hSVXs5yGr1iuEIcn/eLHQOi0tgOYNV1tcJ6hHB+U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 29/60] serial: amba-pl011: Make sure we initialize the port.lock spinlock
-Date:   Wed, 17 Jun 2020 21:29:33 -0400
-Message-Id: <20200618013004.610532-29-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 31/60] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
+Date:   Wed, 17 Jun 2020 21:29:35 -0400
+Message-Id: <20200618013004.610532-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
 References: <20200618013004.610532-1-sashal@kernel.org>
@@ -63,85 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Stultz <john.stultz@linaro.org>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 8508f4cba308f785b2fd4b8c38849c117b407297 ]
+[ Upstream commit 66ff14e59e8a30690755b08bc3042359703fb07a ]
 
-Valentine reported seeing:
+7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
+Linux to enable ASPM, but for some undocumented reason, it didn't enable
+ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
 
-[    3.626638] INFO: trying to register non-static key.
-[    3.626639] the code is fine but needs lockdep annotation.
-[    3.626640] turning off the locking correctness validator.
-[    3.626644] CPU: 7 PID: 51 Comm: kworker/7:1 Not tainted 5.7.0-rc2-00115-g8c2e9790f196 #116
-[    3.626646] Hardware name: HiKey960 (DT)
-[    3.626656] Workqueue: events deferred_probe_work_func
-[    3.632476] sd 0:0:0:0: [sda] Optimal transfer size 8192 bytes not a multiple of physical block size (16384 bytes)
-[    3.640220] Call trace:
-[    3.640225]  dump_backtrace+0x0/0x1b8
-[    3.640227]  show_stack+0x20/0x30
-[    3.640230]  dump_stack+0xec/0x158
-[    3.640234]  register_lock_class+0x598/0x5c0
-[    3.640235]  __lock_acquire+0x80/0x16c0
-[    3.640236]  lock_acquire+0xf4/0x4a0
-[    3.640241]  _raw_spin_lock_irqsave+0x70/0xa8
-[    3.640245]  uart_add_one_port+0x388/0x4b8
-[    3.640248]  pl011_register_port+0x70/0xf0
-[    3.640250]  pl011_probe+0x184/0x1b8
-[    3.640254]  amba_probe+0xdc/0x180
-[    3.640256]  really_probe+0xe0/0x338
-[    3.640257]  driver_probe_device+0x60/0xf8
-[    3.640259]  __device_attach_driver+0x8c/0xd0
-[    3.640260]  bus_for_each_drv+0x84/0xd8
-[    3.640261]  __device_attach+0xe4/0x140
-[    3.640263]  device_initial_probe+0x1c/0x28
-[    3.640265]  bus_probe_device+0xa4/0xb0
-[    3.640266]  deferred_probe_work_func+0x7c/0xb8
-[    3.640269]  process_one_work+0x2c0/0x768
-[    3.640271]  worker_thread+0x4c/0x498
-[    3.640272]  kthread+0x14c/0x158
-[    3.640275]  ret_from_fork+0x10/0x1c
+Remove this exclusion so we can enable ASPM on these links.
 
-Which seems to be due to the fact that after allocating the uap
-structure, nothing initializes the spinlock.
+The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
+PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
+Intel SoC to enter deeper Package C-states, which is a significant power
+savings.
 
-Its a little confusing, as uart_port_spin_lock_init() is one
-place where the lock is supposed to be initialized, but it has
-an exception for the case where the port is a console.
-
-This makes it seem like a deeper fix is needed to properly
-register the console, but I'm not sure what that entails, and
-Andy suggested that this approach is less invasive.
-
-Thus, this patch resolves the issue by initializing the spinlock
-in the driver, and resolves the resulting warning.
-
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: linux-serial@vger.kernel.org
-Reported-by: Valentin Schneider <valentin.schneider@arm.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Reviewed-and-tested-by: Valentin Schneider <valentin.schneider@arm.com>
-Link: https://lore.kernel.org/r/20200428184050.6501-1-john.stultz@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bhelgaas: commit log]
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/amba-pl011.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/pcie/aspm.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index 899a77187bde..c5da46f7b909 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -2323,6 +2323,7 @@ static int pl011_setup_port(struct device *dev, struct uart_amba_port *uap,
- 	uap->port.fifosize = uap->fifosize;
- 	uap->port.flags = UPF_BOOT_AUTOCONF;
- 	uap->port.line = index;
-+	spin_lock_init(&uap->port.lock);
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index c6a012b5ba39..966b6947e565 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -388,16 +388,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
  
- 	amba_ports[index] = uap;
+ 	/* Setup initial capable state. Will be updated later */
+ 	link->aspm_capable = link->aspm_support;
+-	/*
+-	 * If the downstream component has pci bridge function, don't
+-	 * do ASPM for now.
+-	 */
+-	list_for_each_entry(child, &linkbus->devices, bus_list) {
+-		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
+-			link->aspm_disable = ASPM_STATE_ALL;
+-			break;
+-		}
+-	}
  
+ 	/* Get and check endpoint acceptable latencies */
+ 	list_for_each_entry(child, &linkbus->devices, bus_list) {
 -- 
 2.25.1
 
