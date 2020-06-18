@@ -2,130 +2,176 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2688DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2EAC21707
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:44:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xh8lFTG0"
+	by mail.kernel.org (Postfix) with ESMTP id 0458E214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:55:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgFRDoD (ORCPT
+        id S1727870AbgFRDzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 23:44:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgFRDoC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 23:44:02 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF11C06174E;
-        Wed, 17 Jun 2020 20:44:02 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id u8so1914631pje.4;
-        Wed, 17 Jun 2020 20:44:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=1Rgq0ulDPtp4yL9OdQkGowJ9k/7ZXwP4nQO/fYmYMbM=;
-        b=Xh8lFTG082UWXegg2JpUiaBdyxR5+66Tax9pDwaZnh63dJCF3Wsx+Vb5MqF+DJiXWe
-         46+7dFEvdQq1GlwQ4y5KprkaYajwpovX5/iAHlGU5a3zbZ3PAJYnM3C6dEIw1dqruSIQ
-         fFSjnJbpsC/HjBInlX0Wcx6aWgix7nvVlUnmSrcoQc2xIe2J6gutgsXS144sPbjcgPzy
-         ZSKA2rpxwpXfWwsSyt8KoucZAga+s+82sNrN726YGAbg2nZDd/SIII+9XVioL7sTCFe/
-         SU5jTSYo1EtlR0xgmEzE/hm6sihHYIqqSRD+kXbHx41+Mk8SkAQF6FqHafpXOAhy0+vS
-         l2Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1Rgq0ulDPtp4yL9OdQkGowJ9k/7ZXwP4nQO/fYmYMbM=;
-        b=bVUuD8WsOhTZfwVZ8zcIFh8nvQJK3hrz/jZd68lVRHlvM5+JL4nzYN3AkTXQ2vrYRN
-         gBrVvcUQ575HgwyBtIIL62+t/UpaUQKOkDYv1Dg6lcTIxxJLGF8Xsftd9HmfbgVNiUDa
-         YZeJkbhmI/QA7MynTYfbbkSWG64o6Ygoxqia1YK8jHWFI56BeRuBc4QwoZ4cXcsaoQYi
-         Di5AEOD9712cuG3dV7gxZQ6PowO8hXA2nbW7c7UmsoWC1PkkLuLparUNJxA9dy1w+ab6
-         /HR5IsVr+GaK+3VO4uOr2O8VBimE0nO4m75Ta1Nl2PBVpGkEm9fGwh0a2eBHvHtreWpA
-         BvmA==
-X-Gm-Message-State: AOAM533TfZ/ShPr1BS1yMsCcQw4hNtMzdWnQuj6OwsNK1s7b8u/K3/0m
-        ikcDLq0cSW3rhrVFQVSPH92a125P
-X-Google-Smtp-Source: ABdhPJy83+fOVe5D78nh+uY3Ofr/Hi/62J/UjRsIJ5oTOKKnTAN5pZGy+pbcpkDkKjP3ONLWLAzFFQ==
-X-Received: by 2002:a17:90a:ac0f:: with SMTP id o15mr2212743pjq.105.1592451841385;
-        Wed, 17 Jun 2020 20:44:01 -0700 (PDT)
-Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id t76sm1193806pfc.220.2020.06.17.20.44.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2020 20:44:00 -0700 (PDT)
-Subject: Re: [PATCH] [net/sched] Fix null pointer deref skb in tc_ctl_action
-To:     Gaurav Singh <gaurav1086@gmail.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "open list:TC subsystem" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200618014328.28668-1-gaurav1086@gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <c84daca7-4103-9f56-5cf8-a09a75159ebd@gmail.com>
-Date:   Wed, 17 Jun 2020 20:43:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 17 Jun 2020 23:55:40 -0400
+Received: from mga04.intel.com ([192.55.52.120]:26543 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726948AbgFRDzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 23:55:40 -0400
+IronPort-SDR: fbVK/5Z4arKqxun4Bh4biFws6uPMtNJq6NfBAzrrrk6oXkx7myLWfsFgj5jo3yGyi6VeQ75z4E
+ mBgqdOK0027Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2020 20:55:34 -0700
+IronPort-SDR: YidyLnIGEIhDKUCHrbbiEcPumcpcA2uViDHzXKnpRC2CUpmQhG5qQ8/qQNkXxiyh0WhXXlo2Of
+ VmAlBOT/CNYw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,525,1583222400"; 
+   d="scan'208";a="450493737"
+Received: from lkp-server02.sh.intel.com (HELO 5ce11009e457) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 17 Jun 2020 20:55:31 -0700
+Received: from kbuild by 5ce11009e457 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jlleE-00003e-Co; Thu, 18 Jun 2020 03:55:30 +0000
+Date:   Thu, 18 Jun 2020 11:55:12 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cleanups] BUILD SUCCESS
+ 2accfa69050c2a0d6fc6106f609208b3e9622b26
+Message-ID: <5eeae5a0.YU80VpEI077amDB2%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200618014328.28668-1-gaurav1086@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cleanups
+branch HEAD: 2accfa69050c2a0d6fc6106f609208b3e9622b26  cpu/speculation: Add prototype for cpu_show_srbds()
 
+elapsed time: 726m
 
-On 6/17/20 6:43 PM, Gaurav Singh wrote:
-> Add null check for skb
-> 
+configs tested: 109
+configs skipped: 6
 
-Bad choice really.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-You have to really understand code intent before trying to fix it.
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+mips                           ip28_defconfig
+xtensa                    xip_kc705_defconfig
+m68k                        mvme16x_defconfig
+arm                            mmp2_defconfig
+arm                          ep93xx_defconfig
+mips                           xway_defconfig
+sparc                            alldefconfig
+arm                         mv78xx0_defconfig
+powerpc                     mpc83xx_defconfig
+c6x                              alldefconfig
+xtensa                              defconfig
+riscv                          rv32_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20200617
+i386                 randconfig-a002-20200617
+i386                 randconfig-a001-20200617
+i386                 randconfig-a004-20200617
+i386                 randconfig-a005-20200617
+i386                 randconfig-a003-20200617
+x86_64               randconfig-a015-20200617
+x86_64               randconfig-a011-20200617
+x86_64               randconfig-a016-20200617
+x86_64               randconfig-a014-20200617
+x86_64               randconfig-a012-20200617
+x86_64               randconfig-a013-20200617
+i386                 randconfig-a015-20200617
+i386                 randconfig-a011-20200617
+i386                 randconfig-a014-20200617
+i386                 randconfig-a016-20200617
+i386                 randconfig-a013-20200617
+i386                 randconfig-a012-20200617
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allmodconfig
+um                               allyesconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
 
-> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
-> ---
->  net/sched/act_api.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/sched/act_api.c b/net/sched/act_api.c
-> index 8ac7eb0a8309..fd584821d75a 100644
-> --- a/net/sched/act_api.c
-> +++ b/net/sched/act_api.c
-> @@ -1473,9 +1473,12 @@ static const struct nla_policy tcaa_policy[TCA_ROOT_MAX + 1] = {
->  static int tc_ctl_action(struct sk_buff *skb, struct nlmsghdr *n,
->  			 struct netlink_ext_ack *extack)
->  {
-> +	if (!skb)
-> +		return 0;
-
-
-We do not allow this
-
-warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
-
-> +
->  	struct net *net = sock_net(skb->sk);
->  	struct nlattr *tca[TCA_ROOT_MAX + 1];
-> -	u32 portid = skb ? NETLINK_CB(skb).portid : 0;
-> +	u32 portid = NETLINK_CB(skb).portid;
->  	int ret = 0, ovr = 0;
->  
->  	if ((n->nlmsg_type != RTM_GETACTION) &&
-> 
-
-Please compile your patches, do not expect us from doing this.
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
