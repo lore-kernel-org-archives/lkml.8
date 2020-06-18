@@ -2,57 +2,61 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA282C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4012C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDB121974
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE41820897
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444875;
-	bh=tNCa20it20TAFV8/6bFK9+ti07nFHI+lr1VPJCykpbs=;
+	s=default; t=1592444877;
+	bh=tzNlaL0+cJsGcwUowAApTOrBiy72ZUL3GV3N+eP8Bfc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kv40p1u8iPjo6p9w5duwMk74dTO4TX/vO0K0Z7h1fKbzRzTY9ADoZ3kafrzRnKqGq
-	 EpoQL3Iqrc0XL8zKCJGilUHuF/6D+fg1Wkl9ghzQMVIn4uQ7czqKGwRL1b5I5QcIBj
-	 GVAoo7uK5zzT0nrE+/7618fBdqUqy/W20DRQpkMY=
+	b=PaK3FW2jizoRCjRbEVYWKx89FBqx6lx3BVtMkxlaJ/ss0k5jy1pV4Ziy5tITLGeAA
+	 NoppSpL0dJ5CH6kCWeWHQv0/erOf9B46Of4MJsMwg1v11raIQmQMckJYujsRO8NWk/
+	 oD6SUJgz4A/fHEs3dfs32ymLfGW/Zjiz8tbdhpCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730393AbgFRB2E (ORCPT
+        id S1732221AbgFRBrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:28:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59456 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:47:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730343AbgFRBYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:24:45 -0400
+        id S1730343AbgFRB2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:28:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE68C214DB;
-        Thu, 18 Jun 2020 01:24:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D71B221F2;
+        Thu, 18 Jun 2020 01:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443484;
-        bh=tNCa20it20TAFV8/6bFK9+ti07nFHI+lr1VPJCykpbs=;
+        s=default; t=1592443684;
+        bh=tzNlaL0+cJsGcwUowAApTOrBiy72ZUL3GV3N+eP8Bfc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RV2Oo/Tx9hF3afX9OYzTY4KWF/DWoLpNbsb9lLtGJW/b29PE0RQSEVWCm5LvtnHhu
-         wCNFvC9Qw+cGFJ3Q/vs0oi1e8ChiOEkb6CaAAyg9f79qAVnBQar9PIHPqaGcel7MDv
-         fGPpMKUjv8bCi8WgeUouARkEFR1E8E/G2pLTKjos=
+        b=uL9gf94qSR0yK19VrKv70vnfcy9bga4gX15PCB6JtME76IcfIaRMRlLmpcZn7p83v
+         +3fSkx7JmwkjWRubgkm+JeOX12HuU4rkEg/6gw8hIY5wUf51zqx4/JLiVLxz1rc7VZ
+         zI+Aa9/6enI2979n41x9N3A6Kic8uoMBWFJT8n1Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        kbuild test robot <lkp@intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
         clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 113/172] USB: gadget: udc: s3c2410_udc: Remove pointless NULL check in s3c2410_udc_nuke
-Date:   Wed, 17 Jun 2020 21:21:19 -0400
-Message-Id: <20200618012218.607130-113-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 098/108] include/linux/bitops.h: avoid clang shift-count-overflow warnings
+Date:   Wed, 17 Jun 2020 21:25:50 -0400
+Message-Id: <20200618012600.608744-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,54 +66,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 7a0fbcf7c308920bc6116b3a5fb21c8cc5fec128 ]
+[ Upstream commit bd93f003b7462ae39a43c531abca37fe7073b866 ]
 
-Clang warns:
+Clang normally does not warn about certain issues in inline functions when
+it only happens in an eliminated code path. However if something else
+goes wrong, it does tend to complain about the definition of hweight_long()
+on 32-bit targets:
 
-drivers/usb/gadget/udc/s3c2410_udc.c:255:11: warning: comparison of
-address of 'ep->queue' equal to a null pointer is always false
-[-Wtautological-pointer-compare]
-        if (&ep->queue == NULL)
-             ~~~~^~~~~    ~~~~
-1 warning generated.
+  include/linux/bitops.h:75:41: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+          return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
+                                                 ^~~~~~~~~~~~
+  include/asm-generic/bitops/const_hweight.h:29:49: note: expanded from macro 'hweight64'
+   define hweight64(w) (__builtin_constant_p(w) ? __const_hweight64(w) : __arch_hweight64(w))
+                                                  ^~~~~~~~~~~~~~~~~~~~
+  include/asm-generic/bitops/const_hweight.h:21:76: note: expanded from macro '__const_hweight64'
+   define __const_hweight64(w) (__const_hweight32(w) + __const_hweight32((w) >> 32))
+                                                                             ^  ~~
+  include/asm-generic/bitops/const_hweight.h:20:49: note: expanded from macro '__const_hweight32'
+   define __const_hweight32(w) (__const_hweight16(w) + __const_hweight16((w) >> 16))
+                                                  ^
+  include/asm-generic/bitops/const_hweight.h:19:72: note: expanded from macro '__const_hweight16'
+   define __const_hweight16(w) (__const_hweight8(w)  + __const_hweight8((w)  >> 8 ))
+                                                                         ^
+  include/asm-generic/bitops/const_hweight.h:12:9: note: expanded from macro '__const_hweight8'
+            (!!((w) & (1ULL << 2))) +     \
 
-It is not wrong, queue is not a pointer so if ep is not NULL, the
-address of queue cannot be NULL. No other driver does a check like this
-and this check has been around since the driver was first introduced,
-presumably with no issues so it does not seem like this check should be
-something else. Just remove it.
+Adding an explicit cast to __u64 avoids that warning and makes it easier
+to read other output.
 
-Commit afe956c577b2d ("kbuild: Enable -Wtautological-compare") exposed
-this but it is not the root cause of the warning.
-
-Fixes: 3fc154b6b8134 ("USB Gadget driver for Samsung s3c2410 ARM SoC")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1004
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Link: http://lkml.kernel.org/r/20200505135513.65265-1-arnd@arndb.de
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/s3c2410_udc.c | 4 ----
- 1 file changed, 4 deletions(-)
+ include/linux/bitops.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/s3c2410_udc.c b/drivers/usb/gadget/udc/s3c2410_udc.c
-index 8bf5ad7a59ad..6cc63e317aba 100644
---- a/drivers/usb/gadget/udc/s3c2410_udc.c
-+++ b/drivers/usb/gadget/udc/s3c2410_udc.c
-@@ -264,10 +264,6 @@ static void s3c2410_udc_done(struct s3c2410_ep *ep,
- static void s3c2410_udc_nuke(struct s3c2410_udc *udc,
- 		struct s3c2410_ep *ep, int status)
+diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+index c51574fab0b0..00dcb1bad76b 100644
+--- a/include/linux/bitops.h
++++ b/include/linux/bitops.h
+@@ -50,7 +50,7 @@ static inline int get_bitmask_order(unsigned int count)
+ 
+ static __always_inline unsigned long hweight_long(unsigned long w)
  {
--	/* Sanity check */
--	if (&ep->queue == NULL)
--		return;
--
- 	while (!list_empty(&ep->queue)) {
- 		struct s3c2410_request *req;
- 		req = list_entry(ep->queue.next, struct s3c2410_request,
+-	return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
++	return sizeof(w) == 4 ? hweight32(w) : hweight64((__u64)w);
+ }
+ 
+ /**
 -- 
 2.25.1
 
