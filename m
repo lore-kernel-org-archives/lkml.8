@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85981C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3D5221927
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E3421534
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448221;
-	bh=EvwO6JCvwjH0ii7c8P2k9TCjFrLWsFBoTY+wiB+vL34=;
+	s=default; t=1592448227;
+	bh=PrJwWTm0VdOVnX35amAIPecVOip3KqY9iV5LFSBKaA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nFX+py4FBpUoIcrywVxqf3BfScKe11r3YDNxzr9EsqdY9JmUxEROc1Rj34mhpEWfT
-	 Xi9S5CTz5+Jn+NLbB0Id402a4w1RDm1ilDmjO4CSWSlWjkRyBHYe24HQYQfrbxNDIZ
-	 epgt6MFv824theeWKdw77Mi82JktpBHRW6HPzcGo=
+	b=kHpPg2fSl/zk++HBrTXXIgJkfXLqaC9isolRR26WeAaeYSU6840cqNN89TMf5AzFV
+	 UnSMNP3Z6MN+Foh9Jm5LiB7u5erDkB89kZtCO/eippyVGkHUOudIZlt8t2ow96nPhA
+	 4pyCBVGVExHftcfTiKIxmvZ9ZIt60LTtfDVTq5CY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733292AbgFRCnj (ORCPT
+        id S1728885AbgFRCnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39466 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:43:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728113AbgFRBLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:31 -0400
+        id S1728736AbgFRBL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F89320CC7;
-        Thu, 18 Jun 2020 01:11:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A845D21924;
+        Thu, 18 Jun 2020 01:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442691;
-        bh=EvwO6JCvwjH0ii7c8P2k9TCjFrLWsFBoTY+wiB+vL34=;
+        s=default; t=1592442688;
+        bh=PrJwWTm0VdOVnX35amAIPecVOip3KqY9iV5LFSBKaA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DmldXKW4DMAMOBkNiM0yLRctZ5uVCSwjTjeF1dz76nsmTlLav5rYuSy9IOb0z41Mg
-         TZ/H+ithTZPvUqiSL6CbFVXC0rkZYoSQDXMtxYezhC2/tzFYB+3DujYICLED2RcCJ6
-         9h52OqmrVzG7/sC4sZFrn12s116s1KDIF7L4HFuY=
+        b=xZvBL7mxtESuXa3Po2WGCaONVCfCipsrLFKcSlT4FM1MDH+i/JidEUl/ZIBMJDMGb
+         9gf01FeNY2M77nBZyjEuaQ+tpBA+H23v47f7PlpMf6iHDsSXIIS+E7ZFAy1bhwA1x0
+         XIOa0OO8R1/orkeV3YoRfT6LS3NIYg8GwLtPD0uA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 156/388] thermal/drivers/ti-soc-thermal: Avoid dereferencing ERR_PTR
-Date:   Wed, 17 Jun 2020 21:04:13 -0400
-Message-Id: <20200618010805.600873-156-sashal@kernel.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Marcel Gudert <m.gudert@eckelmann.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 154/388] gpio: pca953x: fix handling of automatic address incrementing
+Date:   Wed, 17 Jun 2020 21:04:11 -0400
+Message-Id: <20200618010805.600873-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,55 +63,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-[ Upstream commit 7440f518dad9d861d76c64956641eeddd3586f75 ]
+[ Upstream commit bcf41dc480b179bfb669a232080a2e26dc7294b4 ]
 
-On error the function ti_bandgap_get_sensor_data() returns the error
-code in ERR_PTR() but we only checked if the return value is NULL or
-not. And, so we can dereference an error code inside ERR_PTR.
-While at it, convert a check to IS_ERR_OR_NULL.
+Some of the chips supported by the pca953x driver need the most
+significant bit in the address word set to automatically increment the
+address pointer on subsequent reads and writes (example: PCA9505). With
+this bit unset the same register is read multiple times on a multi-byte
+read sequence. Other chips must not have this bit set and autoincrement
+always (example: PCA9555).
 
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200424161944.6044-1-sudipm.mukherjee@gmail.com
+Up to now this AI bit was interpreted to be part of the address, which
+resulted in inconsistent regmap caching when a register was written with
+AI set and then read without it. This happened for the PCA9505 in
+pca953x_gpio_set_multiple() where pca953x_read_regs() bulk read from the
+cache for registers 0x8-0xc and then wrote to registers 0x88-0x8c. (Side
+note: reading 5 values from offset 0x8 yiels OP0 5 times because AI must
+be set to get OP0-OP4, which is another bug that is resolved here as a
+by-product.) The same problem happens when calls to gpio_set_value() and
+gpio_set_array_value() were mixed.
+
+With this patch the AI bit is always set for chips that support it. This
+works as there are no code locations that make use of the behaviour with
+AI unset (for the chips that support it).
+
+Note that the call to pca953x_setup_gpio() had to be done a bit earlier
+to make the NBANK macro work.
+
+The history of this bug is a bit complicated. Commit b32cecb46bdc
+("gpio: pca953x: Extract the register address mangling to single
+function") changed which chips and functions are affected. Commit
+3b00691cc46a ("gpio: pca953x: hack to fix 24 bit gpio expanders") used
+some duct tape to make the driver at least appear to work. Commit
+49427232764d ("gpio: pca953x: Perform basic regmap conversion")
+introduced the caching. Commit b4818afeacbd ("gpio: pca953x: Add
+set_multiple to allow multiple bits to be set in one write.") introduced
+the .set_multiple() callback which didn't work for chips that need the
+AI bit which was fixed later for some chips in 8958262af3fb ("gpio:
+pca953x: Repair multi-byte IO address increment on PCA9575"). So I'm
+sorry, I don't know which commit I should pick for a Fixes: line.
+
+Tested-by: Marcel Gudert <m.gudert@eckelmann.de>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 44 +++++++++++++++++++++++--------------
+ 1 file changed, 28 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-index d3e959d01606..85776db4bf34 100644
---- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-+++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-@@ -169,7 +169,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 4269ea9a817e..01011a780688 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -307,8 +307,22 @@ static const struct regmap_config pca953x_i2c_regmap = {
+ 	.volatile_reg = pca953x_volatile_register,
  
- 	data = ti_bandgap_get_sensor_data(bgp, id);
+ 	.cache_type = REGCACHE_RBTREE,
+-	/* REVISIT: should be 0x7f but some 24 bit chips use REG_ADDR_AI */
+-	.max_register = 0xff,
++	.max_register = 0x7f,
++};
++
++static const struct regmap_config pca953x_ai_i2c_regmap = {
++	.reg_bits = 8,
++	.val_bits = 8,
++
++	.read_flag_mask = REG_ADDR_AI,
++	.write_flag_mask = REG_ADDR_AI,
++
++	.readable_reg = pca953x_readable_register,
++	.writeable_reg = pca953x_writeable_register,
++	.volatile_reg = pca953x_volatile_register,
++
++	.cache_type = REGCACHE_RBTREE,
++	.max_register = 0x7f,
+ };
  
--	if (!data || IS_ERR(data))
-+	if (!IS_ERR_OR_NULL(data))
- 		data = ti_thermal_build_data(bgp, id);
+ static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
+@@ -319,18 +333,6 @@ static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
+ 	int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
+ 	u8 regaddr = pinctrl | addr | (off / BANK_SZ);
  
- 	if (!data)
-@@ -196,7 +196,7 @@ int ti_thermal_remove_sensor(struct ti_bandgap *bgp, int id)
+-	/* Single byte read doesn't need AI bit set. */
+-	if (!addrinc)
+-		return regaddr;
+-
+-	/* Chips with 24 and more GPIOs always support Auto Increment */
+-	if (write && NBANK(chip) > 2)
+-		regaddr |= REG_ADDR_AI;
+-
+-	/* PCA9575 needs address-increment on multi-byte writes */
+-	if (PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE)
+-		regaddr |= REG_ADDR_AI;
+-
+ 	return regaddr;
+ }
  
- 	data = ti_bandgap_get_sensor_data(bgp, id);
+@@ -863,6 +865,7 @@ static int pca953x_probe(struct i2c_client *client,
+ 	int ret;
+ 	u32 invert = 0;
+ 	struct regulator *reg;
++	const struct regmap_config *regmap_config;
  
--	if (data && data->ti_thermal) {
-+	if (!IS_ERR_OR_NULL(data) && data->ti_thermal) {
- 		if (data->our_zone)
- 			thermal_zone_device_unregister(data->ti_thermal);
- 	}
-@@ -262,7 +262,7 @@ int ti_thermal_unregister_cpu_cooling(struct ti_bandgap *bgp, int id)
+ 	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
+ 	if (chip == NULL)
+@@ -925,7 +928,17 @@ static int pca953x_probe(struct i2c_client *client,
  
- 	data = ti_bandgap_get_sensor_data(bgp, id);
+ 	i2c_set_clientdata(client, chip);
  
--	if (data) {
-+	if (!IS_ERR_OR_NULL(data)) {
- 		cpufreq_cooling_unregister(data->cool_dev);
- 		if (data->policy)
- 			cpufreq_cpu_put(data->policy);
+-	chip->regmap = devm_regmap_init_i2c(client, &pca953x_i2c_regmap);
++	pca953x_setup_gpio(chip, chip->driver_data & PCA_GPIO_MASK);
++
++	if (NBANK(chip) > 2 || PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE) {
++		dev_info(&client->dev, "using AI\n");
++		regmap_config = &pca953x_ai_i2c_regmap;
++	} else {
++		dev_info(&client->dev, "using no AI\n");
++		regmap_config = &pca953x_i2c_regmap;
++	}
++
++	chip->regmap = devm_regmap_init_i2c(client, regmap_config);
+ 	if (IS_ERR(chip->regmap)) {
+ 		ret = PTR_ERR(chip->regmap);
+ 		goto err_exit;
+@@ -956,7 +969,6 @@ static int pca953x_probe(struct i2c_client *client,
+ 	/* initialize cached registers from their original values.
+ 	 * we can't share this chip with another i2c master.
+ 	 */
+-	pca953x_setup_gpio(chip, chip->driver_data & PCA_GPIO_MASK);
+ 
+ 	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
+ 		chip->regs = &pca953x_regs;
 -- 
 2.25.1
 
