@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA169C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE06AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACFF4214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA6D221D90
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443820;
-	bh=lvqK+OEl2mVBWoRcfXzFrNQSTJaOjX4d3F1R6xzTIUk=;
+	s=default; t=1592443830;
+	bh=kYM8IshYBvLgKdoY5hXB5ottarneM32mlxpl3zcp23o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bLTnJWtJhpneEpHUmtmzkxXcOkfp3c5iU33Jqt/aeWug3JkC2zhygyMNsWWdaBG4/
-	 TTT8CG7GxGg3hpm/YY4wT+Xx4VZa8S/zvMpswMYcTHcwhcjJEDBf0REQQoktRfbdeG
-	 Zg53fI37iBAakbfBASidYEdzcK+O+rL7d8sDjAdM=
+	b=byjXpdmjygXBvXQPPtgVEUKMqn4c1+Ai68i/IInhQXnkSwelMtsDD67IGQ0vD3xs2
+	 WzgKOpm3B9ZlpvHIK6CpexdBny7VCMU82sRHoqRewx6mKblns8bVsfK2N3HqigEvtx
+	 WkGrFL7v28P9NGQnCw7I6pjX3goZOm5VCe9hOl3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732495AbgFRBaT (ORCPT
+        id S1732537AbgFRBa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:30:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34844 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:30:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731013AbgFRB1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:00 -0400
+        id S1730139AbgFRB1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8690D21D7A;
-        Thu, 18 Jun 2020 01:26:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C55F720776;
+        Thu, 18 Jun 2020 01:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443620;
-        bh=lvqK+OEl2mVBWoRcfXzFrNQSTJaOjX4d3F1R6xzTIUk=;
+        s=default; t=1592443627;
+        bh=kYM8IshYBvLgKdoY5hXB5ottarneM32mlxpl3zcp23o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jxY4LHm+0zh22icMEFfu38SVD1apaIshW1EOE8WOXWwnDgWHBGEV9N7pqwzOvEuSx
-         C+X5AS39kcHZ8IPFo4BirFRX0MuhYoAtm3dctZNMvbq62C3knYDvYa/AK34XRQqTNJ
-         u7vwmxK7YbbfEoq2gGV9+FWMeNRSbaFvQoF9YjoA=
+        b=ZxFKf6QU97RCnY6B94TSg6kVwFe9PEYwznl8FJZPC9zZiJhOqIr0/Lh5FP21t2Fmv
+         O+YgR46Ce0A4t1S7J5ghORawRO7DGOtuO8Bw/nMd2PqkoC16sVQcESE+DxjJW4hIW7
+         sXEJP4fDw+7s2UOGvCyKOiYNEqhj3PZXX7VPMpvg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 046/108] i2c: pxa: fix i2c_pxa_scream_blue_murder() debug output
-Date:   Wed, 17 Jun 2020 21:24:58 -0400
-Message-Id: <20200618012600.608744-46-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 052/108] power: supply: lp8788: Fix an error handling path in 'lp8788_charger_probe()'
+Date:   Wed, 17 Jun 2020 21:25:04 -0400
+Message-Id: <20200618012600.608744-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -59,52 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 88b73ee7ca4c90baf136ed5a8377fc5a9b73ac08 ]
+[ Upstream commit 934ed3847a4ebc75b655659c4d2349ba4337941c ]
 
-The IRQ log output is supposed to appear on a single line.  However,
-commit 3a2dc1677b60 ("i2c: pxa: Update debug function to dump more info
-on error") resulted in it being printed one-entry-per-line, which is
-excessively long.
+In the probe function, in case of error, resources allocated in
+'lp8788_setup_adc_channel()' must be released.
 
-Fixing this is not a trivial matter; using pr_cont() doesn't work as
-the previous dev_dbg() may not have been compiled in, or may be
-dynamic.
+This can be achieved easily by using the devm_ variant of
+'iio_channel_get()'.
+This has the extra benefit to simplify the remove function and to axe the
+'lp8788_release_adc_channel()' function which is now useless.
 
-Since the rest of this function output is at error level, and is also
-debug output, promote this to error level as well to avoid this
-problem.
-
-Reduce the number of always zero prefix digits to save screen real-
-estate.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Fixes: 98a276649358 ("power_supply: Add new lp8788 charger driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pxa.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/power/supply/lp8788-charger.c | 18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index ecc84aea5131..e300f9530f19 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -315,11 +315,10 @@ static void i2c_pxa_scream_blue_murder(struct pxa_i2c *i2c, const char *why)
- 	dev_err(dev, "IBMR: %08x IDBR: %08x ICR: %08x ISR: %08x\n",
- 		readl(_IBMR(i2c)), readl(_IDBR(i2c)), readl(_ICR(i2c)),
- 		readl(_ISR(i2c)));
--	dev_dbg(dev, "log: ");
-+	dev_err(dev, "log:");
- 	for (i = 0; i < i2c->irqlogidx; i++)
--		pr_debug("[%08x:%08x] ", i2c->isrlog[i], i2c->icrlog[i]);
--
--	pr_debug("\n");
-+		pr_cont(" [%03x:%05x]", i2c->isrlog[i], i2c->icrlog[i]);
-+	pr_cont("\n");
+diff --git a/drivers/power/supply/lp8788-charger.c b/drivers/power/supply/lp8788-charger.c
+index 0f3432795f3c..b8f7dac7ac3f 100644
+--- a/drivers/power/supply/lp8788-charger.c
++++ b/drivers/power/supply/lp8788-charger.c
+@@ -600,27 +600,14 @@ static void lp8788_setup_adc_channel(struct device *dev,
+ 		return;
+ 
+ 	/* ADC channel for battery voltage */
+-	chan = iio_channel_get(dev, pdata->adc_vbatt);
++	chan = devm_iio_channel_get(dev, pdata->adc_vbatt);
+ 	pchg->chan[LP8788_VBATT] = IS_ERR(chan) ? NULL : chan;
+ 
+ 	/* ADC channel for battery temperature */
+-	chan = iio_channel_get(dev, pdata->adc_batt_temp);
++	chan = devm_iio_channel_get(dev, pdata->adc_batt_temp);
+ 	pchg->chan[LP8788_BATT_TEMP] = IS_ERR(chan) ? NULL : chan;
  }
  
- #else /* ifdef DEBUG */
+-static void lp8788_release_adc_channel(struct lp8788_charger *pchg)
+-{
+-	int i;
+-
+-	for (i = 0; i < LP8788_NUM_CHG_ADC; i++) {
+-		if (!pchg->chan[i])
+-			continue;
+-
+-		iio_channel_release(pchg->chan[i]);
+-		pchg->chan[i] = NULL;
+-	}
+-}
+-
+ static ssize_t lp8788_show_charger_status(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
+@@ -747,7 +734,6 @@ static int lp8788_charger_remove(struct platform_device *pdev)
+ 	lp8788_irq_unregister(pdev, pchg);
+ 	sysfs_remove_group(&pdev->dev.kobj, &lp8788_attr_group);
+ 	lp8788_psy_unregister(pchg);
+-	lp8788_release_adc_channel(pchg);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
