@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31568C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB944C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1A632083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90E520776
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448730;
-	bh=2RWuC1I4HdtIrFZE3PM5UhPef8qY+Xc5s/9pa45NXFw=;
+	s=default; t=1592448731;
+	bh=hoCU8WMiSipGRhTwA1idIQYXuWJKj3HYboe160YztMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bmvjar3wcqGfKaRyDTrdBwTMLvp6ZZKvdmGGbPAD+QuWm4QmmkMZ3gOQWD2GS8217
-	 p9xVH4ljJTbFW1UwlUBbNEYHv3mS/EeAHozaEQ8RLjqy5b0qO/AIAxLHKvgj5ouiEi
-	 NIIUqkiA7tT7Mcu05dYV/4nXQ1JFCxgJMp2qSdfc=
+	b=o+4k6EfUnrYZ1krFs+6rkBHXub7pU0a64H4wiuxJJZC4Q+c2uU/iTqVMY4l1dwJBP
+	 zZcNy+TCA1MZ8iTLbgOLcV0as2yA208XUCxB4GZc3eJr+Ds2a/g9MJru2l5bljfh9z
+	 +ayEKWmeJEFQIZFf7Kg00JVfI9TkvtxohM3bxOLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgFRCwI (ORCPT
+        id S1728157AbgFRCwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:52:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34558 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:52:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbgFRBIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:08:41 -0400
+        id S1727881AbgFRBIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:08:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98C2121D79;
-        Thu, 18 Jun 2020 01:08:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CA2021D7D;
+        Thu, 18 Jun 2020 01:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442521;
-        bh=2RWuC1I4HdtIrFZE3PM5UhPef8qY+Xc5s/9pa45NXFw=;
+        s=default; t=1592442523;
+        bh=hoCU8WMiSipGRhTwA1idIQYXuWJKj3HYboe160YztMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gu3uFGdw0FRW05niVqK1zPhO0/v2Zyy65RqjEpeKQWLaH4mLaOwhT8iBDWcI1dpYY
-         zBPRMusA+wbXSEmbyLIAU4GiujqF8X/iH7Oj/041IX4yGwT3mRelwFV5qDRAPjBRET
-         WQco4+TSf+MWmerwwx7SiAWxGFdNZiBK1nn3gl7U=
+        b=ALfbarEtzc0AE6Ct7kHb8hF5w+PRWq/iy+A1kBwLttK1wXjaANFceA81MCMJtrdQS
+         XMZtGKyNrU4uEovT6msSPE8osPbSsAtTRcQabzOr2z8m7FckwBKy1/lyuM+5JpKS0G
+         LSSiQTyVmqddnK/dP8C8NAHJEmb27qswtz4cxCGQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 026/388] ALSA: isa/wavefront: prevent out of bounds write in ioctl
-Date:   Wed, 17 Jun 2020 21:02:03 -0400
-Message-Id: <20200618010805.600873-26-sashal@kernel.org>
+Cc:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 028/388] PCI: endpoint: functions/pci-epf-test: Fix DMA channel release
+Date:   Wed, 17 Jun 2020 21:02:05 -0400
+Message-Id: <20200618010805.600873-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,47 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-[ Upstream commit 7f0d5053c5a9d23fe5c2d337495a9d79038d267b ]
+[ Upstream commit 0e86d981f9b7252e9716c5137cd8e4d9ad8ef32f ]
 
-The "header->number" comes from the ioctl and it needs to be clamped to
-prevent out of bounds writes.
+When unbinding pci_epf_test, pci_epf_test_clean_dma_chan() is called in
+pci_epf_test_unbind() even though epf_test->dma_supported is false.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200501094011.GA960082@mwanda
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+As a result, dma_release_channel() will trigger a NULL pointer
+dereference because dma_chan is not set.
+
+Avoid calling dma_release_channel() if epf_test->dma_supported
+is false.
+
+Link: https://lore.kernel.org/r/1587540287-10458-1-git-send-email-hayashi.kunihiko@socionext.com
+Fixes: 5ebf3fc59bd2 ("PCI: endpoint: functions/pci-epf-test: Add DMA support to transfer data")
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/isa/wavefront/wavefront_synth.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/isa/wavefront/wavefront_synth.c b/sound/isa/wavefront/wavefront_synth.c
-index c5b1d5900eed..d6420d224d09 100644
---- a/sound/isa/wavefront/wavefront_synth.c
-+++ b/sound/isa/wavefront/wavefront_synth.c
-@@ -1171,7 +1171,10 @@ wavefront_send_alias (snd_wavefront_t *dev, wavefront_patch_info *header)
- 				      "alias for %d\n",
- 				      header->number,
- 				      header->hdr.a.OriginalSample);
--    
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 60330f3e3751..c89a9561439f 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -187,6 +187,9 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
+  */
+ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
+ {
++	if (!epf_test->dma_supported)
++		return;
 +
-+	if (header->number >= WF_MAX_SAMPLE)
-+		return -EINVAL;
-+
- 	munge_int32 (header->number, &alias_hdr[0], 2);
- 	munge_int32 (header->hdr.a.OriginalSample, &alias_hdr[2], 2);
- 	munge_int32 (*((unsigned int *)&header->hdr.a.sampleStartOffset),
-@@ -1202,6 +1205,9 @@ wavefront_send_multisample (snd_wavefront_t *dev, wavefront_patch_info *header)
- 	int num_samples;
- 	unsigned char *msample_hdr;
- 
-+	if (header->number >= WF_MAX_SAMPLE)
-+		return -EINVAL;
-+
- 	msample_hdr = kmalloc(WF_MSAMPLE_BYTES, GFP_KERNEL);
- 	if (! msample_hdr)
- 		return -ENOMEM;
+ 	dma_release_channel(epf_test->dma_chan);
+ 	epf_test->dma_chan = NULL;
+ }
 -- 
 2.25.1
 
