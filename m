@@ -2,262 +2,172 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0956C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8096C2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7140A20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgFRI5K (ORCPT
+        id S1728989AbgFRI5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:57:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45062 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728945AbgFRI4l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:56:41 -0400
-Received: from ip-109-41-0-102.web.vodafone.de ([109.41.0.102] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jlqLL-0003gc-FO; Thu, 18 Jun 2020 08:56:20 +0000
-Date:   Thu, 18 Jun 2020 10:56:14 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian@brauner.io>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 02/11] fs: Move __scm_install_fd() to
- __fd_install_received()
-Message-ID: <20200618085614.fw3ynalpcipbplf3@wittgenstein>
-References: <20200616032524.460144-1-keescook@chromium.org>
- <20200616032524.460144-3-keescook@chromium.org>
+        Thu, 18 Jun 2020 04:57:33 -0400
+Received: from mga18.intel.com ([134.134.136.126]:9917 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728957AbgFRI5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:57:01 -0400
+IronPort-SDR: /V+J27ipgjfERc3R9X4ROxUL/rtRhNhQHPeSH8kJmof0DSfltmva1DtSXfFqS5OhcZc7fXy6un
+ 9Cm+l/CsS/cg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9655"; a="129838105"
+X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
+   d="scan'208";a="129838105"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 01:56:54 -0700
+IronPort-SDR: ZGxC2mJAjIhIqoZ7Ayl/dGYggHaOBy1q/pA5op6tYrSozL8Y1S7uTRMbtIcWiMasAXVhzZ4zI8
+ mfRvg4mzBiiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
+   d="scan'208";a="299596268"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 18 Jun 2020 01:56:52 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jlqLu-00EEZK-OX; Thu, 18 Jun 2020 11:56:54 +0300
+Date:   Thu, 18 Jun 2020 11:56:54 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v1 0/6] mfd: Make use of software nodes
+Message-ID: <20200618085654.GL2428291@smile.fi.intel.com>
+References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
+ <20200616200225.32mwzew3zw3nuiwh@mobilestation>
+ <CAHp75VfZMx8ip=Bo=gZQiGufJvh=7dtr61C3ZcZjETFrErTk6Q@mail.gmail.com>
+ <20200616225648.eqzugzapatblndcy@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616032524.460144-3-keescook@chromium.org>
+In-Reply-To: <20200616225648.eqzugzapatblndcy@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 08:25:15PM -0700, Kees Cook wrote:
-> In preparation for users of the "install a received file" logic outside
-> of net/ (pidfd and seccomp), relocate and rename __scm_install_fd() from
-> net/core/scm.c to __fd_install_received() in fs/file.c, and provide a
-> wrapper named fd_install_received_user(), as future patches will change
-> the interface to __fd_install_received().
+On Wed, Jun 17, 2020 at 01:56:48AM +0300, Serge Semin wrote:
+> On Wed, Jun 17, 2020 at 12:40:35AM +0300, Andy Shevchenko wrote:
+> > On Tue, Jun 16, 2020 at 11:03 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > > On Mon, Jun 08, 2020 at 04:42:54PM +0300, Andy Shevchenko wrote:
+> > > > Some devices would need to have a hierarchy of properties and
+> > > > child nodes passed to the child or children of MFD. For such case
+> > > > we may utilize software nodes, which is superior on device properties.
+> > > >
+> > > > Add support of software nodes to MFD core and convert one driver
+> > > > to show how it looks like. This allows to get rid of legacy platform
+> > > > data.
+> > > >
+> > > > The change has been tested on Intel Galileo Gen 2.
+> > >
+> > > I am wondering whether we could move the {gpio_base, ngpio, irq_shared}
+> > > part into the gpio-dwapb.c driver and use either the ACPI-based or
+> > > platform_device_id-based matching to get the device-specific resources
+> > > info through the driver_data field. By doing so you wouldn't need to
+> > > introduce a new "snps,gpio-base"-like property and propagate
+> > > software_node-based properties, but still you could get rid of the
+> > > dwapb_platform_data structure since all the info would be locally
+> > > available.
+> > 
+> > The idea is to get rid of the driver being dependent on some quirks
+> > when we may do it clearly and nicely.
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  fs/file.c            | 47 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/file.h |  8 ++++++++
->  include/net/scm.h    |  1 -
->  net/compat.c         |  2 +-
->  net/core/scm.c       | 32 +-----------------------------
->  5 files changed, 57 insertions(+), 33 deletions(-)
+> Yes, I've got that and in most of the aspects I like what you suggested
+> in this parchset. But it seems to me that the maintainers are mostly prone
+> to having some of the platform-specifics being locally (in-driver) defined.
+
+You are a maintainer of the dwapb-gpio. Is it what you insist?
+
+> So I proposed an alternative solution, which might do to satisfy their
+> requirement.
+
+I'm puzzled whom about you are talking.
+
+> Note saying that you want to get rid of the quirks and
+> introducing something like "gpio-base" firmware property seems contradicting
+> a bit. 
+
+Maybe I need to elaborate that under quirks I meant quirk-clean GPIO driver,
+so, it wouldn't care about what platform(s) require base and what do not.
+
+> > We, by applying this series, make (keep) layers independent: board
+> > code vs. driver code. Mixing them more is the opposite to what I
+> > propose.
+> > 
+> > WRT property.
+> > snps,gpio-base can be easily changed to *already in use* gpio-base or
+> > being both converted to linux,gpio-base to explicitly show people that
+> > this is internal stuff that must not be present in firmware nodes.
 > 
-> diff --git a/fs/file.c b/fs/file.c
-> index abb8b7081d7a..fcfddae0d252 100644
-> --- a/fs/file.c
-> +++ b/fs/file.c
-> @@ -11,6 +11,7 @@
->  #include <linux/export.h>
->  #include <linux/fs.h>
->  #include <linux/mm.h>
-> +#include <linux/net.h>
->  #include <linux/sched/signal.h>
->  #include <linux/slab.h>
->  #include <linux/file.h>
-> @@ -18,6 +19,8 @@
->  #include <linux/bitops.h>
->  #include <linux/spinlock.h>
->  #include <linux/rcupdate.h>
-> +#include <net/cls_cgroup.h>
-> +#include <net/netprio_cgroup.h>
->  
->  unsigned int sysctl_nr_open __read_mostly = 1024*1024;
->  unsigned int sysctl_nr_open_min = BITS_PER_LONG;
-> @@ -931,6 +934,50 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
->  	return err;
->  }
->  
-> +/**
-> + * __fd_install_received() - Install received file into file descriptor table
-> + *
-> + * @fd: fd to install into (if negative, a new fd will be allocated)
-> + * @file: struct file that was received from another process
-> + * @ufd_required: true to use @ufd for writing fd number to userspace
-> + * @ufd: __user pointer to write new fd number to
-> + * @o_flags: the O_* flags to apply to the new fd entry
-> + *
-> + * Installs a received file into the file descriptor table, with appropriate
-> + * checks and count updates. Optionally writes the fd number to userspace.
-> + *
-> + * Returns -ve on error.
-> + */
-> +int __fd_install_received(struct file *file, int __user *ufd, unsigned int o_flags)
-> +{
-> +	struct socket *sock;
-> +	int new_fd;
-> +	int error;
-> +
-> +	error = security_file_receive(file);
-> +	if (error)
-> +		return error;
-> +
-> +	new_fd = get_unused_fd_flags(o_flags);
-> +	if (new_fd < 0)
-> +		return new_fd;
-> +
-> +	error = put_user(new_fd, ufd);
-> +	if (error) {
-> +		put_unused_fd(new_fd);
-> +		return error;
-> +	}
-> +
-> +	/* Bump the usage count and install the file. */
-> +	sock = sock_from_file(file, &error);
-> +	if (sock) {
-> +		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-> +		sock_update_classid(&sock->sk->sk_cgrp_data);
-> +	}
-> +	fd_install(new_fd, get_file(file));
-> +	return 0;
-> +}
-> +
->  static int ksys_dup3(unsigned int oldfd, unsigned int newfd, int flags)
->  {
->  	int err = -EBADF;
-> diff --git a/include/linux/file.h b/include/linux/file.h
-> index 122f80084a3e..fe18a1a0d555 100644
-> --- a/include/linux/file.h
-> +++ b/include/linux/file.h
-> @@ -91,6 +91,14 @@ extern void put_unused_fd(unsigned int fd);
->  
->  extern void fd_install(unsigned int fd, struct file *file);
->  
-> +extern int __fd_install_received(struct file *file, int __user *ufd,
-> +				 unsigned int o_flags);
-> +static inline int fd_install_received_user(struct file *file, int __user *ufd,
-> +					   unsigned int o_flags)
-> +{
-> +	return __fd_install_received(file, ufd, o_flags);
-> +}
+> As I see it the part with "gpio-base" and the irq_shared can be moved to the
+> gpio-dwapb.c driver to be defined as the quark-specific quirks. Adding a
+> property like "gpio-base" seems like a quirk anyway, so I'd leave it defined in
+> the driver.
 
-Shouldn't this be the other way around such that
-fd_install_received_user() is the workhorse that has a "ufd" argument
-and fd_install_received() is the static inline function that doesn't?
+Huh?! The whole idea is make GPIO driver agnostic from platforms and their quirks.
 
-extern int fd_install_received_user(struct file *file, int __user *ufd, unsigned int o_flags)
-static inline int fd_install_received(struct file *file, unsigned int o_flags)
-{
-	return fd_install_received_user(file, NULL, o_flags);
-}
+> * Note I don't really like replacing the irq_shared flag with to_of_node()
+> because in general to_of_node() doesn't mean the IRQ line is shared, so
+> selecting the shared and non-shared interrupt request paths based on that macro
+> seems hackish.
 
-(So I'm on vacation this week some my reviews are selective and spotty
-but I promise to be back next week. :))
+This I can understand, but can you propose better alternative?
 
-Christian
-
-> +
->  extern void flush_delayed_fput(void);
->  extern void __fput_sync(struct file *);
->  
-> diff --git a/include/net/scm.h b/include/net/scm.h
-> index 581a94d6c613..1ce365f4c256 100644
-> --- a/include/net/scm.h
-> +++ b/include/net/scm.h
-> @@ -37,7 +37,6 @@ struct scm_cookie {
->  #endif
->  };
->  
-> -int __scm_install_fd(struct file *file, int __user *ufd, unsigned int o_flags);
->  void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm);
->  void scm_detach_fds_compat(struct msghdr *msg, struct scm_cookie *scm);
->  int __scm_send(struct socket *sock, struct msghdr *msg, struct scm_cookie *scm);
-> diff --git a/net/compat.c b/net/compat.c
-> index 27d477fdcaa0..94f288e8dac5 100644
-> --- a/net/compat.c
-> +++ b/net/compat.c
-> @@ -298,7 +298,7 @@ void scm_detach_fds_compat(struct msghdr *msg, struct scm_cookie *scm)
->  	int err = 0, i;
->  
->  	for (i = 0; i < fdmax; i++) {
-> -		err = __scm_install_fd(scm->fp->fp[i], cmsg_data + i, o_flags);
-> +		err = fd_install_received_user(scm->fp->fp[i], cmsg_data + i, o_flags);
->  		if (err)
->  			break;
->  	}
-> diff --git a/net/core/scm.c b/net/core/scm.c
-> index 6151678c73ed..df190f1fdd28 100644
-> --- a/net/core/scm.c
-> +++ b/net/core/scm.c
-> @@ -280,36 +280,6 @@ void put_cmsg_scm_timestamping(struct msghdr *msg, struct scm_timestamping_inter
->  }
->  EXPORT_SYMBOL(put_cmsg_scm_timestamping);
->  
-> -int __scm_install_fd(struct file *file, int __user *ufd, unsigned int o_flags)
-> -{
-> -	struct socket *sock;
-> -	int new_fd;
-> -	int error;
-> -
-> -	error = security_file_receive(file);
-> -	if (error)
-> -		return error;
-> -
-> -	new_fd = get_unused_fd_flags(o_flags);
-> -	if (new_fd < 0)
-> -		return new_fd;
-> -
-> -	error = put_user(new_fd, ufd);
-> -	if (error) {
-> -		put_unused_fd(new_fd);
-> -		return error;
-> -	}
-> -
-> -	/* Bump the usage count and install the file. */
-> -	sock = sock_from_file(file, &error);
-> -	if (sock) {
-> -		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-> -		sock_update_classid(&sock->sk->sk_cgrp_data);
-> -	}
-> -	fd_install(new_fd, get_file(file));
-> -	return 0;
-> -}
-> -
->  static int scm_max_fds(struct msghdr *msg)
->  {
->  	if (msg->msg_controllen <= sizeof(struct cmsghdr))
-> @@ -336,7 +306,7 @@ void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
->  	}
->  
->  	for (i = 0; i < fdmax; i++) {
-> -		err = __scm_install_fd(scm->fp->fp[i], cmsg_data + i, o_flags);
-> +		err = fd_install_received_user(scm->fp->fp[i], cmsg_data + i, o_flags);
->  		if (err)
->  			break;
->  	}
-> -- 
-> 2.25.1
+> > > If ACPI-based matching doesn't uniquely address the Quark GPIO node,
+> > > then you could just replace the intel_quark_mfd_cells[0].name with
+> > > something like "gpio-dwapb-quark", which then by the MFD core will be
+> > > copied to the corresponding platform_device->name due to calling
+> > > platform_device_alloc() with cell-name passed. That name will be used
+> > > to match a platform_driver with id_table having that new name added.
+> > 
+> > Oh, that doesn't sound right. It makes things ugly.
 > 
+> I may have said that a bit unclearly. The only thing you'd need to do is to
+> add an unique name to the Quark GPIO cell, like:
+> drivers/mfd/intel_quark_i2c_gpio.c:
+> static struct mfd_cell intel_quark_mfd_cells[] = {
+>         {
+>                 .name = "gpio-dwapb-quark",
+>         }
+> 
+> Then make the gpio-dwapb.c driver being compatible with that device by declaring
+> the id_table with that device name and passing the table to the DW APB GPIO
+> "struct platform_driver" descriptor. The MFD/platform cores already provide the
+> functionality of matching those two device and driver. If ACPI node uniquely
+> defines the Quark GPIO with all that quirks applicable then you wouldn't even
+> need to do the platform_device-driver-based matching. Just use the acpi_device_id
+> to get the quirks flags/descriptors. 
+
+What you are talking about? Can you provide a code we can discuss?
+
+> * Though indeed it would be better to mark the "snps,nr-gpios" as deprecated in
+> the DT schema and have the "ngpios" supported as well.
+
+Actually I used to have that piece in my first patches, but decided to remove
+due to this property being (semi-)internal. I would like to hear GPIO
+maintainers about this.
+
+Bart, Linus?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
