@@ -2,130 +2,86 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF59C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA0A2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868D02075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:25:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="LxMPuUSA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j3bi4iLe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731207AbgFRPYN (ORCPT
+        id S1731401AbgFRPZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:24:13 -0400
-Received: from mail-eopbgr770118.outbound.protection.outlook.com ([40.107.77.118]:30030
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726905AbgFRPYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:24:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jjF3WmvhzRbY0sfm6q0qMs7YFoKvH4UEL/PCiV3moG9KOhAFiSwgbOFrrt2B2pjBnMz793eihbPe20rcnZ76owFzLcKCokgyIbIfqJ3OHvOriFxtjabET8QVZRAED/eddip6SF4aSq0R7P+ekpaQ0CaMCKN8E4uwh2HM72Y9xZMAF76oEzitDQMFoV34bX/0fwl4OVhTBA4sgfO2r7wptpQICw4YZ+YhEGnpPb/kLpJVkQxMRFYDPo6olAgCzerXIVGI60LLbbkiFFeAm2CerGzVab6UkAnqTDbNxvRzHtcltFVc7ROK/ciyCEn/LLh9Aam1xyGqvoygWbRMt/HCFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I0/qrWzubGG9EtOv55Hm5jttac6SlrdJp7ZhsA2bRIU=;
- b=loEEZzIwuDx7KH/AsAgSCMCNDjKH0fQS3pb0TqI8/VAvz8+EWnb4SLf9R+/VpVNjll3coIBeIZ0dj9MC8ZTbFUIDOizzckMs4J8Ku1F8VEIfPq6E+on2oFoMqCWWoSIY0UuJaR1MGPuHugneCvhNONEZQUki5EYo2npAbk2gndI++RLtBMFgbDc3LLUaw5ykvI3h1yiZCwAYkWKGMay0JzZaWvYtkm3aI9NT5r02mZUgjMKiUXOl3lOeHelagynC9gew0i0l6Nf/IY4ejFBFjsj+Ce2tLwvNd9ceDgVp1OJI/YGexNvPMCf7hfMNuHJLE6CRxQjrpMfVA/6u7IARsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I0/qrWzubGG9EtOv55Hm5jttac6SlrdJp7ZhsA2bRIU=;
- b=LxMPuUSAdLeS1xx3UpuuDjRJndrZjM/fATuDWP/WTDiNY9IgY+LZWToNb6MaMhGpHhdpItsN2pw/jxToiDfjnQpfAKPqsVbHRF8T3SdQb2XMqw1qU+gGTl2TzAkeBa3rd8G/nEmyBqR+zi+be9DeRMIXlDthhnCoT/WSkABOfuM=
-Received: from DM5PR2101MB1047.namprd21.prod.outlook.com (2603:10b6:4:9e::16)
- by DM6PR21MB1290.namprd21.prod.outlook.com (2603:10b6:5:170::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.12; Thu, 18 Jun
- 2020 15:24:06 +0000
-Received: from DM5PR2101MB1047.namprd21.prod.outlook.com
- ([fe80::9583:a05a:e040:2923]) by DM5PR2101MB1047.namprd21.prod.outlook.com
- ([fe80::9583:a05a:e040:2923%7]) with mapi id 15.20.3131.008; Thu, 18 Jun 2020
- 15:24:06 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/8] Drivers: hv: vmbus: Remove the target_vp field from
- the vmbus_channel struct
-Thread-Topic: [PATCH 1/8] Drivers: hv: vmbus: Remove the target_vp field from
- the vmbus_channel struct
-Thread-Index: AQHWRMcKu+sQS1ApXkyBzB8+LK3Nrqjefy7Q
-Date:   Thu, 18 Jun 2020 15:24:06 +0000
-Message-ID: <DM5PR2101MB1047A972A39E3AE03DB9C475D79B0@DM5PR2101MB1047.namprd21.prod.outlook.com>
-References: <20200617164642.37393-1-parri.andrea@gmail.com>
- <20200617164642.37393-2-parri.andrea@gmail.com>
-In-Reply-To: <20200617164642.37393-2-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-18T15:24:04Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0284ff37-f947-4fe5-8140-99e6e6ce0234;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6cd67a1a-d158-4ecc-3485-08d8139ba3f5
-x-ms-traffictypediagnostic: DM6PR21MB1290:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR21MB1290304340827F8806E705CCD79B0@DM6PR21MB1290.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2449;
-x-forefront-prvs: 0438F90F17
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UWdvGVKvhskLglEJwPG9ZG4mav7+SVeuuJcByAaZOQIu8kzOfht6Gq3Z4F0XHSsEZ2xrQhCFoEDB/G3o0ty1nthMfX/QB7IjPlo7orkWBl4RgeO3bR6WzV3Y/FNwHj+ilmFEcRcGcqlhyKVw5nZ0ZndAJpOZbhVMG0twk8ntY3PdNqGpo/aP1SNZ644t0LeB2T60yhtb9CfP/Eedt8gYuYY/9rpueJ7sCUTYI7zGpz0mUuzKDoe+36FtV7aVbtHO7TxvBPSDgoJdBlcO4NIBtPVm2+OGAOB6i4CQD7D3Sf5O/TDBvJ2vYwYnsoyOC6HkCm2OrDpedoN5zgycNpOgMg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR2101MB1047.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(396003)(136003)(366004)(2906002)(52536014)(5660300002)(33656002)(8936002)(4744005)(66556008)(54906003)(64756008)(66946007)(83380400001)(66446008)(66476007)(55016002)(76116006)(86362001)(110136005)(9686003)(6506007)(82960400001)(82950400001)(71200400001)(478600001)(186003)(4326008)(8990500004)(8676002)(316002)(7696005)(10290500003)(26005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: YfMIk/Gze+z89CZwdj79bEqCo+GEivdn5bBKu4lhpwMTj1mv6OBFgoVyr8CvtY84tI7FWvKlNBSE2CNoMUDYwudGkh3bol0zTrsL/AY0kde1S+kV/V7/rBA0rqf2Q/7hcjxBvaB1EpzWoQI9dcxwCb97P2i5dEDdAkbvGhc7EhT0xuehcsETCcobrlcBL+JWfFUO1sB55dn1Rik2AhjBEAavEDpffX4ELUpTH7Ibict4GqCO2g6pzs2tyn5Y6XdV3aiayHrF5piAb8j71URi0x78aBmcz8QqprBInWyzydCA/zvQ2lWFzkvurSnMFRbEIK0RJc2RqF3WUKyUVsiDmXF8qmBzMm/Pak7E2FujV/4iqQ0bIZZgs4ck8UzER8sunNPfboxr4qYNZrhLpgV3zmLRmnyPI4fEGqlmHLvfx97t0EmI9b5W4XmqbGl2U/7/EhoyQZJGs0MJr8XQ7uEGidRNu/qHa7TS7B/A7f2wRY7zfZmMcUwLg9kGRSWtd3Qk
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 18 Jun 2020 11:25:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbgFRPZN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 11:25:13 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5B89C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:25:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=0BWKHLb/czL3HfDkyPQ/l70JHQlX7HmWK3YRfweIKwc=; b=j3bi4iLefY89bOCygQK+/UtFMU
+        iwObx1gvW2qJ5avInfE9vP7ExhY+l+DJdttbnP0iZ5hdGbczX3cQzceKcmQ/KHZwoLrlEEdgMFovZ
+        HtUhDPNzeda7rRk/Ec2pgorrs0cOUC7YORBqRN+RJxYiV4gTgqRWNwCC7pGZDbIpA1j8gpcSUzLfL
+        p9j7ou2LF/sBXkHC3U+oaaMUxK+SM6/0Q2TA9oOp8EFHy9TZsdS7Qu2XNNG0memqIlYwe0+3efnAm
+        jXySKW2u0GOiLoTajSfV/28UzaY09XClb8kAkC5C742txomTrbnJqeQMx5HvsRZlN+c0SysJIt6hx
+        6XSPak9g==;
+Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlwPh-0002vR-7z; Thu, 18 Jun 2020 15:25:13 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     rientjes@google.com
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] dma-mapping: DMA_COHERENT_POOL should select GENERIC_ALLOCATOR
+Date:   Thu, 18 Jun 2020 17:25:06 +0200
+Message-Id: <20200618152506.116057-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR2101MB1047.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6cd67a1a-d158-4ecc-3485-08d8139ba3f5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 15:24:06.2957
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: i6fb8cFbKpgDKY3xj3WzHLKY7tEqR2tV2ygCKhWtqps/bkTZVaeu5cC1LBAb4WVzp+pvaeRpH4A6K7a7qvl/A5icUr7hosQStpOXUqlt39w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1290
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Wednesday, Ju=
-ne 17, 2020 9:47 AM
->=20
-> The field is read only in __vmbus_open() and it is already stored twice
-> (after a call to hv_cpu_number_to_vp_number()) in target_cpu_store() and
-> init_vp_index(); there is no need to "cache" its value in the channel
-> data structure.
->=20
-> Suggested-by: Michael Kelley <mikelley@microsoft.com>
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> ---
->  drivers/hv/channel.c      |  3 ++-
->  drivers/hv/channel_mgmt.c |  3 ---
->  drivers/hv/vmbus_drv.c    |  2 --
->  include/linux/hyperv.h    | 15 +++++++--------
->  4 files changed, 9 insertions(+), 14 deletions(-)
+The dma coherent pool code needs genalloc.  Move the select over
+from DMA_REMAP, which doesn't actually need it.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Fixes: dbed452a078d ("dma-pool: decouple DMA_REMAP from DMA_COHERENT_POOL")
+Reported-by: kernel test robot <lkp@intel.com>
+---
+ kernel/dma/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+index a0ce3c1494fdd2..6ad16b7c96526c 100644
+--- a/kernel/dma/Kconfig
++++ b/kernel/dma/Kconfig
+@@ -74,12 +74,12 @@ config DMA_NONCOHERENT_MMAP
+ 	bool
+ 
+ config DMA_COHERENT_POOL
++	select GENERIC_ALLOCATOR
+ 	bool
+ 
+ config DMA_REMAP
+ 	bool
+ 	depends on MMU
+-	select GENERIC_ALLOCATOR
+ 	select DMA_NONCOHERENT_MMAP
+ 
+ config DMA_DIRECT_REMAP
+-- 
+2.26.2
+
