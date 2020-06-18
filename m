@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B98C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59309C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F17921D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F152221F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443506;
-	bh=7NhwcdDfywdzC2pMc3Q/Qd6LhyK7bB2fcHfFzOdxuzI=;
+	s=default; t=1592443511;
+	bh=av4bXigQgjGLTBKgKQcAkOoaKU+fXP8Fihq9vCp9qMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tf0aLJFix6rbQP3vDBWFp7gVVmkg85iD8NkhJpdbxtQcGofC1lGKD5klVopEkI1lU
-	 za2k4PyDn4uQiAGSJdVkVrU2a8JLsZz+Wfjwv2US+78eMbLidFNh7Ei3SYwsOEYpd1
-	 jc2hdu/MRswEMcVg+2nhuZw+ylP0r/FbJAY4ygr0=
+	b=TaCku5Zq30qmbZz5NCXWCSkMGJ9i427qddFkUp9BJ32QTMaT+ycPc3TvGLoYhbhQQ
+	 vG9jW6YA/lOu9tVmlHZtataEwDKDW1rYEHJyyJyyK2EW28g0L1/OcV/26/Dq/Gvi5S
+	 dnxkBgm6GQF/fu6eCxKGPLx1EXjDnOYA9pe9KbT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731348AbgFRBZF (ORCPT
+        id S1731364AbgFRBZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:25:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54610 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727995AbgFRBV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:56 -0400
+        id S1728233AbgFRBWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:22:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F90220FC3;
-        Thu, 18 Jun 2020 01:21:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31A3221974;
+        Thu, 18 Jun 2020 01:22:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443315;
-        bh=7NhwcdDfywdzC2pMc3Q/Qd6LhyK7bB2fcHfFzOdxuzI=;
+        s=default; t=1592443325;
+        bh=av4bXigQgjGLTBKgKQcAkOoaKU+fXP8Fihq9vCp9qMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GaBLFUnOgbBMGZCFeazOeb52CrF/nlofHNMgp03Axgm/199ioX15X9gw3qjovbbun
-         sVx6AWjsc+VW4YYIW2UsQ/R/blxGwaFEQ+vY39zDQJcUmuNuRQWpfJrGuAmrV0jbbA
-         skR5ZcvLNN/KLhc7UnS6Tgj4h4GJ5DfudFR4EV5c=
+        b=xZCvwK+18qisGGmXUPX9rwGU2eg2PY65Af1Cm/QjJoViWCMqeqT5v0KCardwGert/
+         NHO0X4cCz1FNmwZG9UByNxCOPFBm2IU1Od2lD3wQDXakQcwnasZ+yePNZ9HU7pvWak
+         jugaz71hDPNA3AdbyiyfUeQEKxzrW5sF8LB/ht/c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@gmail.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 251/266] ASoC: SOF: nocodec: conditionally set dpcm_capture/dpcm_playback flags
-Date:   Wed, 17 Jun 2020 21:16:16 -0400
-Message-Id: <20200618011631.604574-251-sashal@kernel.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 258/266] libbpf: Handle GCC noreturn-turned-volatile quirk
+Date:   Wed, 17 Jun 2020 21:16:23 -0400
+Message-Id: <20200618011631.604574-258-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -63,48 +61,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit ba4e5abc6c4e173af7c941c03c067263b686665d ]
+[ Upstream commit 32022fd97ed34f6812802bf1288db27c313576f4 ]
 
-With additional checks on dailinks, we see errors such as
+Handle a GCC quirk of emitting extra volatile modifier in DWARF (and
+subsequently preserved in BTF by pahole) for function pointers marked as
+__attribute__((noreturn)). This was the way to mark such functions before GCC
+2.5 added noreturn attribute. Drop such func_proto modifiers, similarly to how
+it's done for array (also to handle GCC quirk/bug).
 
-[ 3.000418] sof-nocodec sof-nocodec: CPU DAI DMIC01 Pin for rtd
-NoCodec-6 does not support playback
+Such volatile attribute is emitted by GCC only, so existing selftests can't
+express such test. Simple repro is like this (compiled with GCC + BTF
+generated by pahole):
 
-It's not clear why we set the dpcm_playback and dpcm_capture flags
-unconditionally, add a check on number of channels for each direction
-to avoid invalid configurations.
+  struct my_struct {
+      void __attribute__((noreturn)) (*fn)(int);
+  };
+  struct my_struct a;
 
-Fixes: 8017b8fd37bf5e ('ASoC: SOF: Add Nocodec machine driver support')
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@gmail.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Link: https://lore.kernel.org/r/20200608194415.4663-5-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Without this fix, output will be:
+
+struct my_struct {
+    voidvolatile  (*fn)(int);
+};
+
+With the fix:
+
+struct my_struct {
+    void (*fn)(int);
+};
+
+Fixes: 351131b51c7a ("libbpf: add btf_dump API for BTF-to-C conversion")
+Reported-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Tested-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Link: https://lore.kernel.org/bpf/20200610052335.2862559-1-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/nocodec.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/lib/bpf/btf_dump.c | 33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
-diff --git a/sound/soc/sof/nocodec.c b/sound/soc/sof/nocodec.c
-index 3d128e5a132c..ea0fe9a09f3f 100644
---- a/sound/soc/sof/nocodec.c
-+++ b/sound/soc/sof/nocodec.c
-@@ -52,8 +52,10 @@ static int sof_nocodec_bes_setup(struct device *dev,
- 		links[i].platforms->name = dev_name(dev);
- 		links[i].codecs->dai_name = "snd-soc-dummy-dai";
- 		links[i].codecs->name = "snd-soc-dummy";
--		links[i].dpcm_playback = 1;
--		links[i].dpcm_capture = 1;
-+		if (ops->drv[i].playback.channels_min)
-+			links[i].dpcm_playback = 1;
-+		if (ops->drv[i].capture.channels_min)
-+			links[i].dpcm_capture = 1;
+diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
+index 87f27e2664c5..d9e386b8f47e 100644
+--- a/tools/lib/bpf/btf_dump.c
++++ b/tools/lib/bpf/btf_dump.c
+@@ -1141,6 +1141,20 @@ static void btf_dump_emit_mods(struct btf_dump *d, struct id_stack *decl_stack)
  	}
+ }
  
- 	card->dai_link = links;
++static void btf_dump_drop_mods(struct btf_dump *d, struct id_stack *decl_stack)
++{
++	const struct btf_type *t;
++	__u32 id;
++
++	while (decl_stack->cnt) {
++		id = decl_stack->ids[decl_stack->cnt - 1];
++		t = btf__type_by_id(d->btf, id);
++		if (!btf_is_mod(t))
++			return;
++		decl_stack->cnt--;
++	}
++}
++
+ static void btf_dump_emit_name(const struct btf_dump *d,
+ 			       const char *name, bool last_was_ptr)
+ {
+@@ -1239,14 +1253,7 @@ static void btf_dump_emit_type_chain(struct btf_dump *d,
+ 			 * a const/volatile modifier for array, so we are
+ 			 * going to silently skip them here.
+ 			 */
+-			while (decls->cnt) {
+-				next_id = decls->ids[decls->cnt - 1];
+-				next_t = btf__type_by_id(d->btf, next_id);
+-				if (btf_is_mod(next_t))
+-					decls->cnt--;
+-				else
+-					break;
+-			}
++			btf_dump_drop_mods(d, decls);
+ 
+ 			if (decls->cnt == 0) {
+ 				btf_dump_emit_name(d, fname, last_was_ptr);
+@@ -1274,7 +1281,15 @@ static void btf_dump_emit_type_chain(struct btf_dump *d,
+ 			__u16 vlen = btf_vlen(t);
+ 			int i;
+ 
+-			btf_dump_emit_mods(d, decls);
++			/*
++			 * GCC emits extra volatile qualifier for
++			 * __attribute__((noreturn)) function pointers. Clang
++			 * doesn't do it. It's a GCC quirk for backwards
++			 * compatibility with code written for GCC <2.5. So,
++			 * similarly to extra qualifiers for array, just drop
++			 * them, instead of handling them.
++			 */
++			btf_dump_drop_mods(d, decls);
+ 			if (decls->cnt) {
+ 				btf_dump_printf(d, " (");
+ 				btf_dump_emit_type_chain(d, decls, fname, lvl);
 -- 
 2.25.1
 
