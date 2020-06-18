@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC96C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7402208D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD492088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446609;
-	bh=t5Bgx/bu+7cOVDYp+ujArvCBoHhBFp8tTdGO9LXeT6w=;
+	s=default; t=1592446615;
+	bh=r9cAeOlq1yFQF0rprhLhPNc4ZUVGAgeDwB5qDxlMPy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WMeuyhqkH5N4UkuDvDb+4vsJPzIeJuk6nZImfQRrW/RU9ruatHcRQz4SXuFj51I/q
-	 HYkQ+lF0VU6mfXY3x3I3e2CE36+nSdKP/z9nEXxUIuBizPLvR+Ty07wBjfni5AUww+
-	 gAioxJfXYaaWdZc/BPk05PVAihILBLj+rdWYEdVg=
+	b=oNs2Z95Qwh9H2IqOmqo6gkHgT6FJ2sYTCyT6sw6pq7TDC5qoeDy0iQTrtwiBZKtOB
+	 NGNbu9HNz4Jeet+nvKkwJGcoEWmFt0BAVlly3bSFwc3bFJvmw6CLmtBOnciQLcNX3O
+	 4yglVsywLMsnINspZcmF8xJEd/toqWE3UV6fqk6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387569AbgFRCQs (ORCPT
+        id S2387580AbgFRCQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52262 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728774AbgFRBUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:20:10 -0400
+        id S1729561AbgFRBUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC0FC21D90;
-        Thu, 18 Jun 2020 01:20:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99D4D221F1;
+        Thu, 18 Jun 2020 01:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443210;
-        bh=t5Bgx/bu+7cOVDYp+ujArvCBoHhBFp8tTdGO9LXeT6w=;
+        s=default; t=1592443209;
+        bh=r9cAeOlq1yFQF0rprhLhPNc4ZUVGAgeDwB5qDxlMPy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BmxqB6MeZum0yAQGOfmRyisd5iwgShjWOcoWIAeITof///FhCUVI4tBoawdb4OApb
-         zsXcxefrEyVw+NDeofv2Je/OjT2eBfh9VHMXDJbnUux4Hh87ZcccoMNnY43UyLEOOA
-         qfeBfrbYN+VuckG+vcwbJ+ORG5imfvnruZm6BerQ=
+        b=pLLkRcG5wpUfVaVu5Yu7aS/Whpld9ldDsI3/FTsrTlcWkNzeh6yprKEg5iGiHIsdf
+         W8+TopVJYLABVdWQrhesg1JCE60rUYwgT0j+EyJ6h15Yt4AytHX/el3fD+CbOr0LRw
+         7jsF/ui5U9GT1p4XqVi/xOaVBHanCjqaJNbWMwRM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 167/266] fuse: fix copy_file_range cache issues
-Date:   Wed, 17 Jun 2020 21:14:52 -0400
-Message-Id: <20200618011631.604574-167-sashal@kernel.org>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 166/266] firmware: imx: scu: Fix possible memory leak in imx_scu_probe()
+Date:   Wed, 17 Jun 2020 21:14:51 -0400
+Message-Id: <20200618011631.604574-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -58,61 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 2c4656dfd994538176db30ce09c02cc0dfc361ae ]
+[ Upstream commit 89f12d6509bff004852c51cb713a439a86816b24 ]
 
-a) Dirty cache needs to be written back not just in the writeback_cache
-case, since the dirty pages may come from memory maps.
+'chan_name' is malloced in imx_scu_probe() and should be freed
+before leaving from the error handling cases, otherwise it will
+cause memory leak.
 
-b) The fuse_writeback_range() helper takes an inclusive interval, so the
-end position needs to be pos+len-1 instead of pos+len.
-
-Fixes: 88bc7d5097a1 ("fuse: add support for copy_file_range()")
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: edbee095fafb ("firmware: imx: add SCU firmware driver support")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/file.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ drivers/firmware/imx/imx-scu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 713d55a61890..e730e3d8ad99 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -3280,13 +3280,11 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
- 	if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
- 		return -EXDEV;
+diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
+index e48d971ffb61..a3b11bc71dcb 100644
+--- a/drivers/firmware/imx/imx-scu.c
++++ b/drivers/firmware/imx/imx-scu.c
+@@ -300,6 +300,7 @@ static int imx_scu_probe(struct platform_device *pdev)
+ 			if (ret != -EPROBE_DEFER)
+ 				dev_err(dev, "Failed to request mbox chan %s ret %d\n",
+ 					chan_name, ret);
++			kfree(chan_name);
+ 			return ret;
+ 		}
  
--	if (fc->writeback_cache) {
--		inode_lock(inode_in);
--		err = fuse_writeback_range(inode_in, pos_in, pos_in + len);
--		inode_unlock(inode_in);
--		if (err)
--			return err;
--	}
-+	inode_lock(inode_in);
-+	err = fuse_writeback_range(inode_in, pos_in, pos_in + len - 1);
-+	inode_unlock(inode_in);
-+	if (err)
-+		return err;
- 
- 	inode_lock(inode_out);
- 
-@@ -3294,11 +3292,9 @@ static ssize_t __fuse_copy_file_range(struct file *file_in, loff_t pos_in,
- 	if (err)
- 		goto out;
- 
--	if (fc->writeback_cache) {
--		err = fuse_writeback_range(inode_out, pos_out, pos_out + len);
--		if (err)
--			goto out;
--	}
-+	err = fuse_writeback_range(inode_out, pos_out, pos_out + len - 1);
-+	if (err)
-+		goto out;
- 
- 	if (is_unstable)
- 		set_bit(FUSE_I_SIZE_UNSTABLE, &fi_out->state);
 -- 
 2.25.1
 
