@@ -2,144 +2,110 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8232C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B291120890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF34208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:02:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="rnGYZ99a"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="JPAWHp88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbgFRUBR (ORCPT
+        id S1730698AbgFRUCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:01:17 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:49852 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727909AbgFRUBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:01:16 -0400
-Received: from zn.tnic (p200300ec2f0dcf00ed288847e9b97b82.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:cf00:ed28:8847:e9b9:7b82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B29931EC0424;
-        Thu, 18 Jun 2020 22:01:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1592510474;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:references;
-        bh=REiouwTSAKygSPN/bHRtOt64ynjYjWrhYC7ZSW7IpVk=;
-        b=rnGYZ99az9nanMKru5uLmgPbOQ9RO2Gt8N7TUOo2zHChvkPRNA5D1EVWNJWiL261FrIEKB
-        Jky+1VCvIEXFzEAMXsIlv1jhGbpGXC6NaqpVee9ny5vsTh2ZPViEQsobgC58e61Nbvbuzd
-        RitjCc91Ox4LF+YONpLwWJOzX5NbyB4=
-Date:   Thu, 18 Jun 2020 22:01:06 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ben Skeggs <bskeggs@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: 2dd4d163cd9c ("drm/nouveau: remove open-coded version of
- remove_conflicting_pci_framebuffers()")
-Message-ID: <20200618200106.GF27951@zn.tnic>
+        Thu, 18 Jun 2020 16:02:41 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:16855 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727909AbgFRUCl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 16:02:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1592510561; x=1624046561;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2kmMXn71z1aHaErHJz+a+5Rckm6j69eZzhgRB1l7j0Y=;
+  b=JPAWHp88i+B+8LaBocgA9OYg3v8nleV2cQ6IDVsbr0CQExdRescL0C95
+   HmVLhe9fMHq4yJ7SsPh/atdsvP5T+SuTiYBpSs7DRJbCAN50kR81TmCL2
+   JR22ThasVPH5W958F7kWOwoOGczh5JbtzGFeuawgfxIEJ0f6Ry7fLX0YB
+   SvDe2D06vt07iPHOt9z+LBgAnvR7hItPxubTrmevOvDm6j+E2atHzmsZj
+   bwIOwhXeT9xUX1jlLGRAkYhwLBbUuzzbO21ClZLy8mmJX8mftGZIYapSK
+   l3Y9hlzM+LqggfzYgc3SIDxiDDsrdbUdaJXfPYuBwDQAV/cKcW6jq7LRF
+   g==;
+IronPort-SDR: rFa77vFWCh8XfvxgQA1BSJ0pAXyyqDu16jtWCc3pgfvPzyOW8nyIx9Y7+yyaJI20tqVk6JGAD/
+ kSctG14tGyBlEhc0i4gdLlHFgUweNzK5rYjcLDKkLsId0XBot5OQMxm4bc1XBy9mHry8TMLgBM
+ r17df+rx0hypZSbSLAJr8Qf1MEcUePNVEHV2wHOpUKmNKBIM8si4KRRL7BmOI5+iqrlbcdmrkB
+ WHQgdA8/lpqJ9Tg5v+SEWYHEcmwKQnzOm4T3cdY2JIqr4wUATCNlmcptFdagwvkcUDFmJIHm13
+ r14=
+X-IronPort-AV: E=Sophos;i="5.75,252,1589212800"; 
+   d="scan'208";a="140608364"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 19 Jun 2020 04:02:41 +0800
+IronPort-SDR: DMygmfIDZdSi9iKFbc1QNUUMHkCC+l93bxLp9S6siMvXLs3lATDXGAbKHfnw5XHDBS/WNtWPJj
+ +M8kVAI8eVgX05bWhVq+v0mYpcRLJ5bdA=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 12:51:19 -0700
+IronPort-SDR: lSS9MdC0lT01x7YZEJMxSdooO7aOZJmx5J4yxQcctGElNPf6cUg5eI6/ZpCBeeciO/sUzmfkZp
+ yi8Dic1t1FAQ==
+WDCIronportException: Internal
+Received: from usa001298.ad.shared (HELO localhost.hgst.com) ([10.86.58.149])
+  by uls-op-cesaip02.wdc.com with ESMTP; 18 Jun 2020 13:02:38 -0700
+From:   Niklas Cassel <niklas.cassel@wdc.com>
+To:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc:     Niklas Cassel <niklas.cassel@wdc.com>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] remove workarounds for gcc bug wrt unnamed fields in initializers
+Date:   Thu, 18 Jun 2020 22:02:32 +0200
+Message-Id: <20200618200235.1104587-1-niklas.cassel@wdc.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Make the nvme code more uniform by initializing struct members at
+declaration time. This change is done both in drivers/nvme/host/ and
+drivers/nvme/target/.
 
-my test box won't boot 5.8-rc1 all the way but stops at
+This is how the design pattern was in nvme, before workarounds for a gcc
+bug were introduced in commit e44ac588cd61 ("drivers/block/nvme-core.c:
+fix build with gcc-4.4.4").
 
-...
-fb0: switching to nouveaufb from EFI VGA
-<-- EOF
+Since the minimum gcc version needed to build the kernel is now gcc 4.8.0,
+which does not have this bug, revert to the previous design pattern,
+which matches how the rest of the nvme code handles initialization
+of struct members (excluding the cases where anonymous unions were
+involved).
 
-I've bisected it to the commit in $Subject, see below. Unfortunately, it
-doesn't revert cleanly so I can't really do the final test of reverting
-it ontop of 5.8-rc1 to confirm that this one is really causing it.
+If, for some reason, we want to allow builds with gcc < 4.6.0
+even though the minimum gcc version is now 4.8.0,
+there is another less intrusive workaround where you add an extra pair of
+curly braces, see e.g. commit 6cc65be4f6f2 ("locking/qspinlock: Fix build
+for anonymous union in older GCC compilers").
 
-Any ideas?
+Changes since v1:
+-Fixed RDMA build error.
 
-GPU is:
+Niklas Cassel (2):
+  nvme: remove workarounds for gcc bug wrt unnamed fields in
+    initializers
+  nvmet: remove workarounds for gcc bug wrt unnamed fields in
+    initializers
 
-[    5.678614] fb0: switching to nouveaufb from EFI VGA
-[    5.685577] Console: switching to colour dummy device 80x25
-[    5.691865] nouveau 0000:03:00.0: NVIDIA GT218 (0a8c00b1)
-[    5.814409] nouveau 0000:03:00.0: bios: version 70.18.83.00.08
-[    5.823559] nouveau 0000:03:00.0: fb: 512 MiB DDR3
-[    6.096680] [TTM] Zone  kernel: Available graphics memory: 8158364 KiB
-[    6.103327] [TTM] Zone   dma32: Available graphics memory: 2097152 KiB
-[    6.109951] [TTM] Initializing pool allocator
-[    6.114405] [TTM] Initializing DMA pool allocator
-[    6.119256] nouveau 0000:03:00.0: DRM: VRAM: 512 MiB
-[    6.124285] nouveau 0000:03:00.0: DRM: GART: 1048576 MiB
-[    6.129677] nouveau 0000:03:00.0: DRM: TMDS table version 2.0
-[    6.135534] nouveau 0000:03:00.0: DRM: DCB version 4.0
-[    6.140755] nouveau 0000:03:00.0: DRM: DCB outp 00: 02000360 00000000
-[    6.147273] nouveau 0000:03:00.0: DRM: DCB outp 01: 02000362 00020010
-[    6.153782] nouveau 0000:03:00.0: DRM: DCB outp 02: 028003a6 0f220010
-[    6.160292] nouveau 0000:03:00.0: DRM: DCB outp 03: 01011380 00000000
-[    6.166810] nouveau 0000:03:00.0: DRM: DCB outp 04: 08011382 00020010
-[    6.173306] nouveau 0000:03:00.0: DRM: DCB outp 05: 088113c6 0f220010
-[    6.179829] nouveau 0000:03:00.0: DRM: DCB conn 00: 00101064
-[    6.185553] nouveau 0000:03:00.0: DRM: DCB conn 01: 00202165
-[    6.196145] nouveau 0000:03:00.0: DRM: MM: using COPY for buffer copies
-[    6.233659] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[    6.311939] nouveau 0000:03:00.0: DRM: allocated 1920x1080 fb: 0x70000, bo (____ptrval____)
-[    6.320736] fbcon: nouveaudrmfb (fb0) is primary device
-[    6.392722] tsc: Refined TSC clocksource calibration: 3591.346 MHz
-[    6.392788] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x33c46403b59, max_idle_ns: 440795293818 ns
-[    6.392930] clocksource: Switched to clocksource tsc
-[    6.509946] Console: switching to colour frame buffer device 240x67
-[    6.546287] nouveau 0000:03:00.0: fb0: nouveaudrmfb frame buffer device
-[    6.555021] [drm] Initialized nouveau 1.3.1 20120801 for 0000:03:00.0 on minor 0
-
-Thx.
-
-git bisect start
-# good: [3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162] Linux 5.7
-git bisect good 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
-# bad: [b3a9e3b9622ae10064826dccb4f7a52bd88c7407] Linux 5.8-rc1
-git bisect bad b3a9e3b9622ae10064826dccb4f7a52bd88c7407
-# bad: [ee01c4d72adffb7d424535adf630f2955748fa8b] Merge branch 'akpm' (patches from Andrew)
-git bisect bad ee01c4d72adffb7d424535adf630f2955748fa8b
-# bad: [16d91548d1057691979de4686693f0ff92f46000] Merge tag 'xfs-5.8-merge-8' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
-git bisect bad 16d91548d1057691979de4686693f0ff92f46000
-# good: [cfa3b8068b09f25037146bfd5eed041b78878bee] Merge tag 'for-linus-hmm' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
-git bisect good cfa3b8068b09f25037146bfd5eed041b78878bee
-# good: [3fd911b69b3117e03181262fc19ae6c3ef6962ce] Merge tag 'drm-misc-next-2020-05-07' of git://anongit.freedesktop.org/drm/drm-misc into drm-next
-git bisect good 3fd911b69b3117e03181262fc19ae6c3ef6962ce
-# bad: [1966391fa576e1fb2701be8bcca197d8f72737b7] mm/migrate.c: attach_page_private already does the get_page
-git bisect bad 1966391fa576e1fb2701be8bcca197d8f72737b7
-# good: [43c8546bcd854806736d8a635a0d696504dd4c21] drm/amdgpu: Add a UAPI flag for user to call mem_sync
-git bisect good 43c8546bcd854806736d8a635a0d696504dd4c21
-# good: [6cf991611bc72c077f0cc64e23987341ad7ef41e] Merge tag 'drm-intel-next-2020-05-15' of git://anongit.freedesktop.org/drm/drm-intel into drm-next
-git bisect good 6cf991611bc72c077f0cc64e23987341ad7ef41e
-# bad: [dc455f4c888365595c0a13da445e092422d55b8d] drm/nouveau/dispnv50: fix runtime pm imbalance on error
-git bisect bad dc455f4c888365595c0a13da445e092422d55b8d
-# bad: [2dd4d163cd9c15432524aa9863155bc03a821361] drm/nouveau: remove open-coded version of remove_conflicting_pci_framebuffers()
-git bisect bad 2dd4d163cd9c15432524aa9863155bc03a821361
-# good: [c41219fda6e04255c44d37fd2c0d898c1c46abf1] Merge tag 'drm-intel-next-fixes-2020-05-20' of git://anongit.freedesktop.org/drm/drm-intel into drm-next
-git bisect good c41219fda6e04255c44d37fd2c0d898c1c46abf1
-# good: [fd44028ff145ffb2d03c877d74f479da04ac2c62] drm/nouveau/acr: ensure falcon providing acr functions is bootstrapped first
-git bisect good fd44028ff145ffb2d03c877d74f479da04ac2c62
-# good: [fa4f4c213f5f7807360c41f2501a3031a9940f3a] drm/nouveau/kms: Support NVIDIA format modifiers
-git bisect good fa4f4c213f5f7807360c41f2501a3031a9940f3a
-# good: [d2bcfce7f8a4ba8df28d3bebb81225bd7f9c046f] drm/nouveau/ibus: use nvkm_subdev_new_()
-git bisect good d2bcfce7f8a4ba8df28d3bebb81225bd7f9c046f
-# good: [fb172f5fe880cd0ddb4370b2fcc9ad4848c98bbb] drm/nouveau/gr/gk20a: move MODULE_FIRMWARE firmware definitions
-git bisect good fb172f5fe880cd0ddb4370b2fcc9ad4848c98bbb
-# first bad commit: [2dd4d163cd9c15432524aa9863155bc03a821361] drm/nouveau: remove open-coded version of remove_conflicting_pci_framebuffers()
-
+ drivers/nvme/host/core.c     | 59 ++++++++++++++++++------------------
+ drivers/nvme/host/lightnvm.c | 32 +++++++++----------
+ drivers/nvme/host/rdma.c     | 28 ++++++++---------
+ drivers/nvme/target/rdma.c   | 23 +++++++-------
+ 4 files changed, 71 insertions(+), 71 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.26.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
