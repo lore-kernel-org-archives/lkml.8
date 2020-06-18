@@ -2,172 +2,201 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B33C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7140A20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E31E2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:57:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbgFRI5d (ORCPT
+        id S1728984AbgFRI5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:57:33 -0400
-Received: from mga18.intel.com ([134.134.136.126]:9917 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728957AbgFRI5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:57:01 -0400
-IronPort-SDR: /V+J27ipgjfERc3R9X4ROxUL/rtRhNhQHPeSH8kJmof0DSfltmva1DtSXfFqS5OhcZc7fXy6un
- 9Cm+l/CsS/cg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9655"; a="129838105"
-X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
-   d="scan'208";a="129838105"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 01:56:54 -0700
-IronPort-SDR: ZGxC2mJAjIhIqoZ7Ayl/dGYggHaOBy1q/pA5op6tYrSozL8Y1S7uTRMbtIcWiMasAXVhzZ4zI8
- mfRvg4mzBiiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
-   d="scan'208";a="299596268"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 18 Jun 2020 01:56:52 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jlqLu-00EEZK-OX; Thu, 18 Jun 2020 11:56:54 +0300
-Date:   Thu, 18 Jun 2020 11:56:54 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v1 0/6] mfd: Make use of software nodes
-Message-ID: <20200618085654.GL2428291@smile.fi.intel.com>
-References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
- <20200616200225.32mwzew3zw3nuiwh@mobilestation>
- <CAHp75VfZMx8ip=Bo=gZQiGufJvh=7dtr61C3ZcZjETFrErTk6Q@mail.gmail.com>
- <20200616225648.eqzugzapatblndcy@mobilestation>
+        Thu, 18 Jun 2020 04:57:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58246 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728992AbgFRI5g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:57:36 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05I8XHsP166386;
+        Thu, 18 Jun 2020 04:56:54 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31r44t239w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 04:56:54 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05I8Xovn168995;
+        Thu, 18 Jun 2020 04:56:53 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31r44t2396-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 04:56:53 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05I8tl9e022242;
+        Thu, 18 Jun 2020 08:56:50 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04fra.de.ibm.com with ESMTP id 31r18v04f3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 08:56:50 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05I8tTmP62915032
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jun 2020 08:55:29 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC5ED4204C;
+        Thu, 18 Jun 2020 08:56:46 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BBBA14203F;
+        Thu, 18 Jun 2020 08:56:43 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.204.36])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 18 Jun 2020 08:56:43 +0000 (GMT)
+Date:   Thu, 18 Jun 2020 11:56:41 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 (RESEND) 0/3] arm64: Enable vmemmap mapping from
+ device memory
+Message-ID: <20200618085641.GE6493@linux.ibm.com>
+References: <1592442930-9380-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200616225648.eqzugzapatblndcy@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1592442930-9380-1-git-send-email-anshuman.khandual@arm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-18_04:2020-06-17,2020-06-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ priorityscore=1501 impostorscore=0 mlxscore=0 mlxlogscore=999
+ clxscore=1011 lowpriorityscore=0 malwarescore=0 suspectscore=0 bulkscore=0
+ phishscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006180065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 01:56:48AM +0300, Serge Semin wrote:
-> On Wed, Jun 17, 2020 at 12:40:35AM +0300, Andy Shevchenko wrote:
-> > On Tue, Jun 16, 2020 at 11:03 PM Serge Semin <fancer.lancer@gmail.com> wrote:
-> > > On Mon, Jun 08, 2020 at 04:42:54PM +0300, Andy Shevchenko wrote:
-> > > > Some devices would need to have a hierarchy of properties and
-> > > > child nodes passed to the child or children of MFD. For such case
-> > > > we may utilize software nodes, which is superior on device properties.
-> > > >
-> > > > Add support of software nodes to MFD core and convert one driver
-> > > > to show how it looks like. This allows to get rid of legacy platform
-> > > > data.
-> > > >
-> > > > The change has been tested on Intel Galileo Gen 2.
-> > >
-> > > I am wondering whether we could move the {gpio_base, ngpio, irq_shared}
-> > > part into the gpio-dwapb.c driver and use either the ACPI-based or
-> > > platform_device_id-based matching to get the device-specific resources
-> > > info through the driver_data field. By doing so you wouldn't need to
-> > > introduce a new "snps,gpio-base"-like property and propagate
-> > > software_node-based properties, but still you could get rid of the
-> > > dwapb_platform_data structure since all the info would be locally
-> > > available.
-> > 
-> > The idea is to get rid of the driver being dependent on some quirks
-> > when we may do it clearly and nicely.
+On Thu, Jun 18, 2020 at 06:45:27AM +0530, Anshuman Khandual wrote:
+> This series enables vmemmap backing memory allocation from device memory
+> ranges on arm64. But before that, it enables vmemmap_populate_basepages()
+> and vmemmap_alloc_block_buf() to accommodate struct vmem_altmap based
+> alocation requests.
 > 
-> Yes, I've got that and in most of the aspects I like what you suggested
-> in this parchset. But it seems to me that the maintainers are mostly prone
-> to having some of the platform-specifics being locally (in-driver) defined.
-
-You are a maintainer of the dwapb-gpio. Is it what you insist?
-
-> So I proposed an alternative solution, which might do to satisfy their
-> requirement.
-
-I'm puzzled whom about you are talking.
-
-> Note saying that you want to get rid of the quirks and
-> introducing something like "gpio-base" firmware property seems contradicting
-> a bit. 
-
-Maybe I need to elaborate that under quirks I meant quirk-clean GPIO driver,
-so, it wouldn't care about what platform(s) require base and what do not.
-
-> > We, by applying this series, make (keep) layers independent: board
-> > code vs. driver code. Mixing them more is the opposite to what I
-> > propose.
-> > 
-> > WRT property.
-> > snps,gpio-base can be easily changed to *already in use* gpio-base or
-> > being both converted to linux,gpio-base to explicitly show people that
-> > this is internal stuff that must not be present in firmware nodes.
+> This series applies on 5.8-rc1.
 > 
-> As I see it the part with "gpio-base" and the irq_shared can be moved to the
-> gpio-dwapb.c driver to be defined as the quark-specific quirks. Adding a
-> property like "gpio-base" seems like a quirk anyway, so I'd leave it defined in
-> the driver.
-
-Huh?! The whole idea is make GPIO driver agnostic from platforms and their quirks.
-
-> * Note I don't really like replacing the irq_shared flag with to_of_node()
-> because in general to_of_node() doesn't mean the IRQ line is shared, so
-> selecting the shared and non-shared interrupt request paths based on that macro
-> seems hackish.
-
-This I can understand, but can you propose better alternative?
-
-> > > If ACPI-based matching doesn't uniquely address the Quark GPIO node,
-> > > then you could just replace the intel_quark_mfd_cells[0].name with
-> > > something like "gpio-dwapb-quark", which then by the MFD core will be
-> > > copied to the corresponding platform_device->name due to calling
-> > > platform_device_alloc() with cell-name passed. That name will be used
-> > > to match a platform_driver with id_table having that new name added.
-> > 
-> > Oh, that doesn't sound right. It makes things ugly.
+> Pending Question:
 > 
-> I may have said that a bit unclearly. The only thing you'd need to do is to
-> add an unique name to the Quark GPIO cell, like:
-> drivers/mfd/intel_quark_i2c_gpio.c:
-> static struct mfd_cell intel_quark_mfd_cells[] = {
->         {
->                 .name = "gpio-dwapb-quark",
->         }
+> altmap_alloc_block_buf() does not have any other remaining users in
+> the tree after this change. Should it be converted into a static
+> function and it's declaration be dropped from the header
+> (include/linux/mm.h). Avoided doing so because I was not sure if there
+> are any off-tree users or not.
+
+Well, off-tree users probably have an active fork anyway so they could
+switch to vmemmap_alloc_block_buf()...
+
+Regardless, can you please update Documentation/vm/memory-model.rst to
+keep it in sync with the code?
+
+> Changes in V3:
 > 
-> Then make the gpio-dwapb.c driver being compatible with that device by declaring
-> the id_table with that device name and passing the table to the DW APB GPIO
-> "struct platform_driver" descriptor. The MFD/platform cores already provide the
-> functionality of matching those two device and driver. If ACPI node uniquely
-> defines the Quark GPIO with all that quirks applicable then you wouldn't even
-> need to do the platform_device-driver-based matching. Just use the acpi_device_id
-> to get the quirks flags/descriptors. 
-
-What you are talking about? Can you provide a code we can discuss?
-
-> * Though indeed it would be better to mark the "snps,nr-gpios" as deprecated in
-> the DT schema and have the "ngpios" supported as well.
-
-Actually I used to have that piece in my first patches, but decided to remove
-due to this property being (semi-)internal. I would like to hear GPIO
-maintainers about this.
-
-Bart, Linus?
+> - Dropped comment from free_hotplug_page_range() per Robin
+> - Modified comment in unmap_hotplug_range() per Robin
+> - Enabled altmap support in vmemmap_alloc_block_buf() per Robin
+> 
+> Changes in V2: (https://lkml.org/lkml/2020/3/4/475)
+> 
+> - Rebased on latest hot-remove series (v14) adding P4D page table support
+> 
+> Changes in V1: (https://lkml.org/lkml/2020/1/23/12)
+> 
+> - Added an WARN_ON() in unmap_hotplug_range() when altmap is
+>   provided without the page table backing memory being freed
+> 
+> Changes in RFC V2: (https://lkml.org/lkml/2019/10/21/11)
+> 
+> - Changed the commit message on 1/2 patch per Will
+> - Changed the commit message on 2/2 patch as well
+> - Rebased on arm64 memory hot remove series (v10)
+> 
+> RFC V1: (https://lkml.org/lkml/2019/6/28/32)
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-ia64@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: x86@kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Anshuman Khandual (3):
+>   mm/sparsemem: Enable vmem_altmap support in vmemmap_populate_basepages()
+>   mm/sparsemem: Enable vmem_altmap support in vmemmap_alloc_block_buf()
+>   arm64/mm: Enable vmem_altmap support for vmemmap mappings
+> 
+>  arch/arm64/mm/mmu.c       | 59 ++++++++++++++++++++++++++-------------
+>  arch/ia64/mm/discontig.c  |  2 +-
+>  arch/powerpc/mm/init_64.c | 10 +++----
+>  arch/riscv/mm/init.c      |  2 +-
+>  arch/x86/mm/init_64.c     | 12 ++++----
+>  include/linux/mm.h        |  8 ++++--
+>  mm/sparse-vmemmap.c       | 38 ++++++++++++++++++++-----
+>  7 files changed, 87 insertions(+), 44 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Sincerely yours,
+Mike.
