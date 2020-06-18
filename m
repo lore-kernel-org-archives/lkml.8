@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE504C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A57F8207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A7F207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbgFRNvi (ORCPT
+        id S1730677AbgFRNvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:51:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49182 "EHLO
+        Thu, 18 Jun 2020 09:51:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730572AbgFRNvJ (ORCPT
+        with ESMTP id S1730564AbgFRNvG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:51:09 -0400
+        Thu, 18 Jun 2020 09:51:06 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96A14C061794;
-        Thu, 18 Jun 2020 06:51:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51464C06174E;
+        Thu, 18 Jun 2020 06:51:06 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jluwR-0002ia-Vi; Thu, 18 Jun 2020 15:50:56 +0200
+        id 1jluwZ-0002lz-43; Thu, 18 Jun 2020 15:51:03 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8517B1C032F;
-        Thu, 18 Jun 2020 15:50:55 +0200 (CEST)
-Date:   Thu, 18 Jun 2020 13:50:55 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AE0401C032F;
+        Thu, 18 Jun 2020 15:50:58 +0200 (CEST)
+Date:   Thu, 18 Jun 2020 13:50:58 -0000
 From:   "tip-bot2 for Chang S. Bae" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fsgsbase] selftests/x86/fsgsbase: Test GS selector on
- ptracer-induced GS base write
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
+Subject: [tip: x86/fsgsbase] x86/fsgsbase/64: Enable FSGSBASE instructions in
+ helper functions
+Cc:     "Chang S. Bae" <chang.seok.bae@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86 <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200528201402.1708239-16-sashal@kernel.org>
-References: <20200528201402.1708239-16-sashal@kernel.org>
+In-Reply-To: <1557309753-24073-7-git-send-email-chang.seok.bae@intel.com>
+References: <1557309753-24073-7-git-send-email-chang.seok.bae@intel.com>
 MIME-Version: 1.0
-Message-ID: <159248825533.16989.3733631087117185210.tip-bot2@tip-bot2>
+Message-ID: <159248825847.16989.12376221390897516192.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,74 +61,195 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/fsgsbase branch of tip:
 
-Commit-ID:     291fd83569e10f3d305cd8adb62f6ec00f759dc6
-Gitweb:        https://git.kernel.org/tip/291fd83569e10f3d305cd8adb62f6ec00f759dc6
+Commit-ID:     58edfd2e0a93c9adc2f29902a0335af0584041a0
+Gitweb:        https://git.kernel.org/tip/58edfd2e0a93c9adc2f29902a0335af0584041a0
 Author:        Chang S. Bae <chang.seok.bae@intel.com>
-AuthorDate:    Thu, 28 May 2020 16:14:01 -04:00
+AuthorDate:    Thu, 28 May 2020 16:13:50 -04:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 18 Jun 2020 15:47:06 +02:00
+CommitterDate: Thu, 18 Jun 2020 15:47:00 +02:00
 
-selftests/x86/fsgsbase: Test GS selector on ptracer-induced GS base write
+x86/fsgsbase/64: Enable FSGSBASE instructions in helper functions
 
-The test validates that the selector is not changed when a ptracer writes
-the ptracee's GS base.
+Add cpu feature conditional FSGSBASE access to the relevant helper
+functions. That allows to accelerate certain FS/GS base operations in
+subsequent changes.
 
-Originally-by: Andy Lutomirski <luto@kernel.org>
+Note, that while possible, the user space entry/exit GSBASE operations are
+not going to use the new FSGSBASE instructions. The reason is that it would
+require additional storage for the user space value which adds more
+complexity to the low level code and experiments have shown marginal
+benefit. This may be revisited later but for now the SWAPGS based handling
+in the entry code is preserved except for the paranoid entry/exit code.
+
+To preserve the SWAPGS entry mechanism introduce __[rd|wr]gsbase_inactive()
+helpers. Note, for Xen PV, paravirt hooks can be added later as they might
+allow a very efficient but different implementation.
+
+[ tglx: Massaged changelog, convert it to noinstr and force inline
+  	native_swapgs() ]
+
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20200528201402.1708239-16-sashal@kernel.org
+Link: https://lkml.kernel.org/r/1557309753-24073-7-git-send-email-chang.seok.bae@intel.com
+Link: https://lkml.kernel.org/r/20200528201402.1708239-5-sashal@kernel.org
 
 
 ---
- tools/testing/selftests/x86/fsgsbase.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/fsgsbase.h  | 27 +++++-------
+ arch/x86/include/asm/processor.h |  2 +-
+ arch/x86/kernel/process_64.c     | 68 +++++++++++++++++++++++++++++++-
+ 3 files changed, 81 insertions(+), 16 deletions(-)
 
-diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
-index 15a329d..950a48b 100644
---- a/tools/testing/selftests/x86/fsgsbase.c
-+++ b/tools/testing/selftests/x86/fsgsbase.c
-@@ -465,7 +465,7 @@ static void test_ptrace_write_gsbase(void)
- 	wait(&status);
+diff --git a/arch/x86/include/asm/fsgsbase.h b/arch/x86/include/asm/fsgsbase.h
+index fdd1177..aefd537 100644
+--- a/arch/x86/include/asm/fsgsbase.h
++++ b/arch/x86/include/asm/fsgsbase.h
+@@ -49,35 +49,32 @@ static __always_inline void wrgsbase(unsigned long gsbase)
+ 	asm volatile("wrgsbase %0" :: "r" (gsbase) : "memory");
+ }
  
- 	if (WSTOPSIG(status) == SIGTRAP) {
--		unsigned long gs, base;
-+		unsigned long gs;
- 		unsigned long gs_offset = USER_REGS_OFFSET(gs);
- 		unsigned long base_offset = USER_REGS_OFFSET(gs_base);
- 
-@@ -481,7 +481,6 @@ static void test_ptrace_write_gsbase(void)
- 			err(1, "PTRACE_POKEUSER");
- 
- 		gs = ptrace(PTRACE_PEEKUSER, child, gs_offset, NULL);
--		base = ptrace(PTRACE_PEEKUSER, child, base_offset, NULL);
- 
- 		/*
- 		 * In a non-FSGSBASE system, the nonzero selector will load
-@@ -489,11 +488,21 @@ static void test_ptrace_write_gsbase(void)
- 		 * selector value is changed or not by the GSBASE write in
- 		 * a ptracer.
- 		 */
--		if (gs == 0 && base == 0xFF) {
--			printf("[OK]\tGS was reset as expected\n");
--		} else {
-+		if (gs != *shared_scratch) {
- 			nerrs++;
--			printf("[FAIL]\tGS=0x%lx, GSBASE=0x%lx (should be 0, 0xFF)\n", gs, base);
-+			printf("[FAIL]\tGS changed to %lx\n", gs);
++#include <asm/cpufeature.h>
 +
-+			/*
-+			 * On older kernels, poking a nonzero value into the
-+			 * base would zero the selector.  On newer kernels,
-+			 * this behavior has changed -- poking the base
-+			 * changes only the base and, if FSGSBASE is not
-+			 * available, this may not effect.
-+			 */
-+			if (gs == 0)
-+				printf("\tNote: this is expected behavior on older kernels.\n");
-+		} else {
-+			printf("[OK]\tGS remained 0x%hx\n", *shared_scratch);
- 		}
- 	}
+ /* Helper functions for reading/writing FS/GS base */
  
+ static inline unsigned long x86_fsbase_read_cpu(void)
+ {
+ 	unsigned long fsbase;
+ 
+-	rdmsrl(MSR_FS_BASE, fsbase);
++	if (static_cpu_has(X86_FEATURE_FSGSBASE))
++		fsbase = rdfsbase();
++	else
++		rdmsrl(MSR_FS_BASE, fsbase);
+ 
+ 	return fsbase;
+ }
+ 
+-static inline unsigned long x86_gsbase_read_cpu_inactive(void)
+-{
+-	unsigned long gsbase;
+-
+-	rdmsrl(MSR_KERNEL_GS_BASE, gsbase);
+-
+-	return gsbase;
+-}
+-
+ static inline void x86_fsbase_write_cpu(unsigned long fsbase)
+ {
+-	wrmsrl(MSR_FS_BASE, fsbase);
++	if (static_cpu_has(X86_FEATURE_FSGSBASE))
++		wrfsbase(fsbase);
++	else
++		wrmsrl(MSR_FS_BASE, fsbase);
+ }
+ 
+-static inline void x86_gsbase_write_cpu_inactive(unsigned long gsbase)
+-{
+-	wrmsrl(MSR_KERNEL_GS_BASE, gsbase);
+-}
++extern unsigned long x86_gsbase_read_cpu_inactive(void);
++extern void x86_gsbase_write_cpu_inactive(unsigned long gsbase);
+ 
+ #endif /* CONFIG_X86_64 */
+ 
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 42cd333..f66202d 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -575,7 +575,7 @@ native_load_sp0(unsigned long sp0)
+ 	this_cpu_write(cpu_tss_rw.x86_tss.sp0, sp0);
+ }
+ 
+-static inline void native_swapgs(void)
++static __always_inline void native_swapgs(void)
+ {
+ #ifdef CONFIG_X86_64
+ 	asm volatile("swapgs" ::: "memory");
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 9a97415..c41e0aa 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -150,6 +150,44 @@ enum which_selector {
+ };
+ 
+ /*
++ * Out of line to be protected from kprobes and tracing. If this would be
++ * traced or probed than any access to a per CPU variable happens with
++ * the wrong GS.
++ *
++ * It is not used on Xen paravirt. When paravirt support is needed, it
++ * needs to be renamed with native_ prefix.
++ */
++static noinstr unsigned long __rdgsbase_inactive(void)
++{
++	unsigned long gsbase;
++
++	lockdep_assert_irqs_disabled();
++
++	native_swapgs();
++	gsbase = rdgsbase();
++	native_swapgs();
++
++	return gsbase;
++}
++
++/*
++ * Out of line to be protected from kprobes and tracing. If this would be
++ * traced or probed than any access to a per CPU variable happens with
++ * the wrong GS.
++ *
++ * It is not used on Xen paravirt. When paravirt support is needed, it
++ * needs to be renamed with native_ prefix.
++ */
++static noinstr void __wrgsbase_inactive(unsigned long gsbase)
++{
++	lockdep_assert_irqs_disabled();
++
++	native_swapgs();
++	wrgsbase(gsbase);
++	native_swapgs();
++}
++
++/*
+  * Saves the FS or GS base for an outgoing thread if FSGSBASE extensions are
+  * not available.  The goal is to be reasonably fast on non-FSGSBASE systems.
+  * It's forcibly inlined because it'll generate better code and this function
+@@ -327,6 +365,36 @@ static unsigned long x86_fsgsbase_read_task(struct task_struct *task,
+ 	return base;
+ }
+ 
++unsigned long x86_gsbase_read_cpu_inactive(void)
++{
++	unsigned long gsbase;
++
++	if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
++		unsigned long flags;
++
++		local_irq_save(flags);
++		gsbase = __rdgsbase_inactive();
++		local_irq_restore(flags);
++	} else {
++		rdmsrl(MSR_KERNEL_GS_BASE, gsbase);
++	}
++
++	return gsbase;
++}
++
++void x86_gsbase_write_cpu_inactive(unsigned long gsbase)
++{
++	if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
++		unsigned long flags;
++
++		local_irq_save(flags);
++		__wrgsbase_inactive(gsbase);
++		local_irq_restore(flags);
++	} else {
++		wrmsrl(MSR_KERNEL_GS_BASE, gsbase);
++	}
++}
++
+ unsigned long x86_fsbase_read_task(struct task_struct *task)
+ {
+ 	unsigned long fsbase;
