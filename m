@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23075C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F29072193E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B893121534
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448268;
-	bh=TS51LkKgjmjEv2BFagb1w17wjUJM5ZYvOrdt2wSaGh8=;
+	s=default; t=1592448281;
+	bh=qIVTL6kloqxKMY1tm1nI4jXoolMw/CZL9rpotWD4kHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pph8DIeR/5GvdXeiqRhxpwiT6pI2Rdq/rC3h6Q7rf+K97Acoh/peBOyAoAuNMv/iK
-	 3h9apBrYZCsf7Pzu/P/AJ21tPBVv3uileouX0kOHa4/xrKfQ8kRHqLmpbWWM1ZwjnL
-	 RLkG8KBZg1H4PSKqeyy9G9mrYBlq8FI9nZB5PLPI=
+	b=gXr+8LFoNsVB78fxSVW+jk9bowfiY3dsea4Zo5ySIE4lUXWwHy1e2x+bYc1nWcIX4
+	 cfRegcEwWGt5iT1WLPq5otU1V6J419OjtN00snBtb0KNOZQnvxAc25L0JxTuCrawo9
+	 ZAZfPFAfTNpdzcrhXKKSgtOheNwbfH1xy1t6AnhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387907AbgFRCo0 (ORCPT
+        id S1729109AbgFRCoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:44:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38970 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:44:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727801AbgFRBLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:14 -0400
+        id S1727855AbgFRBLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5C7021D7E;
-        Thu, 18 Jun 2020 01:11:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37D2F21D93;
+        Thu, 18 Jun 2020 01:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442673;
-        bh=TS51LkKgjmjEv2BFagb1w17wjUJM5ZYvOrdt2wSaGh8=;
+        s=default; t=1592442668;
+        bh=qIVTL6kloqxKMY1tm1nI4jXoolMw/CZL9rpotWD4kHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=js1/BdXIk8LUvZoxamm2vcStRezJWvpl+Njz8RXH5F9thpbYiDwNoBSBgxxK28w9a
-         G+tU0JwlPN0yyizXIolEj14+MerDYQ72tpp6J/f11ro/f3z3NJbIZQDcUvuszz+4c/
-         soc0M2g01t2OUwdicHuhWoT/gONe3M6W072rp6rc=
+        b=D5ANQaEJaHjLF8Brnq+S3wB6ae+Jin95CZt8AhiyYlY5BecCzGmDHJK1BO3qZuH5E
+         b7nZFDik6EqZZDQ96jnrxXKaosT5tA89KOH+bnseEmsyL1PjwHojHFEwN94yDritE7
+         AyyE2AATfaO3OCDSrf8t+hCSHOUJ4RTiUKCY48co=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 142/388] s390/qdio: tear down thinint indicator after early error
-Date:   Wed, 17 Jun 2020 21:03:59 -0400
-Message-Id: <20200618010805.600873-142-sashal@kernel.org>
+Cc:     Alexander Tsoy <alexander@tsoy.me>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.7 138/388] ALSA: usb-audio: Improve frames size computation
+Date:   Wed, 17 Jun 2020 21:03:55 -0400
+Message-Id: <20200618010805.600873-138-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,34 +58,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Alexander Tsoy <alexander@tsoy.me>
 
-[ Upstream commit 68a381746f20e5435206173e22d0a011ef78790e ]
+[ Upstream commit f0bd62b64016508938df9babe47f65c2c727d25c ]
 
-qdio_establish() calls qdio_establish_thinint(), but later has an error
-exit path that doesn't roll this call back. Fix it.
+For computation of the the next frame size current value of fs/fps and
+accumulated fractional parts of fs/fps are used, where values are stored
+in Q16.16 format. This is quite natural for computing frame size for
+asynchronous endpoints driven by explicit feedback, since in this case
+fs/fps is a value provided by the feedback endpoint and it's already in
+the Q format. If an error is accumulated over time, the device can
+adjust fs/fps value to prevent buffer overruns/underruns.
 
-Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+But for synchronous endpoints the accuracy provided by these computations
+is not enough. Due to accumulated error the driver periodically produces
+frames with incorrect size (+/- 1 audio sample).
+
+This patch fixes this issue by implementing a different algorithm for
+frame size computation. It is based on accumulating of the remainders
+from division fs/fps and it doesn't accumulate errors over time. This
+new method is enabled for synchronous and adaptive playback endpoints.
+
+Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
+Link: https://lore.kernel.org/r/20200424022449.14972-1-alexander@tsoy.me
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/qdio_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/usb/card.h     |  4 ++++
+ sound/usb/endpoint.c | 43 ++++++++++++++++++++++++++++++++++++++-----
+ sound/usb/endpoint.h |  1 +
+ sound/usb/pcm.c      |  2 ++
+ 4 files changed, 45 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
-index da5a11138020..80cc811bd2e0 100644
---- a/drivers/s390/cio/qdio_main.c
-+++ b/drivers/s390/cio/qdio_main.c
-@@ -1363,6 +1363,7 @@ int qdio_establish(struct ccw_device *cdev,
- 	if (rc) {
- 		DBF_ERROR("%4x est IO ERR", irq_ptr->schid.sch_no);
- 		DBF_ERROR("rc:%4x", rc);
-+		qdio_shutdown_thinint(irq_ptr);
- 		qdio_shutdown_irq(irq_ptr);
- 		mutex_unlock(&irq_ptr->setup_mutex);
- 		return rc;
+diff --git a/sound/usb/card.h b/sound/usb/card.h
+index 395403a2d33f..820e564656ed 100644
+--- a/sound/usb/card.h
++++ b/sound/usb/card.h
+@@ -84,6 +84,10 @@ struct snd_usb_endpoint {
+ 	dma_addr_t sync_dma;		/* DMA address of syncbuf */
+ 
+ 	unsigned int pipe;		/* the data i/o pipe */
++	unsigned int framesize[2];	/* small/large frame sizes in samples */
++	unsigned int sample_rem;	/* remainder from division fs/fps */
++	unsigned int sample_accum;	/* sample accumulator */
++	unsigned int fps;		/* frames per second */
+ 	unsigned int freqn;		/* nominal sampling rate in fs/fps in Q16.16 format */
+ 	unsigned int freqm;		/* momentary sampling rate in fs/fps in Q16.16 format */
+ 	int	   freqshift;		/* how much to shift the feedback value to get Q16.16 */
+diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
+index 4a9a2f6ef5a4..d8dc7cb56d43 100644
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -124,12 +124,12 @@ int snd_usb_endpoint_implicit_feedback_sink(struct snd_usb_endpoint *ep)
+ 
+ /*
+  * For streaming based on information derived from sync endpoints,
+- * prepare_outbound_urb_sizes() will call next_packet_size() to
++ * prepare_outbound_urb_sizes() will call slave_next_packet_size() to
+  * determine the number of samples to be sent in the next packet.
+  *
+- * For implicit feedback, next_packet_size() is unused.
++ * For implicit feedback, slave_next_packet_size() is unused.
+  */
+-int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep)
++int snd_usb_endpoint_slave_next_packet_size(struct snd_usb_endpoint *ep)
+ {
+ 	unsigned long flags;
+ 	int ret;
+@@ -146,6 +146,29 @@ int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep)
+ 	return ret;
+ }
+ 
++/*
++ * For adaptive and synchronous endpoints, prepare_outbound_urb_sizes()
++ * will call next_packet_size() to determine the number of samples to be
++ * sent in the next packet.
++ */
++int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep)
++{
++	int ret;
++
++	if (ep->fill_max)
++		return ep->maxframesize;
++
++	ep->sample_accum += ep->sample_rem;
++	if (ep->sample_accum >= ep->fps) {
++		ep->sample_accum -= ep->fps;
++		ret = ep->framesize[1];
++	} else {
++		ret = ep->framesize[0];
++	}
++
++	return ret;
++}
++
+ static void retire_outbound_urb(struct snd_usb_endpoint *ep,
+ 				struct snd_urb_ctx *urb_ctx)
+ {
+@@ -190,6 +213,8 @@ static void prepare_silent_urb(struct snd_usb_endpoint *ep,
+ 
+ 		if (ctx->packet_size[i])
+ 			counts = ctx->packet_size[i];
++		else if (ep->sync_master)
++			counts = snd_usb_endpoint_slave_next_packet_size(ep);
+ 		else
+ 			counts = snd_usb_endpoint_next_packet_size(ep);
+ 
+@@ -874,10 +899,17 @@ int snd_usb_endpoint_set_params(struct snd_usb_endpoint *ep,
+ 	ep->maxpacksize = fmt->maxpacksize;
+ 	ep->fill_max = !!(fmt->attributes & UAC_EP_CS_ATTR_FILL_MAX);
+ 
+-	if (snd_usb_get_speed(ep->chip->dev) == USB_SPEED_FULL)
++	if (snd_usb_get_speed(ep->chip->dev) == USB_SPEED_FULL) {
+ 		ep->freqn = get_usb_full_speed_rate(rate);
+-	else
++		ep->fps = 1000;
++	} else {
+ 		ep->freqn = get_usb_high_speed_rate(rate);
++		ep->fps = 8000;
++	}
++
++	ep->sample_rem = rate % ep->fps;
++	ep->framesize[0] = rate / ep->fps;
++	ep->framesize[1] = (rate + (ep->fps - 1)) / ep->fps;
+ 
+ 	/* calculate the frequency in 16.16 format */
+ 	ep->freqm = ep->freqn;
+@@ -936,6 +968,7 @@ int snd_usb_endpoint_start(struct snd_usb_endpoint *ep)
+ 	ep->active_mask = 0;
+ 	ep->unlink_mask = 0;
+ 	ep->phase = 0;
++	ep->sample_accum = 0;
+ 
+ 	snd_usb_endpoint_start_quirk(ep);
+ 
+diff --git a/sound/usb/endpoint.h b/sound/usb/endpoint.h
+index 63a39d4fa8d8..d23fa0a8c11b 100644
+--- a/sound/usb/endpoint.h
++++ b/sound/usb/endpoint.h
+@@ -28,6 +28,7 @@ void snd_usb_endpoint_release(struct snd_usb_endpoint *ep);
+ void snd_usb_endpoint_free(struct snd_usb_endpoint *ep);
+ 
+ int snd_usb_endpoint_implicit_feedback_sink(struct snd_usb_endpoint *ep);
++int snd_usb_endpoint_slave_next_packet_size(struct snd_usb_endpoint *ep);
+ int snd_usb_endpoint_next_packet_size(struct snd_usb_endpoint *ep);
+ 
+ void snd_usb_handle_sync_urb(struct snd_usb_endpoint *ep,
+diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
+index a4e4064f9aee..b50965ab3b3a 100644
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -1579,6 +1579,8 @@ static void prepare_playback_urb(struct snd_usb_substream *subs,
+ 	for (i = 0; i < ctx->packets; i++) {
+ 		if (ctx->packet_size[i])
+ 			counts = ctx->packet_size[i];
++		else if (ep->sync_master)
++			counts = snd_usb_endpoint_slave_next_packet_size(ep);
+ 		else
+ 			counts = snd_usb_endpoint_next_packet_size(ep);
+ 
 -- 
 2.25.1
 
