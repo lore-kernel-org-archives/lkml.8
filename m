@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2986C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2191221E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F72221E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444286;
-	bh=oOn5MZYvIf+AOlHExtHn2fgo34KzySZ2AJ7C0utEokw=;
+	s=default; t=1592444292;
+	bh=kxG45STq5CMYA1inuAgbobc/i/Q6V2Gzuxo39Hd6l2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BK0QPU6LQ2bZWqzRyrtMj1/jK4KQJzD/nl3GmPduhIfAH5rmyXQqbdZHpHole6i/l
-	 2GLao/uEL6i3q0bx8fPoIFcYeJD066etCIs3RPYMmHUu59lQb76a/0HSyk22Xw8QGb
-	 gGK2E3cp6AgbnXlRx1ySnZjyUsO1Os2fsxgCC5Sc=
+	b=pNsWYppDqU/EKCzN36vZgzGLpTPsyRdvP6FAa3UdGfjGq4hvMeUce1DmiObLqi85d
+	 0xfSRBgYmHoMiSWhwkRDk5ZJy2LxqvYqvbLbxVegrOitDAD8ekh+P+mbtofl2gdmVE
+	 8y3hf8SdULAoZ5JOvRr/V5a0wQNz46O2YKffmWbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732572AbgFRBag (ORCPT
+        id S1733048AbgFRBiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:30:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35272 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:38:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731817AbgFRB1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:14 -0400
+        id S1732562AbgFRBaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:30:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 354F420B1F;
-        Thu, 18 Jun 2020 01:27:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BEA421D82;
+        Thu, 18 Jun 2020 01:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443634;
-        bh=oOn5MZYvIf+AOlHExtHn2fgo34KzySZ2AJ7C0utEokw=;
+        s=default; t=1592443835;
+        bh=kxG45STq5CMYA1inuAgbobc/i/Q6V2Gzuxo39Hd6l2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O5ezpX05J/sYGYWKEaLrq40SjWYhSWWRKkV+EbaOeF3jy6NAzKRXJ15BQMYxccek3
-         kGjqj/Lp3q9g3UDd6URUQ5qN73sCBh+QeKuw584PR6inchY7buLGrF4tU6o/N8Idd5
-         lr6sNxX2IE0W4m8ZOmJM3XCm5Y5BVFn1RhmK7QiY=
+        b=RRRdi+lOBNXN7slNO+iksN+PfYfpQ740uZ/IbVJb/eaQfSU1rUP2tC2VTr6Wryl7N
+         IO7N+FVM7hpxeu22UOY8D2PBRoF9LtsW1rjgVr4bG+djVt53MkUkTwg9CN2qgXqXQF
+         qlkMeP+ztmv7UDhsJ4SBTr0PB+2uIDycMP3iTItQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 057/108] PCI: Fix pci_register_host_bridge() device_register() error handling
-Date:   Wed, 17 Jun 2020 21:25:09 -0400
-Message-Id: <20200618012600.608744-57-sashal@kernel.org>
+Cc:     Aiman Najjar <aiman.najjar@hurranet.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.4 22/60] staging: rtl8712: fix multiline derefernce warnings
+Date:   Wed, 17 Jun 2020 21:29:26 -0400
+Message-Id: <20200618013004.610532-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
-References: <20200618012600.608744-1-sashal@kernel.org>
+In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
+References: <20200618013004.610532-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,41 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Aiman Najjar <aiman.najjar@hurranet.com>
 
-[ Upstream commit 1b54ae8327a4d630111c8d88ba7906483ec6010b ]
+[ Upstream commit 269da10b1477c31c660288633c8d613e421b131f ]
 
-If device_register() has an error, we should bail out of
-pci_register_host_bridge() rather than continuing on.
+This patch fixes remaining checkpatch warnings
+in rtl871x_xmit.c:
 
-Fixes: 37d6a0a6f470 ("PCI: Add pci_register_host_bridge() interface")
-Link: https://lore.kernel.org/r/20200513223859.11295-1-robh@kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->PrivacyKeyIndex'
+636: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:636:
++					      (u8)psecuritypriv->
++					      PrivacyKeyIndex);
+
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
+643: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:643:
++						   (u8)psecuritypriv->
++						   XGrpKeyid);
+
+WARNING: Avoid multiple line dereference - prefer 'psecuritypriv->XGrpKeyid'
+652: FILE: drivers/staging//rtl8712/rtl871x_xmit.c:652:
++						   (u8)psecuritypriv->
++						   XGrpKeyid);
+
+Signed-off-by: Aiman Najjar <aiman.najjar@hurranet.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/98805a72b92e9bbf933e05b827d27944663b7bc1.1585508171.git.aiman.najjar@hurranet.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/probe.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8712/rtl871x_xmit.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index e23bfd9845b1..61ec17dd47e5 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -792,9 +792,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 		goto free;
- 
- 	err = device_register(&bridge->dev);
--	if (err)
-+	if (err) {
- 		put_device(&bridge->dev);
--
-+		goto free;
-+	}
- 	bus->bridge = get_device(&bridge->dev);
- 	device_enable_async_suspend(bus->bridge);
- 	pci_set_bus_of_node(bus);
+diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
+index d3ad89c7b8af..f82bbbe82244 100644
+--- a/drivers/staging/rtl8712/rtl871x_xmit.c
++++ b/drivers/staging/rtl8712/rtl871x_xmit.c
+@@ -593,7 +593,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
+ 	addr_t addr;
+ 	u8 *pframe, *mem_start, *ptxdesc;
+ 	struct sta_info		*psta;
+-	struct security_priv	*psecuritypriv = &padapter->securitypriv;
++	struct security_priv	*psecpriv = &padapter->securitypriv;
+ 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
+ 	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
+ 	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
+@@ -636,15 +636,13 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
+ 				case _WEP40_:
+ 				case _WEP104_:
+ 					WEP_IV(pattrib->iv, psta->txpn,
+-					       (u8)psecuritypriv->
+-					       PrivacyKeyIndex);
++					       (u8)psecpriv->PrivacyKeyIndex);
+ 					break;
+ 				case _TKIP_:
+ 					if (bmcst)
+ 						TKIP_IV(pattrib->iv,
+ 						    psta->txpn,
+-						    (u8)psecuritypriv->
+-						    XGrpKeyid);
++						    (u8)psecpriv->XGrpKeyid);
+ 					else
+ 						TKIP_IV(pattrib->iv, psta->txpn,
+ 							0);
+@@ -652,8 +650,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
+ 				case _AES_:
+ 					if (bmcst)
+ 						AES_IV(pattrib->iv, psta->txpn,
+-						    (u8)psecuritypriv->
+-						    XGrpKeyid);
++						    (u8)psecpriv->XGrpKeyid);
+ 					else
+ 						AES_IV(pattrib->iv, psta->txpn,
+ 						       0);
 -- 
 2.25.1
 
