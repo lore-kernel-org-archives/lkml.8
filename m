@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73503C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4303521D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2333521D93
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442598;
-	bh=FechefcbcXYNZfQW9PyLTkrR0AXuYRd2DiB3DkXGSG4=;
+	s=default; t=1592442603;
+	bh=LOq9WDryFQBQbvgVCaB1OKHLeNMRXnbcTegbuYzqQAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AAhBDUscQZtJKZrjl1AcZVfM/d4RHk8bqAfKomCywo0YlW5s7PyBXpgZzzaHWWujx
-	 Fukpl0RfpVFC2YGofnIrIvhVABwztKJqoMuMBTtGdBVDMEZ3Rhn3dBZWsNVYViOcMo
-	 aOlguEq8q3qugY6b8BBcqJnEFI7dPagIhdl5ZyCg=
+	b=hZjnQ0JnJ+JsVNTdyAv5lpG5sO2pjCoR/uzMTD/DhEcANpxpJVa7EBnjqHWWise1K
+	 MmzHsi+ri+GbgvatC7XtK63dYNlwPzTRZde9R7mpE9+yUhV1CrCc0JFArIV6Y0/0Dh
+	 GXf3u3Md/xS6nw2FtPCIMG1zKn7/1CD0KjFAd3xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgFRBJ4 (ORCPT
+        id S1728371AbgFRBKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:09:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36626 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:10:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728332AbgFRBJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:09:52 -0400
+        id S1728343AbgFRBJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66B6021D7D;
-        Thu, 18 Jun 2020 01:09:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCB4221D92;
+        Thu, 18 Jun 2020 01:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442592;
-        bh=FechefcbcXYNZfQW9PyLTkrR0AXuYRd2DiB3DkXGSG4=;
+        s=default; t=1592442595;
+        bh=LOq9WDryFQBQbvgVCaB1OKHLeNMRXnbcTegbuYzqQAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BQkSuioWt+lTWyqiA3Zk04UQVjYHgKAVl8ZfAev+v10Qgks4gR8r3LXUuzxWQ8ZGv
-         gGoYK7buheHQ4KaSSBApOvwzM05FXf4CN1GDfyj7cB8Omy9kyhkKqqImCq20H8yLKb
-         9w6jt/pV/An1ZyD6R2a9HNLmL1kkLNUyR3X2CCzQ=
+        b=Ii3/40K02JKSed7s3eqJNmXksE8hBl7aS2hoX0UxhNZTvD6ryV+vNXr4LXAnZsbYT
+         C0GZiGSLfAXdz/HFp+P2tkaVlBYIUNjdXtLk1YfG6SiccSgj8CalYUvAHLj1uqa8m1
+         bsCL8SIfFZqkdTqfSN8r5JVurMnEOhLkI6l7W2yA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        "J . Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 081/388] nfsd: Fix svc_xprt refcnt leak when setup callback client failed
-Date:   Wed, 17 Jun 2020 21:02:58 -0400
-Message-Id: <20200618010805.600873-81-sashal@kernel.org>
+Cc:     Paulo Alcantara <pc@cjr.nz>, Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 5.7 084/388] cifs: set up next DFS target before generic_ip_connect()
+Date:   Wed, 17 Jun 2020 21:03:01 -0400
+Message-Id: <20200618010805.600873-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,42 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Paulo Alcantara <pc@cjr.nz>
 
-[ Upstream commit a4abc6b12eb1f7a533c2e7484cfa555454ff0977 ]
+[ Upstream commit aaa3aef34d3ab9499a5c7633823429f7a24e6dff ]
 
-nfsd4_process_cb_update() invokes svc_xprt_get(), which increases the
-refcount of the "c->cn_xprt".
+If we mount a very specific DFS link
 
-The reference counting issue happens in one exception handling path of
-nfsd4_process_cb_update(). When setup callback client failed, the
-function forgets to decrease the refcnt increased by svc_xprt_get(),
-causing a refcnt leak.
+    \\FS0.FOO.COM\dfs\link -> \FS0\share1, \FS1\share2
 
-Fix this issue by calling svc_xprt_put() when setup callback client
-failed.
+where its target list contains NB names ("FS0" & "FS1") rather than
+FQDN ones ("FS0.FOO.COM" & "FS1.FOO.COM"), we end up connecting to
+\FOO\share1 but server->hostname will have "FOO.COM".  The reason is
+because both "FS0" and "FS0.FOO.COM" resolve to same IP address and
+they share same TCP server connection, but "FS0.FOO.COM" was the first
+hostname set -- which is OK.
 
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+However, if the echo thread timeouts and we still have a good
+connection to "FS0", in cifs_reconnect()
+
+    rc = generic_ip_connect(server) -> success
+    if (rc) {
+            ...
+            reconn_inval_dfs_target(server, cifs_sb, &tgt_list,
+	                            &tgt_it);
+            ...
+     }
+     ...
+
+it successfully reconnects to "FS0" server but does not set up next
+DFS target - which should be the same target server "\FS0\share1" -
+and server->hostname remains set to "FS0.FOO.COM" rather than "FS0",
+as reconn_inval_dfs_target() would have it set to "FS0" if called
+earlier.
+
+Finally, in __smb2_reconnect(), the reconnect of tcons would fail
+because tcon->ses->server->hostname (FS0.FOO.COM) does not match DFS
+target's hostname (FS0).
+
+Fix that by calling reconn_inval_dfs_target() before
+generic_ip_connect() so server->hostname will get updated correctly
+prior to reconnecting its tcons in __smb2_reconnect().
+
+With "cifs: handle hostnames that resolve to same ip in failover"
+patch
+
+    - The above problem would not occur.
+    - We could save an DNS query to find out that they both resolve to
+      the same ip address.
+
+Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4callback.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/cifs/connect.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 5cf91322de0f..07e0c6f6322f 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1301,6 +1301,8 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
- 	err = setup_callback_client(clp, &conn, ses);
- 	if (err) {
- 		nfsd4_mark_cb_down(clp, err);
-+		if (c)
-+			svc_xprt_put(c->cn_xprt);
- 		return;
- 	}
- }
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 28268ed461b8..47b9fbb70bf5 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -572,26 +572,26 @@ cifs_reconnect(struct TCP_Server_Info *server)
+ 		try_to_freeze();
+ 
+ 		mutex_lock(&server->srv_mutex);
++#ifdef CONFIG_CIFS_DFS_UPCALL
+ 		/*
+ 		 * Set up next DFS target server (if any) for reconnect. If DFS
+ 		 * feature is disabled, then we will retry last server we
+ 		 * connected to before.
+ 		 */
++		reconn_inval_dfs_target(server, cifs_sb, &tgt_list, &tgt_it);
++#endif
++		rc = reconn_set_ipaddr(server);
++		if (rc) {
++			cifs_dbg(FYI, "%s: failed to resolve hostname: %d\n",
++				 __func__, rc);
++		}
++
+ 		if (cifs_rdma_enabled(server))
+ 			rc = smbd_reconnect(server);
+ 		else
+ 			rc = generic_ip_connect(server);
+ 		if (rc) {
+ 			cifs_dbg(FYI, "reconnect error %d\n", rc);
+-#ifdef CONFIG_CIFS_DFS_UPCALL
+-			reconn_inval_dfs_target(server, cifs_sb, &tgt_list,
+-						&tgt_it);
+-#endif
+-			rc = reconn_set_ipaddr(server);
+-			if (rc) {
+-				cifs_dbg(FYI, "%s: failed to resolve hostname: %d\n",
+-					 __func__, rc);
+-			}
+ 			mutex_unlock(&server->srv_mutex);
+ 			msleep(3000);
+ 		} else {
 -- 
 2.25.1
 
