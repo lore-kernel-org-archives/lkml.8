@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DD9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD10CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 464B920FC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BADC52222C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443902;
-	bh=epyxbYswVvephDkPXPEclBJhJIc3qheizT4iCdgmcNs=;
+	s=default; t=1592443913;
+	bh=p5j9bXEfQihepKV8ulcRN1vZrOTxa+RtQpCBl17Vk5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zv0Wxzgv+W/pg1oz/2zXcj3yGEafqndCCwcB6HFPtpk67RxZkL2kbba/24BnAfvVt
-	 MVS9dIcTPhCYc2NpBAeswbmpyb8TZC7AortjTfKH5pmeCNTBsWOK8IiIPl+Bh9qvbW
-	 IWyccwJ/QdBGS6hI7cEmYRQEX6UFWEIN6wcT5sDA=
+	b=DeiCeTAP2iofQl1nnhZOtnWTV3Hbn8HI1Vfl//xsR3J97LR+qDyLwCIjDCKb/dfC4
+	 qnC3vjiXZs9PlK7RRO9urPXsDTDL0ERcvf3VZKGUsBAC0vc47vSvE9HS/OtxSJ5zrb
+	 o4+yulw+b4zvuG/xhB0Hrjb4VJjlwbbHzBR62cqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732814AbgFRBbl (ORCPT
+        id S1730957AbgFRBbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:31:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38198 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:31:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732236AbgFRB3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:06 -0400
+        id S1732279AbgFRB3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:29:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81C442222F;
-        Thu, 18 Jun 2020 01:29:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4899B2222F;
+        Thu, 18 Jun 2020 01:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443746;
-        bh=epyxbYswVvephDkPXPEclBJhJIc3qheizT4iCdgmcNs=;
+        s=default; t=1592443759;
+        bh=p5j9bXEfQihepKV8ulcRN1vZrOTxa+RtQpCBl17Vk5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1YNQ9njoSRvZnsnnPo3zz3IhIFuzxDtGd27414NS77KgawC2YQCTZkytS3VGuHPo0
-         XcYH6tw0S/baW6LGVDMyoLmQqF7Ou8Ui/q3Z4297lXhwA6OHpF3dU3dK3v4zBAbcXp
-         9B50DKBJZ0BnAo5ZSz6gi2Rek9HarMYO/BpLXP0A=
+        b=MXFUb2DzehuA3aFX/kDJcaLMTfsmfyRbYeAzuWd3kbmu1XRhD7WAnyJSC4gSC1KmN
+         TAlpDNmAxcZs60KbkC0p4HX87/8Y52JtarppKUtg+mmT+JK5Ui+magNn5Rvobhk8sW
+         vbL2e4e5/9BueLlHC+UpsWIqZ+lHdvou8US3HfkY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 35/80] i2c: pxa: fix i2c_pxa_scream_blue_murder() debug output
-Date:   Wed, 17 Jun 2020 21:27:34 -0400
-Message-Id: <20200618012819.609778-35-sashal@kernel.org>
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 46/80] tty: n_gsm: Fix waking up upper tty layer when room available
+Date:   Wed, 17 Jun 2020 21:27:45 -0400
+Message-Id: <20200618012819.609778-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
 References: <20200618012819.609778-1-sashal@kernel.org>
@@ -59,52 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-[ Upstream commit 88b73ee7ca4c90baf136ed5a8377fc5a9b73ac08 ]
+[ Upstream commit 01dbb362f0a114fbce19c8abe4cd6f4710e934d5 ]
 
-The IRQ log output is supposed to appear on a single line.  However,
-commit 3a2dc1677b60 ("i2c: pxa: Update debug function to dump more info
-on error") resulted in it being printed one-entry-per-line, which is
-excessively long.
+Warn the upper layer when n_gms is ready to receive data
+again. Without this the associated virtual tty remains blocked
+indefinitely.
 
-Fixing this is not a trivial matter; using pr_cont() doesn't work as
-the previous dev_dbg() may not have been compiled in, or may be
-dynamic.
-
-Since the rest of this function output is at error level, and is also
-debug output, promote this to error level as well to avoid this
-problem.
-
-Reduce the number of always zero prefix digits to save screen real-
-estate.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20200512115323.1447922-4-gregory.clement@bootlin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pxa.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/tty/n_gsm.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index e49af1985209..fb191ad8fc3a 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -297,11 +297,10 @@ static void i2c_pxa_scream_blue_murder(struct pxa_i2c *i2c, const char *why)
- 	dev_err(dev, "IBMR: %08x IDBR: %08x ICR: %08x ISR: %08x\n",
- 		readl(_IBMR(i2c)), readl(_IDBR(i2c)), readl(_ICR(i2c)),
- 		readl(_ISR(i2c)));
--	dev_dbg(dev, "log: ");
-+	dev_err(dev, "log:");
- 	for (i = 0; i < i2c->irqlogidx; i++)
--		pr_debug("[%08x:%08x] ", i2c->isrlog[i], i2c->icrlog[i]);
--
--	pr_debug("\n");
-+		pr_cont(" [%03x:%05x]", i2c->isrlog[i], i2c->icrlog[i]);
-+	pr_cont("\n");
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index d5efacd27b15..56716f525030 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -681,7 +681,7 @@ static struct gsm_msg *gsm_data_alloc(struct gsm_mux *gsm, u8 addr, int len,
+  *	FIXME: lock against link layer control transmissions
+  */
+ 
+-static void gsm_data_kick(struct gsm_mux *gsm)
++static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
+ {
+ 	struct gsm_msg *msg, *nmsg;
+ 	int len;
+@@ -713,6 +713,24 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+ 
+ 		list_del(&msg->list);
+ 		kfree(msg);
++
++		if (dlci) {
++			tty_port_tty_wakeup(&dlci->port);
++		} else {
++			int i = 0;
++
++			for (i = 0; i < NUM_DLCI; i++) {
++				struct gsm_dlci *dlci;
++
++				dlci = gsm->dlci[i];
++				if (dlci == NULL) {
++					i++;
++					continue;
++				}
++
++				tty_port_tty_wakeup(&dlci->port);
++			}
++		}
+ 	}
  }
  
- #else /* ifdef DEBUG */
+@@ -764,7 +782,7 @@ static void __gsm_data_queue(struct gsm_dlci *dlci, struct gsm_msg *msg)
+ 	/* Add to the actual output queue */
+ 	list_add_tail(&msg->list, &gsm->tx_list);
+ 	gsm->tx_bytes += msg->len;
+-	gsm_data_kick(gsm);
++	gsm_data_kick(gsm, dlci);
+ }
+ 
+ /**
+@@ -1225,7 +1243,7 @@ static void gsm_control_message(struct gsm_mux *gsm, unsigned int command,
+ 		gsm_control_reply(gsm, CMD_FCON, NULL, 0);
+ 		/* Kick the link in case it is idling */
+ 		spin_lock_irqsave(&gsm->tx_lock, flags);
+-		gsm_data_kick(gsm);
++		gsm_data_kick(gsm, NULL);
+ 		spin_unlock_irqrestore(&gsm->tx_lock, flags);
+ 		break;
+ 	case CMD_FCOFF:
+@@ -2408,7 +2426,7 @@ static void gsmld_write_wakeup(struct tty_struct *tty)
+ 	/* Queue poll */
+ 	clear_bit(TTY_DO_WRITE_WAKEUP, &tty->flags);
+ 	spin_lock_irqsave(&gsm->tx_lock, flags);
+-	gsm_data_kick(gsm);
++	gsm_data_kick(gsm, NULL);
+ 	if (gsm->tx_bytes < TX_THRESH_LO) {
+ 		gsm_dlci_data_sweep(gsm);
+ 	}
 -- 
 2.25.1
 
