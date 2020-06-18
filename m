@@ -2,117 +2,245 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A180C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73CFD2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:52:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rqUeg7CR"
+	by mail.kernel.org (Postfix) with ESMTP id BA3592080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730435AbgFRNwq (ORCPT
+        id S1730483AbgFRNww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:52:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730451AbgFRNwO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:52:14 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B40E8C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 06:52:14 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id i25so7160285iog.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 06:52:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eVS/S6zyAsSq/6kuxFunRg89oD8Dg+SRXmL6IJBqxCA=;
-        b=rqUeg7CRBj/e3o5psD3Os41N/M9sCjUS5dfPl+E5LMVF1R8oOpB9IXJZM8PtZ+nc8j
-         Qvm9HVCGBrXpnn5qynSeUmxb2IPFifqr0dBbWI9HqUZGWf0GSx8i5QUCCkjZ8elYQtBP
-         b3hfvtxeTNicoL/D/JAzKaA9DKqcD1gHudHwJT/06PQOczjmTzr6cQCu9zK3K48w1PdR
-         4/t8RoP0MoJRApcm0skwCKkbVwcnMDNj+FxTyZ0afH4Xjoa6+qoc9s9oyG9evC6wufvJ
-         ny5hPe/zIPPnG3WZB2qQBL77PaOcfLd+xl716Dn8l3tbxc7t/S3cgLMDPp1b1MBmrCl5
-         L2Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eVS/S6zyAsSq/6kuxFunRg89oD8Dg+SRXmL6IJBqxCA=;
-        b=DhNCNif0SUcvs0WFaFHvZkhRO2HzgpS7A8AHk7T66IoomPehq1Ks5rL1Uc4+D2Hcgy
-         a4zqVT8Xie/V4CVoU+HUrqSkVL1vVjDmk6h/qEQjV8pvf+laElrV32ndOrGFcyL7xDOE
-         EE0ht8tPU0wnbMoVnWh9qVucVijU/bBqxX3UfMyXIbH/LLiDSQeMfrOjXGv2WBS77WKY
-         yGpCR8+VhJAnGOijiTgthn0FHK7dBR2mIfmD1mKCrFwq7B/vZIrKzRkAqyuLU4hy1+QN
-         hOaSpvG9RzyxIOoUFxrryeQVmfjI+k0B8S4arlsbQWG1QneLOyBsR7hWA3+3wBKIWuOa
-         +KuQ==
-X-Gm-Message-State: AOAM530GjSGQlgLTiUkyVIyqOGupMvG6+SRGKVoyw7QiBjYKc2gz+EVb
-        k8F0ff+fMt8ZAmjuNpM4WuG98eFGidkBJoIxvnDrhJPQuJI=
-X-Google-Smtp-Source: ABdhPJzAevsDs5/CaxSbOZu2xtpXyUD7rhoaK3SdCfk6sEhUCveLuzp7FVrX982QQ4FRaXax0ahV2oohzWFZMwlZ7vU=
-X-Received: by 2002:a5e:a61a:: with SMTP id q26mr4916808ioi.207.1592488334169;
- Thu, 18 Jun 2020 06:52:14 -0700 (PDT)
+        Thu, 18 Jun 2020 09:52:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54724 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730205AbgFRNwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 09:52:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9FFD5AB98;
+        Thu, 18 Jun 2020 13:52:33 +0000 (UTC)
+Subject: Re: [PATCH v2] drm/hisilicon: Code refactoring for hibmc_drv_vdac
+To:     Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
+        airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
+        alexander.deucher@amd.com, tglx@linutronix.de,
+        dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+        linux-kernel@vger.kernel.org
+Cc:     linuxarm@huawei.com
+References: <1586586315-12764-1-git-send-email-tiantao6@hisilicon.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <21d9f165-3fe9-d0cb-35ce-c91889e7e0dd@suse.de>
+Date:   Thu, 18 Jun 2020 15:52:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <87mu5roov6.fsf@nanos.tec.linutronix.de> <20200529082618.1697-1-laijs@linux.alibaba.com>
- <CALCETrXKdh=nBWz96pow5roLmh0ez2YeQ9P+H5gxdor5TfrqUQ@mail.gmail.com> <CAJhGHyBSzhm7h5dROAKSzdSD3czmUNG+80rS9tpaau_U23p4Ug@mail.gmail.com>
-In-Reply-To: <CAJhGHyBSzhm7h5dROAKSzdSD3czmUNG+80rS9tpaau_U23p4Ug@mail.gmail.com>
-From:   Lai Jiangshan <jiangshanlai+lkml@gmail.com>
-Date:   Thu, 18 Jun 2020 21:52:02 +0800
-Message-ID: <CAJhGHyC+LswHw+=Ymo92CX-ffFB=PJRP0bSLOWEN42KLPfvJ6w@mail.gmail.com>
-Subject: Re: [PATCH V2 0/4] x86/entry: simply stack switching when exception
- on userspace
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1586586315-12764-1-git-send-email-tiantao6@hisilicon.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="bMq42WMT5VsIyVKShMmg9UM3yjBKvRebk"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello and Ping
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--bMq42WMT5VsIyVKShMmg9UM3yjBKvRebk
+Content-Type: multipart/mixed; boundary="eShotCSXpdcfDQZHiqDDGiBqtaP8lv2Qy";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Tian Tao <tiantao6@hisilicon.com>, puck.chen@hisilicon.com,
+ airlied@linux.ie, daniel@ffwll.ch, kraxel@redhat.com,
+ alexander.deucher@amd.com, tglx@linutronix.de,
+ dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+ linux-kernel@vger.kernel.org
+Cc: linuxarm@huawei.com
+Message-ID: <21d9f165-3fe9-d0cb-35ce-c91889e7e0dd@suse.de>
+Subject: Re: [PATCH v2] drm/hisilicon: Code refactoring for hibmc_drv_vdac
+References: <1586586315-12764-1-git-send-email-tiantao6@hisilicon.com>
+In-Reply-To: <1586586315-12764-1-git-send-email-tiantao6@hisilicon.com>
 
-On Tue, Jun 16, 2020 at 9:56 AM Lai Jiangshan
-<jiangshanlai+lkml@gmail.com> wrote:
->
-> On Sat, May 30, 2020 at 2:33 AM Andy Lutomirski <luto@kernel.org> wrote:
-> >
-> > On Fri, May 29, 2020 at 1:26 AM Lai Jiangshan <laijs@linux.alibaba.com> wrote:
-> > >
-> > > 7f2590a110b8("x86/entry/64: Use a per-CPU trampoline stack for IDT entries")
-> > > has resulted that when exception on userspace, the kernel (error_entry)
-> > > always push the pt_regs to entry stack(sp0), and then copy them to the
-> > > kernel stack.
+--eShotCSXpdcfDQZHiqDDGiBqtaP8lv2Qy
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Ping Andy Lutomirski for having added the overhead two years ago.
+Hi,
 
-> > >
-> > > And recent x86/entry work makes interrupt also use idtentry
-> > > and makes all the interrupt code save the pt_regs on the sp0 stack
-> > > and then copy it to the thread stack like exception.
-> > >
+sorry for letting these patches sit around for so long. I'd say that if
+you waited for a week or two without further responses, it's ok to ping
+people.
 
-Ping Thomas Gleixner for having added the overhead recently.
+Am 11.04.20 um 08:25 schrieb Tian Tao:
+> code refactoring for hibmc_drv_vdac.c, no actual function changes.
+>=20
+> v2:
+> remove the debug message.
+>=20
+> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+> Reviewed-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c | 50 +++++++---------=
+--------
+>  1 file changed, 14 insertions(+), 36 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c b/drivers=
+/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+> index 678ac2e..077b7996 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+> @@ -52,32 +52,6 @@ static const struct drm_connector_funcs hibmc_connec=
+tor_funcs =3D {
+>  	.atomic_destroy_state =3D drm_atomic_helper_connector_destroy_state,
+>  };
+> =20
+> -static struct drm_connector *
+> -hibmc_connector_init(struct hibmc_drm_private *priv)
+> -{
+> -	struct drm_device *dev =3D priv->dev;
+> -	struct drm_connector *connector;
+> -	int ret;
+> -
+> -	connector =3D devm_kzalloc(dev->dev, sizeof(*connector), GFP_KERNEL);=
 
->
-> Hello, All
->
-> This patchset can be smoothly applicable to the newest tip/x86/entry
-> which has 5.8-rc1 merged. Which means I don't have to respin/resend it
-> until any update is needed.
->
-> Could you have a review on it please.
->
-> Thanks
-> Lai
+> -	if (!connector) {
+> -		DRM_ERROR("failed to alloc memory when init connector\n");
+> -		return ERR_PTR(-ENOMEM);
+> -	}
+> -
+> -	ret =3D drm_connector_init(dev, connector,
+> -				 &hibmc_connector_funcs,
+> -				 DRM_MODE_CONNECTOR_VGA);
+> -	if (ret) {
+> -		DRM_ERROR("failed to init connector: %d\n", ret);
+> -		return ERR_PTR(ret);
+> -	}
+> -	drm_connector_helper_add(connector,
+> -				 &hibmc_connector_helper_funcs);
+> -
+> -	return connector;
+> -}
+> -
+>  static void hibmc_encoder_mode_set(struct drm_encoder *encoder,
+>  				   struct drm_display_mode *mode,
+>  				   struct drm_display_mode *adj_mode)
+> @@ -109,18 +83,9 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv)=
+
+>  	struct drm_connector *connector;
+>  	int ret;
+> =20
+> -	connector =3D hibmc_connector_init(priv);
+> -	if (IS_ERR(connector)) {
+> -		DRM_ERROR("failed to create connector: %ld\n",
+> -			  PTR_ERR(connector));
+> -		return PTR_ERR(connector);
+> -	}
+> -
+>  	encoder =3D devm_kzalloc(dev->dev, sizeof(*encoder), GFP_KERNEL);
+> -	if (!encoder) {
+> -		DRM_ERROR("failed to alloc memory when init encoder\n");
+> +	if (!encoder)
+>  		return -ENOMEM;
+> -	}
+> =20
+>  	encoder->possible_crtcs =3D 0x1;
+>  	ret =3D drm_encoder_init(dev, encoder, &hibmc_encoder_funcs,
+> @@ -131,6 +96,19 @@ int hibmc_vdac_init(struct hibmc_drm_private *priv)=
+
+>  	}
+> =20
+>  	drm_encoder_helper_add(encoder, &hibmc_encoder_helper_funcs);
+> +
+> +	connector =3D devm_kzalloc(dev->dev, sizeof(*connector), GFP_KERNEL);=
+
+
+Overall, the patch seems correct, expect for this line. DRM data
+structures should now be allocated with drmm_kzalloc() in drm_managed.h.
+It was added recently.
+
+With devm_kzalloc(), the memory will be released when the HW device goes
+away. If userspace still holds a reference, the driver can segfault.
+Using drmm_kzalloc() delays the release until the memory is really unused=
+=2E
+
+However, hibmc's modesetting pipeline appears to be always the same. I
+think you should consider embedding connector and encoder (and crtc) in
+struct hibmc_drm_private. Would make the code simpler and more robust.
+
+Best regards
+Thomas
+
+
+
+> +	if (!connector)
+> +		return -ENOMEM;
+> +
+> +	ret =3D drm_connector_init(dev, connector, &hibmc_connector_funcs,
+> +				 DRM_MODE_CONNECTOR_VGA);
+> +	if (ret) {
+> +		DRM_ERROR("failed to init connector: %d\n", ret);
+> +		return ret;
+> +	}
+> +	drm_connector_helper_add(connector, &hibmc_connector_helper_funcs);
+> +
+>  	drm_connector_attach_encoder(connector, encoder);
+> =20
+>  	return 0;
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--eShotCSXpdcfDQZHiqDDGiBqtaP8lv2Qy--
+
+--bMq42WMT5VsIyVKShMmg9UM3yjBKvRebk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl7rcZ0ACgkQaA3BHVML
+eiP9QggAptYdaNLZREzAwQ3D109OpCD7FmzN610r8cAnUtL3w2FycjP1iGWhO4UY
+NmdwmKhgVXeQnCp0jrjcZL75cAGgCZA4XRvOrqWES5yoFaMJ3U9ziZ3+nb1e/gUy
+okypHn07qNZjdnksbSKgko4u04aS6KLOgskSZubTHlZeKgPbjkw9UnJIaLMXnNHX
+XNI4pRuB5oRkuply7DqzXmKlLu4J8n/s7J2y1mlXLFaQFhOM4Hlb/4XI1g1R2XyX
+NU4IDle8BPpCt5LajQZctcYz8SyNVIbeCOTIZ9LouohgjzJoa7VFPO1j2AJLi9dr
+jDD6ODlT8W8/uOlYsrhidr1dEu67WQ==
+=ZHIf
+-----END PGP SIGNATURE-----
+
+--bMq42WMT5VsIyVKShMmg9UM3yjBKvRebk--
