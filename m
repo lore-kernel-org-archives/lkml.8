@@ -2,152 +2,116 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D293C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18B7E2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D60207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:22:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Geh+g+f9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YA7SsuUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbgFRNRU (ORCPT
+        id S1728780AbgFRNWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730017AbgFRNQ7 (ORCPT
+        Thu, 18 Jun 2020 09:22:02 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37591 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726940AbgFRNWB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:16:59 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54FFCC06174E;
-        Thu, 18 Jun 2020 06:16:59 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id y6so4839954edi.3;
-        Thu, 18 Jun 2020 06:16:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=48gB+FKpHGZivOJlNsg9by7jPEV/1dGczJbcHmuBME4=;
-        b=Geh+g+f9ChaBf/gxuwgIH8IkAR58S9I0a0k9wYrv7U7Q1Q8vYUYy2X2pfXF1nQMBE5
-         EfwQzcGke/qewUUjtLfbGftBSVKWohwJDphitmQ4atJ5ZXd+pUYUbM3WsJk6QN6fHMoE
-         7eDl12g0YhfaKbBUAUm0AHqh4FicEnjWjMrD7hOCHSEz0SGZcShCw2beo7Us3l32TvPf
-         g63h75qi+spKdRLjUTkdQvc9NM6viCOvbFBYledJzJXspd2+4g09a7pZHRUHAjCW0v93
-         o996z5gN5fkSx+g+hYSv94xo+t44Y32Evta7w0WqD0zxGjfCEbn07wLZXgI/REOygrtE
-         JWfA==
+        Thu, 18 Jun 2020 09:22:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592486519;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IrGlZfeq1ulUHocq8AnjSLbU7gwN1WZOemxSJQXMZqQ=;
+        b=YA7SsuUnTn2kqTVIDZ1ZZZ6AbgDyo2n/XtZO9Ejmu5UO+wKbPLpU+/i0XK2Xuwmteqbxr1
+        9DFeknN4rmm7J/LFXY8mr8HJBlgXjvAx/b2STyjPMoXFu0nlKmhdTToG1Tf5gy5RgPLYlm
+        qRUTpxwqcNPpbb/Y2M9+BIGLQ1PIV+A=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-384-eTVsuw61NF6N7ON21_d5kw-1; Thu, 18 Jun 2020 09:21:58 -0400
+X-MC-Unique: eTVsuw61NF6N7ON21_d5kw-1
+Received: by mail-wm1-f70.google.com with SMTP id r1so2576319wmh.7
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 06:21:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=48gB+FKpHGZivOJlNsg9by7jPEV/1dGczJbcHmuBME4=;
-        b=e3CStdF3OnVzxkodE4oC0HHh/rmG7u6nqvRL/off3IYYbmKpzSLWs3bzHJqRBqDMNd
-         bQaEAeOrrtHdCgvWhe2gC/9RALyXU+vB3BpfaxSYxLukqLn7ZDXv3MR0IWNx952W4hwo
-         t9dZAVi1cJnmMY1g85y/yyNaoJema3bi3CJ2hW/jwrRPiuXVYj0VKgBnpRdcZHCQlzM5
-         Ud6oL7jORO6LB0nLPWv+XD/ENPzQ0vYi0Zqmwusiw2ONDv4UvGHjwf5OFmDbznvoqD/4
-         PigmX+gYXGwHbt6ao8V7WfPxwncZBqSnpmt/eNfT3VNhqTX+HVPlad+qX7rxC77mb//H
-         C7lA==
-X-Gm-Message-State: AOAM531BQxhRxXx73QRLmea3El0UYbjYbPyqplRaIQxWkA8yPkPwWaX+
-        ZW4/kooNmTx2WoqZY/UFaA==
-X-Google-Smtp-Source: ABdhPJyGznE7ezxmDoITq/swZTW/ORC7BGRM2zzOvwu6Eazh7ADEURRz35DVgPF4yv5a7xm0AV5Daw==
-X-Received: by 2002:a50:9b16:: with SMTP id o22mr3972554edi.130.1592486218015;
-        Thu, 18 Jun 2020 06:16:58 -0700 (PDT)
-Received: from localhost.localdomain ([46.53.250.254])
-        by smtp.gmail.com with ESMTPSA id n3sm2310261ejd.82.2020.06.18.06.16.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 06:16:57 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 16:16:55 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     'Matt Fleming' <matt@codeblueprint.co.uk>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>,
-        "Kumar, Venkataramanan" <Venkataramanan.Kumar@amd.com>,
-        Jan Kara <jack@suse.cz>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] x86/asm/64: Align start of __clear_user() loop to
- 16-bytes
-Message-ID: <20200618131655.GA24607@localhost.localdomain>
-References: <20200618102002.30034-1-matt@codeblueprint.co.uk>
- <39f8304b75094f87a54ace7732708d30@AcuMS.aculab.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IrGlZfeq1ulUHocq8AnjSLbU7gwN1WZOemxSJQXMZqQ=;
+        b=GeJt4BRSo1yJxJHEtoDjuy/PBd+4Stp2tqy+l6FOFq6Wzze+4TMZrmszSxqVskUJXR
+         mfCBRkiQgxFhJk5PAyW325biAkBAeZ0umrvEwz+gqNilrYugxo5300wkZH8m/vM9ZjXb
+         SOBE82SdNFKo3nmHEwrDMQ/Hl2AM7pbYmEZENqqWGwilZCj79xmVK0Z+TYs3s3JODEtJ
+         iAvxpnRV3JCST/7MKzDesG4n0rBDN6TK8lt97ALH+zBcJokUAowrHBGmv0Tem0ZrK/lD
+         0aVNfoZQdKua5PXnoduUhCG6wMaj+ycz7YSf91hD20yAp8JhWHBWYvee6RlVTsn9OMUi
+         ItQQ==
+X-Gm-Message-State: AOAM530Vbi6e6aeJVtzXtzWk2gSxjfVWEGEVqctaP7gJOcSSlIHAF/xn
+        6Nnrtu6y45xl/+NaS5D+kBnO+F1yF/xQPrJnE2fykmqhRnWJR3YC0kdICfoxkDMPTTCp5Hn9dPq
+        AA5lFQ/w4IxXHBmzAjhRbNa56
+X-Received: by 2002:a1c:2b86:: with SMTP id r128mr4262218wmr.13.1592486516886;
+        Thu, 18 Jun 2020 06:21:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJymxwdYQWvQbXE8ARnQo904uTYfAl6mm/1E4F5nzGGAimPob6Q2xh4UUsh6Qsvjdqh+1rgImA==
+X-Received: by 2002:a1c:2b86:: with SMTP id r128mr4262202wmr.13.1592486516680;
+        Thu, 18 Jun 2020 06:21:56 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e1d2:138e:4eff:42cb? ([2001:b07:6468:f312:e1d2:138e:4eff:42cb])
+        by smtp.gmail.com with ESMTPSA id d9sm3490622wre.28.2020.06.18.06.21.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 06:21:56 -0700 (PDT)
+Subject: Re: [PATCH v2] KVM: SVM: emulate MSR_IA32_PERF_CAPABILITIES
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Like Xu <like.xu@linux.intel.com>, linux-kernel@vger.kernel.org
+References: <20200618111328.429931-1-vkuznets@redhat.com>
+ <adc8b307-4ec4-575f-ff94-c9b820189fb1@redhat.com>
+ <87ftash6ui.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8e3b2eef-b4f1-01cc-e033-c1ece70bd7db@redhat.com>
+Date:   Thu, 18 Jun 2020 15:21:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <87ftash6ui.fsf@vitty.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <39f8304b75094f87a54ace7732708d30@AcuMS.aculab.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 10:48:05AM +0000, David Laight wrote:
-> From: Matt Fleming
-> > Sent: 18 June 2020 11:20
-> > x86 CPUs can suffer severe performance drops if a tight loop, such as
-> > the ones in __clear_user(), straddles a 16-byte instruction fetch
-> > window, or worse, a 64-byte cacheline. This issues was discovered in the
-> > SUSE kernel with the following commit,
-> > 
-> >   1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
-> > 
-> > which increased the code object size from 10 bytes to 15 bytes and
-> > caused the 8-byte copy loop in __clear_user() to be split across a
-> > 64-byte cacheline.
-> > 
-> > Aligning the start of the loop to 16-bytes makes this fit neatly inside
-> > a single instruction fetch window again and restores the performance of
-> > __clear_user() which is used heavily when reading from /dev/zero.
-> > 
-> > Here are some numbers from running libmicro's read_z* and pread_z*
-> > microbenchmarks which read from /dev/zero:
-> > 
-> >   Zen 1 (Naples)
-> > 
-> >   libmicro-file
-> >                                         5.7.0-rc6              5.7.0-rc6              5.7.0-rc6
-> >                                                     revert-1153933703d9+               align16+
-> >   Time mean95-pread_z100k       9.9195 (   0.00%)      5.9856 (  39.66%)      5.9938 (  39.58%)
-> >   Time mean95-pread_z10k        1.1378 (   0.00%)      0.7450 (  34.52%)      0.7467 (  34.38%)
-> >   Time mean95-pread_z1k         0.2623 (   0.00%)      0.2251 (  14.18%)      0.2252 (  14.15%)
-> >   Time mean95-pread_zw100k      9.9974 (   0.00%)      6.0648 (  39.34%)      6.0756 (  39.23%)
-> >   Time mean95-read_z100k        9.8940 (   0.00%)      5.9885 (  39.47%)      5.9994 (  39.36%)
-> >   Time mean95-read_z10k         1.1394 (   0.00%)      0.7483 (  34.33%)      0.7482 (  34.33%)
-> > 
-> > Note that this doesn't affect Haswell or Broadwell microarchitectures
-> > which seem to avoid the alignment issue by executing the loop straight
-> > out of the Loop Stream Detector (verified using perf events).
+On 18/06/20 14:54, Vitaly Kuznetsov wrote:
+> Paolo Bonzini <pbonzini@redhat.com> writes:
 > 
-> Which cpu was affected?
-> At least one source (www.agner.org/optimize) implies that both ivy
-> bridge and sandy bridge have uop caches that mean (If I've read it
-> correctly) the loop shouldn't be affected by the alignment).
-> 
-> > diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
-> > index fff28c6f73a2..b0dfac3d3df7 100644
-> > --- a/arch/x86/lib/usercopy_64.c
-> > +++ b/arch/x86/lib/usercopy_64.c
-> > @@ -24,6 +24,7 @@ unsigned long __clear_user(void __user *addr, unsigned long size)
-> >  	asm volatile(
-> >  		"	testq  %[size8],%[size8]\n"
-> >  		"	jz     4f\n"
-> > +		"	.align 16\n"
-> >  		"0:	movq $0,(%[dst])\n"
-> >  		"	addq   $8,%[dst]\n"
-> >  		"	decl %%ecx ; jnz   0b\n"
-> 
-> You can do better that that loop.
-> Change 'dst' to point to the end of the buffer, negate the count
-> and divide by 8 and you get:
-> 		"0:	movq $0,($[dst],%%ecx,8)\n"
-> 		"	add $1,%%ecx"
-> 		"	jnz 0b\n"
-> which might run at one iteration per clock especially on cpu that pair
-> the add and jnz into a single uop.
-> (You need to use add not inc.)
+>> On 18/06/20 13:13, Vitaly Kuznetsov wrote:
+>>> state_test/smm_test selftests are failing on AMD with:
+>>> "Unexpected result from KVM_GET_MSRS, r: 51 (failed MSR was 0x345)"
+>>>
+>>> MSR_IA32_PERF_CAPABILITIES is an emulated MSR on Intel but it is not
+>>> known to AMD code, emulate it there too (by returning 0 and allowing
+>>> userspace to write 0). This way the code is better prepared to the
+>>> eventual appearance of the feature in AMD hardware.
+>>>
+>>> Fixes: 27461da31089 ("KVM: x86/pmu: Support full width counting")
+>>> Suggested-by: Jim Mattson <jmattson@google.com>
+>>> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+>>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>>> ---
+>>>  arch/x86/kvm/svm/pmu.c | 29 ++++++++++++++++++++++++++++-
+>>>  1 file changed, 28 insertions(+), 1 deletion(-)
+>> This is okay and I'll apply it, but it would be even better to move the
+>> whole handling of the MSR to common x86 code.
+> I thought about that but intel_pmu_set_msr() looks at
+> vmx_get_perf_capabilities(), we'll need to abstract this somehow.
 
-/dev/zero should probably use REP STOSB etc just like everything else.
+Indeed, you could use kvm_get_msr_feature for that.
+
+Paolo
+
