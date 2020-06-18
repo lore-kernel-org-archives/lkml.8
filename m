@@ -2,134 +2,90 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D177CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8161DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF4DA214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:39:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="Jp9qjrjh"
+	by mail.kernel.org (Postfix) with ESMTP id 5DAC5204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:40:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592469637;
+	bh=hFJYYoOy8ZgZSe7kwebjbwvT/qbmAaFVTlJYwv2eTuE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UgPiAPyOEMRPdpmCSJeYU+ZFV5MPFz9cUuvWX+2HSs6C2qgGzI65GeGqxS3ztp9G5
+	 WhdQyH/fmbgONN/n+S/O+FrKhlZyvTjadDmTz3CAk6idx64NvesHyqW3esRsB1ZqXY
+	 9P065RsD20LOTNbO6JANjeS6HbwdQ7Yh+D3c9hVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgFRIjr (ORCPT
+        id S1728757AbgFRIkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:39:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbgFRIjo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:39:44 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABDA8C0613ED
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:39:43 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id t18so5116606wru.6
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:39:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=bfGxedb35Oy+a+SaZCiApfvdfQftE+QGRqOTHCEiwk0=;
-        b=Jp9qjrjhQcFj3NXFN/4Rrfme74bB0nupeKD4ZlzQWvUS7V6iRJu1jv1Sw/xuYGTK7k
-         ej+7JPWkQcKo3Ajn043X+/+R+2UJ5jWokpn3flKm+7PyPqNh17V4WhZVxVl8UGg64Wfl
-         yLAVVzaAY5T02u0306kGK6RI1pOm68OMgMXs1Q6bzwjTyr46pYHRf/2EDMWEUCo1eENB
-         ah42bVn0bM6JaiFAzRuDUo0UXVHCUtYN8YRPwPB1XYEJI1AxR6UM7zrwjYxOlgOAVjlf
-         Murw1Sff/3vLDbdD7Obz+r4KwOHNyTfSd6/UabOTjfMlsof+K6zxD5w1t/9NBrZ/jGDZ
-         u39Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bfGxedb35Oy+a+SaZCiApfvdfQftE+QGRqOTHCEiwk0=;
-        b=kRnywDj1/N4lvEDyb8TY5gFRSRabbUoI4EEE262dJWGWCq6cU+/yD0ubO35UaBo7Ru
-         lU3gO6kosyiwSZZhVOyGOt4J7gCCbehOBIYbiNkfI5VguMjWHxojwh8c+EEreR3ycefI
-         FzQIkvTJAadecCgFtD6ZeL5vzu2oazC7x5KQ3q60eWOMm32nHKCaXIOS0mAyl4HLSiHK
-         kxlHW/VaNS3TPu1L7ey1rfCeDr9sGt1/dra13ZYpI9fqQExTOYVMuRA8Zudza21y/gCk
-         /m4v2/ENwQ664EgK9iwBh4LPQpe+HQuj/C0TMW/4yAk6uJUGY/MijG60HTnjOu6im113
-         ls5A==
-X-Gm-Message-State: AOAM530gScQ4w2ERxXZGXWAYHvntjBzbylHzzqSJwpE18qwETYr6aCic
-        gbHkFYsW80YlyE2PSLCepjA+XQ==
-X-Google-Smtp-Source: ABdhPJyDJ4nqkXRrg8KN6BZdktgYlGnBwNdxZkxcf0GETyowwUFVAIHSwSrcMLTYoBfjtVs+p7hvSA==
-X-Received: by 2002:adf:a18b:: with SMTP id u11mr3390432wru.102.1592469582468;
-        Thu, 18 Jun 2020 01:39:42 -0700 (PDT)
-Received: from localhost ([194.62.217.57])
-        by smtp.gmail.com with ESMTPSA id d24sm2471775wmb.45.2020.06.18.01.39.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 01:39:41 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 10:39:40 +0200
-From:   Javier =?utf-8?B?R29uesOhbGV6?= <javier@javigon.com>
-To:     Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, bcrl@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-aio@kvack.org, io-uring@vger.kernel.org,
-        linux-block@vger.kernel.org, selvakuma.s1@samsung.com,
-        nj.shetty@samsung.com, Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Keith Busch <keith.busch@wdc.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 0/3] zone-append support in aio and io-uring
-Message-ID: <20200618083940.jzjtbfwwyyyhpnhs@mpHalley.local>
-References: <CGME20200617172653epcas5p488de50090415eb802e62acc0e23d8812@epcas5p4.samsung.com>
- <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
- <f503c488-fa00-4fe2-1ceb-7093ea429e45@lightnvm.io>
- <20200618082740.i4sfoi54aed6sxnk@mpHalley.local>
- <f9b820af-2b23-7bb4-f651-e6e1b3002ebf@lightnvm.io>
+        Thu, 18 Jun 2020 04:40:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728320AbgFRIkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:40:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06C3C2089D;
+        Thu, 18 Jun 2020 08:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592469633;
+        bh=hFJYYoOy8ZgZSe7kwebjbwvT/qbmAaFVTlJYwv2eTuE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jS27CLq/ErVC7tBrwumIeEogglJYOluouLk5sKA8q/xozqXRfgJ1zHGjRInSf/P3Y
+         2+5bRkBM4uFbm/YA1KWXfIcmA96NgFIqfzGWZbraBDx+cZCX8PxxaEM/BzWyUxanLQ
+         ONtyeHAjcurQQ/D+lTk+tweznwTawo4iks6+/hIw=
+Date:   Thu, 18 Jun 2020 10:40:26 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>, linux-usb@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] usb: xhci: fix spelling mistake in Kconfig
+ "firwmare" -> "firmware"
+Message-ID: <20200618084026.GA1073692@kroah.com>
+References: <20200603121152.16550-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f9b820af-2b23-7bb4-f651-e6e1b3002ebf@lightnvm.io>
+In-Reply-To: <20200603121152.16550-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.06.2020 10:32, Matias Bjørling wrote:
->On 18/06/2020 10.27, Javier González wrote:
->>On 18.06.2020 10:04, Matias Bjørling wrote:
->>>On 17/06/2020 19.23, Kanchan Joshi wrote:
->>>>This patchset enables issuing zone-append using aio and io-uring 
->>>>direct-io interface.
->>>>
->>>>For aio, this introduces opcode IOCB_CMD_ZONE_APPEND. 
->>>>Application uses start LBA
->>>>of the zone to issue append. On completion 'res2' field is used 
->>>>to return
->>>>zone-relative offset.
->>>>
->>>>For io-uring, this introduces three opcodes: 
->>>>IORING_OP_ZONE_APPEND/APPENDV/APPENDV_FIXED.
->>>>Since io_uring does not have aio-like res2, cqe->flags are 
->>>>repurposed to return zone-relative offset
->>>
->>>Please provide a pointers to applications that are updated and 
->>>ready to take advantage of zone append.
->>
->>Good point. We are posting a RFC with fio support for append. We wanted
->>to start the conversation here before.
->>
->>We can post a fork for improve the reviews in V2.
->
->Christoph's response points that it is not exactly clear how this 
->matches with the POSIX API.
+On Wed, Jun 03, 2020 at 01:11:52PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There are two spelling mistakes in the Kconfig text. Fix these.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/usb/host/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> index 62c348062e48..5f4b6c71392c 100644
+> --- a/drivers/usb/host/Kconfig
+> +++ b/drivers/usb/host/Kconfig
+> @@ -44,10 +44,10 @@ config USB_XHCI_PCI
+>  	default y
+>  
+>  config USB_XHCI_PCI_RENESAS
+> -	tristate "Support for additional Renesas xHCI controller with firwmare"
+> +	tristate "Support for additional Renesas xHCI controller with firmware"
+>  	---help---
+>  	  Say 'Y' to enable the support for the Renesas xHCI controller with
+> -	  firwmare. Make sure you have the firwmare for the device and
+> +	  firmware. Make sure you have the firwmare for the device and
+>  	  installed on your system for this device to work.
+>  	  If unsure, say 'N'.
+>  
+> -- 
+> 2.25.1
+> 
 
-Yes. We will address this.
->
->fio support is great - but I was thinking along the lines of 
->applications that not only benchmark performance. fio should be part 
->of the supported applications, but should not be the sole reason the 
->API is added.
-
-Agree. It is a process with different steps. We definitely want to have
-the right kernel interface before pushing any changes to libraries and /
-or applications. These will come as the interface becomes more stable.
-
-To start with xNVMe will be leveraging this new path. A number of
-customers are leveraging the xNVMe API for their applications already.
-
-Thanks,
-Javier
-
+Does not apply to my tree :(
