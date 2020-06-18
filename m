@@ -4,51 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A7BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3732E22240
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666DF22249
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445298;
-	bh=bIk6w6VvDx5GaB2S3OeclfhGrx+NuGFb52D0NAChQF0=;
+	s=default; t=1592445300;
+	bh=Eq1DcpXNBEZu/BqwZzcK+uB2YIFarNYs5ivrXYLr4uU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jr2BDxtFAsCDtAuq68hg9YS6p1ZEcX/EAtArIrMuFACmFm/8W7D+i/iq1RhGFSkoA
-	 eJfTDZTPBz1e3rE9B8b56s//wcoKF8huC7eksAoFg7AmB6UE1PY0A8j28dT1uc+8lN
-	 Kl/wg0tShFvoliiQagp47U8MQkPTQSCy9hQBNfEM=
+	b=n905sdFg0ZdGNcXTOnLVZ2uiNTrqS6rNSPzx+uG0dtb66Zpp16sTeRUfuR2WEXmjJ
+	 FfZap8hDaVDKwH+dMk2CdcnW3w64MtQM2qwRI5VZnLf1CN7ihOhjN9TAnMBZqZjmoV
+	 y6BbLuf5RXy3DlpgZozPF0QrclccR5Br+P21DBm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgFRBy4 (ORCPT
+        id S1731527AbgFRBZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:54:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731528AbgFRBZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730850AbgFRBWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:22:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A175421974;
-        Thu, 18 Jun 2020 01:25:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A066020B1F;
+        Thu, 18 Jun 2020 01:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443552;
-        bh=bIk6w6VvDx5GaB2S3OeclfhGrx+NuGFb52D0NAChQF0=;
+        s=default; t=1592443370;
+        bh=Eq1DcpXNBEZu/BqwZzcK+uB2YIFarNYs5ivrXYLr4uU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wc9k4r+EPEe2SHZeAvvwqVZokx1WnCJnfnyVyhm06Nxvl3LcJ6IQaMmHwXrC6Mm+R
-         jg6wIxjkSHq1CJkR5MFZ0oGRt7UYcozk46OtL4+DWzWq9omvD2zaUUE9ADPGa5+Sou
-         sxjl8IGL4FxaJB1A7pyf3XBnagjuhm8jgeEKI0as=
+        b=ESi6GQCCQBMA/Crc6rCGnoKGZO/PQsOupHh42boP8MfuWeVhEyN0U3awrkRFt6vnZ
+         /fx4NxDfTFg9y5sJqfRIgVKjVgKwz0PFglKmFFAnzMrfqvM2LeLkJPPZsapHA89+Ej
+         uAf45wkj0e16cTKMIw3YKM/vvxyX17Yumu4kq/W4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     tannerlove <tannerlove@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 167/172] selftests/net: in rxtimestamp getopt_long needs terminating null entry
-Date:   Wed, 17 Jun 2020 21:22:13 -0400
-Message-Id: <20200618012218.607130-167-sashal@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Long Cheng <long.cheng@mediatek.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 024/172] serial: 8250: Fix max baud limit in generic 8250 port
+Date:   Wed, 17 Jun 2020 21:19:50 -0400
+Message-Id: <20200618012218.607130-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -61,34 +72,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: tannerlove <tannerlove@google.com>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit 865a6cbb2288f8af7f9dc3b153c61b7014fdcf1e ]
+[ Upstream commit 7b668c064ec33f3d687c3a413d05e355172e6c92 ]
 
-getopt_long requires the last element to be filled with zeros.
-Otherwise, passing an unrecognized option can cause a segfault.
+Standard 8250 UART ports are designed in a way so they can communicate
+with baud rates up to 1/16 of a reference frequency. It's expected from
+most of the currently supported UART controllers. That's why the former
+version of serial8250_get_baud_rate() method called uart_get_baud_rate()
+with min and max baud rates passed as (port->uartclk / 16 / UART_DIV_MAX)
+and ((port->uartclk + tolerance) / 16) respectively. Doing otherwise, like
+it was suggested in commit ("serial: 8250_mtk: support big baud rate."),
+caused acceptance of bauds, which was higher than the normal UART
+controllers actually supported. As a result if some user-space program
+requested to set a baud greater than (uartclk / 16) it would have been
+permitted without truncation, but then serial8250_get_divisor(baud)
+(which calls uart_get_divisor() to get the reference clock divisor) would
+have returned a zero divisor. Setting zero divisor will cause an
+unpredictable effect varying from chip to chip. In case of DW APB UART the
+communications just stop.
 
-Fixes: 16e781224198 ("selftests/net: Add a test to validate behavior of rx timestamps")
-Signed-off-by: Tanner Love <tannerlove@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Lets fix this problem by getting back the limitation of (uartclk +
+tolerance) / 16 maximum baud supported by the generic 8250 port. Mediatek
+8250 UART ports driver developer shouldn't have touched it in the first
+place  notably seeing he already provided a custom version of set_termios()
+callback in that glue-driver which took into account the extended baud
+rate values and accordingly updated the standard and vendor-specific
+divisor latch registers anyway.
+
+Fixes: 81bb549fdf14 ("serial: 8250_mtk: support big baud rate.")
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Long Cheng <long.cheng@mediatek.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Link: https://lore.kernel.org/r/20200506233136.11842-2-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/networking/timestamping/rxtimestamp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/serial/8250/8250_port.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/networking/timestamping/rxtimestamp.c b/tools/testing/selftests/networking/timestamping/rxtimestamp.c
-index dd4162fc0419..7a573fb4c1c4 100644
---- a/tools/testing/selftests/networking/timestamping/rxtimestamp.c
-+++ b/tools/testing/selftests/networking/timestamping/rxtimestamp.c
-@@ -114,6 +114,7 @@ static struct option long_options[] = {
- 	{ "tcp", no_argument, 0, 't' },
- 	{ "udp", no_argument, 0, 'u' },
- 	{ "ip", no_argument, 0, 'i' },
-+	{ NULL, 0, NULL, 0 },
- };
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 5a04d4ddca73..20b799219826 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2628,6 +2628,8 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
+ 					     struct ktermios *termios,
+ 					     struct ktermios *old)
+ {
++	unsigned int tolerance = port->uartclk / 100;
++
+ 	/*
+ 	 * Ask the core to calculate the divisor for us.
+ 	 * Allow 1% tolerance at the upper limit so uart clks marginally
+@@ -2636,7 +2638,7 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
+ 	 */
+ 	return uart_get_baud_rate(port, termios, old,
+ 				  port->uartclk / 16 / UART_DIV_MAX,
+-				  port->uartclk);
++				  (port->uartclk + tolerance) / 16);
+ }
  
- static int next_port = 19999;
+ void
 -- 
 2.25.1
 
