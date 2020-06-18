@@ -2,199 +2,138 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AEBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A737C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFA3206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F797206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F6Qzk43n"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fMHKBye7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731286AbgFRXBR (ORCPT
+        id S1731568AbgFRXBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 19:01:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730750AbgFRXBK (ORCPT
+        Thu, 18 Jun 2020 19:01:38 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57199 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730750AbgFRXBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 19:01:10 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C7BC0613EE
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:01:10 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id i4so1525184ooj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:01:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yc8mFXvH9+bvXdPbuCrBKeuEjVF5zsJFmzpNjkxHWMo=;
-        b=F6Qzk43n9hOMr0F4NODTytpPzKoJejgC53DX0hNIAani5BvakYsEg5BYejBSfJJRFK
-         Xveb1M2471hR5+hXD0nrRKJPWetO+Sm9CXdnLQ/354Jwx2+SAROf9zcH9nOj1f4r2BmG
-         4OhP4aiWNVP3N1Z3PnwsXKCCcwprjP/r7yknNF074Mqx5ocK34Qoz+i0yhVtZqSNZl8E
-         IbSthlYnPjQ4Ifcop0/QphEEIYcIl9WJqyKdM1ZE+wTYMUHzs/utKyK0LIdSCWoIkVRg
-         TFlIL6ILcD4OJudkIbjNqm5Ppsq4BTPCwfwbR9kT+/5+LeKmP6bHS9Q4Wvj+BLy2p9Uj
-         P1AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yc8mFXvH9+bvXdPbuCrBKeuEjVF5zsJFmzpNjkxHWMo=;
-        b=Ad3/op306tosqAUZgXoqlXca9mQhLi8t/8ymE/+DQORe/6B07+OS9Cv+bt5ij+rLzv
-         kWnYJ9NM+BJZE5anGGrZ18TLJ4wMjSLuv+QzuZVpkbaqSTYRwK7P5TYvo/yXyjF+7moS
-         16k49gaLZVudHJ6PMddQFc+SP1/1ysB4YyrIsZDDtGBHtl/dERWh9wZ/FBJ3YJXfSABb
-         /iv3zip6w7j0hVu44gZE21w7YoEWMpZ9eaiDqNjdhn9Azb3S64jgXZkxn4hix6bNtPVV
-         8GtWMlQk3PwqgrScdKmOb0Y4CXZ3a4+0WXQ+lQ+5JtGZgLbmMbUDJ6Jp8AR1bYdg2P1i
-         nElg==
-X-Gm-Message-State: AOAM533uPDRH+Sf1vEOIYwSfqlnRdEqi2cfM0gSvcaA+SEE/6G405rf1
-        KQc+TNyv+CFyioRMXNQFY9ImJCfxXw3aLDXZomDvNw==
-X-Google-Smtp-Source: ABdhPJze5y3/R2DKImLZ7iiLzxaS6HhogUtDTZ6f6c1zd9yAOujkemUlEPJ8VwbBuyiv/TUaV+zXkBMoEOzKC1JUTAg=
-X-Received: by 2002:a4a:7ac2:: with SMTP id a185mr1035246ooc.84.1592521269356;
- Thu, 18 Jun 2020 16:01:09 -0700 (PDT)
+        Thu, 18 Jun 2020 19:01:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592521294;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=fVl7NirlPBDaZbv0g3tbYP7L/Gzjwfxt3r7f0D5EtyA=;
+        b=fMHKBye7qMOKzFq+rFofKjt/PWcGai6G+BvQvCxHygpQ+0yg2TmZq4S6dcKhUETjJF/XDi
+        aD8NVg5LiE4BHUB1RRVdIdDP/Rhh8bepGR0ZZ8a21v13Kp/qBYkNg4EUWZ6tmv4tVltkA/
+        CNLPrqir2ShHtAU2SEtzoaZz1KyrDes=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-471-I141doS4NfOHr44PF510Eg-1; Thu, 18 Jun 2020 19:01:32 -0400
+X-MC-Unique: I141doS4NfOHr44PF510Eg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02636464;
+        Thu, 18 Jun 2020 23:01:31 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-114-66.rdu2.redhat.com [10.10.114.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 07EEF5D9C5;
+        Thu, 18 Jun 2020 23:01:28 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] afs: Fix afs_do_lookup() to call correct fetch-status op
+ variant
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 19 Jun 2020 00:01:28 +0100
+Message-ID: <159252128817.1594103.7234386826450496394.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.22
 MIME-Version: 1.0
-References: <20200515053500.215929-1-saravanak@google.com> <20200515053500.215929-5-saravanak@google.com>
- <CAMuHMdUnbDvn6GdK51MN-+5iRp6zYRf-yzKY+OwcQOGrYqOZPA@mail.gmail.com>
- <CAGETcx9JKbNQWQwNah7pO5ppVSAe86R-OmMujZPYNkuTCLwKnQ@mail.gmail.com> <CAMuHMdU2gF=aTeVxRvtzAMLGY=GyBDfBwrYZxoRkL1tV7dL56g@mail.gmail.com>
-In-Reply-To: <CAMuHMdU2gF=aTeVxRvtzAMLGY=GyBDfBwrYZxoRkL1tV7dL56g@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 18 Jun 2020 16:00:33 -0700
-Message-ID: <CAGETcx-rHFthf-aLb_S-ST6Evozvgis5XX5u0LNxyvfMoJOLKQ@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] of: platform: Batch fwnode parsing when adding all
- top level devices
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ji Luo <ji.luo@nxp.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 12:32 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Saravana,
->
-> On Wed, Jun 17, 2020 at 8:36 PM Saravana Kannan <saravanak@google.com> wrote:
-> > On Wed, Jun 17, 2020 at 5:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Fri, May 15, 2020 at 7:38 AM Saravana Kannan <saravanak@google.com> wrote:
-> > > > The fw_devlink_pause() and fw_devlink_resume() APIs allow batching the
-> > > > parsing of the device tree nodes when a lot of devices are added. This
-> > > > will significantly cut down parsing time (as much a 1 second on some
-> > > > systems). So, use them when adding devices for all the top level device
-> > > > tree nodes in a system.
-> > > >
-> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > >
-> > > This is now commit 93d2e4322aa74c1a ("of: platform: Batch fwnode parsing
-> > > when adding all top level devices") in v5.8-rc1, and I have bisected a
-> > > regression to it: on r8a7740/armadillo and sh73a0/kzm9g, the system can
-> > > no longer be woken up from s2ram by a GPIO key. Reverting the commit
-> > > fixes the issue.
-> > >
-> > > On these systems, the GPIO/PFC block has its interrupt lines connected
-> > > to intermediate interrupt controllers (Renesas INTC), which are in turn
-> > > connected to the main interrupt controller (ARM GIC).  The INTC block is
-> > > part of a power and clock domain.  Hence if a GPIO is enabled as a
-> > > wake-up source, the INTC is part of the wake-up path, and thus must be
-> > > kept enabled when entering s2ram.
-> > >
-> > > While this commit has no impact on probe order for me (unlike in Marek's
-> > > case), it does have an impact on suspend order:
-> > >   - Before this commit:
-> > >       1. The keyboard (gpio-keys) is suspended, and calls
-> > >          enable_irq_wake() to inform the upstream interrupt controller
-> > >          (INTC) that it is part of the wake-up path,
-> > >       2. INTC is suspended, and calls device_set_wakeup_path() to inform
-> > >          the device core that it must be kept enabled,
-> > >       3. The system is woken by pressing a wake-up key.
-> > >
-> > >   - After this commit:
-> > >       1. INTC is suspended, and is not aware it is part of the wake-up
-> > >          path, so it is disabled by the device core,
-> > >       2. gpio-keys is suspended, and calls enable_irq_wake() in vain,
-> > >       3. Pressing a wake-up key has no effect, as INTC is disabled, and
-> > >          the interrupt does not come through.
-> > >
-> > > It looks like no device links are involved, as both gpio-keys and INTC have
-> > > no links.
-> > > Do you have a clue?
-> > >
-> > > Thanks!
-> >
-> > That patch of mine defers probe on all devices added by the
-> > of_platform_default_populate() call, and then once the call returns,
-> > it immediately triggers a deferred probe.
-> >
-> > So all these devices are being probed in parallel in the deferred
-> > probe workqueue while the main "initcall thread" continues down to
-> > further initcalls. It looks like some of the drivers in subsequent
-> > initcalls are assuming that devices in the earlier initcalls always
-> > probe and can't be deferred?
-> >
-> > There are two options.
-> > 1. Fix these drivers.
-> > 2. Add a "flush deferred workqueue" in fw_devlink_resume()
-> >
-> > I'd rather we fix the drivers so that they handle deferred probes
-> > correctly. Thoughts?
->
-> While the affected drivers should handle deferred probe fine, none of
-> the affected drivers is subject to deferred probing: they all probe
-> successfully on first try (I had added debug prints to
-> platform_drv_probe() to be sure).
-> The affected drivers are still probed in the same order (INTC is one of
-> the earliest drivers probed, gpio-keys is the last).
+Fix afs_do_lookup()'s fallback case for when FS.InlineBulkStatus isn't
+supported by the server.  In the fallback, it calls FS.FetchStatus for the
+specific vnode it's meant to be looking up.  Commit b6489a49f7b7 broke this
+by renaming one of the two identically-named afs_fetch_status_operation
+descriptors to something else so that one of them could be made non-static.
+The site that used the renamed one, however, wasn't renamed and didn't
+produce any warning because the other was declared in a header.
 
-Thanks, this is useful info. Now I know that my patch isn't somehow
-reordering devices that would have probed as soon as
-of_platform_default_populate_init() added them.
+Fix this by making afs_do_lookup() use the renamed variant.
 
-When you say the "The affected drivers are still probed in the same
-order", are you only referring to the devices that would have probed
-before of_platform_default_populate_init() returns? Or ALL devices in
-the system are probing in the same order?
+Note that there are two variants of the success method because one is
+called from ->lookup() where we may or may not have an inode, but can't
+call iget until after we've talked to the server - whereas the other is
+called from within iget where we have an inode, but it may or may not be
+initialised.
 
-I assume gpio-keys gets probed in the "normal init thread" and not by
-the deferred probe workqueue? I'm guessing this because gpio_keys
-driver seems to register during late_initcall() whereas
-of_platform_default_populate_init() runs as an arch_initcall_sync().
+The latter variant expects there to be an inode, but because it's being
+called from there former case, there might not be - resulting in an oops
+like the following:
 
-> However, during
-> system suspend, gpio-keys is suspended before INTC, which is wrong, as
-> gpio-keys uses an interrupt provided by INTC.
->
-> Perhaps the "in parallel" is the real culprit, and there is a race
-> condition somewhere?
+ BUG: kernel NULL pointer dereference, address: 00000000000000b0
+ ...
+ RIP: 0010:afs_fetch_status_success+0x27/0x7e
+ ...
+ Call Trace:
+  ? rxrpc_cleanup_call+0xb5/0xc5
+  afs_wait_for_operation+0xda/0x234
+  afs_do_lookup+0x2fe/0x3c1
+  afs_lookup+0x3c5/0x4bd
+  __lookup_slow+0xcd/0x10f
+  walk_component+0xa2/0x10c
+  ? path_init+0x101/0x2eb
+  path_lookupat.isra.0+0x80/0x110
+  filename_lookup+0x81/0x104
+  ? slab_post_alloc_hook.isra.0+0xa/0x1a
+  ? kmem_cache_alloc+0xc3/0x129
+  vfs_statx+0x76/0x109
+  ? touch_atime+0x33/0xac
+  __do_sys_newlstat+0x39/0x6b
+  ? ksys_getdents64+0xb9/0xe0
+  ? vtime_delta.isra.0+0xe/0x24
+  ? vtime_delta.isra.0+0xe/0x24
+  ? get_vtime_delta+0x12/0x20
+  ? vtime_user_exit+0x21/0x61
+  ? __context_tracking_exit+0x3a/0x87
+  do_syscall_64+0x4c/0x78
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-I tried digging into the gpio_keys driver code to see how it interacts
-with INTC and if gpio-keys defers probe if INTC hasn't probed yet. But
-it seems like a rabbit hole that'd be easier to figure out when you
-have the device. Can you check if gpio-keys is probing before INTC in
-the "bad" case?
 
-Also, in general, can you see if there's a difference in the probe
-order between all the devices in the system? Adding a log to
-really_probe() would be better in case non-platform devices are
-getting reordered (my change affects all devices that are created from
-DT, not just platform devices).
+Fixes: b6489a49f7b7 ("afs: Fix silly rename")
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-I want to make sure we understand the real issue before we try to fix it.
+ fs/afs/dir.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Saravana
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index 3e3c2bf0a722..96757f3abd74 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -845,7 +845,7 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
+ 		 * to FS.FetchStatus for op->file[1].
+ 		 */
+ 		op->fetch_status.which = 1;
+-		op->ops = &afs_fetch_status_operation;
++		op->ops = &afs_lookup_fetch_status_operation;
+ 		afs_begin_vnode_operation(op);
+ 		afs_wait_for_operation(op);
+ 	}
+
+
