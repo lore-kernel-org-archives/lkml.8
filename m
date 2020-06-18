@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0695C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9544207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9846822257
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443996;
-	bh=cNRss9k61jcT5jvgxhOjB1htArPOvfCf4vU4KyasxiE=;
+	s=default; t=1592444001;
+	bh=6GbONZrIGeBS048AjB4buui1OGTHoi5x/iorTFe4KnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cpze2S52PNzqzyDajz7sQBx6PR1mFb+oMrCx/VQh6YgELQUOC+9DWAddHPbAhNhon
-	 wqBaKbulkGLNXpqPZWQ6gIQ9W94J94qu+brLx9Y4yB5iw9l1qwQXRBEKYieSGE3RPw
-	 LICRqdafGAChIOjuxPXhv8d+wv/hZg9tFYXs9aWM=
+	b=DkLjSN0K2/5JhmkwWwe9jD09EDhtFWt1QDBrxUB1cgmG1saXX4csx2h/N0PBLQBxl
+	 AYbIkSosUEu9+aksZ2EFxFsiRHkviAiRXZjxLuw312oY1kLCBNZ3dbdKuWp7c9hLJI
+	 lhKFHEBNg3rJrlBv8o49tdMCrtF7EEt7eI5A9W4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732944AbgFRBdN (ORCPT
+        id S1732940AbgFRBdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:33:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40722 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:33:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732570AbgFRBah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:30:37 -0400
+        id S1732585AbgFRBaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:30:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 990D1221EC;
-        Thu, 18 Jun 2020 01:30:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46913206E2;
+        Thu, 18 Jun 2020 01:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443836;
-        bh=cNRss9k61jcT5jvgxhOjB1htArPOvfCf4vU4KyasxiE=;
+        s=default; t=1592443839;
+        bh=6GbONZrIGeBS048AjB4buui1OGTHoi5x/iorTFe4KnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1rVAN0os+U07gNa/RD1yiH1np/lAjDBSvIVREce3KxMP0tQUbWFtE9tSHxNzrrxEG
-         Z53Nq41nr5qP3itoqfCJh+o7Pw8W/1Qf9mGiv58VV+p4tNgs0+srPv5YGF4lT0lskc
-         qJDR7S2lINj0wCnsC6g7XuArDeKD6x7Ze2NcYRQc=
+        b=hg/FCv8xFdGqGX7g+CpUg6RBQkxx7zO6lAPNts8RFM9Qdy/yoHBGp/gKW4pRBAMEl
+         RVPvvuJkJRCm+J2k0TRmxCHG3VeEE2ks6FbEt2+tP58KJRbeI1AohSyi7d5epuVl3B
+         p4wzjHPt9vvV7xSQu1n7fS+qouGNubv9NPQkQ19E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 23/60] iio: buffer: Don't allow buffers without any channels enabled to be activated
-Date:   Wed, 17 Jun 2020 21:29:27 -0400
-Message-Id: <20200618013004.610532-23-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 25/60] s390/qdio: put thinint indicator after early error
+Date:   Wed, 17 Jun 2020 21:29:29 -0400
+Message-Id: <20200618013004.610532-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
 References: <20200618013004.610532-1-sashal@kernel.org>
@@ -60,67 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit b7329249ea5b08b2a1c2c3f24a2f4c495c4f14b8 ]
+[ Upstream commit 75e82bec6b2622c6f455b7a543fb5476a5d0eed7 ]
 
-Before activating a buffer make sure that at least one channel is enabled.
-Activating a buffer with 0 channels enabled doesn't make too much sense and
-disallowing this case makes sure that individual driver don't have to add
-special case code to handle it.
+qdio_establish() calls qdio_setup_thinint() via qdio_setup_irq().
+If the subsequent qdio_establish_thinint() fails, we miss to put the
+DSCI again. Thus the DSCI isn't available for re-use. Given enough of
+such errors, we could end up with having only the shared DSCI available.
 
-Currently, without this patch enabling a buffer is possible and no error is
-produced. With this patch -EINVAL is returned.
+Merge qdio_setup_thinint() into qdio_establish_thinint(), and deal with
+such an error internally.
 
-An example of execution with this patch and some instrumented print-code:
-   root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
-   root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
-   0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
-   1: iio_verify_update 753
-   2:__iio_update_buffers 1115 ret -22
-   3: iio_buffer_store_enable 1241 ret -22
-   -bash: echo: write error: Invalid argument
-1, 2 & 3 are exit-error paths. 0 the first print in iio_verify_update()
-rergardless of error path.
-
-Without this patch (and same instrumented print-code):
-   root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
-   root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
-   0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
-   root@analog:/sys/bus/iio/devices/iio:device3/buffer#
-Buffer is enabled with no error.
-
-Note from Jonathan: Probably not suitable for automatic application to stable.
-This has been there from the very start.  It tidies up an odd corner
-case but won't effect any 'real' users.
-
-Fixes: 84b36ce5f79c0 ("staging:iio: Add support for multiple buffers")
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/industrialio-buffer.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/s390/cio/qdio.h         |  1 -
+ drivers/s390/cio/qdio_setup.c   |  1 -
+ drivers/s390/cio/qdio_thinint.c | 14 ++++++++------
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-index 864a61b05665..fea41b328ab9 100644
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -641,6 +641,13 @@ static int iio_verify_update(struct iio_dev *indio_dev,
- 	bool scan_timestamp;
- 	unsigned int modes;
+diff --git a/drivers/s390/cio/qdio.h b/drivers/s390/cio/qdio.h
+index 7e70f9298cc1..11f6ebd04545 100644
+--- a/drivers/s390/cio/qdio.h
++++ b/drivers/s390/cio/qdio.h
+@@ -376,7 +376,6 @@ static inline int multicast_outbound(struct qdio_q *q)
+ extern u64 last_ai_time;
  
-+	if (insert_buffer &&
-+	    bitmap_empty(insert_buffer->scan_mask, indio_dev->masklength)) {
-+		dev_dbg(&indio_dev->dev,
-+			"At least one scan element must be enabled first\n");
-+		return -EINVAL;
-+	}
+ /* prototypes for thin interrupt */
+-void qdio_setup_thinint(struct qdio_irq *irq_ptr);
+ int qdio_establish_thinint(struct qdio_irq *irq_ptr);
+ void qdio_shutdown_thinint(struct qdio_irq *irq_ptr);
+ void tiqdio_add_input_queues(struct qdio_irq *irq_ptr);
+diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
+index d0090c5c88e7..a64615a10352 100644
+--- a/drivers/s390/cio/qdio_setup.c
++++ b/drivers/s390/cio/qdio_setup.c
+@@ -479,7 +479,6 @@ int qdio_setup_irq(struct qdio_initialize *init_data)
+ 	setup_queues(irq_ptr, init_data);
+ 
+ 	setup_qib(irq_ptr, init_data);
+-	qdio_setup_thinint(irq_ptr);
+ 	set_impl_params(irq_ptr, init_data->qib_param_field_format,
+ 			init_data->qib_param_field,
+ 			init_data->input_slib_elements,
+diff --git a/drivers/s390/cio/qdio_thinint.c b/drivers/s390/cio/qdio_thinint.c
+index debe69adfc70..aecb6445a567 100644
+--- a/drivers/s390/cio/qdio_thinint.c
++++ b/drivers/s390/cio/qdio_thinint.c
+@@ -268,17 +268,19 @@ int __init tiqdio_register_thinints(void)
+ 
+ int qdio_establish_thinint(struct qdio_irq *irq_ptr)
+ {
++	int rc;
 +
- 	memset(config, 0, sizeof(*config));
+ 	if (!is_thinint_irq(irq_ptr))
+ 		return 0;
+-	return set_subchannel_ind(irq_ptr, 0);
+-}
  
- 	/*
+-void qdio_setup_thinint(struct qdio_irq *irq_ptr)
+-{
+-	if (!is_thinint_irq(irq_ptr))
+-		return;
+ 	irq_ptr->dsci = get_indicator();
+ 	DBF_HEX(&irq_ptr->dsci, sizeof(void *));
++
++	rc = set_subchannel_ind(irq_ptr, 0);
++	if (rc)
++		put_indicator(irq_ptr->dsci);
++
++	return rc;
+ }
+ 
+ void qdio_shutdown_thinint(struct qdio_irq *irq_ptr)
 -- 
 2.25.1
 
