@@ -2,92 +2,167 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57649C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED739C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC7121974
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448090;
-	bh=mGN9DdKaAmVEzpdoVTQ/AB/ixfkCHEhhjiWmQ+Z00rI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LJEXxJ/Y1b3Ys2St9MjBciU7UEGyOvvpHS6A3BX5wypTh5p1eqfcGULOIxropUJBw
-	 xTMv2QdxC/8zUs2jdLfjsiBq2XCmmWaPWwfId9LfdyIRu9ze1QcxDuwtwJpXkuv2Ls
-	 YTOdEXeLo74m20pLXtygGibFxUf7FmA7ffzXu5vU=
+	by mail.kernel.org (Postfix) with ESMTP id C34D121534
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBa3G0l+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387845AbgFRClR (ORCPT
+        id S1730834AbgFRClg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:41:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727979AbgFRBM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:28 -0400
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43B76214DB;
-        Thu, 18 Jun 2020 01:12:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442747;
-        bh=mGN9DdKaAmVEzpdoVTQ/AB/ixfkCHEhhjiWmQ+Z00rI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xzsVrD7akKySIWhvQD55PtUN2F05SgqEIQ0FBQXyrmbiBXLTK2KyYj2xCXvEORWGJ
-         zHQBhVJ/v3Ymfwxra4LefSoKABPvCGyUpIX2mfrGWICi+aprnskbSySUBLb4WoAVep
-         rvWsIseXqFcwnil5YImRepnntj/Wze4KPlhO8R3c=
-Date:   Wed, 17 Jun 2020 18:12:26 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     peterz@infradead.org, jroedel@suse.de,
-        Andy Lutomirski <luto@kernel.org>,
-        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        manvanth@linux.vnet.ibm.com, linux-next@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, hch@lst.de,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] mm: Move p?d_alloc_track to separate header file
-Message-Id: <20200617181226.ab213ea1531b5dd6eca1b0b6@linux-foundation.org>
-In-Reply-To: <20200609120533.25867-1-joro@8bytes.org>
-References: <20200609120533.25867-1-joro@8bytes.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 17 Jun 2020 22:41:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728235AbgFRBMZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:25 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C5DAC061755;
+        Wed, 17 Jun 2020 18:12:25 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 23so1981113pfw.10;
+        Wed, 17 Jun 2020 18:12:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2mYYmw9nQduGr7ImYE2MP1C2QsjcPBen23TKEtxnDoY=;
+        b=kBa3G0l+ZNUXGCRjrjIh/s9kaSyUojbgB+Eyc39Uf/7c8gLLYv3g5WFrTplfAXZSGj
+         Ueg4+uAgarXniOlUAp+AC46WRJSoLNnrj1PIkVBcEeRYdR58TvKwFV9LkxqmFkUFtSDm
+         qoWSMDCY/5hMkvJl4c8s3bA93TIZqTfsYGepQ1SDqvko2De6KbRJrNRvgSriNUqyirPm
+         Z/XMPQ//Av9revEdsHJtzzlpIq+i7Nw9bzZwxc69FNnY2gRXr65vmVykrJpJbB0q8Ywi
+         vHaBxvZveDmajKMqGsWHZvRA4rcJec9Z6iAOKoTulcl+M5MN/np6JJecMEzr/NnS0HGz
+         MH9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2mYYmw9nQduGr7ImYE2MP1C2QsjcPBen23TKEtxnDoY=;
+        b=NbR8KWAtJQZhnSs47MjpcS97DqHzOQDcxVzl6ZmXYrj425VxIR0bz/KEx8S0ULGUN4
+         86zAJJHPJ4y0Qts7S9M0yLGtUv/kBXIkoBLz10buz5rnx/+Z173f/lVyNc6nU8fFn8PS
+         rhRNwCH5DgyM1lb3E2zwevMPnos1MloMlJS92qWBOOZn7qbUoJitOFNvnRAJYrqxd69f
+         F5w8Bj6zoXDYm2ns/qAZVQ2cbNKVKpcCFJYvxIPnJXCG/i0OOx+iLlyHIdkVBvfxiobK
+         DnDhptJwtsSQcFsUMesdVix78rmpiJneVRI8+v74doNQNBnPRql5s2aBAarYm9k9R81r
+         pGMw==
+X-Gm-Message-State: AOAM533scHdM1ODVLdBJ1+CeiqOmn6+qSDj75j/OrKde3G98n1E+eoFP
+        akIW+x7sQPLVIzD8KFbx7l11CBHtpLU=
+X-Google-Smtp-Source: ABdhPJz/mOUor7XwvAv9bccD3inxzqmkUVqwhIN47oG3dQuKAkR+QC0pz02eMw/i7U68pqz8EN7zXw==
+X-Received: by 2002:a63:3409:: with SMTP id b9mr1394174pga.106.1592442744653;
+        Wed, 17 Jun 2020 18:12:24 -0700 (PDT)
+Received: from dc803.localdomain (FL1-125-199-162-203.hyg.mesh.ad.jp. [125.199.162.203])
+        by smtp.gmail.com with ESMTPSA id q10sm1022781pfk.86.2020.06.17.18.12.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 18:12:24 -0700 (PDT)
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+To:     kohada.t2@gmail.com
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2 v3] exfat: write multiple sectors at once
+Date:   Thu, 18 Jun 2020 10:12:03 +0900
+Message-Id: <20200618011205.1406-1-kohada.t2@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  9 Jun 2020 14:05:33 +0200 Joerg Roedel <joro@8bytes.org> wrote:
+Write multiple sectors at once when updating dir-entries.
+Add exfat_update_bhs() for that. It wait for write completion once
+instead of sector by sector.
+It's only effective if sync enabled.
 
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> The functions are only used in two source files, so there is no need
-> for them to be in the global <linux/mm.h> header. Move them to the new
-> <linux/pgalloc-track.h> header and include it only where needed.
-> 
-> ...
->
-> new file mode 100644
-> index 000000000000..1dcc865029a2
-> --- /dev/null
-> +++ b/include/linux/pgalloc-track.h
-> @@ -0,0 +1,51 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_PGALLLC_TRACK_H
-> +#define _LINUX_PGALLLC_TRACK_H
+Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+---
+Changes in v2:
+ - Split into 'write multiple sectors at once'
+   and 'add error check when updating dir-entries'
+Changes in v3
+ - Rebase to latest exfat-dev
 
-hm, no #includes.  I guess this is OK, given the limited use.
+ fs/exfat/dir.c      | 12 ++++++------
+ fs/exfat/exfat_fs.h |  1 +
+ fs/exfat/misc.c     | 19 +++++++++++++++++++
+ 3 files changed, 26 insertions(+), 6 deletions(-)
 
-But it does make one wonder whether ioremap.c should be moved from lib/
-to mm/ and this file should be moved from include/linux/ to mm/.
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index 02acbb6ddf02..a3364df6339c 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -606,13 +606,13 @@ void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
+ 
+ void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
+ {
+-	int i;
++	int i, err = 0;
+ 
+-	for (i = 0; i < es->num_bh; i++) {
+-		if (es->modified)
+-			exfat_update_bh(es->bh[i], sync);
+-		brelse(es->bh[i]);
+-	}
++	if (es->modified)
++		err = exfat_update_bhs(es->bh, es->num_bh, sync);
++
++	for (i = 0; i < es->num_bh; i++)
++		err ? bforget(es->bh[i]):brelse(es->bh[i]);
+ 	kfree(es);
+ }
+ 
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index 84664024e51e..cbb00ee97183 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -512,6 +512,7 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type);
+ u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type);
+ void exfat_update_bh(struct buffer_head *bh, int sync);
++int exfat_update_bhs(struct buffer_head **bhs, int nr_bhs, int sync);
+ void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
+ 		unsigned int size, unsigned char flags);
+ void exfat_chain_dup(struct exfat_chain *dup, struct exfat_chain *ec);
+diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
+index 8a3dde59052b..564718747fb2 100644
+--- a/fs/exfat/misc.c
++++ b/fs/exfat/misc.c
+@@ -172,6 +172,25 @@ void exfat_update_bh(struct buffer_head *bh, int sync)
+ 		sync_dirty_buffer(bh);
+ }
+ 
++int exfat_update_bhs(struct buffer_head **bhs, int nr_bhs, int sync)
++{
++	int i, err = 0;
++
++	for (i = 0; i < nr_bhs; i++) {
++		set_buffer_uptodate(bhs[i]);
++		mark_buffer_dirty(bhs[i]);
++		if (sync)
++			write_dirty_buffer(bhs[i], 0);
++	}
++
++	for (i = 0; i < nr_bhs && sync; i++) {
++		wait_on_buffer(bhs[i]);
++		if (!buffer_uptodate(bhs[i]))
++			err = -EIO;
++	}
++	return err;
++}
++
+ void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
+ 		unsigned int size, unsigned char flags)
+ {
+-- 
+2.25.1
 
-Oh well.
