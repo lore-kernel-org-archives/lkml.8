@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F342BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB568C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD1B82192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AEA421D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444251;
-	bh=7xl6cFlDLKefR7FK+GS0KdRmp7qWbcA3/PyCqL2r4xM=;
+	s=default; t=1592444255;
+	bh=r22kJpkaw3xZhTgw3O801kzZRzM5D2whyI7HfVm1ddo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=npFG7poR6cnLe2TU6Ov/YLM8gxFSNV9eDxtq/ZBAVhQhcMKXWACTrxUB6HrpYTTTe
-	 OqJjtMe+VtuWkASCVNQDMxEsS+db+xOhuX5BMxIAGAcVwHlmbABuPuaQM8yeluIUSL
-	 +Z5GnWOV9f7XR8M6DeAnM2Nb96yUOHpg87BdEyMA=
+	b=kSZmTRwsWD1J0xVOl4Ex9ssz6ra3D9C1CQRdyJxNcMiafpn0BbjDkwA8ltwWSAFX9
+	 VF7+qY2SfK26Y7/P73gGofhkemYJQdm58aX99XwBQlC5GvjeXwv1J5VdRGFZ3tIO9i
+	 7exHLpIFiFsTxJ/agj2Q8IGA2BxoDs8191Htjat8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732619AbgFRBar (ORCPT
+        id S1732175AbgFRBhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:30:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35578 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:37:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731862AbgFRB1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:25 -0400
+        id S1731939AbgFRBar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:30:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 502A2221F2;
-        Thu, 18 Jun 2020 01:27:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C742E221EC;
+        Thu, 18 Jun 2020 01:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443644;
-        bh=7xl6cFlDLKefR7FK+GS0KdRmp7qWbcA3/PyCqL2r4xM=;
+        s=default; t=1592443847;
+        bh=r22kJpkaw3xZhTgw3O801kzZRzM5D2whyI7HfVm1ddo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uyu9TFV3ZGbZhc5NjeB70YlttRHw/65s6qF56EKci92kf8rsTyuOIMxmbjxWMMftR
-         F+K4lllzBdhhBKUbinA0RBw6PgBdsMzTc4WVQt8xsxoh4XuPaBZvsV5TPwbCpZo3/X
-         OgGYUUJCkCK2j3Bf9AxPpqHVDgvGh3iSP3RQubmk=
+        b=JbF9hCkAB0X6szbo0l4TjldDeVCs1CqoElFUGwSt2WE90jd1claniPscJBaBtiVmm
+         lMSYkWZI1TF87JNe9dsp9qI03LdVK4UW6PL0CZ4EAc00koMyZWGZrDeV1znbk5DuGa
+         rsXLxWw+q7h3orgmCEr6Hl7w5jmosD7JFzBrS4V4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 066/108] tty: n_gsm: Fix bogus i++ in gsm_data_kick
-Date:   Wed, 17 Jun 2020 21:25:18 -0400
-Message-Id: <20200618012600.608744-66-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 32/60] power: supply: smb347-charger: IRQSTAT_D is volatile
+Date:   Wed, 17 Jun 2020 21:29:36 -0400
+Message-Id: <20200618013004.610532-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
-References: <20200618012600.608744-1-sashal@kernel.org>
+In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
+References: <20200618013004.610532-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,51 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 4dd31f1ffec6c370c3c2e0c605628bf5e16d5c46 ]
+[ Upstream commit c32ea07a30630ace950e07ffe7a18bdcc25898e1 ]
 
-When submitting the previous fix "tty: n_gsm: Fix waking up upper tty
-layer when room available". It was suggested to switch from a while to
-a for loop, but when doing it, there was a remaining bogus i++.
+Fix failure when USB cable is connected:
+smb347 2-006a: reading IRQSTAT_D failed
 
-This patch removes this i++ and also reorganizes the code making it more
-compact.
+Fixes: 1502cfe19bac ("smb347-charger: Fix battery status reporting logic for charger faults")
 
-Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20200518084517.2173242-3-gregory.clement@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Tested-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/n_gsm.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/power/smb347-charger.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index e7417eac3f21..c70e79a0e9f2 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -715,17 +715,9 @@ static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
- 		} else {
- 			int i = 0;
- 
--			for (i = 0; i < NUM_DLCI; i++) {
--				struct gsm_dlci *dlci;
--
--				dlci = gsm->dlci[i];
--				if (dlci == NULL) {
--					i++;
--					continue;
--				}
--
--				tty_port_tty_wakeup(&dlci->port);
--			}
-+			for (i = 0; i < NUM_DLCI; i++)
-+				if (gsm->dlci[i])
-+					tty_port_tty_wakeup(&gsm->dlci[i]->port);
- 		}
- 	}
- }
+diff --git a/drivers/power/smb347-charger.c b/drivers/power/smb347-charger.c
+index 072c5189bd6d..0655dbdc7000 100644
+--- a/drivers/power/smb347-charger.c
++++ b/drivers/power/smb347-charger.c
+@@ -1141,6 +1141,7 @@ static bool smb347_volatile_reg(struct device *dev, unsigned int reg)
+ 	switch (reg) {
+ 	case IRQSTAT_A:
+ 	case IRQSTAT_C:
++	case IRQSTAT_D:
+ 	case IRQSTAT_E:
+ 	case IRQSTAT_F:
+ 	case STAT_A:
 -- 
 2.25.1
 
