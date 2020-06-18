@@ -2,192 +2,104 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FBEC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B40EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7A720720
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWeasNGf"
+	by mail.kernel.org (Postfix) with ESMTP id 55A4920720
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592447858;
+	bh=+7/PlDzWUjyfolRw+6reVX66V0k0Iko13dyWim3CMY0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FBhk6Awz2IWSEU0wamIR5U5kKM+hIpUfZ8uYYT2jNPxSuJCNA6SlRXgmx4vvEeOxa
+	 ILI6CWyn874r/rbK4IrkB+Z903B4lIrVyRSvOnqFoHiOaqqIqeY4sZ3+bwf2e2mUrQ
+	 tv7zsQ+/g3PYNIAiWpDn/dDmkR6dyQLl7kouGTIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgFRBNn (ORCPT
+        id S1732274AbgFRChh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:13:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbgFRBM3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:29 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04F4DC06174E;
-        Wed, 17 Jun 2020 18:12:29 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b201so2015367pfb.0;
-        Wed, 17 Jun 2020 18:12:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=e9FOCSBqSJYzjtlQfMtvxrRXQjQq6WyBA8o/hvLoOy8=;
-        b=hWeasNGf5UeBfBu0B7VFOylvzhKTVKa36Hij10+tbb1qblS9qxGuqA739dAZtQmXPl
-         CFL1+uXbsPS2XCMah1Wei+yrso+Yt78IsdmwZyvZY68ZcVT1O8IPMJxiXDZKl1wvKa/2
-         AB+JICg4bC4NelAarSZgjvD7QVsCf+6MIQ4PLHIq3U8lToVcj9GjkVLPfkM0fVA0cyJG
-         tCPRyxcERUoqefspNnGYPUDoTlZEMnBaxbUNBXf4U1QlUlid8lmxlNa8+1owggnydsEr
-         aE9SgHY+LMIssIhW5rqo5xywP4sHodrMcEDbixqytpMGpsIAV1AY7P78cCyiN+PbIuZj
-         uwtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=e9FOCSBqSJYzjtlQfMtvxrRXQjQq6WyBA8o/hvLoOy8=;
-        b=K4F5fsMSTagjXqcQjSFYqSCOZUJTizlEOz5GEoiI5a9GsOk3vxVGCiYNQy6PUCq7sD
-         /bCHZPWmznnkDb6laU0Y6O4lH4Ag04UF/l89fqxGmYjPqKwQrwM9Ej0O2DEauO/FRBMK
-         dtLMYf1+ZKdsdXsf9hEInAEne3oVMx3GVe2by1BG2lwhqiCUyvMtzjDFH+OTpHoqQSc4
-         Bkqg9rzV/6AQIZiz4uLbvpe0SypG9wji/eehI/VUhI3Hp9uNl1OCOQp8LmxKZfy+JLT/
-         3aJ8MSdL3BnoRjM2zF836U/wrfwG+VGIYwY86xd28rhdODi6IUu81wKNxXYpY4KzRXOk
-         1u0w==
-X-Gm-Message-State: AOAM533oY+B8lV/UVG4tn/ficR6Y0TBiTvU3HjGXGg9pGhDGYZwj8KFX
-        LrMFTZHygj9A4035RRQwWso=
-X-Google-Smtp-Source: ABdhPJztv7TY0qrdkLCitl4fWnLkzeDtTpNve6L6zUuUd8CG8Lblvje8JKrHM2IHpOA36Cwl0f/hSw==
-X-Received: by 2002:aa7:9a92:: with SMTP id w18mr1299129pfi.261.1592442748524;
-        Wed, 17 Jun 2020 18:12:28 -0700 (PDT)
-Received: from dc803.localdomain (FL1-125-199-162-203.hyg.mesh.ad.jp. [125.199.162.203])
-        by smtp.gmail.com with ESMTPSA id q10sm1022781pfk.86.2020.06.17.18.12.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 18:12:28 -0700 (PDT)
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-To:     kohada.t2@gmail.com
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2 v3] exfat: add error check when updating dir-entries
-Date:   Thu, 18 Jun 2020 10:12:04 +0900
-Message-Id: <20200618011205.1406-2-kohada.t2@gmail.com>
+        Wed, 17 Jun 2020 22:37:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728610AbgFRBNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:42 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A740521924;
+        Thu, 18 Jun 2020 01:13:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592442821;
+        bh=+7/PlDzWUjyfolRw+6reVX66V0k0Iko13dyWim3CMY0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sddd2DOQO+XZ2HjHKK2SIMigVF5QnzkN/YU1b3nwiR0CruEdwju4p+BrzIOPxRCq2
+         q9nAFRs9vDiy398BWNeBsAYYihALdJaHYhyC3T0SzEh4X46mpj2jiHglHAgmSKE18V
+         L7BRkyq2WOuBhxmpbX2fdASNfjJVtUnhff5nJcq8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 258/388] PCI: dwc: Fix inner MSI IRQ domain registration
+Date:   Wed, 17 Jun 2020 21:05:55 -0400
+Message-Id: <20200618010805.600873-258-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011205.1406-1-kohada.t2@gmail.com>
-References: <20200618011205.1406-1-kohada.t2@gmail.com>
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add error check when synchronously updating dir-entries.
+From: Marc Zyngier <maz@kernel.org>
 
-Suggested-by: Sungjong Seo <sj1557.seo@samsung.com>
-Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+[ Upstream commit 0414b93e78d87ecc24ae1a7e61fe97deb29fa2f4 ]
+
+On a system that uses the internal DWC MSI widget, I get this
+warning from debugfs when CONFIG_GENERIC_IRQ_DEBUGFS is selected:
+
+  debugfs: File ':soc:pcie@fc000000' in directory 'domains' already present!
+
+This is due to the fact that the DWC MSI code tries to register two
+IRQ domains for the same firmware node, without telling the low
+level code how to distinguish them (by setting a bus token). This
+further confuses debugfs which tries to create corresponding
+files for each domain.
+
+Fix it by tagging the inner domain as DOMAIN_BUS_NEXUS, which is
+the closest thing we have as to "generic MSI".
+
+Link: https://lore.kernel.org/r/20200501113921.366597-1-maz@kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes in v2:
- - Split into 'write multiple sectors at once'
-   and 'add error check when updating dir-entries'
-Changes in v3
- - Rebase to latest exfat-dev
+ drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- fs/exfat/dir.c      | 3 ++-
- fs/exfat/exfat_fs.h | 2 +-
- fs/exfat/file.c     | 5 ++++-
- fs/exfat/inode.c    | 8 +++++---
- 4 files changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
-index a3364df6339c..89d216d5ac89 100644
---- a/fs/exfat/dir.c
-+++ b/fs/exfat/dir.c
-@@ -604,7 +604,7 @@ void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
- 	es->modified = true;
- }
- 
--void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
-+int exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
- {
- 	int i, err = 0;
- 
-@@ -614,6 +614,7 @@ void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
- 	for (i = 0; i < es->num_bh; i++)
- 		err ? bforget(es->bh[i]):brelse(es->bh[i]);
- 	kfree(es);
-+	return err;
- }
- 
- static int exfat_walk_fat_chain(struct super_block *sb,
-diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
-index cbb00ee97183..da677c85314f 100644
---- a/fs/exfat/exfat_fs.h
-+++ b/fs/exfat/exfat_fs.h
-@@ -459,7 +459,7 @@ struct exfat_dentry *exfat_get_dentry_cached(struct exfat_entry_set_cache *es,
- 		int num);
- struct exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *sb,
- 		struct exfat_chain *p_dir, int entry, unsigned int type);
--void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync);
-+int exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync);
- int exfat_count_dir_entries(struct super_block *sb, struct exfat_chain *p_dir);
- 
- /* inode.c */
-diff --git a/fs/exfat/file.c b/fs/exfat/file.c
-index fce03f318787..37c8f04c1f8a 100644
---- a/fs/exfat/file.c
-+++ b/fs/exfat/file.c
-@@ -153,6 +153,7 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
- 		struct timespec64 ts;
- 		struct exfat_dentry *ep, *ep2;
- 		struct exfat_entry_set_cache *es;
-+		int err;
- 
- 		es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry,
- 				ES_ALL_ENTRIES);
-@@ -187,7 +188,9 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
- 		}
- 
- 		exfat_update_dir_chksum_with_entry_set(es);
--		exfat_free_dentry_set(es, inode_needs_sync(inode));
-+		err = exfat_free_dentry_set(es, inode_needs_sync(inode));
-+		if (err)
-+			return err;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 395feb8ca051..3c43311bb95c 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -264,6 +264,8 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
+ 		return -ENOMEM;
  	}
  
- 	/* cut off from the FAT chain */
-diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
-index cf9ca6c4d046..1e851f172e0c 100644
---- a/fs/exfat/inode.c
-+++ b/fs/exfat/inode.c
-@@ -77,8 +77,7 @@ static int __exfat_write_inode(struct inode *inode, int sync)
- 	ep2->dentry.stream.size = ep2->dentry.stream.valid_size;
- 
- 	exfat_update_dir_chksum_with_entry_set(es);
--	exfat_free_dentry_set(es, sync);
--	return 0;
-+	return exfat_free_dentry_set(es, sync);
- }
- 
- int exfat_write_inode(struct inode *inode, struct writeback_control *wbc)
-@@ -222,6 +221,7 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
- 		if (ei->dir.dir != DIR_DELETED && modified) {
- 			struct exfat_dentry *ep;
- 			struct exfat_entry_set_cache *es;
-+			int err;
- 
- 			es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry,
- 				ES_ALL_ENTRIES);
-@@ -240,7 +240,9 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
- 				ep->dentry.stream.valid_size;
- 
- 			exfat_update_dir_chksum_with_entry_set(es);
--			exfat_free_dentry_set(es, inode_needs_sync(inode));
-+			err = exfat_free_dentry_set(es, inode_needs_sync(inode));
-+			if (err)
-+				return err;
- 
- 		} /* end of if != DIR_DELETED */
- 
++	irq_domain_update_bus_token(pp->irq_domain, DOMAIN_BUS_NEXUS);
++
+ 	pp->msi_domain = pci_msi_create_irq_domain(fwnode,
+ 						   &dw_pcie_msi_domain_info,
+ 						   pp->irq_domain);
 -- 
 2.25.1
 
