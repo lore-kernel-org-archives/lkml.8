@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E10C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7207CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2E3D221EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EEC922206
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445043;
-	bh=1suXfqXB8wFHhKBMZXOWemYVz8CFAzks7HX0TcBdIrA=;
+	s=default; t=1592445058;
+	bh=A8WtP3vMsswmUtj7/Z5FBorv3GFfxNsg9zYgCEOcPjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nO0g3qkPNCidiBL+cm8Lv1Zzyaj27I6KshPOspDfycTAyPjavZX4LLzg+qrXtkz2W
-	 iA5+lIx2cYkiSnCJAWlASJQCMqin0Vvpb+Ngl5c69k2v0lzNp1BP2jz1OjqLGQ/9dI
-	 y1k+7k53EpZPsmTKASSQTfYELuauTkKCeWoQ4e34=
+	b=kuOX3q9rHVaOcLTF6LhRBBo6/YP/BAIC4Ba3bn8fElfanbLc4fbhh8JXhKqMZT9SZ
+	 aP9GXNFjXFwX8eh1t1hoPCo80yEVBvSjqs0zXTxLQdbpOQm6bIK4/521sxA+cDeaH/
+	 rhX5YDIm/5KPQ0IJLKNu9aqvZSrTsX9NMWvKwlzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732995AbgFRBuh (ORCPT
+        id S1732199AbgFRBu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:50:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35512 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:50:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731855AbgFRB1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:22 -0400
+        id S1731825AbgFRB1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99A94221EB;
-        Thu, 18 Jun 2020 01:27:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 820EA20776;
+        Thu, 18 Jun 2020 01:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443642;
-        bh=1suXfqXB8wFHhKBMZXOWemYVz8CFAzks7HX0TcBdIrA=;
+        s=default; t=1592443635;
+        bh=A8WtP3vMsswmUtj7/Z5FBorv3GFfxNsg9zYgCEOcPjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gH9AxSDfg4M4mkfnR9z+ZO8Zdu3qxL0Erxg/KWjgVBEFpUNmi7dNwfZbjW7oUThUK
-         m5DE4elAw+upGUw/+ihwI7pzbV13+BsKIrL3+O4fZmFwv2EnQsVJ1iohM+MdpwP/xz
-         dy0AavOjUt/wbYb2fhdY+jhbiFoL4RGvYCh73bqg=
+        b=jx3w52ZGVKL11CwIdZROTimW6a2ZZ5UCDSB4ATaG1KebCS0dkZLIG1KpTDQyGqWGZ
+         HpTGB+m1ZZq1uNiSSUEwbOksTZJkXlE6NYW1Nv/9gQw5YuTg0JGSfbnAKfyt3CPSHU
+         IABk8HChMHDEpnqpdx3GfIN15nhefPOHjQ5PlLUI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roy Spliet <nouveau@spliet.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 064/108] drm/msm/mdp5: Fix mdp5_init error path for failed mdp5_kms allocation
-Date:   Wed, 17 Jun 2020 21:25:16 -0400
-Message-Id: <20200618012600.608744-64-sashal@kernel.org>
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 058/108] tty: n_gsm: Fix SOF skipping
+Date:   Wed, 17 Jun 2020 21:25:10 -0400
+Message-Id: <20200618012600.608744-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -61,35 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roy Spliet <nouveau@spliet.org>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-[ Upstream commit e4337877c5d578722c0716f131fb774522013cf5 ]
+[ Upstream commit 84d6f81c1fb58b56eba81ff0a36cf31946064b40 ]
 
-When allocation for mdp5_kms fails, calling mdp5_destroy() leads to undefined
-behaviour, likely a nullptr exception or use-after-free troubles.
+For at least some modems like the TELIT LE910, skipping SOF makes
+transfers blocking indefinitely after a short amount of data
+transferred.
 
-Signed-off-by: Roy Spliet <nouveau@spliet.org>
-Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Given the small improvement provided by skipping the SOF (just one
+byte on about 100 bytes), it seems better to completely remove this
+"feature" than make it optional.
+
+Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20200512115323.1447922-3-gregory.clement@bootlin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/n_gsm.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
-index f7c0698fec40..791a74b9907d 100644
---- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
-+++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
-@@ -972,7 +972,8 @@ static int mdp5_init(struct platform_device *pdev, struct drm_device *dev)
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index f46bd1af7a10..eabdcfa414aa 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -681,7 +681,6 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+ {
+ 	struct gsm_msg *msg, *nmsg;
+ 	int len;
+-	int skip_sof = 0;
  
- 	return 0;
- fail:
--	mdp5_destroy(pdev);
-+	if (mdp5_kms)
-+		mdp5_destroy(pdev);
- 	return ret;
- }
+ 	list_for_each_entry_safe(msg, nmsg, &gsm->tx_list, list) {
+ 		if (gsm->constipated && msg->addr)
+@@ -703,15 +702,10 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+ 			print_hex_dump_bytes("gsm_data_kick: ",
+ 					     DUMP_PREFIX_OFFSET,
+ 					     gsm->txframe, len);
+-
+-		if (gsm->output(gsm, gsm->txframe + skip_sof,
+-						len - skip_sof) < 0)
++		if (gsm->output(gsm, gsm->txframe, len) < 0)
+ 			break;
+ 		/* FIXME: Can eliminate one SOF in many more cases */
+ 		gsm->tx_bytes -= msg->len;
+-		/* For a burst of frames skip the extra SOF within the
+-		   burst */
+-		skip_sof = 1;
  
+ 		list_del(&msg->list);
+ 		kfree(msg);
 -- 
 2.25.1
 
