@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC04DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C748C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB1782083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3222083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448698;
-	bh=RN2bILSQm9t4nnyHUz9ZGhGu6QRwP2bTK5/z6XWX6JY=;
+	s=default; t=1592448701;
+	bh=+vEkPhmzh426RGcTQdJbbQ/XsrAnTOgO/RTwQ9TiMLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VBB9nYClfiy94B1qUFH8Lt+wmSH1KIAOKj9e/BgD9mRIjqlciO0u5b6pPAKvqMiOh
-	 6fpfvS2YmMEdPK30F/erQzaZPw1oaT69XIJzX1AI/OkbJnU8wv4v9k3YdggfcVw5lg
-	 rtj11CP8pCBXjA/1TFYEj04FNBYRTgO7UrZY8Uds=
+	b=02Zaz8rfXEVhniM2D8o4KzA0PIw7aDhn7rfSm8TgUa/o+D5r0w/j4rB+N3E7A8kEy
+	 wIjhlPyQE6NE3B/HRLadTjCqT/j7PVzsMU97o7P5AMdcP5GBfLc9zlmigjFZ1w+C8q
+	 72QHakzAXfKA+NzgXhJR+V/9UxA5eaEDkjmMG0NM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgFRBI4 (ORCPT
+        id S1730609AbgFRCvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:08:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34692 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:51:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727898AbgFRBIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:08:46 -0400
+        id S1727019AbgFRBI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:08:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9114921D6C;
-        Thu, 18 Jun 2020 01:08:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59CCF2193E;
+        Thu, 18 Jun 2020 01:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442526;
-        bh=RN2bILSQm9t4nnyHUz9ZGhGu6QRwP2bTK5/z6XWX6JY=;
+        s=default; t=1592442536;
+        bh=+vEkPhmzh426RGcTQdJbbQ/XsrAnTOgO/RTwQ9TiMLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FwjVUpuhW1Ls1i5Mf99YeXEAWn/rm5HDPsrIaN2LfUt0gcn6N+Ux4wwFAF9DsnJF2
-         HkesmzMPJJEUvrUFytb75Kdav8fEJLYcwpKoThKmMMQP04in2Q/zQda9HQtSeNMMKM
-         WfKdZmIBZmYmJ47C2psABr4V62/qfx82uqeoXV6Y=
+        b=XB5VoAs5UDwYPA025H4ZEJmUKVi6o6hno/8pTsZsFauLC8L9yzgVyOkV/eAOXS0Pr
+         LBRmqFctnQ1ri5t4ASMhy9iLtytKwiEhF+4sX/YJwttgjpHKB1QyGO4W2vHALftICo
+         IdyMW9Hru6g8WXfJ9eZNoGv1VJiFyS0zjseJWphU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 030/388] Input: edt-ft5x06 - fix get_default register write access
-Date:   Wed, 17 Jun 2020 21:02:07 -0400
-Message-Id: <20200618010805.600873-30-sashal@kernel.org>
+Cc:     Sibi Sankar <sibis@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 038/388] remoteproc: qcom_q6v5_mss: map/unmap mpss segments before/after use
+Date:   Wed, 17 Jun 2020 21:02:15 -0400
+Message-Id: <20200618010805.600873-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,56 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Sibi Sankar <sibis@codeaurora.org>
 
-[ Upstream commit 255cdaf73412de13608fb776101402dca68bed2b ]
+[ Upstream commit be050a3429f46ecf13eb2b80f299479f8bb823fb ]
 
-Since commit b6eba86030bf ("Input: edt-ft5x06 - add offset support for
-ev-ft5726") offset-x and offset-y is supported. Devices using those
-offset parameters don't support the offset parameter so we need to add
-the NO_REGISTER check for edt_ft5x06_ts_get_defaults().
+The application processor accessing the mpss region when the Q6 modem is
+running will lead to an XPU violation. Fix this by un-mapping the mpss
+segments post copy during mpss authentication and coredumps.
 
-Fixes: b6eba86030bf ("Input: edt-ft5x06 - add offset support for ev-ft5726")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Link: https://lore.kernel.org/r/20200227112819.16754-2-m.felsch@pengutronix.de
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Tested-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Link: https://lore.kernel.org/r/20200415071619.6052-1-sibis@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/edt-ft5x06.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/remoteproc/qcom_q6v5_mss.c | 31 +++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index d2587724c52a..9b8450794a8a 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -938,19 +938,25 @@ static void edt_ft5x06_ts_get_defaults(struct device *dev,
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index 5475d4f808a8..22416e86a174 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -1156,7 +1156,13 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 			goto release_firmware;
+ 		}
  
- 	error = device_property_read_u32(dev, "offset", &val);
- 	if (!error) {
--		edt_ft5x06_register_write(tsdata, reg_addr->reg_offset, val);
-+		if (reg_addr->reg_offset != NO_REGISTER)
-+			edt_ft5x06_register_write(tsdata,
-+						  reg_addr->reg_offset, val);
- 		tsdata->offset = val;
+-		ptr = qproc->mpss_region + offset;
++		ptr = ioremap_wc(qproc->mpss_phys + offset, phdr->p_memsz);
++		if (!ptr) {
++			dev_err(qproc->dev,
++				"unable to map memory region: %pa+%zx-%x\n",
++				&qproc->mpss_phys, offset, phdr->p_memsz);
++			goto release_firmware;
++		}
+ 
+ 		if (phdr->p_filesz && phdr->p_offset < fw->size) {
+ 			/* Firmware is large enough to be non-split */
+@@ -1165,6 +1171,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 					"failed to load segment %d from truncated file %s\n",
+ 					i, fw_name);
+ 				ret = -EINVAL;
++				iounmap(ptr);
+ 				goto release_firmware;
+ 			}
+ 
+@@ -1175,6 +1182,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 			ret = request_firmware(&seg_fw, fw_name, qproc->dev);
+ 			if (ret) {
+ 				dev_err(qproc->dev, "failed to load %s\n", fw_name);
++				iounmap(ptr);
+ 				goto release_firmware;
+ 			}
+ 
+@@ -1187,6 +1195,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 			memset(ptr + phdr->p_filesz, 0,
+ 			       phdr->p_memsz - phdr->p_filesz);
+ 		}
++		iounmap(ptr);
+ 		size += phdr->p_memsz;
+ 
+ 		code_length = readl(qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
+@@ -1236,7 +1245,8 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
+ 	int ret = 0;
+ 	struct q6v5 *qproc = rproc->priv;
+ 	unsigned long mask = BIT((unsigned long)segment->priv);
+-	void *ptr = rproc_da_to_va(rproc, segment->da, segment->size);
++	int offset = segment->da - qproc->mpss_reloc;
++	void *ptr = NULL;
+ 
+ 	/* Unlock mba before copying segments */
+ 	if (!qproc->dump_mba_loaded) {
+@@ -1250,10 +1260,15 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
+ 		}
  	}
  
- 	error = device_property_read_u32(dev, "offset-x", &val);
- 	if (!error) {
--		edt_ft5x06_register_write(tsdata, reg_addr->reg_offset_x, val);
-+		if (reg_addr->reg_offset_x != NO_REGISTER)
-+			edt_ft5x06_register_write(tsdata,
-+						  reg_addr->reg_offset_x, val);
- 		tsdata->offset_x = val;
- 	}
+-	if (!ptr || ret)
+-		memset(dest, 0xff, segment->size);
+-	else
++	if (!ret)
++		ptr = ioremap_wc(qproc->mpss_phys + offset, segment->size);
++
++	if (ptr) {
+ 		memcpy(dest, ptr, segment->size);
++		iounmap(ptr);
++	} else {
++		memset(dest, 0xff, segment->size);
++	}
  
- 	error = device_property_read_u32(dev, "offset-y", &val);
- 	if (!error) {
--		edt_ft5x06_register_write(tsdata, reg_addr->reg_offset_y, val);
-+		if (reg_addr->reg_offset_y != NO_REGISTER)
-+			edt_ft5x06_register_write(tsdata,
-+						  reg_addr->reg_offset_y, val);
- 		tsdata->offset_y = val;
- 	}
+ 	qproc->dump_segment_mask |= mask;
+ 
+@@ -1595,12 +1610,6 @@ static int q6v5_alloc_memory_region(struct q6v5 *qproc)
+ 
+ 	qproc->mpss_phys = qproc->mpss_reloc = r.start;
+ 	qproc->mpss_size = resource_size(&r);
+-	qproc->mpss_region = devm_ioremap_wc(qproc->dev, qproc->mpss_phys, qproc->mpss_size);
+-	if (!qproc->mpss_region) {
+-		dev_err(qproc->dev, "unable to map memory region: %pa+%zx\n",
+-			&r.start, qproc->mpss_size);
+-		return -EBUSY;
+-	}
+ 
+ 	return 0;
  }
 -- 
 2.25.1
