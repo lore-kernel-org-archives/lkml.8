@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6596FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 398EE22200
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E2C2220E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443724;
-	bh=mg/P6fKKJQX1fx7Cd+4cqTFVQqCKHuQdVkCkLPKPx0A=;
+	s=default; t=1592443728;
+	bh=csJ8IE/XOc4BW2uiPxYot+bTQhRZhV07EeUQSgae858=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jyit1cWtqqF/vkSkiCO6kSrXtMndK3GwPoqGdi6wNy0BPyiZI+NIw09K3UAY4AA3D
-	 tIUFC/vJ6wQLQ1xiGhiu1Nk6q9GIBhwkA2sOgP4mAkTVygPq7IA0fOhd4dmSIe4ZHX
-	 H/6/WC4FJX684GuHkLkXad/isaGPcj/7rlsf3HBU=
+	b=AeoNO9zme2c7AqbAt8olVwMblL7u76CoLXIW3EmgKLpAxhodQdbLuLmxC6ovAmZXw
+	 34BIxyUmJqvCJYB7hHyhcNkt2GdQ4GoZTohKSAmHUPNqKN8xAHrBTOg+LjW4KRxvJx
+	 bQAS5OFvmrPP6CsaMyW9M+MHtWQbJPihtGZVkqNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732145AbgFRB2n (ORCPT
+        id S1731551AbgFRB2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:28:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60860 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:28:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731454AbgFRBZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:35 -0400
+        id S1731477AbgFRBZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE83F2088E;
-        Thu, 18 Jun 2020 01:25:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A566C2075E;
+        Thu, 18 Jun 2020 01:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443534;
-        bh=mg/P6fKKJQX1fx7Cd+4cqTFVQqCKHuQdVkCkLPKPx0A=;
+        s=default; t=1592443538;
+        bh=csJ8IE/XOc4BW2uiPxYot+bTQhRZhV07EeUQSgae858=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xLVfo0//ToanLP9YDUJH74Uo075GEC45hGkBXUfmV6bB8qf5PTNAaIOCRGpIpKebs
-         1yn4oIODWCuIgWQ72I8ojdLwdK9mi84xHCck3IHHoBvZWFjGmoBvTilE7ajB2ZvwNh
-         GettYykycALmV9b5YQGka+HFG5bsGNoLY0MIVNV4=
+        b=asKxOOlUz4k0MNjMzhafx8NgOTbRbexa9eXudcm/YEOKtcLjnpQWIj0x/eztRCJWO
+         yUzWzbgICnFAP8rPQrjZEePYI6Q2K3nYHiilrQv9+1mL/O52SImMFT15vjOZW6qKZI
+         yjFUNaox/WhZu9scXp3QdLGfkY2Gvs+KRofAZz0o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sanjay R Mehta <sanju.mehta@amd.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Arindam Nath <arindam.nath@amd.com>,
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Alexander Fomichev <fomichev.ru@gmail.com>,
         Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
         linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 153/172] ntb_perf: pass correct struct device to dma_alloc_coherent
-Date:   Wed, 17 Jun 2020 21:21:59 -0400
-Message-Id: <20200618012218.607130-153-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 156/172] NTB: Revert the change to use the NTB device dev for DMA allocations
+Date:   Wed, 17 Jun 2020 21:22:02 -0400
+Message-Id: <20200618012218.607130-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -61,58 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 98f4e140264eeb52f22ff05be6b6dd48237255ac ]
+[ Upstream commit 40da7d9a93c8941737ef4a1208d32c13ce017fe1 ]
 
-Currently, ntb->dev is passed to dma_alloc_coherent
-and dma_free_coherent calls. The returned dma_addr_t
-is the CPU physical address. This works fine as long
-as IOMMU is disabled. But when IOMMU is enabled, we
-need to make sure that IOVA is returned for dma_addr_t.
-So the correct way to achieve this is by changing the
-first parameter of dma_alloc_coherent() as ntb->pdev->dev
-instead.
+Commit 417cf39cfea9 ("NTB: Set dma mask and dma coherent mask to NTB
+devices") started using the NTB device for DMA allocations which was
+turns out was wrong. If the IOMMU is enabled, such alloctanions will
+always fail with messages such as:
 
-Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
+  DMAR: Allocating domain for 0000:02:00.1 failed
+
+This is because the IOMMU has not setup the device for such use.
+
+Change the tools back to using the PCI device for allocations seeing
+it doesn't make sense to add an IOMMU group for the non-physical NTB
+device. Also remove the code that sets the DMA mask as it no longer
+makes sense to do this.
+
+Fixes: 7f46c8b3a552 ("NTB: ntb_tool: Add full multi-port NTB API support")
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-Signed-off-by: Arindam Nath <arindam.nath@amd.com>
+Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
 Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_perf.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/ntb/ntb.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-index 80508da3c8b5..2ee41b988c5d 100644
---- a/drivers/ntb/test/ntb_perf.c
-+++ b/drivers/ntb/test/ntb_perf.c
-@@ -559,7 +559,7 @@ static void perf_free_inbuf(struct perf_peer *peer)
- 		return;
- 
- 	(void)ntb_mw_clear_trans(peer->perf->ntb, peer->pidx, peer->gidx);
--	dma_free_coherent(&peer->perf->ntb->dev, peer->inbuf_size,
-+	dma_free_coherent(&peer->perf->ntb->pdev->dev, peer->inbuf_size,
- 			  peer->inbuf, peer->inbuf_xlat);
- 	peer->inbuf = NULL;
+diff --git a/drivers/ntb/ntb.c b/drivers/ntb/ntb.c
+index c9a0912b175f..f8f75a504a58 100644
+--- a/drivers/ntb/ntb.c
++++ b/drivers/ntb/ntb.c
+@@ -311,4 +311,3 @@ static void __exit ntb_driver_exit(void)
+ 	bus_unregister(&ntb_bus);
  }
-@@ -588,8 +588,9 @@ static int perf_setup_inbuf(struct perf_peer *peer)
- 
- 	perf_free_inbuf(peer);
- 
--	peer->inbuf = dma_alloc_coherent(&perf->ntb->dev, peer->inbuf_size,
--					 &peer->inbuf_xlat, GFP_KERNEL);
-+	peer->inbuf = dma_alloc_coherent(&perf->ntb->pdev->dev,
-+					 peer->inbuf_size, &peer->inbuf_xlat,
-+					 GFP_KERNEL);
- 	if (!peer->inbuf) {
- 		dev_err(&perf->ntb->dev, "Failed to alloc inbuf of %pa\n",
- 			&peer->inbuf_size);
-@@ -1512,4 +1513,3 @@ static void __exit perf_exit(void)
- 	destroy_workqueue(perf_wq);
- }
- module_exit(perf_exit);
+ module_exit(ntb_driver_exit);
 -
 -- 
 2.25.1
