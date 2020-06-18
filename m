@@ -2,125 +2,110 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1194EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC74522225
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445114;
-	bh=DczPXgbR3LZtV9QYkjNMLLC5qoXA+WMPTwUX5CCeeRs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CQ8xBG8XAqJauArtCBh3ASDLmXipazyrL55ItLpYoFJA3HYMxBOt23Hg9tOrEMvRi
-	 nlCXbX1DMVxAldc2VV40WJR1HAtHA+GrJRPW1RsCDvmEPDtTXjHfzVvCEaBhvFDvDr
-	 sySmr6UHH4Rb29QI0Fd4lUhRre4sFli6zm4YG0YM=
+	by mail.kernel.org (Postfix) with ESMTP id 2D088221F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733009AbgFRBvw (ORCPT
+        id S1733180AbgFRBv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:51:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34634 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:51:56 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45682 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731751AbgFRB0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:26:53 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E99B20B1F;
-        Thu, 18 Jun 2020 01:26:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443612;
-        bh=DczPXgbR3LZtV9QYkjNMLLC5qoXA+WMPTwUX5CCeeRs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wM986ioIIaESnBWGsSSet607c5l7we63fjUl+scwenf0PJXAPzzEFRfybNPq/A1Ad
-         Wp8FC2pwiEfAItFhfQv31CiJPhoWvuShpN/svP7aqtAb23N33nkPak3OZWXIgZzKCd
-         rC+efax4hRBqmM/0/5Pqmb0OzS+G43vhmdG6E02w=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 040/108] iio: buffer: Don't allow buffers without any channels enabled to be activated
-Date:   Wed, 17 Jun 2020 21:24:52 -0400
-Message-Id: <20200618012600.608744-40-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
-References: <20200618012600.608744-1-sashal@kernel.org>
+        id S1732198AbgFRBvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:51:53 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jljiV-0013N7-K9; Thu, 18 Jun 2020 03:51:47 +0200
+Date:   Thu, 18 Jun 2020 03:51:47 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
+        robh@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v7 2/6] net: phy: Add a helper to return the
+ index for of the internal delay
+Message-ID: <20200618015147.GH249144@lunn.ch>
+References: <20200617182019.6790-1-dmurphy@ti.com>
+ <20200617182019.6790-3-dmurphy@ti.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617182019.6790-3-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+On Wed, Jun 17, 2020 at 01:20:15PM -0500, Dan Murphy wrote:
+> Add a helper function that will return the index in the array for the
+> passed in internal delay value.  The helper requires the array, size and
+> delay value.
+> 
+> The helper will then return the index for the exact match or return the
+> index for the index to the closest smaller value.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  drivers/net/phy/phy_device.c | 68 ++++++++++++++++++++++++++++++++++++
+>  include/linux/phy.h          |  4 +++
+>  2 files changed, 72 insertions(+)
+> 
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> index 04946de74fa0..611d4e68e3c6 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/mdio.h>
+>  #include <linux/io.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/property.h>
+>  
+>  MODULE_DESCRIPTION("PHY library");
+>  MODULE_AUTHOR("Andy Fleming");
+> @@ -2657,6 +2658,73 @@ void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause)
+>  }
+>  EXPORT_SYMBOL(phy_get_pause);
+>  
+> +/**
+> + * phy_get_delay_index - returns the index of the internal delay
+> + * @phydev: phy_device struct
+> + * @dev: pointer to the devices device struct
+> + * @delay_values: array of delays the PHY supports
+> + * @size: the size of the delay array
+> + * @is_rx: boolean to indicate to get the rx internal delay
+> + *
+> + * Returns the index within the array of internal delay passed in.
+> + * Or if size == 0 then the delay read from the firmware is returned.
+> + * The array must be in ascending order.
+> + * Return errno if the delay is invalid or cannot be found.
+> + */
+> +s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
+> +			   const int *delay_values, int size, bool is_rx)
+> +{
+> +	int ret;
+> +	int i;
+> +	s32 delay;
+> +
+> +	if (is_rx)
+> +		ret = device_property_read_u32(dev, "rx-internal-delay-ps",
+> +					       &delay);
+> +	else
+> +		ret = device_property_read_u32(dev, "tx-internal-delay-ps",
+> +					       &delay);
+> +	if (ret) {
+> +		phydev_err(phydev, "internal delay not defined\n");
 
-[ Upstream commit b7329249ea5b08b2a1c2c3f24a2f4c495c4f14b8 ]
+This is an optional property. So printing an error message seems heavy
+handed.
 
-Before activating a buffer make sure that at least one channel is enabled.
-Activating a buffer with 0 channels enabled doesn't make too much sense and
-disallowing this case makes sure that individual driver don't have to add
-special case code to handle it.
+Maybe it would be better to default to 0 if the property is not found,
+and continue with the lookup in the table to find what value should be
+written for a 0ps delay?
 
-Currently, without this patch enabling a buffer is possible and no error is
-produced. With this patch -EINVAL is returned.
-
-An example of execution with this patch and some instrumented print-code:
-   root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
-   root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
-   0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
-   1: iio_verify_update 753
-   2:__iio_update_buffers 1115 ret -22
-   3: iio_buffer_store_enable 1241 ret -22
-   -bash: echo: write error: Invalid argument
-1, 2 & 3 are exit-error paths. 0 the first print in iio_verify_update()
-rergardless of error path.
-
-Without this patch (and same instrumented print-code):
-   root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
-   root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
-   0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
-   root@analog:/sys/bus/iio/devices/iio:device3/buffer#
-Buffer is enabled with no error.
-
-Note from Jonathan: Probably not suitable for automatic application to stable.
-This has been there from the very start.  It tidies up an odd corner
-case but won't effect any 'real' users.
-
-Fixes: 84b36ce5f79c0 ("staging:iio: Add support for multiple buffers")
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/iio/industrialio-buffer.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-index c3badf634378..f6641b9d7cd1 100644
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -691,6 +691,13 @@ static int iio_verify_update(struct iio_dev *indio_dev,
- 	bool scan_timestamp;
- 	unsigned int modes;
- 
-+	if (insert_buffer &&
-+	    bitmap_empty(insert_buffer->scan_mask, indio_dev->masklength)) {
-+		dev_dbg(&indio_dev->dev,
-+			"At least one scan element must be enabled first\n");
-+		return -EINVAL;
-+	}
-+
- 	memset(config, 0, sizeof(*config));
- 	config->watermark = ~0;
- 
--- 
-2.25.1
-
+	Andrew
