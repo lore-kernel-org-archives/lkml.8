@@ -2,145 +2,94 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0469C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89BB8206F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:45:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CvHGAf1y"
+	by mail.kernel.org (Postfix) with ESMTP id 8946C206F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592444727;
+	bh=WMSSxLlp0/ZaTJ4TLfHiw0XFmnBGQrGSj2HVAH+vOnk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Y45ea069roz6tTdG2xcdwKIS3Ba7xrpsjYRix2ZThsYvBKBbDXQ2Jt3IfKZ6849o3
+	 rmzM6q0DXhmSsC+5iUmAglDmYJcEFlAYJKxNlbXFyy9SoT2Wo7sXFN7abVdyBjCJQx
+	 +s1GEKQIAFRDgVZCcI1YCU4qBjmEUc+TaGg0l3jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733149AbgFRBpS (ORCPT
+        id S1732441AbgFRBp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:45:18 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:12250 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733132AbgFRBpG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:45:06 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200618014503epoutp0285f3f44baf76dfeb76b60736ea32db56~ZgAU_dE0L1006610066epoutp02B
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:45:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200618014503epoutp0285f3f44baf76dfeb76b60736ea32db56~ZgAU_dE0L1006610066epoutp02B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1592444703;
-        bh=LHnFRCa4HDOWm0RYymVWN7YfXGnU6fTOFZfK3I3tHJw=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=CvHGAf1yR63wrrquyBdw2Lpy0+bi+SpSQ1HYg5ZS0b6T2BoMjNAfM1xbn+VSaxZki
-         vCMdtuGTpJzdLIQfQ6IrXQUZEwH4vLsLWFvjZ1+mwdWHWnEEZ2MpTHrqMLFWOCV1+K
-         VVs/vE5aLkZEPXl8yzjSdIqcNv5JwUOMSn+H8IzM=
-Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p4.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200618014502epcas1p456f39db093eac2a257a8b443772238d9~ZgAUS8Bj62175421754epcas1p4e;
-        Thu, 18 Jun 2020 01:45:02 +0000 (GMT)
-Mime-Version: 1.0
-Subject: Re: [RFC PATCH v2 3/5] scsi: ufs: Introduce HPB module
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Bean Huo <huobean@gmail.com>,
-        Daejun Park <daejun7.park@samsung.com>,
-        Avri Altman <Avri.Altman@wdc.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <3d5748ce4481c789000979f9831a5ae681cd9d34.camel@gmail.com>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <717176949.41592444702525.JavaMail.epsvc@epcpadp1>
-Date:   Thu, 18 Jun 2020 10:06:04 +0900
-X-CMS-MailID: 20200618010604epcms2p324800aa16fc9de874116c27b00b07c54
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210
-References: <3d5748ce4481c789000979f9831a5ae681cd9d34.camel@gmail.com>
-        <SN6PR04MB46405EC52240E00F5D634E2AFC9A0@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <231786897.01592212081335.JavaMail.epsvc@epcpadp2>
-        <336371513.41592205783606.JavaMail.epsvc@epcpadp2>
-        <231786897.01592205482200.JavaMail.epsvc@epcpadp2>
-        <231786897.01592213402355.JavaMail.epsvc@epcpadp1>
-        <231786897.01592395081831.JavaMail.epsvc@epcpadp2>
-        <CGME20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210@epcms2p3>
+        Wed, 17 Jun 2020 21:45:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732140AbgFRB2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:28:42 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 857532220D;
+        Thu, 18 Jun 2020 01:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592443722;
+        bh=WMSSxLlp0/ZaTJ4TLfHiw0XFmnBGQrGSj2HVAH+vOnk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WtgsyIRaZ9CJyOQFPyjIqwrv7y0zZI+Ge2vghQnPq3UAcWyko3X1g/GYTF6NfCKBn
+         3lISS8MKwxYn0Zi20xsd6+9dDnqTk2ULaAwnJFAOoCtsp0JNweyAfdAcfH9ZX294E/
+         dvN7g+zPJyrKqTfoArsFfHnz1LidMu7BY4vEdIgU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
+Subject: [PATCH AUTOSEL 4.9 18/80] mfd: wm8994: Fix driver operation if loaded as modules
+Date:   Wed, 17 Jun 2020 21:27:17 -0400
+Message-Id: <20200618012819.609778-18-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
+References: <20200618012819.609778-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > implemented
-> > > > as a module parameter, so that it can be configurable by the
-> > > > user.
-> > > > 
-> > > > To gurantee a minimum memory pool size of 4MB:
-> > > > $ insmod ufshpb.ko ufshpb_host_map_kbytes=4096
-> > > 
-> > > You are going through a lot of troubles to make it a loadable
-> > > module.
-> > > What are, in your opinion, the pros and cons of this design
-> > > decision?
-> > 
-> > In my opinion...
-> > 
-> > pros:
-> > 1. A user can unload an unnecessary module when there is an
-> > insufficient
-> > memory situation (HPB case).
-> > 2. Since each UFS vendor has a different way of implementing UFS
-> > features,
-> > it can be supported as a separate module. Otherwise, many quirks must
-> > be attached to module, which is not desirable way.
-> > 3. It is possible to distinguish parts that are not necessary for
-> > essential
-> > ufs operation.
-> > 4. It is advantageous to implement the latest functions according to
-> > the
-> > development speed of UFS.
-> > 
-> > cons:
-> > 1. It is difficult work to be implemented as a module.
-> > 2. Modifying "ufsfeature.c" is required to implement the feature that
-> > can
-> > not supported by the exsiting "ufsf_operation".
-> > 
-> > Thanks,
-> > Daejun
-> 
-> Dear Avri, Daejun, Bart
-> 
-> It is true that it is very difficult to make everyone happy.
-> We now have three HPB drivers in the patchwork, but I still didn't see
-> a final agreement. Please tell me which one do you want to focus on?
-The HPB driver has been greatly improved in the process of being applied to
-mobile devices since the release of the first HPB version in openMPDK. We
-want to contribute to the linux mainline with the knowledge obtained
-through the experience.
-I find it difficult to make everyone happy, but I think it is possible that
-everyone can accept the HPB driver through several revisions.
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Thanks,
-Daejun
+[ Upstream commit d4f9b5428b53dd67f49ee8deed8d4366ed6b1933 ]
+
+WM8994 chip has built-in regulators, which might be used for chip
+operation. They are controlled by a separate wm8994-regulator driver,
+which should be loaded before this driver calls regulator_get(), because
+that driver also provides consumer-supply mapping for the them. If that
+driver is not yet loaded, regulator core substitute them with dummy
+regulator, what breaks chip operation, because the built-in regulators are
+never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
+"pre" dependency to "wm8994_regulator" module.
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/mfd/wm8994-core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
+index 8588dbad3301..925c1828ec28 100644
+--- a/drivers/mfd/wm8994-core.c
++++ b/drivers/mfd/wm8994-core.c
+@@ -698,3 +698,4 @@ module_i2c_driver(wm8994_i2c_driver);
+ MODULE_DESCRIPTION("Core support for the WM8994 audio CODEC");
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
++MODULE_SOFTDEP("pre: wm8994_regulator");
+-- 
+2.25.1
+
