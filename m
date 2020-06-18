@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D02DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEB4D2222A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69F82220E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445222;
-	bh=UDMO8yPxo/ymHjbdYyC+RM4xaVrptlMQ6yvJ7+uYWVk=;
+	s=default; t=1592445232;
+	bh=5d3vNDNuQvODzfrN0SzSBAhnNYtyMFSiHtXdBNldzrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ffUgyBLrxia3k+qWGIGG2LYBQvdRkRsvl9IKr63d95mnpRg8yI63xu8Yu6jRUODXT
-	 6/xKgJvr4DWfR6YYvP8/HpxT+p7FRnL56hkOei/y7qmPR+DCOk+oBSm/L/SXLkyelX
-	 trRiusgeCI9jPK7vpGNsEoZmZS0UVMaMbLxiDC44=
+	b=hMFJU5Mj9za8TlqpveF5yjIDOCb6u48HWiTbPpi31AkSaQLUYlwZFHJJo1LVa/nRk
+	 z+HaIPSDIt36nvBygguy2UW1M65kybcC7S04iVzPSMGNu2rWfvqUKC+F0TA3ZDcSEi
+	 hDn6yQ69zWUIhiulrdH8mjPkmwnIujoOqxz7l62k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733213AbgFRBxl (ORCPT
+        id S1733024AbgFRBxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33644 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:53:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731626AbgFRB0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:26:15 -0400
+        id S1731620AbgFRB0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:26:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DC8D20B1F;
-        Thu, 18 Jun 2020 01:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21CA421D80;
+        Thu, 18 Jun 2020 01:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443575;
-        bh=UDMO8yPxo/ymHjbdYyC+RM4xaVrptlMQ6yvJ7+uYWVk=;
+        s=default; t=1592443573;
+        bh=5d3vNDNuQvODzfrN0SzSBAhnNYtyMFSiHtXdBNldzrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A6oEB7fF+aP5fEsvrtGBqBL3bufxVGqi07Isfz9iFjtYbETjV4f/mXqoRpyXuK82e
-         pQNtUpkgn7anrP+woHcVjNW2VVkH90j5T5OQ4muGbQy1QgvJMloWSeFMiCaG+nmoSI
-         uspInp6yokDUDSgDkMnjDucrt4cpx2qVga3pW+fc=
+        b=jTbtHcj7jBIdSOy7B5lOFkPaDJaQGWreTAxYWaVMOxPpZB4q+5HW/tEH0viTerB79
+         7DqnrdEdmxQzKfuZnxeNwLCHFcsk9CUXESZQfRKnsrDASDFqfJ8balszE/GdsXV8so
+         Tm0jfnSWzv0i4lmLz8/5iBEhHihQndYsw2ZMPCj4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 011/108] scsi: qedi: Check for buffer overflow in qedi_set_path()
-Date:   Wed, 17 Jun 2020 21:24:23 -0400
-Message-Id: <20200618012600.608744-11-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 010/108] ARM: integrator: Add some Kconfig selections
+Date:   Wed, 17 Jun 2020 21:24:22 -0400
+Message-Id: <20200618012600.608744-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -60,43 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 4a4c0cfb4be74e216dd4446b254594707455bfc6 ]
+[ Upstream commit d2854bbe5f5c4b4bec8061caf4f2e603d8819446 ]
 
-Smatch complains that the "path_data->handle" variable is user controlled.
-It comes from iscsi_set_path() so that seems possible.  It's harmless to
-add a limit check.
+The CMA and DMA_CMA Kconfig options need to be selected
+by the Integrator in order to produce boot console on some
+Integrator systems.
 
-The qedi->ep_tbl[] array has qedi->max_active_conns elements (which is
-always ISCSI_MAX_SESS_PER_HBA (4096) elements).  The array is allocated in
-the qedi_cm_alloc_mem() function.
+The REGULATOR and REGULATOR_FIXED_VOLTAGE need to be
+selected in order to boot the system from an external
+MMC card when using MMCI/PL181 from the device tree
+probe path.
 
-Link: https://lore.kernel.org/r/20200428131939.GA696531@mwanda
-Fixes: ace7f46ba5fd ("scsi: qedi: Add QLogic FastLinQ offload iSCSI driver framework.")
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Select these things directly from the Kconfig so we are
+sure to be able to bring the systems up with console
+from any device tree.
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_iscsi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/mach-integrator/Kconfig | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-index 94f3829b1974..1effac1111d5 100644
---- a/drivers/scsi/qedi/qedi_iscsi.c
-+++ b/drivers/scsi/qedi/qedi_iscsi.c
-@@ -1224,6 +1224,10 @@ static int qedi_set_path(struct Scsi_Host *shost, struct iscsi_path *path_data)
- 	}
+diff --git a/arch/arm/mach-integrator/Kconfig b/arch/arm/mach-integrator/Kconfig
+index cefe44f6889b..ba124f8704fa 100644
+--- a/arch/arm/mach-integrator/Kconfig
++++ b/arch/arm/mach-integrator/Kconfig
+@@ -3,6 +3,8 @@ menuconfig ARCH_INTEGRATOR
+ 	depends on ARCH_MULTI_V4T || ARCH_MULTI_V5 || ARCH_MULTI_V6
+ 	select ARM_AMBA
+ 	select COMMON_CLK_VERSATILE
++	select CMA
++	select DMA_CMA
+ 	select HAVE_TCM
+ 	select ICST
+ 	select MFD_SYSCON
+@@ -34,14 +36,13 @@ config INTEGRATOR_IMPD1
+ 	select ARM_VIC
+ 	select GPIO_PL061
+ 	select GPIOLIB
++	select REGULATOR
++	select REGULATOR_FIXED_VOLTAGE
+ 	help
+ 	  The IM-PD1 is an add-on logic module for the Integrator which
+ 	  allows ARM(R) Ltd PrimeCells to be developed and evaluated.
+ 	  The IM-PD1 can be found on the Integrator/PP2 platform.
  
- 	iscsi_cid = (u32)path_data->handle;
-+	if (iscsi_cid >= qedi->max_active_conns) {
-+		ret = -EINVAL;
-+		goto set_path_exit;
-+	}
- 	qedi_ep = qedi->ep_tbl[iscsi_cid];
- 	QEDI_INFO(&qedi->dbg_ctx, QEDI_LOG_INFO,
- 		  "iscsi_cid=0x%x, qedi_ep=%p\n", iscsi_cid, qedi_ep);
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called impd1.
+-
+ config INTEGRATOR_CM7TDMI
+ 	bool "Integrator/CM7TDMI core module"
+ 	depends on ARCH_INTEGRATOR_AP
 -- 
 2.25.1
 
