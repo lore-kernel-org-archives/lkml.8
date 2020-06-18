@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F952206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7E7206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447490;
-	bh=PGIajTLNvn1TlSKGVmd+/Ro+viHxJzQ4+cuGN8MOxDA=;
+	s=default; t=1592447493;
+	bh=GJ34EjidoZBzIOjN/wVvFdpLNoYkvOoGaKbAlBWHRAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0f2E7ABWVjUupfTY0SpntSc8U22DBrGNHrPPNky6WyjSrN1jVPJfcIYGa70cUjXnL
-	 h4Nvswa35jqnEXgUFbRKnAVMcqqzrSigDXuCJ0qjGXYBAM7YwHE9jFRWqDDFdJ0Xw7
-	 1h8qQ/5wF96zM99lT4hYXlN9Y3tDg0Wq/JE8HrRo=
+	b=bfyUso+ZoKa1ipsyQyccIEdpBZYcgRW9IGlVOcqzRaS1chaY1wv6qxxp0F/VnITLd
+	 ggHEV/uf2umjOpQiiS8AjdxQ5tOszChqHdRYfIChBvAXEUsUF8jdgikD0WveiRb8MI
+	 Juc68zGXrDyMT/dIGWx6El5enIwaRUyGmq0JKezk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgFRBP3 (ORCPT
+        id S1731615AbgFRCba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:15:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42962 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:31:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729174AbgFRBNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:40 -0400
+        id S1728563AbgFRBP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6502F221EB;
-        Thu, 18 Jun 2020 01:13:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C38C421D79;
+        Thu, 18 Jun 2020 01:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442820;
-        bh=PGIajTLNvn1TlSKGVmd+/Ro+viHxJzQ4+cuGN8MOxDA=;
+        s=default; t=1592442929;
+        bh=GJ34EjidoZBzIOjN/wVvFdpLNoYkvOoGaKbAlBWHRAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fgmk6Tp5AmLgFnz+Vty6rmPTMvmLI+g0bKagi+CeTJc21J75LlUSdR6pzYG4GH/f1
-         k3LMYjVgajENzu2r97jv2qFDOpz2pxmlKd5M2ceTKHdhcbiwLFMRKGxniW3DaZCeKM
-         Cb2VYR+qVFZAuXp+Ye7CnwrTg+R05PE8YbguMVWM=
+        b=uwX8cLEp9Wo6HD0GyxxFNnZL8qCjVLKfG8IU4rJJKR8bZ/KlurlszVHOPK34iCWtq
+         xmodBnGa+x1/Js9ph1ATwA66QDrSBfNAsA1RShcAXjfvKJuMazbbWx2MjdHvA0zRM1
+         F0mSNoZx9Y1ZXY7wZmZPtENuDIdQqHogBTOBY77g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 257/388] PCI: dwc: pci-dra7xx: Use devm_platform_ioremap_resource_byname()
-Date:   Wed, 17 Jun 2020 21:05:54 -0400
-Message-Id: <20200618010805.600873-257-sashal@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.7 343/388] gfs2: fix use-after-free on transaction ail lists
+Date:   Wed, 17 Jun 2020 21:07:20 -0400
+Message-Id: <20200618010805.600873-343-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,50 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit c8a119779f5609de8dcd98630f71cc7f1b2e4e8c ]
+[ Upstream commit 83d060ca8d90fa1e3feac227f995c013100862d3 ]
 
-platform_get_resource() may fail and return NULL, so we had better
-check its return value to avoid a NULL pointer dereference a bit later
-in the code. Fix it to use devm_platform_ioremap_resource_byname()
-instead of calling platform_get_resource_byname() and devm_ioremap().
+Before this patch, transactions could be merged into the system
+transaction by function gfs2_merge_trans(), but the transaction ail
+lists were never merged. Because the ail flushing mechanism can run
+separately, bd elements can be attached to the transaction's buffer
+list during the transaction (trans_add_meta, etc) but quickly moved
+to its ail lists. Later, in function gfs2_trans_end, the transaction
+can be freed (by gfs2_trans_end) while it still has bd elements
+queued to its ail lists, which can cause it to either lose track of
+the bd elements altogether (memory leak) or worse, reference the bd
+elements after the parent transaction has been freed.
 
-Link: https://lore.kernel.org/r/20200429015027.134485-1-weiyongjun1@huawei.com
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-[lorenzo.pieralisi@arm.com: commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Although I've not seen any serious consequences, the problem becomes
+apparent with the previous patch's addition of:
+
+	gfs2_assert_warn(sdp, list_empty(&tr->tr_ail1_list));
+
+to function gfs2_trans_free().
+
+This patch adds logic into gfs2_merge_trans() to move the merged
+transaction's ail lists to the sdp transaction. This prevents the
+use-after-free. To do this properly, we need to hold the ail lock,
+so we pass sdp into the function instead of the transaction itself.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-dra7xx.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ fs/gfs2/log.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index 3b0e58f2de58..6184ebc9392d 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -840,7 +840,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 	struct phy **phy;
- 	struct device_link **link;
- 	void __iomem *base;
--	struct resource *res;
- 	struct dw_pcie *pci;
- 	struct dra7xx_pcie *dra7xx;
- 	struct device *dev = &pdev->dev;
-@@ -877,10 +876,9 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 		return irq;
- 	}
+diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+index 0644e58c6191..b7a5221bea7d 100644
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -1003,8 +1003,10 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
+  * @new: New transaction to be merged
+  */
  
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ti_conf");
--	base = devm_ioremap(dev, res->start, resource_size(res));
--	if (!base)
--		return -ENOMEM;
-+	base = devm_platform_ioremap_resource_byname(pdev, "ti_conf");
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
+-static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
++static void gfs2_merge_trans(struct gfs2_sbd *sdp, struct gfs2_trans *new)
+ {
++	struct gfs2_trans *old = sdp->sd_log_tr;
++
+ 	WARN_ON_ONCE(!test_bit(TR_ATTACHED, &old->tr_flags));
  
- 	phy_count = of_property_count_strings(np, "phy-names");
- 	if (phy_count < 0) {
+ 	old->tr_num_buf_new	+= new->tr_num_buf_new;
+@@ -1016,6 +1018,11 @@ static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
+ 
+ 	list_splice_tail_init(&new->tr_databuf, &old->tr_databuf);
+ 	list_splice_tail_init(&new->tr_buf, &old->tr_buf);
++
++	spin_lock(&sdp->sd_ail_lock);
++	list_splice_tail_init(&new->tr_ail1_list, &old->tr_ail1_list);
++	list_splice_tail_init(&new->tr_ail2_list, &old->tr_ail2_list);
++	spin_unlock(&sdp->sd_ail_lock);
+ }
+ 
+ static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
+@@ -1027,7 +1034,7 @@ static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
+ 	gfs2_log_lock(sdp);
+ 
+ 	if (sdp->sd_log_tr) {
+-		gfs2_merge_trans(sdp->sd_log_tr, tr);
++		gfs2_merge_trans(sdp, tr);
+ 	} else if (tr->tr_num_buf_new || tr->tr_num_databuf_new) {
+ 		gfs2_assert_withdraw(sdp, test_bit(TR_ALLOCED, &tr->tr_flags));
+ 		sdp->sd_log_tr = tr;
 -- 
 2.25.1
 
