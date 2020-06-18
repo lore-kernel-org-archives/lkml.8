@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7278C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E668DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDF020776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C397320899
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448792;
-	bh=stORPdFsRhgx7toJ62y60iPkcRMSoNPQRIYfOj7ngAM=;
+	s=default; t=1592448799;
+	bh=oRtI3EK4vwV1BYLrXFSQDXPl5jMD+2koWknO8vkCueY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mYZ6mECzjtmSnMjIZsd7ujPYQUoH5N7+GX41ZT6wrlLkglXeYWZZ5/VyumPhvWDzi
-	 xA+x5OddFsFEQS8p/sTRPFg/FH8Dl4emrdoky6fNvEXvq76qf/97ndfaaTqa/Suc2F
-	 isCeVKDk9boZXxK3+nBJVHfvl0HTBqbGAKr3+nbQ=
+	b=vNpWjJ0NUYK5rb1eqwR+XUfQKhTfZbo19U/54EH++4VWOX9rwIeDnHc6rvOFMqCPg
+	 DKmxysBpewLgs8EP64IpveSvjy9W2kVhWMyjQXmotD9c8ldVcF45glQLW6Cm+aagIr
+	 TJZ0KdS8KDS20CRI6XGtO9Bbo1MumtZiGMNbvjn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgFRCw7 (ORCPT
+        id S1728516AbgFRCxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:52:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33808 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:53:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgFRBIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:08:17 -0400
+        id S1727097AbgFRBIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:08:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C73AB21D79;
-        Thu, 18 Jun 2020 01:08:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 022BA21D7E;
+        Thu, 18 Jun 2020 01:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442496;
-        bh=stORPdFsRhgx7toJ62y60iPkcRMSoNPQRIYfOj7ngAM=;
+        s=default; t=1592442493;
+        bh=oRtI3EK4vwV1BYLrXFSQDXPl5jMD+2koWknO8vkCueY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KLsPm7hJnbWbkeWByc7TbddDGdfXiM7IJdPEwC0VRcWWWay0APjydJYo+HVo8RQ26
-         sH3xveTsD/GQ+6jyKvcdWBX0Ge2eHLChKieWBOrEkO24ZKs4roW88YUsDVqqEsCKuY
-         ofempq+g2dYtDMYfgOm8Ym2Zphuo8SDiqqZSqhPk=
+        b=OXdRReb0B0GUDnHe+lOwP3g12ADCBF/jDSsnWQ6vYhh6x8RwbNb7inM4DstyVzCpJ
+         71OvCy+WTiAbHievzG+AHbBLWsErXM0GFgpjOQJMKCSj338so1S7EuKSZWsFUVyPV2
+         TUtpSu4g6qFLXdg5g70H0aWPlM+lrd8/RfVLusYo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 008/388] iio: pressure: bmp280: Tolerate IRQ before registering
-Date:   Wed, 17 Jun 2020 21:01:45 -0400
-Message-Id: <20200618010805.600873-8-sashal@kernel.org>
+Cc:     Adam Honse <calcprogrammer1@gmail.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 006/388] i2c: piix4: Detect secondary SMBus controller on AMD AM4 chipsets
+Date:   Wed, 17 Jun 2020 21:01:43 -0400
+Message-Id: <20200618010805.600873-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,56 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Adam Honse <calcprogrammer1@gmail.com>
 
-[ Upstream commit 97b31a6f5fb95b1ec6575b78a7240baddba34384 ]
+[ Upstream commit f27237c174fd9653033330e4e532cd9d153ce824 ]
 
-With DEBUG_SHIRQ enabled we have a kernel crash
+The AMD X370 and other AM4 chipsets (A/B/X 3/4/5 parts) and Threadripper
+equivalents have a secondary SMBus controller at I/O port address
+0x0B20.  This bus is used by several manufacturers to control
+motherboard RGB lighting via embedded controllers.  I have been using
+this bus in my OpenRGB project to control the Aura RGB on many
+motherboards and ASRock also uses this bus for their Polychrome RGB
+controller.
 
-[  116.482696] BUG: kernel NULL pointer dereference, address: 0000000000000000
+I am not aware of any CZ-compatible platforms which do not have the
+second SMBus channel.  All of AMD's AM4- and Threadripper- series
+chipsets that OpenRGB users have tested appear to have this secondary
+bus.  I also noticed this secondary bus is present on older AMD
+platforms including my FM1 home server.
 
-...
-
-[  116.606571] Call Trace:
-[  116.609023]  <IRQ>
-[  116.611047]  complete+0x34/0x50
-[  116.614206]  bmp085_eoc_irq+0x9/0x10 [bmp280]
-
-because DEBUG_SHIRQ mechanism fires an IRQ before registration and drivers
-ought to be able to handle an interrupt happening before request_irq() returns.
-
-Fixes: aae953949651 ("iio: pressure: bmp280: add support for BMP085 EOC interrupt")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202587
+Signed-off-by: Adam Honse <calcprogrammer1@gmail.com>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Tested-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/pressure/bmp280-core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-piix4.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-index 29c209cc1108..2540e7c2358c 100644
---- a/drivers/iio/pressure/bmp280-core.c
-+++ b/drivers/iio/pressure/bmp280-core.c
-@@ -713,7 +713,7 @@ static int bmp180_measure(struct bmp280_data *data, u8 ctrl_meas)
- 	unsigned int ctrl;
- 
- 	if (data->use_eoc)
--		init_completion(&data->done);
-+		reinit_completion(&data->done);
- 
- 	ret = regmap_write(data->regmap, BMP280_REG_CTRL_MEAS, ctrl_meas);
- 	if (ret)
-@@ -969,6 +969,9 @@ static int bmp085_fetch_eoc_irq(struct device *dev,
- 			"trying to enforce it\n");
- 		irq_trig = IRQF_TRIGGER_RISING;
+diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
+index 30ded6422e7b..69740a4ff1db 100644
+--- a/drivers/i2c/busses/i2c-piix4.c
++++ b/drivers/i2c/busses/i2c-piix4.c
+@@ -977,7 +977,8 @@ static int piix4_probe(struct pci_dev *dev, const struct pci_device_id *id)
  	}
-+
-+	init_completion(&data->done);
-+
- 	ret = devm_request_threaded_irq(dev,
- 			irq,
- 			bmp085_eoc_irq,
+ 
+ 	if (dev->vendor == PCI_VENDOR_ID_AMD &&
+-	    dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) {
++	    (dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS ||
++	     dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)) {
+ 		retval = piix4_setup_sb800(dev, id, 1);
+ 	}
+ 
 -- 
 2.25.1
 
