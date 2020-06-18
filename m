@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52249C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FE2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2239921534
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 522B021534
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447353;
-	bh=daUevcPQwSz8ypE0/GRlaqeC7kN8wLzXpFUXl6xgYxE=;
+	s=default; t=1592447360;
+	bh=wZAQsidRpruN3wZZ4eFfyqQT1wMLScdt0Bf/+b16xc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=idlB2RgNMpLgAggqyLt/QWF2VyMJkv2LknVrLwr+3dgNlpj1wZ6bO0wLPZuVUP9pq
-	 RoMxXz1x1msKCEgAaUq5LW3xeiYuV0wC+RrFqlQ7Z6v/uKXAbqQ/X2JQT+fIl7U6Ku
-	 /3ipwVDsxdBvpiCV0tdPg/IjLPqRh+5HkaZt7fKc=
+	b=g4kGErh5eaGgw1rNhnXmgPzPkZ7X87ITENx1Vq609Mx9LuRG87oRhD0E8mf6TYQXe
+	 Ce4OrlHh5kRzPO8m1UBg9n+rcG66iXU4LQKYIqlntu8rXrOh7AjEPuf4tj9j6IU0jG
+	 Fts683veioP59odRX7H5XeaNmrT8TwueV240B45k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731292AbgFRC3K (ORCPT
+        id S1729315AbgFRC3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:29:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46816 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:29:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728628AbgFRBQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:16:14 -0400
+        id S1729236AbgFRBQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:16:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3145921D82;
-        Thu, 18 Jun 2020 01:16:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C536821D80;
+        Thu, 18 Jun 2020 01:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442974;
-        bh=daUevcPQwSz8ypE0/GRlaqeC7kN8wLzXpFUXl6xgYxE=;
+        s=default; t=1592442972;
+        bh=wZAQsidRpruN3wZZ4eFfyqQT1wMLScdt0Bf/+b16xc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yXsyeDbfDPP2z3lrIkMJqmAOEHXmWAnHiNrd3VMV284yxd9zDKpPjNfYyZ73j277t
-         j4DZ+9XxzKXeEaoUdtQGCosjuuVOYeHjzqxkSbXBypQsF9fZNfgnLXOuB2LuWF2Uq5
-         O0A8BSJAoSmR+ZXTyz51SRRb2xn3aMWyqO5C/Rys=
+        b=Gcgeq3upFyJHTbc8PNH8MoMgsD11JyHSgh4nAriS5/bpV9nLl07sFcIWk+rPdF1Qo
+         neTmB+KxNv819DU0+2fxbh/yUlrfwGNpXcT7Frpv4r4m46acTk+hcYlBHcAHVqHHHu
+         /NkE6WDwj0JWVweu+HsPKmgZ108IzyUUrAEWFVdE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tobias Klauser <tklauser@distanz.ch>,
+Cc:     YiFei Zhu <zhuyifei1999@gmail.com>,
+        YiFei Zhu <zhuyifei@google.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
+        Stanislav Fomichev <sdf@google.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
         bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 377/388] tools, bpftool: Fix memory leak in codegen error cases
-Date:   Wed, 17 Jun 2020 21:07:54 -0400
-Message-Id: <20200618010805.600873-377-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 376/388] net/filter: Permit reading NET in load_bytes_relative when MAC not set
+Date:   Wed, 17 Jun 2020 21:07:53 -0400
+Message-Id: <20200618010805.600873-376-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,42 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tobias Klauser <tklauser@distanz.ch>
+From: YiFei Zhu <zhuyifei1999@gmail.com>
 
-[ Upstream commit d4060ac969563113101c79433f2ae005feca1c29 ]
+[ Upstream commit 0f5d82f187e1beda3fe7295dfc500af266a5bd80 ]
 
-Free the memory allocated for the template on error paths in function
-codegen.
+Added a check in the switch case on start_header that checks for
+the existence of the header, and in the case that MAC is not set
+and the caller requests for MAC, -EFAULT. If the caller requests
+for NET then MAC's existence is completely ignored.
 
-Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+There is no function to check NET header's existence and as far
+as cgroup_skb/egress is concerned it should always be set.
+
+Removed for ptr >= the start of header, considering offset is
+bounded unsigned and should always be true. len <= end - mac is
+redundant to ptr + len <= end.
+
+Fixes: 3eee1f75f2b9 ("bpf: fix bpf_skb_load_bytes_relative pkt length check")
+Signed-off-by: YiFei Zhu <zhuyifei@google.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200610130804.21423-1-tklauser@distanz.ch
+Reviewed-by: Stanislav Fomichev <sdf@google.com>
+Link: https://lore.kernel.org/bpf/76bb820ddb6a95f59a772ecbd8c8a336f646b362.1591812755.git.zhuyifei@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/gen.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/core/filter.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/tools/bpf/bpftool/gen.c b/tools/bpf/bpftool/gen.c
-index f8113b3646f5..f5960b48c861 100644
---- a/tools/bpf/bpftool/gen.c
-+++ b/tools/bpf/bpftool/gen.c
-@@ -225,6 +225,7 @@ static int codegen(const char *template, ...)
- 		} else {
- 			p_err("unrecognized character at pos %td in template '%s'",
- 			      src - template - 1, template);
-+			free(s);
- 			return -EINVAL;
- 		}
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 5cc9276f1023..9080d01d9638 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -1766,25 +1766,27 @@ BPF_CALL_5(bpf_skb_load_bytes_relative, const struct sk_buff *, skb,
+ 	   u32, offset, void *, to, u32, len, u32, start_header)
+ {
+ 	u8 *end = skb_tail_pointer(skb);
+-	u8 *net = skb_network_header(skb);
+-	u8 *mac = skb_mac_header(skb);
+-	u8 *ptr;
++	u8 *start, *ptr;
+ 
+-	if (unlikely(offset > 0xffff || len > (end - mac)))
++	if (unlikely(offset > 0xffff))
+ 		goto err_clear;
+ 
+ 	switch (start_header) {
+ 	case BPF_HDR_START_MAC:
+-		ptr = mac + offset;
++		if (unlikely(!skb_mac_header_was_set(skb)))
++			goto err_clear;
++		start = skb_mac_header(skb);
+ 		break;
+ 	case BPF_HDR_START_NET:
+-		ptr = net + offset;
++		start = skb_network_header(skb);
+ 		break;
+ 	default:
+ 		goto err_clear;
  	}
-@@ -235,6 +236,7 @@ static int codegen(const char *template, ...)
- 			if (*src != '\t') {
- 				p_err("not enough tabs at pos %td in template '%s'",
- 				      src - template - 1, template);
-+				free(s);
- 				return -EINVAL;
- 			}
- 		}
+ 
+-	if (likely(ptr >= mac && ptr + len <= end)) {
++	ptr = start + offset;
++
++	if (likely(ptr + len <= end)) {
+ 		memcpy(to, ptr, len);
+ 		return 0;
+ 	}
 -- 
 2.25.1
 
