@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11668C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAC4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D893020885
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399B120885
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445336;
-	bh=gY4isXoW+MbbJvD0uF60Gw7xxlbj5s9u5gXAPpzrZGo=;
+	s=default; t=1592445344;
+	bh=Tjwcs5C6InVQWlOBJvSo72TYRFM9EWlfIcd4qF8y+Gk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iT/+uZ5Vnzo27bhCPmA76Jx+GBi3X0QaVZ+RYCbHdEhz+vCnlXAgkHSNPMmdJvCnJ
-	 plnv8D5Dqnpy9/Tt8ok3AYYjjgLVOQQ51YkQqpw3v65ZLxc/fpcr4zsOKPHBGewfjp
-	 0M9MFVxcBQpo+0Z68roVSbWxScVY6eXzf7MDjKWA=
+	b=bqdXJps5TP2AlDq6DWkI1y6KbzV0Pp4f0k2sFgNppnQCObMjgzqzCRQTfS/f5hvk/
+	 lm3Fj5knnCyMPa/dypxYwi0jzIQ8FDHdwxJ/Upj5py/S5XqmwnYZbdvZcCF5uHYUHx
+	 E2umYh/T7tlhCblY19OWqJ/PHttC4ovE3hNXP5oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732015AbgFRBzf (ORCPT
+        id S1730359AbgFRBzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:55:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32794 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:55:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730804AbgFRBZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:44 -0400
+        id S1731482AbgFRBZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCB4C2088E;
-        Thu, 18 Jun 2020 01:25:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C2B020897;
+        Thu, 18 Jun 2020 01:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443543;
-        bh=gY4isXoW+MbbJvD0uF60Gw7xxlbj5s9u5gXAPpzrZGo=;
+        s=default; t=1592443541;
+        bh=Tjwcs5C6InVQWlOBJvSo72TYRFM9EWlfIcd4qF8y+Gk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZnE/cNLmO024ewCkcU9lIV7nYLb3Uaclv6Ss06xcFK6vFCUD/vK9iffUVTZ/zD5uA
-         g2AUrhCFsNozsPmIkz0HjSctl9Gt6NI3F4YyA7aAFbKAjsZa+ntV3QsS48QGvzNp2l
-         enTsjugfdcCs6b1sGpIE/pkGiJ3hZB2YIaQLtXHc=
+        b=xpnFIAbTWoL4k7AaTL4dtEfdvu15Ahh4nNjamf6KFOzanZjlfg0HZFczC/u6zMXT8
+         iYPSGKRyniGFqf67SbXf+qDpkBQvQHukcehEMeVrf5tNHy6/VAtmwVOMB++k4XISAb
+         XYbaf03/+mLhm8L2tdDqlJ5SSX4dA5j2+gvU4VBU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Logan Gunthorpe <logang@deltatee.com>,
         Allen Hubbe <allenbh@gmail.com>,
         Alexander Fomichev <fomichev.ru@gmail.com>,
         Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com, linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 160/172] NTB: ntb_test: Fix bug when counting remote files
-Date:   Wed, 17 Jun 2020 21:22:06 -0400
-Message-Id: <20200618012218.607130-160-sashal@kernel.org>
+        linux-ntb@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 158/172] NTB: perf: Fix support for hardware that doesn't have port numbers
+Date:   Wed, 17 Jun 2020 21:22:04 -0400
+Message-Id: <20200618012218.607130-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -63,35 +63,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 2130c0ba69d69bb21f5c52787f2587db00d13d8a ]
+[ Upstream commit b54369a248c2e033bfcf5d6917e08cf9d73d54a6 ]
 
-When remote files are counted in get_files_count, without using SSH,
-the code returns 0 because there is a colon prepended to $LOC. $VPATH
-should have been used instead of $LOC.
+Legacy drivers do not have port numbers (but is reliably only two ports)
+and was broken by the recent commit that added mult-port support to
+ntb_perf. This is especially important to support the cross link
+topology which is perfectly symmetric and cannot assign unique port
+numbers easily.
 
-Fixes: 06bd0407d06c ("NTB: ntb_test: Update ntb_tool Scratchpad tests")
+Hardware that returns zero for both the local port and the peer should
+just always use gidx=0 for the only peer.
+
+Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Acked-by: Allen Hubbe <allenbh@gmail.com>
 Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
 Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/ntb/ntb_test.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ntb/test/ntb_perf.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/tools/testing/selftests/ntb/ntb_test.sh b/tools/testing/selftests/ntb/ntb_test.sh
-index 08cbfbbc7029..17ca36403d04 100755
---- a/tools/testing/selftests/ntb/ntb_test.sh
-+++ b/tools/testing/selftests/ntb/ntb_test.sh
-@@ -250,7 +250,7 @@ function get_files_count()
- 	split_remote $LOC
+diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
+index 28d288ff3bae..62a9a1d44f9f 100644
+--- a/drivers/ntb/test/ntb_perf.c
++++ b/drivers/ntb/test/ntb_perf.c
+@@ -1418,6 +1418,16 @@ static int perf_init_peers(struct perf_ctx *perf)
+ 	if (perf->gidx == -1)
+ 		perf->gidx = pidx;
  
- 	if [[ "$REMOTE" == "" ]]; then
--		echo $(ls -1 "$LOC"/${NAME}* 2>/dev/null | wc -l)
-+		echo $(ls -1 "$VPATH"/${NAME}* 2>/dev/null | wc -l)
- 	else
- 		echo $(ssh "$REMOTE" "ls -1 \"$VPATH\"/${NAME}* | \
- 		       wc -l" 2> /dev/null)
++	/*
++	 * Hardware with only two ports may not have unique port
++	 * numbers. In this case, the gidxs should all be zero.
++	 */
++	if (perf->pcnt == 1 &&  ntb_port_number(perf->ntb) == 0 &&
++	    ntb_peer_port_number(perf->ntb, 0) == 0) {
++		perf->gidx = 0;
++		perf->peers[0].gidx = 0;
++	}
++
+ 	for (pidx = 0; pidx < perf->pcnt; pidx++) {
+ 		ret = perf_setup_peer_mw(&perf->peers[pidx]);
+ 		if (ret)
 -- 
 2.25.1
 
