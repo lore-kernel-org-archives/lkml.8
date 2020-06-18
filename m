@@ -8,101 +8,95 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F191C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61A1F21527
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B1521527
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:12:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQgK0Voi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HN5C7ut0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgFRAKA (ORCPT
+        id S1726942AbgFRAMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 20:10:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36030 "EHLO
+        Wed, 17 Jun 2020 20:12:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726815AbgFRAJ7 (ORCPT
+        with ESMTP id S1726815AbgFRAMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 20:09:59 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBAA3C061755;
-        Wed, 17 Jun 2020 17:09:58 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b6so4165918wrs.11;
-        Wed, 17 Jun 2020 17:09:58 -0700 (PDT)
+        Wed, 17 Jun 2020 20:12:07 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5161EC06174E;
+        Wed, 17 Jun 2020 17:12:06 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id n11so3914401qkn.8;
+        Wed, 17 Jun 2020 17:12:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7inzO9UP28E4HK5AwcA3raikK65alSD3oW0aeo5vJ8Q=;
-        b=VQgK0Voi5Rd+VMD1G1he8kf1cq2/l1jlOntXtu5XYIEhnk1vvRF9HZ4jkEtWL8ZOPr
-         wr+KlOAc60I9RfiEUIfB2VD8ASwSpk7y6lxYbMIqS2OUyOORj4SjrZ0ph4b8QW46xjE+
-         avINlHybFMgc1r823bjndK4AyxEyxX1scwBj25QC+d3Qvw/S2bo7w54jQj2jjjMGiOOK
-         YwsNa5crWyVT9Of0vIjrEQF5MTCEvp7r/iMwOSBHnFJk6+El6bWqTkUxzAluQS12mJ9i
-         UEXknWnJlQskZpmnC2lfkF2Y1znSSw2aNn4j5nFOu3DrhhEH0ESqMs9KGnlbldMHAa8s
-         iicQ==
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=edtf2eABu219UZLqaAwwL2YPJpuQp4rR5iROhIj3sug=;
+        b=HN5C7ut0vfhPtRFQUUi3d7lVBooP4PiOOS8rtAO1wN2+3kIBmscyVYtBfzy+CP+2jj
+         0G1rXyqnaQPrnGyjoGGX1Vbb1z2Ty7h/4k2aRisn2B+7VHZuN3+Wer2/yISSOY5cHmd3
+         iPMjbeu59zG6DxpC29JslX1GOUYriYf9N5Zyst0SY8Z7etxMMGX3yX32PKPxMcCBNWoK
+         wb7YdmZ6b8L5C73GGHL5UFbZpxNkvZtd85b3EMZFGSCvtsYRhjfx7NIkgoOGNFTS7qFy
+         wKOi3TFptgKcrZ9uE+AxLvNyeLEP2fNVWlZhMZFjFEIao6f1rWGXLPmHyY2x3pvfNoLw
+         Z+5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7inzO9UP28E4HK5AwcA3raikK65alSD3oW0aeo5vJ8Q=;
-        b=fWwC/JfkeqQZnk8yYm87zSrwAm4cibAwIVoh0/nry5SooxzzPh8QVSjpTcC02FDyYd
-         2NYM0QT75W7nor74WLIrfHmMprCqOHUYm2Ekl3yTWy82x3Oj5P0EjG0Q8qEY8hK+dCy4
-         P2EMwDpU5xlUEb9HMtxTrlSqxCIUaCqfZFayoAHG/rcOouIisOOs3CGv8YM7DNFWDxaI
-         Rs2wzszKlcDR/qwUZACro/6LTwvTguFTkPkWRvE7VThVMJBrxz4UcBuGY/HrfFebQCTB
-         7aSEI/bsb35tZQzTqSFsElBJSnKPJegeAwA8kU2iDB0W907rZlECjZCxRZ+n5P1AIHXq
-         1Yxg==
-X-Gm-Message-State: AOAM530IdaPUGQz9Y5udZY8JJEcqcQkWtrcLn+VCFymMs1uGIz6Gsra+
-        IRUlyB+RsUB02EIuYxEen5g=
-X-Google-Smtp-Source: ABdhPJz4mlf12mzHC4iJV7r76PCJF/kBpg9ri/XcA2x2wsWVKl+4aQx8JlfIVL/L1qZEgSzo71L4fw==
-X-Received: by 2002:adf:e749:: with SMTP id c9mr1844369wrn.25.1592438997519;
-        Wed, 17 Jun 2020 17:09:57 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:4cc:a210:8e70:5aff:fe7e:da0a])
-        by smtp.gmail.com with ESMTPSA id h203sm905252wme.37.2020.06.17.17.09.56
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=edtf2eABu219UZLqaAwwL2YPJpuQp4rR5iROhIj3sug=;
+        b=ib63NhK9tQWPLp5D6BG1x1P/46j7nauuClX/desB1RrKkcHcmBMgujmWmekQgz0mwU
+         knFtPdpsNxMzcVWhV9130V3ywE4aBnBS4CPgEc424InqoncJxvQlltM3vUImbgYq5tmM
+         qG0bV9pE4gz3UVs1DL8uAk3UM3BoR5fdSxfBIkOyc/ZgSzjzu2v9I9dWx6KoRhcEUZ20
+         DdsHvIW4MocIsV8zhox52o6024hUcxIeyioLrkcWKUByVvNEXzrhHIRTGtMHmZalsBlI
+         fF+n5t/zifvntK9kvaQBd/03bc9siwivZZ5I7zh2iRDPjyDeFjfvOdGXFw3jR9j3Dy8o
+         e1cA==
+X-Gm-Message-State: AOAM532idZkUbGMSF+OXb6YF0kL0R3UFTTDorQ5O0ijwRp6dcO5uLvX5
+        Hb95WOvi2il4PMh099saIf8=
+X-Google-Smtp-Source: ABdhPJzgSG6bY0yPlJdrhmH0It6v98GQcK8Jc28vmTtFveOm6v1hG+rgwoeUub8MjxuFGNDrVruAKA==
+X-Received: by 2002:a37:de0c:: with SMTP id h12mr1254711qkj.466.1592439126137;
+        Wed, 17 Jun 2020 17:12:06 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:9c3:b47c:c995:4853])
+        by smtp.googlemail.com with ESMTPSA id b26sm1699066qta.84.2020.06.17.17.12.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 17:09:57 -0700 (PDT)
-From:   Antonio Borneo <borneo.antonio@gmail.com>
-To:     Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hewenliang <hewenliang4@huawei.com>, linux-usb@vger.kernel.org
-Cc:     Antonio Borneo <borneo.antonio@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] usbip: tools: fix build error for multiple definition
-Date:   Thu, 18 Jun 2020 02:08:44 +0200
-Message-Id: <20200618000844.1048309-1-borneo.antonio@gmail.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 17 Jun 2020 17:12:05 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        linux-ia64@vger.kernel.org (open list:IA64 (Itanium) PLATFORM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ia64: Add null pointer check for task in default_handler
+Date:   Wed, 17 Jun 2020 20:11:46 -0400
+Message-Id: <20200618001157.26035-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200611150221.15665-1-gaurav1086@gmail.com>
+References: <20200611150221.15665-1-gaurav1086@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With GCC 10, building usbip triggers error for multiple definition
-of 'udev_context', in:
-- libsrc/vhci_driver.c:18 and
-- libsrc/usbip_host_common.c:27.
+If the task is NULL and the if condition is true 
+then task->pid would cause null pointer dereference. 
+Fix this by adding additional null check.
 
-Declare as extern the definition in libsrc/usbip_host_common.c.
-
-Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
 ---
- tools/usb/usbip/libsrc/usbip_host_common.c | 2 +-
+ arch/ia64/kernel/perfmon_default_smpl.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/usb/usbip/libsrc/usbip_host_common.c b/tools/usb/usbip/libsrc/usbip_host_common.c
-index d1d8ba2a4a40..ca78aa368476 100644
---- a/tools/usb/usbip/libsrc/usbip_host_common.c
-+++ b/tools/usb/usbip/libsrc/usbip_host_common.c
-@@ -23,7 +23,7 @@
- #include "list.h"
- #include "sysfs_utils.h"
+diff --git a/arch/ia64/kernel/perfmon_default_smpl.c b/arch/ia64/kernel/perfmon_default_smpl.c
+index a40c56020fc5..2732b4cf4296 100644
+--- a/arch/ia64/kernel/perfmon_default_smpl.c
++++ b/arch/ia64/kernel/perfmon_default_smpl.c
+@@ -111,7 +111,7 @@ default_handler(struct task_struct *task, void *buf, pfm_ovfl_arg_t *arg, struct
+ 	unsigned char ovfl_notify;
  
--struct udev *udev_context;
-+extern struct udev *udev_context;
+ 	if (unlikely(buf == NULL || arg == NULL|| regs == NULL || task == NULL)) {
+-		DPRINT(("[%d] invalid arguments buf=%p arg=%p\n", task->pid, buf, arg));
++		DPRINT(("[%d] invalid arguments buf=%p arg=%p\n", task? task->pid : -1, buf, arg));
+ 		return -EINVAL;
+ 	}
  
- static int32_t read_attr_usbip_status(struct usbip_usb_device *udev)
- {
 -- 
-2.27.0
+2.17.1
 
