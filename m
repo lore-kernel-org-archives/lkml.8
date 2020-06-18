@@ -2,97 +2,189 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42494C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38860C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BFDF2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:38:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L32Q6EwU"
+	by mail.kernel.org (Postfix) with ESMTP id 1B15720773
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730869AbgFROiY (ORCPT
+        id S1730872AbgFROiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:38:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730846AbgFROiR (ORCPT
+        Thu, 18 Jun 2020 10:38:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55549 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbgFROiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:38:17 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F33C0C06174E;
-        Thu, 18 Jun 2020 07:38:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=QkS9Mtt0QDYYe9qdb3TQ9/JElZki5rRNgo5h249RJlY=; b=L32Q6EwUocb1McN+U2WqgDbYx1
-        4GkclM9Db9mAuFZXMPwXX23Mt2Q4oVOzO84QHQ6BBXfeCVr6gf4ZAOwBZaqc2yhhEgjG540/H/sIH
-        ePMWCIwSXxNmlgILMXr/q1zXMeXnniSlpR3cMaKca8GTWtBM23md02Wt1LXdJXPJaC6PibEhwst6c
-        ModKdOyeLTrE6BM0xiuQj/UCB/QKTszsTxl/1b25tfCB0lqf+2+uHY3slTWqn8huQQNgXqgfZi5P8
-        fvwzGm+j9zVGpgax3VqNyq2RL21lJXMhXGv2rNnWk7df6kVlVABP5JWOha8rStyxvYrFcIvWQcGNo
-        0qaAvbeg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlvfe-0000C3-Ki; Thu, 18 Jun 2020 14:37:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BF9CF30604B;
-        Thu, 18 Jun 2020 16:37:35 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B4A0E21AB372C; Thu, 18 Jun 2020 16:37:35 +0200 (CEST)
-Date:   Thu, 18 Jun 2020 16:37:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [v3 PATCH 1/2] lockdep: Split header file into lockdep and
- lockdep_types
-Message-ID: <20200618143735.GJ576905@hirez.programming.kicks-ass.net>
-References: <20200617071524.GA3055@gondor.apana.org.au>
- <E1jlSJz-0003hE-8g@fornost.hmeau.com>
- <20200617082459.GC2531@hirez.programming.kicks-ass.net>
- <20200617122449.GX31238@alley>
+        Thu, 18 Jun 2020 10:38:54 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jlvgo-0002Gk-Uo; Thu, 18 Jun 2020 14:38:51 +0000
+Subject: Re: [PATCH] drm/arm: fix unintentional integer overflow on left shift
+To:     Garrit Franke <garritfranke@gmail.com>,
+        Liviu Dudau <liviu.dudau@arm.com>
+Cc:     David Airlie <airlied@linux.ie>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20200618100400.11464-1-colin.king@canonical.com>
+ <20200618121405.GJ159988@e110455-lin.cambridge.arm.com>
+ <5d08fbec-75d8-d9a9-af61-e6ab98e77c80@canonical.com>
+ <20200618142106.GK159988@e110455-lin.cambridge.arm.com>
+ <CAD16O86ebsDkwbnuw2G04YZWfukqxJ=_Tex5OT07icEpfPdQNw@mail.gmail.com>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ mQINBE6TJCgBEACo6nMNvy06zNKj5tiwDsXXS+LhT+LwtEsy9EnraKYXAf2xwazcICSjX06e
+ fanlyhB0figzQO0n/tP7BcfMVNG7n1+DC71mSyRK1ZERcG1523ajvdZOxbBCTvTitYOy3bjs
+ +LXKqeVMhK3mRvdTjjmVpWnWqJ1LL+Hn12ysDVVfkbtuIm2NoaSEC8Ae8LSSyCMecd22d9Pn
+ LR4UeFgrWEkQsqROq6ZDJT9pBLGe1ZS0pVGhkRyBP9GP65oPev39SmfAx9R92SYJygCy0pPv
+ BMWKvEZS/7bpetPNx6l2xu9UvwoeEbpzUvH26PHO3DDAv0ynJugPCoxlGPVf3zcfGQxy3oty
+ dNTWkP6Wh3Q85m+AlifgKZudjZLrO6c+fAw/jFu1UMjNuyhgShtFU7NvEzL3RqzFf9O1qM2m
+ uj83IeFQ1FZ65QAiCdTa3npz1vHc7N4uEQBUxyXgXfCI+A5yDnjHwzU0Y3RYS52TA3nfa08y
+ LGPLTf5wyAREkFYou20vh5vRvPASoXx6auVf1MuxokDShVhxLpryBnlKCobs4voxN54BUO7m
+ zuERXN8kadsxGFzItAyfKYzEiJrpUB1yhm78AecDyiPlMjl99xXk0zs9lcKriaByVUv/NsyJ
+ FQj/kmdxox3XHi9K29kopFszm1tFiDwCFr/xumbZcMY17Yi2bQARAQABtCVDb2xpbiBLaW5n
+ IDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+iQI2BBMBCAAhBQJOkyQoAhsDBQsJCAcDBRUK
+ CQgLBRYCAwEAAh4BAheAAAoJEGjCh9/GqAImsBcP9i6C/qLewfi7iVcOwqF9avfGzOPf7CVr
+ n8CayQnlWQPchmGKk6W2qgnWI2YLIkADh53TS0VeSQ7Tetj8f1gV75eP0Sr/oT/9ovn38QZ2
+ vN8hpZp0GxOUrzkvvPjpH+zdmKSaUsHGp8idfPpZX7XeBO0yojAs669+3BrnBcU5wW45SjSV
+ nfmVj1ZZj3/yBunb+hgNH1QRcm8ZPICpjvSsGFClTdB4xu2AR28eMiL/TTg9k8Gt72mOvhf0
+ fS0/BUwcP8qp1TdgOFyiYpI8CGyzbfwwuGANPSupGaqtIRVf+/KaOdYUM3dx/wFozZb93Kws
+ gXR4z6tyvYCkEg3x0Xl9BoUUyn9Jp5e6FOph2t7TgUvv9dgQOsZ+V9jFJplMhN1HPhuSnkvP
+ 5/PrX8hNOIYuT/o1AC7K5KXQmr6hkkxasjx16PnCPLpbCF5pFwcXc907eQ4+b/42k+7E3fDA
+ Erm9blEPINtt2yG2UeqEkL+qoebjFJxY9d4r8PFbEUWMT+t3+dmhr/62NfZxrB0nTHxDVIia
+ u8xM+23iDRsymnI1w0R78yaa0Eea3+f79QsoRW27Kvu191cU7QdW1eZm05wO8QUvdFagVVdW
+ Zg2DE63Fiin1AkGpaeZG9Dw8HL3pJAJiDe0KOpuq9lndHoGHs3MSa3iyQqpQKzxM6sBXWGfk
+ EkK5Ag0ETpMkKAEQAMX6HP5zSoXRHnwPCIzwz8+inMW7mJ60GmXSNTOCVoqExkopbuUCvinN
+ 4Tg+AnhnBB3R1KTHreFGoz3rcV7fmJeut6CWnBnGBtsaW5Emmh6gZbO5SlcTpl7QDacgIUuT
+ v1pgewVHCcrKiX0zQDJkcK8FeLUcB2PXuJd6sJg39kgsPlI7R0OJCXnvT/VGnd3XPSXXoO4K
+ cr5fcjsZPxn0HdYCvooJGI/Qau+imPHCSPhnX3WY/9q5/WqlY9cQA8tUC+7mgzt2VMjFft1h
+ rp/CVybW6htm+a1d4MS4cndORsWBEetnC6HnQYwuC4bVCOEg9eXMTv88FCzOHnMbE+PxxHzW
+ 3Gzor/QYZGcis+EIiU6hNTwv4F6fFkXfW6611JwfDUQCAHoCxF3B13xr0BH5d2EcbNB6XyQb
+ IGngwDvnTyKHQv34wE+4KtKxxyPBX36Z+xOzOttmiwiFWkFp4c2tQymHAV70dsZTBB5Lq06v
+ 6nJs601Qd6InlpTc2mjd5mRZUZ48/Y7i+vyuNVDXFkwhYDXzFRotO9VJqtXv8iqMtvS4xPPo
+ 2DtJx6qOyDE7gnfmk84IbyDLzlOZ3k0p7jorXEaw0bbPN9dDpw2Sh9TJAUZVssK119DJZXv5
+ 2BSc6c+GtMqkV8nmWdakunN7Qt/JbTcKlbH3HjIyXBy8gXDaEto5ABEBAAGJAh8EGAEIAAkF
+ Ak6TJCgCGwwACgkQaMKH38aoAiZ4lg/+N2mkx5vsBmcsZVd3ys3sIsG18w6RcJZo5SGMxEBj
+ t1UgyIXWI9lzpKCKIxKx0bskmEyMy4tPEDSRfZno/T7p1mU7hsM4owi/ic0aGBKP025Iok9G
+ LKJcooP/A2c9dUV0FmygecRcbIAUaeJ27gotQkiJKbi0cl2gyTRlolKbC3R23K24LUhYfx4h
+ pWj8CHoXEJrOdHO8Y0XH7059xzv5oxnXl2SD1dqA66INnX+vpW4TD2i+eQNPgfkECzKzGj+r
+ KRfhdDZFBJj8/e131Y0t5cu+3Vok1FzBwgQqBnkA7dhBsQm3V0R8JTtMAqJGmyOcL+JCJAca
+ 3Yi81yLyhmYzcRASLvJmoPTsDp2kZOdGr05Dt8aGPRJL33Jm+igfd8EgcDYtG6+F8MCBOult
+ TTAu+QAijRPZv1KhEJXwUSke9HZvzo1tNTlY3h6plBsBufELu0mnqQvHZmfa5Ay99dF+dL1H
+ WNp62+mTeHsX6v9EACH4S+Cw9Q1qJElFEu9/1vFNBmGY2vDv14gU2xEiS2eIvKiYl/b5Y85Q
+ QLOHWV8up73KK5Qq/6bm4BqVd1rKGI9un8kezUQNGBKre2KKs6wquH8oynDP/baoYxEGMXBg
+ GF/qjOC6OY+U7kNUW3N/A7J3M2VdOTLu3hVTzJMZdlMmmsg74azvZDV75dUigqXcwjE=
+Message-ID: <33bcb868-5202-9a59-b4c6-803097cbe620@canonical.com>
+Date:   Thu, 18 Jun 2020 15:38:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617122449.GX31238@alley>
+In-Reply-To: <CAD16O86ebsDkwbnuw2G04YZWfukqxJ=_Tex5OT07icEpfPdQNw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 02:24:50PM +0200, Petr Mladek wrote:
-> On Wed 2020-06-17 10:24:59, Peter Zijlstra wrote:
-> > On Wed, Jun 17, 2020 at 05:17:19PM +1000, Herbert Xu wrote:
-> > > There is a header file inclusion loop between asm-generic/bug.h
-> > > and linux/kernel.h.  This causes potential compile failurs depending
-> > > on the which file is included first.  One way of breaking this loop
-> > > is to stop spinlock_types.h from including lockdep.h.  This patch
-> > > splits lockdep.h into two files for this purpose.
-> > > 
-> > > Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> > > Acked-by: Petr Mladek <pmladek@suse.com>
-> > > Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > 
-> > Looks good.
-> > 
-> > Petr, how about I stick this in tip/locking/header for us both to share?
-> 
-> Sure. Sounds good to me.
+On 18/06/2020 15:36, Garrit Franke wrote:
+> Hi all, newbie here.
+> Can the BIT macro be safely used on other parts of the kernel as well?
+> Just using git grep "1 <<" returns a ton of results where bit shifting
+> is used the old fashioned way.
 
-OK, done. tip/locking/header should contain just this patch, and that
-branch also got merged into tip/locking/core.
+The BIT macro casts the 1 it a UL before shifting so it catches these
+type of bugs.  use BIT_ULL when the result is assigned to a long long.
+
+Colin
+
+> 
+> Am Do., 18. Juni 2020 um 16:23 Uhr schrieb Liviu Dudau <liviu.dudau@arm.com>:
+>>
+>> On Thu, Jun 18, 2020 at 01:50:34PM +0100, Colin Ian King wrote:
+>>> On 18/06/2020 13:14, Liviu Dudau wrote:
+>>>> On Thu, Jun 18, 2020 at 11:04:00AM +0100, Colin King wrote:
+>>>>> From: Colin Ian King <colin.king@canonical.com>
+>>>>
+>>>> Hi Colin,
+>>>>
+>>>>>
+>>>>> Shifting the integer value 1 is evaluated using 32-bit arithmetic
+>>>>> and then used in an expression that expects a long value leads to
+>>>>> a potential integer overflow.
+>>>>
+>>>> I'm afraid this explanation makes no sense to me. Do you care to explain better what
+>>>> you think the issue is? If the shift is done as 32-bit arithmetic and then promoted
+>>>> to long how does the overflow happen?
+>>>
+>>> The shift is performed using 32 bit signed math and then assigned to an
+>>> unsigned 64 bit long. This if the shift is 31 bits then the signed int
+>>> conversion of 0x80000000 to unsigned long becomes 0xffffffff80000000.
+>>> If the shift is more than 32 bits then result overflows and becomes 0x0.
+>>
+>> You are right, I've missed the fact that it is signed math. Not very likely that
+>> we are going to ever have 30 or more CRTCs in the driver, but Coverity has no
+>> way of knowing that.
+>>
+>> Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+>>
+>> I will pull this into drm-misc-next today.
+>>
+>> Best regards,
+>> Liviu
+>>
+>>>
+>>> Colin
+>>>
+>>>>
+>>>> Best regards,
+>>>> Liviu
+>>>>
+>>>>> Fix this by using the BIT macro to
+>>>>> perform the shift to avoid the overflow.
+>>>>>
+>>>>> Addresses-Coverity: ("Unintentional integer overflow")
+>>>>> Fixes: ad49f8602fe8 ("drm/arm: Add support for Mali Display Processors")
+>>>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>>>> ---
+>>>>>  drivers/gpu/drm/arm/malidp_planes.c | 2 +-
+>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/arm/malidp_planes.c b/drivers/gpu/drm/arm/malidp_planes.c
+>>>>> index 37715cc6064e..ab45ac445045 100644
+>>>>> --- a/drivers/gpu/drm/arm/malidp_planes.c
+>>>>> +++ b/drivers/gpu/drm/arm/malidp_planes.c
+>>>>> @@ -928,7 +928,7 @@ int malidp_de_planes_init(struct drm_device *drm)
+>>>>>    const struct malidp_hw_regmap *map = &malidp->dev->hw->map;
+>>>>>    struct malidp_plane *plane = NULL;
+>>>>>    enum drm_plane_type plane_type;
+>>>>> -  unsigned long crtcs = 1 << drm->mode_config.num_crtc;
+>>>>> +  unsigned long crtcs = BIT(drm->mode_config.num_crtc);
+>>>>>    unsigned long flags = DRM_MODE_ROTATE_0 | DRM_MODE_ROTATE_90 | DRM_MODE_ROTATE_180 |
+>>>>>                          DRM_MODE_ROTATE_270 | DRM_MODE_REFLECT_X | DRM_MODE_REFLECT_Y;
+>>>>>    unsigned int blend_caps = BIT(DRM_MODE_BLEND_PIXEL_NONE) |
+>>>>> --
+>>>>> 2.27.0.rc0
+>>>>>
+>>>>
+>>>
+>>> _______________________________________________
+>>> dri-devel mailing list
+>>> dri-devel@lists.freedesktop.org
+>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>>
+>> --
+>> ====================
+>> | I would like to |
+>> | fix the world,  |
+>> | but they're not |
+>> | giving me the   |
+>>  \ source code!  /
+>>   ---------------
+>>     ¯\_(ツ)_/¯
+
