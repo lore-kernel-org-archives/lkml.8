@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B044C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0BBC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D14FD221FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E099A221F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444350;
-	bh=FgYJtY6YjowxDgILyIBUCt/OhaAvMobU2W8m+To8XUU=;
+	s=default; t=1592444353;
+	bh=nbkmqZukT/Tkw7WWqBVK/Bb+JkaY0QMzxUMcKu2QFLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bIJG4xvzxtf7tqnkUPtkmQKmz/JwC75D83GwA2rERP9AUDIO+hWIWS0Gtg8MSPs2x
-	 OmTSgq2hLUkWbgkWEOzA6j0JenoJeyLjEsx8EEAAMmHySt86CLSQZw/2HGx5+Q+ReU
-	 JRMzPCk532/s+MOJsqJUf14LjoU/i59R7Kow81/c=
+	b=syHXwJpsJ9KgXeHTrloQOiTL6fNr+Nx4Lk0vt16TG+dKBse0f2IwFUO8SDz2oJY5d
+	 DgSPmTNtJ4KcYGZzDKVG967BqVBS2CRQjQXpk20fUCpUI2t7qcCUxIzO7zmNtuO//D
+	 vQSaHBZtaUet36A4hOh6rQ1xGXwJpcxBWvVpk2V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730742AbgFRBjI (ORCPT
+        id S1732506AbgFRBaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:39:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40388 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:30:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732508AbgFRBaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:30:23 -0400
+        id S1729997AbgFRB1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3644A207E8;
-        Thu, 18 Jun 2020 01:30:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 246CD221F1;
+        Thu, 18 Jun 2020 01:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443822;
-        bh=FgYJtY6YjowxDgILyIBUCt/OhaAvMobU2W8m+To8XUU=;
+        s=default; t=1592443622;
+        bh=nbkmqZukT/Tkw7WWqBVK/Bb+JkaY0QMzxUMcKu2QFLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ASz2RAxhkqzGuEADwS708RmmdvDhKrB40qdbn7gcOV1qJ2hZJObJwtZ62PrPTTg2
-         m/UL5mDVPv4Qts0CwVJYZfYiIugXhPnoAoFPje88O1PIiGE6kiSWwXKx60260B6jra
-         qrBTkqoYhfzYCr3NxKFwNOw1k4gHnlWsxk+7ZBT0=
+        b=T6yC4ntFT/yO0mTNAFjVe1vwHqqQp02qZzuZwiw37VtntOrgMGbB4cbMSyG1KRojO
+         xqx+3do30l707/wbQ6mBSgf9hMDs5ajlefbKiThLzfxv5mkHkxWCF/pLmdzJZLeIif
+         5b3o5xpHT2Q2j6XtXI/15EVcPXYaA5iq4x+HXSxY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kajol Jain <kjain@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 14/60] powerpc/pseries: Update hv-24x7 information after migration
-Date:   Wed, 17 Jun 2020 21:29:18 -0400
-Message-Id: <20200618013004.610532-14-sashal@kernel.org>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 048/108] drivers: base: Fix NULL pointer exception in __platform_driver_probe() if a driver developer is foolish
+Date:   Wed, 17 Jun 2020 21:25:00 -0400
+Message-Id: <20200618012600.608744-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
-References: <20200618013004.610532-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,44 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kajol Jain <kjain@linux.ibm.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-[ Upstream commit 373b373053384f12951ae9f916043d955501d482 ]
+[ Upstream commit 388bcc6ecc609fca1b4920de7dc3806c98ec535e ]
 
-Function 'read_sys_info_pseries()' is added to get system parameter
-values like number of sockets and chips per socket.
-and it gets these details via rtas_call with token
-"PROCESSOR_MODULE_INFO".
+If platform bus driver registration is failed then, accessing
+platform bus spin lock (&drv->driver.bus->p->klist_drivers.k_lock)
+in __platform_driver_probe() without verifying the return value
+__platform_driver_register() can lead to NULL pointer exception.
 
-Incase lpar migrate from one system to another, system
-parameter details like chips per sockets or number of sockets might
-change. So, it needs to be re-initialized otherwise, these values
-corresponds to previous system values.
-This patch adds a call to 'read_sys_info_pseries()' from
-'post-mobility_fixup()' to re-init the physsockets and physchips values
+So check the return value before attempting the spin lock.
 
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200525104308.9814-6-kjain@linux.ibm.com
+One such example is below:
+
+For a custom usecase, I have intentionally failed the platform bus
+registration and I expected all the platform device/driver
+registrations to fail gracefully. But I came across this panic
+issue.
+
+[    1.331067] BUG: kernel NULL pointer dereference, address: 00000000000000c8
+[    1.331118] #PF: supervisor write access in kernel mode
+[    1.331163] #PF: error_code(0x0002) - not-present page
+[    1.331208] PGD 0 P4D 0
+[    1.331233] Oops: 0002 [#1] PREEMPT SMP
+[    1.331268] CPU: 3 PID: 1 Comm: swapper/0 Tainted: G        W         5.6.0-00049-g670d35fb0144 #165
+[    1.331341] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[    1.331406] RIP: 0010:_raw_spin_lock+0x15/0x30
+[    1.331588] RSP: 0000:ffffc9000001be70 EFLAGS: 00010246
+[    1.331632] RAX: 0000000000000000 RBX: 00000000000000c8 RCX: 0000000000000001
+[    1.331696] RDX: 0000000000000001 RSI: 0000000000000092 RDI: 0000000000000000
+[    1.331754] RBP: 00000000ffffffed R08: 0000000000000501 R09: 0000000000000001
+[    1.331817] R10: ffff88817abcc520 R11: 0000000000000670 R12: 00000000ffffffed
+[    1.331881] R13: ffffffff82dbc268 R14: ffffffff832f070a R15: 0000000000000000
+[    1.331945] FS:  0000000000000000(0000) GS:ffff88817bd80000(0000) knlGS:0000000000000000
+[    1.332008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.332062] CR2: 00000000000000c8 CR3: 000000000681e001 CR4: 00000000003606e0
+[    1.332126] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    1.332189] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    1.332252] Call Trace:
+[    1.332281]  __platform_driver_probe+0x92/0xee
+[    1.332323]  ? rtc_dev_init+0x2b/0x2b
+[    1.332358]  cmos_init+0x37/0x67
+[    1.332396]  do_one_initcall+0x7d/0x168
+[    1.332428]  kernel_init_freeable+0x16c/0x1c9
+[    1.332473]  ? rest_init+0xc0/0xc0
+[    1.332508]  kernel_init+0x5/0x100
+[    1.332543]  ret_from_fork+0x1f/0x30
+[    1.332579] CR2: 00000000000000c8
+[    1.332616] ---[ end trace 3bd87f12e9010b87 ]---
+[    1.333549] note: swapper/0[1] exited with preempt_count 1
+[    1.333592] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+[    1.333736] Kernel Offset: disabled
+
+Note, this can only be triggered if a driver errors out from this call,
+which should never happen.  If it does, the driver needs to be fixed.
+
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Link: https://lore.kernel.org/r/20200408214003.3356-1-sathyanarayanan.kuppuswamy@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/mobility.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/base/platform.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
-index 8d30a425a88a..58ddc4389a51 100644
---- a/arch/powerpc/platforms/pseries/mobility.c
-+++ b/arch/powerpc/platforms/pseries/mobility.c
-@@ -326,6 +326,9 @@ void post_mobility_fixup(void)
- 	/* Possibly switch to a new RFI flush type */
- 	pseries_setup_rfi_flush();
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index bcb6519fe211..0ee3cab88f70 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -702,6 +702,8 @@ int __init_or_module __platform_driver_probe(struct platform_driver *drv,
+ 	/* temporary section violation during probe() */
+ 	drv->probe = probe;
+ 	retval = code = __platform_driver_register(drv, module);
++	if (retval)
++		return retval;
  
-+	/* Reinitialise system information for hv-24x7 */
-+	read_24x7_sys_info();
-+
- 	return;
- }
- 
+ 	/*
+ 	 * Fixup that section violation, being paranoid about code scanning
 -- 
 2.25.1
 
