@@ -2,278 +2,178 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D655DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D524C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6BD52083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:30:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vHq4YIw6"
+	by mail.kernel.org (Postfix) with ESMTP id 4F9702186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 06:36:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgFRGaY (ORCPT
+        id S1727825AbgFRGgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 02:30:24 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:60301 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725898AbgFRGaX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 02:30:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592461822; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=GoNXgc7+2d91O+hXVI16Z9u6/tuLTSjOHfmUUPsJg5M=; b=vHq4YIw6aCRev5OixkODkYT445I06Km720ZGCuCMLdzUZo8trqAry+H+tt/5GP8oQ2J2qfSA
- DcWI8AdzKV9PpVLaqm5vRr/g5d91JxHPgYQJntiLuuljEWSz1mX6hVlTtCaXiBw2Hjii9B2x
- fDtjcbnZCcVsRKQreslMIzGvEcs=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5eeb09f5c76a4e7a2a990375 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 18 Jun 2020 06:30:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3240EC433CA; Thu, 18 Jun 2020 06:30:12 +0000 (UTC)
-Received: from [192.168.0.106] (unknown [183.83.66.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8FD31C433C9;
-        Thu, 18 Jun 2020 06:30:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8FD31C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V4 2/2] mmc: sdhci-msm: Use internal voltage control
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1592321779-28556-1-git-send-email-vbadigan@codeaurora.org>
- <1592321779-28556-3-git-send-email-vbadigan@codeaurora.org>
- <CAPDyKFrvvhQPio3FRQmoBgMm1Euvsma_dgGzxA=R8rm0aQgDMQ@mail.gmail.com>
- <40b03630-cdbc-50ee-e483-8ff919f76fb5@codeaurora.org>
- <CAPDyKFrf3rxA-_0wB=bNby2dVSxTwZHSTXeNO5OayQ57Eqiphg@mail.gmail.com>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <541c95a6-0b89-fdc1-4707-e0a1eef1bf91@codeaurora.org>
-Date:   Thu, 18 Jun 2020 12:00:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 18 Jun 2020 02:36:43 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56270 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726952AbgFRGgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 02:36:42 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A323F17A898288F2A316;
+        Thu, 18 Jun 2020 14:36:40 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 18 Jun 2020 14:36:33 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 5/5] f2fs: show more debug info for per-temperature log
+Date:   Thu, 18 Jun 2020 14:36:25 +0800
+Message-ID: <20200618063625.110273-5-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
+In-Reply-To: <20200618063625.110273-1-yuchao0@huawei.com>
+References: <20200618063625.110273-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFrf3rxA-_0wB=bNby2dVSxTwZHSTXeNO5OayQ57Eqiphg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+- Add to account and show per-log dirty_seg, full_seg and valid_blocks
+in debugfs.
+- reformat printed info.
 
-On 6/17/2020 7:46 PM, Ulf Hansson wrote:
-> On Wed, 17 Jun 2020 at 14:46, Veerabhadrarao Badiganti
-> <vbadigan@codeaurora.org> wrote:
->> Thanks for comments Uffe.
->>
->> On 6/17/2020 3:04 PM, Ulf Hansson wrote:
->>> On Tue, 16 Jun 2020 at 17:38, Veerabhadrarao Badiganti
->>> <vbadigan@codeaurora.org> wrote:
->>>> On qcom SD host controllers voltage switching be done after the HW
->>>> is ready for it. The HW informs its readiness through power irq.
->>>> The voltage switching should happen only then.
->>>>
->>>> Use the internal voltage switching and then control the voltage
->>>> switching using power irq.
->>>>
->>>> IO-bus supply of eMMC would be kept always-on. So set the load
->>>> for this supply to configure it in LPM when eMMC is suspend state
->>>>    and in HPM when eMMC is active.
->>>>
->>>> Co-developed-by: Asutosh Das <asutoshd@codeaurora.org>
->>>> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
->>>> Co-developed-by: Vijay Viswanath <vviswana@codeaurora.org>
->>>> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
->>>> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->>>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->>>> ---
->>>>    drivers/mmc/host/sdhci-msm.c | 208 +++++++++++++++++++++++++++++++++++++++++--
->>>>    1 file changed, 199 insertions(+), 9 deletions(-)
->>>>
->>>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->>>> index 15c42b059240..8297b2142748 100644
->>>> --- a/drivers/mmc/host/sdhci-msm.c
->>>> +++ b/drivers/mmc/host/sdhci-msm.c
->>>> @@ -37,7 +37,9 @@
->>>>    #define CORE_PWRCTL_IO_LOW     BIT(2)
->>>>    #define CORE_PWRCTL_IO_HIGH    BIT(3)
->>>>    #define CORE_PWRCTL_BUS_SUCCESS BIT(0)
->>>> +#define CORE_PWRCTL_BUS_FAIL    BIT(1)
->>>>    #define CORE_PWRCTL_IO_SUCCESS BIT(2)
->>>> +#define CORE_PWRCTL_IO_FAIL     BIT(3)
->>>>    #define REQ_BUS_OFF            BIT(0)
->>>>    #define REQ_BUS_ON             BIT(1)
->>>>    #define REQ_IO_LOW             BIT(2)
->>>> @@ -127,6 +129,9 @@
->>>>    /* Timeout value to avoid infinite waiting for pwr_irq */
->>>>    #define MSM_PWR_IRQ_TIMEOUT_MS 5000
->>>>
->>>> +/* Max load for eMMC Vdd-io supply */
->>>> +#define MMC_VQMMC_MAX_LOAD_UA  325000
->>>> +
->>>>    #define msm_host_readl(msm_host, host, offset) \
->>>>           msm_host->var_ops->msm_readl_relaxed(host, offset)
->>>>
->>>> @@ -278,6 +283,7 @@ struct sdhci_msm_host {
->>>>           bool uses_tassadar_dll;
->>>>           u32 dll_config;
->>>>           u32 ddr_config;
->>>> +       bool vqmmc_enabled;
->>>>    };
->>>>
->>>>    static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
->>>> @@ -1346,6 +1352,88 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->>>>                   sdhci_msm_hs400(host, &mmc->ios);
->>>>    }
->>>>
->>>> +static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
->>>> +{
->>>> +       if (IS_ERR(mmc->supply.vmmc))
->>>> +               return 0;
->>>> +
->>>> +       return mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
->>>> +}
->>>> +
->>>> +static int msm_toggle_vqmmc(struct sdhci_msm_host *msm_host,
->>>> +                             struct mmc_host *mmc, bool level)
->>>> +{
->>>> +       int ret;
->>>> +       struct mmc_ios ios;
->>>> +
->>>> +       if (msm_host->vqmmc_enabled == level)
->>>> +               return 0;
->>>> +
->>>> +       if (level) {
->>>> +               /* Set the IO voltage regulator to default voltage level */
->>>> +               if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
->>>> +                       ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
->>>> +               else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
->>>> +                       ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
->>>> +
->>>> +               if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
->>>> +                       ret = mmc_regulator_set_vqmmc(mmc, &ios);
->>>> +                       if (ret < 0) {
->>>> +                               dev_err(mmc_dev(mmc), "%s: vqmmc set volgate failed: %d\n",
->>>> +                                       mmc_hostname(mmc), ret);
->>>> +                               goto out;
->>>> +                       }
->>>> +               }
->>>> +               ret = regulator_enable(mmc->supply.vqmmc);
->>>> +       } else {
->>>> +               ret = regulator_disable(mmc->supply.vqmmc);
->>>> +       }
->>>> +
->>>> +       if (ret)
->>>> +               dev_err(mmc_dev(mmc), "%s: vqmm %sable failed: %d\n",
->>>> +                       mmc_hostname(mmc), level ? "en":"dis", ret);
->>>> +       else
->>>> +               msm_host->vqmmc_enabled = level;
->>>> +out:
->>>> +       return ret;
->>>> +}
->>>> +
->>>> +static int msm_config_vqmmc_mode(struct sdhci_msm_host *msm_host,
->>>> +                             struct mmc_host *mmc, bool hpm)
->>>> +{
->>>> +       int load, ret;
->>>> +
->>>> +       load = hpm ? MMC_VQMMC_MAX_LOAD_UA : 0;
->>>> +       ret = regulator_set_load(mmc->supply.vqmmc, load);
->>>> +       if (ret)
->>>> +               dev_err(mmc_dev(mmc), "%s: vqmmc set load failed: %d\n",
->>>> +                       mmc_hostname(mmc), ret);
->>>> +       return ret;
->>>> +}
->>>> +
->>>> +static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
->>>> +                             struct mmc_host *mmc, bool level)
->>>> +{
->>>> +       int ret;
->>>> +       bool always_on;
->>>> +
->>>> +       if (IS_ERR(mmc->supply.vqmmc)           ||
->>> White space.
->>>
->>>> +           (mmc->ios.power_mode == MMC_POWER_UNDEFINED))
->>>> +               return 0;
->>>> +       /*
->>>> +        * For eMMC don't turn off Vqmmc, Instead just configure it in LPM
->>>> +        * and HPM modes by setting the right amonut of load.
->>> /s/right amonut of load/corresponding load
->>>
->>>> +        */
->>>> +       always_on = mmc->card && mmc_card_mmc(mmc->card);
->>>> +
->>>> +       if (always_on)
->>>> +               ret = msm_config_vqmmc_mode(msm_host, mmc, level);
->>>> +       else
->>>> +               ret = msm_toggle_vqmmc(msm_host, mmc, level);
->>> I am worried that this isn't really doing what you think it does.
->>> always_on may not always be set for an eMMC.
->>>
->>> This is because the mmc->card doesn't get assigned until the
->>> initialization of the eMMC has been completed. In other words, way
->>> after VCC and VCCQ have been turned on and changed voltage levels.
->> For the very first time, i have to enable the vqmmc.
->> And second time on-wards I have to set load instead of turning vqmmc off
->> / on.
->>
->> This condition helps me in doing exactly the same.
->>
->> This gets invoked first time when  mmc_power_up() is called.
->> Yes, by that time card won't be initialized. So this check fails and
->> allows to turn on the regulator instead of setting load.
->>
->> After that, this gets invoked only next time mmc_power_up/off() is called
->> which is during mmc_suspend/resume.
-> I see.
->
-> That assumes the initialization always works at the first attempt, so
-> no re-try or power cycle gets done in some error/reset path.
->
->> By this time card is initialized, it allows to set load.
-> Okay, I get it. Thanks for clarifying.
->
-> Perhaps you can add a small comment about this in the code, so we
-> don't forget the reasons why the code looks like this.
-Sure. Will update comment with this info.
->>
->>> Moreover, mmc_card_mmc() is also about legacy MMC cards, not solely for eMMCs.
->> Okay. But on qcom platform, we have support for only eMMC/SD/SDIO.
->> So this mmc_card_mmc() meets my requirements!!! Allows only eMMC not SD
->> & SDIO.
-> Well, eMMC is fairly similar to MMC, from a basic functionality point
-> of view. So, I am quite sure you can get it to work with your
-> controller, even if it's not officially supported.
->>> If you want special treatment of an eMMC, I think it's better to use
->>> the DT bindings Documentation/devicetree/bindings/mmc/mmc-card.txt. If
->>> you have such a subnode, that indicates that there is an eMMC card
->>> attached.
-> That said, if you don't like the pure DT based solution, as I
-> suggested above - at least extend mmc_card_mmc() with checking the
-> MMC_CAP_NONREMOVABLE flag.
-sure. Will update it. Thank you.
->
-> [...]
->
-> Kind regards
-> Uffe
+    TYPE            segno    secno   zoneno  dirty_seg   full_seg  valid_blk
+  - COLD   data:     1523     1523     1523          1          0        399
+  - WARM   data:      769      769      769         20        255     133098
+  - HOT    data:      767      767      767          9          0        167
+  - Dir   dnode:       22       22       22          3          0         70
+  - File  dnode:      722      722      722         14         10       6505
+  - Indir nodes:        2        2        2          1          0          3
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/debug.c | 67 ++++++++++++++++++++++++++++++++++++++++---------
+ fs/f2fs/f2fs.h  |  3 +++
+ 2 files changed, 58 insertions(+), 12 deletions(-)
+
+diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
+index 0dbcb0f9c019..aa1fd2de11ba 100644
+--- a/fs/f2fs/debug.c
++++ b/fs/f2fs/debug.c
+@@ -174,6 +174,29 @@ static void update_general_status(struct f2fs_sb_info *sbi)
+ 	for (i = META_CP; i < META_MAX; i++)
+ 		si->meta_count[i] = atomic_read(&sbi->meta_count[i]);
+ 
++	for (i = 0; i < NO_CHECK_TYPE; i++) {
++		si->dirty_seg[i] = 0;
++		si->full_seg[i] = 0;
++		si->valid_blks[i] = 0;
++	}
++
++	for (i = 0; i < MAIN_SEGS(sbi); i++) {
++		int blks = get_seg_entry(sbi, i)->valid_blocks;
++		int type = get_seg_entry(sbi, i)->type;
++
++		if (!blks)
++			continue;
++
++		if (IS_CURSEG(sbi, i))
++			continue;
++
++		if (blks == sbi->blocks_per_seg)
++			si->full_seg[type]++;
++		else
++			si->dirty_seg[type]++;
++		si->valid_blks[type] += blks;
++	}
++
+ 	for (i = 0; i < 2; i++) {
+ 		si->segment_count[i] = sbi->segment_count[i];
+ 		si->block_count[i] = sbi->block_count[i];
+@@ -329,30 +352,50 @@ static int stat_show(struct seq_file *s, void *v)
+ 		seq_printf(s, "\nMain area: %d segs, %d secs %d zones\n",
+ 			   si->main_area_segs, si->main_area_sections,
+ 			   si->main_area_zones);
+-		seq_printf(s, "  - COLD  data: %d, %d, %d\n",
++		seq_printf(s, "    TYPE         %8s %8s %8s %10s %10s %10s\n",
++			   "segno", "secno", "zoneno", "dirty_seg", "full_seg", "valid_blk");
++		seq_printf(s, "  - COLD   data: %8d %8d %8d %10u %10u %10u\n",
+ 			   si->curseg[CURSEG_COLD_DATA],
+ 			   si->cursec[CURSEG_COLD_DATA],
+-			   si->curzone[CURSEG_COLD_DATA]);
+-		seq_printf(s, "  - WARM  data: %d, %d, %d\n",
++			   si->curzone[CURSEG_COLD_DATA],
++			   si->dirty_seg[CURSEG_COLD_DATA],
++			   si->full_seg[CURSEG_COLD_DATA],
++			   si->valid_blks[CURSEG_COLD_DATA]);
++		seq_printf(s, "  - WARM   data: %8d %8d %8d %10u %10u %10u\n",
+ 			   si->curseg[CURSEG_WARM_DATA],
+ 			   si->cursec[CURSEG_WARM_DATA],
+-			   si->curzone[CURSEG_WARM_DATA]);
+-		seq_printf(s, "  - HOT   data: %d, %d, %d\n",
++			   si->curzone[CURSEG_WARM_DATA],
++			   si->dirty_seg[CURSEG_WARM_DATA],
++			   si->full_seg[CURSEG_WARM_DATA],
++			   si->valid_blks[CURSEG_WARM_DATA]);
++		seq_printf(s, "  - HOT    data: %8d %8d %8d %10u %10u %10u\n",
+ 			   si->curseg[CURSEG_HOT_DATA],
+ 			   si->cursec[CURSEG_HOT_DATA],
+-			   si->curzone[CURSEG_HOT_DATA]);
+-		seq_printf(s, "  - Dir   dnode: %d, %d, %d\n",
++			   si->curzone[CURSEG_HOT_DATA],
++			   si->dirty_seg[CURSEG_HOT_DATA],
++			   si->full_seg[CURSEG_HOT_DATA],
++			   si->valid_blks[CURSEG_HOT_DATA]);
++		seq_printf(s, "  - Dir   dnode: %8d %8d %8d %10u %10u %10u\n",
+ 			   si->curseg[CURSEG_HOT_NODE],
+ 			   si->cursec[CURSEG_HOT_NODE],
+-			   si->curzone[CURSEG_HOT_NODE]);
+-		seq_printf(s, "  - File   dnode: %d, %d, %d\n",
++			   si->curzone[CURSEG_HOT_NODE],
++			   si->dirty_seg[CURSEG_HOT_NODE],
++			   si->full_seg[CURSEG_HOT_NODE],
++			   si->valid_blks[CURSEG_HOT_NODE]);
++		seq_printf(s, "  - File  dnode: %8d %8d %8d %10u %10u %10u\n",
+ 			   si->curseg[CURSEG_WARM_NODE],
+ 			   si->cursec[CURSEG_WARM_NODE],
+-			   si->curzone[CURSEG_WARM_NODE]);
+-		seq_printf(s, "  - Indir nodes: %d, %d, %d\n",
++			   si->curzone[CURSEG_WARM_NODE],
++			   si->dirty_seg[CURSEG_WARM_NODE],
++			   si->full_seg[CURSEG_WARM_NODE],
++			   si->valid_blks[CURSEG_WARM_NODE]);
++		seq_printf(s, "  - Indir nodes: %8d %8d %8d %10u %10u %10u\n",
+ 			   si->curseg[CURSEG_COLD_NODE],
+ 			   si->cursec[CURSEG_COLD_NODE],
+-			   si->curzone[CURSEG_COLD_NODE]);
++			   si->curzone[CURSEG_COLD_NODE],
++			   si->dirty_seg[CURSEG_COLD_NODE],
++			   si->full_seg[CURSEG_COLD_NODE],
++			   si->valid_blks[CURSEG_COLD_NODE]);
+ 		seq_printf(s, "\n  - Valid: %d\n  - Dirty: %d\n",
+ 			   si->main_area_segs - si->dirty_count -
+ 			   si->prefree_count - si->free_segs,
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 72a667f1d678..70565d81320b 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3536,6 +3536,9 @@ struct f2fs_stat_info {
+ 	int curseg[NR_CURSEG_TYPE];
+ 	int cursec[NR_CURSEG_TYPE];
+ 	int curzone[NR_CURSEG_TYPE];
++	unsigned int dirty_seg[NR_CURSEG_TYPE];
++	unsigned int full_seg[NR_CURSEG_TYPE];
++	unsigned int valid_blks[NR_CURSEG_TYPE];
+ 
+ 	unsigned int meta_count[META_MAX];
+ 	unsigned int segment_count[2];
+-- 
+2.18.0.rc1
+
