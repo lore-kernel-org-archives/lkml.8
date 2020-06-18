@@ -2,246 +2,269 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA73AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F645C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85FC42078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:15:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ls0OMPnE"
+	by mail.kernel.org (Postfix) with ESMTP id F3543207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:19:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592479153;
+	bh=VMTjW3A5rM+/n8uTmhib5xc6DSyPNkBhwsyvBYgZETA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S0y76tYGJlbVjN+8Fff0/WcyxLGiAFU5rYbkubyX2tv1TtWXPLrdZMxj3i+d35fyw
+	 +THUATJsapxwbudRwF3Y2t6fLPy9tnNcSyIc+ZIa/urnv1q/IOhQxbR0nlK8zdl8sN
+	 cKhbnOrIo2/6cxvlbK+ykzTlQi5hKuyT8gbSq+sM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbgFRLPe (ORCPT
+        id S1729454AbgFRLTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 07:15:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727904AbgFRLPc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 07:15:32 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77583C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 04:15:30 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r7so5648343wro.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 04:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=0GJVcitDyaEL2jf4WCeTo8g4uf7cIzuyvkTtnJ0mIkM=;
-        b=ls0OMPnEqEV0KBcrCJ2lgEK8nRpKgsmP/QP0iu1kFoeB9GaSnkkOKZFi2fmc1uPsLw
-         /ToYnxZC7mYzuy3a7Dtj/WOR7I3rN5bcLhsw74TdK7uo++5CQ27TH1e/Uk7HEfPnOO6H
-         wzwKodFOH+6Ac5FBrkFux6Wy6p89aBQohMHrGnk38rkgErZKw3d/UcCVvLBng6lKrqtO
-         GmaOENyKPcVRQvepyCmxNtVarmmO05esOj1uFMSsiI0U2IYI/zsZs5xKvj9PqbGonvaF
-         jFUUkdrlsWyaOrZPST5E4E1C6hjfqeDYTx9/YmZggaCtbNNxqlmKmSwd9w0w0twbhyjS
-         Rdww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=0GJVcitDyaEL2jf4WCeTo8g4uf7cIzuyvkTtnJ0mIkM=;
-        b=CENVqqUDia7M5H2Zsoue0d2ZttyFh5IXCx3hCWkNPaEbepl3IChPMeifiplmc7QlsG
-         r4oAuGz1ASoi2YbcbFTdmjlUB0hvskQQ6I5qbwRVh6l67+tNJ1g9FrRbLwwcQl0jLmBw
-         1GpEHLOOarwAixQdE1z3McNyipcbGz+exLszEErZocuzYM/cPveWrA6CSG+9m3Yh4yX/
-         vpKkYSFnt3z00MXLMeinjXq4rHT6vzNvr3lb6pP2KV/2Y6nZqDX5Zf/rrDeECxRACOIt
-         G5nNOisOxfupzdEPc3c422zvcvt6QAbrEBhAiIXTi7OTJqxL65QCGdHIZUe2sLC9k+f1
-         j9BA==
-X-Gm-Message-State: AOAM530486exNYYqJk0bSBjB7mdTzHeDJMNemlhVCDmX501V67G3y3Ux
-        3SqkTiN4gsIB69So9eYbnVzJp/iH0iU=
-X-Google-Smtp-Source: ABdhPJwCh5MHV4ccM/kG14whc1HjaNqmA1LNLwcS5N9awI6WD2D/iCQk21si3KGFR3gioGFWYgtZCQ==
-X-Received: by 2002:adf:a18b:: with SMTP id u11mr4057854wru.102.1592478929101;
-        Thu, 18 Jun 2020 04:15:29 -0700 (PDT)
-Received: from dell ([95.149.164.118])
-        by smtp.gmail.com with ESMTPSA id s2sm3050456wmh.11.2020.06.18.04.15.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 04:15:28 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 12:15:26 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>
-Subject: Re: [PATCH v3 1/2] mfd: da9063: Fix revision handling to correctly
- select reg tables
-Message-ID: <20200618111526.GG954398@dell>
-References: <cover.1587120185.git.Adam.Thomson.Opensource@diasemi.com>
- <a019b698f0c643455e07e7a94dcf0478b1b1f4d4.1587120185.git.Adam.Thomson.Opensource@diasemi.com>
- <20200618101511.GE954398@dell>
- <AM6PR10MB226325A1203A99CE49C364EC809B0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+        Thu, 18 Jun 2020 07:19:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726918AbgFRLTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 07:19:10 -0400
+Received: from localhost (unknown [151.48.140.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A29402078D;
+        Thu, 18 Jun 2020 11:19:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592479149;
+        bh=VMTjW3A5rM+/n8uTmhib5xc6DSyPNkBhwsyvBYgZETA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Dw2AtYlUis3RrRvXICgjJS9KxGDTJj8qk6FfhNQqgUH4oGN3yA4YYqciaFJtCyJPo
+         pJvdkvxTSzNCTq9oZrKXI6OaP57Bcs2S2bm6ELcG+Ufjs+jE1BjVa04Hr3iZDXQL/w
+         3hIG/B03CAJSr59A/uIK6CZdg/mQqd2dRqKcljCw=
+Date:   Thu, 18 Jun 2020 13:18:59 +0200
+From:   Lorenzo Bianconi <lorenzo@kernel.org>
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Felix Fietkau <nbd@nbd.name>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: mt7612 suspend/resume issue
+Message-ID: <20200618111859.GC698688@lore-desk.lan>
+References: <20200618090556.pepjdbnba2gqzcbe@butterfly.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yVhtmJPUSI46BTXb"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM6PR10MB226325A1203A99CE49C364EC809B0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+In-Reply-To: <20200618090556.pepjdbnba2gqzcbe@butterfly.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jun 2020, Adam Thomson wrote:
 
-> On 18 June 2020 11:15, Lee Jones wrote:
-> 
-> > > The current implementation performs checking in the i2c_probe()
-> > > function of the variant_code but does this immediately after the
-> > > containing struct has been initialised as all zero. This means the
-> > > check for variant code will always default to using the BB tables
-> > > and will never select AD. The variant code is subsequently set
-> > > by device_init() and later used by the RTC so really it's a little
-> > > fortunate this mismatch works.
-> > >
-> > > This update adds raw I2C read access functionality to read the chip
-> > > and variant/revision information (common to all revisions) so that
-> > > it can subsequently correctly choose the proper regmap tables for
-> > > real initialisation.
-> > >
-> > > Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> > > ---
-> > >  drivers/mfd/da9063-core.c            |  31 ------
-> > >  drivers/mfd/da9063-i2c.c             | 184 +++++++++++++++++++++++++++++++-
-> > ---
-> > >  include/linux/mfd/da9063/registers.h |  15 ++-
-> > >  3 files changed, 177 insertions(+), 53 deletions(-)
-> > 
-> > [...]
-> > 
-> > > + * Raw I2C access required for just accessing chip and variant info before we
-> > > + * know which device is present. The info read from the device using this
-> > > + * approach is then used to select the correct regmap tables.
-> > > + */
-> > > +
-> > > +#define DA9063_REG_PAGE_SIZE		0x100
-> > > +#define DA9063_REG_PAGED_ADDR_MASK	0xFF
-> > > +
-> > > +enum da9063_page_sel_buf_fmt {
-> > > +	DA9063_PAGE_SEL_BUF_PAGE_REG = 0,
-> > > +	DA9063_PAGE_SEL_BUF_PAGE_VAL,
-> > > +	DA9063_PAGE_SEL_BUF_SIZE,
-> > > +};
-> > > +
-> > > +enum da9063_paged_read_msgs {
-> > > +	DA9063_PAGED_READ_MSG_PAGE_SEL = 0,
-> > > +	DA9063_PAGED_READ_MSG_REG_SEL,
-> > > +	DA9063_PAGED_READ_MSG_DATA,
-> > > +	DA9063_PAGED_READ_MSG_CNT,
-> > > +};
-> > > +
-> > > +static int da9063_i2c_blockreg_read(struct i2c_client *client, u16 addr,
-> > > +				    u8 *buf, int count)
-> > > +{
-> > > +	struct i2c_msg xfer[DA9063_PAGED_READ_MSG_CNT];
-> > > +	u8 page_sel_buf[DA9063_PAGE_SEL_BUF_SIZE];
-> > > +	u8 page_num, paged_addr;
-> > > +	int ret;
-> > > +
-> > > +	/* Determine page info based on register address */
-> > > +	page_num = (addr / DA9063_REG_PAGE_SIZE);
-> > > +	if (page_num > 1) {
-> > > +		dev_err(&client->dev, "Invalid register address provided\n");
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	paged_addr = (addr % DA9063_REG_PAGE_SIZE) &
-> > DA9063_REG_PAGED_ADDR_MASK;
-> > > +	page_sel_buf[DA9063_PAGE_SEL_BUF_PAGE_REG] =
-> > DA9063_REG_PAGE_CON;
-> > > +	page_sel_buf[DA9063_PAGE_SEL_BUF_PAGE_VAL] =
-> > > +		(page_num << DA9063_I2C_PAGE_SEL_SHIFT) &
-> > DA9063_REG_PAGE_MASK;
-> > > +
-> > > +	/* Write reg address, page selection */
-> > > +	xfer[DA9063_PAGED_READ_MSG_PAGE_SEL].addr = client->addr;
-> > > +	xfer[DA9063_PAGED_READ_MSG_PAGE_SEL].flags = 0;
-> > > +	xfer[DA9063_PAGED_READ_MSG_PAGE_SEL].len =
-> > DA9063_PAGE_SEL_BUF_SIZE;
-> > > +	xfer[DA9063_PAGED_READ_MSG_PAGE_SEL].buf = page_sel_buf;
-> > > +
-> > > +	/* Select register address */
-> > > +	xfer[DA9063_PAGED_READ_MSG_REG_SEL].addr = client->addr;
-> > > +	xfer[DA9063_PAGED_READ_MSG_REG_SEL].flags = 0;
-> > > +	xfer[DA9063_PAGED_READ_MSG_REG_SEL].len = sizeof(paged_addr);
-> > > +	xfer[DA9063_PAGED_READ_MSG_REG_SEL].buf = &paged_addr;
-> > > +
-> > > +	/* Read data */
-> > > +	xfer[DA9063_PAGED_READ_MSG_DATA].addr = client->addr;
-> > > +	xfer[DA9063_PAGED_READ_MSG_DATA].flags = I2C_M_RD;
-> > > +	xfer[DA9063_PAGED_READ_MSG_DATA].len = count;
-> > > +	xfer[DA9063_PAGED_READ_MSG_DATA].buf = buf;
-> > > +
-> > > +	ret = i2c_transfer(client->adapter, xfer,
-> > DA9063_PAGED_READ_MSG_CNT);
-> > > +	if (ret < 0) {
-> > > +		dev_err(&client->dev, "Paged block read failed: %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	if (ret != DA9063_PAGED_READ_MSG_CNT) {
-> > > +		dev_err(&client->dev, "Paged block read failed to complete\n");
-> > > +		return -EIO;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > 
-> > Rather than open coding this, does it make sense to register a small
-> > (temporary?) Device ID Regmap to read from?
-> 
-> The original patch submission did exactly that but you indicated you weren't
-> keen due to overheads, hence the implementation above. Actually what we have
-> here is a bit smaller than the regmap approach and I really I'd rather not
-> have to respin again just to revert to something that was dismissed in the first
-> place over 6 months ago.
+--yVhtmJPUSI46BTXb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Actually the conversation went like:
+> Hello, Lorenzo et al.
 
-Lee:
-  IIUC, you have a dependency issue whereby the device type is required
-  before you can select the correct Regmap configuration.  Is that
-  correct?
+Hi Oleksandr,
 
-  If so, using Regmap for the initial register reads sounds like
-  over-kill.  What's stopping you simply using raw reads before the
-  Regmap is instantiated?
+>=20
+> I'm using MT7612 mini-PCIE cards as both AP in a home server and as a cli=
+ent in
+> a laptop. The AP works perfectly (after some fixing from your side; thank=
+s for
+> that!), and so does the client modulo it has issues during system resume.
+>=20
 
-Adam:
-  Actually nothing and I did consider this at the start. Nice thing with regmap
-  is it's all tidily contained and provides the page swapping mechanism to access
-  higher page registers like the variant information. Given this is only once at
-  probe time it felt like this was a reasonable solution. However if you're not
-  keen I can update to use raw access instead.
+[...]
 
-Lee:
-  It would be nice to compare the 2 solutions side by side.  I can't see
-  the raw reads of a few device-ID registers being anywhere near 170
-  lines though.
+>=20
+> The Wi-Fi becomes unusable from this point. If I `modprobe -r` the "mt76x=
+2e" module
+> after this splat, the system hangs completely.
+>=20
+> If the system resumes fine, the resume itself takes quite some time (more=
+ than
+> 10 seconds).
+>=20
+> I've found a workaround for this, though. It seems the system behaves fin=
+e if I
+> do `modprobe -r mt76x2e` before it goes to sleep, and then `modprobe mt76=
+x2e`
+> after resume. Also, the resume time improves greatly.
+>=20
+> I cannot say if it is some regression or not. I've installed the card
+> just recently, and used it with v5.7 kernel series only.
+>=20
+> Do you have any idea what could go wrong and how to approach the issue?
 
-  Ah, they are I2C transactions?  Not the nice readl()s I had in mind.
+I have not reproduced the issue myself yet, but I guess we can try:
+1- update to latest Felix's tree [1]
+2- could you please try to apply the patch below? (compile-test only)
 
-Adam:
-  I can knock something together though just to see what it looks like.
+Regards,
+Lorenzo
 
-Lee:
-  Well, I'd appreciated that, thanks.
+[1] https://github.com/nbd168/wireless
 
-So now we can see them side-by-side we can take them on their own
-merits.  When I initially requested raw reads, I had readl()s in mind,
-rather than the extensive code required to read the required registers
-via I2C.
+=46rom 400268a0ee5843cf736308504dfbd2f20a291eaf Mon Sep 17 00:00:00 2001
+Message-Id: <400268a0ee5843cf736308504dfbd2f20a291eaf.1592478809.git.lorenz=
+o@kernel.org>
+=46rom: Lorenzo Bianconi <lorenzo@kernel.org>
+Date: Thu, 18 Jun 2020 13:10:11 +0200
+Subject: [PATCH] mt76: mt76x2: fix pci suspend
 
-However, it looks like there is very little difference between them,
-thus I do not see a benefit to reverting it back.  The current version
-seems fine.
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+---
+ .../net/wireless/mediatek/mt76/mt76x02_dma.h  |  1 +
+ .../net/wireless/mediatek/mt76/mt76x02_mmio.c | 15 +++++
+ .../net/wireless/mediatek/mt76/mt76x2/pci.c   | 58 +++++++++++++++++++
+ 3 files changed, 74 insertions(+)
 
-I'll conduct a full review shortly, when I have a little more spare
-time (looking at my current TODO list, this will probably be Monday
-now).  Although everything does look fine at first glance.
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02_dma.h b/drivers/net=
+/wireless/mediatek/mt76/mt76x02_dma.h
+index 4aff4f8e87b6..6262f2ecded5 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x02_dma.h
++++ b/drivers/net/wireless/mediatek/mt76/mt76x02_dma.h
+@@ -62,5 +62,6 @@ mt76x02_wait_for_wpdma(struct mt76_dev *dev, int timeout)
+ int mt76x02_dma_init(struct mt76x02_dev *dev);
+ void mt76x02_dma_disable(struct mt76x02_dev *dev);
+ void mt76x02_dma_cleanup(struct mt76x02_dev *dev);
++void mt76x02_dma_reset(struct mt76x02_dev *dev);
+=20
+ #endif /* __MT76x02_DMA_H */
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02_mmio.c b/drivers/ne=
+t/wireless/mediatek/mt76/mt76x02_mmio.c
+index cbbe986655fe..e2631c964331 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x02_mmio.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x02_mmio.c
+@@ -348,6 +348,21 @@ void mt76x02_dma_disable(struct mt76x02_dev *dev)
+ }
+ EXPORT_SYMBOL_GPL(mt76x02_dma_disable);
+=20
++void mt76x02_dma_reset(struct mt76x02_dev *dev)
++{
++	int i;
++
++	mt76x02_dma_disable(dev);
++	usleep_range(1000, 2000);
++
++	for (i =3D 0; i < __MT_TXQ_MAX; i++)
++		mt76_queue_tx_cleanup(dev, i, true);
++	mt76_for_each_q_rx(&dev->mt76, i)
++		mt76_queue_rx_reset(dev, i);
++
++	mt76x02_dma_enable(dev);
++}
++
+ void mt76x02_mac_start(struct mt76x02_dev *dev)
+ {
+ 	mt76x02_mac_reset_counters(dev);
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c b/drivers/net/=
+wireless/mediatek/mt76/mt76x2/pci.c
+index 53ca0cedf026..5543e242fb9b 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
+@@ -103,6 +103,60 @@ mt76pci_remove(struct pci_dev *pdev)
+ 	mt76_free_device(mdev);
+ }
+=20
++static int __maybe_unused
++mt76x2e_suspend(struct pci_dev *pdev, pm_message_t state)
++{
++	struct mt76_dev *mdev =3D pci_get_drvdata(pdev);
++	struct mt76x02_dev *dev =3D container_of(mdev, struct mt76x02_dev, mt76);
++	int i, err;
++
++	napi_disable(&mdev->tx_napi);
++	tasklet_kill(&mdev->pre_tbtt_tasklet);
++	tasklet_kill(&mdev->tx_tasklet);
++
++	mt76_for_each_q_rx(mdev, i)
++		napi_disable(&mdev->napi[i]);
++
++	mt76x02_dma_reset(dev);
++
++	pci_enable_wake(pdev, pci_choose_state(pdev, state), true);
++	pci_save_state(pdev);
++	err =3D pci_set_power_state(pdev, pci_choose_state(pdev, state));
++	if (err)
++		goto restore;
++
++	return 0;
++
++restore:
++	mt76_for_each_q_rx(mdev, i)
++		napi_enable(&mdev->napi[i]);
++	napi_enable(&mdev->tx_napi);
++
++	return err;
++}
++
++static int __maybe_unused
++mt76x2e_resume(struct pci_dev *pdev)
++{
++	struct mt76_dev *mdev =3D pci_get_drvdata(pdev);
++	int i, err;
++
++	err =3D pci_set_power_state(pdev, PCI_D0);
++	if (err)
++		return err;
++
++	pci_restore_state(pdev);
++
++	mt76_for_each_q_rx(mdev, i) {
++		napi_enable(&mdev->napi[i]);
++		napi_schedule(&mdev->napi[i]);
++	}
++	napi_enable(&mdev->tx_napi);
++	napi_schedule(&mdev->tx_napi);
++
++	return 0;
++}
++
+ MODULE_DEVICE_TABLE(pci, mt76pci_device_table);
+ MODULE_FIRMWARE(MT7662_FIRMWARE);
+ MODULE_FIRMWARE(MT7662_ROM_PATCH);
+@@ -113,6 +167,10 @@ static struct pci_driver mt76pci_driver =3D {
+ 	.id_table	=3D mt76pci_device_table,
+ 	.probe		=3D mt76pci_probe,
+ 	.remove		=3D mt76pci_remove,
++#ifdef CONFIG_PM
++	.suspend	=3D mt76x2e_suspend,
++	.resume		=3D mt76x2e_resume,
++#endif /* CONFIG_PM */
+ };
+=20
+ module_pci_driver(mt76pci_driver);
+--=20
+2.26.2
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
+>=20
+> Thanks.
+>=20
+> --=20
+>   Best regards,
+>     Oleksandr Natalenko (post-factum)
+>     Principal Software Maintenance Engineer
+>=20
+
+--yVhtmJPUSI46BTXb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXutNoAAKCRA6cBh0uS2t
+rGaCAP9seDnh+3I9x7qM0L6z+RmRhKym8Vj5D+al2CY0DHHnMgEAgvTcNsCPFMrh
+Dj6aS0JZ6xV07SQNTlsUmV2eld+m6gc=
+=Cp+H
+-----END PGP SIGNATURE-----
+
+--yVhtmJPUSI46BTXb--
