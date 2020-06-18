@@ -2,170 +2,399 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D762AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABD2220899
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:23:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="aMp7molH";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="C4IKPIV5"
+	by mail.kernel.org (Postfix) with ESMTP id 2F5C7212CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:25:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgFRKW7 (ORCPT
+        id S1726573AbgFRKYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 06:22:59 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:50366 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgFRKWr (ORCPT
+        Thu, 18 Jun 2020 06:24:20 -0400
+Received: from mail-lf1-f43.google.com ([209.85.167.43]:36702 "EHLO
+        mail-lf1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgFRKXn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 06:22:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1592475767; x=1624011767;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=g52g/h8WIgYUC4RwVjymGTrl0sbADB0rD3EBI39XG+c=;
-  b=aMp7molHKI75DBAPntPh1W3CXkVqZRSXFmMnKG4a1eUuRVWMh7/EBQ68
-   RhP76f+u4jhaurY3BSC8xZkg30VGDRoRlhgcYHahPGMnuWPN7rOeHEbrO
-   j2Rf24x8J9bFG80+NMrtVzrl2T0ozyeoimMtMRmeitHH/D4nrS6zy5o1Y
-   rf393OuPqbP8F0Al6zmCzqxK2d8GOl2TFnM9Svrbi/kC4fYkw/lVOKe1g
-   35lvKwaciSncVZi6+W0Lr7v3Np6Gf+shMIf+B3rxznBjMm6XWbj0ds7sf
-   BAQOzFHSkCrBzFG7X5pBvFy1at94FJgDVc7xJ1wKIBBFIfHmZZmkBmly4
-   w==;
-IronPort-SDR: mbNJWiZe4aQ6D3LKWn5+VtqJR7HKVPRRY+5e4bmAzjwcT72kMvN50oHXeow4K1Fy8Zwmj9i0xd
- L7vDXwt9wNEmJBbUd0fudE1UxLtsOqCgP5A9bTP4QyFz93qY7hJkogbN7voCm3C6yaEbpkPQd6
- IQqZm8ZJfFTkgFgYCGigjkdCPf56DPieunxJzLMAixgsteCevrsYXMi7IH2cdfp7CnprASkD0H
- FVeP3m7EQRrdbuaYfrD9aaAjA4v7e+LFRK3NtThHm3KcsBZSVwzOOH+uoxu44JI8qd4uV44ZwE
- ks0=
-X-IronPort-AV: E=Sophos;i="5.73,526,1583164800"; 
-   d="scan'208";a="243266673"
-Received: from mail-bn8nam12lp2174.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.174])
-  by ob1.hgst.iphmx.com with ESMTP; 18 Jun 2020 18:22:42 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GBkIk80QE0EQGFMhnADIl9B85Z94T0Orqh2Zb1Z1aQWKxPXhvzSHSp8XFuqf4AJ9IzXz2Jw3copFYdSCC6ujY/ldryi4J7sGNSCLXKlbTx/XCQwg6MAS8cwLaay2gJOcn0ZHXrdMee6TB33AXBKA5rpmTCknTbJPWeZ4zZgkw9Hzz/u/U1KNHhcuAde/IAuprS4dVg6h65G1N61b9XUsBGHFzlVfaMGvKlkQW87b8C++Xkzez2urFiHFO/R73ti1a41JvkWaYP4QZ08OVUNllq4BpJjQYs8wO1jll8DA4SU/lcm3+lmG4CO0xQT6HLsKSxALFOScr892jfQ+NxmH+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g52g/h8WIgYUC4RwVjymGTrl0sbADB0rD3EBI39XG+c=;
- b=kRkJwxgP9yZzq7wmEzEASXOEKhipUefPR68ZZ1WdZ3PZqQBiY+09ht6ECokzRP79iM0/CP4nJ8I3yIx2+k+R5nbcizP7l6cyd5runs30rLG83fb7N3pmR94Mp9Nfo/nQRJolZdV2ffnD/L7H0wsXPU9uwJ0oWUwVLK2VfyGWVzQaITNAHh3wimgJ/kPELGynQ0Ha8PREGLd/iwrVZNXHA24nSgl4AHua3f/fDsrQWPCw6LCVYUhNmyjKeCaabNQFlfV3QcnkxFExleAHGpbGXIQKnyM3mq3mtluQ+CRFB569ns9QjzmXG7Ad69iIMO0ZeIODPpr3hlv2uErAZsAsBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g52g/h8WIgYUC4RwVjymGTrl0sbADB0rD3EBI39XG+c=;
- b=C4IKPIV5yqGGgLdqV2yS4nlvLwp5cllMsl7Rp8sEh7uIhHD7JRLaKHKH3edif+RNCUr14bfRlZuVMStCwmhTgcdzgFuRcrayUQEV46dBN4pHZujxx9KjHvUGO/fHNy+lw95FnnibPZmhoYGbUv3N8RF+MSb/3I1Y8h2HOtcEUK8=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4717.namprd04.prod.outlook.com (2603:10b6:805:a8::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Thu, 18 Jun
- 2020 10:22:41 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3109.021; Thu, 18 Jun 2020
- 10:22:41 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-Subject: RE: [RFC PATCH v2 4/5] scsi: ufs: L2P map management for HPB read
-Thread-Topic: [RFC PATCH v2 4/5] scsi: ufs: L2P map management for HPB read
-Thread-Index: AQHWQvj3YPr08JZ2QEy1VbmJ7tAyW6jeLfhg
-Date:   Thu, 18 Jun 2020 10:22:41 +0000
-Message-ID: <SN6PR04MB4640B1D4FBDF68A59D993F21FC9B0@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <231786897.01592213402355.JavaMail.epsvc@epcpadp1>
-        <231786897.01592212081335.JavaMail.epsvc@epcpadp2>
-        <336371513.41592205783606.JavaMail.epsvc@epcpadp2>
-        <231786897.01592205482200.JavaMail.epsvc@epcpadp2>
-        <CGME20200615062708epcms2p19a7fbc051bcd5e843c29dcd58fff4210@epcms2p7>
- <231786897.01592214002170.JavaMail.epsvc@epcpadp1>
-In-Reply-To: <231786897.01592214002170.JavaMail.epsvc@epcpadp1>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: samsung.com; dkim=none (message not signed)
- header.d=none;samsung.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1b96efa8-7d09-41ba-ad58-08d81371885c
-x-ms-traffictypediagnostic: SN6PR04MB4717:
-x-microsoft-antispam-prvs: <SN6PR04MB4717719AFDA54F4445714622FC9B0@SN6PR04MB4717.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2150;
-x-forefront-prvs: 0438F90F17
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Maw1dHGzGNonrs0vGZ/B8nDt0aN19qokrulegxtSP6hUfPkwk9Hh7iLAJg8BLCW9e3ChI+XFrFZdDdzVK05sbyZNalzXUlo6kGKKhYXdoPTqR2WR+Sq1rMeDMst+kUzAboQa6Lc9qOBeslEnpzYPTJTLfjH/AQmVYCt+wInQhHEH+Uo0S+pt6Wfjvezy7fFZBS3iKY9dA9LRam6j661BczWJ/d7fhpz5R57n847j9yL3De/v2RWj+R034z2KCzC9yRfTlEkDHg6MwyQfkZVQiW73iC+NRQ8UTSy2EdTnv1RLJMfBZCSAAtaJc5Eb+zWto0Z3txx6d8P7ujCJrjUsx1UPp20Rp+hOIB1z2vPO4ZWiNhmHaVUjcXycSg9I/lYS
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(366004)(346002)(396003)(39860400002)(33656002)(5660300002)(52536014)(7696005)(2906002)(8936002)(7416002)(64756008)(66476007)(26005)(8676002)(66946007)(316002)(76116006)(478600001)(66446008)(66556008)(4326008)(54906003)(6506007)(110136005)(9686003)(55016002)(71200400001)(86362001)(83380400001)(186003)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: lbObWt8CbaN2ive0Na/WShHvr/D0LAvCbUzsc5krbtHdEgi8yAvIb5R9zUNqt7xqL96GMmv3DbALe7g1c52IvJXzoX9z89sYXJQdrYSj9UVaIvCuTTafsXjfnoEh6D04WmHeAefEGVJfxSKl6tqLSzg6R/GgjYsMtf0wxYPaM+NsxwbRLOlWagcUX+cNqKQ+HHJ8unZK86lDEiCJlEIYIszw2/cy/cL1ECIFhZ3AR7n3mgqHJTHRO8ouSzFzEOnIkTQ3bR9S2ztJGSyQzEKVVp7/sNgp/b12C1sPa+mUCPM+uZhraVm7t55sm+SPCFUWJd7wNM5UyeiiD0XeoDEGwLTxpu6xykrfubrIRPcTUDrbzc1gOrFCiegjT39uvdFLwe2+BbzmBknLCNF+kSbmmfyvUY8Xy9ghrZZQoaPZUg30PPTIyAgFpvM2kdkFTYtrq7WY00i0toBb3LX0ZF377lh1lzXN1wPZZgBcebsAVBqkSXhw3pcCLj39ZB1V+eRj
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 18 Jun 2020 06:23:43 -0400
+Received: by mail-lf1-f43.google.com with SMTP id c21so3153706lfb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 03:23:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ubgAniuLZwUefX9aPUKilP2kkhN35Iuff9mjSqyql7k=;
+        b=Ub3QDkEkHyUNMF5dun93zgcGKovmInoZROM5J3YX6oz40nQiXT8AM9HZm1jZf/mosl
+         1SdOqCoB+CvKFwzGbwltHakO8gN038P+0nB+WQZY59lvpn0Eh5zR5OzsKZtipfSXGblK
+         VvYZjUbvd+g50OZ2TmRqLvWfUtfMOmJZ/wu5PEeG3G5TA8/ZodFrN2ho3i3Jaayux/Jx
+         Bd7KD8hv+HJcf5eXem9co0SG1G0ZvUrtZIzxkVIYnzZYglK2V/pO1WuAv47nfyryXbIZ
+         kN8QaX8sfRSSE5I/c/wXhBiglzOhCZ1BTM9gfIgDBrjs+rvRN5UNLKih0LxGwbnR6U1h
+         jdVg==
+X-Gm-Message-State: AOAM533lzOVAGM1CWtdPCvvURz9vduevwMUnQ1fqPDUPdQhlIUulCuyq
+        WCtgQxGDXljkcW8zPno9TAw=
+X-Google-Smtp-Source: ABdhPJyHZwVg/wsvx7Lo95dRSERAP076Soy/X4/VnowSrs0AGcQdBE10aNp54yu2cNcAx4SXqni7TA==
+X-Received: by 2002:a05:6512:308e:: with SMTP id z14mr2000619lfd.29.1592475819472;
+        Thu, 18 Jun 2020 03:23:39 -0700 (PDT)
+Received: from localhost.localdomain ([213.87.137.195])
+        by smtp.googlemail.com with ESMTPSA id z13sm657226lfd.7.2020.06.18.03.23.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 03:23:38 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A . R . Silva" <garsilva@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH v2] coccinelle: misc: add array_size_dup script to detect missed overlow checks
+Date:   Thu, 18 Jun 2020 13:23:08 +0300
+Message-Id: <20200618102308.7305-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200615102045.4558-1-efremov@linux.com>
+References: <20200615102045.4558-1-efremov@linux.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b96efa8-7d09-41ba-ad58-08d81371885c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 10:22:41.0563
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UV8IcBjvYacpBrf7ig3LmmtQd4hvtSEzUnzA6xkiTKfva/2RRYXib8tQblWS3f2kDJY1VV90cDaFEeZKHaIOng==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4717
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+ICtzdGF0aWMgdm9pZCB1ZnNocGJfcnVuX2FjdGl2ZV9zdWJyZWdpb25fbGlzdChzdHJ1Y3Qg
-dWZzaHBiX2x1ICpocGIpDQo+ICt7DQo+ICsgICAgICAgc3RydWN0IHVmc2hwYl9yZWdpb24gKnJn
-bjsNCj4gKyAgICAgICBzdHJ1Y3QgdWZzaHBiX3N1YnJlZ2lvbiAqc3JnbjsNCj4gKyAgICAgICBz
-dHJ1Y3QgdWZzaHBiX21hcF9jdHggKm1jdHg7DQptY3R4ICBkb2Vzbid0IHJlYWxseSBkbyBhbnl0
-aGluZyBoZXJlDQoNCj4gKyAgICAgICB1bnNpZ25lZCBsb25nIGZsYWdzOw0KPiArICAgICAgIGlu
-dCByZXQgPSAwOw0KPiArDQo+ICsgICAgICAgc3Bpbl9sb2NrX2lycXNhdmUoJmhwYi0+cnNwX2xp
-c3RfbG9jaywgZmxhZ3MpOw0KPiArICAgICAgIHdoaWxlICgoc3JnbiA9IGxpc3RfZmlyc3RfZW50
-cnlfb3JfbnVsbCgmaHBiLT5saF9hY3Rfc3JnbiwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IHVmc2hwYl9zdWJyZWdpb24sDQo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxpc3RfYWN0X3NyZ24p
-KSkgew0KPiArICAgICAgICAgICAgICAgbGlzdF9kZWxfaW5pdCgmc3Jnbi0+bGlzdF9hY3Rfc3Jn
-bik7DQo+ICsgICAgICAgICAgICAgICBzcGluX3VubG9ja19pcnFyZXN0b3JlKCZocGItPnJzcF9s
-aXN0X2xvY2ssIGZsYWdzKTsNCj4gKw0KPiArICAgICAgICAgICAgICAgcmduID0gaHBiLT5yZ25f
-dGJsICsgc3Jnbi0+cmduX2lkeDsNCj4gKyAgICAgICAgICAgICAgIG1jdHggPSBOVUxMOw0KPiAr
-ICAgICAgICAgICAgICAgcmV0ID0gdWZzaHBiX2FkZF9yZWdpb24oaHBiLCByZ24pOw0KPiArICAg
-ICAgICAgICAgICAgaWYgKHJldCkNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+
-ICsNCj4gKyAgICAgICAgICAgICAgIHJldCA9IHVmc2hwYl9pc3N1ZV9tYXBfcmVxKGhwYiwgcmdu
-LCBzcmduKTsNCj4gKyAgICAgICAgICAgICAgIGlmIChyZXQpIHsNCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgZGV2X25vdGljZSgmaHBiLT5ocGJfbHVfZGV2LA0KPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgImlzc3VlIG1hcF9yZXEgZmFpbGVkLiByZXQgJWQsIHJlZ2lvbiAlZCAtICVk
-XG4iLA0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0LCByZ24tPnJnbl9pZHgsIHNy
-Z24tPnNyZ25faWR4KTsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+ICsgICAg
-ICAgICAgICAgICB9DQo+ICsgICAgICAgICAgICAgICBzcGluX2xvY2tfaXJxc2F2ZSgmaHBiLT5y
-c3BfbGlzdF9sb2NrLCBmbGFncyk7DQo+ICsgICAgICAgfQ0KPiArDQo+ICsgICAgICAgaWYgKHJl
-dCkgew0KPiArICAgICAgICAgICAgICAgZGV2X25vdGljZSgmaHBiLT5ocGJfbHVfZGV2LCAicmVn
-aW9uICVkIC0gJWQsIHdpbGwgcmV0cnlcbiIsDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-IHJnbi0+cmduX2lkeCwgc3Jnbi0+c3Jnbl9pZHgpOw0KPiArICAgICAgICAgICAgICAgc3Bpbl9s
-b2NrX2lycXNhdmUoJmhwYi0+cnNwX2xpc3RfbG9jaywgZmxhZ3MpOw0KPiArICAgICAgICAgICAg
-ICAgdWZzaHBiX2FkZF9hY3RpdmVfbGlzdChocGIsIHJnbiwgc3Jnbik7DQo+ICsgICAgICAgfQ0K
-PiArICAgICAgIHNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmhwYi0+cnNwX2xpc3RfbG9jaywgZmxh
-Z3MpOw0KPiArfQ0K
+Detect an opencoded expression that is used before or after
+array_size()/array3_size()/struct_size() to compute the same size.
+
+Cc: Gustavo A. R. Silva <garsilva@embeddedor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+Changes in v2:
+ - python rules moved next to SmPL patterns
+ - assignment operator used
+ - struct_size patterns fixed to check only E3, since
+   E1, E2 are sizeofs of a structure and a member
+   of a structure
+
+ scripts/coccinelle/misc/array_size_dup.cocci | 309 +++++++++++++++++++
+ 1 file changed, 309 insertions(+)
+ create mode 100644 scripts/coccinelle/misc/array_size_dup.cocci
+
+diff --git a/scripts/coccinelle/misc/array_size_dup.cocci b/scripts/coccinelle/misc/array_size_dup.cocci
+new file mode 100644
+index 000000000000..c5214310285c
+--- /dev/null
++++ b/scripts/coccinelle/misc/array_size_dup.cocci
+@@ -0,0 +1,309 @@
++// SPDX-License-Identifier: GPL-2.0-only
++///
++/// Check for array_size(), array3_size(), struct_size() duplicates.
++/// Three types of patterns for these functions:
++///  1. An opencoded expression is used before array_size() to compute the same size
++///  2. An opencoded expression is used after array_size() to compute the same size
++///  3. Consecutive calls of array_size() with the same values
++/// From security point of view only first case is relevant. These functions
++/// perform arithmetic overflow check. Thus, if we use an opencoded expression
++/// before a call to the *_size() function we can miss an overflow.
++///
++// Confidence: High
++// Copyright: (C) 2020 Denis Efremov ISPRAS
++// Options: --no-includes --include-headers --no-loops
++
++virtual context
++virtual report
++virtual org
++
++@as@
++expression E1, E2;
++@@
++
++array_size(E1, E2)
++
++@as_next@
++expression subE1 <= as.E1;
++expression subE2 <= as.E2;
++expression as.E1, as.E2, E3;
++assignment operator aop;
++position p1, p2;
++@@
++
++* E1 * E2@p1
++  ... when != \(E1\|E2\|subE1\|subE2\) aop E3
++      when != \(&E1\|&E2\|&subE1\|&subE2\)
++* array_size(E1, E2)@p2
++
++@script:python depends on report@
++p1 << as_next.p1;
++p2 << as_next.p2;
++@@
++
++coccilib.report.print_report(p1[0],
++f"WARNING: array_size is used down the code (line {p2[0].line}) to compute \
++the same size")
++
++@script:python depends on org@
++p1 << as_next.p1;
++p2 << as_next.p2;
++@@
++
++coccilib.org.print_todo(p1[0],
++f"WARNING: array_size is used down the code (line {p2[0].line}) to compute \
++the same size")
++
++@as_prev@
++expression subE1 <= as.E1;
++expression subE2 <= as.E2;
++expression as.E1, as.E2, E3;
++assignment operator aop;
++position p1, p2;
++@@
++
++* array_size(E1, E2)@p1
++  ... when != \(E1\|E2\|subE1\|subE2\) aop E3
++      when != \(&E1\|&E2\|&subE1\|&subE2\)
++* E1 * E2@p2
++
++@script:python depends on report@
++p1 << as_prev.p1;
++p2 << as_prev.p2;
++@@
++
++coccilib.report.print_report(p2[0],
++f"WARNING: array_size is already used (line {p1[0].line}) to compute \
++the same size")
++
++@script:python depends on org@
++p1 << as_prev.p1;
++p2 << as_prev.p2;
++@@
++
++coccilib.org.print_todo(p2[0],
++f"WARNING: array_size is already used (line {p1[0].line}) to compute \
++the same size")
++
++@as_dup@
++expression subE1 <= as.E1;
++expression subE2 <= as.E2;
++expression as.E1, as.E2, E3;
++assignment operator aop;
++position p1, p2;
++@@
++
++* array_size(E1, E2)@p1
++  ... when != \(E1\|E2\|subE1\|subE2\) aop E3
++      when != \(&E1\|&E2\|&subE1\|&subE2\)
++* array_size(E1, E2)@p2
++
++@script:python depends on report@
++p1 << as_dup.p1;
++p2 << as_dup.p2;
++@@
++
++coccilib.report.print_report(p2[0],
++f"WARNING: same array_size (line {p1[0].line})")
++
++@script:python depends on org@
++p1 << as_dup.p1;
++p2 << as_dup.p2;
++@@
++
++coccilib.org.print_todo(p2[0],
++f"WARNING: same array_size (line {p1[0].line})")
++
++@as3@
++expression E1, E2, E3;
++@@
++
++array3_size(E1, E2, E3)
++
++@as3_next@
++expression subE1 <= as3.E1;
++expression subE2 <= as3.E2;
++expression subE3 <= as3.E3;
++expression as3.E1, as3.E2, as3.E3, E4;
++assignment operator aop;
++position p1, p2;
++@@
++
++* E1 * E2 * E3@p1
++  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\) aop E4
++      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
++* array3_size(E1, E2, E3)@p2
++
++@script:python depends on report@
++p1 << as3_next.p1;
++p2 << as3_next.p2;
++@@
++
++coccilib.report.print_report(p1[0],
++f"WARNING: array3_size is used down the code (line {p2[0].line}) to compute \
++the same size")
++
++@script:python depends on org@
++p1 << as3_next.p1;
++p2 << as3_next.p2;
++@@
++
++coccilib.org.print_todo(p1[0],
++f"WARNING: array3_size is used down the code (line {p2[0].line}) to compute \
++the same size")
++
++@as3_prev@
++expression subE1 <= as3.E1;
++expression subE2 <= as3.E2;
++expression subE3 <= as3.E3;
++expression as3.E1, as3.E2, as3.E3, E4;
++assignment operator aop;
++position p1, p2;
++@@
++
++* array3_size(E1, E2, E3)@p1
++  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\) aop E4
++      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
++* E1 * E2 * E3@p2
++
++@script:python depends on report@
++p1 << as3_prev.p1;
++p2 << as3_prev.p2;
++@@
++
++coccilib.report.print_report(p2[0],
++f"WARNING: array3_size is already used (line {p1[0].line}) to compute \
++the same size")
++
++@script:python depends on org@
++p1 << as3_prev.p1;
++p2 << as3_prev.p2;
++@@
++
++coccilib.org.print_todo(p2[0],
++f"WARNING: array3_size is already used (line {p1[0].line}) to compute \
++the same size")
++
++@as3_dup@
++expression subE1 <= as3.E1;
++expression subE2 <= as3.E2;
++expression subE3 <= as3.E3;
++expression as3.E1, as3.E2, as3.E3, E4;
++assignment operator aop;
++position p1, p2;
++@@
++
++* array3_size(E1, E2, E3)@p1
++  ... when != \(E1\|E2\|E3\|subE1\|subE2\|subE3\) aop E4
++      when != \(&E1\|&E2\|&E3\|&subE1\|&subE2\|&subE3\)
++* array3_size(E1, E2, E3)@p2
++
++@script:python depends on report@
++p1 << as3_dup.p1;
++p2 << as3_dup.p2;
++@@
++
++coccilib.report.print_report(p2[0],
++f"WARNING: same array3_size (line {p1[0].line})")
++
++@script:python depends on org@
++p1 << as3_dup.p1;
++p2 << as3_dup.p2;
++@@
++
++coccilib.org.print_todo(p2[0],
++f"WARNING: same array3_size (line {p1[0].line})")
++
++@ss@
++expression E1, E2, E3;
++@@
++
++struct_size(E1, E2, E3)
++
++@ss_next@
++expression subE3 <= ss.E3;
++expression ss.E1, ss.E2, ss.E3, E4;
++assignment operator aop;
++position p1, p2;
++@@
++
++* E1 * E2 + E3@p1
++  ... when != \(E3\|subE3\) aop E4
++      when != \(&E3\|&subE3\)
++* struct_size(E1, E2, E3)@p2
++
++@script:python depends on report@
++p1 << ss_next.p1;
++p2 << ss_next.p2;
++@@
++
++coccilib.report.print_report(p1[0],
++f"WARNING: struct_size is used down the code (line {p2[0].line}) to compute \
++the same size")
++
++@script:python depends on org@
++p1 << ss_next.p1;
++p2 << ss_next.p2;
++@@
++
++coccilib.org.print_todo(p1[0],
++f"WARNING: struct_size is used down the code (line {p2[0].line}) to compute \
++the same size")
++
++@ss_prev@
++expression subE3 <= ss.E3;
++expression ss.E1, ss.E2, ss.E3, E4;
++assignment operator aop;
++position p1, p2;
++@@
++
++* struct_size(E1, E2, E3)@p1
++  ... when != \(E3\|subE3\) aop E4
++      when != \(&E3\|&subE3\)
++* E1 * E2 + E3@p2
++
++@script:python depends on report@
++p1 << ss_prev.p1;
++p2 << ss_prev.p2;
++@@
++
++coccilib.report.print_report(p2[0],
++f"WARNING: struct_size is already used (line {p1[0].line}) to compute \
++the same size")
++
++@script:python depends on org@
++p1 << ss_prev.p1;
++p2 << ss_prev.p2;
++@@
++
++coccilib.org.print_todo(p2[0],
++f"WARNING: struct_size is already used (line {p1[0].line}) to compute \
++the same size")
++
++@ss_dup@
++expression subE3 <= ss.E3;
++expression ss.E1, ss.E2, ss.E3, E4;
++assignment operator aop;
++position p1, p2;
++@@
++
++* struct_size(E1, E2, E3)@p1
++  ... when != \(E3\|subE3\) aop E4
++      when != \(&E3\|&subE3\)
++* struct_size(E1, E2, E3)@p2
++
++@script:python depends on report@
++p1 << ss_dup.p1;
++p2 << ss_dup.p2;
++@@
++
++coccilib.report.print_report(p2[0],
++f"WARNING: same struct_size (line {p1[0].line})")
++
++@script:python depends on org@
++p1 << ss_dup.p1;
++p2 << ss_dup.p2;
++@@
++
++coccilib.org.print_todo(p2[0],
++f"WARNING: same struct_size (line {p1[0].line})")
+-- 
+2.26.2
+
