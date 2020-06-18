@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C42722260
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB1422260
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444069;
-	bh=V3xSI5/zZpF0MVwHKDI/qCulDykZwcknnUze45wcd+8=;
+	s=default; t=1592444071;
+	bh=dHMeiW8tPlRhWaQxoSQzBYcWAAeYiXVhE8CdsSwJTPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vKmLHKzjFPXnSuaz8nlXQ8MuXnQUPMMQejbSkXp34TKMQJzYuX9cbg4NLr0lazkrc
-	 sYHheRjX5kgPN+RBl9nY4WU6Mu/aUwawyh0PvhImsxVaJlCItsaq4EogYAnRhrojhj
-	 ddCNNHWZ6lfk9fpbi57duHRIFaQLvrM0WTDMd4qs=
+	b=WTFzUTHtvK7MBeDyNe1K4xJjJ9aIvO//qnbLiIK7Fqy/+iivCS8TNKBpHc3whnpBz
+	 Cibq/DJ9Kka29yS8QoiwcgNrLcTX8z6UZ5Vq7yIJuJIuCu8MmGJ7sXbfhFP2IfH0DS
+	 OBdSK25E7O0ZgYvQbL19sn8thweIw35a0Nn62jTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732635AbgFRBeB (ORCPT
+        id S1733015AbgFRBd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41754 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:33:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731647AbgFRBbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:31:12 -0400
+        id S1732022AbgFRBbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:31:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D5CA22257;
-        Thu, 18 Jun 2020 01:31:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A8CC20CC7;
+        Thu, 18 Jun 2020 01:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443872;
-        bh=V3xSI5/zZpF0MVwHKDI/qCulDykZwcknnUze45wcd+8=;
+        s=default; t=1592443869;
+        bh=dHMeiW8tPlRhWaQxoSQzBYcWAAeYiXVhE8CdsSwJTPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z1qVjGZkYCfcOGkB1VhzIwAO6AuMSJuFUiFCIUxVlh6u3iOE8RJ0h5jDkkdsMZyyP
-         Eqw87AyFMcD505rzal/FWVUuKMuHJUmmQrYNZu0oZuThyFrqplzxbNWqjga5Ds8DAV
-         MgRaN68Idb+DSrTX4noFj4Q1aZaJ7RUB+7R99b60=
+        b=XNjes2JYfbq1gufpbwKNiKdrarbomJbKLQKh5CCEyJKRdFEL2uxaQBVRUJ0NpPhZr
+         eznLoY1BS2y5FyWe0uuGIuBZANuTnS0xZlz71IOao1rTOL4A+NiFuRFT3J6LfEyKTb
+         B1Xvf4J6qiyQqwdV26z07TybPkxPHHQ6i0Wi+7W0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 52/60] ASoC: fsl_asrc_dma: Fix dma_chan leak when config DMA channel failed
-Date:   Wed, 17 Jun 2020 21:29:56 -0400
-Message-Id: <20200618013004.610532-52-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 50/60] vfio/pci: fix memory leaks of eventfd ctx
+Date:   Wed, 17 Jun 2020 21:29:54 -0400
+Message-Id: <20200618013004.610532-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
 References: <20200618013004.610532-1-sashal@kernel.org>
@@ -61,44 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 36124fb19f1ae68a500cd76a76d40c6e81bee346 ]
+[ Upstream commit 1518ac272e789cae8c555d69951b032a275b7602 ]
 
-fsl_asrc_dma_hw_params() invokes dma_request_channel() or
-fsl_asrc_get_dma_channel(), which returns a reference of the specified
-dma_chan object to "pair->dma_chan[dir]" with increased refcnt.
+Finished a qemu-kvm (-device vfio-pci,host=0001:01:00.0) triggers a few
+memory leaks after a while because vfio_pci_set_ctx_trigger_single()
+calls eventfd_ctx_fdget() without the matching eventfd_ctx_put() later.
+Fix it by calling eventfd_ctx_put() for those memory in
+vfio_pci_release() before vfio_device_release().
 
-The reference counting issue happens in one exception handling path of
-fsl_asrc_dma_hw_params(). When config DMA channel failed for Back-End,
-the function forgets to decrease the refcnt increased by
-dma_request_channel() or fsl_asrc_get_dma_channel(), causing a refcnt
-leak.
+unreferenced object 0xebff008981cc2b00 (size 128):
+  comm "qemu-kvm", pid 4043, jiffies 4294994816 (age 9796.310s)
+  hex dump (first 32 bytes):
+    01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+    ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+  backtrace:
+    [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+    [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+    [<000000005fcec025>] do_eventfd+0x54/0x1ac
+    [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+    [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+    [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+    [<00000000d495ef94>] el0_sync+0x164/0x180
+unreferenced object 0x29ff008981cc4180 (size 128):
+  comm "qemu-kvm", pid 4043, jiffies 4294994818 (age 9796.290s)
+  hex dump (first 32 bytes):
+    01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+    ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+  backtrace:
+    [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+    [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+    [<000000005fcec025>] do_eventfd+0x54/0x1ac
+    [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+    [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+    [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+    [<00000000d495ef94>] el0_sync+0x164/0x180
 
-Fix this issue by calling dma_release_channel() when config DMA channel
-failed.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Link: https://lore.kernel.org/r/1590415966-52416-1-git-send-email-xiyuyang19@fudan.edu.cn
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_asrc_dma.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/vfio/pci/vfio_pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-index ffc000bc1f15..56a873ba08e4 100644
---- a/sound/soc/fsl/fsl_asrc_dma.c
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -243,6 +243,7 @@ static int fsl_asrc_dma_hw_params(struct snd_pcm_substream *substream,
- 	ret = dmaengine_slave_config(pair->dma_chan[dir], &config_be);
- 	if (ret) {
- 		dev_err(dev, "failed to config DMA channel for Back-End\n");
-+		dma_release_channel(pair->dma_chan[dir]);
- 		return ret;
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 7a82735d5308..ab765770e8dd 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -255,6 +255,10 @@ static void vfio_pci_release(void *device_data)
+ 	if (!(--vdev->refcnt)) {
+ 		vfio_spapr_pci_eeh_release(vdev->pdev);
+ 		vfio_pci_disable(vdev);
++		if (vdev->err_trigger)
++			eventfd_ctx_put(vdev->err_trigger);
++		if (vdev->req_trigger)
++			eventfd_ctx_put(vdev->req_trigger);
  	}
  
+ 	mutex_unlock(&driver_lock);
 -- 
 2.25.1
 
