@@ -7,59 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7018C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4493CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96E5020853
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2376A20853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446322;
-	bh=p3Hnb+vOJEjS2tVwNF7F5TKw8Ai9OL9Llz0cByj2LTM=;
+	s=default; t=1592446326;
+	bh=2D3kzws+KYsBXtr3Gt9Fxj/LRF9q8n+ybKuM2O2Gmxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QmoSrXlR2Z6da0pUcIWP1V6U47cHASiLfG47Ufek5O+k068NiDuG6Dp3EfWNTwMhs
-	 tZbTwn8D2FFA3um+PzIE3Yek6lKHhP4jCZA1FMDQiKVjVveh7Mj9puGfvNd0mdo+Pr
-	 7y2i+zmAmCcKskW9vSEguJxzHXUP++8PpyMq1UoQ=
+	b=Oz82goH4XHRBmCgtdCsV9hQulFiWOljlM/kbpgkQSZSD+eEtCVc8SawaRE5Zj0Z3J
+	 Cjva4llWRkp4ltMxuiDO6Eogzzep0U14Ylzv+WTrf+yJLSHus165Ee8iKi1JQYlOS3
+	 4IeFQIX/3pW8fzPDnGjIiRA1gzh1ndxZP8YMeMZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732535AbgFRCMB (ORCPT
+        id S1730509AbgFRBV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:12:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54054 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:21:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730513AbgFRBVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:30 -0400
+        id S1729862AbgFRBSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:18:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AD2620B1F;
-        Thu, 18 Jun 2020 01:21:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B063206F1;
+        Thu, 18 Jun 2020 01:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443290;
-        bh=p3Hnb+vOJEjS2tVwNF7F5TKw8Ai9OL9Llz0cByj2LTM=;
+        s=default; t=1592443080;
+        bh=2D3kzws+KYsBXtr3Gt9Fxj/LRF9q8n+ybKuM2O2Gmxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nyavEOMThvscfBK4cX1kSa2EbSkZb9VSkFTLqQNWzyIPiIdrx+AvOkJWEOaL49NOz
-         IeDx4kejyAAvZ2F73KxNdNqu2fBQhg6EGXkvCGM+1Qb1l893qtwkKGi8yxrM8bEmyv
-         lOsHTmogEAbDzrVAy9lCoqdeqkrSV0UpwGuDKBQQ=
+        b=JwKxBux1K36WCMOs9+PLFhe/dd9MqHMl+C3aBVq9jxgXR8lCnSbM/OBFMaHR0Oy2U
+         iO9M0HFXdfHPhLmBPVuWVRlJ3bi3Rty9gjjcpyAnbbB9tN8uEf11CQeO3+QUER/TAu
+         8Sa0xH5cOqNtwI+nZrogbb0/vVpuNdI3BZIcnV6k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ram Pai <linuxram@us.ibm.com>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "Desnes A. Nunes do Rosario" <desnesn@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 231/266] selftests/vm/pkeys: fix alloc_random_pkey() to make it really random
-Date:   Wed, 17 Jun 2020 21:15:56 -0400
-Message-Id: <20200618011631.604574-231-sashal@kernel.org>
+Cc:     Paulo Alcantara <pc@cjr.nz>, Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 5.4 066/266] cifs: set up next DFS target before generic_ip_connect()
+Date:   Wed, 17 Jun 2020 21:13:11 -0400
+Message-Id: <20200618011631.604574-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -72,58 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ram Pai <linuxram@us.ibm.com>
+From: Paulo Alcantara <pc@cjr.nz>
 
-[ Upstream commit 6e373263ce07eeaa6410843179535fbdf561fc31 ]
+[ Upstream commit aaa3aef34d3ab9499a5c7633823429f7a24e6dff ]
 
-alloc_random_pkey() was allocating the same pkey every time.  Not all
-pkeys were geting tested.  This fixes it.
+If we mount a very specific DFS link
 
-Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Dave Hansen <dave.hansen@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: "Desnes A. Nunes do Rosario" <desnesn@linux.vnet.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Michal Suchanek <msuchanek@suse.de>
-Cc: Shuah Khan <shuah@kernel.org>
-Link: http://lkml.kernel.org/r/0162f55816d4e783a0d6e49e554d0ab9a3c9a23b.1585646528.git.sandipan@linux.ibm.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+    \\FS0.FOO.COM\dfs\link -> \FS0\share1, \FS1\share2
+
+where its target list contains NB names ("FS0" & "FS1") rather than
+FQDN ones ("FS0.FOO.COM" & "FS1.FOO.COM"), we end up connecting to
+\FOO\share1 but server->hostname will have "FOO.COM".  The reason is
+because both "FS0" and "FS0.FOO.COM" resolve to same IP address and
+they share same TCP server connection, but "FS0.FOO.COM" was the first
+hostname set -- which is OK.
+
+However, if the echo thread timeouts and we still have a good
+connection to "FS0", in cifs_reconnect()
+
+    rc = generic_ip_connect(server) -> success
+    if (rc) {
+            ...
+            reconn_inval_dfs_target(server, cifs_sb, &tgt_list,
+	                            &tgt_it);
+            ...
+     }
+     ...
+
+it successfully reconnects to "FS0" server but does not set up next
+DFS target - which should be the same target server "\FS0\share1" -
+and server->hostname remains set to "FS0.FOO.COM" rather than "FS0",
+as reconn_inval_dfs_target() would have it set to "FS0" if called
+earlier.
+
+Finally, in __smb2_reconnect(), the reconnect of tcons would fail
+because tcon->ses->server->hostname (FS0.FOO.COM) does not match DFS
+target's hostname (FS0).
+
+Fix that by calling reconn_inval_dfs_target() before
+generic_ip_connect() so server->hostname will get updated correctly
+prior to reconnecting its tcons in __smb2_reconnect().
+
+With "cifs: handle hostnames that resolve to same ip in failover"
+patch
+
+    - The above problem would not occur.
+    - We could save an DNS query to find out that they both resolve to
+      the same ip address.
+
+Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/x86/protection_keys.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/cifs/connect.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tools/testing/selftests/x86/protection_keys.c b/tools/testing/selftests/x86/protection_keys.c
-index 480995bceefa..47191af46617 100644
---- a/tools/testing/selftests/x86/protection_keys.c
-+++ b/tools/testing/selftests/x86/protection_keys.c
-@@ -24,6 +24,7 @@
- #define _GNU_SOURCE
- #include <errno.h>
- #include <linux/futex.h>
-+#include <time.h>
- #include <sys/time.h>
- #include <sys/syscall.h>
- #include <string.h>
-@@ -612,10 +613,10 @@ int alloc_random_pkey(void)
- 	int nr_alloced = 0;
- 	int random_index;
- 	memset(alloced_pkeys, 0, sizeof(alloced_pkeys));
-+	srand((unsigned int)time(NULL));
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 721b2560caa7..947c4aad5d6a 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -614,26 +614,26 @@ cifs_reconnect(struct TCP_Server_Info *server)
+ 		try_to_freeze();
  
- 	/* allocate every possible key and make a note of which ones we got */
- 	max_nr_pkey_allocs = NR_PKEYS;
--	max_nr_pkey_allocs = 1;
- 	for (i = 0; i < max_nr_pkey_allocs; i++) {
- 		int new_pkey = alloc_pkey();
- 		if (new_pkey < 0)
+ 		mutex_lock(&server->srv_mutex);
++#ifdef CONFIG_CIFS_DFS_UPCALL
+ 		/*
+ 		 * Set up next DFS target server (if any) for reconnect. If DFS
+ 		 * feature is disabled, then we will retry last server we
+ 		 * connected to before.
+ 		 */
++		reconn_inval_dfs_target(server, cifs_sb, &tgt_list, &tgt_it);
++#endif
++		rc = reconn_set_ipaddr(server);
++		if (rc) {
++			cifs_dbg(FYI, "%s: failed to resolve hostname: %d\n",
++				 __func__, rc);
++		}
++
+ 		if (cifs_rdma_enabled(server))
+ 			rc = smbd_reconnect(server);
+ 		else
+ 			rc = generic_ip_connect(server);
+ 		if (rc) {
+ 			cifs_dbg(FYI, "reconnect error %d\n", rc);
+-#ifdef CONFIG_CIFS_DFS_UPCALL
+-			reconn_inval_dfs_target(server, cifs_sb, &tgt_list,
+-						&tgt_it);
+-#endif
+-			rc = reconn_set_ipaddr(server);
+-			if (rc) {
+-				cifs_dbg(FYI, "%s: failed to resolve hostname: %d\n",
+-					 __func__, rc);
+-			}
+ 			mutex_unlock(&server->srv_mutex);
+ 			msleep(3000);
+ 		} else {
 -- 
 2.25.1
 
