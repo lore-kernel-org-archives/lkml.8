@@ -2,129 +2,112 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B0BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8260204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B602204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:06:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aB8ub7BN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uKqv+S2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731310AbgFRPGJ (ORCPT
+        id S1731332AbgFRPGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:06:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60854 "EHLO
+        Thu, 18 Jun 2020 11:06:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgFRPGI (ORCPT
+        with ESMTP id S1730950AbgFRPGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:06:08 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233FFC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:06:08 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id n22so1509826vkm.7
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:06:08 -0700 (PDT)
+        Thu, 18 Jun 2020 11:06:12 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 877AEC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:06:12 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id n6so4796602otl.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:06:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Uhyo0sKph8oAx2mIyvhHF5US4adK0E3GfKdnIj29E9Y=;
-        b=aB8ub7BN1xbigSK9olQdwudzkwJ1S2Yyrfdib2JJjs9mSUrmcIBMO2frrAcBiZHX7l
-         4L9kXEoi3EWaFw233GFFuBhCKCauoatr3Dh0Zel+L6LuxU0GkTw8Fz5FrXpPncLbU1ap
-         Wjgam1IaQoIbFXWShumV1iaHOZseVhcJ8qLaQ=
+        bh=l2w5iTdi6pjAzijl7Bc7YhZ6+y+qiHcAmJvuLO19co4=;
+        b=uKqv+S2FuImmiuJOy8hZFJRZW0IbmUHdc3pzKLWsElMRzEIfB8Dmat6FhfQHbQDXMV
+         zaNY62+U/oXQonZrN9Y9e20vfNRQuYJEKPpMiTvoBq7VCTtoebGjebK0ZDeH4W55Wmd2
+         sZ40DQcu7wpBiE+ejR8UN/nlwkzMkpv3AuXt0DcSuQQ9nq3xfgnS018C9wdO8vkmT39c
+         1a9Hp0pZZi0h+cmXA1W/NhPASOUS8kRtKWetnoLN2fqtGigyg3O9qb/hw8D1XkBWtyvC
+         BswPOGNAU2Sy5tWTbp28S0VaW7wlKuN1h2Tz+FYM45G4KATczAU5h4YNKFuRehHgdEWo
+         e7yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Uhyo0sKph8oAx2mIyvhHF5US4adK0E3GfKdnIj29E9Y=;
-        b=UjIWj9r7KO2rMJkVHDXS5PSvJ4P34SjLGHmaPVUNOUPwDDZ0d/xysmGnwmQ84IrHlG
-         VOoVF7Dz3pvrAkXzDwyl2h151T21qbwid5NyapaCdodTyI91wTeBzGzdENGxoIqQEpw9
-         nCCw6DtpI4ruhWu2q7fuOm8NNVD3VfpYRQI4azjeRV1n+QMSmzjcTqAhNFklA5LNCm1z
-         rjD5jl+Dtxko81rDIWGtqeWwPLoho2ygdxruEMIYCmNDmfCgH7rm4HT8Ef3oJ/0CBNIm
-         aLMHzcvZ6iLb0CShmCdsCJ1SYZZ+y4K8USNHbc8ej8E/lyfY+Wcu8hCZtLzRz+b5mqo8
-         y1Xg==
-X-Gm-Message-State: AOAM530zTqU0v+U0sQoYoGng6UGBV3+9nQnOwbuSqz1NCvcnkJNNVl0z
-        e4l+50fWMRk0VLZN4fDMkwdChKvpjoU=
-X-Google-Smtp-Source: ABdhPJwQotPmEPLNgCD12BohWZyNgp7TQAeoq2Mwj5j7N82gkg1cKH8Za43OMXFuU9sDT7F9rRpAeQ==
-X-Received: by 2002:a1f:ea82:: with SMTP id i124mr3600394vkh.62.1592492766914;
-        Thu, 18 Jun 2020 08:06:06 -0700 (PDT)
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
-        by smtp.gmail.com with ESMTPSA id r139sm356296vkr.20.2020.06.18.08.06.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 08:06:06 -0700 (PDT)
-Received: by mail-vk1-f173.google.com with SMTP id e1so1513631vkd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:06:06 -0700 (PDT)
-X-Received: by 2002:ac5:ce86:: with SMTP id 6mr3726475vke.75.1592492765249;
- Thu, 18 Jun 2020 08:06:05 -0700 (PDT)
+        bh=l2w5iTdi6pjAzijl7Bc7YhZ6+y+qiHcAmJvuLO19co4=;
+        b=biGD3XBYzjusR4fd3dRl9djWLSCuE3hRilLXmQemEnRhaltQhR453yx3x2qHZimyHs
+         8zpOzo24x70BER1yscRxzi8TDYjSGvnyu4/1uampTq9YBgr80soGLqUfb790unZySdrF
+         BRzoZwjyI8uO09uXlW3rU1l+uutsCoKK3QIKIRcVdbz02BCvyCg9gaeOEDoSXAHD6FmH
+         sv0av2Uunlvx0sDze/utuooKoC5+CR/62DdLMQM2/gqyQt6ANebJ+Y5eStkmk0bNv55o
+         jQkThaDZCqISW4Q9IuLxfziBSZi+45kitnuUUHNdqtEsFUuZVVtXNQCd6FFgLqGIirut
+         WlOA==
+X-Gm-Message-State: AOAM531cls2y2CABEhWZWuF56Vjzg207Ufq/CZDap0b+j6bVkRUgRBLh
+        sa7PMTaXGIfo2lJwTNQkOIyBWF+rqRzR4s1EjtlIpQ==
+X-Google-Smtp-Source: ABdhPJzFPc1NdRB73G1tM7LvNF+rN3FrlkyYZp5Y/15SFFi5XKr8i7Hp6GOLUfOfs2/lOt5NXmv2FO+R/e84mctWF9M=
+X-Received: by 2002:a9d:58c9:: with SMTP id s9mr4074802oth.233.1592492771742;
+ Thu, 18 Jun 2020 08:06:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200616104050.84764-1-dianders@chromium.org> <20200616034044.v3.5.Ib1e6855405fc9c99916ab7c7dee84d73a8bf3d68@changeid>
- <159242860191.62212.18088243128415903480@swboyd.mtv.corp.google.com>
-In-Reply-To: <159242860191.62212.18088243128415903480@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 18 Jun 2020 08:05:52 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XfYnkw2EFFHZNMRffmO3XJE9Qm8YtMzjK8OWLgL39XKQ@mail.gmail.com>
-Message-ID: <CAD=FV=XfYnkw2EFFHZNMRffmO3XJE9Qm8YtMzjK8OWLgL39XKQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] spi: spi-geni-qcom: Don't keep a local state variable
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+References: <20200618144407.520952071@infradead.org> <20200618144801.819246178@infradead.org>
+In-Reply-To: <20200618144801.819246178@infradead.org>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 18 Jun 2020 17:06:00 +0200
+Message-ID: <CANpmjNNpnW2AyzKOQ8tuXvhs04Kugjuj0y+j4wMxA7YfDyOwxg@mail.gmail.com>
+Subject: Re: [PATCH 4/7] x86/entry: Increase entry_stack size to a full page
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, mhelsley@vmware.com,
+        Steven Rostedt <rostedt@goodmis.org>, jthierry@redhat.com,
+        mbenes@suse.cz, Andy Lutomirski <luto@amacapital.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Wed, Jun 17, 2020 at 2:16 PM Stephen Boyd <swboyd@chromium.org> wrote:
+On Thu, 18 Jun 2020 at 16:50, Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> Quoting Douglas Anderson (2020-06-16 03:40:50)
-> > diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-> > index 63a62548b078..6feea88d63ac 100644
-> > --- a/drivers/spi/spi-geni-qcom.c
-> > +++ b/drivers/spi/spi-geni-qcom.c
-> > @@ -63,13 +63,6 @@
-> >  #define TIMESTAMP_AFTER                BIT(3)
-> >  #define POST_CMD_DELAY         BIT(4)
-> >
-> > -enum spi_m_cmd_opcode {
-> > -       CMD_NONE,
-> > -       CMD_XFER,
-> > -       CMD_CS,
-> > -       CMD_CANCEL,
-> > -};
-> > -
-> >  struct spi_geni_master {
-> >         struct geni_se se;
-> >         struct device *dev;
-> > @@ -81,10 +74,11 @@ struct spi_geni_master {
-> >         unsigned int tx_rem_bytes;
-> >         unsigned int rx_rem_bytes;
-> >         const struct spi_transfer *cur_xfer;
-> > -       struct completion xfer_done;
-> > +       struct completion cs_done;
-> > +       struct completion cancel_done;
-> > +       struct completion abort_done;
+> Marco crashed in bad_iret with a Clang11/KCSAN build due to
+> overflowing the stack. Now that we run C code on it, expand it to a
+> full page.
 >
-> I wonder if it would be better to use the wait_bit() APIs. That would
-> let us have one word for various bits like CS_DONE, CANCEL_DONE,
-> ABORT_DONE and then wake up the waiters when the particular bit happens
-> to come in through the isr. It is probably over-engineering though
-> because it saves a handful of bytes while increasing complexity.
+> Suggested-by: Andy Lutomirski <luto@amacapital.net>
+> Reported-by: Marco Elver <elver@google.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+This fixes the unpredictable crashes.
+
+Tested-by: Marco Elver <elver@google.com>
+
+Thanks!
+
+
+> ---
+>  arch/x86/include/asm/processor.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Otherwise I like this patch.
-
-I'm going to leave it as-is for v4.  We can always make it a future
-improvement if we want.
-
--Doug
+> --- a/arch/x86/include/asm/processor.h
+> +++ b/arch/x86/include/asm/processor.h
+> @@ -370,7 +370,7 @@ struct x86_hw_tss {
+>  #define IO_BITMAP_OFFSET_INVALID       (__KERNEL_TSS_LIMIT + 1)
+>
+>  struct entry_stack {
+> -       unsigned long           words[64];
+> +       char    stack[PAGE_SIZE];
+>  };
+>
+>  struct entry_stack_page {
+>
+>
