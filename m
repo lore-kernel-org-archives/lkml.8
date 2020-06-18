@@ -2,103 +2,136 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CB0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F398C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B381B207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB7A207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t1r9Dysu"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="d5HU7W+D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730568AbgFRSe3 (ORCPT
+        id S1730636AbgFRSen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 14:34:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729862AbgFRSe1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 14:34:27 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87272C06174E;
-        Thu, 18 Jun 2020 11:34:27 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id q19so8516107lji.2;
-        Thu, 18 Jun 2020 11:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PyjKf0yQJUn797GKMZ1etLAj+edU1lvwjmQ9JIL+8zE=;
-        b=t1r9DysuY9WR1DlGtMUGZrPyLQF56KrDnKvaUDbOrLHT7TlkMvo3vCkHFZLgj9ptIQ
-         B1WGvc0ciZ8KGjnfYXcrpGyzcI1Lsb5hrEyM/StDMRpVCBik0zD1duVENIzW9xd6ggrF
-         oYFwXcbQYeQAF46EYYQQDVOxYh6W65mmDgQL+169HYoTZHFteE22udkZBN1WMcBb+4+/
-         0Zkrpl3RH4VjxdNRp9V1ukE7hIkT68Jmr97pl9GCyLw0V54MFmsor4kXez7XnQCtqQni
-         YnPDTkGuIG/9uw2W9U2vZQ2iboBnMfmh9HUmuJ1+n4pyasorx96SWWaKJFufePWbE9KF
-         H6LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PyjKf0yQJUn797GKMZ1etLAj+edU1lvwjmQ9JIL+8zE=;
-        b=gTt+WdW4WgNODZHh1SfsjfTOP+Ss4E02tSqncHhcqrwHtt5S98WMla0xMgx7ToaAII
-         nawGFjX0alVwdyAb8QzW118MP5hA9V5FQYYKxhGMWX9ivyMNpgdqoi6tTRhbd77sdjqu
-         dZv7+RmgO+v8o8CWZbQxYk+k1QvRMgCgi8ta24F/dNj6xsCx3WgDAjaPYS3BTwgfSDJf
-         f2ZgQSzfFHMOwJHrwgatdi9gjVR2ZylJfcl+FGQUDBE82xy0HX5t3oDU+fBLXgAW46rf
-         JVDDc5ss6EK5dBmB0OvuvyGeQU1I/EOWtUg+oUlJJsFTwBQFTg+QarBPgnfTz98tXzdM
-         fT5A==
-X-Gm-Message-State: AOAM533K73r8Y8HUd5EL/FC9SEUi+mJonL8RBehKlgjswdarP28u9Qu8
-        fCeLIRxYHrW6N2xTgmjm/TY=
-X-Google-Smtp-Source: ABdhPJwzh+j3cZEie5IfRGMVB2dg3RSJkTKcAFJ/mEM7RixDYruHJh0QHZu8TiDk7/y/NtdyEQdzRA==
-X-Received: by 2002:a2e:6a15:: with SMTP id f21mr2910443ljc.455.1592505266039;
-        Thu, 18 Jun 2020 11:34:26 -0700 (PDT)
-Received: from pc-sasha.localdomain ([146.120.244.6])
-        by smtp.gmail.com with ESMTPSA id w20sm907436lfk.56.2020.06.18.11.34.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 11:34:25 -0700 (PDT)
-From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
-To:     ericvh@gmail.com, lucho@ionkov.net, asmadeus@codewreck.org
-Cc:     davem@davemloft.net, kuba@kernel.org,
-        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alexander.kapshuk@gmail.com
-Subject: [PATCH] net/9p: Fix sparse endian warning in trans_fd.c
-Date:   Thu, 18 Jun 2020 21:34:17 +0300
-Message-Id: <20200618183417.5423-1-alexander.kapshuk@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 18 Jun 2020 14:34:43 -0400
+Received: from mail-eopbgr700114.outbound.protection.outlook.com ([40.107.70.114]:32867
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729862AbgFRSen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 14:34:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IAtyMDNbyn3o1kbTrsj+fmqE5reoUuGiad3lFxu6dFxPjSwOVTHEDXXsVzI8g8BxygZTxFzKAZb9UBe3g+jJnxehVeK1aBXZkGItGTf4bx5iDH/WUzDj8jJD7c5d0SkoFKObjxcGCNIFIk7wm35lHhfD1DFTuyczNXZAEE4bVTfsFRJuJnoxzJNidJ/QVfxGH1QRZ3/5k21STZM8E7JgqeuwGWjZWg9XOs2oKljoa4JMyeOdah8e7/u5XPGQDh3K5DlZc3Jtk55vA9nTRfH8hy6gVH74eZ7ArEMk8RHkWU/V5qxL5Qx/UEHCvvhX9ptPxBr1MfYRXkSq3iOgXhKr8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MXY6unyZ5Lrdq0R5VPHdAApisAxvHSt8Dnfv32veTpA=;
+ b=mHtYboBSkIvZDZRCUvAMFhR6koDjkURU3dbBJWpkMmWi74IdRqsZDOMk42aEsRK3fyutgh0h05dvkOVs86kr4X2cOKUarOuzWIgqO6Z553neveadKsxRm6tKhV8PlBMENcJJJFuk9cWcZasWo3L7+gUEKpkpbN3aJ0TNotq4yNA0iih5uS4ON5XjOd87zfrmYaEepfi3yATzvh4a5kuzjOiQ9jTPpywFF1fzNfBKxOM2JcnB08c9zida4k+iA5Rhl+DPHFEcTMpaXE2lXwBcRKp9tUC7kExv2pISPFKWXDsk2CCECWtwwO+CHXM+LmrpL9Gkwj3rydP2K8lRexHTLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MXY6unyZ5Lrdq0R5VPHdAApisAxvHSt8Dnfv32veTpA=;
+ b=d5HU7W+DqBjq614z70Ldq5j8ttgvXhxR1lUoRk/+pyh7qu12AMt9yFs6mlRH+RMu5+VchFPGunFkOFr7JT4IJo9Sfnb3xZ+jNr1QV4A/M0j7Nqg+qLUoEnhdH0wgQl1ipL8o67nAKtS2d+J3rrhMpl1U7QhYJm980QgCP3Q7Ceg=
+Received: from DM5PR2101MB1047.namprd21.prod.outlook.com (2603:10b6:4:9e::16)
+ by DM5PR21MB1781.namprd21.prod.outlook.com (2603:10b6:4:9e::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.9; Thu, 18 Jun
+ 2020 18:34:40 +0000
+Received: from DM5PR2101MB1047.namprd21.prod.outlook.com
+ ([fe80::9583:a05a:e040:2923]) by DM5PR2101MB1047.namprd21.prod.outlook.com
+ ([fe80::9583:a05a:e040:2923%7]) with mapi id 15.20.3131.008; Thu, 18 Jun 2020
+ 18:34:40 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 7/8] scsi: storvsc: Introduce the per-storvsc_device
+ spinlock
+Thread-Topic: [PATCH 7/8] scsi: storvsc: Introduce the per-storvsc_device
+ spinlock
+Thread-Index: AQHWRMcT5Kf96D8yYU2GkK3j3mraO6jetCLg
+Date:   Thu, 18 Jun 2020 18:34:40 +0000
+Message-ID: <DM5PR2101MB1047555F4EBA64EF29F751EBD79B0@DM5PR2101MB1047.namprd21.prod.outlook.com>
+References: <20200617164642.37393-1-parri.andrea@gmail.com>
+ <20200617164642.37393-8-parri.andrea@gmail.com>
+In-Reply-To: <20200617164642.37393-8-parri.andrea@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-18T18:34:38Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1e60c0a3-c919-4a0e-af60-fe6c3aaa252e;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c5bfb796-fd25-4391-d8cd-08d813b6435b
+x-ms-traffictypediagnostic: DM5PR21MB1781:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR21MB1781A74DFE4DB073F5A74809D79B0@DM5PR21MB1781.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-forefront-prvs: 0438F90F17
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: W+Lnpwu+VUZChl9Fs0O39LTCjAoUFP8CRfZ35PUIGze1QQsCBJiqCPvTMVIzJ1gMtqsPm6uIptqoDqsCCN9SGKhO+WnOJw6PoY3LZ+ez1XcaHq+YPp0K+SJ5PQs71J6j6RiylIFgWlGI2lgJK9dNB2clx6OdFIwg9i6ZiBU0nIexTSgN5RtpseUR8+Gizo3N+l4xpq81qhXuJoE6EfIOGoetJAEFU3ctFuTAHdiTCHsOAjfRq0i4uVrIQEwsSBq8cHc5vcWsGwDK2MJIZ5vmw6Il/SpLEJGwgkLGZ8Eqwbnu7x/jn/oc8zaX5y7Q/MJgB+kB62rRMZmF4tMKyA6Mwg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR2101MB1047.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(396003)(39860400002)(136003)(5660300002)(26005)(6506007)(52536014)(86362001)(10290500003)(8936002)(4744005)(316002)(7696005)(186003)(110136005)(54906003)(2906002)(33656002)(8990500004)(4326008)(478600001)(71200400001)(82960400001)(64756008)(82950400001)(66476007)(9686003)(8676002)(66946007)(66556008)(66446008)(55016002)(83380400001)(76116006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: T8HQZk816OtaKRnyKVidBdWmURd/WY1PC2HbME+HHPo+FLFGl5RCmfdeX6r/OEO/bs9/jvNqssxTRlyiSzso5Dvyf7YM9OtCCSBpkFPFZ5fcDIUrCk4xGcOj5H91tOmqR+wBfwFUlbXl6LPiTSDe0sdUjTtJVfQSQfsq62Wnwzw+DUUojXCvFt18dWz3GeQlRc+EFeAmDJU11+ys2jgQnjRmXlh51t/R5HNNg47SLHKvY7oYwG64IxdHCWOpC3GRFHt80dCZkgCcVxUIBb7VMi3hBX1DYzmeZfPIu6Nk0C7nEakXplzQQb16ktosv2Ol0lZW7f/bdek5x9war0nuY0UPXvQ9E0snyu8XUEOvcBM/pI1sUKZzzeqIFswogAPvXCAGtvy6AbBBjYWAcFIx16dHZlimy7BwTgjtALLYw6WYIVKPz7n1u4T/QzVIrF36PttNaeqEC47Fpeh3x65O21W3XTTlsh98VUEvvQ9T7iKt3S/kSOEUg9/3xVKgJ2Ed
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR2101MB1047.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5bfb796-fd25-4391-d8cd-08d813b6435b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 18:34:40.7594
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: I0rzYWyRcRL5CFMhCQ4HEM6iLlSqKlrKWsovczXSfogReybk0z9CkQ3UQHsB7EBvZm3ajySgAffIGZ/VccYDaxyier0BF22lwqkfmQffrFE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB1781
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Address sparse endian warning:
-net/9p/trans_fd.c:932:28: warning: incorrect type in assignment (different base types)
-net/9p/trans_fd.c:932:28:    expected restricted __be32 [addressable] [assigned] [usertype] s_addr
-net/9p/trans_fd.c:932:28:    got unsigned long
+From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Wednesday, Ju=
+ne 17, 2020 9:47 AM
+>=20
+> storvsc uses the spinlock of the hv_device's primary channel to
+> serialize modifications of stor_chns[] performed by storvsc_do_io()
+> and storvsc_change_target_cpu(), when it could/should use a (per-)
+> storvsc_device spinlock: this change untangles the synchronization
+> mechanism for the (storvsc-specific) stor_chns[] array from the
+> "generic" VMBus code and data structures, clarifying the scope of
+> this synchronization mechanism.
+>=20
+> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> ---
+>  drivers/scsi/storvsc_drv.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+>=20
 
-Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
----
- net/9p/trans_fd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+FWIW, this patch will need to get routed to the SCSI maintainers and go thr=
+ough
+the SCSI tree.
 
-diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-index 13cd683a658a..2581f5145a22 100644
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -929,7 +929,7 @@ static int p9_bind_privport(struct socket *sock)
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
- 	memset(&cl, 0, sizeof(cl));
- 	cl.sin_family = AF_INET;
--	cl.sin_addr.s_addr = INADDR_ANY;
-+	cl.sin_addr.s_addr = htonl(INADDR_ANY);
- 	for (port = p9_ipport_resv_max; port >= p9_ipport_resv_min; port--) {
- 		cl.sin_port = htons((ushort)port);
- 		err = kernel_bind(sock, (struct sockaddr *)&cl, sizeof(cl));
---
-2.27.0
 
