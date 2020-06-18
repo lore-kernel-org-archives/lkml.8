@@ -2,106 +2,187 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1066C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 809342168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD98E2168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:47:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X86ZIrwR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgFRAqB (ORCPT
+        id S1726945AbgFRArH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 20:46:01 -0400
-Received: from [211.29.132.246] ([211.29.132.246]:55447 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-FAIL-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1726848AbgFRAqB (ORCPT
+        Wed, 17 Jun 2020 20:47:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726857AbgFRArG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 20:46:01 -0400
-Received: from dread.disaster.area (unknown [49.180.124.177])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 3754F52E54D;
-        Thu, 18 Jun 2020 10:45:09 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jlifx-0001W3-Cu; Thu, 18 Jun 2020 10:45:05 +1000
-Date:   Thu, 18 Jun 2020 10:45:05 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>, Eric Sandeen <sandeen@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 2/2] xfs: Fix false positive lockdep warning with
- sb_internal & fs_reclaim
-Message-ID: <20200618004505.GG2005@dread.disaster.area>
-References: <20200617175310.20912-1-longman@redhat.com>
- <20200617175310.20912-3-longman@redhat.com>
+        Wed, 17 Jun 2020 20:47:06 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D90A3C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:47:06 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 23so1955251pfw.10
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 17:47:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=f6j4+8YevQh47RsT4brCAj4c/xJHHLkwlwNASfer+2E=;
+        b=X86ZIrwRyriUEhya6GQsS4aS4zYZCHlE8tAyb4UEPbu//ePFnoKFuqF52QqvCi81rp
+         YmX+NUVf2xGP0/eOvc+Vb2H3I0GGzcN2CaZ61yDCMwJCk+TPGkRC+8RjODPnC2GAD90o
+         H76jrftuLRumrNeEyfIxhCeRCQHiCEOXmZAU0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=f6j4+8YevQh47RsT4brCAj4c/xJHHLkwlwNASfer+2E=;
+        b=poncwZ6k9kga84NRhoPft4/ipxOLB06SSWOAAoEq77Ommi3LSu0LslBo+lpGedG3q9
+         +RX+fJb5IoGdXX/C5aTeqsGtPnsCavcsBetGZGEfmvUUUePpEMEBAE56QiFCVKRkvMXL
+         DIvbNLfUICHcn5wfJH2AIDoxjSv/UpnrosffZJqkkDHGXmG4JWAjDR/A73RwDFGlgUuQ
+         LwfRNKiKu8mvHHd7nmlGqft4SdUGWrgomi5OarRBDPW+AtsE+G6ZPVVIb6Ml/5+Ta9tA
+         p90HBbgKRxb/wD4AOA5Spa/llF7sSTfuky0w+KapNAFmtZr/N8OK1VqamBXYgHdE1bVG
+         kC5Q==
+X-Gm-Message-State: AOAM530PljLrBDTmvZxD5eYAA7gRsfIgBtHkYe7c/trchzNk7mjV1AH+
+        XoVgD2pn1/cMH0kBgdYZ2PxZrg==
+X-Google-Smtp-Source: ABdhPJxXLLCHetyZa/AzIkbmdiT4LYl0lQi6uP/TkG15L0lSnrBpz2tToB6Z776bsazLXRqsoEkPwA==
+X-Received: by 2002:a63:ff52:: with SMTP id s18mr1267367pgk.203.1592441226154;
+        Wed, 17 Jun 2020 17:47:06 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id q11sm608773pjq.52.2020.06.17.17.47.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 17:47:05 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617175310.20912-3-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=7-415B0cAAAA:8
-        a=hXDGzopf8riABYrvaZEA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAD=FV=UmH2WwhyZZSyuYE2n2BzaS8486Bu2fMHu+RFfX5x3MUg@mail.gmail.com>
+References: <20200616104050.84764-1-dianders@chromium.org> <20200616034044.v3.2.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid> <159242718864.62212.18160698526818943096@swboyd.mtv.corp.google.com> <CAD=FV=UmH2WwhyZZSyuYE2n2BzaS8486Bu2fMHu+RFfX5x3MUg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] spi: spi-geni-qcom: Mo' betta locking
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dilip Kota <dkota@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Date:   Wed, 17 Jun 2020 17:47:04 -0700
+Message-ID: <159244122443.62212.12188134609709828571@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 01:53:10PM -0400, Waiman Long wrote:
->  fs/xfs/xfs_log.c   |  9 +++++++++
->  fs/xfs/xfs_trans.c | 31 +++++++++++++++++++++++++++----
->  2 files changed, 36 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-> index 00fda2e8e738..33244680d0d4 100644
-> --- a/fs/xfs/xfs_log.c
-> +++ b/fs/xfs/xfs_log.c
-> @@ -830,8 +830,17 @@ xlog_unmount_write(
->  	xfs_lsn_t		lsn;
->  	uint			flags = XLOG_UNMOUNT_TRANS;
->  	int			error;
-> +	unsigned long		pflags;
->  
-> +	/*
-> +	 * xfs_log_reserve() allocates memory. This can lead to fs reclaim
-> +	 * which may conflicts with the unmount process. To avoid that,
-> +	 * disable fs reclaim for this allocation.
-> +	 */
-> +	current_set_flags_nested(&pflags, PF_MEMALLOC_NOFS);
->  	error = xfs_log_reserve(mp, 600, 1, &tic, XFS_LOG, 0);
-> +	current_restore_flags_nested(&pflags, PF_MEMALLOC_NOFS);
-> +
->  	if (error)
->  		goto out_err;
+Quoting Doug Anderson (2020-06-17 14:19:29)
+> On Wed, Jun 17, 2020 at 1:53 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Douglas Anderson (2020-06-16 03:40:47)
+> > > If you added a bit of a delay (like a trace_printk) into the ISR for
+> > > the spi-geni-qcom driver, you would suddenly start seeing some errors
+> > > spit out.  The problem was that, though the ISR itself held a lock,
+> > > other parts of the driver didn't always grab the lock.
+> > >
+> > > One example race was this:
+> > > a) Driver queues off a command to set a Chip Select (CS).
+> > > b) ISR fires indicating the CS is done.
+> > > c) Done bit is set, so we complete().
+> > > d) Second CPU gallops off and starts a transfer.
+> > > e) Second CPU starts messing with hardware / software state (not under
+> > >    spinlock).
+> > > f) ISR now does things like set "mas->cur_mcmd" to CMD_NONE, prints
+> > >    errors if "tx_rem_bytes" / "rx_rem_bytes" have been set, and also
+> > >    Acks all interrupts it handled.
+> >
+> > Can we get a CPU0/CPU1 diagram here? At point e) I got sort of lost. And
+> > maybe it's not even a dual CPU problem? i.e. it can happen on one CPU?
+> >
+> >     CPU0
+> >     ----
+> >  a) spi_geni_set_cs()
+> >      mas->cur_mcmd =3D CMD_CS
+> >      wait_for_completion_timeout(&xfer_done)
+> >  b)  <INTERRUPT>
+> >      geni_spi_isr()
+> >  c)   complete(&xfer_done);
+> >      <END INTERRUPT>
+> >      pm_runtime_put(mas->dev);
+> >  d) galloping?
+> >
+> > I got lost... Sorry!
+>=20
+> I think you need two CPUs, at least for the race I'm thinking of.
+> Maybe this is clearer?
 
-The more I look at this, the more I think Darrick is right and I
-somewhat misinterpretted what he meant by "the top of the freeze
-path".
+With threaded irqs I think you only need one CPU, but that's just a
+minor detail. Drawing it with two CPUs is clearer and easier to
+understand.
 
-i.e. setting PF_MEMALLOC_NOFS here is out of place - only one caller
-of xlog_unmount_write requires PF_MEMALLOC_NOFS
-context. That context should be set in the caller that requires this
-context, and in this case it is xfs_fs_freeze(). This is top of the
-final freeze state processing (what I think Darrick meant), not the
-top of the freeze syscall call chain (what I thought he meant).
+>=20
+> CPU1:
+> =3D> spi_geni_set_cs() starts
+> =3D> spi_geni_set_cs() calls wait_for_completion_timeout(&xfer_done)
+> CPU0:
+> =3D> geni_spi_isr() starts
+> =3D> geni_spi_isr() calls complete(&xfer_done)
+> =3D> geni_spi_isr() stalls
+> CPU1:
+> =3D> spi_geni_set_cs() call to wait_for_completion_timeout() finishes
+> =3D> spi_geni_set_cs() exits.
+> =3D> spi_geni_transfer_one() is called
+> =3D> spi_geni_transfer_one() calls setup_fifo_xfer()
+> =3D> setup_fifo_xfer() sets "cur_mcmd"
+> =3D> setup_fifo_xfer() sets "tx_rem_bytes"
+> =3D> setup_fifo_xfer() sets "rx_rem_bytes"
+> =3D> setup_fifo_xfer() kicks off a transfer
+> CPU0:
+> =3D> geni_spi_isr() finishes stalling
+> =3D> geni_spi_isr() sets "cur_mcmd" to NULL
+> =3D> geni_spi_isr() checks "tx_rem_bytes" to confirm it's 0.
+> =3D> geni_spi_isr() checks "rx_rem_bytes" to confirm it's 0.
+> =3D> geni_spi_isr() clears any "DONE" interrupt that is pending
+>=20
+> I can update the commit message to have that if it's helpful and makes
+> sense.  In the above example I have a fake "stall" that wouldn't
+> really happen, but in general if adding a delay somewhere creates a
+> race condition then the race condition was there anyway.  Also, with
+> weakly ordered memory it's possible that a write on one CPU could
+> clobber a write made by another CPU even if they happened in opposite
+> orders.
+>=20
+> The race is fixed by my patch because when CPU1 starts
+> setup_fifo_xfer() it won't be able to grab the spinlock until the ISR
+> is totally done.
 
-So if set PF_MEMALLOC_NOFS setting in xfs_fs_freeze(), it covers all
-the allocations in this problematic path, and it should obliviates
-the need for the first patch in the series altogether.
+Ok. This would be the diagram then if it looked like this:
 
-Cheers,
+  CPU0                                         CPU1
+  ----                                         ----
+  spi_geni_set_cs()
+   mas->cur_mcmd =3D CMD_CS;
+   geni_se_setup_m_cmd(...)
+   wait_for_completion_timeout(&xfer_done);
+                                              <INTERRUPT>
+                                               geni_spi_isr()
+                                                complete(&xfer_done);
+   <wakeup>
+   pm_runtime_put(mas->dev);
+  ... // back to SPI core
+  spi_geni_transfer_one()
+   setup_fifo_xfer() =20
+    mas->cur_mcmd =3D CMD_XFER;
+                                                mas->cur_cmd =3D CMD_NONE; =
+// bad!
+                                                return IRQ_HANDLED;
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+    =20
+Time flows down as it usually does in these diagrams. No need to put
+stalls in. Reading all those lines and holding which CPU they're running
+on makes it harder for me to see the two running in parallel like is
+shown above.
