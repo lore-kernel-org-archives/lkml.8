@@ -2,51 +2,59 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF6DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A67032222C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 953272222C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443969;
-	bh=6OPqHLKur3gEtvhg8Ujc/NSKAmxBuQ5UCEpCXrYw7F0=;
+	s=default; t=1592443972;
+	bh=YPvB/UVTTNOlO5+VGInzT9x0BmqbR/P5AtA7zUkZ0g0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tw4ahmRYaLwU+5+6y/l32X6YmdoalRvRgkzliw4qWrxGEVhE2V+A2FmzBsES8K5gB
-	 CveaixcUGtrFAv+apXFC3opSdyGSN0RwL3BP2qWPUW7FADKIWrUoPaUA0jEFoBCPzM
-	 rC7AlVij2XNzwCZAYnrf3/NQ26r6CJM3pIui69yo=
+	b=QpWBIi+K+Aw+W2bt1mDLripfVpQKn29ivJb0PvKQQjkGJGEMhr/Qt/W9DkBIPSGO/
+	 /8HjfxLtx3W546GKksiiZEtSdjORo88WoPWQbc811t+WGi1KMwEjw0YuQNmABXUQPu
+	 2adpN8aY9nAI7vWBALRzFh+VAABms+OrCoiwWGww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731116AbgFRBcq (ORCPT
+        id S1732896AbgFRBcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:32:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39574 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:32:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732405AbgFRB3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:55 -0400
+        id S1732426AbgFRB37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:29:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0DD922228;
-        Thu, 18 Jun 2020 01:29:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A352522228;
+        Thu, 18 Jun 2020 01:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443794;
-        bh=6OPqHLKur3gEtvhg8Ujc/NSKAmxBuQ5UCEpCXrYw7F0=;
+        s=default; t=1592443799;
+        bh=YPvB/UVTTNOlO5+VGInzT9x0BmqbR/P5AtA7zUkZ0g0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cKAyj7tuLqm/tEFDpJqKXrlgpbvOLsFFhbjB1mDSf0SOotUULQCX20l7l9Hw080rB
-         3eSZh7MvvUPAJmnhxnrgRHsJDDMlJavUVutz36W0S7C+euT71/YRw2yi8ELoMQrqak
-         yvt667JWZTublEucZTgN/R7g0LiNKFFUGV4c2x7I=
+        b=vx3yFd0Pm6gKeVpsgb8+79y0P0wy0+gselx8gvCGMTnnSF61vyOdpFlCSweYw4d4k
+         /gUDAMA/cCwpSh8q+dUzPxCSSNC3aP3dfc+t399yha3bZe3dgGMBlksiDV7C7SZ/pp
+         NdWCsHW047Onyia9hB4BRX31kJfaq2PBL4DXOjME=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 74/80] crypto: omap-sham - add proper load balancing support for multicore
-Date:   Wed, 17 Jun 2020 21:28:13 -0400
-Message-Id: <20200618012819.609778-74-sashal@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Jeremy Fitzhardinge <jeremy@goop.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 77/80] elfnote: mark all .note sections SHF_ALLOC
+Date:   Wed, 17 Jun 2020 21:28:16 -0400
+Message-Id: <20200618012819.609778-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
 References: <20200618012819.609778-1-sashal@kernel.org>
@@ -59,166 +67,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-[ Upstream commit 281c377872ff5d15d80df25fc4df02d2676c7cde ]
+[ Upstream commit 51da9dfb7f20911ae4e79e9b412a9c2d4c373d4b ]
 
-The current implementation of the multiple accelerator core support for
-OMAP SHA does not work properly. It always picks up the first probed
-accelerator core if this is available, and rest of the book keeping also
-gets confused if there are two cores available. Add proper load
-balancing support for SHA, and also fix any bugs related to the
-multicore support while doing it.
+ELFNOTE_START allows callers to specify flags for .pushsection assembler
+directives.  All callsites but ELF_NOTE use "a" for SHF_ALLOC.  For vdso's
+that explicitly use ELF_NOTE_START and BUILD_SALT, the same section is
+specified twice after preprocessing, once with "a" flag, once without.
+Example:
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+.pushsection .note.Linux, "a", @note ;
+.pushsection .note.Linux, "", @note ;
+
+While GNU as allows this ordering, it warns for the opposite ordering,
+making these directives position dependent.  We'd prefer not to precisely
+match this behavior in Clang's integrated assembler.  Instead, the non
+__ASSEMBLY__ definition of ELF_NOTE uses
+__attribute__((section(".note.Linux"))) which is created with SHF_ALLOC,
+so let's make the __ASSEMBLY__ definition of ELF_NOTE consistent with C
+and just always use "a" flag.
+
+This allows Clang to assemble a working mainline (5.6) kernel via:
+$ make CC=clang AS=clang
+
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Cc: Jeremy Fitzhardinge <jeremy@goop.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/913
+Link: http://lkml.kernel.org/r/20200325231250.99205-1-ndesaulniers@google.com
+Debugged-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/omap-sham.c | 64 ++++++++++++++++++--------------------
- 1 file changed, 31 insertions(+), 33 deletions(-)
+ include/linux/elfnote.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/omap-sham.c b/drivers/crypto/omap-sham.c
-index ff6ac4e824b5..e7ca922a45e1 100644
---- a/drivers/crypto/omap-sham.c
-+++ b/drivers/crypto/omap-sham.c
-@@ -167,8 +167,6 @@ struct omap_sham_hmac_ctx {
- };
+diff --git a/include/linux/elfnote.h b/include/linux/elfnote.h
+index 278e3ef05336..56c6d9031663 100644
+--- a/include/linux/elfnote.h
++++ b/include/linux/elfnote.h
+@@ -53,7 +53,7 @@
+ .popsection				;
  
- struct omap_sham_ctx {
--	struct omap_sham_dev	*dd;
--
- 	unsigned long		flags;
- 
- 	/* fallback stuff */
-@@ -915,27 +913,35 @@ static int omap_sham_update_dma_stop(struct omap_sham_dev *dd)
- 	return 0;
- }
- 
-+struct omap_sham_dev *omap_sham_find_dev(struct omap_sham_reqctx *ctx)
-+{
-+	struct omap_sham_dev *dd;
-+
-+	if (ctx->dd)
-+		return ctx->dd;
-+
-+	spin_lock_bh(&sham.lock);
-+	dd = list_first_entry(&sham.dev_list, struct omap_sham_dev, list);
-+	list_move_tail(&dd->list, &sham.dev_list);
-+	ctx->dd = dd;
-+	spin_unlock_bh(&sham.lock);
-+
-+	return dd;
-+}
-+
- static int omap_sham_init(struct ahash_request *req)
- {
- 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
- 	struct omap_sham_ctx *tctx = crypto_ahash_ctx(tfm);
- 	struct omap_sham_reqctx *ctx = ahash_request_ctx(req);
--	struct omap_sham_dev *dd = NULL, *tmp;
-+	struct omap_sham_dev *dd;
- 	int bs = 0;
- 
--	spin_lock_bh(&sham.lock);
--	if (!tctx->dd) {
--		list_for_each_entry(tmp, &sham.dev_list, list) {
--			dd = tmp;
--			break;
--		}
--		tctx->dd = dd;
--	} else {
--		dd = tctx->dd;
--	}
--	spin_unlock_bh(&sham.lock);
-+	ctx->dd = NULL;
- 
--	ctx->dd = dd;
-+	dd = omap_sham_find_dev(ctx);
-+	if (!dd)
-+		return -ENODEV;
- 
- 	ctx->flags = 0;
- 
-@@ -1185,8 +1191,7 @@ static int omap_sham_handle_queue(struct omap_sham_dev *dd,
- static int omap_sham_enqueue(struct ahash_request *req, unsigned int op)
- {
- 	struct omap_sham_reqctx *ctx = ahash_request_ctx(req);
--	struct omap_sham_ctx *tctx = crypto_tfm_ctx(req->base.tfm);
--	struct omap_sham_dev *dd = tctx->dd;
-+	struct omap_sham_dev *dd = ctx->dd;
- 
- 	ctx->op = op;
- 
-@@ -1196,7 +1201,7 @@ static int omap_sham_enqueue(struct ahash_request *req, unsigned int op)
- static int omap_sham_update(struct ahash_request *req)
- {
- 	struct omap_sham_reqctx *ctx = ahash_request_ctx(req);
--	struct omap_sham_dev *dd = ctx->dd;
-+	struct omap_sham_dev *dd = omap_sham_find_dev(ctx);
- 
- 	if (!req->nbytes)
- 		return 0;
-@@ -1301,21 +1306,8 @@ static int omap_sham_setkey(struct crypto_ahash *tfm, const u8 *key,
- 	struct omap_sham_hmac_ctx *bctx = tctx->base;
- 	int bs = crypto_shash_blocksize(bctx->shash);
- 	int ds = crypto_shash_digestsize(bctx->shash);
--	struct omap_sham_dev *dd = NULL, *tmp;
- 	int err, i;
- 
--	spin_lock_bh(&sham.lock);
--	if (!tctx->dd) {
--		list_for_each_entry(tmp, &sham.dev_list, list) {
--			dd = tmp;
--			break;
--		}
--		tctx->dd = dd;
--	} else {
--		dd = tctx->dd;
--	}
--	spin_unlock_bh(&sham.lock);
--
- 	err = crypto_shash_setkey(tctx->fallback, key, keylen);
- 	if (err)
- 		return err;
-@@ -1333,7 +1325,7 @@ static int omap_sham_setkey(struct crypto_ahash *tfm, const u8 *key,
- 
- 	memset(bctx->ipad + keylen, 0, bs - keylen);
- 
--	if (!test_bit(FLAGS_AUTO_XOR, &dd->flags)) {
-+	if (!test_bit(FLAGS_AUTO_XOR, &sham.flags)) {
- 		memcpy(bctx->opad, bctx->ipad, bs);
- 
- 		for (i = 0; i < bs; i++) {
-@@ -2072,6 +2064,7 @@ static int omap_sham_probe(struct platform_device *pdev)
- 	}
- 
- 	dd->flags |= dd->pdata->flags;
-+	sham.flags |= dd->pdata->flags;
- 
- 	pm_runtime_use_autosuspend(dev);
- 	pm_runtime_set_autosuspend_delay(dev, DEFAULT_AUTOSUSPEND_DELAY);
-@@ -2097,6 +2090,9 @@ static int omap_sham_probe(struct platform_device *pdev)
- 	spin_unlock(&sham.lock);
- 
- 	for (i = 0; i < dd->pdata->algs_info_size; i++) {
-+		if (dd->pdata->algs_info[i].registered)
-+			break;
-+
- 		for (j = 0; j < dd->pdata->algs_info[i].size; j++) {
- 			struct ahash_alg *alg;
- 
-@@ -2142,9 +2138,11 @@ static int omap_sham_remove(struct platform_device *pdev)
- 	list_del(&dd->list);
- 	spin_unlock(&sham.lock);
- 	for (i = dd->pdata->algs_info_size - 1; i >= 0; i--)
--		for (j = dd->pdata->algs_info[i].registered - 1; j >= 0; j--)
-+		for (j = dd->pdata->algs_info[i].registered - 1; j >= 0; j--) {
- 			crypto_unregister_ahash(
- 					&dd->pdata->algs_info[i].algs_list[j]);
-+			dd->pdata->algs_info[i].registered--;
-+		}
- 	tasklet_kill(&dd->done_task);
- 	pm_runtime_disable(&pdev->dev);
+ #define ELFNOTE(name, type, desc)		\
+-	ELFNOTE_START(name, type, "")		\
++	ELFNOTE_START(name, type, "a")		\
+ 		desc			;	\
+ 	ELFNOTE_END
  
 -- 
 2.25.1
