@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF99EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF5EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDC3621534
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96ED421D82
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:39:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447987;
-	bh=QzHsFMc7e1sAg3TGj2D+4DGxTg90cYJi1ce6cG/HcDY=;
+	s=default; t=1592447990;
+	bh=JTx3BJOyOHs/g7ekfWefjh53IK3WTvHsMWejKB/u4g4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ygO/bjYQUKRZ5/9f7STJLqOyIkuOKuvDipvmcjCctJoTxODE6T0Bol5UZ2mLFvrIh
-	 0g1hBxEUS599ThnF2h6lzvxQA1qFrAIk6YGOaweGcoYGJ26t6h6XlZ9vSXPwBt9qve
-	 1BPHQ5SxAM1ahLT7oMTgBZz++jGi6vtvigpE+Kpw=
+	b=Fx0PmQrvmis4C9qcCr6LWJjeJpM96xqs/eqFlMhie0wS4nWsMLd0m3oojYnq0BDSO
+	 qjqW7rTX/Dn0AsluEx2daFkwjCy54U5dPyW6PVOhtYdKrOVvsfIIT41A7SrSlTt6+t
+	 MT1srKPyhVXaobTzzQmZHfDd4igFueAE+uk4ihjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732293AbgFRCjq (ORCPT
+        id S1729015AbgFRBM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:39:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41856 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:12:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbgFRBM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:58 -0400
+        id S1728078AbgFRBMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B43C8214DB;
-        Thu, 18 Jun 2020 01:12:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADDDD21924;
+        Thu, 18 Jun 2020 01:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442778;
-        bh=QzHsFMc7e1sAg3TGj2D+4DGxTg90cYJi1ce6cG/HcDY=;
+        s=default; t=1592442719;
+        bh=JTx3BJOyOHs/g7ekfWefjh53IK3WTvHsMWejKB/u4g4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WEAKdeDvC6VfbF2KaH5xqS1cIIWVq5MKAEWURbodcwLtrCFT0IcKXjSue3C75AX3s
-         uMnoT6iwmm8JlgHXl3oOS28rS4nu2sd4J7exiYgdzPJSdou1HDdd/EU+gZHxA883MF
-         aaUAebt15C5JzFVdjqyJp/1UXgHtA3MJcplD3g0Y=
+        b=uiEtxRr6rgGMd5ciSyqIsjcQLJFaKFD3n/BQyrnUbsY2Hp6sSHDzbHATgRcS/4kIk
+         l1e2O249P8kwsWE2/0UGEbiUq9/fQxvBLU+gtZ1sx6BkZiyDYxrArgNyhyAsCt9eWm
+         1nuHp0itpXI4ypbB55cvvWJtRjVRJ0M7O7mGC6Ro=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bharat Gooty <bharat.gooty@broadcom.com>,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 224/388] drivers: phy: sr-usb: do not use internal fsm for USB2 phy init
-Date:   Wed, 17 Jun 2020 21:05:21 -0400
-Message-Id: <20200618010805.600873-224-sashal@kernel.org>
+Cc:     Viacheslav Dubeyko <v.dubeiko@yadro.com>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 178/388] scsi: qla2xxx: Fix warning after FC target reset
+Date:   Wed, 17 Jun 2020 21:04:35 -0400
+Message-Id: <20200618010805.600873-178-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,148 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bharat Gooty <bharat.gooty@broadcom.com>
+From: Viacheslav Dubeyko <v.dubeiko@yadro.com>
 
-[ Upstream commit 6f0577d1411337a0d97d545abe4a784e9e611516 ]
+[ Upstream commit f839544ccff60cbe534282aac68858fc3fb278ca ]
 
-During different reboot cycles, USB PHY PLL may not always lock
-during initialization and therefore can cause USB to be not usable.
+Currently, FC target reset finishes with the warning message:
 
-Hence do not use internal FSM programming sequence for the USB
-PHY initialization.
+[84010.596893] ------------[ cut here ]------------
+[84010.596917] WARNING: CPU: 238 PID: 279973 at ../drivers/scsi/qla2xxx/qla_target.c:6644 qlt_enable_vha+0x1d0/0x260 [qla2xxx]
+[84010.596918] Modules linked in: vrf af_packet 8021q garp mrp stp llc netlink_diag target_tatlin_tblock(OEX) dm_ec(OEX) ttln_rdma(OEX) dm_frontend(OEX) nvme_rdma nvmet tcm_qla2xxx iscsi_target_mod target_core_mod at24 nvmem_core pnv_php ipmi_watchdog ipmi_ssif vmx_crypto gf128mul crct10dif_vpmsum qla2xxx rpcrdma nvme_fc powernv_flash(X) nvme_fabrics uio_pdrv_genirq mtd rtc_opal(X) ibmpowernv(X) opal_prd(X) uio scsi_transport_fc i2c_opal(X) ses enclosure ipmi_poweroff ast i2c_algo_bit ttm bmc_mcu(OEX) drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops drm drm_panel_orientation_quirks agpgart nfsd auth_rpcgss nfs_acl ipmi_powernv(X) lockd ipmi_devintf ipmi_msghandler grace dummy ext4 crc16 jbd2 mbcache sd_mod rdma_ucm ib_iser rdma_cm ib_umad iw_cm ib_ipoib libiscsi scsi_transport_iscsi ib_cm
+[84010.596975]  configfs mlx5_ib ib_uverbs ib_core mlx5_core crc32c_vpmsum xhci_pci xhci_hcd mpt3sas(OEX) tg3 usbcore mlxfw tls raid_class libphy scsi_transport_sas devlink ptp pps_core nvme nvme_core sunrpc dm_mirror dm_region_hash dm_log sg dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua scsi_mod autofs4
+[84010.597001] Supported: Yes, External
+[84010.597004] CPU: 238 PID: 279973 Comm: bash Tainted: G           OE      4.12.14-197.29-default #1 SLE15-SP1
+[84010.597006] task: c000000a104c0000 task.stack: c000000b52188000
+[84010.597007] NIP: d00000001ffd7f78 LR: d00000001ffd7f6c CTR: c0000000001676c0
+[84010.597008] REGS: c000000b5218b910 TRAP: 0700   Tainted: G           OE       (4.12.14-197.29-default)
+[84010.597008] MSR: 900000010282b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>
+[84010.597015]   CR: 48242424  XER: 00000000
+[84010.597016] CFAR: d00000001ff45d08 SOFTE: 1
+               GPR00: d00000001ffd7f6c c000000b5218bb90 d00000002001b228 0000000000000102
+               GPR04: 0000000000000001 0000000000000001 00013d91ed0a5e2d 0000000000000000
+               GPR08: c000000007793300 0000000000000000 0000000000000000 c000000a086e7818
+               GPR12: 0000000000002200 c000000007793300 0000000000000000 000000012bc937c0
+               GPR16: 000000012bbf7ed0 0000000000000000 000000012bc3dd10 0000000000000000
+               GPR20: 000000012bc4db28 0000010036442810 000000012bc97828 000000012bc96c70
+               GPR24: 00000100365b1550 0000000000000000 00000100363f3d80 c000000be20d3080
+               GPR28: c000000bda7eae00 c000000be20db7e8 c000000be20d3778 c000000be20db7e8
+[84010.597042] NIP [d00000001ffd7f78] qlt_enable_vha+0x1d0/0x260 [qla2xxx]
+[84010.597051] LR [d00000001ffd7f6c] qlt_enable_vha+0x1c4/0x260 [qla2xxx]
+[84010.597051] Call Trace:
+[84010.597061] [c000000b5218bb90] [d00000001ffd7f6c] qlt_enable_vha+0x1c4/0x260 [qla2xxx] (unreliable)
+[84010.597064] [c000000b5218bc20] [d000000009820b6c] tcm_qla2xxx_tpg_enable_store+0xc4/0x130 [tcm_qla2xxx]
+[84010.597067] [c000000b5218bcb0] [d0000000185d0e68] configfs_write_file+0xd0/0x190 [configfs]
+[84010.597072] [c000000b5218bd00] [c0000000003d0edc] __vfs_write+0x3c/0x1e0
+[84010.597074] [c000000b5218bd90] [c0000000003d2ea8] vfs_write+0xd8/0x220
+[84010.597076] [c000000b5218bde0] [c0000000003d4ddc] SyS_write+0x6c/0x110
+[84010.597079] [c000000b5218be30] [c00000000000b188] system_call+0x3c/0x130
+[84010.597080] Instruction dump:
+[84010.597082] 7d0050a8 7d084b78 7d0051ad 40c2fff4 7fa3eb78 4bf73965 60000000 7fa3eb78
+[84010.597086] 4bf6dcd9 60000000 2fa30000 419eff40 <0fe00000> 4bffff38 e95f0058 a12a0180
+[84010.597090] ---[ end trace e32abaf6e6fee826 ]---
 
-Fixes: 4dcddbb38b64 ("phy: sr-usb: Add Stingray USB PHY driver")
-Signed-off-by: Bharat Gooty <bharat.gooty@broadcom.com>
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Link: https://lore.kernel.org/r/20200513173947.10919-1-rayagonda.kokatanur@broadcom.com
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+To reproduce:
+
+echo 0x7fffffff > /sys/module/qla2xxx/parameters/logging
+modprobe target_core_mod
+modprobe tcm_qla2xxx
+mkdir /sys/kernel/config/target/qla2xxx
+mkdir /sys/kernel/config/target/qla2xxx/<port-name>
+mkdir /sys/kernel/config/target/qla2xxx/<port-name>/tpgt_1
+echo 1 > /sys/kernel/config/target/qla2xxx/<port-name>/tpgt_1/enable
+echo 0 > /sys/kernel/config/target/qla2xxx/<port-name>/tpgt_1/enable
+echo 1 > /sys/kernel/config/target/qla2xxx/<port-name>/tpgt_1/enable
+
+SYSTEM START
+kernel: pid 327:drivers/scsi/qla2xxx/qla_init.c:2174 qla2x00_initialize_adapter(): vha->flags.online 0x0
+<...>
+kernel: pid 327:drivers/scsi/qla2xxx/qla_os.c:3444 qla2x00_probe_one(): vha->flags.online 0x1
+
+echo 1 > /sys/kernel/config/target/qla2xxx/21:00:00:24:ff:86:a6:2a/tpgt_1/enable
+kernel: pid 348:drivers/scsi/qla2xxx/qla_init.c:6641 qla2x00_abort_isp_cleanup(): vha->flags.online 0x0, ISP_ABORT_NEEDED 0x0
+<...>
+kernel: pid 348:drivers/scsi/qla2xxx/qla_init.c:6998 qla2x00_restart_isp(): vha->flags.online 0x0
+
+echo 0 > /sys/kernel/config/target/qla2xxx/21:00:00:24:ff:86:a6:2a/tpgt_1/enable
+kernel: pid 348:drivers/scsi/qla2xxx/qla_init.c:6641 qla2x00_abort_isp_cleanup(): vha->flags.online 0x0, ISP_ABORT_NEEDED 0x0
+<...>
+kernel: pid 1404:drivers/scsi/qla2xxx/qla_os.c:1107 qla2x00_wait_for_hba_online(): base_vha->flags.online 0x0
+
+echo 1 > /sys/kernel/config/target/qla2xxx/21:00:00:24:ff:86:a6:2a/tpgt_1/enable
+kernel: pid 1404:drivers/scsi/qla2xxx/qla_os.c:1107 qla2x00_wait_for_hba_online(): base_vha->flags.online 0x0
+kernel: -----------[ cut here ]-----------
+kernel: WARNING: CPU: 1 PID: 1404 at drivers/scsi/qla2xxx/qla_target.c:6654 qlt_enable_vha+0x1e0/0x280 [qla2xxx]
+
+The issue happens because no real ISP reset is executed.  The
+qla2x00_abort_isp(scsi_qla_host_t *vha) function expects that
+vha->flags.online will be not zero for ISP reset procedure.  This patch
+sets vha->flags.online to 1 before calling ->abort_isp() for starting the
+ISP reset.
+
+Link: https://lore.kernel.org/r/1d7b21bf9f7676643239eb3d60eaca7cfa505cf0.camel@yadro.com
+Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Viacheslav Dubeyko <v.dubeiko@yadro.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/broadcom/phy-bcm-sr-usb.c | 55 +--------------------------
- 1 file changed, 2 insertions(+), 53 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/phy/broadcom/phy-bcm-sr-usb.c b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-index fe6c58910e4c..7c7862b4f41f 100644
---- a/drivers/phy/broadcom/phy-bcm-sr-usb.c
-+++ b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-@@ -16,8 +16,6 @@ enum bcm_usb_phy_version {
- };
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 1d9a4866f9a7..9179bb4caed8 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -6871,6 +6871,7 @@ qla2x00_do_dpc(void *data)
  
- enum bcm_usb_phy_reg {
--	PLL_NDIV_FRAC,
--	PLL_NDIV_INT,
- 	PLL_CTRL,
- 	PHY_CTRL,
- 	PHY_PLL_CTRL,
-@@ -31,18 +29,11 @@ static const u8 bcm_usb_combo_phy_ss[] = {
- };
- 
- static const u8 bcm_usb_combo_phy_hs[] = {
--	[PLL_NDIV_FRAC]	= 0x04,
--	[PLL_NDIV_INT]	= 0x08,
- 	[PLL_CTRL]	= 0x0c,
- 	[PHY_CTRL]	= 0x10,
- };
- 
--#define HSPLL_NDIV_INT_VAL	0x13
--#define HSPLL_NDIV_FRAC_VAL	0x1005
--
- static const u8 bcm_usb_hs_phy[] = {
--	[PLL_NDIV_FRAC]	= 0x0,
--	[PLL_NDIV_INT]	= 0x4,
- 	[PLL_CTRL]	= 0x8,
- 	[PHY_CTRL]	= 0xc,
- };
-@@ -52,7 +43,6 @@ enum pll_ctrl_bits {
- 	SSPLL_SUSPEND_EN,
- 	PLL_SEQ_START,
- 	PLL_LOCK,
--	PLL_PDIV,
- };
- 
- static const u8 u3pll_ctrl[] = {
-@@ -66,29 +56,17 @@ static const u8 u3pll_ctrl[] = {
- #define HSPLL_PDIV_VAL		0x1
- 
- static const u8 u2pll_ctrl[] = {
--	[PLL_PDIV]	= 1,
- 	[PLL_RESETB]	= 5,
- 	[PLL_LOCK]	= 6,
- };
- 
- enum bcm_usb_phy_ctrl_bits {
- 	CORERDY,
--	AFE_LDO_PWRDWNB,
--	AFE_PLL_PWRDWNB,
--	AFE_BG_PWRDWNB,
--	PHY_ISO,
- 	PHY_RESETB,
- 	PHY_PCTL,
- };
- 
- #define PHY_PCTL_MASK	0xffff
--/*
-- * 0x0806 of PCTL_VAL has below bits set
-- * BIT-8 : refclk divider 1
-- * BIT-3:2: device mode; mode is not effect
-- * BIT-1: soft reset active low
-- */
--#define HSPHY_PCTL_VAL	0x0806
- #define SSPHY_PCTL_VAL	0x0006
- 
- static const u8 u3phy_ctrl[] = {
-@@ -98,10 +76,6 @@ static const u8 u3phy_ctrl[] = {
- 
- static const u8 u2phy_ctrl[] = {
- 	[CORERDY]		= 0,
--	[AFE_LDO_PWRDWNB]	= 1,
--	[AFE_PLL_PWRDWNB]	= 2,
--	[AFE_BG_PWRDWNB]	= 3,
--	[PHY_ISO]		= 4,
- 	[PHY_RESETB]		= 5,
- 	[PHY_PCTL]		= 6,
- };
-@@ -186,38 +160,13 @@ static int bcm_usb_hs_phy_init(struct bcm_usb_phy_cfg *phy_cfg)
- 	int ret = 0;
- 	void __iomem *regs = phy_cfg->regs;
- 	const u8 *offset;
--	u32 rd_data;
- 
- 	offset = phy_cfg->offset;
- 
--	writel(HSPLL_NDIV_INT_VAL, regs + offset[PLL_NDIV_INT]);
--	writel(HSPLL_NDIV_FRAC_VAL, regs + offset[PLL_NDIV_FRAC]);
--
--	rd_data = readl(regs + offset[PLL_CTRL]);
--	rd_data &= ~(HSPLL_PDIV_MASK << u2pll_ctrl[PLL_PDIV]);
--	rd_data |= (HSPLL_PDIV_VAL << u2pll_ctrl[PLL_PDIV]);
--	writel(rd_data, regs + offset[PLL_CTRL]);
--
--	/* Set Core Ready high */
--	bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
--			      BIT(u2phy_ctrl[CORERDY]));
--
--	/* Maximum timeout for Core Ready done */
--	msleep(30);
--
-+	bcm_usb_reg32_clrbits(regs + offset[PLL_CTRL],
-+			      BIT(u2pll_ctrl[PLL_RESETB]));
- 	bcm_usb_reg32_setbits(regs + offset[PLL_CTRL],
- 			      BIT(u2pll_ctrl[PLL_RESETB]));
--	bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
--			      BIT(u2phy_ctrl[PHY_RESETB]));
--
--
--	rd_data = readl(regs + offset[PHY_CTRL]);
--	rd_data &= ~(PHY_PCTL_MASK << u2phy_ctrl[PHY_PCTL]);
--	rd_data |= (HSPHY_PCTL_VAL << u2phy_ctrl[PHY_PCTL]);
--	writel(rd_data, regs + offset[PHY_CTRL]);
--
--	/* Maximum timeout for PLL reset done */
--	msleep(30);
- 
- 	ret = bcm_usb_pll_lock_check(regs + offset[PLL_CTRL],
- 				     BIT(u2pll_ctrl[PLL_LOCK]));
+ 			if (do_reset && !(test_and_set_bit(ABORT_ISP_ACTIVE,
+ 			    &base_vha->dpc_flags))) {
++				base_vha->flags.online = 1;
+ 				ql_dbg(ql_dbg_dpc, base_vha, 0x4007,
+ 				    "ISP abort scheduled.\n");
+ 				if (ha->isp_ops->abort_isp(base_vha)) {
 -- 
 2.25.1
 
