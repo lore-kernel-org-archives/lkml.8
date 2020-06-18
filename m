@@ -2,230 +2,110 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5570EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45FBD207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E9520890
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:59:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ijjGELKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgFRU5S (ORCPT
+        id S1728291AbgFRU70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:57:18 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:48657 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgFRU5Q (ORCPT
+        Thu, 18 Jun 2020 16:59:26 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27003 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726478AbgFRU7Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:57:16 -0400
-Received: by mail-il1-f199.google.com with SMTP id o4so4906510ilc.15
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:57:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=d4+iWLaVlBy8wzsOcjuAnUFW5E1j1kRl6+gfWh8J8Hk=;
-        b=orfigv+bw2OXHcNgNuCbau+PiExjhyzuD2EIef62rE4XAhvgm9S43XOd4ONWTfLQkZ
-         rXqMHL7FAwkdJtaQQsOAfSPqSQGl/133Ei8KUVQ4nWv1BeB46n+ZWp7JeQnl/2wd9/fR
-         2gd98UD6DU9BGWSAH2bDDwKlN6V0rJrC7Tu8hN7wAbSB5Qbz/Byh68xNKVEJSXKg+dDm
-         cYD+/6oyMoburLd+5fdrvwpcJGU9G6gQb1NT05G78WdTDwcwqu83m8T8PrUhj3/5WRDx
-         1xX4rFf4k1+fWdUV4gzTGZtrhIr2tT7sCV8tJCMDkqD1oMXj0nnSNiubjDH1DjR1Bj25
-         RXBg==
-X-Gm-Message-State: AOAM531bFmgQvkuXtzba4kRpAaP/rBDd75DuEHM1epS3T/3Mpva7/2dM
-        +3tusM1vGfgP038A6wP6oDeawMd3Xlez0LaW6+MC/netVDSP
-X-Google-Smtp-Source: ABdhPJw4eac/XW53i+LMcaWE0Cd57xbpVKEng30kzh0FAwfMuCudWPv9v27oel9I+xEKgTlPlw44nRgE126xXcQ2DL0zIGQmWBcK
+        Thu, 18 Jun 2020 16:59:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592513964;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2iDTwr+/iWvsdg/YE4W4q4L8qhRtiVj32UpGEhBg6Zs=;
+        b=ijjGELKAgzCuAxQiEFaeMtxy0HDr59QFyDgsOphcvYUVjO5Ftkecj1gPJ8vNE20vFFZ77H
+        vnY2On8n/JVR/W7TVguU8Vi0jGt6Q/C/V6QaOP7ecD2fMAHsYyF2tsCsYVaa23yUw3z/9f
+        K3C3RXF13C2eI1gMcojfLi2FDMXt1T8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-375-CkW3-5CMNT632YrXDGbmzw-1; Thu, 18 Jun 2020 16:59:20 -0400
+X-MC-Unique: CkW3-5CMNT632YrXDGbmzw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 442C4107ACF4;
+        Thu, 18 Jun 2020 20:59:19 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-118-66.rdu2.redhat.com [10.10.118.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 70B4A5C1D0;
+        Thu, 18 Jun 2020 20:59:18 +0000 (UTC)
+Subject: Re: [PATCH] sched, mm: Optimize current_gfp_context()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michel Lespinasse <walken@google.com>,
+        linux-kernel@vger.kernel.org
+References: <20200618155847.30975-1-longman@redhat.com>
+ <20200618160726.GL576905@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <6333186c-224a-fb84-7304-ca7c6c903c13@redhat.com>
+Date:   Thu, 18 Jun 2020 16:59:18 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:15ca:: with SMTP id f10mr682018iow.52.1592513834771;
- Thu, 18 Jun 2020 13:57:14 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 13:57:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006bf03c05a86205bb@google.com>
-Subject: INFO: trying to register non-static key in ath9k_htc_rxep
-From:   syzbot <syzbot+4d2d56175b934b9a7bf9@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, ath9k-devel@qca.qualcomm.com,
-        davem@davemloft.net, kuba@kernel.org, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200618160726.GL576905@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 6/18/20 12:07 PM, Peter Zijlstra wrote:
+> On Thu, Jun 18, 2020 at 11:58:47AM -0400, Waiman Long wrote:
+>> The current_gfp_context() converts a number of PF_MEMALLOC_* per-process
+>> flags into the corresponding GFP_* flags for memory allocation. In
+>> that function, current->flags is accessed 3 times. That may lead to
+>> duplicated access of the same memory location.
+>>
+>> This is not usually a problem with minimal debug config options on as the
+>> compiler can optimize away the duplicated memory accesses.  With most
+>> of the debug config options on, however, that may not be the case.
+>> For example, the x86-64 object size of the __need_fs_reclaim() in a
+>> debug kernel that calls current_gfp_context() was 309 bytes. With this
+>> patch applied, the object size is reduced to 202 bytes. This is a saving
+>> of 107 bytes and will probably be slightly faster too.
+>>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>>   include/linux/sched/mm.h | 10 ++++++----
+>>   1 file changed, 6 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+>> index 480a4d1b7dd8..09e01909d192 100644
+>> --- a/include/linux/sched/mm.h
+>> +++ b/include/linux/sched/mm.h
+>> @@ -181,18 +181,20 @@ static inline bool in_vfork(struct task_struct *tsk)
+>>    */
+>>   static inline gfp_t current_gfp_context(gfp_t flags)
+>>   {
+>> -	if (unlikely(current->flags &
+>> +	unsigned int pflags = current->flags;
+> Per the above, I would've expected a READ_ONCE() there, otherwise the
+> compiler can still re-load.
+>
+Right. Will do that.
 
-syzbot found the following crash on:
+Thanks,
+Longman
 
-HEAD commit:    b791d1bd Merge tag 'locking-kcsan-2020-06-11' of git://git..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=1522cc25100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=16c2467d4b6dbee2
-dashboard link: https://syzkaller.appspot.com/bug?extid=4d2d56175b934b9a7bf9
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4d2d56175b934b9a7bf9@syzkaller.appspotmail.com
-
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 0 PID: 355 Comm: syz-executor.2 Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xf6/0x16e lib/dump_stack.c:118
- assign_lock_key kernel/locking/lockdep.c:894 [inline]
- register_lock_class+0x1442/0x17e0 kernel/locking/lockdep.c:1206
- __lock_acquire+0x101/0x6270 kernel/locking/lockdep.c:4259
- lock_acquire+0x18b/0x7c0 kernel/locking/lockdep.c:4959
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x32/0x50 kernel/locking/spinlock.c:159
- ath9k_htc_rxep+0x31/0x210 drivers/net/wireless/ath/ath9k/htc_drv_txrx.c:1128
- ath9k_htc_rx_msg+0x2d9/0xb00 drivers/net/wireless/ath/ath9k/htc_hst.c:459
- ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:638 [inline]
- ath9k_hif_usb_rx_cb+0xc76/0x1050 drivers/net/wireless/ath/ath9k/hif_usb.c:671
- __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
- usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
- dummy_timer+0x125e/0x32b4 drivers/usb/gadget/udc/dummy_hcd.c:1967
- call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0x5e5/0x14c0 kernel/time/timer.c:1786
- __do_softirq+0x21e/0x996 kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0x178/0x1a0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:546 [inline]
- smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1107
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
-RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
-RIP: 0010:_raw_spin_unlock_irqrestore+0x3b/0x40 kernel/locking/spinlock.c:191
-Code: e8 1a 69 8d fb 48 89 ef e8 42 5d 8e fb f6 c7 02 75 11 53 9d e8 26 e6 ab fb 65 ff 0d 57 e4 68 7a 5b 5d c3 e8 e7 de ab fb 53 9d <eb> ed 0f 1f 00 55 48 89 fd 65 ff 05 3d e4 68 7a 45 31 c9 41 b8 01
-RSP: 0018:ffff8881ae06fba0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000000 RBX: 0000000000000246 RCX: 1ffffffff0fd4d4a
-RDX: 1ffff11039bbe747 RSI: 0000000000000000 RDI: ffff8881cddf3a38
-RBP: ffff8881db228400 R08: 0000000000000000 R09: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff8881db228480 R14: ffff8881ae06fdf8 R15: ffff8881db228400
- unlock_hrtimer_base kernel/time/hrtimer.c:898 [inline]
- hrtimer_start_range_ns+0x5cd/0xb50 kernel/time/hrtimer.c:1136
- hrtimer_start_expires include/linux/hrtimer.h:435 [inline]
- hrtimer_sleeper_start_expires kernel/time/hrtimer.c:1800 [inline]
- do_nanosleep+0x1b9/0x650 kernel/time/hrtimer.c:1876
- hrtimer_nanosleep+0x1df/0x3a0 kernel/time/hrtimer.c:1932
- __do_sys_nanosleep kernel/time/hrtimer.c:1966 [inline]
- __se_sys_nanosleep kernel/time/hrtimer.c:1953 [inline]
- __x64_sys_nanosleep+0x1dc/0x260 kernel/time/hrtimer.c:1953
- do_syscall_64+0xb6/0x5a0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45af70
-Code: Bad RIP value.
-RSP: 002b:00007fff27bba8e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000023
-RAX: ffffffffffffffda RBX: 000000000009722e RCX: 000000000045af70
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007fff27bba8f0
-RBP: 00000000000001de R08: 0000000000000001 R09: 0000000001410940
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fff27bba940 R14: 000000000009722e R15: 00007fff27bba950
-BUG: unable to handle page fault for address: ffffffffffffffc8
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 7026067 P4D 7026067 PUD 7028067 PMD 0 
-Oops: 0000 [#1] SMP KASAN
-CPU: 0 PID: 355 Comm: syz-executor.2 Not tainted 5.7.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:ath9k_htc_rxep+0xb5/0x210 drivers/net/wireless/ath/ath9k/htc_drv_txrx.c:1130
-Code: 8b 43 38 48 8d 58 c8 49 39 c4 0f 84 ee 00 00 00 e8 90 fd 61 fe 48 89 d8 48 c1 e8 03 0f b6 04 28 84 c0 74 06 0f 8e 0a 01 00 00 <44> 0f b6 3b 31 ff 44 89 fe e8 cd fe 61 fe 45 84 ff 75 a8 e8 63 fd
-RSP: 0018:ffff8881db209870 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffffffffffffc8 RCX: ffffc900004a7000
-RDX: 0000000000040000 RSI: ffffffff82ddb320 RDI: ffff8881db2097e0
-RBP: dffffc0000000000 R08: 0000000000000004 R09: ffffed103b6412fd
-R10: 0000000000000003 R11: ffffed103b6412fc R12: ffff8881ac34b4d8
-R13: ffff8881ac34b0a0 R14: ffff8881ac34b4e8 R15: ffffed10392efc10
-FS:  0000000001410940(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffc8 CR3: 00000001ae02b000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- ath9k_htc_rx_msg+0x2d9/0xb00 drivers/net/wireless/ath/ath9k/htc_hst.c:459
- ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:638 [inline]
- ath9k_hif_usb_rx_cb+0xc76/0x1050 drivers/net/wireless/ath/ath9k/hif_usb.c:671
- __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
- usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
- dummy_timer+0x125e/0x32b4 drivers/usb/gadget/udc/dummy_hcd.c:1967
- call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0x5e5/0x14c0 kernel/time/timer.c:1786
- __do_softirq+0x21e/0x996 kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0x178/0x1a0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:546 [inline]
- smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1107
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
-RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
-RIP: 0010:_raw_spin_unlock_irqrestore+0x3b/0x40 kernel/locking/spinlock.c:191
-Code: e8 1a 69 8d fb 48 89 ef e8 42 5d 8e fb f6 c7 02 75 11 53 9d e8 26 e6 ab fb 65 ff 0d 57 e4 68 7a 5b 5d c3 e8 e7 de ab fb 53 9d <eb> ed 0f 1f 00 55 48 89 fd 65 ff 05 3d e4 68 7a 45 31 c9 41 b8 01
-RSP: 0018:ffff8881ae06fba0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000000 RBX: 0000000000000246 RCX: 1ffffffff0fd4d4a
-RDX: 1ffff11039bbe747 RSI: 0000000000000000 RDI: ffff8881cddf3a38
-RBP: ffff8881db228400 R08: 0000000000000000 R09: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff8881db228480 R14: ffff8881ae06fdf8 R15: ffff8881db228400
- unlock_hrtimer_base kernel/time/hrtimer.c:898 [inline]
- hrtimer_start_range_ns+0x5cd/0xb50 kernel/time/hrtimer.c:1136
- hrtimer_start_expires include/linux/hrtimer.h:435 [inline]
- hrtimer_sleeper_start_expires kernel/time/hrtimer.c:1800 [inline]
- do_nanosleep+0x1b9/0x650 kernel/time/hrtimer.c:1876
- hrtimer_nanosleep+0x1df/0x3a0 kernel/time/hrtimer.c:1932
- __do_sys_nanosleep kernel/time/hrtimer.c:1966 [inline]
- __se_sys_nanosleep kernel/time/hrtimer.c:1953 [inline]
- __x64_sys_nanosleep+0x1dc/0x260 kernel/time/hrtimer.c:1953
- do_syscall_64+0xb6/0x5a0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45af70
-Code: Bad RIP value.
-RSP: 002b:00007fff27bba8e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000023
-RAX: ffffffffffffffda RBX: 000000000009722e RCX: 000000000045af70
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007fff27bba8f0
-RBP: 00000000000001de R08: 0000000000000001 R09: 0000000001410940
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fff27bba940 R14: 000000000009722e R15: 00007fff27bba950
-Modules linked in:
-CR2: ffffffffffffffc8
----[ end trace 4488f3a2c836a427 ]---
-RIP: 0010:ath9k_htc_rxep+0xb5/0x210 drivers/net/wireless/ath/ath9k/htc_drv_txrx.c:1130
-Code: 8b 43 38 48 8d 58 c8 49 39 c4 0f 84 ee 00 00 00 e8 90 fd 61 fe 48 89 d8 48 c1 e8 03 0f b6 04 28 84 c0 74 06 0f 8e 0a 01 00 00 <44> 0f b6 3b 31 ff 44 89 fe e8 cd fe 61 fe 45 84 ff 75 a8 e8 63 fd
-RSP: 0018:ffff8881db209870 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffffffffffffc8 RCX: ffffc900004a7000
-RDX: 0000000000040000 RSI: ffffffff82ddb320 RDI: ffff8881db2097e0
-RBP: dffffc0000000000 R08: 0000000000000004 R09: ffffed103b6412fd
-R10: 0000000000000003 R11: ffffed103b6412fc R12: ffff8881ac34b4d8
-R13: ffff8881ac34b0a0 R14: ffff8881ac34b4e8 R15: ffffed10392efc10
-FS:  0000000001410940(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffc8 CR3: 00000001ae02b000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
