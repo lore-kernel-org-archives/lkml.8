@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27699C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C281C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0CE921924
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F8B21924
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442782;
-	bh=th9LzinmB/iJByqx4yAfdoibilCaqLb71XRYANjmnxQ=;
+	s=default; t=1592442791;
+	bh=M50ufoemI63gZ3fe4MejLYNALLeX/lnGiYzNt2MofMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AC00pumwIqByESjC0jXvZp8FSupyMVAKgFpNGC1Ava+ajswReQIYWPhybSPc+SknP
-	 m8WID4IwcESVrOwZ3/KLbz1Wj39bmsalRITo7D/jPCxI+KFIJOIUkpghrdTW+A+KOE
-	 Mm5admBtCGihkk3yLi/cQPbYDgvgEkE6QM7xybTQ=
+	b=yJ9aSGw5lmUdHZ5DvqYQQP6SAblMWfp42cVjCguztpmhV8vQB7Z25SZKFGg7nFMZw
+	 QyJyLMxLv8lSqkFZPq231AQIgypw7Qxu9huQ01vw/OOV3SHARqp0kIm5pmLImwXFYW
+	 ZHy67FGfvAgJbXPMBwRus2wM+98xq3QIgTWYsHKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgFRBM7 (ORCPT
+        id S1729052AbgFRBNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40390 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:13:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727842AbgFRBMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:03 -0400
+        id S1728848AbgFRBMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8270E20EDD;
-        Thu, 18 Jun 2020 01:12:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63AE920B1F;
+        Thu, 18 Jun 2020 01:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442723;
-        bh=th9LzinmB/iJByqx4yAfdoibilCaqLb71XRYANjmnxQ=;
+        s=default; t=1592442726;
+        bh=M50ufoemI63gZ3fe4MejLYNALLeX/lnGiYzNt2MofMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oPy5/jkspVZpMf/fD/AEeYz5xPac0eJU9QAmuuSQgMp8pY4J9mG7XUtpKY/hCop1d
-         kW4no/YUVtDCMJwSZS4PrfQi63+uLwMtc4w5KieG2h1t86fm2coRtDonrJ2r8AFCTH
-         o5N5o1t252ApOa8xZa7LW/lD4a2KxnvBjwcNRAF8=
+        b=bm5Q/iOJO3LCkplN3/4l8SoOUCoNEMs0ocVriCfLd4ubbB9Mgi5B7v0LhfXKtG7hx
+         jHhuZyOo0WWwfwVOopOGgPNe2a0PW8IKSHuPNEwEcBjUgrSDHxnZhH2IS99BGwafQ+
+         QaHqfafeh7PdmQiCJzeUB3uT/jQsxILahb1WYL/M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 181/388] power: supply: smb347-charger: IRQSTAT_D is volatile
-Date:   Wed, 17 Jun 2020 21:04:38 -0400
-Message-Id: <20200618010805.600873-181-sashal@kernel.org>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.7 183/388] ASoC: SOF: core: fix error return code in sof_probe_continue()
+Date:   Wed, 17 Jun 2020 21:04:40 -0400
+Message-Id: <20200618010805.600873-183-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,36 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit c32ea07a30630ace950e07ffe7a18bdcc25898e1 ]
+[ Upstream commit 7d8785bc7adbb4dc5ba8ee06994107637848ded8 ]
 
-Fix failure when USB cable is connected:
-smb347 2-006a: reading IRQSTAT_D failed
+Fix to return negative error code -ENOMEM from the IPC init error
+handling case instead of 0, as done elsewhere in this function.
 
-Fixes: 1502cfe19bac ("smb347-charger: Fix battery status reporting logic for charger faults")
-
-Tested-by: David Heidelberg <david@ixit.cz>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: David Heidelberg <david@ixit.cz>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Fixes: c16211d6226d ("ASoC: SOF: Add Sound Open Firmware driver core")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Link: https://lore.kernel.org/r/20200509093337.78897-1-weiyongjun1@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/smb347-charger.c | 1 +
+ sound/soc/sof/core.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/power/supply/smb347-charger.c b/drivers/power/supply/smb347-charger.c
-index c1d124b8be0c..d102921b3ab2 100644
---- a/drivers/power/supply/smb347-charger.c
-+++ b/drivers/power/supply/smb347-charger.c
-@@ -1138,6 +1138,7 @@ static bool smb347_volatile_reg(struct device *dev, unsigned int reg)
- 	switch (reg) {
- 	case IRQSTAT_A:
- 	case IRQSTAT_C:
-+	case IRQSTAT_D:
- 	case IRQSTAT_E:
- 	case IRQSTAT_F:
- 	case STAT_A:
+diff --git a/sound/soc/sof/core.c b/sound/soc/sof/core.c
+index 91acfae7935c..74b438216216 100644
+--- a/sound/soc/sof/core.c
++++ b/sound/soc/sof/core.c
+@@ -176,6 +176,7 @@ static int sof_probe_continue(struct snd_sof_dev *sdev)
+ 	/* init the IPC */
+ 	sdev->ipc = snd_sof_ipc_init(sdev);
+ 	if (!sdev->ipc) {
++		ret = -ENOMEM;
+ 		dev_err(sdev->dev, "error: failed to init DSP IPC %d\n", ret);
+ 		goto ipc_err;
+ 	}
 -- 
 2.25.1
 
