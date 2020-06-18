@@ -2,150 +2,70 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE11C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34B7220734
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:10:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SdwMOn5h"
+	by mail.kernel.org (Postfix) with ESMTP id 96F5520734
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730592AbgFROKc (ORCPT
+        id S1730649AbgFROKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:10:32 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:37945 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728707AbgFROKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:10:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592489431; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=jjmPl8ffifdefNdsGpjiapdQuNH9tn0Yaao34JTd4R8=; b=SdwMOn5hPHW7Xmm3iZhCgkFKvKEQCULnbPaf4A/3nQRjCe42k1EbTsVjap5reDQn7IvtZk7g
- QocllmixizEt5FqHCOmwICOSm9pljtd+Z5FuZkM81i6v0LYk5yFF76xenZM/+v02TPE3WAx6
- dnnJwY2TA8iRiFVZamw4OMbezug=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
- 5eeb75d0567385e8e7ff6a57 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 18 Jun 2020 14:10:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0BAEAC43391; Thu, 18 Jun 2020 14:10:23 +0000 (UTC)
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0EF7EC433C8;
-        Thu, 18 Jun 2020 14:10:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0EF7EC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Thu, 18 Jun 2020 08:10:21 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        georgi.djakov@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        dianders@chromium.org, swboyd@chromium.org, rnayak@codeaurora.org,
-        lsrao@codeaurora.org
-Subject: Re: [PATCH] soc: qcom: rpmh: Update rpmh_invalidate function to
- return void
-Message-ID: <20200618141021.GG12942@codeaurora.org>
-References: <1592485553-29163-1-git-send-email-mkshah@codeaurora.org>
+        Thu, 18 Jun 2020 10:10:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728707AbgFROKe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 10:10:34 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85690C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:10:34 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jlvF6-0003LK-7Q; Thu, 18 Jun 2020 16:10:12 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 8CCA9101482; Thu, 18 Jun 2020 16:10:11 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Lai Jiangshan <jiangshanlai+lkml@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH V2 0/4] x86/entry: simply stack switching when exception on userspace
+In-Reply-To: <CAJhGHyC+LswHw+=Ymo92CX-ffFB=PJRP0bSLOWEN42KLPfvJ6w@mail.gmail.com>
+References: <87mu5roov6.fsf@nanos.tec.linutronix.de> <20200529082618.1697-1-laijs@linux.alibaba.com> <CALCETrXKdh=nBWz96pow5roLmh0ez2YeQ9P+H5gxdor5TfrqUQ@mail.gmail.com> <CAJhGHyBSzhm7h5dROAKSzdSD3czmUNG+80rS9tpaau_U23p4Ug@mail.gmail.com> <CAJhGHyC+LswHw+=Ymo92CX-ffFB=PJRP0bSLOWEN42KLPfvJ6w@mail.gmail.com>
+Date:   Thu, 18 Jun 2020 16:10:11 +0200
+Message-ID: <877dw4cvng.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1592485553-29163-1-git-send-email-mkshah@codeaurora.org>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18 2020 at 07:06 -0600, Maulik Shah wrote:
->Currently rpmh_invalidate() always returns success. Update its
->return type to void.
->
->Suggested-by: Stephen Boyd <swboyd@chromium.org>
->Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Lina Iyer <ilina@codeaurora.org>
+Lai,
 
->---
-> drivers/interconnect/qcom/bcm-voter.c | 6 +-----
-> drivers/soc/qcom/rpmh.c               | 4 +---
-> include/soc/qcom/rpmh.h               | 7 ++++---
-> 3 files changed, 6 insertions(+), 11 deletions(-)
->
->diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
->index 2a11a63..a3d2ef1 100644
->--- a/drivers/interconnect/qcom/bcm-voter.c
->+++ b/drivers/interconnect/qcom/bcm-voter.c
->@@ -266,11 +266,7 @@ int qcom_icc_bcm_voter_commit(struct bcm_voter *voter)
-> 	if (!commit_idx[0])
-> 		goto out;
->
->-	ret = rpmh_invalidate(voter->dev);
->-	if (ret) {
->-		pr_err("Error invalidating RPMH client (%d)\n", ret);
->-		goto out;
->-	}
->+	rpmh_invalidate(voter->dev);
->
-> 	ret = rpmh_write_batch(voter->dev, RPMH_ACTIVE_ONLY_STATE,
-> 			       cmds, commit_idx);
->diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
->index f2b5b46c..b61e183 100644
->--- a/drivers/soc/qcom/rpmh.c
->+++ b/drivers/soc/qcom/rpmh.c
->@@ -497,7 +497,7 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
->  *
->  * Invalidate the sleep and wake values in batch_cache.
->  */
->-int rpmh_invalidate(const struct device *dev)
->+void rpmh_invalidate(const struct device *dev)
-> {
-> 	struct rpmh_ctrlr *ctrlr = get_rpmh_ctrlr(dev);
-> 	struct batch_cache_req *req, *tmp;
->@@ -509,7 +509,5 @@ int rpmh_invalidate(const struct device *dev)
-> 	INIT_LIST_HEAD(&ctrlr->batch_cache);
-> 	ctrlr->dirty = true;
-> 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->-
->-	return 0;
-> }
-> EXPORT_SYMBOL(rpmh_invalidate);
->diff --git a/include/soc/qcom/rpmh.h b/include/soc/qcom/rpmh.h
->index f9ec353..bdbee1a 100644
->--- a/include/soc/qcom/rpmh.h
->+++ b/include/soc/qcom/rpmh.h
->@@ -20,7 +20,7 @@ int rpmh_write_async(const struct device *dev, enum rpmh_state state,
-> int rpmh_write_batch(const struct device *dev, enum rpmh_state state,
-> 		     const struct tcs_cmd *cmd, u32 *n);
->
->-int rpmh_invalidate(const struct device *dev);
->+void rpmh_invalidate(const struct device *dev);
->
-> #else
->
->@@ -38,8 +38,9 @@ static inline int rpmh_write_batch(const struct device *dev,
-> 				   const struct tcs_cmd *cmd, u32 *n)
-> { return -ENODEV; }
->
->-static inline int rpmh_invalidate(const struct device *dev)
->-{ return -ENODEV; }
->+static inline void rpmh_invalidate(const struct device *dev)
->+{
->+}
->
-> #endif /* CONFIG_QCOM_RPMH */
->
->-- 
->QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->of Code Aurora Forum, hosted by The Linux Foundation
->
+Lai Jiangshan <jiangshanlai+lkml@gmail.com> writes:
+
+> Hello and Ping
+
+you have poked on that on Tuesday, i.e. 2 days ago. It's on the todo
+list, but not the must urgent problem on the planet.
+
+Thanks
+
+        tglx
