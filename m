@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBED4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFB2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB52D20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6780920885
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446936;
-	bh=uPBiJ4AumncjvZcxAi3pEEIlqWJqyQ0HKHJnDQw2Iqo=;
+	s=default; t=1592446939;
+	bh=Z0RcWYenrpj8+WEO56fwKNjTcwN2Tnh89HFmd30u+7s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c6Sg5YEZM5QySgzRxd+livfvusxTiWEW5faNi30E8Kg5wnssN6cOAejDi7k7du4UW
-	 MnZgQuK9saqoaoJLQx/Z5LlSCG1+TBmAM0jZ8QxzonTLgg+QFydKdoRGpibpBERqb4
-	 ltQREN3QZsxwVePKwRY6HJBdpkRXMx987X3uW1xA=
+	b=Ydr9DMvGw4cjUGjw4szOw73VA4nVixEUys9f/wmRyix0NEiHe6srMdgLMKIhCitF/
+	 kltUyVhRhO5yIfM8YgJkEB+Hk2cP5fd0ywm523YoBBpEW9SAwAMrrxVfERP0TV651i
+	 YlbiZ04DNw3pX/eyCCOKvSJ7dALTQtBmKtsjDavg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730294AbgFRCWH (ORCPT
+        id S1729923AbgFRBSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:22:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49878 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:18:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729931AbgFRBS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:18:28 -0400
+        id S1729474AbgFRBP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC2E8221F1;
-        Thu, 18 Jun 2020 01:18:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79B192193E;
+        Thu, 18 Jun 2020 01:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443107;
-        bh=uPBiJ4AumncjvZcxAi3pEEIlqWJqyQ0HKHJnDQw2Iqo=;
+        s=default; t=1592442928;
+        bh=Z0RcWYenrpj8+WEO56fwKNjTcwN2Tnh89HFmd30u+7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3MglZ/Cef6ZIo4L0GAGKWafbNHgYQ8rFbqw3iRbNvARdGIdFAY1xNGbXoRcG/fby
-         UY+5v6lR2DP2Q1CIK8IdJ39HyTqQPuL9g20mjEGLwd2n+bOVvaGvf9M84XdXwq3Wa2
-         QpLpbcCp00Es4B7rAfGww/5086BtXZtPTItQT7zo=
+        b=ehoTLYQtnp4AKHJwIefrdbJzkk2JiZ5I4Ck2iL0SPCJkSMC9Gl40+AWCZKkKjyNjq
+         FqoukQB20oB+dDCnHtXDGKJ8aNjIjs4xcxmYBnJUirol6uGSQaXJjREA4r3h2O7Kd/
+         RzJ/8TqDfrIvr8GunPBi/2LeZUXfqjUNb8v15b6E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, greybus-dev@lists.linaro.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.4 085/266] staging: greybus: fix a missing-check bug in gb_lights_light_config()
-Date:   Wed, 17 Jun 2020 21:13:30 -0400
-Message-Id: <20200618011631.604574-85-sashal@kernel.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Marcelo Bandeira Condotta <mcondotta@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 342/388] KVM: selftests: Fix build with "make ARCH=x86_64"
+Date:   Wed, 17 Jun 2020 21:07:19 -0400
+Message-Id: <20200618010805.600873-342-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
-References: <20200618011631.604574-1-sashal@kernel.org>
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,36 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit 9bb086e5ba9495ac150fbbcc5c8c2bccc06261dd ]
+[ Upstream commit b80db73dc8be7022adae1b4414a1bebce50fe915 ]
 
-In gb_lights_light_config(), 'light->name' is allocated by kstrndup().
-It returns NULL when fails, add check for it.
+Marcelo reports that kvm selftests fail to build with
+"make ARCH=x86_64":
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
-Link: https://lore.kernel.org/r/20200401030017.100274-1-chenzhou10@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+gcc -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99
+ -fno-stack-protector -fno-PIE -I../../../../tools/include
+ -I../../../../tools/arch/x86_64/include  -I../../../../usr/include/
+ -Iinclude -Ilib -Iinclude/x86_64 -I.. -c lib/kvm_util.c
+ -o /var/tmp/20200604202744-bin/lib/kvm_util.o
+
+In file included from lib/kvm_util.c:11:
+include/x86_64/processor.h:14:10: fatal error: asm/msr-index.h: No such
+ file or directory
+
+ #include <asm/msr-index.h>
+          ^~~~~~~~~~~~~~~~~
+compilation terminated.
+
+"make ARCH=x86", however, works. The problem is that arch specific headers
+for x86_64 live in 'tools/arch/x86/include', not in
+'tools/arch/x86_64/include'.
+
+Fixes: 66d69e081b52 ("selftests: fix kvm relocatable native/cross builds and installs")
+Reported-by: Marcelo Bandeira Condotta <mcondotta@redhat.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Message-Id: <20200605142028.550068-1-vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/greybus/light.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/testing/selftests/kvm/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
-index d6ba25f21d80..d2672b65c3f4 100644
---- a/drivers/staging/greybus/light.c
-+++ b/drivers/staging/greybus/light.c
-@@ -1026,7 +1026,8 @@ static int gb_lights_light_config(struct gb_lights *glights, u8 id)
- 
- 	light->channels_count = conf.channel_count;
- 	light->name = kstrndup(conf.name, NAMES_MAX, GFP_KERNEL);
--
-+	if (!light->name)
-+		return -ENOMEM;
- 	light->channels = kcalloc(light->channels_count,
- 				  sizeof(struct gb_channel), GFP_KERNEL);
- 	if (!light->channels)
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index 42f4f49f2a48..2c85b9dd86f5 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -80,7 +80,11 @@ LIBKVM += $(LIBKVM_$(UNAME_M))
+ INSTALL_HDR_PATH = $(top_srcdir)/usr
+ LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
+ LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
++ifeq ($(ARCH),x86_64)
++LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/x86/include
++else
+ LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/$(ARCH)/include
++endif
+ CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
+ 	-fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
+ 	-I$(LINUX_TOOL_ARCH_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude \
 -- 
 2.25.1
 
