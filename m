@@ -2,213 +2,160 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9808320888
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2020207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:49:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ceY3GOfJ"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="klf6PYxy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbgFRXo0 (ORCPT
+        id S1727982AbgFRXtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 19:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56074 "EHLO
+        Thu, 18 Jun 2020 19:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgFRXoZ (ORCPT
+        with ESMTP id S1726001AbgFRXtZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 19:44:25 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E66DC0613EE
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:44:24 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k2so3302682pjs.2
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:44:24 -0700 (PDT)
+        Thu, 18 Jun 2020 19:49:25 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48114C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:49:25 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id m2so3491956pjv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:49:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yvMb0a2c10861vhwKbOrdUepqOFkOOTrJVCk2dRfuZY=;
-        b=ceY3GOfJpNh0ZC/Fk/jOULWNhQVbB5DWH9hsXiIJPYBcRUoNpbt1Qsj/70w29kdaD+
-         Wl7AaXV1XouuHHR8bDaZ++vSMCCFR4atOHlv7cRBBxVkOKKkaeKN54Pc3hJsrRvL15XB
-         L0o+v/kLgFBNzOCDuE/RR/SdvLQIchUdVhIhwMifEVe0Zzy5lhyreetnLITGYGsnqaBP
-         bNDkldIDaNGYip8xamFAVWn3Wz1D7aSrUEVUe7YeaavLcmxNRF91YY7AEDcJNYCG9Rnf
-         t/w8tOcnYbO3kh1D/edX4na0mJuVD7Y0LUmTeh1GX5SV2ExvQrWX7AuO7rSRBNk0ftr4
-         YEdA==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yYUcfax4E2dlsz0hVRBnudhd98bc0SpSGm5R4FipwaQ=;
+        b=klf6PYxyM9AmxSgk8zCOKLbtBcPW9VhTg0ulvIVXLz/AQn8z6IwTCbD59rmvPhi93e
+         y+DkH7ecRkHn7zLAR2VVtt01GFPgG63EEVZv4/GreOx/9rbvhZsgMJs45i/pgYOsj3ny
+         6ezT4eI6QXUlGoesRGqlin/ErRc02ZdEXzM9Lwv2OBPXgymW7S+O2+uWS7/D1kKHflEL
+         OT1UsJzh7peBJbJSUEk5WrCSc8VhuSMWv/y3tiJqFhRBEPF9V3BGHzXJSpn8eTl7IDCh
+         Ukz3KSPCPw3lwJnElbwl8nmANvhUB9g/RKgjXSWYs2PDzhBct5zE5ugGtNa/ODGWZxrx
+         lwTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yvMb0a2c10861vhwKbOrdUepqOFkOOTrJVCk2dRfuZY=;
-        b=E+XitbCB9ROYZ5xFJ3jt5yqpgb1G0OhVUIHjjCKQ6MmepqNn6PPoFjtzjK+bszv1Al
-         hg5m9B0u6vOAiaAMNskjIEFJpC2mpIzOPxKgs9YnsGcMZIRjsww2FUCxFghjxLWUcbgt
-         4v7QaURC+/Jjzy0HUFASOXeRhwj9UzrtvtUUzh3pv9oyMyi6gUPORRTgSMhyrY0c44wB
-         YWnvTapEoYfiEVF4t3m6unjcrezWFI6hBQS1C9WDRmJqVEft0AUee1dZDG0uTEYUEGVR
-         RihxoLWvjVPLpXbD5zFNVx5MJGuv5884KQAuu4wtKsaj3X4QoomU7LE5sWGnlAHT2LrG
-         yv+g==
-X-Gm-Message-State: AOAM533iMMiCZYohx2YO2H3ojQ+88Pa9oHEg0kGtVMFi1I3RFafMTHUj
-        rHfDIZDjuH7cqWSMrmslR76H5w==
-X-Google-Smtp-Source: ABdhPJyNWW8E/cNTuVgEqsGVFJm/OQSR0fcdze58ugdAUPV3L4aNzeiuPCG4YmpZJ7ubSzIfsKricQ==
-X-Received: by 2002:a17:902:b216:: with SMTP id t22mr5527631plr.181.1592523863778;
-        Thu, 18 Jun 2020 16:44:23 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h9sm3967767pfe.32.2020.06.18.16.44.22
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=yYUcfax4E2dlsz0hVRBnudhd98bc0SpSGm5R4FipwaQ=;
+        b=YnSYLqswfoO2XCwip4H7ODiZ6YXRybYp9/5wNtyZofylByJxRNTRjjSR+TFDpTgwHG
+         7s4RfJBVf6JYkUSqlhoifJiVJHupj0jGgWPWlVHGWI7Xoo4CmJcrMCYylwJ8deS81+mc
+         CxFiDSFzEO1Vgo8kZQMWMBW8HkC/ec991jJYsID3QV8uqJuYpfZxkelGFeO7ocVndHSe
+         EcwjeDVlbHbCoh/vkjpPzDwTC/89VtRM6qDSAhx1nSSu8bS7TsBaub7Yn1pt9bdqCbjr
+         hMABTnlqGr9CgMTnPEjkRu2nGvvJ+gXGeu1iIlfRWGKoY0YYRDBUtvYEyYTr4CPLclyy
+         Aozw==
+X-Gm-Message-State: AOAM531fGJ6z/RYOTUuO86157bej+RuViZMuPV1nNiiIy4EL3I0EKcVX
+        vmWlkNO02ZNzopPVAUrP5T0kAKFxM0ZNTA==
+X-Google-Smtp-Source: ABdhPJx/FYurnEYAtKAZPHIo+SrvRxkIg9o39R8+0LYg79YjNV81gAy08r0kIzj7nF+RFqdHW7P8tw==
+X-Received: by 2002:a17:90a:5218:: with SMTP id v24mr665196pjh.223.1592524164257;
+        Thu, 18 Jun 2020 16:49:24 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id f14sm3456421pjq.36.2020.06.18.16.49.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 16:44:22 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 16:44:20 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, nishakumari@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH v4 1/5] regulator: Allow regulators to verify enabled
- during enable()
-Message-ID: <20200618234420.GI11847@yoga>
-References: <20200602100924.26256-1-sumit.semwal@linaro.org>
- <20200602100924.26256-2-sumit.semwal@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602100924.26256-2-sumit.semwal@linaro.org>
+        Thu, 18 Jun 2020 16:49:23 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 16:49:23 -0700 (PDT)
+X-Google-Original-Date: Thu, 18 Jun 2020 16:45:09 PDT (-0700)
+Subject:     Re: [PATCH 18/25] mm/riscv: Use mm_fault_accounting()
+In-Reply-To: <20200615221607.7764-19-peterx@redhat.com>
+CC:     linux-kernel@vger.kernel.org, gerald.schaefer@de.ibm.com,
+        akpm@linux-foundation.org, peterx@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        aarcange@redhat.com, Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     peterx@redhat.com
+Message-ID: <mhng-261b69ba-d08f-4560-9c69-f4ece64a7729@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 02 Jun 03:09 PDT 2020, Sumit Semwal wrote:
-
-> Some regulators might need to verify that they have indeed been enabled
-> after the enable() call is made and enable_time delay has passed.
-> 
-> This is implemented by repeatedly checking is_enabled() upto
-> poll_enabled_time, waiting for the already calculated enable delay in
-> each iteration.
-> 
-> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-> --
-> v2: Address review comments, including swapping enable_time and poll_enabled_time.
+On Mon, 15 Jun 2020 15:16:00 PDT (-0700), peterx@redhat.com wrote:
+> Use the new mm_fault_accounting() helper for page fault accounting.
+>
+> Avoid doing page fault accounting multiple times if the page fault is retried.
+>
+> CC: Paul Walmsley <paul.walmsley@sifive.com>
+> CC: Palmer Dabbelt <palmer@dabbelt.com>
+> CC: Albert Ou <aou@eecs.berkeley.edu>
+> CC: linux-riscv@lists.infradead.org
+> Signed-off-by: Peter Xu <peterx@redhat.com>
 > ---
->  drivers/regulator/core.c         | 58 +++++++++++++++++++++++++++++++-
->  include/linux/regulator/driver.h |  5 +++
->  2 files changed, 62 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-> index 7486f6e4e613..d9ab888da95f 100644
-> --- a/drivers/regulator/core.c
-> +++ b/drivers/regulator/core.c
-> @@ -2347,6 +2347,32 @@ static void _regulator_enable_delay(unsigned int delay)
->  		udelay(us);
->  }
->  
-> +/* _regulator_check_status_enabled
+>  arch/riscv/mm/fault.c | 21 +++------------------
+>  1 file changed, 3 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
+> index be84e32adc4c..9262338614d1 100644
+> --- a/arch/riscv/mm/fault.c
+> +++ b/arch/riscv/mm/fault.c
+> @@ -30,7 +30,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+>  	struct vm_area_struct *vma;
+>  	struct mm_struct *mm;
+>  	unsigned long addr, cause;
+> -	unsigned int flags = FAULT_FLAG_DEFAULT;
+> +	unsigned int flags = FAULT_FLAG_DEFAULT, major = 0;
+>  	int code = SEGV_MAPERR;
+>  	vm_fault_t fault;
+>
+> @@ -65,9 +65,6 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+>
+>  	if (user_mode(regs))
+>  		flags |= FAULT_FLAG_USER;
+> -
+> -	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
+> -
+>  retry:
+>  	down_read(&mm->mmap_sem);
+>  	vma = find_vma(mm, addr);
+> @@ -111,6 +108,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+>  	 * the fault.
+>  	 */
+>  	fault = handle_mm_fault(vma, addr, flags);
+> +	major |= fault & VM_FAULT_MAJOR;
+>
+>  	/*
+>  	 * If we need to retry but a fatal signal is pending, handle the
+> @@ -128,21 +126,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+>  		BUG();
+>  	}
+>
+> -	/*
+> -	 * Major/minor page fault accounting is only done on the
+> -	 * initial attempt. If we go through a retry, it is extremely
+> -	 * likely that the page will be found in page cache at that point.
+> -	 */
+>  	if (flags & FAULT_FLAG_ALLOW_RETRY) {
+> -		if (fault & VM_FAULT_MAJOR) {
+> -			tsk->maj_flt++;
+> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ,
+> -				      1, regs, addr);
+> -		} else {
+> -			tsk->min_flt++;
+> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN,
+> -				      1, regs, addr);
+> -		}
+>  		if (fault & VM_FAULT_RETRY) {
+>  			flags |= FAULT_FLAG_TRIED;
+>
+> @@ -156,6 +140,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+>  	}
+>
+>  	up_read(&mm->mmap_sem);
+> +	mm_fault_accounting(tsk, regs, addr, major);
+>  	return;
+>
+>  	/*
 
-Please make all your kerneldoc follow:
-https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html#function-documentation
-
-> + *
-> + * returns:
-> + *          1 if status shows regulator is in enabled state
-> + *          0 if not enabled state
-> + *          else, error value as received from ops->get_status()
-> + */
-> +static inline int _regulator_check_status_enabled(struct regulator_dev *rdev)
-> +{
-> +	int ret = rdev->desc->ops->get_status(rdev);
-> +
-> +	if (ret < 0) {
-> +		rdev_info(rdev, "get_status returned error: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	switch (ret) {
-> +	case REGULATOR_STATUS_OFF:
-> +	case REGULATOR_STATUS_ERROR:
-> +	case REGULATOR_STATUS_UNDEFINED:
-> +		return 0;
-> +	default:
-> +		return 1;
-> +	}
-> +}
-> +
->  static int _regulator_do_enable(struct regulator_dev *rdev)
->  {
->  	int ret, delay;
-> @@ -2407,7 +2433,37 @@ static int _regulator_do_enable(struct regulator_dev *rdev)
->  	 * together.  */
->  	trace_regulator_enable_delay(rdev_get_name(rdev));
->  
-> -	_regulator_enable_delay(delay);
-> +	/* If poll_enabled_time is set, poll upto the delay calculated
-> +	 * above, delaying poll_enabled_time uS to check if the regulator
-> +	 * actually got enabled.
-> +	 * If the regulator isn't enabled after enable_delay has
-> +	 * expired, return -ETIMEDOUT.
-> +	 */
-> +	if (rdev->desc->poll_enabled_time) {
-> +		unsigned int time_remaining = delay;
-> +
-> +		while (time_remaining > 0) {
-> +			_regulator_enable_delay(rdev->desc->poll_enabled_time);
-> +
-> +			if (rdev->desc->ops->get_status) {
-> +				ret = _regulator_check_status_enabled(rdev);
-> +				if (ret < 0)
-> +					return ret;
-> +				else if (ret)
-> +					break;
-> +			} else if (rdev->desc->ops->is_enabled(rdev))
-> +				break;
-> +
-> +			time_remaining -= rdev->desc->poll_enabled_time;
-> +		}
-> +
-> +		if (time_remaining <= 0) {
-> +			rdev_err(rdev, "Enabled check failed.\n");
-> +			return -ETIMEDOUT;
-> +		}
-> +	} else {
-> +		_regulator_enable_delay(delay);
-> +	}
->  
->  	trace_regulator_enable_complete(rdev_get_name(rdev));
->  
-> diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
-> index 29d920516e0b..bb50e943010f 100644
-> --- a/include/linux/regulator/driver.h
-> +++ b/include/linux/regulator/driver.h
-> @@ -322,6 +322,9 @@ enum regulator_type {
->   * @enable_time: Time taken for initial enable of regulator (in uS).
->   * @off_on_delay: guard time (in uS), before re-enabling a regulator
->   *
-> + * @poll_enabled_time: Maximum time (in uS) to poll if the regulator is
-> + *                          actually enabled, after enable() call
-
-I read this as "how long should we stay in the poll loop". I think it
-would be better describes as something like "The polling interval to use
-while checking that the regulator was actually enabled".
-
-Regards,
-Bjorn
-
-> + *
->   * @of_map_mode: Maps a hardware mode defined in a DeviceTree to a standard mode
->   */
->  struct regulator_desc {
-> @@ -389,6 +392,8 @@ struct regulator_desc {
->  
->  	unsigned int off_on_delay;
->  
-> +	unsigned int poll_enabled_time;
-> +
->  	unsigned int (*of_map_mode)(unsigned int mode);
->  };
->  
-> -- 
-> 2.26.2
-> 
+AFAICT this changes the behavior of the perf event: it used to count any fault,
+whereas now it only counts those that succeed successfully.  If everyone else
+is doing it that way then I'm happy to change us over, but this definately
+isn't just avoiding retries.
