@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A639C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B21C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C85F7221E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DBE720CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442609;
-	bh=7OFBYehAghyI03+0CzcorCPm2clfgBnBM6lz8Cfhh80=;
+	s=default; t=1592442615;
+	bh=BGdvKK5DrbYBFeR4C8aGl3gQsYyEsDpaxKr1dkc8478=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nNEOd269GhR2ZRDv7kJrUryGHjTyLxqCdoTVHeFFpuKY3K+VjAjoVQIEz8TuvB/Ys
-	 8YDwNpVjgNxNMn+s9UlCJDxSjitWA4HfsTH94qVdHE/KPeZyU+0PVYE2LI64yCYEZK
-	 a9yDVKawlNkH83f/HQGo1izuSLNitq7OORb/1xKo=
+	b=R9/0GaRU7hgeExCUYk1Y2mv9cIu9+73Nte2rZ5sYINpFxdiswVx82jMqDKsREVQRe
+	 /ts/HG3AXsQN0BjaPoLzCMhkHn3SzhF/jql8XA1M7UOP7mHE1SpFbRwTFFVCWDRSfR
+	 fUUB446XxmgWTmjBrv1psALCO8TtYjIh3fTEy/S0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbgFRBKI (ORCPT
+        id S1728430AbgFRBKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:10:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36866 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:10:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbgFRBKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:02 -0400
+        id S1728385AbgFRBKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E519D21D90;
-        Thu, 18 Jun 2020 01:10:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D718E21D7B;
+        Thu, 18 Jun 2020 01:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442601;
-        bh=7OFBYehAghyI03+0CzcorCPm2clfgBnBM6lz8Cfhh80=;
+        s=default; t=1592442605;
+        bh=BGdvKK5DrbYBFeR4C8aGl3gQsYyEsDpaxKr1dkc8478=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0PCTUWZg8pWwPZ5JyN6eGg5nzI/izcDQpfozJ7+8n2qoNTo6sdqiPmxogThRmLor0
-         pr0GyTHnp3/LuTVbea7chB6WLBCaEG77lccBbaFzcKLT1gMx/zk9HiuXdyVTP7Q3Te
-         9/g/01Xe4h90vZTvAGT0IckAvuJPeotz4mp9fPV4=
+        b=gmiAm8sEQw9CzzdNSxIKtk1WXyp3TJProqX1txhxhLyy74xJFLlJ2iMgOluSH3WG9
+         d4Ok5VC2xZgG4Hfg+0RJKIpFYRZ3GSipsHcR9HKfmRDBg1sE83VrJYlNFMzmQ0XM5v
+         3eG4LUMz4NDH7IeOwLLyZvIKfyy+UngUgtL7Ov/I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 088/388] sparc32: mm: Don't try to free page-table pages if ctor() fails
-Date:   Wed, 17 Jun 2020 21:03:05 -0400
-Message-Id: <20200618010805.600873-88-sashal@kernel.org>
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 091/388] crypto: omap-sham - huge buffer access fixes
+Date:   Wed, 17 Jun 2020 21:03:08 -0400
+Message-Id: <20200618010805.600873-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,39 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit 454b0289c6b5f2c66164654b80212d15fbef7a03 ]
+[ Upstream commit 6395166d7a19019d5e9574eb9ecdaf0028abb887 ]
 
-The pages backing page-table allocations for SRMMU are allocated via
-memblock as part of the "nocache" region initialisation during
-srmmu_paging_init() and should not be freed even if a later call to
-pgtable_pte_page_ctor() fails.
+The ctx internal buffer can only hold buflen amount of data, don't try
+to copy over more than that. Also, initialize the context sg pointer
+if we only have data in the context internal buffer, this can happen
+when closing a hash with certain data amounts.
 
-Remove the broken call to __free_page().
-
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Fixes: 1ae9ae5f7df7 ("sparc: handle pgtable_page_ctor() fail")
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/mm/srmmu.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/crypto/omap-sham.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
-index a8c2f2615fc6..ecc9e8786d57 100644
---- a/arch/sparc/mm/srmmu.c
-+++ b/arch/sparc/mm/srmmu.c
-@@ -383,7 +383,6 @@ pgtable_t pte_alloc_one(struct mm_struct *mm)
- 		return NULL;
- 	page = pfn_to_page(__nocache_pa(pte) >> PAGE_SHIFT);
- 	if (!pgtable_pte_page_ctor(page)) {
--		__free_page(page);
- 		return NULL;
- 	}
- 	return page;
+diff --git a/drivers/crypto/omap-sham.c b/drivers/crypto/omap-sham.c
+index e4072cd38585..0cbf9c932a0f 100644
+--- a/drivers/crypto/omap-sham.c
++++ b/drivers/crypto/omap-sham.c
+@@ -751,8 +751,15 @@ static int omap_sham_align_sgs(struct scatterlist *sg,
+ 	int offset = rctx->offset;
+ 	int bufcnt = rctx->bufcnt;
+ 
+-	if (!sg || !sg->length || !nbytes)
++	if (!sg || !sg->length || !nbytes) {
++		if (bufcnt) {
++			sg_init_table(rctx->sgl, 1);
++			sg_set_buf(rctx->sgl, rctx->dd->xmit_buf, bufcnt);
++			rctx->sg = rctx->sgl;
++		}
++
+ 		return 0;
++	}
+ 
+ 	new_len = nbytes;
+ 
+@@ -896,7 +903,7 @@ static int omap_sham_prepare_request(struct ahash_request *req, bool update)
+ 	if (hash_later < 0)
+ 		hash_later = 0;
+ 
+-	if (hash_later) {
++	if (hash_later && hash_later <= rctx->buflen) {
+ 		scatterwalk_map_and_copy(rctx->buffer,
+ 					 req->src,
+ 					 req->nbytes - hash_later,
 -- 
 2.25.1
 
