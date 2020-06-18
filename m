@@ -2,82 +2,130 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02119C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC0A92075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D4C207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 23:54:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="HFQhLaYw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgFRXw5 (ORCPT
+        id S1728109AbgFRXys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 19:52:57 -0400
-Received: from mga09.intel.com ([134.134.136.24]:25986 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbgFRXw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 19:52:57 -0400
-IronPort-SDR: uDOPNHYfi4qTqIXjXZjw7Cu86/A23iRzosn9seIqujPcbL5aYI/ZFa7xKGhd2OZ/tPq7vLU2xm
- 6fjt5QFcJHIA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="144277058"
-X-IronPort-AV: E=Sophos;i="5.75,253,1589266800"; 
-   d="scan'208";a="144277058"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 16:52:56 -0700
-IronPort-SDR: psbdkD+6G/wejZSYFjX2b12pA6Cvb92ATM+V8uo5Sy3j3bL+kmDD4janj2vXNpCtz6JP3LlhGQ
- tWPdFZZ31U9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,253,1589266800"; 
-   d="scan'208";a="477430092"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Jun 2020 16:52:55 -0700
-Received: from orsmsx126.amr.corp.intel.com (10.22.240.126) by
- ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 18 Jun 2020 16:52:55 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.209]) by
- ORSMSX126.amr.corp.intel.com ([169.254.4.235]) with mapi id 14.03.0439.000;
- Thu, 18 Jun 2020 16:52:55 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "dhowells@redhat.com" <dhowells@redhat.com>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Parallel compilation performance regression
-Thread-Topic: Parallel compilation performance regression
-Thread-Index: AQHWRcuWKh0BKGrzv0a8mEFl49sTbQ==
-Date:   Thu, 18 Jun 2020 23:52:55 +0000
-Message-ID: <a1bafab884bb60250840a8721b78f4b5d3a6c2ed.camel@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.71.254]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7BE1FE02EA899048B1B7FFDBD939B4A4@intel.com>
-Content-Transfer-Encoding: base64
+        Thu, 18 Jun 2020 19:54:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgFRXyq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 19:54:46 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 822F4C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:54:46 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id q8so7354014qkm.12
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 16:54:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YDvDd70QEgXgwyT4Q35elQVEcGFI1GdqJOBPMEPxGFs=;
+        b=HFQhLaYwq0gsCyRls2cQYYsziEWpQgnhe980EFFGUMuG5cZBXEQAw5Gu1gYTrV+tkx
+         xUjGCkGqKfPl3lJfzuv1qlcBUGpvCutbj2cwbpZ8Efay6x+3g6R7Ia8/8LVWw5+YZY4g
+         /wbjMn6DXmjiefFJiO/zTQbOlLA0XZYuzsGu4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YDvDd70QEgXgwyT4Q35elQVEcGFI1GdqJOBPMEPxGFs=;
+        b=mcRRtjSsPODsbJdU887267mnUkwI8rxgZtne3qbFeQPVzCZe3hToGnAwnElg8QmYwV
+         R9JWEX85wBGjwKTSh/p/0d8SFBVGN5BeW6dYoYGfBRGsdCY0my4Oy8R4QxT5AkvOqI2X
+         RKG1V+UH4MX1e+o4UqF8y4pGi1CPqxZ0dWSTddjTjvqXzME72odgrePoRwDOe+ZkV63j
+         AK7Th08MeJrXGF2E1xl8s/wnp99SHOxbzcmDPtgacKUEx2nTtAsFrUG+DXqtQ874ovhL
+         UJAPIVtpUsAAwJBGI1s7nWWmi5RPKHU9u8GFhcw1Anpjw7RehWWyatbZXBdb29HKRc04
+         QsTw==
+X-Gm-Message-State: AOAM533ckjx+4NmkU6QhHeXzXCg78XQYFanK7zjHoYHpYZPI5sEjhvA8
+        ogoNtOKL/FfZToSfihZOe29IsQ==
+X-Google-Smtp-Source: ABdhPJxnFkj3cOEHwReARlTrUr3tDwHBIA6+lZCUlWL5WSbOcXG8+YtXVwZCEG6S4uKVshNg/py84w==
+X-Received: by 2002:a37:a985:: with SMTP id s127mr1032937qke.198.1592524485683;
+        Thu, 18 Jun 2020 16:54:45 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id n36sm828983qtc.35.2020.06.18.16.54.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 16:54:45 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 19:54:44 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Subject: Re: [PATCH 5/7] rcu/trace: Use rsp's gp_seq in acceleration's
+ rcu_grace_period tracepoint
+Message-ID: <20200618235444.GC40119@google.com>
+References: <20200618202955.4024-1-joel@joelfernandes.org>
+ <20200618202955.4024-5-joel@joelfernandes.org>
+ <20200618222721.GA2723@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618222721.GA2723@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRGF2aWQsDQoNCkkndmUgYmVlbiBleHBlcmllbmNpbmcgYSBwZXJmb3JtYW5jZSByZWdyZXNz
-aW9uIHdoZW4gcnVubmluZyBhIHBhcmFsbGVsDQpjb21waWxhdGlvbiAoZWcsIG1ha2UgLWo3Mikg
-b24gcmVjZW50IGtlcm5lbHMuDQoNCkkgYmlzZWN0ZWQgaXQgdG8gdGhpcyBjb21taXQ6DQoNCmNv
-bW1pdCBiNjY3Yjg2NzM0NDMwMWUyNGYyMWQ0YTRjODQ0Njc1ZmY2MWQ4OWUxDQpBdXRob3I6IERh
-dmlkIEhvd2VsbHMgPGRob3dlbGxzQHJlZGhhdC5jb20+DQpEYXRlOiAgIFR1ZSBTZXAgMjQgMTY6
-MDk6MDQgMjAxOSArMDEwMA0KDQogICAgcGlwZTogQWR2YW5jZSB0YWlsIHBvaW50ZXIgaW5zaWRl
-IG9mIHdhaXQgc3BpbmxvY2sgaW4gcGlwZV9yZWFkKCkNCiAgICANCiAgICBBZHZhbmNlIHRoZSBw
-aXBlIHJpbmcgdGFpbCBwb2ludGVyIGluc2lkZSBvZiB3YWl0IHNwaW5sb2NrIGluIHBpcGVfcmVh
-ZCgpDQogICAgc28gdGhhdCB0aGUgcGlwZSBjYW4gYmUgd3JpdHRlbiBpbnRvIHdpdGgga2VybmVs
-IG5vdGlmaWNhdGlvbnMgZnJvbQ0KICAgIGNvbnRleHRzIHdoZXJlIHBpcGUtPm11dGV4IGNhbm5v
-dCBiZSB0YWtlbi4NCiAgICANCg0KUHJpb3IgdG8gdGhpcyBjb21taXQgSSBnb3QgNzAlIG9yIHNv
-IHRocmVhZCBzYXR1cmF0aW9uIG9mIGNjMSBhbmQgYWZ0ZXINCml0IHJhcmVseSBnZXRzIGFib3Zl
-IDE1JSBhbmQgd291bGQgb2Z0ZW4gZHJvcCBkb3duIHRvIDEtMiB0aHJlYWRzLiBJdA0KZG9lc24n
-dCBsb29rIGxpa2UgYSBjbGVhbiByZXZlcnQgZWl0aGVyLiBMb29raW5nIGF0IHVwc3RyZWFtLCBp
-dCBzZWVtcw0KdGhhdCBzb21lIGxhdGVyIGNvZGUgY2hhbmdlZCB0aGUgd2FrZXVwLiBJJ20gbm90
-IHJlYWxseSBzdXJlIGhvdyB0aGlzDQphbGwgZml0cyBpbnRvIHBhcmFsbGVsaXplZCBtYWtlLg0K
-DQpCZXN0DQpKb24NCg==
+On Thu, Jun 18, 2020 at 03:27:21PM -0700, Paul E. McKenney wrote:
+> On Thu, Jun 18, 2020 at 04:29:53PM -0400, Joel Fernandes (Google) wrote:
+> > During acceleration of CB, the rsp's gp_seq is rcu_seq_snap'd. This is
+> > the value used for acceleration - it is the value of gp_seq at which it
+> > is safe the execute all callbacks in the callback list.
+> > 
+> > The rdp's gp_seq is not very useful for this scenario. Make
+> > rcu_grace_period report the rsp's gp_seq instead as it allows one to
+> > reason about how the acceleration works.
+> 
+> Good catch, but please instead trace the gp_seq_req local variable.
+
+Oh sure, I will do that. Actually I was planning to, but was wondering if it
+would be inconsistent with other trace_rcu_grace_period() invocations which
+pass a real gp_seq (one that is as old as rcu_state.gp_seq). But agreed, this
+is better since the acceleration uses it.
+
+thanks,
+
+ - Joel
+
+> 							Thanx, Paul
+> 
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> >  kernel/rcu/tree.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 81df1b837dd9d..c3bae7a83d792 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -1437,9 +1437,9 @@ static bool rcu_accelerate_cbs(struct rcu_node *rnp, struct rcu_data *rdp)
+> >  
+> >  	/* Trace depending on how much we were able to accelerate. */
+> >  	if (rcu_segcblist_restempty(&rdp->cblist, RCU_WAIT_TAIL))
+> > -		trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("AccWaitCB"));
+> > +		trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq, TPS("AccWaitCB"));
+> >  	else
+> > -		trace_rcu_grace_period(rcu_state.name, "rdp", rdp->gp_seq, TPS("AccReadyCB"));
+> > +		trace_rcu_grace_period(rcu_state.name, "rsp", rcu_state.gp_seq, TPS("AccReadyCB"));
+> >  
+> >  	/* Count CBs for tracing. */
+> >  	rcu_segcblist_countseq(&rdp->cblist, cbs, gps);
+> > -- 
+> > 2.27.0.111.gc72c7da667-goog
+> > 
