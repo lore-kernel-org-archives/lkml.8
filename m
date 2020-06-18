@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C03C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC22C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50618214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DCB214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442655;
-	bh=/5CTNdM+F7gp4IC14sNl6sz4EKBucflwPUzL4O4i0n0=;
+	s=default; t=1592442656;
+	bh=Hwb8RdOICnfAWn54O9C5w3TGy5ajzSZfqY6SLChfTmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gk/kbsSMxQieMfcC96lJ6T+35hTZViIkXMKBd1vFaRWQv8+ynuFATMJq0sfhQKpJI
-	 hjZsEv4XedyCUXBMQsmVAiKxZwiYpy4HEDq6rA95++M253XQBoyOfyKfV78H9cHL5W
-	 zJoRwTY9btCe79KrRJ7Hh8bCnmkZauXk/zP0eJ+Y=
+	b=bP0zyb17G8geLLIh78E70rpQVmoYXvocsfrzL3Tnr/2sLBQNKbb0a3VfKVmoec3Wd
+	 sR5N36Yt9N6U4QDfcaolfFLXSs81g4VHl30GIH7XhMX2VlMcHz+AZ/9ZfSqn5HI1Hg
+	 sIRrWsQhrCv2tr6i7YRPWpPSs+aw28+2D3pdIcA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgFRBKx (ORCPT
+        id S1728666AbgFRBKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38380 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:10:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728626AbgFRBKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:10:51 -0400
+        id S1728609AbgFRBKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2DED21924;
-        Thu, 18 Jun 2020 01:10:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30F1220CC7;
+        Thu, 18 Jun 2020 01:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442650;
-        bh=/5CTNdM+F7gp4IC14sNl6sz4EKBucflwPUzL4O4i0n0=;
+        s=default; t=1592442653;
+        bh=Hwb8RdOICnfAWn54O9C5w3TGy5ajzSZfqY6SLChfTmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Er9sbcQ7PIBWiAx+YlbbAU4F/4e14FMmyF95Xe+B5nyfngitw0f8J6shQxhm52PW
-         XVkU/Q1ElXDg8hAYrt4elr3keCfeQC42Fc6PAXqHng25oiFweJHJ8AwnkSqpcmUuKm
-         Bx1DeCynDg6DnIVuV/LFUad2aiqI+EXJAY4AtWQU=
+        b=NE4/WW0nIInLQ+/taadJfujRwz84L+duJ/f/cpAGovFNmjQAKRYBSWFQ0SQ3n/qFG
+         z7nnEFIKfCYDqq5exIAYblUo788rFjFzoJQELbSjmiSt/FYVt3LZmVCIGEnNMCqVZ5
+         VQ+DcUzHrbA9E3JeJJBosAgUxX9JB7+U1X1ld/Ks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yishai Hadas <yishaih@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 123/388] RDMA/mlx5: Fix udata response upon SRQ creation
-Date:   Wed, 17 Jun 2020 21:03:40 -0400
-Message-Id: <20200618010805.600873-123-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 125/388] gpio: dwapb: Append MODULE_ALIAS for platform driver
+Date:   Wed, 17 Jun 2020 21:03:42 -0400
+Message-Id: <20200618010805.600873-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,48 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yishai Hadas <yishaih@mellanox.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit cf26deff9036cd3270af562dbec545239e5c7f07 ]
+[ Upstream commit c58220cba2e03618659fa7d5dfae31f5ad4ae9d0 ]
 
-Fix udata response upon SRQ creation to use the UAPI structure (i.e.
-mlx5_ib_create_srq_resp). It did not zero the reserved field in userspace.
+The commit 3d2613c4289f
+  ("GPIO: gpio-dwapb: Enable platform driver binding to MFD driver")
+introduced a use of the platform driver but missed to add the following line
+to it:
+  MODULE_ALIAS("platform:gpio-dwapb");
 
-Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
-Link: https://lore.kernel.org/r/20200406173540.1466477-1-leon@kernel.org
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Add this to get driver loaded automatically if platform device is registered.
+
+Fixes: 3d2613c4289f ("GPIO: gpio-dwapb: Enable platform driver binding to MFD driver")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+Link: https://lore.kernel.org/r/20200415141534.31240-2-andriy.shevchenko@linux.intel.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/srq.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-dwapb.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/srq.c b/drivers/infiniband/hw/mlx5/srq.c
-index b1a8a9175040..6d1ff13d2283 100644
---- a/drivers/infiniband/hw/mlx5/srq.c
-+++ b/drivers/infiniband/hw/mlx5/srq.c
-@@ -310,12 +310,18 @@ int mlx5_ib_create_srq(struct ib_srq *ib_srq,
- 	srq->msrq.event = mlx5_ib_srq_event;
- 	srq->ibsrq.ext.xrc.srq_num = srq->msrq.srqn;
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 02cf4c43a4c4..ed6061b5cca1 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -49,7 +49,9 @@
+ #define GPIO_EXT_PORTC		0x58
+ #define GPIO_EXT_PORTD		0x5c
  
--	if (udata)
--		if (ib_copy_to_udata(udata, &srq->msrq.srqn, sizeof(__u32))) {
-+	if (udata) {
-+		struct mlx5_ib_create_srq_resp resp = {
-+			.srqn = srq->msrq.srqn,
-+		};
++#define DWAPB_DRIVER_NAME	"gpio-dwapb"
+ #define DWAPB_MAX_PORTS		4
 +
-+		if (ib_copy_to_udata(udata, &resp, min(udata->outlen,
-+				     sizeof(resp)))) {
- 			mlx5_ib_dbg(dev, "copy to user failed\n");
- 			err = -EFAULT;
- 			goto err_core;
- 		}
-+	}
+ #define GPIO_EXT_PORT_STRIDE	0x04 /* register stride 32 bits */
+ #define GPIO_SWPORT_DR_STRIDE	0x0c /* register stride 3*32 bits */
+ #define GPIO_SWPORT_DDR_STRIDE	0x0c /* register stride 3*32 bits */
+@@ -398,7 +400,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 		return;
  
- 	init_attr->attr.max_wr = srq->msrq.max - 1;
+ 	err = irq_alloc_domain_generic_chips(gpio->domain, ngpio, 2,
+-					     "gpio-dwapb", handle_level_irq,
++					     DWAPB_DRIVER_NAME, handle_level_irq,
+ 					     IRQ_NOREQUEST, 0,
+ 					     IRQ_GC_INIT_NESTED_LOCK);
+ 	if (err) {
+@@ -455,7 +457,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 		 */
+ 		err = devm_request_irq(gpio->dev, pp->irq[0],
+ 				       dwapb_irq_handler_mfd,
+-				       IRQF_SHARED, "gpio-dwapb-mfd", gpio);
++				       IRQF_SHARED, DWAPB_DRIVER_NAME, gpio);
+ 		if (err) {
+ 			dev_err(gpio->dev, "error requesting IRQ\n");
+ 			irq_domain_remove(gpio->domain);
+@@ -843,7 +845,7 @@ static SIMPLE_DEV_PM_OPS(dwapb_gpio_pm_ops, dwapb_gpio_suspend,
  
+ static struct platform_driver dwapb_gpio_driver = {
+ 	.driver		= {
+-		.name	= "gpio-dwapb",
++		.name	= DWAPB_DRIVER_NAME,
+ 		.pm	= &dwapb_gpio_pm_ops,
+ 		.of_match_table = of_match_ptr(dwapb_of_match),
+ 		.acpi_match_table = ACPI_PTR(dwapb_acpi_match),
+@@ -857,3 +859,4 @@ module_platform_driver(dwapb_gpio_driver);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Jamie Iles");
+ MODULE_DESCRIPTION("Synopsys DesignWare APB GPIO driver");
++MODULE_ALIAS("platform:" DWAPB_DRIVER_NAME);
 -- 
 2.25.1
 
