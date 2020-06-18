@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF553C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB3E5206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 874CE206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447477;
-	bh=Y1go16sZdujvKNOyB/vN/Dty2JrzqrRayzBxBRx/xO0=;
+	s=default; t=1592447484;
+	bh=VgIIpDrAuDELIijnCUKjW6fNEXXyd3TAfiapNDQUyuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O/s0z8CIfN/IitOy1r1BjarxpmcbtTyIpb8MagL1cUguAiZMdI8+rHzk8XyjX8Ewn
-	 WSwbZ/jfdVu+5yrRVRWaUagUVYP0STtEHQKcjxU2siJytkcHw4XMq1YaWpcnxCYB8q
-	 6pAPcdnaG4ii5aO0Bk/HZt4upsXqs5xH0SRBTgMY=
+	b=gjsEmxVb6tSsVDhmQeYMNpUpDf8GC0LW6EJ23XHEFIEWXtkyeuxrh/4EfGJ4DLVU9
+	 8Hd4PoiBKidEoCCudN7SbT8WQhz898B7GEqyDWP0zOAYE1lm9isIJHQwwslhSZMbi+
+	 1PMdwKqSKXwLcCu2jrL+xG781J7Qxj/7Ja6FiyFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbgFRCbP (ORCPT
+        id S1729483AbgFRCbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:31:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45692 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:31:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729493AbgFRBPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:35 -0400
+        id S1729485AbgFRBPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D85FC21D80;
-        Thu, 18 Jun 2020 01:15:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35C7521D7D;
+        Thu, 18 Jun 2020 01:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442934;
-        bh=Y1go16sZdujvKNOyB/vN/Dty2JrzqrRayzBxBRx/xO0=;
+        s=default; t=1592442932;
+        bh=VgIIpDrAuDELIijnCUKjW6fNEXXyd3TAfiapNDQUyuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tdiP2HD+zjic87V97uT6vRekeXldJx1hO8sw13uVnQxcfGkdrzXemB7oonJJ4AjvK
-         krjQCx3E7wQ74Ve3TUH4dL2Av4K3ajvlWH2FqlYsozLiPb0RdyLWp6ZAhGyQKeM7UC
-         RnFBIbJNts/8CoG1hhqOFmFRQ3xJNa85+lQ50yZs=
+        b=VTpn3whzooc8Y4FNfmN6HIAKK/jGql/15xjQF6SboDu+Od7z5bigCaKxEq5vXETdT
+         Ea5YgaJrM7q68T8HKf3mfc+PNcFFa/9htkC8XjZW228xTnjQWeipPGOyExwHYSoPmr
+         RtS52kL4+3ktlP4hC2mpsYwXunpA3XqsERagLSDY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sanjay R Mehta <sanju.mehta@amd.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Arindam Nath <arindam.nath@amd.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 5.7 347/388] ntb_perf: pass correct struct device to dma_alloc_coherent
-Date:   Wed, 17 Jun 2020 21:07:24 -0400
-Message-Id: <20200618010805.600873-347-sashal@kernel.org>
+Cc:     Dan Murphy <dmurphy@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 345/388] net: marvell: Fix OF_MDIO config check
+Date:   Wed, 17 Jun 2020 21:07:22 -0400
+Message-Id: <20200618010805.600873-345-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,59 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+From: Dan Murphy <dmurphy@ti.com>
 
-[ Upstream commit 98f4e140264eeb52f22ff05be6b6dd48237255ac ]
+[ Upstream commit 5cd119d9a05f1c1a08778a7305b4ca0f16bc1e20 ]
 
-Currently, ntb->dev is passed to dma_alloc_coherent
-and dma_free_coherent calls. The returned dma_addr_t
-is the CPU physical address. This works fine as long
-as IOMMU is disabled. But when IOMMU is enabled, we
-need to make sure that IOVA is returned for dma_addr_t.
-So the correct way to achieve this is by changing the
-first parameter of dma_alloc_coherent() as ntb->pdev->dev
-instead.
+When CONFIG_OF_MDIO is set to be a module the code block is not
+compiled. Use the IS_ENABLED macro that checks for both built in as
+well as module.
 
-Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-Signed-off-by: Arindam Nath <arindam.nath@amd.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fixes: cf41a51db8985 ("of/phylib: Use device tree properties to initialize Marvell PHYs.")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_perf.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/phy/marvell.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-index 972f6d984f6d..1c93b9f5c73b 100644
---- a/drivers/ntb/test/ntb_perf.c
-+++ b/drivers/ntb/test/ntb_perf.c
-@@ -557,7 +557,7 @@ static void perf_free_inbuf(struct perf_peer *peer)
- 		return;
- 
- 	(void)ntb_mw_clear_trans(peer->perf->ntb, peer->pidx, peer->gidx);
--	dma_free_coherent(&peer->perf->ntb->dev, peer->inbuf_size,
-+	dma_free_coherent(&peer->perf->ntb->pdev->dev, peer->inbuf_size,
- 			  peer->inbuf, peer->inbuf_xlat);
- 	peer->inbuf = NULL;
+diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
+index 7fc8e10c5f33..a435f7352cfb 100644
+--- a/drivers/net/phy/marvell.c
++++ b/drivers/net/phy/marvell.c
+@@ -337,7 +337,7 @@ static int m88e1101_config_aneg(struct phy_device *phydev)
+ 	return marvell_config_aneg(phydev);
  }
-@@ -586,8 +586,9 @@ static int perf_setup_inbuf(struct perf_peer *peer)
  
- 	perf_free_inbuf(peer);
- 
--	peer->inbuf = dma_alloc_coherent(&perf->ntb->dev, peer->inbuf_size,
--					 &peer->inbuf_xlat, GFP_KERNEL);
-+	peer->inbuf = dma_alloc_coherent(&perf->ntb->pdev->dev,
-+					 peer->inbuf_size, &peer->inbuf_xlat,
-+					 GFP_KERNEL);
- 	if (!peer->inbuf) {
- 		dev_err(&perf->ntb->dev, "Failed to alloc inbuf of %pa\n",
- 			&peer->inbuf_size);
-@@ -1554,4 +1555,3 @@ static void __exit perf_exit(void)
- 	destroy_workqueue(perf_wq);
- }
- module_exit(perf_exit);
--
+-#ifdef CONFIG_OF_MDIO
++#if IS_ENABLED(CONFIG_OF_MDIO)
+ /* Set and/or override some configuration registers based on the
+  * marvell,reg-init property stored in the of_node for the phydev.
+  *
 -- 
 2.25.1
 
