@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BD7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B126C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 944EC221F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C132220C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445123;
-	bh=9FwDKn0Pk472PixKulouDu0tIeqqcbmBGsF1GD227xQ=;
+	s=default; t=1592445129;
+	bh=YbQ/ve/xaN0TaYECh2pWFCVmv0cZDtl6sWpM00QVo+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pyTABxKGb3FTC2u/f7Asl0pR9rvaBXkWXou8tSTJciYzQOQ0hCkgJqqjRQtQ2M81Z
-	 YQr8qK9cjNTA8HgqPISJ286OW7/CdzAjAVk82/Zpp1uIXB97MN/ahpJzrEInF5K3yZ
-	 xbWh0RefGSideq9W6N68nU7OFNYFM7zGunMRbyE0=
+	b=jbUmAollBwPSvYrbt53d7g4EGDg2i5xoclxJEI7rbI3pvTy3j1T3GJuPLuCdwUuoK
+	 KYiF//mScw+tY2M83H+p6vBCFCTcOnTzMQrNiVZMHelbf2VbWRYQqpFjvvGRiBRyFk
+	 GkC8U32YtlqCrG84DKfQJ6kRcMfeClWg8pyy1UP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgFRB0u (ORCPT
+        id S1732932AbgFRBwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:26:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57166 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:52:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730507AbgFRBXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:23:30 -0400
+        id S1729416AbgFRB0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:26:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE28D221EF;
-        Thu, 18 Jun 2020 01:23:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A42D320897;
+        Thu, 18 Jun 2020 01:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443409;
-        bh=9FwDKn0Pk472PixKulouDu0tIeqqcbmBGsF1GD227xQ=;
+        s=default; t=1592443610;
+        bh=YbQ/ve/xaN0TaYECh2pWFCVmv0cZDtl6sWpM00QVo+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZGFZ/Azo2KSLQo2c7Q3LIAn7W7RbLeCY860d++AHrTUgwtBE9VB0YCgHBh5/MGf1
-         ZUNG3mtHdrpqdyy8gpFTlyxWYPOD81zHdLfPFPHOCkvRGP1kzdsojeTegYWNzHZ9+l
-         L804cN5gN45ME5ukiXeNjfF/cd9ecIXrAkdYP6MM=
+        b=rKk2aBzGhKoE6nNNpahLilCXDz+1HE9xx4iYMSaLC4fXBLcPZX6byL5T8tvoro+Wx
+         yfY8XP0obFRjefk329E9ZlL3Nu1Sa0x3K3P5ytKPnuuAu/otBq6Ihzf/HLWYDgyS6c
+         Crgn0r/PqeeatPeTeHrhkow4CP/3jAy4KZG2cexo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Aiman Najjar <aiman.najjar@hurranet.com>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.19 053/172] staging: rtl8712: fix multiline derefernce warnings
-Date:   Wed, 17 Jun 2020 21:20:19 -0400
-Message-Id: <20200618012218.607130-53-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 038/108] staging: rtl8712: fix multiline derefernce warnings
+Date:   Wed, 17 Jun 2020 21:24:50 -0400
+Message-Id: <20200618012600.608744-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -92,7 +92,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
-index a8ae14ce6613..95d5c050a894 100644
+index eda2aee02ff8..06e2377092fe 100644
 --- a/drivers/staging/rtl8712/rtl871x_xmit.c
 +++ b/drivers/staging/rtl8712/rtl871x_xmit.c
 @@ -601,7 +601,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
