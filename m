@@ -2,87 +2,116 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB126C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFD8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C077D20706
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FE520706
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:10:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="Bl68elqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbgFRIJa (ORCPT
+        id S1728461AbgFRIKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:09:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52548 "EHLO
+        Thu, 18 Jun 2020 04:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbgFRIHI (ORCPT
+        with ESMTP id S1728392AbgFRIGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:07:08 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90465C061755
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:07:04 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jlpZc-000358-9s; Thu, 18 Jun 2020 10:07:00 +0200
-Date:   Thu, 18 Jun 2020 10:07:00 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] sched: __set_cpus_allowed_ptr(): Check cpus_mask, not
- cpus_ptr
-Message-ID: <20200618080700.cig4x4y7n3thmneu@linutronix.de>
-References: <20200617121742.cpxppyi7twxmpin7@linutronix.de>
- <jhjmu51eq2k.mognet@arm.com>
- <696309d91635fa965ad8436388e7ae7d098420a1.camel@redhat.com>
+        Thu, 18 Jun 2020 04:06:34 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CCA5C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:06:32 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id n24so5448288ejd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:06:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jdqKWoOyO8tnt8jM6tOGRLXKdHHuxGrW259cHQOP1hQ=;
+        b=Bl68elqdqcLd30G17pvoe9exM0NJ8hGF7jB5cGALBgvffL4Hs4vGUKFwalT6qPJxtx
+         aN0oLBEu2Bslk9VDAdZ1c9MJn4xMHVUPPwi6RqIWall7j+JeZaDNq/J/EN2gjWCwy8qC
+         cBLJ6ske6QcdjduiZEMSUCX3LU3ylAdfULiUv3PIl976LvSQB6ZzuQACNqqumUqqgWTk
+         3vhZGYzvsXzvPPJANR/hs3aYPzHfozkXVPFSpI0P4jkCsJWPftzC8Po+fIxoZ2G3M806
+         OCvyRN8Ia/EjRPB2BwMcDt0XUdLekkm3HReRFNdmKXDemdcnOTOECUjY9ZYmEsgWtb32
+         +v3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jdqKWoOyO8tnt8jM6tOGRLXKdHHuxGrW259cHQOP1hQ=;
+        b=avLoaF2yj+EMI49irKUqB81+lBlydlkn5jxk3E6l/ou2hN/+SlsDQkOaL+9GxrgqxD
+         49T+/Y4x6NMiZTTpJxVOx6hOy12aAFg0CSKuCDgS2uTVbTYLHrex1QcBrYg/oWkxlRWs
+         ThR6iYzUBibpbwczlYEqMFMu7N+UMXLa5C7mAUm3fdEc9vTlKTSgGLoYtWptB+1MbUPe
+         IGdJ5OyDCzRVjE2nBw1BgoHFVX/JTun29BnQfVBoOLPuuWIFgZJn3rHJI6Qb5tRm1P+Y
+         4oV4LT7+bboAePN8P3sYeTDPq1F+MWEoTzOqJ/Y1v9pzfHR0FkKpVRA7/Q7P5eVTzbOa
+         Krug==
+X-Gm-Message-State: AOAM532PN/LYT3OsUONCTJyL3s0xwIBXdKApDzTVj11Jnh0BNapa+YAd
+        4Z4Q8nvOpeWvE4cGVwQ2OhWC4/ds70M=
+X-Google-Smtp-Source: ABdhPJwl82oiSxnfYLXazps1x+rq+d4v0E9PMnXQgh6ZFurD6BCgfQLUMtmWbYQrxHGMPNn408CItw==
+X-Received: by 2002:a17:906:4d18:: with SMTP id r24mr2781366eju.222.1592467590896;
+        Thu, 18 Jun 2020 01:06:30 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([79.132.248.22])
+        by smtp.gmail.com with ESMTPSA id nw22sm1711739ejb.48.2020.06.18.01.06.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 01:06:30 -0700 (PDT)
+Subject: Re: [PATCH net-next 0/3] add MP_PRIO, MP_FAIL and MP_FASTCLOSE
+ suboptions handling
+To:     Geliang Tang <geliangtang@gmail.com>
+Cc:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        netdev@vger.kernel.org, mptcp@lists.01.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1592289629.git.geliangtang@gmail.com>
+ <04ae76d9-231a-de8e-ad33-1e4e80bb314c@tessares.net>
+ <20200618062737.GA21303@OptiPlex>
+From:   Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <8397397f-d341-0593-9ba9-a87f1d63c26b@tessares.net>
+Date:   Thu, 18 Jun 2020 10:06:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <696309d91635fa965ad8436388e7ae7d098420a1.camel@redhat.com>
+In-Reply-To: <20200618062737.GA21303@OptiPlex>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-17 17:49:48 [-0500], Scott Wood wrote:
-> > Makes sense, but what about the rest of the checks? Further down there is
-> > 
-> >         /* Can the task run on the task's current CPU? If so, we're done
-> > */
-> >         if (cpumask_test_cpu(task_cpu(p), new_mask))
-> >                 goto out;
-> > 
-> > If the task is currently migrate disabled and for some stupid reason it
-> > gets affined elsewhere, we could try to move it out - which AFAICT we
-> > don't
-> > want to do because migrate disabled. So I suppose you'd want an extra
-> > bailout condition here when the task is migrate disabled.
-> > 
-> > ISTR in RT you do re-check the affinity and potentially move the task away
-> > when re-enabling migration, so that should work out all fine.
-> 
-> On RT the above test is:
-> 
->         /* Can the task run on the task's current CPU? If so, we're done */
->         if (cpumask_test_cpu(task_cpu(p), new_mask) ||
->             p->cpus_ptr != &p->cpus_mask)
->                 goto out;
-> 
-> ...so we do bail out if we're migrate disabled.
+Hi Geliang,
 
-correct. There is a complete migrate_disable() patch in the RT queue
-which has to wait. This patch however looked to be independent of that
-and could "fix" the pointer part which is already here so I sent it.
+On 18/06/2020 08:27, Geliang Tang wrote:
+> On Tue, Jun 16, 2020 at 05:18:56PM +0200, Matthieu Baerts wrote:
+>> On 16/06/2020 08:47, Geliang Tang wrote:
+ >>
+>> I would suggest you to discuss about that on MPTCP mailing list. We also
+>> have meetings every Thursday. New devs are always welcome to contribute to
+>> new features and bug-fixes!
+ >
+> Thanks for your reply. I will do these tests and improve my patches.
 
-> -Scott
+Great, thank you! Looking forward to see new kernel selftests and/or 
+packetdrill tests!
 
-Sebastian
+For any new features related to MPTCP or bug fixes involving significant 
+code modifications, please send it first to the MPTCP Upstream mailing 
+list only: mptcp@lists.01.org
+
+We will be able to give a first review without involving the whole 
+netdev community and if needed, we can "park" patches in our mptcp-next 
+repo.
+
+For more details about the project, please check: 
+https://github.com/multipath-tcp/mptcp_net-next/wiki
+
+Cheers,
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
