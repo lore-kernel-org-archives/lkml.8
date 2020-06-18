@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C871C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE3321D7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D021221E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442806;
-	bh=zrR7EWqR9FOZ7/8Tm7ym4wywgV/bCyV61N5vb0zUF8M=;
+	s=default; t=1592442810;
+	bh=eqqdhs6Sudw4/8RR0ac1++R01qSNRzWPhMXqDumOfwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CQhF6S/KoZYmduDikWh/wDcMWQb0Wx88BrVsCUHfLznthQSGIbfphdM2o093dLZNL
-	 mwo29MuPyO2l4EoAzrwFP/K8plG2uz/FdmR0tlQSPWdf1wclizc6GLN6Cm7DDZP1B1
-	 8JHVoqURBOa4Qi12kyzySjbDTtmQTmImcboRkA+I=
+	b=PzxinRpZut2Rx+tebXW9HDTk9Si7e8H/oGMfSCUCM+GdrrKAcK7Dp8RiJfCR/qqdd
+	 t3YL8U2LBazjyu0cdZt5dd0e33/ji/8+lL9vxVGZRvJATH1BADJYpZTyVLmhjqYi+L
+	 FOAEPjxxEqTSXcdNkmP2vVqMxOTO5xt1hWayx9CM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729118AbgFRBNZ (ORCPT
+        id S1729129AbgFRBN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:13:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40826 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:13:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728890AbgFRBMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:20 -0400
+        id S1728892AbgFRBMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6834F21D7E;
-        Thu, 18 Jun 2020 01:12:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0C58214DB;
+        Thu, 18 Jun 2020 01:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442740;
-        bh=zrR7EWqR9FOZ7/8Tm7ym4wywgV/bCyV61N5vb0zUF8M=;
+        s=default; t=1592442741;
+        bh=eqqdhs6Sudw4/8RR0ac1++R01qSNRzWPhMXqDumOfwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EdI2tio0REoMspEDeuHToM4Z9G8qWoXEXZGhf8Gw/0ueSXC4MiP1lkg/Nog0kv1C4
-         YRtuGMv/+QRGPgutmedSeQxJq/nvmxAQ8fOzcROuCxG1p4MP2xGPthd4UHDx8ZsxVC
-         4SfBnXrJ24LUPF4nMnzwf7zyilDLSQGpWz0ZKag4=
+        b=blu8ZLwGUxaKfJ4984BjKEymUUjJE6LjgiFkq64dOkVQtI1oT5nc5OjTwfj1xligB
+         DuJqEhx3yYHeQ4FZ28/x5sCXj6TZrzvPoCFTjS7nZnA91XuZgsQYlIImvVudCX3v1r
+         BHplt+4MqiczWDy4x9TW58UE/KBfiuwolz9cALgU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Peter Ujfalusi <peter.ujflausi@ti.com>,
         Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 194/388] ASoC: ux500: mop500: Fix some refcounted resources issues
-Date:   Wed, 17 Jun 2020 21:04:51 -0400
-Message-Id: <20200618010805.600873-194-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 195/388] ASoC: ti: omap-mcbsp: Fix an error handling path in 'asoc_mcbsp_probe()'
+Date:   Wed, 17 Jun 2020 21:04:52 -0400
+Message-Id: <20200618010805.600873-195-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,53 +63,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 4e8748fcaeec073e3ba794871ce86c545e4f961f ]
+[ Upstream commit 03990fd58d2b7c8f7d53e514ba9b8749fac260f9 ]
 
-There are 2 issues here:
-   - if one of the 'of_parse_phandle' fails, calling 'mop500_of_node_put()'
-     is a no-op because the 'mop500_dai_links' structure has not been
-     initialized yet, so the referenced are not decremented
-   - The reference stored in 'mop500_dai_links[i].codecs' is refcounted
-     only once in the probe and must be decremented only once.
+If an error occurs after the call to 'omap_mcbsp_init()', the reference to
+'mcbsp->fclk' must be decremented, as already done in the remove function.
 
-Fixes: 39013bd60e79 ("ASoC: Ux500: Dispose of device nodes correctly")
+This can be achieved easily by using the devm_ variant of 'clk_get()'
+when the reference is taken in 'omap_mcbsp_init()'
+
+This fixes the leak in the probe and has the side effect to simplify both
+the error handling path of 'omap_mcbsp_init()' and the remove function.
+
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/20200512100705.246349-1-christophe.jaillet@wanadoo.fr
+Acked-by: Peter Ujfalusi <peter.ujflausi@ti.com>
+Link: https://lore.kernel.org/r/20200512134325.252073-1-christophe.jaillet@wanadoo.fr
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/ux500/mop500.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ sound/soc/ti/omap-mcbsp.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/ux500/mop500.c b/sound/soc/ux500/mop500.c
-index 2873e8e6f02b..cdae1190b930 100644
---- a/sound/soc/ux500/mop500.c
-+++ b/sound/soc/ux500/mop500.c
-@@ -63,10 +63,11 @@ static void mop500_of_node_put(void)
- {
- 	int i;
+diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
+index 3d41ca2238d4..4f33ddb7b441 100644
+--- a/sound/soc/ti/omap-mcbsp.c
++++ b/sound/soc/ti/omap-mcbsp.c
+@@ -686,7 +686,7 @@ static int omap_mcbsp_init(struct platform_device *pdev)
+ 	mcbsp->dma_data[1].addr = omap_mcbsp_dma_reg_params(mcbsp,
+ 						SNDRV_PCM_STREAM_CAPTURE);
  
--	for (i = 0; i < 2; i++) {
-+	for (i = 0; i < 2; i++)
- 		of_node_put(mop500_dai_links[i].cpus->of_node);
--		of_node_put(mop500_dai_links[i].codecs->of_node);
--	}
-+
-+	/* Both links use the same codec, which is refcounted only once */
-+	of_node_put(mop500_dai_links[0].codecs->of_node);
+-	mcbsp->fclk = clk_get(&pdev->dev, "fck");
++	mcbsp->fclk = devm_clk_get(&pdev->dev, "fck");
+ 	if (IS_ERR(mcbsp->fclk)) {
+ 		ret = PTR_ERR(mcbsp->fclk);
+ 		dev_err(mcbsp->dev, "unable to get fck: %d\n", ret);
+@@ -711,7 +711,7 @@ static int omap_mcbsp_init(struct platform_device *pdev)
+ 		if (ret) {
+ 			dev_err(mcbsp->dev,
+ 				"Unable to create additional controls\n");
+-			goto err_thres;
++			return ret;
+ 		}
+ 	}
+ 
+@@ -724,8 +724,6 @@ static int omap_mcbsp_init(struct platform_device *pdev)
+ err_st:
+ 	if (mcbsp->pdata->buffer_size)
+ 		sysfs_remove_group(&mcbsp->dev->kobj, &additional_attr_group);
+-err_thres:
+-	clk_put(mcbsp->fclk);
+ 	return ret;
  }
  
- static int mop500_of_probe(struct platform_device *pdev,
-@@ -81,7 +82,9 @@ static int mop500_of_probe(struct platform_device *pdev,
+@@ -1442,8 +1440,6 @@ static int asoc_mcbsp_remove(struct platform_device *pdev)
  
- 	if (!(msp_np[0] && msp_np[1] && codec_np)) {
- 		dev_err(&pdev->dev, "Phandle missing or invalid\n");
--		mop500_of_node_put();
-+		for (i = 0; i < 2; i++)
-+			of_node_put(msp_np[i]);
-+		of_node_put(codec_np);
- 		return -EINVAL;
- 	}
+ 	omap_mcbsp_st_cleanup(pdev);
+ 
+-	clk_put(mcbsp->fclk);
+-
+ 	return 0;
+ }
  
 -- 
 2.25.1
