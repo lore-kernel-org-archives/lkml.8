@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB037C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A40AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD00221EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA9902220E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444547;
-	bh=03fCVU5g+JP9egRymhbYN0IgM6S53R3OBv/GHqButBc=;
+	s=default; t=1592444556;
+	bh=dPteiSV/kKE689tA8hP9phkFLANeBY/7ZzDTa17iXBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qOs9JIajtdT21tssrnx2TOVBskKKd5JZKPgqedpqadQ0KW/FgYyF3JhuQK+jVSdgN
-	 rQIwIjrM9jpopCdc2b+omZNtUlIAm6BZBV5rQtC8msAXAMnyGCplwctGDy/nNfIr5h
-	 XdVCkbmj/FPwxrGLMQD6Q+lM1o1Ud3KL2ucGShyc=
+	b=05dTBEFWyUg2CfsdJKQ3hkz7M1Oy7uUMva6emSIYKhpmsvYblOl9sTv2MciJ/kb10
+	 CcXY4jililtVzUj5eTzhUdevuUjLCP2qSJYV076+QSzclMPXsbJu2jvAohdBvo9l79
+	 gTssaJKXDmI00n3n6xpzQtu55SGmcOsvIgq0MSjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732301AbgFRBm0 (ORCPT
+        id S1732550AbgFRBmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:42:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38798 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:42:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731708AbgFRB30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:26 -0400
+        id S1732280AbgFRB3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:29:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 686C922209;
-        Thu, 18 Jun 2020 01:29:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E66722229;
+        Thu, 18 Jun 2020 01:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443766;
-        bh=03fCVU5g+JP9egRymhbYN0IgM6S53R3OBv/GHqButBc=;
+        s=default; t=1592443761;
+        bh=dPteiSV/kKE689tA8hP9phkFLANeBY/7ZzDTa17iXBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EKRAVZ7ktGdUMrbz3FCXiAN6ZIbJUm+HKEMAmfzbT0cBuippokiHVU4BWecPAKRPL
-         GKsgIvM/7mPYSQQBQeKEWAagMfrUPEhMYxACWehhKOCcBsXUm0XfS5/qbxvBEWq+pE
-         VqkXyhv0JAIa6zJubkMS47CKPd77DxZJii7Xtvls=
+        b=uUmcRfpdAM7kKA25EXARslBkFQ6zWh4zEP00u4nSMaTU7X/frcGhF2lrPaZQ5+YuE
+         KUvJ9qOb09ByYd6KXKWxx3uDDVZciBrg7ltR/gxarO0twKLl3DdohkHG1X5ZxrMsYk
+         Jfy31/WzXLJOQm3xgwHdYohOeVwcgEhBVsDxG8XQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roy Spliet <nouveau@spliet.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 51/80] drm/msm/mdp5: Fix mdp5_init error path for failed mdp5_kms allocation
-Date:   Wed, 17 Jun 2020 21:27:50 -0400
-Message-Id: <20200618012819.609778-51-sashal@kernel.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 47/80] powerpc/pseries/ras: Fix FWNMI_VALID off by one
+Date:   Wed, 17 Jun 2020 21:27:46 -0400
+Message-Id: <20200618012819.609778-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
 References: <20200618012819.609778-1-sashal@kernel.org>
@@ -61,35 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roy Spliet <nouveau@spliet.org>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit e4337877c5d578722c0716f131fb774522013cf5 ]
+[ Upstream commit deb70f7a35a22dffa55b2c3aac71bc6fb0f486ce ]
 
-When allocation for mdp5_kms fails, calling mdp5_destroy() leads to undefined
-behaviour, likely a nullptr exception or use-after-free troubles.
+This was discovered developing qemu fwnmi sreset support. This
+off-by-one bug means the last 16 bytes of the rtas area can not
+be used for a 16 byte save area.
 
-Signed-off-by: Roy Spliet <nouveau@spliet.org>
-Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+It's not a serious bug, and QEMU implementation has to retain a
+workaround for old kernels, but it's good to tighten it.
+
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Acked-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+Link: https://lore.kernel.org/r/20200508043408.886394-7-npiggin@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/ras.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
-index ed7143d35b25..6224aca7cd29 100644
---- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
-+++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
-@@ -769,7 +769,8 @@ static int mdp5_init(struct platform_device *pdev, struct drm_device *dev)
+diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
+index 8799d8a83d56..0af19aa1df57 100644
+--- a/arch/powerpc/platforms/pseries/ras.c
++++ b/arch/powerpc/platforms/pseries/ras.c
+@@ -311,10 +311,11 @@ static irqreturn_t ras_error_interrupt(int irq, void *dev_id)
+ /*
+  * Some versions of FWNMI place the buffer inside the 4kB page starting at
+  * 0x7000. Other versions place it inside the rtas buffer. We check both.
++ * Minimum size of the buffer is 16 bytes.
+  */
+ #define VALID_FWNMI_BUFFER(A) \
+-	((((A) >= 0x7000) && ((A) < 0x7ff0)) || \
+-	(((A) >= rtas.base) && ((A) < (rtas.base + rtas.size - 16))))
++	((((A) >= 0x7000) && ((A) <= 0x8000 - 16)) || \
++	(((A) >= rtas.base) && ((A) <= (rtas.base + rtas.size - 16))))
  
- 	return 0;
- fail:
--	mdp5_destroy(pdev);
-+	if (mdp5_kms)
-+		mdp5_destroy(pdev);
- 	return ret;
- }
- 
+ /*
+  * Get the error information for errors coming through the
 -- 
 2.25.1
 
