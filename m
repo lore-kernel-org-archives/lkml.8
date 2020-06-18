@@ -2,110 +2,158 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEACC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79ECC20773
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092DB20773
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:42:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="fH2Bztqr"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Yv00WEyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgFROmE (ORCPT
+        id S1730918AbgFROmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:42:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57024 "EHLO
+        Thu, 18 Jun 2020 10:42:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730842AbgFROmD (ORCPT
+        with ESMTP id S1726478AbgFROmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:42:03 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B90A4C0613ED
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:42:02 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id ne5so2630873pjb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:42:02 -0700 (PDT)
+        Thu, 18 Jun 2020 10:42:43 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B06E3C0613EE
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:42:42 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x6so6311138wrm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:42:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+CwHsxmZO7al02eIsWAPOcThZHp6rfmpE6RrFb8EcPw=;
-        b=fH2BztqrIj/VG/8Fx6R4BMU6mIp3/E6CMLGmQU/uhMq9bushUQaKRmtjc2Jv6li16i
-         ai2HkjDikjqrO929y3PfF8UAJgLIPhzNlFOtssQW1rvMm27YMQIRPEjfv/iEY3kB2kzu
-         qE0MLbvqx4DYL1d6BUSoWEsI+fMbJAN0T+bF1N79Kokc4YlMcqM/UdkpuTK4BXbq8cvD
-         8qIhpehLRYycZhOttdFGbGvvWzHx4HsWXUbEQIkyYUqhJIncv3PyFS4eoVQF7sdRrr1N
-         NhxbZ4sOAxaYxAuZuhrIk7Pv2J4+CnmmlNQLkN8hb9Y/+bQR0hGFz+7NquTfx2vNaPKa
-         Wg7Q==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pdYzXGFouE6m4FSIkgrBziaqe3C5lzqdVFEvi65td6k=;
+        b=Yv00WEyiSIg66gxJEUUQwcy2Tlc1E6Wc6zvKRDzYUlRDO6iCWLetHtRbnLoDvvQlXe
+         zOvWWpAvNNuvZIWHgr0fKWDsU8iNkZKTU9Ci4Vt8EkYVQUyV00qvQSrVYglPeqw2m8hn
+         YqvRGf3NKI0NMSmp82ufCgdaCILt0ba9vFJX0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+CwHsxmZO7al02eIsWAPOcThZHp6rfmpE6RrFb8EcPw=;
-        b=Q7ELpQyTm/78zUsWglXsMteaJppckvCdPISDSnGeKHSy5b29318EBV2k4vGi/XjSjx
-         OK1qq97eEhd6CukpeEC60MiyRf6bxQeCXpOqHHpzK6y2YbDmnpHcO3l0FN8BUJdk1Kjq
-         mS/yLRppyNAvy4lB+XdUA9GEeAaEB88Ec5Kc3vnE4fZivd65W2lMSjEj3sjV+XMo5qY+
-         c02x7w+COUFhTnUWVBL1sk7Wjdg7i0G5c2vFIYmz8vnjoXIHphdybsvf5JirFfjiP4o0
-         uHTSic3VVrNe3XmOv0jWlytA9G8Pnu6wf0/LGOnNXfWrZy9QlG8ZlPLU71jHLW2E/nSL
-         o1Mw==
-X-Gm-Message-State: AOAM533go0aj2qKZzioK0Yu0zlVtRoqtYc5b+XeMKFGPE4g1ZkKqcwWY
-        8PKVmo7ld3VKbOodF8uIbC/HqA==
-X-Google-Smtp-Source: ABdhPJycmaH/Sq6ALxmP55R4OyQZwQBY9HYoAjxXJCFGcMDHXq30eGLpBKlGwC81JM1FheQuhhv4eg==
-X-Received: by 2002:a17:902:7881:: with SMTP id q1mr3907257pll.159.1592491321424;
-        Thu, 18 Jun 2020 07:42:01 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id u74sm2786453pgc.58.2020.06.18.07.42.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 07:42:00 -0700 (PDT)
-Subject: Re: linux-next: Tree for Jun 18 (fs/io_uring)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>
-References: <20200618141530.0ca9897d@canb.auug.org.au>
- <25b48bfa-07ef-c6c8-c4c9-61c213e22f66@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <52b64a82-34c2-268f-7aa3-4cb4f7a14e23@kernel.dk>
-Date:   Thu, 18 Jun 2020 08:42:00 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=pdYzXGFouE6m4FSIkgrBziaqe3C5lzqdVFEvi65td6k=;
+        b=DAB5RNvR5CLHiX1k1WN2tUBa1V/DXELOP3n3PrVf0pZUsg3qv/c3+hGAgvhRs3HxXT
+         YWKpwJF+gcY16ft1BKitnFUeLRfNmQMeVaIAlcDSduDjo1jiKM5YHgZihK/zN62KgO3H
+         In15fsUM/H/LpNHCXh/FQVvBrcprFM0edv0zppICYpV6bAFR+1YDwb4PqCPReAQAmPfl
+         Q54y+Ob9lUuLzA0WGUq+fx3MwZ+aUyPynjtx916PBHO4pH05PeGVV771RQVAheYKiGE1
+         ewM05o8ZdrLFsUdPcAN/Y0Yx7tiD9FJBZqqteBLCfD+s0V/MY+56/fOeMUM7nnPZsFBz
+         5PPg==
+X-Gm-Message-State: AOAM5308nTOhnPqBFgz3KrZptBd1oQXTwiAvLkr9qVh9C7/ygtzF5pJF
+        950vyowZ/qHPEX06evzdBAmzFQ==
+X-Google-Smtp-Source: ABdhPJxnVXjNFjlZjZjkcFFWafgkcwR6ZwnMtNAx31PJPXgT9P8/Pv/85bqfzuCJe/q/lkXd/e/Xbg==
+X-Received: by 2002:adf:cf0c:: with SMTP id o12mr4325124wrj.265.1592491359458;
+        Thu, 18 Jun 2020 07:42:39 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id g25sm3649693wmh.18.2020.06.18.07.42.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 07:42:38 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 16:42:36 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200618144236.GR20149@phenom.ffwll.local>
+Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" <linux-media@vger.kernel.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+ <20200604081224.863494-5-daniel.vetter@ffwll.ch>
+ <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
+ <20200611083430.GD20149@phenom.ffwll.local>
+ <20200611141515.GW6578@ziepe.ca>
+ <20200616120719.GL20149@phenom.ffwll.local>
+ <20200616145312.GC6578@ziepe.ca>
+ <CAKMK7uER6ax1zr14xYLKqDfDZp+ycBsY9Yx7JaVkKQ849VfSPg@mail.gmail.com>
+ <20200617152940.GG6578@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <25b48bfa-07ef-c6c8-c4c9-61c213e22f66@infradead.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617152940.GG6578@ziepe.ca>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/20 11:38 PM, Randy Dunlap wrote:
-> On 6/17/20 9:15 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> News: there will be no linux-next release tomorrow.
->>
->> Changes since 20200617:
->>
+On Wed, Jun 17, 2020 at 12:29:40PM -0300, Jason Gunthorpe wrote:
+> On Wed, Jun 17, 2020 at 09:57:54AM +0200, Daniel Vetter wrote:
 > 
-> when CONFIG_BLOCK is not set/enabled:
+> > > At the very least I think there should be some big warning that
+> > > dma_fence in notifiers should be avoided.
+> > 
+> > Yeah I'm working on documentation, and also the notifiers here
+> > hopefully make it clear it's massive pain. I think we could even make
+> > a hard rule that dma_fence in mmu notifier outside of drivers/gpu is a
+> > bug/misfeature.
 > 
-> ../fs/io_uring.c: In function 'io_async_task_func':
-> ../fs/io_uring.c:4559:7: error: implicit declaration of function 'io_sq_thread_acquire_mm'; did you mean 'atomic_read_acquire'? [-Werror=implicit-function-declaration]
->    if (io_sq_thread_acquire_mm(ctx, req)) {
->        ^~~~~~~~~~~~~~~~~~~~~~~
->        atomic_read_acquire
-> ../fs/io_uring.c: In function 'io_sq_thread':
-> ../fs/io_uring.c:6268:4: error: implicit declaration of function 'io_sq_thread_drop_mm'; did you mean 'io_sq_thread'? [-Werror=implicit-function-declaration]
->     io_sq_thread_drop_mm(ctx);
->     ^~~~~~~~~~~~~~~~~~~~
->     io_sq_thread
+> Yep!
+>
+> > Might be a good idea to add a MAINTAINERS entry with a K: regex
+> > pattern, so that you can catch such modifiers. We do already have such
+> > a pattern for dma-fence, to catch abuse. So if you want I could type
+> > up a documentation patch for this, get your and others acks and the
+> > dri-devel folks would enforce that the dma_fence_wait madness doesn't
+> > leak beyond drivers/gpu
+> 
+> It seems like the best thing
 
-Fixed it up, thanks.
+Just thought about where to best put this, and I think including it as
+another paragraph in the next round of this series makes the most sense.
+You'll get cc'ed for acking when that happens - might take a while since
+there's a lot of details here all over to sort out.
+-Daniel
+
+>  
+> > Oded has agreed to remove the dma-fence usage, since they really don't
+> > need it (and all the baggage that comes with it), plain old completion
+> > is enough for their use. This use is also why I added the regex to
+> > MAINTAINERS, so that in the future we can catch people who try to use
+> > dma_fence because it looks cute and useful, and are completely
+> > oblivious to all the pain and headaches involved.
+> 
+> This is good!
+> 
+> Thanks,
+> Jason 
 
 -- 
-Jens Axboe
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
