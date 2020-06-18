@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38575C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7782088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108F820EDD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446730;
-	bh=PAz4pLAm9XEI1zL/Wk3wIS4gF+KjCk6zdfZrFFmni5k=;
+	s=default; t=1592446732;
+	bh=lwzRwsrx3YiJQpfwmDmgLujx4GshtpM/4E4B9ChFbrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DGjej2M5bNudYlvLne15U+pIwZzkzO2Yo1nXBX/jLScNxXkY50g8OvoMlN1zDmdDt
-	 3ZOhVvVkS1wQwDx6eAyxfmLAol0suDdKEGW1253uk8fH8oc06pLHMUZQZS/banwOgC
-	 Cu3/E94mEeRih4bQraT3szl8L2WPOdpufvY8NQ0Q=
+	b=rJRNVFMFN/sJLm2/gao/Gh0xIrwISapFGkXZFkMHfcEjZ9AOx7xyoU/gT9Fu6gqht
+	 gn5lGEkX1P9c4OuO2xcUHWlMswF7qA0wDMuhLn71bVZ6vVJFzsQLixZzbN2ugsxIgS
+	 rl+kO5C9tpR/74molUGQsT6ghj+4mWix+6HufBiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733124AbgFRCSs (ORCPT
+        id S1733125AbgFRCSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:18:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51412 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:18:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730152AbgFRBTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:19:34 -0400
+        id S1730147AbgFRBTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:19:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB4C521D94;
-        Thu, 18 Jun 2020 01:19:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C477221EB;
+        Thu, 18 Jun 2020 01:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443173;
-        bh=PAz4pLAm9XEI1zL/Wk3wIS4gF+KjCk6zdfZrFFmni5k=;
+        s=default; t=1592443172;
+        bh=lwzRwsrx3YiJQpfwmDmgLujx4GshtpM/4E4B9ChFbrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmDicJiaOVPEeaE9SeBPrHIw3HNemeH7crHTX22y8t0UhVoNjrHgMDYZtK5wMKwaA
-         Icc7FWBxd/kepUY1JIAIXR4ZDerI4KzQif+gwwVPhbrWi8Wr02QE5AbYPYiVXoGMB/
-         mlTFczn3eSS4OiLFy8tTYE4ySYOLbd/bfYTwR2Yk=
+        b=qoAsQ1m1vBgBx7VgYVPsOdx9J2BWhxLFYg5z2k5GH4bxZNk68SdQHVs4qkU5qr3wX
+         5vrtPiPdT1y5OdK+++PInHteyWnFNenjFzlD4kfj/2YOwBGSc08QoPnA/GjwZh5BAX
+         GPRC6SvzdT2xsIk8wzFaggxK5DXfX0+ymS8b9nsY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 137/266] pinctrl: rockchip: fix memleak in rockchip_dt_node_to_map
-Date:   Wed, 17 Jun 2020 21:14:22 -0400
-Message-Id: <20200618011631.604574-137-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Peter Ujfalusi <peter.ujflausi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 136/266] ASoC: ti: omap-mcbsp: Fix an error handling path in 'asoc_mcbsp_probe()'
+Date:   Wed, 17 Jun 2020 21:14:21 -0400
+Message-Id: <20200618011631.604574-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -62,62 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit d7faa8ffb6be57bf8233a4b5a636d76b83c51ce7 ]
+[ Upstream commit 03990fd58d2b7c8f7d53e514ba9b8749fac260f9 ]
 
-In function rockchip_dt_node_to_map, a new_map variable is
-allocated by:
+If an error occurs after the call to 'omap_mcbsp_init()', the reference to
+'mcbsp->fclk' must be decremented, as already done in the remove function.
 
-new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
-		       GFP_KERNEL);
+This can be achieved easily by using the devm_ variant of 'clk_get()'
+when the reference is taken in 'omap_mcbsp_init()'
 
-This uses devres and attaches new_map to the pinctrl driver.
-This cause a leak since new_map is not released when the probed
-driver is removed. Fix it by using kcalloc to allocate new_map
-and free it in `rockchip_dt_free_map`
+This fixes the leak in the probe and has the side effect to simplify both
+the error handling path of 'omap_mcbsp_init()' and the remove function.
 
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://lore.kernel.org/r/20200506100903.15420-1-dafna.hirschfeld@collabora.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Acked-by: Peter Ujfalusi <peter.ujflausi@ti.com>
+Link: https://lore.kernel.org/r/20200512134325.252073-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-rockchip.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ sound/soc/ti/omap-mcbsp.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index dc0bbf198cbc..1bd8840e11a6 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -506,8 +506,8 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
+diff --git a/sound/soc/ti/omap-mcbsp.c b/sound/soc/ti/omap-mcbsp.c
+index 26b503bbdb5f..3273b317fa3b 100644
+--- a/sound/soc/ti/omap-mcbsp.c
++++ b/sound/soc/ti/omap-mcbsp.c
+@@ -686,7 +686,7 @@ static int omap_mcbsp_init(struct platform_device *pdev)
+ 	mcbsp->dma_data[1].addr = omap_mcbsp_dma_reg_params(mcbsp,
+ 						SNDRV_PCM_STREAM_CAPTURE);
+ 
+-	mcbsp->fclk = clk_get(&pdev->dev, "fck");
++	mcbsp->fclk = devm_clk_get(&pdev->dev, "fck");
+ 	if (IS_ERR(mcbsp->fclk)) {
+ 		ret = PTR_ERR(mcbsp->fclk);
+ 		dev_err(mcbsp->dev, "unable to get fck: %d\n", ret);
+@@ -711,7 +711,7 @@ static int omap_mcbsp_init(struct platform_device *pdev)
+ 		if (ret) {
+ 			dev_err(mcbsp->dev,
+ 				"Unable to create additional controls\n");
+-			goto err_thres;
++			return ret;
+ 		}
  	}
  
- 	map_num += grp->npins;
--	new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
--								GFP_KERNEL);
-+
-+	new_map = kcalloc(map_num, sizeof(*new_map), GFP_KERNEL);
- 	if (!new_map)
- 		return -ENOMEM;
- 
-@@ -517,7 +517,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	/* create mux map */
- 	parent = of_get_parent(np);
- 	if (!parent) {
--		devm_kfree(pctldev->dev, new_map);
-+		kfree(new_map);
- 		return -EINVAL;
- 	}
- 	new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
-@@ -544,6 +544,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
- static void rockchip_dt_free_map(struct pinctrl_dev *pctldev,
- 				    struct pinctrl_map *map, unsigned num_maps)
- {
-+	kfree(map);
+@@ -724,8 +724,6 @@ static int omap_mcbsp_init(struct platform_device *pdev)
+ err_st:
+ 	if (mcbsp->pdata->buffer_size)
+ 		sysfs_remove_group(&mcbsp->dev->kobj, &additional_attr_group);
+-err_thres:
+-	clk_put(mcbsp->fclk);
+ 	return ret;
  }
  
- static const struct pinctrl_ops rockchip_pctrl_ops = {
+@@ -1442,8 +1440,6 @@ static int asoc_mcbsp_remove(struct platform_device *pdev)
+ 
+ 	omap_mcbsp_st_cleanup(pdev);
+ 
+-	clk_put(mcbsp->fclk);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
