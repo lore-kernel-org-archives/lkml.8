@@ -2,162 +2,141 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4F4C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93BDC221F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A33D221F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445063;
-	bh=hsD8rEWgNzJQVshX0lx5pB7GQ9Y4hZ3wbaRlnnuycxI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PihVINOgQv5dJRz3YEBmoxzWqUi3xb3icYaVts5QxSysZr2u77jHuwk8/lFojj08A
-	 qam/RY82CcyY0dwnN5l+AhkEe4VARByQYc12EjpuYv27DQTOcmcZ5oBOWioND9vmLd
-	 mV/Ss7ptnmSRSZcXh8+7xSwfUA4biB8TVRPN5/0o=
+	s=default; t=1592445066;
+	bh=g4pjzjoWwC5uwkYkxbzWhhntYB8sIO5y6DGTwIdZYgU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=r6qZUThtPefeU3GHoRK9POhyuHOFjAPQCcJlu8OZbgthhD3iRv8CWEMCaBjMEWlzn
+	 WEbyWjKs4pMupWbZ7C8fuBhyQbh28NskHKUKLzRKb+RVb+Qu24bjkx5rMJT9C8H9b9
+	 haXuOcyWZPuajP8y55bOgKeOfAugPfqnVkyzWsBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733037AbgFRBvC (ORCPT
+        id S1730839AbgFRB1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:51:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40102 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:27:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731646AbgFRBu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:50:56 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731059AbgFRBXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:23:47 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDDD322205;
-        Thu, 18 Jun 2020 01:50:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B023620CC7;
+        Thu, 18 Jun 2020 01:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592445055;
-        bh=hsD8rEWgNzJQVshX0lx5pB7GQ9Y4hZ3wbaRlnnuycxI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LTE+D4UbUcEkUSMktV4ESXw4EIEzIOD6H0gorecjoVPo/NCOAK0S7MJPdzPbaPD30
-         vCuOSYNxu6jFgtFv+weatEHa28lHxUrpTm/yWwt2EuwKv7ldq/dqZ94lFq6+UyI9tg
-         JZzjiI9BChv95Mdd+umax1KbG4dXUzdpcuYsEKNQ=
-Date:   Thu, 18 Jun 2020 10:50:51 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mingo@redhat.com, linux-trace-devel@vger.kernel.org,
-        linux-kernel@i4.cs.fau.de,
-        Maximilian Werner <maximilian.werner96@gmail.com>
-Subject: Re: [PATCH] tracing/boottime: Fix kprobe multiple events
-Message-Id: <20200618105051.ce01a84a13bbf67b816c1363@kernel.org>
-In-Reply-To: <20200617140817.17161-1-sascha.ortmann@stud.uni-hannover.de>
-References: <20200617140817.17161-1-sascha.ortmann@stud.uni-hannover.de>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1592443427;
+        bh=g4pjzjoWwC5uwkYkxbzWhhntYB8sIO5y6DGTwIdZYgU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lWabb/ugq0NkDK+CuMg/sN5WIt2KDb68Q1FQRQGKPwvkVtF12GE7NIU8L8vbcjtW2
+         Y/W8d0MRlYPPEXo0nJD4yN+cRjq9jukiS0wVmOzu7EV6ZSTC89OV8EXxfYLO3tU+hV
+         HPMMimR6gUJinSNQ5e73jcgBougBtiCmwyOgejrY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 067/172] s390/qdio: put thinint indicator after early error
+Date:   Wed, 17 Jun 2020 21:20:33 -0400
+Message-Id: <20200618012218.607130-67-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-On Wed, 17 Jun 2020 16:08:17 +0200
-Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de> wrote:
+[ Upstream commit 75e82bec6b2622c6f455b7a543fb5476a5d0eed7 ]
 
-> Fix boottime kprobe events to add multiple events even if one fails
-> and report probe generation failures.
-> 
-> As an example, when we try to set multiprobe kprobe events in
-> bootconfig like this:
-> 
-> ftrace.event.kprobes.vfsevents {
-> 	probes = "vfs_read $arg1 $arg2,,
->                  !error! not reported;?", // leads to error
-> 		 "vfs_write $arg1 $arg2"
-> }
-> 
-> this will not work like expected. After commit
-> da0f1f4167e3af69e1d8b32d6d65195ddd2bfb64 ("tracing/boottime:
-> Fix kprobe event API usage"), the function
-> trace_boot_add_kprobe_event will not produce any error message,
-> aborting the function and stopping subsequent probes from getting
-> installed when adding a probe fails at kprobe_event_gen_cmd_start.
+qdio_establish() calls qdio_setup_thinint() via qdio_setup_irq().
+If the subsequent qdio_establish_thinint() fails, we miss to put the
+DSCI again. Thus the DSCI isn't available for re-use. Given enough of
+such errors, we could end up with having only the shared DSCI available.
 
-Ah, good catch!
-Indeed, I missed the error message.
+Merge qdio_setup_thinint() into qdio_establish_thinint(), and deal with
+such an error internally.
 
-> Furthermore, probes continue when kprobe_event_gen_cmd_end fails
-> (and kprobe_event_gen_cmd_start did not fail). In this case the
-> function even returns successfully when the last call to
-> kprobe_event_gen_cmd_end is successful.
-> 
-> The behaviour of reporting and aborting after failures is not
-> consistent.
+Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/cio/qdio.h         |  1 -
+ drivers/s390/cio/qdio_setup.c   |  1 -
+ drivers/s390/cio/qdio_thinint.c | 14 ++++++++------
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-OK. And for more consistency, we should abort the loop if we hit any
-error instead of continuing, because if trace_boot_add_kprobe_event()
-returns an error code, the rest of event settings are skipped.
-(See trace_boot_init_one_event())
-
-> 
-> The function trace_boot_add_kprobe_event now continues even when
-> one of the multiple events fails. Each failure is now reported
-> individually. Since the function can only return one result to the
-> caller, the function returns now the last failure (or none, if
-> nothing fails).
-> 
-> Cc: linux-kernel@i4.cs.fau.de
-> Signed-off-by: Maximilian Werner <maximilian.werner96@gmail.com>
-> Signed-off-by: Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
-> ---
->  kernel/trace/trace_boot.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-> index 9de29bb45a27..dbb50184e060 100644
-> --- a/kernel/trace/trace_boot.c
-> +++ b/kernel/trace/trace_boot.c
-> @@ -95,18 +95,24 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
->  	struct xbc_node *anode;
->  	char buf[MAX_BUF_LEN];
->  	const char *val;
-> +	int error = 0;
->  	int ret = 0;
->  
->  	xbc_node_for_each_array_value(node, "probes", anode, val) {
->  		kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
->  
-> -		ret = kprobe_event_gen_cmd_start(&cmd, event, val);
-> -		if (ret)
-> -			break;
-> +		error = kprobe_event_gen_cmd_start(&cmd, event, val);
-> +		if (error) {
-> +			pr_err("Failed to generate probe: %s\n", buf);
-> +			ret = error;
-> +			continue;
-
-so, could you break here?
-
-> +		}
->  
-> -		ret = kprobe_event_gen_cmd_end(&cmd);
-> -		if (ret)
-> +		error = kprobe_event_gen_cmd_end(&cmd);
-> +		if (error) {
->  			pr_err("Failed to add probe: %s\n", buf);
-> +			ret = error;
-
-And here.
-
-> +		}
->  	}
->  
->  	return ret;
-> -- 
-> 2.17.1
-> 
-
-Thank you!
-
-
+diff --git a/drivers/s390/cio/qdio.h b/drivers/s390/cio/qdio.h
+index a6f7c2986b94..ed60b8d4efe6 100644
+--- a/drivers/s390/cio/qdio.h
++++ b/drivers/s390/cio/qdio.h
+@@ -377,7 +377,6 @@ static inline int multicast_outbound(struct qdio_q *q)
+ extern u64 last_ai_time;
+ 
+ /* prototypes for thin interrupt */
+-void qdio_setup_thinint(struct qdio_irq *irq_ptr);
+ int qdio_establish_thinint(struct qdio_irq *irq_ptr);
+ void qdio_shutdown_thinint(struct qdio_irq *irq_ptr);
+ void tiqdio_add_input_queues(struct qdio_irq *irq_ptr);
+diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
+index d040c4920ee7..b8955e20f246 100644
+--- a/drivers/s390/cio/qdio_setup.c
++++ b/drivers/s390/cio/qdio_setup.c
+@@ -480,7 +480,6 @@ int qdio_setup_irq(struct qdio_initialize *init_data)
+ 	setup_queues(irq_ptr, init_data);
+ 
+ 	setup_qib(irq_ptr, init_data);
+-	qdio_setup_thinint(irq_ptr);
+ 	set_impl_params(irq_ptr, init_data->qib_param_field_format,
+ 			init_data->qib_param_field,
+ 			init_data->input_slib_elements,
+diff --git a/drivers/s390/cio/qdio_thinint.c b/drivers/s390/cio/qdio_thinint.c
+index 6628e0c9e70e..e6b22a58150a 100644
+--- a/drivers/s390/cio/qdio_thinint.c
++++ b/drivers/s390/cio/qdio_thinint.c
+@@ -267,17 +267,19 @@ int __init tiqdio_register_thinints(void)
+ 
+ int qdio_establish_thinint(struct qdio_irq *irq_ptr)
+ {
++	int rc;
++
+ 	if (!is_thinint_irq(irq_ptr))
+ 		return 0;
+-	return set_subchannel_ind(irq_ptr, 0);
+-}
+ 
+-void qdio_setup_thinint(struct qdio_irq *irq_ptr)
+-{
+-	if (!is_thinint_irq(irq_ptr))
+-		return;
+ 	irq_ptr->dsci = get_indicator();
+ 	DBF_HEX(&irq_ptr->dsci, sizeof(void *));
++
++	rc = set_subchannel_ind(irq_ptr, 0);
++	if (rc)
++		put_indicator(irq_ptr->dsci);
++
++	return rc;
+ }
+ 
+ void qdio_shutdown_thinint(struct qdio_irq *irq_ptr)
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.25.1
+
