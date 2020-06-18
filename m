@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E02BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA7E21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F53221E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443521;
-	bh=GrXHVtwxhb7GAQ5w2+0nA8HW2ks88zZMM+TVvt4858s=;
+	s=default; t=1592443527;
+	bh=2rm5RcYbUb/j6LaDywUbdw/y6eC+GKGN8Q/dRzVkim8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e6ny4i+6ptJ5PBQeCvxZMceXC70pHjdz6u4QFWPsC/e2+7/N8LFVxpXps9McXVdZ/
-	 3jk0Jvzd9gsVzlAWnPQth+J/K6j6CHBOcMlRYAYWkGK9qr2neFlvg+JPV+rDRZ2HLi
-	 IPJE4sdWKRARvJ1OjUF0n8f/v1ZAW7ewFEXF8IUk=
+	b=f2/1i/OL6vQLTUnmg72xZp6jV/WB6QsC8n/zZFw9QEXl9D97kW383GnKFfyRGdpu6
+	 d5qVNctlg7dgEgb1N+2/NSl4v/SG5BELe2sCJz8H3sbG1sRnk7Ty6AQFbY4DKKEROK
+	 2YoA7dqCRe/CNH4CYarOxjnLr/UhWljbN22/yttw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731415AbgFRBZT (ORCPT
+        id S1730861AbgFRBZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:25:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55070 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:25:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730671AbgFRBWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:22:11 -0400
+        id S1730689AbgFRBWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:22:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92CAD21D82;
-        Thu, 18 Jun 2020 01:22:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76F99221E8;
+        Thu, 18 Jun 2020 01:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443331;
-        bh=GrXHVtwxhb7GAQ5w2+0nA8HW2ks88zZMM+TVvt4858s=;
+        s=default; t=1592443334;
+        bh=2rm5RcYbUb/j6LaDywUbdw/y6eC+GKGN8Q/dRzVkim8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OBMJQjoMC+0nUXW70w6MLleQAgjisRTQ1MvRcL6XHWd8TI5QtWgdVGz19F1Fm+ZkY
-         BTwQKGgbgNhTDfekmgZbsVcMcf0WHieSiIe8MIzf3QwavybdNUq9bIFYg/KcItSN0I
-         oAf+QrmCK5b0NZZfDjP/eueltYBLOycFFSHNIglo=
+        b=MqZY1KYfdcCzInD7remNRO8OF1m/U0neQBi5RrB4fuxiFuuG2+HLliQAvljtSaGFw
+         CmUGZZi3+JhClnD2BX8VBYmrpVLH0qi5zsKFDSgeA0//1G/7V2HrGO/v2cbkOVmv8k
+         Azw2dX7XBji0BP89V8Uwh388+UV+Pju55LUnd3a0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zheng Bin <zhengbin13@huawei.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 263/266] nfs: set invalid blocks after NFSv4 writes
-Date:   Wed, 17 Jun 2020 21:16:28 -0400
-Message-Id: <20200618011631.604574-263-sashal@kernel.org>
+Cc:     Brett Creeley <brett.creeley@intel.com>,
+        Sergey Nemov <sergey.nemov@intel.com>,
+        Paul Greenwalt <paul.greenwalt@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 265/266] iavf: fix speed reporting over virtchnl
+Date:   Wed, 17 Jun 2020 21:16:30 -0400
+Message-Id: <20200618011631.604574-265-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,112 +63,328 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Bin <zhengbin13@huawei.com>
+From: Brett Creeley <brett.creeley@intel.com>
 
-[ Upstream commit 3a39e778690500066b31fe982d18e2e394d3bce2 ]
+[ Upstream commit e0ef26fbe2b0c62f42ba7667076dc38b693b6fb8 ]
 
-Use the following command to test nfsv4(size of file1M is 1MB):
-mount -t nfs -o vers=4.0,actimeo=60 127.0.0.1/dir1 /mnt
-cp file1M /mnt
-du -h /mnt/file1M  -->0 within 60s, then 1M
+Link speeds are communicated over virtchnl using an enum
+virtchnl_link_speed. Currently, the highest link speed is 40Gbps which
+leaves us unable to reflect some speeds that an ice VF is capable of.
+This causes link speed to be misreported on the iavf driver.
 
-When write is done(cp file1M /mnt), will call this:
-nfs_writeback_done
-  nfs4_write_done
-    nfs4_write_done_cb
-      nfs_writeback_update_inode
-        nfs_post_op_update_inode_force_wcc_locked(change, ctime, mtime
-nfs_post_op_update_inode_force_wcc_locked
-   nfs_set_cache_invalid
-   nfs_refresh_inode_locked
-     nfs_update_inode
+Allow for communicating link speeds using Mbps so that the proper speed can
+be reported for an ice VF. Moving away from the enum allows us to
+communicate future speed changes without requiring a new enum to be added.
 
-nfsd write response contains change, ctime, mtime, the flag will be
-clear after nfs_update_inode. Howerver, write response does not contain
-space_used, previous open response contains space_used whose value is 0,
-so inode->i_blocks is still 0.
+In order to support communicating link speeds over virtchnl in Mbps the
+following functionality was added:
+    - Added u32 link_speed_mbps in the iavf_adapter structure.
+    - Added the macro ADV_LINK_SUPPORT(_a) to determine if the VF
+      driver supports communicating link speeds in Mbps.
+    - Added the function iavf_get_vpe_link_status() to fill the
+      correct link_status in the event_data union based on the
+      ADV_LINK_SUPPORT(_a) macro.
+    - Added the function iavf_set_adapter_link_speed_from_vpe()
+      to determine whether or not to fill the u32 link_speed_mbps or
+      enum virtchnl_link_speed link_speed field in the iavf_adapter
+      structure based on the ADV_LINK_SUPPORT(_a) macro.
+    - Do not free vf_res in iavf_init_get_resources() as vf_res will be
+      accessed in iavf_get_link_ksettings(); memset to 0 instead. This
+      memory is subsequently freed in iavf_remove().
 
-nfs_getattr  -->called by "du -h"
-  do_update |= force_sync || nfs_attribute_cache_expired -->false in 60s
-  cache_validity = READ_ONCE(NFS_I(inode)->cache_validity)
-  do_update |= cache_validity & (NFS_INO_INVALID_ATTR    -->false
-  if (do_update) {
-        __nfs_revalidate_inode
-  }
-
-Within 60s, does not send getattr request to nfsd, thus "du -h /mnt/file1M"
-is 0.
-
-Add a NFS_INO_INVALID_BLOCKS flag, set it when nfsv4 write is done.
-
-Fixes: 16e143751727 ("NFS: More fine grained attribute tracking")
-Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 7c710869d64e ("ice: Add handlers for VF netdevice operations")
+Signed-off-by: Brett Creeley <brett.creeley@intel.com>
+Signed-off-by: Sergey Nemov <sergey.nemov@intel.com>
+Signed-off-by: Paul Greenwalt <paul.greenwalt@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/inode.c         | 14 +++++++++++---
- include/linux/nfs_fs.h |  1 +
- 2 files changed, 12 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/iavf/iavf.h        | 14 +++
+ .../net/ethernet/intel/iavf/iavf_ethtool.c    | 14 ++-
+ drivers/net/ethernet/intel/iavf/iavf_main.c   | 25 ++++--
+ .../net/ethernet/intel/iavf/iavf_virtchnl.c   | 88 ++++++++++++++++---
+ 4 files changed, 120 insertions(+), 21 deletions(-)
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index 3802c88e8372..6de41f741280 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -826,6 +826,8 @@ int nfs_getattr(const struct path *path, struct kstat *stat,
- 		do_update |= cache_validity & NFS_INO_INVALID_ATIME;
- 	if (request_mask & (STATX_CTIME|STATX_MTIME))
- 		do_update |= cache_validity & NFS_INO_REVAL_PAGECACHE;
-+	if (request_mask & STATX_BLOCKS)
-+		do_update |= cache_validity & NFS_INO_INVALID_BLOCKS;
- 	if (do_update) {
- 		/* Update the attribute cache */
- 		if (!(server->flags & NFS_MOUNT_NOAC))
-@@ -1750,7 +1752,8 @@ int nfs_post_op_update_inode_force_wcc_locked(struct inode *inode, struct nfs_fa
- 	status = nfs_post_op_update_inode_locked(inode, fattr,
- 			NFS_INO_INVALID_CHANGE
- 			| NFS_INO_INVALID_CTIME
--			| NFS_INO_INVALID_MTIME);
-+			| NFS_INO_INVALID_MTIME
-+			| NFS_INO_INVALID_BLOCKS);
- 	return status;
+diff --git a/drivers/net/ethernet/intel/iavf/iavf.h b/drivers/net/ethernet/intel/iavf/iavf.h
+index bd1b1ed323f4..6b9117a350fa 100644
+--- a/drivers/net/ethernet/intel/iavf/iavf.h
++++ b/drivers/net/ethernet/intel/iavf/iavf.h
+@@ -87,6 +87,10 @@ struct iavf_vsi {
+ #define IAVF_HLUT_ARRAY_SIZE ((IAVF_VFQF_HLUT_MAX_INDEX + 1) * 4)
+ #define IAVF_MBPS_DIVISOR	125000 /* divisor to convert to Mbps */
+ 
++#define IAVF_VIRTCHNL_VF_RESOURCE_SIZE (sizeof(struct virtchnl_vf_resource) + \
++					(IAVF_MAX_VF_VSI * \
++					 sizeof(struct virtchnl_vsi_resource)))
++
+ /* MAX_MSIX_Q_VECTORS of these are allocated,
+  * but we only use one per queue-specific vector.
+  */
+@@ -306,6 +310,14 @@ struct iavf_adapter {
+ 	bool netdev_registered;
+ 	bool link_up;
+ 	enum virtchnl_link_speed link_speed;
++	/* This is only populated if the VIRTCHNL_VF_CAP_ADV_LINK_SPEED is set
++	 * in vf_res->vf_cap_flags. Use ADV_LINK_SUPPORT macro to determine if
++	 * this field is valid. This field should be used going forward and the
++	 * enum virtchnl_link_speed above should be considered the legacy way of
++	 * storing/communicating link speeds.
++	 */
++	u32 link_speed_mbps;
++
+ 	enum virtchnl_ops current_op;
+ #define CLIENT_ALLOWED(_a) ((_a)->vf_res ? \
+ 			    (_a)->vf_res->vf_cap_flags & \
+@@ -322,6 +334,8 @@ struct iavf_adapter {
+ 			VIRTCHNL_VF_OFFLOAD_RSS_PF)))
+ #define VLAN_ALLOWED(_a) ((_a)->vf_res->vf_cap_flags & \
+ 			  VIRTCHNL_VF_OFFLOAD_VLAN)
++#define ADV_LINK_SUPPORT(_a) ((_a)->vf_res->vf_cap_flags & \
++			      VIRTCHNL_VF_CAP_ADV_LINK_SPEED)
+ 	struct virtchnl_vf_resource *vf_res; /* incl. all VSIs */
+ 	struct virtchnl_vsi_resource *vsi_res; /* our LAN VSI */
+ 	struct virtchnl_version_info pf_version;
+diff --git a/drivers/net/ethernet/intel/iavf/iavf_ethtool.c b/drivers/net/ethernet/intel/iavf/iavf_ethtool.c
+index dad3eec8ccd8..758bef02a2a8 100644
+--- a/drivers/net/ethernet/intel/iavf/iavf_ethtool.c
++++ b/drivers/net/ethernet/intel/iavf/iavf_ethtool.c
+@@ -278,7 +278,18 @@ static int iavf_get_link_ksettings(struct net_device *netdev,
+ 	ethtool_link_ksettings_zero_link_mode(cmd, supported);
+ 	cmd->base.autoneg = AUTONEG_DISABLE;
+ 	cmd->base.port = PORT_NONE;
+-	/* Set speed and duplex */
++	cmd->base.duplex = DUPLEX_FULL;
++
++	if (ADV_LINK_SUPPORT(adapter)) {
++		if (adapter->link_speed_mbps &&
++		    adapter->link_speed_mbps < U32_MAX)
++			cmd->base.speed = adapter->link_speed_mbps;
++		else
++			cmd->base.speed = SPEED_UNKNOWN;
++
++		return 0;
++	}
++
+ 	switch (adapter->link_speed) {
+ 	case IAVF_LINK_SPEED_40GB:
+ 		cmd->base.speed = SPEED_40000;
+@@ -306,7 +317,6 @@ static int iavf_get_link_ksettings(struct net_device *netdev,
+ 	default:
+ 		break;
+ 	}
+-	cmd->base.duplex = DUPLEX_FULL;
+ 
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
+index 8e16be960e96..bacc5fb7eba2 100644
+--- a/drivers/net/ethernet/intel/iavf/iavf_main.c
++++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
+@@ -1756,17 +1756,17 @@ static int iavf_init_get_resources(struct iavf_adapter *adapter)
+ 	struct net_device *netdev = adapter->netdev;
+ 	struct pci_dev *pdev = adapter->pdev;
+ 	struct iavf_hw *hw = &adapter->hw;
+-	int err = 0, bufsz;
++	int err;
+ 
+ 	WARN_ON(adapter->state != __IAVF_INIT_GET_RESOURCES);
+ 	/* aq msg sent, awaiting reply */
+ 	if (!adapter->vf_res) {
+-		bufsz = sizeof(struct virtchnl_vf_resource) +
+-			(IAVF_MAX_VF_VSI *
+-			sizeof(struct virtchnl_vsi_resource));
+-		adapter->vf_res = kzalloc(bufsz, GFP_KERNEL);
+-		if (!adapter->vf_res)
++		adapter->vf_res = kzalloc(IAVF_VIRTCHNL_VF_RESOURCE_SIZE,
++					  GFP_KERNEL);
++		if (!adapter->vf_res) {
++			err = -ENOMEM;
+ 			goto err;
++		}
+ 	}
+ 	err = iavf_get_vf_config(adapter);
+ 	if (err == IAVF_ERR_ADMIN_QUEUE_NO_WORK) {
+@@ -2036,7 +2036,7 @@ static void iavf_disable_vf(struct iavf_adapter *adapter)
+ 	iavf_reset_interrupt_capability(adapter);
+ 	iavf_free_queues(adapter);
+ 	iavf_free_q_vectors(adapter);
+-	kfree(adapter->vf_res);
++	memset(adapter->vf_res, 0, IAVF_VIRTCHNL_VF_RESOURCE_SIZE);
+ 	iavf_shutdown_adminq(&adapter->hw);
+ 	adapter->netdev->flags &= ~IFF_UP;
+ 	clear_bit(__IAVF_IN_CRITICAL_TASK, &adapter->crit_section);
+@@ -2487,6 +2487,16 @@ static int iavf_validate_tx_bandwidth(struct iavf_adapter *adapter,
+ {
+ 	int speed = 0, ret = 0;
+ 
++	if (ADV_LINK_SUPPORT(adapter)) {
++		if (adapter->link_speed_mbps < U32_MAX) {
++			speed = adapter->link_speed_mbps;
++			goto validate_bw;
++		} else {
++			dev_err(&adapter->pdev->dev, "Unknown link speed\n");
++			return -EINVAL;
++		}
++	}
++
+ 	switch (adapter->link_speed) {
+ 	case IAVF_LINK_SPEED_40GB:
+ 		speed = 40000;
+@@ -2510,6 +2520,7 @@ static int iavf_validate_tx_bandwidth(struct iavf_adapter *adapter,
+ 		break;
+ 	}
+ 
++validate_bw:
+ 	if (max_tx_rate > speed) {
+ 		dev_err(&adapter->pdev->dev,
+ 			"Invalid tx rate specified\n");
+diff --git a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
+index 1ab9cb339acb..9655318803b7 100644
+--- a/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
++++ b/drivers/net/ethernet/intel/iavf/iavf_virtchnl.c
+@@ -139,7 +139,8 @@ int iavf_send_vf_config_msg(struct iavf_adapter *adapter)
+ 	       VIRTCHNL_VF_OFFLOAD_ENCAP |
+ 	       VIRTCHNL_VF_OFFLOAD_ENCAP_CSUM |
+ 	       VIRTCHNL_VF_OFFLOAD_REQ_QUEUES |
+-	       VIRTCHNL_VF_OFFLOAD_ADQ;
++	       VIRTCHNL_VF_OFFLOAD_ADQ |
++	       VIRTCHNL_VF_CAP_ADV_LINK_SPEED;
+ 
+ 	adapter->current_op = VIRTCHNL_OP_GET_VF_RESOURCES;
+ 	adapter->aq_required &= ~IAVF_FLAG_AQ_GET_CONFIG;
+@@ -918,6 +919,8 @@ void iavf_disable_vlan_stripping(struct iavf_adapter *adapter)
+ 	iavf_send_pf_msg(adapter, VIRTCHNL_OP_DISABLE_VLAN_STRIPPING, NULL, 0);
  }
  
-@@ -1857,7 +1860,8 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 	nfsi->cache_validity &= ~(NFS_INO_INVALID_ATTR
- 			| NFS_INO_INVALID_ATIME
- 			| NFS_INO_REVAL_FORCED
--			| NFS_INO_REVAL_PAGECACHE);
-+			| NFS_INO_REVAL_PAGECACHE
-+			| NFS_INO_INVALID_BLOCKS);
++#define IAVF_MAX_SPEED_STRLEN	13
++
+ /**
+  * iavf_print_link_message - print link up or down
+  * @adapter: adapter structure
+@@ -927,37 +930,99 @@ void iavf_disable_vlan_stripping(struct iavf_adapter *adapter)
+ static void iavf_print_link_message(struct iavf_adapter *adapter)
+ {
+ 	struct net_device *netdev = adapter->netdev;
+-	char *speed = "Unknown ";
++	int link_speed_mbps;
++	char *speed;
  
- 	/* Do atomic weak cache consistency updates */
- 	nfs_wcc_update_inode(inode, fattr);
-@@ -2019,8 +2023,12 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 		inode->i_blocks = nfs_calc_block_size(fattr->du.nfs3.used);
- 	} else if (fattr->valid & NFS_ATTR_FATTR_BLOCKS_USED)
- 		inode->i_blocks = fattr->du.nfs2.blocks;
--	else
-+	else {
-+		nfsi->cache_validity |= save_cache_validity &
-+				(NFS_INO_INVALID_BLOCKS
-+				| NFS_INO_REVAL_FORCED);
- 		cache_revalidated = false;
+ 	if (!adapter->link_up) {
+ 		netdev_info(netdev, "NIC Link is Down\n");
+ 		return;
+ 	}
+ 
++	speed = kcalloc(1, IAVF_MAX_SPEED_STRLEN, GFP_KERNEL);
++	if (!speed)
++		return;
++
++	if (ADV_LINK_SUPPORT(adapter)) {
++		link_speed_mbps = adapter->link_speed_mbps;
++		goto print_link_msg;
 +	}
++
+ 	switch (adapter->link_speed) {
+ 	case IAVF_LINK_SPEED_40GB:
+-		speed = "40 G";
++		link_speed_mbps = SPEED_40000;
+ 		break;
+ 	case IAVF_LINK_SPEED_25GB:
+-		speed = "25 G";
++		link_speed_mbps = SPEED_25000;
+ 		break;
+ 	case IAVF_LINK_SPEED_20GB:
+-		speed = "20 G";
++		link_speed_mbps = SPEED_20000;
+ 		break;
+ 	case IAVF_LINK_SPEED_10GB:
+-		speed = "10 G";
++		link_speed_mbps = SPEED_10000;
+ 		break;
+ 	case IAVF_LINK_SPEED_1GB:
+-		speed = "1000 M";
++		link_speed_mbps = SPEED_1000;
+ 		break;
+ 	case IAVF_LINK_SPEED_100MB:
+-		speed = "100 M";
++		link_speed_mbps = SPEED_100;
+ 		break;
+ 	default:
++		link_speed_mbps = SPEED_UNKNOWN;
+ 		break;
+ 	}
  
- 	/* Update attrtimeo value if we're out of the unstable period */
- 	if (attr_changed) {
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index 570a60c2f4f4..ad09c0cc5464 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -225,6 +225,7 @@ struct nfs4_copy_state {
- #define NFS_INO_INVALID_OTHER	BIT(12)		/* other attrs are invalid */
- #define NFS_INO_DATA_INVAL_DEFER	\
- 				BIT(13)		/* Deferred cache invalidation */
-+#define NFS_INO_INVALID_BLOCKS	BIT(14)         /* cached blocks are invalid */
+-	netdev_info(netdev, "NIC Link is Up %sbps Full Duplex\n", speed);
++print_link_msg:
++	if (link_speed_mbps > SPEED_1000) {
++		if (link_speed_mbps == SPEED_2500)
++			snprintf(speed, IAVF_MAX_SPEED_STRLEN, "2.5 Gbps");
++		else
++			/* convert to Gbps inline */
++			snprintf(speed, IAVF_MAX_SPEED_STRLEN, "%d %s",
++				 link_speed_mbps / 1000, "Gbps");
++	} else if (link_speed_mbps == SPEED_UNKNOWN) {
++		snprintf(speed, IAVF_MAX_SPEED_STRLEN, "%s", "Unknown Mbps");
++	} else {
++		snprintf(speed, IAVF_MAX_SPEED_STRLEN, "%u %s",
++			 link_speed_mbps, "Mbps");
++	}
++
++	netdev_info(netdev, "NIC Link is Up Speed is %s Full Duplex\n", speed);
++	kfree(speed);
++}
++
++/**
++ * iavf_get_vpe_link_status
++ * @adapter: adapter structure
++ * @vpe: virtchnl_pf_event structure
++ *
++ * Helper function for determining the link status
++ **/
++static bool
++iavf_get_vpe_link_status(struct iavf_adapter *adapter,
++			 struct virtchnl_pf_event *vpe)
++{
++	if (ADV_LINK_SUPPORT(adapter))
++		return vpe->event_data.link_event_adv.link_status;
++	else
++		return vpe->event_data.link_event.link_status;
++}
++
++/**
++ * iavf_set_adapter_link_speed_from_vpe
++ * @adapter: adapter structure for which we are setting the link speed
++ * @vpe: virtchnl_pf_event structure that contains the link speed we are setting
++ *
++ * Helper function for setting iavf_adapter link speed
++ **/
++static void
++iavf_set_adapter_link_speed_from_vpe(struct iavf_adapter *adapter,
++				     struct virtchnl_pf_event *vpe)
++{
++	if (ADV_LINK_SUPPORT(adapter))
++		adapter->link_speed_mbps =
++			vpe->event_data.link_event_adv.link_speed;
++	else
++		adapter->link_speed = vpe->event_data.link_event.link_speed;
+ }
  
- #define NFS_INO_INVALID_ATTR	(NFS_INO_INVALID_CHANGE \
- 		| NFS_INO_INVALID_CTIME \
+ /**
+@@ -1187,12 +1252,11 @@ void iavf_virtchnl_completion(struct iavf_adapter *adapter,
+ 	if (v_opcode == VIRTCHNL_OP_EVENT) {
+ 		struct virtchnl_pf_event *vpe =
+ 			(struct virtchnl_pf_event *)msg;
+-		bool link_up = vpe->event_data.link_event.link_status;
++		bool link_up = iavf_get_vpe_link_status(adapter, vpe);
+ 
+ 		switch (vpe->event) {
+ 		case VIRTCHNL_EVENT_LINK_CHANGE:
+-			adapter->link_speed =
+-				vpe->event_data.link_event.link_speed;
++			iavf_set_adapter_link_speed_from_vpe(adapter, vpe);
+ 
+ 			/* we've already got the right link status, bail */
+ 			if (adapter->link_up == link_up)
 -- 
 2.25.1
 
