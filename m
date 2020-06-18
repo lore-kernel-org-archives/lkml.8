@@ -2,118 +2,122 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC28FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2598FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8CF720739
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446296;
-	bh=jwppOJWJ0KbGh3W6BOSV/XYDkefGSCvIOHRBpZ0GYuA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n5JfzdBctXoxMq/jQBlUhRUI/xP+oc3KrzEoNjqhmqHN0n3IrUUT5txdCG97ntxPI
-	 js6clD0hr5jrjzY5zvLoVNXfJ+2omkDOszBTUk1LPhtyMM0UTNNOWpGUDqrujGWNJB
-	 izlys3cWZYuRLBGNfEApzfHRYxsUIUV9gOHcJ1L4=
+	by mail.kernel.org (Postfix) with ESMTP id 0245320739
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:11:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WAj0Sbvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731495AbgFRCLe (ORCPT
+        id S1731634AbgFRCLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730549AbgFRBVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:21:37 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 17 Jun 2020 22:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730549AbgFRCLf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 22:11:35 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55569C06174E;
+        Wed, 17 Jun 2020 19:11:35 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6645820CC7;
-        Thu, 18 Jun 2020 01:21:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443297;
-        bh=jwppOJWJ0KbGh3W6BOSV/XYDkefGSCvIOHRBpZ0GYuA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K+jcCy3yGsqS7Z7jbyxBGbeiwtLkavL7m95AsnIvYa4+sdbYrZMh+SEjDJ6k5p++O
-         3E8uXbivliQg3Nm91kbDqiWNEfRAdYUOH85hXW95llUm5St9yEu2leMOD+3pix97cS
-         BIx9gdKUuL97Rx4QYyJC8Lci+lq58L/He6XYkNWs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sanjay R Mehta <sanju.mehta@amd.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Arindam Nath <arindam.nath@amd.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 237/266] ntb_perf: pass correct struct device to dma_alloc_coherent
-Date:   Wed, 17 Jun 2020 21:16:02 -0400
-Message-Id: <20200618011631.604574-237-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
-References: <20200618011631.604574-1-sashal@kernel.org>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49nQR91GBPz9sWn;
+        Thu, 18 Jun 2020 12:11:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1592446293;
+        bh=/d/Jhma+imEvxuAxLE9c24AL1eQWO7+jWKTQDSwtFuU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WAj0Sbvl7Gfat/I6lvM3LprLDd6BRofv56Id2XEhtbOTr9duy/2s+DtPkz7W3MD/3
+         RQ/AqEMv41xsQaLADD1N+EB/818QsKxnOTaFJdMeMzFxh0VDTnSJS9Y9UYDQS2dMI1
+         s0AK+UX2SIzG3ALM+C0whl8aF4uJevgxqJ2YByZg78pKJTxuZlY1MduYEBR8rmZeNA
+         gQ8THUFznuHoefAx88YJ3cgrf11lakFxeEjgx7C6CNkDOunbNBFYKAdGcbGJqGQROt
+         vUSjo8fQAyFMSWjJR/pojBQs0/XjGejWOL9nxZTh03yGfWqA7Hif/9L5JMoqKwtgvI
+         sdURzcF0zX//A==
+Date:   Thu, 18 Jun 2020 12:11:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christian Brauner <christian@brauner.io>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the pidfd tree with the powerpc-fixes
+ tree
+Message-ID: <20200618121131.4ad29150@canb.auug.org.au>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/O856NgubTpu=wpzyxLA68e+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+--Sig_/O856NgubTpu=wpzyxLA68e+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[ Upstream commit 98f4e140264eeb52f22ff05be6b6dd48237255ac ]
+Hi all,
 
-Currently, ntb->dev is passed to dma_alloc_coherent
-and dma_free_coherent calls. The returned dma_addr_t
-is the CPU physical address. This works fine as long
-as IOMMU is disabled. But when IOMMU is enabled, we
-need to make sure that IOVA is returned for dma_addr_t.
-So the correct way to achieve this is by changing the
-first parameter of dma_alloc_coherent() as ntb->pdev->dev
-instead.
+Today's linux-next merge of the pidfd tree got a conflict in:
 
-Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-Signed-off-by: Arindam Nath <arindam.nath@amd.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/ntb/test/ntb_perf.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+  arch/powerpc/kernel/syscalls/syscall.tbl
 
-diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-index e9b7c2dfc730..52c29791fc02 100644
---- a/drivers/ntb/test/ntb_perf.c
-+++ b/drivers/ntb/test/ntb_perf.c
-@@ -556,7 +556,7 @@ static void perf_free_inbuf(struct perf_peer *peer)
- 		return;
- 
- 	(void)ntb_mw_clear_trans(peer->perf->ntb, peer->pidx, peer->gidx);
--	dma_free_coherent(&peer->perf->ntb->dev, peer->inbuf_size,
-+	dma_free_coherent(&peer->perf->ntb->pdev->dev, peer->inbuf_size,
- 			  peer->inbuf, peer->inbuf_xlat);
- 	peer->inbuf = NULL;
- }
-@@ -585,8 +585,9 @@ static int perf_setup_inbuf(struct perf_peer *peer)
- 
- 	perf_free_inbuf(peer);
- 
--	peer->inbuf = dma_alloc_coherent(&perf->ntb->dev, peer->inbuf_size,
--					 &peer->inbuf_xlat, GFP_KERNEL);
-+	peer->inbuf = dma_alloc_coherent(&perf->ntb->pdev->dev,
-+					 peer->inbuf_size, &peer->inbuf_xlat,
-+					 GFP_KERNEL);
- 	if (!peer->inbuf) {
- 		dev_err(&perf->ntb->dev, "Failed to alloc inbuf of %pa\n",
- 			&peer->inbuf_size);
-@@ -1517,4 +1518,3 @@ static void __exit perf_exit(void)
- 	destroy_workqueue(perf_wq);
- }
- module_exit(perf_exit);
--
--- 
-2.25.1
+between commit:
 
+  35e32a6cb5f6 ("powerpc/syscalls: Split SPU-ness out of ABI")
+
+from the powerpc-fixes tree and commit:
+
+  9b4feb630e8e ("arch: wire-up close_range()")
+
+from the pidfd tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/powerpc/kernel/syscalls/syscall.tbl
+index c0cdaacd770e,dd87a782d80e..000000000000
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@@ -480,6 -524,8 +480,7 @@@
+  434	common	pidfd_open			sys_pidfd_open
+  435	32	clone3				ppc_clone3			sys_clone3
+  435	64	clone3				sys_clone3
+ -435	spu	clone3				sys_ni_syscall
++ 436	common	close_range			sys_close_range
+  437	common	openat2				sys_openat2
+  438	common	pidfd_getfd			sys_pidfd_getfd
+  439	common	faccessat2			sys_faccessat2
+
+--Sig_/O856NgubTpu=wpzyxLA68e+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7qzVMACgkQAVBC80lX
+0GwvewgAh+vJ/7gqcE/3Xk8Aya4tIWiLxqqpc5YVQlAH8zijoMf3p6i7hfZsuEM5
+JmnLvrsiOlKdDQcmy0opuHd6HxtvVXmw3lTzShGPGb5ZDYg5tMYzWA/T8qpdGHpr
+T42Da8GaxVuh9kZPLNu6AXFhe53lY/Xaol9ezWcYFrxjdcPXCbv3m7N0wlw5Hahc
+hTIFCbhobIpLsC6DVQCmETW29B6Hl1hurkPA+RCR54NwIMjiFv1iBhbdYfpMZXrG
+6J8wE96cwoQZJBWXrc7Ru9G78eIJGH7tmTEVMTDZuq7AfL1mXRAuJsoS9kiLHgCa
+niMQB7k6Qte7mDnjdbxqVSeW+heHTQ==
+=aO3b
+-----END PGP SIGNATURE-----
+
+--Sig_/O856NgubTpu=wpzyxLA68e+--
