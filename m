@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98482C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 799482220D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F39B22209
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443758;
-	bh=D86AWZDvHgld329xPkXgBJ4CYWDLN4uKoOAb4vaqp8Y=;
+	s=default; t=1592443761;
+	bh=pZAaIKjkv2LG4+I0TntsRr+1UM8Ya3d3av/5lBBnhV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ifPqG3lR71Fu3+EAkCmVGpbTVknm52xVTN9ztmjIP8F+nUJgAZv9/38hrCYLUKyNm
-	 pBbrS77jM25Qb6NvVIy+331FMEbrzSAJmnkWqbLMBQDlSKXiNx07neyJBNcUgp+2jB
-	 GRlsx7ZYttD4owWbQ1m6mFQVl4ya6jWzTDhTcRFw=
+	b=kXmAkvI5tlRpp3iBdHAXiWcINsi28yWmKUNJhc8BUVAuTwqJNV1PzRUACQXqOfvAp
+	 iO2Scv2OKfH3fp2paVMxabrX39zs2vyPJVarCb954//xshnoA353sk4D0JSIXTDO1m
+	 1nBb0XXVQHT1EZtVsiEyKvWNXTrhavhustyksBPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732268AbgFRB3Q (ORCPT
+        id S1732277AbgFRB3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:29:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33470 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:29:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731606AbgFRB0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:26:10 -0400
+        id S1731631AbgFRB0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:26:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DECF621D80;
-        Thu, 18 Jun 2020 01:26:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E0B520897;
+        Thu, 18 Jun 2020 01:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443570;
-        bh=D86AWZDvHgld329xPkXgBJ4CYWDLN4uKoOAb4vaqp8Y=;
+        s=default; t=1592443576;
+        bh=pZAaIKjkv2LG4+I0TntsRr+1UM8Ya3d3av/5lBBnhV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CYaiOePMpBBnQK6YJN+gGv+1oIrVUlwb8ir8NY0NJnCjwRm3gGDbIX9agpECgEDpg
-         Jn5I0ilBOYjW5FTQ/jgrNEwCbXf6Y03zpYMXQAhSLxAF3yyiE4o/MfPYU3yEB5fq86
-         LpsFsYaB6aMpBPggfa1bzzWnXNtNfrRu8llrDrWI=
+        b=ASdKdd9cx26LnoEG4aPuxs5cMerlPYPfl43RTWjHD0JwEBfvJDK3s4bk7JPAbYe0M
+         U/bQTr0aWDVKCxYENEgzK1XPLeVGwuE5S1jTm/L6zdRvGpehzpxnl0lrzpVcOhX15O
+         /r9+mgFm+03b8XWOjttEKT4IazPXBLRBXXgQXv9M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 007/108] clk: qcom: msm8916: Fix the address location of pll->config_reg
-Date:   Wed, 17 Jun 2020 21:24:19 -0400
-Message-Id: <20200618012600.608744-7-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 012/108] ALSA: isa/wavefront: prevent out of bounds write in ioctl
+Date:   Wed, 17 Jun 2020 21:24:24 -0400
+Message-Id: <20200618012600.608744-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -64,92 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit f47ab3c2f5338828a67e89d5f688d2cef9605245 ]
+[ Upstream commit 7f0d5053c5a9d23fe5c2d337495a9d79038d267b ]
 
-During the process of debugging a processor derived from the msm8916 which
-we found the new processor was not starting one of its PLLs.
+The "header->number" comes from the ioctl and it needs to be clamped to
+prevent out of bounds writes.
 
-After tracing the addresses and writes that downstream was doing and
-comparing to upstream it became obvious that we were writing to a different
-register location than downstream when trying to configure the PLL.
-
-This error is also present in upstream msm8916.
-
-As an example clk-pll.c::clk_pll_recalc_rate wants to write to
-pll->config_reg updating the bit-field POST_DIV_RATIO. That bit-field is
-defined in PLL_USER_CTL not in PLL_CONFIG_CTL. Taking the BIMC PLL as an
-example
-
-lm80-p0436-13_c_qc_snapdragon_410_processor_hrd.pdf
-
-0x01823010 GCC_BIMC_PLL_USER_CTL
-0x01823014 GCC_BIMC_PLL_CONFIG_CTL
-
-This pattern is repeated for gpll0, gpll1, gpll2 and bimc_pll.
-
-This error is likely not apparent since the bootloader will already have
-initialized these PLLs.
-
-This patch corrects the location of config_reg from PLL_CONFIG_CTL to
-PLL_USER_CTL for all relevant PLLs on msm8916.
-
-Fixes commit 3966fab8b6ab ("clk: qcom: Add MSM8916 Global Clock Controller support")
-
-Cc: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Link: https://lkml.kernel.org/r/20200329124116.4185447-1-bryan.odonoghue@linaro.org
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200501094011.GA960082@mwanda
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-msm8916.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/isa/wavefront/wavefront_synth.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/gcc-msm8916.c b/drivers/clk/qcom/gcc-msm8916.c
-index 2057809219f4..7426d910e079 100644
---- a/drivers/clk/qcom/gcc-msm8916.c
-+++ b/drivers/clk/qcom/gcc-msm8916.c
-@@ -270,7 +270,7 @@ static struct clk_pll gpll0 = {
- 	.l_reg = 0x21004,
- 	.m_reg = 0x21008,
- 	.n_reg = 0x2100c,
--	.config_reg = 0x21014,
-+	.config_reg = 0x21010,
- 	.mode_reg = 0x21000,
- 	.status_reg = 0x2101c,
- 	.status_bit = 17,
-@@ -297,7 +297,7 @@ static struct clk_pll gpll1 = {
- 	.l_reg = 0x20004,
- 	.m_reg = 0x20008,
- 	.n_reg = 0x2000c,
--	.config_reg = 0x20014,
-+	.config_reg = 0x20010,
- 	.mode_reg = 0x20000,
- 	.status_reg = 0x2001c,
- 	.status_bit = 17,
-@@ -324,7 +324,7 @@ static struct clk_pll gpll2 = {
- 	.l_reg = 0x4a004,
- 	.m_reg = 0x4a008,
- 	.n_reg = 0x4a00c,
--	.config_reg = 0x4a014,
-+	.config_reg = 0x4a010,
- 	.mode_reg = 0x4a000,
- 	.status_reg = 0x4a01c,
- 	.status_bit = 17,
-@@ -351,7 +351,7 @@ static struct clk_pll bimc_pll = {
- 	.l_reg = 0x23004,
- 	.m_reg = 0x23008,
- 	.n_reg = 0x2300c,
--	.config_reg = 0x23014,
-+	.config_reg = 0x23010,
- 	.mode_reg = 0x23000,
- 	.status_reg = 0x2301c,
- 	.status_bit = 17,
+diff --git a/sound/isa/wavefront/wavefront_synth.c b/sound/isa/wavefront/wavefront_synth.c
+index 0b1e4b34b299..13c8e6542a2f 100644
+--- a/sound/isa/wavefront/wavefront_synth.c
++++ b/sound/isa/wavefront/wavefront_synth.c
+@@ -1175,7 +1175,10 @@ wavefront_send_alias (snd_wavefront_t *dev, wavefront_patch_info *header)
+ 				      "alias for %d\n",
+ 				      header->number,
+ 				      header->hdr.a.OriginalSample);
+-    
++
++	if (header->number >= WF_MAX_SAMPLE)
++		return -EINVAL;
++
+ 	munge_int32 (header->number, &alias_hdr[0], 2);
+ 	munge_int32 (header->hdr.a.OriginalSample, &alias_hdr[2], 2);
+ 	munge_int32 (*((unsigned int *)&header->hdr.a.sampleStartOffset),
+@@ -1206,6 +1209,9 @@ wavefront_send_multisample (snd_wavefront_t *dev, wavefront_patch_info *header)
+ 	int num_samples;
+ 	unsigned char *msample_hdr;
+ 
++	if (header->number >= WF_MAX_SAMPLE)
++		return -EINVAL;
++
+ 	msample_hdr = kmalloc(WF_MSAMPLE_BYTES, GFP_KERNEL);
+ 	if (! msample_hdr)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
