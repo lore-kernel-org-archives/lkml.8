@@ -2,124 +2,119 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAC9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4734620888
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:19:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mljGeutj"
+	by mail.kernel.org (Postfix) with ESMTP id F271A20888
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731664AbgFRQTN (ORCPT
+        id S1731808AbgFRQTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726981AbgFRQTM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:19:12 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289FAC06174E;
-        Thu, 18 Jun 2020 09:19:11 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id q2so4248614wrv.8;
-        Thu, 18 Jun 2020 09:19:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8WbWb/rh17O2FOPGzHzwKOpepFQSzXzuV1eAuPNrEak=;
-        b=mljGeutj7UU8b1Y0O2M3yVHAaoqSYhqxn/1afiqMJZJpSMUY+32Gyf8Tvyj/oW+kq7
-         FIgG7+uUWLNsAkD/iXE4P5XF3/VdUXdADvIQZBayJseob9MWvBoPpalg/dQ8U1WDNJ6h
-         LQXSabLZuVeq6t6//8dTrWZHiJKNcgTc2RRdu7WhBL5tcR7FBhdPJQzemi65u+/cwEhI
-         VycskAY2JbwMbjQBUepz5Mbv+t2YFv6Z8izKnGEDZ8rtdLUK0cuE33npqjLiQKopRz2z
-         FzBpJ7zEVDCOVEAWPzFkRjsvcScXej8x78lv4gq9gJHpglcafZrsusnxjWCxrHywfkPg
-         4NGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8WbWb/rh17O2FOPGzHzwKOpepFQSzXzuV1eAuPNrEak=;
-        b=KAFu6d1UzACLzPXtRUAcrcPFAjU/jLdajH1iHr/EcG2WNDD8TFN2N4rUhqXwqj8iwX
-         b6OrKCWSGY0S385vANEaEhGfHscLTSlY6kZiCmhhsPBUYglI/SnRUC7Fq62FA6HlS0r2
-         MFPP2F2+6WYKrTpRxD3upefC7yN0LgSsOJ5SPec9vSxK9Gu18md710y3BEJk0ZAcrnlc
-         obvsBJc437kq1EqsF6raNmZjrFYwEzuvRR4DhIQqw+TxMcbcS6RRMvvIV/33NHQkwk9s
-         D5w6PgHc+xUYE2LxIfQ1qrQJE1jmh2lKXQB2A1An4KZq2+1TJgJxIwd824VvQ2e3kxUF
-         GZzg==
-X-Gm-Message-State: AOAM533tXl2tFSJhZb9hooxjXUxWaMdQHR6cEfUS89bdIC3We5XyIJse
-        1CjICDMDaV5r2ig0yZF9Q8KSd8DZ
-X-Google-Smtp-Source: ABdhPJza/9Oyu5LS/XiF0vHJyPK5HtUWpZdrviopBqelEtl9zOklzWaZHM1/5DChsp5VNDlnWhKadQ==
-X-Received: by 2002:a5d:6a03:: with SMTP id m3mr5308757wru.293.1592497149579;
-        Thu, 18 Jun 2020 09:19:09 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id e8sm2368235wrv.24.2020.06.18.09.19.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 09:19:09 -0700 (PDT)
-Subject: Re: [PATCH net] net: dsa: bcm_sf2: Fix node reference count
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200618034245.29928-1-f.fainelli@gmail.com>
- <20200618125640.GL249144@lunn.ch>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <d00c5ca2-5c49-b558-0dfd-fd3e9391abf4@gmail.com>
-Date:   Thu, 18 Jun 2020 09:19:05 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Thu, 18 Jun 2020 12:19:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43058 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726981AbgFRQTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 12:19:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id AD798AC9F;
+        Thu, 18 Jun 2020 16:19:12 +0000 (UTC)
+Date:   Thu, 18 Jun 2020 18:19:12 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Jim Cromie <jim.cromie@gmail.com>
+Cc:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
+        akpm@linuxfoundation.org, gregkh@linuxfoundation.org,
+        linux@rasmusvillemoes.dk, Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        Orson Zhai <orson.zhai@unisoc.com>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 20/21] dyndbg: add user-flag, negating-flags, and
+ filtering on flags
+Message-ID: <20200618161912.GD3617@alley>
+References: <20200617162536.611386-1-jim.cromie@gmail.com>
+ <20200617162536.611386-23-jim.cromie@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200618125640.GL249144@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617162536.611386-23-jim.cromie@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/18/2020 5:56 AM, Andrew Lunn wrote:
-> On Wed, Jun 17, 2020 at 08:42:44PM -0700, Florian Fainelli wrote:
->> of_find_node_by_name() will do an of_node_put() on the "from" argument.
+On Wed 2020-06-17 10:25:35, Jim Cromie wrote:
+> 1. Add a user-flag [u] which works like the [pfmlt] flags, but has no
+> effect on callsite behavior; it allows incremental marking of
+> arbitrary sets of callsites.
 > 
->> Fixes: afa3b592953b ("net: dsa: bcm_sf2: Ensure correct sub-node is parsed")
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->>  drivers/net/dsa/bcm_sf2.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
->> index c1bd21e4b15c..9f62ba3e4345 100644
->> --- a/drivers/net/dsa/bcm_sf2.c
->> +++ b/drivers/net/dsa/bcm_sf2.c
->> @@ -1154,6 +1154,8 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
->>  	set_bit(0, priv->cfp.used);
->>  	set_bit(0, priv->cfp.unique);
->>  
->> +	/* Balance of_node_put() done by of_find_node_by_name() */
->> +	of_node_get(dn);
->>  	ports = of_find_node_by_name(dn, "ports");
+> 2. Add [PFMLTU] flags, which negate their counterparts; P===!p etc.
+> And in ddebug_read_flags():
+>    current code does:	[pfmltu_] -> flags
+>    copy it to:		[PFMLTU_] -> mask
 > 
-> That if_find_node_by_name() does a put is not very intuitive.
-> Maybe document that as well in the kerneldocs?
+> also disallow both of a pair: ie no 'pP', no true & false.
+> 
+> 3. Add filtering ops into ddebug_change(), right after all the
+> callsite-property selections are complete.  These filter on the
+> callsite's current flagstate before applying modflags.
+> 
+> Why ?
+> 
+> The u-flag & filter flags
+> 
+> The 'u' flag lets the user assemble an arbitary set of callsites.
+> Then using filter flags, user can activate the 'u' callsite set.
+> 
+>   #> echo 'file foo.c +u; file bar.c +u' > control   # and repeat
+>   #> echo 'u+p' > control
+> 
+> Of course, you can continue to just activate your set without ever
+> marking it 1st, but you could trivially add the markup as you go, then
+> be able to use it as a constraint later, to undo or modify your set.
+> 
+>   #> echo 'file foo.c +up' >control
+>   .. monitor, debug, finish ..
+>   #> echo 'u-p' >control
+> 
+>   # then later resume
+>   #> echo 'u+p' >control
+> 
+>   # disable some cluttering messages, and remove from u-set
+>   #> echo 'file noisy.c function:jabber_* u-pu' >control
+> 
+>   # for doc, recollection
+>   grep =pu control > my-favorite-callsites
+> 
+> Note:
+> 
+> Your flagstate after boot is generally not all =_. -DDEBUG will arm
+> compiled callsites by default, $builtinmod.dyndbg=+p bootargs can
+> enable them early, and $module.dyndbg=+p bootargs will arm them when
+> the module is loaded.  But you could manage them with u-flags:
+> 
+>   #> echo '-t' >control		# clear t-flag to use it as 2ndary markup
+>   #> echo 'p+ut' >control	# mark the boot-enabled set of callsites
+>   #> echo '-p' >control		# clean your dmesg -w stream
+> 
+>   ... monitor, debug ..
+>   #> echo 'module of_interest $qterms +pu' >control	# build your set of useful debugs
+>   #> echo 'module of_interest $qterms UT+pu' >control	# same, but dont alter ut marked set
 
-Yes that is the plan, most callers call it with a NULL from argument but
-that is a bit silly if you know what the Device Tree looks like, you can
-search quicker to the target node. Thanks.
+Does anyone requested this feature, please?
 
-> 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> 
->     Andrew
-> 
+For me, it is really hard to imagine people using these complex and hacky
+steps.
 
--- 
-Florian
+Not to say that using t-flag as a markup looks like a real hack.
+People either always need the line number in the kernel log or
+they do not need it at all.
+
+Let me repeat. Please, stop this non-sense.
+
+Best Regards,
+Petr
