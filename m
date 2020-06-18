@@ -2,136 +2,214 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE2FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95447C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9742217A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3F5217A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="Z0X0AmgF"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KtObXN+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgFRD5n (ORCPT
+        id S1727776AbgFRD6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 23:57:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgFRD5m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 23:57:42 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F59FC061755
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 20:57:41 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id q2so4365915qkb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 20:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kxq9wRrE0VcoWqdZaicI3/uHvnI8AYX6HIWvnm/8zQU=;
-        b=Z0X0AmgFWFKBZX0ES2R4eb0Zccw1evdsbhMfTQR8REFSgqGBre9aVWppzpZHKBD1T2
-         p2vk59LxddnUhMiGRtjZSxJwll0NNPe283ZTTiZ1HjLE0v2EsPbiDHrGWEFSNfFDJ96t
-         zG34duQCPI6NFTakIDfkNqOa2QNGLK0X8vQsPM8kuiDKllhrvTAg2SVTXN2KRnCL97op
-         citaOJ/yBH3DLNHEX3GdXrivfTYhkDqky8KacUjgsFIcnYZpN9F/4tlrHDcx96M38x/4
-         nihDusTfHIueFxSn7yrqTqe0sg3gFV8YWOtHdjVpA+iA0v9xFWXdi6O2GXGkFW5gc1YR
-         C0eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kxq9wRrE0VcoWqdZaicI3/uHvnI8AYX6HIWvnm/8zQU=;
-        b=JjVaqDBMlExqPyTOBvn064NDA2G3l2ISiERPStv1pYoR2h/1ZXfZii/pFZ4Smdvzvm
-         9y0284i1STB2k/asNHDjQQaXhhhNgEzgvNvBeaDYAJCArYF9BRWPL0TGKi2+y9MOPb9n
-         JwQqEfK8lROlJBMz+/u5eaJfsMbx5GdOx2esEmQ6MXTgZFAWKq/LpE9JiRJhYnVeJJ+i
-         VZmkYHISarsu5kjvEUnsO8e/pXwkhvnaDiFCZOm1D2QhSfY5vj4dl4PNpS3Ulam88bhk
-         65CYGYoRWWf/ypDIXhnjK7PLeYQNbxwlVGi2lAIUgN6+3+p/ldaJEt2LgtaJv+BADzAv
-         /bbg==
-X-Gm-Message-State: AOAM531RWJn+ZJw8sGrLiZqAkR5QMr5S0nh59s97O5ihoUccVkd20tfG
-        ZlsWfmT1x+S64GORWCMepX0zSw==
-X-Google-Smtp-Source: ABdhPJx7UOP/sLgtGoIwIcclUrfK9C91LRQm5rNLMKQL+9lN8jMkDMH6MlF3cRaZ2mvb6P4/pXHg4A==
-X-Received: by 2002:a37:a386:: with SMTP id m128mr2023002qke.224.1592452660335;
-        Wed, 17 Jun 2020 20:57:40 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id a1sm1846168qkn.87.2020.06.17.20.57.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 20:57:39 -0700 (PDT)
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     kunit-dev@googlegroups.com
-Cc:     skhan@linuxfoundation.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, brendanhiggins@google.com,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] kunit: fix KconfigParseError by ignoring CC_VERSION_TEXT
-Date:   Thu, 18 Jun 2020 00:57:36 -0300
-Message-Id: <20200618035736.245566-1-vitor@massaru.org>
-X-Mailer: git-send-email 2.26.2
+        Wed, 17 Jun 2020 23:58:35 -0400
+Received: from mail-db8eur05on2044.outbound.protection.outlook.com ([40.107.20.44]:51649
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726906AbgFRD6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 23:58:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k+lp97vvovb70swF8Jn6Bgr1WSP/wBWdNL4c8cRLQBn9NvM/mjXiYXEyr7yyHO/Dh/3heiA3q2vnU351LOfzKeTOLzs3YkYPu/vob1obAee0I+ERQypiLlwU79iZHIe6ne0Zo/5RIe3I5fxvQt3VK4DbpUcQuQ+4ayzR7uqRA/7+jHCy9F7qSkYSp1QQlFvF9jrjNMneJtIe+lrBV3tYS+Wv+FegLxnTG0/Li5isRdOhn6PHSv2cAgx58q7Rk85QGb3VKjNkKCq9jRe6Ofqk+P/7tJ6RX6kQltID+VyAJ43SEBW5BnV3o9DfdbZqgQAybo0IE0UGwxqLJmrDLGARyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KAuJa+yvNtSd9B9H8CdnaFLe+5j+z2hl4qgi3W6g2Vs=;
+ b=Zi62mtNGX+dW/X0thRRzW7RXGy4aoSTKPjzrznfrAMlTrXcgep0kb5KLNBTItAyaqF0vCbNNE2ct7HYEBv6AskNilN0iFZl3mwrNeaJlxfUDclBOJ2y+E2Pd1w9pdD9KsQA3px/suBLw/qPka+dT+QH7ZOK1e5RxvjwSbIhs+5VYQ/yrW3se7ab9msYeyejDMjfa7U5yVfhKIDQO2MXAG5+OpPitZNFyPH5CyzIs+UbP10je7t4r8u1CKN+H1Qpql8C0HnrESNd7tv5fsxGWTcLHJ9z2jOLCLjuibFfB8FwzV4/06Q0LSBPVmE/tvWwMSTj1O0Z6P+G6ypTmj/T1Jw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KAuJa+yvNtSd9B9H8CdnaFLe+5j+z2hl4qgi3W6g2Vs=;
+ b=KtObXN+h8LL1r8P8HicP5HDMcRfn++yzB+swHzN/aulpv0w1yuP0wq5GLRP5BtRa7qOTx2985XeG3T+i+6qaVplOfiDxSNnpvx34PFM0QoZB244cr0zeChec4cbDWCNZgVVhOevT7fQAeKaal41g4XYNuxUDgZ+y02+LuId0JYo=
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
+ by AM6PR04MB4214.eurprd04.prod.outlook.com (2603:10a6:209:41::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Thu, 18 Jun
+ 2020 03:58:29 +0000
+Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
+ ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3088.028; Thu, 18 Jun 2020
+ 03:58:29 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, Abel Vesa <abel.vesa@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "info@metux.net" <info@metux.net>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Andy Duan <fugang.duan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V2 2/9] ARM: imx: Select MXC_CLK for ARCH_MXC
+Thread-Topic: [PATCH V2 2/9] ARM: imx: Select MXC_CLK for ARCH_MXC
+Thread-Index: AQHWPjGjLfNEVvc8HUmhxuTW0pJGcKjcqIMggAAi6gCAAPOSIIAAAt+AgAAJBZA=
+Date:   Thu, 18 Jun 2020 03:58:29 +0000
+Message-ID: <AM6PR04MB496695B4659CEE5AD7C00C6C809B0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+References: <1591687933-19495-1-git-send-email-Anson.Huang@nxp.com>
+ <1591687933-19495-3-git-send-email-Anson.Huang@nxp.com>
+ <AM6PR04MB4966F4A5E0276AEDB5605260809A0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39160682846B99E0A3762AF1F59A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <AM6PR04MB496647CBE140DFF73DCBBEED809B0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916B3474CF0014B490C78BBF59B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916B3474CF0014B490C78BBF59B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: db8d7154-b6f3-4e36-3500-08d8133bdc99
+x-ms-traffictypediagnostic: AM6PR04MB4214:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR04MB4214577608A463889C08A01E809B0@AM6PR04MB4214.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-forefront-prvs: 0438F90F17
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: O6inJV0SGESRJcZtUwkWsjNnDn0nru+1VGHiUS+flKzDbzcP8RvoNnNFFPFmE1QMxlkZgd96Qh06w7l3uS2FE553Xf6O//O1Rj14118qOYCdJYabESImfrBhWN4N7zcm+3S+bUIy91nqX4jeSbbmWJ1Eq4asWefULDZS7vSf8P8FmI0jJ9w0+sVPJNG3W9DJVjxmiPaOG5VhY45fGkQqqvL1PeE0hGUT+PNPAC7EQG3InZ15PGoWKofRKP0nhzDUCY00g5egVdZHbv+J4xjdRe4CayoEZPeQFWvebbzEHQMuUMoFoTjtAN9m6Hu1uyTLqoKx9J7/UzNfMpm16KJnoT8jdFMYf7hE/0naj3vuUkjN4Stq1Fhjq2A8TRwc4V8g5Gzsr8DG+riRS5Nl3FI9CA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(396003)(346002)(39860400002)(366004)(83380400001)(7416002)(66476007)(86362001)(8936002)(33656002)(8676002)(66446008)(76116006)(52536014)(66556008)(44832011)(5660300002)(66946007)(64756008)(2906002)(7696005)(4326008)(9686003)(186003)(26005)(71200400001)(110136005)(6506007)(55016002)(316002)(478600001)(21314003)(921003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: Ws3IPasJQ3WDVd5mm0931CN2U+ov6ZROz0LBBzNsz1ls55otoil+dJT9ph/4pwqm1rNMX3EcOimqLyLhrzYPdRwIm6o3qubqg59Nap4T0wNJ0t5KfpEG4QGN6UOgLK+IpypiI9RrGe5WwWX9sNuTN5kW2m0fIHd3M5K2zempStqwRg88JJL1Oejab9kRhWxbUvp94QCGMb1vbpgd1Ij4mGApfxcIjQoo4DW1gP4t4oYJtaim9wrpwnwTlyKsdJoFetsy1MDR09z6RR21zU8nHg04OYMURuf4fX53bbhAvmdMdThv8YkpyfxW8iK2rUiagDH45blOMbQjc/F9Ol52OU6JbL6knjf64om8fEend6A2mXMQnM7GerizmadeqBVZ0C+j2/QN3YB0kNcxlNfrCA3WbhA2909Ubv/davgiMB3mHHI5u5+PHb0IPJfKe/B2rNoHCI5szv5kBVdeCasWKZ+3xSnzhS1PFI6dLiyh0Atk4dvZeBT23H6FKxwtL4rc
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db8d7154-b6f3-4e36-3500-08d8133bdc99
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2020 03:58:29.6772
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WqTW28jyAnm5yTPTV4fdWWHF1ncO0L1dIw6MVRzF/T+3cXE9DnFcSk8lKiHttYU7SCPROC1gSBc9AhxLE7CFqg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 8b59cd81dc5 ("kbuild: ensure full rebuild when the compiler
-is updated") added the environment variable CC_VERSION_TEXT,
-parse_from_string() doesn't expect a string and this causes the
-failure below:
-
-[iha@bbking linux]$ tools/testing/kunit/kunit.py run --timeout=60
-[00:20:12] Configuring KUnit Kernel ...
-Generating .config ...
-Traceback (most recent call last):
-  File "tools/testing/kunit/kunit.py", line 347, in <module>
-    main(sys.argv[1:])
-  File "tools/testing/kunit/kunit.py", line 257, in main
-    result = run_tests(linux, request)
-  File "tools/testing/kunit/kunit.py", line 134, in run_tests
-    config_result = config_tests(linux, config_request)
-  File "tools/testing/kunit/kunit.py", line 64, in config_tests
-    success = linux.build_reconfig(request.build_dir, request.make_options)
-  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py", line 161, in build_reconfig
-    return self.build_config(build_dir, make_options)
-  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py", line 145, in build_config
-    return self.validate_config(build_dir)
-  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_kernel.py", line 124, in validate_config
-    validated_kconfig.read_from_file(kconfig_path)
-  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_config.py", line 89, in read_from_file
-    self.parse_from_string(f.read())
-  File "/home/iha/lkmp/linux/tools/testing/kunit/kunit_config.py", line 85, in parse_from_string
-    raise KconfigParseError('Failed to parse: ' + line)
-kunit_config.KconfigParseError: Failed to parse: CONFIG_CC_VERSION_TEXT="gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)"
-
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
----
- tools/testing/kunit/kunit_config.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/kunit/kunit_config.py b/tools/testing/kunit/kunit_config.py
-index e75063d603b5..3033520597b6 100644
---- a/tools/testing/kunit/kunit_config.py
-+++ b/tools/testing/kunit/kunit_config.py
-@@ -9,6 +9,7 @@
- import collections
- import re
- 
-+CONFIG_IGNORE_CC_VERSION_TEXT = 'CONFIG_CC_VERSION_TEXT'
- CONFIG_IS_NOT_SET_PATTERN = r'^# CONFIG_(\w+) is not set$'
- CONFIG_PATTERN = r'^CONFIG_(\w+)=(\S+)$'
- 
-@@ -79,7 +80,7 @@ class Kconfig(object):
- 				self.add_entry(entry)
- 				continue
- 
--			if line[0] == '#':
-+			if line[0] == '#' or CONFIG_IGNORE_CC_VERSION_TEXT in line:
- 				continue
- 			else:
- 				raise KconfigParseError('Failed to parse: ' + line)
-
-base-commit: 7bf200b3a4ac10b1b0376c70b8c66ed39eae7cdd
--- 
-2.26.2
-
+PiBGcm9tOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gU2VudDogVGh1cnNk
+YXksIEp1bmUgMTgsIDIwMjAgMTE6MTggQU0NCj4gDQo+ID4gRnJvbTogQWlzaGVuZyBEb25nIDxh
+aXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gPiBTZW50OiAyMDIw5bm0NuaciDE45pelIDExOjA5DQo+
+ID4NCj4gPiA+IEZyb206IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiA+ID4g
+U2VudDogV2VkbmVzZGF5LCBKdW5lIDE3LCAyMDIwIDg6MzYgUE0NCj4gPiA+DQo+ID4gPiA+IFN1
+YmplY3Q6IFJFOiBbUEFUQ0ggVjIgMi85XSBBUk06IGlteDogU2VsZWN0IE1YQ19DTEsgZm9yIEFS
+Q0hfTVhDDQo+ID4gPiA+DQo+ID4gPiA+ID4gRnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5n
+QG54cC5jb20+DQo+ID4gPiA+ID4gU2VudDogVHVlc2RheSwgSnVuZSA5LCAyMDIwIDM6MzIgUE0N
+Cj4gPiA+ID4gPg0KPiA+ID4gPiA+IGkuTVggY29tbW9uIGNsb2NrIGRyaXZlcnMgbWF5IHN1cHBv
+cnQgbW9kdWxlIGJ1aWxkLCBzbyBpdCBpcyBOT1QNCj4gPiA+ID4gPiBzZWxlY3RlZCBieSBkZWZh
+dWx0LCBmb3IgQVJDSF9NWEMgQVJNdjcgcGxhdGZvcm1zLCBuZWVkIHRvDQo+ID4gPiA+ID4gc2Vs
+ZWN0IGl0IG1hbnVhbGx5IHRvIG1ha2UgYnVpbGQgcGFzcy4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+
+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+ID4g
+Pg0KPiA+ID4gPiBDYW4ndCB0aGUgb3JpZ2luYWwgZGVmX3h4eCB3b3JrPw0KPiA+ID4gPg0KPiA+
+ID4gPiBjb25maWcgTVhDX0NMSw0KPiA+ID4gPiAgICAgICAgIHRyaXN0YXRlDQo+ID4gPiA+ICAg
+ICAgICAgZGVmX3RyaXN0YXRlIEFSQ0hfTVhDDQo+ID4gPg0KPiA+ID4gU3VjaCBjaGFuZ2Ugd2ls
+bCBtYWtlIE1YQ19DTEs9eSBldmVuIGFsbCBpLk1YOCBTb0NzIGNsb2NrIGRyaXZlcnMNCj4gPiA+
+IGFyZSBzZWxlY3RlZCBhcyBtb2R1bGUsIHNvIGl0IGRvZXMgTk9UIG1lZXQgdGhlIHJlcXVpcmVt
+ZW50IG9mDQo+ID4gPiBtb2R1bGUgc3VwcG9ydC4gQmVsb3cgaXMgZnJvbSAuY29uZmlnIHdoZW4g
+YWxsDQo+ID4gPiBpLk1YOCBTb0NzIGNsb2NrIGRyaXZlcnMgYXJlIGNvbmZpZ3VyZWQgdG8gbW9k
+dWxlLg0KPiA+ID4NCj4gPiA+ICBDT05GSUdfTVhDX0NMSz15DQo+ID4gPiAgQ09ORklHX01YQ19D
+TEtfU0NVPW0NCj4gPiA+ICBDT05GSUdfQ0xLX0lNWDhNTT1tDQo+ID4gPiAgQ09ORklHX0NMS19J
+TVg4TU49bQ0KPiA+ID4gIENPTkZJR19DTEtfSU1YOE1QPW0NCj4gPiA+ICBDT05GSUdfQ0xLX0lN
+WDhNUT1tDQo+ID4gPiAgQ09ORklHX0NMS19JTVg4UVhQPW0NCj4gPiA+DQo+ID4NCj4gPiBJdCB3
+b3JrcyBhdCBteSBzaWRlLg0KPiA+IEJlbG93IGlzIG15IGNoYW5nZXMgYmFzZWQgb24geW91ciBw
+YXRjaHNldDoNCj4gPiAkIGdpdCBkaWZmDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gt
+aW14L0tjb25maWcgYi9hcmNoL2FybS9tYWNoLWlteC9LY29uZmlnDQo+ID4gaW5kZXgNCj4gPiA0
+N2IxMGQyMGY0MTEuLmU3ZDdiOTBlMmNmOCAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9tYWNo
+LWlteC9LY29uZmlnDQo+ID4gKysrIGIvYXJjaC9hcm0vbWFjaC1pbXgvS2NvbmZpZw0KPiA+IEBA
+IC00LDcgKzQsNiBAQCBtZW51Y29uZmlnIEFSQ0hfTVhDDQo+ID4gICAgICAgICBkZXBlbmRzIG9u
+IEFSQ0hfTVVMVElfVjRfVjUgfHwgQVJDSF9NVUxUSV9WNl9WNyB8fA0KPiA+IEFSTV9TSU5HTEVf
+QVJNVjdNDQo+ID4gICAgICAgICBzZWxlY3QgQVJDSF9TVVBQT1JUU19CSUdfRU5ESUFODQo+ID4g
+ICAgICAgICBzZWxlY3QgQ0xLU1JDX0lNWF9HUFQNCj4gPiAtICAgICAgIHNlbGVjdCBNWENfQ0xL
+DQo+ID4gICAgICAgICBzZWxlY3QgR0VORVJJQ19JUlFfQ0hJUA0KPiA+ICAgICAgICAgc2VsZWN0
+IEdQSU9MSUINCj4gPiAgICAgICAgIHNlbGVjdCBQSU5DVFJMDQo+ID4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvY2xrL2lteC9LY29uZmlnIGIvZHJpdmVycy9jbGsvaW14L0tjb25maWcgaW5kZXgNCj4g
+PiAyNmNlZGJmZTM4NmMuLmY3YjNlM2EyY2I5ZiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2Ns
+ay9pbXgvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvY2xrL2lteC9LY29uZmlnDQo+ID4gQEAg
+LTMsNiArMyw3IEBADQo+ID4gIGNvbmZpZyBNWENfQ0xLDQo+ID4gICAgICAgICB0cmlzdGF0ZSAi
+SU1YIGNsb2NrIg0KPiA+ICAgICAgICAgZGVwZW5kcyBvbiBBUkNIX01YQw0KPiA+ICsgICAgICAg
+ZGVmX3RyaXN0YXRlIEFSQ0hfTVhDDQo+ID4NCj4gPiAgY29uZmlnIE1YQ19DTEtfU0NVDQo+ID4g
+ICAgICAgICB0cmlzdGF0ZSAiSU1YIFNDVSBjbG9jayINCj4gPg0KPiANCj4gSSBndWVzcyB5b3Ug
+dHJpZWQgaW14X3Y2X3Y3X2RlZmNvbmZpZz8gSXQgZG9lcyBOT1Qgd29yayBmb3IgQVJNNjQgZGVm
+Y29uZmlnDQo+IHdoZW4gd2UgdHJ5IHRvIG1ha2UgQ09ORklHX01YQ19DTEs9bSwgQmVsb3cgYXJl
+IG15IGNoYW5nZSwgeW91IGNhbiBzZWUNCj4gaW4gLmNvbmZpZywgZXZlbiBhbGwgaS5NWDggU29D
+cyBjbG9jayBkcml2ZXJzIGFyZSBjb25maWd1cmVkIHRvIG1vZHVsZSwgdGhlDQo+IENPTkZJR19N
+WENfQ0xLIGlzIHN0aWxsID15LCBidXQgdGhlIGV4cGVjdGVkIHJlc3VsdCBpcyA9bS4NCj4gDQoN
+Ckl0IHdvcmtzIGF0IG15IHNpZGUgYmVjYXVzZSBpdCBjYW4gbWFudWFsbHkgc2VsZWN0ZWQgYXMg
+bSBvciBhZGQgQ09ORklHX01YQ19DTEs9bQ0KSW4gZGVmY29uZmlnLg0KQnV0IG5vdyBJIGdvdCB5
+b3VyIHBvaW50IHlvdSB3YW50IENPTkZJR19NWENfQ0xLIGRlZmF1bHQgdG8gbSBvbmNlIGRlZmlu
+ZQ0KQ09ORklHX0NMS19JTVg4WD1tIGluIGRlZmNvbmZpZy4NCg0KPiBCVFcsIGFsbCBpLk1YOCBT
+b0NzIHNlbGVjdCBNWENfQ0xLIGluIHRoZWlyIGtjb25maWcsIHRoaXMgcGF0Y2gganVzdCBkb2Vz
+IHRoZQ0KPiBzYW1lIHRoaW5nIGZvciBpLk1YNi83IGluIGNvbW1vbiBwbGFjZS4NCj4gDQoNCkkg
+anVzdCBub3RpY2VkIGZvciBNWDYmNywgYWN0dWFsbHkgQ09ORklHX01YQ19DTEsgY2FuJ3QgYmUg
+bSBvdGhlcndpc2Ugd2Ugd2lsbCBtZWV0IGJ1aWxkIGJyZWFrLg0KVGhhdCBtZWFucyBDT05GSUdf
+TVhDX0NMSyBjYW5ub3QgYmUgY29uZmlndXJhYmxlIGJ5IHVzZXJzIGZvciBub24tQVJNNjQgcGxh
+dGZvcm1zLg0KVGh1cyBjYW4ndCB1c2UgZGVmX3RyaXN0YXRlIGFuZCB3ZSBzdGlsbCBuZWVkIHNl
+bGVjdCBpdCB1bmRlciBBUkNIX01YQy4NClRoaXMgbGlnaHRseSBsb3NlIGEgYml0IG1lYW5pbmcg
+dG8gbWFrZSB0aGlzIGNvcmUgbGlicmFyeSBhcyBtb2R1bGUuDQoNCklNSE8gSSdkIHN0aWxsIHBy
+ZWZlciB0byBidWlsdGluIHRob3NlIGNvcmUgbGlicmFyaWVzIHJhdGhlciB0aGFuIGNvbnZlcnQg
+dG8gbW9kdWxlLg0KDQpSZWdhcmRzDQpBaXNoZW5nDQoNCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+L21hY2gtaW14L0tjb25maWcgYi9hcmNoL2FybS9tYWNoLWlteC9LY29uZmlnIGluZGV4DQo+IDQ3
+YjEwZDIuLmU3ZDdiOTAgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL21hY2gtaW14L0tjb25maWcN
+Cj4gKysrIGIvYXJjaC9hcm0vbWFjaC1pbXgvS2NvbmZpZw0KPiBAQCAtNCw3ICs0LDYgQEAgbWVu
+dWNvbmZpZyBBUkNIX01YQw0KPiAgICAgICAgIGRlcGVuZHMgb24gQVJDSF9NVUxUSV9WNF9WNSB8
+fCBBUkNIX01VTFRJX1Y2X1Y3IHx8DQo+IEFSTV9TSU5HTEVfQVJNVjdNDQo+ICAgICAgICAgc2Vs
+ZWN0IEFSQ0hfU1VQUE9SVFNfQklHX0VORElBTg0KPiAgICAgICAgIHNlbGVjdCBDTEtTUkNfSU1Y
+X0dQVA0KPiAtICAgICAgIHNlbGVjdCBNWENfQ0xLDQo+ICAgICAgICAgc2VsZWN0IEdFTkVSSUNf
+SVJRX0NISVANCj4gICAgICAgICBzZWxlY3QgR1BJT0xJQg0KPiAgICAgICAgIHNlbGVjdCBQSU5D
+VFJMDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnIGIvYXJjaC9h
+cm02NC9jb25maWdzL2RlZmNvbmZpZyBpbmRleA0KPiA4MjIyZTRiLi4yMWUyZGJiIDEwMDY0NA0K
+PiAtLS0gYS9hcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnDQo+ICsrKyBiL2FyY2gvYXJtNjQv
+Y29uZmlncy9kZWZjb25maWcNCj4gQEAgLTc5OSwxMSArNzk5LDExIEBAIENPTkZJR19DT01NT05f
+Q0xLX1MyTVBTMTE9eQ0KPiBDT05GSUdfQ09NTU9OX0NMS19QV009eSAgQ09ORklHX0NPTU1PTl9D
+TEtfVkM1PXkNCj4gQ09ORklHX0NMS19SQVNQQkVSUllQST1tIC1DT05GSUdfQ0xLX0lNWDhNTT15
+DQo+IC1DT05GSUdfQ0xLX0lNWDhNTj15IC1DT05GSUdfQ0xLX0lNWDhNUD15IC1DT05GSUdfQ0xL
+X0lNWDhNUT15DQo+IC1DT05GSUdfQ0xLX0lNWDhRWFA9eQ0KPiArQ09ORklHX0NMS19JTVg4TU09
+bQ0KPiArQ09ORklHX0NMS19JTVg4TU49bQ0KPiArQ09ORklHX0NMS19JTVg4TVA9bQ0KPiArQ09O
+RklHX0NMS19JTVg4TVE9bQ0KPiArQ09ORklHX0NMS19JTVg4UVhQPW0NCj4gIENPTkZJR19USV9T
+Q0lfQ0xLPXkNCj4gIENPTkZJR19DT01NT05fQ0xLX1FDT009eQ0KPiAgQ09ORklHX1FDT01fQTUz
+UExMPXkNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9LY29uZmlnIGIvZHJpdmVycy9j
+bGsvaW14L0tjb25maWcgaW5kZXgNCj4gMjZjZWRiZi4uZjdiM2UzYSAxMDA2NDQNCj4gLS0tIGEv
+ZHJpdmVycy9jbGsvaW14L0tjb25maWcNCj4gKysrIGIvZHJpdmVycy9jbGsvaW14L0tjb25maWcN
+Cj4gQEAgLTMsNiArMyw3IEBADQo+ICBjb25maWcgTVhDX0NMSw0KPiAgICAgICAgIHRyaXN0YXRl
+ICJJTVggY2xvY2siDQo+ICAgICAgICAgZGVwZW5kcyBvbiBBUkNIX01YQw0KPiArICAgICAgIGRl
+Zl90cmlzdGF0ZSBBUkNIX01YQw0KPiANCj4gIGNvbmZpZyBNWENfQ0xLX1NDVQ0KPiAgICAgICAg
+IHRyaXN0YXRlICJJTVggU0NVIGNsb2NrIg0KPiANCj4gLmNvbmZpZzoNCj4gIENPTkZJR19NWENf
+Q0xLPXkNCj4gIENPTkZJR19NWENfQ0xLX1NDVT1tDQo+ICBDT05GSUdfQ0xLX0lNWDhNTT1tDQo+
+ICBDT05GSUdfQ0xLX0lNWDhNTj1tDQo+ICBDT05GSUdfQ0xLX0lNWDhNUD1tDQo+ICBDT05GSUdf
+Q0xLX0lNWDhNUT1tDQo+ICBDT05GSUdfQ0xLX0lNWDhRWFA9bQ0KPiANCj4gQW5zb24NCg==
