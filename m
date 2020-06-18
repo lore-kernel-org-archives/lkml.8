@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A240C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36A3321D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53DE4221EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443102;
-	bh=fxuDxoiJw1A3q7eocOnCf3UTJkQcjntDBa6vgDS/uLs=;
+	s=default; t=1592443117;
+	bh=YTPK4gDULgXHgBeBf9fRR92kyb9GbSxulZ74DiQGJ14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oh8tYhBqZOyGvZpdrD/L9t88Admu1rFajWag8/OwbT5lYE85BfIqZs4ZqhZN4Ztcy
-	 pNBmce/ln6ogWeLG87iQjuVyIDUSk5RJxbLf+fC107EXn7lP8xgbDLB/nsb9uJSci1
-	 lxB3+5lkBFmRGL4qTI9ZBqkSu42kOOM8j775BqTo=
+	b=LL5IAO6OKebsa5PnD4Pug1oIBKfMFg95Dfn+R+5W3DceOVleDHMBvp0O1fdbypEwy
+	 JKYsxoYuaZvJ3gVc3CGPKU1yt2LmpfH2TTVXHexmtz+qivarfB1hMXllLMiEaLfhO2
+	 whvOi7MI+nLA3Dr8G5FCHPGE9B+dFFFAmKmPh/10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbgFRBSS (ORCPT
+        id S1728424AbgFRBSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:18:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45390 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:18:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728803AbgFRBPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:25 -0400
+        id S1726997AbgFRBPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 150F221D79;
-        Thu, 18 Jun 2020 01:15:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBD7B221F1;
+        Thu, 18 Jun 2020 01:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442924;
-        bh=fxuDxoiJw1A3q7eocOnCf3UTJkQcjntDBa6vgDS/uLs=;
+        s=default; t=1592442938;
+        bh=YTPK4gDULgXHgBeBf9fRR92kyb9GbSxulZ74DiQGJ14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gx5f45KtEGYSK8d+8lJCl+AV7KvsOMcDNrQMvmxbHBiHzJlQstg8z+2gsn1P0TEZo
-         UV4zwb9WE68Wojeziz2Nt+GiJ2ZoH+kGu3QiHj0G50gLkIUn9gRmwt9X2dDzzItI9F
-         hSvAaKp+TrtW5JC+nh9kv6gfz+k60mdZ3e+az2jo=
+        b=OeWPlgqwXguu/UWrZhCyISLAR0itVzmRn78qqLLXxxIqcEX7ey1FBm22/hAlI29yW
+         k/G4byxtqecdjMDXwibangRfJDhyE7Yuof4ijnFfLbeNnpndojEpO/Qw9NSR7ZPLjz
+         TNJzKZe7NRDHPbKwHE6Q4gcB/mE0VkQabcW39f0U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 339/388] blktrace: use errno instead of bi_status
-Date:   Wed, 17 Jun 2020 21:07:16 -0400
-Message-Id: <20200618010805.600873-339-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Alexander Fomichev <fomichev.ru@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
+        linux-ntb@googlegroups.com
+Subject: [PATCH AUTOSEL 5.7 350/388] NTB: Revert the change to use the NTB device dev for DMA allocations
+Date:   Wed, 17 Jun 2020 21:07:27 -0400
+Message-Id: <20200618010805.600873-350-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,48 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 48bc3cd3e07a1486f45d9971c75d6090976c3b1b ]
+[ Upstream commit 40da7d9a93c8941737ef4a1208d32c13ce017fe1 ]
 
-In blk_add_trace_spliti() blk_add_trace_bio_remap() use
-blk_status_to_errno() to pass the error instead of pasing the bi_status.
-This fixes the sparse warning.
+Commit 417cf39cfea9 ("NTB: Set dma mask and dma coherent mask to NTB
+devices") started using the NTB device for DMA allocations which was
+turns out was wrong. If the IOMMU is enabled, such alloctanions will
+always fail with messages such as:
 
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+  DMAR: Allocating domain for 0000:02:00.1 failed
+
+This is because the IOMMU has not setup the device for such use.
+
+Change the tools back to using the PCI device for allocations seeing
+it doesn't make sense to add an IOMMU group for the non-physical NTB
+device. Also remove the code that sets the DMA mask as it no longer
+makes sense to do this.
+
+Fixes: 7f46c8b3a552 ("NTB: ntb_tool: Add full multi-port NTB API support")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/blktrace.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/ntb/core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index ca39dc3230cb..c6d59a457f50 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -995,8 +995,10 @@ static void blk_add_trace_split(void *ignore,
- 
- 		__blk_add_trace(bt, bio->bi_iter.bi_sector,
- 				bio->bi_iter.bi_size, bio_op(bio), bio->bi_opf,
--				BLK_TA_SPLIT, bio->bi_status, sizeof(rpdu),
--				&rpdu, blk_trace_bio_get_cgid(q, bio));
-+				BLK_TA_SPLIT,
-+				blk_status_to_errno(bio->bi_status),
-+				sizeof(rpdu), &rpdu,
-+				blk_trace_bio_get_cgid(q, bio));
- 	}
- 	rcu_read_unlock();
+diff --git a/drivers/ntb/core.c b/drivers/ntb/core.c
+index c9a0912b175f..f8f75a504a58 100644
+--- a/drivers/ntb/core.c
++++ b/drivers/ntb/core.c
+@@ -311,4 +311,3 @@ static void __exit ntb_driver_exit(void)
+ 	bus_unregister(&ntb_bus);
  }
-@@ -1033,7 +1035,8 @@ static void blk_add_trace_bio_remap(void *ignore,
- 	r.sector_from = cpu_to_be64(from);
- 
- 	__blk_add_trace(bt, bio->bi_iter.bi_sector, bio->bi_iter.bi_size,
--			bio_op(bio), bio->bi_opf, BLK_TA_REMAP, bio->bi_status,
-+			bio_op(bio), bio->bi_opf, BLK_TA_REMAP,
-+			blk_status_to_errno(bio->bi_status),
- 			sizeof(r), &r, blk_trace_bio_get_cgid(q, bio));
- 	rcu_read_unlock();
- }
+ module_exit(ntb_driver_exit);
+-
 -- 
 2.25.1
 
