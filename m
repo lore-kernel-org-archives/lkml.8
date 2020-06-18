@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CB7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1562192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09E2B2192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447145;
-	bh=E26Z2uGMlLvZZQOaDHdserktZJN5eR2gHFfLP0ErK4I=;
+	s=default; t=1592447150;
+	bh=UDd8uk9p2I+v6hhvAwFRHqjl8gWU2ZvEKxxPoMVqz7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S3xy3lGAR0F6x8o8lW/CPpu9NerI0qTMiH18p3xfSKDpHYy8OzNn8tdHIBQzsey4O
-	 Z0OJXi7KjvkBHK9x9XjBpIfUULGtUJKt+T5ozbr0gLp4IVJThujyGyhR3gOR5DhZR5
-	 4nfWqQUWl55l/7e+9EGYbMcYC5X20bt2BCCDeSXg=
+	b=GTVABLVUNY0Tx3tQzdvTcaYTMTmalMlE5KSbvKyYQ39iii/pk5sWuGo1y1SlNY7h2
+	 g7tdoZBg/OPYmIk7iG4QahLbvvc1/8awfa1EIhkKGrGWZBgttdkfTsknzOg8oww/u8
+	 IhbqpFEL5RjnVHwCHY+457A3QfVZUxI/iaTz3Fw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbgFRCZn (ORCPT
+        id S1729777AbgFRCZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:25:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48480 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:25:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728962AbgFRBRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:21 -0400
+        id S1729781AbgFRBRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ACDA21D80;
-        Thu, 18 Jun 2020 01:17:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB7A7221F6;
+        Thu, 18 Jun 2020 01:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443038;
-        bh=E26Z2uGMlLvZZQOaDHdserktZJN5eR2gHFfLP0ErK4I=;
+        s=default; t=1592443037;
+        bh=UDd8uk9p2I+v6hhvAwFRHqjl8gWU2ZvEKxxPoMVqz7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zEc6XMqhw4Q4dZmVKey04RAxaAEDTc6sZhD3H9ZPxD8Io7kGYx2VlHjZc+8pyVHAU
-         n+IXLn8iN9fokRROB/id0o35364E5I/H0pmk6kFYDcebft/Tfbh5MBK23vJbo9PPGk
-         8cUZ+CB+gjWPhntWOZVD76bz2jXN5Pio5RYt2/NA=
+        b=r/TOxH/Alh5YahRam0e75zAWl33V2Sksk5zoZcN7U98MQFEUqRJS5m1hwrZgATF7h
+         3RnrY0tQWichyReeTntqg3+rgB8roK1kBPN45PNc0yrP7d2MoWZ2/laaJ+3GNMLklf
+         d/Z22FxQycYHdbFs0LYe2nMQ/FRXu4UpBE9LesXE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Wilck <mwilck@suse.com>, Hannes Reinecke <hare@suse.de>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, dm-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.4 035/266] dm mpath: switch paths in dm_blk_ioctl() code path
-Date:   Wed, 17 Jun 2020 21:12:40 -0400
-Message-Id: <20200618011631.604574-35-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 034/266] misc: fastrpc: fix potential fastrpc_invoke_ctx leak
+Date:   Wed, 17 Jun 2020 21:12:39 -0400
+Message-Id: <20200618011631.604574-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,47 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Wilck <mwilck@suse.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 2361ae595352dec015d14292f1b539242d8446d6 ]
+[ Upstream commit 74003385cf716f1b88cc7753ca282f5493f204a2 ]
 
-SCSI LUN passthrough code such as qemu's "scsi-block" device model
-pass every IO to the host via SG_IO ioctls. Currently, dm-multipath
-calls choose_pgpath() only in the block IO code path, not in the ioctl
-code path (unless current_pgpath is NULL). This has the effect that no
-path switching and thus no load balancing is done for SCSI-passthrough
-IO, unless the active path fails.
+fastrpc_invoke_ctx can have refcount of 2 in error path where
+rpmsg_send() fails to send invoke message. decrement the refcount
+properly in the error path to fix this leak.
 
-Fix this by using the same logic in multipath_prepare_ioctl() as in
-multipath_clone_and_map().
+This also fixes below static checker warning:
 
-Note: The allegedly best path selection algorithm, service-time,
-still wouldn't work perfectly, because the io size of the current
-request is always set to 0. Changing that for the IO passthrough
-case would require the ioctl cmd and arg to be passed to dm's
-prepare_ioctl() method.
+drivers/misc/fastrpc.c:990 fastrpc_internal_invoke()
+warn: 'ctx->refcount.refcount.ref.counter' not decremented on lines: 990.
 
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: c68cfb718c8f ("misc: fastrpc: Add support for context")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200512110930.2550-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-mpath.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/fastrpc.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/dm-mpath.c b/drivers/md/dm-mpath.c
-index 456d790c918c..f2de4c73cc8f 100644
---- a/drivers/md/dm-mpath.c
-+++ b/drivers/md/dm-mpath.c
-@@ -1856,7 +1856,7 @@ static int multipath_prepare_ioctl(struct dm_target *ti,
- 	int r;
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index ee3291f7e615..3a5d2890fe2a 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -886,6 +886,7 @@ static int fastrpc_invoke_send(struct fastrpc_session_ctx *sctx,
+ 	struct fastrpc_channel_ctx *cctx;
+ 	struct fastrpc_user *fl = ctx->fl;
+ 	struct fastrpc_msg *msg = &ctx->msg;
++	int ret;
  
- 	current_pgpath = READ_ONCE(m->current_pgpath);
--	if (!current_pgpath)
-+	if (!current_pgpath || !test_bit(MPATHF_QUEUE_IO, &m->flags))
- 		current_pgpath = choose_pgpath(m, 0);
+ 	cctx = fl->cctx;
+ 	msg->pid = fl->tgid;
+@@ -901,7 +902,13 @@ static int fastrpc_invoke_send(struct fastrpc_session_ctx *sctx,
+ 	msg->size = roundup(ctx->msg_sz, PAGE_SIZE);
+ 	fastrpc_context_get(ctx);
  
- 	if (current_pgpath) {
+-	return rpmsg_send(cctx->rpdev->ept, (void *)msg, sizeof(*msg));
++	ret = rpmsg_send(cctx->rpdev->ept, (void *)msg, sizeof(*msg));
++
++	if (ret)
++		fastrpc_context_put(ctx);
++
++	return ret;
++
+ }
+ 
+ static int fastrpc_internal_invoke(struct fastrpc_user *fl,  u32 kernel,
 -- 
 2.25.1
 
