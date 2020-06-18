@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46672C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDC1C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22A8521D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D219221F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443006;
-	bh=xS/sOfYhQmXqBYyWzUfT3F1aKVDn9c/U3LLDYZoLQBo=;
+	s=default; t=1592443014;
+	bh=uFpR+BxR1ZP8Le0s2244kM6IUY9wJds3BgH+c5MCtFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JymIyMB8AoKaO8mcD9nrKx0SK0gCKCyjC2dpUSJTNqq+rMrld09uFSW4oYS2vYYN3
-	 7UG/5ZVc9QiHTJRanP+0DXQy7s1198uXlOLGh6amjyFX+LTmAfo3qfBgpjNOPqjMYG
-	 YrGhAHL+PQY01xEnYDL7KfQvNAbUEPPZIQiPeCI0=
+	b=jBJ10ULLcEuRdsPVukoWcN/qwaGG5BGiSJC9y6IqAY/eITdS+sBs3Re40GdWvjgyw
+	 Xu3bEdU4GbKztjqbjTXKNVkf4w/0VHcF+vTMbIy+pw3e4SiQVLsL92qzPLH6BLG3J7
+	 G618m7ZgVW1+o+WoY/u00AekJERrh0BGFcVh4v/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbgFRBQp (ORCPT
+        id S1728160AbgFRBQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:16:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44080 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:16:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbgFRBO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:14:28 -0400
+        id S1729316AbgFRBOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B79BD20EDD;
-        Thu, 18 Jun 2020 01:14:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AB7B21D7B;
+        Thu, 18 Jun 2020 01:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442867;
-        bh=xS/sOfYhQmXqBYyWzUfT3F1aKVDn9c/U3LLDYZoLQBo=;
+        s=default; t=1592442871;
+        bh=uFpR+BxR1ZP8Le0s2244kM6IUY9wJds3BgH+c5MCtFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rSqBk/p2Gpech5rbXDPzjkIRxoMPl9bf7930YnJRV7z2ak/2B+BbGz3mJydyIAw3C
-         gZZKz5ugKpWL01EpY/51YLmT+v390duizNr9GeuRJiHYVuquT/x7YDHzWF3CZsuNbO
-         /Uv59FhObY/tjp2SxTpciV9o9xMDRCmyBzKku3jg=
+        b=sfw9el2YZI8neXeeVT5UcHLysIzNuIXcHExhbDX2tu421fB272ZIC5LKbg9hgoVCH
+         2JCeIAV+3FYqUN2sru062w9PwId1CYEenpM/0usFxBXonoehsfIMu0lrtN8FjLACFE
+         ak0PHckaT8sKf2TQy/Yy8joBgxPP16h5MckCg9RQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 294/388] ASoC: dapm: Move dai_link widgets to runtime to fix use after free
-Date:   Wed, 17 Jun 2020 21:06:31 -0400
-Message-Id: <20200618010805.600873-294-sashal@kernel.org>
+Cc:     Marcos Scriven <marcos@scriven.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 297/388] PCI: Avoid FLR for AMD Matisse HD Audio & USB 3.0
+Date:   Wed, 17 Jun 2020 21:06:34 -0400
+Message-Id: <20200618010805.600873-297-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,97 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Marcos Scriven <marcos@scriven.org>
 
-[ Upstream commit f4aa5e214eeaf7f1c7f157526a5aa29784cb6a1f ]
+[ Upstream commit 0d14f06cd6657ba3446a5eb780672da487b068e7 ]
 
-The newly added CODEC to CODEC DAI link widget pointers in
-snd_soc_dai_link are better placed in snd_soc_pcm_runtime.
-snd_soc_dai_link is really intended for static configuration of
-the DAI, and the runtime for dynamic data.  The snd_soc_dai_link
-structures are not destroyed if the card is unbound. The widgets
-are cleared up on unbind, however if the card is rebound as the
-snd_soc_dai_link structures are reused these pointers will be left at
-their old values, causing access to freed memory.
+The AMD Matisse HD Audio & USB 3.0 devices advertise Function Level Reset
+support, but hang when an FLR is triggered.
 
-Fixes: 595571cca4de ("ASoC: dapm: Fix regression introducing multiple copies of DAI widgets")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200526161930.30759-1-ckeepax@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+To reproduce the problem, attach the device to a VM, then detach and try to
+attach again.
+
+Rename the existing quirk_intel_no_flr(), which was not Intel-specific, to
+quirk_no_flr(), and apply it to prevent the use of FLR on these AMD
+devices.
+
+Link: https://lore.kernel.org/r/CAAri2DpkcuQZYbT6XsALhx2e6vRqPHwtbjHYeiH7MNp4zmt1RA@mail.gmail.com
+Signed-off-by: Marcos Scriven <marcos@scriven.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/soc.h  |  6 +++---
- sound/soc/soc-dapm.c | 12 ++++++------
- 2 files changed, 9 insertions(+), 9 deletions(-)
+ drivers/pci/quirks.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index e0371e70242d..8e480efeda2a 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -790,9 +790,6 @@ struct snd_soc_dai_link {
- 	const struct snd_soc_pcm_stream *params;
- 	unsigned int num_params;
- 
--	struct snd_soc_dapm_widget *playback_widget;
--	struct snd_soc_dapm_widget *capture_widget;
--
- 	unsigned int dai_fmt;           /* format to set on init */
- 
- 	enum snd_soc_dpcm_trigger trigger[2]; /* trigger type for DPCM */
-@@ -1156,6 +1153,9 @@ struct snd_soc_pcm_runtime {
- 	struct snd_soc_dai **cpu_dais;
- 	unsigned int num_cpus;
- 
-+	struct snd_soc_dapm_widget *playback_widget;
-+	struct snd_soc_dapm_widget *capture_widget;
-+
- 	struct delayed_work delayed_work;
- 	void (*close_delayed_work_func)(struct snd_soc_pcm_runtime *rtd);
- #ifdef CONFIG_DEBUG_FS
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index e2632841b321..c0aa64ff8e32 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -4340,16 +4340,16 @@ static void dapm_connect_dai_pair(struct snd_soc_card *card,
- 	codec = codec_dai->playback_widget;
- 
- 	if (playback_cpu && codec) {
--		if (dai_link->params && !dai_link->playback_widget) {
-+		if (dai_link->params && !rtd->playback_widget) {
- 			substream = streams[SNDRV_PCM_STREAM_PLAYBACK].substream;
- 			dai = snd_soc_dapm_new_dai(card, substream, "playback");
- 			if (IS_ERR(dai))
- 				goto capture;
--			dai_link->playback_widget = dai;
-+			rtd->playback_widget = dai;
- 		}
- 
- 		dapm_connect_dai_routes(&card->dapm, cpu_dai, playback_cpu,
--					dai_link->playback_widget,
-+					rtd->playback_widget,
- 					codec_dai, codec);
- 	}
- 
-@@ -4358,16 +4358,16 @@ static void dapm_connect_dai_pair(struct snd_soc_card *card,
- 	codec = codec_dai->capture_widget;
- 
- 	if (codec && capture_cpu) {
--		if (dai_link->params && !dai_link->capture_widget) {
-+		if (dai_link->params && !rtd->capture_widget) {
- 			substream = streams[SNDRV_PCM_STREAM_CAPTURE].substream;
- 			dai = snd_soc_dapm_new_dai(card, substream, "capture");
- 			if (IS_ERR(dai))
- 				return;
--			dai_link->capture_widget = dai;
-+			rtd->capture_widget = dai;
- 		}
- 
- 		dapm_connect_dai_routes(&card->dapm, codec_dai, codec,
--					dai_link->capture_widget,
-+					rtd->capture_widget,
- 					cpu_dai, capture_cpu);
- 	}
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index ca9ed5774eb1..43a0c2ce635e 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5129,13 +5129,23 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
  }
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
+ 
+-/* FLR may cause some 82579 devices to hang */
+-static void quirk_intel_no_flr(struct pci_dev *dev)
++/*
++ * FLR may cause the following to devices to hang:
++ *
++ * AMD Starship/Matisse HD Audio Controller 0x1487
++ * AMD Matisse USB 3.0 Host Controller 0x149c
++ * Intel 82579LM Gigabit Ethernet Controller 0x1502
++ * Intel 82579V Gigabit Ethernet Controller 0x1503
++ *
++ */
++static void quirk_no_flr(struct pci_dev *dev)
+ {
+ 	dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
+ }
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_intel_no_flr);
+-DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_intel_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
+ 
+ static void quirk_no_ext_tags(struct pci_dev *pdev)
+ {
 -- 
 2.25.1
 
