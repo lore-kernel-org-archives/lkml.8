@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A273C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE140C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3E720EDD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FAE620B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445932;
-	bh=C4iKVDt08NYAinUh8xI0FNen0UxaP7QWj1KFSbiJm8I=;
+	s=default; t=1592445934;
+	bh=vISulG17zn1hnsebsxv/42UOPuhkUap0AVaKQ55VhEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S+F90xLU02O8w44TwNWcK6b30l4UcmOvXp7AwGfjLxr6ijMCQkt7xaVje1VTnQHdP
-	 ofPrDBtAwF2Ko6omrbgUr/mhpKsgZ1Ih+cI5eAiQw0ZAM9oqwTn/tvHA/IYsNYV21Q
-	 blQJcNe8DRzLWn7JRZvmP0VlSX0rosvokP73FoL8=
+	b=ZNGCOnYr2UarXD4ai5mQbOX0CJHfTgSOry+9DE2OViI1ghDIQrIrFIjx1RI2tl/aD
+	 mVWAEPndo0KPWEtNKinEpWgXoHcsusDt6VZaGDr5frYCbwWQXbrddM7b2CMKuO0sa6
+	 sroTkhzTNsc5sRcOcsG3sVppEXlImQHdSycVXuvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730817AbgFRBWn (ORCPT
+        id S1731575AbgFRCFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:22:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51170 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:05:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgFRBTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:19:25 -0400
+        id S1730010AbgFRBWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:22:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C62EB221ED;
-        Thu, 18 Jun 2020 01:19:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A789020CC7;
+        Thu, 18 Jun 2020 01:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443164;
-        bh=C4iKVDt08NYAinUh8xI0FNen0UxaP7QWj1KFSbiJm8I=;
+        s=default; t=1592443365;
+        bh=vISulG17zn1hnsebsxv/42UOPuhkUap0AVaKQ55VhEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=apENoXwLAmkTQVKSqk2RYAWv3cf5I5xI4PLKE84suVvZH+RDQ6VMf7jCpjjBZnrdC
-         rbZAC1CkdLe5srj7ZZRRqFAmKv/4dJVHkr2HphsxihWAEO45kNAFz66uwu3TjSIm0Q
-         vbbtEr1/30eT1RPNHG/3fguMO8g3j7rAgKVpixoY=
+        b=Lt9ONg1vFLhYUjVJ1rBALk8XVeeP+L6Wz3v44aoIElwRdGvvZ225Z2f3rcKOfkUJr
+         osFZTnhio3lilP9yDkpqk6e9R/SjABzLii7l6rKi1thIxKU0xYYNTXq93pRjwDefN8
+         4M0ryLDFOOZBrgdGdmqjjxX0BMStHfMb1VvHmbKs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 130/266] ASoC: SOF: core: fix error return code in sof_probe_continue()
-Date:   Wed, 17 Jun 2020 21:14:15 -0400
-Message-Id: <20200618011631.604574-130-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 021/172] i2c: pxa: clear all master action bits in i2c_pxa_stop_message()
+Date:   Wed, 17 Jun 2020 21:19:47 -0400
+Message-Id: <20200618012218.607130-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
-References: <20200618011631.604574-1-sashal@kernel.org>
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,35 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 7d8785bc7adbb4dc5ba8ee06994107637848ded8 ]
+[ Upstream commit e81c979f4e071d516aa27cf5a0c3939da00dc1ca ]
 
-Fix to return negative error code -ENOMEM from the IPC init error
-handling case instead of 0, as done elsewhere in this function.
+If we timeout during a message transfer, the control register may
+contain bits that cause an action to be set. Read-modify-writing the
+register leaving these bits set may trigger the hardware to attempt
+one of these actions unintentionally.
 
-Fixes: c16211d6226d ("ASoC: SOF: Add Sound Open Firmware driver core")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Link: https://lore.kernel.org/r/20200509093337.78897-1-weiyongjun1@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Always clear these bits when cleaning up after a message or after
+a timeout.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sof/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/i2c/busses/i2c-pxa.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/sof/core.c b/sound/soc/sof/core.c
-index 12aec140819a..2a6b84d2781e 100644
---- a/sound/soc/sof/core.c
-+++ b/sound/soc/sof/core.c
-@@ -372,6 +372,7 @@ static int sof_probe_continue(struct snd_sof_dev *sdev)
- 	/* init the IPC */
- 	sdev->ipc = snd_sof_ipc_init(sdev);
- 	if (!sdev->ipc) {
-+		ret = -ENOMEM;
- 		dev_err(sdev->dev, "error: failed to init DSP IPC %d\n", ret);
- 		goto ipc_err;
- 	}
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index fbf91d383b40..7248ba6763e4 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -709,11 +709,9 @@ static inline void i2c_pxa_stop_message(struct pxa_i2c *i2c)
+ {
+ 	u32 icr;
+ 
+-	/*
+-	 * Clear the STOP and ACK flags
+-	 */
++	/* Clear the START, STOP, ACK, TB and MA flags */
+ 	icr = readl(_ICR(i2c));
+-	icr &= ~(ICR_STOP | ICR_ACKNAK);
++	icr &= ~(ICR_START | ICR_STOP | ICR_ACKNAK | ICR_TB | ICR_MA);
+ 	writel(icr, _ICR(i2c));
+ }
+ 
 -- 
 2.25.1
 
