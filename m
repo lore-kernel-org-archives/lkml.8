@@ -2,196 +2,58 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E58C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE24C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C803520890
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:46:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="YeULpx9I"
+	by mail.kernel.org (Postfix) with ESMTP id 97DF5214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731179AbgFROqP (ORCPT
+        id S1731204AbgFROqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:46:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730957AbgFROoJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:44:09 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D8FAC0613EF
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:44:08 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id h95so2771898pje.4
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 07:44:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references:reply-to
-         :mime-version:content-transfer-encoding;
-        bh=L8y2vzO4eFciFziI46a/ttSbeGYaIdwkqPPuYZk9V/Y=;
-        b=YeULpx9IMVYlet06hXXtF3Dyovfb6OWV7znBhPslocYv61JEKGOzA86Uf7KlkwQUxA
-         5veTkQm0U3FiHje/G2qBCvINtR+5H6+EjnG+6Sf5DBiwhwEgiK3ZySkgoWKeRlArsl6Z
-         KII1sM40sgw0BBBEt/0RNUdVdIscLTYaAk11C3WKb8/EKEdqvKbfubfLIO/VBQ2Xx9WL
-         CEYBtGHqlJYku+rfQdHayepPiSv6ME4oZxtjXE8I56CTLxFCqrzXuobRRnwbzTHobf+i
-         uKAVIMjqM417ECasSBzSLduZSGdbDtTFAHLkWJ12coSXUTQ7pSi5y5D2Y4Jzync6tV9q
-         xrBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:reply-to:mime-version:content-transfer-encoding;
-        bh=L8y2vzO4eFciFziI46a/ttSbeGYaIdwkqPPuYZk9V/Y=;
-        b=iM8Lt4aElcXcor32u9N4CusarJ+vkGksP5QRtwZuiENIGH96FGZzn9bTuQ1hecakuR
-         gSGewF+6zmMaLebJcn6NHXuLR0QbU1JV6tWYCHMRvVYYGM0nvaA1U8Llu/v0PdVOjlB7
-         Ac8NVw256JN+pzp4/umYKK1mvauoxf3anWzQJpEw/SYw26XAYk8TtNirU7Qw9O/0NyIe
-         NDa+RGP3/zDVnsRJQymbdpIxlQWFPyJnApK82UFJEzZ0XG6UeWmSKjveuEhwuGpNFFyx
-         WSg4GnDGBq9A4+HcIqawEhe1UTBfC2EDhQFZKsd4HHQLl2oX/ogAJeq35df0FA+UFJkw
-         vdkg==
-X-Gm-Message-State: AOAM53030EW+2EtdsvpsP6UmXEkJe4VyF2FX9YCYKJyYP0ejoGOA860L
-        WNg9emQtZtvFxptwhKxByKV8/A==
-X-Google-Smtp-Source: ABdhPJwx9um0vmY0DnYUG9kEzc1v1xMH5bH+K7HVKhmpcv+yl+Hyx+jkxHpVYBs3czBGcr7qfQ+u8g==
-X-Received: by 2002:a17:902:8690:: with SMTP id g16mr4021455plo.257.1592491447688;
-        Thu, 18 Jun 2020 07:44:07 -0700 (PDT)
-Received: from x1.localdomain ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id g9sm3127197pfm.151.2020.06.18.07.44.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 07:44:06 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: [PATCH 06/15] mm: abstract out wake_page_match() from wake_page_function()
-Date:   Thu, 18 Jun 2020 08:43:46 -0600
-Message-Id: <20200618144355.17324-7-axboe@kernel.dk>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200618144355.17324-1-axboe@kernel.dk>
-References: <20200618144355.17324-1-axboe@kernel.dk>
-Reply-To: "[PATCHSET v7 0/15]"@vger.kernel.org, Add@vger.kernel.org,
-          support@vger.kernel.org, for@vger.kernel.org,
-          async@vger.kernel.org, buffered@vger.kernel.org,
-          reads@vger.kernel.org
+        Thu, 18 Jun 2020 10:46:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44340 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730858AbgFROqS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 10:46:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B6909ACF9;
+        Thu, 18 Jun 2020 14:46:15 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 2BCF1DA703; Thu, 18 Jun 2020 16:46:06 +0200 (CEST)
+Date:   Thu, 18 Jun 2020 16:46:05 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Boris Burkov <boris@bur.io>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH v2 btrfs/for-next] btrfs: fix fatal extent_buffer
+ readahead vs releasepage race
+Message-ID: <20200618144605.GW27795@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Boris Burkov <boris@bur.io>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+References: <CAL3q7H4GqjcesWir69PULr4a9rSi2cVQ366y5bAEU23wS6xJkA@mail.gmail.com>
+ <20200617183519.152946-1-boris@bur.io>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617183519.152946-1-boris@bur.io>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No functional changes in this patch, just in preparation for allowing
-more callers.
+On Wed, Jun 17, 2020 at 11:35:19AM -0700, Boris Burkov wrote:
+[...]
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- include/linux/pagemap.h | 37 +++++++++++++++++++++++++++++++++++++
- mm/filemap.c            | 35 ++++-------------------------------
- 2 files changed, 41 insertions(+), 31 deletions(-)
+> Signed-off-by: Boris Burkov <boris@bur.io>
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index cf2468da68e9..2f18221bb5c8 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -496,6 +496,43 @@ static inline pgoff_t linear_page_index(struct vm_area_struct *vma,
- 	return pgoff;
- }
- 
-+/* This has the same layout as wait_bit_key - see fs/cachefiles/rdwr.c */
-+struct wait_page_key {
-+	struct page *page;
-+	int bit_nr;
-+	int page_match;
-+};
-+
-+struct wait_page_queue {
-+	struct page *page;
-+	int bit_nr;
-+	wait_queue_entry_t wait;
-+};
-+
-+static inline int wake_page_match(struct wait_page_queue *wait_page,
-+				  struct wait_page_key *key)
-+{
-+	if (wait_page->page != key->page)
-+	       return 0;
-+	key->page_match = 1;
-+
-+	if (wait_page->bit_nr != key->bit_nr)
-+		return 0;
-+
-+	/*
-+	 * Stop walking if it's locked.
-+	 * Is this safe if put_and_wait_on_page_locked() is in use?
-+	 * Yes: the waker must hold a reference to this page, and if PG_locked
-+	 * has now already been set by another task, that task must also hold
-+	 * a reference to the *same usage* of this page; so there is no need
-+	 * to walk on to wake even the put_and_wait_on_page_locked() callers.
-+	 */
-+	if (test_bit(key->bit_nr, &key->page->flags))
-+		return -1;
-+
-+	return 1;
-+}
-+
- extern void __lock_page(struct page *page);
- extern int __lock_page_killable(struct page *page);
- extern int __lock_page_or_retry(struct page *page, struct mm_struct *mm,
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 3378d4fca883..c3175dbd8fba 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -987,43 +987,16 @@ void __init pagecache_init(void)
- 	page_writeback_init();
- }
- 
--/* This has the same layout as wait_bit_key - see fs/cachefiles/rdwr.c */
--struct wait_page_key {
--	struct page *page;
--	int bit_nr;
--	int page_match;
--};
--
--struct wait_page_queue {
--	struct page *page;
--	int bit_nr;
--	wait_queue_entry_t wait;
--};
--
- static int wake_page_function(wait_queue_entry_t *wait, unsigned mode, int sync, void *arg)
- {
- 	struct wait_page_key *key = arg;
- 	struct wait_page_queue *wait_page
- 		= container_of(wait, struct wait_page_queue, wait);
-+	int ret;
- 
--	if (wait_page->page != key->page)
--	       return 0;
--	key->page_match = 1;
--
--	if (wait_page->bit_nr != key->bit_nr)
--		return 0;
--
--	/*
--	 * Stop walking if it's locked.
--	 * Is this safe if put_and_wait_on_page_locked() is in use?
--	 * Yes: the waker must hold a reference to this page, and if PG_locked
--	 * has now already been set by another task, that task must also hold
--	 * a reference to the *same usage* of this page; so there is no need
--	 * to walk on to wake even the put_and_wait_on_page_locked() callers.
--	 */
--	if (test_bit(key->bit_nr, &key->page->flags))
--		return -1;
--
-+	ret = wake_page_match(wait_page, key);
-+	if (ret != 1)
-+		return ret;
- 	return autoremove_wake_function(wait, mode, sync, key);
- }
- 
--- 
-2.27.0
-
+Added to misc-next, thanks.
