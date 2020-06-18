@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD04C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF325C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9637121D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8D8621D81
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442922;
-	bh=++TE833j+DXLC/txZxLB2LxUhnJsxmm4FsnYJoi9dB0=;
+	s=default; t=1592442935;
+	bh=1L1IL2y01Qzhmft+H/AeRDpC/FR4sANsggs28guR4Ug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=itnt8TtMGVerZA85ayUPnJF0oQLLaswS7sGNa5sf6y9g0twlgs/6UARs9my3kjJ4h
-	 /WsJPQEo3ooXOM67CvK4weH2LOLwzVfSRjDA2HEkx7Ph3VBb40kVUSanrtNOHZvWqf
-	 ubtYbn0I8e/6+DEzgXRmwxkS9nzJrHYFjp5FBK3w=
+	b=FYuzCpgk+Y9uoDIYxiONyh7rsCjI7/wMqK/ex1IfIww72HKVxxMSOiHtxisaxB2F0
+	 O7USp8rH0oq8BJY4gnQyB1SUfOQyO9ElKGF3XGvgQUPKGGnFRt2339bBfK5f0WMXgt
+	 TpubqnJg4pUa8Eh5LmU0Hifi09tncdK+GqmZRqyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbgFRBPP (ORCPT
+        id S1729488AbgFRBPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42938 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:15:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728014AbgFRBNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:39 -0400
+        id S1728176AbgFRBNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08E3421924;
-        Thu, 18 Jun 2020 01:13:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E223820EDD;
+        Thu, 18 Jun 2020 01:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442819;
-        bh=++TE833j+DXLC/txZxLB2LxUhnJsxmm4FsnYJoi9dB0=;
+        s=default; t=1592442826;
+        bh=1L1IL2y01Qzhmft+H/AeRDpC/FR4sANsggs28guR4Ug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C6pUeXGKa7SvAt8zdK9LNe/ol6sjtyqgKQ5X5hQ8E0JuvdZ4q3K2M7+n3BqaIy/CA
-         DvPbgWIZi/rtvsJ7n6o5upj2TuTJMY94nZscG/xjjg8Bzr7iJLf9wIvfkDwU2rjNVX
-         VkVo74y7fqEIceYjQnFI7vTeqfwwXZHUeJ1wcFtg=
+        b=d4Rzd+wBXlq2u+gD9Fl96r0RpiMMX4XYtwRmM13AVZN6XfnwIw9VVsf32+mxMgyzo
+         /WWHwyJ3iSI6Fi4kvYkEmXpL9vuxNRFhbnOcGlLnATByI8XCvBCa/fyKGhT5wOYSFz
+         5tRyUAVJioBU7Fd3gK1dIaPKa5T6oeV9ZWJsnkbU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hemant Kumar <hemantk@codeaurora.org>,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 256/388] bus: mhi: core: Read transfer length from an event properly
-Date:   Wed, 17 Jun 2020 21:05:53 -0400
-Message-Id: <20200618010805.600873-256-sashal@kernel.org>
+Cc:     Andrei Vagin <avagin@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 262/388] selftests/timens: handle a case when alarm clocks are not supported
+Date:   Wed, 17 Jun 2020 21:05:59 -0400
+Message-Id: <20200618010805.600873-262-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -62,57 +61,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hemant Kumar <hemantk@codeaurora.org>
+From: Andrei Vagin <avagin@gmail.com>
 
-[ Upstream commit ee75cedf82d832561af8ba8380aeffd00a9eea77 ]
+[ Upstream commit 558ae0355a91c7d28fdf4c0011bee6ebb5118632 ]
 
-When MHI Driver receives an EOT event, it reads xfer_len from the
-event in the last TRE. The value is under control of the MHI device
-and never validated by Host MHI driver. The value should never be
-larger than the real size of the buffer but a malicious device can
-set the value 0xFFFF as maximum. This causes driver to memory
-overflow (both read or write). Fix this issue by reading minimum of
-transfer length from event and the buffer length provided.
+This can happen if a testing node doesn't have RTC (real time clock)
+hardware or it doesn't support alarms.
 
-Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
-Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Link: https://lore.kernel.org/r/20200521170249.21795-5-manivannan.sadhasivam@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 61c57676035d ("selftests/timens: Add Time Namespace test for supported clocks")
+Acked-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Reported-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/mhi/core/main.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/testing/selftests/timens/clock_nanosleep.c |  2 +-
+ tools/testing/selftests/timens/timens.c          |  2 +-
+ tools/testing/selftests/timens/timens.h          | 13 ++++++++++++-
+ tools/testing/selftests/timens/timer.c           |  5 +++++
+ tools/testing/selftests/timens/timerfd.c         |  5 +++++
+ 5 files changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-index 97e06cc586e4..8be3d0fb0614 100644
---- a/drivers/bus/mhi/core/main.c
-+++ b/drivers/bus/mhi/core/main.c
-@@ -513,7 +513,10 @@ static int parse_xfer_event(struct mhi_controller *mhi_cntrl,
- 				mhi_cntrl->unmap_single(mhi_cntrl, buf_info);
+diff --git a/tools/testing/selftests/timens/clock_nanosleep.c b/tools/testing/selftests/timens/clock_nanosleep.c
+index 8e7b7c72ef65..72d41b955fb2 100644
+--- a/tools/testing/selftests/timens/clock_nanosleep.c
++++ b/tools/testing/selftests/timens/clock_nanosleep.c
+@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
  
- 			result.buf_addr = buf_info->cb_buf;
--			result.bytes_xferd = xfer_len;
+ 	ksft_set_plan(4);
+ 
+-	check_config_posix_timers();
++	check_supported_timers();
+ 
+ 	if (unshare_timens())
+ 		return 1;
+diff --git a/tools/testing/selftests/timens/timens.c b/tools/testing/selftests/timens/timens.c
+index 098be7c83be3..52b6a1185f52 100644
+--- a/tools/testing/selftests/timens/timens.c
++++ b/tools/testing/selftests/timens/timens.c
+@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
+ 
+ 	nscheck();
+ 
+-	check_config_posix_timers();
++	check_supported_timers();
+ 
+ 	ksft_set_plan(ARRAY_SIZE(clocks) * 2);
+ 
+diff --git a/tools/testing/selftests/timens/timens.h b/tools/testing/selftests/timens/timens.h
+index e09e7e39bc52..d4fc52d47146 100644
+--- a/tools/testing/selftests/timens/timens.h
++++ b/tools/testing/selftests/timens/timens.h
+@@ -14,15 +14,26 @@
+ #endif
+ 
+ static int config_posix_timers = true;
++static int config_alarm_timers = true;
+ 
+-static inline void check_config_posix_timers(void)
++static inline void check_supported_timers(void)
+ {
++	struct timespec ts;
 +
-+			/* truncate to buf len if xfer_len is larger */
-+			result.bytes_xferd =
-+				min_t(u16, xfer_len, buf_info->len);
- 			mhi_del_ring_element(mhi_cntrl, buf_ring);
- 			mhi_del_ring_element(mhi_cntrl, tre_ring);
- 			local_rp = tre_ring->rp;
-@@ -597,7 +600,9 @@ static int parse_rsc_event(struct mhi_controller *mhi_cntrl,
- 
- 	result.transaction_status = (ev_code == MHI_EV_CC_OVERFLOW) ?
- 		-EOVERFLOW : 0;
--	result.bytes_xferd = xfer_len;
+ 	if (timer_create(-1, 0, 0) == -1 && errno == ENOSYS)
+ 		config_posix_timers = false;
 +
-+	/* truncate to buf len if xfer_len is larger */
-+	result.bytes_xferd = min_t(u16, xfer_len, buf_info->len);
- 	result.buf_addr = buf_info->cb_buf;
- 	result.dir = mhi_chan->dir;
++	if (clock_gettime(CLOCK_BOOTTIME_ALARM, &ts) == -1 && errno == EINVAL)
++		config_alarm_timers = false;
+ }
  
+ static inline bool check_skip(int clockid)
+ {
++	if (!config_alarm_timers && clockid == CLOCK_BOOTTIME_ALARM) {
++		ksft_test_result_skip("CLOCK_BOOTTIME_ALARM isn't supported\n");
++		return true;
++	}
++
+ 	if (config_posix_timers)
+ 		return false;
+ 
+diff --git a/tools/testing/selftests/timens/timer.c b/tools/testing/selftests/timens/timer.c
+index 96dba11ebe44..5e7f0051bd7b 100644
+--- a/tools/testing/selftests/timens/timer.c
++++ b/tools/testing/selftests/timens/timer.c
+@@ -22,6 +22,9 @@ int run_test(int clockid, struct timespec now)
+ 	timer_t fd;
+ 	int i;
+ 
++	if (check_skip(clockid))
++		return 0;
++
+ 	for (i = 0; i < 2; i++) {
+ 		struct sigevent sevp = {.sigev_notify = SIGEV_NONE};
+ 		int flags = 0;
+@@ -74,6 +77,8 @@ int main(int argc, char *argv[])
+ 
+ 	nscheck();
+ 
++	check_supported_timers();
++
+ 	ksft_set_plan(3);
+ 
+ 	clock_gettime(CLOCK_MONOTONIC, &mtime_now);
+diff --git a/tools/testing/selftests/timens/timerfd.c b/tools/testing/selftests/timens/timerfd.c
+index eff1ec5ff215..9edd43d6b2c1 100644
+--- a/tools/testing/selftests/timens/timerfd.c
++++ b/tools/testing/selftests/timens/timerfd.c
+@@ -28,6 +28,9 @@ int run_test(int clockid, struct timespec now)
+ 	long long elapsed;
+ 	int fd, i;
+ 
++	if (check_skip(clockid))
++		return 0;
++
+ 	if (tclock_gettime(clockid, &now))
+ 		return pr_perror("clock_gettime(%d)", clockid);
+ 
+@@ -81,6 +84,8 @@ int main(int argc, char *argv[])
+ 
+ 	nscheck();
+ 
++	check_supported_timers();
++
+ 	ksft_set_plan(3);
+ 
+ 	clock_gettime(CLOCK_MONOTONIC, &mtime_now);
 -- 
 2.25.1
 
