@@ -6,103 +6,108 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E73AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7097C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4953120FC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC41E212CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 07:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgFRHUK (ORCPT
+        id S1727978AbgFRHVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 03:20:10 -0400
-Received: from mga06.intel.com ([134.134.136.31]:36224 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgFRHUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 03:20:06 -0400
-IronPort-SDR: ZjK2exdIS5jvympC7Du2/vo3K1pXAoZNO/zvVM0rNIGvh8rv+cUC17tpkeS6e6IYOnv6EneSZo
- sBry6k98meiQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9655"; a="203963885"
-X-IronPort-AV: E=Sophos;i="5.73,525,1583222400"; 
-   d="scan'208";a="203963885"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 00:20:06 -0700
-IronPort-SDR: GOOndaOg0rTI1y/zoM9ik2FFZWaBYobsTN/aX7QIWNaExAcCBhA4jz5ODZs1oAtPHDTimnz/pR
- ct72S+OAfvFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,525,1583222400"; 
-   d="scan'208";a="263517625"
-Received: from jkalinox-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.49.234])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Jun 2020 00:19:56 -0700
-Date:   Thu, 18 Jun 2020 10:19:55 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Markus Wamser <Markus.Wamser@mixed-mode.de>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        op-tee@lists.trustedfirmware.org,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Luke Hinds <lhinds@redhat.com>
-Subject: Re: [PATCH v5 1/4] KEYS: trusted: Add generic trusted keys framework
-Message-ID: <20200618071955.GE6560@linux.intel.com>
-References: <1591107505-6030-1-git-send-email-sumit.garg@linaro.org>
- <1591107505-6030-2-git-send-email-sumit.garg@linaro.org>
- <20200615182457.GB5416@linux.intel.com>
- <CAFA6WYNEnXm5FOGHGAg4XB-+GXD=C+YMh+6t976=pStU0WshAA@mail.gmail.com>
- <20200617231429.GD62794@linux.intel.com>
- <CAFA6WYOdtwnewqY0ASnMf7fyw3s_hQx0+oWJRhT3CpkkkxYpDA@mail.gmail.com>
+        Thu, 18 Jun 2020 03:21:12 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:36211 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgFRHVL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 03:21:11 -0400
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mq2vU-1j7pP513qM-00nBZC for <linux-kernel@vger.kernel.org>; Thu, 18 Jun
+ 2020 09:21:09 +0200
+Received: by mail-qt1-f181.google.com with SMTP id v19so1219861qtq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 00:21:09 -0700 (PDT)
+X-Gm-Message-State: AOAM532e+QKVC3mrrWSKnlFNQ7oH+KWRV1DYSPkKcqQK8MSIUBSa6D7l
+        ugjq8U9n5dEliVAfVJ1abp80i62CvjziJRf/C/U=
+X-Google-Smtp-Source: ABdhPJyZwB+YzjDh0fJqM1eWf1KZdD5m3whVUi2LGOR5Rq66DfLtWAExIzP5DMOjDRUJoSdl6RPuwHagBzsvGAhJDHc=
+X-Received: by 2002:ac8:7417:: with SMTP id p23mr3048812qtq.204.1592464868127;
+ Thu, 18 Jun 2020 00:21:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFA6WYOdtwnewqY0ASnMf7fyw3s_hQx0+oWJRhT3CpkkkxYpDA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <1592369623-10723-1-git-send-email-Anson.Huang@nxp.com>
+ <AM6PR04MB49667E1B41DC2A77B3E2FEBF809A0@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <AM6PR0402MB3911B852B49E194E5FE84505F59A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39167727A8B7CEDAC531D94EF59A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB39167727A8B7CEDAC531D94EF59A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 18 Jun 2020 09:20:52 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3zHBRqSg1VeuKcmyQquE7n5wrEViw5KFbDGJNaMjtZRw@mail.gmail.com>
+Message-ID: <CAK8P3a3zHBRqSg1VeuKcmyQquE7n5wrEViw5KFbDGJNaMjtZRw@mail.gmail.com>
+Subject: Re: [PATCH] soc: imx-scu: Support module build
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:ZyQynNmYvlOC2TyBDj7V1T5SOx7MS8SCgIOcJqy3h4eX4fBoKM8
+ Gmxm4y5mEaO1Y3mMSM/AKkJpsq7N8OLwZ76qn6TQbvwgLRQsDDCmPgVxeSo0FUyvKB5ilbQ
+ zsa06YWn8GLava34X17UXh0DIa6vwLTLOYOAtzxRA78ipzWDh2W12Vix3gZ/xCovsxddK31
+ czcGds9Ycpmcknxsdeqig==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:x/gm8/irSGM=:GuMZgqwOvNlvtBUnB/TYXf
+ MrP9OOT5XZRu/0YmZkQqWzw9Dy962CiOzQCUh/3ZflrUAg52264hhAraKM6c4llDBJAmKc5fF
+ qqItK6Dc1MGDUjT4IlVP+uP2+MCPAjwtH8MHyohzaDeLQiqhQUkueD4l4xuMkPjnDi4+MKJ3o
+ t3Po2B23v/LTwbfMhCYNlkdvGUlvK+8SIRdxN7fRbK91Ajzqi/vcNBkq2gUnJnvpVOhTGdbZw
+ Odzs7F1A+aRMEWqnYKoHxw05wflnvgdOannPLbODn67yu4ZiS2BJxnrfIpl/LV7zKCXPbTGQn
+ kHA6BNOLIsvppeN0iiG6OfjQM4qTp12KsSdtyzeTfbzyw2Aca9GV8D9DlMz4FsJgMf7OqFbcf
+ t9MR7suHRdYKQLbP3tfAg0k2wcEeCwlOTMvQx8OZ2TEkEd7JhAESERUJVpJuKA4W6dVeCj7Hw
+ fx7yE90sAmZUtRtI3anT0hmGnanTQrT0xm2hU/dA5pOlIhM/f+AK8Hjt1ugHDual8DepkGL85
+ gnUvgu3w7t+5rMt0lvGWu8syOEPE19GwLg6gYEl1wytMRScAG6T4BT0Q1OB4NQ4n/PcOvbIvV
+ Na6CNIkiF2WNwMlUQc50x+qO7GFHlAtm7EBts7YoE79lfVrwrtdnXvDnDmtUGc/yjAg03jNaF
+ 3Mcfmdzlin8ZlJ+jRTPhoSEoX72n7U4oHatPthB7jj15GjBzGF4+UbX2jJlRGcQGTQHDMmwai
+ PczGpd48oiGdnYvGsjJTbhBsInpO6csa5fTt1TiI+eQgUFfGYT33cQ/5XvjVfl381fKKjJ01D
+ TGkTWLPv1la3McnVMfn6o3eIsBO84/szyPkXtnlK5t6TCEeMv0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 12:12:41PM +0530, Sumit Garg wrote:
-> On Thu, 18 Jun 2020 at 04:44, Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > On Tue, Jun 16, 2020 at 07:02:37PM +0530, Sumit Garg wrote:
-> > > + Luke
-> > >
-> > > Hi Jarkko,
-> > >
-> > > Prior to addressing your comments below which seems to show your
-> > > preference for compile time selection of trust source (TPM or TEE), I
-> > > would just like to hear the reasons for this preference especially if
-> > > it makes distro vendor's life difficult [1] to make opinionated
-> > > selection which could rather be achieved dynamically based on platform
-> > > capability.
-> > >
-> > > [1] https://lkml.org/lkml/2020/6/3/405
-> > >
-> > > -Sumit
-> >
-> > Hmm... I do get the distribution kernel point. OK, lets revert to
-> > dynamic then. Thanks for the remark.
-> >
-> > /Jarkko
-> 
-> Thanks, will revert to dynamic mode in v6.
+On Wed, Jun 17, 2020 at 11:41 AM Anson Huang <anson.huang@nxp.com> wrote:
 
-Sorry about the extra trouble caused by me.
+> > >
+> > > I'm ok with the change. But I'm curious how can this module be
+> > > autoloaded without MODULE_DEVICE_TABLE.
+> > > Have you tested if it can work?
+> > >
+> >
+> > I ONLY tested the manual insmod, if want to support auto load, may need
+> > some more change, will try it later and send out a V2 if needed.
+>
+> The further check shows that, if want to support auto load, the platform device
+> register needs to be done in somewhere else which is built-in (in my test, I move it
+> to clk-imx8qxp.c's probe), and also need to add below module alias in this driver,
+> because it has no device node in DT and no device table in driver.
+>
+> +MODULE_ALIAS("platform:imx-scu-soc");
+>
+> Since this driver has no device node in DT, and the target is to build all SoC specific
+> drivers as module, so the best way is to add a virtual device node in DT in order to support
+> auto load?
 
-/Jarkko
+I see that there is indeed a driver for the device node in
+drivers/firmware/imx/imx-scu.c,
+the only reason for this module using device_initcall() with a manual
+platform_device_register_simple() seems to be that we cannot have two
+platform drivers bind to the same device node.
+
+I think a cleaner way to handle this would be to just move the entire soc
+driver into the firmware driver and then remove the duplication.
+
+       Arnd
