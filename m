@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3608EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A53A20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 002EC20776
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448535;
-	bh=EOEpLFrpL07cKV3jYLatlv8jhS7AwfBNhQfXh5nU21g=;
+	s=default; t=1592448539;
+	bh=QIlGLf7nDUlZtRArNO4LcuTLmawRlFYKBDMqXqRElDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IGGk904oI3S2ZJaRVKxqxBa1S/D4gtI5FvFXIRc2MZs3WVnfI5P17TteyzEUabRrT
-	 RNsT0/2xopckvHjVAYp5N/m7kO7oriL6gWwuS2Kx787bMz7grX25GyAoQiNHyHuT19
-	 c+BexkdVMOcAONZBcKs+ptn8AsiDor6beEH88U20=
+	b=kJwmGQWqYsw8wm5tGV7EILKDTEkhIu/qxPTNeKxKauADrpewyFtYJa0yye96RcIog
+	 QB20x05Yu0qgLuvYgjdTS8baxHu7LagwCBKt5HJnSdXDqCFUWNHVx8l8W/7AdM/Rvh
+	 hnjWwLHYxW1mSSuGXWDB87yixSlHVp4NsI1hcYUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgFRBJt (ORCPT
+        id S1733159AbgFRCs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36342 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:48:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728254AbgFRBJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:09:41 -0400
+        id S1728280AbgFRBJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD79121D91;
-        Thu, 18 Jun 2020 01:09:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86CB921D93;
+        Thu, 18 Jun 2020 01:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442581;
-        bh=EOEpLFrpL07cKV3jYLatlv8jhS7AwfBNhQfXh5nU21g=;
+        s=default; t=1592442585;
+        bh=QIlGLf7nDUlZtRArNO4LcuTLmawRlFYKBDMqXqRElDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uy+/TZ0yloQvgMeKWzRgLRzrQCjri7sRH5kprHCOAqCbzQGMIv8s4H6Nul3MpHbve
-         MbqVHs1oX1pVvwR8x3vXLZKfKCWlvNsH4tBK1d0oJ5zJkGX8PstWo54/dLVGFeY2DN
-         4F/HLaOTNHauH81idCkX3Ni2BCKmM4FxsiHyyQwQ=
+        b=Z8TEDNF9Q7vLKn4xowmdyS2x05uZ9ZAuaQLU2JQED/YviBK8kBePG16FsxdUrsM8a
+         +ziD6B8xvxs3lF3brGjACqVPC7yKykZ5Y2sZi2SBfCeA9la3bSDhnlHyyQKznb19sM
+         nhThjo3JnofOXVmw3z6zLtM1X44gaWe4guYuOClY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
-Subject: [PATCH AUTOSEL 5.7 073/388] mfd: wm8994: Fix driver operation if loaded as modules
-Date:   Wed, 17 Jun 2020 21:02:50 -0400
-Message-Id: <20200618010805.600873-73-sashal@kernel.org>
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Daniel Wagner <dwagner@suse.de>,
+        James Smart <james.smart@broadcom.com>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 076/388] scsi: lpfc: Fix lpfc_nodelist leak when processing unsolicited event
+Date:   Wed, 17 Jun 2020 21:02:53 -0400
+Message-Id: <20200618010805.600873-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,36 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit d4f9b5428b53dd67f49ee8deed8d4366ed6b1933 ]
+[ Upstream commit 7217e6e694da3aae6d17db8a7f7460c8d4817ebf ]
 
-WM8994 chip has built-in regulators, which might be used for chip
-operation. They are controlled by a separate wm8994-regulator driver,
-which should be loaded before this driver calls regulator_get(), because
-that driver also provides consumer-supply mapping for the them. If that
-driver is not yet loaded, regulator core substitute them with dummy
-regulator, what breaks chip operation, because the built-in regulators are
-never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
-"pre" dependency to "wm8994_regulator" module.
+In order to create or activate a new node, lpfc_els_unsol_buffer() invokes
+lpfc_nlp_init() or lpfc_enable_node() or lpfc_nlp_get(), all of them will
+return a reference of the specified lpfc_nodelist object to "ndlp" with
+increased refcnt.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+When lpfc_els_unsol_buffer() returns, local variable "ndlp" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
+
+The reference counting issue happens in one exception handling path of
+lpfc_els_unsol_buffer(). When "ndlp" in DEV_LOSS, the function forgets to
+decrease the refcnt increased by lpfc_nlp_init() or lpfc_enable_node() or
+lpfc_nlp_get(), causing a refcnt leak.
+
+Fix this issue by calling lpfc_nlp_put() when "ndlp" in DEV_LOSS.
+
+Link: https://lore.kernel.org/r/1590416184-52592-1-git-send-email-xiyuyang19@fudan.edu.cn
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/wm8994-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/lpfc/lpfc_els.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
-index 1e9fe7d92597..737dede4a95c 100644
---- a/drivers/mfd/wm8994-core.c
-+++ b/drivers/mfd/wm8994-core.c
-@@ -690,3 +690,4 @@ module_i2c_driver(wm8994_i2c_driver);
- MODULE_DESCRIPTION("Core support for the WM8994 audio CODEC");
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
-+MODULE_SOFTDEP("pre: wm8994_regulator");
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index 80d1e661b0d4..35fbcb4d52eb 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -8514,6 +8514,8 @@ lpfc_els_unsol_buffer(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
+ 	spin_lock_irq(shost->host_lock);
+ 	if (ndlp->nlp_flag & NLP_IN_DEV_LOSS) {
+ 		spin_unlock_irq(shost->host_lock);
++		if (newnode)
++			lpfc_nlp_put(ndlp);
+ 		goto dropit;
+ 	}
+ 	spin_unlock_irq(shost->host_lock);
 -- 
 2.25.1
 
