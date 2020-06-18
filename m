@@ -2,56 +2,107 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4883BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E96922225
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D910A2222F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592444656;
+	bh=NDVL0WOLvQUU3WGWVLdkeWQr9oituaVCLeI8lELCp+E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jHRmO3+lfQhdpJtLUh0VOw+PbVjwCTFqaR5nNilSpd1PaPOOqw+UEZeaUPxHp22Tp
+	 kUUSiyoChcQDzhpP2+bpPxBRhbDxlAOncg1CpktB2/HhgD9hpKYeFmQcpdQHYizMZU
+	 xvVTVFeU+9yLTT5ufPyOt/unZO5vrlsI4A4AFn0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733094AbgFRBoF (ORCPT
+        id S1732194AbgFRB25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:44:05 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45614 "EHLO vps0.lunn.ch"
+        Wed, 17 Jun 2020 21:28:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730521AbgFRBoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:44:02 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jljav-0013GB-1Z; Thu, 18 Jun 2020 03:43:57 +0200
-Date:   Thu, 18 Jun 2020 03:43:57 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        robh@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v7 1/6] dt-bindings: net: Add tx and rx internal
- delays
-Message-ID: <20200618014357.GG249144@lunn.ch>
-References: <20200617182019.6790-1-dmurphy@ti.com>
- <20200617182019.6790-2-dmurphy@ti.com>
+        id S1730345AbgFRBZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:25:50 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 358AA2075E;
+        Thu, 18 Jun 2020 01:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592443550;
+        bh=NDVL0WOLvQUU3WGWVLdkeWQr9oituaVCLeI8lELCp+E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=leGq1NBq5C9P+uUUg3n8QWdOdY6ub5f1G/SszJoWQignwtLPxM2vQg8CybTP4w/ht
+         lw+D+blz1ZEOvPUCrPHlofm5H9zwjyjPrnaYlOGlV/VTYtgXzlgQbZ4/lSDRPU9yd5
+         SWeeUuAoLMSzIwUHSQpyR11+LoGXo6duYk6E4QQo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 165/172] ASoC: Intel: bytcr_rt5640: Add quirk for Toshiba Encore WT10-A tablet
+Date:   Wed, 17 Jun 2020 21:22:11 -0400
+Message-Id: <20200618012218.607130-165-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617182019.6790-2-dmurphy@ti.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 01:20:14PM -0500, Dan Murphy wrote:
-> tx-internal-delays and rx-internal-delays are a common setting for RGMII
-> capable devices.
-> 
-> These properties are used when the phy-mode or phy-controller is set to
-> rgmii-id, rgmii-rxid or rgmii-txid.  These modes indicate to the
-> controller that the PHY will add the internal delay for the connection.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+[ Upstream commit 199a5e8fda54ab3c8c6f6bf980c004e97ebf5ccb ]
 
-    Andrew
+The Toshiba Encore WT10-A tablet almost fully works with the default
+settings for Bay Trail CR devices. The only issue is that it uses a
+digital mic. connected the the DMIC1 input instead of an analog mic.
+
+Add a quirk for this model using the default settings with the input-map
+replaced with BYT_RT5640_DMIC1_MAP.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200608204634.93407-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/intel/boards/bytcr_rt5640.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index 5dfc17987b2b..0dcd249877c5 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -724,6 +724,18 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 					BYT_RT5640_JD_NOT_INV |
+ 					BYT_RT5640_MCLK_EN),
+ 	},
++	{	/* Toshiba Encore WT10-A */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TOSHIBA"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "TOSHIBA WT10-A-103"),
++		},
++		.driver_data = (void *)(BYT_RT5640_DMIC1_MAP |
++					BYT_RT5640_JD_SRC_JD1_IN4P |
++					BYT_RT5640_OVCD_TH_2000UA |
++					BYT_RT5640_OVCD_SF_0P75 |
++					BYT_RT5640_SSP0_AIF2 |
++					BYT_RT5640_MCLK_EN),
++	},
+ 	{	/* Catch-all for generic Insyde tablets, must be last */
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
+-- 
+2.25.1
+
