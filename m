@@ -1,100 +1,87 @@
-Return-Path: <SRS0=qsSF=76=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06B9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD98FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2A220B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Jun 2020 23:58:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGiayrYQ"
+	by mail.kernel.org (Postfix) with ESMTP id 88514214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 00:00:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592438452;
+	bh=O0Ojn64QE9TAUNMg1Czyk7vrOv6xiPBYlaWVb0X35x8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dLMyVYo159MOszMK80Sz2dHpEJWjUnW80P3ABJp3HVDf9pgmnN4CtehmUO50lnefY
+	 KdtR0HuIbOu3vke/INzP1Aq75bJTaur39iqf6y1RxM9Q4MRXaqIQ8xbdK0BSXsDkSu
+	 SBI8c1LrCP2MSyNheomF6CP/Uui4YqXkujjmsqZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgFQX6x (ORCPT
+        id S1727019AbgFRAAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 19:58:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgFQX6w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 19:58:52 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73D3BC06174E;
-        Wed, 17 Jun 2020 16:58:51 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id q14so3055521qtr.9;
-        Wed, 17 Jun 2020 16:58:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=jGy72MS6gZKYHJ1vR4n9374W/R354yQ24JMckZsZxVk=;
-        b=PGiayrYQUm5naVpGdTdNvZd567DY9WtY7O7CabtImTleiqrdAcr8pVh6Sv4AFXyoHH
-         Z1FyPJh1BTRW4ErAB6BpIkOIFHOvQ+7wJzReTlFwhfqaepfK7RYkA76EojBOBLflqMJV
-         nW423Ijic5ljepsDOD6qlqVlHZ4oTUdbfsQAl4RE9bT6n8Eoc8EclMe431HznPklvRcY
-         6aI+CJs5L/elIztypPD8r54DTkxiXEgV2alGtlq676KmoGirw5V1UAeooiEjm2vCnKc5
-         Evg7MPT00OBwWPr9+y4rQsZVS9g9PYkVNfzHOh7kq/N5wni6QHEiHJ0jOTBJYmz2Gw7i
-         V2Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=jGy72MS6gZKYHJ1vR4n9374W/R354yQ24JMckZsZxVk=;
-        b=WkYcWY96BwGSmUyDsT0V2kdGtfbs3eIRJSdmuCQdt5K/Eh2X2IWoyHXwYCBI+660YH
-         tZ9qbJq53cSWuFSL5ZD2OIAaV5eqKJYv7AhIZitVTrpjVUJSz8hN0gp8Skg1X/kmWzAF
-         drh15rhNv7WpE8ZYPFW+TifjMs9PGhSAzXGKQ0mX3oS6VOzVt7tA+VCWkbmcm47xISbW
-         iZWkuaC9HSXLCXQudMdf1QD9+foLDVlQPp0k1jBNI8qAnIyDeeS91leEerPJzzfITOI2
-         nXhM65PnIUca1H4HnTdLV0zQVrjlD+Qv/u+nuzQTWgqKPAN33Dtn05dK+Ty42WWL0XyC
-         k4eg==
-X-Gm-Message-State: AOAM533j3Efu1sbQJk7slvTwNlNUHK/sF5SP8iPdXicZT9/8jPmCG2Z5
-        NH9ux0Q0R4S8+8Kbalvtb/0=
-X-Google-Smtp-Source: ABdhPJyY8d28wSSZaDFBJ71V7MlCpga0K4kCntcxasPuh4S0OAA0LRGw8uC2Imyr866Fi8ug6MeYhQ==
-X-Received: by 2002:ac8:3682:: with SMTP id a2mr1771825qtc.137.1592438330707;
-        Wed, 17 Jun 2020 16:58:50 -0700 (PDT)
-Received: from linux.home ([2604:2000:1344:41d:9c3:b47c:c995:4853])
-        by smtp.googlemail.com with ESMTPSA id f30sm1356774qtb.9.2020.06.17.16.58.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 16:58:50 -0700 (PDT)
-From:   Gaurav Singh <gaurav1086@gmail.com>
-To:     gaurav1086@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] max732x_probe: remove redundant check
-Date:   Wed, 17 Jun 2020 19:58:19 -0400
-Message-Id: <20200617235831.25671-1-gaurav1086@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 17 Jun 2020 20:00:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49538 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726763AbgFRAAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 20:00:51 -0400
+Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 515B820B1F;
+        Thu, 18 Jun 2020 00:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592438450;
+        bh=O0Ojn64QE9TAUNMg1Czyk7vrOv6xiPBYlaWVb0X35x8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gntkbq/YBvvPhhPey0eMwmZnvFqAA0xmCm33NsY2GTKj8dJSY1qe2aD0wauUxNDFa
+         A3SoEyYovNwwrk0zB7RyggJLgYgL3F7NZ3BXDno9GM7tPtHMTiHCdwmXQccU6fl3Nd
+         br1RA6J8hvuQNwKsAK1zy7WXq97Uw8aosdT2/WpY=
+Date:   Wed, 17 Jun 2020 17:00:48 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH net-next v7 6/6] net: phy: DP83822: Add ability to
+ advertise Fiber connection
+Message-ID: <20200617170048.3501848a@kicinski-fedora-PC1C0HJN>
+In-Reply-To: <20200617182019.6790-7-dmurphy@ti.com>
+References: <20200617182019.6790-1-dmurphy@ti.com>
+        <20200617182019.6790-7-dmurphy@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The check : if (pdata) is redundant since its already
-dereferenced before: pdata->have_64bit_regs;
-pdata is not initialized after that hence remove 
-this null check.
+On Wed, 17 Jun 2020 13:20:19 -0500 Dan Murphy wrote:
+> +static int dp83822_config_init(struct phy_device *phydev)
+> +{
+> +	struct dp83822_private *dp83822 = phydev->priv;
+> +	int rgmii_delay;
+> +	int err = 0;
+> +
+> +	if (phy_interface_is_rgmii(phydev)) {
+> +		if (dp83822->rx_int_delay)
+> +			rgmii_delay = DP83822_RX_CLK_SHIFT;
+> +
+> +		if (dp83822->tx_int_delay)
+> +			rgmii_delay |= DP83822_TX_CLK_SHIFT;
+> +
+> +		if (rgmii_delay)
+> +			err = phy_set_bits_mmd(phydev, DP83822_DEVADDR,
+> +					       MII_DP83822_RCSR, rgmii_delay);
+> +	}
+> +
+> +	return dp8382x_disable_wol(phydev);
+> +}
 
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
----
- drivers/gpio/gpio-max732x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
-index 5fb0bcf31142..63472f308857 100644
---- a/drivers/gpio/gpio-max732x.c
-+++ b/drivers/gpio/gpio-max732x.c
-@@ -703,7 +703,7 @@ static int max732x_probe(struct i2c_client *client,
- 	if (ret)
- 		return ret;
- 
--	if (pdata && pdata->setup) {
-+	if (pdata->setup) {
- 		ret = pdata->setup(client, chip->gpio_chip.base,
- 				chip->gpio_chip.ngpio, pdata->context);
- 		if (ret < 0)
--- 
-2.17.1
-
+drivers/net/phy/dp83822.c: In function dp83822_config_init:
+drivers/net/phy/dp83822.c:282:6: warning: variable err set but not used [-Wunused-but-set-variable]
+  282 |  int err = 0;
+      |      ^~~
