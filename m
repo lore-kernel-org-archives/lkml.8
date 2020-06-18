@@ -2,307 +2,571 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4094CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D22512075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB412075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 12:29:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E5P4NQGY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729870AbgFRM3Y (ORCPT
+        id S1729887AbgFRM3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 08:29:24 -0400
-Received: from mga03.intel.com ([134.134.136.65]:58149 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729840AbgFRM3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 08:29:04 -0400
-IronPort-SDR: bLpYikYayENzivwLYrhbTlmUFAR2QUSQSv3uTTGAJY9T1pmBah8jpgA4a46LSPekieCy704Q5s
- VdqWATc9zWOQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9655"; a="142498831"
-X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
-   d="scan'208";a="142498831"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 05:29:03 -0700
-IronPort-SDR: zWy8t80wDV3GuZ52l+NYpDNn/3ln0dvMXJ/H9oYoCF5qW3xuuq0EMo/imTeISD+XE2ObbLZB5A
- WKm5dp7d7X8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,526,1583222400"; 
-   d="scan'208";a="317811874"
-Received: from gliakhov-mobl2.ger.corp.intel.com (HELO ubuntu) ([10.252.48.152])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 Jun 2020 05:28:58 -0700
-Date:   Thu, 18 Jun 2020 14:28:56 +0200
-From:   Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     David Stevens <stevensd@chromium.org>,
-        dri-devel@lists.freedesktop.org, virtio-dev@lists.oasis-open.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, Daniel Vetter <daniel@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] virtio: add dma-buf support for exported objects
-Message-ID: <20200618122856.GC4189@ubuntu>
-References: <20200526105811.30784-1-stevensd@chromium.org>
- <20200526105811.30784-2-stevensd@chromium.org>
- <20200604145620-mutt-send-email-mst@kernel.org>
+        Thu, 18 Jun 2020 08:29:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729274AbgFRM0H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 08:26:07 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7773C061798
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 05:26:02 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id t18so5855218wru.6
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 05:26:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=74VV+hWrAL0zCCFEfjNCgA2uQ+DitYEe58gLlSBqoCk=;
+        b=E5P4NQGYzL5UaWmwY1z+kkRyF7ccG4gozbkk0/NooJZsCcZoMcebVMGxpN+qI5+JEb
+         KUYsfeDWJHlGXrBd7hZ6va1sAzy+qiEtqPcXWEKyXUJEBA8wwHQhdD9D2zXjvBWEbvdL
+         u8bayVSKwjOiprCOYesKXtXr5gH0PJ6PpT0G88khtJoO1YfT+xz/V4pfL54ySbhe8FJu
+         X1/e6ZIds9kc7nFl9gm0lqWzc9iv8H6JWXJxGvhsQCp9ob8f/POoF9hPi1Mh7PrPwczs
+         5+lJR544iurizR6YWCUfRRNMaIACJkWnTGd3MJX88UWJ/sMSZvSOgYwCIiBwwL2oHyV/
+         z3Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=74VV+hWrAL0zCCFEfjNCgA2uQ+DitYEe58gLlSBqoCk=;
+        b=H23MhOO6D+bs26uUFi0kgI1qUoV3AtIy1BHJylhdpPOnTGEbrTyMMDdYr/KQSVBgfo
+         9kW8CiHpX5Tv9320KUuyyrVuMbkaT1ViSYEshdltFmSn6m2i9nrKX3b7rhjzhSzM/o1Y
+         ri9b+7p3wdsCT5dfIXZ7g9tblQGOsQOj16+S2Tm/Uc+Mo3aGU19xPGkWIlb0mepZeBDq
+         I+PZ3LuyjSXXwiLFpOW/lxgsCmFpVj5TjBF93J/k2hn2EnkbspW1fgGJHtioGPT6LEa1
+         mZCMw75mZnwkdc9tIEXDfel74FCoxTiD3LbBQP7QUgJcLa6au6dIcQ5mmj/rd+g4R6EG
+         wCOg==
+X-Gm-Message-State: AOAM53339i787MSid4K9DZffdLAycdTIpNnIFTFuSyl8vvF/6lEPP8q9
+        BSnPDECsGF+r2oLrJWynm5rVew==
+X-Google-Smtp-Source: ABdhPJxMV2JEH9hNNg4EugfqAogfJSPY6ETVKExk3/LwDntYxLcTJfTvQotP7mMsU3yBGKgoEo3BPQ==
+X-Received: by 2002:adf:fd81:: with SMTP id d1mr4505813wrr.96.1592483161018;
+        Thu, 18 Jun 2020 05:26:01 -0700 (PDT)
+Received: from localhost ([2a01:4b00:8523:2d03:c1af:c724:158a:e200])
+        by smtp.gmail.com with ESMTPSA id o6sm3426241wrp.3.2020.06.18.05.25.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 05:26:00 -0700 (PDT)
+From:   David Brazdil <dbrazdil@google.com>
+To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, android-kvm@google.com,
+        kernel-team@android.com, David Brazdil <dbrazdil@google.com>
+Subject: [PATCH v3 07/15] arm64: kvm: Split hyp/tlb.c to VHE/nVHE
+Date:   Thu, 18 Jun 2020 13:25:29 +0100
+Message-Id: <20200618122537.9625-8-dbrazdil@google.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200618122537.9625-1-dbrazdil@google.com>
+References: <20200618122537.9625-1-dbrazdil@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604145620-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+This patch is part of a series which builds KVM's non-VHE hyp code separately
+from VHE and the rest of the kernel.
 
-On Thu, Jun 04, 2020 at 03:05:23PM -0400, Michael S. Tsirkin wrote:
-> On Tue, May 26, 2020 at 07:58:09PM +0900, David Stevens wrote:
-> > This change adds a new flavor of dma-bufs that can be used by virtio
-> > drivers to share exported objects. A virtio dma-buf can be queried by
-> > virtio drivers to obtain the UUID which identifies the underlying
-> > exported object.
-> > 
-> > Signed-off-by: David Stevens <stevensd@chromium.org>
-> 
-> Is this just for graphics? If yes I'd rather we put it in the graphics
-> driver. We can always move it later ...
+tlb.c contains code for flushing the TLB, with parts shared between VHE/nVHE.
+These common routines are moved into a header file tlb.h, VHE-specific code
+remains in tlb.c and nVHE-specific code is moved to nvhe/tlb.c.
 
-Wouldn't this be the API that audio virtualisation will have to use to share 
-buffers between the host and any guests?
+The header file expects its users to implement two helper functions declared
+at the top of the file.
 
-Thanks
-Guennadi
+Signed-off-by: David Brazdil <dbrazdil@google.com>
+---
+ arch/arm64/kernel/image-vars.h   |   8 +-
+ arch/arm64/kvm/hyp/nvhe/Makefile |   2 +-
+ arch/arm64/kvm/hyp/nvhe/tlb.c    |  70 +++++++++++++
+ arch/arm64/kvm/hyp/tlb.c         | 171 +++----------------------------
+ arch/arm64/kvm/hyp/tlb.h         | 134 ++++++++++++++++++++++++
+ 5 files changed, 222 insertions(+), 163 deletions(-)
+ create mode 100644 arch/arm64/kvm/hyp/nvhe/tlb.c
+ create mode 100644 arch/arm64/kvm/hyp/tlb.h
 
-> > ---
-> >  drivers/virtio/Makefile         |  2 +-
-> >  drivers/virtio/virtio.c         |  6 +++
-> >  drivers/virtio/virtio_dma_buf.c | 89 +++++++++++++++++++++++++++++++++
-> >  include/linux/virtio.h          |  1 +
-> >  include/linux/virtio_dma_buf.h  | 58 +++++++++++++++++++++
-> >  5 files changed, 155 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/virtio/virtio_dma_buf.c
-> >  create mode 100644 include/linux/virtio_dma_buf.h
-> > 
-> > diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
-> > index 29a1386ecc03..ecdae5b596de 100644
-> > --- a/drivers/virtio/Makefile
-> > +++ b/drivers/virtio/Makefile
-> > @@ -1,5 +1,5 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> > -obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o
-> > +obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o virtio_dma_buf.o
-> >  obj-$(CONFIG_VIRTIO_MMIO) += virtio_mmio.o
-> >  obj-$(CONFIG_VIRTIO_PCI) += virtio_pci.o
-> >  virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
-> > diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> > index a977e32a88f2..5d46f0ded92d 100644
-> > --- a/drivers/virtio/virtio.c
-> > +++ b/drivers/virtio/virtio.c
-> > @@ -357,6 +357,12 @@ int register_virtio_device(struct virtio_device *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(register_virtio_device);
-> >  
-> > +bool is_virtio_device(struct device *dev)
-> > +{
-> > +	return dev->bus == &virtio_bus;
-> > +}
-> > +EXPORT_SYMBOL_GPL(is_virtio_device);
-> > +
-> >  void unregister_virtio_device(struct virtio_device *dev)
-> >  {
-> >  	int index = dev->index; /* save for after device release */
-> > diff --git a/drivers/virtio/virtio_dma_buf.c b/drivers/virtio/virtio_dma_buf.c
-> > new file mode 100644
-> > index 000000000000..23e3399b11ed
-> > --- /dev/null
-> > +++ b/drivers/virtio/virtio_dma_buf.c
-> > @@ -0,0 +1,89 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + * dma-bufs for virtio exported objects
-> > + *
-> > + * Copyright (C) 2020 Google, Inc.
-> > + */
-> > +
-> > +#include <linux/virtio_dma_buf.h>
-> > +
-> > +/**
-> > + * virtio_dma_buf_export - Creates a new dma-buf for a virtio exported object
-> > + *
-> > + * This wraps dma_buf_export() to allow virtio drivers to create a dma-buf
-> > + * for an virtio exported object that can be queried by other virtio drivers
-> > + * for the object's UUID.
-> > + */
-> > +struct dma_buf *virtio_dma_buf_export(
-> > +		const struct virtio_dma_buf_export_info *virtio_exp_info)
-> > +{
-> > +	struct dma_buf_export_info exp_info;
-> > +
-> > +	if (!virtio_exp_info->ops
-> > +		|| virtio_exp_info->ops->ops.attach != &virtio_dma_buf_attach
-> > +		|| !virtio_exp_info->ops->get_uuid) {
-> > +		return ERR_PTR(-EINVAL);
-> > +	}
-> > +
-> > +	exp_info.exp_name = virtio_exp_info->exp_name;
-> > +	exp_info.owner = virtio_exp_info->owner;
-> > +	exp_info.ops = &virtio_exp_info->ops->ops;
-> > +	exp_info.size = virtio_exp_info->size;
-> > +	exp_info.flags = virtio_exp_info->flags;
-> > +	exp_info.resv = virtio_exp_info->resv;
-> > +	exp_info.priv = virtio_exp_info->priv;
-> > +	BUILD_BUG_ON(sizeof(struct virtio_dma_buf_export_info)
-> > +		     != sizeof(struct dma_buf_export_info));
-> 
-> This is the only part that gives me pause. Why do we need this hack?
-> What's wrong with just using dma_buf_export_info directly,
-> and if you want the virtio ops, just using container_off?
-> 
-> 
-> 
-> > +
-> > +	return dma_buf_export(&exp_info);
-> > +}
-> > +EXPORT_SYMBOL(virtio_dma_buf_export);
-> > +
-> > +/**
-> > + * virtio_dma_buf_attach - mandatory attach callback for virtio dma-bufs
-> > + */
-> > +int virtio_dma_buf_attach(struct dma_buf *dma_buf,
-> > +			  struct dma_buf_attachment *attach)
-> > +{
-> > +	int ret;
-> > +	const struct virtio_dma_buf_ops *ops = container_of(
-> > +			dma_buf->ops, const struct virtio_dma_buf_ops, ops);
-> > +
-> > +	if (ops->device_attach) {
-> > +		ret = ops->device_attach(dma_buf, attach);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL(virtio_dma_buf_attach);
-> > +
-> > +/**
-> > + * is_virtio_dma_buf - returns true if the given dma-buf is a virtio dma-buf
-> > + * @dma_buf: buffer to query
-> > + */
-> > +bool is_virtio_dma_buf(struct dma_buf *dma_buf)
-> > +{
-> > +	return dma_buf->ops->attach == &virtio_dma_buf_attach;
-> > +}
-> > +EXPORT_SYMBOL(is_virtio_dma_buf);
-> > +
-> > +/**
-> > + * virtio_dma_buf_get_uuid - gets the uuid of the virtio dma-buf's exported object
-> > + * @dma_buf: [in] buffer to query
-> > + * @uuid: [out] the uuid
-> > + *
-> > + * Returns: 0 on success, negative on failure.
-> > + */
-> > +int virtio_dma_buf_get_uuid(struct dma_buf *dma_buf,
-> > +			    uuid_t *uuid)
-> > +{
-> > +	const struct virtio_dma_buf_ops *ops = container_of(
-> > +			dma_buf->ops, const struct virtio_dma_buf_ops, ops);
-> > +
-> > +	if (!is_virtio_dma_buf(dma_buf))
-> > +		return -EINVAL;
-> > +
-> > +	return ops->get_uuid(dma_buf, uuid);
-> > +}
-> > +EXPORT_SYMBOL(virtio_dma_buf_get_uuid);
-> > diff --git a/include/linux/virtio.h b/include/linux/virtio.h
-> > index 15f906e4a748..9397e25616c4 100644
-> > --- a/include/linux/virtio.h
-> > +++ b/include/linux/virtio.h
-> > @@ -128,6 +128,7 @@ static inline struct virtio_device *dev_to_virtio(struct device *_dev)
-> >  void virtio_add_status(struct virtio_device *dev, unsigned int status);
-> >  int register_virtio_device(struct virtio_device *dev);
-> >  void unregister_virtio_device(struct virtio_device *dev);
-> > +bool is_virtio_device(struct device *dev);
-> >  
-> >  void virtio_break_device(struct virtio_device *dev);
-> >  
-> > diff --git a/include/linux/virtio_dma_buf.h b/include/linux/virtio_dma_buf.h
-> > new file mode 100644
-> > index 000000000000..29fee167afbd
-> > --- /dev/null
-> > +++ b/include/linux/virtio_dma_buf.h
-> > @@ -0,0 +1,58 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * dma-bufs for virtio exported objects
-> > + *
-> > + * Copyright (C) 2020 Google, Inc.
-> > + */
-> > +
-> > +#ifndef _LINUX_VIRTIO_DMA_BUF_H
-> > +#define _LINUX_VIRTIO_DMA_BUF_H
-> > +
-> > +#include <linux/dma-buf.h>
-> > +#include <linux/uuid.h>
-> > +#include <linux/virtio.h>
-> > +
-> > +/**
-> > + * struct virtio_dma_buf_ops - operations possible on exported object dma-buf
-> > + * @ops: the base dma_buf_ops. ops.attach MUST be virtio_dma_buf_attach.
-> > + * @device_attach: [optional] callback invoked by virtio_dma_buf_attach during
-> > + *		   all attach operations.
-> > + * @get_uid: [required] callback to get the uuid of the exported object.
-> > + */
-> > +struct virtio_dma_buf_ops {
-> > +	struct dma_buf_ops ops;
-> > +	int (*device_attach)(struct dma_buf *dma_buf,
-> > +			     struct dma_buf_attachment *attach);
-> > +	int (*get_uuid)(struct dma_buf *dma_buf, uuid_t *uuid);
-> > +};
-> > +
-> > +/**
-> > + * struct virtio_dma_buf_export_info - see struct dma_buf_export_info
-> > + */
-> > +struct virtio_dma_buf_export_info {
-> > +	const char *exp_name;
-> > +	struct module *owner;
-> > +	const struct virtio_dma_buf_ops *ops;
-> > +	size_t size;
-> > +	int flags;
-> > +	struct dma_resv *resv;
-> > +	void *priv;
-> > +};
-> > +
-> > +/**
-> > + * DEFINE_VIRTIO_DMA_BUF_EXPORT_INFO - helper macro for exporters
-> > + */
-> > +#define DEFINE_VIRTIO_DMA_BUF_EXPORT_INFO(name)	\
-> > +	struct virtio_dma_buf_export_info name = { \
-> > +		.exp_name = KBUILD_MODNAME, \
-> > +		.owner = THIS_MODULE }
-> > +
-> > +int virtio_dma_buf_attach(struct dma_buf *dma_buf,
-> > +			  struct dma_buf_attachment *attach);
-> > +
-> > +struct dma_buf *virtio_dma_buf_export(
-> > +		const struct virtio_dma_buf_export_info *virtio_exp_info);
-> > +bool is_virtio_dma_buf(struct dma_buf *dma_buf);
-> > +int virtio_dma_buf_get_uuid(struct dma_buf *dma_buf, uuid_t *uuid);
-> > +
-> > +#endif /* _LINUX_VIRTIO_DMA_BUF_H */
-> > -- 
-> > 2.27.0.rc0.183.gde8f92d652-goog
-> 
-> _______________________________________________
-> Virtualization mailing list
-> Virtualization@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/virtualization
+diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
+index 4dc969ccda9e..e8a8aa6bc7bd 100644
+--- a/arch/arm64/kernel/image-vars.h
++++ b/arch/arm64/kernel/image-vars.h
+@@ -63,13 +63,10 @@ __efistub__ctype		= _ctype;
+ 
+ __kvm_nvhe___guest_exit = __guest_exit;
+ __kvm_nvhe___hyp_stub_vectors = __hyp_stub_vectors;
++__kvm_nvhe___icache_flags = __icache_flags;
+ __kvm_nvhe___kvm_enable_ssbs = __kvm_enable_ssbs;
+-__kvm_nvhe___kvm_flush_vm_context = __kvm_flush_vm_context;
+ __kvm_nvhe___kvm_get_mdcr_el2 = __kvm_get_mdcr_el2;
+ __kvm_nvhe___kvm_timer_set_cntvoff = __kvm_timer_set_cntvoff;
+-__kvm_nvhe___kvm_tlb_flush_local_vmid = __kvm_tlb_flush_local_vmid;
+-__kvm_nvhe___kvm_tlb_flush_vmid = __kvm_tlb_flush_vmid;
+-__kvm_nvhe___kvm_tlb_flush_vmid_ipa = __kvm_tlb_flush_vmid_ipa;
+ __kvm_nvhe___kvm_vcpu_run_nvhe = __kvm_vcpu_run_nvhe;
+ __kvm_nvhe___vgic_v3_get_ich_vtr_el2 = __vgic_v3_get_ich_vtr_el2;
+ __kvm_nvhe___vgic_v3_init_lrs = __vgic_v3_init_lrs;
+@@ -79,8 +76,11 @@ __kvm_nvhe___vgic_v3_save_aprs = __vgic_v3_save_aprs;
+ __kvm_nvhe___vgic_v3_write_vmcr = __vgic_v3_write_vmcr;
+ __kvm_nvhe_abort_guest_exit_end = abort_guest_exit_end;
+ __kvm_nvhe_abort_guest_exit_start = abort_guest_exit_start;
++__kvm_nvhe_arm64_const_caps_ready = arm64_const_caps_ready;
+ __kvm_nvhe_arm64_enable_wa2_handling = arm64_enable_wa2_handling;
+ __kvm_nvhe_arm64_ssbd_callback_required = arm64_ssbd_callback_required;
++__kvm_nvhe_cpu_hwcap_keys = cpu_hwcap_keys;
++__kvm_nvhe_cpu_hwcaps = cpu_hwcaps;
+ __kvm_nvhe_hyp_panic = hyp_panic;
+ __kvm_nvhe_idmap_t0sz = idmap_t0sz;
+ __kvm_nvhe_kimage_voffset = kimage_voffset;
+diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
+index fef6f1881765..3bfc51de1679 100644
+--- a/arch/arm64/kvm/hyp/nvhe/Makefile
++++ b/arch/arm64/kvm/hyp/nvhe/Makefile
+@@ -7,7 +7,7 @@ asflags-y := -D__KVM_NVHE_HYPERVISOR__
+ ccflags-y := -D__KVM_NVHE_HYPERVISOR__ -fno-stack-protector \
+ 	     -DDISABLE_BRANCH_PROFILING $(DISABLE_STACKLEAK_PLUGIN)
+ 
+-obj-y := hyp-init.o ../hyp-entry.o
++obj-y := tlb.o hyp-init.o ../hyp-entry.o
+ 
+ obj-y := $(patsubst %.o,%.hyp.o,$(obj-y))
+ extra-y := $(patsubst %.hyp.o,%.hyp.tmp.o,$(obj-y))
+diff --git a/arch/arm64/kvm/hyp/nvhe/tlb.c b/arch/arm64/kvm/hyp/nvhe/tlb.c
+new file mode 100644
+index 000000000000..111c4b0a23d3
+--- /dev/null
++++ b/arch/arm64/kvm/hyp/nvhe/tlb.c
+@@ -0,0 +1,70 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2015 - ARM Ltd
++ * Author: Marc Zyngier <marc.zyngier@arm.com>
++ */
++
++#include <linux/irqflags.h>
++
++#include <asm/kvm_hyp.h>
++#include <asm/kvm_mmu.h>
++#include <asm/tlbflush.h>
++
++#include "../tlb.h"
++
++static void __hyp_text __tlb_switch_to_guest(struct kvm *kvm,
++					     struct tlb_inv_context *cxt)
++{
++	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT)) {
++		u64 val;
++
++		/*
++		 * For CPUs that are affected by ARM 1319367, we need to
++		 * avoid a host Stage-1 walk while we have the guest's
++		 * VMID set in the VTTBR in order to invalidate TLBs.
++		 * We're guaranteed that the S1 MMU is enabled, so we can
++		 * simply set the EPD bits to avoid any further TLB fill.
++		 */
++		val = cxt->tcr = read_sysreg_el1(SYS_TCR);
++		val |= TCR_EPD1_MASK | TCR_EPD0_MASK;
++		write_sysreg_el1(val, SYS_TCR);
++		isb();
++	}
++
++	/* __load_guest_stage2() includes an ISB for the workaround. */
++	__load_guest_stage2(kvm);
++	asm(ALTERNATIVE("isb", "nop", ARM64_WORKAROUND_SPECULATIVE_AT));
++}
++
++static void __hyp_text __tlb_switch_to_host(struct kvm *kvm,
++					    struct tlb_inv_context *cxt)
++{
++	write_sysreg(0, vttbr_el2);
++
++	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT)) {
++		/* Ensure write of the host VMID */
++		isb();
++		/* Restore the host's TCR_EL1 */
++		write_sysreg_el1(cxt->tcr, SYS_TCR);
++	}
++}
++
++void __hyp_text __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
++{
++	__tlb_flush_vmid_ipa(kvm, ipa);
++}
++
++void __hyp_text __kvm_tlb_flush_vmid(struct kvm *kvm)
++{
++	__tlb_flush_vmid(kvm);
++}
++
++void __hyp_text __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu)
++{
++	__tlb_flush_local_vmid(vcpu);
++}
++
++void __hyp_text __kvm_flush_vm_context(void)
++{
++	__tlb_flush_vm_context();
++}
+diff --git a/arch/arm64/kvm/hyp/tlb.c b/arch/arm64/kvm/hyp/tlb.c
+index d063a576d511..4e190f8c7e9c 100644
+--- a/arch/arm64/kvm/hyp/tlb.c
++++ b/arch/arm64/kvm/hyp/tlb.c
+@@ -10,14 +10,10 @@
+ #include <asm/kvm_mmu.h>
+ #include <asm/tlbflush.h>
+ 
+-struct tlb_inv_context {
+-	unsigned long	flags;
+-	u64		tcr;
+-	u64		sctlr;
+-};
++#include "tlb.h"
+ 
+-static void __hyp_text __tlb_switch_to_guest_vhe(struct kvm *kvm,
+-						 struct tlb_inv_context *cxt)
++static void __hyp_text __tlb_switch_to_guest(struct kvm *kvm,
++					     struct tlb_inv_context *cxt)
+ {
+ 	u64 val;
+ 
+@@ -60,41 +56,8 @@ static void __hyp_text __tlb_switch_to_guest_vhe(struct kvm *kvm,
+ 	isb();
+ }
+ 
+-static void __hyp_text __tlb_switch_to_guest_nvhe(struct kvm *kvm,
+-						  struct tlb_inv_context *cxt)
+-{
+-	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT)) {
+-		u64 val;
+-
+-		/*
+-		 * For CPUs that are affected by ARM 1319367, we need to
+-		 * avoid a host Stage-1 walk while we have the guest's
+-		 * VMID set in the VTTBR in order to invalidate TLBs.
+-		 * We're guaranteed that the S1 MMU is enabled, so we can
+-		 * simply set the EPD bits to avoid any further TLB fill.
+-		 */
+-		val = cxt->tcr = read_sysreg_el1(SYS_TCR);
+-		val |= TCR_EPD1_MASK | TCR_EPD0_MASK;
+-		write_sysreg_el1(val, SYS_TCR);
+-		isb();
+-	}
+-
+-	/* __load_guest_stage2() includes an ISB for the workaround. */
+-	__load_guest_stage2(kvm);
+-	asm(ALTERNATIVE("isb", "nop", ARM64_WORKAROUND_SPECULATIVE_AT));
+-}
+-
+-static void __hyp_text __tlb_switch_to_guest(struct kvm *kvm,
+-					     struct tlb_inv_context *cxt)
+-{
+-	if (has_vhe())
+-		__tlb_switch_to_guest_vhe(kvm, cxt);
+-	else
+-		__tlb_switch_to_guest_nvhe(kvm, cxt);
+-}
+-
+-static void __hyp_text __tlb_switch_to_host_vhe(struct kvm *kvm,
+-						struct tlb_inv_context *cxt)
++static void __hyp_text __tlb_switch_to_host(struct kvm *kvm,
++					    struct tlb_inv_context *cxt)
+ {
+ 	/*
+ 	 * We're done with the TLB operation, let's restore the host's
+@@ -113,130 +76,22 @@ static void __hyp_text __tlb_switch_to_host_vhe(struct kvm *kvm,
+ 	local_irq_restore(cxt->flags);
+ }
+ 
+-static void __hyp_text __tlb_switch_to_host_nvhe(struct kvm *kvm,
+-						 struct tlb_inv_context *cxt)
+-{
+-	write_sysreg(0, vttbr_el2);
+-
+-	if (cpus_have_final_cap(ARM64_WORKAROUND_SPECULATIVE_AT)) {
+-		/* Ensure write of the host VMID */
+-		isb();
+-		/* Restore the host's TCR_EL1 */
+-		write_sysreg_el1(cxt->tcr, SYS_TCR);
+-	}
+-}
+-
+-static void __hyp_text __tlb_switch_to_host(struct kvm *kvm,
+-					    struct tlb_inv_context *cxt)
+-{
+-	if (has_vhe())
+-		__tlb_switch_to_host_vhe(kvm, cxt);
+-	else
+-		__tlb_switch_to_host_nvhe(kvm, cxt);
+-}
+-
+-void __hyp_text __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
++void __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
+ {
+-	struct tlb_inv_context cxt;
+-
+-	dsb(ishst);
+-
+-	/* Switch to requested VMID */
+-	kvm = kern_hyp_va(kvm);
+-	__tlb_switch_to_guest(kvm, &cxt);
+-
+-	/*
+-	 * We could do so much better if we had the VA as well.
+-	 * Instead, we invalidate Stage-2 for this IPA, and the
+-	 * whole of Stage-1. Weep...
+-	 */
+-	ipa >>= 12;
+-	__tlbi(ipas2e1is, ipa);
+-
+-	/*
+-	 * We have to ensure completion of the invalidation at Stage-2,
+-	 * since a table walk on another CPU could refill a TLB with a
+-	 * complete (S1 + S2) walk based on the old Stage-2 mapping if
+-	 * the Stage-1 invalidation happened first.
+-	 */
+-	dsb(ish);
+-	__tlbi(vmalle1is);
+-	dsb(ish);
+-	isb();
+-
+-	/*
+-	 * If the host is running at EL1 and we have a VPIPT I-cache,
+-	 * then we must perform I-cache maintenance at EL2 in order for
+-	 * it to have an effect on the guest. Since the guest cannot hit
+-	 * I-cache lines allocated with a different VMID, we don't need
+-	 * to worry about junk out of guest reset (we nuke the I-cache on
+-	 * VMID rollover), but we do need to be careful when remapping
+-	 * executable pages for the same guest. This can happen when KSM
+-	 * takes a CoW fault on an executable page, copies the page into
+-	 * a page that was previously mapped in the guest and then needs
+-	 * to invalidate the guest view of the I-cache for that page
+-	 * from EL1. To solve this, we invalidate the entire I-cache when
+-	 * unmapping a page from a guest if we have a VPIPT I-cache but
+-	 * the host is running at EL1. As above, we could do better if
+-	 * we had the VA.
+-	 *
+-	 * The moral of this story is: if you have a VPIPT I-cache, then
+-	 * you should be running with VHE enabled.
+-	 */
+-	if (!has_vhe() && icache_is_vpipt())
+-		__flush_icache_all();
+-
+-	__tlb_switch_to_host(kvm, &cxt);
++	__tlb_flush_vmid_ipa(kvm, ipa);
+ }
+ 
+-void __hyp_text __kvm_tlb_flush_vmid(struct kvm *kvm)
++void __kvm_tlb_flush_vmid(struct kvm *kvm)
+ {
+-	struct tlb_inv_context cxt;
+-
+-	dsb(ishst);
+-
+-	/* Switch to requested VMID */
+-	kvm = kern_hyp_va(kvm);
+-	__tlb_switch_to_guest(kvm, &cxt);
+-
+-	__tlbi(vmalls12e1is);
+-	dsb(ish);
+-	isb();
+-
+-	__tlb_switch_to_host(kvm, &cxt);
++	__tlb_flush_vmid(kvm);
+ }
+ 
+-void __hyp_text __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu)
++void __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu)
+ {
+-	struct kvm *kvm = kern_hyp_va(kern_hyp_va(vcpu)->kvm);
+-	struct tlb_inv_context cxt;
+-
+-	/* Switch to requested VMID */
+-	__tlb_switch_to_guest(kvm, &cxt);
+-
+-	__tlbi(vmalle1);
+-	dsb(nsh);
+-	isb();
+-
+-	__tlb_switch_to_host(kvm, &cxt);
++	__tlb_flush_local_vmid(vcpu);
+ }
+ 
+-void __hyp_text __kvm_flush_vm_context(void)
++void __kvm_flush_vm_context(void)
+ {
+-	dsb(ishst);
+-	__tlbi(alle1is);
+-
+-	/*
+-	 * VIPT and PIPT caches are not affected by VMID, so no maintenance
+-	 * is necessary across a VMID rollover.
+-	 *
+-	 * VPIPT caches constrain lookup and maintenance to the active VMID,
+-	 * so we need to invalidate lines with a stale VMID to avoid an ABA
+-	 * race after multiple rollovers.
+-	 *
+-	 */
+-	if (icache_is_vpipt())
+-		asm volatile("ic ialluis");
+-
+-	dsb(ish);
++	__tlb_flush_vm_context();
+ }
+diff --git a/arch/arm64/kvm/hyp/tlb.h b/arch/arm64/kvm/hyp/tlb.h
+new file mode 100644
+index 000000000000..841ef400c8ec
+--- /dev/null
++++ b/arch/arm64/kvm/hyp/tlb.h
+@@ -0,0 +1,134 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2015 - ARM Ltd
++ * Author: Marc Zyngier <marc.zyngier@arm.com>
++ */
++
++#ifndef __ARM64_KVM_HYP_TLB_H__
++#define __ARM64_KVM_HYP_TLB_H__
++
++#include <linux/irqflags.h>
++
++#include <asm/kvm_hyp.h>
++#include <asm/kvm_mmu.h>
++#include <asm/tlbflush.h>
++
++struct tlb_inv_context {
++	unsigned long	flags;
++	u64		tcr;
++	u64		sctlr;
++};
++
++static void __hyp_text __tlb_switch_to_guest(struct kvm *kvm,
++					     struct tlb_inv_context *cxt);
++static void __hyp_text __tlb_switch_to_host(struct kvm *kvm,
++					    struct tlb_inv_context *cxt);
++
++static inline void __hyp_text
++__tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
++{
++	struct tlb_inv_context cxt;
++
++	dsb(ishst);
++
++	/* Switch to requested VMID */
++	kvm = kern_hyp_va(kvm);
++	__tlb_switch_to_guest(kvm, &cxt);
++
++	/*
++	 * We could do so much better if we had the VA as well.
++	 * Instead, we invalidate Stage-2 for this IPA, and the
++	 * whole of Stage-1. Weep...
++	 */
++	ipa >>= 12;
++	__tlbi(ipas2e1is, ipa);
++
++	/*
++	 * We have to ensure completion of the invalidation at Stage-2,
++	 * since a table walk on another CPU could refill a TLB with a
++	 * complete (S1 + S2) walk based on the old Stage-2 mapping if
++	 * the Stage-1 invalidation happened first.
++	 */
++	dsb(ish);
++	__tlbi(vmalle1is);
++	dsb(ish);
++	isb();
++
++	/*
++	 * If the host is running at EL1 and we have a VPIPT I-cache,
++	 * then we must perform I-cache maintenance at EL2 in order for
++	 * it to have an effect on the guest. Since the guest cannot hit
++	 * I-cache lines allocated with a different VMID, we don't need
++	 * to worry about junk out of guest reset (we nuke the I-cache on
++	 * VMID rollover), but we do need to be careful when remapping
++	 * executable pages for the same guest. This can happen when KSM
++	 * takes a CoW fault on an executable page, copies the page into
++	 * a page that was previously mapped in the guest and then needs
++	 * to invalidate the guest view of the I-cache for that page
++	 * from EL1. To solve this, we invalidate the entire I-cache when
++	 * unmapping a page from a guest if we have a VPIPT I-cache but
++	 * the host is running at EL1. As above, we could do better if
++	 * we had the VA.
++	 *
++	 * The moral of this story is: if you have a VPIPT I-cache, then
++	 * you should be running with VHE enabled.
++	 */
++	if (!has_vhe() && icache_is_vpipt())
++		__flush_icache_all();
++
++	__tlb_switch_to_host(kvm, &cxt);
++}
++
++static inline void __hyp_text __tlb_flush_vmid(struct kvm *kvm)
++{
++	struct tlb_inv_context cxt;
++
++	dsb(ishst);
++
++	/* Switch to requested VMID */
++	kvm = kern_hyp_va(kvm);
++	__tlb_switch_to_guest(kvm, &cxt);
++
++	__tlbi(vmalls12e1is);
++	dsb(ish);
++	isb();
++
++	__tlb_switch_to_host(kvm, &cxt);
++}
++
++static inline void __hyp_text __tlb_flush_local_vmid(struct kvm_vcpu *vcpu)
++{
++	struct kvm *kvm = kern_hyp_va(kern_hyp_va(vcpu)->kvm);
++	struct tlb_inv_context cxt;
++
++	/* Switch to requested VMID */
++	__tlb_switch_to_guest(kvm, &cxt);
++
++	__tlbi(vmalle1);
++	dsb(nsh);
++	isb();
++
++	__tlb_switch_to_host(kvm, &cxt);
++}
++
++static inline void __hyp_text __tlb_flush_vm_context(void)
++{
++	dsb(ishst);
++	__tlbi(alle1is);
++
++	/*
++	 * VIPT and PIPT caches are not affected by VMID, so no maintenance
++	 * is necessary across a VMID rollover.
++	 *
++	 * VPIPT caches constrain lookup and maintenance to the active VMID,
++	 * so we need to invalidate lines with a stale VMID to avoid an ABA
++	 * race after multiple rollovers.
++	 *
++	 */
++	if (icache_is_vpipt())
++		asm volatile("ic ialluis");
++
++	dsb(ish);
++}
++
++#endif /* __ARM64_KVM_HYP_TLB_H__ */
+-- 
+2.27.0
+
