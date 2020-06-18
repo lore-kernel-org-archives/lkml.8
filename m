@@ -2,117 +2,134 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F28C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEB6208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84CA1206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:10:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="b30qOhfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbgFRVJC (ORCPT
+        id S1730302AbgFRVKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 17:09:02 -0400
-Received: from mga05.intel.com ([192.55.52.43]:39873 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbgFRVJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 17:09:01 -0400
-IronPort-SDR: EBB4wcQyOy5bNTmlRPp6iBd53AVTf8S+sanLOIqP4ZltqVDrPCAGR7bp1jvXtng8zVTOO0zuXC
- MTAG8G22o2ug==
-X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="227433553"
-X-IronPort-AV: E=Sophos;i="5.75,253,1589266800"; 
-   d="scan'208";a="227433553"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2020 14:09:01 -0700
-IronPort-SDR: 36Oa2h3jAlQn0wYNRL5cX+Y5fV/Yqv8JjViDL0Ow2l8Ld6C+vIxukYiq9OdvHyn//my1txzyCG
- amfFT4Q8nHAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,253,1589266800"; 
-   d="scan'208";a="277760008"
-Received: from mcrum-mobl1.amr.corp.intel.com (HELO [10.255.0.127]) ([10.255.0.127])
-  by orsmga006.jf.intel.com with ESMTP; 18 Jun 2020 14:08:58 -0700
-Subject: Re: [PATCH] Ability to read the MKTME status from userspace
-To:     Daniel Gutson <daniel.gutson@eclypsium.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Daniel Gutson <daniel@eclypsium.com>
-References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com>
-Date:   Thu, 18 Jun 2020 14:08:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 18 Jun 2020 17:10:18 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:52548 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbgFRVKR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 17:10:17 -0400
+Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id EDA5E207564C;
+        Thu, 18 Jun 2020 14:10:15 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EDA5E207564C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1592514616;
+        bh=YiCRzEtMqOMRGhK1JB6+uXhuvSs5ixeHO99z/YzrCNw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=b30qOhfFRkmUxWYXsp0tCg1xNoai+tuzhcElGnk6aQqF+sHXn8o9cTZ3DOKkg2yAO
+         nCwRPVzwRoHnBYW3E5flVBJUOwZ+1JrMzNU5fwjf0CB0m9smLxLpMKgSkKF7pk8Cv1
+         12u0C4+Wu/QLKVuHjPBdpSB4IYsxlYm7AINMH764=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, sgrubb@redhat.com, paul@paul-moore.com
+Cc:     rgb@redhat.com, linux-integrity@vger.kernel.org,
+        linux-audit@redhat.com, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] integrity: Add errno field in audit message
+Date:   Thu, 18 Jun 2020 14:10:11 -0700
+Message-Id: <20200618211012.2823-1-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/20 2:02 PM, Daniel Gutson wrote:
-> The intent of this patch is to provide visibility of the
-> MKTME status to userspace. This is an important factor for
-> firmware security related applilcations.
+Error code is not included in the audit messages logged by
+the integrity subsystem.
 
-I think we need more specifics before considering adding a new ABI like
-this.  Could you elaborate, plesae?
+Define a new function integrity_audit_message() that takes error code
+in the "errno" parameter. Add "errno" field in the audit messages logged
+by the integrity subsystem and set the value passed in the "errno"
+parameter.
+
+[    6.303048] audit: type=1804 audit(1592506281.627:2): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=kernel op=measuring_key cause=ENOMEM comm="swapper/0" name=".builtin_trusted_keys" res=0 errno=-12
+
+[    7.987647] audit: type=1802 audit(1592506283.312:9): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=policy_update cause=completed comm="systemd" res=1 errno=0
+
+[    8.019432] audit: type=1804 audit(1592506283.344:10): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 op=measuring_kexec_cmdline cause=hashing_error comm="systemd" name="kexec-cmdline" res=0 errno=-22
+
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Suggested-by: Steve Grubb <sgrubb@redhat.com>
+Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+ security/integrity/integrity.h       | 13 +++++++++++++
+ security/integrity/integrity_audit.c | 11 ++++++++++-
+ 2 files changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
+index 16c1894c29bb..413c803c5208 100644
+--- a/security/integrity/integrity.h
++++ b/security/integrity/integrity.h
+@@ -239,6 +239,11 @@ void integrity_audit_msg(int audit_msgno, struct inode *inode,
+ 			 const unsigned char *fname, const char *op,
+ 			 const char *cause, int result, int info);
+ 
++void integrity_audit_message(int audit_msgno, struct inode *inode,
++			     const unsigned char *fname, const char *op,
++			     const char *cause, int result, int info,
++			     int errno);
++
+ static inline struct audit_buffer *
+ integrity_audit_log_start(struct audit_context *ctx, gfp_t gfp_mask, int type)
+ {
+@@ -253,6 +258,14 @@ static inline void integrity_audit_msg(int audit_msgno, struct inode *inode,
+ {
+ }
+ 
++static inline void integrity_audit_message(int audit_msgno,
++					   struct inode *inode,
++					   const unsigned char *fname,
++					   const char *op, const char *cause,
++					   int result, int info, int errno)
++{
++}
++
+ static inline struct audit_buffer *
+ integrity_audit_log_start(struct audit_context *ctx, gfp_t gfp_mask, int type)
+ {
+diff --git a/security/integrity/integrity_audit.c b/security/integrity/integrity_audit.c
+index 5109173839cc..f25e7df099c8 100644
+--- a/security/integrity/integrity_audit.c
++++ b/security/integrity/integrity_audit.c
+@@ -28,6 +28,15 @@ __setup("integrity_audit=", integrity_audit_setup);
+ void integrity_audit_msg(int audit_msgno, struct inode *inode,
+ 			 const unsigned char *fname, const char *op,
+ 			 const char *cause, int result, int audit_info)
++{
++	integrity_audit_message(audit_msgno, inode, fname, op, cause,
++				result, audit_info, 0);
++}
++
++void integrity_audit_message(int audit_msgno, struct inode *inode,
++			     const unsigned char *fname, const char *op,
++			     const char *cause, int result, int audit_info,
++			     int errno)
+ {
+ 	struct audit_buffer *ab;
+ 	char name[TASK_COMM_LEN];
+@@ -53,6 +62,6 @@ void integrity_audit_msg(int audit_msgno, struct inode *inode,
+ 		audit_log_untrustedstring(ab, inode->i_sb->s_id);
+ 		audit_log_format(ab, " ino=%lu", inode->i_ino);
+ 	}
+-	audit_log_format(ab, " res=%d", !result);
++	audit_log_format(ab, " res=%d errno=%d", !result, errno);
+ 	audit_log_end(ab);
+ }
+-- 
+2.27.0
+
