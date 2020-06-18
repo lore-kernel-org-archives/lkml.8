@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB325C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAAEC214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E4C214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447017;
-	bh=dUkmD52lNqPmRdAMdoB/PrJJyegJXyeJhm0rTeXELTM=;
+	s=default; t=1592447025;
+	bh=m5MjLN5kHPqximv4jc7KfEfNo/8ZvUuXiLLO/NUGhaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i/08LpIrNz9vs/SkI9ceskAnSVqHhcMGZFSYgkjzB9XBR+HfPqtmJon3NFmwg5nnV
-	 l4Kr3YHmPIIXdfUsxxqyBD4ZaF5/uqTEMmw4v2u+sHO9ifT61ODiovnnFWHP/tsPy7
-	 Zyoezax09ISuK6v41Q43mpxSOboxxYgojUHLdMuY=
+	b=iZMBlaZk5BhG9BJ85CsDblxcN8FvXQby8q4lcYgYjVXQPYelPNPKLH/VVHIgRqiD0
+	 UHoEe5wvg0u8BgeOEC7SBLGJ9ybpzDM23H46WCg6SqOvQm/hn0KMa/RI/SfPGrjX9S
+	 OEhMgm9IagcFveb7trBE2AmKvWLojdYRF5zqlroI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbgFRCXg (ORCPT
+        id S1730167AbgFRCXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:23:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49144 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:23:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727879AbgFRBRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:54 -0400
+        id S1729829AbgFRBRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE87921D90;
-        Thu, 18 Jun 2020 01:17:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF8C021D82;
+        Thu, 18 Jun 2020 01:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443073;
-        bh=dUkmD52lNqPmRdAMdoB/PrJJyegJXyeJhm0rTeXELTM=;
+        s=default; t=1592443071;
+        bh=m5MjLN5kHPqximv4jc7KfEfNo/8ZvUuXiLLO/NUGhaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P0y4WQSXAmKZhV+1XmeQ9LhGIKnOEco2RCDYorCOuZ2Lsc1j3GNx384LEyFKORQq6
-         Tf4ob10J56GDDOflkyXJEUuwff/7myk0eV4IgIPRRrxpiuNYGXRLbMU5SlBOrhKn5G
-         IpfAHdYBBzP5tGYP1Kl5/sGWrgFcJLKFEqKghMRo=
+        b=S9Wtqzx4iz3mO3jUbqEh14Z1RhHbvWIp+aRbxIPUWQt2I/FNB8CFh968yZ1dn4Sbf
+         t3eqkOaDj+9N2Ir2rnvXg92CByuBQp7dkRHhH/AbuMz1Em+kFSdVaG1QdTeKBhIjp6
+         2qoaJj4+ufhivzWOyFAh+UA8c6sYDiK+bfKKIZrA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Zhang <markz@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 061/266] IB/mlx5: Fix DEVX support for MLX5_CMD_OP_INIT2INIT_QP command
-Date:   Wed, 17 Jun 2020 21:13:06 -0400
-Message-Id: <20200618011631.604574-61-sashal@kernel.org>
+Cc:     Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Mike Christie <mchristi@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 059/266] scsi: vhost: Notify TCM about the maximum sg entries supported per command
+Date:   Wed, 17 Jun 2020 21:13:04 -0400
+Message-Id: <20200618011631.604574-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -61,41 +66,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Zhang <markz@mellanox.com>
+From: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
 
-[ Upstream commit d246a3061528be6d852156d25c02ea69d6db7e65 ]
+[ Upstream commit 5ae6a6a915033bfee79e76e0c374d4f927909edc ]
 
-The commit citied in the Fixes line wasn't complete and solved
-only part of the problems. Update the mlx5_ib to properly support
-MLX5_CMD_OP_INIT2INIT_QP command in the DEVX, that is required when
-modify the QP tx_port_affinity.
+vhost-scsi pre-allocates the maximum sg entries per command and if a
+command requires more than VHOST_SCSI_PREALLOC_SGLS entries, then that
+command is failed by it. This patch lets vhost communicate the max sg limit
+when it registers vhost_scsi_ops with TCM. With this change, TCM would
+report the max sg entries through "Block Limits" VPD page which will be
+typically queried by the SCSI initiator during device discovery. By knowing
+this limit, the initiator could ensure the maximum transfer length is less
+than or equal to what is reported by vhost-scsi.
 
-Fixes: 819f7427bafd ("RDMA/mlx5: Add init2init as a modify command")
-Link: https://lore.kernel.org/r/20200527135703.482501-1-leon@kernel.org
-Signed-off-by: Mark Zhang <markz@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Link: https://lore.kernel.org/r/1590166317-953-1-git-send-email-sudhakar.panneerselvam@oracle.com
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Sudhakar Panneerselvam <sudhakar.panneerselvam@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/devx.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/vhost/scsi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
-index bba7ab078430..fd75a9043bf1 100644
---- a/drivers/infiniband/hw/mlx5/devx.c
-+++ b/drivers/infiniband/hw/mlx5/devx.c
-@@ -489,6 +489,10 @@ static u64 devx_get_obj_id(const void *in)
- 		obj_id = get_enc_obj_id(MLX5_CMD_OP_CREATE_QP,
- 					MLX5_GET(rst2init_qp_in, in, qpn));
- 		break;
-+	case MLX5_CMD_OP_INIT2INIT_QP:
-+		obj_id = get_enc_obj_id(MLX5_CMD_OP_CREATE_QP,
-+					MLX5_GET(init2init_qp_in, in, qpn));
-+		break;
- 	case MLX5_CMD_OP_INIT2RTR_QP:
- 		obj_id = get_enc_obj_id(MLX5_CMD_OP_CREATE_QP,
- 					MLX5_GET(init2rtr_qp_in, in, qpn));
+diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
+index a9caf1bc3c3e..88ce114790d7 100644
+--- a/drivers/vhost/scsi.c
++++ b/drivers/vhost/scsi.c
+@@ -2290,6 +2290,7 @@ static struct configfs_attribute *vhost_scsi_wwn_attrs[] = {
+ static const struct target_core_fabric_ops vhost_scsi_ops = {
+ 	.module				= THIS_MODULE,
+ 	.fabric_name			= "vhost",
++	.max_data_sg_nents		= VHOST_SCSI_PREALLOC_SGLS,
+ 	.tpg_get_wwn			= vhost_scsi_get_fabric_wwn,
+ 	.tpg_get_tag			= vhost_scsi_get_tpgt,
+ 	.tpg_check_demo_mode		= vhost_scsi_check_true,
 -- 
 2.25.1
 
