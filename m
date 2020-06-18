@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD26C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A639C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FAA521D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85F7221E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442604;
-	bh=iZ1o1yPV/RcV9olBx73vgaWmv1mp/Xdd0HgpzYi4P5Y=;
+	s=default; t=1592442609;
+	bh=7OFBYehAghyI03+0CzcorCPm2clfgBnBM6lz8Cfhh80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MftArcToL/bL/tqO8Ohk83ZD3ctM5SB3pe6YPIZYeZpxg2dd+pul9s1B6lsZD6sGj
-	 X3/PmKXNJOhsK9djChnIS2+7WkHxQ1jnUu36JuXcCknTbHiajWjATHyRamjJNIpW/u
-	 Xgw76x817dOniCS3/tbZI9bvkig/N0ijR8O+lS5Y=
+	b=nNEOd269GhR2ZRDv7kJrUryGHjTyLxqCdoTVHeFFpuKY3K+VjAjoVQIEz8TuvB/Ys
+	 8YDwNpVjgNxNMn+s9UlCJDxSjitWA4HfsTH94qVdHE/KPeZyU+0PVYE2LI64yCYEZK
+	 a9yDVKawlNkH83f/HQGo1izuSLNitq7OORb/1xKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgFRBKD (ORCPT
+        id S1728404AbgFRBKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:10:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36694 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:10:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728341AbgFRBJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:09:55 -0400
+        id S1728369AbgFRBKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:10:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C066E21D81;
-        Thu, 18 Jun 2020 01:09:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E519D21D90;
+        Thu, 18 Jun 2020 01:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442594;
-        bh=iZ1o1yPV/RcV9olBx73vgaWmv1mp/Xdd0HgpzYi4P5Y=;
+        s=default; t=1592442601;
+        bh=7OFBYehAghyI03+0CzcorCPm2clfgBnBM6lz8Cfhh80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EXdBmNSb5q3kr5EMdNT5nB49nzHJ7iKd5je/QrxY6IvowUwgIr/mMT221ZFRcW0Tx
-         Rc5ioXNO04pw5l9gb+r3Dwr6H8z+yHG7jBPUbUJYmWOoR5wL7neHfBDSf3V7s1O3zO
-         bFd/t///m0khmCY4TyBFihqkvl9qPyHzKJAV45KE=
+        b=0PCTUWZg8pWwPZ5JyN6eGg5nzI/izcDQpfozJ7+8n2qoNTo6sdqiPmxogThRmLor0
+         pr0GyTHnp3/LuTVbea7chB6WLBCaEG77lccBbaFzcKLT1gMx/zk9HiuXdyVTP7Q3Te
+         9/g/01Xe4h90vZTvAGT0IckAvuJPeotz4mp9fPV4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 083/388] RDMA/core: Fix several reference count leaks.
-Date:   Wed, 17 Jun 2020 21:03:00 -0400
-Message-Id: <20200618010805.600873-83-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 088/388] sparc32: mm: Don't try to free page-table pages if ctor() fails
+Date:   Wed, 17 Jun 2020 21:03:05 -0400
+Message-Id: <20200618010805.600873-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -58,61 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 0b8e125e213204508e1b3c4bdfe69713280b7abd ]
+[ Upstream commit 454b0289c6b5f2c66164654b80212d15fbef7a03 ]
 
-kobject_init_and_add() takes reference even when it fails.  If this
-function returns an error, kobject_put() must be called to properly clean
-up the memory associated with the object. Previous
-commit b8eb718348b8 ("net-sysfs: Fix reference count leak in
-rx|netdev_queue_add_kobject") fixed a similar problem.
+The pages backing page-table allocations for SRMMU are allocated via
+memblock as part of the "nocache" region initialisation during
+srmmu_paging_init() and should not be freed even if a later call to
+pgtable_pte_page_ctor() fails.
 
-Link: https://lore.kernel.org/r/20200528030231.9082-1-wu000273@umn.edu
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Remove the broken call to __free_page().
+
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Fixes: 1ae9ae5f7df7 ("sparc: handle pgtable_page_ctor() fail")
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/sysfs.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/sparc/mm/srmmu.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
-index 087682e6969e..defe9cd4c5ee 100644
---- a/drivers/infiniband/core/sysfs.c
-+++ b/drivers/infiniband/core/sysfs.c
-@@ -1058,8 +1058,7 @@ static int add_port(struct ib_core_device *coredev, int port_num)
- 				   coredev->ports_kobj,
- 				   "%d", port_num);
- 	if (ret) {
--		kfree(p);
--		return ret;
-+		goto err_put;
+diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
+index a8c2f2615fc6..ecc9e8786d57 100644
+--- a/arch/sparc/mm/srmmu.c
++++ b/arch/sparc/mm/srmmu.c
+@@ -383,7 +383,6 @@ pgtable_t pte_alloc_one(struct mm_struct *mm)
+ 		return NULL;
+ 	page = pfn_to_page(__nocache_pa(pte) >> PAGE_SHIFT);
+ 	if (!pgtable_pte_page_ctor(page)) {
+-		__free_page(page);
+ 		return NULL;
  	}
- 
- 	p->gid_attr_group = kzalloc(sizeof(*p->gid_attr_group), GFP_KERNEL);
-@@ -1072,8 +1071,7 @@ static int add_port(struct ib_core_device *coredev, int port_num)
- 	ret = kobject_init_and_add(&p->gid_attr_group->kobj, &gid_attr_type,
- 				   &p->kobj, "gid_attrs");
- 	if (ret) {
--		kfree(p->gid_attr_group);
--		goto err_put;
-+		goto err_put_gid_attrs;
- 	}
- 
- 	if (device->ops.process_mad && is_full_dev) {
-@@ -1404,8 +1402,10 @@ int ib_port_register_module_stat(struct ib_device *device, u8 port_num,
- 
- 		ret = kobject_init_and_add(kobj, ktype, &port->kobj, "%s",
- 					   name);
--		if (ret)
-+		if (ret) {
-+			kobject_put(kobj);
- 			return ret;
-+		}
- 	}
- 
- 	return 0;
+ 	return page;
 -- 
 2.25.1
 
