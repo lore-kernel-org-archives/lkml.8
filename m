@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADD7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70DCE204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4428206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447454;
-	bh=KCnVK+gaeeikLm3JJfgKmPmF/BQMXdMBHmPPaLyIHyc=;
+	s=default; t=1592447466;
+	bh=ZII2wOPc5Pc1S7b/7uP1Twc8VfUiFwn2H5JNdyzUJ0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lapS1MgjkDKucHyJS5+gVkqLgIwlVN1e6bsp4Mp4YA2SweZgXFLnUKokiIagAkIgn
-	 trRdT3RbuQH1atASDhYspgMJmm2JUrdznAmbrjeDI7MdZ7u1LhYGpM+GtaGGtdJ8eD
-	 VBwOFFWUWcGrrkjNn5QIigh97vetSellSv1JXGeU=
+	b=rSF8Dj3YDQjAN4xb8wzyWIFx3vP+OxGoPpjm88CK8XJ2dSm0+KYWg/a+c+LDPOyr3
+	 zh6fgvCTCsa4jizWlGvanXe5yNe+XTdpXGU5WSg6eTZKopREVzwoLVnmoKrn8ZneRs
+	 MzREyOEEnK9xKSnCZe707WSJSUiDaWKSgiOmVzhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730368AbgFRCaq (ORCPT
+        id S1731240AbgFRCbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:30:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46054 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:31:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728938AbgFRBPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:44 -0400
+        id S1729500AbgFRBPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05FA6221FD;
-        Thu, 18 Jun 2020 01:15:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E6CF21D82;
+        Thu, 18 Jun 2020 01:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442944;
-        bh=KCnVK+gaeeikLm3JJfgKmPmF/BQMXdMBHmPPaLyIHyc=;
+        s=default; t=1592442936;
+        bh=ZII2wOPc5Pc1S7b/7uP1Twc8VfUiFwn2H5JNdyzUJ0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UQ34EhzRFQB/N0+EVlHb8hg6nxKn7yoNb134A/twE01DKspDRCuypLFk8FHxmZguJ
-         W4+r6rsoIhnB3KOz1dG7YoBp81KSeyHe3iYofgbzwh4WeBB4aFSqSp5zFqxdRoiD4H
-         vMHWTapapFn9swHspdg3kF1EpLlOuTnAfFCLbKLI=
+        b=nf7h00EK3OtNaTR/FDBT9J2lG03TnkFEXrwWw4mJmThzDG4ciMF6OObr9Q4+Cq4Fy
+         jfpaxZEm+xu+BSBD7NyiiNqgqLRBPkQOMm/m49RgKU4oY6rubrwqE8WY8N2fPLxdna
+         w1UDIKaaN3ClBGhMy5CyNh/u8sQUqRrUYhpBk8uA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Alexander Fomichev <fomichev.ru@gmail.com>,
+Cc:     Sanjay R Mehta <sanju.mehta@amd.com>,
+        Arindam Nath <arindam.nath@amd.com>,
         Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com, linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 354/388] NTB: ntb_test: Fix bug when counting remote files
-Date:   Wed, 17 Jun 2020 21:07:31 -0400
-Message-Id: <20200618010805.600873-354-sashal@kernel.org>
+        linux-ntb@googlegroups.com
+Subject: [PATCH AUTOSEL 5.7 348/388] ntb_tool: pass correct struct device to dma_alloc_coherent
+Date:   Wed, 17 Jun 2020 21:07:25 -0400
+Message-Id: <20200618010805.600873-348-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,37 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Sanjay R Mehta <sanju.mehta@amd.com>
 
-[ Upstream commit 2130c0ba69d69bb21f5c52787f2587db00d13d8a ]
+[ Upstream commit 433efe720674efd9fdbcef78be75793393cf05db ]
 
-When remote files are counted in get_files_count, without using SSH,
-the code returns 0 because there is a colon prepended to $LOC. $VPATH
-should have been used instead of $LOC.
+Currently, ntb->dev is passed to dma_alloc_coherent
+and dma_free_coherent calls. The returned dma_addr_t
+is the CPU physical address. This works fine as long
+as IOMMU is disabled. But when IOMMU is enabled, we
+need to make sure that IOVA is returned for dma_addr_t.
+So the correct way to achieve this is by changing the
+first parameter of dma_alloc_coherent() as ntb->pdev->dev
+instead.
 
-Fixes: 06bd0407d06c ("NTB: ntb_test: Update ntb_tool Scratchpad tests")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Allen Hubbe <allenbh@gmail.com>
-Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
+Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
+Signed-off-by: Arindam Nath <arindam.nath@amd.com>
 Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/ntb/ntb_test.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ntb/test/ntb_tool.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/ntb/ntb_test.sh b/tools/testing/selftests/ntb/ntb_test.sh
-index 9c60337317c6..020137b61407 100755
---- a/tools/testing/selftests/ntb/ntb_test.sh
-+++ b/tools/testing/selftests/ntb/ntb_test.sh
-@@ -241,7 +241,7 @@ function get_files_count()
- 	split_remote $LOC
+diff --git a/drivers/ntb/test/ntb_tool.c b/drivers/ntb/test/ntb_tool.c
+index 69da758fe64c..9eaeb221d980 100644
+--- a/drivers/ntb/test/ntb_tool.c
++++ b/drivers/ntb/test/ntb_tool.c
+@@ -590,7 +590,7 @@ static int tool_setup_mw(struct tool_ctx *tc, int pidx, int widx,
+ 	inmw->size = min_t(resource_size_t, req_size, size);
+ 	inmw->size = round_up(inmw->size, addr_align);
+ 	inmw->size = round_up(inmw->size, size_align);
+-	inmw->mm_base = dma_alloc_coherent(&tc->ntb->dev, inmw->size,
++	inmw->mm_base = dma_alloc_coherent(&tc->ntb->pdev->dev, inmw->size,
+ 					   &inmw->dma_base, GFP_KERNEL);
+ 	if (!inmw->mm_base)
+ 		return -ENOMEM;
+@@ -612,7 +612,7 @@ static int tool_setup_mw(struct tool_ctx *tc, int pidx, int widx,
+ 	return 0;
  
- 	if [[ "$REMOTE" == "" ]]; then
--		echo $(ls -1 "$LOC"/${NAME}* 2>/dev/null | wc -l)
-+		echo $(ls -1 "$VPATH"/${NAME}* 2>/dev/null | wc -l)
- 	else
- 		echo $(ssh "$REMOTE" "ls -1 \"$VPATH\"/${NAME}* | \
- 		       wc -l" 2> /dev/null)
+ err_free_dma:
+-	dma_free_coherent(&tc->ntb->dev, inmw->size, inmw->mm_base,
++	dma_free_coherent(&tc->ntb->pdev->dev, inmw->size, inmw->mm_base,
+ 			  inmw->dma_base);
+ 	inmw->mm_base = NULL;
+ 	inmw->dma_base = 0;
+@@ -629,7 +629,7 @@ static void tool_free_mw(struct tool_ctx *tc, int pidx, int widx)
+ 
+ 	if (inmw->mm_base != NULL) {
+ 		ntb_mw_clear_trans(tc->ntb, pidx, widx);
+-		dma_free_coherent(&tc->ntb->dev, inmw->size,
++		dma_free_coherent(&tc->ntb->pdev->dev, inmw->size,
+ 				  inmw->mm_base, inmw->dma_base);
+ 	}
+ 
 -- 
 2.25.1
 
