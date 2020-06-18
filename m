@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D44CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD84206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955D1206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447695;
-	bh=eaD84W3GW/ZIqkQYnnxcu2kJ30TFB3Y1Jad/xEldKic=;
+	s=default; t=1592447703;
+	bh=yxjlZXBHSwssaqDKkjpPc3u3wRsrsKwzGkwMtEVmXMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SxfDIVyidthbs1lHCsbWspYjB4j41OoXWj0Hu8cv47XocBKkvGvB/HgvgI5Ynbc3A
-	 sE08/RnYBxVApKOCDNMRevs4LQgCHEQ9nNHXJ5uq/dTP8dCSPptszEP5ixKNu5eEjS
-	 8wB12oThp/p6/cOzmhQ1ToFAEEKUVT4+eQNDvThw=
+	b=LciTdEtZkKrJeB2Nu7vkWBVAeNIWgfOwwbMJ4MdkgYMI1WiEuWVYtjrLEohimmzEr
+	 gPnVSRUHjuQYt1b11x+H+8UB1+9Z7Sd4h/eO55QLFF5o4Be3HH8d8IKEv92nC6oAqx
+	 TAkyPb4mhdICcNl+6cPoTZHiwCtsu3Nr4bDQT/nQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgFRBO0 (ORCPT
+        id S1728881AbgFRCfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:14:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42010 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:35:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729034AbgFRBND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:03 -0400
+        id S1727777AbgFRBOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 948B2221EF;
-        Thu, 18 Jun 2020 01:13:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 136B9221F0;
+        Thu, 18 Jun 2020 01:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442783;
-        bh=eaD84W3GW/ZIqkQYnnxcu2kJ30TFB3Y1Jad/xEldKic=;
+        s=default; t=1592442862;
+        bh=yxjlZXBHSwssaqDKkjpPc3u3wRsrsKwzGkwMtEVmXMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IXIV/z+1RWZDDjleVivak/NyFd+oLPxm/xM/Mo0F+6zkRYLHFUDzEdYbbDQP8F2hI
-         LGVNMyxwrd9CmyAMW/h2MQzNlAfkNJ4UEaZFFD+Ou0qOywR9ATU3aLBHlDF36IfIqA
-         rETf5Sb8hKwdgOiPJ6g2rWNxF0qVgKSBaDwmZfGE=
+        b=tThE2/P6lgln4Nj0KFtkreybaiC0tWn/b2VYDR/5lYndMbdPvZkU2VK/6tSrYqDJm
+         KOmHiWbh2+wXA+1MGVS+PDtfBNVu0HNhQkhx4gsNvCbIEbnBgYPblwZaLwsOJ/S5VR
+         J+dbygA3/XSQk3vZTar4SrQ4FImtshLKft+ibHwE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 228/388] vfio-pci: Mask cap zero
-Date:   Wed, 17 Jun 2020 21:05:25 -0400
-Message-Id: <20200618010805.600873-228-sashal@kernel.org>
+Cc:     Eddie James <eajames@linux.ibm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 291/388] clk: ast2600: Fix AHB clock divider for A1
+Date:   Wed, 17 Jun 2020 21:06:28 -0400
+Message-Id: <20200618010805.600873-291-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,48 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Eddie James <eajames@linux.ibm.com>
 
-[ Upstream commit bc138db1b96264b9c1779cf18d5a3b186aa90066 ]
+[ Upstream commit 2d491066ccd4286538450c227fc5094ceb04b494 ]
 
-The PCI Code and ID Assignment Specification changed capability ID 0
-from reserved to a NULL capability in the v1.1 revision.  The NULL
-capability is defined to include only the 16-bit capability header,
-ie. only the ID and next pointer.  Unfortunately vfio-pci creates a
-map of config space, where ID 0 is used to reserve the standard type
-0 header.  Finding an actual capability with this ID therefore results
-in a bogus range marked in that map and conflicts with subsequent
-capabilities.  As this seems to be a dummy capability anyway and we
-already support dropping capabilities, let's hide this one rather than
-delving into the potentially subtle dependencies within our map.
+The latest specs for the AST2600 A1 chip include some different bit
+definitions for calculating the AHB clock divider. Implement these in
+order to get the correct AHB clock value in Linux.
 
-Seen on an NVIDIA Tesla T4.
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Link: https://lkml.kernel.org/r/20200408203616.4031-1-eajames@linux.ibm.com
+Fixes: d3d04f6c330a ("clk: Add support for AST2600 SoC")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci_config.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/clk/clk-ast2600.c | 31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index 43b95f9cdaf7..814bcbe0dd4e 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1462,7 +1462,12 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
- 		if (ret)
- 			return ret;
+diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
+index 392d01705b97..99afc949925f 100644
+--- a/drivers/clk/clk-ast2600.c
++++ b/drivers/clk/clk-ast2600.c
+@@ -642,14 +642,22 @@ static const u32 ast2600_a0_axi_ahb_div_table[] = {
+ 	2, 2, 3, 5,
+ };
  
--		if (cap <= PCI_CAP_ID_MAX) {
-+		/*
-+		 * ID 0 is a NULL capability, conflicting with our fake
-+		 * PCI_CAP_ID_BASIC.  As it has no content, consider it
-+		 * hidden for now.
-+		 */
-+		if (cap && cap <= PCI_CAP_ID_MAX) {
- 			len = pci_cap_length[cap];
- 			if (len == 0xFF) { /* Variable length */
- 				len = vfio_cap_len(vdev, cap, pos);
+-static const u32 ast2600_a1_axi_ahb_div_table[] = {
+-	4, 6, 2, 4,
++static const u32 ast2600_a1_axi_ahb_div0_tbl[] = {
++	3, 2, 3, 4,
++};
++
++static const u32 ast2600_a1_axi_ahb_div1_tbl[] = {
++	3, 4, 6, 8,
++};
++
++static const u32 ast2600_a1_axi_ahb200_tbl[] = {
++	3, 4, 3, 4, 2, 2, 2, 2,
+ };
+ 
+ static void __init aspeed_g6_cc(struct regmap *map)
+ {
+ 	struct clk_hw *hw;
+-	u32 val, div, chip_id, axi_div, ahb_div;
++	u32 val, div, divbits, chip_id, axi_div, ahb_div;
+ 
+ 	clk_hw_register_fixed_rate(NULL, "clkin", NULL, 0, 25000000);
+ 
+@@ -679,11 +687,22 @@ static void __init aspeed_g6_cc(struct regmap *map)
+ 	else
+ 		axi_div = 2;
+ 
++	divbits = (val >> 11) & 0x3;
+ 	regmap_read(map, ASPEED_G6_SILICON_REV, &chip_id);
+-	if (chip_id & BIT(16))
+-		ahb_div = ast2600_a1_axi_ahb_div_table[(val >> 11) & 0x3];
+-	else
++	if (chip_id & BIT(16)) {
++		if (!divbits) {
++			ahb_div = ast2600_a1_axi_ahb200_tbl[(val >> 8) & 0x3];
++			if (val & BIT(16))
++				ahb_div *= 2;
++		} else {
++			if (val & BIT(16))
++				ahb_div = ast2600_a1_axi_ahb_div1_tbl[divbits];
++			else
++				ahb_div = ast2600_a1_axi_ahb_div0_tbl[divbits];
++		}
++	} else {
+ 		ahb_div = ast2600_a0_axi_ahb_div_table[(val >> 11) & 0x3];
++	}
+ 
+ 	hw = clk_hw_register_fixed_factor(NULL, "ahb", "hpll", 0, 1, axi_div * ahb_div);
+ 	aspeed_g6_clk_data->hws[ASPEED_CLK_AHB] = hw;
 -- 
 2.25.1
 
