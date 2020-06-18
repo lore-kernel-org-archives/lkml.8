@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03430C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69346C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC44D21534
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A09214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447196;
-	bh=1r1fw6u+sogIcOlFix7QL3YOSTMRICnyNQPQivxLnH4=;
+	s=default; t=1592447205;
+	bh=2RWuC1I4HdtIrFZE3PM5UhPef8qY+Xc5s/9pa45NXFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hWQsKOPsQ2pAg/4tHUndY7XbPdZwacPli9vgO8hJauwAS9piCUtefdNQIdrDiPu0J
-	 fswbdf+wmU93XjhrxcknObjabvadqD0N6fYnTqteVrEWgvuaYYljKaUHk7gV9MqqfF
-	 Hg7dy/HVifkKDB32BxXo6TrU4ZGIthxpIG+qPHu8=
+	b=lnijcNQgetXUSVGL6iODF9uJ8jXPRAo+0cCxRM++UqHKtsdFBmrYrhlis3ZT56Gnw
+	 Js6ntmcahlDC5BTACprfXHJyxyJL+iZuEpupmBoWK7xT73ITSx8xsPYRD2QrLYEhnW
+	 i5nI8EbdHd4P8K9Zk7VX2wjQa08we0PUMH6gzcNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387465AbgFRC0f (ORCPT
+        id S2387565AbgFRC0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:26:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48150 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:26:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729721AbgFRBRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:02 -0400
+        id S1729339AbgFRBQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:16:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 073FC221F1;
-        Thu, 18 Jun 2020 01:17:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10387221F2;
+        Thu, 18 Jun 2020 01:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443022;
-        bh=1r1fw6u+sogIcOlFix7QL3YOSTMRICnyNQPQivxLnH4=;
+        s=default; t=1592443018;
+        bh=2RWuC1I4HdtIrFZE3PM5UhPef8qY+Xc5s/9pa45NXFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iIEuIjG/RtAZUz5rLibp/jIjstSCSouFW8pkYYekm9tkxsliyuPOIYzkJ7I7r+AFa
-         boKd33dioAK95ZNXzZWKfDcGedjU2eQhn/z1Aa418w5KoAofl5sDMLkmz9DQKAcZd3
-         HW10esePDSvlMPHR4DgM49pO1lRYRp1IAeJf4znM=
+        b=BfzE3kbCehpwOGOXhL2YvWUhPST9aPnw+YVtfvIWZkYLcqp/6O89iqOXMpKtdikeS
+         CD5ZP19rtxHdrZndRJknohk0etSDc0/nA3iVZXjlNWyfcr+gh3VsYLCW1BQIfUkulH
+         z4sE89hozSsyet8k7DZGEEqn394f/Wg4Y+/ZLYWE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 023/266] Input: edt-ft5x06 - fix get_default register write access
-Date:   Wed, 17 Jun 2020 21:12:28 -0400
-Message-Id: <20200618011631.604574-23-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 020/266] ALSA: isa/wavefront: prevent out of bounds write in ioctl
+Date:   Wed, 17 Jun 2020 21:12:25 -0400
+Message-Id: <20200618011631.604574-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,57 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 255cdaf73412de13608fb776101402dca68bed2b ]
+[ Upstream commit 7f0d5053c5a9d23fe5c2d337495a9d79038d267b ]
 
-Since commit b6eba86030bf ("Input: edt-ft5x06 - add offset support for
-ev-ft5726") offset-x and offset-y is supported. Devices using those
-offset parameters don't support the offset parameter so we need to add
-the NO_REGISTER check for edt_ft5x06_ts_get_defaults().
+The "header->number" comes from the ioctl and it needs to be clamped to
+prevent out of bounds writes.
 
-Fixes: b6eba86030bf ("Input: edt-ft5x06 - add offset support for ev-ft5726")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Link: https://lore.kernel.org/r/20200227112819.16754-2-m.felsch@pengutronix.de
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200501094011.GA960082@mwanda
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/edt-ft5x06.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ sound/isa/wavefront/wavefront_synth.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index 240e8de24cd2..b41b97c962ed 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -935,19 +935,25 @@ static void edt_ft5x06_ts_get_defaults(struct device *dev,
+diff --git a/sound/isa/wavefront/wavefront_synth.c b/sound/isa/wavefront/wavefront_synth.c
+index c5b1d5900eed..d6420d224d09 100644
+--- a/sound/isa/wavefront/wavefront_synth.c
++++ b/sound/isa/wavefront/wavefront_synth.c
+@@ -1171,7 +1171,10 @@ wavefront_send_alias (snd_wavefront_t *dev, wavefront_patch_info *header)
+ 				      "alias for %d\n",
+ 				      header->number,
+ 				      header->hdr.a.OriginalSample);
+-    
++
++	if (header->number >= WF_MAX_SAMPLE)
++		return -EINVAL;
++
+ 	munge_int32 (header->number, &alias_hdr[0], 2);
+ 	munge_int32 (header->hdr.a.OriginalSample, &alias_hdr[2], 2);
+ 	munge_int32 (*((unsigned int *)&header->hdr.a.sampleStartOffset),
+@@ -1202,6 +1205,9 @@ wavefront_send_multisample (snd_wavefront_t *dev, wavefront_patch_info *header)
+ 	int num_samples;
+ 	unsigned char *msample_hdr;
  
- 	error = device_property_read_u32(dev, "offset", &val);
- 	if (!error) {
--		edt_ft5x06_register_write(tsdata, reg_addr->reg_offset, val);
-+		if (reg_addr->reg_offset != NO_REGISTER)
-+			edt_ft5x06_register_write(tsdata,
-+						  reg_addr->reg_offset, val);
- 		tsdata->offset = val;
- 	}
- 
- 	error = device_property_read_u32(dev, "offset-x", &val);
- 	if (!error) {
--		edt_ft5x06_register_write(tsdata, reg_addr->reg_offset_x, val);
-+		if (reg_addr->reg_offset_x != NO_REGISTER)
-+			edt_ft5x06_register_write(tsdata,
-+						  reg_addr->reg_offset_x, val);
- 		tsdata->offset_x = val;
- 	}
- 
- 	error = device_property_read_u32(dev, "offset-y", &val);
- 	if (!error) {
--		edt_ft5x06_register_write(tsdata, reg_addr->reg_offset_y, val);
-+		if (reg_addr->reg_offset_y != NO_REGISTER)
-+			edt_ft5x06_register_write(tsdata,
-+						  reg_addr->reg_offset_y, val);
- 		tsdata->offset_y = val;
- 	}
- }
++	if (header->number >= WF_MAX_SAMPLE)
++		return -EINVAL;
++
+ 	msample_hdr = kmalloc(WF_MSAMPLE_BYTES, GFP_KERNEL);
+ 	if (! msample_hdr)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
