@@ -4,59 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61601C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35F9C221F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DAF221FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444442;
-	bh=QgYmmQleaC/wGq/9Q1nj/YbOCzCUzdHmiDBrBuruem4=;
+	s=default; t=1592444444;
+	bh=MISZoiCLDvcumQIPnbJkrwHKF0jEFowkhUBjeR/PLV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jw0NVydtXa4zyT+NgpzNako+ktGF20vCJVeiTKs5S+GPL9U0ING+ttHdrfDna6Ha0
-	 AzaSD9Qy5gn1XctHnfGDZs194DLg51wgAShds6qM451+wbjvoPOre3VhIK5lYQnolO
-	 QJAsSSQ7ioj5OmIwAOIpHZBT0OKTw5IE1WaL6luI=
+	b=HCN31OXuFTaWkWkdbY16H4lBh6sEgCduHRmWdAOBGnyiHYV0ejKnuJLdsZfpzAPBt
+	 aANUGvgSbxkk9SpjTMjZ6QFtPJxjcOv/JYEBptbXdElm7BH/U8CK8IRCO3eVBoTnCx
+	 /BTgOaehF5lWAbiUpGJxAuYiwZ+Bp0zZoWNejefc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732712AbgFRBkk (ORCPT
+        id S1732417AbgFRB34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39672 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:29:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729386AbgFRB35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:57 -0400
+        id S1731729AbgFRB0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:26:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02B872224A;
-        Thu, 18 Jun 2020 01:29:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FC4F2088E;
+        Thu, 18 Jun 2020 01:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443797;
-        bh=QgYmmQleaC/wGq/9Q1nj/YbOCzCUzdHmiDBrBuruem4=;
+        s=default; t=1592443606;
+        bh=MISZoiCLDvcumQIPnbJkrwHKF0jEFowkhUBjeR/PLV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F7AlBFZUTy73J6bPIQOpKJ8RQosFWxCciDLDcOscIf2s8YYZ6J0D6CwtsrUHRY4vA
-         1Y3QvRNtA0ucJUb55n5zQBuxxZLV2ilBi4UJ2eLOyIkowIxau+u39c+v3+SKGAguG3
-         8SbXLN+TqRn/OiTIXzUVynovSsHZhP7xowWaaxrA=
+        b=K8adrJTaWfuMq9WYNODMzEJU7bMKF54TWMFKftSutXhDLEOJTtdOiWvuijKvs4mW6
+         RbckkbnMeBKDZILO6ekEcmnQL4baQrpuxya9kvqt9cfz+Vw6fzcRRrChBShI/hmyVi
+         T1WTx5DB4vfuJV/i690/8hBelqobEEl+KBwCjW6Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 76/80] include/linux/bitops.h: avoid clang shift-count-overflow warnings
-Date:   Wed, 17 Jun 2020 21:28:15 -0400
-Message-Id: <20200618012819.609778-76-sashal@kernel.org>
+Cc:     Simon Arlott <simon@octiron.net>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 035/108] scsi: sr: Fix sr_probe() missing deallocate of device minor
+Date:   Wed, 17 Jun 2020 21:24:47 -0400
+Message-Id: <20200618012600.608744-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
-References: <20200618012819.609778-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -66,63 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Simon Arlott <simon@octiron.net>
 
-[ Upstream commit bd93f003b7462ae39a43c531abca37fe7073b866 ]
+[ Upstream commit 6555781b3fdec5e94e6914511496144241df7dee ]
 
-Clang normally does not warn about certain issues in inline functions when
-it only happens in an eliminated code path. However if something else
-goes wrong, it does tend to complain about the definition of hweight_long()
-on 32-bit targets:
+If the cdrom fails to be registered then the device minor should be
+deallocated.
 
-  include/linux/bitops.h:75:41: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-          return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
-                                                 ^~~~~~~~~~~~
-  include/asm-generic/bitops/const_hweight.h:29:49: note: expanded from macro 'hweight64'
-   define hweight64(w) (__builtin_constant_p(w) ? __const_hweight64(w) : __arch_hweight64(w))
-                                                  ^~~~~~~~~~~~~~~~~~~~
-  include/asm-generic/bitops/const_hweight.h:21:76: note: expanded from macro '__const_hweight64'
-   define __const_hweight64(w) (__const_hweight32(w) + __const_hweight32((w) >> 32))
-                                                                             ^  ~~
-  include/asm-generic/bitops/const_hweight.h:20:49: note: expanded from macro '__const_hweight32'
-   define __const_hweight32(w) (__const_hweight16(w) + __const_hweight16((w) >> 16))
-                                                  ^
-  include/asm-generic/bitops/const_hweight.h:19:72: note: expanded from macro '__const_hweight16'
-   define __const_hweight16(w) (__const_hweight8(w)  + __const_hweight8((w)  >> 8 ))
-                                                                         ^
-  include/asm-generic/bitops/const_hweight.h:12:9: note: expanded from macro '__const_hweight8'
-            (!!((w) & (1ULL << 2))) +     \
-
-Adding an explicit cast to __u64 avoids that warning and makes it easier
-to read other output.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Link: http://lkml.kernel.org/r/20200505135513.65265-1-arnd@arndb.de
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/072dac4b-8402-4de8-36bd-47e7588969cd@0882a8b5-c6c3-11e9-b005-00805fc181fe
+Signed-off-by: Simon Arlott <simon@octiron.net>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bitops.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/sr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index cee74a52b9eb..e1dee6c91ff5 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -49,7 +49,7 @@ static inline int get_bitmask_order(unsigned int count)
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index d0389b20574d..5be3d6b7991b 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -748,7 +748,7 @@ static int sr_probe(struct device *dev)
+ 	cd->cdi.disk = disk;
  
- static __always_inline unsigned long hweight_long(unsigned long w)
- {
--	return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
-+	return sizeof(w) == 4 ? hweight32(w) : hweight64((__u64)w);
- }
+ 	if (register_cdrom(&cd->cdi))
+-		goto fail_put;
++		goto fail_minor;
  
- /**
+ 	/*
+ 	 * Initialize block layer runtime PM stuffs before the
+@@ -766,6 +766,10 @@ static int sr_probe(struct device *dev)
+ 
+ 	return 0;
+ 
++fail_minor:
++	spin_lock(&sr_index_lock);
++	clear_bit(minor, sr_index_bits);
++	spin_unlock(&sr_index_lock);
+ fail_put:
+ 	put_disk(disk);
+ fail_free:
 -- 
 2.25.1
 
