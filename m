@@ -2,52 +2,54 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BC5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2022CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF12206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0FD2206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447811;
-	bh=iWIUER23wzCOCeRHFFTexOPF6uNXNU87K8YRWhn08C4=;
+	s=default; t=1592447817;
+	bh=0Cg+1HjumcR/wdZpJrlM6XCd4WErr1y5PbKzG6iOC30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jo60ToZhrLZW9Ukzed9r8CzlqrZLgEfq0bC36UPrJluEs0nijXb51Bjc0HRmqWRde
-	 VHXoKYSoZ4KdhSRHz9YGkwcuiiVRdjZcECxfAucz3ahhNxkhPJBo92WpsnVHHrFvVm
-	 jLlQp6+4ASqk45XoUYCeFX1YtFWCY8M/1YceqNtY=
+	b=n/BCsFJctFx2Ij7xtVxgNvKLpxihnHVp+Y03cbm1sxvocnyD2OOUHAnQO0CcNtBVp
+	 1tZu7jheFILOefDNbz1brfz/EE+FOSep1bW0bLrAHavKbsJn9PBN+hvWEZdfBp5Qg8
+	 IBRLmhnS/HdYrZoGCw5RmHAy/KbcDS2LESy4AOgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729216AbgFRBNu (ORCPT
+        id S1731659AbgFRCgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:13:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41236 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:36:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728937AbgFRBMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:33 -0400
+        id S1729217AbgFRBNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FAF821924;
-        Thu, 18 Jun 2020 01:12:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A02BC20EDD;
+        Thu, 18 Jun 2020 01:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442753;
-        bh=iWIUER23wzCOCeRHFFTexOPF6uNXNU87K8YRWhn08C4=;
+        s=default; t=1592442830;
+        bh=0Cg+1HjumcR/wdZpJrlM6XCd4WErr1y5PbKzG6iOC30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YxGi3Ef4agkir3pbcHRf73S3WusAoLb3uYlQ/ORNnCHTdBfE5jdNk8zcBBZvnSj4z
-         jjr4AT9d730tH1XIMZljeNS2ULAbtQSsHaxe7xPxbB14H9f0jg2aSDuLqG/kS5Vhii
-         6Ra5+Mpw20LrG3hnqsZqEvNHWjPkgf8RBncZ9plk=
+        b=H2K0mmUmR14jspE0/MtkwgYDesmDd3iAQNjGzEUAy8Av/bpqpB1Gc3pTmtMCmYt3z
+         Eucm5IRuxcpaZY41czbpmRqVgV1oIb4DMrHAgE1FqxPkhTw1z3DD6UlLREgro0dkG9
+         tf0o1f0gyE2zhBhGJoF6J99rvsSUqGFh/k76X2ko=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 204/388] PCI: Fix pci_register_host_bridge() device_register() error handling
-Date:   Wed, 17 Jun 2020 21:05:01 -0400
-Message-Id: <20200618010805.600873-204-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        kbuild test robot <lkp@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.7 265/388] USB: gadget: udc: s3c2410_udc: Remove pointless NULL check in s3c2410_udc_nuke
+Date:   Wed, 17 Jun 2020 21:06:02 -0400
+Message-Id: <20200618010805.600873-265-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,41 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 1b54ae8327a4d630111c8d88ba7906483ec6010b ]
+[ Upstream commit 7a0fbcf7c308920bc6116b3a5fb21c8cc5fec128 ]
 
-If device_register() has an error, we should bail out of
-pci_register_host_bridge() rather than continuing on.
+Clang warns:
 
-Fixes: 37d6a0a6f470 ("PCI: Add pci_register_host_bridge() interface")
-Link: https://lore.kernel.org/r/20200513223859.11295-1-robh@kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+drivers/usb/gadget/udc/s3c2410_udc.c:255:11: warning: comparison of
+address of 'ep->queue' equal to a null pointer is always false
+[-Wtautological-pointer-compare]
+        if (&ep->queue == NULL)
+             ~~~~^~~~~    ~~~~
+1 warning generated.
+
+It is not wrong, queue is not a pointer so if ep is not NULL, the
+address of queue cannot be NULL. No other driver does a check like this
+and this check has been around since the driver was first introduced,
+presumably with no issues so it does not seem like this check should be
+something else. Just remove it.
+
+Commit afe956c577b2d ("kbuild: Enable -Wtautological-compare") exposed
+this but it is not the root cause of the warning.
+
+Fixes: 3fc154b6b8134 ("USB Gadget driver for Samsung s3c2410 ARM SoC")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1004
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/probe.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/udc/s3c2410_udc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 77b8a145c39b..e21dc71b1907 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -909,9 +909,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 		goto free;
- 
- 	err = device_register(&bridge->dev);
--	if (err)
-+	if (err) {
- 		put_device(&bridge->dev);
+diff --git a/drivers/usb/gadget/udc/s3c2410_udc.c b/drivers/usb/gadget/udc/s3c2410_udc.c
+index 0507a2ca0f55..80002d97b59d 100644
+--- a/drivers/usb/gadget/udc/s3c2410_udc.c
++++ b/drivers/usb/gadget/udc/s3c2410_udc.c
+@@ -251,10 +251,6 @@ static void s3c2410_udc_done(struct s3c2410_ep *ep,
+ static void s3c2410_udc_nuke(struct s3c2410_udc *udc,
+ 		struct s3c2410_ep *ep, int status)
+ {
+-	/* Sanity check */
+-	if (&ep->queue == NULL)
+-		return;
 -
-+		goto free;
-+	}
- 	bus->bridge = get_device(&bridge->dev);
- 	device_enable_async_suspend(bus->bridge);
- 	pci_set_bus_of_node(bus);
+ 	while (!list_empty(&ep->queue)) {
+ 		struct s3c2410_request *req;
+ 		req = list_entry(ep->queue.next, struct s3c2410_request,
 -- 
 2.25.1
 
