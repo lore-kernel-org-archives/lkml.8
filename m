@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6361C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF547C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC38B21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7978721927
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448068;
-	bh=HyWkwtaU0/RoTtrJwEMQ2IOLdNbG66utKfyAaE3FH+A=;
+	s=default; t=1592448072;
+	bh=akzNYp/BG7Kv+ev3sVP1mF5oUsQ0FXBpqIqVlnZYvl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vwoGxWjUqT7uScz7offvql+ZxV5DpcIetm5HLbyIuG8SZN6fYdNKsaRRvhL4tXJQ2
-	 ubgeWpTUNh9S+beqaMotofZKqhMlrRtIbPBwV/eieS6bNwerm1aNaNLBbt7RBS/2jF
-	 RtTX9Y7npzhGqMAogejbz3iw0YNxqB0zYAGSPZSQ=
+	b=lZ6XsyprExLEc9TlcC0LBtSiIpyPaGj6P+mrxSMwoSRff2QVjbkY85VQpPo+k3Guj
+	 8zW6wJg+d4SWOLxMMuOd4zyPMZ70rzS2rLuXuFqAaszWeP+INcB//caLi7hhIUxoVe
+	 AbhIIL/qYOE430rXg8twBhpZD40G5HH7dtw4W6o4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgFRBM3 (ORCPT
+        id S2387787AbgFRClK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:12:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39756 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:41:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728770AbgFRBLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:42 -0400
+        id S1728231AbgFRBM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2062320B1F;
-        Thu, 18 Jun 2020 01:11:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D04E221EB;
+        Thu, 18 Jun 2020 01:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442702;
-        bh=HyWkwtaU0/RoTtrJwEMQ2IOLdNbG66utKfyAaE3FH+A=;
+        s=default; t=1592442749;
+        bh=akzNYp/BG7Kv+ev3sVP1mF5oUsQ0FXBpqIqVlnZYvl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cUF3JzZ3cCUoQpbPWImubojPtFYTPfi8wT4uIpw20TjE8Kml/ZWFCnowBTIWQGPFW
-         TFpNH9HMaYOtZ9rM+qnC56QpPjmVMWD1G9luDcpqo2RLK4pKxh7hEdRonrxXJiOKhE
-         hAoPW0Gr8BB+mgwTkSL6RdUbY7lef8pmlQJy8gS8=
+        b=cdVUjYiV2nHkGkAypF31DIZ5AshUv3iAW3ShR/onMFiHIa0Fo/VDBWRHvGkgz3Xy5
+         Xcpvnsm+RMcxGH97nqgMwfartPz4qblLYvujPXBbPw50DQUfRs69uomMxcBWrVofOt
+         oOGhHJdIz9PlPyZ3STZsJ1KVgMooshem3casFpcs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eddie James <eajames@linux.ibm.com>, Joel Stanley <joel@jms.id.au>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 164/388] ARM: dts: aspeed: ast2600: Set arch timer always-on
-Date:   Wed, 17 Jun 2020 21:04:21 -0400
-Message-Id: <20200618010805.600873-164-sashal@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 201/388] arm64: dts: qcom: db820c: Fix invalid pm8994 supplies
+Date:   Wed, 17 Jun 2020 21:04:58 -0400
+Message-Id: <20200618010805.600873-201-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,48 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eddie James <eajames@linux.ibm.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit c998f40f2ae6a48e93206e2c1ea0691479989611 ]
+[ Upstream commit 1cacdf5d3bb9644ac7b9339c611ac5b9dd90d09d ]
 
-According to ASPEED, FTTMR010 is not intended to be used in the AST2600.
-The arch timer should be used, but Linux doesn't enable high-res timers
-without being assured that the arch timer is always on, so set that
-property in the devicetree.
+It's uncertain where the "vreg_s8a_l3a_input" comes from, but the supply
+for VDD_L3_L11 on PM8994 should be VREG_S3A_1P3, so correct this - and
+drop the vreg_s8a_l3a_input.
 
-The FTTMR010 device is described by set to disabled.
-
-This fixes highres timer support for AST2600.
-
-Fixes: 2ca5646b5c2f ("ARM: dts: aspeed: Add AST2600 and EVB")
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Reviewed-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 83d9ed4342a3 ("arm64: dts: qcom: db820c: Use regulator names from schematics")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200417070712.1376355-1-bjorn.andersson@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/aspeed-g6.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
-index 0a29b3b57a9d..fd0e483737a0 100644
---- a/arch/arm/boot/dts/aspeed-g6.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g6.dtsi
-@@ -65,6 +65,7 @@ timer {
- 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
- 		clocks = <&syscon ASPEED_CLK_HPLL>;
- 		arm,cpu-registers-not-fw-configured;
-+		always-on;
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index c4abbccf2bed..eaa1eb70b455 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -117,16 +117,6 @@ vph_pwr: vph-pwr-regulator {
+ 		regulator-max-microvolt = <3700000>;
  	};
  
- 	ahb {
-@@ -368,6 +369,7 @@ timer: timer@1e782000 {
- 						<&gic  GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&syscon ASPEED_CLK_APB1>;
- 				clock-names = "PCLK";
-+				status = "disabled";
-                         };
+-	vreg_s8a_l3a_input: vreg-s8a-l3a-input {
+-		compatible = "regulator-fixed";
+-		regulator-name = "vreg_s8a_l3a_input";
+-		regulator-always-on;
+-		regulator-boot-on;
+-
+-		regulator-min-microvolt = <0>;
+-		regulator-max-microvolt = <0>;
+-	};
+-
+ 	wlan_en: wlan-en-1-8v {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&wlan_en_gpios>;
+@@ -705,14 +695,14 @@ pm8994-regulators {
+ 		vdd_s11-supply = <&vph_pwr>;
+ 		vdd_s12-supply = <&vph_pwr>;
+ 		vdd_l2_l26_l28-supply = <&vreg_s3a_1p3>;
+-		vdd_l3_l11-supply = <&vreg_s8a_l3a_input>;
++		vdd_l3_l11-supply = <&vreg_s3a_1p3>;
+ 		vdd_l4_l27_l31-supply = <&vreg_s3a_1p3>;
+ 		vdd_l5_l7-supply = <&vreg_s5a_2p15>;
+ 		vdd_l6_l12_l32-supply = <&vreg_s5a_2p15>;
+ 		vdd_l8_l16_l30-supply = <&vph_pwr>;
+ 		vdd_l14_l15-supply = <&vreg_s5a_2p15>;
+ 		vdd_l25-supply = <&vreg_s3a_1p3>;
+-		vdd_lvs1_2-supply = <&vreg_s4a_1p8>;
++		vdd_lvs1_lvs2-supply = <&vreg_s4a_1p8>;
  
- 			uart1: serial@1e783000 {
+ 		vreg_s3a_1p3: s3 {
+ 			regulator-name = "vreg_s3a_1p3";
 -- 
 2.25.1
 
