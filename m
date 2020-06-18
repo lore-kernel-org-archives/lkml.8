@@ -2,111 +2,114 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97942C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA08FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7464720734
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF68208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 18:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HAiJG3g6"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="OYeM9Z28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgFRR7U (ORCPT
+        id S1729467AbgFRSFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:59:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59434 "EHLO
+        Thu, 18 Jun 2020 14:05:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbgFRR7T (ORCPT
+        with ESMTP id S1726984AbgFRSFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 13:59:19 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEBD8C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:59:18 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id w15so3990638lfe.11
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 10:59:18 -0700 (PDT)
+        Thu, 18 Jun 2020 14:05:01 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 232DBC0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 11:05:00 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id w7so5620261edt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 11:05:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DG6waLEdFsnTtAqG8HhZhzhS+3kDlW87TTmqAjLBels=;
-        b=HAiJG3g6G/CpYFtkYuVFmKHINe7HEwnNsj0UWq9tQhUoGwTSt+JY/PeARD43bIBeHE
-         jSW8QmnYeJ+pDDXe1xEhacU1WsFANWz3Yl7XndOz3mv+ygcIVsgDfzS/zb5vthDW4ArW
-         JYxwpHdLz34CYVrh5YDFKJHE18ALIlRDigbylfRCPGBlS5pkySARYh+gNvNYXYKe5vGM
-         l3mj1acDYvBbJaPHDnNCEj5cxgsblEL8sGvyBLfsDuoTywGVQQ5EhfzZCPvLZzvy1wvp
-         c/GJvgBxLpvsziygTakhVBkXOCXROjT8/91/XJK6CkuKwUZlk3e/pytpvIfkGcYhoNax
-         cRSg==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qsN49f4hirUtdZmYoS95c5NGD88R+Y70UvHP8YntzlI=;
+        b=OYeM9Z28ushTDNsydouA7yjX+3/+GDzVKigOwo86UF1VY3TrAFG+/GFi7Ai/dW6Maa
+         nIklrhk/iNEJnbtakdCuWMju6omiuJkmOOywCP/eg52D98SkQ6klkBcV23zhjsj8uQth
+         ZflAUZJFpcdMBUpV4P9WSsWlLGRItxpyxwngLlfnZGYG9f3IzbwLBqGBk4b6QU0APhfC
+         Fekb6MfCzZOhcCVlJYXs4eRp+ZXgd+8ct78fnsFesoJhAogKShnZEYhrMFltZ0B08fRx
+         huH4IvOX94ERPAcwL+8ltIN72DPrgfp+1GQNDwItB/hc5Y9MoJV2Df9nlg2FrLm9UAfb
+         bS8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DG6waLEdFsnTtAqG8HhZhzhS+3kDlW87TTmqAjLBels=;
-        b=gb86vOPM4kZqSMgx07w8t3b1gTP4RTLM+n/luUoWspdzWpw66dMYJTC5SdZ2bPJ+Ie
-         8+JN/uBhqAsqm/NyebdFjo+A6O8gcPDKeYqdacoBCNsO1k4Ma/vADal1itB/jjUAK6pm
-         WI+t+gTpC8hshS9DxOh9bD72zuusiTaaSKHSRO8EyVEwgCXdkmqmL5LGreiXBgZkoCg6
-         1fIeTuLl/fyL6YHf3lB33utFLE04EMnkt7lhJwA4nccp6YHyzAxeZf37/8A1nxUzYbug
-         mrExctZJg5xX44ZFxSY4VphT97zb3FJmHceVxZb+vNH1KvFxurKW50lqwORUu9yLZjiM
-         sg5Q==
-X-Gm-Message-State: AOAM533xal21H3j3j+p/CiDZvVHZuwRDwJ4FXxVqs3gUWmkJfjMD6s2W
-        f6TuB+wHAef5hmLqdeUp0TnEvt8CPHpEl0UKYjtKzg==
-X-Google-Smtp-Source: ABdhPJw0Nr4UcYZ+azSOMFTr5bmHtnJ60xr25YkyjwO2ZGRhyantwHE9yjV68k7d0RvM/M+3o9zhV97cR6vjiBrbYY4=
-X-Received: by 2002:a05:6512:1103:: with SMTP id l3mr3016306lfg.108.1592503156546;
- Thu, 18 Jun 2020 10:59:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qsN49f4hirUtdZmYoS95c5NGD88R+Y70UvHP8YntzlI=;
+        b=AysnjO48CV1Wfau5DujpcpMY4ekUx353e91pN4YDHNWW+vfQeSd9LTWqbk9COlalpC
+         uJ+4kRNGNLLX2aFXBGtX14o7w95Fi+JRCekYs8j1PhO2P9lfLaCr4uT1Q5ilGShC3dcp
+         rvJfxYwEQ1jUJGvSlFlZxXUWMzwaun8D2PWJAHSdDn9OdQgRgjjAIJ94szV5ULBWcVDL
+         oGXIVOL6v8+VtbXGlD/LSZUP3GWa274KFUrP1Pb9Lz41o0MTNrwrIfDtpdak1PlIpEBC
+         SID9rgkYfwfJQE1BLexDT9JuWhKh9gQ1EFAt2RA8uUv8SChLk8c8789VrX8JVZXsWtaE
+         ystQ==
+X-Gm-Message-State: AOAM531KOEIIgoaKe+5+bDiJBk9JKO6XD31UFTEOzEHtjK0iW9FE2IEu
+        n43AHBc4/32DvtZ84hAoQgSwSA==
+X-Google-Smtp-Source: ABdhPJwQl77DM21JWoNWOj0+8epK/6Y/CwEYYomQcTvPKHlc7pG4NTpS4ocpujLs1ENnB+e8RQHV6w==
+X-Received: by 2002:a50:f106:: with SMTP id w6mr5314129edl.131.1592503498760;
+        Thu, 18 Jun 2020 11:04:58 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id r6sm2718734edx.83.2020.06.18.11.04.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 11:04:57 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 20:04:54 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH] arm: dts: am335x-pocketbeagle: add gpio-line-names
+Message-ID: <20200618180454.GA58092@x1>
+References: <20200609142504.GA2955236@x1>
+ <20200617170915.GA4185472@x1>
+ <20200618170345.GI37466@atomide.com>
 MIME-Version: 1.0
-References: <20200617165616.52241bde@oasis.local.home> <CAG48ez2pOns4vF9M_4ubMJ+p9YFY29udMaH0wm8UuCwGQ4ZZAQ@mail.gmail.com>
- <20200617183628.3594271d@oasis.local.home> <CAG48ez04Fj=1p61KAxAQWZ3f_z073fVUr8LsQgtKA9c-kcHmDQ@mail.gmail.com>
- <20200618124157.0b9b8807@oasis.local.home>
-In-Reply-To: <20200618124157.0b9b8807@oasis.local.home>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 18 Jun 2020 19:58:50 +0200
-Message-ID: <CAG48ez1LoTLmHnAKFZCQFSvcb13Em6kc8y1xO8sNwyvzB=D2Lg@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Use linker magic instead of recasting ftrace_ops_list_func()
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Oscar Carter <oscar.carter@gmx.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618170345.GI37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 6:42 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Thu, 18 Jun 2020 01:12:37 +0200
-> Jann Horn <jannh@google.com> wrote:
->
-> > static ftrace_func_t ftrace_ops_get_list_func(struct ftrace_ops *ops)
-> > +static ftrace_asm_func_t ftrace_ops_get_list_func(struct ftrace_ops *ops)
-> >  {
-> > +#if FTRACE_FORCE_LIST_FUNC
-> > +       return ftrace_ops_list_func;
-> > +#else
-> >         /*
-> >          * If this is a dynamic, RCU, or per CPU ops, or we force list func,
-> >          * then it needs to call the list anyway.
-> >          */
-> > -       if (ops->flags & (FTRACE_OPS_FL_DYNAMIC | FTRACE_OPS_FL_RCU) ||
-> > -           FTRACE_FORCE_LIST_FUNC)
-> > +       if (ops->flags & (FTRACE_OPS_FL_DYNAMIC | FTRACE_OPS_FL_RCU))
-> >                 return ftrace_ops_list_func;
-> >
-> >         return ftrace_ops_get_func(ops);
->
-> But ftrace_ops_get_func() returns ftrace_func_t type, wont this complain?
+On Thu, Jun 18, 2020 at 10:03:45AM -0700, Tony Lindgren wrote:
+> * Drew Fustini <drew@beagleboard.org> [200617 17:10]:
+> > Tony - does this look ok for 5.9?
+> 
+> Yes looks OK to me.
+> 
+> Just wondering, are the line with "NA" not used internally either?
+> If the "NA" lines are used internally, we should probably use
+> "Reserved" or "Internal" or something like that to avoid later
+> on having to patch them with internal device names..
 
-No, because we only compile this case under FTRACE_FORCE_LIST_FUNC==0,
-which means ARCH_SUPPORTS_FTRACE_OPS, which means the preprocessor
-turns all occurrences of ftrace_asm_func_t into ftrace_func_t.
+There are many more 'no connects' as the PocketBeagle is much simpler.
 
-Essentially my idea here is to take the high-level rule "you can only
-directly call ftrace_func_t-typed functions from assembly if
-ARCH_SUPPORTS_FTRACE_OPS", and encode it in the type system. And then
-the compiler won't complain as long as we make sure that we never cast
-between the two types under ARCH_SUPPORTS_FTRACE_OPS==0.
+There are 12 SYSBOOT pins which just go to fixed pull-up and pull-down
+resistors.  I'll change those from "[NC]" to "[SYSBOOT]".
+
+Also, after going through all the enteries again, I noticed 4 lines that
+I mislabeled.
+
+I will post a v2.
+
+> 
+> > If so, I might start making other variants like BeagleBone Blue and
+> > BeagleBone {Green,Black} Wireless and submit those when ready.
+> 
+> OK yeah makes sense.
+> 
+
+thanks,
+drew
