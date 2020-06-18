@@ -2,128 +2,193 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7993C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4FE82075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 105362073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 15:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kYwPKZdp"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="NAXSbQeH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730886AbgFRPAJ (ORCPT
+        id S1730972AbgFRPBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 11:00:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59912 "EHLO
+        Thu, 18 Jun 2020 11:01:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgFRPAI (ORCPT
+        with ESMTP id S1730940AbgFRPBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 11:00:08 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3CFC06174E;
-        Thu, 18 Jun 2020 08:00:07 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id m81so7406487ioa.1;
-        Thu, 18 Jun 2020 08:00:07 -0700 (PDT)
+        Thu, 18 Jun 2020 11:01:02 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F92C06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:01:01 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q2so3969151wrv.8
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 08:01:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NtwtfirPIaj3hQKqt5NnTqLzfoXadlYH6xaXhH3mB+s=;
-        b=kYwPKZdp0pHLg9nzSkXLUjXIWhhGSDK+lUsX3kvZKhpx/abFTtNYjkojW4sVVt7bHm
-         qZGTxARuFd3WI6EfU1eBN6+4gj/yCc7G3VU2n21gea6aS3fkUz/uMmbZ6zjhs6dF/ctG
-         mtQLDzrh6EKtHb9OSOEmMjo3N7fWi8hwmYyXXXcwlEWheXzJEY46FsRDyYJ/YXapbZEL
-         GAjWeoKd6sh4vm2KkDp99cfVll6l6Xz1jcMVSif5RsT91SxuUdRKKCZShkXiMxJfDPO2
-         mEQ03gbiIGbBmN1vxaEfCsHPJle351uahP3BtuY+Amj/uplhgSOrlPpU1WHGNLMkS4iC
-         lVIw==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6OXAj9s43JL1nA3AEpbYM/MO9Qwg5Ya14IpN0gZo/as=;
+        b=NAXSbQeHANLe1jipR3irzjbY7yWCggcmWa6HNg2IPmITzqFGf3L5EfLt0xDSdDrG+b
+         x2cMxixoM50+NeYTVtrK/kNJYHNO6fr4lE9I3N0/BlBM5groWNzwqW1H+Hm//JIuCUoA
+         dlNXlF2mmmSgTTwOzqZXKvpuzoxFA0/uYDSds=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NtwtfirPIaj3hQKqt5NnTqLzfoXadlYH6xaXhH3mB+s=;
-        b=E9oYBpHSZYmC7FLuwZtM18HBTCZPtsRMxCzP0mIHBegoGebObr7eH9A7y4vuzcy66h
-         Kd3F62IdMGfD/Q8vLsxuqYRk5AhEPIBg55HPyVBb0PGzoXl0igvA0SIPhQLYundiIMx+
-         tcgJqFJOaqh9yEL5uSqY55GT+USlIRYZVF/VfS9kNr13eJ53fAIBYIBO47RDw9NCtDJx
-         yhJfYZTsJH7BAFHsYN1ySSDYNAWrsh5qRnguXjI7Nx5PypdyoEyfXovnVqwprgoFdeZx
-         0vHgfWRD82wxHZsrQ8boAvZ7JBHCLsK2Y/qXb1qZH4ZkXPcZs3sXiK4s9cDt8Jl3NJdC
-         Apdw==
-X-Gm-Message-State: AOAM531PZUpGh13VrmFL1AJBCGva+2B1zX1VYE6NkKS9TH70KddBrTFW
-        sDtIVOtYHe2ZjdVKqjAWQ1PnUYsWmMEG/bDDECQ=
-X-Google-Smtp-Source: ABdhPJyxduBF4FPnbsePTb+IJMrnaO574t87lgH7MXGDrxKnm7Fm0uPL20a9JpNnhO5AEW9mefqTwucGCC8avIECgKo=
-X-Received: by 2002:a05:6602:2dd4:: with SMTP id l20mr5412675iow.13.1592492407237;
- Thu, 18 Jun 2020 08:00:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=6OXAj9s43JL1nA3AEpbYM/MO9Qwg5Ya14IpN0gZo/as=;
+        b=ZlH3p0x6X2rANe7BdNMCoqJ2BTYiS7Y6oxEA1NNJo9+b/J188KgIYZQSP+OJ7059Lb
+         z001xgk+Gvd3LH4TGwSIjZL6Xrr1cNiQiY/HARSRsZpHtVaeLR+sHURMhPBsoLW2u327
+         BqxzIrnHTeMqiBI+m5+m08YeDn7/L2zdC3qr7UDTVgbw1lNJ+eX48fFi+N5emyypRd/7
+         xoJ4vub7estuVgXMdkfkpqbTZw8DGgm0fS7OO9JXLEzbIp81LnA9RRx0yiD6ny3s4BLn
+         r/46POiEQD4tHTZxIfjN1/ZvkVqnmHox8Vz86/pfoXIHRJURoUeFoVL1uDIohzUCf7Q/
+         vtmA==
+X-Gm-Message-State: AOAM53314tn8Rj8jzSuq/sTsBGKgeUrX9+TcUAu4gHA+/+zw1RX8MXJE
+        hvQKpul8DJwgeY49diIhAue66A==
+X-Google-Smtp-Source: ABdhPJyrsmwBwFtG4KAk31ycwBo00rNlOYG3lXCyUqre+ViPnXoXIqRRhRlofgF6zGCpK4dB5Hv+mw==
+X-Received: by 2002:adf:d841:: with SMTP id k1mr4031245wrl.93.1592492454932;
+        Thu, 18 Jun 2020 08:00:54 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id p7sm3878240wro.26.2020.06.18.08.00.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 08:00:53 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 17:00:51 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= 
+        <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 04/18] dma-fence: prime lockdep
+ annotations
+Message-ID: <20200618150051.GS20149@phenom.ffwll.local>
+Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
+        Thomas =?iso-8859-1?Q?Hellstr=F6m_=28Intel=29?= <thomas_os@shipmail.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" <linaro-mm-sig@lists.linaro.org>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" <linux-media@vger.kernel.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Mika Kuoppala <mika.kuoppala@intel.com>
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+ <20200604081224.863494-5-daniel.vetter@ffwll.ch>
+ <b11c2140-1b9c-9013-d9bb-9eb2c1906710@shipmail.org>
+ <20200611083430.GD20149@phenom.ffwll.local>
+ <20200611141515.GW6578@ziepe.ca>
+ <20200616120719.GL20149@phenom.ffwll.local>
+ <CAKMK7uE7DKUo9Z+yCpY+mW5gmKet8ugbF3yZNyHGqsJ=e-g_hA@mail.gmail.com>
+ <20200617152835.GF6578@ziepe.ca>
 MIME-Version: 1.0
-References: <20200521095515.GK6462@dhcp22.suse.cz> <20200521163450.GV6462@dhcp22.suse.cz>
- <CA+G9fYsdsgRmwLtSKJSzB1eWcUQ1z-_aaU+BNcQpker34XT6_w@mail.gmail.com>
- <20200617135758.GA548179@chrisdown.name> <20200617141155.GQ9499@dhcp22.suse.cz>
- <CA+G9fYu+FB1PE0AMmE-9MrHpayE9kChwTyc3zfM6V83uQ0zcQA@mail.gmail.com>
- <20200617160624.GS9499@dhcp22.suse.cz> <CA+G9fYtCXrVGVtRTwxiqgfFNDDf_H4aNH=VpWLhsV4n_mCTLGg@mail.gmail.com>
- <20200617210935.GA578452@chrisdown.name> <CALOAHbBp7Ytd-Hta9NH-_HJtVTAsR5Pw2RYrVScp7PPezCEv2w@mail.gmail.com>
- <20200618123743.GA694719@chrisdown.name>
-In-Reply-To: <20200618123743.GA694719@chrisdown.name>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Thu, 18 Jun 2020 22:59:28 +0800
-Message-ID: <CALOAHbCPd407z45e809VE5c8vP6ewqwkDkY9nrMP5TyP5cjG+A@mail.gmail.com>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617152835.GF6578@ziepe.ca>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 8:37 PM Chris Down <chris@chrisdown.name> wrote:
->
-> Yafang Shao writes:
-> >On Thu, Jun 18, 2020 at 5:09 AM Chris Down <chris@chrisdown.name> wrote:
-> >>
-> >> Naresh Kamboju writes:
-> >> >After this patch applied the reported issue got fixed.
-> >>
-> >> Great! Thank you Naresh and Michal for helping to get to the bottom of this :-)
-> >>
-> >> I'll send out a new version tomorrow with the fixes applied and both of you
-> >> credited in the changelog for the detection and fix.
-> >
-> >As we have already found that the usage around memory.{emin, elow} has
-> >many limitations, I think memory.{emin, elow} should be used for
-> >memcg-tree internally only, that means they can only be used to
-> >calculate the protection of a memcg in a specified memcg-tree but
-> >should not be exposed to other MM parts.
->
-> I agree that the current semantics are mentally taxing and we should generally
-> avoid exposing the implementation details outside of memcg where possible. Do
-> you have a suggested rework? :-)
+On Wed, Jun 17, 2020 at 12:28:35PM -0300, Jason Gunthorpe wrote:
+> On Wed, Jun 17, 2020 at 08:48:50AM +0200, Daniel Vetter wrote:
+> 
+> > Now my understanding for rdma is that if you don't have hw page fault
+> > support,
+> 
+> The RDMA ODP feature is restartable HW page faulting just like nouveau
+> has. The classical MR feature doesn't have this. Only mlx5 HW supports
+> ODP today.
+> 
+> > It's only gpus (I think) which are in this awkward in-between spot
+> > where dynamic memory management really is much wanted, but the hw
+> > kinda sucks. Aside, about 10+ years ago we had a similar problem with
+> > gpu hw, but for security: Many gpu didn't have any kinds of page
+> > tables to isolate different clients from each another. drivers/gpu
+> > fixed this by parsing&validating what userspace submitted to make sure
+> > it's only every accessing its own buffers. Most gpus have become
+> > reasonable nowadays and do have proper per-process pagetables (gpu
+> > process, not the pasid stuff), but even today there's still some of
+> > the old model left in some of the smallest SoC.
+> 
+> But I still don't understand why a dma fence is needed inside the GPU
+> driver itself in the notifier.
+> 
+> Surely the GPU driver can block and release the notifier directly from
+> its own command processing channel?
+> 
+> Why does this fence and all it entails need to leak out across
+> drivers?
 
-Keeping the mem_cgroup_protected() as-is is my suggestion. Anyway I
-think it is bad to put memory.{emin, elow} here and there.
-If we don't have any better idea by now, just putting all the
-references of memory.{emin, elow}  into one
-wrapper(mem_cgroup_protected()) is the reasonable solution.
+So 10 years ago we had this world of every gpu driver is its own bucket,
+nothing leaks out to the world. But the world had a different idea how
+gpus where supposed to work, with stuff like:
 
+- laptops with a power-efficient but slow gpu integrated on the cpu die,
+  and a 2nd, much faster but also more wasteful gpu seperately
+
+- also multi-gpu rendering (but on linux we never really got around to
+  enabling that, at least not for 3d rendering)
+
+- soc just bundle IP blocks together, and very often they feel like they
+  have to do their own display block (it's fairly easy and allows you to
+  keep your hw engineers justified on payroll with some more patents they
+  create), but anything more fancy they buy in. So from a driver
+  architecture pov even a single chip soc looks like a bundle of gpus
+
+And you want to pipeline all this because performance, so waiting in
+userspace for one block to finish before you hand it ever to the other
+isn't a good idea.
+
+Hence dma_fence as a cross driver leak was created by pulling the gpu
+completion tracking from the drm/ttm library for managing vram.
+
+Now with glorious hindsight we could have come up with a different
+approach, where synchronization is managed by userspace, kernel just
+provides some primitives (kinda like futexes, but for gpu). And the kernel
+manages residency and gpu pte wrangling entirely seperately. But:
+
+- 10 years ago drivers/gpu was a handful of people at best
+
+- we just finished the massive rewrite to get to a kernel memory manager
+  and kernel modesetting (over 5 years after windows/macos), so appetite
+  for massive rewrites was minimal.
+
+Here we are, now with 50 more drivers built on top and an entire userspace
+ecosystem that relies on all this (because yes we made dma_fence also the
+building block for all the cross-process uapi, why wouldn't we).
+
+I hope that explains a bit the history of how and why we ended up here.
+
+Maybe I should do a plumbers talk about "How not to memory manage -
+cautious tales from drivers/gpu" I think there's a lot of areas where the
+conversation usually goes "wtf" ... long explanation of history and
+technical reasons leading to a "oh dear". With a lot of other accelerators
+and things landing might be good to have a list of things that look
+tempting (because hey 2% faster) but arent worth the pain.
+-Daniel
 -- 
-Thanks
-Yafang
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
