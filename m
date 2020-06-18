@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 443ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 226ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C82021974
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F101321974
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448106;
-	bh=rLZ11fgScO8wU6jQ6dDX9fn8ep+lhLKEB6480JVUFe0=;
+	s=default; t=1592448108;
+	bh=0eBh3Q0tasAH7NSrRJtTwSQ5nfxknCIIN9MpMfO0/s4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FepbH+rZP0tLWOcfA/tfg7t/1U2rjZeDnU9S0zCsnd2eGsTM5uTvfklvRrYAoZfEE
-	 62+evVzYG/o07f7fAvs6K/hW7tfWlYRCp8K8ZJE/fcC+ZLk0xWei0KPSZ9XlZ4KuO1
-	 1JbX5O8PDzKWrPUkgigXLMRmVuRRxWJLH27NUvo4=
+	b=B+2AixtgY2VJ9DQbr0GXtTYYMlTG+N9d2B/r495KdnazfGxIUWw8kE0ngceYxKwIR
+	 f7HEUHXSLW+sP+26vkCDEKFrYnhx3YYvo7bidX0+HYndM7dy4sbKUo0xBEpwKYtp8s
+	 KYpbHrTeLhylI3CXmJl0/5rINg7zefo/dS+PMCkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730924AbgFRClo (ORCPT
+        id S1728154AbgFRBMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:41:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40802 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:12:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728173AbgFRBMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:20 -0400
+        id S1727980AbgFRBLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19CCA21974;
-        Thu, 18 Jun 2020 01:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8CD52193E;
+        Thu, 18 Jun 2020 01:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442738;
-        bh=rLZ11fgScO8wU6jQ6dDX9fn8ep+lhLKEB6480JVUFe0=;
+        s=default; t=1592442696;
+        bh=0eBh3Q0tasAH7NSrRJtTwSQ5nfxknCIIN9MpMfO0/s4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RDxpzp1hl2MWHe0CSzz3mp6vRB3ruu3MdSCo4TqoOo4tlqkR1dAfyJGGhIeeq6y/M
-         joFS7vDwYprGd40t5lBZZnHu8NukHGgnfWQdXoNM/z4ctpr97AfUSj38Vd1ZwgWpXi
-         Uuy9oKpXFYO9Z1ncpnLfa0ratzjZm7DaCUF80SEU=
+        b=Ttkk8bVjQQqyiBSXCxF+CrK8y1zH86ml/MT0ib/nNIoC+fyvgvGLUbbX4F9BgkO0g
+         5E/bDE+Vedv9rvbaP8nByj4pnZeHhS30JmeyGc+Cc3eZEQi2q2q9dxYDM18a1e9ndJ
+         55rn9hv+dXImzqMKzZIC9D5170Gz4smveLzMzods=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yongbo Zhang <giraffesnn123@gmail.com>,
-        Chen Li <licheng0822@thundersoft.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 193/388] SoC: rsnd: add interrupt support for SSI BUSIF buffer
-Date:   Wed, 17 Jun 2020 21:04:50 -0400
-Message-Id: <20200618010805.600873-193-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.7 160/388] ASoC: SOF: Update correct LED status at the first time usage of update_mute_led()
+Date:   Wed, 17 Jun 2020 21:04:17 -0400
+Message-Id: <20200618010805.600873-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,279 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yongbo Zhang <giraffesnn123@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 66c705d07d784fb6b4622c6e47b6acae357472db ]
+[ Upstream commit 49c22696348d6e7c8a2ecfd7e60fddfe188ded82 ]
 
-SSI BUSIF buffer is possible to overflow or underflow, especially in a
-hypervisor environment. If there is no interrupt support, it will eventually
-lead to errors in pcm data.
-This patch adds overflow and underflow interrupt support for SSI BUSIF buffer.
+At the first time update_mute_led() gets called, if channels are already
+muted, the temp value equals to led_value as 0, skipping the following
+LED setting.
 
-Reported-by: Chen Li <licheng0822@thundersoft.com>
-Signed-off-by: Yongbo Zhang <giraffesnn123@gmail.com>
-Tested-by: Chen Li <licheng0822@thundersoft.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Link: https://lore.kernel.org/r/20200512093003.28332-1-giraffesnn123@gmail.com
+So set led_value to -1 as an uninitialized state, to update the correct
+LED status at first time usage.
+
+Fixes: 5d43001ae436 ("ASoC: SOF: acpi led support for switch controls")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Acked-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200430091139.7003-1-kai.heng.feng@canonical.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/gen.c  |   8 +++
- sound/soc/sh/rcar/rsnd.h |   9 +++
- sound/soc/sh/rcar/ssi.c  | 145 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 162 insertions(+)
+ sound/soc/sof/control.c   | 4 ++--
+ sound/soc/sof/sof-audio.h | 2 +-
+ sound/soc/sof/topology.c  | 2 ++
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/sh/rcar/gen.c b/sound/soc/sh/rcar/gen.c
-index af19010b9d88..8bd49c8a9517 100644
---- a/sound/soc/sh/rcar/gen.c
-+++ b/sound/soc/sh/rcar/gen.c
-@@ -224,6 +224,14 @@ static int rsnd_gen2_probe(struct rsnd_priv *priv)
- 		RSND_GEN_S_REG(SSI_SYS_STATUS5,	0x884),
- 		RSND_GEN_S_REG(SSI_SYS_STATUS6,	0x888),
- 		RSND_GEN_S_REG(SSI_SYS_STATUS7,	0x88c),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE0, 0x850),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE1, 0x854),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE2, 0x858),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE3, 0x85c),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE4, 0x890),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE5, 0x894),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE6, 0x898),
-+		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE7, 0x89c),
- 		RSND_GEN_S_REG(HDMI0_SEL,	0x9e0),
- 		RSND_GEN_S_REG(HDMI1_SEL,	0x9e4),
- 
-diff --git a/sound/soc/sh/rcar/rsnd.h b/sound/soc/sh/rcar/rsnd.h
-index ea6cbaa9743e..d47608ff5fac 100644
---- a/sound/soc/sh/rcar/rsnd.h
-+++ b/sound/soc/sh/rcar/rsnd.h
-@@ -189,6 +189,14 @@ enum rsnd_reg {
- 	SSI_SYS_STATUS5,
- 	SSI_SYS_STATUS6,
- 	SSI_SYS_STATUS7,
-+	SSI_SYS_INT_ENABLE0,
-+	SSI_SYS_INT_ENABLE1,
-+	SSI_SYS_INT_ENABLE2,
-+	SSI_SYS_INT_ENABLE3,
-+	SSI_SYS_INT_ENABLE4,
-+	SSI_SYS_INT_ENABLE5,
-+	SSI_SYS_INT_ENABLE6,
-+	SSI_SYS_INT_ENABLE7,
- 	HDMI0_SEL,
- 	HDMI1_SEL,
- 	SSI9_BUSIF0_MODE,
-@@ -237,6 +245,7 @@ enum rsnd_reg {
- #define SSI9_BUSIF_ADINR(i)	(SSI9_BUSIF0_ADINR + (i))
- #define SSI9_BUSIF_DALIGN(i)	(SSI9_BUSIF0_DALIGN + (i))
- #define SSI_SYS_STATUS(i)	(SSI_SYS_STATUS0 + (i))
-+#define SSI_SYS_INT_ENABLE(i) (SSI_SYS_INT_ENABLE0 + (i))
- 
- 
- struct rsnd_priv;
-diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
-index 4a7d3413917f..47d5ddb526f2 100644
---- a/sound/soc/sh/rcar/ssi.c
-+++ b/sound/soc/sh/rcar/ssi.c
-@@ -372,6 +372,9 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
- 	u32 wsr		= ssi->wsr;
- 	int width;
- 	int is_tdm, is_tdm_split;
-+	int id = rsnd_mod_id(mod);
-+	int i;
-+	u32 sys_int_enable = 0;
- 
- 	is_tdm		= rsnd_runtime_is_tdm(io);
- 	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
-@@ -447,6 +450,38 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
- 		cr_mode = DIEN;		/* PIO : enable Data interrupt */
- 	}
- 
-+	/* enable busif buffer over/under run interrupt. */
-+	if (is_tdm || is_tdm_split) {
-+		switch (id) {
-+		case 0:
-+		case 1:
-+		case 2:
-+		case 3:
-+		case 4:
-+			for (i = 0; i < 4; i++) {
-+				sys_int_enable = rsnd_mod_read(mod,
-+					SSI_SYS_INT_ENABLE(i * 2));
-+				sys_int_enable |= 0xf << (id * 4);
-+				rsnd_mod_write(mod,
-+					       SSI_SYS_INT_ENABLE(i * 2),
-+					       sys_int_enable);
-+			}
-+
-+			break;
-+		case 9:
-+			for (i = 0; i < 4; i++) {
-+				sys_int_enable = rsnd_mod_read(mod,
-+					SSI_SYS_INT_ENABLE((i * 2) + 1));
-+				sys_int_enable |= 0xf << 4;
-+				rsnd_mod_write(mod,
-+					       SSI_SYS_INT_ENABLE((i * 2) + 1),
-+					       sys_int_enable);
-+			}
-+
-+			break;
-+		}
-+	}
-+
- init_end:
- 	ssi->cr_own	= cr_own;
- 	ssi->cr_mode	= cr_mode;
-@@ -496,6 +531,13 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
+diff --git a/sound/soc/sof/control.c b/sound/soc/sof/control.c
+index dfc412e2d956..6d63768d42aa 100644
+--- a/sound/soc/sof/control.c
++++ b/sound/soc/sof/control.c
+@@ -19,8 +19,8 @@ static void update_mute_led(struct snd_sof_control *scontrol,
+ 			    struct snd_kcontrol *kcontrol,
+ 			    struct snd_ctl_elem_value *ucontrol)
  {
- 	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
- 	struct device *dev = rsnd_priv_to_dev(priv);
-+	int is_tdm, is_tdm_split;
-+	int id = rsnd_mod_id(mod);
-+	int i;
-+	u32 sys_int_enable = 0;
-+
-+	is_tdm		= rsnd_runtime_is_tdm(io);
-+	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+-	unsigned int temp = 0;
+-	unsigned int mask;
++	int temp = 0;
++	int mask;
+ 	int i;
  
- 	if (!rsnd_ssi_is_run_mods(mod, io))
- 		return 0;
-@@ -517,6 +559,38 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
- 		ssi->wsr	= 0;
+ 	mask = 1U << snd_ctl_get_ioffidx(kcontrol, &ucontrol->id);
+diff --git a/sound/soc/sof/sof-audio.h b/sound/soc/sof/sof-audio.h
+index bf65f31af858..875a5fc13297 100644
+--- a/sound/soc/sof/sof-audio.h
++++ b/sound/soc/sof/sof-audio.h
+@@ -56,7 +56,7 @@ struct snd_sof_pcm {
+ struct snd_sof_led_control {
+ 	unsigned int use_led;
+ 	unsigned int direction;
+-	unsigned int led_value;
++	int led_value;
+ };
+ 
+ /* ALSA SOF Kcontrol device */
+diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
+index fe8ba3e05e08..ab2b69de1d4d 100644
+--- a/sound/soc/sof/topology.c
++++ b/sound/soc/sof/topology.c
+@@ -1203,6 +1203,8 @@ static int sof_control_load(struct snd_soc_component *scomp, int index,
+ 		return ret;
  	}
  
-+	/* disable busif buffer over/under run interrupt. */
-+	if (is_tdm || is_tdm_split) {
-+		switch (id) {
-+		case 0:
-+		case 1:
-+		case 2:
-+		case 3:
-+		case 4:
-+			for (i = 0; i < 4; i++) {
-+				sys_int_enable = rsnd_mod_read(mod,
-+						SSI_SYS_INT_ENABLE(i * 2));
-+				sys_int_enable &= ~(0xf << (id * 4));
-+				rsnd_mod_write(mod,
-+					       SSI_SYS_INT_ENABLE(i * 2),
-+					       sys_int_enable);
-+			}
++	scontrol->led_ctl.led_value = -1;
 +
-+			break;
-+		case 9:
-+			for (i = 0; i < 4; i++) {
-+				sys_int_enable = rsnd_mod_read(mod,
-+					SSI_SYS_INT_ENABLE((i * 2) + 1));
-+				sys_int_enable &= ~(0xf << 4);
-+				rsnd_mod_write(mod,
-+					       SSI_SYS_INT_ENABLE((i * 2) + 1),
-+					       sys_int_enable);
-+			}
-+
-+			break;
-+		}
-+	}
-+
- 	return 0;
- }
- 
-@@ -622,6 +696,11 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
- 			int enable)
- {
- 	u32 val = 0;
-+	int is_tdm, is_tdm_split;
-+	int id = rsnd_mod_id(mod);
-+
-+	is_tdm		= rsnd_runtime_is_tdm(io);
-+	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
- 
- 	if (rsnd_is_gen1(priv))
- 		return 0;
-@@ -635,6 +714,19 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
- 	if (enable)
- 		val = rsnd_ssi_is_dma_mode(mod) ? 0x0e000000 : 0x0f000000;
- 
-+	if (is_tdm || is_tdm_split) {
-+		switch (id) {
-+		case 0:
-+		case 1:
-+		case 2:
-+		case 3:
-+		case 4:
-+		case 9:
-+			val |= 0x0000ff00;
-+			break;
-+		}
-+	}
-+
- 	rsnd_mod_write(mod, SSI_INT_ENABLE, val);
- 
- 	return 0;
-@@ -651,6 +743,12 @@ static void __rsnd_ssi_interrupt(struct rsnd_mod *mod,
- 	u32 status;
- 	bool elapsed = false;
- 	bool stop = false;
-+	int id = rsnd_mod_id(mod);
-+	int i;
-+	int is_tdm, is_tdm_split;
-+
-+	is_tdm		= rsnd_runtime_is_tdm(io);
-+	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
- 
- 	spin_lock(&priv->lock);
- 
-@@ -672,6 +770,53 @@ static void __rsnd_ssi_interrupt(struct rsnd_mod *mod,
- 		stop = true;
- 	}
- 
-+	status = 0;
-+
-+	if (is_tdm || is_tdm_split) {
-+		switch (id) {
-+		case 0:
-+		case 1:
-+		case 2:
-+		case 3:
-+		case 4:
-+			for (i = 0; i < 4; i++) {
-+				status = rsnd_mod_read(mod,
-+						       SSI_SYS_STATUS(i * 2));
-+				status &= 0xf << (id * 4);
-+
-+				if (status) {
-+					rsnd_dbg_irq_status(dev,
-+						"%s err status : 0x%08x\n",
-+						rsnd_mod_name(mod), status);
-+					rsnd_mod_write(mod,
-+						       SSI_SYS_STATUS(i * 2),
-+						       0xf << (id * 4));
-+					stop = true;
-+					break;
-+				}
-+			}
-+			break;
-+		case 9:
-+			for (i = 0; i < 4; i++) {
-+				status = rsnd_mod_read(mod,
-+						SSI_SYS_STATUS((i * 2) + 1));
-+				status &= 0xf << 4;
-+
-+				if (status) {
-+					rsnd_dbg_irq_status(dev,
-+						"%s err status : 0x%08x\n",
-+						rsnd_mod_name(mod), status);
-+					rsnd_mod_write(mod,
-+						SSI_SYS_STATUS((i * 2) + 1),
-+						0xf << 4);
-+					stop = true;
-+					break;
-+				}
-+			}
-+			break;
-+		}
-+	}
-+
- 	rsnd_ssi_status_clear(mod);
- rsnd_ssi_interrupt_out:
- 	spin_unlock(&priv->lock);
+ 	dobj->private = scontrol;
+ 	list_add(&scontrol->list, &sdev->kcontrol_list);
+ 	return ret;
 -- 
 2.25.1
 
