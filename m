@@ -2,157 +2,151 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209DFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB6EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE2BA20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4672206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:40:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Lu6yjyZ/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e31t8BkS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbgFRQk2 (ORCPT
+        id S1731984AbgFRQkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:40:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728929AbgFRQk0 (ORCPT
+        Thu, 18 Jun 2020 12:40:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59579 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731959AbgFRQkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:40:26 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D679C06174E;
-        Thu, 18 Jun 2020 09:40:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wQ51QMPUtPEJr0c4bhMM9pVdyp44hbpF1rlza5L8bD0=; b=Lu6yjyZ/5efCrXL0CtuLzVu9g
-        qPOM+X6SutLQNYojPjT9criSA3ZvjhBsV5sIM5cq2z4dVsCaOR9rz939y5mkw49ER+ii8hPdsMNPE
-        EsQ3OEZBJEcSPJm6+Njq2P7o6LBVwpIahOPhqxCC5SHDhtp+0SmFYDYxSClrUBXbIL86LNhD8dLHm
-        9PfAr+4pd/CejL30nIxOYuGUh9Ifn2m/YnQxOrfF1tbgimkk2JXuyAOS79MoM4PbHGqaEYTy42D6w
-        2SrTzsZF1sToyWYiGoCHY0k8+4ZB91S7+khNH5EdpUaCKlP5jCxNyq/Ao4zjMyUTBD3SabDouPXtk
-        kIugdRPFg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58792)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jlxaN-0005Pg-NF; Thu, 18 Jun 2020 17:40:19 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jlxaJ-0004ra-WC; Thu, 18 Jun 2020 17:40:16 +0100
-Date:   Thu, 18 Jun 2020 17:40:15 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net, kuba@kernel.org,
-        robh+dt@kernel.org, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com
-Subject: Re: [PATCH v5 3/3] net: phy: mscc: handle the clkout control on some
- phy variants
-Message-ID: <20200618164015.GF1551@shell.armlinux.org.uk>
-References: <20200618121139.1703762-1-heiko@sntech.de>
- <2277698.LFZWc9m3Y3@diego>
- <20200618154748.GE1551@shell.armlinux.org.uk>
- <1723854.ZAnHLLU950@diego>
+        Thu, 18 Jun 2020 12:40:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592498429;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=K+ZmXo1VT3DgmlBxctO5wOawFr9Ym28t9PdelfkR48g=;
+        b=e31t8BkS6xSRALcGqv57e+ji295zDcSzyzbjhbqCPIya2fUZ79TtfL8Q09svKgs5aFv63r
+        w2G2eCWwvlV+m3QmvX9nS4hIZ67OOvmncXeTlp+hdk0c7J0f5qhYsbJ5KdB3cSRoyHzcHK
+        WEeRU0hMzJ37Biryh2RpuzvyJNnvKg0=
+Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com
+ [209.85.161.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-230-Srafve5RNliKD506qAVihQ-1; Thu, 18 Jun 2020 12:40:28 -0400
+X-MC-Unique: Srafve5RNliKD506qAVihQ-1
+Received: by mail-oo1-f69.google.com with SMTP id n15so3003212oov.22
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 09:40:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=K+ZmXo1VT3DgmlBxctO5wOawFr9Ym28t9PdelfkR48g=;
+        b=Wyb2UOYw0Gpfoz6Wrdu9M3ybuIWisthzBgQFFFtIbO1x3hQRTtuKjymwfbsQ/u18rM
+         CuPYd/gREoVz+ms+ynOH3q4UxqFUXtRaWzX0MTA4j7UASfxzbQqVlbdYXhyewT0J7LqV
+         xJR7ZFDoVk6Ysm0k1sxYe2el3duQ2/Jt9KWnDiHh0J3CtaIpRyOu/20b9wDyTi2mDyt/
+         VgVftFEt2xv7f6SpDY0XDsXxKCL+nosOMH9bfBUJMz1/razS9s4weEVtKsY/MkOGmDl8
+         07MiDcZcpxq3ZukTTOCoCRjLezy6S5UOE3GQNaruwEN5eBUMdyPereEaNdCo7ekXpCid
+         /FyA==
+X-Gm-Message-State: AOAM531rpONw+V/vfEmauXLjP8QYTr+6lWX+ysVGy3Pf0/SF05IyO0vC
+        xP1uSwOSWBl0HpvPt0cvjo2D8kTvlIgpmd+pgcxnaX0dvkwJOZy/9gDm3DRhHJQccqLl8yAjoE9
+        gUP5NYHDBFrnTsdMbkh6g/DRMNxWYF/3svWnfrn8Q
+X-Received: by 2002:a05:6830:10c8:: with SMTP id z8mr4000193oto.95.1592498427404;
+        Thu, 18 Jun 2020 09:40:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzE8nhb2Q0d4GxQpaInRB14NGapvcWpYnTg96Ky3B2ltZU9DxgAABVkj/Ptn9PHhgl8mMoH1G9lpq5ufccfhow=
+X-Received: by 2002:a05:6830:10c8:: with SMTP id z8mr4000168oto.95.1592498427103;
+ Thu, 18 Jun 2020 09:40:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1723854.ZAnHLLU950@diego>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200414150233.24495-1-willy@infradead.org> <20200414150233.24495-17-willy@infradead.org>
+ <CAHc6FU4m1M7Tv4scX0UxSiVBqkL=Vcw_z-R7SufL8k7Bw=qPOw@mail.gmail.com>
+ <20200617003216.GC8681@bombadil.infradead.org> <CAHpGcMK6Yu0p-FO8CciiySqh+qcWLG-t3hEaUg-rqJnS=2uhqg@mail.gmail.com>
+ <20200617022157.GF8681@bombadil.infradead.org> <CAHc6FU7NLRHKRJJ6c2kQT0ig8ed1n+3qR-YcSCWzXOeJCUsLbA@mail.gmail.com>
+ <20200618150309.GP8681@bombadil.infradead.org>
+In-Reply-To: <20200618150309.GP8681@bombadil.infradead.org>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+Date:   Thu, 18 Jun 2020 18:40:15 +0200
+Message-ID: <CAHc6FU6TYTiQ0a0GkN1dhh3VeQKVKrL+eALvuYzZ8nq5jvNHjg@mail.gmail.com>
+Subject: Re: [Cluster-devel] [PATCH v11 16/25] fs: Convert mpage_readpages to mpage_readahead
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        cluster-devel <cluster-devel@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
+        linux-btrfs@vger.kernel.org,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 06:01:29PM +0200, Heiko Stübner wrote:
-> Am Donnerstag, 18. Juni 2020, 17:47:48 CEST schrieb Russell King - ARM Linux admin:
-> > On Thu, Jun 18, 2020 at 05:41:54PM +0200, Heiko Stübner wrote:
-> > > Though I'm not sure how this fits in the whole bringup of ethernet phys.
-> > > Like the phy is dependent on the underlying ethernet controller to
-> > > actually turn it on.
-> > > 
-> > > I guess we should check the phy-state and if it's not accessible, just
-> > > keep the values and if it's in a suitable state do the configuration.
-> > > 
-> > > Calling a vsc8531_config_clkout() from both the vsc8531_config_init()
-> > > as well as the clk_(un-)prepare  and clk_set_rate functions and being
-> > > protected by a check against phy_is_started() ?
-> > 
-> > It sounds like it doesn't actually fit the clk API paradym then.  I
-> > see that Rob suggested it, and from the DT point of view, it makes
-> > complete sense, but then if the hardware can't actually be used in
-> > the way the clk API expects it to be used, then there's a semantic
-> > problem.
-> > 
-> > What is this clock used for?
-> 
-> It provides a source for the mac-clk for the actual transfers, here to
-> provide the 125MHz clock needed for the RGMII interface .
-> 
-> So right now the old rk3368-lion devicetree just declares a stub
-> fixed-clock and instructs the soc's clock controller to use it [0] .
-> And in the cover-letter here, I show the update variant with using
-> the clock defined here.
-> 
-> 
-> I've added the idea from my previous mail like shown below [1].
-> which would take into account the phy-state.
-> 
-> But I guess I'll wait for more input before spamming people with v6.
+On Thu, Jun 18, 2020 at 5:03 PM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Thu, Jun 18, 2020 at 02:46:03PM +0200, Andreas Gruenbacher wrote:
+> > On Wed, Jun 17, 2020 at 4:22 AM Matthew Wilcox <willy@infradead.org> wr=
+ote:
+> > > On Wed, Jun 17, 2020 at 02:57:14AM +0200, Andreas Gr=C3=83=C2=BCnbach=
+er wrote:
+> > > > Right, the approach from the following thread might fix this:
+> > > >
+> > > > https://lore.kernel.org/linux-fsdevel/20191122235324.17245-1-agruen=
+ba@redhat.com/T/#t
+> > >
+> > > In general, I think this is a sound approach.
+> > >
+> > > Specifically, I think FAULT_FLAG_CACHED can go away.  map_pages()
+> > > will bring in the pages which are in the page cache, so when we get t=
+o
+> > > gfs2_fault(), we know there's a reason to acquire the glock.
+> >
+> > We'd still be grabbing a glock while holding a dependent page lock.
+> > Another process could be holding the glock and could try to grab the
+> > same page lock (i.e., a concurrent writer), leading to the same kind
+> > of deadlock.
+>
+> What I'm saying is that gfs2_fault should just be:
+>
+> +static vm_fault_t gfs2_fault(struct vm_fault *vmf)
+> +{
+> +       struct inode *inode =3D file_inode(vmf->vma->vm_file);
+> +       struct gfs2_inode *ip =3D GFS2_I(inode);
+> +       struct gfs2_holder gh;
+> +       vm_fault_t ret;
+> +       int err;
+> +
+> +       gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
+> +       err =3D gfs2_glock_nq(&gh);
+> +       if (err) {
+> +               ret =3D block_page_mkwrite_return(err);
+> +               goto out_uninit;
+> +       }
+> +       ret =3D filemap_fault(vmf);
+> +       gfs2_glock_dq(&gh);
+> +out_uninit:
+> +       gfs2_holder_uninit(&gh);
+> +       return ret;
+> +}
+>
+> because by the time gfs2_fault() is called, map_pages() has already been
+> called and has failed to insert the necessary page, so we should just
+> acquire the glock now instead of trying again to look for the page in
+> the page cache.
 
-Let's get a handle on exactly what this is.
+Okay, that's great.
 
-The RGMII bus has two clocks: RXC and TXC, which are clocked at one
-of 125MHz, 25MHz or 2.5MHz depending on the RGMII data rate.  Some
-PHYs replace TXC with GTX clock, which always runs at 125MHz.  These
-clocks are not what you're referring to.
+Thanks,
+Andreas
 
-You are referring to another commonly provided clock between the MAC
-and the PHY, something which is not unique to your PHY.
-
-We seem to be heading down a path where different PHYs end up doing
-different things in DT for what is basically the same hardware setup,
-which really isn't good. :(
-
-We have at803x using:
-
-qca,clk-out-frequency
-qca,clk-out-strength
-qca,keep-pll-enabled
-
-which are used to control the CLK_25M output pin on the device, which
-may be used to provide a reference clock for the MAC side, selecting
-between 25M, 50M, 62.5M and 125MHz.  This was introduced in November
-2019, so not that long ago.
-
-Broadcom PHYs configure their 125MHz clock through the PHY device
-flags passed from the MAC at attach/connect time.
-
-There's the dp83867 and dp83869 configuration (I'm not sure I can
-make sense of it from reading the code) using ti,clk-output-sel -
-but it looks like it's the same kind of thing.  Introduced February
-2018 into one driver, and November 2019 in the other.
-
-It seems the Micrel PHYs produce a 125MHz clock irrespective of any
-configuration (maybe configured by firmware, or hardware strapping?)
-
-So it seems we have four ways of doing the same thing today, and now
-the suggestion is to implement a fifth different way.  I think there
-needs to be some consolidation here, maybe choosing one approach and
-sticking with it.
-
-Hence, I disagree with Rob - we don't need a fifth approach, we need
-to choose one approach and decide that's our policy for this and
-apply it evenly across the board, rather than making up something
-different each time a new PHY comes along.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
