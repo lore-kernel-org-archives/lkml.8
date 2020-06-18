@@ -2,109 +2,139 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5356C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3355EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB08208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 040E1208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BhqrUg2y"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="EuLaR5r3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbgFRQV7 (ORCPT
+        id S1730597AbgFRQXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:21:59 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11892 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726981AbgFRQV6 (ORCPT
+        Thu, 18 Jun 2020 12:23:21 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37846 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbgFRQXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:21:58 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eeb94410000>; Thu, 18 Jun 2020 09:20:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 18 Jun 2020 09:21:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 18 Jun 2020 09:21:57 -0700
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 18 Jun
- 2020 16:21:57 +0000
-Subject: Re: [PATCH -next] lib: fix test_hmm.c reference after free
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>
-CC:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-References: <c845c158-9c65-9665-0d0b-00342846dd07@infradead.org>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <fae8934b-7300-27ff-e18e-6db413b9ea53@nvidia.com>
-Date:   Thu, 18 Jun 2020 09:21:57 -0700
+        Thu, 18 Jun 2020 12:23:20 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8A5A2F9;
+        Thu, 18 Jun 2020 18:23:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1592497398;
+        bh=/cd/RPu/vuGMr1gt5mZp5+oG7+iJ6WX/U8t/ogBZIO8=;
+        h=Reply-To:Subject:To:References:From:Date:In-Reply-To:From;
+        b=EuLaR5r33jTj9RDJPNe9yDCQxR8Z5pJsFzYONOdzg7Wr/c1tiPV9F4fHejN774aGX
+         gNl/Y11ebZVsi+tFOylADYqCG2snXAscCHtjurgqc1x6v8AVJh1EBXqd6qvVc1cFmn
+         jk7y6luLxzWYc4H/qZEispBLVZIa9Cevv/AfM3MQ=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH v5 6/9] media: adv748x: prepare/enable mclk when the audio
+ is used
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1585852001.git.alexander.riesen@cetitec.com>
+ <d9b7a7290e3d95b484a7a760484f827c3ed7651e.1585852001.git.alexander.riesen@cetitec.com>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <646b0f32-2f83-281a-ccc0-eb88f82eb7a3@ideasonboard.com>
+Date:   Thu, 18 Jun 2020 17:23:14 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <c845c158-9c65-9665-0d0b-00342846dd07@infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592497217; bh=0hMi0xIwkUC9/TCs8lWLufXqXDXyWYEohg3QmmYj+og=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=BhqrUg2yERdAPawT5Qw+t1rBqdhQpLqbOV17quzsC/9rjv6aMSq/08gIKFAIfnzC8
-         fLNVgJUxCYmt4ODHApjKeW8X41saLfBstZnr4Mrt4ew6jwqzwgaN+FrEX5vZU0f+uv
-         ytpvt9Al4dInIlHv1IrCulb0wIIf8W43P5VnQDmijbE5NBUfUi4pX+jx4V//Jqzs7y
-         LGrHBOEfbwED/NLPnPRG4aBFm8CdNTDEp6VJ+/7FV+k7wYEj4a4KG+Ct+5I0nejD8N
-         xl3wDHJIDbbszYz4XG3tQ+uYRCN98O8xMG3f23aTRMb/uWKphvTYTYNCuv7EHEikVx
-         A+Ogz+qbUsoNA==
+In-Reply-To: <d9b7a7290e3d95b484a7a760484f827c3ed7651e.1585852001.git.alexander.riesen@cetitec.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Alex,
 
-On 6/17/20 10:31 PM, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
->=20
-> Coccinelle scripts report the following errors:
->=20
-> lib/test_hmm.c:523:20-26: ERROR: reference preceded by free on line 521
-> lib/test_hmm.c:524:21-27: ERROR: reference preceded by free on line 521
-> lib/test_hmm.c:523:28-35: ERROR: devmem is NULL but dereferenced.
-> lib/test_hmm.c:524:29-36: ERROR: devmem is NULL but dereferenced.
->=20
-> Fix these by using the local variable 'res' instead of devmem.
->=20
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> Cc: linux-mm@kvack.org
-> Cc: Ralph Campbell <rcampbell@nvidia.com>
+On 02/04/2020 19:34, Alex Riesen wrote:
+> As there is nothing else (the consumers are supposed to do that) which
+> enables the clock, do it in the driver.
+> 
+> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+> --
+> 
+> v3: added
 > ---
->   lib/test_hmm.c |    3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> --- linux-next-20200617.orig/lib/test_hmm.c
-> +++ linux-next-20200617/lib/test_hmm.c
-> @@ -520,8 +520,7 @@ static bool dmirror_allocate_chunk(struc
->   err_free:
->   	kfree(devmem);
->   err_release:
-> -	release_mem_region(devmem->pagemap.res.start,
-> -			   resource_size(&devmem->pagemap.res));
-> +	release_mem_region(res->start, resource_size(res));
->   err:
->   	mutex_unlock(&mdevice->devmem_lock);
->   	return false;
->=20
+>  drivers/media/i2c/adv748x/adv748x-dai.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/i2c/adv748x/adv748x-dai.c b/drivers/media/i2c/adv748x/adv748x-dai.c
+> index c9191f8f1ca8..185f78023e91 100644
+> --- a/drivers/media/i2c/adv748x/adv748x-dai.c
+> +++ b/drivers/media/i2c/adv748x/adv748x-dai.c
+> @@ -117,11 +117,22 @@ static int adv748x_dai_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+>  
+>  static int adv748x_dai_startup(struct snd_pcm_substream *sub, struct snd_soc_dai *dai)
+>  {
+> +	int ret;
+>  	struct adv748x_state *state = state_of(dai);
+>  
+>  	if (sub->stream != SNDRV_PCM_STREAM_CAPTURE)
+>  		return -EINVAL;
+this looks quite bunched up so :
 
-Thanks for fixing this!
-Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+Newline...
+
+> -	return set_audio_pads_state(state, 1);
+> +	ret = set_audio_pads_state(state, 1);
+> +	if (ret)
+> +		goto fail;
+
+With no action required to cleanup here, I would just
+		return ret;
+and remove the fail: label.
+
+
+Newline...
+
+> +	ret = clk_prepare_enable(mclk_of(state));
+> +	if (ret)
+> +		goto fail_pwdn;
+
+newline...
+
+> +	return 0;
+
+newline...
+
+Other than that:
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+> +fail_pwdn:
+> +	set_audio_pads_state(state, 0);
+> +fail:
+> +	return ret;
+>  }
+>  
+>  static int adv748x_dai_hw_params(struct snd_pcm_substream *sub,
+> @@ -174,6 +185,7 @@ static void adv748x_dai_shutdown(struct snd_pcm_substream *sub, struct snd_soc_d
+>  {
+>  	struct adv748x_state *state = state_of(dai);
+>  
+> +	clk_disable_unprepare(mclk_of(state));
+>  	set_audio_pads_state(state, 0);
+>  }
+>  
+> 
