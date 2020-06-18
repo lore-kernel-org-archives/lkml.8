@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF70CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB325C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A01E2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAAEC214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447012;
-	bh=FgPG6cCgUeE3avIJ+Y2VCR4P+1TbrZ2c2zsyKos1QuI=;
+	s=default; t=1592447017;
+	bh=dUkmD52lNqPmRdAMdoB/PrJJyegJXyeJhm0rTeXELTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bv3noZGl1/PjtZ2s1lCMvhRx+FM1hchuQWRXf7DYl9LjQkPFOGmdp80Hujpz2sfuW
-	 fJNLNJ/PZSSWR3J1JERKyN2oEBMbgzmRdHLoTGx09jTOzl0Lar0YfRfAzx+Y/PQC27
-	 wTUzxy5PEeRndzWuJNJaFMJZ2HTJ/4TiuguwYKOg=
+	b=i/08LpIrNz9vs/SkI9ceskAnSVqHhcMGZFSYgkjzB9XBR+HfPqtmJon3NFmwg5nnV
+	 l4Kr3YHmPIIXdfUsxxqyBD4ZaF5/uqTEMmw4v2u+sHO9ifT61ODiovnnFWHP/tsPy7
+	 Zyoezax09ISuK6v41Q43mpxSOboxxYgojUHLdMuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbgFRBR5 (ORCPT
+        id S1730182AbgFRCXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:17:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45074 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:23:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729436AbgFRBPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:06 -0400
+        id S1727879AbgFRBRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4637221EA;
-        Thu, 18 Jun 2020 01:15:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE87921D90;
+        Thu, 18 Jun 2020 01:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442905;
-        bh=FgPG6cCgUeE3avIJ+Y2VCR4P+1TbrZ2c2zsyKos1QuI=;
+        s=default; t=1592443073;
+        bh=dUkmD52lNqPmRdAMdoB/PrJJyegJXyeJhm0rTeXELTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u93fT35/LXUAGvqxB03JFmkW/0XADitz3UwkPKN5EAmxYCwiobhvlyPjOwunxI20x
-         8VIRvH5E5BbWbt+DZDudBuumg62B2O0tAA9bKBVE45EsEJz0ctpNiem3PyyYVyNQ91
-         zo6zj2IHzD353gc7XXGKOMEXe+jHqCWwCG7SdrH4=
+        b=P0y4WQSXAmKZhV+1XmeQ9LhGIKnOEco2RCDYorCOuZ2Lsc1j3GNx384LEyFKORQq6
+         Tf4ob10J56GDDOflkyXJEUuwff/7myk0eV4IgIPRRrxpiuNYGXRLbMU5SlBOrhKn5G
+         IpfAHdYBBzP5tGYP1Kl5/sGWrgFcJLKFEqKghMRo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 325/388] pinctrl: freescale: imx: Fix an error handling path in 'imx_pinctrl_probe()'
-Date:   Wed, 17 Jun 2020 21:07:02 -0400
-Message-Id: <20200618010805.600873-325-sashal@kernel.org>
+Cc:     Mark Zhang <markz@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 061/266] IB/mlx5: Fix DEVX support for MLX5_CMD_OP_INIT2INIT_QP command
+Date:   Wed, 17 Jun 2020 21:13:06 -0400
+Message-Id: <20200618011631.604574-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,73 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Mark Zhang <markz@mellanox.com>
 
-[ Upstream commit 11d8da5cabf7c6c3263ba2cd9c00260395867048 ]
+[ Upstream commit d246a3061528be6d852156d25c02ea69d6db7e65 ]
 
-'pinctrl_unregister()' should not be called to undo
-'devm_pinctrl_register_and_init()', it is already handled by the framework.
+The commit citied in the Fixes line wasn't complete and solved
+only part of the problems. Update the mlx5_ib to properly support
+MLX5_CMD_OP_INIT2INIT_QP command in the DEVX, that is required when
+modify the QP tx_port_affinity.
 
-This simplifies the error handling paths of the probe function.
-The 'imx_free_resources()' can be removed as well.
-
-Fixes: a51c158bf0f7 ("pinctrl: imx: use radix trees for groups and functions")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Link: https://lore.kernel.org/r/20200530204955.588962-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 819f7427bafd ("RDMA/mlx5: Add init2init as a modify command")
+Link: https://lore.kernel.org/r/20200527135703.482501-1-leon@kernel.org
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ drivers/infiniband/hw/mlx5/devx.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index 9f42036c5fbb..1f81569c7ae3 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -774,16 +774,6 @@ static int imx_pinctrl_probe_dt(struct platform_device *pdev,
- 	return 0;
- }
- 
--/*
-- * imx_free_resources() - free memory used by this driver
-- * @info: info driver instance
-- */
--static void imx_free_resources(struct imx_pinctrl *ipctl)
--{
--	if (ipctl->pctl)
--		pinctrl_unregister(ipctl->pctl);
--}
--
- int imx_pinctrl_probe(struct platform_device *pdev,
- 		      const struct imx_pinctrl_soc_info *info)
- {
-@@ -874,23 +864,18 @@ int imx_pinctrl_probe(struct platform_device *pdev,
- 					     &ipctl->pctl);
- 	if (ret) {
- 		dev_err(&pdev->dev, "could not register IMX pinctrl driver\n");
--		goto free;
-+		return ret;
- 	}
- 
- 	ret = imx_pinctrl_probe_dt(pdev, ipctl);
- 	if (ret) {
- 		dev_err(&pdev->dev, "fail to probe dt properties\n");
--		goto free;
-+		return ret;
- 	}
- 
- 	dev_info(&pdev->dev, "initialized IMX pinctrl driver\n");
- 
- 	return pinctrl_enable(ipctl->pctl);
--
--free:
--	imx_free_resources(ipctl);
--
--	return ret;
- }
- 
- static int __maybe_unused imx_pinctrl_suspend(struct device *dev)
+diff --git a/drivers/infiniband/hw/mlx5/devx.c b/drivers/infiniband/hw/mlx5/devx.c
+index bba7ab078430..fd75a9043bf1 100644
+--- a/drivers/infiniband/hw/mlx5/devx.c
++++ b/drivers/infiniband/hw/mlx5/devx.c
+@@ -489,6 +489,10 @@ static u64 devx_get_obj_id(const void *in)
+ 		obj_id = get_enc_obj_id(MLX5_CMD_OP_CREATE_QP,
+ 					MLX5_GET(rst2init_qp_in, in, qpn));
+ 		break;
++	case MLX5_CMD_OP_INIT2INIT_QP:
++		obj_id = get_enc_obj_id(MLX5_CMD_OP_CREATE_QP,
++					MLX5_GET(init2init_qp_in, in, qpn));
++		break;
+ 	case MLX5_CMD_OP_INIT2RTR_QP:
+ 		obj_id = get_enc_obj_id(MLX5_CMD_OP_CREATE_QP,
+ 					MLX5_GET(init2rtr_qp_in, in, qpn));
 -- 
 2.25.1
 
