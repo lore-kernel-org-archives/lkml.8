@@ -2,132 +2,100 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A722C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7B7C206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:50:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tIRU1k1m"
+	by mail.kernel.org (Postfix) with ESMTP id 53224207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 10:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbgFRKuQ (ORCPT
+        id S1729367AbgFRKuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 06:50:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgFRKuM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 06:50:12 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B90A2C06174E;
-        Thu, 18 Jun 2020 03:50:11 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id e1so5553808wrt.5;
-        Thu, 18 Jun 2020 03:50:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rq2vtUmYaxK4oFT2JMWTlMByzPndGv5xo1xhKDsPblM=;
-        b=tIRU1k1mmbprjFBezRoJ/fRf6b4ii5Zvlsnfw1NYXXMVmQm4MXjoPLMQkSy9D1oWyU
-         COnpdWBxiA1BzcutzGTvVRN1Tz4Izy1pmKsev0pIwbF81DXfrGYLiZvlBOU8uS/1SBdK
-         wIdX/dgFCGW3al6nLuoYKTb8Qa/tH8GOYUXw945nfC7HvJEeHrU9H+3kfzuaV5SbJ6kq
-         NhZBOvH97jHYsQ3QVAwHyZz1RK52KR1+JgbYMA5qZ4i/w3fuyC+bIlftZl8ag6eJM2dk
-         X2d9D0A+v12N6ssf1BRC6dVsIekuehm0ncNsKB5A5BakdVfpqudtRYBmB5abLqdnYzX1
-         t2JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rq2vtUmYaxK4oFT2JMWTlMByzPndGv5xo1xhKDsPblM=;
-        b=SBJEZZnvCxNnlWkhtUNSLIZUKa6MJIUUAk0n485OYAt+lo+EJ8X/y5k85Iojns4NHl
-         efXxf/5DaGTZXBiJfsHF1tKa5eFnFv672XhMBtFugd2Bf6lSnEMXFsC5v/I96avNYKWa
-         8m0rmsSv3TmOmOzxIL+wbGCPRjG0ti5BUlMVwE2+VH2cnqgZOxZHze25Sg9U8CqzHzNT
-         fslekuPy/PDTMedo/hYTJgTo1BgXu4hdF4+GgK1U2n1Z8yaUo+Qi2QH6KD9XmwF88aKZ
-         GZKOnRn9IQ/7qZ9Z6p/1VMKQGA0hFGQSayDUJKlUtnzaHgnmPg81jv/r03OtScQpZK7n
-         fWcA==
-X-Gm-Message-State: AOAM532PC5FOXWPZcYiVrEEG10IpxGjlPeOmNPbH4qNI5Ns87jB1JM6q
-        szlz1NMK42WzsjeDpQz+Ylg=
-X-Google-Smtp-Source: ABdhPJzn6TiRD5IAKs0XCAIfaFPig7mPGXaimtb/vQ+Sfv8NqJIzzX/LezQJNXioqTqXrux5wOb1qA==
-X-Received: by 2002:adf:df91:: with SMTP id z17mr3835800wrl.273.1592477410465;
-        Thu, 18 Jun 2020 03:50:10 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id o10sm3073553wrj.37.2020.06.18.03.50.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 03:50:09 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 12:50:07 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>, jonathanh@nvidia.com,
-        frankc@nvidia.com, hverkuil@xs4all.nl, sakari.ailus@iki.fi,
-        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [RFC PATCH v1 10/18] dt-bindings: tegra: Document VI and CSI
- port nodes
-Message-ID: <20200618105007.GA3663225@ulmo>
-References: <1591768960-31648-1-git-send-email-skomatineni@nvidia.com>
- <1591768960-31648-11-git-send-email-skomatineni@nvidia.com>
- <20200617221411.GB2923473@bogus>
+        Thu, 18 Jun 2020 06:50:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:47882 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728956AbgFRKuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 06:50:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85C5431B;
+        Thu, 18 Jun 2020 03:50:14 -0700 (PDT)
+Received: from [192.168.0.110] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9935A3F71F;
+        Thu, 18 Jun 2020 03:50:12 -0700 (PDT)
+Subject: Re: [PATCH v5 1/7] arm64: perf: Add missing ISB in
+ armv8pmu_enable_event()
+To:     Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mark.rutland@arm.com, Julien Thierry <julien.thierry@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>, maz@kernel.org,
+        Jiri Olsa <jolsa@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>, catalin.marinas@arm.com,
+        Namhyung Kim <namhyung@kernel.org>, will@kernel.org,
+        Julien Thierry <julien.thierry.kdev@gmail.com>
+References: <20200617113851.607706-1-alexandru.elisei@arm.com>
+ <20200617113851.607706-2-alexandru.elisei@arm.com>
+ <159242406774.62212.13909672383879587787@swboyd.mtv.corp.google.com>
+From:   Alexandru Elisei <alexandru.elisei@arm.com>
+Message-ID: <f1ab2ea4-97ad-0e27-ba0a-90fe53d54bce@arm.com>
+Date:   Thu, 18 Jun 2020 11:50:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
-Content-Disposition: inline
-In-Reply-To: <20200617221411.GB2923473@bogus>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <159242406774.62212.13909672383879587787@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Stephen,
 
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you very much for taking the time to review the patches!
 
-On Wed, Jun 17, 2020 at 04:14:11PM -0600, Rob Herring wrote:
-> On Tue, Jun 09, 2020 at 11:02:32PM -0700, Sowjanya Komatineni wrote:
-> > This patch documents Tegra VI and CSI port and endpoint nodes along
-> > with the other required properties.
-> >=20
-> > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> > ---
-> >  .../display/tegra/nvidia,tegra20-host1x.txt        | 87 ++++++++++++++=
-++++++++
-> >  1 file changed, 87 insertions(+)
->=20
-> This is getting converted to schema by Thierry.
+Comments below.
 
-Yeah, once this has settled it probably makes sense for me to pick this
-up into the json-schema series on top of the initial conversion.
+On 6/17/20 9:01 PM, Stephen Boyd wrote:
+> Quoting Alexandru Elisei (2020-06-17 04:38:45)
+>> Writes to the PMXEVTYPER_EL0 register are not self-synchronising. In
+>> armv8pmu_enable_event(), the PE can reorder configuring the event type
+>> after we have enabled the counter and the interrupt. This can lead to an
+>> interrupt being asserted because the of the previous event type that we
+> 'because the of the' doesn't read properly.
 
-Thierry
+Typo on my part, will fix it.
 
---ew6BAiZeqk4r7MaW
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+>> were counting, not the one that we've just enabled.
+>>
+>> The same rationale applies to writes to the PMINTENSET_EL1 register. The PE
+>> can reorder enabling the interrupt at any point in the future after we have
+>> enabled the event.
+>>
+>> Prevent both situations from happening by adding an ISB just before we
+>> enable the event counter.
+>>
+>> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+>> index 4d7879484cec..ee180b2a5b39 100644
+>> --- a/arch/arm64/kernel/perf_event.c
+>> +++ b/arch/arm64/kernel/perf_event.c
+>> @@ -605,6 +605,7 @@ static void armv8pmu_enable_event(struct perf_event *event)
+>>          * Enable interrupt for this counter
+>>          */
+>>         armv8pmu_enable_event_irq(event);
+>> +       isb();
+> Please add a comment before the isb() explaining the situation. Nobody
+> knows what this is for when reading the code and they don't want to do
+> git archaeology to figure it out.
 
------BEGIN PGP SIGNATURE-----
+That's a good idea, I'll do that.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7rRt0ACgkQ3SOs138+
-s6GjeQ//V5z5HHU3AGAEhkRvK5MxJwjbKjLteO/qr7SoHUcB0259EJUCo+M/Sj9r
-fhPbTuepd7NldeZBKTTHO+nwYVsl09ztvRAEdHHOZ9Nir6xToHYmr8i9t8bJH0Da
-Z1zueXUCBK+XWvodw0qzW6vLAZKAPgXk9ZyWXE2QcdiKTi/nq//ND3Wl2m1f8qdc
-IeoReqDLMJZEkig5HdDjkDcX0DnYhWaiN6TlYTN0gFt0P9n/3vrys6A3UnKQHcAt
-/vKgw5YKUfk4MHhKVZqWAeOVhRHxpef+2Q5atXqxWCwAQtcbrANXKA2UQMZ/fiux
-7xs8MhOOhkfVrH67N8qU/qzS00k8V+5CW1XVBfMQs2qfwRFSXlpBj5ONXPWLzbKs
-5/LXp/y+A+L0U7SykbfD8lT6SsCxabI5jF6jF/zlExc4gpqlL0gjVEaNpMcFje1/
-40ZwDxxQZHtSamkuOET5flEgDbe/uTc07Susmee5tBP3I91C7zikZZJvvKJ6sZnO
-HuQ3Yq67LFLl/q+pjyHPXoxx7+OsY1Z7Zm/3WWjfnprR+Y2IjUJ70nqxvlx/FZ03
-HrTf1iReuKRJMB1uDJT9YHxkAELACQql2hxCs1pa+X3GV/G5C0sMxN4rmmZQeQnm
-dzqM9ZVaXqmHopcGVfsAXF3/nyLKVPYVTdjngoP1fxcIqv9rEV4=
-=gbuv
------END PGP SIGNATURE-----
-
---ew6BAiZeqk4r7MaW--
+Thanks,
+Alex
