@@ -4,59 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6910CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDD6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44918221F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0441721D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444156;
-	bh=mAqzkT6MAi5iwjRq0/RbbHWDD0NklJgtR0mk/J0LAxc=;
+	s=default; t=1592444162;
+	bh=RbF7R6syy7S1waQY1MbRHQy3roS+yF1ctEbrIxMiiN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0+8Y3UbbX/3lLDH4/Ha9Di48zUXiotaQ81CRxmfJNsx/j6QFDXScq79Yd7uZEhP2/
-	 ESj0+estrYUswo+prMtb6nLXUgm/o3JHJDFvCSwZZ9S58JdWKPQeCbKVW7oIj3GHcP
-	 LOEwdd+3q+lZz9js+YAc73ayDuVv7vXYsH5D6UP4=
+	b=wyexHNPXScaHFX492N7+iCu1R+naP9NtA9pgd6pNpTWyujbZlFsEmZHC2I/xBPTMR
+	 JA/WhH3YOb8bDkpdQ+VOdA2F7ovWtrey6am/gV+9AMLb+2d0p90vYW95s5aVzbx+c7
+	 qsgyOhWj0jPqf1kLwXZxepGjVNhxx3dtTXQutMAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732075AbgFRBfx (ORCPT
+        id S1732743AbgFRBbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:35:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41954 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:31:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732750AbgFRBbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:31:19 -0400
+        id S1731997AbgFRB2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:28:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 772ED2222C;
-        Thu, 18 Jun 2020 01:31:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEE5922203;
+        Thu, 18 Jun 2020 01:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443878;
-        bh=mAqzkT6MAi5iwjRq0/RbbHWDD0NklJgtR0mk/J0LAxc=;
+        s=default; t=1592443681;
+        bh=RbF7R6syy7S1waQY1MbRHQy3roS+yF1ctEbrIxMiiN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kzDc0i39UnkU4kwfINOUFyCS6h/8460n5xcsiDvUq4w9zkdQAP9rugKfGNgRXgRbn
-         r+qfSoq/EIlYuin4HkJ62HXe1Qwx1TijayrzApRrDBhM2Lpr+RS4/8JI8sSzMku9or
-         b6xXuUWMdZgFaFSAQxDD4rJ/ZUj7aV+8p0XivLs8=
+        b=k+uRsnF8++DSqHwkx1UTm1jGW2rB5Pc4d17Hlzin1MITDIprfMgtFsZVT4L4gxVfl
+         MXeyRSNMtmRN12pW15qp3xWOzx45YB1ApXMI4zn9sWlxCSKIDUZqhL/R3vnK/zOtTy
+         jFD0wOgDnvF0LrH+lnbaOhHFVab79IDdRz/5vc/Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.4 57/60] include/linux/bitops.h: avoid clang shift-count-overflow warnings
-Date:   Wed, 17 Jun 2020 21:30:01 -0400
-Message-Id: <20200618013004.610532-57-sashal@kernel.org>
+Cc:     Jiri Benc <jbenc@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 096/108] geneve: change from tx_error to tx_dropped on missing metadata
+Date:   Wed, 17 Jun 2020 21:25:48 -0400
+Message-Id: <20200618012600.608744-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
-References: <20200618013004.610532-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -66,63 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Jiri Benc <jbenc@redhat.com>
 
-[ Upstream commit bd93f003b7462ae39a43c531abca37fe7073b866 ]
+[ Upstream commit 9d149045b3c0e44c049cdbce8a64e19415290017 ]
 
-Clang normally does not warn about certain issues in inline functions when
-it only happens in an eliminated code path. However if something else
-goes wrong, it does tend to complain about the definition of hweight_long()
-on 32-bit targets:
+If the geneve interface is in collect_md (external) mode, it can't send any
+packets submitted directly to its net interface, as such packets won't have
+metadata attached. This is expected.
 
-  include/linux/bitops.h:75:41: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-          return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
-                                                 ^~~~~~~~~~~~
-  include/asm-generic/bitops/const_hweight.h:29:49: note: expanded from macro 'hweight64'
-   define hweight64(w) (__builtin_constant_p(w) ? __const_hweight64(w) : __arch_hweight64(w))
-                                                  ^~~~~~~~~~~~~~~~~~~~
-  include/asm-generic/bitops/const_hweight.h:21:76: note: expanded from macro '__const_hweight64'
-   define __const_hweight64(w) (__const_hweight32(w) + __const_hweight32((w) >> 32))
-                                                                             ^  ~~
-  include/asm-generic/bitops/const_hweight.h:20:49: note: expanded from macro '__const_hweight32'
-   define __const_hweight32(w) (__const_hweight16(w) + __const_hweight16((w) >> 16))
-                                                  ^
-  include/asm-generic/bitops/const_hweight.h:19:72: note: expanded from macro '__const_hweight16'
-   define __const_hweight16(w) (__const_hweight8(w)  + __const_hweight8((w)  >> 8 ))
-                                                                         ^
-  include/asm-generic/bitops/const_hweight.h:12:9: note: expanded from macro '__const_hweight8'
-            (!!((w) & (1ULL << 2))) +     \
+However, the kernel itself sends some packets to the interface, most
+notably, IPv6 DAD, IPv6 multicast listener reports, etc. This is not wrong,
+as tunnel metadata can be specified in routing table (although technically,
+that has never worked for IPv6, but hopefully will be fixed eventually) and
+then the interface must correctly participate in IPv6 housekeeping.
 
-Adding an explicit cast to __u64 avoids that warning and makes it easier
-to read other output.
+The problem is that any such attempt increases the tx_error counter. Just
+bringing up a geneve interface with IPv6 enabled is enough to see a number
+of tx_errors. That causes confusion among users, prompting them to find
+a network error where there is none.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Link: http://lkml.kernel.org/r/20200505135513.65265-1-arnd@arndb.de
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Change the counter used to tx_dropped. That better conveys the meaning
+(there's nothing wrong going on, just some packets are getting dropped) and
+hopefully will make admins panic less.
+
+Signed-off-by: Jiri Benc <jbenc@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bitops.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/geneve.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index ce2bb045b3fd..9b9711ea267a 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -59,7 +59,7 @@ static inline int get_count_order(unsigned int count)
+diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
+index 6d3fa36b1616..3c9f8770f7e7 100644
+--- a/drivers/net/geneve.c
++++ b/drivers/net/geneve.c
+@@ -915,9 +915,10 @@ static netdev_tx_t geneve_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	if (geneve->collect_md) {
+ 		info = skb_tunnel_info(skb);
+ 		if (unlikely(!info || !(info->mode & IP_TUNNEL_INFO_TX))) {
+-			err = -EINVAL;
+ 			netdev_dbg(dev, "no tunnel metadata\n");
+-			goto tx_error;
++			dev_kfree_skb(skb);
++			dev->stats.tx_dropped++;
++			return NETDEV_TX_OK;
+ 		}
+ 	} else {
+ 		info = &geneve->info;
+@@ -934,7 +935,7 @@ static netdev_tx_t geneve_xmit(struct sk_buff *skb, struct net_device *dev)
  
- static __always_inline unsigned long hweight_long(unsigned long w)
- {
--	return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
-+	return sizeof(w) == 4 ? hweight32(w) : hweight64((__u64)w);
- }
+ 	if (likely(!err))
+ 		return NETDEV_TX_OK;
+-tx_error:
++
+ 	dev_kfree_skb(skb);
  
- /**
+ 	if (err == -ELOOP)
 -- 
 2.25.1
 
