@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F93C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26A54214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E97B221534
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447216;
-	bh=4P2Er/lUDMo8uruv5gFZ3mMiL8dQT5lEQ8AYO/2A1Xw=;
+	s=default; t=1592447218;
+	bh=FumiIC4SV64ItlOjDACyymgUa5Er6vFZUmFMIWXeyP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kxi1P9mLY7/dcXFyitKavi6tXaRfmcvbq1HO3jfFNQyq5+Oh6dwE8juZezao1zhAn
-	 2X1LCIFW49br9ryk+vW5GHElWX0EDkaKO/O9Wk1vXWvkGtZesHFBqSluVQCWdwbUL7
-	 +dCamWmiYFBGdX7Mm1/7zhNQit5iTXtvFRllBNVs=
+	b=Y84IZVwib+yiFtsJecXww0ffEIfQSziJcZ0K2YzH4n2HEs57/i4pbE66IW8sO3KnP
+	 7XkWRje/Kx3hBJjQSptZYYlYJmsI7CLKIX9NY6vTxDgoSODp1JkYU1GFi7E9bCZx3V
+	 I7/IKZrvRnfVMg6C3yOcI3KPI/OnW+EcCmfMEuQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387602AbgFRC0x (ORCPT
+        id S1729866AbgFRC0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:26:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47986 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:26:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729687AbgFRBQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:16:55 -0400
+        id S1728279AbgFRBQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:16:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49CCF21D80;
-        Thu, 18 Jun 2020 01:16:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D481821D94;
+        Thu, 18 Jun 2020 01:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443015;
-        bh=4P2Er/lUDMo8uruv5gFZ3mMiL8dQT5lEQ8AYO/2A1Xw=;
+        s=default; t=1592443017;
+        bh=FumiIC4SV64ItlOjDACyymgUa5Er6vFZUmFMIWXeyP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EdtvSq5W1KZAW0nh3Bclf3fzBvZ4mYN6dU9HXilF+GPk3/djTPrs4QP5BzVjqM4fB
-         8mypUenxayXaE6mTYTFEOHDwWSjx3MWCUQfrumd8YVAweHADBnXAJVwDjtqhz7JRRA
-         BzpJYqoSEUv8zOFFC3f2hnEFulRHw+101Xy6rcJo=
+        b=M6mpw8N0SODsKU+F/z/RO3zIz6660RU0X1J62Uxv7im9d/SaxyvlJLSAyKs7iyS12
+         cB4RR7Bgm/Y4TKz2OBX2pXPnWgHi+ayH8iabhU4a6LGW61bjvxTsYGfj9Mlrb5l1Ib
+         VKpJzi5Y1qOCjZedzh7KfVjrnIKeXA4QWXKQ52K0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 017/266] scsi: qedi: Check for buffer overflow in qedi_set_path()
-Date:   Wed, 17 Jun 2020 21:12:22 -0400
-Message-Id: <20200618011631.604574-17-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 019/266] ALSA: hda/realtek - Introduce polarity for micmute LED GPIO
+Date:   Wed, 17 Jun 2020 21:12:24 -0400
+Message-Id: <20200618011631.604574-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -60,43 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 4a4c0cfb4be74e216dd4446b254594707455bfc6 ]
+[ Upstream commit dbd13179780555ecd3c992dea1222ca31920e892 ]
 
-Smatch complains that the "path_data->handle" variable is user controlled.
-It comes from iscsi_set_path() so that seems possible.  It's harmless to
-add a limit check.
+Currently mute LED and micmute LED share the same GPIO polarity.
 
-The qedi->ep_tbl[] array has qedi->max_active_conns elements (which is
-always ISCSI_MAX_SESS_PER_HBA (4096) elements).  The array is allocated in
-the qedi_cm_alloc_mem() function.
+So split the polarity for mute and micmute, in case they have different
+polarities.
 
-Link: https://lore.kernel.org/r/20200428131939.GA696531@mwanda
-Fixes: ace7f46ba5fd ("scsi: qedi: Add QLogic FastLinQ offload iSCSI driver framework.")
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200430083255.5093-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_iscsi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/pci/hda/patch_realtek.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-index 8829880a54c3..84a639698343 100644
---- a/drivers/scsi/qedi/qedi_iscsi.c
-+++ b/drivers/scsi/qedi/qedi_iscsi.c
-@@ -1214,6 +1214,10 @@ static int qedi_set_path(struct Scsi_Host *shost, struct iscsi_path *path_data)
- 	}
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index df5afac0b600..459a7d61326e 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -81,6 +81,7 @@ struct alc_spec {
  
- 	iscsi_cid = (u32)path_data->handle;
-+	if (iscsi_cid >= qedi->max_active_conns) {
-+		ret = -EINVAL;
-+		goto set_path_exit;
-+	}
- 	qedi_ep = qedi->ep_tbl[iscsi_cid];
- 	QEDI_INFO(&qedi->dbg_ctx, QEDI_LOG_INFO,
- 		  "iscsi_cid=0x%x, qedi_ep=%p\n", iscsi_cid, qedi_ep);
+ 	/* mute LED for HP laptops, see alc269_fixup_mic_mute_hook() */
+ 	int mute_led_polarity;
++	int micmute_led_polarity;
+ 	hda_nid_t mute_led_nid;
+ 	hda_nid_t cap_mute_led_nid;
+ 
+@@ -4080,11 +4081,9 @@ static void alc269_fixup_hp_mute_led_mic3(struct hda_codec *codec,
+ 
+ /* update LED status via GPIO */
+ static void alc_update_gpio_led(struct hda_codec *codec, unsigned int mask,
+-				bool enabled)
++				int polarity, bool enabled)
+ {
+-	struct alc_spec *spec = codec->spec;
+-
+-	if (spec->mute_led_polarity)
++	if (polarity)
+ 		enabled = !enabled;
+ 	alc_update_gpio_data(codec, mask, !enabled); /* muted -> LED on */
+ }
+@@ -4095,7 +4094,8 @@ static void alc_fixup_gpio_mute_hook(void *private_data, int enabled)
+ 	struct hda_codec *codec = private_data;
+ 	struct alc_spec *spec = codec->spec;
+ 
+-	alc_update_gpio_led(codec, spec->gpio_mute_led_mask, enabled);
++	alc_update_gpio_led(codec, spec->gpio_mute_led_mask,
++			    spec->mute_led_polarity, enabled);
+ }
+ 
+ /* turn on/off mic-mute LED via GPIO per capture hook */
+@@ -4104,6 +4104,7 @@ static void alc_gpio_micmute_update(struct hda_codec *codec)
+ 	struct alc_spec *spec = codec->spec;
+ 
+ 	alc_update_gpio_led(codec, spec->gpio_mic_led_mask,
++			    spec->micmute_led_polarity,
+ 			    spec->gen.micmute_led.led_value);
+ }
+ 
+@@ -5808,7 +5809,8 @@ static void alc280_hp_gpio4_automute_hook(struct hda_codec *codec,
+ 
+ 	snd_hda_gen_hp_automute(codec, jack);
+ 	/* mute_led_polarity is set to 0, so we pass inverted value here */
+-	alc_update_gpio_led(codec, 0x10, !spec->gen.hp_jack_present);
++	alc_update_gpio_led(codec, 0x10, spec->mute_led_polarity,
++			    !spec->gen.hp_jack_present);
+ }
+ 
+ /* Manage GPIOs for HP EliteBook Folio 9480m.
 -- 
 2.25.1
 
