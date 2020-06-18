@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B42C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DBCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 022D6221FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA08A221F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444475;
-	bh=L7krQWvQ/BaFmjdN656B/vQz1kmE70ALqk8CeDzjA+4=;
+	s=default; t=1592444478;
+	bh=UsY6ojiGGo04yYN4r3Alru+AS50HUpMPbmnkwX+mkWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gnhJgBa+sxBYa131JtN+E6YUDAF71CADIImnwJIuHBFfwF8s+JxUl8cchG7XMdIs9
-	 XSW6H+Gd9QIcv/+Zgbmj6xsVwYSDVjCOs0aSodcoBbNRltMiC4G1whkfdOxDI3dOku
-	 aTMHCgfE3Cl2z5Ty4veTFgbIotq4SgdqFgAIWtEs=
+	b=XmW9c+P/O4szjRE4zz1WJfu6ZFH5HxP3YPi7VHEcz9SKbWqx+i4xtLp3lpbCWTCBc
+	 eo4KZoYX0ZglACNFDzJmv5D83WhtfHHlJW+EfA929iZBFgwb7cAb3v6C/yPHyp4DOD
+	 V65Z0ykLgqhAnl/6XDLIP3tEThxEMifCGmSE5OKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731303AbgFRBlN (ORCPT
+        id S1732373AbgFRB3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:41:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732375AbgFRB3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:29:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731690AbgFRB0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:26:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCE8922229;
-        Thu, 18 Jun 2020 01:29:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EFC120897;
+        Thu, 18 Jun 2020 01:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443789;
-        bh=L7krQWvQ/BaFmjdN656B/vQz1kmE70ALqk8CeDzjA+4=;
+        s=default; t=1592443592;
+        bh=UsY6ojiGGo04yYN4r3Alru+AS50HUpMPbmnkwX+mkWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CIAFLCWM2DdlphUvSjW26HQHkvKC/98E8nrgPgy8Y05aSFqd2JR9Wh1cFsY8tcwsN
-         j3m5xWALFlqxL1Ks6w5ktMXoJg6xAKXUi+BIgnH3gYxU0a+ic8G1jWvS+gHyhFPdIY
-         nKiGJ4DiATH6EoY1ePw4xTUQ52Bb3o4p5pxp/tV8=
+        b=gHgHz3Ol8l/j+n3klM5XFldaxt2pz4OJ8+vnF/giugCXeb3+5jFjEJBzwsl4pjww1
+         5BoKDbDbADNoPmqAiHYYN7Y7Pya0SInmiWNZLBjC7RcIyZhyMONkDyrYGQTy1vB+gv
+         vYC6MLFkCS0Hx25+dIl+1AZcxQV4H3jW8e5zcjrk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stafford Horne <shorne@gmail.com>, Sasha Levin <sashal@kernel.org>,
-        openrisc@lists.librecores.org
-Subject: [PATCH AUTOSEL 4.9 70/80] openrisc: Fix issue with argument clobbering for clone/fork
-Date:   Wed, 17 Jun 2020 21:28:09 -0400
-Message-Id: <20200618012819.609778-70-sashal@kernel.org>
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Daniel Wagner <dwagner@suse.de>,
+        James Smart <james.smart@broadcom.com>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 025/108] scsi: lpfc: Fix lpfc_nodelist leak when processing unsolicited event
+Date:   Wed, 17 Jun 2020 21:24:37 -0400
+Message-Id: <20200618012600.608744-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
-References: <20200618012819.609778-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,46 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stafford Horne <shorne@gmail.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 6bd140e14d9aaa734ec37985b8b20a96c0ece948 ]
+[ Upstream commit 7217e6e694da3aae6d17db8a7f7460c8d4817ebf ]
 
-Working on the OpenRISC glibc port I found that sometimes clone was
-working strange.  That the tls data argument sent in r7 was always
-wrong.  Further investigation revealed that the arguments were getting
-clobbered in the entry code.  This patch removes the code that writes to
-the argument registers.  This was likely due to some old code hanging
-around.
+In order to create or activate a new node, lpfc_els_unsol_buffer() invokes
+lpfc_nlp_init() or lpfc_enable_node() or lpfc_nlp_get(), all of them will
+return a reference of the specified lpfc_nodelist object to "ndlp" with
+increased refcnt.
 
-This patch fixes this up for clone and fork.  This fork clobber is
-harmless but also useless so remove.
+When lpfc_els_unsol_buffer() returns, local variable "ndlp" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-Signed-off-by: Stafford Horne <shorne@gmail.com>
+The reference counting issue happens in one exception handling path of
+lpfc_els_unsol_buffer(). When "ndlp" in DEV_LOSS, the function forgets to
+decrease the refcnt increased by lpfc_nlp_init() or lpfc_enable_node() or
+lpfc_nlp_get(), causing a refcnt leak.
+
+Fix this issue by calling lpfc_nlp_put() when "ndlp" in DEV_LOSS.
+
+Link: https://lore.kernel.org/r/1590416184-52592-1-git-send-email-xiyuyang19@fudan.edu.cn
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/openrisc/kernel/entry.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/lpfc/lpfc_els.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
-index c17e8451d997..3fbe420f49c4 100644
---- a/arch/openrisc/kernel/entry.S
-+++ b/arch/openrisc/kernel/entry.S
-@@ -1092,13 +1092,13 @@ ENTRY(__sys_clone)
- 	l.movhi	r29,hi(sys_clone)
- 	l.ori	r29,r29,lo(sys_clone)
- 	l.j	_fork_save_extra_regs_and_call
--	 l.addi	r7,r1,0
-+	 l.nop
- 
- ENTRY(__sys_fork)
- 	l.movhi	r29,hi(sys_fork)
- 	l.ori	r29,r29,lo(sys_fork)
- 	l.j	_fork_save_extra_regs_and_call
--	 l.addi	r3,r1,0
-+	 l.nop
- 
- ENTRY(sys_rt_sigreturn)
- 	l.j	_sys_rt_sigreturn
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index 4c84c2ae1112..db1111f7e85a 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -7913,6 +7913,8 @@ lpfc_els_unsol_buffer(struct lpfc_hba *phba, struct lpfc_sli_ring *pring,
+ 	spin_lock_irq(shost->host_lock);
+ 	if (ndlp->nlp_flag & NLP_IN_DEV_LOSS) {
+ 		spin_unlock_irq(shost->host_lock);
++		if (newnode)
++			lpfc_nlp_put(ndlp);
+ 		goto dropit;
+ 	}
+ 	spin_unlock_irq(shost->host_lock);
 -- 
 2.25.1
 
