@@ -2,76 +2,121 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5435C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F16C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 921C720706
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C024F20706
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:13:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e3MwnKPy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oMlIb0Fo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgFRIMZ (ORCPT
+        id S1728448AbgFRINL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:12:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53362 "EHLO
+        Thu, 18 Jun 2020 04:13:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728278AbgFRIMY (ORCPT
+        with ESMTP id S1728278AbgFRINK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:12:24 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7989FC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:12:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=8WLntUDK1QrdTrtcYEKpz3qz/VsDSn22rJQznhsWmU0=; b=e3MwnKPyFxHRL5O429eXq+MBeb
-        V99twzBHr2ZXWFY2ynglX6gSFx36uKpjd+0ghXzeWdf0xh2c8LctMz+VtELXUOcNHtz9XzjU8fUCr
-        l8CkSq1+PCFiYMhidXjLG1bJ5mmQfdYW5M9R7EtvGSPXG/yJFPaHK2jp8Y4bF0piLT+UoiNL7ynuj
-        Z11k3keHfxpXLobhqyoreaHbJEfFh3hYOuFNAzAig5DQnpVAPzPfHBKqxfNtgI0ibbUbbi0aN9NPv
-        5T9Rfw7VLV+IYFZNDXTnx6Qr4fb7bP+SBltVUTpaxTYa4LfhzntaknHQWJeRPCmhXI7dDHCxW7V1s
-        fhhWC9TQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlpej-0001PE-74; Thu, 18 Jun 2020 08:12:17 +0000
-Date:   Thu, 18 Jun 2020 01:12:17 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     JaeHun Jung <jh0801.jung@samsung.com>
-Cc:     tiwai@suse.de, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH] ANDROID: sound: usb: Add vendor's hooking interface
-Message-ID: <20200618081217.GA25552@infradead.org>
-References: <CGME20200617022554epcas2p214a49f03a15e504d8faa28148e06e796@epcas2p2.samsung.com>
- <1592360304-29621-1-git-send-email-jh0801.jung@samsung.com>
+        Thu, 18 Jun 2020 04:13:10 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E2D7C06174E;
+        Thu, 18 Jun 2020 01:13:09 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id s135so2586092pgs.2;
+        Thu, 18 Jun 2020 01:13:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ene5uMUm+upAXA9BJzuffmYO6Vv0lNnhNcaEqAS2hRI=;
+        b=oMlIb0FoGBOJsgrNjpyA6usrw+ThWjyOMCmvPw99IwyYIB9ip/U9QzQHM7FRRCUyVa
+         k34zw3yY6VYyswqz9FW7UYIj/4DmuvGwkZ6M2Sty2biD7jPkTJa1jEwgALUm1GfCim3D
+         XKrA7g31mdNnR/gZy1pgwqzhrqnfzJ41FhSygGWHtmdBqIp5FvDh+5lrCQhdsYgSozBR
+         4P63nnZI4qWxo2ZZh1o3UxJluffSonG0U0VdlUfB6sgRVIWElBaQjWnyc8szcFsPdHk/
+         cLslW6W/v55tZ6UkbptbmR4NGzT9n6kIjKALMasirBmP2nutJjYj7WeTdQlj/mW9chfC
+         yKvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ene5uMUm+upAXA9BJzuffmYO6Vv0lNnhNcaEqAS2hRI=;
+        b=JlHQa+4IdAH6T22zyOQW1GqdPIspzcnQaMWAquq3UA4taKkSolJj9c2YFrqj+X3IfC
+         G1HGDK/eqKMSFvroPOb4gkmfja2wm2BOIKs19L3M2Z9gBWHrw044CjHRMTkNddW9xSNf
+         NuuUoV3zsmwNfYZ91Wt5m0yDn8p32sPp5G4ftZECvbLyCsksdgQoQaP+wPcBb3UX2HjF
+         oGq0CxpfBEBYUdvcqVPyJj1d4T2TeQznjaJLnGMrdwebXCXh/cmXzPVhyg64Cw+SGcb5
+         RXHi6qBE/jsBXOZ30mAkK13hC7Hsb2/50PFdXoojPC04Z78z2eLZCv/rSUcfag1iTOXj
+         h2dA==
+X-Gm-Message-State: AOAM533Yu+1WggqxiOeVXSiehu/iGccvLb+NjsfvEqZ8Imr3YyuWFWhw
+        AE+jGpGtoaBo7Q0LY8k1BWoOUUCahKlbn+LyBOw=
+X-Google-Smtp-Source: ABdhPJzn2cN3ofWkUgWLzA5Vs/OEjLvfC75aOifXK9Wv9zVyHGJzQXPmA/pTNu8thNBvmrN+azQmzx37a2Glr4j49IE=
+X-Received: by 2002:a62:1c46:: with SMTP id c67mr2533442pfc.170.1592467988587;
+ Thu, 18 Jun 2020 01:13:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592360304-29621-1-git-send-email-jh0801.jung@samsung.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200616011742.138975-1-rajatja@google.com> <20200616011742.138975-4-rajatja@google.com>
+ <20200616073249.GB30385@infradead.org> <CACK8Z6ELaM8KxbwPor=BUquWN7pALQmmHu5geSOc71P3KoJ1QA@mail.gmail.com>
+ <20200617073100.GA14424@infradead.org> <CACK8Z6FecYkAYQh4sm4RbAQ1iwb9gexqgY9ExD9BH2p-5Usj=g@mail.gmail.com>
+In-Reply-To: <CACK8Z6FecYkAYQh4sm4RbAQ1iwb9gexqgY9ExD9BH2p-5Usj=g@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 18 Jun 2020 11:12:56 +0300
+Message-ID: <CAHp75Vc6eA33cyAQH-m+yixTuHqiobg6fo7nzbbb-J6vN6qFcA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] pci: export untrusted attribute in sysfs
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 11:18:24AM +0900, JaeHun Jung wrote:
-> In mobile, a co-processor is used when using USB audio
-> to improve power consumption.
-> hooking is required for sync-up when operating
-> the co-processor. So register call-back function.
-> The main operation of the call-back function is as follows:
-> - Initialize the co-processor by transmitting data
->   when initializing.
-> - Change the co-processor setting value through
->   the interface function.
-> - Configure sampling rate
-> - pcm open/close
-> 
-> Bug: 156315379
+On Wed, Jun 17, 2020 at 10:56 PM Rajat Jain <rajatja@google.com> wrote:
+> On Wed, Jun 17, 2020 at 12:31 AM Christoph Hellwig <hch@infradead.org> wrote:
 
-None of that is acceptable without an in-tree user.  Never mind that
-the interface just seems horrible.  I'm pretty sure we could do
-somehting much better and more specific based on the actual needs of
-the user, so please post it.
+...
+
+> (and likely call it "external" instead of "untrusted".
+
+Which is not okay. 'External' to what? 'untrusted' has been carefully
+chosen by the meaning of it.
+What external does mean for M.2. WWAN card in my laptop? It's in ACPI
+tables, but I can replace it.
+This is only one example. Or if firmware of some device is altered,
+and it's internal (whatever it means) is it trusted or not?
+
+So, please leave it as is (I mean name).
+
+-- 
+With Best Regards,
+Andy Shevchenko
