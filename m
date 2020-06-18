@@ -7,184 +7,132 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D1EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE88C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9A9B208B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB0F20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 17:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iiqRWOJe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnJVvr0v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732285AbgFRReL (ORCPT
+        id S1732307AbgFRRfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 13:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55534 "EHLO
+        Thu, 18 Jun 2020 13:35:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728384AbgFRReK (ORCPT
+        with ESMTP id S1726899AbgFRRfZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 13:34:10 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BB7EC06174E;
-        Thu, 18 Jun 2020 10:34:10 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id y9so3156480qvs.4;
-        Thu, 18 Jun 2020 10:34:10 -0700 (PDT)
+        Thu, 18 Jun 2020 13:35:25 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33E30C06174E;
+        Thu, 18 Jun 2020 10:35:25 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id i3so8282827ljg.3;
+        Thu, 18 Jun 2020 10:35:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HEt4Pvebw1D02KEOJn4E0FCDzL41oY+kb0al+hZuU00=;
-        b=iiqRWOJedzCE0nYhPevpMxA8E6GErKmVq3eX5LGN4vJS4nnKZIA9PyIsZHpqjFGHVs
-         p/LDOiY/w5n9vRMD7htsyddAZewMnIg5W4pcBuRm+vrc+l3pTEy2OhoRkstG43xS/U5l
-         5BH2Ab5f8LC6ee+/Yn49oZvorgfF2aKN/i36uBuXFkxWluqJk3sCJQc4c3BgmbyLlUGz
-         Ciy8z6wf1a5LrL9jGISLUlgKWKymwDUpxbumR2Ra4OKxnycymndz8538yK+RCIA7yQCS
-         fubzWDqY3Ao/URof858vU9iylT4IqHWKeAfrLSinM68jauqU8TGW5Av2d0RTtNzqyoI3
-         MfKw==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2dnP8qUYYyaFpZ3zTbvKqOauflmJ29SpLJF29OdRiCY=;
+        b=UnJVvr0vjgrNwYCuzGQ6Zwo0ZVOh/xGkhHUBk/0FzT/T+Ziki1U2FpCULJ6P04LVov
+         JURhpY1o6uMKtJhlLf1rU1t0Et/tIhjTe6Ph/AdJ8FPnrhTLQVBacPE0hUXobrMePabw
+         vouH+VTXBH8gtFwRihx66ME4fgW8MqQrRJYKM1ByaJBompes1rA7HRt0N4Izz2T5bHdf
+         Xb76GGTOw60NJVLmPZCpl71bjGxL8Y3+niDOZqPT2czIf///ZMo+5MjG4XdPCXswIWRa
+         vKCYkgC9UBOY4xne6+RfrbTwTqu4UogFTG05Yvxb2k5n/z2CoiUgrEMxfvZJpuIx/gk0
+         48QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HEt4Pvebw1D02KEOJn4E0FCDzL41oY+kb0al+hZuU00=;
-        b=B5dH2vSqDqYZCm5bsaVBM3PZDJbvvwoxXzR1emGrGGlSAdum0omIb2XjVGWbJZr6hn
-         6eXbk3o70n26/mfq2w5QNpb5o6v5FixmhDpmezMzYsfe4hnyvVG1n5GTAjyS4rUTvcxF
-         wTqXrp7pJe76N91e9IDRHVtyBVyV9Bcu5ye3g68gu1J8+fP1TRFBQ3Leym/4holV19Gx
-         Ncu0HPdEQHkOuAU+Kg8+kuRV5j62s8nhyVKy9ET92XPmRS39mVuVF/lhmy6nPaOaYYP5
-         7bGLOycp30XQKqEit4j2/EM0ofCBOUlQSoUYyUvONKT7TgmPbLTeCHQ3jzduaeOSW94z
-         lTGA==
-X-Gm-Message-State: AOAM533GJNL90sreH4tnlGVdV5v/eAjuKFyoIsI4rNm+rzIXHX9/dWNC
-        qCDLozQXJL1jsmciV+LG1xE=
-X-Google-Smtp-Source: ABdhPJzf++G2jVb6Z9CC0IL2NDF9hkq8ySX+4NfRd5wM/n+z3/yS5T9b//i24vaF/xge3XVL62440w==
-X-Received: by 2002:a05:6214:9ce:: with SMTP id dp14mr4790257qvb.216.1592501649452;
-        Thu, 18 Jun 2020 10:34:09 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id n13sm4307698qtf.35.2020.06.18.10.34.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jun 2020 10:34:08 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] mfd: core: Make a best effort attempt to match
- devices with the correct of_nodes
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     andy.shevchenko@gmail.com, michael@walle.cc, robh+dt@kernel.org,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux@roeck-us.net,
-        andriy.shevchenko@linux.intel.com, robin.murphy@arm.com,
-        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200611191002.2256570-1-lee.jones@linaro.org>
- <4b188fb5-6667-720d-46e1-6f103efe8966@gmail.com>
- <20200615092644.GA2608702@dell>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <eef50a78-8571-5600-4fee-c824fd4a7f69@gmail.com>
-Date:   Thu, 18 Jun 2020 12:34:07 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2dnP8qUYYyaFpZ3zTbvKqOauflmJ29SpLJF29OdRiCY=;
+        b=j8YAJ4Hd11ziMBugddeq2igPvzR7ii2mFbhna6/J+Sj55LhgrDOUjXHNm5H3XSL8Sz
+         CcWpFnuq1Ey49AYERp+qtO4skiZkD2J22KkGMg7sggbFxrzbiiJXPeocjR459Vvq9vki
+         PPsRdrau9bAPHbzH6r4VDUg4HPj9SF23ev1/SYePJyHYNgACXHb+k25whP34hWQ5H7pE
+         IltB1ZeauyBJ+DT7mFz7vCwopMP/p1IWRI2Qc2TOBMMMuXtUBzeJbnVkaGhMazg3OoZR
+         cmXejhzdQVQWjokF0CTXuT/qanU2wijoTssntZ7Iq49YoCaqKFKK1T/kjKuxmSSnvYKg
+         JZAg==
+X-Gm-Message-State: AOAM530+gWw2Z0a51JEiQxPN2yjgNT7TxgdC3EqBnPg63oe3bjWeopo6
+        xMNMwoqSvAmOLovtDqB9jgJ0HW5sabt3og==
+X-Google-Smtp-Source: ABdhPJyRHfUAtfaXLaXdDIJZ3o3g1DeSegfwsePEd6xOssh783a7fX4fLQEGbc4AJvcyRvrKKGGOHw==
+X-Received: by 2002:a05:651c:29b:: with SMTP id b27mr2725268ljo.454.1592501723586;
+        Thu, 18 Jun 2020 10:35:23 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id t11sm427510lfc.24.2020.06.18.10.35.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 10:35:22 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Thu, 18 Jun 2020 19:35:20 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
+ ptrs
+Message-ID: <20200618173520.GC14613@pc636>
+References: <20200525214800.93072-1-urezki@gmail.com>
+ <20200525214800.93072-10-urezki@gmail.com>
+ <20200617234609.GA10087@paulmck-ThinkPad-P72>
+ <20200618005214.GN8681@bombadil.infradead.org>
+ <20200618031823.GQ2723@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <20200615092644.GA2608702@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618031823.GQ2723@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-15 04:26, Lee Jones wrote:
-> On Sun, 14 Jun 2020, Frank Rowand wrote:
+> > 
+> > I don't think that replacing direct function calls with indirect function
+> > calls is a great suggestion with the current state of play around branch
+> > prediction.
+> > 
+> > I'd suggest:
+> > 
+> >  			rcu_lock_acquire(&rcu_callback_map);
+> > 			trace_rcu_invoke_kfree_bulk_callback(rcu_state.name,
+> > 				bkvhead[i]->nr_records, bkvhead[i]->records);
+> >  			if (i == 0) {
+> >  				kfree_bulk(bkvhead[i]->nr_records,
+> >  					bkvhead[i]->records);
+> >  			} else {
+> >  				for (j = 0; j < bkvhead[i]->nr_records; j++) {
+> >  					vfree(bkvhead[i]->records[j]);
+> >  				}
+> >  			}
+> >  			rcu_lock_release(&rcu_callback_map);
+> > 
+> > But I'd also suggest a vfree_bulk be added.  There are a few things
+> > which would be better done in bulk as part of the vfree process
+> > (we batch them up already, but i'm sure we could do better).
 > 
->> Hi Lee,
->>
->> I'm looking at 5.8-rc1.
->>
->> The only use of OF_MFD_CELL() where the same compatible is specified
->> for multiple elements of a struct mfd_cell array is for compatible
->> "stericsson,ab8500-pwm" in drivers/mfd/ab8500-core.c:
->>
->>         OF_MFD_CELL("ab8500-pwm",
->>                     NULL, NULL, 0, 1, "stericsson,ab8500-pwm"),
->>         OF_MFD_CELL("ab8500-pwm",
->>                     NULL, NULL, 0, 2, "stericsson,ab8500-pwm"),
->>         OF_MFD_CELL("ab8500-pwm",
->>                     NULL, NULL, 0, 3, "stericsson,ab8500-pwm"),
-
-         OF_MFD_CELL("ab8500-pwm",
-                     NULL, NULL, 0, 0, "stericsson,ab8500-pwm"),
-
-         OF_MFD_CELL_REG("ab8500-pwm-mc",
-                         NULL, NULL, 0, 0, "stericsson,ab8500-pwm", 0),
-         OF_MFD_CELL_REG("ab8500-pwm-mc",
-                         NULL, NULL, 0, 1, "stericsson,ab8500-pwm", 1),
-         OF_MFD_CELL_REG("ab8500-pwm-mc",
-                         NULL, NULL, 0, 2, "stericsson,ab8500-pwm", 2),
-
->>
->> The only .dts or .dtsi files where I see compatible "stericsson,ab8500-pwm"
->> are:
->>
->>    arch/arm/boot/dts/ste-ab8500.dtsi
->>    arch/arm/boot/dts/ste-ab8505.dtsi
->>
->> These two .dtsi files only have a single node with this compatible.
->> Chasing back to .dts and .dtsi files that include these two .dtsi
->> files, I see no case where there are multiple nodes with this
->> compatible.
->>
->> So it looks to me like there is no .dts in mainline that is providing
->> the three "stericsson,ab8500-pwm" nodes that drivers/mfd/ab8500-core.c
->> is expecting.  No case that there are multiple mfd child nodes where
->> mfd_add_device() would assign the first of n child nodes with the
->> same compatible to multiple devices.
->>
->> So it appears to me that drivers/mfd/ab8500-core.c is currently broken.
->> Am I missing something here?
->>
->> If I am correct, then either drivers/mfd/ab8500-core.c or
->> ste-ab8500.dtsi and ste-ab8505.dtsi need to be fixed.
+> I suspect that he would like to keep the tracing.
 > 
-> Your analysis is correct.
-
-OK, if I'm not overlooking anything, that is good news.
-
-Existing .dts source files only have one "ab8500-pwm" child.  They already
-work correcly.
-
-Create a new compatible for the case of multiple children.  In my example
-I will add "-mc" (multiple children) to the existing compatible.  There
-is likely a better name, but this lets me provide an example.
-
-Modify drivers/mfd/ab8500-core.c to use the new compatible, and new .dts
-source files with multiple children use the new compatible:
-
-         OF_MFD_CELL("ab8500-pwm",
-                     NULL, NULL, 0, 0, "stericsson,ab8500-pwm"),
-
-         OF_MFD_CELL_REG("ab8500-pwm-mc",
-                         NULL, NULL, 0, 0, "stericsson,ab8500-pwm", 0),
-         OF_MFD_CELL_REG("ab8500-pwm-mc",
-                         NULL, NULL, 0, 1, "stericsson,ab8500-pwm", 1),
-         OF_MFD_CELL_REG("ab8500-pwm-mc",
-                         NULL, NULL, 0, 2, "stericsson,ab8500-pwm", 2),
-
-The "OF_MFD_CELL" entry is the existing entry, which will handle current
-.dts source files.  The new "OF_MFD_CELL_REG" entries will handle new
-.dts source files.
-
-And of course the patch that creates OF_MFD_CELL_REG() needs to precede
-this change.
-
-I would remove the fallback code in the existing patch that tries to
-handle an incorrect binding.  Just error out if the binding is not
-used properly.
-
--Frank
+> It might be worth trying the branches, given that they would be constant
+> and indexed by "i".  The compiler might well remove the indirection.
+> 
+> The compiler guys brag about doing so, which of course might or might
+> not have any correlation to a given compiler actually doing so.  :-/
+> 
+> Having a vfree_bulk() might well be useful, but I would feel more
+> confidence in that if there were other callers of kfree_bulk().
+>
+Hmm... I think replacing that with vfree_bulk() is a good idea though.
 
 > 
-> Although it's not "broken", it just works when it really shouldn't.
+> But again, either way, future work as far as this series is concerned.
 > 
-> I will be fixing the 'ab8500-pwm' case in due course.
-> 
->> Moving forward, your proposed OF_MFD_CELL_REG() method seems a good
->> approach (I have not completely read the actual code in the patch yet
->> though).
-> 
-> Thanks.
-> 
+What do you mean: is concerned?
 
+We are planning to implement kfree_rcu() to be integrated directly into
+SLAB: SLAB, SLUB, SLOB. So, there are plenty of future work :)
+
+--
+Vlad Rezki
