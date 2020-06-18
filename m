@@ -2,142 +2,141 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE1EF2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:22:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cDW1fPwu"
+	by mail.kernel.org (Postfix) with ESMTP id 85E302186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592468553;
+	bh=VpzKjvvcq9cKpAHfRmxLguugzRbLfQsNRX/iv+XnJ4s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZPdZr+1nPiBlX/hyf80myWGp7CWDLq515vKb6ofj3+Jo9wxopspmIb096eqZsS88f
+	 eCPt+GhwwgO4rmudSazGpT0AjP4LbtgzVWXgGRZuciB+sV1d5c1DJQoZwzONGzVU7h
+	 R5/4uKVMkN3Dtc4QzTnuHFJFTPaU432RAwXOdzBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgFRIWN (ORCPT
+        id S1728664AbgFRIWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:22:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728629AbgFRIWJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:22:09 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201CCC06174E;
-        Thu, 18 Jun 2020 01:22:07 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k1so2146636pls.2;
-        Thu, 18 Jun 2020 01:22:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5va4+zAz3Y84F8I+jfwGK7kVZgA+OWKUCO/DBzqZ2lk=;
-        b=cDW1fPwusXFzGuCl5MLlwj3Weok2y/3zDATZakbo/QxGCfddQPnP9+2vX2AwQ7pOCU
-         WO7ztjrphuOdlaWUCyCendYSCETu3ckX0m+nG+esOVlkRgTCNW7IyvIZS+ptQGtMAQYY
-         BXLd8pI1mh8TBLJ8yWa+ZtEFKB252rKhjqGdLRJK5w19fvKuLyB6J9YmhHO0vYyO2zS4
-         DY6PJbKGD6Z9sNQ+Wcva2R90nSOstl+3TkSQx8qHoJKBH0yLeVdbTs91CbeM/lv7p2Sj
-         1Q8MkQ3YLnT0fshzg2HkNSmtQh5YJXuaBiNe8Rzi1w7Fm7JCQAkFpGMR9ini0g/Qudel
-         1nEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5va4+zAz3Y84F8I+jfwGK7kVZgA+OWKUCO/DBzqZ2lk=;
-        b=DqRlM1zo4YbQCJc8uA92q2L+QmRJXEfmhxqi18bgebJNRJdr2emXuzvRcK+f8ONu5y
-         HI0cqBzpt7VFBOtsC5g/e8rZ+ZjDQcwgQGXxuiOTA38BCYIi+2yfzmuBT4tO9sWrWz7k
-         dEQwP9alvivbX1uaIDXiPgnojdAnUSo9rde4/AZVgya5ZVKoGM/LO6kXd6JkPQnGE85l
-         okANFXSq8O0G74XjUIJfciQ0oKhDeN6vc46pFaOmgj1ryXQG61O0LnzpiQciiqdvnziB
-         bxfT1RDymJkP01pv4HF7ZpgNMScsR2vhMUmaiL1aqq6CgUwxRjydxOteDO6kPJheV8lj
-         CT9A==
-X-Gm-Message-State: AOAM532wctvWeYA5k/cUQXhfgnIHxKu13/wLp6O4//8YODpyuGG+AWlG
-        XgGTF9c59qOeI6ylvPhyfGv3e5imj8vN3AXfUCk=
-X-Google-Smtp-Source: ABdhPJxX08N8JTeQWAXqBjqWujBqYCDSdKV6HtPJTrJdC6PtGGZb5xiN1DV0gsb2hPJw/LyrQK9UVr140CiNu7pAebo=
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr3196269pjq.228.1592468526692;
- Thu, 18 Jun 2020 01:22:06 -0700 (PDT)
+        Thu, 18 Jun 2020 04:22:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728406AbgFRIW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:22:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D3152166E;
+        Thu, 18 Jun 2020 08:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592468548;
+        bh=VpzKjvvcq9cKpAHfRmxLguugzRbLfQsNRX/iv+XnJ4s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qwtLE0nJ45+bYIrXs2BzXtjtwDd5cYm/VGXw0562eUuFmKhCD7B1bwTIgDxuX2YKB
+         2Anc8hKMP0BnfJFwYtNDQpWNZF0X7FxZgQHkhudsAFb/+sMw0PXKLEf+sdMSac4aFt
+         tR5nyyCNj3GR5gsLWAvuoW7D7Y3ujsawon8cdhgQ=
+Date:   Thu, 18 Jun 2020 10:22:20 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Minas Harutyunyan <hminas@synopsys.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: dwc2: use well defined macros for power_down
+Message-ID: <20200618082220.GA1050230@kroah.com>
+References: <20200616162617.38365cc8@xhacker.debian>
 MIME-Version: 1.0
-References: <20200617234028.25808-1-Sergey.Semin@baikalelectronics.ru> <20200617234028.25808-2-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200617234028.25808-2-Sergey.Semin@baikalelectronics.ru>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 18 Jun 2020 11:21:53 +0300
-Message-ID: <CAHp75Vd+3ZN51geXg+KiQYVpBZN7F+kgt-2Snw7VDiKiYVqX=A@mail.gmail.com>
-Subject: Re: [PATCH v6 1/9] dt-bindings: dma: dw: Convert DW DMAC to DT binding
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616162617.38365cc8@xhacker.debian>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 2:43 AM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> Modern device tree bindings are supposed to be created as YAML-files
-> in accordance with dt-schema. This commit replaces the Synopsis
-> Designware DMA controller legacy bare text bindings with YAML file.
-> The only required prorties are "compatible", "reg", "#dma-cells" and
-> "interrupts", which will be used by the driver to correctly find the
-> controller memory region and handle its events. The rest of the properties
-> are optional, since in case if either "dma-channels" or "dma-masters" isn't
-> specified, the driver will attempt to auto-detect the IP core
-> configuration.
->
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: linux-mips@vger.kernel.org
+On Tue, Jun 16, 2020 at 04:26:17PM +0800, Jisheng Zhang wrote:
+> Use the well defined macros such as DWC2_POWER_DOWN_PARAM_NONE,
+> DWC2_POWER_DOWN_PARAM_PARTIAL and DWC2_POWER_DOWN_PARAM_HIBERNATION
+> to make code more readable.
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+> ---
+>  drivers/usb/dwc2/hcd.c    |  4 ++--
+>  drivers/usb/dwc2/params.c | 12 ++++++------
+>  2 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
+> index b90f858af960..e9ac215b9663 100644
+> --- a/drivers/usb/dwc2/hcd.c
+> +++ b/drivers/usb/dwc2/hcd.c
+> @@ -3628,7 +3628,7 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
+>  				"SetPortFeature - USB_PORT_FEAT_SUSPEND\n");
+>  			if (windex != hsotg->otg_port)
+>  				goto error;
+> -			if (hsotg->params.power_down == 2)
+> +			if (hsotg->params.power_down == DWC2_POWER_DOWN_PARAM_HIBERNATION)
+>  				dwc2_enter_hibernation(hsotg, 1);
+>  			else
+>  				dwc2_port_suspend(hsotg, windex);
+> @@ -3646,7 +3646,7 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
+>  			break;
+>  
+>  		case USB_PORT_FEAT_RESET:
+> -			if (hsotg->params.power_down == 2 &&
+> +			if (hsotg->params.power_down == DWC2_POWER_DOWN_PARAM_HIBERNATION &&
+>  			    hsotg->hibernated)
+>  				dwc2_exit_hibernation(hsotg, 0, 1, 1);
+>  			hprt0 = dwc2_read_hprt0(hsotg);
+> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+> index ce736d67c7c3..8f9d061c4d5f 100644
+> --- a/drivers/usb/dwc2/params.c
+> +++ b/drivers/usb/dwc2/params.c
+> @@ -68,14 +68,14 @@ static void dwc2_set_his_params(struct dwc2_hsotg *hsotg)
+>  	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 <<
+>  		GAHBCFG_HBSTLEN_SHIFT;
+>  	p->change_speed_quirk = true;
+> -	p->power_down = false;
+> +	p->power_down = DWC2_POWER_DOWN_PARAM_NONE;
+>  }
+>  
+>  static void dwc2_set_s3c6400_params(struct dwc2_hsotg *hsotg)
+>  {
+>  	struct dwc2_core_params *p = &hsotg->params;
+>  
+> -	p->power_down = 0;
+> +	p->power_down = DWC2_POWER_DOWN_PARAM_NONE;
+>  	p->phy_utmi_width = 8;
+>  }
+>  
+> @@ -89,7 +89,7 @@ static void dwc2_set_rk_params(struct dwc2_hsotg *hsotg)
+>  	p->host_perio_tx_fifo_size = 256;
+>  	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 <<
+>  		GAHBCFG_HBSTLEN_SHIFT;
+> -	p->power_down = 0;
+> +	p->power_down = DWC2_POWER_DOWN_PARAM_NONE;
+>  }
+>  
+>  static void dwc2_set_ltq_params(struct dwc2_hsotg *hsotg)
+> @@ -319,11 +319,11 @@ static void dwc2_set_param_power_down(struct dwc2_hsotg *hsotg)
+>  	int val;
+>  
+>  	if (hsotg->hw_params.hibernation)
+> -		val = 2;
+> +		val = DWC2_POWER_DOWN_PARAM_HIBERNATION;
+>  	else if (hsotg->hw_params.power_optimized)
+> -		val = 1;
+> +		val = DWC2_POWER_DOWN_PARAM_PARTIAL;
+>  	else
+> -		val = 0;
+> +		val = DWC2_POWER_DOWN_PARAM_NONE;
+>  
+>  	hsotg->params.power_down = val;
+>  }
+> -- 
+> 2.27.0
+> 
 
-
-Rob, here are questions to you.
-
-> +  dma-channels:
-> +    description: |
-> +      Number of DMA channels supported by the controller. In case if
-> +      not specified the driver will try to auto-detect this and
-> +      the rest of the optional parameters.
-> +    minimum: 1
-> +    maximum: 8
-
-...
-
-> +  multi-block:
-
-> +      maxItems: 8
-
-This maximum is defined by above dma-channels property. Is there any
-way to put it in the schema?
-
-...
-
-> +  snps,dma-protection-control:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description: |
-> +      Bits one-to-one passed to the AHB HPROT[3:1] bus. Each bit setting
-> +      indicates the following features: bit 0 - privileged mode,
-> +      bit 1 - DMA is bufferable, bit 2 - DMA is cacheable.
-> +    default: 0
-> +    minimum: 0
-> +    maximum: 7
-
-AFAIR this is defined by bit flags, does schema have a mechanism to
-define flags-like entries?
-
--- 
-With Best Regards,
-Andy Shevchenko
+This does not apply to Linus's tree :(
