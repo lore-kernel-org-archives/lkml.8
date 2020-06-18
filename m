@@ -2,115 +2,192 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7760EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FBEC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B53120EDD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447852;
-	bh=78btlO7Vr7itdFV3U5z5DJ2DrSrGncjQyVvThiu09Tk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKxk5WqIJVY5eWNJC16jTcL53DY0Ih4MEARhDnCCS7MiIFnZXnXSkEVkLN22KcHB9
-	 XSrFof9jYxHvPDSHGv8nyfXgpx2EdtaG/Yaa4gZ4AoBC6vRfcR9blX5zLcvAtCGnds
-	 OJDJQGH3Jpr95/5CI518/XeWCddR/nFuTC1vZYE4=
+	by mail.kernel.org (Postfix) with ESMTP id 6C7A720720
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWeasNGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgFRCha (ORCPT
+        id S1727788AbgFRBNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:37:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728627AbgFRBNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:13:43 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCA91221ED;
-        Thu, 18 Jun 2020 01:13:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442822;
-        bh=78btlO7Vr7itdFV3U5z5DJ2DrSrGncjQyVvThiu09Tk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OFJp0m2PUHF02kQ/OeK4GYUuuIK1wTTRjBpqYBqEw0jC74TdcXXdpD7ZUftnhfMOr
-         w9CnBvT+VMBTq0pWdx6jEdWBW0gTzi78Yla6Uy6uUkPFl+R/zFijLOTgadxGv7D/AR
-         e4qqwY1c4P14OzR/Kn92Oz4/CbLyRwZPTUEWd/X4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 259/388] PCI: amlogic: meson: Don't use FAST_LINK_MODE to set up link
-Date:   Wed, 17 Jun 2020 21:05:56 -0400
-Message-Id: <20200618010805.600873-259-sashal@kernel.org>
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbgFRBM3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:29 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04F4DC06174E;
+        Wed, 17 Jun 2020 18:12:29 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id b201so2015367pfb.0;
+        Wed, 17 Jun 2020 18:12:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=e9FOCSBqSJYzjtlQfMtvxrRXQjQq6WyBA8o/hvLoOy8=;
+        b=hWeasNGf5UeBfBu0B7VFOylvzhKTVKa36Hij10+tbb1qblS9qxGuqA739dAZtQmXPl
+         CFL1+uXbsPS2XCMah1Wei+yrso+Yt78IsdmwZyvZY68ZcVT1O8IPMJxiXDZKl1wvKa/2
+         AB+JICg4bC4NelAarSZgjvD7QVsCf+6MIQ4PLHIq3U8lToVcj9GjkVLPfkM0fVA0cyJG
+         tCPRyxcERUoqefspNnGYPUDoTlZEMnBaxbUNBXf4U1QlUlid8lmxlNa8+1owggnydsEr
+         aE9SgHY+LMIssIhW5rqo5xywP4sHodrMcEDbixqytpMGpsIAV1AY7P78cCyiN+PbIuZj
+         uwtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=e9FOCSBqSJYzjtlQfMtvxrRXQjQq6WyBA8o/hvLoOy8=;
+        b=K4F5fsMSTagjXqcQjSFYqSCOZUJTizlEOz5GEoiI5a9GsOk3vxVGCiYNQy6PUCq7sD
+         /bCHZPWmznnkDb6laU0Y6O4lH4Ag04UF/l89fqxGmYjPqKwQrwM9Ej0O2DEauO/FRBMK
+         dtLMYf1+ZKdsdXsf9hEInAEne3oVMx3GVe2by1BG2lwhqiCUyvMtzjDFH+OTpHoqQSc4
+         Bkqg9rzV/6AQIZiz4uLbvpe0SypG9wji/eehI/VUhI3Hp9uNl1OCOQp8LmxKZfy+JLT/
+         3aJ8MSdL3BnoRjM2zF836U/wrfwG+VGIYwY86xd28rhdODi6IUu81wKNxXYpY4KzRXOk
+         1u0w==
+X-Gm-Message-State: AOAM533oY+B8lV/UVG4tn/ficR6Y0TBiTvU3HjGXGg9pGhDGYZwj8KFX
+        LrMFTZHygj9A4035RRQwWso=
+X-Google-Smtp-Source: ABdhPJztv7TY0qrdkLCitl4fWnLkzeDtTpNve6L6zUuUd8CG8Lblvje8JKrHM2IHpOA36Cwl0f/hSw==
+X-Received: by 2002:aa7:9a92:: with SMTP id w18mr1299129pfi.261.1592442748524;
+        Wed, 17 Jun 2020 18:12:28 -0700 (PDT)
+Received: from dc803.localdomain (FL1-125-199-162-203.hyg.mesh.ad.jp. [125.199.162.203])
+        by smtp.gmail.com with ESMTPSA id q10sm1022781pfk.86.2020.06.17.18.12.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 18:12:28 -0700 (PDT)
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+To:     kohada.t2@gmail.com
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2 v3] exfat: add error check when updating dir-entries
+Date:   Thu, 18 Jun 2020 10:12:04 +0900
+Message-Id: <20200618011205.1406-2-kohada.t2@gmail.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+In-Reply-To: <20200618011205.1406-1-kohada.t2@gmail.com>
+References: <20200618011205.1406-1-kohada.t2@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+Add error check when synchronously updating dir-entries.
 
-[ Upstream commit 87dccf09323fc363bd0d072fcc12b96622ab8c69 ]
-
-The vim3l board does not work with a standard PCIe switch (ASM1184e),
-spitting all kind of errors - hinting at HW misconfiguration (no link,
-port enumeration issues, etc).
-
-According to the the Synopsys DWC PCIe Reference Manual, in the section
-dedicated to the PLCR register, bit 7 is described (FAST_LINK_MODE) as:
-
-"Sets all internal timers to fast mode for simulation purposes."
-
-it is sound to set this bit from a simulation perspective, but on actual
-silicon, which expects timers to have a nominal value, it is not.
-
-Make sure the FAST_LINK_MODE bit is cleared when configuring the RC
-to solve this problem.
-
-Link: https://lore.kernel.org/r/20200429164230.309922-1-maz@kernel.org
-Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-[lorenzo.pieralisi@arm.com: commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Suggested-by: Sungjong Seo <sj1557.seo@samsung.com>
+Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
 ---
- drivers/pci/controller/dwc/pci-meson.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Changes in v2:
+ - Split into 'write multiple sectors at once'
+   and 'add error check when updating dir-entries'
+Changes in v3
+ - Rebase to latest exfat-dev
 
-diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
-index 3715dceca1bf..ca59ba9e0ecd 100644
---- a/drivers/pci/controller/dwc/pci-meson.c
-+++ b/drivers/pci/controller/dwc/pci-meson.c
-@@ -289,11 +289,11 @@ static void meson_pcie_init_dw(struct meson_pcie *mp)
- 	meson_cfg_writel(mp, val, PCIE_CFG0);
+ fs/exfat/dir.c      | 3 ++-
+ fs/exfat/exfat_fs.h | 2 +-
+ fs/exfat/file.c     | 5 ++++-
+ fs/exfat/inode.c    | 8 +++++---
+ 4 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index a3364df6339c..89d216d5ac89 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -604,7 +604,7 @@ void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
+ 	es->modified = true;
+ }
  
- 	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
--	val &= ~LINK_CAPABLE_MASK;
-+	val &= ~(LINK_CAPABLE_MASK | FAST_LINK_MODE);
- 	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
+-void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
++int exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
+ {
+ 	int i, err = 0;
  
- 	val = meson_elb_readl(mp, PCIE_PORT_LINK_CTRL_OFF);
--	val |= LINK_CAPABLE_X1 | FAST_LINK_MODE;
-+	val |= LINK_CAPABLE_X1;
- 	meson_elb_writel(mp, val, PCIE_PORT_LINK_CTRL_OFF);
+@@ -614,6 +614,7 @@ void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
+ 	for (i = 0; i < es->num_bh; i++)
+ 		err ? bforget(es->bh[i]):brelse(es->bh[i]);
+ 	kfree(es);
++	return err;
+ }
  
- 	val = meson_elb_readl(mp, PCIE_GEN2_CTRL_OFF);
+ static int exfat_walk_fat_chain(struct super_block *sb,
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index cbb00ee97183..da677c85314f 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -459,7 +459,7 @@ struct exfat_dentry *exfat_get_dentry_cached(struct exfat_entry_set_cache *es,
+ 		int num);
+ struct exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *sb,
+ 		struct exfat_chain *p_dir, int entry, unsigned int type);
+-void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync);
++int exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync);
+ int exfat_count_dir_entries(struct super_block *sb, struct exfat_chain *p_dir);
+ 
+ /* inode.c */
+diff --git a/fs/exfat/file.c b/fs/exfat/file.c
+index fce03f318787..37c8f04c1f8a 100644
+--- a/fs/exfat/file.c
++++ b/fs/exfat/file.c
+@@ -153,6 +153,7 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
+ 		struct timespec64 ts;
+ 		struct exfat_dentry *ep, *ep2;
+ 		struct exfat_entry_set_cache *es;
++		int err;
+ 
+ 		es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry,
+ 				ES_ALL_ENTRIES);
+@@ -187,7 +188,9 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
+ 		}
+ 
+ 		exfat_update_dir_chksum_with_entry_set(es);
+-		exfat_free_dentry_set(es, inode_needs_sync(inode));
++		err = exfat_free_dentry_set(es, inode_needs_sync(inode));
++		if (err)
++			return err;
+ 	}
+ 
+ 	/* cut off from the FAT chain */
+diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
+index cf9ca6c4d046..1e851f172e0c 100644
+--- a/fs/exfat/inode.c
++++ b/fs/exfat/inode.c
+@@ -77,8 +77,7 @@ static int __exfat_write_inode(struct inode *inode, int sync)
+ 	ep2->dentry.stream.size = ep2->dentry.stream.valid_size;
+ 
+ 	exfat_update_dir_chksum_with_entry_set(es);
+-	exfat_free_dentry_set(es, sync);
+-	return 0;
++	return exfat_free_dentry_set(es, sync);
+ }
+ 
+ int exfat_write_inode(struct inode *inode, struct writeback_control *wbc)
+@@ -222,6 +221,7 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
+ 		if (ei->dir.dir != DIR_DELETED && modified) {
+ 			struct exfat_dentry *ep;
+ 			struct exfat_entry_set_cache *es;
++			int err;
+ 
+ 			es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry,
+ 				ES_ALL_ENTRIES);
+@@ -240,7 +240,9 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
+ 				ep->dentry.stream.valid_size;
+ 
+ 			exfat_update_dir_chksum_with_entry_set(es);
+-			exfat_free_dentry_set(es, inode_needs_sync(inode));
++			err = exfat_free_dentry_set(es, inode_needs_sync(inode));
++			if (err)
++				return err;
+ 
+ 		} /* end of if != DIR_DELETED */
+ 
 -- 
 2.25.1
 
