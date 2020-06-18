@@ -2,79 +2,112 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B39EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0EE208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154FF208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592498680;
+	bh=V/vmS3iE8bYbFH1KgNhqWAC8guQyH2lID8qzr22I8bA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qmN05XlNQiyzCJY0q9rzEHWxZKKEQHzlu8zWM/UWnZlefKayNAKnmdFUZvL2yyQsq
+	 EY04NcfuowAOwxzv+QihTtR5VV2t4lMEpgcpMj8h91O8R7+u1IhHNvpobnBkkqrzsa
+	 emICfY6oTO9X/0ZhGHVXHYJRf4iSq6Z8BdCtbYFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732012AbgFRQmB (ORCPT
+        id S1731994AbgFRQoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:42:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729292AbgFRQmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:42:00 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EB6520707;
-        Thu, 18 Jun 2020 16:41:59 +0000 (UTC)
-Date:   Thu, 18 Jun 2020 12:41:57 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Oscar Carter <oscar.carter@gmx.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] tracing: Use linker magic instead of recasting
- ftrace_ops_list_func()
-Message-ID: <20200618124157.0b9b8807@oasis.local.home>
-In-Reply-To: <CAG48ez04Fj=1p61KAxAQWZ3f_z073fVUr8LsQgtKA9c-kcHmDQ@mail.gmail.com>
-References: <20200617165616.52241bde@oasis.local.home>
-        <CAG48ez2pOns4vF9M_4ubMJ+p9YFY29udMaH0wm8UuCwGQ4ZZAQ@mail.gmail.com>
-        <20200617183628.3594271d@oasis.local.home>
-        <CAG48ez04Fj=1p61KAxAQWZ3f_z073fVUr8LsQgtKA9c-kcHmDQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 18 Jun 2020 12:44:37 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35679 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728090AbgFRQog (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 12:44:36 -0400
+Received: by mail-io1-f68.google.com with SMTP id s18so7822174ioe.2;
+        Thu, 18 Jun 2020 09:44:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=P6K0NMCQ9QdVvPAqikzClu5E67Y9Qrb4CGCZ1kreB7k=;
+        b=lQQF7kigInRkQfosEdD964L/MxE8WBfqhlcjat7uGcKAHLo05DRETCrqGSyks++q+N
+         LD4YhxofHAtxiU5+rHlIy3fj7hI2j+51pQtcM6jdo+VhoSuWboDrT/C3r1LucoJ5fPo8
+         XH90hJcCZpxLydo/zfi86U+YTKyjFpcCynbHwPNVBykLh/AwfkGFiYvV01UC7Njcn9Fm
+         i7JzC87Ts5XcXKgf8rWto+0uBp8pgMrufHPIklBNXVWtmArrkvPMRXYS+6uQQNqXM3nF
+         lkAvJYLMGcm+LVrud0JLT3mPZ6pXFG4l0Cfon9dqlnZ+CMrhPV3AS8sCW/3sHC9A7wxY
+         h+Og==
+X-Gm-Message-State: AOAM532zD6wytvJDMt90fD2r8Vx2DFdu1IjS513iNUXpDm7pYMOGOlBs
+        R7JCddqfLJIs+WZMZ6CLdg==
+X-Google-Smtp-Source: ABdhPJwkW4ZsJ4bdYKr0qKa9ryOy5g+2hE48HtjOUzrbj3WgzjP+FDJi5kL2BbFKLOci4Y0m6ArWyw==
+X-Received: by 2002:a5d:858a:: with SMTP id f10mr6056867ioj.184.1592498674934;
+        Thu, 18 Jun 2020 09:44:34 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id g21sm1969126ioc.14.2020.06.18.09.44.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 09:44:34 -0700 (PDT)
+Received: (nullmailer pid 504576 invoked by uid 1000);
+        Thu, 18 Jun 2020 16:44:31 -0000
+Date:   Thu, 18 Jun 2020 10:44:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        Sean Wang <sean.wang@mediatek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-bluetooth@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-rockchip@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-arm-kernel@lists.infradead.org,
+        Sandy Huang <hjc@rock-chips.com>, alsa-devel@alsa-project.org,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH 13/29] dt: fix broken links due to txt->yaml renames
+Message-ID: <20200618164431.GA504444@bogus>
+References: <cover.1592203542.git.mchehab+huawei@kernel.org>
+ <0e4a7f0b7efcc8109c8a41a2e13c8adde4d9c6b9.1592203542.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0e4a7f0b7efcc8109c8a41a2e13c8adde4d9c6b9.1592203542.git.mchehab+huawei@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jun 2020 01:12:37 +0200
-Jann Horn <jannh@google.com> wrote:
-
-> static ftrace_func_t ftrace_ops_get_list_func(struct ftrace_ops *ops)
-> +static ftrace_asm_func_t ftrace_ops_get_list_func(struct ftrace_ops *ops)
->  {
-> +#if FTRACE_FORCE_LIST_FUNC
-> +       return ftrace_ops_list_func;
-> +#else
->         /*
->          * If this is a dynamic, RCU, or per CPU ops, or we force list func,
->          * then it needs to call the list anyway.
->          */
-> -       if (ops->flags & (FTRACE_OPS_FL_DYNAMIC | FTRACE_OPS_FL_RCU) ||
-> -           FTRACE_FORCE_LIST_FUNC)
-> +       if (ops->flags & (FTRACE_OPS_FL_DYNAMIC | FTRACE_OPS_FL_RCU))
->                 return ftrace_ops_list_func;
+On Mon, 15 Jun 2020 08:46:52 +0200, Mauro Carvalho Chehab wrote:
+> There are some new broken doc links due to yaml renames
+> at DT. Developers should really run:
 > 
->         return ftrace_ops_get_func(ops);
+> 	./scripts/documentation-file-ref-check
+> 
+> in order to solve those issues while submitting patches.
+> This tool can even fix most of the issues with:
+> 
+> 	./scripts/documentation-file-ref-check --fix
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/display/bridge/sii902x.txt  | 2 +-
+>  .../devicetree/bindings/display/rockchip/rockchip-drm.yaml    | 2 +-
+>  Documentation/devicetree/bindings/net/mediatek-bluetooth.txt  | 2 +-
+>  Documentation/devicetree/bindings/sound/audio-graph-card.txt  | 2 +-
+>  Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt  | 2 +-
+>  Documentation/mips/ingenic-tcu.rst                            | 2 +-
+>  MAINTAINERS                                                   | 4 ++--
+>  7 files changed, 8 insertions(+), 8 deletions(-)
+> 
 
-But ftrace_ops_get_func() returns ftrace_func_t type, wont this complain?
-
--- Steve
-
-
-> +#endif
->  }
-
+Applied, thanks!
