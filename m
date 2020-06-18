@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926ABC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0744AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72BFD2192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99F0221E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444271;
-	bh=sz2VY7bKf1cEfS5TP7IGpkiCBgblk54msJDFCj5Xo9w=;
+	s=default; t=1592444274;
+	bh=Cw9ow6ueq2twMjtypdAtV/dpjUCSZdqJ3BP2pATcygA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R+C9uWhSfKCITJPqfjH9gorkShObV5UCdszkjpPEyuWh3hb/vGPoHcrIKlMpZ7rJo
-	 mJH7MNCvRlNPeKwoxdwtyKbKVt+2ubVWOhVejsWxtTVR/+VibzQ7Ap8PjAIFliE1HQ
-	 mO1iGCzmiu18VICiO6tLOZUbPDEC0+L9n73m6hZs=
+	b=vEFZ32iPz3MLdQosPethSZ1tqK++WJRTy/DYBr5fnIrwXXvkPXrEfVbLYhJt9aCOa
+	 TAkD0e/47b4361yiQJo8qrqlxSoSYmFFSxljep9/VSaIcucRt0g/5tPLD1FXiqxIrv
+	 gVTCuiiVM6LjLbGTjUkvxoVB/rCHik8Ls9VRWg4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732600AbgFRBan (ORCPT
+        id S1732302AbgFRBhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:30:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35396 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:37:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731836AbgFRB1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:18 -0400
+        id S1731919AbgFRBal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:30:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBC5520776;
-        Thu, 18 Jun 2020 01:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FE6B21D90;
+        Thu, 18 Jun 2020 01:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443638;
-        bh=sz2VY7bKf1cEfS5TP7IGpkiCBgblk54msJDFCj5Xo9w=;
+        s=default; t=1592443841;
+        bh=Cw9ow6ueq2twMjtypdAtV/dpjUCSZdqJ3BP2pATcygA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SmA/EACX4W8r2tOg2ILQu/HMkki0f8WN9kEk6cdNd2tRgha6JbiYhfjPO/2Jmj9oi
-         uE4wi6omXr5SrxI+bzH7UUN80cpd1cLKtVahruUrZAqAlah9VfbLdlk2e2W268X1CE
-         5kYDIKdBBJ6D7mqL7pSGdBpGDr5o4M4d2ywTMuPQ=
+        b=BzS+flITWl8GIOc8EO00a/NrbuFXkayGKGyUxubIKVsf2cEp4ohnyThR9yp0hdSA+
+         z9EVW5Jr0vVY11C9q8eI9BSM5ShHdmE3lnv3re34oVyhwWLn19nzRFnxfNJ56y8Slk
+         NZRXxcWXXnXM7QW9Nbf6952u8nj3VBOO28kMDfbE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 061/108] powerpc/ps3: Fix kexec shutdown hang
-Date:   Wed, 17 Jun 2020 21:25:13 -0400
-Message-Id: <20200618012600.608744-61-sashal@kernel.org>
+Cc:     Matej Dujava <mdujava@kocurkovo.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.4 27/60] staging: sm750fb: add missing case while setting FB_VISUAL
+Date:   Wed, 17 Jun 2020 21:29:31 -0400
+Message-Id: <20200618013004.610532-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
-References: <20200618012600.608744-1-sashal@kernel.org>
+In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
+References: <20200618013004.610532-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,81 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geoff Levand <geoff@infradead.org>
+From: Matej Dujava <mdujava@kocurkovo.cz>
 
-[ Upstream commit 126554465d93b10662742128918a5fc338cda4aa ]
+[ Upstream commit fa90133377f4a7f15a937df6ad55133bb57c5665 ]
 
-The ps3_mm_region_destroy() and ps3_mm_vas_destroy() routines
-are called very late in the shutdown via kexec's mmu_cleanup_all
-routine.  By the time mmu_cleanup_all runs it is too late to use
-udbg_printf, and calling it will cause PS3 systems to hang.
+Switch statement does not contain all cases: 8, 16, 24, 32.
+This patch will add missing one (24)
 
-Remove all debugging statements from ps3_mm_region_destroy() and
-ps3_mm_vas_destroy() and replace any error reporting with calls
-to lv1_panic.
-
-With this change builds with 'DEBUG' defined will not cause kexec
-reboots to hang, and builds with 'DEBUG' defined or not will end
-in lv1_panic if an error is encountered.
-
-Signed-off-by: Geoff Levand <geoff@infradead.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/7325c4af2b4c989c19d6a26b90b1fec9c0615ddf.1589049250.git.geoff@infradead.org
+Fixes: 81dee67e215b ("staging: sm750fb: add sm750 to staging")
+Signed-off-by: Matej Dujava <mdujava@kocurkovo.cz>
+Link: https://lore.kernel.org/r/1588277366-19354-2-git-send-email-mdujava@kocurkovo.cz
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/ps3/mm.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/staging/sm750fb/sm750.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/platforms/ps3/mm.c b/arch/powerpc/platforms/ps3/mm.c
-index b0f34663b1ae..19bae78b1f25 100644
---- a/arch/powerpc/platforms/ps3/mm.c
-+++ b/arch/powerpc/platforms/ps3/mm.c
-@@ -212,13 +212,14 @@ void ps3_mm_vas_destroy(void)
- {
- 	int result;
- 
--	DBG("%s:%d: map.vas_id    = %llu\n", __func__, __LINE__, map.vas_id);
--
- 	if (map.vas_id) {
- 		result = lv1_select_virtual_address_space(0);
--		BUG_ON(result);
--		result = lv1_destruct_virtual_address_space(map.vas_id);
--		BUG_ON(result);
-+		result += lv1_destruct_virtual_address_space(map.vas_id);
-+
-+		if (result) {
-+			lv1_panic(0);
-+		}
-+
- 		map.vas_id = 0;
- 	}
- }
-@@ -316,19 +317,20 @@ static void ps3_mm_region_destroy(struct mem_region *r)
- 	int result;
- 
- 	if (!r->destroy) {
--		pr_info("%s:%d: Not destroying high region: %llxh %llxh\n",
--			__func__, __LINE__, r->base, r->size);
- 		return;
- 	}
- 
--	DBG("%s:%d: r->base = %llxh\n", __func__, __LINE__, r->base);
--
- 	if (r->base) {
- 		result = lv1_release_memory(r->base);
--		BUG_ON(result);
-+
-+		if (result) {
-+			lv1_panic(0);
-+		}
-+
- 		r->size = r->base = r->offset = 0;
- 		map.total = map.rm.size;
- 	}
-+
- 	ps3_mm_set_repository_highmem(NULL);
- }
- 
+diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
+index 860e1c288ad5..75b47d61318a 100644
+--- a/drivers/staging/sm750fb/sm750.c
++++ b/drivers/staging/sm750fb/sm750.c
+@@ -894,6 +894,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
+ 		fix->visual = FB_VISUAL_PSEUDOCOLOR;
+ 		break;
+ 	case 16:
++	case 24:
+ 	case 32:
+ 		fix->visual = FB_VISUAL_TRUECOLOR;
+ 		break;
 -- 
 2.25.1
 
