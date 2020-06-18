@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B071C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB2AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D966221F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A03A221F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445081;
-	bh=GhIYSFu1WdXO/kU0IV77O0twIZpg2ROjAYlOXLFDnZY=;
+	s=default; t=1592445089;
+	bh=eBj2SV0H+lxZ+/rvct+DDT8Lrvn4UMAZ59kaoPGgF3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XSZ0wYImkDTXVX/Wcm4ZVEjOqOinTTF9NV7wFJpD6fJfFLbgvc++3/7mk0L1tq/NA
-	 8SES5JUu31EAlSxUX+W89NdsHjL5kd7TqmdbMWHmYlNn+mBsTmeu8lpft6fTNwwmcC
-	 /NcT2Kp7m+V3/LGX0QzgEnbL/KuQc8ROkf8KPskk=
+	b=TfvZGXD/GToFB0NAoWqZEKQS1N9tSs5J+CSz3EJXz4c+CHp4BNCownyzW2qeVdDZ6
+	 SPv7kk5DyfPAd8T+geLNFQs8qa/5nX1+57idYNwccfQmmwPDDrF6tmdu2zNZCW/Vq4
+	 gKwCKSEqpZhTSu/QiQEZUjxiY4hHPmKxjiKUI1VQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731776AbgFRB1F (ORCPT
+        id S1732887AbgFRBv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:27:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57508 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:51:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731035AbgFRBXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:23:40 -0400
+        id S1731770AbgFRB1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7088020776;
-        Thu, 18 Jun 2020 01:23:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2750520897;
+        Thu, 18 Jun 2020 01:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443420;
-        bh=GhIYSFu1WdXO/kU0IV77O0twIZpg2ROjAYlOXLFDnZY=;
+        s=default; t=1592443623;
+        bh=eBj2SV0H+lxZ+/rvct+DDT8Lrvn4UMAZ59kaoPGgF3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=czqTTQuTnZobJ+piR1GjwDy0hHbpwcsXm2AnxbrXMmsvOi1XpXBEgN2gE0F8oqiyZ
-         Tkze+1eScM0NwXpulKhRLzXshchb56P938VS6UPs+KQ8gH03JiFMcEqpxQAG3+cPxW
-         YkP874wupFBw2u458PE6hQWH1nYQMIrJPPw9EueU=
+        b=V5YZimYVeGHeths5P+UmTekGGKer1YhprGfMpkPNyfy5MtXk7Yma2acGDHKqTvS7d
+         KfsyKcDBKZfTe+D1fE6SDF/cBXOHnENFrV8pKWUhR30KtxD6Mv1tmu4NF5X3kR/5mf
+         uYZBdPl20mUsf9EmLg1fJFvS0q80/SLyUHdEZmeg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 061/172] firmware: qcom_scm: fix bogous abuse of dma-direct internals
-Date:   Wed, 17 Jun 2020 21:20:27 -0400
-Message-Id: <20200618012218.607130-61-sashal@kernel.org>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 049/108] PCI: rcar: Fix incorrect programming of OB windows
+Date:   Wed, 17 Jun 2020 21:25:01 -0400
+Message-Id: <20200618012600.608744-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,70 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Andrew Murray <andrew.murray@arm.com>
 
-[ Upstream commit 459b1f86f1cba7de813fbc335df476c111feec22 ]
+[ Upstream commit 2b9f217433e31d125fb697ca7974d3de3ecc3e92 ]
 
-As far as the device is concerned the dma address is the physical
-address.  There is no need to convert it to a physical address,
-especially not using dma-direct internals that are not available
-to drivers and which will interact badly with IOMMUs.  Last but not
-least the commit introducing it claimed to just fix a type issue,
-but actually changed behavior.
+The outbound windows (PCIEPAUR(x), PCIEPALR(x)) describe a mapping between
+a CPU address (which is determined by the window number 'x') and a
+programmed PCI address - Thus allowing the controller to translate CPU
+accesses into PCI accesses.
 
-Fixes: 6e37ccf78a532 ("firmware: qcom_scm: Use proper types for dma mappings")
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/r/20200414123136.441454-1-hch@lst.de
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+However the existing code incorrectly writes the CPU address - lets fix
+this by writing the PCI address instead.
+
+For memory transactions, existing DT users describe a 1:1 identity mapping
+and thus this change should have no effect. However the same isn't true for
+I/O.
+
+Link: https://lore.kernel.org/r/20191004132941.6660-1-andrew.murray@arm.com
+Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
+Tested-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/qcom_scm.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/pci/host/pcie-rcar.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 98c987188835..513908a0c262 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -18,7 +18,6 @@
- #include <linux/init.h>
- #include <linux/cpumask.h>
- #include <linux/export.h>
--#include <linux/dma-direct.h>
- #include <linux/dma-mapping.h>
- #include <linux/module.h>
- #include <linux/types.h>
-@@ -449,8 +448,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	struct qcom_scm_mem_map_info *mem_to_map;
- 	phys_addr_t mem_to_map_phys;
- 	phys_addr_t dest_phys;
--	phys_addr_t ptr_phys;
--	dma_addr_t ptr_dma;
-+	dma_addr_t ptr_phys;
- 	size_t mem_to_map_sz;
- 	size_t dest_sz;
- 	size_t src_sz;
-@@ -468,10 +466,9 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- 	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
- 			ALIGN(dest_sz, SZ_64);
+diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
+index 2b0a1f3b8265..0077afca2493 100644
+--- a/drivers/pci/host/pcie-rcar.c
++++ b/drivers/pci/host/pcie-rcar.c
+@@ -328,11 +328,12 @@ static struct pci_ops rcar_pcie_ops = {
+ };
  
--	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_dma, GFP_KERNEL);
-+	ptr = dma_alloc_coherent(__scm->dev, ptr_sz, &ptr_phys, GFP_KERNEL);
- 	if (!ptr)
- 		return -ENOMEM;
--	ptr_phys = dma_to_phys(__scm->dev, ptr_dma);
+ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
+-				   struct resource *res)
++				   struct resource_entry *window)
+ {
+ 	/* Setup PCIe address space mappings for each resource */
+ 	resource_size_t size;
+ 	resource_size_t res_start;
++	struct resource *res = window->res;
+ 	u32 mask;
  
- 	/* Fill source vmid detail */
- 	src = ptr;
-@@ -501,7 +498,7 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 	rcar_pci_write_reg(pcie, 0x00000000, PCIEPTCTLR(win));
+@@ -346,9 +347,9 @@ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
+ 	rcar_pci_write_reg(pcie, mask << 7, PCIEPAMR(win));
  
- 	ret = __qcom_scm_assign_mem(__scm->dev, mem_to_map_phys, mem_to_map_sz,
- 				    ptr_phys, src_sz, dest_phys, dest_sz);
--	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_dma);
-+	dma_free_coherent(__scm->dev, ptr_sz, ptr, ptr_phys);
- 	if (ret) {
- 		dev_err(__scm->dev,
- 			"Assign memory protection call failed %d.\n", ret);
+ 	if (res->flags & IORESOURCE_IO)
+-		res_start = pci_pio_to_address(res->start);
++		res_start = pci_pio_to_address(res->start) - window->offset;
+ 	else
+-		res_start = res->start;
++		res_start = res->start - window->offset;
+ 
+ 	rcar_pci_write_reg(pcie, upper_32_bits(res_start), PCIEPAUR(win));
+ 	rcar_pci_write_reg(pcie, lower_32_bits(res_start) & ~0x7F,
+@@ -377,7 +378,7 @@ static int rcar_pcie_setup(struct list_head *resource, struct rcar_pcie *pci)
+ 		switch (resource_type(res)) {
+ 		case IORESOURCE_IO:
+ 		case IORESOURCE_MEM:
+-			rcar_pcie_setup_window(i, pci, res);
++			rcar_pcie_setup_window(i, pci, win);
+ 			i++;
+ 			break;
+ 		case IORESOURCE_BUS:
 -- 
 2.25.1
 
