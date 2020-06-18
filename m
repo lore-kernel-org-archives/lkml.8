@@ -2,269 +2,131 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F645C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6347CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3543207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:19:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592479153;
-	bh=VMTjW3A5rM+/n8uTmhib5xc6DSyPNkBhwsyvBYgZETA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S0y76tYGJlbVjN+8Fff0/WcyxLGiAFU5rYbkubyX2tv1TtWXPLrdZMxj3i+d35fyw
-	 +THUATJsapxwbudRwF3Y2t6fLPy9tnNcSyIc+ZIa/urnv1q/IOhQxbR0nlK8zdl8sN
-	 cKhbnOrIo2/6cxvlbK+ykzTlQi5hKuyT8gbSq+sM=
+	by mail.kernel.org (Postfix) with ESMTP id 41CC720773
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 11:20:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="IdjASJHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbgFRLTL (ORCPT
+        id S1729480AbgFRLUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 07:19:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726918AbgFRLTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 07:19:10 -0400
-Received: from localhost (unknown [151.48.140.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A29402078D;
-        Thu, 18 Jun 2020 11:19:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592479149;
-        bh=VMTjW3A5rM+/n8uTmhib5xc6DSyPNkBhwsyvBYgZETA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Dw2AtYlUis3RrRvXICgjJS9KxGDTJj8qk6FfhNQqgUH4oGN3yA4YYqciaFJtCyJPo
-         pJvdkvxTSzNCTq9oZrKXI6OaP57Bcs2S2bm6ELcG+Ufjs+jE1BjVa04Hr3iZDXQL/w
-         3hIG/B03CAJSr59A/uIK6CZdg/mQqd2dRqKcljCw=
-Date:   Thu, 18 Jun 2020 13:18:59 +0200
-From:   Lorenzo Bianconi <lorenzo@kernel.org>
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Felix Fietkau <nbd@nbd.name>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: mt7612 suspend/resume issue
-Message-ID: <20200618111859.GC698688@lore-desk.lan>
-References: <20200618090556.pepjdbnba2gqzcbe@butterfly.localdomain>
+        Thu, 18 Jun 2020 07:20:06 -0400
+Received: from sonic316-8.consmr.mail.gq1.yahoo.com ([98.137.69.32]:39164 "EHLO
+        sonic316-8.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726918AbgFRLUE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 07:20:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1592479203; bh=dxLr5Sac0lejPsIBqUUe96IPZz24J89p+FcMiUYdm/s=; h=From:To:Cc:Subject:Date:References:From:Subject; b=IdjASJHxuiD+tymW+DPVdxsWgbi1J+uj+R5xOg+aU3JxynB/ukTsVvnGq7fS2cXF+jHlic8ZgBxFwsm4H3CEooTFyAzO+rN5gc0td0Wol0JDZKSRYprje1yXoCqYwSk2Fcrwt7wXG5envMuRS49yvtY8SKB/rKcLqLzx7G0UKMY/TpACRpSCYkGZAJMSa+eIKU3tNhSjlfN3EQlCvKA5tBroNUCg6zeLVZcF0gofL6u4h788UeFndVAJwRon1uQuRcrRkd01iRVrlCRV/lEjiGMnSXNnIODAJ3BIQMXmc+KhSOXMmW8p3zsTbJspZiZGpKSfEeOf4e0mSi0A6JCZ+w==
+X-YMail-OSG: B22.dV4VM1kVZzmBsXXUQgjdYN358GoSAxGLH_QYMWwz_W0kwgJe1fpVoD1On37
+ NUPN84WnwyO_peJQbJ4l.f8xHladpKR76K.GgSb7fSeZKoDewHuPCebf3Z_2mS1oekR.HbaVFrVz
+ 5S62sP2lrLQUV32hMb_CMGf5LgxLBydZCr1_LC_s4rvjtIDUTvw7bxwh.t6qYghuSldy88Y2BIe3
+ TfYbbmaTqEztLRENPoK26sLYlILdvBn6qWJDODoP_4QHmVdZQ8SMSM2E22q_hQX9pNkOY9FYl69P
+ Mj.HJQG7YAgxydLXDd9VxhLYWkrJ433fgaQx8dnftPVYtZHMwrpj1Oaq480lWvgUTUNHfx34Kl8L
+ 5oeWjRFiv3ZhNKfSoT5CpjzPF4RtODvC0moYOO2z9gkdFunuR.liqknL3bdmwPJELOhqlbfjguFZ
+ my7ENcBXQmD8VdtLJfBhOCvyeMfD5lwZD1dNeaWNxiMTAsnIc96gWeTbEWGhsnT0XcKk68wR5tQM
+ PDofUkv90IQYlx.E0moQCt7TEJ.P66vuGLCNJU.fk570vq2MMC61NbIKQMd4BKtEGVgPP.kwvXlV
+ ONecITZhZYreKuwafqQnzIY38Q2NmVVFahTfgCXttiUf.ykOTFAMgmGQ5f40_bfQkeLTKk8DJPwK
+ i8b8jqWuFI34R45wfeDSGwNFgpwaFQBr3yTkrAe9wP3wZPz2L94gZFZW81IfEDMqmmWpAb9FC.Kh
+ vGE0bGAY69giUGQNEj1wtsR9k3PIh.CLtnTHM_1hP6dSewAUwFpMxGllNTXU1s7FZSrXIc160anO
+ uR89DT6hLLOG.4RRuAmiA.SDLKqw0oIJKwuXrzCzgCFHNAzl_YCPlOLQNgEOrWBOGkHqDBC5vt_S
+ 7BwYfw.M7wjhvjfORXsS.ibeSTVNRM_BDL62U.gao7Nhw4HGKQNP4jWQ2xXnXf.RkVh59V77kXVa
+ xJO_VSl6wrmLhxrPwRS59vFSCeYD5wQjKEacsFhNYB7WoJEVp4jQaWFDxi5OSU17t7ibvsEkm5YK
+ 0o8mwe2TJUUKGYvnHIBbdtg.clpFi6tJFp6Xf_dxkaB_lyx.dSbSRYZWD54Usba19RlCU_zTJrZl
+ 82f01LA7zkFae8p.MxLzjIDZtMyffycGmFaQPzNoaZmaqaAGc3LaDgQWMgEElzyrtXV5zYhwYeGV
+ RwIqVvrWmlYNXykFoC4lwoiF49V6Aguoy.hdBh23ECjIGdzNypbe.ldq3hkoWeh7VqZo0JcjJuJr
+ mfYlsUAKl7rAz6as0jOb3rI46rK3VVsGgO_WZWjX.WyE9I599Q1gQsSN.ZM8T2vWBN0LFdw7rJH.
+ Is2HPYM9WTtu8PuiikhPaB_dq_S70ulOxgUiOsLxBF2BnBBtCb0o75nw0lx8X580tm3Oz8OT3U2p
+ QlVg6esQqKR5sFRozNt60f4FUWouCa7I.
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.gq1.yahoo.com with HTTP; Thu, 18 Jun 2020 11:20:03 +0000
+Received: by smtp416.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID be5fb830dad37ee084f7e0af79317143;
+          Thu, 18 Jun 2020 11:20:01 +0000 (UTC)
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>
+Cc:     Chao Yu <chao@kernel.org>, Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Gao Xiang <hsiangkao@redhat.com>,
+        Hongyu Jin <hongyu.jin@unisoc.com>, stable@vger.kernel.org
+Subject: [PATCH] erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
+Date:   Thu, 18 Jun 2020 19:19:36 +0800
+Message-Id: <20200618111936.19845-1-hsiangkao@aol.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yVhtmJPUSI46BTXb"
-Content-Disposition: inline
-In-Reply-To: <20200618090556.pepjdbnba2gqzcbe@butterfly.localdomain>
+Content-Transfer-Encoding: 8bit
+References: <20200618111936.19845-1-hsiangkao.ref@aol.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Gao Xiang <hsiangkao@redhat.com>
 
---yVhtmJPUSI46BTXb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hongyu reported "id != index" in z_erofs_onlinepage_fixup() with
+specific aarch64 environment easily, which wasn't shown before.
 
-> Hello, Lorenzo et al.
+After digging into that, I found that high 32 bits of page->private
+was set to 0xaaaaaaaa rather than 0 (due to z_erofs_onlinepage_init
+behavior with specific compiler options). Actually we only use low
+32 bits to keep the page information since page->private is only 4
+bytes on most 32-bit platforms. However z_erofs_onlinepage_fixup()
+uses the upper 32 bits by mistake.
 
-Hi Oleksandr,
+Let's fix it now.
 
->=20
-> I'm using MT7612 mini-PCIE cards as both AP in a home server and as a cli=
-ent in
-> a laptop. The AP works perfectly (after some fixing from your side; thank=
-s for
-> that!), and so does the client modulo it has issues during system resume.
->=20
-
-[...]
-
->=20
-> The Wi-Fi becomes unusable from this point. If I `modprobe -r` the "mt76x=
-2e" module
-> after this splat, the system hangs completely.
->=20
-> If the system resumes fine, the resume itself takes quite some time (more=
- than
-> 10 seconds).
->=20
-> I've found a workaround for this, though. It seems the system behaves fin=
-e if I
-> do `modprobe -r mt76x2e` before it goes to sleep, and then `modprobe mt76=
-x2e`
-> after resume. Also, the resume time improves greatly.
->=20
-> I cannot say if it is some regression or not. I've installed the card
-> just recently, and used it with v5.7 kernel series only.
->=20
-> Do you have any idea what could go wrong and how to approach the issue?
-
-I have not reproduced the issue myself yet, but I guess we can try:
-1- update to latest Felix's tree [1]
-2- could you please try to apply the patch below? (compile-test only)
-
-Regards,
-Lorenzo
-
-[1] https://github.com/nbd168/wireless
-
-=46rom 400268a0ee5843cf736308504dfbd2f20a291eaf Mon Sep 17 00:00:00 2001
-Message-Id: <400268a0ee5843cf736308504dfbd2f20a291eaf.1592478809.git.lorenz=
-o@kernel.org>
-=46rom: Lorenzo Bianconi <lorenzo@kernel.org>
-Date: Thu, 18 Jun 2020 13:10:11 +0200
-Subject: [PATCH] mt76: mt76x2: fix pci suspend
-
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Reported-by: Hongyu Jin <hongyu.jin@unisoc.com>
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- .../net/wireless/mediatek/mt76/mt76x02_dma.h  |  1 +
- .../net/wireless/mediatek/mt76/mt76x02_mmio.c | 15 +++++
- .../net/wireless/mediatek/mt76/mt76x2/pci.c   | 58 +++++++++++++++++++
- 3 files changed, 74 insertions(+)
+ fs/erofs/zdata.h | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02_dma.h b/drivers/net=
-/wireless/mediatek/mt76/mt76x02_dma.h
-index 4aff4f8e87b6..6262f2ecded5 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x02_dma.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x02_dma.h
-@@ -62,5 +62,6 @@ mt76x02_wait_for_wpdma(struct mt76_dev *dev, int timeout)
- int mt76x02_dma_init(struct mt76x02_dev *dev);
- void mt76x02_dma_disable(struct mt76x02_dev *dev);
- void mt76x02_dma_cleanup(struct mt76x02_dev *dev);
-+void mt76x02_dma_reset(struct mt76x02_dev *dev);
-=20
- #endif /* __MT76x02_DMA_H */
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02_mmio.c b/drivers/ne=
-t/wireless/mediatek/mt76/mt76x02_mmio.c
-index cbbe986655fe..e2631c964331 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x02_mmio.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x02_mmio.c
-@@ -348,6 +348,21 @@ void mt76x02_dma_disable(struct mt76x02_dev *dev)
- }
- EXPORT_SYMBOL_GPL(mt76x02_dma_disable);
-=20
-+void mt76x02_dma_reset(struct mt76x02_dev *dev)
-+{
-+	int i;
-+
-+	mt76x02_dma_disable(dev);
-+	usleep_range(1000, 2000);
-+
-+	for (i =3D 0; i < __MT_TXQ_MAX; i++)
-+		mt76_queue_tx_cleanup(dev, i, true);
-+	mt76_for_each_q_rx(&dev->mt76, i)
-+		mt76_queue_rx_reset(dev, i);
-+
-+	mt76x02_dma_enable(dev);
-+}
-+
- void mt76x02_mac_start(struct mt76x02_dev *dev)
+diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
+index 7824f5563a55..92fbc0f0ba85 100644
+--- a/fs/erofs/zdata.h
++++ b/fs/erofs/zdata.h
+@@ -144,22 +144,24 @@ static inline void z_erofs_onlinepage_init(struct page *page)
+ static inline void z_erofs_onlinepage_fixup(struct page *page,
+ 	uintptr_t index, bool down)
  {
- 	mt76x02_mac_reset_counters(dev);
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c b/drivers/net/=
-wireless/mediatek/mt76/mt76x2/pci.c
-index 53ca0cedf026..5543e242fb9b 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2/pci.c
-@@ -103,6 +103,60 @@ mt76pci_remove(struct pci_dev *pdev)
- 	mt76_free_device(mdev);
+-	unsigned long *p, o, v, id;
++	union z_erofs_onlinepage_converter u;
++	int orig, orig_index, val;
++
+ repeat:
+-	p = &page_private(page);
+-	o = READ_ONCE(*p);
++	u.v = &page_private(page);
++	orig = atomic_read(u.o);
+ 
+-	id = o >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
+-	if (id) {
++	orig_index = orig >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
++	if (orig_index) {
+ 		if (!index)
+ 			return;
+ 
+-		DBG_BUGON(id != index);
++		DBG_BUGON(orig_index != index);
+ 	}
+ 
+-	v = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
+-		((o & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
+-	if (cmpxchg(p, o, v) != o)
++	val = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
++		((orig & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
++	if (atomic_cmpxchg(u.o, orig, val) != orig)
+ 		goto repeat;
  }
-=20
-+static int __maybe_unused
-+mt76x2e_suspend(struct pci_dev *pdev, pm_message_t state)
-+{
-+	struct mt76_dev *mdev =3D pci_get_drvdata(pdev);
-+	struct mt76x02_dev *dev =3D container_of(mdev, struct mt76x02_dev, mt76);
-+	int i, err;
-+
-+	napi_disable(&mdev->tx_napi);
-+	tasklet_kill(&mdev->pre_tbtt_tasklet);
-+	tasklet_kill(&mdev->tx_tasklet);
-+
-+	mt76_for_each_q_rx(mdev, i)
-+		napi_disable(&mdev->napi[i]);
-+
-+	mt76x02_dma_reset(dev);
-+
-+	pci_enable_wake(pdev, pci_choose_state(pdev, state), true);
-+	pci_save_state(pdev);
-+	err =3D pci_set_power_state(pdev, pci_choose_state(pdev, state));
-+	if (err)
-+		goto restore;
-+
-+	return 0;
-+
-+restore:
-+	mt76_for_each_q_rx(mdev, i)
-+		napi_enable(&mdev->napi[i]);
-+	napi_enable(&mdev->tx_napi);
-+
-+	return err;
-+}
-+
-+static int __maybe_unused
-+mt76x2e_resume(struct pci_dev *pdev)
-+{
-+	struct mt76_dev *mdev =3D pci_get_drvdata(pdev);
-+	int i, err;
-+
-+	err =3D pci_set_power_state(pdev, PCI_D0);
-+	if (err)
-+		return err;
-+
-+	pci_restore_state(pdev);
-+
-+	mt76_for_each_q_rx(mdev, i) {
-+		napi_enable(&mdev->napi[i]);
-+		napi_schedule(&mdev->napi[i]);
-+	}
-+	napi_enable(&mdev->tx_napi);
-+	napi_schedule(&mdev->tx_napi);
-+
-+	return 0;
-+}
-+
- MODULE_DEVICE_TABLE(pci, mt76pci_device_table);
- MODULE_FIRMWARE(MT7662_FIRMWARE);
- MODULE_FIRMWARE(MT7662_ROM_PATCH);
-@@ -113,6 +167,10 @@ static struct pci_driver mt76pci_driver =3D {
- 	.id_table	=3D mt76pci_device_table,
- 	.probe		=3D mt76pci_probe,
- 	.remove		=3D mt76pci_remove,
-+#ifdef CONFIG_PM
-+	.suspend	=3D mt76x2e_suspend,
-+	.resume		=3D mt76x2e_resume,
-+#endif /* CONFIG_PM */
- };
-=20
- module_pci_driver(mt76pci_driver);
---=20
-2.26.2
+ 
+-- 
+2.24.0
 
-
->=20
-> Thanks.
->=20
-> --=20
->   Best regards,
->     Oleksandr Natalenko (post-factum)
->     Principal Software Maintenance Engineer
->=20
-
---yVhtmJPUSI46BTXb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCXutNoAAKCRA6cBh0uS2t
-rGaCAP9seDnh+3I9x7qM0L6z+RmRhKym8Vj5D+al2CY0DHHnMgEAgvTcNsCPFMrh
-Dj6aS0JZ6xV07SQNTlsUmV2eld+m6gc=
-=Cp+H
------END PGP SIGNATURE-----
-
---yVhtmJPUSI46BTXb--
