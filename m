@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EB0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD25C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 862D5221F6
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38BF21974
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444822;
-	bh=egjh4KR1n2yvreET00hqFOEmkwK3ljyyUEcCR/XFy2w=;
+	s=default; t=1592444824;
+	bh=w1lTZXh9IdDYDLqWT6YpftBSWKQnfqyHQ9w33e4WjlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1p0vxksisaN7/uObf+jmKnVaSJxCKu0/nXJyh2Sf/uemJtk05ItlCDlSCFZdG6EMT
-	 ilu2bVrimIFGzpBGAyvUnUwCJIssvW+jeCnn6UYvkWOpaZCt0/4yjhdOBbuiCxz2ir
-	 5jKuq/T96hYl0crcDhDd8LNmwCn+He7Ovwe8LDJ0=
+	b=Bn02aLbVP9bAGWSYw0uUF/sICHRqN6htJOfj0EbQPQF/FZJb3n0Wxmtab50zdekQ9
+	 2oC0tgfkwEyseCzje4aTTFhLpTFvIAmXfNSOqnvmP3ZwuDVcdZu1InkPzV0mWuLqQ1
+	 Xl+3zyLGQJcJxtY0TKeGagPFhVOdi5dbZZ9ErS1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732503AbgFRBrA (ORCPT
+        id S1732072AbgFRB2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:47:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36952 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:28:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732081AbgFRB2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:28:22 -0400
+        id S1731316AbgFRBY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:24:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5560221F3;
-        Thu, 18 Jun 2020 01:28:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07A3621D80;
+        Thu, 18 Jun 2020 01:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443702;
-        bh=egjh4KR1n2yvreET00hqFOEmkwK3ljyyUEcCR/XFy2w=;
+        s=default; t=1592443497;
+        bh=w1lTZXh9IdDYDLqWT6YpftBSWKQnfqyHQ9w33e4WjlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HGRrari0kKo9lXrbNg6hDOfkQplMvvOz/Cfd5PAtBR70F//HiQkD8p7K+dkswprcR
-         +jiKKQ59F8qarPfiAD34tYEe4W60Zn5GL/AgnQzt024GTXzH6W7t3CP3k7KVUSvB4A
-         m25c0MS6QqZKfG6C5xL7VYBgbANGpaq9qCz+mh9w=
+        b=zQLrPnSBf+Xnf257jBvWnAXNHb1ZtUqsH79ru6QEjSFMRirng1kk/++G5i9dAcMl4
+         o7pJSN2BAlG7WLD+fhTov0/NQiFtUsNwhtjSZt+63paYMCN+T0zfdWaFUIWDKvgm1M
+         u+kOKlHMeaf516WbeYcKHRcsEPCBvdxajLwxDe4w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 02/80] clk: sunxi: Fix incorrect usage of round_down()
-Date:   Wed, 17 Jun 2020 21:27:01 -0400
-Message-Id: <20200618012819.609778-2-sashal@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 123/172] scsi: ufs-qcom: Fix scheduling while atomic issue
+Date:   Wed, 17 Jun 2020 21:21:29 -0400
+Message-Id: <20200618012218.607130-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
-References: <20200618012819.609778-1-sashal@kernel.org>
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,37 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit ee25d9742dabed3fd18158b518f846abeb70f319 ]
+[ Upstream commit 3be60b564de49875e47974c37fabced893cd0931 ]
 
-round_down() can only round to powers of 2. If round_down() is asked
-to round to something that is not a power of 2, incorrect results are
-produced. The incorrect results can be both too large and too small.
+ufs_qcom_dump_dbg_regs() uses usleep_range, a sleeping function, but can be
+called from atomic context in the following flow:
 
-Instead, use rounddown() which can round to any number.
+ufshcd_intr -> ufshcd_sl_intr -> ufshcd_check_errors ->
+ufshcd_print_host_regs -> ufshcd_vops_dbg_register_dump ->
+ufs_qcom_dump_dbg_regs
 
-Fixes: 6a721db180a2 ("clk: sunxi: Add A31 clocks support")
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+This causes a boot crash on the Lenovo Miix 630 when the interrupt is
+handled on the idle thread.
+
+Fix the issue by switching to udelay().
+
+Link: https://lore.kernel.org/r/20200525204125.46171-1-jeffrey.l.hugo@gmail.com
+Fixes: 9c46b8676271 ("scsi: ufs-qcom: dump additional testbus registers")
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi/clk-sunxi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/ufs/ufs-qcom.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index f2c9274b8bd5..369164f0bd0e 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -98,7 +98,7 @@ static void sun6i_a31_get_pll1_factors(struct factors_request *req)
- 	 * Round down the frequency to the closest multiple of either
- 	 * 6 or 16
- 	 */
--	u32 round_freq_6 = round_down(freq_mhz, 6);
-+	u32 round_freq_6 = rounddown(freq_mhz, 6);
- 	u32 round_freq_16 = round_down(freq_mhz, 16);
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index 75ee5906b966..21e3ff590ec9 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -1635,11 +1635,11 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
  
- 	if (round_freq_6 > round_freq_16)
+ 	/* sleep a bit intermittently as we are dumping too much data */
+ 	ufs_qcom_print_hw_debug_reg_all(hba, NULL, ufs_qcom_dump_regs_wrapper);
+-	usleep_range(1000, 1100);
++	udelay(1000);
+ 	ufs_qcom_testbus_read(hba);
+-	usleep_range(1000, 1100);
++	udelay(1000);
+ 	ufs_qcom_print_unipro_testbus(hba);
+-	usleep_range(1000, 1100);
++	udelay(1000);
+ }
+ 
+ /**
 -- 
 2.25.1
 
