@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B67C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46672C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADA6721D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A8521D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442995;
-	bh=wxagRCdDmLBVpwWsJ/YZCGc4NdGxBQAmrVSKQTkcppM=;
+	s=default; t=1592443006;
+	bh=xS/sOfYhQmXqBYyWzUfT3F1aKVDn9c/U3LLDYZoLQBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ExHkLsRgjlX1SVYJVaZuljq9gzDNAZ3Qkwb8PRZNC9TGibQxiW7r1iMbKQ9A9Bqfs
-	 24yeDDQJ3fer2nAoWbLydvquTIH+Td4jqiZAkr+t6WUeAfuD4iKXv7nPteHl3iYnqQ
-	 yeljXmzRB5rBif+FmaDOTuRer3YzLeG9V8HNk66w=
+	b=JymIyMB8AoKaO8mcD9nrKx0SK0gCKCyjC2dpUSJTNqq+rMrld09uFSW4oYS2vYYN3
+	 7UG/5ZVc9QiHTJRanP+0DXQy7s1198uXlOLGh6amjyFX+LTmAfo3qfBgpjNOPqjMYG
+	 YrGhAHL+PQY01xEnYDL7KfQvNAbUEPPZIQiPeCI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbgFRBQd (ORCPT
+        id S1729647AbgFRBQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:16:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43828 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:16:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728394AbgFRBOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:14:14 -0400
+        id S1728903AbgFRBO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0459821D7B;
-        Thu, 18 Jun 2020 01:14:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B79BD20EDD;
+        Thu, 18 Jun 2020 01:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442853;
-        bh=wxagRCdDmLBVpwWsJ/YZCGc4NdGxBQAmrVSKQTkcppM=;
+        s=default; t=1592442867;
+        bh=xS/sOfYhQmXqBYyWzUfT3F1aKVDn9c/U3LLDYZoLQBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wIVu9cNQurT8hjqqVnuFPYpTTPcVjur4fVsYdg3TMj3buMmS24yDa2yGQ8nbVowWQ
-         2rse+h2UyrjGdyFs+WGqPshMOwpyh02WaZXZNTeB9QvAUdQMsB4odDiopF3cOmiTrh
-         Px9Q7leFSamuEdb/SCI10rfAtDtkuQWlA4VTh2nQ=
+        b=rSqBk/p2Gpech5rbXDPzjkIRxoMPl9bf7930YnJRV7z2ak/2B+BbGz3mJydyIAw3C
+         gZZKz5ugKpWL01EpY/51YLmT+v390duizNr9GeuRJiHYVuquT/x7YDHzWF3CZsuNbO
+         /Uv59FhObY/tjp2SxTpciV9o9xMDRCmyBzKku3jg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tejas Patel <tejas.patel@xilinx.com>,
-        Jolly Shah <jolly.shah@xilinx.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 284/388] clk: zynqmp: Fix divider2 calculation
-Date:   Wed, 17 Jun 2020 21:06:21 -0400
-Message-Id: <20200618010805.600873-284-sashal@kernel.org>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.7 294/388] ASoC: dapm: Move dai_link widgets to runtime to fix use after free
+Date:   Wed, 17 Jun 2020 21:06:31 -0400
+Message-Id: <20200618010805.600873-294-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,85 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejas Patel <tejas.patel@xilinx.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit b8c1049c68d634a412ed5980ae666ed7c8839305 ]
+[ Upstream commit f4aa5e214eeaf7f1c7f157526a5aa29784cb6a1f ]
 
-zynqmp_get_divider2_val() calculates, divider value of type DIV2 clock,
-considering best possible combination of DIV1 and DIV2.
+The newly added CODEC to CODEC DAI link widget pointers in
+snd_soc_dai_link are better placed in snd_soc_pcm_runtime.
+snd_soc_dai_link is really intended for static configuration of
+the DAI, and the runtime for dynamic data.  The snd_soc_dai_link
+structures are not destroyed if the card is unbound. The widgets
+are cleared up on unbind, however if the card is rebound as the
+snd_soc_dai_link structures are reused these pointers will be left at
+their old values, causing access to freed memory.
 
-To find best possible values of DIV1 and DIV2, DIV1's parent rate
-should be consider and not DIV2's parent rate since it would rate of
-div1 clock. Consider a below topology,
-
-	out_clk->div2_clk->div1_clk->fixed_parent
-
-where out_clk = (fixed_parent/div1_clk) / div2_clk, so parent clock
-of div1_clk (i.e. out_clk) should be divided by div1_clk and div2_clk.
-
-Existing code divides parent rate of div2_clk's clock instead of
-div1_clk's parent rate, which is wrong.
-
-Fix the same by considering div1's parent clock rate.
-
-Fixes: 4ebd92d2e228 ("clk: zynqmp: Fix divider calculation")
-Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
-Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
-Link: https://lkml.kernel.org/r/1583185843-20707-3-git-send-email-jolly.shah@xilinx.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 595571cca4de ("ASoC: dapm: Fix regression introducing multiple copies of DAI widgets")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200526161930.30759-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/zynqmp/divider.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ include/sound/soc.h  |  6 +++---
+ sound/soc/soc-dapm.c | 12 ++++++------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
-index 4be2cc76aa2e..9bc4f9409aea 100644
---- a/drivers/clk/zynqmp/divider.c
-+++ b/drivers/clk/zynqmp/divider.c
-@@ -111,23 +111,30 @@ static unsigned long zynqmp_clk_divider_recalc_rate(struct clk_hw *hw,
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index e0371e70242d..8e480efeda2a 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -790,9 +790,6 @@ struct snd_soc_dai_link {
+ 	const struct snd_soc_pcm_stream *params;
+ 	unsigned int num_params;
  
- static void zynqmp_get_divider2_val(struct clk_hw *hw,
- 				    unsigned long rate,
--				    unsigned long parent_rate,
- 				    struct zynqmp_clk_divider *divider,
- 				    int *bestdiv)
- {
- 	int div1;
- 	int div2;
- 	long error = LONG_MAX;
--	struct clk_hw *parent_hw = clk_hw_get_parent(hw);
--	struct zynqmp_clk_divider *pdivider = to_zynqmp_clk_divider(parent_hw);
-+	unsigned long div1_prate;
-+	struct clk_hw *div1_parent_hw;
-+	struct clk_hw *div2_parent_hw = clk_hw_get_parent(hw);
-+	struct zynqmp_clk_divider *pdivider =
-+				to_zynqmp_clk_divider(div2_parent_hw);
+-	struct snd_soc_dapm_widget *playback_widget;
+-	struct snd_soc_dapm_widget *capture_widget;
+-
+ 	unsigned int dai_fmt;           /* format to set on init */
  
- 	if (!pdivider)
- 		return;
+ 	enum snd_soc_dpcm_trigger trigger[2]; /* trigger type for DPCM */
+@@ -1156,6 +1153,9 @@ struct snd_soc_pcm_runtime {
+ 	struct snd_soc_dai **cpu_dais;
+ 	unsigned int num_cpus;
  
-+	div1_parent_hw = clk_hw_get_parent(div2_parent_hw);
-+	if (!div1_parent_hw)
-+		return;
++	struct snd_soc_dapm_widget *playback_widget;
++	struct snd_soc_dapm_widget *capture_widget;
 +
-+	div1_prate = clk_hw_get_rate(div1_parent_hw);
- 	*bestdiv = 1;
- 	for (div1 = 1; div1 <= pdivider->max_div;) {
- 		for (div2 = 1; div2 <= divider->max_div;) {
--			long new_error = ((parent_rate / div1) / div2) - rate;
-+			long new_error = ((div1_prate / div1) / div2) - rate;
+ 	struct delayed_work delayed_work;
+ 	void (*close_delayed_work_func)(struct snd_soc_pcm_runtime *rtd);
+ #ifdef CONFIG_DEBUG_FS
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index e2632841b321..c0aa64ff8e32 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -4340,16 +4340,16 @@ static void dapm_connect_dai_pair(struct snd_soc_card *card,
+ 	codec = codec_dai->playback_widget;
  
- 			if (abs(new_error) < abs(error)) {
- 				*bestdiv = div2;
-@@ -192,7 +199,7 @@ static long zynqmp_clk_divider_round_rate(struct clk_hw *hw,
- 	 */
- 	if (div_type == TYPE_DIV2 &&
- 	    (clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT)) {
--		zynqmp_get_divider2_val(hw, rate, *prate, divider, &bestdiv);
-+		zynqmp_get_divider2_val(hw, rate, divider, &bestdiv);
+ 	if (playback_cpu && codec) {
+-		if (dai_link->params && !dai_link->playback_widget) {
++		if (dai_link->params && !rtd->playback_widget) {
+ 			substream = streams[SNDRV_PCM_STREAM_PLAYBACK].substream;
+ 			dai = snd_soc_dapm_new_dai(card, substream, "playback");
+ 			if (IS_ERR(dai))
+ 				goto capture;
+-			dai_link->playback_widget = dai;
++			rtd->playback_widget = dai;
+ 		}
+ 
+ 		dapm_connect_dai_routes(&card->dapm, cpu_dai, playback_cpu,
+-					dai_link->playback_widget,
++					rtd->playback_widget,
+ 					codec_dai, codec);
  	}
  
- 	if ((clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) && divider->is_frac)
+@@ -4358,16 +4358,16 @@ static void dapm_connect_dai_pair(struct snd_soc_card *card,
+ 	codec = codec_dai->capture_widget;
+ 
+ 	if (codec && capture_cpu) {
+-		if (dai_link->params && !dai_link->capture_widget) {
++		if (dai_link->params && !rtd->capture_widget) {
+ 			substream = streams[SNDRV_PCM_STREAM_CAPTURE].substream;
+ 			dai = snd_soc_dapm_new_dai(card, substream, "capture");
+ 			if (IS_ERR(dai))
+ 				return;
+-			dai_link->capture_widget = dai;
++			rtd->capture_widget = dai;
+ 		}
+ 
+ 		dapm_connect_dai_routes(&card->dapm, codec_dai, codec,
+-					dai_link->capture_widget,
++					rtd->capture_widget,
+ 					cpu_dai, capture_cpu);
+ 	}
+ }
 -- 
 2.25.1
 
