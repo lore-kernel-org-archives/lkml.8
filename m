@@ -2,169 +2,102 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11981C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E92C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE9592080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:11:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592518282;
-	bh=Uzh3yY2YeniyETVFPI0fgkL5ivLFjwCm1C6v1H53ZII=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=TS9hhAfHu+XYDc2KCtpDf5/KGLItfbLBMgJYPkPfU0cApZrC3Neo2PWR6NwawxHiJ
-	 IbvOB9RR/7K4Q14JxMvlfhqtK7btV3AaqGrEhyqq1/FSope5yoLDodxoL1Ckukq2Ra
-	 OhSPWPWF88ity+Nnaz+Sox4Wuq4QK/qduRpc2SpA=
+	by mail.kernel.org (Postfix) with ESMTP id F08E02083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:12:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UaC02oSh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbgFRWLV (ORCPT
+        id S1731733AbgFRWMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:11:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728450AbgFRWLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 18:11:20 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1DC620656;
-        Thu, 18 Jun 2020 22:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592518279;
-        bh=Uzh3yY2YeniyETVFPI0fgkL5ivLFjwCm1C6v1H53ZII=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=AWkcMHqCOBCFskfwY2eU/YcQM5YlEoppWycqDAHRjo99Lmx53RZlckGODm6ku6E51
-         xzFJ23g21NiKgB2Q55aOrxHXmlN8MFXHnxO/vmZ1pWhXIEOI/unmrebF7nWgAsYubf
-         ALss+mUpoGRChqy1aETcbJ3k/EfTHeznigEQTzfU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id BB0A6352264E; Thu, 18 Jun 2020 15:11:19 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 15:11:19 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, urezki@gmail.com,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 1/7] rcu/segcblist: Prevent useless GP start if no CBs to
- accelerate
-Message-ID: <20200618221119.GX2723@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200618202955.4024-1-joel@joelfernandes.org>
+        Thu, 18 Jun 2020 18:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727827AbgFRWMe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 18:12:34 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9018C06174E;
+        Thu, 18 Jun 2020 15:12:33 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id t18so7728274wru.6;
+        Thu, 18 Jun 2020 15:12:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=POBgBl3MI/dA6mNJ5+hGlqrhujuUmmxFrJ0pjJyUNc8=;
+        b=UaC02oShpxtI/MNfXzOqezN5e2CQ6fHyVgspS3Qf6YhYFCaq3LEhRQ+l2MfPPlnO1p
+         bvxQzuJgfDsAPSt4CRMaWsNHSdAqUc4EBV9Wy6eygFu68NNNGaE35eDA+U+EqIsvltl1
+         iUy5ALjPu6x9FrY1K9obF4jW55in+nio1robfbEM2zb7AAnczyLBp2bD5XBmUMZFmpvi
+         NOsfeBFemydvFxA7pMkHJI+5MS6HqxALBiD/vYUTgckQwMy4JQxUZ2qgFGG8wo/gbx/+
+         +o83wVSYbJHpQ/i8H7ER2YDYBp4Z0UBxzh2soQkz5eaZ+gS7oegrDmjsKd0xHWQOOn85
+         jpag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=POBgBl3MI/dA6mNJ5+hGlqrhujuUmmxFrJ0pjJyUNc8=;
+        b=qhkezecl1sWGt3JatMgmx6kci/uajdY8vYpxMkoUvyF2iHt8qpEXLtWSfqAElVTrZT
+         /t4vfBgITaf3EqNzLyLBRkHkLgazn+CU3DUU4lAgZD21BaaWUuRbE0eQsFim8/cwJ7t/
+         QPfQzUYYJPSB9IXmUI7SQBPrnWhOglpmTi8HuCKw5YB02xN7zitsEv6ifzSj+zy1qPVd
+         13gJtZQbNA3NVdLzVtID1iyM8pYiImy040PNweEdgTV17FnVlFHiXRZ/Lg1BhWf6wYXY
+         SXArhD5vB1d83zqh8BRX6Wg+4mkhGKJiKQXKWlwyCX5HjqO9hiJ7VIqtDqxt1CuPot30
+         St+g==
+X-Gm-Message-State: AOAM531LhMXwhdQWses0zKMmwdgUTf1cspIBovpTN7Aswitotqrvje6d
+        e95xWUFvopj6ZCL4fHsQlpU=
+X-Google-Smtp-Source: ABdhPJx8hy6wOubeqxfTx/fn/AnNUMOEzQ6xLh5Mglw12uW4b0wv42gO0zYOEw+mTUgB1GWSiSN/Ig==
+X-Received: by 2002:a5d:4009:: with SMTP id n9mr575240wrp.97.1592518352590;
+        Thu, 18 Jun 2020 15:12:32 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id e25sm5677317wrc.69.2020.06.18.15.12.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 15:12:31 -0700 (PDT)
+Subject: Re: [PATCH net-next] of: mdio: preserve phy dev_flags in
+ of_phy_connect()
+To:     rentao.bupt@gmail.com, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+References: <20200618220444.5064-1-rentao.bupt@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <f57e5c7f-88f0-d033-6f63-ab53addf9e20@gmail.com>
+Date:   Thu, 18 Jun 2020 15:12:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618202955.4024-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200618220444.5064-1-rentao.bupt@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 04:29:49PM -0400, Joel Fernandes (Google) wrote:
 
-First, this looks like a very nice optimization, thank you!
 
-> rcu_segcblist_accelerate() returns true if a GP is to be
-> started/requested and false if not. During tracing, I found that it is
-> asking that GPs be requested
-
-s/GPs/unnecessary GPs/?  Plus "." at end of the sentence.
-
-> The exact flow seems to be something like:
-> 1. Callbacks are queued on CPU A - into the NEXT list.
-> 2. softirq runs on CPU A, accelerate all CBs from NEXT->WAIT and request a GP X.
-> 3. GP thread wakes up on another CPU, starts the GP X and requests QS from CPU A.
-> 4. CPU A's softirq runs again presumably because of #3.
-
-Yes, that is one reason RCU softirq might run again.
-
-> 5. CPU A's softirq now does acceleration again, this time no CBs are
->    accelerated since last attempt, but it still requests GP X+1 which
->    could be useless.
-
-I can't think of a case where this request helps.  How about: "but
-it still unnecessarily requests GP X+1"?
-
-> The fix is, prevent the useless GP start if we detect no CBs are there
-> to accelerate.
+On 6/18/2020 3:04 PM, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
 > 
-> With this, we have the following improvement in short runs of
-> rcutorture (5 seconds each):
-> +----+-------------------+-------------------+
-> | #  | Number of GPs     | Number of Wakeups |
-> +====+=========+=========+=========+=========+
-> | 1  | With    | Without | With    | Without |
-> +----+---------+---------+---------+---------+
-> | 2  |      75 |      89 |     113 |     119 |
-> +----+---------+---------+---------+---------+
-> | 3  |      62 |      91 |     105 |     123 |
-> +----+---------+---------+---------+---------+
-> | 4  |      60 |      79 |      98 |     110 |
-> +----+---------+---------+---------+---------+
-> | 5  |      63 |      79 |      99 |     112 |
-> +----+---------+---------+---------+---------+
-> | 6  |      57 |      89 |      96 |     123 |
-> +----+---------+---------+---------+---------+
-> | 7  |      64 |      85 |      97 |     118 |
-> +----+---------+---------+---------+---------+
-> | 8  |      58 |      83 |      98 |     113 |
-> +----+---------+---------+---------+---------+
-> | 9  |      57 |      77 |      89 |     104 |
-> +----+---------+---------+---------+---------+
-> | 10 |      66 |      82 |      98 |     119 |
-> +----+---------+---------+---------+---------+
-> | 11 |      52 |      82 |      83 |     117 |
-> +----+---------+---------+---------+---------+
-
-So the reductions in wakeups ranges from 5% to 40%, with almost a 20%
-overall reduction in wakeups across all the runs.  That should be of
-some use to someone.  ;-)
-
-I do run rcutorture quite a bit, but is there a more real-world
-benchmark that could be tried?
-
-> Cc: urezki@gmail.com
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/rcu/rcu_segcblist.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+> Replace assignment "=" with OR "|=" for "phy->dev_flags" so "dev_flags"
+> configured in phy probe() function can be preserved.
 > 
-> diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-> index 9a0f66133b4b3..4782cf17bf4f9 100644
-> --- a/kernel/rcu/rcu_segcblist.c
-> +++ b/kernel/rcu/rcu_segcblist.c
-> @@ -475,8 +475,15 @@ bool rcu_segcblist_accelerate(struct rcu_segcblist *rsclp, unsigned long seq)
->  	 * Also advance to the oldest segment of callbacks whose
->  	 * ->gp_seq[] completion is at or after that passed in via "seq",
->  	 * skipping any empty segments.
-> +	 *
-> +	 * Note that "i" is the youngest segment of the list after which
-> +	 * any older segments than "i" would not be mutated or assigned
-> +	 * GPs. For example, if i == WAIT_TAIL, then neither WAIT_TAIL,
-> +	 * nor DONE_TAIL will be touched. Only CBs in NEXT_TAIL will be
-> +	 * merged with NEXT_READY_TAIL and the GP numbers of both of
-> +	 * them would be updated.
-
-In this case, only the GP number of NEXT_READY_TAIL would be updated,
-correct?  Or am I missing something subtle in the loop just past the
-end of this patch?
-
-							Thanx, Paul
-
->  	 */
-> -	if (++i >= RCU_NEXT_TAIL)
-> +	if (rcu_segcblist_restempty(rsclp, i) || ++i >= RCU_NEXT_TAIL)
->  		return false;
->  
->  	/*
-> -- 
-> 2.27.0.111.gc72c7da667-goog
+> The idea is similar to commit e7312efbd5de ("net: phy: modify assignment
+> to OR for dev_flags in phy_attach_direct").
 > 
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
