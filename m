@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A49DEC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4868C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73D0822229
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD37422229
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444670;
-	bh=1DjVf4x6Kv2CJYuM2vBCCnZyAX5U4axJg1eon0whqtY=;
+	s=default; t=1592444672;
+	bh=k5fJn4/BHCsHWqjor/jslrTNiMZt/S9sgjvZvWRPe4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eGnLBUccwDDLbE2r0oUZlhVynTPhN+vnrJjnGCHaQujjv2oYmCq8+rB7G7WgVFt9o
-	 mL4OAkw2d9LipU3rhxReYH7H0YWgMsVkgpMCaOYTUzk27S2xZBiIypwc5thc+kHi/c
-	 pQF41RplPKEIOzdfYQcc0+objkX8ohWPkMcXwKvM=
+	b=vvIy+M27P3E/coI2qLe3iAL0VG43i0s4QcXr1ps3fOPbjB1FgAbd7/obA5KszasSE
+	 imZ9paAcbFlWCAR5p09iMgvJp9v6dvQ9mkwXfZvZLmHfTqWiAxywNAzPYVQCdLURqk
+	 frbPGmm830yyssRF03fq5lzuq+a1eMmuIx/HcCWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732386AbgFRBo2 (ORCPT
+        id S1733107AbgFRBob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:44:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37888 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:44:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732182AbgFRB2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:28:54 -0400
+        id S1732167AbgFRB2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:28:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 099AF22203;
-        Thu, 18 Jun 2020 01:28:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE0772222C;
+        Thu, 18 Jun 2020 01:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443734;
-        bh=1DjVf4x6Kv2CJYuM2vBCCnZyAX5U4axJg1eon0whqtY=;
+        s=default; t=1592443728;
+        bh=k5fJn4/BHCsHWqjor/jslrTNiMZt/S9sgjvZvWRPe4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yyeW3+E52wbu/k/KOED5G6WHyBWOAF+w9K4ILjPTuhCKGCd+oPSGAD5S6sKWm4SaR
-         Rs+AoNB1L5Mi97l1sV+pJV5gPeKQ/LC+vd8+HBfgHXsyzjFmSV9jK8e6ITQNypUhkp
-         lSb+AxVpqaurKYFRTYMmb7NIpfiqVLIiDGRdGS1Q=
+        b=yRBNzmCFyFgWkeWTPrZFHOa8X049PZz5Kp/S5c93CbbpFOsqVplG7ShN46kcjZbHV
+         QSqDCZImL3i7vkV26Jvrm3ofSdXrRdx1pfa24vtWuqirDSgyeYjoT4PpX5xXGzHCSl
+         Dw7HUX6WcuUiQbMA3for/ApbqGamU9Hgw5EjxWVU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        syzbot+6f1624f937d9d6911e2d@syzkaller.appspotmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 25/80] fat: don't allow to mount if the FAT length == 0
-Date:   Wed, 17 Jun 2020 21:27:24 -0400
-Message-Id: <20200618012819.609778-25-sashal@kernel.org>
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 23/80] powerpc/crashkernel: Take "mem=" option into account
+Date:   Wed, 17 Jun 2020 21:27:22 -0400
+Message-Id: <20200618012819.609778-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
 References: <20200618012819.609778-1-sashal@kernel.org>
@@ -63,44 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+From: Pingfan Liu <kernelfans@gmail.com>
 
-[ Upstream commit b1b65750b8db67834482f758fc385bfa7560d228 ]
+[ Upstream commit be5470e0c285a68dc3afdea965032f5ddc8269d7 ]
 
-If FAT length == 0, the image doesn't have any data. And it can be the
-cause of overlapping the root dir and FAT entries.
+'mem=" option is an easy way to put high pressure on memory during
+some test. Hence after applying the memory limit, instead of total
+mem, the actual usable memory should be considered when reserving mem
+for crashkernel. Otherwise the boot up may experience OOM issue.
 
-Also Windows treats it as invalid format.
+E.g. it would reserve 4G prior to the change and 512M afterward, if
+passing
+crashkernel="2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G",
+and mem=5G on a 256G machine.
 
-Reported-by: syzbot+6f1624f937d9d6911e2d@syzkaller.appspotmail.com
-Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Marco Elver <elver@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Link: http://lkml.kernel.org/r/87r1wz8mrd.fsf@mail.parknet.co.jp
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This issue is powerpc specific because it puts higher priority on
+fadump and kdump reservation than on "mem=". Referring the following
+code:
+    if (fadump_reserve_mem() == 0)
+            reserve_crashkernel();
+    ...
+    /* Ensure that total memory size is page-aligned. */
+    limit = ALIGN(memory_limit ?: memblock_phys_mem_size(), PAGE_SIZE);
+    memblock_enforce_memory_limit(limit);
+
+While on other arches, the effect of "mem=" takes a higher priority
+and pass through memblock_phys_mem_size() before calling
+reserve_crashkernel().
+
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1585749644-4148-1-git-send-email-kernelfans@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fat/inode.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/powerpc/kernel/machine_kexec.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/fat/inode.c b/fs/fat/inode.c
-index f0387d040331..9af410142f78 100644
---- a/fs/fat/inode.c
-+++ b/fs/fat/inode.c
-@@ -1512,6 +1512,12 @@ static int fat_read_bpb(struct super_block *sb, struct fat_boot_sector *b,
- 		goto out;
+diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
+index 9dafd7af39b8..cb4d6cd949fc 100644
+--- a/arch/powerpc/kernel/machine_kexec.c
++++ b/arch/powerpc/kernel/machine_kexec.c
+@@ -113,11 +113,12 @@ void machine_kexec(struct kimage *image)
+ 
+ void __init reserve_crashkernel(void)
+ {
+-	unsigned long long crash_size, crash_base;
++	unsigned long long crash_size, crash_base, total_mem_sz;
+ 	int ret;
+ 
++	total_mem_sz = memory_limit ? memory_limit : memblock_phys_mem_size();
+ 	/* use common parsing */
+-	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
++	ret = parse_crashkernel(boot_command_line, total_mem_sz,
+ 			&crash_size, &crash_base);
+ 	if (ret == 0 && crash_size > 0) {
+ 		crashk_res.start = crash_base;
+@@ -176,6 +177,7 @@ void __init reserve_crashkernel(void)
+ 	/* Crash kernel trumps memory limit */
+ 	if (memory_limit && memory_limit <= crashk_res.end) {
+ 		memory_limit = crashk_res.end + 1;
++		total_mem_sz = memory_limit;
+ 		printk("Adjusted memory limit for crashkernel, now 0x%llx\n",
+ 		       memory_limit);
  	}
+@@ -184,7 +186,7 @@ void __init reserve_crashkernel(void)
+ 			"for crashkernel (System RAM: %ldMB)\n",
+ 			(unsigned long)(crash_size >> 20),
+ 			(unsigned long)(crashk_res.start >> 20),
+-			(unsigned long)(memblock_phys_mem_size() >> 20));
++			(unsigned long)(total_mem_sz >> 20));
  
-+	if (bpb->fat_fat_length == 0 && bpb->fat32_length == 0) {
-+		if (!silent)
-+			fat_msg(sb, KERN_ERR, "bogus number of FAT sectors");
-+		goto out;
-+	}
-+
- 	error = 0;
- 
- out:
+ 	if (!memblock_is_region_memory(crashk_res.start, crash_size) ||
+ 	    memblock_reserve(crashk_res.start, crash_size)) {
 -- 
 2.25.1
 
