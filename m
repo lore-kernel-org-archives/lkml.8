@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80744C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 010B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C45B21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D157F2193E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442736;
-	bh=1GHEktr/FGZJLGxJRB9jHKx37ExbftyAROwdmO92/to=;
+	s=default; t=1592442756;
+	bh=civejUupUvfmmfhwDBpeah7dotAHq5OcLCZlFNcAbfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cozKiQxIcLrWp6LVZuOHRAajb7z7BgL2nM0jhk7Z1P0pohc2QoeZjRokZ0JEZm1C/
-	 JpGkPtc+i/hBBFmrakxLOfSXr6v0nRmeYFnbV5apWUX84xKjgCHMrdaAH904+dsrXc
-	 gyvGhpH2nlJS73S5tyw9gwL0oNv0m5fDrmqCco+0=
+	b=dEmY4ufutsGt8ojhofCXq7tcD448hfFbSXj0p1rsf65Tdpljx9HFtVekAv5Z8/jod
+	 887hihv/gtE4vFPjjCyuOngG+zdQ6fLltrltRN1NalCSSNRf8wYy/U4iemacxlmAdx
+	 Z8Znt/M7/vVTn1+Gdrxk5IKxviSnNLmhP5YLiraI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbgFRBMO (ORCPT
+        id S1728940AbgFRBMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39524 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbgFRBLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:33 -0400
+        id S1728778AbgFRBLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B61CF21924;
-        Thu, 18 Jun 2020 01:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D44E214DB;
+        Thu, 18 Jun 2020 01:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442693;
-        bh=1GHEktr/FGZJLGxJRB9jHKx37ExbftyAROwdmO92/to=;
+        s=default; t=1592442703;
+        bh=civejUupUvfmmfhwDBpeah7dotAHq5OcLCZlFNcAbfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IRo+xIWUceqgRKC+HTHebBzVPHj4eK2s8puR8I1+wjZhzxR0m0bPvtHGwl0iRwJ1G
-         XMhFNMB3okpdubvLaW8bsp0XJOnYolxCiXajPcij71JP7Pz5yaF/Rt0xyRisAXthcQ
-         /LifQeFIW72+b/Hmuq0iBTsCQ/Wk2KfO0p4oCwPE=
+        b=PxasFqCcmzPxPRt2rIv4OreBP0Em0gy0MaU1cbWe0VVAeEXs9qu2CivN4pmXhhDO+
+         KvYOgYluTRF00HdpHBCKuYGlVKjYIbhtJjZQray7Vr2/xbvB0jqr5xfqqIJI/ErBlr
+         fb+b0xOu18nN7SU6UZkZUpKuskHVuVzpuTwYpt3M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+Cc:     Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 158/388] arm64: dts: meson-g12b-ugoos-am6: fix board compatible
-Date:   Wed, 17 Jun 2020 21:04:15 -0400
-Message-Id: <20200618010805.600873-158-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.7 165/388] ARM: dts: aspeed: Change KCS nodes to v2 binding
+Date:   Wed, 17 Jun 2020 21:04:22 -0400
+Message-Id: <20200618010805.600873-165-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,36 +59,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Andrew Jeffery <andrew@aj.id.au>
 
-[ Upstream commit 5c28dcbb3a1be167c07784b5f710ec602a57bea2 ]
+[ Upstream commit fa4c8ec6feaa3237f5d44cb8c6d0aa0dff6e1bcc ]
 
-Add missing amlogic,s922x in the board compatible list.
+Fixes the following warnings for both g5 and g6 SoCs:
 
-It fixes:
-meson-g12b-ugoos-am6.dt.yaml: /: compatible: ['ugoos,am6', 'amlogic,g12b'] is not valid under any of the given schemas
+    arch/arm/boot/dts/aspeed-g5.dtsi:376.19-381.8: Warning
+    (unit_address_vs_reg): /ahb/apb/lpc@1e789000/lpc-bmc@0/kcs1@0: node
+    has a unit name, but no reg property
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Link: https://lore.kernel.org/r/20200326165958.19274-4-narmstrong@baylibre.com
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../dts/aspeed-bmc-facebook-tiogapass.dts     |  4 ++--
+ arch/arm/boot/dts/aspeed-g5.dtsi              | 24 +++++++++----------
+ arch/arm/boot/dts/aspeed-g6.dtsi              | 23 +++++++++---------
+ 3 files changed, 26 insertions(+), 25 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
-index 06c5430eb92d..fdaacfd96b97 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
-@@ -14,7 +14,7 @@
- #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+index 5d7cbd9164d4..669980c690f9 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -112,13 +112,13 @@ &uart5 {
+ &kcs2 {
+ 	// BMC KCS channel 2
+ 	status = "okay";
+-	kcs_addr = <0xca8>;
++	aspeed,lpc-io-reg = <0xca8>;
+ };
  
- / {
--	compatible = "ugoos,am6", "amlogic,g12b";
-+	compatible = "ugoos,am6", "amlogic,s922x", "amlogic,g12b";
- 	model = "Ugoos AM6";
+ &kcs3 {
+ 	// BMC KCS channel 3
+ 	status = "okay";
+-	kcs_addr = <0xca2>;
++	aspeed,lpc-io-reg = <0xca2>;
+ };
  
- 	aliases {
+ &mac0 {
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index f12ec04d3cbc..bc92d3db7b78 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -426,22 +426,22 @@ lpc_bmc: lpc-bmc@0 {
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x0 0x80>;
+ 
+-					kcs1: kcs1@0 {
+-						compatible = "aspeed,ast2500-kcs-bmc";
++					kcs1: kcs@24 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
+ 						interrupts = <8>;
+-						kcs_chan = <1>;
+ 						status = "disabled";
+ 					};
+-					kcs2: kcs2@0 {
+-						compatible = "aspeed,ast2500-kcs-bmc";
++					kcs2: kcs@28 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
+ 						interrupts = <8>;
+-						kcs_chan = <2>;
+ 						status = "disabled";
+ 					};
+-					kcs3: kcs3@0 {
+-						compatible = "aspeed,ast2500-kcs-bmc";
++					kcs3: kcs@2c {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
+ 						interrupts = <8>;
+-						kcs_chan = <3>;
+ 						status = "disabled";
+ 					};
+ 				};
+@@ -455,10 +455,10 @@ lpc_host: lpc-host@80 {
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x80 0x1e0>;
+ 
+-					kcs4: kcs4@0 {
+-						compatible = "aspeed,ast2500-kcs-bmc";
++					kcs4: kcs@94 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
+ 						interrupts = <8>;
+-						kcs_chan = <4>;
+ 						status = "disabled";
+ 					};
+ 
+diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
+index fd0e483737a0..a2d2ac720a51 100644
+--- a/arch/arm/boot/dts/aspeed-g6.dtsi
++++ b/arch/arm/boot/dts/aspeed-g6.dtsi
+@@ -435,22 +435,23 @@ lpc_bmc: lpc-bmc@0 {
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x0 0x80>;
+ 
+-					kcs1: kcs1@0 {
+-						compatible = "aspeed,ast2600-kcs-bmc";
++					kcs1: kcs@24 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x24 0x1>, <0x30 0x1>, <0x3c 0x1>;
+ 						interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+ 						kcs_chan = <1>;
+ 						status = "disabled";
+ 					};
+-					kcs2: kcs2@0 {
+-						compatible = "aspeed,ast2600-kcs-bmc";
++					kcs2: kcs@28 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x28 0x1>, <0x34 0x1>, <0x40 0x1>;
+ 						interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
+-						kcs_chan = <2>;
+ 						status = "disabled";
+ 					};
+-					kcs3: kcs3@0 {
+-						compatible = "aspeed,ast2600-kcs-bmc";
++					kcs3: kcs@2c {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x2c 0x1>, <0x38 0x1>, <0x44 0x1>;
+ 						interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
+-						kcs_chan = <3>;
+ 						status = "disabled";
+ 					};
+ 				};
+@@ -464,10 +465,10 @@ lpc_host: lpc-host@80 {
+ 					#size-cells = <1>;
+ 					ranges = <0x0 0x80 0x1e0>;
+ 
+-					kcs4: kcs4@0 {
+-						compatible = "aspeed,ast2600-kcs-bmc";
++					kcs4: kcs@94 {
++						compatible = "aspeed,ast2500-kcs-bmc-v2";
++						reg = <0x94 0x1>, <0x98 0x1>, <0x9c 0x1>;
+ 						interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+-						kcs_chan = <4>;
+ 						status = "disabled";
+ 					};
+ 
 -- 
 2.25.1
 
