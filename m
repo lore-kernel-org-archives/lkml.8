@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B56C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1283D20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4F520776
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:51:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448667;
-	bh=ekHxHA0/0+ucEtW0CwYzY4lQSV0nX8LCO1zOta4a1Pc=;
+	s=default; t=1592448670;
+	bh=qqcRd+xS0PYccEaXyI7kdgQx+HoKQW5xSsFSjkSRG7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mGtF55lCI1zPfKR6IrZiSbUvR8b+Uu4BYJ4MmLHsUcTBTzt28pispBwoeb7uQ4Lm4
-	 296BLTLzbKxOZ8G5OYIp4YEwtR72ohng6beoWvBuAgLGnB8TuClH9sx8GiTrkbFlX6
-	 ZynRu4WitIhHzkFvLBn2zrlXsoiTRp3UVqKHpZC0=
+	b=je9ZQHOVgrkOj5VB8An31un4XkPf30sNnkgpaBsa4Azw6s00bs6AkdFRqTtN3Wu1q
+	 PlM+4fmxy/cQChOcU1P/+KeENLDnVNarvHTWPLDEKIekPgpUfu4yCd8hL7hD2lhNh2
+	 WcbbBrC6bQ+WFPVw1gzIEoqDs4s+Ul8v22EmgAuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgFRBJH (ORCPT
+        id S1728271AbgFRCvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:09:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34884 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:51:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727955AbgFRBIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:08:53 -0400
+        id S1728034AbgFRBJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEF8F21D6C;
-        Thu, 18 Jun 2020 01:08:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3E2C21BE5;
+        Thu, 18 Jun 2020 01:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442532;
-        bh=ekHxHA0/0+ucEtW0CwYzY4lQSV0nX8LCO1zOta4a1Pc=;
+        s=default; t=1592442546;
+        bh=qqcRd+xS0PYccEaXyI7kdgQx+HoKQW5xSsFSjkSRG7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uAZggeOkvT3ekpDhaLarJ6ZVm9oI74gI8HmlIOJYTf1udMgvAr2bP0Iev9Yk7HgVL
-         MFTQ9BxAALllkpPeKIpQRusI4JcKsxem/fZMPZoyq1KK3OO1Qa8c0rkQi7+XKavliY
-         ZidYMIE3NHoVWHUimbhtxtMbZxX5wqjHBv/Ic8P8=
+        b=T7A2Qo3nnI5wbFSBN/LIWZapkB8bhpfV7ff4cCnn3dkPJJ6MaOpImhmvlBL8t6Iji
+         /19c8JFQiaEEF+fGMI9A0eBAsan4JfJMNpODseAqfnwfwNIV9mQa1/sIGkIDflFsA+
+         ortFp5IYgDsjeLcJR+pzFZYlQpj+I/wPxM4Mooqw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Daeho Jeong <daehojeong@google.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.7 035/388] f2fs: compress: let lz4 compressor handle output buffer budget properly
-Date:   Wed, 17 Jun 2020 21:02:12 -0400
-Message-Id: <20200618010805.600873-35-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 045/388] misc: fastrpc: Fix an incomplete memory release in fastrpc_rpmsg_probe()
+Date:   Wed, 17 Jun 2020 21:02:22 -0400
+Message-Id: <20200618010805.600873-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,63 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit f6644143c63f2eac88973f7fea087582579b0189 ]
+[ Upstream commit 0978de9fc7335c73934ab8fac189fb4cb3f23191 ]
 
-Commonly, in order to handle lz4 worst compress case, caller should
-allocate buffer with size of LZ4_compressBound(inputsize) for target
-compressed data storing, however in this case, if caller didn't
-allocate enough space, lz4 compressor still can handle output buffer
-budget properly, and end up compressing when left space in output
-buffer is not enough.
+fastrpc_channel_ctx is not freed if misc_register() fails, this would
+lead to a memory leak. Fix this leak by adding kfree in misc_register()
+error path.
 
-So we don't have to allocate buffer with size for worst case, then
-we can avoid 2 * 4KB size intermediate buffer allocation when
-log_cluster_size is 2, and avoid unnecessary compressing work of
-compressor if we can not save at least 4KB space.
-
-Suggested-by: Daeho Jeong <daehojeong@google.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 278d56f970ae ("misc: fastrpc: Reference count channel context")
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200511162722.2552-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/compress.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/misc/fastrpc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index df7b2d15eacd..c05801758a35 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -236,7 +236,12 @@ static int lz4_init_compress_ctx(struct compress_ctx *cc)
- 	if (!cc->private)
- 		return -ENOMEM;
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index e3e085e33d46..9065d3e71ff7 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -1613,8 +1613,10 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+ 					    domains[domain_id]);
+ 	data->miscdev.fops = &fastrpc_fops;
+ 	err = misc_register(&data->miscdev);
+-	if (err)
++	if (err) {
++		kfree(data);
+ 		return err;
++	}
  
--	cc->clen = LZ4_compressBound(PAGE_SIZE << cc->log_cluster_size);
-+	/*
-+	 * we do not change cc->clen to LZ4_compressBound(inputsize) to
-+	 * adapt worst compress case, because lz4 compressor can handle
-+	 * output budget properly.
-+	 */
-+	cc->clen = cc->rlen - PAGE_SIZE - COMPRESS_HEADER_SIZE;
- 	return 0;
- }
+ 	kref_init(&data->refcount);
  
-@@ -252,11 +257,9 @@ static int lz4_compress_pages(struct compress_ctx *cc)
- 
- 	len = LZ4_compress_default(cc->rbuf, cc->cbuf->cdata, cc->rlen,
- 						cc->clen, cc->private);
--	if (!len) {
--		printk_ratelimited("%sF2FS-fs (%s): lz4 compress failed\n",
--				KERN_ERR, F2FS_I_SB(cc->inode)->sb->s_id);
--		return -EIO;
--	}
-+	if (!len)
-+		return -EAGAIN;
-+
- 	cc->clen = len;
- 	return 0;
- }
 -- 
 2.25.1
 
