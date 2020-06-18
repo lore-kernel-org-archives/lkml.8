@@ -2,209 +2,156 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 770C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3400C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E5CC20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDAF8208D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 21:45:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hCDyykgv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OcNB5enP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731286AbgFRVo3 (ORCPT
+        id S1731308AbgFRVpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 17:44:29 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53486 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725982AbgFRVo3 (ORCPT
+        Thu, 18 Jun 2020 17:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725982AbgFRVpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 17:44:29 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05ILiLG6099619;
-        Thu, 18 Jun 2020 16:44:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592516661;
-        bh=NtFYYf22CUq2Y656mDj/xXRVHdSM/x6MXTmqwdRqKiA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hCDyykgvkONfsqJ83Szw/CKpRVlltRvLNr/9xu/2Lo+BE+7qaOUG9dx/Uh26jPoNo
-         P0RJtVeJTaTfgSW5P5VYQFaioZ3hx43bcKnzBED35gOPsdx/LBi/d/jQ60aaRxYJmC
-         TX7paIFNPQqofAS0MCn1NumoQcVz42AC+ljlJObM=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05ILiL17051337
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 18 Jun 2020 16:44:21 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 18
- Jun 2020 16:44:21 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 18 Jun 2020 16:44:20 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05ILiKqL096589;
-        Thu, 18 Jun 2020 16:44:20 -0500
-Subject: Re: [RESEND PATCH v27 11/15] leds: lp55xx: Add multicolor framework
- support to lp55xx
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <robh@kernel.org>
-CC:     <kbuild-all@lists.01.org>, <devicetree@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200615201522.19677-12-dmurphy@ti.com>
- <202006180032.JW0i39C6%lkp@intel.com>
- <0a8a6f57-678d-b1b9-41e5-5e58c15cfe6b@ti.com>
- <58ad7723-131f-6930-00d7-1144c993110c@gmail.com>
- <fc1ae702-0734-973d-9e3c-22b8f8d5c873@ti.com>
- <fc410dfb-70d1-1b8b-3b6d-0de1c6c84ec2@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <56823113-4875-4813-8627-84b0d1792391@ti.com>
-Date:   Thu, 18 Jun 2020 16:44:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 18 Jun 2020 17:45:19 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD08C0613EE
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 14:45:19 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ga6so3165383pjb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 14:45:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7m9IQb77WMRokOHCzjIG9BXkj3DN9XbzWU3McEPzT8M=;
+        b=OcNB5enPK8vW1r84gntMK0xfEmL/Jimh5afRSEsvDbZzXnL3YX6s65onPZf514fpdl
+         daeUA9Ca6KGAn/1VBWBh6Y0kHs7R74fSQA1Q8WfojvcSvXYlYTocfEVj7W408/sfRkFn
+         cjO+fs0Dwn6W7fzwjCeJYRqLcxUaVT8lTBlC4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7m9IQb77WMRokOHCzjIG9BXkj3DN9XbzWU3McEPzT8M=;
+        b=EsT3QtIM9Ijl8d/Kz7b1B83DWHLf04NLnVmubGFBly5WUVZOWinbPu/rYRSX4Ii8h/
+         pchDlfyiQeTiA1o/VPLm44nHAyQ24pqNgyY/bt1326PaT4rVVZjRDQ5is14HJd29OdMt
+         m0fz0YZApX/XxklfK0ihnfdUXJ3CzTOXA3WrGl3MLJdCEGG7mZrvm9XMqV2HiHcOLigq
+         At0ruH+oR5fc/aRaL3pOlMQhYHaKF0FQCigQJZW6283c2FC8JpF6zgIbiCdAWGHmm1dN
+         312QiNCELbyIGUR8IDENczKuA3MOBPuK+qWpxnBBYTBVk0YmwADuwrhvLEoEWZ2/YPb5
+         +QPw==
+X-Gm-Message-State: AOAM533MfcsXVLYgloU0CVI7xsSrv2BDLOo89f/6jXkfiGrkm7z+8KrA
+        axfAX9q2Oc9/sbgSDtwoZ0++YkF62W8=
+X-Google-Smtp-Source: ABdhPJz3nUvKGWRVCVOaK7H+h3HvFaJft3BtzeMV++r6/ZAd6Tosgp7bHy1wjftoAyOoxC5OGj8+NQ==
+X-Received: by 2002:a17:90a:fcc:: with SMTP id 70mr365314pjz.106.1592516718466;
+        Thu, 18 Jun 2020 14:45:18 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id q1sm3970287pfk.132.2020.06.18.14.45.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Jun 2020 14:45:17 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 14:45:16 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH] driver core:Export the symbol device_is_bound
+Message-ID: <20200618214516.GG4525@google.com>
+References: <1591123192-565-1-git-send-email-sanm@codeaurora.org>
+ <20200618081443.GA1043700@kroah.com>
+ <20200618154555.GD4525@google.com>
+ <20200618155820.GA3076467@kroah.com>
+ <20200618165151.GE4525@google.com>
+ <CAL_Jsq+5NCvvpKd-69QvgqK6wzbc53=MTt-TcVop23hjT6Rs_g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <fc410dfb-70d1-1b8b-3b6d-0de1c6c84ec2@gmail.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+5NCvvpKd-69QvgqK6wzbc53=MTt-TcVop23hjT6Rs_g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+On Thu, Jun 18, 2020 at 11:33:49AM -0600, Rob Herring wrote:
+> On Thu, Jun 18, 2020 at 10:51 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > On Thu, Jun 18, 2020 at 05:58:20PM +0200, Greg Kroah-Hartman wrote:
+> > > On Thu, Jun 18, 2020 at 08:45:55AM -0700, Matthias Kaehlcke wrote:
+> > > > Hi Greg,
+> > > >
+> > > > On Thu, Jun 18, 2020 at 10:14:43AM +0200, Greg Kroah-Hartman wrote:
+> > > > > On Wed, Jun 03, 2020 at 12:09:52AM +0530, Sandeep Maheswaram wrote:
+> > > > > > Export the symbol device_is_bound so that it can be used by the modules.
+> > > > >
+> > > > > What modules need this?
+> > > >
+> > > > drivers/usb/dwc3/dwc3-qcom.c (and probably other dwc3 'wrappers').
+> > >
+> > > Why wasn't that said here?  No context is not good :(
+> >
+> > Agreed, this patch should probably have been part of a series to establish
+> > the context.
+> >
+> > > > Short summary: QCOM dwc3 support is split in two drivers, the core dwc3
+> > > > driver and the QCOM specific parts. dwc3-qcom is probed first (through
+> > > > a DT entry or ACPI), dwc3_qcom_probe() then calls of_platform_populate()
+> > > > to probe the core part. After a successful return from _populate() the
+> > > > driver assumes that the core device is fully initialized. However the
+> > > > latter is not correct, the driver core doesn't propagate errors from
+> > > > probe() to platform_populate(). The dwc3-qcom driver would use
+> > > > device_is_bound() to make sure the core device was probed successfully.
+> > >
+> > > why does the dwc3-qcom driver care?
+> >
+> > Currently the dwc3-qcom driver uses the core device to determine if the
+> > controller is used in peripheral mode and it runtime resumes the XHCI
+> > device when it sees a wakeup interrupt.
+> >
+> > The WIP patch to add interconnect support relies on the core driver
+> > to determine the max speed of the controller.
+> >
+> > > And why is the driver split in a way that requires such "broken"
+> > > structures?  Why can't that be fixed instead?
+> >
+> > It seems determining the mode could be easily changed by getting it through
+> > the pdev, as in st_dwc3_probe(). Not sure about the other two parts,
+> > determining the maximum speed can involve evaluating hardware registers,
+> > which currently are 'owned' by the core driver.
+> >
+> > Manu or Sandeep who know the hardware and the driver better than me might
+> > have ideas on how to improve things.
+> 
+> We never should have had this split either in the DT binding nor
+> driver(s) as if the SoC wrapper crap and licensed IP block are
+> independent things. The thing to do here is either make the DWC3 code
+> a library which drivers call (e.g. SDHCI) or add hooks into the DWC3
+> driver for platform specifics (e.g. Designware PCI). Neither is a
+> simple solution though.
 
-On 6/18/20 4:21 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 6/18/20 12:33 AM, Dan Murphy wrote:
->> Jacek
->>
->> On 6/17/20 4:41 PM, Jacek Anaszewski wrote:
->>> Dan,
->>>
->>> On 6/17/20 9:22 PM, Dan Murphy wrote:
->>>> Pavel/Jacek
->>>>
->>>> On 6/17/20 11:28 AM, kernel test robot wrote:
->>>>> Hi Dan,
->>>>>
->>>>> I love your patch! Yet something to improve:
->>>>>
->>>>> [auto build test ERROR on pavel-linux-leds/for-next]
->>>>> [cannot apply to j.anaszewski-leds/for-next]
->>>>> [if your patch is applied to the wrong git tree, please drop us a 
->>>>> note to help
->>>>> improve the system. BTW, we also suggest to use '--base' option to 
->>>>> specify the
->>>>> base tree in git format-patch, please see 
->>>>> https://stackoverflow.com/a/37406982]
->>>>>
->>>>> url: 
->>>>> https://github.com/0day-ci/linux/commits/Dan-Murphy/Multicolor-Framework-v27/20200616-042217 
->>>>>
->>>>> base: 
->>>>> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git 
->>>>> for-next
->>>>> config: ia64-randconfig-r015-20200617 (attached as .config)
->>>>> compiler: ia64-linux-gcc (GCC) 9.3.0
->>>>> reproduce (this is a W=1 build):
->>>>>          wget 
->>>>> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross 
->>>>> -O ~/bin/make.cross
->>>>>          chmod +x ~/bin/make.cross
->>>>>          # save the attached .config to linux build tree
->>>>>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 
->>>>> make.cross ARCH=ia64
->>>>>
->>>>> If you fix the issue, kindly add following tag as appropriate
->>>>> Reported-by: kernel test robot <lkp@intel.com>
->>>>>
->>>>> All errors (new ones prefixed by >>, old ones prefixed by <<):
->>>>>
->>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
->>>>> `lp55xx_set_mc_brightness':
->>>>>>> drivers/leds/leds-lp55xx-common.c:146: undefined reference to 
->>>>>>> `led_mc_calc_color_components'
->>>>> ia64-linux-ld: drivers/leds/leds-lp55xx-common.o: in function 
->>>>> `devm_led_classdev_multicolor_register':
->>>>>>> include/linux/led-class-multicolor.h:74: undefined reference to 
->>>>>>> `devm_led_classdev_multicolor_register_ext'
->>>>> vim +146 drivers/leds/leds-lp55xx-common.c
->>>>>
->>>>>     138
->>>>>     139    static int lp55xx_set_mc_brightness(struct led_classdev 
->>>>> *cdev,
->>>>>     140                        enum led_brightness brightness)
->>>>>     141    {
->>>>>     142        struct led_classdev_mc *mc_dev = 
->>>>> lcdev_to_mccdev(cdev);
->>>>>     143        struct lp55xx_led *led = mcled_cdev_to_led(mc_dev);
->>>>>     144        struct lp55xx_device_config *cfg = led->chip->cfg;
->>>>>     145
->>>>>   > 146 led_mc_calc_color_components(&led->mc_cdev, brightness);
->>>>>     147        return cfg->multicolor_brightness_fn(led);
->>>>>     148
->>>>
->>>> Well this was a mess to figure out.
->>>>
->>>> The only fix I can figure out here is to remove the
->>>>
->>>>      depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
->>>>
->>>> from each child device and add
->>>>
->>>>      select LEDS_CLASS_MULTI_COLOR
->>>>
->>>> to the LP55XX_COMMON
->>>>
->>>> This way the Multi color framework will inherit the symbol that was 
->>>> set by the COMMON flag which is inherited by majority from the 
->>>> child flags.
->>>
->>> Did you try this?
->>>
->>> --- a/drivers/leds/Kconfig
->>> +++ b/drivers/leds/Kconfig
->>> @@ -398,6 +398,7 @@ config LEDS_LP50XX
->>>  config LEDS_LP55XX_COMMON
->>>         tristate "Common Driver for TI/National 
->>> LP5521/5523/55231/5562/8501"
->>>         depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 || 
->>> LEDS_LP8501
->>> +       depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
->>>         depends on OF
->>>         select FW_LOADER
->>>         select FW_LOADER_USER_HELPER
->>>
->>>
->> Yes I did
->>
->> That gave unmet dependencies.
->>
->> WARNING: unmet direct dependencies detected for LEDS_LP55XX_COMMON
->>    Depends on [m]: NEW_LEDS [=y] && (LEDS_LP5521 [=n] || LEDS_LP5523 
->> [=m] || LEDS_LP5562 [=y] || LEDS_LP8501 [=y]) && 
->> (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m]) && OF [=y]
->>    Selected by [y]:
->>    - LEDS_LP5562 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
->>    - LEDS_LP8501 [=y] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y]
->>    Selected by [m]:
->>    - LEDS_LP5523 [=m] && NEW_LEDS [=y] && LEDS_CLASS [=y] && I2C [=y] 
->> && (LEDS_CLASS_MULTI_COLOR [=m] || !LEDS_CLASS_MULTI_COLOR [=m])
->>
->
-> When I was testing that yesterday I also had the same warning at some
-> point of testing different Kconfig setups, but with what I showed above
-> it ceased to appear. Now every time I am doing "make oldconfig" the
-> CONFIG_LEDS_LP55XX_COMMON=y entry gets changed to =m with the config
-> from the test bot.
->
-That is not what I saw in my testing especially after doing a distclean
+Sounds reasonable, but as you say it's likely not a short term
+solution. If someone ever picked it up maybe they could create a
+new driver (with plenty of copied code from the current driver)
+and start with supporting a single platform (with multi-platform
+support in the driver architecture). Other drivers could then be
+migrated one by one by folks who have the hardware to test.
+Duplicate code is definitely not desirable, but it's probably
+more feasible than migrating all the drivers in one big bang.
 
-Dan
-
+I guess for now we are stuck with the race in the dwc3-qcom
+driver ...
