@@ -2,152 +2,187 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 219B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F8DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00AF3206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF5720884
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 13:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592488571;
-	bh=38uTI+xDeYQSW97XKhSMUz9+QFd9HVuzaBbis5yErKU=;
+	s=default; t=1592488670;
+	bh=LnYEKbo5XLm8oVGmH1Jg4y8ZvUiouHun1liXREq5bac=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=eLp+eGlifbZ1IKQM+8yEvAmm0A+H9CMfmZIdQ6V56vu957by45XYiLXx3tXBPeh8f
-	 E50213jxIGR3X3XDyjOQeWnqy8HEKxIUZ7ymuW8KAXJj/Zc+y5Tib48v5FHgE/Munl
-	 e+7/nJSRUKpYvhUX4C8KZ7KbQM3Z1PSMsRbisGkU=
+	b=ubpWg3PrWX9G0MErwRtEs8eGtjygLrHdlqVnM4xj8HrQ4j0QKjwSYAw16OiOChUx/
+	 sy05UOH0/ilMYNUBaP3Ich7qRhUzxW+/kvEZurQHDMJtKJBEIAjidhi/uu6K7FBQO5
+	 CaiLHyHZJaad0xYjZnF75awzClkIY3MTDnfc/dGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgFRN4J (ORCPT
+        id S1729035AbgFRN5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 09:56:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34216 "EHLO mail.kernel.org"
+        Thu, 18 Jun 2020 09:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbgFRN4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 09:56:08 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S1725987AbgFRN5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 09:57:48 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A04F2067D;
-        Thu, 18 Jun 2020 13:56:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C69B12082F;
+        Thu, 18 Jun 2020 13:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592488567;
-        bh=38uTI+xDeYQSW97XKhSMUz9+QFd9HVuzaBbis5yErKU=;
+        s=default; t=1592488667;
+        bh=LnYEKbo5XLm8oVGmH1Jg4y8ZvUiouHun1liXREq5bac=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YPZjSjtERAxYgBaBSWo7w0avxyOP7zmc//M5M0t9E7FUKRYHLCcrlYWqIRCnQuXEM
-         vo+5484GeMNW6lr0aQ21UAgHD8wNUlzf+KktxYkQcckDn53lfQs9zSXQcivpVlOQmZ
-         X4ULRP8t3sodH6Dw9LU0IT641NJ+FR5Ap2qIVr0w=
-Date:   Thu, 18 Jun 2020 22:56:02 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Ming Lei <tom.leiming@gmail.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-block <linux-block@vger.kernel.org>
-Subject: Re: kprobe: __blkdev_put probe is missed
-Message-Id: <20200618225602.3f2cca3f0ed48427fc0a483b@kernel.org>
-In-Reply-To: <20200618125438.GA191266@T590>
-References: <CACVXFVO5saamQXs0naLamTKJfXZMW+p446weeqJK=9+V34UM0g@mail.gmail.com>
-        <20200618125438.GA191266@T590>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        b=BvEtPq7yWq1HoWLreLAPoRHu9zg2dv4gVjA+/sWolyzzhzCuYfusljrsDt7PCh1Rl
+         8VzOVSWJVHPKOQf8ENECav3J03US/j4/DonegZKfy7eWRDwY3D9dWQ05qwLpA4LpOi
+         HaPbrU2sScJRWJ14HAyMty8l/Dv/fn0Im1rhu9eQ=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jlv34-004BYE-2D; Thu, 18 Jun 2020 14:57:46 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 18 Jun 2020 14:57:45 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     David Brazdil <dbrazdil@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, android-kvm@google.com,
+        kernel-team@android.com
+Subject: Re: [PATCH v3 02/15] arm64: kvm: Move __smccc_workaround_1_smc to
+ .rodata
+In-Reply-To: <20200618122537.9625-3-dbrazdil@google.com>
+References: <20200618122537.9625-1-dbrazdil@google.com>
+ <20200618122537.9625-3-dbrazdil@google.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <02322fdac903aa1786c334d0ddd7f38a@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: dbrazdil@google.com, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, android-kvm@google.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ming,
+Hi David,
 
-On Thu, 18 Jun 2020 20:54:38 +0800
-Ming Lei <ming.lei@redhat.com> wrote:
-
-> On Wed, Jun 17, 2020 at 06:30:39PM +0800, Ming Lei wrote:
-> > Hello Guys,
-> > 
-> > I found probe on __blkdev_put is missed, which can be observed
-> > via bcc/perf reliably:
-> > 
-> > 1) start trace
-> > - perf probe __blkdev_put
-> > - perf trace -a  -e probe:__blkdev_put
-
-Could you dump the kprobe_event as below?
-
-# cat /sys/kernel/tracing/kprobe_events
-
-
-> > 
-> > or
-> > 
-> > /usr/share/bcc/tools/stackcount __blkdev_put
-> > 
-> > 2) run the following command:
-> > blockdev --getbsz /dev/sda1
-
-And dump the kprobe profile?
-
-# cat /sys/kernel/tracing/kprobe_profile
-
-> > 
-> > 3) 'perf trace'  or stackcount just  dumps one trace event, and it
-> > should have been two
-> > __blkdev_put() traces, since one __blkdev_put() is called for
-> > partition(/dev/sda1),
-> > and another is for disk(/dev/sda). If trace_printk() is added in __blkdev_put(),
-> > two events will be captured from ftrace.
-> > 
+On 2020-06-18 13:25, David Brazdil wrote:
+> This snippet of assembly is used by cpu_errata.c to overwrite parts of 
+> KVM hyp
+> vector. Move it to its own source file and change its ELF section to 
+> .rodata.
 > 
-> The issue can be shown by loading a kprobe module which registers on
-> __blkdev_put(), just by replacing _do_fork with __blkdev_put on
-> samples/kprobes/kprobe_example.c.
+> Signed-off-by: David Brazdil <dbrazdil@google.com>
+> ---
+>  arch/arm64/kvm/hyp/Makefile    |  1 +
+>  arch/arm64/kvm/hyp/hyp-entry.S | 16 ----------------
+>  arch/arm64/kvm/hyp/smccc_wa.S  | 30 ++++++++++++++++++++++++++++++
+>  3 files changed, 31 insertions(+), 16 deletions(-)
+>  create mode 100644 arch/arm64/kvm/hyp/smccc_wa.S
+> 
+> diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
+> index 8c9880783839..5d8357ddc234 100644
+> --- a/arch/arm64/kvm/hyp/Makefile
+> +++ b/arch/arm64/kvm/hyp/Makefile
+> @@ -7,6 +7,7 @@ ccflags-y += -fno-stack-protector 
+> -DDISABLE_BRANCH_PROFILING \
+>  		$(DISABLE_STACKLEAK_PLUGIN)
+> 
+>  obj-$(CONFIG_KVM) += hyp.o
+> +obj-$(CONFIG_KVM_INDIRECT_VECTORS) += smccc_wa.o
+> 
+>  hyp-y := vgic-v3-sr.o timer-sr.o aarch32.o vgic-v2-cpuif-proxy.o 
+> sysreg-sr.o \
+>  	 debug-sr.o entry.o switch.o fpsimd.o tlb.o hyp-entry.o
+> diff --git a/arch/arm64/kvm/hyp/hyp-entry.S 
+> b/arch/arm64/kvm/hyp/hyp-entry.S
+> index 9c5cfb04170e..d362fad97cc8 100644
+> --- a/arch/arm64/kvm/hyp/hyp-entry.S
+> +++ b/arch/arm64/kvm/hyp/hyp-entry.S
+> @@ -318,20 +318,4 @@ SYM_CODE_START(__bp_harden_hyp_vecs)
+>  1:	.org __bp_harden_hyp_vecs + __BP_HARDEN_HYP_VECS_SZ
+>  	.org 1b
+>  SYM_CODE_END(__bp_harden_hyp_vecs)
+> -
+> -	.popsection
 
-Could you tell me what kernel are you using?
+I'd be tempted to leave the .popsection in place, if only for symmetry  
+with the initial .pushsection.
 
-I'm using 5.4 on ubuntu and can not reproduce it with kprobe_event.
+> -
+> -SYM_CODE_START(__smccc_workaround_1_smc)
+> -	esb
+> -	sub	sp, sp, #(8 * 4)
+> -	stp	x2, x3, [sp, #(8 * 0)]
+> -	stp	x0, x1, [sp, #(8 * 2)]
+> -	mov	w0, #ARM_SMCCC_ARCH_WORKAROUND_1
+> -	smc	#0
+> -	ldp	x2, x3, [sp, #(8 * 0)]
+> -	ldp	x0, x1, [sp, #(8 * 2)]
+> -	add	sp, sp, #(8 * 4)
+> -1:	.org __smccc_workaround_1_smc + __SMCCC_WORKAROUND_1_SMC_SZ
+> -	.org 1b
+> -SYM_CODE_END(__smccc_workaround_1_smc)
+>  #endif
+> diff --git a/arch/arm64/kvm/hyp/smccc_wa.S 
+> b/arch/arm64/kvm/hyp/smccc_wa.S
+> new file mode 100644
+> index 000000000000..aa25b5428e77
+> --- /dev/null
+> +++ b/arch/arm64/kvm/hyp/smccc_wa.S
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2015-2018 - ARM Ltd
+> + * Author: Marc Zyngier <marc.zyngier@arm.com>
+> + */
+> +
+> +#include <linux/arm-smccc.h>
+> +
+> +#include <asm/kvm_asm.h>
+> +#include <asm/kvm_mmu.h>
+> +
+> +	/*
+> +	 * This is not executed directly and is instead copied into the 
+> vectors
+> +	 * by install_bp_hardening_cb().
+> +	 */
+> +	.data
+> +	.pushsection	.rodata
+> +	.global		__smccc_workaround_1_smc
+> +__smccc_workaround_1_smc:
 
-root@devnote2:/sys/kernel/tracing# uname -a
-Linux devnote2 5.4.0-37-generic #41-Ubuntu SMP Wed Jun 3 18:57:02 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
-root@devnote2:/sys/kernel/tracing# echo p __blkdev_put > kprobe_events 
-root@devnote2:/sys/kernel/tracing# echo 1 > events/kprobes/p___blkdev_put_0/enable 
-root@devnote2:/sys/kernel/tracing# cat trace
-# tracer: nop
-#
-# entries-in-buffer/entries-written: 0/0   #P:8
-#
-#                              _-----=> irqs-off
-#                             / _----=> need-resched
-#                            | / _---=> hardirq/softirq
-#                            || / _--=> preempt-depth
-#                            ||| /     delay
-#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
-#              | |       |   ||||       |         |
-root@devnote2:/sys/kernel/tracing# blockdev --getbsz /dev/nvme0n1
-4096
-root@devnote2:/sys/kernel/tracing# cat trace
-# tracer: nop
-#
-# entries-in-buffer/entries-written: 1/1   #P:8
-#
-#                              _-----=> irqs-off
-#                             / _----=> need-resched
-#                            | / _---=> hardirq/softirq
-#                            || / _--=> preempt-depth
-#                            ||| /     delay
-#           TASK-PID   CPU#  ||||    TIMESTAMP  FUNCTION
-#              | |       |   ||||       |         |
-           <...>-111740 [002] .... 301734.476991: p___blkdev_put_0: (__blkdev_put+0x0/0x1e0)
+You probably want to replace this with SYM_DATA_START (and SYM_DATA_END 
+at the end).
 
-Hmm, maybe some issue in the latest kernel...?
+> +	esb
+> +	sub	sp, sp, #(8 * 4)
+> +	stp	x2, x3, [sp, #(8 * 0)]
+> +	stp	x0, x1, [sp, #(8 * 2)]
+> +	mov	w0, #ARM_SMCCC_ARCH_WORKAROUND_1
+> +	smc	#0
+> +	ldp	x2, x3, [sp, #(8 * 0)]
+> +	ldp	x0, x1, [sp, #(8 * 2)]
+> +	add	sp, sp, #(8 * 4)
+> +1:	.org __smccc_workaround_1_smc + __SMCCC_WORKAROUND_1_SMC_SZ
+> +	.org 1b
 
+Otherwise, looks good.
 
-Thank you,
+Thanks,
 
+         M.
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Jazz is not dead. It just smells funny...
