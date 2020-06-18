@@ -2,190 +2,138 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58401C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0524521707
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:18:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qqUUsVQ2"
+	by mail.kernel.org (Postfix) with ESMTP id 33C3121941
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 03:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592450317;
+	bh=/e5onVeNdL2f+5wUE0aYjX768ASF0U0+EB+OQwnYxXo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=WcBq8SPTrSlst9eke0Gdtcqgst3puQVcFh1TX35k4HSf+/Wsx9xuxgo7DVuNAbRZ+
+	 4mxXgnbyeiqj6WI+wjHGOBekiHkKKTqDAWR6rUFeCwsHi8VRHN5RkHrxb2MH6W7Urj
+	 9Xuap9X03e3V6IPxtHf6GhZoGwX0Ztm4sFI++WHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbgFRDQ2 (ORCPT
+        id S1727074AbgFRDSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 23:16:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbgFRDQ1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 23:16:27 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC393C06174E
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 20:16:25 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id s88so2004486pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Jun 2020 20:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BQ6+gpUp0LDm306U72ZZjOm3CRXIXZhyD96bzGv7Trs=;
-        b=qqUUsVQ27Wr3RSWWeIuxq+vOUb3yQy0jEJMER/HF4our6EKbACz5wNRGb1nGwtJgpW
-         IZ0oQW8wuLO3tlCwkoGfSK7V/1NJ8Odxc2vmB1fOsKQQSjMVtooJT0s67O8pfGFz67dF
-         Hxc/l5vuvJAd5NGXJwNO26/I0cdgJij2vOEHPSkVkquD7xDmFcIJNdF14yUEkrtAsDSp
-         2dp3knP8DyuuKTZ4D2D4mVJL5LgFJYb7Gujz4WknXXjv/iW5TSCKfvbgNKbRRpCC9Eym
-         hlGZmmLSFwwhCyHEUZpQLLWxHqYbS4EVOUhJfHDCk60oNXp/hC2ldyJt2+cuqUgQmnvM
-         9VgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BQ6+gpUp0LDm306U72ZZjOm3CRXIXZhyD96bzGv7Trs=;
-        b=qh9/j2mZZ8ThC17Z0b1SVxAGNvXaw2x5mvH+nUb6j/6QR7rW4ylzPSCeIISdrniFgn
-         AnJWtWVqzXSWaeB9bZB5p8RG13pBB+3blvUlf5+hcnFjYGvYaM1ncgQulNENfO7XOq0c
-         VsqZcD/pfRQ5hujZHUX/HLn/VxuScNhaxrQA6x/r4X2yWn7u1tXWYzKXqH6bEV+cQVx1
-         mE7fntZcUDSHoAHVTDctapZ2bxf7dc7BkgCFl0Y/JdeOeijDWtRG1P5qqA5sRC8lsYbj
-         YsdoQ/Mumnnno7g937i/KVIdNS0eIy8QS3r37w/VzG8fazdn2l74e6m9m0rRZfJRWX7a
-         p8lQ==
-X-Gm-Message-State: AOAM5302sNmkkPG0+4wJVCGtHevd/xlCCaW69kOkCdxW0fBkQDANAJpT
-        AQfE0+i9Kv44MCZqlH12LCw=
-X-Google-Smtp-Source: ABdhPJzucOhKEzBF+sfQPGWmraO9UIK7gK+Ok0b4VTWLnJdk2MtX0vpyUe42k79e9V833o+kB/KE6Q==
-X-Received: by 2002:a17:90a:a405:: with SMTP id y5mr2092260pjp.15.1592450185243;
-        Wed, 17 Jun 2020 20:16:25 -0700 (PDT)
-Received: from Ryzen-9-3900X.localdomain ([89.46.114.134])
-        by smtp.gmail.com with ESMTPSA id r2sm1031469pgg.23.2020.06.17.20.16.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 20:16:24 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 20:16:22 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v5 01/13] powerpc: Remove Xilinx PPC405/PPC440 support
-Message-ID: <20200618031622.GA195@Ryzen-9-3900X.localdomain>
-References: <cover.1590079968.git.christophe.leroy@csgroup.eu>
- <8c593895e2cb57d232d85ce4d8c3a1aa7f0869cc.1590079968.git.christophe.leroy@csgroup.eu>
- <20200616002720.GA1307277@ubuntu-n2-xlarge-x86>
- <68503e5e-7456-b81c-e43d-27cb331a4b72@xilinx.com>
- <20200616181630.GA3403678@ubuntu-n2-xlarge-x86>
- <50fb2dd6-4e8f-a550-6eda-073beb86f2ff@xilinx.com>
- <87bllidmk4.fsf@mpe.ellerman.id.au>
- <878sgmdmcv.fsf@mpe.ellerman.id.au>
- <CAKwvOdnkcjLGay0jdQ77kHTmKhE56F9jvzh01XWwEE8rjbhLAA@mail.gmail.com>
- <87tuz9ci7e.fsf@mpe.ellerman.id.au>
+        Wed, 17 Jun 2020 23:18:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35508 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726893AbgFRDSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 23:18:24 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D52921655;
+        Thu, 18 Jun 2020 03:18:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592450303;
+        bh=/e5onVeNdL2f+5wUE0aYjX768ASF0U0+EB+OQwnYxXo=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=tU3P/Y/reT2d07dhYZ2jW7nhgGZYh4JFnH+OZG1DlZc3JCGG57U4hRnHIon1ryoga
+         0iKovYcrB/prWr8KkcrzsYvrBtM5wE1A5bG/FDLJMINEVqGhr0m6tjmFdgVT1LwMXb
+         4c5O9ztjb/P9RGHPYLmVBop+GWFrnfWFaPDZaMaE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 6504C3523400; Wed, 17 Jun 2020 20:18:23 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 20:18:23 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH v2 09/16] rcu/tree: Maintain separate array for vmalloc
+ ptrs
+Message-ID: <20200618031823.GQ2723@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200525214800.93072-1-urezki@gmail.com>
+ <20200525214800.93072-10-urezki@gmail.com>
+ <20200617234609.GA10087@paulmck-ThinkPad-P72>
+ <20200618005214.GN8681@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87tuz9ci7e.fsf@mpe.ellerman.id.au>
+In-Reply-To: <20200618005214.GN8681@bombadil.infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 10:48:21AM +1000, Michael Ellerman wrote:
-> Nick Desaulniers <ndesaulniers@google.com> writes:
-> > On Wed, Jun 17, 2020 at 3:20 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
-> >> Michael Ellerman <mpe@ellerman.id.au> writes:
-> >> > Michal Simek <michal.simek@xilinx.com> writes:
-> >> <snip>
-> >>
-> >> >> Or if bamboo requires uImage to be built by default you can do it via
-> >> >> Kconfig.
-> >> >>
-> >> >> diff --git a/arch/powerpc/platforms/44x/Kconfig
-> >> >> b/arch/powerpc/platforms/44x/Kconfig
-> >> >> index 39e93d23fb38..300864d7b8c9 100644
-> >> >> --- a/arch/powerpc/platforms/44x/Kconfig
-> >> >> +++ b/arch/powerpc/platforms/44x/Kconfig
-> >> >> @@ -13,6 +13,7 @@ config BAMBOO
-> >> >>         select PPC44x_SIMPLE
-> >> >>         select 440EP
-> >> >>         select FORCE_PCI
-> >> >> +       select DEFAULT_UIMAGE
-> >> >>         help
-> >> >>           This option enables support for the IBM PPC440EP evaluation board.
-> >> >
-> >> > Who knows what the actual bamboo board used. But I'd be happy to take a
-> >> > SOB'ed patch to do the above, because these days the qemu emulation is
-> >> > much more likely to be used than the actual board.
-> >>
-> >> I just went to see why my CI boot of 44x didn't catch this, and it's
-> >> because I don't use the uImage, I just boot the vmlinux directly:
-> >>
-> >>   $ qemu-system-ppc -M bamboo -m 128m -display none -kernel build~/vmlinux -append "console=ttyS0" -display none -nodefaults -serial mon:stdio
-> >>   Linux version 5.8.0-rc1-00118-g69119673bd50 (michael@alpine1-p1) (gcc (Ubuntu 9.3.0-10ubuntu2) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #4 Wed Jun 17 20:19:22 AEST 2020
-> >>   Using PowerPC 44x Platform machine description
-> >>   ioremap() called early from find_legacy_serial_ports+0x690/0x770. Use early_ioremap() instead
-> >>   printk: bootconsole [udbg0] enabled
-> >>
-> >>
-> >> So that's probably the simplest solution?
-> >
-> > If the uImage or zImage self decompresses, I would prefer to test that as well.
+On Wed, Jun 17, 2020 at 05:52:14PM -0700, Matthew Wilcox wrote:
+> On Wed, Jun 17, 2020 at 04:46:09PM -0700, Paul E. McKenney wrote:
+> > > +	// Handle two first channels.
+> > > +	for (i = 0; i < FREE_N_CHANNELS; i++) {
+> > > +		for (; bkvhead[i]; bkvhead[i] = bnext) {
+> > > +			bnext = bkvhead[i]->next;
+> > > +			debug_rcu_bhead_unqueue(bkvhead[i]);
+> > > +
+> > > +			rcu_lock_acquire(&rcu_callback_map);
+> > > +			if (i == 0) { // kmalloc() / kfree().
+> > > +				trace_rcu_invoke_kfree_bulk_callback(
+> > > +					rcu_state.name, bkvhead[i]->nr_records,
+> > > +					bkvhead[i]->records);
+> > > +
+> > > +				kfree_bulk(bkvhead[i]->nr_records,
+> > > +					bkvhead[i]->records);
+> > > +			} else { // vmalloc() / vfree().
+> > > +				for (j = 0; j < bkvhead[i]->nr_records; j++) {
+> > > +					trace_rcu_invoke_kfree_callback(
+> > > +						rcu_state.name,
+> > > +						bkvhead[i]->records[j], 0);
+> > > +
+> > > +					vfree(bkvhead[i]->records[j]);
+> > > +				}
+> > > +			}
+> > > +			rcu_lock_release(&rcu_callback_map);
+> > 
+> > Not an emergency, but did you look into replacing this "if" statement
+> > with an array of pointers to functions implementing the legs of the
+> > "if" statement?  If nothing else, this would greatly reduced indentation.
 > 
-> The uImage is decompressed by qemu AIUI.
+> I don't think that replacing direct function calls with indirect function
+> calls is a great suggestion with the current state of play around branch
+> prediction.
 > 
-> >> That means previously arch/powerpc/boot/zImage was just a hardlink to
-> >> the uImage:
-> >
-> > It sounds like we can just boot the zImage, or is that no longer
-> > created with the uImage?
+> I'd suggest:
 > 
-> The zImage won't boot on bamboo.
+>  			rcu_lock_acquire(&rcu_callback_map);
+> 			trace_rcu_invoke_kfree_bulk_callback(rcu_state.name,
+> 				bkvhead[i]->nr_records, bkvhead[i]->records);
+>  			if (i == 0) {
+>  				kfree_bulk(bkvhead[i]->nr_records,
+>  					bkvhead[i]->records);
+>  			} else {
+>  				for (j = 0; j < bkvhead[i]->nr_records; j++) {
+>  					vfree(bkvhead[i]->records[j]);
+>  				}
+>  			}
+>  			rcu_lock_release(&rcu_callback_map);
 > 
-> Because of the vagaries of the arch/powerpc/boot/Makefile the zImage
-> ends up pointing to treeImage.ebony, which is for a different board.
-> 
-> The zImage link is made to the first item in $(image-y):
-> 
-> $(obj)/zImage:		$(addprefix $(obj)/, $(image-y))
-> 	$(Q)rm -f $@; ln $< $@
->                          ^
->                          first preqrequisite
-> 
-> Which for this defconfig happens to be:
-> 
-> image-$(CONFIG_EBONY)			+= treeImage.ebony cuImage.ebony
-> 
-> If you turned off CONFIG_EBONY then the zImage will be a link to
-> treeImage.bamboo, but qemu can't boot that either.
-> 
-> It's kind of nuts that the zImage points to some arbitrary image
-> depending on what's configured and the order of things in the Makefile.
-> But I'm not sure how we make it less nuts without risking breaking
-> people's existing setups.
-> 
-> cheers
+> But I'd also suggest a vfree_bulk be added.  There are a few things
+> which would be better done in bulk as part of the vfree process
+> (we batch them up already, but i'm sure we could do better).
 
-Hi Michael,
+I suspect that he would like to keep the tracing.
 
-For what it's worth, this is squared this away in terms of our CI by
-just building and booting the uImage directly, rather than implicitly
-using the zImage:
+It might be worth trying the branches, given that they would be constant
+and indexed by "i".  The compiler might well remove the indirection.
 
-https://github.com/ClangBuiltLinux/continuous-integration/pull/282
-https://github.com/ClangBuiltLinux/boot-utils/pull/22
+The compiler guys brag about doing so, which of course might or might
+not have any correlation to a given compiler actually doing so.  :-/
 
-We were only using the zImage because that is what Joel Stanley intially
-set us up with when PowerPC 32-bit was added to our CI:
+Having a vfree_bulk() might well be useful, but I would feel more
+confidence in that if there were other callers of kfree_bulk().
 
-https://github.com/ClangBuiltLinux/continuous-integration/pull/100
+But again, either way, future work as far as this series is concerned.
 
-Admittedly, we really do not have many PowerPC experts in our
-organization so we are supporting it on a "best effort" basis, which
-often involves using whatever knowledge is floating around or can be
-gained from interactions such as this :) so thank you for that!
-
-Cheers,
-Nathan
+							Thanx, Paul
