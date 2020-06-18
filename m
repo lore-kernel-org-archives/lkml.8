@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1C0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB87214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E082192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447159;
-	bh=3cZhsds1xAGMTrCeTPwU+J8P0xv9FZcUGrImlkxCbp4=;
+	s=default; t=1592447163;
+	bh=888Jc3QOglMoOyYRAqKKyDwxmx47rmmkZ4WPk0QR3qY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c8ta5jX2dSbfJZfxvOqjbHFCIrkaErfT5yhXyVT7mx9r/n7ozCgmMDVrDrZoNGm3J
-	 ebPezQPOTbBIebRthozy7YWk1mRrTAXQZTcrSRWloqghSM+1aQcuf8DUVv/zt7jE8O
-	 hQ9GiQXxVxwtzP7QsuTkPBqZNUMem5wmsm8c0P4o=
+	b=cj8b6SZd1wN+2WWp+G+PHJXDvpzCIVqwbHz+YnantgaIu9yIxl6ak0FyfHoo5y14s
+	 0WOr0i1xSsIkz8iEJPoQmA77+NWX7piUrMn0MjdzbmDlL0YpV5+JLoMeqgnCFQhiWU
+	 EdKMNl2KjHhvn+FKpa4rHPzqV4VVV5kctNIo6Xkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgFRBRO (ORCPT
+        id S1731979AbgFRC0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:17:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44544 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:26:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728294AbgFRBOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:14:47 -0400
+        id S1728975AbgFRBRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C682221EB;
-        Thu, 18 Jun 2020 01:14:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F94E21D82;
+        Thu, 18 Jun 2020 01:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442887;
-        bh=3cZhsds1xAGMTrCeTPwU+J8P0xv9FZcUGrImlkxCbp4=;
+        s=default; t=1592443031;
+        bh=888Jc3QOglMoOyYRAqKKyDwxmx47rmmkZ4WPk0QR3qY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Pw2TaYMepsbLO05ZlObXJ0jUIlT2u6PIXpoNXmhtaE+h0rVQ4T16dwtABoid8HxT
-         Jyn1BqF8cSS+GqwwBgHINpwgrojB09MEJiagkLFWGKyZ+ERIj3WLbt6NmIXRWchxzh
-         LfiojwoiF4FF7bW+8s3B3k6qn8FWjQuWELb7aqhg=
+        b=EQBtimaxX3ik/MKqAdGZ0CxWW9JLCX+gnrch4GLVmQ6+Fa6BLcLuT987LYOgjXM5/
+         x8kfOhLKuw3ePGS4tH81e64vsvMM3nU+ZMfPyudZjglDp0h3ImQF9NSjOIlE8g/eyE
+         EEwNA8te6L2Fl407DcOKTHEfIe4KiXhT9q9AWysk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Sasha Levin <sashal@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 310/388] mailbox: imx: Fix return in imx_mu_scu_xlate()
-Date:   Wed, 17 Jun 2020 21:06:47 -0400
-Message-Id: <20200618010805.600873-310-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 030/266] clk: samsung: Mark top ISP and CAM clocks on Exynos542x as critical
+Date:   Wed, 17 Jun 2020 21:12:35 -0400
+Message-Id: <20200618011631.604574-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,34 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 1b3a347b7d56aa637157da1b7df225071af1421f ]
+[ Upstream commit e47bd937e602bb4379546095d1bd0b9871fa60c2 ]
 
-This called from mbox_request_channel().  The caller is  expecting error
-pointers and not NULL so this "return NULL;" will lead to an Oops.
+The TOP 'aclk*_isp', 'aclk550_cam', 'gscl_wa' and 'gscl_wb' clocks must
+be kept enabled all the time to allow proper access to power management
+control for the ISP and CAM power domains. The last two clocks, although
+related to GScaler device and GSCL power domain, provides also the
+I_WRAP_CLK signal to MIPI CSIS0/1 devices, which are a part of CAM power
+domain and are needed for proper power on/off sequence.
 
-Fixes: 0a67003b1985 ("mailbox: imx: add SCU MU support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Currently there are no drivers for the devices, which are part of CAM and
+ISP power domains yet. This patch only fixes the race between disabling
+the unused power domains and disabling unused clocks, which randomly
+resulted in the following error during boot:
+
+Power domain CAM disable failed
+Power domain ISP disable failed
+
+Fixes: 318fa46cc60d ("clk/samsung: exynos542x: mark some clocks as critical")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/imx-mailbox.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/samsung/clk-exynos5420.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index 7906624a731c..9d6f0217077b 100644
---- a/drivers/mailbox/imx-mailbox.c
-+++ b/drivers/mailbox/imx-mailbox.c
-@@ -374,7 +374,7 @@ static struct mbox_chan *imx_mu_scu_xlate(struct mbox_controller *mbox,
- 		break;
- 	default:
- 		dev_err(mbox->dev, "Invalid chan type: %d\n", type);
--		return NULL;
-+		return ERR_PTR(-EINVAL);
- 	}
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index 27fd274e92f8..dfef5f0833db 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -540,7 +540,7 @@ static const struct samsung_div_clock exynos5800_div_clks[] __initconst = {
  
- 	if (chan >= mbox->num_chans) {
+ static const struct samsung_gate_clock exynos5800_gate_clks[] __initconst = {
+ 	GATE(CLK_ACLK550_CAM, "aclk550_cam", "mout_user_aclk550_cam",
+-				GATE_BUS_TOP, 24, 0, 0),
++				GATE_BUS_TOP, 24, CLK_IS_CRITICAL, 0),
+ 	GATE(CLK_ACLK432_SCALER, "aclk432_scaler", "mout_user_aclk432_scaler",
+ 				GATE_BUS_TOP, 27, CLK_IS_CRITICAL, 0),
+ };
+@@ -940,25 +940,25 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
+ 	GATE(0, "aclk300_jpeg", "mout_user_aclk300_jpeg",
+ 			GATE_BUS_TOP, 4, CLK_IGNORE_UNUSED, 0),
+ 	GATE(0, "aclk333_432_isp0", "mout_user_aclk333_432_isp0",
+-			GATE_BUS_TOP, 5, 0, 0),
++			GATE_BUS_TOP, 5, CLK_IS_CRITICAL, 0),
+ 	GATE(0, "aclk300_gscl", "mout_user_aclk300_gscl",
+ 			GATE_BUS_TOP, 6, CLK_IS_CRITICAL, 0),
+ 	GATE(0, "aclk333_432_gscl", "mout_user_aclk333_432_gscl",
+ 			GATE_BUS_TOP, 7, CLK_IGNORE_UNUSED, 0),
+ 	GATE(0, "aclk333_432_isp", "mout_user_aclk333_432_isp",
+-			GATE_BUS_TOP, 8, 0, 0),
++			GATE_BUS_TOP, 8, CLK_IS_CRITICAL, 0),
+ 	GATE(CLK_PCLK66_GPIO, "pclk66_gpio", "mout_user_pclk66_gpio",
+ 			GATE_BUS_TOP, 9, CLK_IGNORE_UNUSED, 0),
+ 	GATE(0, "aclk66_psgen", "mout_user_aclk66_psgen",
+ 			GATE_BUS_TOP, 10, CLK_IGNORE_UNUSED, 0),
+ 	GATE(0, "aclk266_isp", "mout_user_aclk266_isp",
+-			GATE_BUS_TOP, 13, 0, 0),
++			GATE_BUS_TOP, 13, CLK_IS_CRITICAL, 0),
+ 	GATE(0, "aclk166", "mout_user_aclk166",
+ 			GATE_BUS_TOP, 14, CLK_IGNORE_UNUSED, 0),
+ 	GATE(CLK_ACLK333, "aclk333", "mout_user_aclk333",
+ 			GATE_BUS_TOP, 15, CLK_IS_CRITICAL, 0),
+ 	GATE(0, "aclk400_isp", "mout_user_aclk400_isp",
+-			GATE_BUS_TOP, 16, 0, 0),
++			GATE_BUS_TOP, 16, CLK_IS_CRITICAL, 0),
+ 	GATE(0, "aclk400_mscl", "mout_user_aclk400_mscl",
+ 			GATE_BUS_TOP, 17, CLK_IS_CRITICAL, 0),
+ 	GATE(0, "aclk200_disp1", "mout_user_aclk200_disp1",
+@@ -1158,8 +1158,10 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
+ 			GATE_IP_GSCL1, 3, 0, 0),
+ 	GATE(CLK_SMMU_FIMCL1, "smmu_fimcl1", "dout_gscl_blk_333",
+ 			GATE_IP_GSCL1, 4, 0, 0),
+-	GATE(CLK_GSCL_WA, "gscl_wa", "sclk_gscl_wa", GATE_IP_GSCL1, 12, 0, 0),
+-	GATE(CLK_GSCL_WB, "gscl_wb", "sclk_gscl_wb", GATE_IP_GSCL1, 13, 0, 0),
++	GATE(CLK_GSCL_WA, "gscl_wa", "sclk_gscl_wa", GATE_IP_GSCL1, 12,
++			CLK_IS_CRITICAL, 0),
++	GATE(CLK_GSCL_WB, "gscl_wb", "sclk_gscl_wb", GATE_IP_GSCL1, 13,
++			CLK_IS_CRITICAL, 0),
+ 	GATE(CLK_SMMU_FIMCL3, "smmu_fimcl3,", "dout_gscl_blk_333",
+ 			GATE_IP_GSCL1, 16, 0, 0),
+ 	GATE(CLK_FIMC_LITE3, "fimc_lite3", "aclk333_432_gscl",
 -- 
 2.25.1
 
