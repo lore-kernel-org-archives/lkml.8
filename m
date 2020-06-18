@@ -2,107 +2,98 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43140C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A05F21974
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CAA821974
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 09:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgFRJ2g (ORCPT
+        id S1729154AbgFRJ3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 05:28:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:46806 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728943AbgFRJ2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 05:28:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5C7EC1045;
-        Thu, 18 Jun 2020 02:28:33 -0700 (PDT)
-Received: from [192.168.1.84] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 483DF3F6CF;
-        Thu, 18 Jun 2020 02:28:32 -0700 (PDT)
-Subject: Re: [PATCH v3] drm/panfrost: Reduce the amount of logs on deferred
- probe
-To:     Rob Herring <robh@kernel.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-References: <20200527200544.7849-1-krzk@kernel.org>
- <20200527204334.GA15485@kevin> <20200617141547.GA30516@kozik-lap>
- <b41bfead-7b73-be78-c63f-79a0a7e23b2a@arm.com>
- <CAL_JsqLrFFOVQVR0dWbru6bJvz7sXs8v6Op-hiNgdMwH3N=2Fw@mail.gmail.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <cd609ad6-9672-9fdd-e693-f15395cb6fd0@arm.com>
-Date:   Thu, 18 Jun 2020 10:28:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 18 Jun 2020 05:29:37 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:40673 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729014AbgFRJ3g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 05:29:36 -0400
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mkpj7-1j22dt0gCV-00mKSt; Thu, 18 Jun 2020 11:29:34 +0200
+Received: by mail-qt1-f181.google.com with SMTP id y1so3848159qtv.12;
+        Thu, 18 Jun 2020 02:29:33 -0700 (PDT)
+X-Gm-Message-State: AOAM532px3Vm8oMcgKXDNs5qMUOQlMUtdsGcLyXBQQq31mCPkMbW+S8d
+        ymjYDs/z/sAxvBWYpZuWeAnJb+BqkVBvP4kfhnA=
+X-Google-Smtp-Source: ABdhPJzgdtQ0e15RU/B+VXyW0HKmnrk4ChsFiunlbGhEA/nSRl5iqi+DLHNRjiUEFWDMgOl/S3Q+Wjj/KNXfigA904g=
+X-Received: by 2002:ac8:1844:: with SMTP id n4mr3356547qtk.142.1592472572907;
+ Thu, 18 Jun 2020 02:29:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLrFFOVQVR0dWbru6bJvz7sXs8v6Op-hiNgdMwH3N=2Fw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200618080223.951737-1-lee.jones@linaro.org>
+In-Reply-To: <20200618080223.951737-1-lee.jones@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 18 Jun 2020 11:29:16 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3iRmXC2jDj92QHKqyD+x_UJ7rWU_KcGt=MFOD9UW38RA@mail.gmail.com>
+Message-ID: <CAK8P3a3iRmXC2jDj92QHKqyD+x_UJ7rWU_KcGt=MFOD9UW38RA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] mfd: Add I2C based System Configuaration (SYSCON) access
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     michael@walle.cc, Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:mJn8YsYvecBQHNzW2F014KvvXMMCXXUSdpntKRjYKP8FlCPGqOE
+ gVc/v9hqPBEvM7gXD94bvAvORSYxC7R32rBSY8tYbSc1Kv45vHgm2yfQzUfwsd1HhtY68vg
+ ZqBW4aH3eCMtOAiS146tG2nY3TBNnc41Np7kyD78KmyS1DzBJua4Bm+/zqQOXJnltf7JE5/
+ SIiIIy6Y6ptBLBoqQ78Zg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aJNVddY0ieA=:SGaGsC5HsbFxsXW3/fZvfk
+ MgAK6no/aF1IbmEEuXZtshDPqmpwCbVPYgJr4sWqJ0W6us9taTpnDSZd3NCuAlV3J7xK2ZgyZ
+ gZZUr1/M++LWwmMaQUEZfzR9eqYeSlfQ72T5LR5ejGTZM7rvwueA55EsGBASCICw0rTcSwjOi
+ iAZtztev/PJOvbnYwweTiMqXC2cOBuUgSxDNwH5/wqbEvCxIv/BtV8icGfnR66cU4x/fmuIIy
+ yIEozTnqqzn4owr5Jm6dihYjFF0sFNv2mVkDtan/D9eUd91ZoDYkcs2px3IViFO1SyeWf5t+w
+ E+zjFineyeJTSfrdiFfzOnlcBM/RbO6tdTzjD2sc5v6/z7dQ0FYz07DEUjtPQcLciSb6KaYuT
+ NK+f0SoYTJ6twF4YMZxYXtTsDnGSm91v4JwXKdEuiPM2emULTUESrsc6L1OQIr1sBj9N9Y9CZ
+ Zwq5Jw/5mMPWhXQ8AHFoGBvruuBgEriPYq3wW7suL//sCoOB/mUkroDq8r6g2PmLVfGRc7WJ8
+ Od/3rjN7DPdC2xBiVM2+FECUaU+7szCGUAymSLIr6/NASZo/tj4xqyZ4Oxpb2IBHpPDJ03+N+
+ 0K3O2yCyL1rLLBOcqGv9ZD/sorH25rHNLimogocZeAZAvqtJJDZy0DjrcIT2njBl/npUDoWdR
+ ZdBgfHkxK9wxbicr4eJSGSuLStcQrxIj7hU57FgbrI0mRsWJYtF4zu+8+prG9NrvylGI0nXxw
+ D6jOKOUQVO1jf0O7y3iIXOm/DKdhNwfnCqGTmoaIInUCGw6j9dR0pVmsfyapuyLnr3CMPyIb6
+ nzFRQG/pruKhGInthnHS0cT3ewWRfsGMLtuuqmf3KuFX1EsmQA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/06/2020 20:57, Rob Herring wrote:
-> On Wed, Jun 17, 2020 at 8:36 AM Steven Price <steven.price@arm.com> wrote:
->>
->> On 17/06/2020 15:15, Krzysztof Kozlowski wrote:
->>> On Wed, May 27, 2020 at 04:43:34PM -0400, Alyssa Rosenzweig wrote:
->>>> Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
->>>>
->>>> On Wed, May 27, 2020 at 10:05:44PM +0200, Krzysztof Kozlowski wrote:
->>>>> There is no point to print deferred probe (and its failures to get
->>>>> resources) as an error.  Also there is no need to print regulator errors
->>>>> twice.
->>>>>
->>>>> In case of multiple probe tries this would pollute the dmesg.
->>>>>
->>>>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->>>>> Reviewed-by: Steven Price <steven.price@arm.com>
->>>>>
->>>>> ---
->>>>>
->>>>> Changes since v2:
->>>>> 1. Rebase
->>>>> 2. Add Steven's review
->>>>>
->>>>> Changes since v1:
->>>>> 1. Remove second error message from calling panfrost_regulator_init()
->>>>> ---
->>>>>    drivers/gpu/drm/panfrost/panfrost_device.c | 8 ++++----
->>>>>    1 file changed, 4 insertions(+), 4 deletions(-)
->>>>>
->>>
->>> Hi Rob, Tomeu and Steven,
->>>
->>> You're listed as maintainers for panfrost. Is anyone going to pick this
->>> up?
->>
->> I'm only a reviewer so I've been leaving it for Rob or Tomeu, but I can
->> pick it up if Rob/Tomeu are happy for me to do that.
->>
->>> Maybe I sent it to wrong mailing list or forgot about anything?
->>
->> No, there's actually a few Panfrost commits waiting, it was on my todo
->> list to ask if Rob/Tomeu needed some help with merging patches.
-> 
-> Please do, I haven't had the cycles for panfrost lately.
-> 
-> Rob
-> 
+On Thu, Jun 18, 2020 at 10:03 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> The existing SYSCON implementation only supports MMIO (memory mapped)
+> accesses, facilitated by Regmap.  This extends support for registers
+> held behind I2C busses.
+>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Ok, this patch is pushed to drm-misc-next. I'll dig through my emails 
-for the other patches which are pending and take a look at them too.
+The implementation looks fine to me, but can you explain how this is going to
+be used, and what the advantage is over open-coding the devm_regmap_init_i2c()
+in each driver that would use this?
 
-Steve
+Is this about using proper locking through the regmap framework for
+shared i2c clients, or to reduce memory consumption when lots of drivers
+access the same regmap?
+
+My impression of the existing syscon code is that the main value-add over
+other ways of doing the same is the syscon_regmap_lookup_by_phandle()
+interface that gives other drivers a much simpler way of getting the
+regmap just based on the DT node. Are you planning to add something
+like that here as well? An ideal driver interface might allow
+syscon_regmap_lookup_by_phandle() to work for both mmio and i2c
+based syscons, or additional ones as well, but implementing this would
+be rather tricky when the i2c core is a loadable module.
+
+     Arnd
