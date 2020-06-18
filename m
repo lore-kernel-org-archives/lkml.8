@@ -2,94 +2,261 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39298C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33DBA2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:50:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Daa8kGSC"
+	by mail.kernel.org (Postfix) with ESMTP id 0E89120B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 16:51:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592499092;
+	bh=SERZFPf5xFpc7b0CjgIUjRDwN9gWuC34jVkU4t7/p6s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BlDIcVHdxiJf8SMHqdq8Rbet0DQWbqfuXhiFVHT8VPv7FLvhC5Uu9kR2LBCv0Doo5
+	 HvQfyGEDER9vtQ2STdAocUNbNPqICU2KmFqC4W+GOlGXN2Z18M4VC3u0UEi5jaaX1i
+	 eJnFvD2ybYL0oxSBdGiMs4H6tA4y1lVTXwyvw4oU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731989AbgFRQuP (ORCPT
+        id S1732015AbgFRQva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 12:50:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729740AbgFRQuO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 12:50:14 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FCE3C06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 09:50:14 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id z63so3048915pfb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 09:50:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=12wguNIOpAai+aK7V0UMJZpRX5txJ+g8ecK8VN8zlk0=;
-        b=Daa8kGSChA8GE609NzPdLbnbxSL1yp2GIOtobIGkw213Q6/jN+pqpcohXWQuXWKVyJ
-         peFqEQtL1Z9btJVYzVkWtnVrRQCgmNJ3st9Ldy6vmMigidwJIzcpqDTbji5gbe/SeZZ8
-         GxJQtsEhr/A9o5Thu6mk2R0CMsTqGWeM5Ec66CgEVcVpr7k76LA6ofh++rqtcAhn886E
-         36envhHSlJ8pWCrKO0jv3b0ZBGsLTn/joJ63Ot0JXxMczcsaNhT5KHAPy+hzZXynvNou
-         dRUKdyPX+8x5NIGlXRDlzEHd1DSZB+9IF6mo4g1UiAFkMAAImGsXhLc4rrnXstSqBbhE
-         H6ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=12wguNIOpAai+aK7V0UMJZpRX5txJ+g8ecK8VN8zlk0=;
-        b=OLG2l3/U9yq0RqomEW8oAclFyY1vALJBFUFpt+en4ut7dvdDQuxvMV44G655nWv/pk
-         7+HsRmJd5wECMY0t7xcCxu+IHkWxoEch3i+SGGizXJdGL+7SsAYk3atuC6G/uex6oCPl
-         /GTvOkd+tlH+RJNv/6l9g+DM/jJJzuDZN/fwjNZt1mOad5EzuLNzaEQNa/OBpIFOrIWJ
-         bOB7qb7Gs4H4GkCepo/iQxaWkVoTcFQtethKVuqUC4dDI0KkJvXuMx+c+MWvIZ8j3uCl
-         GGknnmqoZM76ICjBTIri9z6+62DMztBIz5rwHl1yP0nEqtmP0/vfvMcuv3zQmyszRZuS
-         5xLQ==
-X-Gm-Message-State: AOAM5324s5EN21FC/qgB9afgQFdICOFVcTQhn3suQHxO/1AhuhA+3SUF
-        ZX4WMcsGVuR3vh+ehWel+aevcA==
-X-Google-Smtp-Source: ABdhPJwQv/SRknVfzl7s0fd5YGcHkIu/0H0T9dpTN4FKjOEnDG7eWQSrqBX1H2vFyL3jUAUbV4QzQA==
-X-Received: by 2002:a63:63c2:: with SMTP id x185mr716198pgb.57.1592499013421;
-        Thu, 18 Jun 2020 09:50:13 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id u1sm2981749pgf.28.2020.06.18.09.50.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 09:50:12 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 09:50:06 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     JeongHyeon Lee <jhs2.lee@samsung.com>, dm-devel@redhat.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        agk@redhat.com, corbet@lwn.net
-Subject: Re: [dm-devel] New mode DM-Verity error handling
-Message-ID: <20200618165006.GA103290@google.com>
-References: <CGME20200618070250epcas1p409eb2ddd19ecc5d55c219ac3dc884f25@epcas1p4.samsung.com>
- <98eac3fc-c399-625d-5730-29853b3a0771@samsung.com>
- <20200618154444.GB18007@redhat.com>
+        Thu, 18 Jun 2020 12:51:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728664AbgFRQva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 12:51:30 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A93B208C3;
+        Thu, 18 Jun 2020 16:51:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592499089;
+        bh=SERZFPf5xFpc7b0CjgIUjRDwN9gWuC34jVkU4t7/p6s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zvLKsyDEUD0u82aAkmzKgbY1y56tjUifELojFJl8kDu0NYBeqK2NSJrkGK6p7MAgS
+         hFwOyQdLopNEXPXeFdIVm3o41ssrKFmCBxT+cmNUDDCdylwfx2+AHosuVakg97Lmvb
+         lFFsfVWJ+UHaWbIBu5BbgnMfIV+4pTMQcMfUeggo=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jlxl9-004EW2-P8; Thu, 18 Jun 2020 17:51:27 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618154444.GB18007@redhat.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 18 Jun 2020 17:51:27 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     David Brazdil <dbrazdil@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, android-kvm@google.com,
+        kernel-team@android.com, Andrew Scull <ascull@google.com>
+Subject: Re: [PATCH v3 04/15] arm64: kvm: Handle calls to prefixed hyp
+ functions
+In-Reply-To: <20200618122537.9625-5-dbrazdil@google.com>
+References: <20200618122537.9625-1-dbrazdil@google.com>
+ <20200618122537.9625-5-dbrazdil@google.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <a31b7ee9ad1edaa38aa122ac90cc605c@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: dbrazdil@google.com, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, android-kvm@google.com, kernel-team@android.com, ascull@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 11:44:45AM -0400, Mike Snitzer wrote:
-> I do not accept that panicing the system because of verity failure is
-> reasonable.
-> 
-> In fact, even rebooting (via DM_VERITY_MODE_RESTART) looks very wrong.
-> 
-> The device should be put in a failed state and left for admin recovery.
+Hi David,
 
-That's exactly how the restart mode works on some Android devices. The
-bootloader sees the verification error and puts the device in recovery
-mode. Using the restart mode on systems without firmware support won't
-make sense, obviously.
+On 2020-06-18 13:25, David Brazdil wrote:
+> From: Andrew Scull <ascull@google.com>
+> 
+> This patch is part of a series which builds KVM's non-VHE hyp code 
+> separately
+> from VHE and the rest of the kernel.
+> 
+> Once hyp functions are moved to a hyp object, they will have prefixed 
+> symbols.
+> This change declares and gets the address of the prefixed version for 
+> calls to
+> the hyp functions.
+> 
+> To aid migration, the hyp functions that have not yet moved have their 
+> prefixed
+> versions aliased to their non-prefixed version. This begins with all 
+> the hyp
+> functions being listed and will reduce to none of them once the 
+> migration is
+> complete.
+> 
+> Signed-off-by: Andrew Scull <ascull@google.com>
+> 
+> Extracted kvm_call_hyp nVHE branches into own helper macros.
+> Signed-off-by: David Brazdil <dbrazdil@google.com>
 
-Sami
+nit: if you want to add this kind of comment, try to write it between
+square brackets, without blank lines in between:
+
+Signed-off-by: Andrew Scull <ascull@google.com>
+[David: Extracted kvm_call_hyp nVHE branches into own helper macros.]
+Signed-off-by: David Brazdil <dbrazdil@google.com>
+
+> ---
+>  arch/arm64/include/asm/kvm_asm.h  | 19 +++++++++++++++++++
+>  arch/arm64/include/asm/kvm_host.h | 19 ++++++++++++++++---
+>  arch/arm64/kernel/image-vars.h    | 15 +++++++++++++++
+>  3 files changed, 50 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_asm.h 
+> b/arch/arm64/include/asm/kvm_asm.h
+> index 352aaebf4198..6a682d66a640 100644
+> --- a/arch/arm64/include/asm/kvm_asm.h
+> +++ b/arch/arm64/include/asm/kvm_asm.h
+> @@ -42,6 +42,24 @@
+> 
+>  #include <linux/mm.h>
+> 
+> +/*
+> + * Translate name of a symbol defined in nVHE hyp to the name seen
+> + * by kernel proper. All nVHE symbols are prefixed by the build system
+> + * to avoid clashes with the VHE variants.
+> + */
+> +#define kvm_nvhe_sym(sym)	__kvm_nvhe_##sym
+> +
+> +#define DECLARE_KVM_VHE_SYM(sym)	extern char sym[]
+> +#define DECLARE_KVM_NVHE_SYM(sym)	extern char kvm_nvhe_sym(sym)[]
+> +
+> +/*
+> + * Define a pair of symbols sharing the same name but one defined in
+> + * VHE and the other in nVHE hyp implementations.
+> + */
+> +#define DECLARE_KVM_HYP_SYM(sym)		\
+> +	DECLARE_KVM_VHE_SYM(sym);		\
+> +	DECLARE_KVM_NVHE_SYM(sym)
+> +
+>  /* Translate a kernel address of @sym into its equivalent linear 
+> mapping */
+>  #define kvm_ksym_ref(sym)						\
+>  	({								\
+> @@ -50,6 +68,7 @@
+>  			val = lm_alias(&sym);				\
+>  		val;							\
+>  	 })
+> +#define kvm_ksym_ref_nvhe(sym)	kvm_ksym_ref(kvm_nvhe_sym(sym))
+> 
+>  struct kvm;
+>  struct kvm_vcpu;
+> diff --git a/arch/arm64/include/asm/kvm_host.h
+> b/arch/arm64/include/asm/kvm_host.h
+> index c3e6fcc664b1..e782f98243d3 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -448,6 +448,20 @@ void kvm_arm_resume_guest(struct kvm *kvm);
+> 
+>  u64 __kvm_call_hyp(void *hypfn, ...);
+> 
+> +#define kvm_call_hyp_nvhe(f, ...)					\
+> +	do {								\
+> +		DECLARE_KVM_NVHE_SYM(f);				\
+
+I wanted to move this out to __kvm_call_hyp, but the nVHE ssbs code
+got in the way... Oh well.
+
+> +		__kvm_call_hyp(kvm_ksym_ref_nvhe(f), ##__VA_ARGS__);	\
+> +	} while(0)
+> +
+> +#define kvm_call_hyp_nvhe_ret(f, ...)					\
+> +	({								\
+> +		DECLARE_KVM_NVHE_SYM(f);				\
+> +		typeof(f(__VA_ARGS__)) ret;				\
+> +		ret = __kvm_call_hyp(kvm_ksym_ref_nvhe(f),		\
+> +				     ##__VA_ARGS__);			\
+
+You don't need to redefine ret here. actually, you can just evaluate
+the expression and let C do its magic:
+
+diff --git a/arch/arm64/include/asm/kvm_host.h 
+b/arch/arm64/include/asm/kvm_host.h
+index e782f98243d3..49d1a5cd8f8f 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -457,9 +457,7 @@ u64 __kvm_call_hyp(void *hypfn, ...);
+  #define kvm_call_hyp_nvhe_ret(f, ...)					\
+  	({								\
+  		DECLARE_KVM_NVHE_SYM(f);				\
+-		typeof(f(__VA_ARGS__)) ret;				\
+-		ret = __kvm_call_hyp(kvm_ksym_ref_nvhe(f),		\
+-				     ##__VA_ARGS__);			\
++		__kvm_call_hyp(kvm_ksym_ref_nvhe(f), ##__VA_ARGS__);	\
+  	})
+
+  /*
+
+> +	})
+> +
+>  /*
+>   * The couple of isb() below are there to guarantee the same behaviour
+>   * on VHE as on !VHE, where the eret to EL1 acts as a context
+> @@ -459,7 +473,7 @@ u64 __kvm_call_hyp(void *hypfn, ...);
+>  			f(__VA_ARGS__);					\
+>  			isb();						\
+>  		} else {						\
+> -			__kvm_call_hyp(kvm_ksym_ref(f), ##__VA_ARGS__); \
+> +			kvm_call_hyp_nvhe(f, ##__VA_ARGS__);		\
+>  		}							\
+>  	} while(0)
+> 
+> @@ -471,8 +485,7 @@ u64 __kvm_call_hyp(void *hypfn, ...);
+>  			ret = f(__VA_ARGS__);				\
+>  			isb();						\
+>  		} else {						\
+> -			ret = __kvm_call_hyp(kvm_ksym_ref(f),		\
+> -					     ##__VA_ARGS__);		\
+> +			ret = kvm_call_hyp_nvhe_ret(f, ##__VA_ARGS__);	\
+>  		}							\
+>  									\
+>  		ret;							\
+> diff --git a/arch/arm64/kernel/image-vars.h 
+> b/arch/arm64/kernel/image-vars.h
+> index f32b406e90c0..89affa38b143 100644
+> --- a/arch/arm64/kernel/image-vars.h
+> +++ b/arch/arm64/kernel/image-vars.h
+> @@ -61,6 +61,21 @@ __efistub__ctype		= _ctype;
+>   * memory mappings.
+>   */
+> 
+> +__kvm_nvhe___kvm_enable_ssbs = __kvm_enable_ssbs;
+> +__kvm_nvhe___kvm_flush_vm_context = __kvm_flush_vm_context;
+> +__kvm_nvhe___kvm_get_mdcr_el2 = __kvm_get_mdcr_el2;
+> +__kvm_nvhe___kvm_timer_set_cntvoff = __kvm_timer_set_cntvoff;
+> +__kvm_nvhe___kvm_tlb_flush_local_vmid = __kvm_tlb_flush_local_vmid;
+> +__kvm_nvhe___kvm_tlb_flush_vmid = __kvm_tlb_flush_vmid;
+> +__kvm_nvhe___kvm_tlb_flush_vmid_ipa = __kvm_tlb_flush_vmid_ipa;
+> +__kvm_nvhe___kvm_vcpu_run_nvhe = __kvm_vcpu_run_nvhe;
+> +__kvm_nvhe___vgic_v3_get_ich_vtr_el2 = __vgic_v3_get_ich_vtr_el2;
+> +__kvm_nvhe___vgic_v3_init_lrs = __vgic_v3_init_lrs;
+> +__kvm_nvhe___vgic_v3_read_vmcr = __vgic_v3_read_vmcr;
+> +__kvm_nvhe___vgic_v3_restore_aprs = __vgic_v3_restore_aprs;
+> +__kvm_nvhe___vgic_v3_save_aprs = __vgic_v3_save_aprs;
+> +__kvm_nvhe___vgic_v3_write_vmcr = __vgic_v3_write_vmcr;
+> +
+>  #endif /* CONFIG_KVM */
+> 
+>  #endif /* __ARM64_KERNEL_IMAGE_VARS_H */
+
+Otherwise looks good.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
