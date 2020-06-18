@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7122C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F286C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD2120853
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFA2220853
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592446495;
-	bh=q78LKt9Cfe6/uaSsagZYml9M60O3MnAm1lHpgXtjmjY=;
+	s=default; t=1592446502;
+	bh=jgjHGsVhsJSxDyGA5Ork60r7TWAvi3KNCTPoeYEILdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rp/IVsIim1kb9EW+CDleTldwbHoUvqMEXxyCCXTyO3hCkF46GcPsEbV+jJCMWzf7k
-	 JgVPrEBDUJQ3sSiuhqz88b2N+76EXMdIEqXTlwWM9AiESJY3zSxooOjnY9i2p70gDc
-	 S8LO1rq4+aMrt3K/WIiCtB1PyT1jzz74xIMyuJh4=
+	b=Op0mvzK8GWi0Ea3E8lvcKxnv+fGMFeZQzscSeGQipLWKlJiWNRqB7ezvmM1R80HOD
+	 uBP7ui0ds2m3wDMuCN/J8CUkkeqHUToEnbmLEnJosIXDNEIZhkGDFA5KHy08YgUPWL
+	 7cdepQj7vzfRep+cPR/grHMXnUrbOWcjhpEqpAI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbgFRBUn (ORCPT
+        id S1729452AbgFRCPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:20:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48524 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:15:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728922AbgFRBRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:17:21 -0400
+        id S1730332AbgFRBUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:20:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDA9121D94;
-        Thu, 18 Jun 2020 01:17:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0738720776;
+        Thu, 18 Jun 2020 01:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443041;
-        bh=q78LKt9Cfe6/uaSsagZYml9M60O3MnAm1lHpgXtjmjY=;
+        s=default; t=1592443241;
+        bh=jgjHGsVhsJSxDyGA5Ork60r7TWAvi3KNCTPoeYEILdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1CET2wYHOSIcl8/blH2MLGwTSdR2m0bVBSOEZG0rSOQcBwCWDv+wE3JKx6c9tFS8m
-         O0XEasc2qJ+6vP+ZcQkGAg/ZbbZ0TVrBRvYsABIzNC7XzOiN1hGwA9I6PtTh6TwLKK
-         SWkpOp8IYwmG45PbVz9XSvgl67x8C6YmSlJL9YmA=
+        b=I6TMmsQlwvykcti/s8QMx1bkCetcMEhYB0W0gNap1elxP8QJbf4DeVZmO+OxtOC9v
+         krn4CuDK1MbEQoRtQvBjqrUq9ZAL51YU+BNjC8WPswgkvFs2LxqlNu9zu+wPqPkr1t
+         Ch0b+IQ/CaiB8vj8rcqRtV6ISmPd6IfOT7LSB6o0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 037/266] arm64: dts: armada-3720-turris-mox: fix SFP binding
-Date:   Wed, 17 Jun 2020 21:12:42 -0400
-Message-Id: <20200618011631.604574-37-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Mike Christie <mchristi@redhat.com>,
+        David Disseldorp <ddiss@suse.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 192/266] scsi: target: tcmu: Fix a use after free in tcmu_check_expired_queue_cmd()
+Date:   Wed, 17 Jun 2020 21:15:17 -0400
+Message-Id: <20200618011631.604574-192-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,35 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Behún <marek.behun@nic.cz>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit c2671acbbbd822ef077cc168991e0a7dbe2172c9 ]
+[ Upstream commit 9d7464b18892332e35ff37f0b024429a1a9835e6 ]
 
-The sfp compatible should be 'sff,sfp', not 'sff,sfp+'. We used patched
-kernel where the latter was working.
+The pr_debug() dereferences "cmd" after we already freed it by calling
+tcmu_free_cmd(cmd).  The debug printk needs to be done earlier.
 
-Fixes: 7109d817db2e ("arm64: dts: marvell: add DTS for Turris Mox")
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20200523101129.GB98132@mwanda
+Fixes: 61fb24822166 ("scsi: target: tcmu: Userspace must not complete queued commands")
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Reviewed-by: David Disseldorp <ddiss@suse.de>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/target/target_core_user.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-index 01f66056d7d5..c3668187b844 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-@@ -95,7 +95,7 @@ sdhci1_pwrseq: sdhci1-pwrseq {
- 	};
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index 70c64e69a1d2..a497e7c1f4fc 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -1292,13 +1292,13 @@ static void tcmu_check_expired_queue_cmd(struct tcmu_cmd *cmd)
+ 	if (!time_after(jiffies, cmd->deadline))
+ 		return;
  
- 	sfp: sfp {
--		compatible = "sff,sfp+";
-+		compatible = "sff,sfp";
- 		i2c-bus = <&i2c0>;
- 		los-gpio = <&moxtet_sfp 0 GPIO_ACTIVE_HIGH>;
- 		tx-fault-gpio = <&moxtet_sfp 1 GPIO_ACTIVE_HIGH>;
++	pr_debug("Timing out queued cmd %p on dev %s.\n",
++		  cmd, cmd->tcmu_dev->name);
++
+ 	list_del_init(&cmd->queue_entry);
+ 	se_cmd = cmd->se_cmd;
+ 	tcmu_free_cmd(cmd);
+ 
+-	pr_debug("Timing out queued cmd %p on dev %s.\n",
+-		  cmd, cmd->tcmu_dev->name);
+-
+ 	target_complete_cmd(se_cmd, SAM_STAT_TASK_SET_FULL);
+ }
+ 
 -- 
 2.25.1
 
