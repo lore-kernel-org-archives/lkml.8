@@ -2,141 +2,125 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85E302186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592468553;
-	bh=VpzKjvvcq9cKpAHfRmxLguugzRbLfQsNRX/iv+XnJ4s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZPdZr+1nPiBlX/hyf80myWGp7CWDLq515vKb6ofj3+Jo9wxopspmIb096eqZsS88f
-	 eCPt+GhwwgO4rmudSazGpT0AjP4LbtgzVWXgGRZuciB+sV1d5c1DJQoZwzONGzVU7h
-	 R5/4uKVMkN3Dtc4QzTnuHFJFTPaU432RAwXOdzBY=
+	by mail.kernel.org (Postfix) with ESMTP id D14A4208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 08:27:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="Cj/5mRQV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbgFRIWb (ORCPT
+        id S1728582AbgFRI1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 04:22:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728406AbgFRIW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 04:22:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D3152166E;
-        Thu, 18 Jun 2020 08:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592468548;
-        bh=VpzKjvvcq9cKpAHfRmxLguugzRbLfQsNRX/iv+XnJ4s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qwtLE0nJ45+bYIrXs2BzXtjtwDd5cYm/VGXw0562eUuFmKhCD7B1bwTIgDxuX2YKB
-         2Anc8hKMP0BnfJFwYtNDQpWNZF0X7FxZgQHkhudsAFb/+sMw0PXKLEf+sdMSac4aFt
-         tR5nyyCNj3GR5gsLWAvuoW7D7Y3ujsawon8cdhgQ=
-Date:   Thu, 18 Jun 2020 10:22:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     Minas Harutyunyan <hminas@synopsys.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: dwc2: use well defined macros for power_down
-Message-ID: <20200618082220.GA1050230@kroah.com>
-References: <20200616162617.38365cc8@xhacker.debian>
+        Thu, 18 Jun 2020 04:27:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728465AbgFRI1o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 04:27:44 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E0FC0613EE
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:27:44 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f185so4705074wmf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 01:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=zE4oI/xjk4gPn+qKQVZsXwzGGdGfMEP73737Hdz+jyM=;
+        b=Cj/5mRQVF5EPtKV73CeRrVMQAnPUOaupFkki1CVBBIZx0MCP5TxMZOABRWfLgMiKx5
+         OrvSylExR0QnjfxyulmGMFOmZ50JLI7Y2dhI7mEAANxOhD7OYltwyqPY8MyoLq6Jtoi/
+         XPyfWDiJPghNpSFfnB51GYw3ZxKlDGIn+dl2geBSCCc9twmRhl8k3NBf98cnG+Cr7/ZN
+         H00YxlfJyrRH0AD89VWqfIUpmpoZI//X+cpY448HsuY0jNb4cKG3cse5gkt9h5kq7ZOK
+         kFhfUa3vrzFsZ2JAbG2FYifin3cYU8Xvd4Y/BITy+rGZ+qgN3RwEz0LTovGyW1s9VniT
+         0NVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=zE4oI/xjk4gPn+qKQVZsXwzGGdGfMEP73737Hdz+jyM=;
+        b=FbeZ0FPorbcQMUleerLv8biOqv0DIUXqGXiwzfL11TPEVRGyPXoOeMIVBrRSmlgGFf
+         UaRn91c53blWaFWc/GM0KXdSvE+0WPwEjM7gak3pZ00zewoiABQYFKTP9t3XlCeFb3LJ
+         /PGAGG51T6ebsnBN95MdN28yPxzYkOF09GUcuK92IpBmggusscpaWP3hP8X5zWj1IqIS
+         xqM2aVsAtM77Fb2Z090onR4Vxowbd2G5HcW/blnP7RscIVsw74xcQaCCjUpRPE3zEIMu
+         bZSFcig2P1fTdO59oM0bj6yV0DU5Ld90Jx0rzu1L2APZDLBbxQyQ3B9Wsqfo3PSEbKMs
+         WyHA==
+X-Gm-Message-State: AOAM532GSR+CzIkhMxdcC9VYd2GEMji4GKi1AiyUMvHeqO1qWQzgXENS
+        lBrt3+fy+nddHVhlkyd29eCDrQ==
+X-Google-Smtp-Source: ABdhPJzkiRDfED3V6pOmykpfjJbJipeCADa+NhvfgJkz15HsHexnwxQbYOhGefGNDFZWUU3aNLZWVw==
+X-Received: by 2002:a1c:2602:: with SMTP id m2mr1176878wmm.50.1592468862890;
+        Thu, 18 Jun 2020 01:27:42 -0700 (PDT)
+Received: from localhost ([194.62.217.57])
+        by smtp.gmail.com with ESMTPSA id c6sm2627442wma.15.2020.06.18.01.27.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 01:27:42 -0700 (PDT)
+From:   "Javier =?utf-8?B?R29uesOhbGV6?=" <javier@javigon.com>
+X-Google-Original-From: Javier =?utf-8?B?R29uesOhbGV6?= <javier.gonz@samsung.com>
+Date:   Thu, 18 Jun 2020 10:27:40 +0200
+To:     Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, bcrl@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aio@kvack.org, io-uring@vger.kernel.org,
+        linux-block@vger.kernel.org, selvakuma.s1@samsung.com,
+        nj.shetty@samsung.com, Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Keith Busch <keith.busch@wdc.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 0/3] zone-append support in aio and io-uring
+Message-ID: <20200618082740.i4sfoi54aed6sxnk@mpHalley.local>
+References: <CGME20200617172653epcas5p488de50090415eb802e62acc0e23d8812@epcas5p4.samsung.com>
+ <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
+ <f503c488-fa00-4fe2-1ceb-7093ea429e45@lightnvm.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200616162617.38365cc8@xhacker.debian>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f503c488-fa00-4fe2-1ceb-7093ea429e45@lightnvm.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 04:26:17PM +0800, Jisheng Zhang wrote:
-> Use the well defined macros such as DWC2_POWER_DOWN_PARAM_NONE,
-> DWC2_POWER_DOWN_PARAM_PARTIAL and DWC2_POWER_DOWN_PARAM_HIBERNATION
-> to make code more readable.
-> 
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> Acked-by: Minas Harutyunyan <hminas@synopsys.com>
-> ---
->  drivers/usb/dwc2/hcd.c    |  4 ++--
->  drivers/usb/dwc2/params.c | 12 ++++++------
->  2 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
-> index b90f858af960..e9ac215b9663 100644
-> --- a/drivers/usb/dwc2/hcd.c
-> +++ b/drivers/usb/dwc2/hcd.c
-> @@ -3628,7 +3628,7 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
->  				"SetPortFeature - USB_PORT_FEAT_SUSPEND\n");
->  			if (windex != hsotg->otg_port)
->  				goto error;
-> -			if (hsotg->params.power_down == 2)
-> +			if (hsotg->params.power_down == DWC2_POWER_DOWN_PARAM_HIBERNATION)
->  				dwc2_enter_hibernation(hsotg, 1);
->  			else
->  				dwc2_port_suspend(hsotg, windex);
-> @@ -3646,7 +3646,7 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
->  			break;
->  
->  		case USB_PORT_FEAT_RESET:
-> -			if (hsotg->params.power_down == 2 &&
-> +			if (hsotg->params.power_down == DWC2_POWER_DOWN_PARAM_HIBERNATION &&
->  			    hsotg->hibernated)
->  				dwc2_exit_hibernation(hsotg, 0, 1, 1);
->  			hprt0 = dwc2_read_hprt0(hsotg);
-> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-> index ce736d67c7c3..8f9d061c4d5f 100644
-> --- a/drivers/usb/dwc2/params.c
-> +++ b/drivers/usb/dwc2/params.c
-> @@ -68,14 +68,14 @@ static void dwc2_set_his_params(struct dwc2_hsotg *hsotg)
->  	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 <<
->  		GAHBCFG_HBSTLEN_SHIFT;
->  	p->change_speed_quirk = true;
-> -	p->power_down = false;
-> +	p->power_down = DWC2_POWER_DOWN_PARAM_NONE;
->  }
->  
->  static void dwc2_set_s3c6400_params(struct dwc2_hsotg *hsotg)
->  {
->  	struct dwc2_core_params *p = &hsotg->params;
->  
-> -	p->power_down = 0;
-> +	p->power_down = DWC2_POWER_DOWN_PARAM_NONE;
->  	p->phy_utmi_width = 8;
->  }
->  
-> @@ -89,7 +89,7 @@ static void dwc2_set_rk_params(struct dwc2_hsotg *hsotg)
->  	p->host_perio_tx_fifo_size = 256;
->  	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 <<
->  		GAHBCFG_HBSTLEN_SHIFT;
-> -	p->power_down = 0;
-> +	p->power_down = DWC2_POWER_DOWN_PARAM_NONE;
->  }
->  
->  static void dwc2_set_ltq_params(struct dwc2_hsotg *hsotg)
-> @@ -319,11 +319,11 @@ static void dwc2_set_param_power_down(struct dwc2_hsotg *hsotg)
->  	int val;
->  
->  	if (hsotg->hw_params.hibernation)
-> -		val = 2;
-> +		val = DWC2_POWER_DOWN_PARAM_HIBERNATION;
->  	else if (hsotg->hw_params.power_optimized)
-> -		val = 1;
-> +		val = DWC2_POWER_DOWN_PARAM_PARTIAL;
->  	else
-> -		val = 0;
-> +		val = DWC2_POWER_DOWN_PARAM_NONE;
->  
->  	hsotg->params.power_down = val;
->  }
-> -- 
-> 2.27.0
-> 
+On 18.06.2020 10:04, Matias Bjørling wrote:
+>On 17/06/2020 19.23, Kanchan Joshi wrote:
+>>This patchset enables issuing zone-append using aio and io-uring direct-io interface.
+>>
+>>For aio, this introduces opcode IOCB_CMD_ZONE_APPEND. Application uses start LBA
+>>of the zone to issue append. On completion 'res2' field is used to return
+>>zone-relative offset.
+>>
+>>For io-uring, this introduces three opcodes: IORING_OP_ZONE_APPEND/APPENDV/APPENDV_FIXED.
+>>Since io_uring does not have aio-like res2, cqe->flags are repurposed to return zone-relative offset
+>
+>Please provide a pointers to applications that are updated and ready 
+>to take advantage of zone append.
 
-This does not apply to Linus's tree :(
+Good point. We are posting a RFC with fio support for append. We wanted
+to start the conversation here before.
+
+We can post a fork for improve the reviews in V2.
+
+>
+>I do not believe it's beneficial at this point to change the libaio 
+>API, applications that would want to use this API, should anyway 
+>switch to use io_uring.
+
+I can see why you say this, but isn't it too restrictive to directly
+drop libaio support? We can split the patches and merge uring first- no
+proble,.
+
+>
+>Please also note that applications and libraries that want to take 
+>advantage of zone append, can already use the zonefs file-system, as 
+>it will use the zone append command when applicable.
+
+Sure. There are different paths available already, which is great. We
+have use cases for uring and would like to enable them too.
+
+Thanks,
+Javier
