@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4342BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D52CC206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12DCA20720
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447829;
-	bh=BpY0I3vmf68N8BpdZoJscmHBHcofX93f8rmbrcIsk90=;
+	s=default; t=1592447836;
+	bh=T6td+4xjECTmSXQaASCI8eGQ4IqtOOF1xI3Ve0AZX/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mOCi4VaozCddZQ0BzwqM4kDT8Zw3sRdu7+Q/5NlDOqX6ZeW8rA00wwHkGBAzV6Osf
-	 2qN3ZRo57EhV22N0IfhZ8J7Mi/T2B7RRpuHMhFXST9LdGFQFHtkiGWXLuQzunzqp+f
-	 o8RnkOhIM5NeuGL27poN+36KcBmTas9t4Up3bjQg=
+	b=i68LfRZ+xKe0NPJgwYonr3/yQq82zriGmhnchjpUk3RC6ZaM4EpkPH0hAlrdtJf7x
+	 n3bKlPBh7hIXQkXtJBA3KHKDCQmtLwxES0Bu1vjQKaxQvxgDVV7+U/WUjRS2L2ja/U
+	 M5/aglhsOVKf1f3IlwwZMtnb5XUW50Ey2KCfoO1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbgFRChI (ORCPT
+        id S2387744AbgFRChN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:37:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43176 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:37:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727806AbgFRBNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:13:48 -0400
+        id S1729197AbgFRBNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17F40221EB;
-        Thu, 18 Jun 2020 01:13:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AA0921924;
+        Thu, 18 Jun 2020 01:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442827;
-        bh=BpY0I3vmf68N8BpdZoJscmHBHcofX93f8rmbrcIsk90=;
+        s=default; t=1592442825;
+        bh=T6td+4xjECTmSXQaASCI8eGQ4IqtOOF1xI3Ve0AZX/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cCT/KymKr1zMZ0rs9WBngXGSx6Xr2MJ+NDr6RNydc9bptaQOmn7esr2NNnBpaBHIv
-         uz84+c0XGErHQp48quRp5etmqYb7ZqHfbrD2RNtZanv/3B/1BQ1VyB8ZZLsSFqJp7e
-         JPGnOz6GhzaeSC8wS8WhXHbaicIwykSRHEvSbe4c=
+        b=Et5Dno8JgiHTUwnIkwG5mfgdRwXRl3ptqoGtJmp3eHsWSijHD/vmRk7rRIgZsAR7z
+         nWNeYqMa+tqBqPVfEDRkAthl2/3AR7jJ7TQar4WDseL/7OJzlQRaDqDYoyxXyoNjzu
+         SZ6Jb/tqm3dP8xLOW9IONk48Yl2m96ike1jx3+4A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 263/388] watchdog: da9062: No need to ping manually before setting timeout
-Date:   Wed, 17 Jun 2020 21:06:00 -0400
-Message-Id: <20200618010805.600873-263-sashal@kernel.org>
+Cc:     Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 261/388] IB/cma: Fix ports memory leak in cma_configfs
+Date:   Wed, 17 Jun 2020 21:05:58 -0400
+Message-Id: <20200618010805.600873-261-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,47 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Riedmueller <s.riedmueller@phytec.de>
+From: Maor Gottlieb <maorg@mellanox.com>
 
-[ Upstream commit a0948ddba65f4f6d3cfb5e2b84685485d0452966 ]
+[ Upstream commit 63a3345c2d42a9b29e1ce2d3a4043689b3995cea ]
 
-There is actually no need to ping the watchdog before disabling it
-during timeout change. Disabling the watchdog already takes care of
-resetting the counter.
+The allocated ports structure in never freed. The free function should be
+called by release_cma_ports_group, but the group is never released since
+we don't remove its default group.
 
-This fixes an issue during boot when the userspace watchdog handler takes
-over and the watchdog is already running. Opening the watchdog in this case
-leads to the first ping and directly after that without the required
-heartbeat delay a second ping issued by the set_timeout call. Due to the
-missing delay this resulted in a reset.
+Remove default groups when device group is deleted.
 
-Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Link: https://lore.kernel.org/r/20200403130728.39260-3-s.riedmueller@phytec.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Fixes: 045959db65c6 ("IB/cma: Add configfs for rdma_cm")
+Link: https://lore.kernel.org/r/20200521072650.567908-1-leon@kernel.org
+Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/da9062_wdt.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/infiniband/core/cma_configfs.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index 0ad15d55071c..18dec438d518 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -58,11 +58,6 @@ static int da9062_wdt_update_timeout_register(struct da9062_watchdog *wdt,
- 					      unsigned int regval)
- {
- 	struct da9062 *chip = wdt->hw;
--	int ret;
--
--	ret = da9062_reset_watchdog_timer(wdt);
--	if (ret)
--		return ret;
+diff --git a/drivers/infiniband/core/cma_configfs.c b/drivers/infiniband/core/cma_configfs.c
+index c672a4978bfd..3c1e2ca564fe 100644
+--- a/drivers/infiniband/core/cma_configfs.c
++++ b/drivers/infiniband/core/cma_configfs.c
+@@ -322,8 +322,21 @@ static struct config_group *make_cma_dev(struct config_group *group,
+ 	return ERR_PTR(err);
+ }
  
- 	regmap_update_bits(chip->regmap,
- 				  DA9062AA_CONTROL_D,
++static void drop_cma_dev(struct config_group *cgroup, struct config_item *item)
++{
++	struct config_group *group =
++		container_of(item, struct config_group, cg_item);
++	struct cma_dev_group *cma_dev_group =
++		container_of(group, struct cma_dev_group, device_group);
++
++	configfs_remove_default_groups(&cma_dev_group->ports_group);
++	configfs_remove_default_groups(&cma_dev_group->device_group);
++	config_item_put(item);
++}
++
+ static struct configfs_group_operations cma_subsys_group_ops = {
+ 	.make_group	= make_cma_dev,
++	.drop_item	= drop_cma_dev,
+ };
+ 
+ static const struct config_item_type cma_subsys_type = {
 -- 
 2.25.1
 
