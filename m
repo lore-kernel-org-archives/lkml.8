@@ -2,223 +2,95 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9231207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7395207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 20:05:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="etadw103"
+	dkim=pass (2048-bit key) header.d=oth-regensburg.de header.i=@oth-regensburg.de header.b="G1zRClib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730934AbgFRUFT (ORCPT
+        id S1731000AbgFRUFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 16:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50610 "EHLO
+        Thu, 18 Jun 2020 16:05:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730918AbgFRUFQ (ORCPT
+        with ESMTP id S1730652AbgFRUF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 16:05:16 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5464C0613EE
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:05:16 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e18so3411247pgn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:05:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hH5UdqkrUsHHkWkTkrsTpUaZ/SG0CR6QLInGjMheMsQ=;
-        b=etadw103cqJRZdZ59vL7+FSIVCyWqJxsPUoshMP46pJkWYpyPh1Z8z2rOaozPM6T9H
-         5c7AmqMnocB+A8JJb/7BGlmzUHsa8VUg/Sy09a1I4Lr+wMi+eXoSUP1amVW/VFTdTB0Y
-         Az+830Tp9h9FTrH3X1IX6E56xQAUj6mYytnd0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hH5UdqkrUsHHkWkTkrsTpUaZ/SG0CR6QLInGjMheMsQ=;
-        b=cjFi1Y1ZxtZYAxKg5rM3ErGjCrXGjBl0XlHe1PpzPdQgJWNTnT9KdFuegHsiayR5yt
-         g8jFCkbTRU7+H040KDcgFDFozaYO2CfzwjRKVQ+hl0w2U72MG695tjbRAtaSEE1lrnaT
-         7rqfvfMYVBY3oLXKIYUTjPXyz9aablNMngsf1QJw5/gVlcJj6AWVM4KLwhRtUa5dSYLa
-         l7pZVzuPV/ObyHCM+94//mUJvuwSbN60dMsgEwkE3GqduYYcaUgMUCB3Rs5SlYVAd9+s
-         9vyRkVTs+bjHKqi43ZicDtZGSX+p8LD0Jm6fXBB22xvupJwmLRit6yDJ4IorKTF4gz6T
-         ToMw==
-X-Gm-Message-State: AOAM533Xaoklchrw+HMG+HvL8ic0mXFQprnHrQR+9i1DyC1pwe3t+pRf
-        UQV6p+kOeoRTBH7sBvGIBm2t0g==
-X-Google-Smtp-Source: ABdhPJyvN1SyXkPFRjQ3ru6p0iO6TqH4uR0HKiNTz7KbggpLMsPBApIzCK92OExHh+Nr7VZgXchX+A==
-X-Received: by 2002:a62:1c5:: with SMTP id 188mr4954296pfb.213.1592510716220;
-        Thu, 18 Jun 2020 13:05:16 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p14sm3201600pju.7.2020.06.18.13.05.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 13:05:15 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 13:05:14 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Christian Brauner <christian@brauner.io>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Robert Sesek <rsesek@google.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        netdev@vger.kernel.org, containers@lists.linux-foundation.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 02/11] fs: Move __scm_install_fd() to
- __fd_install_received()
-Message-ID: <202006181302.84BFFF52CA@keescook>
-References: <20200616032524.460144-1-keescook@chromium.org>
- <20200616032524.460144-3-keescook@chromium.org>
- <20200618085614.fw3ynalpcipbplf3@wittgenstein>
+        Thu, 18 Jun 2020 16:05:29 -0400
+X-Greylist: delayed 587 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 18 Jun 2020 13:05:29 PDT
+Received: from mta02.hs-regensburg.de (mta02.hs-regensburg.de [IPv6:2001:638:a01:1096::12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3827EC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 13:05:29 -0700 (PDT)
+Received: from E16S02.hs-regensburg.de (e16s02.hs-regensburg.de [IPv6:2001:638:a01:8013::92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client CN "E16S02", Issuer "E16S02" (not verified))
+        by mta02.hs-regensburg.de (Postfix) with ESMTPS id 49nt2w1wJRzy4D;
+        Thu, 18 Jun 2020 21:55:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oth-regensburg.de;
+        s=mta01-20160622; t=1592510136;
+        bh=Of0GwQchv+P8YWeKdVxPE3NR+Pqpw5RU32LW53xV0aI=;
+        h=From:To:CC:Subject:Date:From;
+        b=G1zRClibCiJ8BVL7KynrwyLpHyv44wPwN11Ah2s2Usg+bXcYSv1LEi6goKcSJycv0
+         kYPQ3jYtZiJV7FW08BPWlXAUgEV154T+cb2wM6aan1MoMf/sSUyn7KZjxHJx6h8LhY
+         9bI2/S5xjjuHYKKN6Fgpnz/sPDt0suh/fftzJh0mNxlHRH+X1eA9UGKXpinS2LMQVq
+         UITl5gy5P8M2NE8xLX10QlSsmLA03rRrmuYLzLYHD/T3kid9XpAYF+JJSTWGF2/W8u
+         UFHEmHssqCoV/iFRUvP8PEmI4FKEIOYVHKca46nQFkPV5ftBDdPVzSsdw5Nv+Dee8y
+         9GfyVOCGU5V7A==
+Received: from omega.binary.kitchen (194.95.106.138) by
+ E16S02.hs-regensburg.de (2001:638:a01:8013::92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Thu, 18 Jun 2020 21:55:35 +0200
+From:   Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+To:     Lubomir Rintel <lkundrak@v3.sk>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: fix incorrect directory reference
+Date:   Thu, 18 Jun 2020 21:55:27 +0200
+Message-ID: <20200618195527.162034-1-ralf.ramsauer@oth-regensburg.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618085614.fw3ynalpcipbplf3@wittgenstein>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [194.95.106.138]
+X-ClientProxiedBy: E16S03.hs-regensburg.de (2001:638:a01:8013::93) To
+ E16S02.hs-regensburg.de (2001:638:a01:8013::92)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 10:56:14AM +0200, Christian Brauner wrote:
-> On Mon, Jun 15, 2020 at 08:25:15PM -0700, Kees Cook wrote:
-> > In preparation for users of the "install a received file" logic outside
-> > of net/ (pidfd and seccomp), relocate and rename __scm_install_fd() from
-> > net/core/scm.c to __fd_install_received() in fs/file.c, and provide a
-> > wrapper named fd_install_received_user(), as future patches will change
-> > the interface to __fd_install_received().
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  fs/file.c            | 47 ++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/file.h |  8 ++++++++
-> >  include/net/scm.h    |  1 -
-> >  net/compat.c         |  2 +-
-> >  net/core/scm.c       | 32 +-----------------------------
-> >  5 files changed, 57 insertions(+), 33 deletions(-)
-> > 
-> > diff --git a/fs/file.c b/fs/file.c
-> > index abb8b7081d7a..fcfddae0d252 100644
-> > --- a/fs/file.c
-> > +++ b/fs/file.c
-> > @@ -11,6 +11,7 @@
-> >  #include <linux/export.h>
-> >  #include <linux/fs.h>
-> >  #include <linux/mm.h>
-> > +#include <linux/net.h>
-> >  #include <linux/sched/signal.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/file.h>
-> > @@ -18,6 +19,8 @@
-> >  #include <linux/bitops.h>
-> >  #include <linux/spinlock.h>
-> >  #include <linux/rcupdate.h>
-> > +#include <net/cls_cgroup.h>
-> > +#include <net/netprio_cgroup.h>
-> >  
-> >  unsigned int sysctl_nr_open __read_mostly = 1024*1024;
-> >  unsigned int sysctl_nr_open_min = BITS_PER_LONG;
-> > @@ -931,6 +934,50 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
-> >  	return err;
-> >  }
-> >  
-> > +/**
-> > + * __fd_install_received() - Install received file into file descriptor table
-> > + *
-> > + * @fd: fd to install into (if negative, a new fd will be allocated)
-> > + * @file: struct file that was received from another process
-> > + * @ufd_required: true to use @ufd for writing fd number to userspace
-> > + * @ufd: __user pointer to write new fd number to
-> > + * @o_flags: the O_* flags to apply to the new fd entry
-> > + *
-> > + * Installs a received file into the file descriptor table, with appropriate
-> > + * checks and count updates. Optionally writes the fd number to userspace.
-> > + *
-> > + * Returns -ve on error.
-> > + */
-> > +int __fd_install_received(struct file *file, int __user *ufd, unsigned int o_flags)
-> > +{
-> > +	struct socket *sock;
-> > +	int new_fd;
-> > +	int error;
-> > +
-> > +	error = security_file_receive(file);
-> > +	if (error)
-> > +		return error;
-> > +
-> > +	new_fd = get_unused_fd_flags(o_flags);
-> > +	if (new_fd < 0)
-> > +		return new_fd;
-> > +
-> > +	error = put_user(new_fd, ufd);
-> > +	if (error) {
-> > +		put_unused_fd(new_fd);
-> > +		return error;
-> > +	}
-> > +
-> > +	/* Bump the usage count and install the file. */
-> > +	sock = sock_from_file(file, &error);
-> > +	if (sock) {
-> > +		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-> > +		sock_update_classid(&sock->sk->sk_cgrp_data);
-> > +	}
-> > +	fd_install(new_fd, get_file(file));
-> > +	return 0;
-> > +}
-> > +
-> >  static int ksys_dup3(unsigned int oldfd, unsigned int newfd, int flags)
-> >  {
-> >  	int err = -EBADF;
-> > diff --git a/include/linux/file.h b/include/linux/file.h
-> > index 122f80084a3e..fe18a1a0d555 100644
-> > --- a/include/linux/file.h
-> > +++ b/include/linux/file.h
-> > @@ -91,6 +91,14 @@ extern void put_unused_fd(unsigned int fd);
-> >  
-> >  extern void fd_install(unsigned int fd, struct file *file);
-> >  
-> > +extern int __fd_install_received(struct file *file, int __user *ufd,
-> > +				 unsigned int o_flags);
-> > +static inline int fd_install_received_user(struct file *file, int __user *ufd,
-> > +					   unsigned int o_flags)
-> > +{
-> > +	return __fd_install_received(file, ufd, o_flags);
-> > +}
-> 
-> Shouldn't this be the other way around such that
-> fd_install_received_user() is the workhorse that has a "ufd" argument
-> and fd_install_received() is the static inline function that doesn't?
-> 
-> extern int fd_install_received_user(struct file *file, int __user *ufd, unsigned int o_flags)
-> static inline int fd_install_received(struct file *file, unsigned int o_flags)
-> {
-> 	return fd_install_received_user(file, NULL, o_flags);
-> }
+the below-mentioned commit moved headers to inlucde/linux/soc/mmp. MAINTAINERS
+was updated, but include/ was omitted.
 
-So, I think it's all worked out in v5[1], so the helper argument handling
-is better for the ufd case, as David pointed out earlier. (As in,
-I think you're reacting to the same general problem here.)
+Fixes: 32adcaa010 ("ARM: mmp: move cputype.h to include/linux/soc/")
+Signed-off-by: Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> (So I'm on vacation this week some my reviews are selective and spotty
-> but I promise to be back next week. :))
-
-No worries!
-
--Kees
-
-[1] https://lore.kernel.org/lkml/20200617220327.3731559-1-keescook@chromium.org/
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 68f21d46614c..20d897b5be4b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11492,7 +11492,7 @@ S:	Odd Fixes
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp.git
+ F:	arch/arm/boot/dts/mmp*
+ F:	arch/arm/mach-mmp/
+-F:	linux/soc/mmp/
++F:	include/linux/soc/mmp/
+ 
+ MMP USB PHY DRIVERS
+ R:	Lubomir Rintel <lkundrak@v3.sk>
 -- 
-Kees Cook
+2.27.0
+
