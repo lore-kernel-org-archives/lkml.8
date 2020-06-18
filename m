@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE140C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3794BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FAE620B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C31F20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445934;
-	bh=vISulG17zn1hnsebsxv/42UOPuhkUap0AVaKQ55VhEI=;
+	s=default; t=1592445937;
+	bh=eA5Cn37u1sfoM/u0eqjABoeZC7g3Uj2f/ifAxgr7le0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZNGCOnYr2UarXD4ai5mQbOX0CJHfTgSOry+9DE2OViI1ghDIQrIrFIjx1RI2tl/aD
-	 mVWAEPndo0KPWEtNKinEpWgXoHcsusDt6VZaGDr5frYCbwWQXbrddM7b2CMKuO0sa6
-	 sroTkhzTNsc5sRcOcsG3sVppEXlImQHdSycVXuvA=
+	b=ox8UrGq4Gw7RnLiZ+ndtq53Rr6MVC2kKzgpmT0IzR+2i3mMi/K8DKbQ/HVlYNiR3g
+	 tIBlSTYC9sFdXsUgQDqUEltDwID/AQXUF7t9G4uiTbnjZ7x3TgMMqL6wkNwk483Oxm
+	 mnoSJ23iSd3QaXdNl+pUXKYvv3yT4ph63Mz02b+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731575AbgFRCFd (ORCPT
+        id S1732069AbgFRCFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:05:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55872 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:05:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730010AbgFRBWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729604AbgFRBWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:22:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A789020CC7;
-        Thu, 18 Jun 2020 01:22:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70B7520FC3;
+        Thu, 18 Jun 2020 01:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443365;
-        bh=vISulG17zn1hnsebsxv/42UOPuhkUap0AVaKQ55VhEI=;
+        s=default; t=1592443364;
+        bh=eA5Cn37u1sfoM/u0eqjABoeZC7g3Uj2f/ifAxgr7le0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lt9ONg1vFLhYUjVJ1rBALk8XVeeP+L6Wz3v44aoIElwRdGvvZ225Z2f3rcKOfkUJr
-         osFZTnhio3lilP9yDkpqk6e9R/SjABzLii7l6rKi1thIxKU0xYYNTXq93pRjwDefN8
-         4M0ryLDFOOZBrgdGdmqjjxX0BMStHfMb1VvHmbKs=
+        b=oeIHRv6tul8EjjLqjU2W25NsGBzbFMTTvDU0pgexb+Tx2vdUFSKbni4NEyaHYXP9l
+         o29EkX7LhrzVUnzikmnTjtgNGvD3q/+dnkSO+o6JSe6FwCU851/7OGkjwcpHL+H7iv
+         Bfz8TbiuJUJ9SxGhQO+imjNKWxYlbP68WkMKN4YM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 021/172] i2c: pxa: clear all master action bits in i2c_pxa_stop_message()
-Date:   Wed, 17 Jun 2020 21:19:47 -0400
-Message-Id: <20200618012218.607130-21-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 020/172] f2fs: report delalloc reserve as non-free in statfs for project quota
+Date:   Wed, 17 Jun 2020 21:19:46 -0400
+Message-Id: <20200618012218.607130-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
@@ -59,43 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit e81c979f4e071d516aa27cf5a0c3939da00dc1ca ]
+[ Upstream commit baaa7ebf25c78c5cb712fac16b7f549100beddd3 ]
 
-If we timeout during a message transfer, the control register may
-contain bits that cause an action to be set. Read-modify-writing the
-register leaving these bits set may trigger the hardware to attempt
-one of these actions unintentionally.
+This reserved space isn't committed yet but cannot be used for
+allocations. For userspace it has no difference from used space.
 
-Always clear these bits when cleaning up after a message or after
-a timeout.
+See the same fix in ext4 commit f06925c73942 ("ext4: report delalloc
+reserve as non-free in statfs for project quota").
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Fixes: ddc34e328d06 ("f2fs: introduce f2fs_statfs_project")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pxa.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ fs/f2fs/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index fbf91d383b40..7248ba6763e4 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -709,11 +709,9 @@ static inline void i2c_pxa_stop_message(struct pxa_i2c *i2c)
- {
- 	u32 icr;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 45f8f6ec22a5..9782250c9815 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1154,7 +1154,8 @@ static int f2fs_statfs_project(struct super_block *sb,
+ 		limit >>= sb->s_blocksize_bits;
  
--	/*
--	 * Clear the STOP and ACK flags
--	 */
-+	/* Clear the START, STOP, ACK, TB and MA flags */
- 	icr = readl(_ICR(i2c));
--	icr &= ~(ICR_STOP | ICR_ACKNAK);
-+	icr &= ~(ICR_START | ICR_STOP | ICR_ACKNAK | ICR_TB | ICR_MA);
- 	writel(icr, _ICR(i2c));
- }
- 
+ 	if (limit && buf->f_blocks > limit) {
+-		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
++		curblock = (dquot->dq_dqb.dqb_curspace +
++			    dquot->dq_dqb.dqb_rsvspace) >> sb->s_blocksize_bits;
+ 		buf->f_blocks = limit;
+ 		buf->f_bfree = buf->f_bavail =
+ 			(buf->f_blocks > curblock) ?
 -- 
 2.25.1
 
