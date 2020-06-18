@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 215CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8481C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E771720B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DCB2214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443298;
-	bh=1KICtU+7Ipxdndkbsv962r1msAcOgKW2WYbRsAws1IE=;
+	s=default; t=1592443299;
+	bh=GjNpput/gcM8jX7KUPi8n1vW83BRAOzjo5dxH0l7Gb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jn4rU4NvcB0CkRH7nkmBMbMUTZQWmfoourq2vEShT8XTcngF8QDXbGQav1FuF9HCz
-	 JmOcpY4JdHje7KWgDmwlm5JUS2nDVsTUnxrfWsjeIxgzAdbrgrn2VDfGqVirceRkO3
-	 4hNr5n2eVgE6P1r+87QIdacxKy0dZDt1ZovIT3Wo=
+	b=VH0ZTWvVS09D1MLXTS0FZn+1PaMLQYvbF4O/RfKnVz9fbsze+4A8xj3R0jkb6oYTE
+	 2dJoMnMuYNbc8yBojhJZLAoiAbnyblORUdpWed0zZN0LkyI6T+zmGOLsRU8fv9ytAm
+	 hz3MjKDhgYY2OsAuLn6ciD/Ow3ODe1TtqYD5m3pM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730544AbgFRBVg (ORCPT
+        id S1730559AbgFRBVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:21:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49612 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:21:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729894AbgFRBSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:18:14 -0400
+        id S1729901AbgFRBST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:18:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 766E0206F1;
-        Thu, 18 Jun 2020 01:18:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2384B206F1;
+        Thu, 18 Jun 2020 01:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443094;
-        bh=1KICtU+7Ipxdndkbsv962r1msAcOgKW2WYbRsAws1IE=;
+        s=default; t=1592443098;
+        bh=GjNpput/gcM8jX7KUPi8n1vW83BRAOzjo5dxH0l7Gb0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wQ7OdlTt09J5T/RghFbedBvgLJWmM4pTxm06rHP1BzD2VRwcnLvkQuRu2uh8b7+Bm
-         9K1bPScsMw3S61Nvm3KCQ/k/7jj1Tnut5AY+n24UwkoR7KRtRV5mdIEYAl9fzWyQ+K
-         s/gzGdGx/18kmqzAZnz+lep9nYkO5Q+tgbOj/Snk=
+        b=hhcikRJ2+6C9hEM4B+3IuLVa85jcyZKnZSvwN98Nj7JDQ5tsHC2Layzo4n/WcF3ce
+         cOIaokg/NTEChvf45T3JUgTYDymGdG6Tku9YdsDkOghJ+d3jd/kLBIchFX2jhDR3rX
+         W08KgGKUFNXAINDdrg1b2lMaomNhJt66MiW+6frs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     ashimida <ashimida@linux.alibaba.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 074/266] mksysmap: Fix the mismatch of '.L' symbols in System.map
-Date:   Wed, 17 Jun 2020 21:13:19 -0400
-Message-Id: <20200618011631.604574-74-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.4 078/266] f2fs: handle readonly filesystem in f2fs_ioc_shutdown()
+Date:   Wed, 17 Jun 2020 21:13:23 -0400
+Message-Id: <20200618011631.604574-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
 References: <20200618011631.604574-1-sashal@kernel.org>
@@ -59,44 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ashimida <ashimida@linux.alibaba.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 72d24accf02add25e08733f0ecc93cf10fcbd88c ]
+[ Upstream commit 8626441f05dc45a2f4693ee6863d02456ce39e60 ]
 
-When System.map was generated, the kernel used mksysmap to
-filter the kernel symbols, but all the symbols with the
-second letter 'L' in the kernel were filtered out, not just
-the symbols starting with 'dot + L'.
+If mountpoint is readonly, we should allow shutdowning filesystem
+successfully, this fixes issue found by generic/599 testcase of
+xfstest.
 
-For example:
-ashimida@ubuntu:~/linux$ cat System.map |grep ' .L'
-ashimida@ubuntu:~/linux$ nm -n vmlinux |grep ' .L'
-ffff0000088028e0 t bLength_show
-......
-ffff0000092e0408 b PLLP_OUTC_lock
-ffff0000092e0410 b PLLP_OUTA_lock
-
-The original intent should be to filter out all local symbols
-starting with '.L', so the dot should be escaped.
-
-Fixes: 00902e984732 ("mksysmap: Add h8300 local symbol pattern")
-Signed-off-by: ashimida <ashimida@linux.alibaba.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/mksysmap | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/file.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/mksysmap b/scripts/mksysmap
-index a35acc0d0b82..9aa23d15862a 100755
---- a/scripts/mksysmap
-+++ b/scripts/mksysmap
-@@ -41,4 +41,4 @@
- # so we just ignore them to let readprofile continue to work.
- # (At least sparc64 has __crc_ in the middle).
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index c3a9da79ac99..5d94abe467a4 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -2056,8 +2056,15 @@ static int f2fs_ioc_shutdown(struct file *filp, unsigned long arg)
  
--$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( .L\)' > $2
-+$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( \.L\)' > $2
+ 	if (in != F2FS_GOING_DOWN_FULLSYNC) {
+ 		ret = mnt_want_write_file(filp);
+-		if (ret)
++		if (ret) {
++			if (ret == -EROFS) {
++				ret = 0;
++				f2fs_stop_checkpoint(sbi, false);
++				set_sbi_flag(sbi, SBI_IS_SHUTDOWN);
++				trace_f2fs_shutdown(sbi, in, ret);
++			}
+ 			return ret;
++		}
+ 	}
+ 
+ 	switch (in) {
 -- 
 2.25.1
 
