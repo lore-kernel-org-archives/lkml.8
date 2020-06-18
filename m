@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E13C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B34C433DF
 	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E31BC21534
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF60C21534
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1592448187;
-	bh=tXZguFDtMNtJqm3M9bfTwLckJP+68oggVDjUs9RehoA=;
+	bh=iHZXshDP9yDONls9Yh/1OiWATdkd0Fiit1aCewERE8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BayjeU0PVLj/1qUO4xKOVTMGuDVwoCNA5ORuA8aQk84y/z/ktROiGyOvyk7aop9Dd
-	 wvWdLvtIuIWxYUFAFVYx+GDwkEf4lTQn5KD7I1F29O423hTq5Twz1/fntCn/iX4GhA
-	 2SsgnOChlfgTV+baNeJJayR5y/oHsVCkXb8lf+7Q=
+	b=dtfZ09JI+rbdxTxH9EbsPAcH+CNWOpwQN0u/lOvNt9weH0usRJLeHpZ2RkDylwDuM
+	 Dj39zr88JQTKcIC7RXt1ZJC+WTcfKZX2+r55BcPF5xbNvs60+Xn0kftwiVejGNSiSr
+	 PB+yN8obJc6LT6Jym79q1ImVBvnqZaBXMaB0c0Uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgFRCm5 (ORCPT
+        id S2387859AbgFRCmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:42:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39976 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:42:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728802AbgFRBLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:51 -0400
+        id S1728029AbgFRBLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6613021974;
-        Thu, 18 Jun 2020 01:11:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE9682193E;
+        Thu, 18 Jun 2020 01:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442711;
-        bh=tXZguFDtMNtJqm3M9bfTwLckJP+68oggVDjUs9RehoA=;
+        s=default; t=1592442713;
+        bh=iHZXshDP9yDONls9Yh/1OiWATdkd0Fiit1aCewERE8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E/xBmkX8lgGJH6ECqJnnT64IrHI8qV/pUlg0PLHIMvqM+TrpjiYk1ClP4IqDylMuU
-         cpI7brpOCvGlyeX5lG36xrzmVEmCXozUEdbUBTzkr7ImmRA3HS2XwKtI2bm7VB7ylR
-         NZjgZ10npJlP9wQywcXAMdCgbHZvO17s3DFxYtYM=
+        b=a0kehoPiwpzVqDTBs8dBPIMukHtktP7EL+1vneFQB+J5A7kfqWhtdR6Y9AaTeeenU
+         iKcjbpznlqK+O+ai7uVMu4A22MN9sOhhtE4MtmTasp+J2VGwanr1WiASKTYxQ5Eg6I
+         iHeam54R+iHgMzDbJ5eFG7pUBBBJaxXvIH4FwJTY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matej Dujava <mdujava@kocurkovo.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.7 171/388] staging: sm750fb: add missing case while setting FB_VISUAL
-Date:   Wed, 17 Jun 2020 21:04:28 -0400
-Message-Id: <20200618010805.600873-171-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 173/388] PCI: v3-semi: Fix a memory leak in v3_pci_probe() error handling paths
+Date:   Wed, 17 Jun 2020 21:04:30 -0400
+Message-Id: <20200618010805.600873-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -60,34 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matej Dujava <mdujava@kocurkovo.cz>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit fa90133377f4a7f15a937df6ad55133bb57c5665 ]
+[ Upstream commit bca718988b9008d0d5f504e2d318178fc84958c1 ]
 
-Switch statement does not contain all cases: 8, 16, 24, 32.
-This patch will add missing one (24)
+If we fails somewhere in 'v3_pci_probe()', we need to free 'host'.
 
-Fixes: 81dee67e215b ("staging: sm750fb: add sm750 to staging")
-Signed-off-by: Matej Dujava <mdujava@kocurkovo.cz>
-Link: https://lore.kernel.org/r/1588277366-19354-2-git-send-email-mdujava@kocurkovo.cz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Use the managed version of 'pci_alloc_host_bridge()' to do that easily.
+The use of managed resources is already widely used in this driver.
+
+Link: https://lore.kernel.org/r/20200418081637.1585-1-christophe.jaillet@wanadoo.fr
+Fixes: 68a15eb7bd0c ("PCI: v3-semi: Add V3 Semiconductor PCI host driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/sm750fb/sm750.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/pci-v3-semi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-index 59568d18ce23..5b72aa81d94c 100644
---- a/drivers/staging/sm750fb/sm750.c
-+++ b/drivers/staging/sm750fb/sm750.c
-@@ -898,6 +898,7 @@ static int lynxfb_set_fbinfo(struct fb_info *info, int index)
- 		fix->visual = FB_VISUAL_PSEUDOCOLOR;
- 		break;
- 	case 16:
-+	case 24:
- 	case 32:
- 		fix->visual = FB_VISUAL_TRUECOLOR;
- 		break;
+diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
+index bd05221f5a22..ddcb4571a79b 100644
+--- a/drivers/pci/controller/pci-v3-semi.c
++++ b/drivers/pci/controller/pci-v3-semi.c
+@@ -720,7 +720,7 @@ static int v3_pci_probe(struct platform_device *pdev)
+ 	int irq;
+ 	int ret;
+ 
+-	host = pci_alloc_host_bridge(sizeof(*v3));
++	host = devm_pci_alloc_host_bridge(dev, sizeof(*v3));
+ 	if (!host)
+ 		return -ENOMEM;
+ 
 -- 
 2.25.1
 
