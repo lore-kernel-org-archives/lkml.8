@@ -7,46 +7,59 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D64A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FF0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A880020720
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36EC921D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447508;
-	bh=tMwn+BcMasgSvk7vMNj4n0zYDnzcchGOHU/i04q9Bqc=;
+	s=default; t=1592447521;
+	bh=p3Hnb+vOJEjS2tVwNF7F5TKw8Ai9OL9Llz0cByj2LTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iUMGDU0Yj2a9ACgx6XrJ+R00aexC5A5Im3tPRYkmeIpVlmucUx1BSzB8QPUki6bXR
-	 TPuMVbuNFB23l3RwiTdCm/P+PcL6wCLI+p5Qx0UMBh+18cwh4zFQyRh4PDTuEYh/ms
-	 KnIPPbzTfRxKKPoAN2MkJdPDcsiNA+MKzMNSIpOY=
+	b=KnLmo8HSkU4L0iFo7GCsDMj+RVGyUU5lC157yqWuK+3ofQnxo23RvZWknfXxaCWvA
+	 jt6voFKE9jR14RRiPpDld28ujGMM//SOFW8GJaYHXWuOuKWAOG1xCUPp9sOmzu+Tfx
+	 HWqxN+zTKmzsral/ALTUWGYZf1b4ZL/+zc1QFA9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730822AbgFRCbs (ORCPT
+        id S1730638AbgFRCb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:31:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45506 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:31:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729460AbgFRBP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:26 -0400
+        id S1727980AbgFRBPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D70321D80;
-        Thu, 18 Jun 2020 01:15:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D15F521D7A;
+        Thu, 18 Jun 2020 01:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442925;
-        bh=tMwn+BcMasgSvk7vMNj4n0zYDnzcchGOHU/i04q9Bqc=;
+        s=default; t=1592442923;
+        bh=p3Hnb+vOJEjS2tVwNF7F5TKw8Ai9OL9Llz0cByj2LTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aNB5QUangMupFLqe1nG+gxeirSTkyIU3uiBALVDAlAkD4Yhe+uLINzE14RRd3i15q
-         5967eIbVI22YpD2zAi6SWQ467W2SO3rqxO1VR4hu+uDBjoyU3eT8UhZ56L2rjuZVHJ
-         qiCgNmUS1jezDEuhrfYxMBv5h04Bep68W7TqVP5o=
+        b=l8+hNw4RIO8S+73IOnP/ItskGdAykhtgvud34iGNPxyV3PziIUHztJlYxQ5v/1UzW
+         G6c+rAB0pQHNuq7+dBmhl7hkFSTj3qwkYcEQOcetaA7ck1OlfWNeZL2DYLKLibqIia
+         wRfIWfd1IDzawyZ/Lu6dGllimRPDV8a3EiCy6gkQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 340/388] blktrace: fix endianness in get_pdu_int()
-Date:   Wed, 17 Jun 2020 21:07:17 -0400
-Message-Id: <20200618010805.600873-340-sashal@kernel.org>
+Cc:     Ram Pai <linuxram@us.ibm.com>,
+        Sandipan Das <sandipan@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Desnes A. Nunes do Rosario" <desnesn@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@kernel.org>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 338/388] selftests/vm/pkeys: fix alloc_random_pkey() to make it really random
+Date:   Wed, 17 Jun 2020 21:07:15 -0400
+Message-Id: <20200618010805.600873-338-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,33 +72,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+From: Ram Pai <linuxram@us.ibm.com>
 
-[ Upstream commit 71df3fd82e7cccec7b749a8607a4662d9f7febdd ]
+[ Upstream commit 6e373263ce07eeaa6410843179535fbdf561fc31 ]
 
-In function get_pdu_len() replace variable type from __u64 to
-__be64. This fixes sparse warning.
+alloc_random_pkey() was allocating the same pkey every time.  Not all
+pkeys were geting tested.  This fixes it.
 
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Dave Hansen <dave.hansen@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: "Desnes A. Nunes do Rosario" <desnesn@linux.vnet.ibm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Michal Suchanek <msuchanek@suse.de>
+Cc: Shuah Khan <shuah@kernel.org>
+Link: http://lkml.kernel.org/r/0162f55816d4e783a0d6e49e554d0ab9a3c9a23b.1585646528.git.sandipan@linux.ibm.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/blktrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/x86/protection_keys.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index c6d59a457f50..cba2093edee2 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1256,7 +1256,7 @@ static inline __u16 t_error(const struct trace_entry *ent)
+diff --git a/tools/testing/selftests/x86/protection_keys.c b/tools/testing/selftests/x86/protection_keys.c
+index 480995bceefa..47191af46617 100644
+--- a/tools/testing/selftests/x86/protection_keys.c
++++ b/tools/testing/selftests/x86/protection_keys.c
+@@ -24,6 +24,7 @@
+ #define _GNU_SOURCE
+ #include <errno.h>
+ #include <linux/futex.h>
++#include <time.h>
+ #include <sys/time.h>
+ #include <sys/syscall.h>
+ #include <string.h>
+@@ -612,10 +613,10 @@ int alloc_random_pkey(void)
+ 	int nr_alloced = 0;
+ 	int random_index;
+ 	memset(alloced_pkeys, 0, sizeof(alloced_pkeys));
++	srand((unsigned int)time(NULL));
  
- static __u64 get_pdu_int(const struct trace_entry *ent, bool has_cg)
- {
--	const __u64 *val = pdu_start(ent, has_cg);
-+	const __be64 *val = pdu_start(ent, has_cg);
- 	return be64_to_cpu(*val);
- }
- 
+ 	/* allocate every possible key and make a note of which ones we got */
+ 	max_nr_pkey_allocs = NR_PKEYS;
+-	max_nr_pkey_allocs = 1;
+ 	for (i = 0; i < max_nr_pkey_allocs; i++) {
+ 		int new_pkey = alloc_pkey();
+ 		if (new_pkey < 0)
 -- 
 2.25.1
 
