@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B44C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E32C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14B3F221EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A38221ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442842;
-	bh=hBTlY0hryKkINKQB2+qJdriuPpF+q/j4i6AwqxUADrc=;
+	s=default; t=1592442844;
+	bh=OqayClWImIhBqOFAFtfiY7UDh3l2XDUGo57JCkuN/ts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Li25A8eNrgjkkHdYrWVrTAgeJjI/E1KKzKPZc5C8sA68pGtNTIaguPoSu/4ezOPcw
-	 uiX+Aee1x3JV2J4wMARa1KEiojNWooG5Oe/PsDQJK1rMBQlGzD7QWBzeUkz6FYtGra
-	 yu+2Pivqj79vtcd1yMQIbVFS7gXYT81Nqe0uHy3w=
+	b=TNmr+4gH+P4fba8U8reRRLRqj9d3q5dHpRFmH3kXr/GbPeKWL9VjIgbN/WVWQeNK0
+	 qIvtZvZXFGAMgdUUsFRxjJTd0GHrzFfauy4mEmJiqxRp1ySpmQbbGW/Ds/Btfy1ESf
+	 yxeDY0AHvm3O7bBmiFkcac1dggMeepS8FIHs0RDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgFRBOB (ORCPT
+        id S1726981AbgFRBOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:14:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41674 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:14:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728998AbgFRBMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:51 -0400
+        id S1728063AbgFRBMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B90032193E;
-        Thu, 18 Jun 2020 01:12:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5CA920CC7;
+        Thu, 18 Jun 2020 01:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442770;
-        bh=hBTlY0hryKkINKQB2+qJdriuPpF+q/j4i6AwqxUADrc=;
+        s=default; t=1592442771;
+        bh=OqayClWImIhBqOFAFtfiY7UDh3l2XDUGo57JCkuN/ts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UmTCdbv807QDp90jCkEWDToCBUZdtGzJCUCp4BwgQla9iBvcgJzcJ/LLURN5vglwP
-         sWQ1k0TuzqFc4aJzQjkoGLM6ufwe4T1ZZvn55ACQ9iPO8Z2PizKXDhV54V4Hy1UZgU
-         Zae3My8jPH4OfeLt/K6JXQob5xGFwByGP+NsKwuo=
+        b=P3ACGsSvpQSqSMQlxwp264AhcoQFGqKloK7cudLfxgSocd6N/OocM0Ibne9HDVUWf
+         2mfRNnIpnIab/aGFARaPcDlpQ8ow2PmbGRbmHMG2A2zHfESJcn7YEx4pr/5m8/QCdb
+         jJ26Skal4fDNpbpRnKzncFM8yUZbQqRYpayANF98=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Nicholas Piggin <npiggin@gmail.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 218/388] powerpc/64s/exception: Fix machine check no-loss idle wakeup
-Date:   Wed, 17 Jun 2020 21:05:15 -0400
-Message-Id: <20200618010805.600873-218-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 219/388] powerpc/64s/exceptions: Machine check reconcile irq state
+Date:   Wed, 17 Jun 2020 21:05:16 -0400
+Message-Id: <20200618010805.600873-219-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,71 +61,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit 8a5054d8cbbe03c68dcb0957c291c942132e4101 ]
+[ Upstream commit f0fd9dd3c213c947dfb5bc2cad3ef5e30d3258ec ]
 
-The architecture allows for machine check exceptions to cause idle
-wakeups which resume at the 0x200 address which has to return via
-the idle wakeup code, but the early machine check handler is run
-first.
+pseries fwnmi machine check code pops the soft-irq checks in rtas_call
+(after the next patch to remove rtas_token from this call path).
+Rather than play whack a mole with these and forever having fragile
+code, it seems better to have the early machine check handler perform
+the same kind of reconcile as the other NMI interrupts.
 
-The case of a no state-loss sleep is broken because the early
-handler uses non-volatile register r1 , which is needed for the wakeup
-protocol, but it is not restored.
+  WARNING: CPU: 0 PID: 493 at arch/powerpc/kernel/irq.c:343
+  CPU: 0 PID: 493 Comm: a Tainted: G        W
+  NIP:  c00000000001ed2c LR: c000000000042c40 CTR: 0000000000000000
+  REGS: c0000001fffd38b0 TRAP: 0700   Tainted: G        W
+  MSR:  8000000000021003 <SF,ME,RI,LE>  CR: 28000488  XER: 00000000
+  CFAR: c00000000001ec90 IRQMASK: 0
+  GPR00: c000000000043820 c0000001fffd3b40 c0000000012ba300 0000000000000000
+  GPR04: 0000000048000488 0000000000000000 0000000000000000 00000000deadbeef
+  GPR08: 0000000000000080 0000000000000000 0000000000000000 0000000000001001
+  GPR12: 0000000000000000 c0000000014a0000 0000000000000000 0000000000000000
+  GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+  GPR20: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+  GPR24: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+  GPR28: 0000000000000000 0000000000000001 c000000001360810 0000000000000000
+  NIP [c00000000001ed2c] arch_local_irq_restore.part.0+0xac/0x100
+  LR [c000000000042c40] unlock_rtas+0x30/0x90
+  Call Trace:
+  [c0000001fffd3b40] [c000000001360810] 0xc000000001360810 (unreliable)
+  [c0000001fffd3b60] [c000000000043820] rtas_call+0x1c0/0x280
+  [c0000001fffd3bb0] [c0000000000dc328] fwnmi_release_errinfo+0x38/0x70
+  [c0000001fffd3c10] [c0000000000dcd8c] pseries_machine_check_realmode+0x1dc/0x540
+  [c0000001fffd3cd0] [c00000000003fe04] machine_check_early+0x54/0x70
+  [c0000001fffd3d00] [c000000000008384] machine_check_early_common+0x134/0x1f0
+  --- interrupt: 200 at 0x13f1307c8
+      LR = 0x7fff888b8528
+  Instruction dump:
+  60000000 7d2000a6 71298000 41820068 39200002 7d210164 4bffff9c 60000000
+  60000000 7d2000a6 71298000 4c820020 <0fe00000> 4e800020 60000000 60000000
 
-Fix this by loading r1 from the MCE exception frame before returning
-to the idle wakeup code. Also update the comment which has become
-stale since the idle rewrite in C.
-
-This crash was found and fix confirmed with a machine check injection
-test in qemu powernv model (which is not upstream in qemu yet).
-
-Fixes: 10d91611f426d ("powerpc/64s: Reimplement book3s idle code in C")
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200508043408.886394-2-npiggin@gmail.com
+Link: https://lore.kernel.org/r/20200508043408.886394-5-npiggin@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/exceptions-64s.S | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/exceptions-64s.S | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
-index ebeebab74b56..463372046169 100644
+index 463372046169..d3e19934cca9 100644
 --- a/arch/powerpc/kernel/exceptions-64s.S
 +++ b/arch/powerpc/kernel/exceptions-64s.S
-@@ -1225,17 +1225,19 @@ EXC_COMMON_BEGIN(machine_check_idle_common)
- 	bl	machine_check_queue_event
+@@ -1117,11 +1117,30 @@ END_FTR_SECTION_IFSET(CPU_FTR_HVMODE)
+ 	li	r10,MSR_RI
+ 	mtmsrd	r10,1
  
++	/*
++	 * Set IRQS_ALL_DISABLED and save PACAIRQHAPPENED (see
++	 * system_reset_common)
++	 */
++	li	r10,IRQS_ALL_DISABLED
++	stb	r10,PACAIRQSOFTMASK(r13)
++	lbz	r10,PACAIRQHAPPENED(r13)
++	std	r10,RESULT(r1)
++	ori	r10,r10,PACA_IRQ_HARD_DIS
++	stb	r10,PACAIRQHAPPENED(r13)
++
+ 	addi	r3,r1,STACK_FRAME_OVERHEAD
+ 	bl	machine_check_early
+ 	std	r3,RESULT(r1)	/* Save result */
+ 	ld	r12,_MSR(r1)
+ 
++	/*
++	 * Restore soft mask settings.
++	 */
++	ld	r10,RESULT(r1)
++	stb	r10,PACAIRQHAPPENED(r13)
++	ld	r10,SOFTE(r1)
++	stb	r10,PACAIRQSOFTMASK(r13)
++
+ #ifdef CONFIG_PPC_P7_NAP
  	/*
--	 * We have not used any non-volatile GPRs here, and as a rule
--	 * most exception code including machine check does not.
--	 * Therefore PACA_NAPSTATELOST does not need to be set. Idle
--	 * wakeup will restore volatile registers.
-+	 * GPR-loss wakeups are relatively straightforward, because the
-+	 * idle sleep code has saved all non-volatile registers on its
-+	 * own stack, and r1 in PACAR1.
- 	 *
--	 * Load the original SRR1 into r3 for pnv_powersave_wakeup_mce.
-+	 * For no-loss wakeups the r1 and lr registers used by the
-+	 * early machine check handler have to be restored first. r2 is
-+	 * the kernel TOC, so no need to restore it.
- 	 *
- 	 * Then decrement MCE nesting after finishing with the stack.
- 	 */
- 	ld	r3,_MSR(r1)
- 	ld	r4,_LINK(r1)
-+	ld	r1,GPR1(r1)
- 
- 	lhz	r11,PACA_IN_MCE(r13)
- 	subi	r11,r11,1
-@@ -1244,7 +1246,7 @@ EXC_COMMON_BEGIN(machine_check_idle_common)
- 	mtlr	r4
- 	rlwinm	r10,r3,47-31,30,31
- 	cmpwi	cr1,r10,2
--	bltlr	cr1	/* no state loss, return to idle caller */
-+	bltlr	cr1	/* no state loss, return to idle caller with r3=SRR1 */
- 	b	idle_return_gpr_loss
- #endif
- 
+ 	 * Check if thread was in power saving mode. We come here when any
 -- 
 2.25.1
 
