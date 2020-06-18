@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE06AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13CCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA6D221D90
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83CB1221EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443830;
-	bh=kYM8IshYBvLgKdoY5hXB5ottarneM32mlxpl3zcp23o=;
+	s=default; t=1592443831;
+	bh=Yln1hZ20AEHUtQDAe4xs6Il5U4uOR8pYvQTXwN+ITaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=byjXpdmjygXBvXQPPtgVEUKMqn4c1+Ai68i/IInhQXnkSwelMtsDD67IGQ0vD3xs2
-	 WzgKOpm3B9ZlpvHIK6CpexdBny7VCMU82sRHoqRewx6mKblns8bVsfK2N3HqigEvtx
-	 WkGrFL7v28P9NGQnCw7I6pjX3goZOm5VCe9hOl3s=
+	b=vFASR+e45iV4WELSK+EZrA5xCe9kJyBTAQSCqOzlMgmECFs9K/YM8S7VfufpR/Qgj
+	 ZwPgRux8MYnHnGae/MUNoig2YkHuCIQ9gBfhLr3iZBHTCsPdJaezWws4i6TxWKBt1D
+	 pIEjUfKXEbxO1nnVuaOaIznc0+MirE5MMq0b/I1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732537AbgFRBa1 (ORCPT
+        id S1732543AbgFRBaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:30:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35042 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:30:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730139AbgFRB1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:27:08 -0400
+        id S1728735AbgFRB1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C55F720776;
-        Thu, 18 Jun 2020 01:27:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BCBE20B1F;
+        Thu, 18 Jun 2020 01:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443627;
-        bh=kYM8IshYBvLgKdoY5hXB5ottarneM32mlxpl3zcp23o=;
+        s=default; t=1592443630;
+        bh=Yln1hZ20AEHUtQDAe4xs6Il5U4uOR8pYvQTXwN+ITaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZxFKf6QU97RCnY6B94TSg6kVwFe9PEYwznl8FJZPC9zZiJhOqIr0/Lh5FP21t2Fmv
-         O+YgR46Ce0A4t1S7J5ghORawRO7DGOtuO8Bw/nMd2PqkoC16sVQcESE+DxjJW4hIW7
-         sXEJP4fDw+7s2UOGvCyKOiYNEqhj3PZXX7VPMpvg=
+        b=fq3MtzlXTwB7oOHbN2tJXOHlZUSKl0kwPP5DCasIMfGNLae3DEXmcgnDps4BGyCg9
+         45qHsW7W1vFvqcDNmOPPZTCrQGHacBiqdvCiDPe2yiNA9NVr/LDxc/cJlZ1EeSuwDJ
+         7pviaH+Vl69iSq/uejjcplxwcs1efrc1ZdD2v+hY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 052/108] power: supply: lp8788: Fix an error handling path in 'lp8788_charger_probe()'
-Date:   Wed, 17 Jun 2020 21:25:04 -0400
-Message-Id: <20200618012600.608744-52-sashal@kernel.org>
+Cc:     Suganath Prabu S <suganath-prabu.subramani@broadcom.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 054/108] scsi: mpt3sas: Fix double free warnings
+Date:   Wed, 17 Jun 2020 21:25:06 -0400
+Message-Id: <20200618012600.608744-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -59,68 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
 
-[ Upstream commit 934ed3847a4ebc75b655659c4d2349ba4337941c ]
+[ Upstream commit cbbfdb2a2416c9f0cde913cf09670097ac281282 ]
 
-In the probe function, in case of error, resources allocated in
-'lp8788_setup_adc_channel()' must be released.
+Fix following warning from Smatch static analyser:
 
-This can be achieved easily by using the devm_ variant of
-'iio_channel_get()'.
-This has the extra benefit to simplify the remove function and to axe the
-'lp8788_release_adc_channel()' function which is now useless.
+drivers/scsi/mpt3sas/mpt3sas_base.c:5256 _base_allocate_memory_pools()
+warn: 'ioc->hpr_lookup' double freed
 
-Fixes: 98a276649358 ("power_supply: Add new lp8788 charger driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+drivers/scsi/mpt3sas/mpt3sas_base.c:5256 _base_allocate_memory_pools()
+warn: 'ioc->internal_lookup' double freed
+
+Link: https://lore.kernel.org/r/20200508110738.30732-1-suganath-prabu.subramani@broadcom.com
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/lp8788-charger.c | 18 ++----------------
- 1 file changed, 2 insertions(+), 16 deletions(-)
+ drivers/scsi/mpt3sas/mpt3sas_base.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/power/supply/lp8788-charger.c b/drivers/power/supply/lp8788-charger.c
-index 0f3432795f3c..b8f7dac7ac3f 100644
---- a/drivers/power/supply/lp8788-charger.c
-+++ b/drivers/power/supply/lp8788-charger.c
-@@ -600,27 +600,14 @@ static void lp8788_setup_adc_channel(struct device *dev,
- 		return;
- 
- 	/* ADC channel for battery voltage */
--	chan = iio_channel_get(dev, pdata->adc_vbatt);
-+	chan = devm_iio_channel_get(dev, pdata->adc_vbatt);
- 	pchg->chan[LP8788_VBATT] = IS_ERR(chan) ? NULL : chan;
- 
- 	/* ADC channel for battery temperature */
--	chan = iio_channel_get(dev, pdata->adc_batt_temp);
-+	chan = devm_iio_channel_get(dev, pdata->adc_batt_temp);
- 	pchg->chan[LP8788_BATT_TEMP] = IS_ERR(chan) ? NULL : chan;
- }
- 
--static void lp8788_release_adc_channel(struct lp8788_charger *pchg)
--{
--	int i;
--
--	for (i = 0; i < LP8788_NUM_CHG_ADC; i++) {
--		if (!pchg->chan[i])
--			continue;
--
--		iio_channel_release(pchg->chan[i]);
--		pchg->chan[i] = NULL;
--	}
--}
--
- static ssize_t lp8788_show_charger_status(struct device *dev,
- 				struct device_attribute *attr, char *buf)
- {
-@@ -747,7 +734,6 @@ static int lp8788_charger_remove(struct platform_device *pdev)
- 	lp8788_irq_unregister(pdev, pchg);
- 	sysfs_remove_group(&pdev->dev.kobj, &lp8788_attr_group);
- 	lp8788_psy_unregister(pchg);
--	lp8788_release_adc_channel(pchg);
- 
- 	return 0;
- }
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
+index 817a7963a038..556971c5f0b0 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -3263,7 +3263,9 @@ _base_release_memory_pools(struct MPT3SAS_ADAPTER *ioc)
+ 		ioc->scsi_lookup = NULL;
+ 	}
+ 	kfree(ioc->hpr_lookup);
++	ioc->hpr_lookup = NULL;
+ 	kfree(ioc->internal_lookup);
++	ioc->internal_lookup = NULL;
+ 	if (ioc->chain_lookup) {
+ 		for (i = 0; i < ioc->chain_depth; i++) {
+ 			if (ioc->chain_lookup[i].chain_buffer)
 -- 
 2.25.1
 
