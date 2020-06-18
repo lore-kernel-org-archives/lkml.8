@@ -2,93 +2,107 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D188C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 682542070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B2920776
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 22:05:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ncAx5x+1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjGtbt9Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731602AbgFRWDU (ORCPT
+        id S1731626AbgFRWFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 18:03:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40556 "EHLO
+        Thu, 18 Jun 2020 18:05:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727826AbgFRWDT (ORCPT
+        with ESMTP id S1729796AbgFRWFT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 18:03:19 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A7EC06174E
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 15:03:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UYTpKINys5q7UogH0MrXFzt2ML29Bof5pSVpOvGOBQ8=; b=ncAx5x+1YGICOfIWpHwKkomK9
-        bND/1aWxxt+dgshqhYPBXFpArncVqbfSpKhYYKFMqXYTUq0weEfJoNO5xoajbmF4Xw+JwLx2Lsndl
-        lkxwRGIwqOX+S0+HY62LFPEY4JqWQSBBmMpTlntAoPkg98Uqv8GlRl/NtR+gU2yTmffokTIGloIL/
-        mAOXdyc6hA1UGOlLD82lVTlMf0GMRaskW9nh19t9yPzq5DZwQfNKKSKMwyZ5FlCy4QOm+kq/mLHkY
-        emSGuEZAh2W/Vt4zzQxh2kQqcLaryFyoBGCBHXVV6oquxU8/SBSVCTuoyIdz6Uwhb94XgFmkpy/Vb
-        auvbi4H8A==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58806)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jm2cs-0005cS-G5; Thu, 18 Jun 2020 23:03:14 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jm2cq-00052r-7D; Thu, 18 Jun 2020 23:03:12 +0100
-Date:   Thu, 18 Jun 2020 23:03:12 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Nathan Huckleberry <nhuck@google.com>, vincent.whitchurch@axis.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] Fix unwind_frame for clang-built kernels
-Message-ID: <20200618220312.GK1551@shell.armlinux.org.uk>
-References: <20200616223633.73971-1-nhuck@google.com>
- <CA+icZUW4Jv7589yCU55+C-P0=B0ztzvsOZ9TEMcTt4vKjFU1dA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+icZUW4Jv7589yCU55+C-P0=B0ztzvsOZ9TEMcTt4vKjFU1dA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 18 Jun 2020 18:05:19 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F21F3C06174E;
+        Thu, 18 Jun 2020 15:05:17 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id k2so3193768pjs.2;
+        Thu, 18 Jun 2020 15:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=DFuspUBCAWSfBUM7wRuDqizerOunF3nyVfYMWAoB1Xs=;
+        b=GjGtbt9QqhdRWSt3FcrN78a+L3SHC7LX0DBNavohIshzAV2OHy3+0MM/pYHX/38FNA
+         e2vPso9zBRbVRuyAlJZWeR0PsFXKtRrFTbyy4W4NxYU8AjOH1l5de+yZg2uA/v7L0Zlm
+         AOd8sjwNbVJAKiaPDMub3MtZ2i8rUAyT27qt4oXkGEjOdZQArug5CykTOpYWiD7oqOXU
+         H+arEG5mMRyBtMIj7NBfoj9yXIlbv8To1pb8kxBNxkH6v8DZzJmhL0AkTP2gJCFvuQQq
+         u05bvhp3V8luYWKfKEQ+A0P4WxSjlfl7hkNVsUedQ4dVl1NyiWtKUT2aMOXRBQS8KKAN
+         F1ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DFuspUBCAWSfBUM7wRuDqizerOunF3nyVfYMWAoB1Xs=;
+        b=nmwMOWAlHHdhpefMZU1RDRf8KBJW1gm9GJ6LJoxkwKJjTBmwrGgwKlNq5eYYFEzm2r
+         pg/Jhz5YKXogS2v/RVWxFhST7YniHn5oFmAOvXNCZoswZ1UyqMiSSkgKZ/YiAGHQE7HK
+         fmtVJHCgnEeRL/v/e6V3iS7N9YIlh+1gQ3mdEXoGD7vMDQahg98sDzLy8C89mqSlRZ4N
+         3DWrmDD7jN1qJUu+lUx49Ki0Fb8lFHlRKvPoqeEA6yXOVdqlIipQrteIlzzSUfcFSYOX
+         aMTmlT1ziAXoNJZBmoSUWagqnD6h4cwnxsGC2JOcMavpXdYDEXE8DKP+jx1F3K1qMEeR
+         0ldg==
+X-Gm-Message-State: AOAM530Gammn2Ho3N6+6cmWCKeS6fuGPuUl5An5YkU6FpAjyJGOzB8io
+        EpYtqvqJxnYpKZF0vGLsFSc=
+X-Google-Smtp-Source: ABdhPJz0a7CgPcnqPMHYsXarirAvcaspBT3OSoe0R1KuP1eYrpJDTy8RtpiAEign488GX9+rwiHsAA==
+X-Received: by 2002:a17:902:6a89:: with SMTP id n9mr5289437plk.337.1592517917384;
+        Thu, 18 Jun 2020 15:05:17 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
+        by smtp.gmail.com with ESMTPSA id k18sm3765999pfp.208.2020.06.18.15.05.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 15:05:16 -0700 (PDT)
+From:   rentao.bupt@gmail.com
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+Cc:     Tao Ren <rentao.bupt@gmail.com>
+Subject: [PATCH net-next] of: mdio: preserve phy dev_flags in of_phy_connect()
+Date:   Thu, 18 Jun 2020 15:04:44 -0700
+Message-Id: <20200618220444.5064-1-rentao.bupt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 06:23:48AM +0200, Sedat Dilek wrote:
-> On Wed, Jun 17, 2020 at 12:36 AM 'Nathan Huckleberry' via Clang Built
-> Linux <clang-built-linux@googlegroups.com> wrote:
-> >
-> > Since clang does not push pc and sp in function prologues, the current
-> > implementation of unwind_frame does not work. By using the previous
-> > frame's lr/fp instead of saved pc/sp we get valid unwinds on clang-built
-> > kernels.
-> >
-> > The bounds check on next frame pointer must be changed as well since
-> > there are 8 less bytes between frames.
-> >
-> > This fixes /proc/<pid>/stack.
-> >
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/912
-> > Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> 
-> Just a small nit.
-> 
-> Please label your patch with: "arm/stacktrace: ..." or "arm: stacktrace: ..."
+From: Tao Ren <rentao.bupt@gmail.com>
 
-Convention is to use "ARM: ..." for arch/arm.
+Replace assignment "=" with OR "|=" for "phy->dev_flags" so "dev_flags"
+configured in phy probe() function can be preserved.
 
+The idea is similar to commit e7312efbd5de ("net: phy: modify assignment
+to OR for dev_flags in phy_attach_direct").
+
+Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+---
+ drivers/of/of_mdio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index a04afe79529c..f5c46c72f4d3 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -380,7 +380,7 @@ struct phy_device *of_phy_connect(struct net_device *dev,
+ 	if (!phy)
+ 		return NULL;
+ 
+-	phy->dev_flags = flags;
++	phy->dev_flags |= flags;
+ 
+ 	ret = phy_connect_direct(dev, phy, hndlr, iface);
+ 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+2.17.1
+
