@@ -2,51 +2,51 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9B621D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013A721D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592442958;
-	bh=h0D9f8SfqSG5dRuYkwYsO4LqVWOjWOhzRu88NoAcVDM=;
+	s=default; t=1592442963;
+	bh=REw4IC01CsKB99geE01z5WiH8TR218CtjPlAfy297eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NiMEUbCQaIOT07o9DHNEy8cJEj66fgMGv0H490WyQ/pz10h6a8gPpCxZwqwYyQvwz
-	 KryAnhpFz3aCQocoU9hEdBmNsIRBNL5jre6wDgcQTFDuMz4rh1OIxKXNOyoyk4Px04
-	 +oX9WSqPmv6dghzBSN4c94m37+4SywVR8qVaIp8o=
+	b=I7uI6+jKJsJnhb2UnFLeVYDvJTRGa0/n6KYFdOAOa5TNUeJ31D/4GOnyiA8ulmREA
+	 0ZT0r6EJuNQDBFIvY3nOCK0A0r59znJZOt3qIXhpyNWgB3jOYbTgLe4/q8KltSR9SX
+	 ogqFTpfXZQxrVUM7HZk6O7EDRLceAL2GK+uGF5BE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgFRBP4 (ORCPT
+        id S1728826AbgFRBQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:15:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43632 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729273AbgFRBOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:14:05 -0400
+        id S1729283AbgFRBOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:14:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D493E20EDD;
-        Thu, 18 Jun 2020 01:14:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B363221ED;
+        Thu, 18 Jun 2020 01:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442844;
-        bh=h0D9f8SfqSG5dRuYkwYsO4LqVWOjWOhzRu88NoAcVDM=;
+        s=default; t=1592442848;
+        bh=REw4IC01CsKB99geE01z5WiH8TR218CtjPlAfy297eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B0mgQUdXH1YhS7ALLNxoMWYoc7vSmwHM7Vrm926wdv4TlqNd4J1orz9cHsLIHrJ00
-         u/e5voSyP4rjYWsYrs+y1Y7S+Jj+K98nDBpaHz0rQ03MZQ8JHxNIEypybjkiZ20HMA
-         Y0Nr5VXHiuKmmUkdGqpKf40FY0n2YuaEU6OqKxl8=
+        b=tj5pa11PKVdg74hL85h26sXrewHuBvTRiwtEqHAOx4bggNwpTCv5+Rc2J5p8wrOCz
+         bgUoaeyh7zcPn3yOReTVwL99JnOLpJAss8qxsNc4GGSqwh2pf02jjmjwALCO/LhIaS
+         NBiE78d2s9NbxlWZMwDuFpBRYhXBxBGM2Udw3B00=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.7 277/388] powerpc/32s: Don't warn when mapping RO data ROX.
-Date:   Wed, 17 Jun 2020 21:06:14 -0400
-Message-Id: <20200618010805.600873-277-sashal@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 280/388] vfio/pci: fix memory leaks of eventfd ctx
+Date:   Wed, 17 Jun 2020 21:06:17 -0400
+Message-Id: <20200618010805.600873-280-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,56 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 4b19f96a81bceaf0bcf44d79c0855c61158065ec ]
+[ Upstream commit 1518ac272e789cae8c555d69951b032a275b7602 ]
 
-Mapping RO data as ROX is not an issue since that data
-cannot be modified to introduce an exploit.
+Finished a qemu-kvm (-device vfio-pci,host=0001:01:00.0) triggers a few
+memory leaks after a while because vfio_pci_set_ctx_trigger_single()
+calls eventfd_ctx_fdget() without the matching eventfd_ctx_put() later.
+Fix it by calling eventfd_ctx_put() for those memory in
+vfio_pci_release() before vfio_device_release().
 
-PPC64 accepts to have RO data mapped ROX, as a trade off
-between kernel size and strictness of protection.
+unreferenced object 0xebff008981cc2b00 (size 128):
+  comm "qemu-kvm", pid 4043, jiffies 4294994816 (age 9796.310s)
+  hex dump (first 32 bytes):
+    01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+    ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+  backtrace:
+    [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+    [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+    [<000000005fcec025>] do_eventfd+0x54/0x1ac
+    [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+    [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+    [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+    [<00000000d495ef94>] el0_sync+0x164/0x180
+unreferenced object 0x29ff008981cc4180 (size 128):
+  comm "qemu-kvm", pid 4043, jiffies 4294994818 (age 9796.290s)
+  hex dump (first 32 bytes):
+    01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+    ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+  backtrace:
+    [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+    [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+    [<000000005fcec025>] do_eventfd+0x54/0x1ac
+    [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+    [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+    [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+    [<00000000d495ef94>] el0_sync+0x164/0x180
 
-On PPC32, kernel size is even more critical as amount of
-memory is usually small.
-
-Depending on the number of available IBATs, the last IBATs
-might overflow the end of text. Only warn if it crosses
-the end of RO data.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/6499f8eeb2a36330e5c9fc1cee9a79374875bd54.1589866984.git.christophe.leroy@csgroup.eu
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/book3s32/mmu.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/vfio/pci/vfio_pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
-index 39ba53ca5bb5..a9b2cbc74797 100644
---- a/arch/powerpc/mm/book3s32/mmu.c
-+++ b/arch/powerpc/mm/book3s32/mmu.c
-@@ -187,6 +187,7 @@ void mmu_mark_initmem_nx(void)
- 	int i;
- 	unsigned long base = (unsigned long)_stext - PAGE_OFFSET;
- 	unsigned long top = (unsigned long)_etext - PAGE_OFFSET;
-+	unsigned long border = (unsigned long)__init_begin - PAGE_OFFSET;
- 	unsigned long size;
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 6c6b37b5c04e..080e6608f297 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -519,6 +519,10 @@ static void vfio_pci_release(void *device_data)
+ 		vfio_pci_vf_token_user_add(vdev, -1);
+ 		vfio_spapr_pci_eeh_release(vdev->pdev);
+ 		vfio_pci_disable(vdev);
++		if (vdev->err_trigger)
++			eventfd_ctx_put(vdev->err_trigger);
++		if (vdev->req_trigger)
++			eventfd_ctx_put(vdev->req_trigger);
+ 	}
  
- 	if (IS_ENABLED(CONFIG_PPC_BOOK3S_601))
-@@ -201,9 +202,10 @@ void mmu_mark_initmem_nx(void)
- 		size = block_size(base, top);
- 		size = max(size, 128UL << 10);
- 		if ((top - base) > size) {
--			if (strict_kernel_rwx_enabled())
--				pr_warn("Kernel _etext not properly aligned\n");
- 			size <<= 1;
-+			if (strict_kernel_rwx_enabled() && base + size > border)
-+				pr_warn("Some RW data is getting mapped X. "
-+					"Adjust CONFIG_DATA_SHIFT to avoid that.\n");
- 		}
- 		setibat(i++, PAGE_OFFSET + base, base, size, PAGE_KERNEL_TEXT);
- 		base += size;
+ 	mutex_unlock(&vdev->reflck->lock);
 -- 
 2.25.1
 
