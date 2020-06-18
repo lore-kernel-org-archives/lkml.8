@@ -2,184 +2,86 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E62D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBCBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5B4F206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE3C20720
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447646;
-	bh=WIOl06bZZpaOxOAx2cufPtKtF9JXqxkQhq5wtIEVqNk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=beVd9JmjL7BscZLrlBVcQmQ2QjLeoaFNWA0ob5OjRlR6aYh8cTPLGoIpstLtqd3ie
-	 yYOLOPJoVnQf7IT9U//ttrdkuPy5d2XTZSJgjIhtJYRaIVbSeVGgEVIW/yYCT3A0Y2
-	 ycjQFjjIx8lat1BFFEHvC7j1CCUxB2r91tr3VKMM=
+	s=default; t=1592447648;
+	bh=KzqQWBGzgxPDIiM2TLCHuHzA0lbc/p1k8n6t1lUjCWw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Belwg7ICMgPyeWmVE2YwoGq1QaLUQ55295a8alkqC3fbTMHjjjSLHyl1gEefbM892
+	 pF9iVID+eYn6DZSCnggw9Fpsj42DcPOuGA6No5CTEqc6svKRFACmeVAwWo821SVvRo
+	 wccQPpftMHRF0CGzKRtlhv883kmg1ZZaxkbu4v2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbgFRCeE (ORCPT
+        id S2387736AbgFRCeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:34:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44322 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:34:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729336AbgFRBOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729338AbgFRBOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Jun 2020 21:14:36 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E196421D7B;
-        Thu, 18 Jun 2020 01:14:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A59AD221F0;
+        Thu, 18 Jun 2020 01:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1592442875;
-        bh=WIOl06bZZpaOxOAx2cufPtKtF9JXqxkQhq5wtIEVqNk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kIReAiWj6IZINZHeN4qKp6fbpAUAj2T85JHOxaI79aFXDSrgHXu/fBso5uzwjR9s1
-         bLCr2Z+fIMvRGAz297Ygc8eB44uPDLfqmWYkSlrCEAzd9pONweGcH3ljFl3LyiTvVk
-         QHbmQLt+CogZ6jlAq0GS54tPaCyCxZ1UpCkNyrYM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        kbuild test robot <lkp@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 301/388] input: i8042 - Remove special PowerPC handling
-Date:   Wed, 17 Jun 2020 21:06:38 -0400
-Message-Id: <20200618010805.600873-301-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+        bh=KzqQWBGzgxPDIiM2TLCHuHzA0lbc/p1k8n6t1lUjCWw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=U3+/SWfWhMKw+skYhZV1LDxXhYDYVEYLeSzdKBYILRcQ0jD2LidHnzpTCJwXz8beG
+         D2PhS+y4BMlh0J5Zcvn/1KmmYb9DtFNpvbzPPOofZdV811kUToX9Ub6tFAcKQAaf8A
+         nTzpNL0E170FltTo3ZfKASk5sIQg3Yzl21DYYB0Y=
+Date:   Wed, 17 Jun 2020 18:14:33 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Gaurav Singh <gaurav1086@gmail.com>
+Cc:     Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org (open list:TC subsystem),
+        linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH] [net/sched]: Remove redundant condition in qdisc_graft
+Message-ID: <20200617181433.4aeee30c@kicinski-fedora-PC1C0HJN>
+In-Reply-To: <20200618005526.27101-1-gaurav1086@gmail.com>
+References: <20200618005526.27101-1-gaurav1086@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+On Wed, 17 Jun 2020 20:55:26 -0400 Gaurav Singh wrote:
+> parent cannot be NULL here since its in the else part
+> of the if (parent == NULL) condition. Remove the extra
+> check on parent pointer.
+> 
+> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
 
-[ Upstream commit e4f4ffa8a98c24a4ab482669b1e2b4cfce3f52f4 ]
+Change seems legit, but it obviously doesn't build...
 
-This causes a build error with CONFIG_WALNUT because kb_cs and kb_data
-were removed in commit 917f0af9e5a9 ("powerpc: Remove arch/ppc and
-include/asm-ppc").
-
-ld.lld: error: undefined symbol: kb_cs
-> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
-> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
-> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
-> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
-> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
-> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
-
-ld.lld: error: undefined symbol: kb_data
-> referenced by i8042.c:309 (drivers/input/serio/i8042.c:309)
-> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
-> referenced by i8042-ppcio.h:33 (drivers/input/serio/i8042-ppcio.h:33)
-> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
-> referenced by i8042.c:319 (drivers/input/serio/i8042.c:319)
-> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
-> referenced 15 more times
-
-Presumably since nobody has noticed this for the last 12 years, there is
-not anyone actually trying to use this driver so we can just remove this
-special walnut code and use the generic header so it builds for all
-configurations.
-
-Fixes: 917f0af9e5a9 ("powerpc: Remove arch/ppc and include/asm-ppc")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Link: https://lore.kernel.org/r/20200518181043.3363953-1-natechancellor@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/input/serio/i8042-ppcio.h | 57 -------------------------------
- drivers/input/serio/i8042.h       |  2 --
- 2 files changed, 59 deletions(-)
- delete mode 100644 drivers/input/serio/i8042-ppcio.h
-
-diff --git a/drivers/input/serio/i8042-ppcio.h b/drivers/input/serio/i8042-ppcio.h
-deleted file mode 100644
-index 391f94d9e47d..000000000000
---- a/drivers/input/serio/i8042-ppcio.h
-+++ /dev/null
-@@ -1,57 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--#ifndef _I8042_PPCIO_H
--#define _I8042_PPCIO_H
--
--
--#if defined(CONFIG_WALNUT)
--
--#define I8042_KBD_IRQ 25
--#define I8042_AUX_IRQ 26
--
--#define I8042_KBD_PHYS_DESC "walnutps2/serio0"
--#define I8042_AUX_PHYS_DESC "walnutps2/serio1"
--#define I8042_MUX_PHYS_DESC "walnutps2/serio%d"
--
--extern void *kb_cs;
--extern void *kb_data;
--
--#define I8042_COMMAND_REG (*(int *)kb_cs)
--#define I8042_DATA_REG (*(int *)kb_data)
--
--static inline int i8042_read_data(void)
--{
--	return readb(kb_data);
--}
--
--static inline int i8042_read_status(void)
--{
--	return readb(kb_cs);
--}
--
--static inline void i8042_write_data(int val)
--{
--	writeb(val, kb_data);
--}
--
--static inline void i8042_write_command(int val)
--{
--	writeb(val, kb_cs);
--}
--
--static inline int i8042_platform_init(void)
--{
--	i8042_reset = I8042_RESET_ALWAYS;
--	return 0;
--}
--
--static inline void i8042_platform_exit(void)
--{
--}
--
--#else
--
--#include "i8042-io.h"
--
--#endif
--
--#endif /* _I8042_PPCIO_H */
-diff --git a/drivers/input/serio/i8042.h b/drivers/input/serio/i8042.h
-index 38dc27ad3c18..eb376700dfff 100644
---- a/drivers/input/serio/i8042.h
-+++ b/drivers/input/serio/i8042.h
-@@ -17,8 +17,6 @@
- #include "i8042-ip22io.h"
- #elif defined(CONFIG_SNI_RM)
- #include "i8042-snirm.h"
--#elif defined(CONFIG_PPC)
--#include "i8042-ppcio.h"
- #elif defined(CONFIG_SPARC)
- #include "i8042-sparcio.h"
- #elif defined(CONFIG_X86) || defined(CONFIG_IA64)
--- 
-2.25.1
+>  net/sched/sch_api.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
+> index 9a3449b56bd6..8c92d00c5c8e 100644
+> --- a/net/sched/sch_api.c
+> +++ b/net/sched/sch_api.c
+> @@ -1094,7 +1094,7 @@ static int qdisc_graft(struct net_device *dev, struct Qdisc *parent,
+>  
+>  		/* Only support running class lockless if parent is lockless */
+>  		if (new && (new->flags & TCQ_F_NOLOCK) &&
+> -		    parent && !(parent->flags & TCQ_F_NOLOCK))
+> +		    && !(parent->flags & TCQ_F_NOLOCK))
+>  			qdisc_clear_nolock(new);
+>  
+>  		if (!cops || !cops->graft)
 
