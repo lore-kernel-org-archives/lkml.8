@@ -2,92 +2,138 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A2BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD1D22246
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592445207;
-	bh=HMUNp5S7JgC4MKED6px7xVMS2rMtoj7TyHYEgUjlX8Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KnBe0+H9iX+VL6lIZn/pK0Xc0A0QEOcPfnoKJ/4LIJ9ajGtsqp01Tj2SRxl2bGND0
-	 pDacr7J/StWitmcirywlQQB6BpeqVmeRS6P53G2bTiIQ53ExqieB8DXHrygaR7GiGD
-	 2Ffvt2ML7ExXvjKnJLcND+vS832QqpFObWMTO+Qw=
+	by mail.kernel.org (Postfix) with ESMTP id 0CBB92222A
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:53:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JWoa4vD5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731640AbgFRB0S (ORCPT
+        id S1733207AbgFRBx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:26:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730107AbgFRBXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:23:13 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 17 Jun 2020 21:53:29 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36250 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730913AbgFRB0R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:26:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592443576;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2XjA8FU67I5A0k2SpuvQQRfjiKYOCajyJbpRDZTCuUQ=;
+        b=JWoa4vD54GP5k7FLgrWzwojzgcUsQ4qQ2F6eKPOsTpVnNDgyBVx3yRv7J+gpfdaqr0S6sq
+        FUVN6AHu2Nws4QKfQKxWD2OGRHTqcav49FX3Rb/PAesUOv34VlhKR5VTQOjomIpIjbUWug
+        nMgLxOmhl7EDxJmlOfk6MzhnYx88nP0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-Ztw866pgPtud6cyLII22fA-1; Wed, 17 Jun 2020 21:26:14 -0400
+X-MC-Unique: Ztw866pgPtud6cyLII22fA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C2721974;
-        Thu, 18 Jun 2020 01:23:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443393;
-        bh=HMUNp5S7JgC4MKED6px7xVMS2rMtoj7TyHYEgUjlX8Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ihu6LRSyXyKrfkhblZIo3Dv1yl1+4CK834Jr3+xFQJnDGOmO93PLLnDQ9qeyKpey
-         idsRxaIte+pD/SMif5FeXbBLlYT1Ccw8VW0/bkCN8BVlhA3vVfc1IAA782clgR67Ic
-         uj1qGosRGKfb2tFxsVFX47rVNkZRQo9rOeXvrBAI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hams@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 040/172] yam: fix possible memory leak in yam_init_driver
-Date:   Wed, 17 Jun 2020 21:20:06 -0400
-Message-Id: <20200618012218.607130-40-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2685A1800D42;
+        Thu, 18 Jun 2020 01:26:13 +0000 (UTC)
+Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C12107CACC;
+        Thu, 18 Jun 2020 01:26:12 +0000 (UTC)
+Date:   Wed, 17 Jun 2020 19:26:12 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, kvm@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 120/172] vfio/pci: fix memory leaks of
+ eventfd ctx
+Message-ID: <20200617192612.17188760@x1.home>
+In-Reply-To: <20200618012218.607130-120-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
+        <20200618012218.607130-120-sashal@kernel.org>
+Organization: Red Hat
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+On Wed, 17 Jun 2020 21:21:26 -0400
+Sasha Levin <sashal@kernel.org> wrote:
 
-[ Upstream commit 98749b7188affbf2900c2aab704a8853901d1139 ]
+> From: Qian Cai <cai@lca.pw>
+> 
+> [ Upstream commit 1518ac272e789cae8c555d69951b032a275b7602 ]
+> 
+> Finished a qemu-kvm (-device vfio-pci,host=0001:01:00.0) triggers a few
+> memory leaks after a while because vfio_pci_set_ctx_trigger_single()
+> calls eventfd_ctx_fdget() without the matching eventfd_ctx_put() later.
+> Fix it by calling eventfd_ctx_put() for those memory in
+> vfio_pci_release() before vfio_device_release().
+> 
+> unreferenced object 0xebff008981cc2b00 (size 128):
+>   comm "qemu-kvm", pid 4043, jiffies 4294994816 (age 9796.310s)
+>   hex dump (first 32 bytes):
+>     01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+>     ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+>   backtrace:
+>     [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+>     [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+>     [<000000005fcec025>] do_eventfd+0x54/0x1ac
+>     [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+>     [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+>     [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+>     [<00000000d495ef94>] el0_sync+0x164/0x180
+> unreferenced object 0x29ff008981cc4180 (size 128):
+>   comm "qemu-kvm", pid 4043, jiffies 4294994818 (age 9796.290s)
+>   hex dump (first 32 bytes):
+>     01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+>     ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+>   backtrace:
+>     [<00000000917e8f8d>] slab_post_alloc_hook+0x74/0x9c
+>     [<00000000df0f2aa2>] kmem_cache_alloc_trace+0x2b4/0x3d4
+>     [<000000005fcec025>] do_eventfd+0x54/0x1ac
+>     [<0000000082791a69>] __arm64_sys_eventfd2+0x34/0x44
+>     [<00000000b819758c>] do_el0_svc+0x128/0x1dc
+>     [<00000000b244e810>] el0_sync_handler+0xd0/0x268
+>     [<00000000d495ef94>] el0_sync+0x164/0x180
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/vfio/pci/vfio_pci.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 66783a37f450..36b2ea920bc9 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -407,6 +407,10 @@ static void vfio_pci_release(void *device_data)
+>  	if (!(--vdev->refcnt)) {
+>  		vfio_spapr_pci_eeh_release(vdev->pdev);
+>  		vfio_pci_disable(vdev);
+> +		if (vdev->err_trigger)
+> +			eventfd_ctx_put(vdev->err_trigger);
+> +		if (vdev->req_trigger)
+> +			eventfd_ctx_put(vdev->req_trigger);
+>  	}
+>  
+>  	mutex_unlock(&driver_lock);
 
-If register_netdev(dev) fails, free_netdev(dev) needs
-to be called, otherwise a memory leak will occur.
+This has a fix pending, I'd suggest not picking it on its own:
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/hamradio/yam.c | 1 +
- 1 file changed, 1 insertion(+)
+https://lore.kernel.org/kvm/20200616085052.sahrunsesjyjeyf2@beryllium.lan/
+https://lore.kernel.org/kvm/159234276956.31057.6902954364435481688.stgit@gimli.home/
 
-diff --git a/drivers/net/hamradio/yam.c b/drivers/net/hamradio/yam.c
-index ba9df430fca6..fdab49872587 100644
---- a/drivers/net/hamradio/yam.c
-+++ b/drivers/net/hamradio/yam.c
-@@ -1148,6 +1148,7 @@ static int __init yam_init_driver(void)
- 		err = register_netdev(dev);
- 		if (err) {
- 			printk(KERN_WARNING "yam: cannot register net device %s\n", dev->name);
-+			free_netdev(dev);
- 			goto error;
- 		}
- 		yam_devs[i] = dev;
--- 
-2.25.1
+Thanks,
+Alex
 
