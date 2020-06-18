@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF93CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C45C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCF7B21534
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37BD021927
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448182;
-	bh=b81sBAbK71A81s+WrFLaLjIoRHBsG4x73nqY5oFinc4=;
+	s=default; t=1592448185;
+	bh=mrZanQqxYIkssk95rfUSgIXPFQ0iY4bPahgIafhud7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pW12jhvsWRXE/Vmot/oPWzs6pkPM6THKb0aHl4KxJCLpgNH0vfkgHq91VAItHXVEX
-	 dWNYxu0vOK/fZayxFdu7J3wF3H/TKgGUkN3oZJN3UEzEakL9BSWV9pE6HkNo7wD7Fz
-	 w8b6Qh+USjKgvpCg5QWcwQ9cNtovP/Kba4MAc9eA=
+	b=NCHqKuPDyZNU7lqkMkoGeSyhqp7EeV2KGa7zH1bd65f1zbWQ8fryftjtua0Y8OqPE
+	 hJlHEhELuFZupomUsRXmkaTOPLuY5hMozM/eFYoWhHmnTEWjP2eXyStyIwLBhJ4r2B
+	 7feavABL+favI0rgIrFLdcEKScySQjvME/5fxU3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387872AbgFRCnB (ORCPT
+        id S2387663AbgFRCnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:43:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39880 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:43:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727073AbgFRBLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:47 -0400
+        id S1728795AbgFRBLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:11:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73BAA21D90;
-        Thu, 18 Jun 2020 01:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6681221EA;
+        Thu, 18 Jun 2020 01:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442707;
-        bh=b81sBAbK71A81s+WrFLaLjIoRHBsG4x73nqY5oFinc4=;
+        s=default; t=1592442708;
+        bh=mrZanQqxYIkssk95rfUSgIXPFQ0iY4bPahgIafhud7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rylOHO3IypF9HJHgRFmxOUWNjhoSL9PE+QrN1xiJzrf+28O+esFi2Bwd0NYucxa3R
-         WMP+p7OgKn6c4HpllCl5RCPKr8c+wsMVyCxU8LiE2c0ThWOYepAmRAxtRwP2XGN6gh
-         hFhCvJGXebvhc9u7jSEU4bnvOugM78GQRS+oMygw=
+        b=LBBam0pL4kPrtQMHDdusiBu5BfHLjg+KA/vjD2kpQgh2a8+RdXu56ADf4LqgXFCfT
+         dyo4KyfJZId2t4e85vy+O8B3wIw2RzpucnCbIsxnoMfV0xiy8VAEFQbQ8UEpOzoPEh
+         rDIBJrDElJBcIZC8pwCQ754vSTgRHGJ1VwMZ9/BM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
         Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 168/388] usb: dwc3: meson-g12a: check return of dwc3_meson_g12a_usb_init
-Date:   Wed, 17 Jun 2020 21:04:25 -0400
-Message-Id: <20200618010805.600873-168-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 169/388] usb: dwc3: gadget: Properly handle failed kick_transfer
+Date:   Wed, 17 Jun 2020 21:04:26 -0400
+Message-Id: <20200618010805.600873-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -62,36 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-[ Upstream commit 8f5bc1ec770c2bdc8c604ba4119a77d81d8f3529 ]
+[ Upstream commit 8d99087c2db863c5fa3a4a1f3cb82b3a493705ca ]
 
-The dwc3_meson_g12a_usb_init function can return an error, check it.
+If dwc3 fails to issue START_TRANSFER/UPDATE_TRANSFER command, then we
+should properly end an active transfer and give back all the started
+requests. However if it's for an isoc endpoint, the failure maybe due to
+bus-expiry status. In this case, don't give back the requests and wait
+for the next retry.
 
-Fixes: c99993376f72ca ("usb: dwc3: Add Amlogic G12A DWC3 glue")
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-meson-g12a.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/dwc3/gadget.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
-index b81d085bc534..2d257bdfe848 100644
---- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-+++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-@@ -525,7 +525,9 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
- 	/* Get dr_mode */
- 	priv->otg_mode = usb_get_dr_mode(dev);
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index ab6562c5b927..de3b92680935 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1220,6 +1220,8 @@ static void dwc3_prepare_trbs(struct dwc3_ep *dep)
+ 	}
+ }
  
--	dwc3_meson_g12a_usb_init(priv);
-+	ret = dwc3_meson_g12a_usb_init(priv);
-+	if (ret)
-+		goto err_disable_clks;
++static void dwc3_gadget_ep_cleanup_cancelled_requests(struct dwc3_ep *dep);
++
+ static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
+ {
+ 	struct dwc3_gadget_ep_cmd_params params;
+@@ -1259,14 +1261,20 @@ static int __dwc3_gadget_kick_transfer(struct dwc3_ep *dep)
  
- 	/* Init PHYs */
- 	for (i = 0 ; i < PHY_COUNT ; ++i) {
+ 	ret = dwc3_send_gadget_ep_cmd(dep, cmd, &params);
+ 	if (ret < 0) {
+-		/*
+-		 * FIXME we need to iterate over the list of requests
+-		 * here and stop, unmap, free and del each of the linked
+-		 * requests instead of what we do now.
+-		 */
+-		if (req->trb)
+-			memset(req->trb, 0, sizeof(struct dwc3_trb));
+-		dwc3_gadget_del_and_unmap_request(dep, req, ret);
++		struct dwc3_request *tmp;
++
++		if (ret == -EAGAIN)
++			return ret;
++
++		dwc3_stop_active_transfer(dep, true, true);
++
++		list_for_each_entry_safe(req, tmp, &dep->started_list, list)
++			dwc3_gadget_move_cancelled_request(req);
++
++		/* If ep isn't started, then there's no end transfer pending */
++		if (!(dep->flags & DWC3_EP_END_TRANSFER_PENDING))
++			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
++
+ 		return ret;
+ 	}
+ 
 -- 
 2.25.1
 
