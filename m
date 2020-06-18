@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EADC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9CEB207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A7E6204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447444;
-	bh=yAGnv5NF9mvvxUNTEYI6rE58f1spSCkxNZHtPu3k9a0=;
+	s=default; t=1592447450;
+	bh=fAt8arPsk10vlHfV7fzglD1mjYS2ObhiDsvpwLieti0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OQuzXPQTielVMXaT57ZOax9hWvDOmChrRH+WxodfmcxzZ2/zCYBYqfRL88lYOKYWL
-	 M6M4AloYlfKW0yrs6ybLBZxRdKsp5RA+QEh56jbYiKuTNmxivE0ivG6AjgBrcEYZHn
-	 Sl1ee+lpugzrD0LapVTf5KcWx+oKvlurpvOeuFrM=
+	b=rLL6KG5rfBCALItPy/9tPFQtZp6Nt2YidHzSYXhM5IbCCt3YdBoEiDxUlJtfYSx53
+	 83U66IuYo7tauuaQFvCxYZUlubmoLy/7gVdrKRqIiT26xDZHtm5eMIWKy12OgucSlc
+	 7HthTl5V7/IM1Sy+sSn+gGJ14i8BNVGgDanKv1Vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbgFRCan (ORCPT
+        id S1733302AbgFRCat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:30:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46072 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:30:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728640AbgFRBPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:45 -0400
+        id S1728450AbgFRBPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E69721D7D;
-        Thu, 18 Jun 2020 01:15:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAE5321D79;
+        Thu, 18 Jun 2020 01:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442945;
-        bh=yAGnv5NF9mvvxUNTEYI6rE58f1spSCkxNZHtPu3k9a0=;
+        s=default; t=1592442942;
+        bh=fAt8arPsk10vlHfV7fzglD1mjYS2ObhiDsvpwLieti0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cu0zPtxq+H+gtMjvoCdlrlqjMBXHAKl9DrAoFXKYrGf4GxThLxMCkBkHbwAildDEm
-         dzkoYRvb5H2uEGTjBpCvzvr0+btAQeSkgE4b99wqO1btWVok9kwXCXi7PxXtLFf+kf
-         pU9hJkZsNI4KAmG0K5HP1zJT/thpwTP95fJJ9PuE=
+        b=u+AJcvb3zqgFtagVxPH79FwkVyCI/kfcukRbRn7qVdOnZpdAu5hotES22ErnZeONo
+         dQJbq1grTHayDqpJ7WydZvhNFP4oJL7yiSqajSsqm10+/PEm5Qc6lN9UOk/vy2YUKF
+         fWIFdE3Sj4h12crAvKibsf1EcaiKrmShyTNDo0xI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Staudt <max@enpas.org>, kernel test robot <lkp@intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 355/388] i2c: icy: Fix build with CONFIG_AMIGA_PCMCIA=n
-Date:   Wed, 17 Jun 2020 21:07:32 -0400
-Message-Id: <20200618010805.600873-355-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Alexander Fomichev <fomichev.ru@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
+        linux-ntb@googlegroups.com
+Subject: [PATCH AUTOSEL 5.7 353/388] NTB: perf: Fix race condition when run with ntb_test
+Date:   Wed, 17 Jun 2020 21:07:30 -0400
+Message-Id: <20200618010805.600873-353-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,37 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Staudt <max@enpas.org>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit cdb555397f438592bab00599037c347b700cf397 ]
+[ Upstream commit 34d8673a01b053b6231a995a4eec9341163d63be ]
 
-This has been found by the Kernel Test Robot:
-http://lkml.iu.edu/hypermail/linux/kernel/2006.0/06862.html
+When running ntb_test, the script tries to run the ntb_perf test
+immediately after probing the modules. Since adding multi-port support,
+this fails seeing the new initialization procedure in ntb_perf
+can not complete instantly.
 
-With CONFIG_AMIGA_PCMCIA=n, io_mm.h does not pull in amigahw.h and
-ZTWO_VADDR is undefined. Add forgotten include to i2c-icy.c
+To fix this we add a completion which is waited on when a test is
+started. In this way, run can be written any time after the module is
+loaded and it will wait for the initialization to complete instead of
+sending an error.
 
-Fixes: 4768e90ecaec ("i2c: Add i2c-icy for I2C on m68k/Amiga")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Max Staudt <max@enpas.org>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Acked-by: Allen Hubbe <allenbh@gmail.com>
+Tested-by: Alexander Fomichev <fomichev.ru@gmail.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-icy.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/ntb/test/ntb_perf.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-icy.c b/drivers/i2c/busses/i2c-icy.c
-index 271470f4d8a9..66c9923fc766 100644
---- a/drivers/i2c/busses/i2c-icy.c
-+++ b/drivers/i2c/busses/i2c-icy.c
-@@ -43,6 +43,7 @@
- #include <linux/i2c.h>
- #include <linux/i2c-algo-pcf.h>
+diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
+index 0b1eae07b133..528751803419 100644
+--- a/drivers/ntb/test/ntb_perf.c
++++ b/drivers/ntb/test/ntb_perf.c
+@@ -159,6 +159,8 @@ struct perf_peer {
+ 	/* NTB connection setup service */
+ 	struct work_struct	service;
+ 	unsigned long		sts;
++
++	struct completion init_comp;
+ };
+ #define to_peer_service(__work) \
+ 	container_of(__work, struct perf_peer, service)
+@@ -547,6 +549,7 @@ static int perf_setup_outbuf(struct perf_peer *peer)
  
-+#include <asm/amigahw.h>
- #include <asm/amigaints.h>
- #include <linux/zorro.h>
+ 	/* Initialization is finally done */
+ 	set_bit(PERF_STS_DONE, &peer->sts);
++	complete_all(&peer->init_comp);
  
+ 	return 0;
+ }
+@@ -638,6 +641,7 @@ static void perf_service_work(struct work_struct *work)
+ 		perf_setup_outbuf(peer);
+ 
+ 	if (test_and_clear_bit(PERF_CMD_CLEAR, &peer->sts)) {
++		init_completion(&peer->init_comp);
+ 		clear_bit(PERF_STS_DONE, &peer->sts);
+ 		if (test_bit(0, &peer->perf->busy_flag) &&
+ 		    peer == peer->perf->test_peer) {
+@@ -1084,8 +1088,9 @@ static int perf_submit_test(struct perf_peer *peer)
+ 	struct perf_thread *pthr;
+ 	int tidx, ret;
+ 
+-	if (!test_bit(PERF_STS_DONE, &peer->sts))
+-		return -ENOLINK;
++	ret = wait_for_completion_interruptible(&peer->init_comp);
++	if (ret < 0)
++		return ret;
+ 
+ 	if (test_and_set_bit_lock(0, &perf->busy_flag))
+ 		return -EBUSY;
+@@ -1456,6 +1461,7 @@ static int perf_init_peers(struct perf_ctx *perf)
+ 			peer->gidx = pidx;
+ 		}
+ 		INIT_WORK(&peer->service, perf_service_work);
++		init_completion(&peer->init_comp);
+ 	}
+ 	if (perf->gidx == -1)
+ 		perf->gidx = pidx;
 -- 
 2.25.1
 
