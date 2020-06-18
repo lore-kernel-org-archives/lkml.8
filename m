@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B483C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD5120776
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C880221F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592444131;
-	bh=t3bBVqo47N0Y5P0/j1DPexbAI0QVtdrSXf/vXuU66xo=;
+	s=default; t=1592444144;
+	bh=WJhUlbUTIN1K73n4tY0V57/KVBPeXnvmTmlAw1UHdiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dVlUi7u4WhvszoHn9K8StIDYYZrkzNaz9mZ4+DJ8ng61dtt4UNHsig1k/1OWzAcAx
-	 u1F4MiEIGtcfO3jfF3qJB6YXxZ5CG6UdI331thgHe+ehI/Nume+0fu5v7v9yt+Hpvj
-	 w3Ly/7WSvPmWXvpowk0dDW/jgmAbn12XJd3URxrA=
+	b=dgiFXt1Vlk6y2WmkNl+nV1+AIn8te2/ecVj6kukEmburLut6Y/fnpI3t6p0ey415K
+	 9gHT2j28YPtYNAQJNLq+8jba0iklA/x0c87xKz59av802ojLfwsNPXXoCO6TPGbW3l
+	 zauVEuaFaee3AChUGR0auyAVdzzpA4XaV+Wo4BbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730807AbgFRBbd (ORCPT
+        id S1731957AbgFRBfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:31:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37874 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:35:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732178AbgFRB2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:28:53 -0400
+        id S1732757AbgFRBbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:31:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF0AB221FC;
-        Thu, 18 Jun 2020 01:28:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8F3422257;
+        Thu, 18 Jun 2020 01:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443732;
-        bh=t3bBVqo47N0Y5P0/j1DPexbAI0QVtdrSXf/vXuU66xo=;
+        s=default; t=1592443881;
+        bh=WJhUlbUTIN1K73n4tY0V57/KVBPeXnvmTmlAw1UHdiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bne0yDpftx4Qzh0sM5cjv/FvrYVrX2PgioxX2V6uEul6uvKudfypdcXuZf5RJE4PI
-         /vAronPxJC+Tc8mvR3I9EJThofw+hTxE/2KQFP1qLl7Xzy0dPTcbDtK2qxot2+aZFI
-         w5Pi+kOtqtiQOci2ZljLe6OrzMffg0UCbZeDHG4g=
+        b=SGMYzoi0/Nr8Jt8bBK8Hh5RQKv9/57ipsZStfOT4ksagWUa6myup/VHUJlEeKxAnD
+         PSxsJ9H7E4EUxBd7kCgtKJdMt1lpRjWgosWH/5wMANQXwez79SgDWynnAaNe02ShI2
+         CZ58cXn56OA1AxDv0yueEMQRVhIMpObh4NLkcT9k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+Cc:     tannerlove <tannerlove@google.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hams@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 24/80] yam: fix possible memory leak in yam_init_driver
-Date:   Wed, 17 Jun 2020 21:27:23 -0400
-Message-Id: <20200618012819.609778-24-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 59/60] selftests/net: in timestamping, strncpy needs to preserve null byte
+Date:   Wed, 17 Jun 2020 21:30:03 -0400
+Message-Id: <20200618013004.610532-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
-References: <20200618012819.609778-1-sashal@kernel.org>
+In-Reply-To: <20200618013004.610532-1-sashal@kernel.org>
+References: <20200618013004.610532-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,34 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: tannerlove <tannerlove@google.com>
 
-[ Upstream commit 98749b7188affbf2900c2aab704a8853901d1139 ]
+[ Upstream commit 8027bc0307ce59759b90679fa5d8b22949586d20 ]
 
-If register_netdev(dev) fails, free_netdev(dev) needs
-to be called, otherwise a memory leak will occur.
+If user passed an interface option longer than 15 characters, then
+device.ifr_name and hwtstamp.ifr_name became non-null-terminated
+strings. The compiler warned about this:
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
+timestamping.c:353:2: warning: ‘strncpy’ specified bound 16 equals \
+destination size [-Wstringop-truncation]
+  353 |  strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
+
+Fixes: cb9eff097831 ("net: new user space API for time stamping of incoming and outgoing packets")
+Signed-off-by: Tanner Love <tannerlove@google.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hamradio/yam.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../selftests/networking/timestamping/timestamping.c   | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/hamradio/yam.c b/drivers/net/hamradio/yam.c
-index aaff07c10058..a453b82d1077 100644
---- a/drivers/net/hamradio/yam.c
-+++ b/drivers/net/hamradio/yam.c
-@@ -1160,6 +1160,7 @@ static int __init yam_init_driver(void)
- 		err = register_netdev(dev);
- 		if (err) {
- 			printk(KERN_WARNING "yam: cannot register net device %s\n", dev->name);
-+			free_netdev(dev);
- 			goto error;
- 		}
- 		yam_devs[i] = dev;
+diff --git a/tools/testing/selftests/networking/timestamping/timestamping.c b/tools/testing/selftests/networking/timestamping/timestamping.c
+index 5cdfd743447b..900ed4b47899 100644
+--- a/tools/testing/selftests/networking/timestamping/timestamping.c
++++ b/tools/testing/selftests/networking/timestamping/timestamping.c
+@@ -332,10 +332,16 @@ int main(int argc, char **argv)
+ 	int val;
+ 	socklen_t len;
+ 	struct timeval next;
++	size_t if_len;
+ 
+ 	if (argc < 2)
+ 		usage(0);
+ 	interface = argv[1];
++	if_len = strlen(interface);
++	if (if_len >= IFNAMSIZ) {
++		printf("interface name exceeds IFNAMSIZ\n");
++		exit(1);
++	}
+ 
+ 	for (i = 2; i < argc; i++) {
+ 		if (!strcasecmp(argv[i], "SO_TIMESTAMP"))
+@@ -369,12 +375,12 @@ int main(int argc, char **argv)
+ 		bail("socket");
+ 
+ 	memset(&device, 0, sizeof(device));
+-	strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
++	memcpy(device.ifr_name, interface, if_len + 1);
+ 	if (ioctl(sock, SIOCGIFADDR, &device) < 0)
+ 		bail("getting interface IP address");
+ 
+ 	memset(&hwtstamp, 0, sizeof(hwtstamp));
+-	strncpy(hwtstamp.ifr_name, interface, sizeof(hwtstamp.ifr_name));
++	memcpy(hwtstamp.ifr_name, interface, if_len + 1);
+ 	hwtstamp.ifr_data = (void *)&hwconfig;
+ 	memset(&hwconfig, 0, sizeof(hwconfig));
+ 	hwconfig.tx_type =
 -- 
 2.25.1
 
