@@ -2,92 +2,104 @@ Return-Path: <SRS0=3e5Q=77=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7070C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199DCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA36208D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0B4207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 14:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1592490276;
+	bh=vudr6oJRzoUwNx1PuJdEGZLBjHEzAYe0suL8lQzVm1Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q43UyYZEs15wPoPwl1W29Xz3/GS22UoE1XMOz12GtdmOvFlfUKxV+NuyewzgGd0Ex
+	 uu8rcgaALsLqakEJkbjPHwH1w/cUYyeRksmgC+0RsuPdqYPErx9G42bVEDHtknXfqz
+	 DjWTPnJrPYDHwj8IEkB3v8LqlVvvswB7uulzII8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbgFROXv (ORCPT
+        id S1729032AbgFROYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 10:23:51 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46824 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbgFROXu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:23:50 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 048132A4DC9
-Subject: Re: next/master bisection: baseline.login on
- ox820-cloudengines-pogoplug-series-3
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>,
-        Allison Randal <allison@lohutok.net>,
+        Thu, 18 Jun 2020 10:24:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726988AbgFROYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 18 Jun 2020 10:24:34 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7C862082F;
+        Thu, 18 Jun 2020 14:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592490273;
+        bh=vudr6oJRzoUwNx1PuJdEGZLBjHEzAYe0suL8lQzVm1Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Iy4P2NP+QIfVquNNJLRQ4Hrqll+YheeMWy9qqqECKLV5qnu9pdaRZ8rWRKFAldofC
+         r11vp7twz6+piMBuDO2kkHboiA8qfVD/FQb8QxXhxaNWDg0XhlRgtStwedXBSFu0tY
+         mq8ycgwCwCMlliZUr1uOwEgJV2cwRwtdjUY1uAC4=
+Date:   Thu, 18 Jun 2020 22:24:28 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
-        kernelci-results@groups.io, Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        Enrico Weigelt <info@metux.net>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        linux-next@vger.kernel.org
-References: <5eeb5bf7.1c69fb81.4f6e3.8979@mx.google.com>
- <13497644-ae34-d5e3-e76a-742cddf0f0a9@collabora.com>
- <20200618152324.0b0007a9@xps13> <20200618160925.6f77b1d1@xps13>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <0c00fe0b-c38b-3d69-8f93-3fe8c3675113@collabora.com>
-Date:   Thu, 18 Jun 2020 15:23:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v8 5/5] dt-bindings: arm: fsl: add different Protonic
+ boards
+Message-ID: <20200618142426.GA464@dragon>
+References: <20200520154116.12909-1-o.rempel@pengutronix.de>
+ <20200520154116.12909-6-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200618160925.6f77b1d1@xps13>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520154116.12909-6-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/06/2020 15:09, Miquel Raynal wrote:
-> Hi Guillaume,
+On Wed, May 20, 2020 at 05:41:16PM +0200, Oleksij Rempel wrote:
+> Add Protonic PRTI6Q, WD2, RVT, VT7 boards.
 > 
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote on Thu, 18 Jun 2020
-> 15:23:24 +0200:
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+
+Ah, okay.  The compatible is defined here.  This patch should really
+go first.
+
+Shawn
+
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
->> Hi Guillaume,
->>
->> Guillaume Tucker <guillaume.tucker@collabora.com> wrote on Thu, 18 Jun
->> 2020 13:28:05 +0100:
->>
->>> Please see the bisection report below about a kernel panic.
->>>
->>> Reports aren't automatically sent to the public while we're
->>> trialing new bisection features on kernelci.org but this one
->>> looks valid.
->>>
->>> See the kernel Oops due to a NULL pointer followed by a panic:
->>>
->>>   https://storage.kernelci.org/next/master/next-20200618/arm/oxnas_v6_defconfig/gcc-8/lab-baylibre/baseline-ox820-cloudengines-pogoplug-series-3.html#L504
->>
->> Thanks for the report, I will not be able to manage it before Monday,
->> but I'll try to take care of it early next week.
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> index cd3fbe7e39487..a1657505b3357 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -119,6 +119,8 @@ properties:
+>                - fsl,imx6q-sabreauto
+>                - fsl,imx6q-sabrelite
+>                - fsl,imx6q-sabresd
+> +              - prt,prti6q                # Protonic PRTI6Q board
+> +              - prt,prtwd2                # Protonic WD2 board
+>                - technexion,imx6q-pico-dwarf   # TechNexion i.MX6Q Pico-Dwarf
+>                - technexion,imx6q-pico-hobbit  # TechNexion i.MX6Q Pico-Hobbit
+>                - technexion,imx6q-pico-nymph   # TechNexion i.MX6Q Pico-Nymph
+> @@ -170,6 +172,8 @@ properties:
+>                - emtrion,emcon-mx6-avari   # emCON-MX6S or emCON-MX6DL SoM on Avari Base
+>                - fsl,imx6dl-sabreauto      # i.MX6 DualLite/Solo SABRE Automotive Board
+>                - fsl,imx6dl-sabresd        # i.MX6 DualLite SABRE Smart Device Board
+> +              - prt,prtrvt                # Protonic RVT board
+> +              - prt,prtvt7                # Protonic VT7 board
+>                - technexion,imx6dl-pico-dwarf   # TechNexion i.MX6DL Pico-Dwarf
+>                - technexion,imx6dl-pico-hobbit  # TechNexion i.MX6DL Pico-Hobbit
+>                - technexion,imx6dl-pico-nymph   # TechNexion i.MX6DL Pico-Nymph
+> -- 
+> 2.26.2
 > 
-> Actually Boris saw the issue, I just updated nand/next, it should be
-> part of tomorrow's linux-next. Could you please report if it fixes your
-> boot?
-
-Sure, will check tomorrow.  Thanks for the update.
-
-We may also consider adding the nand/next branch to kernelci.org
-and catch issues earlier.  We can discuss that separately.
-
-Guillaume
