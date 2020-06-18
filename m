@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A50C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8E642224B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2BEE2224B
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 01:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592443803;
-	bh=PDZNewECiB6rDTkVJz0+36Vc+dl7xR3vEuGghn0r9rA=;
+	s=default; t=1592443809;
+	bh=sgML1kiYHFWj9/9/5wfhrnb0KZZ60yVf8cLgS7JaLx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hg4SDhcuY8CZh5EdAaZUw+avcIaoS83SkrO5fIhRqoS1M3qOoofMMQh8zagw4whws
-	 eUVjhKIxVEe2zBQ5vjIu3c0DiX+OpKh9jflKnaeqCoLP9n81+9xDAjxjbiL2p9+DB9
-	 A3zQ6QxQ8ZHI99WcYk1mT7ULL4iw7XbHSz2BWto8=
+	b=v1vltQzOoI0CR+8UnPyOHfnk4HhLrZQaw0WNYM7XvhEZPq9LEgtDq9+1V5kwqKQ6p
+	 1WI2MAE+Ws63EJnzQ2sEhcn9HCTKAo1/epjNpx9Z5GTH0cxPhVGapauZnPgorjL9dM
+	 n4bX2I/2kewdG6KgQmTe48OVTFn974+QD3GUHw74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731174AbgFRBaD (ORCPT
+        id S1732462AbgFRBaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:30:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34592 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 21:30:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731747AbgFRB0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:26:52 -0400
+        id S1731766AbgFRB04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:26:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4F5320776;
-        Thu, 18 Jun 2020 01:26:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEC6F20776;
+        Thu, 18 Jun 2020 01:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443611;
-        bh=PDZNewECiB6rDTkVJz0+36Vc+dl7xR3vEuGghn0r9rA=;
+        s=default; t=1592443615;
+        bh=sgML1kiYHFWj9/9/5wfhrnb0KZZ60yVf8cLgS7JaLx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h3LczfJGPk85r+892DszU0DsT144ho5E3patH+f/cZuNrWjJU+vG16bhvKrLVHGb2
-         eyJ7WpoTcn9th9xf1QicYB/vmxW6NKGvz/bMrCdEfonbTBwj3x4+sSDcOfSnR79hQs
-         T959eIlbN+vGdVFfX7AAnNAayhRmnLjClG5KQSbo=
+        b=0GlYfxi4zoElD8nMZecYJguBC7h4Jh3ZBlnjRfUs8Zdx8vFKUAvgSDurJOda/vYE6
+         tobRARQ1b3ciBFNIr4hrEhaMBaEspeDNWc7i+dN1aDccq+C2jRBxogq0foniS7+jKk
+         MCWLpf8WSXjzusTQbDVsh+34GOgElODeauK3EX+I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nilesh Javali <njavali@marvell.com>, Lee Duncan <lduncan@suse.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 039/108] scsi: qedi: Do not flush offload work if ARP not resolved
-Date:   Wed, 17 Jun 2020 21:24:51 -0400
-Message-Id: <20200618012600.608744-39-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 042/108] s390/qdio: put thinint indicator after early error
+Date:   Wed, 17 Jun 2020 21:24:54 -0400
+Message-Id: <20200618012600.608744-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
 References: <20200618012600.608744-1-sashal@kernel.org>
@@ -60,95 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nilesh Javali <njavali@marvell.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 927527aea0e2a9c1d336c7d33f77f1911481d008 ]
+[ Upstream commit 75e82bec6b2622c6f455b7a543fb5476a5d0eed7 ]
 
-For an unreachable target, offload_work is not initialized and the endpoint
-state is set to OFLDCONN_NONE. This results in a WARN_ON due to the check
-of the work function field being set to zero.
+qdio_establish() calls qdio_setup_thinint() via qdio_setup_irq().
+If the subsequent qdio_establish_thinint() fails, we miss to put the
+DSCI again. Thus the DSCI isn't available for re-use. Given enough of
+such errors, we could end up with having only the shared DSCI available.
 
-------------[ cut here ]------------
-WARNING: CPU: 24 PID: 18587 at ../kernel/workqueue.c:3037 __flush_work+0x1c1/0x1d0
-:
-Hardware name: HPE ProLiant DL380 Gen10/ProLiant DL380 Gen10, BIOS U30 02/01/2020
-RIP: 0010:__flush_work+0x1c1/0x1d0
-Code: ba 6d 00 03 80 c9 f0 eb b6 48 c7 c7 20 ee 6c a4 e8 52 d3 04 00 0f 0b 31 c0 e9 d1 fe ff
-ff 48 c7 c7 20 ee 6c a4 e8 3d d3 04 00 <0f> 0b 31 c0 e9 bc fe ff ff e8 11 f3 f
- 00 31 f6
-RSP: 0018:ffffac5a8cd47a80 EFLAGS: 00010282
-RAX: 0000000000000024 RBX: ffff98d68c1fcaf0 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffff98ce9fd99898 RDI: ffff98ce9fd99898
-RBP: ffff98d68c1fcbc0 R08: 00000000000006fa R09: 0000000000000001
-R10: ffffac5a8cd47b50 R11: 0000000000000001 R12: 0000000000000000
-R13: 000000000000489b R14: ffff98d68c1fc800 R15: ffff98d692132c00
-FS:  00007f65f7f62280(0000) GS:ffff98ce9fd80000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffd2435e880 CR3: 0000000809334003 CR4: 00000000007606e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- ? class_create_release+0x40/0x40
- ? klist_put+0x2c/0x80
- qedi_ep_disconnect+0xdd/0x400 [qedi]
- iscsi_if_ep_disconnect.isra.20+0x59/0x70 [scsi_transport_iscsi]
- iscsi_if_rx+0x129b/0x1670 [scsi_transport_iscsi]
- ? __netlink_lookup+0xe7/0x160
- netlink_unicast+0x21d/0x300
- netlink_sendmsg+0x30f/0x430
- sock_sendmsg+0x5b/0x60
- ____sys_sendmsg+0x1e2/0x240
- ? copy_msghdr_from_user+0xd9/0x160
- ___sys_sendmsg+0x88/0xd0
- ? ___sys_recvmsg+0xa2/0xe0
- ? hrtimer_try_to_cancel+0x25/0x100
- ? do_nanosleep+0x9c/0x170
- ? __sys_sendmsg+0x5e/0xa0
- __sys_sendmsg+0x5e/0xa0
- do_syscall_64+0x60/0x1f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f65f6f16107
-Code: 64 89 02 48 c7 c0 ff ff ff ff eb b9 0f 1f 80 00 00 00 00 8b 05 aa d2 2b 00 48 63 d2 48
-63 ff 85 c0 75 18 b8 2e 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 59 f3 c3 0f 1f 8
-    0 00 00 00 00 53 48 89 f3 48
- RSP: 002b:00007ffd24367ca8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
- RAX: ffffffffffffffda RBX: 000055a7aeaaf110 RCX: 00007f65f6f16107
- RDX: 0000000000000000 RSI: 00007ffd24367cc0 RDI: 0000000000000003
- RBP: 0000000000000070 R08: 0000000000000000 R09: 0000000000000000
- R10: 000000000000075c R11: 0000000000000246 R12: 00007ffd24367cc0
- R13: 000055a7ae560008 R14: 00007ffd24367db0 R15: 0000000000000000
- ---[ end trace 54f499c05d41f8bb ]---
+Merge qdio_setup_thinint() into qdio_establish_thinint(), and deal with
+such an error internally.
 
-Only flush if the connection endpoint state if different from
-OFLDCONN_NONE.
-
-[mkp: clarified commit desc]
-
-Link: https://lore.kernel.org/r/20200408064332.19377-5-mrangankar@marvell.com
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Nilesh Javali <njavali@marvell.com>
-Signed-off-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_iscsi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/s390/cio/qdio.h         |  1 -
+ drivers/s390/cio/qdio_setup.c   |  1 -
+ drivers/s390/cio/qdio_thinint.c | 14 ++++++++------
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-index 1effac1111d5..fb6439bc1d9a 100644
---- a/drivers/scsi/qedi/qedi_iscsi.c
-+++ b/drivers/scsi/qedi/qedi_iscsi.c
-@@ -1007,7 +1007,8 @@ static void qedi_ep_disconnect(struct iscsi_endpoint *ep)
- 	if (qedi_ep->state == EP_STATE_OFLDCONN_START)
- 		goto ep_exit_recover;
+diff --git a/drivers/s390/cio/qdio.h b/drivers/s390/cio/qdio.h
+index 29d6b5222f1c..0f8d13288611 100644
+--- a/drivers/s390/cio/qdio.h
++++ b/drivers/s390/cio/qdio.h
+@@ -377,7 +377,6 @@ static inline int multicast_outbound(struct qdio_q *q)
+ extern u64 last_ai_time;
  
--	flush_work(&qedi_ep->offload_work);
-+	if (qedi_ep->state != EP_STATE_OFLDCONN_NONE)
-+		flush_work(&qedi_ep->offload_work);
+ /* prototypes for thin interrupt */
+-void qdio_setup_thinint(struct qdio_irq *irq_ptr);
+ int qdio_establish_thinint(struct qdio_irq *irq_ptr);
+ void qdio_shutdown_thinint(struct qdio_irq *irq_ptr);
+ void tiqdio_add_input_queues(struct qdio_irq *irq_ptr);
+diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
+index d0090c5c88e7..a64615a10352 100644
+--- a/drivers/s390/cio/qdio_setup.c
++++ b/drivers/s390/cio/qdio_setup.c
+@@ -479,7 +479,6 @@ int qdio_setup_irq(struct qdio_initialize *init_data)
+ 	setup_queues(irq_ptr, init_data);
  
- 	if (qedi_ep->conn) {
- 		qedi_conn = qedi_ep->conn;
+ 	setup_qib(irq_ptr, init_data);
+-	qdio_setup_thinint(irq_ptr);
+ 	set_impl_params(irq_ptr, init_data->qib_param_field_format,
+ 			init_data->qib_param_field,
+ 			init_data->input_slib_elements,
+diff --git a/drivers/s390/cio/qdio_thinint.c b/drivers/s390/cio/qdio_thinint.c
+index 831a3a0a2837..4dc1108069d4 100644
+--- a/drivers/s390/cio/qdio_thinint.c
++++ b/drivers/s390/cio/qdio_thinint.c
+@@ -270,17 +270,19 @@ int __init tiqdio_register_thinints(void)
+ 
+ int qdio_establish_thinint(struct qdio_irq *irq_ptr)
+ {
++	int rc;
++
+ 	if (!is_thinint_irq(irq_ptr))
+ 		return 0;
+-	return set_subchannel_ind(irq_ptr, 0);
+-}
+ 
+-void qdio_setup_thinint(struct qdio_irq *irq_ptr)
+-{
+-	if (!is_thinint_irq(irq_ptr))
+-		return;
+ 	irq_ptr->dsci = get_indicator();
+ 	DBF_HEX(&irq_ptr->dsci, sizeof(void *));
++
++	rc = set_subchannel_ind(irq_ptr, 0);
++	if (rc)
++		put_indicator(irq_ptr->dsci);
++
++	return rc;
+ }
+ 
+ void qdio_shutdown_thinint(struct qdio_irq *irq_ptr)
 -- 
 2.25.1
 
