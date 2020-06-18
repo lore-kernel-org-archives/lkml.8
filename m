@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFABFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE547207DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 846F5207DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592447429;
-	bh=wSXH/t1nm9cYgnXHIJs3ya+RyoRsiYYIX2/TKeLDJgc=;
+	s=default; t=1592447433;
+	bh=DP3l/3dfACuyGZjRaWpqftXw9fDHov1QXG3qtDR18Zg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gHmVqeiEuGMez0NzhEuLCUTDOx5tz0TfxS/n2nNy0hOFV7NK+s3k5KT9N0534BjLe
-	 nCC5zF/zKXe3TsDvn+kcAqiNttD7kkk+zJXlJ8xU+FPaW4tc4YX0gQjXzOOsn4cnFi
-	 Y592rk/YpPDeLHNTh1/aAovSNk9tOULGUWQBBpcQ=
+	b=ieZmdHW+YAvYVmXaFcnoA/PSK4Z4dF1emT38R4sau7f57fUhZ/8CnJWkgs0RWr9NG
+	 7qzo6NpyzWIrQrNZSt7ors3QUXDN+Ygsoot11obEfkavkC7rX3jGYcssAzG9CR2S/z
+	 8HKv6glKaFDgr76o7tuaLeKUYRqpz1JHAMnIfEzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgFRCa2 (ORCPT
+        id S1733273AbgFRCac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 22:30:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46168 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:30:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727901AbgFRBPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:54 -0400
+        id S1729518AbgFRBPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:15:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02D9A221F6;
-        Thu, 18 Jun 2020 01:15:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDCB22088E;
+        Thu, 18 Jun 2020 01:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442952;
-        bh=wSXH/t1nm9cYgnXHIJs3ya+RyoRsiYYIX2/TKeLDJgc=;
+        s=default; t=1592442947;
+        bh=DP3l/3dfACuyGZjRaWpqftXw9fDHov1QXG3qtDR18Zg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H2Xa4GOGm8aVol+iRzuH6pyoI0M/NEfcxp/WD66rp/WE4kzaFM5KrKSzPXC5IfLBp
-         gE4iMaG/rOxsCAo8yNxbOIX0X03YMpEmF54KLXeVaRUP4hS8qZkxl/Dfjv26Dn9bz9
-         2g3HZ7R9hjRGSMWaAY8XWJdQ9QFP5FrFMWxz+28w=
+        b=Yrkq3MpjWv6H6SHC6bNG/YKEWxGiiNXknB2+sSMlIAKykFhaR08OxDU9L08gDl8kI
+         ltmLWoN0OA082EcVMhWO1HHYMz6VhGfrpVrvWVAqoaPmyj5d6rVkyCq6THXLgm8xc4
+         k2QDphhQ03UJf/hBKx5pG6Yvkz7w6AklNSazYlVc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhihao Cheng <chengzhihao1@huawei.com>,
-        David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 361/388] afs: Fix memory leak in afs_put_sysnames()
-Date:   Wed, 17 Jun 2020 21:07:38 -0400
-Message-Id: <20200618010805.600873-361-sashal@kernel.org>
+Cc:     Joe Perches <joe@perches.com>, Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 357/388] arm64: ftrace: Change CONFIG_FTRACE_WITH_REGS to CONFIG_DYNAMIC_FTRACE_WITH_REGS
+Date:   Wed, 17 Jun 2020 21:07:34 -0400
+Message-Id: <20200618010805.600873-357-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -59,34 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhihao Cheng <chengzhihao1@huawei.com>
+From: Joe Perches <joe@perches.com>
 
-[ Upstream commit 2ca068be09bf8e285036603823696140026dcbe7 ]
+[ Upstream commit 91970bef48d68d06b2bb3f464b572ad50941f6a9 ]
 
-Fix afs_put_sysnames() to actually free the specified afs_sysnames
-object after its reference count has been decreased to zero and
-its contents have been released.
+CONFIG_FTRACE_WITH_REGS does not exist as a Kconfig symbol.
 
-Fixes: 6f8880d8e681557 ("afs: Implement @sys substitution handling")
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 3b23e4991fb6 ("arm64: implement ftrace with regs")
+Signed-off-by: Joe Perches <joe@perches.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Link: https://lore.kernel.org/r/b9b27f2233bd1fa31d72ff937beefdae0e2104e5.camel@perches.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/proc.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/kernel/ftrace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/afs/proc.c b/fs/afs/proc.c
-index 468e1713bce1..6f34c84a0fd0 100644
---- a/fs/afs/proc.c
-+++ b/fs/afs/proc.c
-@@ -563,6 +563,7 @@ void afs_put_sysnames(struct afs_sysnames *sysnames)
- 			if (sysnames->subs[i] != afs_init_sysname &&
- 			    sysnames->subs[i] != sysnames->blank)
- 				kfree(sysnames->subs[i]);
-+		kfree(sysnames);
- 	}
- }
+diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+index 8618faa82e6d..86a5cf9bc19a 100644
+--- a/arch/arm64/kernel/ftrace.c
++++ b/arch/arm64/kernel/ftrace.c
+@@ -69,7 +69,8 @@ static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
  
+ 	if (addr == FTRACE_ADDR)
+ 		return &plt[FTRACE_PLT_IDX];
+-	if (addr == FTRACE_REGS_ADDR && IS_ENABLED(CONFIG_FTRACE_WITH_REGS))
++	if (addr == FTRACE_REGS_ADDR &&
++	    IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_REGS))
+ 		return &plt[FTRACE_REGS_PLT_IDX];
+ #endif
+ 	return NULL;
 -- 
 2.25.1
 
