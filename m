@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AC8C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B440121D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C82021974
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Jun 2020 02:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592448101;
-	bh=nZiTh/x0+BJwJJK5EHwTZcOVVxfwS36S2zGYTDgC4ZU=;
+	s=default; t=1592448106;
+	bh=rLZ11fgScO8wU6jQ6dDX9fn8ep+lhLKEB6480JVUFe0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ci2Urn1siCpPa1mmzFa+9Cu4pxLB6VO3rg8KvliBcOuHh4WIarRaP7/cdw0TD+acR
-	 DIw2fjhkMNMc+YUUzbUHgsGX/w/IsMvxZeQvfJ8/m/8aEMj+dOrmCXKbswnGIh/btc
-	 /fd55j0NZuJDrYsYHj/KKQLGhPhmkAriYnvYhveU=
+	b=FepbH+rZP0tLWOcfA/tfg7t/1U2rjZeDnU9S0zCsnd2eGsTM5uTvfklvRrYAoZfEE
+	 62+evVzYG/o07f7fAvs6K/hW7tfWlYRCp8K8ZJE/fcC+ZLk0xWei0KPSZ9XlZ4KuO1
+	 1JbX5O8PDzKWrPUkgigXLMRmVuRRxWJLH27NUvo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgFRBMW (ORCPT
+        id S1730924AbgFRClo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Jun 2020 21:12:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39640 "EHLO mail.kernel.org"
+        Wed, 17 Jun 2020 22:41:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728745AbgFRBLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:11:38 -0400
+        id S1728173AbgFRBMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:12:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CA2E21974;
-        Thu, 18 Jun 2020 01:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19CCA21974;
+        Thu, 18 Jun 2020 01:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442698;
-        bh=nZiTh/x0+BJwJJK5EHwTZcOVVxfwS36S2zGYTDgC4ZU=;
+        s=default; t=1592442738;
+        bh=rLZ11fgScO8wU6jQ6dDX9fn8ep+lhLKEB6480JVUFe0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pkBgkTForBTTz7VuKwDRtFnFgF0uth22pPe8HWvv/eR2EzEDHNtctM1s6peFUozzm
-         clqDAKZtJ5n6L9YsFkPmFdNHX38nE29A5PpwkvyXCBmzR80W3vy5xhDbUQIci1OCLc
-         eQ3gC0GlSm2sLmtGXDorDHNbco7jNGy41ajTCpu0=
+        b=RDxpzp1hl2MWHe0CSzz3mp6vRB3ruu3MdSCo4TqoOo4tlqkR1dAfyJGGhIeeq6y/M
+         joFS7vDwYprGd40t5lBZZnHu8NukHGgnfWQdXoNM/z4ctpr97AfUSj38Vd1ZwgWpXi
+         Uuy9oKpXFYO9Z1ncpnLfa0ratzjZm7DaCUF80SEU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 161/388] clk: meson: meson8b: Don't rely on u-boot to init all GP_PLL registers
-Date:   Wed, 17 Jun 2020 21:04:18 -0400
-Message-Id: <20200618010805.600873-161-sashal@kernel.org>
+Cc:     Yongbo Zhang <giraffesnn123@gmail.com>,
+        Chen Li <licheng0822@thundersoft.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.7 193/388] SoC: rsnd: add interrupt support for SSI BUSIF buffer
+Date:   Wed, 17 Jun 2020 21:04:50 -0400
+Message-Id: <20200618010805.600873-193-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -61,81 +61,279 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Yongbo Zhang <giraffesnn123@gmail.com>
 
-[ Upstream commit a29ae8600d50ece1856b062a39ed296b8b952259 ]
+[ Upstream commit 66c705d07d784fb6b4622c6e47b6acae357472db ]
 
-Not all u-boot versions initialize the HHI_GP_PLL_CNTL[2-5] registers.
-In that case all HHI_GPLL_PLL_CNTL[1-5] registers are 0x0 and when
-booting Linux the PLL fails to lock.
-The initialization sequence from u-boot is:
-- put the PLL into reset
-- write 0x59C88000 to HHI_GP_PLL_CNTL2
-- write 0xCA463823 to HHI_GP_PLL_CNTL3
-- write 0x0286A027 to HHI_GP_PLL_CNTL4
-- write 0x00003000 to HHI_GP_PLL_CNTL5
-- set M, N, OD and the enable bit
-- take the PLL out of reset
-- check if it has locked
-- disable the PLL
+SSI BUSIF buffer is possible to overflow or underflow, especially in a
+hypervisor environment. If there is no interrupt support, it will eventually
+lead to errors in pcm data.
+This patch adds overflow and underflow interrupt support for SSI BUSIF buffer.
 
-In Linux we already initialize M, N, OD, the enable and the reset bits.
-Also the HHI_GP_PLL_CNTL[2-5] registers with these magic values (the
-exact meaning is unknown) so the PLL can lock when the vendor u-boot did
-not initialize these registers yet.
-
-Fixes: b882964b376f21 ("clk: meson: meson8b: add support for the GP_PLL clock on Meson8m2")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200501215717.735393-1-martin.blumenstingl@googlemail.com
+Reported-by: Chen Li <licheng0822@thundersoft.com>
+Signed-off-by: Yongbo Zhang <giraffesnn123@gmail.com>
+Tested-by: Chen Li <licheng0822@thundersoft.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/20200512093003.28332-1-giraffesnn123@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/meson8b.c | 9 +++++++++
- drivers/clk/meson/meson8b.h | 4 ++++
- 2 files changed, 13 insertions(+)
+ sound/soc/sh/rcar/gen.c  |   8 +++
+ sound/soc/sh/rcar/rsnd.h |   9 +++
+ sound/soc/sh/rcar/ssi.c  | 145 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 162 insertions(+)
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index 5f375799ce46..11f6b868cf2b 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -1918,6 +1918,13 @@ static struct clk_regmap meson8b_mali = {
- 	},
- };
+diff --git a/sound/soc/sh/rcar/gen.c b/sound/soc/sh/rcar/gen.c
+index af19010b9d88..8bd49c8a9517 100644
+--- a/sound/soc/sh/rcar/gen.c
++++ b/sound/soc/sh/rcar/gen.c
+@@ -224,6 +224,14 @@ static int rsnd_gen2_probe(struct rsnd_priv *priv)
+ 		RSND_GEN_S_REG(SSI_SYS_STATUS5,	0x884),
+ 		RSND_GEN_S_REG(SSI_SYS_STATUS6,	0x888),
+ 		RSND_GEN_S_REG(SSI_SYS_STATUS7,	0x88c),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE0, 0x850),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE1, 0x854),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE2, 0x858),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE3, 0x85c),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE4, 0x890),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE5, 0x894),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE6, 0x898),
++		RSND_GEN_S_REG(SSI_SYS_INT_ENABLE7, 0x89c),
+ 		RSND_GEN_S_REG(HDMI0_SEL,	0x9e0),
+ 		RSND_GEN_S_REG(HDMI1_SEL,	0x9e4),
  
-+static const struct reg_sequence meson8m2_gp_pll_init_regs[] = {
-+	{ .reg = HHI_GP_PLL_CNTL2,	.def = 0x59c88000 },
-+	{ .reg = HHI_GP_PLL_CNTL3,	.def = 0xca463823 },
-+	{ .reg = HHI_GP_PLL_CNTL4,	.def = 0x0286a027 },
-+	{ .reg = HHI_GP_PLL_CNTL5,	.def = 0x00003000 },
-+};
+diff --git a/sound/soc/sh/rcar/rsnd.h b/sound/soc/sh/rcar/rsnd.h
+index ea6cbaa9743e..d47608ff5fac 100644
+--- a/sound/soc/sh/rcar/rsnd.h
++++ b/sound/soc/sh/rcar/rsnd.h
+@@ -189,6 +189,14 @@ enum rsnd_reg {
+ 	SSI_SYS_STATUS5,
+ 	SSI_SYS_STATUS6,
+ 	SSI_SYS_STATUS7,
++	SSI_SYS_INT_ENABLE0,
++	SSI_SYS_INT_ENABLE1,
++	SSI_SYS_INT_ENABLE2,
++	SSI_SYS_INT_ENABLE3,
++	SSI_SYS_INT_ENABLE4,
++	SSI_SYS_INT_ENABLE5,
++	SSI_SYS_INT_ENABLE6,
++	SSI_SYS_INT_ENABLE7,
+ 	HDMI0_SEL,
+ 	HDMI1_SEL,
+ 	SSI9_BUSIF0_MODE,
+@@ -237,6 +245,7 @@ enum rsnd_reg {
+ #define SSI9_BUSIF_ADINR(i)	(SSI9_BUSIF0_ADINR + (i))
+ #define SSI9_BUSIF_DALIGN(i)	(SSI9_BUSIF0_DALIGN + (i))
+ #define SSI_SYS_STATUS(i)	(SSI_SYS_STATUS0 + (i))
++#define SSI_SYS_INT_ENABLE(i) (SSI_SYS_INT_ENABLE0 + (i))
+ 
+ 
+ struct rsnd_priv;
+diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
+index 4a7d3413917f..47d5ddb526f2 100644
+--- a/sound/soc/sh/rcar/ssi.c
++++ b/sound/soc/sh/rcar/ssi.c
+@@ -372,6 +372,9 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
+ 	u32 wsr		= ssi->wsr;
+ 	int width;
+ 	int is_tdm, is_tdm_split;
++	int id = rsnd_mod_id(mod);
++	int i;
++	u32 sys_int_enable = 0;
+ 
+ 	is_tdm		= rsnd_runtime_is_tdm(io);
+ 	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+@@ -447,6 +450,38 @@ static void rsnd_ssi_config_init(struct rsnd_mod *mod,
+ 		cr_mode = DIEN;		/* PIO : enable Data interrupt */
+ 	}
+ 
++	/* enable busif buffer over/under run interrupt. */
++	if (is_tdm || is_tdm_split) {
++		switch (id) {
++		case 0:
++		case 1:
++		case 2:
++		case 3:
++		case 4:
++			for (i = 0; i < 4; i++) {
++				sys_int_enable = rsnd_mod_read(mod,
++					SSI_SYS_INT_ENABLE(i * 2));
++				sys_int_enable |= 0xf << (id * 4);
++				rsnd_mod_write(mod,
++					       SSI_SYS_INT_ENABLE(i * 2),
++					       sys_int_enable);
++			}
 +
- static const struct pll_params_table meson8m2_gp_pll_params_table[] = {
- 	PLL_PARAMS(182, 3),
- 	{ /* sentinel */ },
-@@ -1951,6 +1958,8 @@ static struct clk_regmap meson8m2_gp_pll_dco = {
- 			.width   = 1,
- 		},
- 		.table = meson8m2_gp_pll_params_table,
-+		.init_regs = meson8m2_gp_pll_init_regs,
-+		.init_count = ARRAY_SIZE(meson8m2_gp_pll_init_regs),
- 	},
- 	.hw.init = &(struct clk_init_data){
- 		.name = "gp_pll_dco",
-diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-index c889fbeec30f..c91fb07fcb65 100644
---- a/drivers/clk/meson/meson8b.h
-+++ b/drivers/clk/meson/meson8b.h
-@@ -20,6 +20,10 @@
-  * [0] http://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
-  */
- #define HHI_GP_PLL_CNTL			0x40  /* 0x10 offset in data sheet */
-+#define HHI_GP_PLL_CNTL2		0x44  /* 0x11 offset in data sheet */
-+#define HHI_GP_PLL_CNTL3		0x48  /* 0x12 offset in data sheet */
-+#define HHI_GP_PLL_CNTL4		0x4C  /* 0x13 offset in data sheet */
-+#define HHI_GP_PLL_CNTL5		0x50  /* 0x14 offset in data sheet */
- #define HHI_VIID_CLK_DIV		0x128 /* 0x4a offset in data sheet */
- #define HHI_VIID_CLK_CNTL		0x12c /* 0x4b offset in data sheet */
- #define HHI_GCLK_MPEG0			0x140 /* 0x50 offset in data sheet */
++			break;
++		case 9:
++			for (i = 0; i < 4; i++) {
++				sys_int_enable = rsnd_mod_read(mod,
++					SSI_SYS_INT_ENABLE((i * 2) + 1));
++				sys_int_enable |= 0xf << 4;
++				rsnd_mod_write(mod,
++					       SSI_SYS_INT_ENABLE((i * 2) + 1),
++					       sys_int_enable);
++			}
++
++			break;
++		}
++	}
++
+ init_end:
+ 	ssi->cr_own	= cr_own;
+ 	ssi->cr_mode	= cr_mode;
+@@ -496,6 +531,13 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
+ {
+ 	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
+ 	struct device *dev = rsnd_priv_to_dev(priv);
++	int is_tdm, is_tdm_split;
++	int id = rsnd_mod_id(mod);
++	int i;
++	u32 sys_int_enable = 0;
++
++	is_tdm		= rsnd_runtime_is_tdm(io);
++	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+ 
+ 	if (!rsnd_ssi_is_run_mods(mod, io))
+ 		return 0;
+@@ -517,6 +559,38 @@ static int rsnd_ssi_quit(struct rsnd_mod *mod,
+ 		ssi->wsr	= 0;
+ 	}
+ 
++	/* disable busif buffer over/under run interrupt. */
++	if (is_tdm || is_tdm_split) {
++		switch (id) {
++		case 0:
++		case 1:
++		case 2:
++		case 3:
++		case 4:
++			for (i = 0; i < 4; i++) {
++				sys_int_enable = rsnd_mod_read(mod,
++						SSI_SYS_INT_ENABLE(i * 2));
++				sys_int_enable &= ~(0xf << (id * 4));
++				rsnd_mod_write(mod,
++					       SSI_SYS_INT_ENABLE(i * 2),
++					       sys_int_enable);
++			}
++
++			break;
++		case 9:
++			for (i = 0; i < 4; i++) {
++				sys_int_enable = rsnd_mod_read(mod,
++					SSI_SYS_INT_ENABLE((i * 2) + 1));
++				sys_int_enable &= ~(0xf << 4);
++				rsnd_mod_write(mod,
++					       SSI_SYS_INT_ENABLE((i * 2) + 1),
++					       sys_int_enable);
++			}
++
++			break;
++		}
++	}
++
+ 	return 0;
+ }
+ 
+@@ -622,6 +696,11 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
+ 			int enable)
+ {
+ 	u32 val = 0;
++	int is_tdm, is_tdm_split;
++	int id = rsnd_mod_id(mod);
++
++	is_tdm		= rsnd_runtime_is_tdm(io);
++	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+ 
+ 	if (rsnd_is_gen1(priv))
+ 		return 0;
+@@ -635,6 +714,19 @@ static int rsnd_ssi_irq(struct rsnd_mod *mod,
+ 	if (enable)
+ 		val = rsnd_ssi_is_dma_mode(mod) ? 0x0e000000 : 0x0f000000;
+ 
++	if (is_tdm || is_tdm_split) {
++		switch (id) {
++		case 0:
++		case 1:
++		case 2:
++		case 3:
++		case 4:
++		case 9:
++			val |= 0x0000ff00;
++			break;
++		}
++	}
++
+ 	rsnd_mod_write(mod, SSI_INT_ENABLE, val);
+ 
+ 	return 0;
+@@ -651,6 +743,12 @@ static void __rsnd_ssi_interrupt(struct rsnd_mod *mod,
+ 	u32 status;
+ 	bool elapsed = false;
+ 	bool stop = false;
++	int id = rsnd_mod_id(mod);
++	int i;
++	int is_tdm, is_tdm_split;
++
++	is_tdm		= rsnd_runtime_is_tdm(io);
++	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+ 
+ 	spin_lock(&priv->lock);
+ 
+@@ -672,6 +770,53 @@ static void __rsnd_ssi_interrupt(struct rsnd_mod *mod,
+ 		stop = true;
+ 	}
+ 
++	status = 0;
++
++	if (is_tdm || is_tdm_split) {
++		switch (id) {
++		case 0:
++		case 1:
++		case 2:
++		case 3:
++		case 4:
++			for (i = 0; i < 4; i++) {
++				status = rsnd_mod_read(mod,
++						       SSI_SYS_STATUS(i * 2));
++				status &= 0xf << (id * 4);
++
++				if (status) {
++					rsnd_dbg_irq_status(dev,
++						"%s err status : 0x%08x\n",
++						rsnd_mod_name(mod), status);
++					rsnd_mod_write(mod,
++						       SSI_SYS_STATUS(i * 2),
++						       0xf << (id * 4));
++					stop = true;
++					break;
++				}
++			}
++			break;
++		case 9:
++			for (i = 0; i < 4; i++) {
++				status = rsnd_mod_read(mod,
++						SSI_SYS_STATUS((i * 2) + 1));
++				status &= 0xf << 4;
++
++				if (status) {
++					rsnd_dbg_irq_status(dev,
++						"%s err status : 0x%08x\n",
++						rsnd_mod_name(mod), status);
++					rsnd_mod_write(mod,
++						SSI_SYS_STATUS((i * 2) + 1),
++						0xf << 4);
++					stop = true;
++					break;
++				}
++			}
++			break;
++		}
++	}
++
+ 	rsnd_ssi_status_clear(mod);
+ rsnd_ssi_interrupt_out:
+ 	spin_unlock(&priv->lock);
 -- 
 2.25.1
 
