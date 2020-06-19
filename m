@@ -2,181 +2,149 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4696C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C74A82073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364EB2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:32:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732056AbgFSJcN (ORCPT
+        id S1732075AbgFSJcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:32:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:49242 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731559AbgFSJbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:31:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4178613D5;
-        Fri, 19 Jun 2020 02:31:22 -0700 (PDT)
-Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 14BFD3F71F;
-        Fri, 19 Jun 2020 02:31:15 -0700 (PDT)
-From:   Jianyong Wu <jianyong.wu@arm.com>
-To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, maz@kernel.org,
-        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
-        suzuki.poulose@arm.com, steven.price@arm.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
-        Wei.Chen@arm.com, jianyong.wu@arm.com, nd@arm.com
-Subject: [RFC PATCH v13 5/9] time: Add mechanism to recognize clocksource in time_get_snapshot
-Date:   Fri, 19 Jun 2020 17:30:29 +0800
-Message-Id: <20200619093033.58344-6-jianyong.wu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200619093033.58344-1-jianyong.wu@arm.com>
-References: <20200619093033.58344-1-jianyong.wu@arm.com>
+        Fri, 19 Jun 2020 05:32:16 -0400
+Received: from mx1.unisoc.com ([222.66.158.135]:41689 "EHLO SHSQR01.unisoc.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731364AbgFSJbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 05:31:18 -0400
+Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
+        by SHSQR01.unisoc.com with ESMTP id 05J91GZF010546
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 17:01:16 +0800 (CST)
+        (envelope-from hongyu.jin@unisoc.com)
+Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+        by SHSQR01.spreadtrum.com with ESMTPS id 05J90rqt009148
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Fri, 19 Jun 2020 17:00:54 +0800 (CST)
+        (envelope-from hongyu.jin@unisoc.com)
+Received: from BJMBX01.spreadtrum.com (10.0.64.7) by BJMBX01.spreadtrum.com
+ (10.0.64.7) with Microsoft SMTP Server (TLS) id 15.0.847.32; Fri, 19 Jun 2020
+ 17:00:53 +0800
+Received: from BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7]) by
+ BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7%16]) with mapi id
+ 15.00.0847.030; Fri, 19 Jun 2020 17:00:53 +0800
+From:   =?gb2312?B?vfC67NPuIChIb25neXUgSmluKQ==?= <hongyu.jin@unisoc.com>
+To:     Gao Xiang <hsiangkao@aol.com>,
+        "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
+        Chao Yu <yuchao0@huawei.com>
+CC:     Chao Yu <chao@kernel.org>, Li Guifu <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Gao Xiang <hsiangkao@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: [PATCH v2] erofs: fix partially uninitialized misuse in
+ z_erofs_onlinepage_fixup
+Thread-Topic: [PATCH v2] erofs: fix partially uninitialized misuse in
+ z_erofs_onlinepage_fixup
+Thread-Index: AQHWRcphTFCNsOawuk2LQqgGLvVLoajfooAF
+Date:   Fri, 19 Jun 2020 09:00:53 +0000
+Message-ID: <37ee181865a6411bb029745b809adae9@BJMBX01.spreadtrum.com>
+References: <20200618111936.19845-1-hsiangkao@aol.com>,<20200618234349.22553-1-hsiangkao@aol.com>
+In-Reply-To: <20200618234349.22553-1-hsiangkao@aol.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.0.74.65]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MAIL: SHSQR01.spreadtrum.com 05J90rqt009148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
-
-System time snapshots are not conveying information about the current
-clocksource which was used, but callers like the PTP KVM guest
-implementation have the requirement to evaluate the clocksource type to
-select the appropriate mechanism.
-
-Introduce a clocksource id field in struct clocksource which is by default
-set to CSID_GENERIC (0). Clocksource implementations can set that field to
-a value which allows to identify the clocksource.
-
-Store the clocksource id of the current clocksource in the
-system_time_snapshot so callers can evaluate which clocksource was used to
-take the snapshot and act accordingly.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
----
- include/linux/clocksource.h     |  6 ++++++
- include/linux/clocksource_ids.h | 11 +++++++++++
- include/linux/timekeeping.h     | 12 +++++++-----
- kernel/time/clocksource.c       |  3 +++
- kernel/time/timekeeping.c       |  1 +
- 5 files changed, 28 insertions(+), 5 deletions(-)
- create mode 100644 include/linux/clocksource_ids.h
-
-diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
-index 86d143db6523..1290d0dce840 100644
---- a/include/linux/clocksource.h
-+++ b/include/linux/clocksource.h
-@@ -17,6 +17,7 @@
- #include <linux/timer.h>
- #include <linux/init.h>
- #include <linux/of.h>
-+#include <linux/clocksource_ids.h>
- #include <asm/div64.h>
- #include <asm/io.h>
- 
-@@ -62,6 +63,10 @@ struct module;
-  *			400-499: Perfect
-  *				The ideal clocksource. A must-use where
-  *				available.
-+ * @id:			Defaults to CSID_GENERIC. The id value is captured
-+ *			in certain snapshot functions to allow callers to
-+ *			validate the clocksource from which the snapshot was
-+ *			taken.
-  * @flags:		Flags describing special properties
-  * @enable:		Optional function to enable the clocksource
-  * @disable:		Optional function to disable the clocksource
-@@ -100,6 +105,7 @@ struct clocksource {
- 	const char		*name;
- 	struct list_head	list;
- 	int			rating;
-+	enum clocksource_ids	id;
- 	enum vdso_clock_mode	vdso_clock_mode;
- 	unsigned long		flags;
- 
-diff --git a/include/linux/clocksource_ids.h b/include/linux/clocksource_ids.h
-new file mode 100644
-index 000000000000..4d8e19e05328
---- /dev/null
-+++ b/include/linux/clocksource_ids.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_CLOCKSOURCE_IDS_H
-+#define _LINUX_CLOCKSOURCE_IDS_H
-+
-+/* Enum to give clocksources a unique identifier */
-+enum clocksource_ids {
-+	CSID_GENERIC		= 0,
-+	CSID_MAX,
-+};
-+
-+#endif
-diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
-index b27e2ffa96c1..70e771862d20 100644
---- a/include/linux/timekeeping.h
-+++ b/include/linux/timekeeping.h
-@@ -3,6 +3,7 @@
- #define _LINUX_TIMEKEEPING_H
- 
- #include <linux/errno.h>
-+#include <linux/clocksource_ids.h>
- 
- /* Included from linux/ktime.h */
- 
-@@ -232,11 +233,12 @@ extern void timekeeping_inject_sleeptime64(const struct timespec64 *delta);
-  * @cs_was_changed_seq:	The sequence number of clocksource change events
-  */
- struct system_time_snapshot {
--	u64		cycles;
--	ktime_t		real;
--	ktime_t		raw;
--	unsigned int	clock_was_set_seq;
--	u8		cs_was_changed_seq;
-+	u64			cycles;
-+	ktime_t			real;
-+	ktime_t			raw;
-+	enum clocksource_ids	cs_id;
-+	unsigned int		clock_was_set_seq;
-+	u8			cs_was_changed_seq;
- };
- 
- /*
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index 02441ead3c3b..9fe148734fb3 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -928,6 +928,9 @@ int __clocksource_register_scale(struct clocksource *cs, u32 scale, u32 freq)
- 
- 	clocksource_arch_init(cs);
- 
-+	if (WARN_ON_ONCE((unsigned int)cs->id >= CSID_MAX))
-+		cs->id = CSID_GENERIC;
-+
- 	if (cs->vdso_clock_mode < 0 ||
- 	    cs->vdso_clock_mode >= VDSO_CLOCKMODE_MAX) {
- 		pr_warn("clocksource %s registered with invalid VDSO mode %d. Disabling VDSO support.\n",
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index d20d489841c8..2cf85d81e4ed 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -979,6 +979,7 @@ void ktime_get_snapshot(struct system_time_snapshot *systime_snapshot)
- 	do {
- 		seq = read_seqcount_begin(&tk_core.seq);
- 		now = tk_clock_read(&tk->tkr_mono);
-+		systime_snapshot->cs_id = tk->tkr_mono.clock->id;
- 		systime_snapshot->cs_was_changed_seq = tk->cs_was_changed_seq;
- 		systime_snapshot->clock_was_set_seq = tk->clock_was_set_seq;
- 		base_real = ktime_add(tk->tkr_mono.base,
--- 
-2.17.1
-
+SGkgeGlhbmc6DQoNCkhvbmd5dSByZXBvcnRlZCAiaWQgIT0gaW5kZXgiIGluIHpfZXJvZnNfb25s
+aW5lcGFnZV9maXh1cCgpIHdpdGgNCnNwZWNpZmljIGFhcmNoNjQgZW52aXJvbm1lbnQgZWFzaWx5
+LCB3aGljaCB3YXNuJ3Qgc2hvd24gYmVmb3JlLg0KDQpBZnRlciBkaWdnaW5nIGludG8gdGhhdCwg
+SSBmb3VuZCB0aGF0IGhpZ2ggMzIgYml0cyBvZiBwYWdlLT5wcml2YXRlDQp3YXMgc2V0IHRvIDB4
+YWFhYWFhYWEgcmF0aGVyIHRoYW4gMCAoZHVlIHRvIHpfZXJvZnNfb25saW5lcGFnZV9pbml0DQpi
+ZWhhdmlvciB3aXRoIHNwZWNpZmljIGNvbXBpbGVyIG9wdGlvbnMpLiBBY3R1YWxseSB3ZSBvbmx5
+IHVzZSBsb3cNCjMyIGJpdHMgdG8ga2VlcCB0aGUgcGFnZSBpbmZvcm1hdGlvbiBzaW5jZSBwYWdl
+LT5wcml2YXRlIGlzIG9ubHkgNA0KYnl0ZXMgb24gbW9zdCAzMi1iaXQgcGxhdGZvcm1zLiBIb3dl
+dmVyIHpfZXJvZnNfb25saW5lcGFnZV9maXh1cCgpDQp1c2VzIHRoZSB1cHBlciAzMiBiaXRzIGJ5
+IG1pc3Rha2UuDQoNClRlc3RlZC1ieTogaG9uZ3l1LmppbkB1bmlzb2MuY29tDQoNCml0J3Mgb2su
+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQq3orz+yMs6IEdhbyBY
+aWFuZyA8aHNpYW5na2FvQGFvbC5jb20+DQq3osvNyrG85DogMjAyMMTqNtTCMTnI1SA3OjQzDQrK
+1bz+yMs6IGxpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmc7IENoYW8gWXUNCrOty806IENoYW8g
+WXU7IExpIEd1aWZ1OyBGYW5nIFdlaTsgTEtNTDsgR2FvIFhpYW5nOyC98Lrs0+4gKEhvbmd5dSBK
+aW4pOyBzdGFibGVAdmdlci5rZXJuZWwub3JnDQrW98ziOiBbUEFUQ0ggdjJdIGVyb2ZzOiBmaXgg
+cGFydGlhbGx5IHVuaW5pdGlhbGl6ZWQgbWlzdXNlIGluIHpfZXJvZnNfb25saW5lcGFnZV9maXh1
+cA0KDQpGcm9tOiBHYW8gWGlhbmcgPGhzaWFuZ2thb0ByZWRoYXQuY29tPg0KDQpIb25neXUgcmVw
+b3J0ZWQgImlkICE9IGluZGV4IiBpbiB6X2Vyb2ZzX29ubGluZXBhZ2VfZml4dXAoKSB3aXRoDQpz
+cGVjaWZpYyBhYXJjaDY0IGVudmlyb25tZW50IGVhc2lseSwgd2hpY2ggd2Fzbid0IHNob3duIGJl
+Zm9yZS4NCg0KQWZ0ZXIgZGlnZ2luZyBpbnRvIHRoYXQsIEkgZm91bmQgdGhhdCBoaWdoIDMyIGJp
+dHMgb2YgcGFnZS0+cHJpdmF0ZQ0Kd2FzIHNldCB0byAweGFhYWFhYWFhIHJhdGhlciB0aGFuIDAg
+KGR1ZSB0byB6X2Vyb2ZzX29ubGluZXBhZ2VfaW5pdA0KYmVoYXZpb3Igd2l0aCBzcGVjaWZpYyBj
+b21waWxlciBvcHRpb25zKS4gQWN0dWFsbHkgd2Ugb25seSB1c2UgbG93DQozMiBiaXRzIHRvIGtl
+ZXAgdGhlIHBhZ2UgaW5mb3JtYXRpb24gc2luY2UgcGFnZS0+cHJpdmF0ZSBpcyBvbmx5IDQNCmJ5
+dGVzIG9uIG1vc3QgMzItYml0IHBsYXRmb3Jtcy4gSG93ZXZlciB6X2Vyb2ZzX29ubGluZXBhZ2Vf
+Zml4dXAoKQ0KdXNlcyB0aGUgdXBwZXIgMzIgYml0cyBieSBtaXN0YWtlLg0KDQpMZXQncyBmaXgg
+aXQgbm93Lg0KDQpSZXBvcnRlZC1ieTogSG9uZ3l1IEppbiA8aG9uZ3l1LmppbkB1bmlzb2MuY29t
+Pg0KRml4ZXM6IDM4ODNhNzlhYmQwMiAoInN0YWdpbmc6IGVyb2ZzOiBpbnRyb2R1Y2UgVkxFIGRl
+Y29tcHJlc3Npb24gc3VwcG9ydCIpDQpDYzogPHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc+ICMgNC4x
+OSsNClNpZ25lZC1vZmYtYnk6IEdhbyBYaWFuZyA8aHNpYW5na2FvQHJlZGhhdC5jb20+DQotLS0N
+CmNoYW5nZSBzaW5jZSB2MToNCiBtb3ZlIC52IGFzc2lnbm1lbnQgb3V0IHNpbmNlIGl0IGRvZXNu
+J3QgbmVlZCBmb3IgZXZlcnkgbG9vcDsNCg0KIGZzL2Vyb2ZzL3pkYXRhLmggfCAyMCArKysrKysr
+KysrLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspLCAxMCBkZWxl
+dGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2ZzL2Vyb2ZzL3pkYXRhLmggYi9mcy9lcm9mcy96ZGF0
+YS5oDQppbmRleCA3ODI0ZjU1NjNhNTUuLjliNjZjMjhiM2FlOSAxMDA2NDQNCi0tLSBhL2ZzL2Vy
+b2ZzL3pkYXRhLmgNCisrKyBiL2ZzL2Vyb2ZzL3pkYXRhLmgNCkBAIC0xNDQsMjIgKzE0NCwyMiBA
+QCBzdGF0aWMgaW5saW5lIHZvaWQgel9lcm9mc19vbmxpbmVwYWdlX2luaXQoc3RydWN0IHBhZ2Ug
+KnBhZ2UpDQogc3RhdGljIGlubGluZSB2b2lkIHpfZXJvZnNfb25saW5lcGFnZV9maXh1cChzdHJ1
+Y3QgcGFnZSAqcGFnZSwNCiAgICAgICAgdWludHB0cl90IGluZGV4LCBib29sIGRvd24pDQogew0K
+LSAgICAgICB1bnNpZ25lZCBsb25nICpwLCBvLCB2LCBpZDsNCi1yZXBlYXQ6DQotICAgICAgIHAg
+PSAmcGFnZV9wcml2YXRlKHBhZ2UpOw0KLSAgICAgICBvID0gUkVBRF9PTkNFKCpwKTsNCisgICAg
+ICAgdW5pb24gel9lcm9mc19vbmxpbmVwYWdlX2NvbnZlcnRlciB1ID0geyAudiA9ICZwYWdlX3By
+aXZhdGUocGFnZSkgfTsNCisgICAgICAgaW50IG9yaWcsIG9yaWdfaW5kZXgsIHZhbDsNCg0KLSAg
+ICAgICBpZCA9IG8gPj4gWl9FUk9GU19PTkxJTkVQQUdFX0lOREVYX1NISUZUOw0KLSAgICAgICBp
+ZiAoaWQpIHsNCityZXBlYXQ6DQorICAgICAgIG9yaWcgPSBhdG9taWNfcmVhZCh1Lm8pOw0KKyAg
+ICAgICBvcmlnX2luZGV4ID0gb3JpZyA+PiBaX0VST0ZTX09OTElORVBBR0VfSU5ERVhfU0hJRlQ7
+DQorICAgICAgIGlmIChvcmlnX2luZGV4KSB7DQogICAgICAgICAgICAgICAgaWYgKCFpbmRleCkN
+CiAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybjsNCg0KLSAgICAgICAgICAgICAgIERCR19C
+VUdPTihpZCAhPSBpbmRleCk7DQorICAgICAgICAgICAgICAgREJHX0JVR09OKG9yaWdfaW5kZXgg
+IT0gaW5kZXgpOw0KICAgICAgICB9DQoNCi0gICAgICAgdiA9IChpbmRleCA8PCBaX0VST0ZTX09O
+TElORVBBR0VfSU5ERVhfU0hJRlQpIHwNCi0gICAgICAgICAgICAgICAoKG8gJiBaX0VST0ZTX09O
+TElORVBBR0VfQ09VTlRfTUFTSykgKyAodW5zaWduZWQgaW50KWRvd24pOw0KLSAgICAgICBpZiAo
+Y21weGNoZyhwLCBvLCB2KSAhPSBvKQ0KKyAgICAgICB2YWwgPSAoaW5kZXggPDwgWl9FUk9GU19P
+TkxJTkVQQUdFX0lOREVYX1NISUZUKSB8DQorICAgICAgICAgICAgICAgKChvcmlnICYgWl9FUk9G
+U19PTkxJTkVQQUdFX0NPVU5UX01BU0spICsgKHVuc2lnbmVkIGludClkb3duKTsNCisgICAgICAg
+aWYgKGF0b21pY19jbXB4Y2hnKHUubywgb3JpZywgdmFsKSAhPSBvcmlnKQ0KICAgICAgICAgICAg
+ICAgIGdvdG8gcmVwZWF0Ow0KIH0NCg0KLS0NCjIuMjQuMA0KDQpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXw0KIFRoaXMgZW1haWwgKGluY2x1ZGluZyBpdHMgYXR0YWNobWVudHMpIGlz
+IGludGVuZGVkIG9ubHkgZm9yIHRoZSBwZXJzb24gb3IgZW50aXR5IHRvIHdoaWNoIGl0IGlzIGFk
+ZHJlc3NlZCBhbmQgbWF5IGNvbnRhaW4gaW5mb3JtYXRpb24gdGhhdCBpcyBwcml2aWxlZ2VkLCBj
+b25maWRlbnRpYWwgb3Igb3RoZXJ3aXNlIHByb3RlY3RlZCBmcm9tIGRpc2Nsb3N1cmUuIFVuYXV0
+aG9yaXplZCB1c2UsIGRpc3NlbWluYXRpb24sIGRpc3RyaWJ1dGlvbiBvciBjb3B5aW5nIG9mIHRo
+aXMgZW1haWwgb3IgdGhlIGluZm9ybWF0aW9uIGhlcmVpbiBvciB0YWtpbmcgYW55IGFjdGlvbiBp
+biByZWxpYW5jZSBvbiB0aGUgY29udGVudHMgb2YgdGhpcyBlbWFpbCBvciB0aGUgaW5mb3JtYXRp
+b24gaGVyZWluLCBieSBhbnlvbmUgb3RoZXIgdGhhbiB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBv
+ciBhbiBlbXBsb3llZSBvciBhZ2VudCByZXNwb25zaWJsZSBmb3IgZGVsaXZlcmluZyB0aGUgbWVz
+c2FnZSB0byB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiBJ
+ZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBwbGVhc2UgZG8gbm90IHJlYWQs
+IGNvcHksIHVzZSBvciBkaXNjbG9zZSBhbnkgcGFydCBvZiB0aGlzIGUtbWFpbCB0byBvdGhlcnMu
+IFBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBpbW1lZGlhdGVseSBhbmQgcGVybWFuZW50bHkgZGVs
+ZXRlIHRoaXMgZS1tYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgaWYgeW91IHJlY2VpdmVkIGl0IGlu
+IGVycm9yLiBJbnRlcm5ldCBjb21tdW5pY2F0aW9ucyBjYW5ub3QgYmUgZ3VhcmFudGVlZCB0byBi
+ZSB0aW1lbHksIHNlY3VyZSwgZXJyb3ItZnJlZSBvciB2aXJ1cy1mcmVlLiBUaGUgc2VuZGVyIGRv
+ZXMgbm90IGFjY2VwdCBsaWFiaWxpdHkgZm9yIGFueSBlcnJvcnMgb3Igb21pc3Npb25zLg0Ksb7T
+yrz+vLDG5Li9vP6+39PQsaPD3NDU1sqjrMrct6jCybGju6Syu7XD0LnCtqOsvfa3osvNuPixvtPK
+vP7L+da4zNi2qMrVvP7Iy6Gj0c+9+7fHvq3K2sioyrnTw6Gi0Pu0q6Git6KyvLvyuLTWxrG+08q8
+/rvyxuTE2sjdoaPI9LfHuMPM2LaoytW8/sjLo6zH687w1MS2waGiuLTWxqGiIMq508O78sX7wrax
+vtPKvP61xMjOus7E2sjdoaPI9M7zytWxvtPKvP6jrMfrtNPPtc2z1tDTwL7D0NTJvrP9sb7Tyrz+
+vLDL+dPQuL28/qOssqLS1LvYuLTTyrz+tcS3vcq9vLS/zLjm1qq3orz+yMuho87et6ixo9aku6XB
+qs34zajQxbywyrGhorCyyKuhos7ezvO78rfAtr6ho7eivP7Iy7bUyM66zrTtwqm++bK7s9C1o9Tw
+yM6how0K
