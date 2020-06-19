@@ -2,100 +2,187 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E41AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA14D2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583396;
-	bh=47bjv5OmHgy6hA58VLYMWuBDqhtIvn88MVvyr/tlets=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SDJUi7BZKGyI4bktyUU2irWGXtye0u8OHxiRxzQbIaQXkGa4f4BN7IdI3TFmomJ9Z
-	 sA1gVqEfk4PX3BCwbxmf7IEixz46d/t/wxxq2jipCZqoJ8flNeupGTf9rwHiolER6E
-	 k2ckL4pWDxcZsUoajwjrIFxykVAvxh/vjK/gItiw=
+	by mail.kernel.org (Postfix) with ESMTP id 37605217D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:16:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ofA1AzoF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394498AbgFSQQb (ORCPT
+        id S2394508AbgFSQQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:16:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390928AbgFSPDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390956AbgFSPDD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 19 Jun 2020 11:03:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D684621841;
-        Fri, 19 Jun 2020 15:03:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578983;
-        bh=47bjv5OmHgy6hA58VLYMWuBDqhtIvn88MVvyr/tlets=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WedEIFEQpCH/ymgkgMJRYMbLpYtNntNEBHAicMoOpqOciWJMlIV+FsS6C5iPlW7OO
-         5Bc6lznP7Y+9GgmvePf7dzOOsL5XbGIKsf2onYQxxFYZ2pIkyNzricmDVso4mlF5o3
-         otijXhn1AFEZyPOX6NBWx3Qx5+fIBYYoYkMY5xkc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 4.19 232/267] e1000e: Disable TSO for buffer overrun workaround
-Date:   Fri, 19 Jun 2020 16:33:37 +0200
-Message-Id: <20200619141659.848204481@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD538C0613EF
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 08:03:03 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id g12so4017211pll.10
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 08:03:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+LnqhKjbJEUfkGCu1m/2g+LppzzVyXYZg47hg3uhOd0=;
+        b=ofA1AzoFRZ4MiXl9EfIriR7S7EEDw0MZ3OcZfvwiug8/LxQyXqMBhQNc2t5MB4T+MP
+         1cBRaqv+Adlb0QGtdhesz8tTqpZT/UwhaqJF283gfDbIcx+/t4EHoPX+zzrLRht1fkO7
+         /eKNTyjuZrSpP6Fa3jjLRB/oeFGV5+We667m5i+qOfK6jAKzhPFN4LZ7Aea1U3BBlq5y
+         r3hyxLdpzzZk0u/q8g8dw5E33HSygPnaxl4wZAuLkwk+LRt7Wwyb1K0YLAGrwQ694bzP
+         HPTAc7nLX+UjyYmLYhVbNDjEQQ2xyaNr+kVwkozO+qmrizxiTxaohrM6KVBv8BSzuh7G
+         rPbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+LnqhKjbJEUfkGCu1m/2g+LppzzVyXYZg47hg3uhOd0=;
+        b=V23mDrxobCuQSG5XdfRNa9IFaWAWblTxRKadk9IiPYfFvFs6h5kJeX/EYa7rfCVODU
+         QfRsIdiw+ZYFuLiwUljIak70AGOFfYXkTz9d5uDBtO8y0VNMhcPrGnb72muoytU5xoZv
+         r75nCSrKFIjXXbzHNWTF1R2TjhAI95igLrF+X7Ucxffvj7xwCvZCpupEJFF75i6f2dyA
+         SvMhDEGppdOIttpXeFNEvREvw29JG8ZpgwmJBPRXUKVpEQMOGDF1l42iTVlathSXHSMZ
+         8w781itMG1Gz4Gv99dsWKQCvhnvmCvKp0zBF3d/mVtBc9qx5FxldQYXu0yWS9FX6n4w3
+         y4gw==
+X-Gm-Message-State: AOAM530ggNgann9Y4EukJ/7LuKwAnOjVRycvrYNqR2RnXnJvC76C88DH
+        T5qeJzChHt6NBzChyjtlCsdfEQ==
+X-Google-Smtp-Source: ABdhPJzxl6m4GmVs1yhzQxBYGEsuQSldHuD3SkC6vlqhKC8YiMob8skih3KD4PgAX5KiZe8FPTwA+g==
+X-Received: by 2002:a17:902:d392:: with SMTP id e18mr8544615pld.295.1592578983045;
+        Fri, 19 Jun 2020 08:03:03 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id q65sm6281283pfc.155.2020.06.19.08.02.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 08:03:01 -0700 (PDT)
+Subject: Re: [PATCH 3/3] io_uring: add support for zone-append
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        "javier.gonz@samsung.com" <javier@javigon.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
+        "nj.shetty@samsung.com" <nj.shetty@samsung.com>
+References: <1592414619-5646-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200617172713epcas5p352f2907a12bd4ee3c97be1c7d8e1569e@epcas5p3.samsung.com>
+ <1592414619-5646-4-git-send-email-joshi.k@samsung.com>
+ <CY4PR04MB37510E916B6F243D189B4EB0E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200618083529.ciifu4chr4vrv2j5@mpHalley.local>
+ <CY4PR04MB3751D5D6AFB0DA7B8A2DFF61E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200618091113.eu2xdp6zmdooy5d2@mpHalley.local>
+ <20200619094149.uaorbger326s6yzz@mpHalley.local>
+ <31f1c27e-4a3d-a411-3d3b-f88a2d92ce7b@kernel.dk>
+ <24297973-82ad-a629-e5f5-38a5b12db83a@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a68cb8f6-e17c-9ee3-b732-4be689ffebc3@kernel.dk>
+Date:   Fri, 19 Jun 2020 09:02:58 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <24297973-82ad-a629-e5f5-38a5b12db83a@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+On 6/19/20 8:59 AM, Pavel Begunkov wrote:
+> On 19/06/2020 17:15, Jens Axboe wrote:
+>> On 6/19/20 3:41 AM, javier.gonz@samsung.com wrote:
+>>> Jens,
+>>>
+>>> Would you have time to answer a question below in this thread?
+>>>
+>>> On 18.06.2020 11:11, javier.gonz@samsung.com wrote:
+>>>> On 18.06.2020 08:47, Damien Le Moal wrote:
+>>>>> On 2020/06/18 17:35, javier.gonz@samsung.com wrote:
+>>>>>> On 18.06.2020 07:39, Damien Le Moal wrote:
+>>>>>>> On 2020/06/18 2:27, Kanchan Joshi wrote:
+>>>>>>>> From: Selvakumar S <selvakuma.s1@samsung.com>
+>>>>>>>>
+>>>>>>>> Introduce three new opcodes for zone-append -
+>>>>>>>>
+>>>>>>>>   IORING_OP_ZONE_APPEND     : non-vectord, similiar to IORING_OP_WRITE
+>>>>>>>>   IORING_OP_ZONE_APPENDV    : vectored, similar to IORING_OP_WRITEV
+>>>>>>>>   IORING_OP_ZONE_APPEND_FIXED : append using fixed-buffers
+>>>>>>>>
+>>>>>>>> Repurpose cqe->flags to return zone-relative offset.
+>>>>>>>>
+>>>>>>>> Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>
+>>>>>>>> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+>>>>>>>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+>>>>>>>> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
+>>>>>>>> ---
+>>>>>>>> fs/io_uring.c                 | 72 +++++++++++++++++++++++++++++++++++++++++--
+>>>>>>>> include/uapi/linux/io_uring.h |  8 ++++-
+>>>>>>>> 2 files changed, 77 insertions(+), 3 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>>>>>>>> index 155f3d8..c14c873 100644
+>>>>>>>> --- a/fs/io_uring.c
+>>>>>>>> +++ b/fs/io_uring.c
+>>>>>>>> @@ -649,6 +649,10 @@ struct io_kiocb {
+>>>>>>>> 	unsigned long		fsize;
+>>>>>>>> 	u64			user_data;
+>>>>>>>> 	u32			result;
+>>>>>>>> +#ifdef CONFIG_BLK_DEV_ZONED
+>>>>>>>> +	/* zone-relative offset for append, in bytes */
+>>>>>>>> +	u32			append_offset;
+>>>>>>>
+>>>>>>> this can overflow. u64 is needed.
+>>>>>>
+>>>>>> We chose to do it this way to start with because struct io_uring_cqe
+>>>>>> only has space for u32 when we reuse the flags.
+>>>>>>
+>>>>>> We can of course create a new cqe structure, but that will come with
+>>>>>> larger changes to io_uring for supporting append.
+>>>>>>
+>>>>>> Do you believe this is a better approach?
+>>>>>
+>>>>> The problem is that zone size are 32 bits in the kernel, as a number
+>>>>> of sectors.  So any device that has a zone size smaller or equal to
+>>>>> 2^31 512B sectors can be accepted. Using a zone relative offset in
+>>>>> bytes for returning zone append result is OK-ish, but to match the
+>>>>> kernel supported range of possible zone size, you need 31+9 bits...
+>>>>> 32 does not cut it.
+>>>>
+>>>> Agree. Our initial assumption was that u32 would cover current zone size
+>>>> requirements, but if this is a no-go, we will take the longer path.
+>>>
+>>> Converting to u64 will require a new version of io_uring_cqe, where we
+>>> extend at least 32 bits. I believe this will need a whole new allocation
+>>> and probably ioctl().
+>>>
+>>> Is this an acceptable change for you? We will of course add support for
+>>> liburing when we agree on the right way to do this.
+>>
+>> If you need 64-bit of return value, then it's not going to work. Even
+>> with the existing patches, reusing cqe->flags isn't going to fly, as
+>> it would conflict with eg doing zone append writes with automatic
+>> buffer selection.
+> 
+> Buffer selection is for reads/recv kind of requests, but appends
+> are writes. In theory they can co-exist using cqe->flags.
 
-commit f29801030ac67bf98b7a65d3aea67b30769d4f7c upstream.
+Yeah good point, since it's just writes, doesn't matter. But the other
+point still stands, it could potentially conflict with other flags, but
+I guess only to the extent where both flags would need extra storage in
+->flags. So not a huge concern imho.
 
-Commit b10effb92e27 ("e1000e: fix buffer overrun while the I219 is
-processing DMA transactions") imposes roughly 30% performance penalty.
 
-The commit log states that "Disabling TSO eliminates performance loss
-for TCP traffic without a noticeable impact on CPU performance", so
-let's disable TSO by default to regain the loss.
-
-CC: stable <stable@vger.kernel.org>
-Fixes: b10effb92e27 ("e1000e: fix buffer overrun while the I219 is processing DMA transactions")
-BugLink: https://bugs.launchpad.net/bugs/1802691
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/net/ethernet/intel/e1000e/netdev.c |    4 ++++
- 1 file changed, 4 insertions(+)
-
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -5251,6 +5251,10 @@ static void e1000_watchdog_task(struct w
- 					/* oops */
- 					break;
- 				}
-+				if (hw->mac.type == e1000_pch_spt) {
-+					netdev->features &= ~NETIF_F_TSO;
-+					netdev->features &= ~NETIF_F_TSO6;
-+				}
- 			}
- 
- 			/* enable transmits in the hardware, need to do this
-
+-- 
+Jens Axboe
 
