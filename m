@@ -2,105 +2,118 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93105C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE425C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7619E20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA6D720771
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 13:35:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="L0o8zXrC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgFSNed (ORCPT
+        id S1732885AbgFSNfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 09:34:33 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51756 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732844AbgFSNea (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 09:34:30 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05JDXVxk115048
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:34:30 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31rwwtrxuj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:34:30 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05JDXZsF115408
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 09:34:29 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31rwwtrxu0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jun 2020 09:34:29 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05JDUVgf010604;
-        Fri, 19 Jun 2020 13:34:27 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 31qur633et-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 Jun 2020 13:34:27 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05JDYP2142926310
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 Jun 2020 13:34:25 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F40814C052;
-        Fri, 19 Jun 2020 13:34:24 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 572B14C044;
-        Fri, 19 Jun 2020 13:34:23 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.63.130])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 19 Jun 2020 13:34:23 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     acme@redhat.com
-Cc:     ravi.bangoria@linux.ibm.com, jolsa@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] perf record: Fix --switch-output=time documentation
-Date:   Fri, 19 Jun 2020 19:04:12 +0530
-Message-Id: <20200619133412.50705-2-ravi.bangoria@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200619133412.50705-1-ravi.bangoria@linux.ibm.com>
-References: <20200619133412.50705-1-ravi.bangoria@linux.ibm.com>
+        Fri, 19 Jun 2020 09:35:00 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:52724 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732655AbgFSNe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 09:34:58 -0400
+Received: from zn.tnic (p200300ec2f0bac004d57d24caa4a0e33.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ac00:4d57:d24c:aa4a:e33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EB6C81EC03D0;
+        Fri, 19 Jun 2020 15:34:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1592573697;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=u1GbBe13gJ4BTiGHsY3PCYbsBzZ3KFyUO+55Ve0pR54=;
+        b=L0o8zXrCdiGsWBnTPoYSrRxtzWeXTGACHWMrRpLgDbX6BXPrI8HiyVTYCS/RWukSK4Ofsz
+        mbhXGH1l8VKsrOmCeBqf6jsf864MZlN3BDKOWZwlCpmWGTWb6asrbx8jZetpKzaSerQOhE
+        CcGVMpI6l/Hfh8bLprQOFcIpSAjqt54=
+Date:   Fri, 19 Jun 2020 15:34:49 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ilia Mirkin <imirkin@alum.mit.edu>
+Cc:     Ben Skeggs <bskeggs@redhat.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: [Nouveau] 2dd4d163cd9c ("drm/nouveau: remove open-coded version
+ of remove_conflicting_pci_framebuffers()")
+Message-ID: <20200619133449.GD32683@zn.tnic>
+References: <20200618200106.GF27951@zn.tnic>
+ <CAKb7UviibvRfqJgtLkePEuXFa6mQfi4h=7eeW+YQxB-StVjjrA@mail.gmail.com>
+ <20200618203907.GG27951@zn.tnic>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-19_14:2020-06-19,2020-06-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 impostorscore=0 mlxlogscore=874 cotscore=-2147483648
- clxscore=1015 mlxscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- phishscore=0 bulkscore=0 suspectscore=1 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006190100
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200618203907.GG27951@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-perf record man page uses word 'size' while describing
---switch-output=time option. Fix that.
+On Thu, Jun 18, 2020 at 10:39:07PM +0200, Borislav Petkov wrote:
+> I'll redo the bisection tomorrow, on a fresh head, to check.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- tools/perf/Documentation/perf-record.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ok, just did it again, similar bisection log, points at the same commit.
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index fa8a5fcd27ab..5256f5e12dde 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -540,7 +540,7 @@ based on 'mode' value:
-   "signal" - when receiving a SIGUSR2 (default value) or
-   <size>   - when reaching the size threshold, size is expected to
-              be a number with appended unit character - B/K/M/G
--  <time>   - when reaching the time threshold, size is expected to
-+  <time>   - when reaching the time threshold, time is expected to
-              be a number with appended unit character - s/m/h/d
- 
-              Note: the precision of  the size  threshold  hugely depends
+The commit before it:
+
+fb172f5fe880 ("drm/nouveau/gr/gk20a: move MODULE_FIRMWARE firmware definitions")
+
+boots ok but
+
+2dd4d163cd9c ("drm/nouveau: remove open-coded version of remove_conflicting_pci_framebuffers()")
+
+doesn't.
+
+Ideas?
+
+git bisect start
+# good: [3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162] Linux 5.7
+git bisect good 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
+# bad: [5e857ce6eae7ca21b2055cca4885545e29228fe2] Merge branch 'hch' (maccess patches from Christoph Hellwig)
+git bisect bad 5e857ce6eae7ca21b2055cca4885545e29228fe2
+# bad: [a98f670e41a99f53acb1fb33cee9c6abbb2e6f23] Merge tag 'media/v5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+git bisect bad a98f670e41a99f53acb1fb33cee9c6abbb2e6f23
+# bad: [5be993432821750f382809df5e20bf4c129b24f7] mm/hugetlb: define a generic fallback for arch_clear_hugepage_flags()
+git bisect bad 5be993432821750f382809df5e20bf4c129b24f7
+# good: [cfa3b8068b09f25037146bfd5eed041b78878bee] Merge tag 'for-linus-hmm' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
+git bisect good cfa3b8068b09f25037146bfd5eed041b78878bee
+# good: [a1fb548962397bb8609bb46e566809a9a1b30044] Merge tag 'drm-intel-next-2020-04-30' of git://anongit.freedesktop.org/drm/drm-intel into drm-next
+git bisect good a1fb548962397bb8609bb46e566809a9a1b30044
+# bad: [750a02ab8d3c49ca7d23102be90d3d1db19e2827] Merge tag 'for-5.8/block-2020-06-01' of git://git.kernel.dk/linux-block
+git bisect bad 750a02ab8d3c49ca7d23102be90d3d1db19e2827
+# good: [e20bb857dea2f620ff37ae541ed8aee70e3c89f1] Merge tag 'exynos-drm-next-for-v5.8' of git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos into drm-next
+git bisect good e20bb857dea2f620ff37ae541ed8aee70e3c89f1
+# good: [e6e7abffe386b614a194ec32457a00c304c980f4] blk-mq: simplify the blk_mq_get_request calling convention
+git bisect good e6e7abffe386b614a194ec32457a00c304c980f4
+# bad: [7dbbdd37f2ae7dd4175ba3f86f4335c463b18403] drm/nouveau: use correct conflicting framebuffer API
+git bisect bad 7dbbdd37f2ae7dd4175ba3f86f4335c463b18403
+# bad: [0f85bbb6ae517d9a4308527188afe35c2012bbc9] drm/nouveau/device: use regular PRI accessors in chipset detection
+git bisect bad 0f85bbb6ae517d9a4308527188afe35c2012bbc9
+# good: [fa4f4c213f5f7807360c41f2501a3031a9940f3a] drm/nouveau/kms: Support NVIDIA format modifiers
+git bisect good fa4f4c213f5f7807360c41f2501a3031a9940f3a
+# bad: [e3d8b08904694e9ccae5163d0bb7d35fa66e5bdc] drm/nouveau/svm: map pages after migration
+git bisect bad e3d8b08904694e9ccae5163d0bb7d35fa66e5bdc
+# good: [fb172f5fe880cd0ddb4370b2fcc9ad4848c98bbb] drm/nouveau/gr/gk20a: move MODULE_FIRMWARE firmware definitions
+git bisect good fb172f5fe880cd0ddb4370b2fcc9ad4848c98bbb
+# bad: [b950c8c5d082d822b0134d1fc058101ab346e503] drm/nouveau/bios: move ACPI _ROM handling
+git bisect bad b950c8c5d082d822b0134d1fc058101ab346e503
+# bad: [2dd4d163cd9c15432524aa9863155bc03a821361] drm/nouveau: remove open-coded version of remove_conflicting_pci_framebuffers()
+git bisect bad 2dd4d163cd9c15432524aa9863155bc03a821361
+# first bad commit: [2dd4d163cd9c15432524aa9863155bc03a821361] drm/nouveau: remove open-coded version of remove_conflicting_pci_framebuffers()
+
+Thx.
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
