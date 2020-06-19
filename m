@@ -2,163 +2,165 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14326C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A40C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF811208C7
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:22:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FHU640Pi"
+	by mail.kernel.org (Postfix) with ESMTP id EC6DD208C7
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:23:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733074AbgFSOWc (ORCPT
+        id S1731028AbgFSOXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:22:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgFSOWZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:22:25 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE012C0613EE
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:22:24 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l24so4560685pgb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 07:22:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vxtHFfxRa6J52mPRG6jvgbvliKZllqWnNgXrzGwwQhE=;
-        b=FHU640PiXW0xLyp6AL1PCI7tRK5wZ06ZcDtLoY1aP2MLtQLYA/U8l9u+b9wpPYqO6A
-         rKlg/ouC1alQwarF28E0DQZ1SJXWsrDrDUYLSjHv95gzOTS88oBzZ0IP7kYuLRe4dEpU
-         K51/lr0hGhn6/egk9YmTp7T1VdLVAlWt3OFSjyKaAMn7Ld7iL3gdHOiFXMm/AJFzUHfu
-         wfMLS9RtdrGdqp76or0DL9iuXL2SBwqm/1H76EveVh8A5a/g6wllP0xfgCSEi5teRCjP
-         SPRU9LwxkuNVMzFCC3C33qwzViJCT+14F747rhVJ9n+i2CVu4EK2i39GuuwIMefZN7za
-         ESGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vxtHFfxRa6J52mPRG6jvgbvliKZllqWnNgXrzGwwQhE=;
-        b=EN0ULgPD9bTaXl78R/ztFjMs9OS9DrtJTOS+PsPoLQ7UaqowT38lu69Q2OCtIG+W1x
-         Xq7nSuI9EcEo4f1pQLFsNwgge99gYZ555OIwzs1Ts3GAWU2xachCLhD7L/Y6u626ioB0
-         FIs3H1YK69v//BWrFP5NsrsabtUuxCMF1ayG8xTmEUt7XNezEz6Vdx0oIpr0aS3dxfgA
-         wsEnukIDlSXssLllKsxZcem4dMEjN08KQaj9vBj4GL01yk6pWLIaGvohaP3+gR1TpEU5
-         wL6Yd//cV7u3/POJSyjhfSoq77ocBirRv4dp5815LmkNJ/N4gJO3aZ46P1g7+EGVEemj
-         XrZw==
-X-Gm-Message-State: AOAM530q+EqxTs+0VCGYQ2zUQgdDcgGYWhCTAbBV65h/PlMSSQ2aSrXx
-        BXLnRo6zSQAFn1O/iQGdMdYvcA==
-X-Google-Smtp-Source: ABdhPJxRONpeZFjGL6amyDVA55vSKIbY4ULoW+nnBgRLPw2fISt14O88Or5B2Im6nt4e2+NiD0KsNQ==
-X-Received: by 2002:a65:43cb:: with SMTP id n11mr3240011pgp.160.1592576544118;
-        Fri, 19 Jun 2020 07:22:24 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id p11sm6265486pfq.10.2020.06.19.07.22.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 07:22:23 -0700 (PDT)
-Subject: Re: [PATCH 04/15] io_uring: re-issue block requests that failed
- because of resources
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-References: <20200618144355.17324-1-axboe@kernel.dk>
- <20200618144355.17324-5-axboe@kernel.dk>
- <cdd4bf56-5a08-5d28-969f-81b70cc3c473@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <da21ba82-c027-0c15-93e3-a372283d7030@kernel.dk>
-Date:   Fri, 19 Jun 2020 08:22:22 -0600
+        Fri, 19 Jun 2020 10:23:48 -0400
+Received: from mga12.intel.com ([192.55.52.136]:41683 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726874AbgFSOXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:23:48 -0400
+IronPort-SDR: aUJ3UyTnM8OxtkzcYY8m7AJRbbhadiUMKW9bqPRd7CeINZIcsmb6fTwpxU+KW60KKL25anfxsr
+ B8yEZzrivD3g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9656"; a="122696401"
+X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
+   d="scan'208";a="122696401"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2020 07:23:47 -0700
+IronPort-SDR: H0rYWEjT24DQvdqrKYWhuzCivThL9qI+9nAubMYJPpC6533NsPkdILM9zGUTYd56cvII5IOjv9
+ aw55v61mdARg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,255,1589266800"; 
+   d="scan'208";a="278011719"
+Received: from mcrum-mobl1.amr.corp.intel.com (HELO [10.255.0.127]) ([10.255.0.127])
+  by orsmga006.jf.intel.com with ESMTP; 19 Jun 2020 07:23:41 -0700
+Subject: Re: [PATCH] Ability to read the MKTME status from userspace
+To:     Richard Hughes <hughsient@gmail.com>
+Cc:     Daniel Gutson <daniel@eclypsium.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200618210215.23602-1-daniel.gutson@eclypsium.com>
+ <589c89ae-620e-36f8-2be5-4afc727c2911@intel.com>
+ <CAFmMkTHNxSN_uWtm63TdkGxj44NXQQKEOmATXhjA=4DSCS92kQ@mail.gmail.com>
+ <23babf62-00cb-cb47-bb19-da9508325934@intel.com>
+ <CAD2FfiFbGdf5uKmsc14F4ZuuCUQYFwfnirn=Y0fu2F0=njvWug@mail.gmail.com>
+ <80578b72-cb6f-8da9-1043-b4055c75d7f6@intel.com>
+ <CAD2FfiG1BgYvR6wkeXGro8v6FQtVjKemmAOOf2W14z5KUWLqhw@mail.gmail.com>
+ <d55f94bc-3b26-a556-f7e6-43e9b1007e13@intel.com>
+ <CAD2FfiHCi2MfShGWaYWk_GcXW4xVr6chsLPZs78OJE+2_GErVg@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <3d454068-fd4e-4399-4bf5-2d010bb2ba7d@intel.com>
+Date:   Fri, 19 Jun 2020 07:23:40 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <cdd4bf56-5a08-5d28-969f-81b70cc3c473@gmail.com>
+In-Reply-To: <CAD2FfiHCi2MfShGWaYWk_GcXW4xVr6chsLPZs78OJE+2_GErVg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/20 8:12 AM, Pavel Begunkov wrote:
-> On 18/06/2020 17:43, Jens Axboe wrote:
->> Mark the plug with nowait == true, which will cause requests to avoid
->> blocking on request allocation. If they do, we catch them and reissue
->> them from a task_work based handler.
+On 6/19/20 7:09 AM, Richard Hughes wrote:
+> On Fri, 19 Jun 2020 at 14:58, Dave Hansen <dave.hansen@intel.com> wrote:
+>>> Right, but for the most part you'd agree that a machine with
+>>> functioning TME and encrypted swap partition is more secure than a
+>>> machine without TME?
 >>
->> Normally we can catch -EAGAIN directly, but the hard case is for split
->> requests. As an example, the application issues a 512KB request. The
->> block core will split this into 128KB if that's the max size for the
->> device. The first request issues just fine, but we run into -EAGAIN for
->> some latter splits for the same request. As the bio is split, we don't
->> get to see the -EAGAIN until one of the actual reads complete, and hence
->> we cannot handle it inline as part of submission.
->>
->> This does potentially cause re-reads of parts of the range, as the whole
->> request is reissued. There's currently no better way to handle this.
->>
->> Signed-off-by: Jens Axboe <axboe@kernel.dk>
->> ---
->>  fs/io_uring.c | 148 ++++++++++++++++++++++++++++++++++++++++++--------
->>  1 file changed, 124 insertions(+), 24 deletions(-)
->>
->> diff --git a/fs/io_uring.c b/fs/io_uring.c
->> index 2e257c5a1866..40413fb9d07b 100644
->> --- a/fs/io_uring.c
->> +++ b/fs/io_uring.c
->> @@ -900,6 +900,13 @@ static int io_file_get(struct io_submit_state *state, struct io_kiocb *req,
->>  static void __io_queue_sqe(struct io_kiocb *req,
->>  			   const struct io_uring_sqe *sqe);
->>  
-> ...> +
->> +static void io_rw_resubmit(struct callback_head *cb)
->> +{
->> +	struct io_kiocb *req = container_of(cb, struct io_kiocb, task_work);
->> +	struct io_ring_ctx *ctx = req->ctx;
->> +	int err;
->> +
->> +	__set_current_state(TASK_RUNNING);
->> +
->> +	err = io_sq_thread_acquire_mm(ctx, req);
->> +
->> +	if (io_resubmit_prep(req, err)) {
->> +		refcount_inc(&req->refs);
->> +		io_queue_async_work(req);
->> +	}
+>> Nope.  There might be zero memory connected to the memory controller
+>> that supports TME.
 > 
-> Hmm, I have similar stuff but for iopoll. On top removing grab_env* for
-> linked reqs and some extra. I think I'll rebase on top of this.
+> So you're saying that a machine with TME available and enabled is not
+> considered more secure than a machine without TME?
 
-Yes, there's certainly overlap there. I consider this series basically
-wrapped up, so feel free to just base on top of it.
+Yes, it is not necessarily more secure.
 
->> +static bool io_rw_reissue(struct io_kiocb *req, long res)
->> +{
->> +#ifdef CONFIG_BLOCK
->> +	struct task_struct *tsk;
->> +	int ret;
->> +
->> +	if ((res != -EAGAIN && res != -EOPNOTSUPP) || io_wq_current_is_worker())
->> +		return false;
->> +
->> +	tsk = req->task;
->> +	init_task_work(&req->task_work, io_rw_resubmit);
->> +	ret = task_work_add(tsk, &req->task_work, true);
+> What I want to do is have a sliding scale of TME not available < TME
+> available but disabled < TME available and enabled < TME available,
+> enabled and being used. The extra nugget of data gets me from state 2
+> to state 3.
+
+I'd assert that availability tells you nothing if you don't pair it with
+use.
+
+Last night, I asked my kids if they brushed their teeth.  They said:
+"Dad, my toothbrush was available."  They argued that mere availability
+was a better situation than not *having* a toothbrush.  They were
+logically right, of course, but they still got cavities.
+
+>>> Can I use TME if the CPU supports it, but the platform has disabled
+>>> it? How do I know that my system is actually *using* the benefits the
+>>> TME feature provides?
+>>
+>> You must have a system with UEFI 2.8, ensure TME is enabled, then make
+>> sure the OS parses EFI_MEMORY_CPU_CRYPTO, then ensure you request that
+>> you data be placed in a region marked with EFI_MEMORY_CPU_CRYPTO, and
+>> that it be *kept* there (hint: NUMA APIs don't do this).
 > 
-> I don't like that the request becomes un-discoverable for cancellation
-> awhile sitting in the task_work list. Poll stuff at least have hash_node
-> for that.
+> So my take-away from that is that it's currently impossible to
+> actually say if your system is *actually* using TME.
 
-Async buffered IO was never cancelable, so it doesn't really matter.
-It's tied to the task, so we know it'll get executed - either run, or
-canceled if the task is going away. This is really not that different
-from having the work discoverable through io-wq queueing before, since
-the latter could never be canceled anyway as it sits there
-uninterruptibly waiting for IO completion.
+Not in a generic way, and it can't be derived from cpuid or MSRs alone.
 
--- 
-Jens Axboe
-
+Let's say I'm buying a fleet of servers.  I know I'm buying some fancy
+Xeon with TME, I know I'm only using DRAM for storing user data, and I
+don't have any accelerators around.  I control and enforce my BIOS
+settings.  I'm pretty sure I'm using TME, but I didn't become sure from
+poking at sysfs.
