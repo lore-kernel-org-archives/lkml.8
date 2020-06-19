@@ -2,54 +2,52 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE25C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16B9A21548
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4232721582
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592577726;
-	bh=mbjPA0vpnyyIxg4/8Es+eXbQrMCkQST/G/1Tj/K+HEc=;
+	s=default; t=1592577736;
+	bh=4GDj40YMC236QJ/h4DC1Ce/InFlHhNvYDg8ll0+BQsg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=At1Us0/KrWBsFhtUm0dg8q7tkn5RO8oA7h4o3GdraTZTV3rKKXl4N0/6G1Y6aLhD4
-	 MdnVMhzyPAMvwdp5tUOoIh/Y/Kl/oYigGBkkqdZLvpL0v1FtSR2EkUizMN/iGM1Md0
-	 I+f1Vd8VJKgJQ3Y9WyxcQ89IofO41RKyTxIlB+jA=
+	b=e8q5Y7skhWCRQWUs4er+ZqaARhWB/OdTnj8aEbAUAGrhC0cWEBIUbZUEJaFGI4rGz
+	 alFuf+/B0ACeF0ZHUIvDRsMPSxLQjjBLL2rXw//AlmmRSK8W/xLj/YWOoxZiMmRPqO
+	 9+VEp7HMEk4Uhdyl0Dmo0BmKLAnuiMINjeh4xEHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387661AbgFSOmE (ORCPT
+        id S2388339AbgFSOmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:42:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60718 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 10:42:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388308AbgFSOl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:41:56 -0400
+        id S2388315AbgFSOmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:42:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0654A2168B;
-        Fri, 19 Jun 2020 14:41:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DED3220A8B;
+        Fri, 19 Jun 2020 14:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592577716;
-        bh=mbjPA0vpnyyIxg4/8Es+eXbQrMCkQST/G/1Tj/K+HEc=;
+        s=default; t=1592577721;
+        bh=4GDj40YMC236QJ/h4DC1Ce/InFlHhNvYDg8ll0+BQsg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I08jbRvc7FtjKzY3N3xHQeje/Ksy3FwjR4SMvsngu8dgGu0npgm3XNNy9P/TBT7+I
-         XatvXF/kKfa/7bWBMmtOBLsl68WxF+cixmoN/p5ymwvbzmZTs+dT9oG2rgxVRixVDF
-         RXjvuWUAiDtWWd6pVBm6nnwzF3zx/HVAczKkDWpU=
+        b=E/pJjACZzjtE2pue+j0aMOz4oC2wu1EzwOD1a34OlApGPHzC6nPj5tX5WeidJnJNb
+         LwszwCWn0yIixpxGGk2CDmkqC8MKCodBWhvBrFUTa/RRHdFyt2TRhV/t9mWo0Sh4H9
+         KXxUuH7+pXfFc0ZcKCmDTe2SHhlq50FamotqzC6c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 030/128] spi: dw: Fix controller unregister order
-Date:   Fri, 19 Jun 2020 16:32:04 +0200
-Message-Id: <20200619141621.757406874@linuxfoundation.org>
+        Martin Sperl <kernel@martin.sperl.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.9 022/128] spi: bcm2835aux: Fix controller unregister order
+Date:   Fri, 19 Jun 2020 16:31:56 +0200
+Message-Id: <20200619141621.339552116@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141620.148019466@linuxfoundation.org>
 References: <20200619141620.148019466@linuxfoundation.org>
@@ -64,67 +62,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit ca8b19d61e3fce5d2d7790cde27a0b57bcb3f341 ]
+commit b9dd3f6d417258ad0beeb292a1bc74200149f15d upstream.
 
-The Designware SPI driver uses devm_spi_register_controller() on bind.
+The BCM2835aux SPI driver uses devm_spi_register_master() on bind.
 As a consequence, on unbind, __device_release_driver() first invokes
-dw_spi_remove_host() before unregistering the SPI controller via
+bcm2835aux_spi_remove() before unregistering the SPI controller via
 devres_release_all().
 
-This order is incorrect:  dw_spi_remove_host() shuts down the chip,
-rendering the SPI bus inaccessible even though the SPI controller is
-still registered.  When the SPI controller is subsequently unregistered,
-it unbinds all its slave devices.  Because their drivers cannot access
-the SPI bus, e.g. to quiesce interrupts, the slave devices may be left
-in an improper state.
+This order is incorrect:  bcm2835aux_spi_remove() turns off the SPI
+controller, including its interrupts and clock.  The SPI controller
+is thus no longer usable.
 
-As a rule, devm_spi_register_controller() must not be used if the
-->remove() hook performs teardown steps which shall be performed after
-unregistering the controller and specifically after unbinding of slaves.
+When the SPI controller is subsequently unregistered, it unbinds all
+its slave devices.  If their drivers need to access the SPI bus,
+e.g. to quiesce their interrupts, unbinding will fail.
 
-Fix by reverting to the non-devm variant of spi_register_controller().
+As a rule, devm_spi_register_master() must not be used if the
+->remove() hook performs teardown steps which shall be performed
+after unbinding of slaves.
 
-An alternative approach would be to use device-managed functions for all
-steps in dw_spi_remove_host(), e.g. by calling devm_add_action_or_reset()
-on probe.  However that approach would add more LoC to the driver and
-it wouldn't lend itself as well to backporting to stable.
+Fix by using the non-devm variant spi_register_master().  Note that the
+struct spi_master as well as the driver-private data are not freed until
+after bcm2835aux_spi_remove() has finished, so accessing them is safe.
 
-Fixes: 04f421e7b0b1 ("spi: dw: use managed resources")
+Fixes: 1ea29b39f4c8 ("spi: bcm2835aux: add bcm2835 auxiliary spi device driver")
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@vger.kernel.org # v3.14+
-Cc: Baruch Siach <baruch@tkos.co.il>
-Link: https://lore.kernel.org/r/3fff8cb8ae44a9893840d0688be15bb88c090a14.1590408496.git.lukas@wunner.de
+Cc: stable@vger.kernel.org # v4.4+
+Cc: Martin Sperl <kernel@martin.sperl.org>
+Link: https://lore.kernel.org/r/32f27f4d8242e4d75f9a53f7e8f1f77483b08669.1589557526.git.lukas@wunner.de
 Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/spi/spi-dw.c | 4 +++-
+ drivers/spi/spi-bcm2835aux.c |    4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index be3ab4006313..c5a2f369941c 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -533,7 +533,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
- 		}
+--- a/drivers/spi/spi-bcm2835aux.c
++++ b/drivers/spi/spi-bcm2835aux.c
+@@ -485,7 +485,7 @@ static int bcm2835aux_spi_probe(struct p
+ 		goto out_clk_disable;
  	}
  
--	ret = devm_spi_register_master(dev, master);
-+	ret = spi_register_master(master);
- 	if (ret) {
- 		dev_err(&master->dev, "problem registering spi master\n");
- 		goto err_dma_exit;
-@@ -557,6 +557,8 @@ void dw_spi_remove_host(struct dw_spi *dws)
- {
- 	dw_spi_debugfs_remove(dws);
+-	err = devm_spi_register_master(&pdev->dev, master);
++	err = spi_register_master(master);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "could not register SPI master: %d\n", err);
+ 		goto out_clk_disable;
+@@ -505,6 +505,8 @@ static int bcm2835aux_spi_remove(struct
+ 	struct spi_master *master = platform_get_drvdata(pdev);
+ 	struct bcm2835aux_spi *bs = spi_master_get_devdata(master);
  
-+	spi_unregister_master(dws->master);
++	spi_unregister_master(master);
 +
- 	if (dws->dma_ops && dws->dma_ops->dma_exit)
- 		dws->dma_ops->dma_exit(dws);
+ 	bcm2835aux_spi_reset_hw(bs);
  
--- 
-2.25.1
-
+ 	/* disable the HW block by releasing the clock */
 
 
