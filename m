@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EECC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3809206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5480F206FA
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592581532;
-	bh=RErxoPQL57Pp8qE20X8tNu1DhNmZrHDXsOBxyT30KC0=;
+	s=default; t=1592581535;
+	bh=FSSEj0I+Qs96LnMPO/9ObpRwOVHhKyOHosCzGUsdNQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jmSBd6bHZsmUImns2VwYbS4kVX7f2CViVPayMreiDSLPGXHsbkgU2jyR4RFiCDF5t
-	 NjCpyD5ectakYkZ4aNTEcT4Xt6O45ZAjqvefNrl2+EKlz96EOkPAmR+6IjOyhnmbri
-	 jBToC6ODezkaDJuaw62wyWptV4aXqEcHKg+8lEp8=
+	b=OR4ZiPj5L4REU8KpnWP1Ye22gRj4PAKGeBVI7DurzhVoCC5VRsxjzOpnOccuJTzif
+	 eKqNEOlrG2t5a7+r52uchUUp94V+AwzWrZuQubqRLiy6usMdMwDuIf5ZU734Nbh1m4
+	 IZ+f4gO8viUVtILsTLZMJGcDleeNKSh64b1I8fGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393532AbgFSP1T (ORCPT
+        id S2405215AbgFSPpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:27:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57626 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:45:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393070AbgFSPZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:25:53 -0400
+        id S2392586AbgFSP1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:27:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41B0A20B80;
-        Fri, 19 Jun 2020 15:25:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A81A221919;
+        Fri, 19 Jun 2020 15:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592580351;
-        bh=RErxoPQL57Pp8qE20X8tNu1DhNmZrHDXsOBxyT30KC0=;
+        s=default; t=1592580442;
+        bh=FSSEj0I+Qs96LnMPO/9ObpRwOVHhKyOHosCzGUsdNQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0AhGZjDVwJ/ii4/Sp7zFTYOf5x5eKv63JnaGj2uHjvP78eCc9MLRqe55mgYwNN1Dk
-         95Ck29+OVb4dzrJCD/iTPNyasFMEd7OQFCRPF+5gwsXah2AjyeclZ73wIwO2LXaXIa
-         2hvYe3A9Mbo+GuE5lD3ETKpUWq0MZfnHLnMAp3HI=
+        b=pvLsEXspx4Q1UBRJIgHlYGPoLpgB6P6QohpbkvaKRmBUDPAgHYFTLadjL3+2kI6dZ
+         4rhkwFTCOQ+5rogWUnGS7PF6Jpe724ysJ+0ORvah2TK+jtyq6r49bFT2ESeTg7mY3p
+         I0FQQGnym9zuDstDeeA0NCCLkyk2nUtoWqVkF8uA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chung-Hsien Hsu <stanley.hsu@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Jay Cornwall <Jay.Cornwall@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 186/376] brcmfmac: fix WPA/WPA2-PSK 4-way handshake offload and SAE offload failures
-Date:   Fri, 19 Jun 2020 16:31:44 +0200
-Message-Id: <20200619141719.154196204@linuxfoundation.org>
+Subject: [PATCH 5.7 210/376] drm/amdgpu: Sync with VM root BO when switching VM to CPU update mode
+Date:   Fri, 19 Jun 2020 16:32:08 +0200
+Message-Id: <20200619141720.275695401@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
 References: <20200619141710.350494719@linuxfoundation.org>
@@ -61,66 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chung-Hsien Hsu <stanley.hsu@cypress.com>
+From: Felix Kuehling <Felix.Kuehling@amd.com>
 
-[ Upstream commit b2fe11f0777311a764e47e2f9437809b4673b7b1 ]
+[ Upstream commit 90ca78deb004abe75b5024968a199acb96bb70f9 ]
 
-An incorrect value of use_fwsup is set for 4-way handshake offload for
-WPA//WPA2-PSK, caused by commit 3b1e0a7bdfee ("brcmfmac: add support for
-SAE authentication offload"). It results in missing bit
-BRCMF_VIF_STATUS_EAP_SUCCESS set in brcmf_is_linkup() and causes the
-failure. This patch correct the value for the case.
+This fixes an intermittent bug where a root PD clear operation still in
+progress could overwrite a PDE update done by the CPU, resulting in a
+VM fault.
 
-Also setting bit BRCMF_VIF_STATUS_EAP_SUCCESS for SAE offload case in
-brcmf_is_linkup() to fix SAE offload failure.
-
-Fixes: 3b1e0a7bdfee ("brcmfmac: add support for SAE authentication offload")
-Signed-off-by: Chung-Hsien Hsu <stanley.hsu@cypress.com>
-Signed-off-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1589277788-119966-1-git-send-email-chi-hsien.lin@cypress.com
+Fixes: 108b4d928c03 ("drm/amd/amdgpu: Update VM function pointer")
+Reported-by: Jay Cornwall <Jay.Cornwall@amd.com>
+Tested-by: Jay Cornwall <Jay.Cornwall@amd.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../wireless/broadcom/brcm80211/brcmfmac/cfg80211.c  | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-index 2ba165330038..bacd762cdf3e 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -1819,6 +1819,10 @@ brcmf_set_key_mgmt(struct net_device *ndev, struct cfg80211_connect_params *sme)
- 		switch (sme->crypto.akm_suites[0]) {
- 		case WLAN_AKM_SUITE_SAE:
- 			val = WPA3_AUTH_SAE_PSK;
-+			if (sme->crypto.sae_pwd) {
-+				brcmf_dbg(INFO, "using SAE offload\n");
-+				profile->use_fwsup = BRCMF_PROFILE_FWSUP_SAE;
-+			}
- 			break;
- 		default:
- 			bphy_err(drvr, "invalid cipher group (%d)\n",
-@@ -2104,11 +2108,6 @@ brcmf_cfg80211_connect(struct wiphy *wiphy, struct net_device *ndev,
- 		goto done;
- 	}
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+index 6d9252a27916..06242096973c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
+@@ -2996,10 +2996,17 @@ int amdgpu_vm_make_compute(struct amdgpu_device *adev, struct amdgpu_vm *vm,
+ 		   !amdgpu_gmc_vram_full_visible(&adev->gmc)),
+ 		  "CPU update of VM recommended only for large BAR system\n");
  
--	if (sme->crypto.sae_pwd) {
--		brcmf_dbg(INFO, "using SAE offload\n");
--		profile->use_fwsup = BRCMF_PROFILE_FWSUP_SAE;
--	}
--
- 	if (sme->crypto.psk &&
- 	    profile->use_fwsup != BRCMF_PROFILE_FWSUP_SAE) {
- 		if (WARN_ON(profile->use_fwsup != BRCMF_PROFILE_FWSUP_NONE)) {
-@@ -5495,7 +5494,8 @@ static bool brcmf_is_linkup(struct brcmf_cfg80211_vif *vif,
- 	u32 event = e->event_code;
- 	u32 status = e->status;
- 
--	if (vif->profile.use_fwsup == BRCMF_PROFILE_FWSUP_PSK &&
-+	if ((vif->profile.use_fwsup == BRCMF_PROFILE_FWSUP_PSK ||
-+	     vif->profile.use_fwsup == BRCMF_PROFILE_FWSUP_SAE) &&
- 	    event == BRCMF_E_PSK_SUP &&
- 	    status == BRCMF_E_STATUS_FWSUP_COMPLETED)
- 		set_bit(BRCMF_VIF_STATUS_EAP_SUCCESS, &vif->sme_state);
+-	if (vm->use_cpu_for_update)
++	if (vm->use_cpu_for_update) {
++		/* Sync with last SDMA update/clear before switching to CPU */
++		r = amdgpu_bo_sync_wait(vm->root.base.bo,
++					AMDGPU_FENCE_OWNER_UNDEFINED, true);
++		if (r)
++			goto free_idr;
++
+ 		vm->update_funcs = &amdgpu_vm_cpu_funcs;
+-	else
++	} else {
+ 		vm->update_funcs = &amdgpu_vm_sdma_funcs;
++	}
+ 	dma_fence_put(vm->last_update);
+ 	vm->last_update = NULL;
+ 	vm->is_compute_context = true;
 -- 
 2.25.1
 
