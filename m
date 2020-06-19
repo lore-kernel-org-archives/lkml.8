@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA3DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 275942067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8D0E2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584554;
-	bh=Zx7Mas0ND3ZhnW4uZIFSFSxSsR4DZILpdmxi+NlRdbQ=;
+	s=default; t=1592584558;
+	bh=SQ3sTs2BoHpYlVXw6ii8lfJ2g13g+h6uUiHhxIHY18I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XCg/wZIGnZoZuG+81JM1ctVYnO+FGl7L0UnfzoO/GEQrM4QnifSWPf/2qp2kfiWHQ
-	 QIIUNAmZOpIQk/OXc4dJsi+O6zW0VD5ScWi+RxX0x+VkNwCRmfl/rmDofJ3IZ04C1k
-	 HfAMIT2D2AYsLdCMuifJCb07CrKps2JRG5I8xTr4=
+	b=rYQSTIH20elG2IDqAogs4EqbHBEshD380PGcZQA69/z59IkY16lljEisLHUkshzLj
+	 6yAVS0Eti8f92ZaCv1b8NiNrdSNIYdkmdy1uspZ3mvLMHkTSlmtlniEv6Qoc6fsVvf
+	 MKJGUWGXbNG/1jKyGoVDlpsPnupfzOKaZZitEEjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395239AbgFSQfv (ORCPT
+        id S2395243AbgFSQf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:35:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42132 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:35:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389217AbgFSOtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:49:31 -0400
+        id S2388845AbgFSOtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:49:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 243C02158C;
-        Fri, 19 Jun 2020 14:49:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CD842184D;
+        Fri, 19 Jun 2020 14:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578171;
-        bh=Zx7Mas0ND3ZhnW4uZIFSFSxSsR4DZILpdmxi+NlRdbQ=;
+        s=default; t=1592578164;
+        bh=SQ3sTs2BoHpYlVXw6ii8lfJ2g13g+h6uUiHhxIHY18I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MNGlTwgFZm10ZpbFsPNj3+K11O4nkZFYxfz/Niz9zkThvG4oLkqHWBVAdbebeQ6g6
-         i2ibde96MbelTmTkIv90D7UTXsgpn/e6w1W9febvSJPiVhQgsE9/HKdyzj9NhpguFl
-         toYTVJIBvvbl7ub6qMkbFgDa/KtIiBr7bgNxlb7g=
+        b=Ws1QROOCBKmpc8NUOIaI/z+YfbZZeRqimZDdYACt5tAacIfJOfInrIp5Bj73hlo4K
+         wzrJT90rbitFMUK3TAngK7Ha1xyV8MhVBjBWn+KCzKm+USeOVCJkFvBCfs8mDM9+0I
+         iCPk27c6AEg73u3U7fF9fso2USmTImQj4OFn49rc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jon Doron <arilou@gmail.com>,
-        Roman Kagan <rvkagan@yandex-team.ru>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 093/190] x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
-Date:   Fri, 19 Jun 2020 16:32:18 +0200
-Message-Id: <20200619141638.244648751@linuxfoundation.org>
+Subject: [PATCH 4.14 108/190] exit: Move preemption fixup up, move blocking operations down
+Date:   Fri, 19 Jun 2020 16:32:33 +0200
+Message-Id: <20200619141638.991924093@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -62,73 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Doron <arilou@gmail.com>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit f7d31e65368aeef973fab788aa22c4f1d5a6af66 ]
+[ Upstream commit 586b58cac8b4683eb58a1446fbc399de18974e40 ]
 
-The problem the patch is trying to address is the fact that 'struct
-kvm_hyperv_exit' has different layout on when compiling in 32 and 64 bit
-modes.
+With CONFIG_DEBUG_ATOMIC_SLEEP=y and CONFIG_CGROUPS=y, kernel oopses in
+non-preemptible context look untidy; after the main oops, the kernel prints
+a "sleeping function called from invalid context" report because
+exit_signals() -> cgroup_threadgroup_change_begin() -> percpu_down_read()
+can sleep, and that happens before the preempt_count_set(PREEMPT_ENABLED)
+fixup.
 
-In 64-bit mode the default alignment boundary is 64 bits thus
-forcing extra gaps after 'type' and 'msr' but in 32-bit mode the
-boundary is at 32 bits thus no extra gaps.
+It looks like the same thing applies to profile_task_exit() and
+kcov_task_exit().
 
-This is an issue as even when the kernel is 64 bit, the userspace using
-the interface can be both 32 and 64 bit but the same 32 bit userspace has
-to work with 32 bit kernel.
+Fix it by moving the preemption fixup up and the calls to
+profile_task_exit() and kcov_task_exit() down.
 
-The issue is fixed by forcing the 64 bit layout, this leads to ABI
-change for 32 bit builds and while we are obviously breaking '32 bit
-userspace with 32 bit kernel' case, we're fixing the '32 bit userspace
-with 64 bit kernel' one.
-
-As the interface has no (known) users and 32 bit KVM is rather baroque
-nowadays, this seems like a reasonable decision.
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Jon Doron <arilou@gmail.com>
-Message-Id: <20200424113746.3473563-2-arilou@gmail.com>
-Reviewed-by: Roman Kagan <rvkagan@yandex-team.ru>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 1dc0fffc48af ("sched/core: Robustify preemption leak checks")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200305220657.46800-1-jannh@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/virtual/kvm/api.txt | 2 ++
- include/uapi/linux/kvm.h          | 2 ++
- 2 files changed, 4 insertions(+)
+ kernel/exit.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
-index f67ed33d1054..81a8802cea88 100644
---- a/Documentation/virtual/kvm/api.txt
-+++ b/Documentation/virtual/kvm/api.txt
-@@ -3737,9 +3737,11 @@ EOI was received.
- #define KVM_EXIT_HYPERV_SYNIC          1
- #define KVM_EXIT_HYPERV_HCALL          2
- 			__u32 type;
-+			__u32 pad1;
- 			union {
- 				struct {
- 					__u32 msr;
-+					__u32 pad2;
- 					__u64 control;
- 					__u64 evt_page;
- 					__u64 msg_page;
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 27c62abb6c9e..efe8873943f6 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -189,9 +189,11 @@ struct kvm_hyperv_exit {
- #define KVM_EXIT_HYPERV_SYNIC          1
- #define KVM_EXIT_HYPERV_HCALL          2
- 	__u32 type;
-+	__u32 pad1;
- 	union {
- 		struct {
- 			__u32 msr;
-+			__u32 pad2;
- 			__u64 control;
- 			__u64 evt_page;
- 			__u64 msg_page;
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 7bee1dd596fa..7a7984d7a4d8 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -770,8 +770,12 @@ void __noreturn do_exit(long code)
+ 	struct task_struct *tsk = current;
+ 	int group_dead;
+ 
+-	profile_task_exit(tsk);
+-	kcov_task_exit(tsk);
++	/*
++	 * We can get here from a kernel oops, sometimes with preemption off.
++	 * Start by checking for critical errors.
++	 * Then fix up important state like USER_DS and preemption.
++	 * Then do everything else.
++	 */
+ 
+ 	WARN_ON(blk_needs_flush_plug(tsk));
+ 
+@@ -789,6 +793,16 @@ void __noreturn do_exit(long code)
+ 	 */
+ 	set_fs(USER_DS);
+ 
++	if (unlikely(in_atomic())) {
++		pr_info("note: %s[%d] exited with preempt_count %d\n",
++			current->comm, task_pid_nr(current),
++			preempt_count());
++		preempt_count_set(PREEMPT_ENABLED);
++	}
++
++	profile_task_exit(tsk);
++	kcov_task_exit(tsk);
++
+ 	ptrace_event(PTRACE_EVENT_EXIT, code);
+ 
+ 	validate_creds_for_do_exit(tsk);
+@@ -806,13 +820,6 @@ void __noreturn do_exit(long code)
+ 
+ 	exit_signals(tsk);  /* sets PF_EXITING */
+ 
+-	if (unlikely(in_atomic())) {
+-		pr_info("note: %s[%d] exited with preempt_count %d\n",
+-			current->comm, task_pid_nr(current),
+-			preempt_count());
+-		preempt_count_set(PREEMPT_ENABLED);
+-	}
+-
+ 	/* sync mm's RSS info before statistics gathering */
+ 	if (tsk->mm)
+ 		sync_mm_rss(tsk->mm);
 -- 
 2.25.1
 
