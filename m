@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC30C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B03FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B934217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4796E21707
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592583993;
-	bh=exxlbFL3ah7u9FldBxgwESWLtDWZgTnmtFalUav9Rco=;
+	s=default; t=1592583999;
+	bh=Tq7cuTcF0tIxFTpSSYiEXO2XTBuptqKup8wVy1mdzPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lp6h423DXW1S9L+scGT4RuAxhFl+bv5t7UCdHZJleMQbsLeaWVSzXvUZdIzPr9MCL
-	 GUtiVy4R1DGXXGGjWS/OrYfHI9W93LclglwnR0yLE1uKzDmeqzqXjCB2xC2fQECnv7
-	 kwvIIcH/sGn8IHdq/M54jZXPjwcCjwPVe9hUoNUA=
+	b=znWJB1DGWTtdQMCSKm6OJyZif3mFnot+m7Pfs8K7iSSSw+EtvyLa5PcYP3vNoyEQg
+	 odeVaetZUakBSDcXYNAkQ9hKGSeS2Xl4QGO17nMWFzuxfT4pTpgqh900Elu36vQSOW
+	 Z57b6BUuzgQXEpDGkllq3C+hln0mxTMy8h/3pBQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394758AbgFSQ0b (ORCPT
+        id S2390159AbgFSQ0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:26:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52444 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:26:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390187AbgFSO5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:57:10 -0400
+        id S2390155AbgFSO4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:56:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 959792158C;
-        Fri, 19 Jun 2020 14:57:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C86C921919;
+        Fri, 19 Jun 2020 14:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578630;
-        bh=exxlbFL3ah7u9FldBxgwESWLtDWZgTnmtFalUav9Rco=;
+        s=default; t=1592578614;
+        bh=Tq7cuTcF0tIxFTpSSYiEXO2XTBuptqKup8wVy1mdzPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hVRIReHSJvqFtgirrUYcJWHTSGTegb8YU67yY0IkEhyenr6bTYw3DQ6fWl+j+hngJ
-         5qxzqn8t5U8J7nIXeAxYLiHAacG3u/2I1qm4X/+a1HPiSUBSUPFkJPxMRt8pEKMsY+
-         VhkZq4xYwa2LIHWO7Lm1d+Etw/4XGGYjOL82PggY=
+        b=vcyc3zbh7g9J7USzpSfKp1hbZ8d1ClbDQkmnN86GbOBMPwaTLsc2dNr0xFtbkxiq0
+         F5CcwM8X0wFd+biGoc7INAlKeHgbv158BwuGLD20EFn9xqhHyHO7qugdM7vENAz8P7
+         McZrW6lXFp8QOH9pjmmw1FaaVuY6/gweWZ3Lk5qE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brad Love <brad@nextdimension.cc>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 096/267] media: si2157: Better check for running tuner in init
-Date:   Fri, 19 Jun 2020 16:31:21 +0200
-Message-Id: <20200619141653.469897935@linuxfoundation.org>
+Subject: [PATCH 4.19 059/267] spi: Fix controller unregister order
+Date:   Fri, 19 Jun 2020 16:30:44 +0200
+Message-Id: <20200619141651.697715454@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,59 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brad Love <brad@nextdimension.cc>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit e955f959ac52e145f27ff2be9078b646d0352af0 ]
+[ Upstream commit 84855678add8aba927faf76bc2f130a40f94b6f7 ]
 
-Getting the Xtal trim property to check if running is less error prone.
-Reset if_frequency if state is unknown.
+When an SPI controller unregisters, it unbinds all its slave devices.
+For this, their drivers may need to access the SPI bus, e.g. to quiesce
+interrupts.
 
-Replaces the previous "garbage check".
+However since commit ffbbdd21329f ("spi: create a message queueing
+infrastructure"), spi_destroy_queue() is executed before unbinding the
+slaves.  It sets ctlr->running = false, thereby preventing SPI bus
+access and causing unbinding of slave devices to fail.
 
-Signed-off-by: Brad Love <brad@nextdimension.cc>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fix by unbinding slaves before calling spi_destroy_queue().
+
+Fixes: ffbbdd21329f ("spi: create a message queueing infrastructure")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v3.4+
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/8aaf9d44c153fe233b17bc2dec4eb679898d7e7b.1589557526.git.lukas@wunner.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/tuners/si2157.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/spi/spi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
-index a08d8fe2bb1b..13770b038048 100644
---- a/drivers/media/tuners/si2157.c
-+++ b/drivers/media/tuners/si2157.c
-@@ -84,24 +84,23 @@ static int si2157_init(struct dvb_frontend *fe)
- 	struct si2157_cmd cmd;
- 	const struct firmware *fw;
- 	const char *fw_name;
--	unsigned int uitmp, chip_id;
-+	unsigned int chip_id, xtal_trim;
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 0022a49797f9..f589d8100e95 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2306,6 +2306,8 @@ void spi_unregister_controller(struct spi_controller *ctlr)
+ 	struct spi_controller *found;
+ 	int id = ctlr->bus_num;
  
- 	dev_dbg(&client->dev, "\n");
- 
--	/* Returned IF frequency is garbage when firmware is not running */
--	memcpy(cmd.args, "\x15\x00\x06\x07", 4);
-+	/* Try to get Xtal trim property, to verify tuner still running */
-+	memcpy(cmd.args, "\x15\x00\x04\x02", 4);
- 	cmd.wlen = 4;
- 	cmd.rlen = 4;
- 	ret = si2157_cmd_execute(client, &cmd);
--	if (ret)
--		goto err;
- 
--	uitmp = cmd.args[2] << 0 | cmd.args[3] << 8;
--	dev_dbg(&client->dev, "if_frequency kHz=%u\n", uitmp);
-+	xtal_trim = cmd.args[2] | (cmd.args[3] << 8);
- 
--	if (uitmp == dev->if_frequency / 1000)
-+	if (ret == 0 && xtal_trim < 16)
- 		goto warm;
- 
-+	dev->if_frequency = 0; /* we no longer know current tuner state */
++	device_for_each_child(&ctlr->dev, NULL, __unregister);
 +
- 	/* power up */
- 	if (dev->chiptype == SI2157_CHIPTYPE_SI2146) {
- 		memcpy(cmd.args, "\xc0\x05\x01\x00\x00\x0b\x00\x00\x01", 9);
+ 	/* First make sure that this controller was ever added */
+ 	mutex_lock(&board_lock);
+ 	found = idr_find(&spi_master_idr, id);
+@@ -2318,7 +2320,6 @@ void spi_unregister_controller(struct spi_controller *ctlr)
+ 	list_del(&ctlr->list);
+ 	mutex_unlock(&board_lock);
+ 
+-	device_for_each_child(&ctlr->dev, NULL, __unregister);
+ 	device_unregister(&ctlr->dev);
+ 	/* free bus id */
+ 	mutex_lock(&board_lock);
 -- 
 2.25.1
 
