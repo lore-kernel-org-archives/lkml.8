@@ -2,102 +2,91 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93714C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB611C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B491207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C46CC20DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 14:02:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732960AbgFSOCc (ORCPT
+        id S1732864AbgFSOCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 10:02:32 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37118 "EHLO
+        Fri, 19 Jun 2020 10:02:31 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37119 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732641AbgFSOC2 (ORCPT
+        with ESMTP id S1725806AbgFSOC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:02:28 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        Fri, 19 Jun 2020 10:02:27 -0400
+Received: from ip-109-41-0-196.web.vodafone.de ([109.41.0.196] helo=wittgenstein)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jmHb2-0002Jv-FJ; Fri, 19 Jun 2020 14:02:20 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     srinivas.pandruvada@linux.intel.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Zhang Lixu <lixu.zhang@intel.com>, Even Xu <even.xu@intel.com>,
-        Song Hongyan <hongyan.song@intel.com>,
-        linux-input@vger.kernel.org (open list:INTEL INTEGRATED SENSOR HUB
-        DRIVER), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] HID: intel-ish-hid: Replace PCI_DEV_FLAGS_NO_D3 with pci_save_state
-Date:   Fri, 19 Jun 2020 22:02:13 +0800
-Message-Id: <20200619140215.11779-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jmHau-0002Hs-LG; Fri, 19 Jun 2020 14:02:15 +0000
+Date:   Fri, 19 Jun 2020 16:01:48 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Christian Brauner <christian@brauner.io>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the pidfd tree with the
+ powerpc-fixes tree
+Message-ID: <20200619140148.4ytme4wsvtw2oyrg@wittgenstein>
+References: <20200618121131.4ad29150@canb.auug.org.au>
+ <878sgjcnjp.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <878sgjcnjp.fsf@mpe.ellerman.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PCI_DEV_FLAGS_NO_D3 should not be used outside of PCI core.
+On Fri, Jun 19, 2020 at 09:17:30PM +1000, Michael Ellerman wrote:
+> Stephen Rothwell <sfr@canb.auug.org.au> writes:
+> > Hi all,
+> >
+> > Today's linux-next merge of the pidfd tree got a conflict in:
+> >
+> >   arch/powerpc/kernel/syscalls/syscall.tbl
+> >
+> > between commit:
+> >
+> >   35e32a6cb5f6 ("powerpc/syscalls: Split SPU-ness out of ABI")
+> >
+> > from the powerpc-fixes tree and commit:
+> >
+> >   9b4feb630e8e ("arch: wire-up close_range()")
+> >
+> > from the pidfd tree.
+> >
+> > I fixed it up (see below) and can carry the fix as necessary. This
+> > is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your tree
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any particularly
+> > complex conflicts.
+> 
+> Thanks.
+> 
+> I thought the week between rc1 and rc2 would be a safe time to do that
+> conversion of the syscall table, but I guess I was wrong :)
 
-Instead, we can use pci_save_state() to hint PCI core that the device
-should stay at D0 during suspend. By doing so, PCI core will let the
-upstream bridges also stays at D0 so the entire hierachy is in the
-correct power state as PCI spec mandates.
+:)
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v2:
- - Wording change.
+> 
+> I'm planning to send those changes to Linus for rc2, so the conflict
+> will then be vs mainline. But I guess it's pretty trivial so it doesn't
+> really matter.
 
- drivers/hid/intel-ish-hid/ipc/pci-ish.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+close_range() is targeted for the v5.9 merge window. I always do
+test-merges with mainline at the time I'm creating a pr and I'll just
+mention to Linus that there's conflict with ppc. :)
 
-diff --git a/drivers/hid/intel-ish-hid/ipc/pci-ish.c b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-index f491d8b4e24c..ab588b9c8d09 100644
---- a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-+++ b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-@@ -106,6 +106,11 @@ static inline bool ish_should_enter_d0i3(struct pci_dev *pdev)
- 	return !pm_suspend_via_firmware() || pdev->device == CHV_DEVICE_ID;
- }
- 
-+static inline bool ish_should_leave_d0i3(struct pci_dev *pdev)
-+{
-+	return !pm_resume_via_firmware() || pdev->device == CHV_DEVICE_ID;
-+}
-+
- /**
-  * ish_probe() - PCI driver probe callback
-  * @pdev:	pci device
-@@ -215,9 +220,7 @@ static void __maybe_unused ish_resume_handler(struct work_struct *work)
- 	struct ishtp_device *dev = pci_get_drvdata(pdev);
- 	int ret;
- 
--	/* Check the NO_D3 flag to distinguish the resume paths */
--	if (pdev->dev_flags & PCI_DEV_FLAGS_NO_D3) {
--		pdev->dev_flags &= ~PCI_DEV_FLAGS_NO_D3;
-+	if (ish_should_leave_d0i3(pdev) && !dev->suspend_flag) {
- 		disable_irq_wake(pdev->irq);
- 
- 		ishtp_send_resume(dev);
-@@ -281,8 +284,10 @@ static int __maybe_unused ish_suspend(struct device *device)
- 			 */
- 			ish_disable_dma(dev);
- 		} else {
--			/* Set the NO_D3 flag, the ISH would enter D0i3 */
--			pdev->dev_flags |= PCI_DEV_FLAGS_NO_D3;
-+			/* Save state so PCI core will keep the device at D0,
-+			 * the ISH would enter D0i3
-+			 */
-+			pci_save_state(pdev);
- 
- 			enable_irq_wake(pdev->irq);
- 		}
--- 
-2.17.1
-
+Thanks!
+Christian
