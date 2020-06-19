@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E8FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C949021941
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC3E21D80
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579254;
-	bh=7NsuvXTif01JnkdbHSo08MuqQTzSoDAw+D/hR9QqYyg=;
+	s=default; t=1592579258;
+	bh=i9Cm6uE8F2dwMgkxMHO8K4IqGtya6rXxjwkvqMYxwkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sVlcmCth6zlN6bzTvgWryHPTJh7kUtIPEa1lDeEMUpDJ+HFLkeZuATl9PnvN4inmK
-	 NIGjJVRlogHNzoIqjT2ySvn2MkrtHD094XlB7LJc7N4eLA1holnMQRhlAMT1ylHaCv
-	 682oxk6EHutlRZXYjKZC2TAO0osE/yI5rtT0vzm4=
+	b=x3C/8e4wYr15rj6yR/7iOUhPEmKcd0T2iFRm3eIIdZwRaRJkQ+Sst1H7ehxkdFW4t
+	 PtJduHTuuaqA6mNU0BxUxM+YUwqSoUCHk+MDeL68iKpw3d9uh43DWJsbTbb9ZhNNqB
+	 CPiqsV9l0QIe2bURt3Ue0lDUnyMoBvngRrNx6j0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391592AbgFSPHd (ORCPT
+        id S2390969AbgFSPHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:07:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36314 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:07:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391535AbgFSPHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:07:07 -0400
+        id S2391559AbgFSPHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:07:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 180DF21835;
-        Fri, 19 Jun 2020 15:07:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFA5521835;
+        Fri, 19 Jun 2020 15:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579226;
-        bh=7NsuvXTif01JnkdbHSo08MuqQTzSoDAw+D/hR9QqYyg=;
+        s=default; t=1592579237;
+        bh=i9Cm6uE8F2dwMgkxMHO8K4IqGtya6rXxjwkvqMYxwkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+kPPzUOBzJCjyFyJFmBex48YufzjKkrJD/Wx8U5ns3GG7BE0LT8LtgDickjC93lx
-         LKRKv6OIOgR+Ywj1KE3s8vaQqE6IwRLuIRylIf4JdqNTBgSqyVelyfYUTIU3gSZDk7
-         H87XwD4DI4I+VylYfbjRUTCE28nwTbQ7rnKAakgA=
+        b=xQvr1WP7odbzbKqqUjRrEPbWl9/fxYqTVsksu22rwYMvIT2kq6HK9WGUHn3bPP5kf
+         Wf6ekCeaQRWmSiQYy4TfP8QbFkYSshKNBMwTyQMtJ7YmBzuV5GFtF/VMZvPiG7DPZL
+         +YKKgbAOE15NxlT4ZyGHiVu3Nr5g+PgVDI2syz1c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jon Doron <arilou@gmail.com>,
-        Roman Kagan <rvkagan@yandex-team.ru>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 054/261] x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
-Date:   Fri, 19 Jun 2020 16:31:05 +0200
-Message-Id: <20200619141652.519326765@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Weiping Zhang <zhangweiping@didiglobal.com>,
+        Bart van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 029/261] block: reset mapping if failed to update hardware queue count
+Date:   Fri, 19 Jun 2020 16:30:40 +0200
+Message-Id: <20200619141651.310835453@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -62,73 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Doron <arilou@gmail.com>
+From: Weiping Zhang <zhangweiping@didiglobal.com>
 
-[ Upstream commit f7d31e65368aeef973fab788aa22c4f1d5a6af66 ]
+[ Upstream commit aa880ad690ab6d4c53934af85fb5a43e69ecb0f5 ]
 
-The problem the patch is trying to address is the fact that 'struct
-kvm_hyperv_exit' has different layout on when compiling in 32 and 64 bit
-modes.
+When we increase hardware queue count, blk_mq_update_queue_map will
+reset the mapping between cpu and hardware queue base on the hardware
+queue count(set->nr_hw_queues). The mapping cannot be reset if it
+encounters error in blk_mq_realloc_hw_ctxs, but the fallback flow will
+continue using it, then blk_mq_map_swqueue will touch a invalid memory,
+because the mapping points to a wrong hctx.
 
-In 64-bit mode the default alignment boundary is 64 bits thus
-forcing extra gaps after 'type' and 'msr' but in 32-bit mode the
-boundary is at 32 bits thus no extra gaps.
+blktest block/030:
 
-This is an issue as even when the kernel is 64 bit, the userspace using
-the interface can be both 32 and 64 bit but the same 32 bit userspace has
-to work with 32 bit kernel.
+null_blk: module loaded
+Increasing nr_hw_queues to 8 fails, fallback to 1
+==================================================================
+BUG: KASAN: null-ptr-deref in blk_mq_map_swqueue+0x2f2/0x830
+Read of size 8 at addr 0000000000000128 by task nproc/8541
 
-The issue is fixed by forcing the 64 bit layout, this leads to ABI
-change for 32 bit builds and while we are obviously breaking '32 bit
-userspace with 32 bit kernel' case, we're fixing the '32 bit userspace
-with 64 bit kernel' one.
+CPU: 5 PID: 8541 Comm: nproc Not tainted 5.7.0-rc4-dbg+ #3
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
+Call Trace:
+dump_stack+0xa5/0xe6
+__kasan_report.cold+0x65/0xbb
+kasan_report+0x45/0x60
+check_memory_region+0x15e/0x1c0
+__kasan_check_read+0x15/0x20
+blk_mq_map_swqueue+0x2f2/0x830
+__blk_mq_update_nr_hw_queues+0x3df/0x690
+blk_mq_update_nr_hw_queues+0x32/0x50
+nullb_device_submit_queues_store+0xde/0x160 [null_blk]
+configfs_write_file+0x1c4/0x250 [configfs]
+__vfs_write+0x4c/0x90
+vfs_write+0x14b/0x2d0
+ksys_write+0xdd/0x180
+__x64_sys_write+0x47/0x50
+do_syscall_64+0x6f/0x310
+entry_SYSCALL_64_after_hwframe+0x49/0xb3
 
-As the interface has no (known) users and 32 bit KVM is rather baroque
-nowadays, this seems like a reasonable decision.
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Jon Doron <arilou@gmail.com>
-Message-Id: <20200424113746.3473563-2-arilou@gmail.com>
-Reviewed-by: Roman Kagan <rvkagan@yandex-team.ru>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
+Tested-by: Bart van Assche <bvanassche@acm.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/virt/kvm/api.txt | 2 ++
- include/uapi/linux/kvm.h       | 2 ++
- 2 files changed, 4 insertions(+)
+ block/blk-mq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
-index 4833904d32a5..a18e996fa54b 100644
---- a/Documentation/virt/kvm/api.txt
-+++ b/Documentation/virt/kvm/api.txt
-@@ -4444,9 +4444,11 @@ EOI was received.
- #define KVM_EXIT_HYPERV_SYNIC          1
- #define KVM_EXIT_HYPERV_HCALL          2
- 			__u32 type;
-+			__u32 pad1;
- 			union {
- 				struct {
- 					__u32 msr;
-+					__u32 pad2;
- 					__u64 control;
- 					__u64 evt_page;
- 					__u64 msg_page;
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 52641d8ca9e8..e735bc4075dc 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -189,9 +189,11 @@ struct kvm_hyperv_exit {
- #define KVM_EXIT_HYPERV_SYNIC          1
- #define KVM_EXIT_HYPERV_HCALL          2
- 	__u32 type;
-+	__u32 pad1;
- 	union {
- 		struct {
- 			__u32 msr;
-+			__u32 pad2;
- 			__u64 control;
- 			__u64 evt_page;
- 			__u64 msg_page;
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 22ce0c6a8e6a..0550366e25d8 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3304,8 +3304,8 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+ 
+ 	prev_nr_hw_queues = set->nr_hw_queues;
+ 	set->nr_hw_queues = nr_hw_queues;
+-	blk_mq_update_queue_map(set);
+ fallback:
++	blk_mq_update_queue_map(set);
+ 	list_for_each_entry(q, &set->tag_list, tag_set_list) {
+ 		blk_mq_realloc_hw_ctxs(set, q);
+ 		if (q->nr_hw_queues != set->nr_hw_queues) {
 -- 
 2.25.1
 
