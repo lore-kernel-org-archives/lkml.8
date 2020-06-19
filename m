@@ -2,103 +2,145 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D22BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69B0D207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A13E20888
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 03:12:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="N9WeD7o0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bt+wAPHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbgFSDMy (ORCPT
+        id S1730317AbgFSDM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 18 Jun 2020 23:12:54 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:23109 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729010AbgFSDMx (ORCPT
+        Thu, 18 Jun 2020 23:12:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729509AbgFSDMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 18 Jun 2020 23:12:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592536372; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
- Subject: Sender; bh=lsyzurmElq8z11uDBfUqzzK77bSrT23gukb17nvxVmw=; b=N9WeD7o0/nAq6Mvb8F+NnI8bTrQHzsglYTu1t5YKTDd8TYV+mQJm7cylBUxaFmwkMDmgyRwy
- JpVgY5zSVHoYUPP++4I7SoS0vtoLXJ3aRIKwJ6m1rsCVtRuUFNuCoJWg9d66BXK5vlvbmlFX
- c4X0l+e+TiQt/2ojplrLJHBvfbI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
- 5eec2d34a6e154319facda46 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 19 Jun 2020 03:12:51
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 29CFDC433C8; Fri, 19 Jun 2020 03:12:51 +0000 (UTC)
-Received: from [192.168.1.6] (unknown [171.78.159.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sricharan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85401C433CA;
-        Fri, 19 Jun 2020 03:12:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85401C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-Subject: Re: [PATCH V3 4/5] phy: qcom-qusb2: Add ipq8074 device compatible
-To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, kishon@ti.com, vkoul@kernel.org,
-        robh+dt@kernel.org, mgautam@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1591625479-4483-1-git-send-email-sivaprak@codeaurora.org>
- <1591625479-4483-5-git-send-email-sivaprak@codeaurora.org>
-From:   Sricharan Ramabadhran <sricharan@codeaurora.org>
-Message-ID: <abf692c2-21d8-74eb-b960-6bdb865ea4ab@codeaurora.org>
-Date:   Fri, 19 Jun 2020 08:42:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1955CC06174E
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 20:12:53 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id c21so4706698lfb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 18 Jun 2020 20:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ux+RlrRIaul1vx3+RsucEfoBIW1+wn2hepN2AwYL3gA=;
+        b=Bt+wAPHbtIEVMjqIuaGC/1uyx9g+h0JmstAgvL3YJl4+t451+WyOTbJOfEvXeXX9eD
+         1Ltc346gaSEn7p3ivSehx5IBh4xH6ymqh+Cq5lYwtfijHLGYMnDbhhfUEQEC6v7QTi9t
+         Gvpm/+doEjzk2t50RGWoXl/eMh2lar/D82DnoQZeJv6XzRq+Fc5AvAcG2D+/Hskhaijt
+         5qOCFYr9fyIP7Xa+r/t0Lv45+tYjKdVg59nS+ejWw+WcV4bkYdYXGAGgDgDTeKjRc7CK
+         GEn4QL8/i4qrDlg0rT9E35HKdjJaOz/dsHKWRrtezLn9lpB9h6gMQoE0SemWFonpZquG
+         NmHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ux+RlrRIaul1vx3+RsucEfoBIW1+wn2hepN2AwYL3gA=;
+        b=thahU3ZsmCJ3g5d+Se9Zcg+BQ1lkINFOxlOWbIyh/JxmOjPhGP3gdgmakcQ6hMuF31
+         V+M9iD04Lt8NjtX/05fAkx98Ma1ZyczUV6odFMGHKRXTxayVTYu5qAZOofI6o8J2K+Qo
+         HHMg3POrLiK16QEcdw4uN/i4h2Fq8jp8zaIrjD9tw3PbP/MxRpuiydTPYC8Ayf2+yOKy
+         vRZebsNqiIuzfBay9AtO12v4sW+pQjvVozXsy9cVfivN+8xRHaB3+GBaEWA1OryVKInw
+         UVBhg2xaUjD+FT4+0fc+GIPNMUeDvF8BVKswqYKja7SsTlwIAnn5pY8isWvZYUrzI7fN
+         yvVQ==
+X-Gm-Message-State: AOAM533xGEJTVtrLk8pGcgQm0P5h3bAmOBqARAgvf4DLChtX4OUHYU+k
+        UmQmZsMDBtgH33JC/qr/Jby+WXvCKKD3Hf4o+ud8fAqI
+X-Google-Smtp-Source: ABdhPJwoJSHfdvQytNKngbcarE9utMq6l97RiL9akPNyVTfXUc439uP32EBiYbbxCOoeDZvLjAyRLu9iHNLCGLt7VZU=
+X-Received: by 2002:a19:b07:: with SMTP id 7mr509645lfl.38.1592536371497; Thu,
+ 18 Jun 2020 20:12:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1591625479-4483-5-git-send-email-sivaprak@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <1592363698-4266-1-git-send-email-jrdr.linux@gmail.com> <d9e8ad0f-f2aa-eea4-5bc7-a802c626ace6@oracle.com>
+In-Reply-To: <d9e8ad0f-f2aa-eea4-5bc7-a802c626ace6@oracle.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Fri, 19 Jun 2020 08:42:39 +0530
+Message-ID: <CAFqt6zbJD+k9xkV9Se0nL2qKfnea3mRrWJ4gzPmPJBquYk4M+w@mail.gmail.com>
+Subject: Re: [RFC PATCH] xen/privcmd: Convert get_user_pages*() to pin_user_pages*()
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Juergen Gross <jgross@suse.com>, sstabellini@kernel.org,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        John Hubbard <jhubbard@nvidia.com>, paul@xen.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 6/8/2020 7:41 PM, Sivaprakash Murugesan wrote:
-> Add ipq8074 qusb2 device compatible for high speed usb support.
+On Wed, Jun 17, 2020 at 11:29 PM Boris Ostrovsky
+<boris.ostrovsky@oracle.com> wrote:
 >
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> ---
->   drivers/phy/qualcomm/phy-qcom-qusb2.c | 3 +++
->   1 file changed, 3 insertions(+)
+> On 6/16/20 11:14 PM, Souptick Joarder wrote:
+> > In 2019, we introduced pin_user_pages*() and now we are converting
+> > get_user_pages*() to the new API as appropriate. [1] & [2] could
+> > be referred for more information.
+> >
+> > [1] Documentation/core-api/pin_user_pages.rst
+> >
+> > [2] "Explicit pinning of user-space pages":
+> >         https://lwn.net/Articles/807108/
+> >
+> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > ---
+> > Hi,
+> >
+> > I have compile tested this patch but unable to run-time test,
+> > so any testing help is much appriciated.
+> >
+> > Also have a question, why the existing code is not marking the
+> > pages dirty (since it did FOLL_WRITE) ?
 >
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-> index 393011a..557547d 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-> @@ -810,6 +810,9 @@ static const struct phy_ops qusb2_phy_gen_ops = {
->   
->   static const struct of_device_id qusb2_phy_of_match_table[] = {
->   	{
-> +		.compatible	= "qcom,ipq8074-qusb2-phy",
-> +		.data		= &msm8996_phy_cfg,
-> +	}, {
->   		.compatible	= "qcom,msm8996-qusb2-phy",
->   		.data		= &msm8996_phy_cfg,
->   	}, {
+>
+> Indeed, seems to me it should. Paul?
+>
+>
+> >
+> >  drivers/xen/privcmd.c | 7 ++-----
+> >  1 file changed, 2 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
+> > index a250d11..543739e 100644
+> > --- a/drivers/xen/privcmd.c
+> > +++ b/drivers/xen/privcmd.c
+> > @@ -594,7 +594,7 @@ static int lock_pages(
+> >               if (requested > nr_pages)
+> >                       return -ENOSPC;
+> >
+> > -             pinned = get_user_pages_fast(
+> > +             pinned = pin_user_pages_fast(
+> >                       (unsigned long) kbufs[i].uptr,
+> >                       requested, FOLL_WRITE, pages);
+> >               if (pinned < 0)
+> > @@ -614,10 +614,7 @@ static void unlock_pages(struct page *pages[], unsigned int nr_pages)
+> >       if (!pages)
+> >               return;
+> >
+> > -     for (i = 0; i < nr_pages; i++) {
+> > -             if (pages[i])
+> > -                     put_page(pages[i]);
+> > -     }
+> > +     unpin_user_pages(pages, nr_pages);
+>
+>
+> Why are you no longer checking for valid pages?
 
-Reviewed-by: Sricharan R <sricharan@codeaurora.org>
+My understanding is, in case of lock_pages() end up returning partial
+mapped pages,
+we should pass no. of partial mapped pages to unlock_pages(), not nr_pages.
+This will avoid checking extra check to validate the pages[i].
 
-Regards,
+and if lock_pages() returns 0 in success, anyway we have all the pages[i] valid.
+I will try to correct it in v2.
 
-  Sricharan
+But I agree, there is no harm to check for pages[i] and I believe,
+unpin_user_pages()
+is the right place to do so.
 
-
+John any thought ?
