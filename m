@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C68C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E33C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFD220809
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF3620809
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584690;
-	bh=Uh/IZUM0L/bUkrura8PqNijQXkLZGvjhnGmgcpPSTQg=;
+	s=default; t=1592584699;
+	bh=wGfsfRARAdevjLxfyzn7UsVt81QTzzFME9TjijF6snw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cLOwiwhHXrkNioWop01sv7+AOb97rX0B6NUo+t8z4k1ianZ2R0mgf7VjnZkf8UGnV
-	 hwKQVsxXA0o1LMc2+pvLBz6DL51y7JTb59COmPBT9bOnmLIgXpSahK5sowWU/w9lSa
-	 oLdxCjFF5m3aj5KCDGD83AzxEpIcuKYIZnIpEg4E=
+	b=crmn8MyP5WB26MzdOSMe0fKNl8DqybLUT76vQieuVOBRriofKPXWzj9z/OwZQO+l9
+	 a9nxrWG4jS3XqCQz7Z6qG23TAfHpm8dz5Ky+JVncuXBbzfSspt8ZpUp9C4KmGsaBaA
+	 wnSqSelNgpVlAszmyRBD3cDF/FvGV7xTk+jQ5Fos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389572AbgFSQiF (ORCPT
+        id S2395383AbgFSQiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:38:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40024 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:38:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387968AbgFSOru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:47:50 -0400
+        id S2388986AbgFSOrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:47:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80FE0217D9;
-        Fri, 19 Jun 2020 14:47:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBC73217A0;
+        Fri, 19 Jun 2020 14:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578070;
-        bh=Uh/IZUM0L/bUkrura8PqNijQXkLZGvjhnGmgcpPSTQg=;
+        s=default; t=1592578065;
+        bh=wGfsfRARAdevjLxfyzn7UsVt81QTzzFME9TjijF6snw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DmvU7Zopv6bgWTC16nx5SYc/7IGB9bubfhvFkMr21YkWuXOS+CNPIrgyfThmOEGQ8
-         9rqHwce9RJTTzhPC4yEdPsXeZpQ7K6ErycPrvSVnNr128cDaLurgrCqbQkn7AxBhV4
-         1mzov6ThVfmVvq2RCw/GBdYT0OAZ3UtILw1wWzpM=
+        b=vkDCKl6lNgKup3tL2b8s177qDhYYhvsCZu1Q67rzWWdp7B7QfatlFQTvJaNgl+29G
+         9q6YCsKgrqhAHx0PTjq/1CNf2bWBvSdOTjJcXRv+G+MaNLe3SnaZRn5yPoMKd8V/zY
+         lZucDE4L1Tv9ANbkvgM9k1TBSdi7pRjSkBGYygLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 071/190] mmc: sdhci-msm: Clear tuning done flag while hs400 tuning
-Date:   Fri, 19 Jun 2020 16:31:56 +0200
-Message-Id: <20200619141637.136935827@linuxfoundation.org>
+        syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com,
+        Barret Rhoden <brho@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 4.14 069/190] perf: Add cond_resched() to task_function_call()
+Date:   Fri, 19 Jun 2020 16:31:54 +0200
+Message-Id: <20200619141637.032031369@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -60,42 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+From: Barret Rhoden <brho@google.com>
 
-commit 9253d71011c349d5f5cc0cebdf68b4a80811b92d upstream.
+commit 2ed6edd33a214bca02bd2b45e3fc3038a059436b upstream.
 
-Clear tuning_done flag while executing tuning to ensure vendor
-specific HS400 settings are applied properly when the controller
-is re-initialized in HS400 mode.
+Under rare circumstances, task_function_call() can repeatedly fail and
+cause a soft lockup.
 
-Without this, re-initialization of the qcom SDHC in HS400 mode fails
-while resuming the driver from runtime-suspend or system-suspend.
+There is a slight race where the process is no longer running on the cpu
+we targeted by the time remote_function() runs.  The code will simply
+try again.  If we are very unlucky, this will continue to fail, until a
+watchdog fires.  This can happen in a heavily loaded, multi-core virtual
+machine.
 
-Fixes: ff06ce417828 ("mmc: sdhci-msm: Add HS400 platform support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Link: https://lore.kernel.org/r/1590678838-18099-1-git-send-email-vbadigan@codeaurora.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reported-by: syzbot+bb4935a5c09b5ff79940@syzkaller.appspotmail.com
+Signed-off-by: Barret Rhoden <brho@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200414222920.121401-1-brho@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-msm.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ kernel/events/core.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -861,6 +861,12 @@ static int sdhci_msm_execute_tuning(stru
- 	msm_host->use_cdr = true;
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -94,11 +94,11 @@ static void remote_function(void *data)
+  * @info:	the function call argument
+  *
+  * Calls the function @func when the task is currently running. This might
+- * be on the current CPU, which just calls the function directly
++ * be on the current CPU, which just calls the function directly.  This will
++ * retry due to any failures in smp_call_function_single(), such as if the
++ * task_cpu() goes offline concurrently.
+  *
+- * returns: @func return value, or
+- *	    -ESRCH  - when the process isn't running
+- *	    -EAGAIN - when the process moved away
++ * returns @func return value or -ESRCH when the process isn't running
+  */
+ static int
+ task_function_call(struct task_struct *p, remote_function_f func, void *info)
+@@ -111,11 +111,16 @@ task_function_call(struct task_struct *p
+ 	};
+ 	int ret;
  
- 	/*
-+	 * Clear tuning_done flag before tuning to ensure proper
-+	 * HS400 settings.
-+	 */
-+	msm_host->tuning_done = 0;
+-	do {
+-		ret = smp_call_function_single(task_cpu(p), remote_function, &data, 1);
+-		if (!ret)
+-			ret = data.ret;
+-	} while (ret == -EAGAIN);
++	for (;;) {
++		ret = smp_call_function_single(task_cpu(p), remote_function,
++					       &data, 1);
++		ret = !ret ? data.ret : -EAGAIN;
 +
-+	/*
- 	 * For HS400 tuning in HS200 timing requires:
- 	 * - select MCLK/2 in VENDOR_SPEC
- 	 * - program MCLK to 400MHz (or nearest supported) in GCC
++		if (ret != -EAGAIN)
++			break;
++
++		cond_resched();
++	}
+ 
+ 	return ret;
+ }
 
 
