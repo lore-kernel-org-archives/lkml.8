@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6658C21D7B
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC64321D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579045;
-	bh=3+n/+0GpUrWUOoVO5jpYcAcrIt9OUq9XsUzcT8TPeac=;
+	s=default; t=1592579052;
+	bh=cZPf0UtNWH0uESVxUsiQsfii7dgWe+ZEcCUAOQqq2TY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ukRhjv+0yUTyVNKRE6YwMpFB6iCSdRscT6ECjs42Vjzy4H8T+iYfZsqXryHtd5LB
-	 W9d5hC9xw0caD1FVvTwGn1dSgK7guk+kAuxzDlbIhJoE3+u/ykDHGh21Gnlkd9xSHi
-	 EHmbjBa8S/9CvmIL9NOcATlQ7Y+D+XISenJaRUvE=
+	b=Yb6eTrMTd1wgQc2nVrDbeb8sXLC5599E/r+kwjpeUjhsne8r38aoBEN/r7sOthP6k
+	 3gm9KwIMnIgdqOecEVJ8dtE6RFbdcPnpsx9H/RrRxRpsQOJsn/8gV6R+uYXd4WPxf2
+	 iBD9fDyXOcK0e/CYtXI8oyo6B156sjciuMgTTKWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391094AbgFSPED (ORCPT
+        id S2391109AbgFSPEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:04:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60820 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391075AbgFSPD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:03:59 -0400
+        id S2391075AbgFSPEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:04:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79E8221941;
-        Fri, 19 Jun 2020 15:03:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFD5621BE5;
+        Fri, 19 Jun 2020 15:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579039;
-        bh=3+n/+0GpUrWUOoVO5jpYcAcrIt9OUq9XsUzcT8TPeac=;
+        s=default; t=1592579044;
+        bh=cZPf0UtNWH0uESVxUsiQsfii7dgWe+ZEcCUAOQqq2TY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u1ODGQEHSbvK81D9f9bwBWVfcYOUju3kYn/yGnYxVRLJRLw/RbkK5bqNfR5xn2fJJ
-         00wGcyWlcd0fBrKtVDkxX5qnx0M4gWuD3HGQStas7vVAY9m9vIquxShAMIJPgueL2L
-         SEeTaB5N9fMvei16D5+K0B8L87wcV/HZrY/LkHMk=
+        b=nWODFXpKDCi9roM4K9PX6ibb/jxNzIfPYbbcVvpMNFGBqcv1HWewCU2Z0IGYy+3Hb
+         WhDvzv8cOPudB+peY/bU6oSLkyZldlG1ieSCJPR3gBeE4wOmU/egE/9wGGBCVdvchN
+         O78o5ZQ6ay8ri9bukqgUSMIerA0bXWvaz3UMDw7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 222/267] x86/amd_nb: Add Family 19h PCI IDs
-Date:   Fri, 19 Jun 2020 16:33:27 +0200
-Message-Id: <20200619141659.361444741@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 224/267] serial: 8250_pci: Move Pericom IDs to pci_ids.h
+Date:   Fri, 19 Jun 2020 16:33:29 +0200
+Message-Id: <20200619141659.452856976@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -59,62 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit b3f79ae45904ae987a7c06a9e8d6084d7b73e67f ]
+[ Upstream commit 62a7f3009a460001eb46984395280dd900bc4ef4 ]
 
-Add the new PCI Device 18h IDs for AMD Family 19h systems. Note that
-Family 19h systems will not have a new PCI root device ID.
+Move the IDs to pci_ids.h so it can be used by next patch.
 
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200110015651.14887-4-Yazen.Ghannam@amd.com
+Link: https://lore.kernel.org/r/20200508065343.32751-1-kai.heng.feng@canonical.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/amd_nb.c | 3 +++
- include/linux/pci_ids.h  | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/tty/serial/8250/8250_pci.c | 6 ------
+ include/linux/pci_ids.h            | 6 ++++++
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-index be1d15a27079..923b4bac9613 100644
---- a/arch/x86/kernel/amd_nb.c
-+++ b/arch/x86/kernel/amd_nb.c
-@@ -21,6 +21,7 @@
- #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
- #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
- #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
-+#define PCI_DEVICE_ID_AMD_19H_DF_F4	0x1654
+diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
+index bbe5cba21522..02091782bc1e 100644
+--- a/drivers/tty/serial/8250/8250_pci.c
++++ b/drivers/tty/serial/8250/8250_pci.c
+@@ -1690,12 +1690,6 @@ pci_wch_ch38x_setup(struct serial_private *priv,
+ #define PCIE_DEVICE_ID_WCH_CH384_4S	0x3470
+ #define PCIE_DEVICE_ID_WCH_CH382_2S	0x3253
  
- /* Protect the PCI config register pairs used for SMN and DF indirect access. */
- static DEFINE_MUTEX(smn_mutex);
-@@ -51,6 +52,7 @@ const struct pci_device_id amd_nb_misc_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },
- 	{}
- };
- EXPORT_SYMBOL_GPL(amd_nb_misc_ids);
-@@ -65,6 +67,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
- 	{}
- };
+-#define PCI_VENDOR_ID_PERICOM			0x12D8
+-#define PCI_DEVICE_ID_PERICOM_PI7C9X7951	0x7951
+-#define PCI_DEVICE_ID_PERICOM_PI7C9X7952	0x7952
+-#define PCI_DEVICE_ID_PERICOM_PI7C9X7954	0x7954
+-#define PCI_DEVICE_ID_PERICOM_PI7C9X7958	0x7958
+-
+ #define PCI_VENDOR_ID_ACCESIO			0x494f
+ #define PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SDB	0x1051
+ #define PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2S	0x1053
 diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 8d3b39028968..a81fcb2f2cb7 100644
+index 14baae112a54..c0dd2f749d3f 100644
 --- a/include/linux/pci_ids.h
 +++ b/include/linux/pci_ids.h
-@@ -549,6 +549,7 @@
- #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
- #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
- #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443
-+#define PCI_DEVICE_ID_AMD_19H_DF_F3	0x1653
- #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
- #define PCI_DEVICE_ID_AMD_LANCE		0x2000
- #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
+@@ -1833,6 +1833,12 @@
+ #define PCI_VENDOR_ID_NVIDIA_SGS	0x12d2
+ #define PCI_DEVICE_ID_NVIDIA_SGS_RIVA128 0x0018
+ 
++#define PCI_VENDOR_ID_PERICOM			0x12D8
++#define PCI_DEVICE_ID_PERICOM_PI7C9X7951	0x7951
++#define PCI_DEVICE_ID_PERICOM_PI7C9X7952	0x7952
++#define PCI_DEVICE_ID_PERICOM_PI7C9X7954	0x7954
++#define PCI_DEVICE_ID_PERICOM_PI7C9X7958	0x7958
++
+ #define PCI_SUBVENDOR_ID_CHASE_PCIFAST		0x12E0
+ #define PCI_SUBDEVICE_ID_CHASE_PCIFAST4		0x0031
+ #define PCI_SUBDEVICE_ID_CHASE_PCIFAST8		0x0021
 -- 
 2.25.1
 
