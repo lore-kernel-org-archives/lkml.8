@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 608CD2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 275942067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584545;
-	bh=qRpGoHHYzAVtaKwfm0+sO3dDW/r3U/cexmDYzuFn13o=;
+	s=default; t=1592584554;
+	bh=Zx7Mas0ND3ZhnW4uZIFSFSxSsR4DZILpdmxi+NlRdbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1al0E0SH2lHgcuQCHIQvvUu2slfLDeE/XZo0qVEeZAzgulXtxl2GyCtx52J1dMDJ8
-	 2bRnUc75LCQt9m8OfjPI0E4aWOfu4IWfNbnM+awHLZQ5DzLKDEoguHCaf+mEvjIsVK
-	 fCPwD8eYz5xSVm8AhGahxcMZE0L5S0opgjSrc/UM=
+	b=XCg/wZIGnZoZuG+81JM1ctVYnO+FGl7L0UnfzoO/GEQrM4QnifSWPf/2qp2kfiWHQ
+	 QIIUNAmZOpIQk/OXc4dJsi+O6zW0VD5ScWi+RxX0x+VkNwCRmfl/rmDofJ3IZ04C1k
+	 HfAMIT2D2AYsLdCMuifJCb07CrKps2JRG5I8xTr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395234AbgFSQfn (ORCPT
+        id S2395239AbgFSQfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:35:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42312 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:35:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389231AbgFSOtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:49:39 -0400
+        id S2389217AbgFSOtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:49:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 217DB2184D;
-        Fri, 19 Jun 2020 14:49:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 243C02158C;
+        Fri, 19 Jun 2020 14:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578179;
-        bh=qRpGoHHYzAVtaKwfm0+sO3dDW/r3U/cexmDYzuFn13o=;
+        s=default; t=1592578171;
+        bh=Zx7Mas0ND3ZhnW4uZIFSFSxSsR4DZILpdmxi+NlRdbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WcKmbxXNMVbMBF99P2b6Pnc/dwDvnKVfGDpDKG+AozO6VnNELm8oPEcYjS3paMRP4
-         2yDxlQVkYlwF4A7bKRVLECSzeO3aC41FMkBoiFz0JknMifB32KLxAfLJaXWQ93wMPy
-         XFjW2nLNYKvBlOxOuSY+7Jy8WJTIof0JOgCqLqI4=
+        b=MNGlTwgFZm10ZpbFsPNj3+K11O4nkZFYxfz/Niz9zkThvG4oLkqHWBVAdbebeQ6g6
+         i2ibde96MbelTmTkIv90D7UTXsgpn/e6w1W9febvSJPiVhQgsE9/HKdyzj9NhpguFl
+         toYTVJIBvvbl7ub6qMkbFgDa/KtIiBr7bgNxlb7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>,
-        Devulapally Shiva Krishna <shiva@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jon Doron <arilou@gmail.com>,
+        Roman Kagan <rvkagan@yandex-team.ru>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 113/190] Crypto/chcr: fix for ccm(aes) failed test
-Date:   Fri, 19 Jun 2020 16:32:38 +0200
-Message-Id: <20200619141639.278166992@linuxfoundation.org>
+Subject: [PATCH 4.14 093/190] x86/kvm/hyper-v: Explicitly align hcall param for kvm_hyperv_exit
+Date:   Fri, 19 Jun 2020 16:32:18 +0200
+Message-Id: <20200619141638.244648751@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141633.446429600@linuxfoundation.org>
 References: <20200619141633.446429600@linuxfoundation.org>
@@ -61,37 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Devulapally Shiva Krishna <shiva@chelsio.com>
+From: Jon Doron <arilou@gmail.com>
 
-[ Upstream commit 10b0c75d7bc19606fa9a62c8ab9180e95c0e0385 ]
+[ Upstream commit f7d31e65368aeef973fab788aa22c4f1d5a6af66 ]
 
-The ccm(aes) test fails when req->assoclen > ~240bytes.
+The problem the patch is trying to address is the fact that 'struct
+kvm_hyperv_exit' has different layout on when compiling in 32 and 64 bit
+modes.
 
-The problem is the value assigned to auth_offset is wrong.
-As auth_offset is unsigned char, it can take max value as 255.
-So fix it by making it unsigned int.
+In 64-bit mode the default alignment boundary is 64 bits thus
+forcing extra gaps after 'type' and 'msr' but in 32-bit mode the
+boundary is at 32 bits thus no extra gaps.
 
-Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
-Signed-off-by: Devulapally Shiva Krishna <shiva@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This is an issue as even when the kernel is 64 bit, the userspace using
+the interface can be both 32 and 64 bit but the same 32 bit userspace has
+to work with 32 bit kernel.
+
+The issue is fixed by forcing the 64 bit layout, this leads to ABI
+change for 32 bit builds and while we are obviously breaking '32 bit
+userspace with 32 bit kernel' case, we're fixing the '32 bit userspace
+with 64 bit kernel' one.
+
+As the interface has no (known) users and 32 bit KVM is rather baroque
+nowadays, this seems like a reasonable decision.
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Jon Doron <arilou@gmail.com>
+Message-Id: <20200424113746.3473563-2-arilou@gmail.com>
+Reviewed-by: Roman Kagan <rvkagan@yandex-team.ru>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/chelsio/chcr_algo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/virtual/kvm/api.txt | 2 ++
+ include/uapi/linux/kvm.h          | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
-index 8d39f3a07bf8..99c3827855c7 100644
---- a/drivers/crypto/chelsio/chcr_algo.c
-+++ b/drivers/crypto/chelsio/chcr_algo.c
-@@ -2201,7 +2201,7 @@ static void fill_sec_cpl_for_aead(struct cpl_tx_sec_pdu *sec_cpl,
- 	unsigned int mac_mode = CHCR_SCMD_AUTH_MODE_CBCMAC;
- 	unsigned int c_id = chcrctx->dev->rx_channel_id;
- 	unsigned int ccm_xtra;
--	unsigned char tag_offset = 0, auth_offset = 0;
-+	unsigned int tag_offset = 0, auth_offset = 0;
- 	unsigned int assoclen;
- 
- 	if (get_aead_subtype(tfm) == CRYPTO_ALG_SUB_TYPE_AEAD_RFC4309)
+diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
+index f67ed33d1054..81a8802cea88 100644
+--- a/Documentation/virtual/kvm/api.txt
++++ b/Documentation/virtual/kvm/api.txt
+@@ -3737,9 +3737,11 @@ EOI was received.
+ #define KVM_EXIT_HYPERV_SYNIC          1
+ #define KVM_EXIT_HYPERV_HCALL          2
+ 			__u32 type;
++			__u32 pad1;
+ 			union {
+ 				struct {
+ 					__u32 msr;
++					__u32 pad2;
+ 					__u64 control;
+ 					__u64 evt_page;
+ 					__u64 msg_page;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 27c62abb6c9e..efe8873943f6 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -189,9 +189,11 @@ struct kvm_hyperv_exit {
+ #define KVM_EXIT_HYPERV_SYNIC          1
+ #define KVM_EXIT_HYPERV_HCALL          2
+ 	__u32 type;
++	__u32 pad1;
+ 	union {
+ 		struct {
+ 			__u32 msr;
++			__u32 pad2;
+ 			__u64 control;
+ 			__u64 evt_page;
+ 			__u64 msg_page;
 -- 
 2.25.1
 
