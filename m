@@ -2,109 +2,99 @@ Return-Path: <SRS0=bWCJ=AA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2635C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2967C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C313A20771
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894D3208DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 09:54:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FJ9xI3Wc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b85Q+wHe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732160AbgFSJvZ (ORCPT
+        id S1732056AbgFSJx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 05:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36272 "EHLO
+        Fri, 19 Jun 2020 05:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731907AbgFSJvY (ORCPT
+        with ESMTP id S1731048AbgFSJx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 05:51:24 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFD25C06174E
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:51:23 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x6so9019800wrm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jun 2020 02:51:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LnPwgU2Ku49ZJqPfwVOOBQKnYQ6yhIFp57++bexGok8=;
-        b=FJ9xI3Wc7r4gcCFA8b8VjMefoKs5sNRH3+a0+UgRIipP3eDy53lralSiPmJ2KKUFPg
-         c8JE5injQrqn5LsaHztBYGk8O4wl0wTfZQ6+qhNUY9qhfFCkv8b1pnDv5iH18Xdm0WMi
-         eKKFHQDAzU8UZiB0zYkRR1sUz5Gv/fxVnDv6KD3O75/BkpcJa/5+cnKfmquBjd4ldZ8H
-         LJ8RPvIoEisWbDMTOmgvM92LnIDCMnfxSjjZWuGO3e2YkGQhBsChs0Lk1ivwcgtZLQDx
-         bXA4SH/dgcKnh9hM7Rtsy7wMH4IVdnpAo8z8gw8PFBje6DFMogBezcJDiPBM088rzVZl
-         vegg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LnPwgU2Ku49ZJqPfwVOOBQKnYQ6yhIFp57++bexGok8=;
-        b=EWGbyvBfuiGeD2QFNJ0iKL3dJuXH6yrFyZltIkoVTCChEGRWdFZgTIdCzHcTjWeWMa
-         v7BZHbDH6J+hoHT0A6FxvkC5JLn9TwrLJcmgQrCFEVvHzQJ5Q7E0dygY6GSQKQT5Q8hb
-         ccUFgAJm/35QvWbTjZa/2xiVcHo/rzJSPf9vgW2466BwZGwe/SqqWNC7gZDpW2a3Vfx7
-         OVX/pJshkuJAuWart9cXj3eRqoaeJS1eM2P7P2y93M9iBmsf4tR6hTZjreO7quEEEPSn
-         p4ElfHgI6mS/EM/595j73sTgJPIWbXBBeNEY8CR0uCmXzUgQh6qtOWnyBXFbUyVJembH
-         qoUA==
-X-Gm-Message-State: AOAM531mJVCWTHUuwXBE9umlIFenel45Gey3t8CGUX2FhHbTxKjDDUET
-        Ag1qKBPY+DASwHAkahLGMgZ/Sw==
-X-Google-Smtp-Source: ABdhPJy/P5GyQ6zftQjFqjZk4Eo0bUBjfqGjrRHEc55ESeQvI7/VsuC7NR2YjKFzBIldf4CGa6pbQw==
-X-Received: by 2002:a5d:67c8:: with SMTP id n8mr3139455wrw.343.1592560282184;
-        Fri, 19 Jun 2020 02:51:22 -0700 (PDT)
-Received: from google.com ([2a01:4b00:8523:2d03:d994:d48b:4a9:7c2b])
-        by smtp.gmail.com with ESMTPSA id n7sm6628302wrx.82.2020.06.19.02.51.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 02:51:21 -0700 (PDT)
-Date:   Fri, 19 Jun 2020 10:51:20 +0100
-From:   David Brazdil <dbrazdil@google.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, android-kvm@google.com,
-        kernel-team@android.com
-Subject: Re: [PATCH v3 02/15] arm64: kvm: Move __smccc_workaround_1_smc to
- .rodata
-Message-ID: <20200619095120.wenkbs5bl3wbyiyh@google.com>
-References: <20200618122537.9625-1-dbrazdil@google.com>
- <20200618122537.9625-3-dbrazdil@google.com>
- <02322fdac903aa1786c334d0ddd7f38a@kernel.org>
+        Fri, 19 Jun 2020 05:53:58 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99FB1C06174E;
+        Fri, 19 Jun 2020 02:53:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=vNFT0Sjkn3Ns/7UfmeMa4BFlK6XwuyyvTy4lSWmOyOA=; b=b85Q+wHeQcNdxG/dTULcLBKUsI
+        sPBb3JkAlAK1dDJl1iVeX4cqP45n5LN3HJgb5ga3rV+3YsW1zJQfZQjgXjbiO7k41C41fr5OWSLKJ
+        SpuMUBc85F8ZYo58ibVFe19JhCYxCXXD3felRoSi5ZqrC8PbZ4cRwxkzRa6OZ4Hjhw3+tTeAM6m2b
+        OGhP4o8lEN47X+wym4zafTtvRnnJswLrzlieWzWAH+8xdcATCh3ePd9Ru8qAEEov7S4dV8yAtW6Jn
+        ybFGb6kaTaXG5rLJVLtymMK+j6LSlMbGJBkDIxBCk+L2D2NJDuw1zQXuh8AgWDLRArZM+SHrlQguZ
+        eNC7FzDQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jmDiT-0006DN-KM; Fri, 19 Jun 2020 09:53:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0DD9A3003E5;
+        Fri, 19 Jun 2020 11:53:43 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EC999203C0359; Fri, 19 Jun 2020 11:53:42 +0200 (CEST)
+Date:   Fri, 19 Jun 2020 11:53:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     syzbot <syzbot+42bc0d31b9a21faebdf8@syzkaller.appspotmail.com>
+Cc:     andreyknvl@google.com, bp@alien8.de, devel@etsukata.com,
+        hpa@zytor.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, mingo@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        viro@zeniv.linux.org.uk, x86@kernel.org
+Subject: Re: INFO: trying to register non-static key in is_dynamic_key
+Message-ID: <20200619095342.GT576905@hirez.programming.kicks-ass.net>
+References: <00000000000004a76305a8624d22@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <02322fdac903aa1786c334d0ddd7f38a@kernel.org>
+In-Reply-To: <00000000000004a76305a8624d22@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Marc,
+On Thu, Jun 18, 2020 at 02:17:15PM -0700, syzbot wrote:
 
-> > -	.popsection
-> 
-> I'd be tempted to leave the .popsection in place, if only for symmetry  with
-> the initial .pushsection.
+> INFO: trying to register non-static key.
+> the code is fine but needs lockdep annotation.
+> turning off the locking correctness validator.
+> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  <IRQ>
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xf6/0x16e lib/dump_stack.c:118
+>  assign_lock_key kernel/locking/lockdep.c:894 [inline]
+>  register_lock_class+0x1442/0x17e0 kernel/locking/lockdep.c:1206
+>  arch_stack_walk+0x81/0xf0 arch/x86/kernel/stacktrace.c:25
+>  lock_downgrade+0x720/0x720 kernel/locking/lockdep.c:4624
+>  is_dynamic_key+0x1b0/0x1b0 kernel/locking/lockdep.c:1176
+>  trace_hardirqs_off+0x50/0x1f0 kernel/trace/trace_preemptirq.c:83
+>  __lock_acquire+0x101/0x6270 kernel/locking/lockdep.c:4259
+>  save_stack+0x32/0x40 mm/kasan/common.c:50
 
-I removed it because other .S files don't pop either. It must have been added
-here purely for the smccc workaround code. Happy to add it back if you prefer,
-but the pushsection is removed later in the series, so this would disappear
-as well.
+So I'm thinking this is in fact:
 
-> > +	.pushsection	.rodata
-> > +	.global		__smccc_workaround_1_smc
-> > +__smccc_workaround_1_smc:
-> 
-> You probably want to replace this with SYM_DATA_START (and SYM_DATA_END at
-> the end).
+	spin_lock_irqsave(&depot_lock, flags);
 
-Done
+from lib/stackdepot.c:stack_depot_save(), which has gone missing from
+the stack due to tail-call optimizations.
 
-Thanks for reviewing,
-David
+Now depot_lock is declared thusly:
+
+  static DEFINE_SPINLOCK(depot_lock);
+
+and I'm trying to figure out how lockdep manages to conclude that isn't
+static storage.... most odd.
