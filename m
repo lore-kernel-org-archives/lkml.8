@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A832CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B9AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7705B217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C4A217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 16:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592584175;
-	bh=bxcjDPu7LuqRjHCweOM9LMQWJan+q+nNWni1LRISz/Q=;
+	s=default; t=1592584179;
+	bh=I9StSnQTve+NRfXNCgjhEtbvSfCpEbTyi7oxIjiSrxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FankeYrRmQPASQuTCBqE4ZkShrELqAQi3RUntC4XPEj7SC4Y49NRX2EsNeVdoVtur
-	 8jM31E6wVCIbKD3QcactbrnpoamGJ96mvo6pY0xpphlGcZ8TxnzKhi6srY1bAevcVE
-	 J6GZ4NYzDaRbeAelzmDCASRms7gAhiXqnnZYCB/8=
+	b=cPUEhrd64qX3QgdSLhB+hg/snRbdvj7qY27TgNAFKGcac1WwjkhDTT633plWmcI3E
+	 GzEhmzP+hOIplH0TN3CA4eRtWKTmj5kwu70y/5t7a/wXCYqYLS6YZEUn3/xHQ4m7GT
+	 wI77ve+M3MqGjC92Xao32idTtdHavX53xuceKcGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394991AbgFSQ3e (ORCPT
+        id S2394984AbgFSQ3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 12:29:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49318 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 12:29:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389869AbgFSOyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:54:36 -0400
+        id S2389871AbgFSOyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:54:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CFE52184D;
-        Fri, 19 Jun 2020 14:54:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB4AC21556;
+        Fri, 19 Jun 2020 14:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578476;
-        bh=bxcjDPu7LuqRjHCweOM9LMQWJan+q+nNWni1LRISz/Q=;
+        s=default; t=1592578474;
+        bh=I9StSnQTve+NRfXNCgjhEtbvSfCpEbTyi7oxIjiSrxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xCvB6J8GITRryZ7ikQChvAISajv5ozvRZ9N0m8z0wTednS2bIHIAhId8QJNrDsfTi
-         OR1i3cjav9A/YRvfcVVqfyp1YcZ+cbsNGvI4BkDn+nvdHz/vh3w4ZZMDc+yzoly5J4
-         2Kc7w4zZoEwzI7DQev5gGIJ9iVQ3M2/RMw12m1v4=
+        b=QZ7dSvjAxvIcGroMlF0+KoqWIjTrLp8xHcWso8ek3uwojLLc8mDQPKu5djMz3Lo7g
+         XnMYnLUj8thwiUW2wang++gLYbbwFQiRpzRayeADXyhyaPEKkK9RNUeToRalqrszne
+         RkV9AubcAiQglOvJ6zyxp7osuOcYJvLnjAnRaD8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 037/267] ACPI: sysfs: Fix reference count leak in acpi_sysfs_add_hotplug_profile()
-Date:   Fri, 19 Jun 2020 16:30:22 +0200
-Message-Id: <20200619141650.618131064@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 036/267] ALSA: usb-audio: Add vendor, product and profile name for HP Thunderbolt Dock
+Date:   Fri, 19 Jun 2020 16:30:21 +0200
+Message-Id: <20200619141650.577504242@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -59,37 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 6e6c25283dff866308c87b49434c7dbad4774cc0 upstream.
+commit 0c5086f5699906ec8e31ea6509239489f060f2dc upstream.
 
-kobject_init_and_add() takes reference even when it fails.
-Thus, when kobject_init_and_add() returns an error,
-kobject_put() must be called to properly clean up the kobject.
+The HP Thunderbolt Dock has two separate USB devices, one is for speaker
+and one is for headset. Add names for them so userspace can apply UCM
+settings.
 
-Fixes: 3f8055c35836 ("ACPI / hotplug: Introduce user space interface for hotplug profiles")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200608062630.10806-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/sysfs.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/usb/quirks-table.h |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/drivers/acpi/sysfs.c
-+++ b/drivers/acpi/sysfs.c
-@@ -990,8 +990,10 @@ void acpi_sysfs_add_hotplug_profile(stru
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -39,6 +39,26 @@
+ 	.idProduct = prod, \
+ 	.bInterfaceClass = USB_CLASS_VENDOR_SPEC
  
- 	error = kobject_init_and_add(&hotplug->kobj,
- 		&acpi_hotplug_profile_ktype, hotplug_kobj, "%s", name);
--	if (error)
-+	if (error) {
-+		kobject_put(&hotplug->kobj);
- 		goto err_out;
++/* HP Thunderbolt Dock Audio Headset */
++{
++	USB_DEVICE(0x03f0, 0x0269),
++	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
++		.vendor_name = "HP",
++		.product_name = "Thunderbolt Dock Audio Headset",
++		.profile_name = "HP-Thunderbolt-Dock-Audio-Headset",
++		.ifnum = QUIRK_NO_INTERFACE
 +	}
- 
- 	kobject_uevent(&hotplug->kobj, KOBJ_ADD);
- 	return;
++},
++/* HP Thunderbolt Dock Audio Module */
++{
++	USB_DEVICE(0x03f0, 0x0567),
++	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
++		.vendor_name = "HP",
++		.product_name = "Thunderbolt Dock Audio Module",
++		.profile_name = "HP-Thunderbolt-Dock-Audio-Module",
++		.ifnum = QUIRK_NO_INTERFACE
++	}
++},
+ /* FTDI devices */
+ {
+ 	USB_DEVICE(0x0403, 0xb8d8),
 
 
