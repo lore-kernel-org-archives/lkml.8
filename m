@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE58C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7858EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7C62186A
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546B020776
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592579454;
-	bh=GggotduncqE53Enp74fYydZ56K8d3jZ2ZbRoU/r6MXg=;
+	s=default; t=1592579457;
+	bh=ROUYVJJ3ePUN3a1iYmd1eoCs5co0/fGeJQMZ/InFDNc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oQvhuGXKcLKm8Z08ThuEtajh+9ul0FoJID2xGiRLm4nwPjagRofPfYCU1TYv62ebq
-	 sSARztkP2UrzLuO7+B2czhTcYOnm4BfVgGEN2XlolXFYoDWfiIaCvlc6mVqrxweChv
-	 f69I6JpPeiYghHiqOl8aAZDYmuTeTWDkxuF3Fez4=
+	b=C4ymRTV+ZLa1ohpJnmOyzvBJf6UkFwkG5Htf3j3C6R+sEUWRuLbhXvygD4SSGGj4Q
+	 ZjWZUe2tnsiHzzsXSaxfZ0IAI9AlZ3Uz8W/qETbO20of3OmhMCZGCwwGhAv8YHLLtk
+	 MH87jQciXnktQAw3Du5W7Fj8TCzrwkuJF3NuwHwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403791AbgFSPKx (ORCPT
+        id S2403796AbgFSPK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40726 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:10:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403783AbgFSPKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 11:10:39 -0400
+        id S2403769AbgFSPKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 11:10:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4127921852;
-        Fri, 19 Jun 2020 15:10:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ABE1206FA;
+        Fri, 19 Jun 2020 15:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592579438;
-        bh=GggotduncqE53Enp74fYydZ56K8d3jZ2ZbRoU/r6MXg=;
+        s=default; t=1592579436;
+        bh=ROUYVJJ3ePUN3a1iYmd1eoCs5co0/fGeJQMZ/InFDNc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EOnE6rr3+jG1J0ukdVWpmcYB37idJWe47tIqvkcxgQhx+JHC8yv28wQTw/9SApaQ+
-         UaqmbcpaOhM4sHCr3cIG5LsXx+5X087Y+cnlicDjE/6L/wyI4PbvLH5XSkTZUsPAtU
-         Yr2tQ6J1z+5D92Bpyiq4eTbgrpaKi7HH+K++cSBc=
+        b=crTZvFx1AHMVpA6gSZsz8yBLU1/H3vOsbN2wtbHQ8IjMVdrWEAkveXDTRaI1Zp2YR
+         0ZcdcPqYSOlaLEAf7Yy/QkwYSEp/h/YThMwtyYa+yIquDFeZv+47Tv/KaqVaWjfEUb
+         5Mzz1bIR9MX17xVkUcsiwkVfD+CsO90PMsuVXNl4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        stable@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 136/261] macvlan: Skip loopback packets in RX handler
-Date:   Fri, 19 Jun 2020 16:32:27 +0200
-Message-Id: <20200619141656.374160854@linuxfoundation.org>
+Subject: [PATCH 5.4 135/261] net: ethernet: fec: move GPR register offset and bit into DT
+Date:   Fri, 19 Jun 2020 16:32:26 +0200
+Message-Id: <20200619141656.318313725@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141649.878808811@linuxfoundation.org>
 References: <20200619141649.878808811@linuxfoundation.org>
@@ -61,100 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+From: Fugang Duan <fugang.duan@nxp.com>
 
-[ Upstream commit 81f3dc9349ce0bf7b8447f147f45e70f0a5b36a6 ]
+[ Upstream commit 8a448bf832af537d26aa557d183a16943dce4510 ]
 
-Ignore loopback-originatig packets soon enough and don't try to process L2
-header where it doesn't exist. The very similar br_handle_frame() in bridge
-code performs exactly the same check.
+The commit da722186f654 (net: fec: set GPR bit on suspend by DT
+configuration) set the GPR reigster offset and bit in driver for
+wake on lan feature.
 
-This is an example of such ICMPv6 packet:
+But it introduces two issues here:
+- one SOC has two instances, they have different bit
+- different SOCs may have different offset and bit
 
-skb len=96 headroom=40 headlen=96 tailroom=56
-mac=(40,0) net=(40,40) trans=80
-shinfo(txflags=0 nr_frags=0 gso(size=0 type=0 segs=0))
-csum(0xae2e9a2f ip_summed=1 complete_sw=0 valid=0 level=0)
-hash(0xc97ebd88 sw=1 l4=1) proto=0x86dd pkttype=5 iif=24
-dev name=etha01.212 feat=0x0x0000000040005000
-skb headroom: 00000000: 00 7c 86 52 84 88 ff ff 00 00 00 00 00 00 08 00
-skb headroom: 00000010: 45 00 00 9e 5d 5c 40 00 40 11 33 33 00 00 00 01
-skb headroom: 00000020: 02 40 43 80 00 00 86 dd
-skb linear:   00000000: 60 09 88 bd 00 38 3a ff fe 80 00 00 00 00 00 00
-skb linear:   00000010: 00 40 43 ff fe 80 00 00 ff 02 00 00 00 00 00 00
-skb linear:   00000020: 00 00 00 00 00 00 00 01 86 00 61 00 40 00 00 2d
-skb linear:   00000030: 00 00 00 00 00 00 00 00 03 04 40 e0 00 00 01 2c
-skb linear:   00000040: 00 00 00 78 00 00 00 00 fd 5f 42 68 23 87 a8 81
-skb linear:   00000050: 00 00 00 00 00 00 00 00 01 01 02 40 43 80 00 00
-skb tailroom: 00000000: ...
-skb tailroom: 00000010: ...
-skb tailroom: 00000020: ...
-skb tailroom: 00000030: ...
+So to support wake-on-lan feature on other i.MX platforms, it should
+configure the GPR reigster offset and bit from DT.
 
-Call Trace, how it happens exactly:
- ...
- macvlan_handle_frame+0x321/0x425 [macvlan]
- ? macvlan_forward_source+0x110/0x110 [macvlan]
- __netif_receive_skb_core+0x545/0xda0
- ? enqueue_task_fair+0xe5/0x8e0
- ? __netif_receive_skb_one_core+0x36/0x70
- __netif_receive_skb_one_core+0x36/0x70
- process_backlog+0x97/0x140
- net_rx_action+0x1eb/0x350
- ? __hrtimer_run_queues+0x136/0x2e0
- __do_softirq+0xe3/0x383
- do_softirq_own_stack+0x2a/0x40
- </IRQ>
- do_softirq.part.4+0x4e/0x50
- netif_rx_ni+0x60/0xd0
- dev_loopback_xmit+0x83/0xf0
- ip6_finish_output2+0x575/0x590 [ipv6]
- ? ip6_cork_release.isra.1+0x64/0x90 [ipv6]
- ? __ip6_make_skb+0x38d/0x680 [ipv6]
- ? ip6_output+0x6c/0x140 [ipv6]
- ip6_output+0x6c/0x140 [ipv6]
- ip6_send_skb+0x1e/0x60 [ipv6]
- rawv6_sendmsg+0xc4b/0xe10 [ipv6]
- ? proc_put_long+0xd0/0xd0
- ? rw_copy_check_uvector+0x4e/0x110
- ? sock_sendmsg+0x36/0x40
- sock_sendmsg+0x36/0x40
- ___sys_sendmsg+0x2b6/0x2d0
- ? proc_dointvec+0x23/0x30
- ? addrconf_sysctl_forward+0x8d/0x250 [ipv6]
- ? dev_forward_change+0x130/0x130 [ipv6]
- ? _raw_spin_unlock+0x12/0x30
- ? proc_sys_call_handler.isra.14+0x9f/0x110
- ? __call_rcu+0x213/0x510
- ? get_max_files+0x10/0x10
- ? trace_hardirqs_on+0x2c/0xe0
- ? __sys_sendmsg+0x63/0xa0
- __sys_sendmsg+0x63/0xa0
- do_syscall_64+0x6c/0x1e0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+So the patch is to improve the commit da722186f654 (net: fec: set GPR
+bit on suspend by DT configuration) to support multiple ethernet
+instances on i.MX series.
 
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+v2:
+ * switch back to store the quirks bitmask in driver_data
+v3:
+ * suggested by Sascha Hauer, use a struct fec_devinfo for
+   abstracting differences between different hardware variants,
+   it can give more freedom to describe the differences.
+
+Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macvlan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/freescale/fec_main.c | 24 +++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
-index 0ce1004a8d0d..9d3209ae41cf 100644
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -447,6 +447,10 @@ static rx_handler_result_t macvlan_handle_frame(struct sk_buff **pskb)
- 	int ret;
- 	rx_handler_result_t handle_res;
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 39c112f1543c..f0acbfa31482 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -88,8 +88,6 @@ static void fec_enet_itr_coal_init(struct net_device *ndev);
  
-+	/* Packets from dev_loopback_xmit() do not have L2 header, bail out */
-+	if (unlikely(skb->pkt_type == PACKET_LOOPBACK))
-+		return RX_HANDLER_PASS;
+ struct fec_devinfo {
+ 	u32 quirks;
+-	u8 stop_gpr_reg;
+-	u8 stop_gpr_bit;
+ };
+ 
+ static const struct fec_devinfo fec_imx25_info = {
+@@ -112,8 +110,6 @@ static const struct fec_devinfo fec_imx6q_info = {
+ 		  FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
+ 		  FEC_QUIRK_HAS_VLAN | FEC_QUIRK_ERR006358 |
+ 		  FEC_QUIRK_HAS_RACC,
+-	.stop_gpr_reg = 0x34,
+-	.stop_gpr_bit = 27,
+ };
+ 
+ static const struct fec_devinfo fec_mvf600_info = {
+@@ -3452,19 +3448,23 @@ static int fec_enet_get_irq_cnt(struct platform_device *pdev)
+ }
+ 
+ static int fec_enet_init_stop_mode(struct fec_enet_private *fep,
+-				   struct fec_devinfo *dev_info,
+ 				   struct device_node *np)
+ {
+ 	struct device_node *gpr_np;
++	u32 out_val[3];
+ 	int ret = 0;
+ 
+-	if (!dev_info)
+-		return 0;
+-
+-	gpr_np = of_parse_phandle(np, "gpr", 0);
++	gpr_np = of_parse_phandle(np, "fsl,stop-mode", 0);
+ 	if (!gpr_np)
+ 		return 0;
+ 
++	ret = of_property_read_u32_array(np, "fsl,stop-mode", out_val,
++					 ARRAY_SIZE(out_val));
++	if (ret) {
++		dev_dbg(&fep->pdev->dev, "no stop mode property\n");
++		return ret;
++	}
 +
- 	port = macvlan_port_get_rcu(skb->dev);
- 	if (is_multicast_ether_addr(eth->h_dest)) {
- 		unsigned int hash;
+ 	fep->stop_gpr.gpr = syscon_node_to_regmap(gpr_np);
+ 	if (IS_ERR(fep->stop_gpr.gpr)) {
+ 		dev_err(&fep->pdev->dev, "could not find gpr regmap\n");
+@@ -3473,8 +3473,8 @@ static int fec_enet_init_stop_mode(struct fec_enet_private *fep,
+ 		goto out;
+ 	}
+ 
+-	fep->stop_gpr.reg = dev_info->stop_gpr_reg;
+-	fep->stop_gpr.bit = dev_info->stop_gpr_bit;
++	fep->stop_gpr.reg = out_val[1];
++	fep->stop_gpr.bit = out_val[2];
+ 
+ out:
+ 	of_node_put(gpr_np);
+@@ -3550,7 +3550,7 @@ fec_probe(struct platform_device *pdev)
+ 	if (of_get_property(np, "fsl,magic-packet", NULL))
+ 		fep->wol_flag |= FEC_WOL_HAS_MAGIC_PACKET;
+ 
+-	ret = fec_enet_init_stop_mode(fep, dev_info, np);
++	ret = fec_enet_init_stop_mode(fep, np);
+ 	if (ret)
+ 		goto failed_stop_mode;
+ 
 -- 
 2.25.1
 
