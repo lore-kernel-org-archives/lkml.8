@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED3CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37D57218AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E96208B8
+	for <linux-kernel@archiver.kernel.org>; Fri, 19 Jun 2020 15:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1592578812;
-	bh=18KOcZajMmpY2rbqPpuMqji5HUMM1Fd6BXCK/THQZIg=;
+	s=default; t=1592578819;
+	bh=Te9F/yrPuD9RjkO3+zwkcMIepHyknzxLlgjxALhWRIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v/CftsyjPxVMxXLlUyPJ6wesT9esnpd4CLOHqMzC9EeaszrzW500daL2Uy8b1bYQA
-	 WjzkOXUGNw2gSImKLktyCghjS9YA0b8AprNOg5kNQyCuAOZqbrGPzFiTUaQyKt7LXQ
-	 Jik0OlvdF5+neCxo+7CNx/2ROClAw6zHvfpxvMCg=
+	b=QjifROo5z3qa03skEUUc8C/ANC/jo/HmnpqZAfRg3ETXLn/ZvI1a4PgqLjT1owo7G
+	 0OL9xm5UzXAvlQpMF2wrkP5w7Nrb78mzFEOHUVoxsRoVBue1NlrBIA2g51+JoHuzJ4
+	 Wn9T/qTYP5Pkjjk4bIcpgDD88VKDNWdApa7lKYfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390618AbgFSPAH (ORCPT
+        id S2390630AbgFSPAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 19 Jun 2020 11:00:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56234 "EHLO mail.kernel.org"
+        Fri, 19 Jun 2020 11:00:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389916AbgFSO7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 19 Jun 2020 10:59:55 -0400
+        id S2390590AbgFSO76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:59:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B29B0218AC;
-        Fri, 19 Jun 2020 14:59:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D8B221BE5;
+        Fri, 19 Jun 2020 14:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592578795;
-        bh=18KOcZajMmpY2rbqPpuMqji5HUMM1Fd6BXCK/THQZIg=;
+        s=default; t=1592578797;
+        bh=Te9F/yrPuD9RjkO3+zwkcMIepHyknzxLlgjxALhWRIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nfnx7BBcnQmVBE6i1l0pNDSXawj3w1wB6RsyDaQxBdLVA++s6DuaLKqJ+SL76biyS
-         iopllzBs8ZLh0w1L46bjjwpJ/cm+8n/pEvzdf7Dqo759mAu2M+HZnfntZnrgc49rUw
-         Cub7Lci58kcbXLizvFp0h1WfzchosWguSAnWQe+E=
+        b=TfIO9flQSPw5J6w0q00vmaBUO2HS2ujXsl1vyeZLzaldVNk+9y2q4Hy/wdB3qTYW/
+         7glzg/LCLDxHlv3JcYh+ZK6Gf4mJwtWv1U3DcRSRnLvk6Yl2EFF+vnm4VS2sNFZKTt
+         qklJ7SDkB/UQGkwpQfsHs9FZyAPqtnDAj7KVpZAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <Mario.limonciello@dell.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 152/267] platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types
-Date:   Fri, 19 Jun 2020 16:32:17 +0200
-Message-Id: <20200619141656.121339159@linuxfoundation.org>
+Subject: [PATCH 4.19 161/267] rtlwifi: Fix a double free in _rtl_usb_tx_urb_setup()
+Date:   Fri, 19 Jun 2020 16:32:26 +0200
+Message-Id: <20200619141656.532878575@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
 References: <20200619141648.840376470@linuxfoundation.org>
@@ -61,67 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 1fac39fd0316b19c3e57a182524332332d1643ce ]
+[ Upstream commit beb12813bc75d4a23de43b85ad1c7cb28d27631e ]
 
-Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
-reporting SW_TABLET_MODE = 1 to userspace on laptops.
+Seven years ago we tried to fix a leak but actually introduced a double
+free instead.  It was an understandable mistake because the code was a
+bit confusing and the free was done in the wrong place.  The "skb"
+pointer is freed in both _rtl_usb_tx_urb_setup() and _rtl_usb_transmit().
+The free belongs _rtl_usb_transmit() instead of _rtl_usb_tx_urb_setup()
+and I've cleaned the code up a bit to hopefully make it more clear.
 
-Some devices with a detachable keyboard and using the intel-vbnt (INT33D6)
-interface to report if they are in tablet mode (keyboard detached) or not,
-report 32 / "Detachable" as chassis-type, e.g. the HP Pavilion X2 series.
-
-Other devices with a detachable keyboard and using the intel-vbnt (INT33D6)
-interface to report SW_TABLET_MODE, report 8 / "Portable" as chassis-type.
-The Dell Venue 11 Pro 7130 is an example of this.
-
-Extend the DMI chassis-type check to also accept Portables and Detachables
-so that the intel-vbtn driver will report SW_TABLET_MODE on these devices.
-
-Note the chassis-type check was originally added to avoid a false-positive
-tablet-mode report on the Dell XPS 9360 laptop. To the best of my knowledge
-that laptop is using a chassis-type of 9 / "Laptop", so after this commit
-we still ignore the tablet-switch for that chassis-type.
-
-Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 36ef0b473fbf ("rtlwifi: usb: add missing freeing of skbuff")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200513093951.GD347693@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtlwifi/usb.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 23cda7aa96cd..5f8120d12859 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -157,12 +157,22 @@ static void detect_tablet_mode(struct platform_device *device)
- static bool intel_vbtn_has_switches(acpi_handle handle)
- {
- 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
-+	unsigned long chassis_type_int;
- 	unsigned long long vgbs;
- 	acpi_status status;
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index 1181b725f503..1893640555c1 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -910,10 +910,8 @@ static struct urb *_rtl_usb_tx_urb_setup(struct ieee80211_hw *hw,
  
--	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
-+	if (kstrtoul(chassis_type, 10, &chassis_type_int))
- 		return false;
+ 	WARN_ON(NULL == skb);
+ 	_urb = usb_alloc_urb(0, GFP_ATOMIC);
+-	if (!_urb) {
+-		kfree_skb(skb);
++	if (!_urb)
+ 		return NULL;
+-	}
+ 	_rtl_install_trx_info(rtlusb, skb, ep_num);
+ 	usb_fill_bulk_urb(_urb, rtlusb->udev, usb_sndbulkpipe(rtlusb->udev,
+ 			  ep_num), skb->data, skb->len, _rtl_tx_complete, skb);
+@@ -927,7 +925,6 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
+ 	struct rtl_usb *rtlusb = rtl_usbdev(rtl_usbpriv(hw));
+ 	u32 ep_num;
+ 	struct urb *_urb = NULL;
+-	struct sk_buff *_skb = NULL;
  
-+	switch (chassis_type_int) {
-+	case  8: /* Portable */
-+	case 31: /* Convertible */
-+	case 32: /* Detachable */
-+		break;
-+	default:
-+		return false;
-+	}
-+
- 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	return ACPI_SUCCESS(status);
- }
+ 	WARN_ON(NULL == rtlusb->usb_tx_aggregate_hdl);
+ 	if (unlikely(IS_USB_STOP(rtlusb))) {
+@@ -936,8 +933,7 @@ static void _rtl_usb_transmit(struct ieee80211_hw *hw, struct sk_buff *skb,
+ 		return;
+ 	}
+ 	ep_num = rtlusb->ep_map.ep_mapping[qnum];
+-	_skb = skb;
+-	_urb = _rtl_usb_tx_urb_setup(hw, _skb, ep_num);
++	_urb = _rtl_usb_tx_urb_setup(hw, skb, ep_num);
+ 	if (unlikely(!_urb)) {
+ 		pr_err("Can't allocate urb. Drop skb!\n");
+ 		kfree_skb(skb);
 -- 
 2.25.1
 
